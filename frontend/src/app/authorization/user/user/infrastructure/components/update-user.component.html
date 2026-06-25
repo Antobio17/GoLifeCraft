@@ -1,0 +1,704 @@
+<app-page-wrapper [maxWidth]="'960px'" [gap]="'24px'">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <app-section-page-wrapper
+      [title]="'updateUser.title' | t"
+      [description]="'updateUser.description' | t"
+      [loading]="loading"
+      [skeletonRows]="3"
+      [skeletonFieldsPerRow]="2"
+      [showBackButton]="true"
+      (backClicked)="cancel()"
+    >
+      <svg
+        slot="icon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+
+      <app-form-section
+        [title]="'updateUser.section.personal' | t"
+        [icon]="ICONS['USERS']"
+      >
+        <div class="form-row">
+          <app-form-input
+            [label]="'updateUser.field.username' | t"
+            formControlName="username"
+          ></app-form-input>
+          <app-form-input
+            [label]="'updateUser.field.email' | t"
+            type="email"
+            formControlName="email"
+          ></app-form-input>
+        </div>
+        <div class="form-row">
+          <app-form-input
+            [label]="'updateUser.field.name' | t"
+            formControlName="name"
+          ></app-form-input>
+          <app-form-input
+            [label]="'updateUser.field.lastname' | t"
+            formControlName="lastname"
+          ></app-form-input>
+        </div>
+      </app-form-section>
+
+      <app-form-section
+        [title]="'updateUser.section.status' | t"
+        [icon]="ICONS['SETTINGS']"
+      >
+        <div class="field-group">
+          <label class="field-label">{{
+            "updateUser.field.isActive" | t
+          }}</label>
+          <div class="toggle-container">
+            <label class="toggle-switch">
+              <input
+                type="checkbox"
+                formControlName="isActive"
+                class="toggle-input"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+            <span
+              class="toggle-label"
+              [class.active]="userForm.get('isActive')?.value"
+            >
+              {{
+                userForm.get("isActive")?.value
+                  ? ("updateUser.field.active" | t)
+                  : ("updateUser.field.inactive" | t)
+              }}
+            </span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label"
+            >{{ "updateUser.field.role" | t }}
+            <span class="required">*</span></label
+          >
+          <div class="roles-grid">
+            @for (role of availableRoles; track role) {
+              @if (
+                role !== "ROLE_GOD" ||
+                userForm.get("role")?.value === "ROLE_GOD"
+              ) {
+                <div class="role-option">
+                  <input
+                    type="radio"
+                    [id]="'role-' + role"
+                    [value]="role"
+                    formControlName="role"
+                    class="role-radio"
+                  />
+                  <label
+                    [for]="'role-' + role"
+                    class="role-card"
+                    [attr.data-role]="role"
+                  >
+                    <div class="role-icon">
+                      @if (role === "ROLE_GOD") {
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            d="M12 2L2 7L12 12L22 7L12 2Z"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M2 17L12 22L22 17"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M2 12L12 17L22 12"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      }
+                      @if (role === "ROLE_USER") {
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <circle
+                            cx="12"
+                            cy="7"
+                            r="4"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      }
+                    </div>
+                    <div class="role-content">
+                      <span class="role-name">{{ getRoleName(role) | t }}</span>
+                      <span class="role-description">{{
+                        getRoleDescription(role) | t
+                      }}</span>
+                    </div>
+                    <div class="role-check">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M20 6L9 17L4 12"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </label>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      </app-form-section>
+
+      @if (!isReadOnlyRole()) {
+        <app-form-section
+          [title]="'updateUser.section.permissions' | t"
+          [icon]="ICONS['SETTINGS']"
+        >
+          <div class="permissions-grid">
+            <div class="permission-card">
+              <label class="permission-clickable">
+                <input
+                  type="checkbox"
+                  formControlName="canCreateFolder"
+                  class="permission-input"
+                />
+                <span class="permission-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                    />
+                    <line x1="12" y1="11" x2="12" y2="17" />
+                    <line x1="9" y1="14" x2="15" y2="14" />
+                  </svg>
+                </span>
+                <span class="permission-name">{{
+                  "updateUser.permissions.canCreateFolder" | t
+                }}</span>
+                <span class="permission-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6L9 17L4 12"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </label>
+              <button
+                type="button"
+                class="permission-info"
+                [attr.aria-label]="
+                  'updateUser.permissions.canCreateFolderDescription' | t
+                "
+                tabindex="0"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <span class="permission-tooltip">{{
+                  "updateUser.permissions.canCreateFolderDescription" | t
+                }}</span>
+              </button>
+            </div>
+
+            <div class="permission-card">
+              <label class="permission-clickable">
+                <input
+                  type="checkbox"
+                  formControlName="canDeleteFolder"
+                  class="permission-input"
+                />
+                <span class="permission-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                    />
+                    <line x1="9.5" y1="11.5" x2="14.5" y2="16.5" />
+                    <line x1="14.5" y1="11.5" x2="9.5" y2="16.5" />
+                  </svg>
+                </span>
+                <span class="permission-name">{{
+                  "updateUser.permissions.canDeleteFolder" | t
+                }}</span>
+                <span class="permission-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6L9 17L4 12"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </label>
+              <button
+                type="button"
+                class="permission-info"
+                [attr.aria-label]="
+                  'updateUser.permissions.canDeleteFolderDescription' | t
+                "
+                tabindex="0"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <span class="permission-tooltip">{{
+                  "updateUser.permissions.canDeleteFolderDescription" | t
+                }}</span>
+              </button>
+            </div>
+
+            <div class="permission-card">
+              <label class="permission-clickable">
+                <input
+                  type="checkbox"
+                  formControlName="canUploadFile"
+                  class="permission-input"
+                />
+                <span class="permission-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                </span>
+                <span class="permission-name">{{
+                  "updateUser.permissions.canUploadFile" | t
+                }}</span>
+                <span class="permission-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6L9 17L4 12"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </label>
+              <button
+                type="button"
+                class="permission-info"
+                [attr.aria-label]="
+                  'updateUser.permissions.canUploadFileDescription' | t
+                "
+                tabindex="0"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <span class="permission-tooltip">{{
+                  "updateUser.permissions.canUploadFileDescription" | t
+                }}</span>
+              </button>
+            </div>
+
+            <div class="permission-card">
+              <label class="permission-clickable">
+                <input
+                  type="checkbox"
+                  formControlName="canDeleteFile"
+                  class="permission-input"
+                />
+                <span class="permission-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="3 6 5 6 21 6" />
+                    <path
+                      d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                    />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                  </svg>
+                </span>
+                <span class="permission-name">{{
+                  "updateUser.permissions.canDeleteFile" | t
+                }}</span>
+                <span class="permission-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6L9 17L4 12"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </label>
+              <button
+                type="button"
+                class="permission-info"
+                [attr.aria-label]="
+                  'updateUser.permissions.canDeleteFileDescription' | t
+                "
+                tabindex="0"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <span class="permission-tooltip">{{
+                  "updateUser.permissions.canDeleteFileDescription" | t
+                }}</span>
+              </button>
+            </div>
+
+            <div class="permission-card">
+              <label class="permission-clickable">
+                <input
+                  type="checkbox"
+                  formControlName="canSignFile"
+                  class="permission-input"
+                />
+                <span class="permission-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 19l7-7 3 3-7 7-3-3z M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z M2 2l7.586 7.586"
+                    />
+                    <circle cx="11" cy="11" r="2" />
+                  </svg>
+                </span>
+                <span class="permission-name">{{
+                  "updateUser.permissions.canSignFile" | t
+                }}</span>
+                <span class="permission-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6L9 17L4 12"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </label>
+              <button
+                type="button"
+                class="permission-info"
+                [attr.aria-label]="
+                  'updateUser.permissions.canSignFileDescription' | t
+                "
+                tabindex="0"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <span class="permission-tooltip">{{
+                  "updateUser.permissions.canSignFileDescription" | t
+                }}</span>
+              </button>
+            </div>
+
+            <div class="permission-card">
+              <label class="permission-clickable">
+                <input
+                  type="checkbox"
+                  formControlName="canRollbackSign"
+                  class="permission-input"
+                />
+                <span class="permission-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="1 4 1 10 7 10" />
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                  </svg>
+                </span>
+                <span class="permission-name">{{
+                  "updateUser.permissions.canRollbackSign" | t
+                }}</span>
+                <span class="permission-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6L9 17L4 12"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </label>
+              <button
+                type="button"
+                class="permission-info"
+                [attr.aria-label]="
+                  'updateUser.permissions.canRollbackSignDescription' | t
+                "
+                tabindex="0"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <span class="permission-tooltip">{{
+                  "updateUser.permissions.canRollbackSignDescription" | t
+                }}</span>
+              </button>
+            </div>
+
+            <div class="permission-card">
+              <label class="permission-clickable">
+                <input
+                  type="checkbox"
+                  formControlName="canAccessUsers"
+                  class="permission-input"
+                />
+                <span class="permission-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </span>
+                <span class="permission-name">{{
+                  "updateUser.permissions.canAccessUsers" | t
+                }}</span>
+                <span class="permission-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6L9 17L4 12"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </label>
+              <button
+                type="button"
+                class="permission-info"
+                [attr.aria-label]="
+                  'updateUser.permissions.canAccessUsersDescription' | t
+                "
+                tabindex="0"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <span class="permission-tooltip">{{
+                  "updateUser.permissions.canAccessUsersDescription" | t
+                }}</span>
+              </button>
+            </div>
+          </div>
+        </app-form-section>
+      }
+    </app-section-page-wrapper>
+
+    <app-form-actions
+      [cancelLabel]="'updateUser.cancel' | t"
+      [submitLabel]="'updateUser.save' | t"
+      [savingLabel]="'updateUser.saving' | t"
+      [saving]="saving"
+      [formInvalid]="userForm.invalid"
+      (cancelled)="cancel()"
+    >
+      <svg
+        slot="icon"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+        />
+        <polyline points="17 21 17 13 7 13 7 21" />
+        <polyline points="7 3 7 8 15 8" />
+      </svg>
+    </app-form-actions>
+  </form>
+</app-page-wrapper>

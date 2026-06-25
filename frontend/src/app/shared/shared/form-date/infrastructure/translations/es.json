@@ -1,0 +1,11 @@
+{
+  "formDate": {
+    "clear": "Borrar fecha",
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "min": "La fecha mínima es {{min}}",
+      "max": "La fecha máxima es {{max}}",
+      "invalid": "Fecha inválida"
+    }
+  }
+}

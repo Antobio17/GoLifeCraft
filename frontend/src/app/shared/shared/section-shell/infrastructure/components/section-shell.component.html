@@ -1,0 +1,25 @@
+<section class="section-shell">
+  <div aria-live="polite" aria-atomic="true" class="sr-only">
+    {{ loading ? "" : title }}
+  </div>
+  <app-section-title
+    [icon]="icon"
+    [iconTone]="iconTone"
+    [title]="title"
+    [subtitle]="subtitle"
+  />
+
+  @if (!loading) {
+    <div class="section-shell__body">
+      <ng-content></ng-content>
+    </div>
+  } @else {
+    <app-section-skeleton />
+  }
+</section>
+
+@if (!loading && showActions) {
+  <footer class="section-shell__actions">
+    <ng-content select="[slot=actions]"></ng-content>
+  </footer>
+}

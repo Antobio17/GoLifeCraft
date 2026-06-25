@@ -1,0 +1,441 @@
+{
+  "name": "legioapp-icons",
+  "version": "1.0.0",
+  "count": 96,
+  "viewBox": "0 0 24 24",
+  "strokeWidth": 1.75,
+  "categories": [
+    {
+      "id": "nav",
+      "title": "Navegación",
+      "icons": [
+        {
+          "name": "home",
+          "label": "Inicio"
+        },
+        {
+          "name": "dashboard",
+          "label": "Dashboard"
+        },
+        {
+          "name": "ppcl",
+          "label": "PPCL"
+        },
+        {
+          "name": "calendar",
+          "label": "Calendario"
+        },
+        {
+          "name": "calendar-check",
+          "label": "Calendario · OK"
+        },
+        {
+          "name": "calendar-plus",
+          "label": "Calendario · Nuevo"
+        },
+        {
+          "name": "organization",
+          "label": "Organización"
+        },
+        {
+          "name": "users",
+          "label": "Usuarios"
+        },
+        {
+          "name": "reports",
+          "label": "Informes"
+        },
+        {
+          "name": "cloud",
+          "label": "Cloud"
+        },
+        {
+          "name": "authorization",
+          "label": "Autorización"
+        },
+        {
+          "name": "settings",
+          "label": "Ajustes"
+        },
+        {
+          "name": "search",
+          "label": "Búsqueda"
+        },
+        {
+          "name": "bell",
+          "label": "Notificaciones"
+        },
+        {
+          "name": "bell-dot",
+          "label": "Notificación nueva"
+        },
+        {
+          "name": "menu",
+          "label": "Menú"
+        }
+      ]
+    },
+    {
+      "id": "direccion",
+      "title": "Dirección",
+      "icons": [
+        {
+          "name": "chevron-up",
+          "label": "Chevron ↑"
+        },
+        {
+          "name": "chevron-down",
+          "label": "Chevron ↓"
+        },
+        {
+          "name": "chevron-left",
+          "label": "Chevron ←"
+        },
+        {
+          "name": "chevron-right",
+          "label": "Chevron →"
+        },
+        {
+          "name": "chevrons-left",
+          "label": "Inicio (≪)"
+        },
+        {
+          "name": "chevrons-right",
+          "label": "Final (≫)"
+        },
+        {
+          "name": "arrow-up",
+          "label": "Flecha ↑"
+        },
+        {
+          "name": "arrow-down",
+          "label": "Flecha ↓"
+        },
+        {
+          "name": "arrow-left",
+          "label": "Flecha ←"
+        },
+        {
+          "name": "arrow-right",
+          "label": "Flecha →"
+        },
+        {
+          "name": "external-link",
+          "label": "Enlace externo"
+        },
+        {
+          "name": "sort-vertical",
+          "label": "Ordenar"
+        }
+      ]
+    },
+    {
+      "id": "acciones",
+      "title": "Acciones",
+      "icons": [
+        {
+          "name": "plus",
+          "label": "Nuevo"
+        },
+        {
+          "name": "plus-circle",
+          "label": "Nuevo · destacado"
+        },
+        {
+          "name": "edit",
+          "label": "Editar"
+        },
+        {
+          "name": "trash",
+          "label": "Eliminar"
+        },
+        {
+          "name": "save",
+          "label": "Guardar"
+        },
+        {
+          "name": "copy",
+          "label": "Duplicar"
+        },
+        {
+          "name": "share",
+          "label": "Compartir"
+        },
+        {
+          "name": "download",
+          "label": "Descargar"
+        },
+        {
+          "name": "upload",
+          "label": "Subir archivo"
+        },
+        {
+          "name": "filter",
+          "label": "Filtrar"
+        },
+        {
+          "name": "refresh",
+          "label": "Refrescar"
+        },
+        {
+          "name": "print",
+          "label": "Imprimir"
+        },
+        {
+          "name": "send",
+          "label": "Enviar"
+        },
+        {
+          "name": "more-horizontal",
+          "label": "Más opciones"
+        },
+        {
+          "name": "more-vertical",
+          "label": "Más (vertical)"
+        },
+        {
+          "name": "expand",
+          "label": "Pantalla completa"
+        }
+      ]
+    },
+    {
+      "id": "estado",
+      "title": "Estado",
+      "icons": [
+        {
+          "name": "check",
+          "label": "Hecho"
+        },
+        {
+          "name": "x",
+          "label": "Cerrar / cancelar"
+        },
+        {
+          "name": "check-circle",
+          "label": "Validado"
+        },
+        {
+          "name": "x-circle",
+          "label": "Rechazado"
+        },
+        {
+          "name": "alert",
+          "label": "Alerta"
+        },
+        {
+          "name": "info",
+          "label": "Información"
+        },
+        {
+          "name": "pending",
+          "label": "Pendiente"
+        },
+        {
+          "name": "in-progress",
+          "label": "En curso"
+        },
+        {
+          "name": "out-of-range",
+          "label": "Fuera de rango"
+        },
+        {
+          "name": "live-dot",
+          "label": "En tiempo real"
+        },
+        {
+          "name": "star",
+          "label": "Favorito"
+        },
+        {
+          "name": "pin",
+          "label": "Fijado"
+        }
+      ]
+    },
+    {
+      "id": "tiempo",
+      "title": "Tiempo y registro",
+      "icons": [
+        {
+          "name": "clock",
+          "label": "Reloj"
+        },
+        {
+          "name": "timer",
+          "label": "Temporizador"
+        },
+        {
+          "name": "history",
+          "label": "Historial"
+        },
+        {
+          "name": "log",
+          "label": "Registro / log"
+        },
+        {
+          "name": "agenda",
+          "label": "Agenda"
+        }
+      ]
+    },
+    {
+      "id": "legionella",
+      "title": "Dominio · Legionella",
+      "icons": [
+        {
+          "name": "drop",
+          "label": "Agua / gota"
+        },
+        {
+          "name": "drop-broken",
+          "label": "Gota fuera de rango"
+        },
+        {
+          "name": "cooling-tower",
+          "label": "Torre de refrigeración"
+        },
+        {
+          "name": "tank",
+          "label": "Depósito de agua"
+        },
+        {
+          "name": "faucet",
+          "label": "Grifo / punto terminal"
+        },
+        {
+          "name": "shower",
+          "label": "Ducha"
+        },
+        {
+          "name": "thermometer",
+          "label": "Temperatura"
+        },
+        {
+          "name": "sample",
+          "label": "Muestra / tubo"
+        },
+        {
+          "name": "flask",
+          "label": "Análisis / matraz"
+        },
+        {
+          "name": "microbe",
+          "label": "Legionella (microbio)"
+        },
+        {
+          "name": "valve",
+          "label": "Válvula"
+        },
+        {
+          "name": "pipe",
+          "label": "Red / tubería"
+        },
+        {
+          "name": "aerosol",
+          "label": "Aerosol"
+        },
+        {
+          "name": "probe",
+          "label": "Sonda / medidor"
+        },
+        {
+          "name": "chlorination",
+          "label": "Cloración"
+        },
+        {
+          "name": "ph",
+          "label": "pH / análisis químico"
+        }
+      ]
+    },
+    {
+      "id": "lugar",
+      "title": "Edificios y ubicación",
+      "icons": [
+        {
+          "name": "hospital",
+          "label": "Hospital"
+        },
+        {
+          "name": "building",
+          "label": "Edificio"
+        },
+        {
+          "name": "plant",
+          "label": "Planta / piso"
+        },
+        {
+          "name": "location",
+          "label": "Ubicación"
+        },
+        {
+          "name": "map",
+          "label": "Mapa"
+        },
+        {
+          "name": "route",
+          "label": "Ruta de inspección"
+        }
+      ]
+    },
+    {
+      "id": "sistema",
+      "title": "Cuenta y sistema",
+      "icons": [
+        {
+          "name": "user",
+          "label": "Usuario"
+        },
+        {
+          "name": "user-plus",
+          "label": "Añadir usuario"
+        },
+        {
+          "name": "user-check",
+          "label": "Usuario validado"
+        },
+        {
+          "name": "lock",
+          "label": "Bloqueado"
+        },
+        {
+          "name": "lock-open",
+          "label": "Desbloqueado"
+        },
+        {
+          "name": "eye",
+          "label": "Mostrar"
+        },
+        {
+          "name": "eye-off",
+          "label": "Ocultar"
+        },
+        {
+          "name": "logout",
+          "label": "Cerrar sesión"
+        },
+        {
+          "name": "login",
+          "label": "Iniciar sesión"
+        },
+        {
+          "name": "help",
+          "label": "Ayuda"
+        },
+        {
+          "name": "light-mode",
+          "label": "Modo claro"
+        },
+        {
+          "name": "dark-mode",
+          "label": "Modo oscuro"
+        },
+        {
+          "name": "language",
+          "label": "Idioma"
+        }
+      ]
+    }
+  ]
+}

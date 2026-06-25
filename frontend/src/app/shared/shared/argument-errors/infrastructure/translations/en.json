@@ -1,0 +1,35 @@
+{
+  "handler": {
+    "failed": {
+      "exception": "Internal server error. Please try again."
+    }
+  },
+  "token": {
+    "authentication": {
+      "failed": "Authentication failed. Please log in again."
+    }
+  },
+  "error": {
+    "server": {
+      "generic": "Server error. Please try again."
+    }
+  },
+  "the": {
+    "argument": {
+      "is": {
+        "required": "Required parameter '{{argumentName}}' is missing from the request"
+      },
+      "must": {
+        "be": {
+          "integer": "Parameter '{{argumentName}}' must be an integer",
+          "array": "Parameter '{{argumentName}}' must be an array"
+        }
+      }
+    },
+    "filter": {
+      "is": {
+        "required": "Required filter '{{filterName}}' is missing from the request"
+      }
+    }
+  }
+}

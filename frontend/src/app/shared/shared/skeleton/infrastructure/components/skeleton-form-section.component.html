@@ -1,0 +1,27 @@
+@if (showHeader) {
+  <div class="skf-page-header">
+    <div class="skf-bar skf-page-title"></div>
+    <div class="skf-bar skf-page-description"></div>
+  </div>
+}
+
+@for (card of cardArray; track card) {
+  <div class="skf-card">
+    @if (showCardHeader) {
+      <div class="skf-card-header">
+        <div class="skf-bar skf-card-icon"></div>
+        <div class="skf-bar skf-card-title"></div>
+      </div>
+    }
+    @for (row of rowArray; track row) {
+      <div class="skf-row" [style.grid-template-columns]="gridTemplate">
+        @for (field of fieldArray; track field) {
+          <div class="skf-field">
+            <div class="skf-bar skf-label"></div>
+            <div class="skf-bar skf-input"></div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,314 @@
+{
+  "getUsers": {
+    "title": "Usuarios",
+    "subtitle": "Gestión de usuarios del sistema",
+    "newUser": "Nuevo Usuario",
+    "filter": {
+      "username": "Username",
+      "usernamePlaceholder": "Buscar por username...",
+      "email": "Email",
+      "emailPlaceholder": "Buscar por email...",
+      "role": "Rol"
+    },
+    "table": {
+      "name": "Usuario",
+      "username": "Username",
+      "email": "Email",
+      "role": "Rol",
+      "status": "Estado",
+      "createdAt": "Fecha Creación",
+      "createdLabel": "Creado",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "emptyTitle": "No hay usuarios",
+      "emptyMessage": "Aún no se han registrado usuarios en el sistema"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "deleteModal": {
+      "title": "Confirmar eliminación",
+      "body": "¿Estás seguro de que deseas eliminar el usuario",
+      "warning": "Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar",
+      "deleting": "Eliminando..."
+    },
+    "toast": {
+      "deleteSuccess": "Usuario eliminado correctamente"
+    }
+  },
+  "user": {
+    "breadcrumb": {
+      "list": "Usuarios",
+      "create": "Crear Usuario",
+      "edit": "Editar Usuario"
+    },
+    "authentication": {
+      "failed": "Usuario o contraseña incorrectos (Si falla 5 veces, se bloqueará el acceso durante 5 minutos)",
+      "too_many_attempts": "Demasiados intentos de inicio de sesión. Por favor, inténtalo de nuevo dentro de 5 minutos."
+    },
+    "create": {
+      "success": "Usuario creado correctamente"
+    },
+    "update": {
+      "success": "Usuario actualizado correctamente"
+    },
+    "delete": {
+      "success": "Usuario eliminado correctamente"
+    },
+    "roles": {
+      "god": "God",
+      "user": "Usuario",
+      "unknown": "Desconocido",
+      "userFull": "Usuario",
+      "godDescription": "Acceso total sin restricciones",
+      "userDescription": "Usuario estándar"
+    },
+    "with": {
+      "username": {
+        "already": {
+          "exists": "Ya existe un usuario con ese nombre de usuario"
+        }
+      }
+    },
+    "does": {
+      "not": {
+        "exist": "El usuario no existe"
+      }
+    },
+    "not": {
+      "found": "El usuario no se ha encontrado"
+    },
+    "not_found": "El usuario no se ha encontrado",
+    "password": {
+      "weak": "La contraseña no cumple los requisitos de seguridad mínimos"
+    },
+    "current_password": {
+      "invalid": "La contraseña actual no es válida"
+    },
+    "invalid": {
+      "language_code": "Código de idioma no válido. Permitidos: es-ES, en-US"
+    }
+  },
+  "creating": {
+    "user": {
+      "does": {
+        "not": {
+          "exist": "El usuario que intenta crear no existe"
+        }
+      }
+    }
+  },
+  "cannot": {
+    "create": {
+      "user": {
+        "with": {
+          "god": {
+            "role": "No se puede crear un usuario con el rol God"
+          }
+        }
+      }
+    },
+    "update": {
+      "user": {
+        "to": {
+          "god": {
+            "role": "No se puede asignar el rol God a un usuario"
+          }
+        }
+      }
+    },
+    "change": {
+      "self": {
+        "role": "No puedes cambiar tu propio rol"
+      }
+    }
+  },
+  "role": {
+    "scope": {
+      "provided": {
+        "is": {
+          "not": {
+            "valid": "El ámbito del rol proporcionado no es válido"
+          }
+        }
+      }
+    },
+    "does": {
+      "not": {
+        "exist": "El rol especificado no existe"
+      }
+    }
+  },
+  "centerId": {
+    "required": {
+      "for": {
+        "center": {
+          "role": "Se requiere un centro para este rol"
+        }
+      }
+    }
+  },
+  "new": {
+    "role": {
+      "is": {
+        "not": {
+          "available": "El nuevo rol no está disponible"
+        }
+      }
+    }
+  },
+  "invalid": {
+    "language": {
+      "code": "Código de idioma no válido"
+    }
+  },
+  "profile": {
+    "breadcrumb": "Mi Perfil",
+    "title": "Mi Perfil",
+    "description": "Gestiona tu información personal y contraseña de acceso",
+    "loading": "Cargando perfil...",
+    "saving": "Guardando...",
+    "save": "Guardar perfil",
+    "changingPassword": "Cambiando...",
+    "changePassword": "Cambiar contraseña",
+    "section": {
+      "personal": "Información personal",
+      "security": "Seguridad"
+    },
+    "field": {
+      "username": "Usuario",
+      "role": "Rol",
+      "center": "Centro",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "lastname": "Apellidos",
+      "lastnamePlaceholder": "Tus apellidos",
+      "email": "Email",
+      "language": "Idioma",
+      "languagePlaceholder": "Selecciona un idioma",
+      "timezoneCode": "Zona horaria",
+      "timezonePlaceholder": "Selecciona una zona horaria",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar contraseña"
+    },
+    "update": {
+      "success": "Perfil actualizado correctamente",
+      "error": "Error al actualizar el perfil"
+    },
+    "timezone": {
+      "nextLoginWarning": "El cambio de zona horaria se aplicará en tu próxima sesión."
+    },
+    "password": {
+      "change": {
+        "success": "Contraseña cambiada correctamente",
+        "error": "Error al cambiar la contraseña"
+      },
+      "weak": "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial"
+    }
+  },
+  "createUser": {
+    "title": "Crear Nuevo Usuario",
+    "description": "Completa los datos para registrar un nuevo usuario en el sistema",
+    "saving": "Creando...",
+    "save": "Crear Usuario",
+    "cancel": "Cancelar",
+    "section": {
+      "personal": "Datos personales",
+      "security": "Contraseña",
+      "role": "Rol y permisos",
+      "permissions": "Permisos del usuario"
+    },
+    "field": {
+      "username": "Usuario",
+      "email": "Email",
+      "name": "Nombre",
+      "lastname": "Apellido",
+      "password": "Contraseña",
+      "confirmPassword": "Repetir Contraseña",
+      "role": "Rol del usuario",
+      "language": "Idioma",
+      "languagePlaceholder": "Selecciona un idioma",
+      "timezoneCode": "Zona horaria",
+      "timezonePlaceholder": "Selecciona una zona horaria"
+    },
+    "permissions": {
+      "canCreateFolder": "Crear carpetas",
+      "canDeleteFolder": "Eliminar carpetas",
+      "canUploadFile": "Subir archivos",
+      "canDeleteFile": "Eliminar archivos",
+      "canSignFile": "Firmar PDFs",
+      "canRollbackSign": "Restaurar PDFs firmados",
+      "canCreateFolderDescription": "Permite crear nuevas carpetas dentro del centro asignado.",
+      "canDeleteFolderDescription": "Permite eliminar carpetas existentes y todo su contenido.",
+      "canUploadFileDescription": "Permite subir nuevos archivos al sistema.",
+      "canDeleteFileDescription": "Permite eliminar archivos del sistema de forma definitiva.",
+      "canSignFileDescription": "Permite firmar digitalmente documentos PDF.",
+      "canRollbackSignDescription": "Permite revertir la firma digital de un PDF previamente firmado.",
+      "canAccessUsers": "Ver sección de usuarios",
+      "canAccessUsersDescription": "Permite acceder a la sección de Autorización y gestionar los usuarios del sistema."
+    },
+    "validation": {
+      "passwordRequired": "La contraseña es requerida",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "confirmPasswordRequired": "Debe repetir la contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    }
+  },
+  "updateUser": {
+    "title": "Editar Usuario",
+    "description": "Modifica los datos de acceso y el rol del usuario",
+    "loading": "Cargando datos del usuario...",
+    "saving": "Guardando...",
+    "save": "Guardar cambios",
+    "cancel": "Cancelar",
+    "section": {
+      "personal": "Datos personales",
+      "status": "Estado y rol",
+      "permissions": "Permisos del usuario"
+    },
+    "field": {
+      "username": "Usuario",
+      "email": "Email",
+      "name": "Nombre",
+      "lastname": "Apellido",
+      "isActive": "Estado del usuario",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "role": "Rol del usuario",
+      "language": "Idioma",
+      "languagePlaceholder": "Selecciona un idioma",
+      "timezoneCode": "Zona horaria",
+      "timezonePlaceholder": "Selecciona una zona horaria"
+    },
+    "permissions": {
+      "canCreateFolder": "Crear carpetas",
+      "canDeleteFolder": "Eliminar carpetas",
+      "canUploadFile": "Subir archivos",
+      "canDeleteFile": "Eliminar archivos",
+      "canSignFile": "Firmar PDFs",
+      "canRollbackSign": "Restaurar PDFs firmados",
+      "canCreateFolderDescription": "Permite crear nuevas carpetas dentro del centro asignado.",
+      "canDeleteFolderDescription": "Permite eliminar carpetas existentes y todo su contenido.",
+      "canUploadFileDescription": "Permite subir nuevos archivos al sistema.",
+      "canDeleteFileDescription": "Permite eliminar archivos del sistema de forma definitiva.",
+      "canSignFileDescription": "Permite firmar digitalmente documentos PDF.",
+      "canRollbackSignDescription": "Permite revertir la firma digital de un PDF previamente firmado.",
+      "canAccessUsers": "Ver sección de usuarios",
+      "canAccessUsersDescription": "Permite acceder a la sección de Autorización y gestionar los usuarios del sistema."
+    }
+  },
+  "access": {
+    "denied": {
+      "to": {
+        "change": {
+          "role": "No tienes permiso para cambiar el rol"
+        }
+      },
+      "super_admin_or_self_required": "Acceso denegado. Se requiere ser administrador o el propio usuario"
+    }
+  }
+}

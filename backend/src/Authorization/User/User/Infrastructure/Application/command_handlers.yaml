@@ -1,0 +1,49 @@
+services:
+  Authorization\User\User\Application\Command\CreateUserCommandHandler:
+    class: Authorization\User\User\Application\Command\CreateUserCommandHandler
+    arguments:
+      $needleDataQuery: '@Authorization\User\User\Domain\QueryModel\CreateUserNeedleDataQuery'
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $passwordHasher: '@Authorization\User\User\Domain\Service\PasswordHasher'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Authorization\User\User\Application\Command\UpdateUserCommandHandler:
+    class: Authorization\User\User\Application\Command\UpdateUserCommandHandler
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $needleDataQuery: '@Authorization\User\User\Domain\QueryModel\UpdateUserNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Authorization\User\User\Application\Command\UpdateMyProfile\UpdateMyProfileCommandHandler:
+    class: Authorization\User\User\Application\Command\UpdateMyProfile\UpdateMyProfileCommandHandler
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Authorization\User\User\Application\Command\ChangeMyPassword\ChangeMyPasswordCommandHandler:
+    class: Authorization\User\User\Application\Command\ChangeMyPassword\ChangeMyPasswordCommandHandler
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $passwordHasher: '@Authorization\User\User\Domain\Service\PasswordHasher'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Authorization\User\User\Application\Command\DeleteUserCommandHandler:
+    class: Authorization\User\User\Application\Command\DeleteUserCommandHandler
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

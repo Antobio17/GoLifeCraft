@@ -1,0 +1,7 @@
+<div
+  [class]="chipClasses"
+  [attr.aria-hidden]="ariaHidden || !ariaLabel ? 'true' : null"
+  [attr.aria-label]="ariaLabel || null"
+>
+  <ng-content></ng-content>
+</div>

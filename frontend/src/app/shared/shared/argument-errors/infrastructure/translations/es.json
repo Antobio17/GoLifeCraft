@@ -1,0 +1,35 @@
+{
+  "handler": {
+    "failed": {
+      "exception": "Error interno del servidor. Inténtalo de nuevo."
+    }
+  },
+  "token": {
+    "authentication": {
+      "failed": "Error de autenticación. Por favor, inicia sesión de nuevo."
+    }
+  },
+  "error": {
+    "server": {
+      "generic": "Error del servidor. Inténtalo de nuevo."
+    }
+  },
+  "the": {
+    "argument": {
+      "is": {
+        "required": "Falta el parámetro requerido '{{argumentName}}' en la petición"
+      },
+      "must": {
+        "be": {
+          "integer": "El parámetro '{{argumentName}}' debe ser un número entero",
+          "array": "El parámetro '{{argumentName}}' debe ser un array"
+        }
+      }
+    },
+    "filter": {
+      "is": {
+        "required": "Falta el filtro requerido '{{filterName}}' en la petición"
+      }
+    }
+  }
+}

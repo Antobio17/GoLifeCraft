@@ -1,0 +1,8 @@
+services:
+  Shared\Tenant\Tenant\Application\Subscriber\TenantResolverSubscriber:
+    class: Shared\Tenant\Tenant\Application\Subscriber\TenantResolverSubscriber
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $tokenStorage: '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+    tags:
+      - { name: kernel.event_subscriber }

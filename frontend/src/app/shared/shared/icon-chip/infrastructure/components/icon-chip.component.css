@@ -1,0 +1,65 @@
+.icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+/* ============================================================
+   SIZES
+   ============================================================ */
+
+.icon-chip--size-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.icon-chip--size-md {
+  width: 40px;
+  height: 40px;
+}
+
+.icon-chip--size-lg {
+  width: 52px;
+  height: 52px;
+}
+
+/* ============================================================
+   TONES
+   ============================================================ */
+
+.icon-chip--sky {
+  background: var(--chip-sky-bg);
+  color: var(--chip-sky-color);
+}
+
+.icon-chip--teal {
+  background: var(--chip-teal-bg);
+  color: var(--chip-teal-color);
+}
+
+.icon-chip--emerald {
+  background: var(--chip-emerald-bg);
+  color: var(--chip-emerald-color);
+}
+
+.icon-chip--amber {
+  background: var(--chip-amber-bg);
+  color: var(--chip-amber-color);
+}
+
+.icon-chip--rose {
+  background: var(--chip-rose-bg);
+  color: var(--chip-rose-color);
+}
+
+.icon-chip--indigo {
+  background: var(--chip-indigo-bg);
+  color: var(--chip-indigo-color);
+}
+
+.icon-chip--slate {
+  background: var(--chip-slate-bg);
+  color: var(--chip-slate-color);
+}

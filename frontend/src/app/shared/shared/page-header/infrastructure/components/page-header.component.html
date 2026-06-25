@@ -1,0 +1,116 @@
+<header class="ph-header">
+  <div class="ph-row">
+    @if (icon) {
+      <div class="ph-icon" [attr.data-tone]="iconTone" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <use
+            [attr.href]="'assets/icons/golifecraft/sprite.svg#i-' + icon"
+          ></use>
+        </svg>
+      </div>
+    }
+    <div class="ph-content">
+      @if (eyebrow) {
+        <div class="ph-eyebrow">
+          <span class="ph-eyebrow__bullet" aria-hidden="true"></span>
+          {{ eyebrow }}
+        </div>
+      }
+      <div class="ph-title-row">
+        <h1 class="ph-title">{{ title }}</h1>
+        <ng-content select="[slot='statusBadge']"></ng-content>
+        @if (meta.length) {
+          <ul class="ph-meta">
+            @for (item of meta; track item.label) {
+              <li class="ph-meta__item">
+                @if (item.icon) {
+                  <svg
+                    class="ph-meta__icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <use
+                      [attr.href]="
+                        'assets/icons/golifecraft/sprite.svg#i-' + item.icon
+                      "
+                    ></use>
+                  </svg>
+                }
+                <span>{{ item.label }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+      @if (subtitle) {
+        <button
+          type="button"
+          class="ph-subtitle"
+          [class.ph-subtitle--expanded]="subtitleExpanded"
+          (click)="toggleSubtitle()"
+          [attr.aria-expanded]="subtitleExpanded"
+        >
+          <span class="ph-subtitle__text" [innerHTML]="subtitle"></span>
+          <svg
+            class="ph-subtitle__chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <use
+              href="assets/icons/golifecraft/sprite.svg#i-chevron-down"
+            ></use>
+          </svg>
+        </button>
+      }
+      @if (stats.length) {
+        <ul class="ph-stats">
+          @for (stat of stats; track stat.label) {
+            <li class="ph-stat" [attr.data-tone]="stat.tone ?? iconTone">
+              @if (stat.icon) {
+                <svg
+                  class="ph-stat__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <use
+                    [attr.href]="
+                      'assets/icons/golifecraft/sprite.svg#i-' + stat.icon
+                    "
+                  ></use>
+                </svg>
+              }
+              <span class="ph-stat__value">{{ stat.value }}</span>
+              <span class="ph-stat__label">{{ stat.label }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+    <div class="ph-actions">
+      <ng-content select="[slot='actions']"></ng-content>
+    </div>
+  </div>
+</header>

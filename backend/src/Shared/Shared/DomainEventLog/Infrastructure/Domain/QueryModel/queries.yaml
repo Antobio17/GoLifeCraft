@@ -1,0 +1,12 @@
+services:
+  Shared\Shared\DomainEventLog\Domain\QueryModel\GetDomainEventLogsNeedleDataQuery:
+    class: Shared\Shared\DomainEventLog\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDomainEventLogsNeedleDataQuery
+    arguments:
+      $tenantConnection: '@doctrine.dbal.reader_tenant_connection'
+      $masterConnection: '@doctrine.dbal.master_connection'
+
+  Shared\Shared\DomainEventLog\Domain\QueryModel\GetDomainEventLogNeedleDataQuery:
+    class: Shared\Shared\DomainEventLog\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDomainEventLogNeedleDataQuery
+    arguments:
+      $tenantConnection: '@doctrine.dbal.reader_tenant_connection'
+      $masterConnection: '@doctrine.dbal.master_connection'

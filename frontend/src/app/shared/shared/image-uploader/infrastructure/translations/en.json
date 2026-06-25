@@ -1,0 +1,17 @@
+{
+  "imageUploader": {
+    "label": "Image",
+    "placeholder": "Upload image",
+    "hint": "PNG/JPG, up to 100MB",
+    "modalTitle": "Image",
+    "closeButtonAriaLabel": "Close",
+    "viewImageTitle": "View image",
+    "imageLoaded": "Image attached",
+    "changeImageTitle": "Change image",
+    "deleteImageTitle": "Delete image",
+    "errors": {
+      "invalidFile": "Please select a valid image file",
+      "maxSize": "Image cannot exceed {{maxSize}}MB"
+    }
+  }
+}

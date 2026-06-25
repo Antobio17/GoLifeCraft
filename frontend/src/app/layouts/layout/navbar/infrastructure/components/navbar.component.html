@@ -1,0 +1,430 @@
+<nav class="navbar" [class.nav-loading]="!translationsReady">
+  <div class="navbar-bar">
+    <div class="navbar-inner">
+      <a routerLink="/me" class="navbar-logo" (click)="closeAll()">
+        <img src="assets/img/logo.png" alt="GoLifeCraft" class="logo-img" />
+      </a>
+
+      <span class="navbar-divider"></span>
+
+      <nav class="primary-nav">
+        @if (canAccessAuthorization()) {
+          <div class="nav-item">
+            <button
+              class="nav-link"
+              [class.is-current]="currentSection() === 'authorization'"
+              [class.is-open]="openMenu() === 'authorization'"
+              (click)="toggleMenu('authorization', $event)"
+              [attr.aria-expanded]="openMenu() === 'authorization'"
+            >
+              <span>{{ "navbar.authorization" | t }}</span>
+              <svg
+                class="nav-link-caret"
+                aria-hidden="true"
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use
+                  href="assets/icons/golifecraft/sprite.svg#i-chevron-down"
+                ></use>
+              </svg>
+            </button>
+            @if (currentSection() === "authorization") {
+              <span class="nav-underline"></span>
+            }
+          </div>
+        }
+
+        @if (canAccessReports()) {
+          <div class="nav-item">
+            <button
+              class="nav-link"
+              [class.is-current]="currentSection() === 'reports'"
+              [class.is-open]="openMenu() === 'reports'"
+              (click)="toggleMenu('reports', $event)"
+              [attr.aria-expanded]="openMenu() === 'reports'"
+            >
+              <span>{{ "navbar.reports" | t }}</span>
+              <svg
+                class="nav-link-caret"
+                aria-hidden="true"
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use
+                  href="assets/icons/golifecraft/sprite.svg#i-chevron-down"
+                ></use>
+              </svg>
+            </button>
+            @if (currentSection() === "reports") {
+              <span class="nav-underline"></span>
+            }
+          </div>
+        }
+      </nav>
+
+      <div class="navbar-actions">
+        <app-theme-toggle />
+
+        <a
+          routerLink="/me"
+          class="avatar-pill"
+          (click)="closeAll()"
+          [title]="username()"
+        >
+          <span class="avatar">{{ initials() }}</span>
+        </a>
+
+        <button
+          class="logout-btn"
+          type="button"
+          (click)="onLogout()"
+          [title]="'navbar.logout' | t"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-logout"></use>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mobile-top-actions">
+        <app-theme-toggle />
+        <button
+          class="mobile-menu-btn"
+          type="button"
+          [class.open]="mobileMenuOpen()"
+          (click)="toggleMobileMenu()"
+          [attr.aria-label]="
+            (mobileMenuOpen() ? 'navbar.closeMenu' : 'navbar.openMenu') | t
+          "
+        >
+          @if (mobileMenuOpen()) {
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <use href="assets/icons/golifecraft/sprite.svg#i-x"></use>
+            </svg>
+          } @else {
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <use href="assets/icons/golifecraft/sprite.svg#i-menu"></use>
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (openMenu() === "authorization") {
+    <div class="mega-panel">
+      <div class="mega-panel-inner mega-cols-2">
+        <div class="mega-hero" data-tone="authorization">
+          <div class="mega-hero-overlay"></div>
+          <div class="mega-hero-head">
+            <span class="mega-hero-icon">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use
+                  href="assets/icons/golifecraft/sprite.svg#i-authorization"
+                ></use>
+              </svg>
+            </span>
+            <div>
+              <div class="mega-hero-label">{{ "navbar.moduleLabel" | t }}</div>
+              <div class="mega-hero-title">
+                {{ "navbar.authorizationModule" | t }}
+              </div>
+            </div>
+          </div>
+          <p class="mega-hero-desc">{{ "navbar.authorizationDesc" | t }}</p>
+        </div>
+        <div class="mega-functions">
+          <div class="mega-section-label">{{ "navbar.functions" | t }}</div>
+          <div class="mega-functions-grid">
+            <a
+              routerLink="/users"
+              routerLinkActive="is-active"
+              class="mega-item"
+              (click)="closeAll()"
+            >
+              <span class="mega-item-icon">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="assets/icons/golifecraft/sprite.svg#i-users"></use>
+                </svg>
+              </span>
+              <div>
+                <div class="mega-item-title">{{ "navbar.users" | t }}</div>
+                <div class="mega-item-desc">{{ "navbar.usersDesc" | t }}</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (openMenu() === "reports") {
+    <div class="mega-panel">
+      <div class="mega-panel-inner mega-cols-2">
+        <div class="mega-hero" data-tone="reports">
+          <div class="mega-hero-overlay"></div>
+          <div class="mega-hero-head">
+            <span class="mega-hero-icon">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use href="assets/icons/golifecraft/sprite.svg#i-reports"></use>
+              </svg>
+            </span>
+            <div>
+              <div class="mega-hero-label">{{ "navbar.moduleLabel" | t }}</div>
+              <div class="mega-hero-title">
+                {{ "navbar.reportsModule" | t }}
+              </div>
+            </div>
+          </div>
+          <p class="mega-hero-desc">{{ "navbar.reportsDesc" | t }}</p>
+        </div>
+        <div class="mega-functions">
+          <div class="mega-section-label">{{ "navbar.functions" | t }}</div>
+          <div class="mega-functions-grid">
+            <a
+              routerLink="/reports/logs"
+              routerLinkActive="is-active"
+              class="mega-item"
+              (click)="closeAll()"
+            >
+              <span class="mega-item-icon">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="assets/icons/golifecraft/sprite.svg#i-log"></use>
+                </svg>
+              </span>
+              <div>
+                <div class="mega-item-title">{{ "navbar.logs" | t }}</div>
+                <div class="mega-item-desc">{{ "navbar.logsDesc" | t }}</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (mobileMenuOpen()) {
+    <button
+      class="drawer-overlay"
+      type="button"
+      [attr.aria-label]="'navbar.closeMenu' | t"
+      (click)="closeMobileMenu()"
+    ></button>
+    <aside class="drawer" role="dialog" aria-modal="true">
+      <header class="drawer-header">
+        <div class="drawer-brand">
+          <img src="assets/img/logo.png" alt="GoLifeCraft" class="logo-img" />
+        </div>
+        <button
+          class="drawer-close"
+          type="button"
+          (click)="closeMobileMenu()"
+          [attr.aria-label]="'navbar.closeMenu' | t"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-x"></use>
+          </svg>
+        </button>
+      </header>
+
+      <nav class="drawer-nav">
+        @if (canAccessAuthorization()) {
+          <section
+            class="drawer-section"
+            [class.is-current]="currentSection() === 'authorization'"
+          >
+            <div class="drawer-section-head">
+              <span class="drawer-section-label">{{
+                "navbar.authorization" | t
+              }}</span>
+            </div>
+            <a
+              routerLink="/users"
+              routerLinkActive="is-active"
+              class="drawer-item"
+              (click)="closeMobileMenu()"
+            >
+              <span class="drawer-item-icon">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="assets/icons/golifecraft/sprite.svg#i-users"></use>
+                </svg>
+              </span>
+              <span class="drawer-item-label">{{ "navbar.users" | t }}</span>
+            </a>
+          </section>
+        }
+
+        @if (canAccessReports()) {
+          <section
+            class="drawer-section"
+            [class.is-current]="currentSection() === 'reports'"
+          >
+            <div class="drawer-section-head">
+              <span class="drawer-section-label">{{
+                "navbar.reports" | t
+              }}</span>
+            </div>
+            <a
+              routerLink="/reports/logs"
+              routerLinkActive="is-active"
+              class="drawer-item"
+              (click)="closeMobileMenu()"
+            >
+              <span class="drawer-item-icon">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <use href="assets/icons/golifecraft/sprite.svg#i-log"></use>
+                </svg>
+              </span>
+              <span class="drawer-item-label">{{ "navbar.logs" | t }}</span>
+            </a>
+          </section>
+        }
+      </nav>
+
+      <footer class="drawer-footer">
+        <a routerLink="/me" class="drawer-user" (click)="closeMobileMenu()">
+          <span class="avatar avatar-md">{{ initials() }}</span>
+          <div class="drawer-user-text">
+            @if (username()) {
+              <span class="drawer-user-name">{{ username() }}</span>
+            }
+            <span class="drawer-user-meta">{{ "navbar.account" | t }}</span>
+          </div>
+          <svg
+            class="drawer-user-chev"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <use
+              href="assets/icons/golifecraft/sprite.svg#i-chevron-right"
+            ></use>
+          </svg>
+        </a>
+        <button class="drawer-logout" type="button" (click)="onLogout()">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-logout"></use>
+          </svg>
+          {{ "navbar.logout" | t }}
+        </button>
+      </footer>
+    </aside>
+  }
+</nav>

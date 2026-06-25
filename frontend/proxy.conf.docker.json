@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "http://nginx:80",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

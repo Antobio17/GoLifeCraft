@@ -1,0 +1,6 @@
+services:
+    Authorization\User\User\Domain\Model\UserRepository:
+        class: Authorization\User\User\Infrastructure\Domain\Model\Doctrine\DoctrineUserRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+          - Authorization\User\User\Domain\Model\User

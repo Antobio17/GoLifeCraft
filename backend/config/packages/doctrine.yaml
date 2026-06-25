@@ -1,0 +1,42 @@
+doctrine:
+    dbal:
+        default_connection: master
+        connections:
+            master:
+                driver: pdo_mysql
+                host: '%env(resolve:DATABASE_MASTER_HOST)%'
+                port: '%env(resolve:DATABASE_MASTER_PORT)%'
+                dbname: '%env(resolve:DATABASE_MASTER_NAME)%'
+                user: '%env(resolve:DATABASE_MASTER_USER)%'
+                password: '%env(resolve:DATABASE_MASTER_PASSWORD)%'
+                charset: UTF8
+                server_version: '%env(resolve:DATABASE_MASTER_SERVER_VERSION)%'
+            writer_tenant:
+                url: '%env(resolve:DATABASE_WRITER_TENANT_TEMPLATE_URL)%'
+            reader_tenant:
+                url: '%env(resolve:DATABASE_READER_TENANT_TEMPLATE_URL)%'
+    orm:
+        default_entity_manager: master_manager
+        auto_generate_proxy_classes: '%kernel.debug%'
+        entity_managers:
+            master_manager:
+                connection: master
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                mappings:
+                    User: 
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Authorization/User/User/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Authorization\User\User\Domain\Model'
+                        alias: user
+            tenant_manager:
+                connection: writer_tenant
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: false
+                mappings:
+                    DomainEventLog:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Shared/Shared/DomainEventLog/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Shared\Shared\DomainEventLog\Domain\Model'
+                        alias: domain_event_log

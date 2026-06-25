@@ -1,0 +1,75 @@
+<div class="pagination">
+  <div class="pagination-info-left">
+    <span class="showing-text">
+      {{ "pagination.showing" | t }} {{ showingStart }} - {{ showingEnd }}
+      {{ "pagination.of" | t }} {{ totalItems }}
+      {{ itemsName | t }}
+    </span>
+    <div class="page-size-selector">
+      <label for="pageSize">{{ "pagination.show" | t }}</label>
+      <select
+        id="pageSize"
+        (change)="onPageSizeChange(+$any($event.target).value)"
+        class="page-size-select"
+      >
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size" [selected]="size === pageSize">
+            {{ size }}
+          </option>
+        }
+      </select>
+      <span class="per-page-text">{{ "pagination.perPage" | t }}</span>
+    </div>
+  </div>
+  <div class="pagination-controls">
+    <app-button
+      variant="secondary"
+      size="sm"
+      [disabled]="currentPage === 1"
+      (clicked)="previousPage()"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <use href="assets/icons/golifecraft/sprite.svg#i-chevron-left"></use>
+      </svg>
+      <span class="pagination-btn-text">{{ "pagination.previous" | t }}</span>
+    </app-button>
+
+    <div class="pagination-pages">
+      <span class="page-number">{{ currentPage }}</span>
+      <span class="page-separator">/</span>
+      <span class="page-total">{{ totalPages || 1 }}</span>
+    </div>
+
+    <app-button
+      variant="secondary"
+      size="sm"
+      [disabled]="currentPage === totalPages || totalPages === 0"
+      (clicked)="nextPage()"
+    >
+      <span class="pagination-btn-text">{{ "pagination.next" | t }}</span>
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <use href="assets/icons/golifecraft/sprite.svg#i-chevron-right"></use>
+      </svg>
+    </app-button>
+  </div>
+</div>

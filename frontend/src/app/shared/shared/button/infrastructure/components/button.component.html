@@ -1,0 +1,13 @@
+<button
+  [type]="type"
+  [class]="buttonClasses"
+  [disabled]="isDisabled"
+  (click)="handleClick()"
+>
+  <span class="btn-content">
+    @if (loading) {
+      <span class="btn-spinner"></span>
+    }
+    <ng-content></ng-content>
+  </span>
+</button>

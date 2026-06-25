@@ -1,0 +1,121 @@
+.avatar-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--color-neutral-white);
+  flex-shrink: 0;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   SIZES
+   ============================================================ */
+
+.avatar-chip--sm {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  font-size: 11px;
+}
+
+.avatar-chip--md {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-lg);
+  font-size: 12px;
+}
+
+.avatar-chip--lg {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xl);
+  font-size: 20px;
+}
+
+/* ============================================================
+   VARIANT — GRADIENT (default)
+   ============================================================ */
+
+.avatar-chip--gradient {
+  background: var(--gradient-brand);
+}
+
+/* ============================================================
+   VARIANT — SOLID colors
+   ============================================================ */
+
+.avatar-chip--solid {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.avatar-chip--solid.avatar-chip--sky {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.avatar-chip--solid.avatar-chip--emerald {
+  background: var(--color-success-50);
+  color: var(--color-success-600);
+}
+
+.avatar-chip--solid.avatar-chip--amber {
+  background: var(--color-warning-50);
+  color: var(--color-warning-600);
+}
+
+.avatar-chip--solid.avatar-chip--rose {
+  background: var(--color-error-50);
+  color: var(--color-error-600);
+}
+
+.avatar-chip--solid.avatar-chip--indigo {
+  background: var(--color-accent-100);
+  color: var(--color-accent-600);
+}
+
+.avatar-chip--solid.avatar-chip--slate {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+
+[data-theme="dark"] .avatar-chip--solid.avatar-chip--sky {
+  background: rgba(14, 165, 233, 0.2);
+  color: var(--color-primary-400);
+}
+
+[data-theme="dark"] .avatar-chip--solid.avatar-chip--emerald {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--color-success-500);
+}
+
+[data-theme="dark"] .avatar-chip--solid.avatar-chip--amber {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--color-warning-500);
+}
+
+[data-theme="dark"] .avatar-chip--solid.avatar-chip--rose {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--color-error-400);
+}
+
+[data-theme="dark"] .avatar-chip--solid.avatar-chip--indigo {
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--color-accent-400);
+}
+
+[data-theme="dark"] .avatar-chip--solid.avatar-chip--slate {
+  background: rgba(100, 116, 139, 0.2);
+  color: var(--color-neutral-400);
+}
+
+[data-theme="dark"] .avatar-chip--solid {
+  background: rgba(14, 165, 233, 0.2);
+  color: var(--color-primary-400);
+}

@@ -1,0 +1,7 @@
+services:
+  Shared\Tool\Tool\Domain\Service\DateTimeGenerator:
+    class: Shared\Tool\Tool\Domain\Service\DateTimeGenerator
+
+  Shared\Tool\Tool\Domain\Service\ImageStorageService:
+    class: Shared\Tool\Tool\Infrastructure\Domain\Service\Linux\LinuxImageStorageService
+

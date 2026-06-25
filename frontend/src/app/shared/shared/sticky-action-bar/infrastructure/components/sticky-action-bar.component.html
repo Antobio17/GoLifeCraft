@@ -1,0 +1,19 @@
+<aside
+  class="sticky-action-bar"
+  role="region"
+  aria-label="Acciones del formulario"
+  [class.sticky-action-bar--mobile]="breakpoint === 'mobile'"
+  [class.sticky-action-bar--tablet]="breakpoint === 'tablet'"
+  [class.sticky-action-bar--hidden]="!visible"
+  [class.sticky-action-bar--end]="align === 'end'"
+>
+  <div class="sticky-action-bar__inner">
+    <div class="sticky-action-bar__start">
+      <ng-content select="[slot=start]" />
+    </div>
+    <div class="sticky-action-bar__spacer"></div>
+    <div class="sticky-action-bar__end">
+      <ng-content select="[slot=end]" />
+    </div>
+  </div>
+</aside>

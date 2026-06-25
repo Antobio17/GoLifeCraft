@@ -1,0 +1,4 @@
+services:
+  Authorization\User\User\Infrastructure\Domain\Listener\JWT\JWTCreatedListener:
+    tags:
+      - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }

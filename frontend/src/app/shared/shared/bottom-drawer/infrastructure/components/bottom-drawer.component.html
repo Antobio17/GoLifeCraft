@@ -1,0 +1,48 @@
+@if (open) {
+  <div
+    class="drawer-backdrop"
+    (click)="close()"
+    (keydown.enter)="close()"
+    (keydown.space)="close()"
+    tabindex="0"
+    role="button"
+    aria-label="Cerrar panel"
+  ></div>
+  <div
+    class="bottom-drawer"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="title ?? 'drawer'"
+    [style.max-height]="maxHeight"
+    [class.bottom-drawer--snap]="snapToContent"
+  >
+    @if (title) {
+      <header class="bottom-drawer__header">
+        <h3 class="bottom-drawer__title">{{ title }}</h3>
+        <button
+          class="bottom-drawer__close"
+          (click)="close()"
+          aria-label="Cerrar"
+          type="button"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-x"></use>
+          </svg>
+        </button>
+      </header>
+    }
+    <div class="bottom-drawer__body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+}

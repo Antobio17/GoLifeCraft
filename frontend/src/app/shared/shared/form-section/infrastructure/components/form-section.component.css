@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+.form-section {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-2xl);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--spacing-6);
+  height: 100%;
+}
+
+.form-section--compact {
+  padding-bottom: var(--spacing-4);
+}
+
+.form-section:hover {
+  border-color: var(--color-border-default);
+  box-shadow: var(--shadow-card-hover);
+  background: var(--color-surface-raised);
+  transform: none;
+}
+
+.section-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--color-border-default);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+}
+
+.section-header.collapsible {
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition-base);
+}
+
+.section-header.collapsible:hover {
+  background: var(--color-surface-hover);
+}
+
+.section-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3-5);
+  letter-spacing: -0.3px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-title svg {
+  color: var(--color-interactive-hover);
+  flex-shrink: 0;
+}
+
+.collapse-icon {
+  color: var(--color-text-disabled);
+  transition:
+    transform var(--transition-base),
+    color var(--transition-base);
+  flex-shrink: 0;
+}
+
+.section-header.collapsible:hover .collapse-icon {
+  color: var(--color-interactive-hover);
+}
+
+.collapse-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+.section-content {
+  padding: 24px 24px 0;
+  flex: 1;
+}
+
+.form-section--headerless {
+  padding-bottom: 0;
+}
+
+.form-section--headerless .section-content {
+  padding: 24px;
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    padding: var(--spacing-4) var(--spacing-5);
+  }
+
+  .section-content {
+    padding: var(--spacing-5);
+  }
+
+  .section-title {
+    font-size: var(--font-size-md);
+  }
+}

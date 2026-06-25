@@ -1,0 +1,130 @@
+<div class="form-group" [class.is-focused]="isFocused">
+  @if (finalConfig.label) {
+    <label class="form-label">
+      {{ finalConfig.label }}
+      @if (finalConfig.required) {
+        <span class="required-indicator">*</span>
+      }
+      @if (tooltip) {
+        <span
+          class="tooltip-wrapper"
+          (mouseenter)="showTooltip($event)"
+          (mouseleave)="hideTooltip()"
+          (touchstart)="showTooltipTouch($event)"
+          (touchend)="hideTooltip()"
+          (touchcancel)="hideTooltip()"
+        >
+          <svg
+            class="tooltip-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-alert"></use>
+          </svg>
+        </span>
+      }
+    </label>
+  }
+
+  <div class="input-wrapper" [class.password-field]="isPassword">
+    <input
+      [type]="effectiveType"
+      [value]="value"
+      [placeholder]="finalConfig.placeholder || ''"
+      [readonly]="finalConfig.readonly || false"
+      [disabled]="disabled"
+      [required]="finalConfig.required || false"
+      [attr.maxlength]="finalConfig.maxLength"
+      [attr.minlength]="finalConfig.minLength"
+      [attr.pattern]="finalConfig.pattern"
+      [attr.min]="finalConfig.min"
+      [attr.max]="finalConfig.max"
+      [attr.step]="finalConfig.step"
+      [attr.autocomplete]="finalConfig.autocomplete"
+      (input)="onInputChange($event)"
+      (blur)="onBlur()"
+      (focus)="onFocus()"
+      class="form-control"
+      [class.is-invalid]="isInvalid"
+    />
+
+    @if (isPassword) {
+      <button
+        type="button"
+        class="password-toggle"
+        [class.active]="showPassword"
+        (click)="toggleShowPassword()"
+        tabindex="-1"
+        [attr.aria-label]="
+          (showPassword
+            ? 'formInput.togglePassword.hide'
+            : 'formInput.togglePassword.show'
+          ) | t
+        "
+      >
+        @if (!showPassword) {
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-eye"></use>
+          </svg>
+        }
+        @if (showPassword) {
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-eye-off"></use>
+          </svg>
+        }
+      </button>
+    }
+  </div>
+
+  @if (hint && !isInvalid) {
+    <small class="form-hint">
+      {{ hint }}
+    </small>
+  }
+
+  @if (isInvalid) {
+    <div class="error-message">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <use href="assets/icons/golifecraft/sprite.svg#i-alert"></use>
+      </svg>
+      <small>{{ firstError || "" | t: firstErrorParams }}</small>
+    </div>
+  }
+</div>

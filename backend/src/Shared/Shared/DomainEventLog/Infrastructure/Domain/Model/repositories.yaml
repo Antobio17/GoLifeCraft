@@ -1,0 +1,6 @@
+services:
+  Shared\Shared\DomainEventLog\Domain\Model\DomainEventLogRepository:
+    class: Shared\Shared\DomainEventLog\Infrastructure\Domain\Model\Doctrine\DoctrineDomainEventLogRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Shared\Shared\DomainEventLog\Domain\Model\DomainEventLog

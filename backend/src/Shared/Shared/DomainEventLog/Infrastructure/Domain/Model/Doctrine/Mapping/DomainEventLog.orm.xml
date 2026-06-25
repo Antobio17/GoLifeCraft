@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="Shared\Shared\DomainEventLog\Infrastructure\Domain\Model\Doctrine\DoctrineDomainEventLogRepository" name="Shared\Shared\DomainEventLog\Domain\Model\DomainEventLog" table="domain_event_log">
+    <indexes>
+      <index name="idx_del_occurred_on" columns="occurred_on"/>
+      <index name="idx_del_event_name_occurred_on" columns="event_name,occurred_on"/>
+    </indexes>
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="eventName" type="string" column="event_name" length="255"/>
+    <field name="aggregateId" type="string" column="aggregate_id" length="36"/>
+    <field name="payload" type="text" column="payload"/>
+    <field name="occurredOn" type="datetime" column="occurred_on"/>
+    <field name="recordedAt" type="datetime" column="recorded_at"/>
+  </entity>
+</doctrine-mapping>

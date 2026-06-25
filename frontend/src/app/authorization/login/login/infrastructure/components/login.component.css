@@ -1,0 +1,502 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
+
+:host {
+  --brand: #50afce;
+  --brand-light: #6cc1dc;
+  --brand-dark: #3d8eaf;
+  --brand-deep: #2d7a99;
+  --brand-deeper: #1e5f7a;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+
+  --color-interactive-default: #50afce;
+  --color-interactive-hover: #6cc1dc;
+  --color-interactive-active: #3d8eaf;
+  --color-interactive-focus-ring: rgba(80, 175, 206, 0.2);
+  --shadow-brand-sm: 0 0 20px rgba(80, 175, 206, 0.18);
+  --shadow-brand-md: 0 0 40px rgba(80, 175, 206, 0.12);
+  --shadow-brand-lg: 0 0 30px rgba(80, 175, 206, 0.4);
+  --shadow-brand-float: 0 4px 20px rgba(80, 175, 206, 0.3);
+  --shadow-focus-primary: 0 0 0 3px rgba(80, 175, 206, 0.25);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  font-family:
+    "DM Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/* ─── Brand panel ─── */
+
+.brand-panel {
+  position: relative;
+  flex: 0 0 520px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+  border-right: 1px solid var(--gray-200);
+}
+
+.brand-logo-banner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 44px 56px 0;
+}
+
+.brand-logo-banner img {
+  width: 200px;
+  height: 96px;
+  display: block;
+  border-radius: 5px;
+  box-shadow: 0 12px 28px rgba(80, 175, 206, 0.28);
+}
+
+.brand-content {
+  position: relative;
+  flex: 1;
+  padding: 36px 56px 32px;
+  z-index: 1;
+}
+
+.brand-deco {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(2px);
+}
+
+.brand-deco--1 {
+  top: -8%;
+  right: -18%;
+  width: 60%;
+  padding-top: 60%;
+  background: radial-gradient(
+    circle,
+    rgba(80, 175, 206, 0.14) 0%,
+    rgba(80, 175, 206, 0) 70%
+  );
+}
+
+.brand-deco--2 {
+  bottom: -20%;
+  left: -25%;
+  width: 70%;
+  padding-top: 70%;
+  background: radial-gradient(
+    circle,
+    rgba(80, 175, 206, 0.1) 0%,
+    rgba(80, 175, 206, 0) 70%
+  );
+}
+
+.brand-logo-platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brand-deep);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 14px 6px 10px;
+  background: rgba(80, 175, 206, 0.08);
+  border: 1px solid rgba(80, 175, 206, 0.18);
+  border-radius: 999px;
+  margin-bottom: 28px;
+}
+
+.platform-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 3px rgba(80, 175, 206, 0.18);
+}
+
+.brand-tagline-block {
+  margin-bottom: 36px;
+}
+
+.brand-tagline-title {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+  margin-bottom: 14px;
+}
+
+.brand-tagline-title::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--brand);
+  border-radius: 2px;
+  margin-top: 18px;
+}
+
+.brand-tagline-desc {
+  font-size: 15px;
+  color: var(--gray-500);
+  line-height: 1.6;
+  max-width: 380px;
+}
+
+.brand-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--gray-800);
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--brand);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(80, 175, 206, 0.3);
+}
+
+.brand-footer {
+  position: relative;
+  z-index: 1;
+  font-size: 11.5px;
+  color: var(--gray-400);
+  padding: 18px 56px 24px;
+  border-top: 1px solid var(--gray-200);
+  letter-spacing: 0.03em;
+}
+
+/* ─── Form panel ─── */
+
+.form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 48px;
+}
+
+.form-content {
+  width: 100%;
+  max-width: 380px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Form header ─── */
+
+.form-header {
+  margin-bottom: 24px;
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+
+.form-subtitle {
+  font-size: 13px;
+  color: var(--gray-400);
+  line-height: 1.5;
+}
+
+/* ─── Login form ─── */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--gray-500);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* ─── Input wrapper ─── */
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 9px;
+  background: #ffffff;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
+}
+
+.input-wrapper:hover {
+  border-color: #cbd5e1;
+}
+
+.input-wrapper:focus-within {
+  border-color: var(--brand);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(80, 175, 206, 0.18);
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  color: var(--gray-400);
+  pointer-events: none;
+}
+
+.form-control {
+  flex: 1;
+  padding: 11px 12px 11px 38px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+  color: var(--gray-800);
+  font-family: "DM Sans", sans-serif;
+  width: 100%;
+  border-radius: 9px;
+}
+
+.form-control::placeholder {
+  color: var(--gray-400);
+}
+
+.form-control:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  box-shadow: 0 0 0 1000px #fff inset;
+  -webkit-text-fill-color: var(--gray-800);
+  caret-color: var(--gray-800);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ─── Password wrapper & toggle ─── */
+
+.password-wrapper .form-control {
+  padding-right: 42px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--gray-400);
+  transition: color 0.15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.password-toggle:hover,
+.password-toggle.active {
+  color: var(--brand);
+}
+
+/* ─── Forgot password ─── */
+
+.form-forgot {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 20px;
+}
+
+.forgot-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand);
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* ─── Tablet responsive ─── */
+
+@media (max-width: 1024px) {
+  .brand-panel {
+    flex: 0 0 420px;
+  }
+
+  .brand-logo-banner {
+    padding: 36px 40px 0;
+  }
+
+  .brand-logo-banner img {
+    width: 184px;
+    height: 84px;
+    border-radius: 5px;
+  }
+
+  .brand-content {
+    padding: 28px 40px 28px;
+  }
+
+  .brand-footer {
+    padding: 16px 40px 22px;
+  }
+
+  .brand-tagline-title {
+    font-size: 28px;
+  }
+
+  .form-panel {
+    padding: 40px 32px;
+  }
+}
+
+/* ─── Mobile responsive ─── */
+
+@media (max-width: 700px) {
+  .login-page {
+    flex-direction: column;
+    background: #ffffff;
+  }
+
+  .brand-panel {
+    flex: 0 0 auto;
+    border-right: none;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .brand-logo-banner {
+    padding: 28px 24px 0;
+  }
+
+  .brand-logo-banner img {
+    width: 164px;
+    height: 64px;
+    border-radius: 5px;
+  }
+
+  .brand-content {
+    padding: 18px 24px 16px;
+  }
+
+  .brand-logo-platform {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    margin-bottom: 18px;
+  }
+
+  .brand-tagline-block {
+    margin-bottom: 0;
+  }
+
+  .brand-tagline-title {
+    font-size: 22px;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+
+  .brand-tagline-title::after {
+    margin-top: 12px;
+    width: 36px;
+  }
+
+  .brand-tagline-desc,
+  .brand-features,
+  .brand-footer {
+    display: none;
+  }
+
+  .form-panel {
+    flex: 1;
+    padding: 0 20px 24px;
+    align-items: flex-start;
+    margin-top: -8px;
+  }
+
+  .form-content {
+    width: 100%;
+    max-width: 100%;
+    background: #ffffff;
+    border-radius: 0;
+    padding: 28px 24px 30px;
+    box-shadow: none;
+  }
+
+  .form-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 400px) {
+  .form-content {
+    padding: 24px 20px;
+  }
+}

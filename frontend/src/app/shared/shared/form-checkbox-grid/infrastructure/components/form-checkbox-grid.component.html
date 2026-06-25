@@ -1,0 +1,59 @@
+<div class="form-checkbox-grid-group">
+  @if (finalLabel) {
+    <label class="form-label">
+      {{ finalLabel }}
+      @if (isRequired) {
+        <span class="required-indicator">*</span>
+      }
+    </label>
+  }
+
+  @if (finalHint) {
+    <p class="form-hint">{{ finalHint }}</p>
+  }
+
+  <div class="checkbox-grid" [class.disabled]="isDisabled">
+    @for (option of options; track option) {
+      <label
+        class="checkbox-option"
+        [class.selected]="isSelected(option.value)"
+        [class.disabled]="isDisabled || option.disabled"
+      >
+        <input
+          type="checkbox"
+          [checked]="isSelected(option.value)"
+          (change)="toggle(option.value)"
+          [disabled]="isDisabled || option.disabled"
+          class="checkbox-input"
+        />
+        <span class="checkbox-custom"></span>
+        <span class="checkbox-label-text">
+          {{
+            optionLabelPrefix
+              ? (optionLabelPrefix + option.value | t)
+              : option.label
+          }}
+        </span>
+      </label>
+    }
+  </div>
+
+  @if (isInvalid && firstError) {
+    <div class="error-message">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <use href="assets/icons/golifecraft/sprite.svg#i-alert"></use>
+      </svg>
+      <small>{{ firstError | t }}</small>
+    </div>
+  }
+</div>

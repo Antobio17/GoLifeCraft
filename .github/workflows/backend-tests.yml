@@ -1,0 +1,71 @@
+name: Backend - Run Tests and Linting
+
+on:
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'backend/src/**'
+      - 'backend/tests/**'
+      - 'backend/composer.json'
+      - 'backend/composer.lock'
+      - 'backend/phpunit.dist.xml'
+      - 'backend/.php-cs-fixer.dist.php'
+      - 'backend/config/**'
+      - 'backend/bin/**'
+      - '.github/workflows/backend-tests.yml'
+  push:
+    branches:
+      - master
+    paths:
+      - 'backend/src/**'
+      - 'backend/tests/**'
+      - 'backend/composer.json'
+      - 'backend/composer.lock'
+      - 'backend/phpunit.dist.xml'
+      - 'backend/.php-cs-fixer.dist.php'
+      - 'backend/config/**'
+      - 'backend/bin/**'
+      - '.github/workflows/backend-tests.yml'
+
+jobs:
+  tests:
+    name: Run Tests and Linting
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: ctype, iconv
+          coverage: none
+
+      - name: Validate composer.json
+        working-directory: backend
+        run: composer validate --no-check-publish
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        working-directory: backend
+        run: composer install --no-interaction --no-plugins --no-scripts --prefer-dist
+
+      - name: Run PHP CS Fixer
+        working-directory: backend
+        run: ./vendor/bin/php-cs-fixer fix src/ --dry-run --verbose
+
+      - name: Run PHPUnit tests
+        working-directory: backend
+        run: ./bin/phpunit

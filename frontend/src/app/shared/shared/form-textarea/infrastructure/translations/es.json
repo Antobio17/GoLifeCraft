@@ -1,0 +1,10 @@
+{
+  "formTextarea": {
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "minlength": "Debe tener al menos {{requiredLength}} caracteres",
+      "maxlength": "No puede superar {{requiredLength}} caracteres",
+      "invalid": "Valor inválido"
+    }
+  }
+}

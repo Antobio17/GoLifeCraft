@@ -1,0 +1,11 @@
+services:
+  Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher:
+    class: Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\DoctrineTenantConnectionSwitcher
+    arguments:
+      - '@doctrine.dbal.writer_tenant_connection'
+      - '@doctrine.dbal.reader_tenant_connection'
+      - '%env(DATABASE_TENANT_WRITER_HOST)%'
+      - '%env(DATABASE_TENANT_READER_HOST)%'
+      - '%env(DATABASE_TENANT_PORT)%'
+      - '%env(DATABASE_TENANT_USER)%'
+      - '%env(DATABASE_TENANT_PASSWORD)%'

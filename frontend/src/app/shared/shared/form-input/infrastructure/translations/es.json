@@ -1,0 +1,20 @@
+{
+  "formInput": {
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "email": "Debe introducir un email válido",
+      "pattern": "El formato introducido no es válido",
+      "minlength": "Debe tener al menos {{requiredLength}} caracteres",
+      "maxlength": "No puede superar {{requiredLength}} caracteres",
+      "min": "El valor mínimo es {{min}}",
+      "max": "El valor máximo es {{max}}",
+      "invalid": "Valor inválido",
+      "weakPassword": "La contraseña es demasiado débil",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    },
+    "togglePassword": {
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña"
+    }
+  }
+}

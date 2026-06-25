@@ -1,0 +1,6 @@
+{
+  "floatingSaveButton": {
+    "label": "Save",
+    "loadingLabel": "Saving..."
+  }
+}

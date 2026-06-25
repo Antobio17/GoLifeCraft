@@ -1,0 +1,51 @@
+<div class="form-group" [class.is-focused]="isFocused">
+  @if (finalConfig.label) {
+    <label class="form-label">
+      {{ finalConfig.label }}
+      @if (finalConfig.required) {
+        <span class="required-indicator">*</span>
+      }
+    </label>
+  }
+
+  <textarea
+    [value]="value"
+    [placeholder]="finalConfig.placeholder || ''"
+    [readonly]="finalConfig.readonly || false"
+    [disabled]="disabled"
+    [required]="finalConfig.required || false"
+    [rows]="finalConfig.rows || 3"
+    [attr.maxlength]="finalConfig.maxLength"
+    [attr.minlength]="finalConfig.minLength"
+    (input)="onTextareaChange($event)"
+    (blur)="onBlur()"
+    (focus)="onFocus()"
+    class="form-control"
+    [class.is-invalid]="isInvalid"
+  ></textarea>
+
+  @if (hint && !isInvalid) {
+    <small class="form-hint">
+      {{ hint }}
+    </small>
+  }
+
+  @if (isInvalid) {
+    <div class="error-message">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <use href="assets/icons/golifecraft/sprite.svg#i-alert"></use>
+      </svg>
+      <small>{{ firstError || "" | t }}</small>
+    </div>
+  }
+</div>

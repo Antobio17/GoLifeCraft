@@ -1,0 +1,84 @@
+@if (visible && toast) {
+  @if (isSuccess()) {
+    <div class="toast-container toast-success" [@toastSlide]>
+      <div class="toast-success-icon">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <use href="assets/icons/golifecraft/sprite.svg#i-check"></use>
+        </svg>
+      </div>
+      <button
+        class="toast-close"
+        type="button"
+        [attr.aria-label]="'floatingToast.close' | t"
+        (click)="dismiss()"
+      >
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <use href="assets/icons/golifecraft/sprite.svg#i-x"></use>
+        </svg>
+      </button>
+    </div>
+  } @else {
+    <div class="toast-container toast-error" [@toastSlide]>
+      <div class="toast-error-icon">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <use href="assets/icons/golifecraft/sprite.svg#i-alert"></use>
+        </svg>
+      </div>
+      <div class="toast-error-body">
+        <div class="toast-title">
+          {{ toast.keyTranslation | t: asParams(toast.details) }}
+        </div>
+      </div>
+      <button
+        class="toast-close"
+        type="button"
+        [attr.aria-label]="'floatingToast.close' | t"
+        (click)="dismiss()"
+      >
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <use href="assets/icons/golifecraft/sprite.svg#i-x"></use>
+        </svg>
+      </button>
+    </div>
+  }
+}

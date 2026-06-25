@@ -1,0 +1,41 @@
+monolog:
+    channels:
+        - deprecation
+
+when@dev:
+    monolog:
+        handlers:
+            main:
+                type: rotating_file
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                max_files: 7
+                channels: ["!event"]
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine", "!console"]
+
+when@test:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                channels: ["!event"]
+
+when@prod:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: "php://stderr"
+                level: info
+                channels: ["!event"]
+                formatter: monolog.formatter.json
+            deprecation:
+                type: stream
+                path: "php://stderr"
+                channels: [deprecation]
+                formatter: monolog.formatter.json

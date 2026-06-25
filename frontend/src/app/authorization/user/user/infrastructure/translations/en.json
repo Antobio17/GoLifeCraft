@@ -1,0 +1,314 @@
+{
+  "getUsers": {
+    "title": "Users",
+    "subtitle": "System user management",
+    "newUser": "New User",
+    "filter": {
+      "username": "Username",
+      "usernamePlaceholder": "Search by username...",
+      "email": "Email",
+      "emailPlaceholder": "Search by email...",
+      "role": "Role"
+    },
+    "table": {
+      "name": "User",
+      "username": "Username",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "createdAt": "Creation Date",
+      "createdLabel": "Created",
+      "active": "Active",
+      "inactive": "Inactive",
+      "emptyTitle": "No users found",
+      "emptyMessage": "No users have been registered in the system yet"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "deleteModal": {
+      "title": "Confirm deletion",
+      "body": "Are you sure you want to delete the user",
+      "warning": "This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "deleting": "Deleting..."
+    },
+    "toast": {
+      "deleteSuccess": "User deleted successfully"
+    }
+  },
+  "user": {
+    "breadcrumb": {
+      "list": "Users",
+      "create": "Create User",
+      "edit": "Edit User"
+    },
+    "authentication": {
+      "failed": "Incorrect username or password",
+      "too_many_attempts": "Too many login attempts. Please try again later."
+    },
+    "create": {
+      "success": "User created successfully"
+    },
+    "update": {
+      "success": "User updated successfully"
+    },
+    "delete": {
+      "success": "User deleted successfully"
+    },
+    "roles": {
+      "god": "God",
+      "user": "User",
+      "unknown": "Unknown",
+      "userFull": "User",
+      "godDescription": "Full access without restrictions",
+      "userDescription": "Standard user"
+    },
+    "with": {
+      "username": {
+        "already": {
+          "exists": "A user with that username already exists"
+        }
+      }
+    },
+    "does": {
+      "not": {
+        "exist": "The user does not exist"
+      }
+    },
+    "not": {
+      "found": "User not found"
+    },
+    "not_found": "User not found",
+    "password": {
+      "weak": "Password does not meet the minimum security requirements"
+    },
+    "current_password": {
+      "invalid": "Current password is invalid"
+    },
+    "invalid": {
+      "language_code": "Invalid language code. Allowed: es-ES, en-US"
+    }
+  },
+  "creating": {
+    "user": {
+      "does": {
+        "not": {
+          "exist": "The creating user does not exist"
+        }
+      }
+    }
+  },
+  "cannot": {
+    "create": {
+      "user": {
+        "with": {
+          "god": {
+            "role": "Cannot create a user with the God role"
+          }
+        }
+      }
+    },
+    "update": {
+      "user": {
+        "to": {
+          "god": {
+            "role": "Cannot assign the God role to a user"
+          }
+        }
+      }
+    },
+    "change": {
+      "self": {
+        "role": "You cannot change your own role"
+      }
+    }
+  },
+  "role": {
+    "scope": {
+      "provided": {
+        "is": {
+          "not": {
+            "valid": "The provided role scope is not valid"
+          }
+        }
+      }
+    },
+    "does": {
+      "not": {
+        "exist": "The specified role does not exist"
+      }
+    }
+  },
+  "centerId": {
+    "required": {
+      "for": {
+        "center": {
+          "role": "A center is required for this role"
+        }
+      }
+    }
+  },
+  "new": {
+    "role": {
+      "is": {
+        "not": {
+          "available": "The new role is not available"
+        }
+      }
+    }
+  },
+  "invalid": {
+    "language": {
+      "code": "Invalid language code"
+    }
+  },
+  "profile": {
+    "breadcrumb": "My Profile",
+    "title": "My Profile",
+    "description": "Manage your personal information and access password",
+    "loading": "Loading profile...",
+    "saving": "Saving...",
+    "save": "Save profile",
+    "changingPassword": "Changing...",
+    "changePassword": "Change password",
+    "section": {
+      "personal": "Personal information",
+      "security": "Security"
+    },
+    "field": {
+      "username": "Username",
+      "role": "Role",
+      "center": "Center",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "lastname": "Last name",
+      "lastnamePlaceholder": "Your last name",
+      "email": "Email",
+      "language": "Language",
+      "languagePlaceholder": "Select a language",
+      "timezoneCode": "Timezone",
+      "timezonePlaceholder": "Select a timezone",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password"
+    },
+    "update": {
+      "success": "Profile updated successfully",
+      "error": "Error updating profile"
+    },
+    "timezone": {
+      "nextLoginWarning": "The timezone change will take effect on your next login."
+    },
+    "password": {
+      "change": {
+        "success": "Password changed successfully",
+        "error": "Error changing password"
+      },
+      "weak": "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number and a special character"
+    }
+  },
+  "createUser": {
+    "title": "Create New User",
+    "description": "Fill in the details to register a new user in the system",
+    "saving": "Creating...",
+    "save": "Create User",
+    "cancel": "Cancel",
+    "section": {
+      "personal": "Personal data",
+      "security": "Password",
+      "role": "Role and permissions",
+      "permissions": "User permissions"
+    },
+    "field": {
+      "username": "Username",
+      "email": "Email",
+      "name": "First name",
+      "lastname": "Last name",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "role": "User role",
+      "language": "Language",
+      "languagePlaceholder": "Select a language",
+      "timezoneCode": "Timezone",
+      "timezonePlaceholder": "Select a timezone"
+    },
+    "permissions": {
+      "canCreateFolder": "Create folders",
+      "canDeleteFolder": "Delete folders",
+      "canUploadFile": "Upload files",
+      "canDeleteFile": "Delete files",
+      "canSignFile": "Sign PDFs",
+      "canRollbackSign": "Restore signed PDFs",
+      "canCreateFolderDescription": "Allows creating new folders within the assigned center.",
+      "canDeleteFolderDescription": "Allows deleting existing folders and all their content.",
+      "canUploadFileDescription": "Allows uploading new files to the system.",
+      "canDeleteFileDescription": "Allows permanently removing files from the system.",
+      "canSignFileDescription": "Allows digitally signing PDF documents.",
+      "canRollbackSignDescription": "Allows reverting the digital signature of a previously signed PDF.",
+      "canAccessUsers": "View users section",
+      "canAccessUsersDescription": "Allows accessing the Authorization section and managing system users."
+    },
+    "validation": {
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordMismatch": "Passwords do not match"
+    }
+  },
+  "updateUser": {
+    "title": "Edit User",
+    "description": "Modify the user's access data and role",
+    "loading": "Loading user data...",
+    "saving": "Saving...",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "section": {
+      "personal": "Personal data",
+      "status": "Status and role",
+      "permissions": "User permissions"
+    },
+    "field": {
+      "username": "Username",
+      "email": "Email",
+      "name": "First name",
+      "lastname": "Last name",
+      "isActive": "User status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "role": "User role",
+      "language": "Language",
+      "languagePlaceholder": "Select a language",
+      "timezoneCode": "Timezone",
+      "timezonePlaceholder": "Select a timezone"
+    },
+    "permissions": {
+      "canCreateFolder": "Create folders",
+      "canDeleteFolder": "Delete folders",
+      "canUploadFile": "Upload files",
+      "canDeleteFile": "Delete files",
+      "canSignFile": "Sign PDFs",
+      "canRollbackSign": "Restore signed PDFs",
+      "canCreateFolderDescription": "Allows creating new folders within the assigned center.",
+      "canDeleteFolderDescription": "Allows deleting existing folders and all their content.",
+      "canUploadFileDescription": "Allows uploading new files to the system.",
+      "canDeleteFileDescription": "Allows permanently removing files from the system.",
+      "canSignFileDescription": "Allows digitally signing PDF documents.",
+      "canRollbackSignDescription": "Allows reverting the digital signature of a previously signed PDF.",
+      "canAccessUsers": "View users section",
+      "canAccessUsersDescription": "Allows accessing the Authorization section and managing system users."
+    }
+  },
+  "access": {
+    "denied": {
+      "to": {
+        "change": {
+          "role": "You do not have permission to change the role"
+        }
+      },
+      "super_admin_or_self_required": "Access denied. Super admin or self required"
+    }
+  }
+}

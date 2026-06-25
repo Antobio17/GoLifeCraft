@@ -1,0 +1,861 @@
+/*
+ * Breakpoints oficiales del proyecto:
+ *   Mobile  : ≤ 639px              → @media (max-width: 639px)
+ *   Tablet  : 640px – 1023px       → @media (min-width: 640px) and (max-width: 1023px)
+ *   Desktop : ≥ 1024px             → @media (min-width: 1024px)
+ *
+ * Breakpoints (media queries literales):
+ * @media (max-width: 639px)                             — móvil
+ * @media (min-width: 640px) and (max-width: 1023px)    — tablet
+ * @media (min-width: 1024px)                            — desktop
+ */
+
+/* === iOS OVERSCROLL FIX === */
+html,
+body {
+  background-color: #f4f7fb;
+}
+
+body {
+  font-family: var(--font-family-base);
+  letter-spacing: -0.01em;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+/* === SCROLLBARS ===
+   Sutiles y adaptadas al tema. Track transparente y thumb redondeado que
+   solo se "ve" al pasar el ratón. Firefox usa scrollbar-width/-color;
+   WebKit/Blink usa los pseudo-elementos ::-webkit-scrollbar. */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* === DESIGN SYSTEM TOKENS === */
+:root {
+  /* ============================================================
+     1. COLOR — PRIMITIVES
+     ============================================================ */
+
+  /* Primary — Sky Blue */
+  --color-primary-50: #f0f9ff;
+  --color-primary-100: #e0f2fe;
+  --color-primary-200: #bae6fd;
+  --color-primary-300: #7dd3fc;
+  --color-primary-400: #38bdf8;
+  --color-primary-500: #0ea5e9;
+  --color-primary-600: #0284c7;
+  --color-primary-700: #0369a1;
+  --color-primary-800: #075985;
+  --color-primary-900: #0c4a6e;
+
+  /* Neutral — Slate */
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-white: #ffffff;
+
+  /* Error — Red */
+  --color-error-50: #fef2f2;
+  --color-error-200: #fecaca;
+  --color-error-400: #f87171;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+
+  /* Success — Emerald */
+  --color-success-50: #ecfdf5;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+
+  /* Warning — Amber */
+  --color-warning-50: #fffbeb;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+
+  /* Accent — Indigo (cloud/files context only) */
+  --color-accent-100: #e0e7ff;
+  --color-accent-400: #818cf8;
+  --color-accent-500: #6366f1;
+  --color-accent-600: #4f46e5;
+
+  /* Teal — accent for gradients and secondary brand */
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+
+  /* ============================================================
+     2. COLOR — SEMANTIC
+     ============================================================ */
+
+  /* Teal semantic */
+  --color-accent-brand: var(--color-teal-600);
+  --color-accent-brand-soft: var(--color-teal-100);
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-primary-600),
+    var(--color-teal-600)
+  );
+
+  /* Interactive */
+  --color-interactive-default: var(--color-primary-600);
+  --color-interactive-hover: var(--color-primary-400);
+  --color-interactive-active: var(--color-primary-700);
+  --color-interactive-focus-ring: rgba(56, 189, 248, 0.15);
+
+  /* Text */
+  --color-text-primary: var(--color-neutral-900);
+  --color-text-body: var(--color-neutral-700);
+  --color-text-secondary: var(--color-neutral-500);
+  --color-text-disabled: var(--color-neutral-400);
+  --color-text-inverse: var(--color-neutral-white);
+  --color-text-brand: var(--color-primary-600);
+
+  /* Borders */
+  --color-border-default: var(--color-neutral-200);
+  --color-border-strong: var(--color-neutral-300);
+  --color-border-brand: rgba(56, 189, 248, 0.4);
+  --color-border-focus: var(--color-primary-600);
+  --color-border-error: var(--color-error-500);
+  --color-border-input: rgba(203, 213, 225, 0.6);
+  --color-border-glass: rgba(226, 232, 240, 0.6);
+
+  /* Surfaces */
+  --color-surface-page: #f4f7fb;
+  --color-surface-default: rgba(255, 255, 255, 0.8);
+  --color-surface-hover: rgba(255, 255, 255, 0.95);
+  --color-surface-glass: rgba(255, 255, 255, 0.6);
+  --color-surface-glass-hover: rgba(255, 255, 255, 0.75);
+  --color-surface-raised: var(--color-neutral-white);
+  --color-surface-nav: var(--color-neutral-white);
+  --color-surface-subtle: var(--color-neutral-50);
+  --color-surface-inset: var(--color-neutral-100);
+  --color-surface-brand-subtle: var(--color-primary-50);
+
+  /* Hairline borders (softer than --color-border-default — for header dividers). */
+  --color-border-hairline: #eef2f7;
+  --color-text-meta: var(--color-neutral-400);
+
+  /* Scrollbar — sutil, se mimetiza con la superficie */
+  --scrollbar-size: 10px;
+  --scrollbar-thumb: rgba(100, 116, 139, 0.35);
+  --scrollbar-thumb-hover: rgba(100, 116, 139, 0.55);
+  --scrollbar-track: transparent;
+
+  /* Icon chip tones */
+  --chip-sky-bg: var(--color-primary-100);
+  --chip-sky-color: var(--color-primary-700);
+  --chip-teal-bg: var(--color-teal-100);
+  --chip-teal-color: var(--color-teal-700);
+  --chip-emerald-bg: var(--color-success-50);
+  --chip-emerald-color: var(--color-success-600);
+  --chip-amber-bg: var(--color-warning-50);
+  --chip-amber-color: var(--color-warning-600);
+  --chip-rose-bg: var(--color-error-50);
+  --chip-rose-color: var(--color-error-600);
+  --chip-indigo-bg: var(--color-accent-100);
+  --chip-indigo-color: var(--color-accent-600);
+  --chip-slate-bg: var(--color-neutral-100);
+  --chip-slate-color: var(--color-neutral-600);
+
+  /* Skeleton */
+  --color-skeleton-base: var(--color-neutral-100);
+  --color-skeleton-highlight: var(--color-neutral-200);
+  --color-skeleton-header-bg: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.06) 0%,
+    rgba(56, 189, 248, 0.03) 100%
+  );
+  --color-skeleton-header-border: rgba(14, 165, 233, 0.2);
+
+  /* Feedback */
+  --color-feedback-error-bg: var(--color-error-50);
+  --color-feedback-error-border: var(--color-error-500);
+  --color-feedback-error-text: var(--color-error-600);
+  --btn-remove-hover-bg: var(--color-error-200);
+  --btn-remove-hover-border: var(--color-error-400);
+  --btn-remove-hover-color: var(--color-error-500);
+  --color-feedback-success-bg: var(--color-primary-50);
+  --color-feedback-success-border: var(--color-primary-500);
+  --color-feedback-warning-bg: var(--color-warning-50);
+  --color-feedback-warning-border: var(--color-warning-500);
+
+  /* Badge backgrounds */
+  --color-badge-success-bg: rgba(16, 185, 129, 0.12);
+  --color-badge-error-bg: rgba(239, 68, 68, 0.12);
+  --color-badge-warning-bg: rgba(245, 158, 11, 0.12);
+  --color-badge-info-bg: rgba(56, 189, 248, 0.12);
+  --color-badge-draft-bg: rgba(107, 114, 128, 0.12);
+  --color-badge-orange-bg: rgba(249, 115, 22, 0.12);
+  --color-badge-draft-text: var(--color-neutral-500);
+  --color-badge-orange-text: #ea580c;
+
+  /* Calendar status tags */
+  --calendar-status-pending-bg: #f1f5f9;
+  --calendar-status-pending-color: #64748b;
+  --calendar-status-rescheduled-bg: #fef3c7;
+  --calendar-status-rescheduled-color: #d97706;
+  --calendar-status-cancelled-bg: #f1f5f9;
+  --calendar-status-cancelled-color: #94a3b8;
+  --calendar-status-completed-bg: #dcfce7;
+  --calendar-status-completed-color: #16a34a;
+  --calendar-status-out-of-range-bg: #fee2e2;
+  --calendar-status-out-of-range-color: #dc2626;
+  --calendar-status-overdue-bg: #fee2e2;
+  --calendar-status-overdue-color: #dc2626;
+
+  /* Role badges */
+  --color-role-god-bg: rgba(139, 92, 246, 0.1);
+  --color-role-god-text: #7c3aed;
+  --color-role-god-border: rgba(139, 92, 246, 0.3);
+  --color-role-central-admin-bg: rgba(239, 68, 68, 0.1);
+  --color-role-central-admin-text: var(--color-error-600);
+  --color-role-central-admin-border: rgba(239, 68, 68, 0.3);
+  --color-role-admin-bg: rgba(245, 158, 11, 0.1);
+  --color-role-admin-text: var(--color-warning-600);
+  --color-role-admin-border: rgba(245, 158, 11, 0.3);
+  --color-role-manager-bg: rgba(16, 185, 129, 0.1);
+  --color-role-manager-text: var(--color-success-600);
+  --color-role-manager-border: rgba(16, 185, 129, 0.3);
+  --color-role-technical-bg: rgba(56, 189, 248, 0.1);
+  --color-role-technical-text: var(--color-primary-600);
+  --color-role-technical-border: rgba(56, 189, 248, 0.3);
+
+  /* Status — installation states */
+  --color-status-pending-bg: rgba(245, 158, 11, 0.1);
+  --color-status-pending-text: var(--color-warning-600);
+  --color-status-done-bg: rgba(16, 185, 129, 0.1);
+  --color-status-done-text: var(--color-success-600);
+  --color-status-error-bg: rgba(239, 68, 68, 0.1);
+  --color-status-error-text: var(--color-error-600);
+
+  /* Role card selected states */
+  --color-role-god-selected-bg: rgba(239, 68, 68, 0.15);
+  --color-role-god-selected-border: var(--color-error-500);
+  --color-role-god-selected-text: #fca5a5;
+  --color-role-god-selected-icon-bg: rgba(239, 68, 68, 0.2);
+  --color-role-central-admin-selected-bg: rgba(245, 158, 11, 0.15);
+  --color-role-central-admin-selected-border: var(--color-warning-500);
+  --color-role-central-admin-selected-text: #fcd34d;
+  --color-role-central-admin-selected-icon-bg: rgba(245, 158, 11, 0.2);
+  --color-role-admin-selected-bg: rgba(56, 189, 248, 0.15);
+  --color-role-admin-selected-border: var(--color-primary-600);
+  --color-role-admin-selected-text: var(--color-primary-700);
+  --color-role-admin-selected-icon-bg: rgba(56, 189, 248, 0.2);
+  --color-role-manager-selected-bg: rgba(0, 175, 102, 0.15);
+  --color-role-manager-selected-border: #00af66;
+  --color-role-manager-selected-text: #008652;
+  --color-role-manager-selected-icon-bg: rgba(0, 175, 102, 0.2);
+  --color-role-technical-selected-bg: rgba(134, 14, 204, 0.15);
+  --color-role-technical-selected-border: #930abd;
+  --color-role-technical-selected-text: #7e0a94;
+  --color-role-technical-selected-icon-bg: rgba(147, 10, 189, 0.2);
+
+  /* Auth surface */
+  --color-surface-auth-gradient: linear-gradient(
+    160deg,
+    #f0f9ff 0%,
+    #e0f2fe 60%,
+    #bae6fd 100%
+  );
+
+  /* Section nav */
+  --color-nav-section-border: rgba(56, 189, 248, 0.15);
+  --color-nav-section-hover-bg: rgba(240, 249, 255, 0.9);
+  --color-nav-section-active-bg: rgba(224, 242, 254, 0.9);
+  --color-nav-section-active-border: rgba(2, 132, 199, 0.4);
+  --color-nav-section-active-shadow: 0 4px 20px rgba(2, 132, 199, 0.2);
+  --color-nav-section-completed-bg: rgba(240, 253, 244, 0.8);
+  --color-nav-section-completed-border: rgba(34, 197, 94, 0.2);
+  --color-nav-section-connector: rgba(2, 132, 199, 0.4);
+  --color-nav-section-connector-end: rgba(2, 132, 199, 0.5);
+  --color-nav-section-connector-hover: rgba(2, 132, 199, 0.7);
+  --color-nav-section-icon-hover-bg: rgba(56, 189, 248, 0.15);
+  --color-nav-section-icon-active-bg: rgba(2, 132, 199, 0.15);
+  --color-nav-section-icon-completed-bg: rgba(34, 197, 94, 0.12);
+
+  /* ============================================================
+     3. TYPOGRAPHY
+     ============================================================ */
+
+  --font-family-base: "DM Sans", "Poppins", system-ui, sans-serif;
+
+  /* Sizes */
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-label-sm: 13px; /* form label mobile / hint text */
+  --font-size-label: 13.5px; /* form label desktop */
+  --font-size-base: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 17px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 36px;
+
+  /* Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line heights */
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.4;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+
+  /* ============================================================
+     4. SPACING
+     ============================================================ */
+
+  --spacing-px: 1px;
+  --spacing-0-5: 0.125rem; /*  2px */
+  --spacing-1: 0.25rem; /*  4px */
+  --spacing-1-5: 0.375rem; /*  6px */
+  --spacing-2: 0.5rem; /*  8px */
+  --spacing-3: 0.75rem; /* 12px */
+  --spacing-3-5: 0.875rem; /* 14px */
+  --space-3-5: 14px; /* alias — gap between cards tablet */
+  --spacing-4: 1rem; /* 16px */
+  --spacing-5: 1.25rem; /* 20px */
+  --spacing-6: 1.5rem; /* 24px */
+  --spacing-7: 1.75rem; /* 28px */
+  --spacing-8: 2rem; /* 32px */
+  --spacing-10: 2.5rem; /* 40px */
+  --spacing-12: 3rem; /* 48px */
+  --spacing-16: 4rem; /* 64px */
+
+  /* Semantic — Forms */
+  --spacing-input-x: var(--spacing-3-5); /* 14px */
+  --spacing-input-y: 10px; /* textarea vertical padding */
+  --spacing-input-height: 44px;
+  --spacing-input-height-sm: 36px;
+  --spacing-label-gap: var(--spacing-2); /*  8px */
+  --spacing-field-gap: var(--spacing-4); /* 16px */
+  --spacing-section-header-x: var(--spacing-6); /* 24px */
+  --spacing-section-header-y: 18px;
+  --spacing-section-body-x: var(--spacing-6); /* 24px */
+  --spacing-section-body-y: var(--spacing-5); /* 20px */
+
+  /* Semantic — Buttons */
+  --spacing-btn-x: 18px;
+  --spacing-btn-y: 9px;
+  --spacing-btn-sm-x: 12px;
+  --spacing-btn-sm-y: 5px;
+  --spacing-btn-gap: var(--spacing-2); /*  8px */
+
+  /* Semantic — Layout */
+  --spacing-page-x: var(--spacing-8); /* 32px */
+  --spacing-page-y: var(--spacing-6); /* 24px */
+  --spacing-page-x-mobile: var(--spacing-5); /* 20px */
+  --spacing-navbar-height: 57px;
+  --spacing-section-gap: var(--spacing-6); /* 24px */
+  --spacing-floating-bottom: var(--spacing-8); /* 32px */
+  --spacing-floating-right: var(--spacing-8); /* 32px */
+
+  /* ============================================================
+     5. BORDER RADIUS
+     ============================================================ */
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px; /* inputs, chips */
+  --radius-xl: 12px;
+  --radius-2xl: 14px; /* cards */
+  --radius-3xl: 16px;
+  --radius-4xl: 18px;
+  --radius-pill: 9999px;
+  --radius-full: 9999px; /* alias */
+
+  /* ============================================================
+     6. BORDERS (WIDTHS)
+     ============================================================ */
+
+  --border-width-default: 1px;
+  --border-width-input: 2px;
+  --border-width-input-sm: 1.5px;
+  --border-width-accent: 3px;
+  --border-width-toast: 4px;
+
+  /* ============================================================
+     7. SHADOWS
+     ============================================================ */
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg:
+    0 8px 24px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+  /* Brand shadows */
+  --shadow-brand-sm: 0 0 20px rgba(56, 189, 248, 0.15);
+  --shadow-brand-md: 0 0 40px rgba(56, 189, 248, 0.1);
+  --shadow-brand-lg: 0 0 30px rgba(56, 189, 248, 0.4);
+  --shadow-brand-float: 0 4px 20px rgba(56, 189, 248, 0.3);
+  --shadow-section-hover:
+    0 4px 12px rgba(56, 189, 248, 0.08), 0 2px 4px rgba(56, 189, 248, 0.04);
+
+  /* Card shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover:
+    0 2px 6px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.06);
+  --shadow-primary-sm: 0 2px 8px rgb(from var(--color-primary-600) r g b / 0.35);
+
+  /* Focus rings */
+  --shadow-focus-primary: 0 0 0 4px rgba(56, 189, 248, 0.1);
+  --shadow-focus-error: 0 0 0 4px rgba(239, 68, 68, 0.08);
+  --shadow-error-glow: 0 0 20px rgba(239, 68, 68, 0.15);
+
+  /* ============================================================
+     8. BLUR / GLASSMORPHISM
+     ============================================================ */
+
+  --blur-sm: blur(10px);
+  --blur-md: blur(12px);
+  --blur-lg: blur(20px);
+
+  /* ============================================================
+     9. TRANSITIONS
+     ============================================================ */
+
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s ease;
+  --transition-ripple: 0.6s ease;
+
+  /* ============================================================
+     10. LAYOUT
+     ============================================================ */
+
+  --layout-list-max-width: 1400px;
+  --layout-form-max-width: 960px;
+  --layout-list-gap: 32px;
+  --layout-form-gap: 24px;
+}
+
+/* === DARK MODE OVERRIDES === */
+[data-theme="dark"],
+[data-theme="dark"] body {
+  background-color: #0d1520;
+}
+
+[data-theme="dark"] {
+  /* Interactive */
+  --color-interactive-default: var(--color-primary-400);
+  --color-interactive-hover: var(--color-primary-300);
+  --color-interactive-active: var(--color-primary-500);
+  --color-interactive-focus-ring: rgba(56, 189, 248, 0.2);
+
+  /* Text */
+  --color-text-primary: var(--color-neutral-50);
+  --color-text-body: var(--color-neutral-200);
+  --color-text-secondary: var(--color-neutral-300);
+  --color-text-disabled: var(--color-neutral-400);
+  --color-text-inverse: var(--color-neutral-900);
+  --color-text-brand: var(--color-primary-400);
+
+  /* Borders */
+  --color-border-default: var(--color-neutral-700);
+  --color-border-strong: var(--color-neutral-600);
+  --color-border-brand: rgba(56, 189, 248, 0.3);
+  --color-border-focus: var(--color-primary-400);
+  --color-border-input: rgba(71, 85, 105, 0.8);
+  --color-border-glass: rgba(51, 65, 85, 0.6);
+
+  /* Surfaces — dark
+     Three tones: page (body) < nav (navbar) < raised (cards/panels). */
+  --color-surface-page: #0d1520;
+  --color-surface-default: rgba(30, 41, 59, 0.8);
+  --color-surface-hover: rgba(30, 41, 59, 0.95);
+  --color-surface-glass: rgba(15, 23, 42, 0.6);
+  --color-surface-glass-hover: rgba(15, 23, 42, 0.75);
+  --color-surface-raised: #131e2e;
+  --color-surface-nav: #0f1b2d;
+  --color-surface-subtle: var(--color-neutral-800);
+  --color-surface-inset: rgb(0 0 0 / 9%);
+  --color-surface-brand-subtle: rgba(2, 132, 199, 0.1);
+
+  --color-border-hairline: #192838;
+  --color-text-meta: #4a6a82;
+
+  /* Scrollbar — dark */
+  --scrollbar-thumb: rgba(148, 163, 184, 0.22);
+  --scrollbar-thumb-hover: rgba(148, 163, 184, 0.4);
+  --scrollbar-track: transparent;
+
+  /* Icon chip tones — dark */
+  --chip-sky-bg: rgba(14, 165, 233, 0.15);
+  --chip-sky-color: var(--color-primary-400);
+  --chip-teal-bg: rgba(20, 184, 166, 0.15);
+  --chip-teal-color: var(--color-teal-400);
+  --chip-emerald-bg: rgba(16, 185, 129, 0.15);
+  --chip-emerald-color: var(--color-success-500);
+  --chip-amber-bg: rgba(245, 158, 11, 0.15);
+  --chip-amber-color: var(--color-warning-500);
+  --chip-rose-bg: rgba(239, 68, 68, 0.15);
+  --chip-rose-color: var(--color-error-400);
+  --chip-indigo-bg: rgba(99, 102, 241, 0.15);
+  --chip-indigo-color: var(--color-accent-400);
+  --chip-slate-bg: rgba(100, 116, 139, 0.15);
+  --chip-slate-color: var(--color-neutral-400);
+
+  /* Feedback */
+  --color-feedback-error-bg: rgba(239, 68, 68, 0.1);
+  --color-feedback-error-border: var(--color-error-400);
+  --color-feedback-error-text: var(--color-error-400);
+  --btn-remove-hover-bg: rgba(220, 38, 38, 0.4);
+  --btn-remove-hover-border: #f87171;
+  --btn-remove-hover-color: #fca5a5;
+  --color-feedback-success-bg: rgba(2, 132, 199, 0.1);
+  --color-feedback-success-border: var(--color-primary-400);
+  --color-feedback-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-feedback-warning-border: var(--color-warning-500);
+
+  /* Badge backgrounds — dark */
+  --color-badge-success-bg: rgba(16, 185, 129, 0.18);
+  --color-badge-error-bg: rgba(239, 68, 68, 0.18);
+  --color-badge-warning-bg: rgba(245, 158, 11, 0.18);
+  --color-badge-info-bg: rgba(56, 189, 248, 0.18);
+  --color-badge-draft-bg: rgba(107, 114, 128, 0.18);
+  --color-badge-orange-bg: rgba(249, 115, 22, 0.18);
+  --color-badge-draft-text: var(--color-neutral-400);
+  --color-badge-orange-text: #fb923c;
+
+  /* Calendar status tags — dark */
+  --calendar-status-pending-bg: rgba(100, 116, 139, 0.18);
+  --calendar-status-pending-color: #94a3b8;
+  --calendar-status-rescheduled-bg: rgba(245, 158, 11, 0.18);
+  --calendar-status-rescheduled-color: #fcd34d;
+  --calendar-status-cancelled-bg: rgba(100, 116, 139, 0.18);
+  --calendar-status-cancelled-color: #94a3b8;
+  --calendar-status-completed-bg: rgba(16, 185, 129, 0.18);
+  --calendar-status-completed-color: #6ee7b7;
+  --calendar-status-out-of-range-bg: rgba(239, 68, 68, 0.18);
+  --calendar-status-out-of-range-color: #fca5a5;
+  --calendar-status-overdue-bg: rgba(239, 68, 68, 0.18);
+  --calendar-status-overdue-color: #fca5a5;
+
+  /* Role badges — dark */
+  --color-role-god-bg: rgba(139, 92, 246, 0.15);
+  --color-role-central-admin-bg: rgba(239, 68, 68, 0.15);
+  --color-role-admin-bg: rgba(245, 158, 11, 0.15);
+  --color-role-manager-bg: rgba(16, 185, 129, 0.15);
+  --color-role-technical-bg: rgba(56, 189, 248, 0.15);
+  --color-role-god-text: #c4b5fd;
+  --color-role-central-admin-text: #fca5a5;
+  --color-role-admin-text: #fcd34d;
+  --color-role-manager-text: #6ee7b7;
+  --color-role-technical-text: var(--color-primary-300);
+  --color-role-god-border: rgba(139, 92, 246, 0.45);
+  --color-role-central-admin-border: rgba(239, 68, 68, 0.45);
+  --color-role-admin-border: rgba(245, 158, 11, 0.45);
+  --color-role-manager-border: rgba(16, 185, 129, 0.45);
+  --color-role-technical-border: rgba(56, 189, 248, 0.45);
+
+  /* Status — installation states dark */
+  --color-status-pending-bg: rgba(245, 158, 11, 0.15);
+  --color-status-done-bg: rgba(16, 185, 129, 0.15);
+  --color-status-error-bg: rgba(239, 68, 68, 0.15);
+
+  /* Role card selected states — dark */
+  --color-role-god-selected-bg: rgba(239, 68, 68, 0.2);
+  --color-role-central-admin-selected-bg: rgba(245, 158, 11, 0.2);
+  --color-role-admin-selected-bg: rgba(56, 189, 248, 0.2);
+  --color-role-manager-selected-bg: rgba(0, 175, 102, 0.2);
+  --color-role-technical-selected-bg: rgba(134, 14, 204, 0.2);
+
+  /* Auth surface — dark */
+  --color-surface-auth-gradient: linear-gradient(
+    160deg,
+    #0c4a6e 0%,
+    #075985 60%,
+    #0369a1 100%
+  );
+
+  /* Skeleton — dark */
+  --color-skeleton-base: var(--color-neutral-800);
+  --color-skeleton-highlight: var(--color-neutral-700);
+  --color-skeleton-header-bg: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.1) 0%,
+    rgba(56, 189, 248, 0.05) 100%
+  );
+  --color-skeleton-header-border: rgba(14, 165, 233, 0.25);
+
+  /* Section nav */
+  --color-nav-section-border: rgba(56, 189, 248, 0.1);
+  --color-nav-section-hover-bg: rgba(30, 41, 59, 0.95);
+  --color-nav-section-active-bg: rgba(2, 132, 199, 0.15);
+  --color-nav-section-active-border: rgba(56, 189, 248, 0.3);
+  --color-nav-section-active-shadow: 0 4px 20px rgba(2, 132, 199, 0.12);
+  --color-nav-section-completed-bg: rgba(34, 197, 94, 0.1);
+  --color-nav-section-completed-border: rgba(34, 197, 94, 0.15);
+  --color-nav-section-connector: rgba(56, 189, 248, 0.3);
+  --color-nav-section-connector-end: rgba(56, 189, 248, 0.4);
+  --color-nav-section-connector-hover: rgba(56, 189, 248, 0.6);
+  --color-nav-section-icon-hover-bg: rgba(56, 189, 248, 0.12);
+  --color-nav-section-icon-active-bg: rgba(2, 132, 199, 0.2);
+  --color-nav-section-icon-completed-bg: rgba(34, 197, 94, 0.15);
+
+  /* Shadows — reducir opacidad en dark */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
+
+  /* Card shadows — dark */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover:
+    0 2px 8px rgba(0, 0, 0, 0.45), 0 8px 20px rgba(0, 0, 0, 0.3);
+  --shadow-primary-sm: 0 4px 14px rgba(14, 165, 233, 0.25);
+}
+
+/* === GLOBAL ANIMATIONS === */
+
+@keyframes pulse-bg {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === UTILITY: FORM GRID === */
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === UTILITY: ICON CHIP TONES === */
+
+.icon-chip--sky {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.icon-chip--teal {
+  background: var(--color-teal-100);
+  color: var(--color-teal-700);
+}
+
+.icon-chip--emerald {
+  background: var(--color-success-50);
+  color: var(--color-success-600);
+}
+
+.icon-chip--amber {
+  background: var(--color-warning-50);
+  color: var(--color-warning-600);
+}
+
+.icon-chip--rose {
+  background: var(--color-error-50);
+  color: var(--color-error-600);
+}
+
+.icon-chip--indigo {
+  background: var(--color-accent-100);
+  color: var(--color-accent-600);
+}
+
+.icon-chip--slate {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+}
+
+[data-theme="dark"] .icon-chip--sky {
+  background: rgba(14, 165, 233, 0.15);
+  color: var(--color-primary-400);
+}
+
+[data-theme="dark"] .icon-chip--teal {
+  background: rgba(20, 184, 166, 0.15);
+  color: var(--color-teal-400);
+}
+
+[data-theme="dark"] .icon-chip--emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-success-500);
+}
+
+[data-theme="dark"] .icon-chip--amber {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-warning-500);
+}
+
+[data-theme="dark"] .icon-chip--rose {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-error-400);
+}
+
+[data-theme="dark"] .icon-chip--indigo {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--color-accent-400);
+}
+
+[data-theme="dark"] .icon-chip--slate {
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--color-neutral-400);
+}
+
+/* ============================================================
+   LAYOUT UTILITIES — form grids, section stacks
+   ============================================================ */
+
+.field-half {
+  flex: 0 0 calc(50% - 7px);
+}
+.field-full {
+  flex: 1 0 100%;
+}
+
+@media (max-width: 1023px) {
+  .field-half {
+    flex: 1 0 100%;
+  }
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+@media (min-width: 1024px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .form-grid-2 {
+    gap: 16px;
+  }
+}
+
+.section-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+@media (max-width: 1023px) {
+  .section-stack {
+    gap: 20px;
+  }
+}
+
+body.drawer-lock {
+  overflow: hidden;
+}
+
+/* === ACCESSIBILITY UTILITIES === */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* === BROWSER AUTOFILL OVERRIDE ===
+   Chrome/Safari/Edge pintan los campos autocompletados con un fondo amarillento
+   o gris oscuro. Forzamos el aspecto normal del input usando el truco del
+   box-shadow inset (no se puede sobreescribir el background directamente). */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-surface-raised) inset !important;
+  box-shadow: 0 0 0 1000px var(--color-surface-raised) inset !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+  caret-color: var(--color-text-primary);
+  transition: background-color 9999s ease-in-out 0s;
+  border-radius: inherit;
+}
+
+input:-webkit-autofill::first-line {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+}

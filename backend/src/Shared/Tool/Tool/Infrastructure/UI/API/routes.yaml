@@ -1,0 +1,4 @@
+csp_report:
+  path: /api/v1/csp-report
+  methods: [POST]
+  controller: Shared\Tool\Tool\Infrastructure\UI\API\Controller\CspReportController

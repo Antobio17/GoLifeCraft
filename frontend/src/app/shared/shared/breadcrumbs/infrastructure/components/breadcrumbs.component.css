@@ -1,0 +1,124 @@
+.breadcrumbs {
+  background: transparent;
+  border-bottom: none;
+  padding: 16px 32px 0;
+  box-shadow: none;
+}
+
+.breadcrumb-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12.5px;
+  letter-spacing: -0.005em;
+  color: var(--color-text-body);
+  font-weight: 500;
+}
+
+.breadcrumb-home {
+  padding: 3px 4px;
+  border-radius: 6px;
+  color: var(--color-text-body);
+}
+
+.breadcrumb-separator {
+  color: var(--color-text-meta);
+  font-size: 13px;
+  opacity: 0.55;
+  user-select: none;
+}
+
+.breadcrumb-item.active {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.home-icon {
+  flex-shrink: 0;
+}
+
+.breadcrumb-item span {
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .breadcrumbs {
+    padding: 14px 22px 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .breadcrumbs {
+    padding: 12px 16px 0;
+  }
+
+  .breadcrumb-item {
+    font-size: 12px;
+  }
+
+  .home-icon {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.breadcrumbs--plain {
+  background: none;
+  border-bottom: none;
+  padding: 0 0 5px;
+  box-shadow: none;
+}
+
+.breadcrumb-item.clickable,
+.breadcrumb-home.clickable {
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb-item.clickable:hover,
+.breadcrumb-home.clickable:hover {
+  color: var(--color-interactive-default);
+}
+
+.breadcrumb-item.active {
+  cursor: default;
+}
+
+@keyframes bc-skeleton-shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.bc-loading .breadcrumb-item span:not(.sr-only) {
+  color: transparent;
+  background: linear-gradient(
+    90deg,
+    var(--color-skeleton-base) 25%,
+    var(--color-skeleton-highlight) 50%,
+    var(--color-skeleton-base) 75%
+  );
+  background-size: 400px 100%;
+  animation: bc-skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+  min-width: 50px;
+  display: inline-block;
+  height: 12px;
+  pointer-events: none;
+}
+
+.bc-loading .breadcrumb-item.active span:not(.sr-only) {
+  min-width: 90px;
+}

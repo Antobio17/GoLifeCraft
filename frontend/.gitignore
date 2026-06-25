@@ -1,0 +1,22 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.angular
+
+# Angular
+dist/
+tmp/
+out-tsc/
+/bazel-out
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# System Files
+Thumbs.db

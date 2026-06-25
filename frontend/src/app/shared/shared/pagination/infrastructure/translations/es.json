@@ -1,0 +1,16 @@
+{
+  "pagination": {
+    "showing": "Mostrando",
+    "of": "de",
+    "show": "Mostrar:",
+    "perPage": "por página",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "items": "elementos",
+    "permissions": "permisos",
+    "users": "usuarios",
+    "centers": "centros",
+    "preventionPlans": "planes",
+    "logs": "logs"
+  }
+}

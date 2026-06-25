@@ -1,0 +1,21 @@
+{
+  "navbar": {
+    "authorization": "Authorization",
+    "authorizationModule": "Authorization",
+    "authorizationDesc": "Team access management, roles and system permissions.",
+    "users": "Users",
+    "usersDesc": "System user management",
+    "reports": "Reports",
+    "reportsModule": "Reports",
+    "reportsDesc": "Audit, activity and platform metrics.",
+    "logs": "Activity log",
+    "logsDesc": "Records and audit",
+    "logout": "Log out",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "darkMode": "Dark mode",
+    "moduleLabel": "Module",
+    "functions": "Functions",
+    "account": "Account"
+  }
+}

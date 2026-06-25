@@ -1,0 +1,43 @@
+<div class="language-selector">
+  <div class="select-wrapper">
+    <svg
+      class="globe-icon"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <use href="assets/icons/golifecraft/sprite.svg#i-language"></use>
+    </svg>
+    <select
+      (change)="onLanguageChange($event)"
+      class="language-select"
+      [title]="'Seleccionar idioma'"
+    >
+      @for (lang of languages; track lang) {
+        <option [value]="lang.code" [selected]="selectedLanguage === lang.code">
+          {{ lang.flag }} {{ lang.label }}
+        </option>
+      }
+    </select>
+    <svg
+      class="chevron-icon"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <use href="assets/icons/golifecraft/sprite.svg#i-chevron-down"></use>
+    </svg>
+  </div>
+</div>

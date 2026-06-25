@@ -1,0 +1,146 @@
+services:
+  gateway:
+    image: ghcr.io/antobio17/golifecraft-gateway-production:latest
+    container_name: golifecraft_gateway
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certbot_certs:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    depends_on:
+      - nginx
+      - frontend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  certbot:
+    image: certbot/certbot
+    container_name: golifecraft_certbot
+    volumes:
+      - certbot_certs:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done;'"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  frontend:
+    image: ghcr.io/antobio17/golifecraft-frontend-production:latest
+    container_name: golifecraft_frontend
+    restart: always
+    ports:
+      - "4200:80"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  nginx:
+    image: ghcr.io/antobio17/golifecraft-nginx-production:latest
+    container_name: golifecraft_nginx
+    restart: always
+    volumes:
+      - /home/deploy/golifecraft/prod/volumes/public_uploads:/var/www/upload/
+    ports:
+      - "8082:80"
+    depends_on:
+      - php
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  php:
+    image: ghcr.io/antobio17/golifecraft-php-production:latest
+    container_name: golifecraft_php
+    restart: always
+    env_file:
+      - .env.local
+    volumes:
+      - /home/deploy/golifecraft/prod/volumes/internal_uploads:/var/www/html/var/uploads
+      - /home/deploy/golifecraft/prod/volumes/jwt_keys:/var/www/html/config/jwt
+    depends_on:
+      - db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+        reservations:
+          cpus: '0.50'
+          memory: 256M
+
+  db:
+    image: mysql:8.0.28
+    container_name: golifecraft_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: ${DATABASE_MASTER_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_MASTER_NAME:-master}
+    ports:
+      - "3309:3306"
+    volumes:
+      - /var/lib/golifecraft-mysql-docker:/var/lib/mysql
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1024M
+        reservations:
+          cpus: '0.50'
+          memory: 512M
+
+volumes:
+  certbot_certs:
+  certbot_www:
+
+networks:
+  default:
+    name: golifecraft_network
+    ipam:
+      config:
+        - subnet: 172.42.0.0/16

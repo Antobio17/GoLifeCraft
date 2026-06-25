@@ -1,0 +1,33 @@
+{
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Access your account to continue",
+    "forgotPassword": "Forgot your password?",
+    "username": {
+      "label": "Username",
+      "placeholder": "Enter your username"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your password"
+    },
+    "submit": "Sign in",
+    "submitting": "Loading...",
+    "togglePassword": {
+      "show": "Show password",
+      "hide": "Hide password"
+    },
+    "brand": {
+      "title": "Maintenance monitoring and control platform",
+      "tagline": "Your secure cloud, always available.",
+      "description": "Manage, sign and share your documents with complete security from any device.",
+      "feature1": "Digital PDF document signing",
+      "feature2": "Secure access with end-to-end encryption",
+      "feature3": "Real-time synchronisation",
+      "copyright": "© 2026 GoLifeCraft. All rights reserved."
+    },
+    "validation": {
+      "required": "Please enter your username and password"
+    }
+  }
+}

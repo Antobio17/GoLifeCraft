@@ -1,0 +1,5 @@
+parameters:
+    container:
+        dumper:
+            inline_factories: true
+            inline_class_loader: true

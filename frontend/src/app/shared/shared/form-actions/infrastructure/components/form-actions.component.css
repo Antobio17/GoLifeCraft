@@ -1,0 +1,21 @@
+.fa-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .fa-actions {
+    flex-direction: column-reverse;
+  }
+
+  .fa-actions app-button {
+    width: 100%;
+  }
+
+  .fa-actions app-button ::ng-deep .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

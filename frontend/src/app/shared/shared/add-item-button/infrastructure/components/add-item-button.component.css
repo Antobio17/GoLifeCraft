@@ -1,0 +1,67 @@
+.add-member-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.btn-add-member {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(
+    135deg,
+    var(--color-badge-info-bg) 0%,
+    rgba(14, 165, 233, 0.05) 100%
+  );
+  color: var(--color-primary-500);
+  border: 2px dashed var(--color-primary-400);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.btn-add-member:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.15) 0%,
+    rgba(14, 165, 233, 0.1) 100%
+  );
+  border-color: var(--color-primary-500);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-brand-float);
+}
+
+:host-context([data-theme="dark"]) .btn-add-member {
+  background: var(--color-badge-info-bg);
+}
+
+:host-context([data-theme="dark"]) .btn-add-member:hover {
+  background: var(--color-badge-info-bg);
+}
+
+.btn-add-member svg {
+  color: var(--color-primary-500);
+}
+
+.btn-add-member--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.add-member-hint {
+  margin: 6px 0 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-disabled);
+}
+
+* {
+  box-sizing: border-box;
+}

@@ -1,0 +1,9 @@
+services:
+  Shared\Tenant\Tenant\Infrastructure\Application\Console\UpdateTenantSchemaCommand:
+    class: Shared\Tenant\Tenant\Infrastructure\Application\Console\UpdateTenantSchemaCommand
+    arguments:
+      $doctrine: '@doctrine'
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
+    tags:
+      - { name: 'console.command' }

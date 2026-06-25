@@ -1,0 +1,353 @@
+@keyframes skt-shimmer {
+  0% {
+    background-position: -700px 0;
+  }
+  100% {
+    background-position: 700px 0;
+  }
+}
+
+.skt-bar,
+.skt-btn,
+.skt-badge {
+  background: linear-gradient(
+    90deg,
+    var(--color-skeleton-base) 25%,
+    var(--color-skeleton-highlight) 50%,
+    var(--color-skeleton-base) 75%
+  );
+  background-size: 700px 100%;
+  animation: skt-shimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* ── Desktop table card ──────────────────── */
+.skt-desktop {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-default);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.skt-table-inner {
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  overflow-x: auto;
+}
+
+.skt-header {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  background: var(--color-surface-inset);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.skt-header-cell {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.skt-header-bar {
+  height: 10px;
+  width: 60%;
+  max-width: 110px;
+  border-radius: 4px;
+}
+
+.skt-header-bar-sm {
+  width: 50%;
+  max-width: 60px;
+}
+
+.skt-right {
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.skt-row {
+  display: grid;
+  gap: 0;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.skt-row:last-child {
+  border-bottom: none;
+}
+
+.skt-cell {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  padding: 14px 20px;
+}
+
+.skt-cell-bar {
+  height: 13px;
+  width: 65%;
+}
+
+.skt-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+/* Staggered row delays */
+.skt-row:nth-child(2) .skt-bar,
+.skt-row:nth-child(2) .skt-btn {
+  animation-delay: 0.07s;
+}
+.skt-row:nth-child(3) .skt-bar,
+.skt-row:nth-child(3) .skt-btn {
+  animation-delay: 0.14s;
+}
+.skt-row:nth-child(4) .skt-bar,
+.skt-row:nth-child(4) .skt-btn {
+  animation-delay: 0.21s;
+}
+.skt-row:nth-child(5) .skt-bar,
+.skt-row:nth-child(5) .skt-btn {
+  animation-delay: 0.28s;
+}
+.skt-row:nth-child(6) .skt-bar,
+.skt-row:nth-child(6) .skt-btn {
+  animation-delay: 0.35s;
+}
+
+/* Variable cell widths for a natural look */
+.skt-cell:nth-child(1) .skt-cell-bar {
+  width: 75%;
+}
+.skt-cell:nth-child(2) .skt-cell-bar {
+  width: 55%;
+}
+.skt-cell:nth-child(3) .skt-cell-bar {
+  width: 80%;
+}
+.skt-cell:nth-child(4) .skt-cell-bar {
+  width: 60%;
+}
+
+/* ── Mobile card list ────────────────────── */
+.skt-mobile {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skt-card {
+  background: var(--color-surface-raised);
+  border-radius: 14px;
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.skt-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 14px 10px;
+}
+
+.skt-card-title {
+  height: 15px;
+  width: 55%;
+}
+
+.skt-badge {
+  height: 22px;
+  width: 78px;
+  border-radius: 20px;
+}
+
+.skt-card-details {
+  padding: 10px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.skt-card-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.skt-card-label {
+  height: 9px;
+  width: 48px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.skt-card-value {
+  height: 11px;
+  width: 64px;
+  border-radius: 4px;
+}
+
+.skt-card-value-sm {
+  width: 44px;
+}
+
+.skt-card-footer {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--color-border-default);
+}
+
+.skt-card-action {
+  flex: 1;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.skt-card-action-icon {
+  width: 40px;
+  flex-shrink: 0;
+  height: 36px;
+  border-radius: 8px;
+}
+
+/* Staggered card delays */
+.skt-card:nth-child(2) .skt-bar {
+  animation-delay: 0.1s;
+}
+.skt-card:nth-child(3) .skt-bar {
+  animation-delay: 0.2s;
+}
+.skt-card:nth-child(4) .skt-bar {
+  animation-delay: 0.3s;
+}
+.skt-card:nth-child(5) .skt-bar {
+  animation-delay: 0.4s;
+}
+
+/* ── Pagination footer ───────────────────── */
+.skt-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  margin-top: 14px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-default);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.skt-pagination-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.skt-pagination-showing {
+  height: 12px;
+  width: 180px;
+}
+
+.skt-pagination-select {
+  height: 26px;
+  width: 130px;
+  border-radius: 7px;
+}
+
+.skt-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skt-pagination-btn {
+  height: 30px;
+  width: 88px;
+  border-radius: 8px;
+}
+
+.skt-pagination-pages {
+  height: 26px;
+  width: 56px;
+  border-radius: 7px;
+}
+
+@media (max-width: 768px) {
+  .skt-pagination {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .skt-pagination-info {
+    justify-content: center;
+  }
+
+  .skt-pagination-controls {
+    justify-content: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .skt-pagination-showing {
+    width: 60%;
+  }
+}
+
+/* ── Inside unified .list-card (desktop/tablet only) ────────────── */
+
+@media (min-width: 769px) {
+  :host-context(.list-card) .skt-desktop {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  :host-context(.list-card) .skt-row {
+    border-bottom-color: var(--color-border-hairline);
+  }
+
+  :host-context(.list-card) .skt-pagination {
+    margin-top: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 1px solid var(--color-border-hairline);
+  }
+}
+
+/* ── Responsive ──────────────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .skt-header-cell {
+    padding: 9px 14px;
+  }
+
+  .skt-cell {
+    padding: 12px 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .skt-desktop {
+    display: none;
+  }
+  .skt-mobile {
+    display: flex;
+  }
+}

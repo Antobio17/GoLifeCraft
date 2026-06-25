@@ -1,0 +1,66 @@
+* {
+  box-sizing: border-box;
+}
+
+.pw-wrapper {
+  min-height: calc(100vh - 72px);
+  background: transparent;
+  font-family: var(--font-family-base);
+  position: relative;
+}
+
+.pw-container {
+  margin: 0 auto;
+  padding: 24px 32px 48px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+:host ::ng-deep .pw-container > app-list-filters + app-list-table,
+:host ::ng-deep .pw-container > app-list-table + app-pagination,
+:host ::ng-deep .pw-container > app-list-filters + app-pagination {
+  margin-top: -16px;
+}
+
+/* Unified list card: groups filters + table + pagination behind one shell.
+   Inner components strip their own chrome via :host-context(.list-card). */
+:host ::ng-deep .pw-container > .list-card {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-default);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  :host ::ng-deep .pw-container > .list-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .pw-container {
+    padding: 20px 20px 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pw-container {
+    padding: 16px 16px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pw-container {
+    padding: 14px 16px 20px;
+  }
+}

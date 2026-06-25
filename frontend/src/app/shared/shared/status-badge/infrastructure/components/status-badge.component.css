@@ -1,0 +1,133 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.badge--sm {
+  padding: 2px 8px;
+  font-size: 11px;
+  gap: 4px;
+}
+
+/* ============================================================
+   VARIANTS
+   ============================================================ */
+
+.badge--draft {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+  border-color: color-mix(in srgb, var(--color-neutral-400) 30%, transparent);
+}
+
+.badge--pending {
+  background: var(--color-warning-50);
+  color: var(--color-warning-600);
+  border-color: color-mix(in srgb, var(--color-warning-500) 30%, transparent);
+}
+
+.badge--approved {
+  background: var(--color-success-50);
+  color: var(--color-success-600);
+  border-color: color-mix(in srgb, var(--color-success-500) 30%, transparent);
+}
+
+.badge--rejected {
+  background: var(--color-error-50);
+  color: var(--color-error-600);
+  border-color: color-mix(in srgb, var(--color-error-500) 30%, transparent);
+}
+
+.badge--warning {
+  background: var(--color-warning-50);
+  color: var(--color-warning-600);
+  border-color: color-mix(in srgb, var(--color-warning-500) 30%, transparent);
+}
+
+.badge--info {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  border-color: color-mix(in srgb, var(--color-primary-500) 30%, transparent);
+}
+
+.badge--neutral {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+  border-color: color-mix(in srgb, var(--color-neutral-400) 30%, transparent);
+}
+
+/* ============================================================
+   DOT
+   ============================================================ */
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.dot--animated {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.75);
+  }
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+
+:host-context([data-theme="dark"]) .badge--draft {
+  background: rgba(148, 163, 184, 0.18);
+  color: var(--color-neutral-300);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+:host-context([data-theme="dark"]) .badge--pending,
+:host-context([data-theme="dark"]) .badge--warning {
+  background: rgba(245, 158, 11, 0.18);
+  color: var(--color-warning-500);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+:host-context([data-theme="dark"]) .badge--approved {
+  background: rgba(22, 163, 74, 0.18);
+  color: var(--color-success-500);
+  border-color: rgba(22, 163, 74, 0.4);
+}
+
+:host-context([data-theme="dark"]) .badge--rejected {
+  background: rgba(239, 68, 68, 0.18);
+  color: var(--color-error-400);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+:host-context([data-theme="dark"]) .badge--info {
+  background: rgba(56, 189, 248, 0.18);
+  color: var(--color-primary-300);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+:host-context([data-theme="dark"]) .badge--neutral {
+  background: rgba(148, 163, 184, 0.18);
+  color: var(--color-neutral-300);
+  border-color: rgba(148, 163, 184, 0.35);
+}

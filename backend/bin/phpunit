@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+
+if (!file_exists(__DIR__.'/../vendor/bin/phpunit')) {
+    echo "Unable to find the `phpunit` script in `vendor/bin/`. Run `composer install` first.\n";
+    exit(1);
+}
+
+require __DIR__.'/../vendor/bin/phpunit';

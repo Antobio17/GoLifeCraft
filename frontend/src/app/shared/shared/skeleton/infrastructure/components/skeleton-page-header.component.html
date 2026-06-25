@@ -1,0 +1,30 @@
+<div class="skph-header">
+  <div class="skph-row">
+    @if (showIcon) {
+      <div class="skph-bar skph-icon"></div>
+    }
+    <div class="skph-content">
+      @if (showEyebrow) {
+        <div class="skph-bar skph-eyebrow"></div>
+      }
+      <div class="skph-bar skph-title"></div>
+      <div class="skph-subtitle-group">
+        <div class="skph-bar skph-subtitle skph-subtitle--1"></div>
+        <div class="skph-bar skph-subtitle skph-subtitle--2"></div>
+      </div>
+      <div class="skph-bar skph-tag"></div>
+      @if (showStats) {
+        <div class="skph-stats">
+          <div class="skph-bar skph-stat"></div>
+          <div class="skph-bar skph-stat"></div>
+          <div class="skph-bar skph-stat"></div>
+        </div>
+      }
+    </div>
+    @if (showAction) {
+      <div class="skph-actions">
+        <div class="skph-bar skph-action"></div>
+      </div>
+    }
+  </div>
+</div>

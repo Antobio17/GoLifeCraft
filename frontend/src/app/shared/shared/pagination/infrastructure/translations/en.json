@@ -1,0 +1,16 @@
+{
+  "pagination": {
+    "showing": "Showing",
+    "of": "of",
+    "show": "Show:",
+    "perPage": "per page",
+    "previous": "Previous",
+    "next": "Next",
+    "items": "items",
+    "permissions": "permissions",
+    "users": "users",
+    "centers": "centers",
+    "preventionPlans": "plans",
+    "logs": "logs"
+  }
+}

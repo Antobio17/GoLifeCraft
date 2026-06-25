@@ -1,0 +1,88 @@
+services:
+  # frontend:
+  #   container_name: golifecraft_frontend
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: infrastructure/docker/local/angular/Dockerfile
+  #   ports:
+  #     - 4201:4200
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #   depends_on:
+  #     - nginx
+
+  nginx:
+    container_name: golifecraft_nginx
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/docker/local/nginx/Dockerfile
+    volumes:
+      - ./backend/public/upload/:/var/www/upload/
+    ports:
+      - 8082:80
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  php:
+    container_name: golifecraft_php
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/docker/local/php/Dockerfile
+    env_file:
+      - .env.local
+    volumes:
+      - ./backend:/var/www/html/
+      - ./backend/vendor:/var/www/html/vendor:delegated
+    links:
+      - nginx:golifecraft_nginx
+      - db:golifecraft_mysql
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+        reservations:
+          cpus: '0.50'
+          memory: 256M
+
+  db:
+    container_name: golifecraft_mysql
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/docker/local/mysql/Dockerfile
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: ${DATABASE_MASTER_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_MASTER_NAME:-master}
+    ports:
+      - 3309:3306
+    volumes:
+      - /var/lib/golifecraft-mysql-docker:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1024M
+        reservations:
+          cpus: '0.50'
+          memory: 512M
+
+networks:
+  default:
+    name: golifecraft_network
+    ipam:
+      config:
+        - subnet: 172.42.0.0/16

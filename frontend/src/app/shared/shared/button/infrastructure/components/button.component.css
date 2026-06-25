@@ -1,0 +1,372 @@
+/* ============================================================
+   BASE
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--font-family-base);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  position: relative;
+  border: 1.5px solid transparent;
+  flex-shrink: 0;
+  transition:
+    filter 0.15s,
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* ============================================================
+   SIZES
+   ============================================================ */
+
+.btn-lg {
+  padding: 10px 22px;
+  font-size: 14px;
+  border-radius: 11px;
+}
+
+.btn-md {
+  padding: 8px 18px;
+  font-size: 13.5px;
+  border-radius: var(--radius-lg);
+}
+
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 12.5px;
+  border-radius: var(--radius-md);
+}
+
+.btn-icon {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+}
+
+.btn-icon .btn-content {
+  gap: 0;
+}
+
+.btn-icon-sm {
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-md);
+  border-width: 1px;
+}
+
+.btn-icon-sm .btn-content {
+  gap: 0;
+}
+
+.btn-icon-lg {
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+}
+
+.btn-icon-lg .btn-content {
+  gap: 0;
+}
+
+/* ============================================================
+   VARIANT — PRIMARY  (soft bubble — applied app-wide)
+   ============================================================ */
+
+.btn-primary {
+  background: var(--color-primary-50);
+  color: var(--color-primary-600);
+  border: 1.5px solid
+    color-mix(in srgb, var(--color-primary-500) 30%, transparent);
+  box-shadow: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: color-mix(
+    in srgb,
+    var(--color-primary-100) 70%,
+    var(--color-neutral-white)
+  );
+  border-color: color-mix(in srgb, var(--color-primary-500) 45%, transparent);
+  filter: none;
+}
+
+.btn-primary:active:not(:disabled) {
+  background: var(--color-primary-100);
+  border-color: color-mix(in srgb, var(--color-primary-500) 55%, transparent);
+  filter: none;
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+:host-context([data-theme="dark"]) .btn-primary {
+  background: #0c3a52;
+  color: var(--color-primary-300);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+:host-context([data-theme="dark"]) .btn-primary:hover:not(:disabled) {
+  background: #0e4a68;
+  border-color: rgba(56, 189, 248, 0.45);
+}
+
+:host-context([data-theme="dark"]) .btn-primary:active:not(:disabled) {
+  background: #105880;
+  border-color: rgba(56, 189, 248, 0.55);
+}
+
+/* ============================================================
+   VARIANT — SECONDARY
+   ============================================================ */
+
+.btn-secondary {
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border-default);
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   VARIANT — DANGER
+   ============================================================ */
+
+.btn-danger {
+  background: var(--color-error-50);
+  color: var(--color-error-600);
+  border-color: color-mix(in srgb, var(--color-error-500) 30%, transparent);
+}
+
+.btn-danger:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.btn-danger:focus-visible {
+  outline: 2px solid var(--color-error-500);
+  outline-offset: 2px;
+}
+
+:host-context([data-theme="dark"]) .btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-error-400);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+:host-context([data-theme="dark"]) .btn-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.22);
+  filter: none;
+}
+
+/* ============================================================
+   VARIANT — OUTLINE (minimal icon button)
+   ============================================================ */
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary-600);
+  border-color: color-mix(in srgb, var(--color-primary-500) 30%, transparent);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--color-primary-50);
+  border-color: color-mix(in srgb, var(--color-primary-500) 45%, transparent);
+  color: var(--color-primary-600);
+}
+
+.btn-outline:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+:host-context([data-theme="dark"]) .btn-outline {
+  color: var(--color-primary-300);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+:host-context([data-theme="dark"]) .btn-outline:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: var(--color-primary-300);
+}
+
+/* ============================================================
+   VARIANT — OUTLINE DANGER
+   ============================================================ */
+
+.btn-outline-danger {
+  background: transparent;
+  color: var(--color-error-600);
+  border-color: color-mix(in srgb, var(--color-error-500) 30%, transparent);
+}
+
+.btn-outline-danger:hover:not(:disabled) {
+  background: var(--color-error-50);
+  border-color: color-mix(in srgb, var(--color-error-500) 45%, transparent);
+  color: var(--color-error-600);
+}
+
+.btn-outline-danger:focus-visible {
+  outline: 2px solid var(--color-error-500);
+  outline-offset: 2px;
+}
+
+:host-context([data-theme="dark"]) .btn-outline-danger {
+  color: var(--color-error-400);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+:host-context([data-theme="dark"]) .btn-outline-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: var(--color-error-400);
+}
+
+/* ============================================================
+   VARIANT — GHOST
+   ============================================================ */
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-primary-600);
+  border-color: transparent;
+  padding-inline: 0;
+  box-shadow: none;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  opacity: 0.75;
+}
+
+.btn-ghost:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   STATES
+   ============================================================ */
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn.btn-primary:disabled,
+.btn.btn-primary[disabled] {
+  opacity: 1;
+  background: var(--color-neutral-100);
+  color: var(--color-text-disabled);
+  border-color: var(--color-border-default);
+}
+
+:host-context([data-theme="dark"]) .btn.btn-primary:disabled,
+:host-context([data-theme="dark"]) .btn.btn-primary[disabled] {
+  opacity: 1;
+  background: #1e293b;
+  color: #475569;
+  border-color: #334155;
+}
+
+.btn-loading {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.btn-full-width {
+  width: 100%;
+}
+
+/* ============================================================
+   SPINNER
+   ============================================================ */
+
+.btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-top-color: currentColor;
+  border-radius: var(--radius-full);
+  animation: btn-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+.btn-sm .btn-spinner {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-icon .btn-spinner {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   ICON SIZING
+   ============================================================ */
+
+.btn-lg .btn-content svg {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-md .btn-content svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-sm .btn-content svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-icon .btn-content svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-icon-sm .btn-content svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-icon-lg .btn-content svg {
+  width: 20px;
+  height: 20px;
+}

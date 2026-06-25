@@ -1,0 +1,111 @@
+@if (show) {
+  <div class="cdm-overlay" (click)="cancelled.emit()">
+    <div class="cdm-content" (click)="$event.stopPropagation()">
+      <div class="cdm-header">
+        <div
+          class="cdm-header-icon"
+          [class.cdm-header-icon--success]="iconVariant === 'success'"
+        >
+          @if (iconVariant === "success") {
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <use href="assets/icons/golifecraft/sprite.svg#i-check"></use>
+            </svg>
+          } @else {
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <use href="assets/icons/golifecraft/sprite.svg#i-trash"></use>
+            </svg>
+          }
+        </div>
+        <h2>{{ title | t }}</h2>
+        <button
+          class="cdm-close"
+          type="button"
+          (click)="cancelled.emit()"
+          [disabled]="isDeleting"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-x"></use>
+          </svg>
+        </button>
+      </div>
+
+      <div class="cdm-body">
+        <p class="cdm-body-text">
+          @if (itemName) {
+            {{ body | t }}<strong> {{ itemName }}</strong
+            >?
+          } @else {
+            {{ body | t }}
+          }
+        </p>
+        @if (warningText) {
+          <p class="cdm-warning">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <use href="assets/icons/golifecraft/sprite.svg#i-alert"></use>
+            </svg>
+            {{ warningText | t }}
+          </p>
+        }
+      </div>
+
+      <div class="cdm-footer">
+        <app-button
+          variant="ghost"
+          size="md"
+          [disabled]="isDeleting"
+          (clicked)="cancelled.emit()"
+        >
+          {{ cancelLabel | t }}
+        </app-button>
+        <app-button
+          [variant]="confirmVariant"
+          size="md"
+          [loading]="isDeleting"
+          (clicked)="confirmed.emit()"
+        >
+          {{ isDeleting ? (deletingLabel | t) : (confirmLabel | t) }}
+        </app-button>
+      </div>
+    </div>
+  </div>
+}

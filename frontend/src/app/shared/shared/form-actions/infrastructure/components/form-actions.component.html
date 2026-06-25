@@ -1,0 +1,22 @@
+<div class="fa-actions">
+  <app-button
+    variant="secondary"
+    size="md"
+    [disabled]="saving"
+    (clicked)="cancelled.emit()"
+  >
+    {{ cancelLabel }}
+  </app-button>
+  <app-button
+    variant="primary"
+    size="md"
+    type="submit"
+    [disabled]="saving || formInvalid"
+    [loading]="saving"
+  >
+    @if (!saving) {
+      <ng-content select="[slot='icon']"></ng-content>
+    }
+    {{ saving ? savingLabel : submitLabel }}
+  </app-button>
+</div>

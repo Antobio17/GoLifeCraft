@@ -1,0 +1,11 @@
+{
+  "formDate": {
+    "clear": "Clear date",
+    "errors": {
+      "required": "This field is required",
+      "min": "Minimum date is {{min}}",
+      "max": "Maximum date is {{max}}",
+      "invalid": "Invalid date"
+    }
+  }
+}

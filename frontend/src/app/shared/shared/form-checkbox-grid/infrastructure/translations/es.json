@@ -1,0 +1,7 @@
+{
+  "formCheckboxGrid": {
+    "errors": {
+      "required": "Este campo es obligatorio"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+<nav
+  class="breadcrumbs"
+  [class.bc-loading]="!translationsReady"
+  [class.breadcrumbs--plain]="plain"
+  aria-label="breadcrumb"
+>
+  <ol class="breadcrumb-list">
+    <li
+      class="breadcrumb-item breadcrumb-home clickable"
+      [attr.aria-label]="'breadcrumbs.home' | t"
+      (click)="onNavigate('dashboard')"
+    >
+      <svg
+        class="home-icon"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <use href="assets/icons/golifecraft/sprite.svg#i-home"></use>
+      </svg>
+      <span class="sr-only">{{ "breadcrumbs.home" | t }}</span>
+    </li>
+    @for (
+      breadcrumb of breadcrumbs;
+      track trackByBreadcrumb(i);
+      let last = $last;
+      let i = $index
+    ) {
+      <li class="breadcrumb-separator" aria-hidden="true">&rsaquo;</li>
+      <li
+        class="breadcrumb-item"
+        [class.active]="last"
+        [class.clickable]="!last && breadcrumb.action"
+        (click)="!last ? onNavigate(breadcrumb.action) : null"
+      >
+        <span>{{ breadcrumb.label | t }}</span>
+      </li>
+    }
+  </ol>
+</nav>

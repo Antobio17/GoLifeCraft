@@ -1,0 +1,26 @@
+services:
+    Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserProvider:
+        class: Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserProvider
+        arguments:
+            - '@Authorization\User\User\Domain\Model\UserRepository'
+
+    Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserAuthenticator:
+        class: Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserAuthenticator
+        arguments:
+            - '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
+            - '@Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserProvider'
+            - '@Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface'
+            - '@Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface'
+
+    Authorization\User\User\Infrastructure\Domain\Service\Security\TenantTokenAuthenticator:
+        class: Authorization\User\User\Infrastructure\Domain\Service\Security\TenantTokenAuthenticator
+        arguments:
+            - '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
+            - '@Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserProvider'
+            - '@Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface'
+            - '@Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface'
+
+    Authorization\User\User\Domain\Service\PasswordHasher:
+        class: Authorization\User\User\Infrastructure\Domain\Service\Security\SymfonyPasswordHasher
+        arguments:
+            - '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'

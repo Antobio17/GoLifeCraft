@@ -1,0 +1,6 @@
+services:
+  Shared\Shared\Shared\Application\Manager\TransactionManager:
+    class: Shared\Shared\Shared\Infrastructure\Application\Manager\Doctrine\DoctrineTransactionManager
+    arguments:
+      $masterEntityManager: '@doctrine.orm.master_manager_entity_manager'
+      $tenantEntityManager: '@doctrine.orm.tenant_manager_entity_manager'

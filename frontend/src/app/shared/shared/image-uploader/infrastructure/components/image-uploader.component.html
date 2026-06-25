@@ -1,0 +1,127 @@
+<div class="image-uploader-wrapper">
+  @if (mergedConfig.label) {
+    <label class="form-label" [for]="inputId">
+      {{ mergedConfig.label || ("imageUploader.label" | t) }}
+      @if (showRequired) {
+        <span class="required-indicator">*</span>
+      }
+    </label>
+  }
+
+  <div class="image-upload-container">
+    @if (!imagePreview) {
+      <div class="image-upload-placeholder">
+        <input
+          type="file"
+          #fileInput
+          [id]="inputId"
+          [accept]="mergedConfig.acceptedTypes"
+          [disabled]="disabled || mergedConfig.disabled"
+          (change)="onFileSelected($event)"
+          class="image-file-input"
+        />
+        <label
+          [for]="inputId"
+          class="image-upload-label"
+          [class.disabled]="disabled || mergedConfig.disabled"
+        >
+          <div class="upload-icon-wrap">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <use href="assets/icons/golifecraft/sprite.svg#i-upload"></use>
+            </svg>
+          </div>
+          <span class="upload-text">{{
+            mergedConfig.placeholder || ("imageUploader.placeholder" | t)
+          }}</span>
+          <span class="image-upload-hint">{{
+            mergedConfig.hint || ("imageUploader.hint" | t)
+          }}</span>
+        </label>
+      </div>
+    }
+
+    @if (imagePreview) {
+      <div
+        class="image-uploaded-card"
+        (click)="openImageModal()"
+        [title]="'imageUploader.viewImageTitle' | t"
+      >
+        <div class="image-thumbnail-wrap">
+          @if (isLocalPreview) {
+            <img [src]="imagePreview" alt="Preview" class="image-thumbnail" />
+          } @else {
+            <div class="image-thumbnail-icon">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <use href="assets/icons/golifecraft/sprite.svg#i-image"></use>
+              </svg>
+            </div>
+          }
+        </div>
+        <div class="image-uploaded-meta">
+          <span class="image-uploaded-status">
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <use href="assets/icons/golifecraft/sprite.svg#i-check"></use>
+            </svg>
+            <span class="image-uploaded-status-text">{{
+              "imageUploader.imageLoaded" | t
+            }}</span>
+          </span>
+        </div>
+        @if (!(disabled || mergedConfig.disabled)) {
+          <div class="image-uploaded-actions">
+            <button
+              type="button"
+              class="btn-remove-image"
+              (click)="$event.stopPropagation(); removeImage()"
+              [title]="'imageUploader.deleteImageTitle' | t"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <use href="assets/icons/golifecraft/sprite.svg#i-trash"></use>
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

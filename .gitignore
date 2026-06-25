@@ -1,0 +1,9 @@
+docs/claude/
+docs/sql/
+
+# Variables de entorno con secretos (nunca versionar)
+.env.local
+.env.*.local
+/backend/.env.local
+/backend/.env.*.local
+/backend/.env.prod

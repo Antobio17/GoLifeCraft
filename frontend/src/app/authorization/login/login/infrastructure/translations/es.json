@@ -1,0 +1,35 @@
+{
+  "login": {
+    "title": "Iniciar sesión",
+    "subtitle": "Accede a tu cuenta para continuar",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "username": {
+      "label": "Usuario",
+      "placeholder": "Introduce tu usuario"
+    },
+    "password": {
+      "label": "Contraseña",
+      "placeholder": "Introduce tu contraseña"
+    },
+    "submit": "Iniciar sesión",
+    "submitting": "Cargando...",
+    "togglePassword": {
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña"
+    },
+    "brand": {
+      "title": "Plataforma de seguimiento y control de mantenimiento",
+      "tagline": "Tu cloud siempre disponible.",
+      "description": "Gestiona y descarga tus documentos desde cualquier dispositivo.",
+      "feature1": "Firma de documentos PDF",
+      "feature3": "Sincronización en tiempo real",
+      "copyright": "© 2026 GoLifeCraft. Todos los derechos reservados."
+    },
+    "validation": {
+      "required": "Por favor, ingrese usuario y contraseña"
+    },
+    "error": {
+      "credentials": "Usuario o contraseña incorrectos"
+    }
+  }
+}

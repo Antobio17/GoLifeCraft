@@ -1,0 +1,71 @@
+<div class="skt-desktop">
+  <div class="skt-table-inner">
+    <div class="skt-header" [style.grid-template-columns]="gridTemplate">
+      @for (col of colArray; track col) {
+        <div class="skt-header-cell">
+          <div class="skt-bar skt-header-bar"></div>
+        </div>
+      }
+      @if (showActions) {
+        <div class="skt-header-cell skt-right">
+          <div class="skt-bar skt-header-bar skt-header-bar-sm"></div>
+        </div>
+      }
+    </div>
+
+    @for (row of rowArray; track row) {
+      <div class="skt-row" [style.grid-template-columns]="gridTemplate">
+        @for (col of colArray; track col) {
+          <div class="skt-cell">
+            <div class="skt-bar skt-cell-bar"></div>
+          </div>
+        }
+        @if (showActions) {
+          <div class="skt-cell skt-right">
+            <div class="skt-btn"></div>
+            <div class="skt-btn"></div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<div class="skt-mobile">
+  @for (row of rowArray; track row) {
+    <div class="skt-card">
+      <div class="skt-card-header">
+        <div class="skt-bar skt-card-title"></div>
+        <div class="skt-bar skt-badge"></div>
+      </div>
+      <div class="skt-card-details">
+        <div class="skt-card-meta-row">
+          <div class="skt-bar skt-card-label"></div>
+          <div class="skt-bar skt-card-value"></div>
+        </div>
+        <div class="skt-card-meta-row">
+          <div class="skt-bar skt-card-label"></div>
+          <div class="skt-bar skt-card-value skt-card-value-sm"></div>
+        </div>
+      </div>
+      <div class="skt-card-footer">
+        <div class="skt-bar skt-card-action"></div>
+        <div class="skt-bar skt-card-action-icon"></div>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showPagination) {
+  <div class="skt-pagination">
+    <div class="skt-pagination-info">
+      <div class="skt-bar skt-pagination-showing"></div>
+      <div class="skt-bar skt-pagination-select"></div>
+    </div>
+    <div class="skt-pagination-controls">
+      <div class="skt-bar skt-pagination-btn"></div>
+      <div class="skt-bar skt-pagination-pages"></div>
+      <div class="skt-bar skt-pagination-btn"></div>
+    </div>
+  </div>
+}

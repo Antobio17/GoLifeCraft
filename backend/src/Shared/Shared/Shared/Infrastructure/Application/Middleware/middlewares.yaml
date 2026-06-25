@@ -1,0 +1,17 @@
+services:
+  Shared\Shared\Shared\Infrastructure\Application\Middleware\TransactionMiddleware:
+    class: Shared\Shared\Shared\Infrastructure\Application\Middleware\TransactionMiddleware
+    arguments:
+      $transactionManager: '@Shared\Shared\Shared\Application\Manager\TransactionManager'
+    tags:
+      - { name: 'messenger.middleware', bus: 'messenger.bus.default', priority: 100 }
+
+  Shared\Shared\Shared\Infrastructure\Application\Middleware\DomainEventMiddleware:
+    class: Shared\Shared\Shared\Infrastructure\Application\Middleware\DomainEventMiddleware
+    arguments:
+      $domainEventCollector: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $domainEventLogRepository: '@Shared\Shared\DomainEventLog\Domain\Model\DomainEventLogRepository'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+      $subscribers: []
+    tags:
+      - { name: 'messenger.middleware', bus: 'messenger.bus.default', priority: 90 }

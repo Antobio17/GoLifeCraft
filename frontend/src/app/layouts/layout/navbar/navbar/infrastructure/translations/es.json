@@ -1,0 +1,21 @@
+{
+  "navbar": {
+    "authorization": "Autorización",
+    "authorizationModule": "Autorización",
+    "authorizationDesc": "Gestión de accesos del equipo, roles y permisos del sistema.",
+    "users": "Usuarios",
+    "usersDesc": "Gestión de usuarios del sistema",
+    "reports": "Informes",
+    "reportsModule": "Informes",
+    "reportsDesc": "Auditoría, actividad y métricas de la plataforma.",
+    "logs": "Log de actividad",
+    "logsDesc": "Registro y auditoría",
+    "logout": "Cerrar sesión",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "darkMode": "Modo oscuro",
+    "moduleLabel": "Módulo",
+    "functions": "Funciones",
+    "account": "Cuenta"
+  }
+}

@@ -1,0 +1,30 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    providers:
+        tenant_user:
+            id: Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserProvider
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        api_login:
+            pattern:  ^/api/login
+            stateless: true
+            provider: tenant_user
+            custom_authenticators:
+                - Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserAuthenticator
+            login_throttling:
+                max_attempts: 5
+                interval: '5 minutes'
+        api:
+            pattern:   ^/api
+            stateless: true
+            provider: tenant_user
+            custom_authenticators:
+                - Authorization\User\User\Infrastructure\Domain\Service\Security\TenantTokenAuthenticator
+
+    access_control:
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1/csp-report, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

@@ -1,0 +1,22 @@
+services:
+  Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogsQueryHandler:
+    class: Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogsQueryHandler
+    arguments:
+      $needleDataQuery: '@Shared\Shared\DomainEventLog\Domain\QueryModel\GetDomainEventLogsNeedleDataQuery'
+      $dataTransform: '@Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogsDataTransform:
+    class: Shared\Shared\DomainEventLog\Infrastructure\UI\API\DataTransform\ApiGetDomainEventLogsDataTransform
+
+  Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogQueryHandler:
+    class: Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogQueryHandler
+    arguments:
+      $needleDataQuery: '@Shared\Shared\DomainEventLog\Domain\QueryModel\GetDomainEventLogNeedleDataQuery'
+      $dataTransform: '@Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogDataTransform:
+    class: Shared\Shared\DomainEventLog\Infrastructure\UI\API\DataTransform\ApiGetDomainEventLogDataTransform

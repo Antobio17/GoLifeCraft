@@ -1,0 +1,9 @@
+get_domain_event_logs:
+  path: /api/v1/shared/domain-event-logs
+  methods: [GET]
+  controller: Shared\Shared\DomainEventLog\Infrastructure\UI\API\Controller\GetDomainEventLogsController
+
+get_domain_event_log:
+  path: /api/v1/shared/domain-event-logs/{domainEventLogId}
+  methods: [GET]
+  controller: Shared\Shared\DomainEventLog\Infrastructure\UI\API\Controller\GetDomainEventLogController
