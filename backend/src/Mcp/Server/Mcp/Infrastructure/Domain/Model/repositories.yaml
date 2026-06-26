@@ -1,0 +1,5 @@
+services:
+  Mcp\Server\Mcp\Domain\Model\GenericModelRepository:
+    class: Mcp\Server\Mcp\Infrastructure\Domain\Model\Doctrine\DoctrineGenericModelRepository
+    arguments:
+      $entityManager: '@doctrine.orm.tenant_manager_entity_manager'

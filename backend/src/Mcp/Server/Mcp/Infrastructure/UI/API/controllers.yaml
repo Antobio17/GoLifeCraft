@@ -1,0 +1,29 @@
+services:
+  Mcp\Server\Mcp\Infrastructure\UI\API\Controller\AuthorizeController:
+    class: Mcp\Server\Mcp\Infrastructure\UI\API\Controller\AuthorizeController
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $passwordHasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
+      $codeStore: '@Mcp\Server\Mcp\Infrastructure\Domain\Service\OAuth\AuthorizationCodeStore'
+    tags:
+      - { name: controller.service_arguments }
+
+  Mcp\Server\Mcp\Infrastructure\UI\API\Controller\TokenController:
+    class: Mcp\Server\Mcp\Infrastructure\UI\API\Controller\TokenController
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $jwtManager: '@Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface'
+      $codeStore: '@Mcp\Server\Mcp\Infrastructure\Domain\Service\OAuth\AuthorizationCodeStore'
+      $tokenTtl: '%env(int:JWT_TTL)%'
+    tags:
+      - { name: controller.service_arguments }
+
+  Mcp\Server\Mcp\Infrastructure\UI\API\Controller\ProtectedResourceMetadataController:
+    class: Mcp\Server\Mcp\Infrastructure\UI\API\Controller\ProtectedResourceMetadataController
+    tags:
+      - { name: controller.service_arguments }
+
+  Mcp\Server\Mcp\Infrastructure\UI\API\Controller\AuthorizationServerMetadataController:
+    class: Mcp\Server\Mcp\Infrastructure\UI\API\Controller\AuthorizationServerMetadataController
+    tags:
+      - { name: controller.service_arguments }

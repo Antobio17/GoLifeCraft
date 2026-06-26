@@ -1,0 +1,19 @@
+parameters:
+    mcp.resources:
+        product:
+            class: 'Product\Catalog\Product\Domain\Model\Product'
+            sidecar: '%kernel.project_dir%/src/Product/Catalog/Product/Infrastructure/Domain/Model/Doctrine/Mapping/Product.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_CENTRAL_ADMIN, ROLE_CENTER_ADMIN, ROLE_CENTER_MANAGER, ROLE_CENTER_TECHNICAL]
+            write_roles: [ROLE_GOD, ROLE_CENTRAL_ADMIN, ROLE_CENTER_ADMIN]
+
+        format:
+            class: 'Product\Catalog\Format\Domain\Model\Format'
+            sidecar: '%kernel.project_dir%/src/Product/Catalog/Format/Infrastructure/Domain/Model/Doctrine/Mapping/Format.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_CENTRAL_ADMIN, ROLE_CENTER_ADMIN]
+            write_roles: [ROLE_GOD, ROLE_CENTRAL_ADMIN]
+
+        nutrition_facts:
+            class: 'Product\Catalog\NutritionFacts\Domain\Model\NutritionFacts'
+            sidecar: '%kernel.project_dir%/src/Product/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping/NutritionFacts.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_CENTRAL_ADMIN, ROLE_CENTER_ADMIN]
+            write_roles: [ROLE_GOD, ROLE_CENTRAL_ADMIN]

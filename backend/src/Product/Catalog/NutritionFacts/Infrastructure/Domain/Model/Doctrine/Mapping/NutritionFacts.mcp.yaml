@@ -1,0 +1,20 @@
+label: Nutrition facts
+
+fields:
+  protein:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  carbs:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  fat:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+
+relations: {}

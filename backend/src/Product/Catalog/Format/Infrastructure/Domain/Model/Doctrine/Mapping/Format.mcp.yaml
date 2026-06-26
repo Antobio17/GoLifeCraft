@@ -1,0 +1,13 @@
+label: Format
+
+fields:
+  name:
+    writable: true
+    required: true
+    min: 2
+    max: 255
+    unique: true
+    filterable: true
+    sortable: true
+
+relations: {}

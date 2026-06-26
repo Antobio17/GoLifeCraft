@@ -1,0 +1,39 @@
+label: Product
+
+fields:
+  name:
+    writable: true
+    required: true
+    min: 3
+    max: 255
+    unique: true
+    filterable: true
+    sortable: true
+  calories:
+    writable: true
+    type: int
+    min: 0
+    filterable: true
+    sortable: true
+  status:
+    writable: true
+    required: true
+    enum: [draft, published]
+    filterable: true
+    sortable: true
+  description:
+    writable: true
+    max: 2000
+    regex: '^[^<>]*$'
+
+relations:
+  format:
+    target: format
+    kind: manyToOne
+    writable: true
+    expandable: true
+  nutritionFacts:
+    target: nutrition_facts
+    kind: oneToOne
+    writable: true
+    expandable: true

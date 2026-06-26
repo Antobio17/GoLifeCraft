@@ -1,0 +1,26 @@
+services:
+  Mcp\Server\Mcp\Infrastructure\UI\Mcp\DescribeModelsTool:
+    class: Mcp\Server\Mcp\Infrastructure\UI\Mcp\DescribeModelsTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
+
+  Mcp\Server\Mcp\Infrastructure\UI\Mcp\QueryModelTool:
+    class: Mcp\Server\Mcp\Infrastructure\UI\Mcp\QueryModelTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
+
+  Mcp\Server\Mcp\Infrastructure\UI\Mcp\WriteModelTool:
+    class: Mcp\Server\Mcp\Infrastructure\UI\Mcp\WriteModelTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+      $metadataProvider: '@Mcp\Server\Mcp\Domain\Service\ModelMetadataProvider'
+      $permissionChecker: '@Mcp\Server\Mcp\Domain\Service\ModelPermissionChecker'
+    tags:
+      - { name: 'mcp.tool' }

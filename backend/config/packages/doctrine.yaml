@@ -40,3 +40,21 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Shared/Shared/DomainEventLog/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Shared\Shared\DomainEventLog\Domain\Model'
                         alias: domain_event_log
+                    Product:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Product/Catalog/Product/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Product\Catalog\Product\Domain\Model'
+                        alias: product
+                    Format:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Product/Catalog/Format/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Product\Catalog\Format\Domain\Model'
+                        alias: format
+                    NutritionFacts:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Product/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Product\Catalog\NutritionFacts\Domain\Model'
+                        alias: nutrition_facts
