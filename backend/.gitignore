@@ -4,6 +4,7 @@
 /public/bundles/
 /var/
 /vendor/
+/config/reference.php
 /composer.phar
 .idea/
 ###< symfony/framework-bundle ###

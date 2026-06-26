@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.5-fpm
 
 # 1. Instalar herramientas base
 RUN apt-get update && \
@@ -12,6 +12,7 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
+        unzip \
         default-mysql-client \
         qpdf \
         ghostscript \

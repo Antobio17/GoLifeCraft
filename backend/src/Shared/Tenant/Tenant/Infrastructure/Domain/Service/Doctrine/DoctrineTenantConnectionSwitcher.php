@@ -65,9 +65,6 @@ final readonly class DoctrineTenantConnectionSwitcher implements TenantConnectio
             params: $connectionParams,
             driver: $connection->getDriver(),
             config: $connection->getConfiguration(),
-            eventManager: $connection->getEventManager()
         );
-
-        $connection->connect();
     }
 }

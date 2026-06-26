@@ -5,7 +5,7 @@
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255" nullable="true"/>
     <field name="lastname" type="string" column="lastname" length="255" nullable="true"/>
-    <field name="roles" type="array" column="roles"/>
+    <field name="roles" type="json" column="roles"/>
     <field name="email" type="string" column="email" length="255"/>
     <field name="username" type="string" column="username" length="255"/>
     <field name="password" type="string" column="password" length="255"/>
