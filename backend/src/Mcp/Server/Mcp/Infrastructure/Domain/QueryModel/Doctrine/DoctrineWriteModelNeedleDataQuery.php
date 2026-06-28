@@ -3,9 +3,9 @@
 namespace Mcp\Server\Mcp\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Mcp\Server\Mcp\Domain\QueryModel\ModelExistsNeedleDataQuery;
+use Mcp\Server\Mcp\Domain\QueryModel\WriteModelNeedleDataQuery;
 
-final readonly class DoctrineModelExistsNeedleDataQuery implements ModelExistsNeedleDataQuery
+final readonly class DoctrineWriteModelNeedleDataQuery implements WriteModelNeedleDataQuery
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

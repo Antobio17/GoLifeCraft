@@ -1,5 +1,5 @@
 services:
-  Mcp\Server\Mcp\Domain\QueryModel\ModelExistsNeedleDataQuery:
-    class: Mcp\Server\Mcp\Infrastructure\Domain\QueryModel\Doctrine\DoctrineModelExistsNeedleDataQuery
+  Mcp\Server\Mcp\Domain\QueryModel\WriteModelNeedleDataQuery:
+    class: Mcp\Server\Mcp\Infrastructure\Domain\QueryModel\Doctrine\DoctrineWriteModelNeedleDataQuery
     arguments:
       $entityManager: '@doctrine.orm.tenant_manager_entity_manager'

@@ -7,7 +7,6 @@ use Mcp\Server\Mcp\Domain\Exception\WriteModelException;
 use Mcp\Server\Mcp\Domain\Model\GenericAggregate;
 use Mcp\Server\Mcp\Domain\Model\GenericModelRepository;
 use Mcp\Server\Mcp\Domain\QueryModel\Dto\ModelDescriptor;
-use Mcp\Server\Mcp\Domain\Service\ModelHydrator;
 use Mcp\Server\Mcp\Domain\Service\ModelMetadataProvider;
 use Mcp\Server\Mcp\Domain\Service\ModelValidator;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -18,14 +17,13 @@ final readonly class WriteModelCommandHandler
     public function __construct(
         private ModelMetadataProvider $metadataProvider,
         private ModelValidator $validator,
-        private ModelHydrator $hydrator,
         private GenericModelRepository $repository,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
     }
 
-    public function __invoke(WriteModelCommand $command): array
+    public function __invoke(WriteModelCommand $command): void
     {
         $descriptor = $this->metadataProvider->describe(alias: $command->entityAlias);
         $isCreate = null === $command->id;
@@ -43,31 +41,27 @@ final readonly class WriteModelCommandHandler
 
         $now = $this->dateTimeGenerator->now();
 
-        $changedFields = $this->hydrator->hydrate(
-            entity: $entity,
-            descriptor: $descriptor,
-            data: $command->data,
-            isCreate: $isCreate,
-            userSessionId: $command->userSessionId,
-            now: $now,
-        );
+        $this->writeFields(entity: $entity, descriptor: $descriptor, data: $command->data);
+        $this->writeRelations(entity: $entity, descriptor: $descriptor, data: $command->data);
+
+        $entity->updatedAt = $now;
+        $entity->updatedByUserId = $command->userSessionId;
+
+        if ($isCreate) {
+            $entity->createdAt = $now;
+            $entity->createdByUserId = $command->userSessionId;
+        }
 
         $entity->record(event: new ModelWritten(
             aggregateId: $entity->id,
             occurredOn: $now,
             entityAlias: $command->entityAlias,
             operation: $isCreate ? 'created' : 'updated',
-            changedFields: $changedFields,
+            entitySnapshot: $this->buildSnapshot(entity: $entity, descriptor: $descriptor),
         ));
 
-        $this->repository->save(entity: $entity, expectedVersion: $command->expectedVersion);
+        $this->repository->save(entity: $entity);
         $this->domainEventCollectorService->register(aggregate: $entity);
-
-        return [
-            'id' => $entity->id,
-            'version' => $entity->aggregateVersion(),
-            'operation' => $isCreate ? 'created' : 'updated',
-        ];
     }
 
     private function createEntity(ModelDescriptor $descriptor): GenericAggregate
@@ -81,10 +75,6 @@ final readonly class WriteModelCommandHandler
 
     private function loadEntity(ModelDescriptor $descriptor, WriteModelCommand $command): GenericAggregate
     {
-        if (null === $command->expectedVersion) {
-            throw WriteModelException::versionRequired();
-        }
-
         $entity = $this->repository->find(class: $descriptor->class, id: $command->id);
 
         if (null === $entity) {
@@ -92,5 +82,52 @@ final readonly class WriteModelCommandHandler
         }
 
         return $entity;
+    }
+
+    private function writeFields(GenericAggregate $entity, ModelDescriptor $descriptor, array $data): void
+    {
+        foreach ($descriptor->fields as $field) {
+            if (!$field->writable || !array_key_exists($field->name, $data)) {
+                continue;
+            }
+
+            $entity->{$field->name} = $data[$field->name];
+        }
+    }
+
+    private function writeRelations(GenericAggregate $entity, ModelDescriptor $descriptor, array $data): void
+    {
+        foreach ($descriptor->relations as $relation) {
+            if (!$relation->writable || !array_key_exists($relation->name, $data)) {
+                continue;
+            }
+
+            $targetId = $data[$relation->name];
+            $entity->{$relation->name} = null === $targetId
+                ? null
+                : $this->repository->reference(class: $relation->targetClass, id: $targetId);
+        }
+    }
+
+    private function buildSnapshot(GenericAggregate $entity, ModelDescriptor $descriptor): array
+    {
+        $snapshot = [
+            'id' => $entity->id,
+            'createdAt' => $entity->createdAt->format(\DateTimeInterface::ATOM),
+            'updatedAt' => $entity->updatedAt->format(\DateTimeInterface::ATOM),
+            'createdByUserId' => $entity->createdByUserId,
+            'updatedByUserId' => $entity->updatedByUserId,
+        ];
+
+        foreach ($descriptor->fields as $field) {
+            $snapshot[$field->name] = $entity->{$field->name} ?? null;
+        }
+
+        foreach ($descriptor->relations as $relation) {
+            $related = $entity->{$relation->name} ?? null;
+            $snapshot[$relation->name] = null === $related ? null : $related->id;
+        }
+
+        return $snapshot;
     }
 }

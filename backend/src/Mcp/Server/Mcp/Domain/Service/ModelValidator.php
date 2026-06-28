@@ -5,12 +5,12 @@ namespace Mcp\Server\Mcp\Domain\Service;
 use Mcp\Server\Mcp\Domain\Exception\ModelValidationException;
 use Mcp\Server\Mcp\Domain\QueryModel\Dto\FieldDescriptor;
 use Mcp\Server\Mcp\Domain\QueryModel\Dto\ModelDescriptor;
-use Mcp\Server\Mcp\Domain\QueryModel\ModelExistsNeedleDataQuery;
+use Mcp\Server\Mcp\Domain\QueryModel\WriteModelNeedleDataQuery;
 
 final readonly class ModelValidator
 {
     public function __construct(
-        private ModelExistsNeedleDataQuery $existsNeedleDataQuery,
+        private WriteModelNeedleDataQuery $writeModelNeedleDataQuery,
     ) {
     }
 
@@ -106,7 +106,7 @@ final readonly class ModelValidator
                 continue;
             }
 
-            if (!$this->existsNeedleDataQuery->exists($descriptor->class, $field->name, $data[$field->name], $currentId)) {
+            if (!$this->writeModelNeedleDataQuery->exists($descriptor->class, $field->name, $data[$field->name], $currentId)) {
                 continue;
             }
 

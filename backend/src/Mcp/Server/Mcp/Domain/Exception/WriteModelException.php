@@ -14,22 +14,4 @@ final class WriteModelException extends BaseException
             details: ['alias' => $alias, 'id' => $id]
         );
     }
-
-    public static function versionRequired(): self
-    {
-        return new self(
-            title: 'Expected version is required on update.',
-            keyTranslation: 'mcp.model.version.required',
-            details: []
-        );
-    }
-
-    public static function versionConflict(string $id, ?int $expectedVersion): self
-    {
-        return new self(
-            title: 'Model version conflict.',
-            keyTranslation: 'mcp.model.version.conflict',
-            details: ['id' => $id, 'expectedVersion' => $expectedVersion]
-        );
-    }
 }

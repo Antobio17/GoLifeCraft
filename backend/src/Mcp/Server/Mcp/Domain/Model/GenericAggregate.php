@@ -11,10 +11,5 @@ abstract class GenericAggregate extends Aggregate
     public \DateTime $updatedAt;
     public string $createdByUserId;
     public string $updatedByUserId;
-    private int $version = 1;
-
-    public function aggregateVersion(): int
-    {
-        return $this->version;
-    }
+    private int $version;
 }

@@ -2,7 +2,7 @@
 
 namespace Mcp\Server\Mcp\Domain\QueryModel;
 
-interface ModelExistsNeedleDataQuery
+interface WriteModelNeedleDataQuery
 {
     public function exists(string $class, string $field, mixed $value, ?string $excludeId): bool;
 }

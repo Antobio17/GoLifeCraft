@@ -7,6 +7,11 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
 final class McpToolResult
 {
+    public static function success(): array
+    {
+        return ['success' => true];
+    }
+
     public static function error(BaseException $exception): array
     {
         return ['error' => [

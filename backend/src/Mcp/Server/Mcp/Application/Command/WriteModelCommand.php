@@ -10,9 +10,7 @@ final readonly class WriteModelCommand implements Command
         public string $entityAlias,
         public array $data,
         public ?string $id,
-        public ?int $expectedVersion,
         public string $userSessionId,
-        public string $tenantSessionId,
     ) {
     }
 

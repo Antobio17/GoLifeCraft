@@ -2,7 +2,6 @@
 
 namespace Mcp\Server\Mcp\Infrastructure\Domain\Model\InMemory;
 
-use Mcp\Server\Mcp\Domain\Exception\WriteModelException;
 use Mcp\Server\Mcp\Domain\Model\GenericAggregate;
 use Mcp\Server\Mcp\Domain\Model\GenericModelRepository;
 use Ramsey\Uuid\Uuid;
@@ -33,15 +32,11 @@ final class InMemoryGenericModelRepository implements GenericModelRepository
         return $entity;
     }
 
-    public function save(object $entity, ?int $expectedVersion): void
+    public function save(object $entity): void
     {
-        $current = $this->versions[$entity->id] ?? null;
+        $current = $this->versions[$entity->id] ?? 0;
+        $newVersion = $current + 1;
 
-        if (null !== $expectedVersion && null !== $current && $current !== $expectedVersion) {
-            throw WriteModelException::versionConflict(id: $entity->id, expectedVersion: $expectedVersion);
-        }
-
-        $newVersion = null === $current ? 1 : $current + 1;
         $this->setVersion(entity: $entity, version: $newVersion);
 
         $this->versions[$entity->id] = $newVersion;

@@ -1,8 +1,8 @@
 mcp:
     app: 'GoLifeCraft'
     version: '1.0.0'
-    description: 'Escritura y lectura dinámica de modelos de producto.'
-    instructions: 'Llama a describe_models antes de query_model o write_model para conocer los campos y reglas expuestos.'
+    description: 'Dynamic read and write operations on product models.'
+    instructions: 'Call describe_models before query_model or write_model to learn the exposed fields and rules.'
     client_transports:
         http: true
     http:

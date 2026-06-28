@@ -2,10 +2,7 @@
 
 namespace Mcp\Server\Mcp\Infrastructure\Domain\Model\Doctrine;
 
-use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Mcp\Server\Mcp\Domain\Exception\WriteModelException;
 use Mcp\Server\Mcp\Domain\Model\GenericModelRepository;
 use Ramsey\Uuid\Uuid;
 
@@ -31,18 +28,9 @@ final readonly class DoctrineGenericModelRepository implements GenericModelRepos
         return $this->entityManager->getReference(entityName: $class, id: $id);
     }
 
-    public function save(object $entity, ?int $expectedVersion): void
+    public function save(object $entity): void
     {
         $this->entityManager->persist(object: $entity);
-
-        try {
-            if (null !== $expectedVersion) {
-                $this->entityManager->lock(entity: $entity, lockMode: LockMode::OPTIMISTIC, lockVersion: $expectedVersion);
-            }
-
-            $this->entityManager->flush();
-        } catch (OptimisticLockException) {
-            throw WriteModelException::versionConflict(id: $entity->id, expectedVersion: $expectedVersion);
-        }
+        $this->entityManager->flush();
     }
 }

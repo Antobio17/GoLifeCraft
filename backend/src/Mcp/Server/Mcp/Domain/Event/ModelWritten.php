@@ -11,7 +11,7 @@ final readonly class ModelWritten extends DomainEvent
         \DateTime $occurredOn,
         public string $entityAlias,
         public string $operation,
-        public array $changedFields,
+        public array $entitySnapshot,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

@@ -10,5 +10,5 @@ interface GenericModelRepository
 
     public function reference(string $class, string $id): object;
 
-    public function save(object $entity, ?int $expectedVersion): void;
+    public function save(object $entity): void;
 }

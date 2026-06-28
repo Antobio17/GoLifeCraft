@@ -8,6 +8,7 @@ use Mcp\Server\Mcp\Domain\Exception\ModelNotExposedException;
 use Mcp\Server\Mcp\Domain\Service\ModelMetadataProvider;
 use Mcp\Server\Mcp\Domain\Service\ModelPermissionChecker;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;
@@ -34,22 +35,21 @@ final class WriteModelTool
         string $alias,
         array $data,
         ?string $id = null,
-        ?int $expectedVersion = null,
     ): array {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest() ?? new Request();
         $role = RequestExtractor::getUserRole(request: $request) ?? '';
 
         try {
             $this->guardWritePermission(alias: $alias, role: $role);
 
-            return $this->handle(message: new WriteModelCommand(
+            $this->handle(message: new WriteModelCommand(
                 entityAlias: $alias,
                 data: $data,
                 id: $id,
-                expectedVersion: $expectedVersion,
                 userSessionId: RequestExtractor::getUserSessionId(request: $request) ?? '',
-                tenantSessionId: RequestExtractor::getTenantSessionId(request: $request) ?? '',
             ));
+
+            return McpToolResult::success();
         } catch (ModelNotExposedException $exception) {
             return McpToolResult::error(exception: $exception);
         } catch (HandlerFailedException $exception) {
