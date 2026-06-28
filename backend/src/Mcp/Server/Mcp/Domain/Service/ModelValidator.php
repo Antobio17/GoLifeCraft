@@ -106,7 +106,7 @@ final readonly class ModelValidator
                 continue;
             }
 
-            if (!$this->writeModelNeedleDataQuery->alreadyExists($descriptor->class, $field->name, $data[$field->name], $currentId)) {
+            if (!$this->writeModelNeedleDataQuery->modelAlreadyExists($descriptor->class, $field->name, $data[$field->name], $currentId)) {
                 continue;
             }
 

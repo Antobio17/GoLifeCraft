@@ -12,7 +12,7 @@ final readonly class DoctrineWriteModelNeedleDataQuery implements WriteModelNeed
     ) {
     }
 
-    public function alreadyExists(string $class, string $field, mixed $value, ?string $excludeId): bool
+    public function modelAlreadyExists(string $class, string $field, mixed $value, ?string $excludeId): bool
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('count(e.id)')

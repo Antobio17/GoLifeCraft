@@ -14,7 +14,7 @@ final class InMemoryWriteModelNeedleDataQuery implements WriteModelNeedleDataQue
         $this->records[] = ['class' => $class, 'field' => $field, 'value' => $value, 'id' => $id];
     }
 
-    public function alreadyExists(string $class, string $field, mixed $value, ?string $excludeId): bool
+    public function modelAlreadyExists(string $class, string $field, mixed $value, ?string $excludeId): bool
     {
         foreach ($this->records as $record) {
             if ($record['class'] !== $class) {
