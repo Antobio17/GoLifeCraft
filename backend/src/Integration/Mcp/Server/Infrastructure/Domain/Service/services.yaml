@@ -1,0 +1,33 @@
+services:
+  Integration\Mcp\Server\Infrastructure\Domain\Service\McpResourceRegistry:
+    class: Integration\Mcp\Server\Infrastructure\Domain\Service\McpResourceRegistry
+    arguments:
+      $resources: '%mcp.resources%'
+
+  Integration\Mcp\Server\Infrastructure\Domain\Service\Sidecar\YamlSidecarReader:
+    class: Integration\Mcp\Server\Infrastructure\Domain\Service\Sidecar\YamlSidecarReader
+
+  Integration\Mcp\Server\Domain\Service\ModelMetadataProvider:
+    class: Integration\Mcp\Server\Infrastructure\Domain\Service\Doctrine\DoctrineModelMetadataProvider
+    arguments:
+      $registry: '@Integration\Mcp\Server\Infrastructure\Domain\Service\McpResourceRegistry'
+      $sidecarReader: '@Integration\Mcp\Server\Infrastructure\Domain\Service\Sidecar\YamlSidecarReader'
+      $entityManager: '@doctrine.orm.tenant_manager_entity_manager'
+
+  Integration\Mcp\Server\Domain\Service\ModelReadQuery:
+    class: Integration\Mcp\Server\Infrastructure\Domain\Service\Doctrine\DoctrineModelReadQuery
+    arguments:
+      $entityManager: '@doctrine.orm.tenant_manager_entity_manager'
+
+  Integration\Mcp\Server\Domain\Service\ModelValidator:
+    class: Integration\Mcp\Server\Domain\Service\ModelValidator
+    arguments:
+      $writeModelNeedleDataQuery: '@Integration\Mcp\Server\Domain\QueryModel\WriteModelNeedleDataQuery'
+
+  Integration\Mcp\Server\Domain\Service\ModelPermissionChecker:
+    class: Integration\Mcp\Server\Domain\Service\ModelPermissionChecker
+
+  Integration\Mcp\Server\Domain\Service\GenericModelHydrator:
+    class: Integration\Mcp\Server\Domain\Service\GenericModelHydrator
+    arguments:
+      $repository: '@Integration\Mcp\Server\Domain\Model\GenericModelRepository'

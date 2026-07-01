@@ -1,0 +1,24 @@
+services:
+  Integration\Mcp\Server\Infrastructure\UI\Mcp\DescribeModelsTool:
+    class: Integration\Mcp\Server\Infrastructure\UI\Mcp\DescribeModelsTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
+
+  Integration\Mcp\Server\Infrastructure\UI\Mcp\QueryModelTool:
+    class: Integration\Mcp\Server\Infrastructure\UI\Mcp\QueryModelTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
+
+  Integration\Mcp\Server\Infrastructure\UI\Mcp\WriteModelTool:
+    class: Integration\Mcp\Server\Infrastructure\UI\Mcp\WriteModelTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

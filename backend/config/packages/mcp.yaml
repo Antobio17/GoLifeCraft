@@ -1,0 +1,12 @@
+mcp:
+    app: 'GoLifeCraft'
+    version: '1.0.0'
+    description: 'Dynamic read and write operations on product models.'
+    instructions: 'Call describe_models before query_model or write_model to learn the exposed fields and rules.'
+    client_transports:
+        http: true
+    http:
+        path: /_mcp
+        session:
+            store: file
+            ttl: 3600

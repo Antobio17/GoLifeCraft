@@ -21,6 +21,8 @@ class Kernel extends BaseKernel
             ),
             type: 'glob'
         );
+
+        $routes->import(resource: '.', type: 'mcp');
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void

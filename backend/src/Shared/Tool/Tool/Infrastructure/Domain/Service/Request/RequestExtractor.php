@@ -362,14 +362,26 @@ final class RequestExtractor
         );
     }
 
-    public static function getUserSessionId(Request $request): ?string
+    public static function getUserSessionId(Request $request, bool $required = true): ?string
     {
-        return $request->attributes->get(key: 'userSessionId');
+        $userSessionId = $request->attributes->get(key: 'userSessionId');
+
+        if ($required && (null === $userSessionId || '' === $userSessionId)) {
+            throw ArgumentRequestException::argumentIsRequired(argumentName: 'userSessionId');
+        }
+
+        return $userSessionId;
     }
 
-    public static function getUserRole(Request $request): ?string
+    public static function getUserRole(Request $request, bool $required = true): ?string
     {
-        return $request->attributes->get(key: 'userRole');
+        $userRole = $request->attributes->get(key: 'userRole');
+
+        if ($required && (null === $userRole || '' === $userRole)) {
+            throw ArgumentRequestException::argumentIsRequired(argumentName: 'userRole');
+        }
+
+        return $userRole;
     }
 
     public static function getUserCanCreateFolder(Request $request): bool

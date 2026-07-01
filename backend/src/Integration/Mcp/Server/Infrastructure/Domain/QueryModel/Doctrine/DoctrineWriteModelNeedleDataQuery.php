@@ -1,0 +1,30 @@
+<?php
+
+namespace Integration\Mcp\Server\Infrastructure\Domain\QueryModel\Doctrine;
+
+use Doctrine\ORM\EntityManagerInterface;
+use Integration\Mcp\Server\Domain\QueryModel\WriteModelNeedleDataQuery;
+
+final readonly class DoctrineWriteModelNeedleDataQuery implements WriteModelNeedleDataQuery
+{
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
+
+    public function modelAlreadyExists(string $class, string $field, mixed $value, ?string $excludeId): bool
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('count(e.id)')
+            ->from(from: $class, alias: 'e')
+            ->where(sprintf('e.%s = :value', $field))
+            ->setParameter(key: 'value', value: $value);
+
+        if (null !== $excludeId) {
+            $queryBuilder->andWhere('e.id != :excludeId')
+                ->setParameter(key: 'excludeId', value: $excludeId);
+        }
+
+        return (int) $queryBuilder->getQuery()->getSingleScalarResult() > 0;
+    }
+}
