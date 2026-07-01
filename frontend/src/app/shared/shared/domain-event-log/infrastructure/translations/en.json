@@ -303,10 +303,7 @@
   "payloadValues": {
     "role": {
       "ROLE_GOD": "Super Admin",
-      "ROLE_CENTRAL_ADMIN": "Central Admin",
-      "ROLE_CENTER_ADMIN": "Center Admin",
-      "ROLE_CENTER_MANAGER": "Center Manager",
-      "ROLE_CENTER_TECHNICAL": "Center Technical"
+      "ROLE_USER": "User"
     },
     "languageCode": {
       "es-ES": "Spanish",

@@ -65,46 +65,6 @@
   background: var(--color-role-god-text);
 }
 
-.badge-central-admin {
-  background: var(--color-role-central-admin-bg);
-  color: var(--color-role-central-admin-text);
-  border: 1px solid var(--color-role-central-admin-border);
-}
-
-.badge-central-admin .role-badge-dot {
-  background: var(--color-role-central-admin-text);
-}
-
-.badge-center-admin {
-  background: var(--color-role-admin-bg);
-  color: var(--color-role-admin-text);
-  border: 1px solid var(--color-role-admin-border);
-}
-
-.badge-center-admin .role-badge-dot {
-  background: var(--color-role-admin-text);
-}
-
-.badge-center-manager {
-  background: var(--color-role-manager-bg);
-  color: var(--color-role-manager-text);
-  border: 1px solid var(--color-role-manager-border);
-}
-
-.badge-center-manager .role-badge-dot {
-  background: var(--color-role-manager-text);
-}
-
-.badge-center-technical {
-  background: var(--color-role-technical-bg);
-  color: var(--color-role-technical-text);
-  border: 1px solid var(--color-role-technical-border);
-}
-
-.badge-center-technical .role-badge-dot {
-  background: var(--color-role-technical-text);
-}
-
 .badge-user {
   background: var(--color-badge-draft-bg);
   color: var(--color-badge-draft-text);

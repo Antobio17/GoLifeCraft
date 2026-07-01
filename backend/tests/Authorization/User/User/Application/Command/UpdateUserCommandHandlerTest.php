@@ -47,7 +47,7 @@ final class UpdateUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -61,7 +61,7 @@ final class UpdateUserCommandHandlerTest extends TestCase
             name: 'John Updated',
             lastname: 'Doe Updated',
             isActive: false,
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             updatedByUserId: 'god-user-id',
         );
 
@@ -74,7 +74,7 @@ final class UpdateUserCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'Doe Updated', actual: $updatedUser->lastname);
         $this->assertFalse(condition: $updatedUser->isActive);
         $this->assertEquals(expected: 'god-user-id', actual: $updatedUser->updatedByUserId);
-        $this->assertEquals(expected: User::ROLE_CENTRAL_ADMIN, actual: $updatedUser->role);
+        $this->assertEquals(expected: User::ROLE_USER, actual: $updatedUser->role);
     }
 
     public function testItUpdatesUserSuccessfullyByThemselves(): void
@@ -89,12 +89,12 @@ final class UpdateUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
         $this->repository->save(user: $user);
-        $this->needleDataQuery->addUserRole(userId: 'user-1', role: User::ROLE_CENTRAL_ADMIN);
+        $this->needleDataQuery->addUserRole(userId: 'god-user-id', role: User::ROLE_GOD);
 
         $command = new UpdateUserCommand(
             userId: 'user-1',
@@ -103,8 +103,8 @@ final class UpdateUserCommandHandlerTest extends TestCase
             name: 'John Self',
             lastname: 'Updated',
             isActive: true,
-            role: User::ROLE_CENTRAL_ADMIN,
-            updatedByUserId: 'user-1',
+            role: User::ROLE_USER,
+            updatedByUserId: 'god-user-id',
         );
 
         ($this->handler)($command);
@@ -124,7 +124,7 @@ final class UpdateUserCommandHandlerTest extends TestCase
             name: 'Test',
             lastname: 'User',
             isActive: true,
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             updatedByUserId: 'super-admin-id',
         );
 
@@ -162,7 +162,7 @@ final class UpdateUserCommandHandlerTest extends TestCase
             name: 'God',
             lastname: 'User',
             isActive: true,
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             updatedByUserId: 'god-user-id',
         );
 
@@ -184,12 +184,12 @@ final class UpdateUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
         $this->repository->save(user: $user);
-        $this->needleDataQuery->addUserRole(userId: 'user-1', role: User::ROLE_CENTRAL_ADMIN);
+        $this->needleDataQuery->addUserRole(userId: 'god-user-id', role: User::ROLE_GOD);
 
         $command = new UpdateUserCommand(
             userId: 'user-1',
@@ -198,15 +198,15 @@ final class UpdateUserCommandHandlerTest extends TestCase
             name: 'John Updated',
             lastname: 'Doe',
             isActive: true,
-            role: User::ROLE_CENTRAL_ADMIN,
-            updatedByUserId: 'user-1',
+            role: User::ROLE_USER,
+            updatedByUserId: 'god-user-id',
         );
 
         ($this->handler)($command);
 
         $updatedUser = $this->repository->findById(id: 'user-1');
         $this->assertNotNull(actual: $updatedUser);
-        $this->assertEquals(expected: User::ROLE_CENTRAL_ADMIN, actual: $updatedUser->role);
+        $this->assertEquals(expected: User::ROLE_USER, actual: $updatedUser->role);
     }
 
     public function testItUpdatesUsernameSuccessfully(): void
@@ -221,12 +221,12 @@ final class UpdateUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
         $this->repository->save(user: $user);
-        $this->needleDataQuery->addUserRole(userId: 'user-1', role: User::ROLE_CENTRAL_ADMIN);
+        $this->needleDataQuery->addUserRole(userId: 'god-user-id', role: User::ROLE_GOD);
 
         $command = new UpdateUserCommand(
             userId: 'user-1',
@@ -235,8 +235,8 @@ final class UpdateUserCommandHandlerTest extends TestCase
             name: 'John',
             lastname: 'Doe',
             isActive: true,
-            role: User::ROLE_CENTRAL_ADMIN,
-            updatedByUserId: 'user-1',
+            role: User::ROLE_USER,
+            updatedByUserId: 'god-user-id',
         );
 
         ($this->handler)($command);
@@ -258,7 +258,7 @@ final class UpdateUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -272,7 +272,7 @@ final class UpdateUserCommandHandlerTest extends TestCase
             name: 'John',
             lastname: 'Doe',
             isActive: true,
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             updatedByUserId: 'reader-id',
         );
 
@@ -294,12 +294,12 @@ final class UpdateUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
         $this->repository->save(user: $user);
-        $this->needleDataQuery->addUserRole(userId: 'user-1', role: User::ROLE_CENTRAL_ADMIN);
+        $this->needleDataQuery->addUserRole(userId: 'god-user-id', role: User::ROLE_GOD);
         $this->needleDataQuery->addExistingUsername(username: 'jane.doe', userId: 'user-2');
 
         $command = new UpdateUserCommand(
@@ -309,8 +309,8 @@ final class UpdateUserCommandHandlerTest extends TestCase
             name: 'John',
             lastname: 'Doe',
             isActive: true,
-            role: User::ROLE_CENTRAL_ADMIN,
-            updatedByUserId: 'user-1',
+            role: User::ROLE_USER,
+            updatedByUserId: 'god-user-id',
         );
 
         $this->expectException(exception: UpdateUserException::class);
