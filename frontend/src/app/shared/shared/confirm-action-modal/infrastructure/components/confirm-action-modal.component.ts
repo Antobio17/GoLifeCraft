@@ -16,9 +16,9 @@ export class ConfirmActionModalComponent {
   @Input() itemName: string = "";
   @Input() warningText: string = "";
   @Input() isDeleting: boolean = false;
-  @Input() cancelLabel: string = "Cancelar";
-  @Input() confirmLabel: string = "Eliminar";
-  @Input() deletingLabel: string = "Eliminando...";
+  @Input() cancelLabel: string = "Cancel";
+  @Input() confirmLabel: string = "Delete";
+  @Input() deletingLabel: string = "Deleting...";
   @Input() confirmVariant: ButtonVariant = "danger";
   @Input() iconVariant: "danger" | "success" = "danger";
 

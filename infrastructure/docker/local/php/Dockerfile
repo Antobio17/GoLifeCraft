@@ -1,6 +1,6 @@
 FROM php:8.5-fpm
 
-# 1. Instalar herramientas base
+# 1. Install base tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         gnupg \
@@ -8,7 +8,7 @@ RUN apt-get update && \
         dirmngr \
         ca-certificates
 
-# 2. Instalar cliente MySQL, Git, qpdf y librerías para GD desde los repos oficiales de Debian
+# 2. Install MySQL client, Git, qpdf and GD libraries from the official Debian repos
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
@@ -23,7 +23,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 3. Configuración de PHP (comandos restantes)
+# 3. PHP configuration (remaining commands)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install mysqli pdo pdo_mysql gd intl
 
