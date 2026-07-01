@@ -17,6 +17,13 @@ security:
             login_throttling:
                 max_attempts: 5
                 interval: '5 minutes'
+        mcp:
+            pattern:   ^/_mcp
+            stateless: true
+            provider: tenant_user
+            entry_point: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\McpAuthenticationEntryPoint
+            custom_authenticators:
+                - Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\McpTokenAuthenticator
         api:
             pattern:   ^/api
             stateless: true
@@ -27,4 +34,7 @@ security:
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1/csp-report, roles: PUBLIC_ACCESS }
+        - { path: '^/\.well-known', roles: PUBLIC_ACCESS }
+        - { path: ^/oauth, roles: PUBLIC_ACCESS }
+        - { path: ^/_mcp, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
