@@ -1,0 +1,13 @@
+parameters:
+    mcp.resources:
+        article:
+            class: 'Nutrition\Catalog\Article\Domain\Model\Article'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/Article/Infrastructure/Domain/Model/Doctrine/Mapping/Article.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+
+        nutrition_facts:
+            class: 'Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping/NutritionFacts.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Nutrition\Catalog\Article\Domain\Model\Article" table="article">
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="name" type="string" column="name" length="255"/>
+    <field name="recipeUnit" type="string" column="recipe_unit" length="30"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+    <one-to-one field="nutritionFacts" target-entity="Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts">
+      <join-column name="nutrition_facts_id" referenced-column-name="id" nullable="true" unique="true"/>
+    </one-to-one>
+    <unique-constraints>
+      <unique-constraint name="uniq_article_name" columns="name"/>
+    </unique-constraints>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,24 @@
+label: Article
+
+fields:
+  name:
+    writable: true
+    required: true
+    min: 2
+    max: 255
+    unique: true
+    filterable: true
+    sortable: true
+  recipeUnit:
+    writable: true
+    required: true
+    enum: [gram, milliliter, unit]
+    filterable: true
+    sortable: true
+
+relations:
+  nutritionFacts:
+    target: nutrition_facts
+    kind: oneToOne
+    writable: true
+    expandable: true
