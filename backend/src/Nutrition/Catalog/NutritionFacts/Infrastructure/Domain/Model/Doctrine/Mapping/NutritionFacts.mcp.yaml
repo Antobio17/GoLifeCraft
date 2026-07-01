@@ -1,0 +1,50 @@
+label: Nutrition facts
+
+fields:
+  referenceAmount:
+    writable: true
+    required: true
+    type: float
+    min: 0
+  calories:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  protein:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  carbs:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  sugars:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  fat:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  saturatedFat:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  fiber:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+  salt:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+
+relations: {}
