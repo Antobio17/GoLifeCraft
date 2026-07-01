@@ -1,0 +1,17 @@
+services:
+  Integration\Mcp\Server\Application\Query\DescribeModelsQueryHandler:
+    class: Integration\Mcp\Server\Application\Query\DescribeModelsQueryHandler
+    arguments:
+      $metadataProvider: '@Integration\Mcp\Server\Domain\Service\ModelMetadataProvider'
+      $permissionChecker: '@Integration\Mcp\Server\Domain\Service\ModelPermissionChecker'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Integration\Mcp\Server\Application\Query\QueryModelQueryHandler:
+    class: Integration\Mcp\Server\Application\Query\QueryModelQueryHandler
+    arguments:
+      $metadataProvider: '@Integration\Mcp\Server\Domain\Service\ModelMetadataProvider'
+      $permissionChecker: '@Integration\Mcp\Server\Domain\Service\ModelPermissionChecker'
+      $readQuery: '@Integration\Mcp\Server\Domain\Service\ModelReadQuery'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

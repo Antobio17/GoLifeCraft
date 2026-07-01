@@ -1,0 +1,13 @@
+services:
+  Integration\Mcp\Server\Application\Command\WriteModelCommandHandler:
+    class: Integration\Mcp\Server\Application\Command\WriteModelCommandHandler
+    arguments:
+      $metadataProvider: '@Integration\Mcp\Server\Domain\Service\ModelMetadataProvider'
+      $permissionChecker: '@Integration\Mcp\Server\Domain\Service\ModelPermissionChecker'
+      $validator: '@Integration\Mcp\Server\Domain\Service\ModelValidator'
+      $hydrator: '@Integration\Mcp\Server\Domain\Service\GenericModelHydrator'
+      $repository: '@Integration\Mcp\Server\Domain\Model\GenericModelRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

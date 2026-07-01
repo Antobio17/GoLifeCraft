@@ -1,0 +1,5 @@
+services:
+  Integration\Mcp\Server\Domain\QueryModel\WriteModelNeedleDataQuery:
+    class: Integration\Mcp\Server\Infrastructure\Domain\QueryModel\Doctrine\DoctrineWriteModelNeedleDataQuery
+    arguments:
+      $entityManager: '@doctrine.orm.tenant_manager_entity_manager'
