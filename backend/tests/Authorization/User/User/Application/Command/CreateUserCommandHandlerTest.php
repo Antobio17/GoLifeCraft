@@ -48,9 +48,9 @@ final class CreateUserCommandHandlerTest extends TestCase
             name: 'John',
             lastname: 'Doe',
             plainPassword: 'secret123',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             createdByUserId: 'admin-user-id',
-            createdByUserRole: User::ROLE_CENTRAL_ADMIN,
+            createdByUserRole: User::ROLE_GOD,
         );
 
         ($this->handler)($command);
@@ -74,9 +74,9 @@ final class CreateUserCommandHandlerTest extends TestCase
             name: 'John',
             lastname: 'Doe',
             plainPassword: 'secret123',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             createdByUserId: 'admin-user-id',
-            createdByUserRole: User::ROLE_CENTRAL_ADMIN,
+            createdByUserRole: User::ROLE_GOD,
         );
 
         $this->expectException(exception: CreateUserException::class);
@@ -93,9 +93,9 @@ final class CreateUserCommandHandlerTest extends TestCase
             name: 'John',
             lastname: 'Doe',
             plainPassword: 'secret123',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             createdByUserId: 'non-existent-user',
-            createdByUserRole: User::ROLE_CENTRAL_ADMIN,
+            createdByUserRole: User::ROLE_GOD,
         );
 
         $this->expectException(exception: CreateUserException::class);
@@ -116,7 +116,7 @@ final class CreateUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             role: User::ROLE_GOD,
             createdByUserId: 'admin-user-id',
-            createdByUserRole: User::ROLE_CENTRAL_ADMIN,
+            createdByUserRole: User::ROLE_GOD,
         );
 
         $this->expectException(exception: CreateUserException::class);
@@ -133,7 +133,7 @@ final class CreateUserCommandHandlerTest extends TestCase
             name: 'John',
             lastname: 'Doe',
             plainPassword: 'secret123',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             createdByUserId: 'reader-user-id',
             createdByUserRole: User::ROLE_USER,
         );

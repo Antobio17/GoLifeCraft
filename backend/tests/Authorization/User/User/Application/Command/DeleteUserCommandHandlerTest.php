@@ -43,7 +43,7 @@ final class DeleteUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -52,7 +52,7 @@ final class DeleteUserCommandHandlerTest extends TestCase
         $command = new DeleteUserCommand(
             userId: 'user-1',
             deletedByUserId: 'user-1',
-            deletedByUserRole: User::ROLE_CENTRAL_ADMIN,
+            deletedByUserRole: User::ROLE_GOD,
         );
 
         ($this->handler)($command);
@@ -73,7 +73,7 @@ final class DeleteUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -103,7 +103,7 @@ final class DeleteUserCommandHandlerTest extends TestCase
             plainPassword: 'secret123',
             isActive: true,
             createdByUserId: 'admin-user-id',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             passwordHasher: new InMemoryPasswordHasher(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -112,7 +112,7 @@ final class DeleteUserCommandHandlerTest extends TestCase
         $command = new DeleteUserCommand(
             userId: 'user-1',
             deletedByUserId: 'admin-id',
-            deletedByUserRole: User::ROLE_CENTRAL_ADMIN,
+            deletedByUserRole: User::ROLE_GOD,
         );
 
         ($this->handler)($command);
@@ -158,7 +158,7 @@ final class DeleteUserCommandHandlerTest extends TestCase
         $command = new DeleteUserCommand(
             userId: 'god-user-1',
             deletedByUserId: 'admin-id',
-            deletedByUserRole: User::ROLE_CENTRAL_ADMIN,
+            deletedByUserRole: User::ROLE_GOD,
         );
 
         $this->expectException(exception: DeleteUserException::class);

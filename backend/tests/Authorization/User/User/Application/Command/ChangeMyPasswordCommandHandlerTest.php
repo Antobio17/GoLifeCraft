@@ -40,13 +40,13 @@ final class ChangeMyPasswordCommandHandlerTest extends TestCase
             name: 'John',
             lastname: 'Doe',
             password: 'hashed_'.$plainPassword,
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             isActive: true,
             createdAt: new \DateTime(),
             updatedAt: new \DateTime(),
             createdByUserId: $id,
             updatedByUserId: $id,
-            roles: [User::ROLE_CENTRAL_ADMIN],
+            roles: [User::ROLE_USER],
         );
     }
 

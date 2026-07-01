@@ -36,13 +36,13 @@ final class UpdateMyProfileCommandHandlerTest extends TestCase
             name: 'Original',
             lastname: 'Name',
             password: 'hashed',
-            role: User::ROLE_CENTRAL_ADMIN,
+            role: User::ROLE_USER,
             isActive: true,
             createdAt: new \DateTime(),
             updatedAt: new \DateTime(),
             createdByUserId: $id,
             updatedByUserId: $id,
-            roles: [User::ROLE_CENTRAL_ADMIN],
+            roles: [User::ROLE_USER],
         );
     }
 
@@ -78,7 +78,7 @@ final class UpdateMyProfileCommandHandlerTest extends TestCase
         ));
 
         $saved = $this->repository->findById(id: 'user-1');
-        $this->assertEquals(expected: User::ROLE_CENTRAL_ADMIN, actual: $saved->role);
+        $this->assertEquals(expected: User::ROLE_USER, actual: $saved->role);
         $this->assertTrue(condition: $saved->isActive);
     }
 
