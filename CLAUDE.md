@@ -29,7 +29,21 @@ GoLifeCraft/
 - **JWT** con `lexik/jwt-authentication-bundle`
 - **UUID v4** con `ramsey/uuid` para IDs
 - **PHPUnit 11**, **PHP-CS-Fixer**
-- **Multi-tenancy**: base de datos `master` (usuarios/permisos) + bases de datos por tenant (negocio)
+- **Multi-tenancy**: base de datos `master` (usuarios) + bases de datos por tenant (negocio)
+- **MCP Server** (Model Context Protocol) para exponer modelos del negocio a clientes MCP, con flujo OAuth 2.0 propio en un módulo aparte (`Integration/Mcp/OAuth`)
+
+## Bounded contexts reales
+
+```
+src/
+├── Authorization/User/User/        # Usuarios, login JWT, perfil, cambio de contraseña
+├── Integration/Mcp/Server/         # Servidor MCP genérico (describe/query/write de modelos)
+├── Integration/Mcp/OAuth/          # OAuth 2.0 propio del MCP (authorize/token/.well-known + autenticación de tokens)
+├── Nutrition/Catalog/              # Negocio: Product, Format, NutritionFacts
+└── Shared/                         # Shared/Shared, Shared/DomainEventLog, Tenant/Tenant, Tool/Tool
+```
+
+> Los ejemplos `Foo`/`Centers` de esta guía son **plantillas ilustrativas**, no entidades reales. Para ver un módulo completo de referencia, mirar `Authorization/User/User`.
 
 ## Comandos — ejecutar dentro del contenedor Docker
 
@@ -353,9 +367,27 @@ final class CreateFooCommandHandlerTest extends TestCase
 
 ## Multi-tenancy
 
-- `master_manager`: gestiona `User` y `Permission`.
+- `master_manager`: gestiona los `User` (autenticación, roles).
 - `tenant_manager`: gestiona el negocio, se resuelve por request via `TenantResolverSubscriber`.
-- `tenantId`, `userSessionId`, `userRole`, `centerSessionId` se inyectan en `$request->attributes` vía `RequestExtractor`.
+- `tenantId`, `userSessionId`, `userRole` se inyectan en `$request->attributes` vía `RequestExtractor`.
+
+## MCP Server (`Integration/Mcp/Server`)
+
+Bounded context genérico que expone entidades del negocio a clientes MCP. No se escribe código por entidad: cada modelo expuesto se declara de forma declarativa.
+
+- **Registro de recursos**: `config/packages/mcp_resources.yaml` mapea cada recurso a su clase de dominio, su sidecar y los roles de lectura/escritura (`read_roles`, `write_roles`).
+- **Sidecar `{Entity}.mcp.yaml`**: junto al mapping Doctrine de la entidad (`Infrastructure/Domain/Model/Doctrine/Mapping/`). Declara `label`, `fields` (con `writable`, `required`, `type`, `min`/`max`, `enum`, `regex`, `unique`, `filterable`, `sortable`) y `relations` (`target`, `kind`, `writable`, `expandable`).
+- **Operaciones**: `DescribeModelsQuery`, `QueryModelQuery` y `WriteModelCommand` operan de forma genérica sobre cualquier recurso registrado, validando contra el sidecar y los roles.
+
+> Para exponer una entidad nueva por MCP: crear su `{Entity}.mcp.yaml` y registrarla en `mcp_resources.yaml`. No requiere Command/Query/Controller propios.
+
+## MCP OAuth (`Integration/Mcp/OAuth`)
+
+Bounded context que implementa el flujo OAuth 2.0 propio del MCP y la autenticación de los tokens emitidos. Está separado del `Server`: el `Server` expone los modelos, el `OAuth` protege el acceso.
+
+- **Authorization Code Flow + PKCE (S256)**: `/oauth/authorize`, `/oauth/token`, `/.well-known/oauth-protected-resource`, `/.well-known/oauth-authorization-server` (controllers en `Infrastructure/UI/API`).
+- **`AuthorizationCodeStore`** (`Infrastructure/Domain/Service`): persiste los códigos de autorización en `cache.app` con TTL.
+- **Resource server**: `McpTokenAuthenticator` + `McpAuthenticationEntryPoint` (`Infrastructure/Domain/Service/Security`) autentican los Bearer tokens del firewall `mcp` (rutas `^/_mcp`), registrados en `config/packages/security.yaml`.
 
 ## Helpers disponibles
 
@@ -420,8 +452,9 @@ src/app/{boundedContext}/{subContext}/{module}/
 ├── domain/
 │   ├── models/
 │   │   └── {action}.model.ts          ← interfaces de request/response
-│   └── ports/
-│       └── {action}.port.ts           ← abstract class (puerto)
+│   ├── ports/
+│   │   └── {action}.port.ts           ← abstract class (puerto)
+│   └── guards/                        ← (opcional) CanActivateFn (auth.guard, role.guard)
 ├── application/
 │   └── services/
 │       └── {action}.service.ts        ← orquesta el caso de uso via el puerto
@@ -430,9 +463,14 @@ src/app/{boundedContext}/{subContext}/{module}/
     │   └── http-{action}.adapter.ts   ← implementación HTTP del puerto
     ├── components/
     │   └── {action}.component.ts      ← componente UI standalone
-    └── providers/
-        └── {action}.provider.ts       ← wiring de DI
+    ├── providers/
+    │   └── {action}.provider.ts       ← wiring de DI
+    ├── routes/
+    │   └── {module}.routes.ts         ← rutas lazy del módulo (cargadas desde app.routes.ts)
+    └── translations/                  ← (opcional) en.json / es.json del módulo
 ```
+
+> La estructura real de directorios es `{boundedContext}/{subContext}/{module}` (p. ej. `authorization/user/user`, `authorization/login/login`). Componentes UI compartidos viven en `shared/shared/*`; la sesión/auth (signals) en `shared/auth`.
 
 ## Patrones de implementación
 
@@ -569,13 +607,12 @@ export class CreateCenterComponent {
 
 ## Sistema de roles
 
+Solo existen dos roles (ver `User::ROLE_HERARCHY` en backend y `USER_ROLES` en `authorization/domain/constants/user-roles.constants.ts`):
+
 | Rol | Alcance |
 |---|---|
-| `ROLE_GOD` | Acceso total |
-| `ROLE_CENTRAL_ADMIN` | Administración de todos los centros |
-| `ROLE_CENTER_ADMIN` | Administración del centro asignado |
-| `ROLE_CENTER_MANAGER` | Gestión del centro asignado |
-| `ROLE_CENTER_TECHNICAL` | Operaciones técnicas del centro |
+| `ROLE_GOD` | Acceso total (lectura y escritura). |
+| `ROLE_USER` | Usuario de solo lectura. El guard `blockReadOnlyUserGuard` lo bloquea en rutas de escritura. |
 
 ## Checklist frontend — nuevo caso de uso
 
@@ -586,3 +623,5 @@ export class CreateCenterComponent {
 - [ ] Component standalone en `infrastructure/components/`
 - [ ] Provider en `infrastructure/providers/`
 - [ ] Registrar provider en el componente/ruta correspondiente
+- [ ] Rutas lazy en `infrastructure/routes/{module}.routes.ts` y enganchadas en `app.routes.ts`
+- [ ] Traducciones en `infrastructure/translations/` (en/es) si el módulo tiene textos propios
