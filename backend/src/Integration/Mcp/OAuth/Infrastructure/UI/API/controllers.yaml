@@ -1,0 +1,33 @@
+services:
+  Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizeController:
+    class: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizeController
+    arguments:
+      $credentialsVerifier: '@Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\CredentialsVerifier'
+      $codeStore: '@Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\AuthorizationCodeStore'
+    tags:
+      - { name: controller.service_arguments }
+
+  Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\TokenController:
+    class: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\TokenController
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $jwtManager: '@Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface'
+      $codeStore: '@Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\AuthorizationCodeStore'
+      $tokenTtl: '%env(int:JWT_TTL)%'
+    tags:
+      - { name: controller.service_arguments }
+
+  Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\RegisterController:
+    class: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\RegisterController
+    tags:
+      - { name: controller.service_arguments }
+
+  Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\ProtectedResourceMetadataController:
+    class: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\ProtectedResourceMetadataController
+    tags:
+      - { name: controller.service_arguments }
+
+  Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizationServerMetadataController:
+    class: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizationServerMetadataController
+    tags:
+      - { name: controller.service_arguments }

@@ -1,0 +1,24 @@
+mcp_oauth_authorize:
+  path: /oauth/authorize
+  methods: [GET, POST]
+  controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizeController
+
+mcp_oauth_token:
+  path: /oauth/token
+  methods: [POST]
+  controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\TokenController
+
+mcp_oauth_register:
+  path: /oauth/register
+  methods: [POST]
+  controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\RegisterController
+
+mcp_well_known_protected_resource:
+  path: /.well-known/oauth-protected-resource
+  methods: [GET]
+  controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\ProtectedResourceMetadataController
+
+mcp_well_known_authorization_server:
+  path: /.well-known/oauth-authorization-server
+  methods: [GET]
+  controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizationServerMetadataController

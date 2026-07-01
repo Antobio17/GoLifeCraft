@@ -1,0 +1,21 @@
+services:
+  Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\AuthorizationCodeStore:
+    class: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\AuthorizationCodeStore
+    arguments:
+      $cache: '@cache.app'
+      $ttl: 300
+
+  Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\CredentialsVerifier:
+    class: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\CredentialsVerifier
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $passwordHasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
+
+  Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\McpTokenAuthenticator:
+    class: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\McpTokenAuthenticator
+    arguments:
+      $jwtEncoder: '@Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface'
+      $tenantUserProvider: '@Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserProvider'
+
+  Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\McpAuthenticationEntryPoint:
+    class: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\McpAuthenticationEntryPoint
