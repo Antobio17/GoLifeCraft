@@ -1,8 +1,8 @@
-name: Frontend - Deploy to Production Server
+name: 🚀 Frontend · Deploy to Production (SSH)
 
 on:
   workflow_run:
-    workflows: ["Frontend - Build and Push Docker Images"]
+    workflows: ["🐳 Frontend · Publish image (GHCR)"]
     types:
       - completed
     branches:

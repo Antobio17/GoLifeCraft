@@ -1,4 +1,4 @@
-name: Frontend - Build and Push Docker Images
+name: 🐳 Frontend · Publish image (GHCR)
 
 on:
   push:

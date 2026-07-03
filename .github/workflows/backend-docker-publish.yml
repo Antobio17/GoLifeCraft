@@ -1,4 +1,4 @@
-name: Backend - Build and Push Docker Images
+name: 🐳 Backend · Publish images (GHCR)
 
 on:
   push:

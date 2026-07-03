@@ -1,8 +1,8 @@
-name: Backend - Deploy to Production Server
+name: 🚀 Backend · Deploy to Production (SSH)
 
 on:
   workflow_run:
-    workflows: ["Backend - Build and Push Docker Images"]
+    workflows: ["🐳 Backend · Publish images (GHCR)"]
     types:
       - completed
     branches:

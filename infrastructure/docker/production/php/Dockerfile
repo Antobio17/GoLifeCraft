@@ -14,7 +14,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install mysqli pdo pdo_mysql opcache gd intl
+    docker-php-ext-install mysqli pdo pdo_mysql gd intl
 
 # ─── Builder stage: install dependencies and warm cache ──────────────
 FROM base AS builder
