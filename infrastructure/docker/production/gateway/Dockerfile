@@ -1,5 +1,11 @@
 FROM nginx:stable-alpine
 
-COPY infrastructure/docker/production/gateway/default.conf /etc/nginx/conf.d/default.conf
+RUN apk add --no-cache openssl
 
-RUN rm -f /etc/nginx/conf.d/default.conf.bak
+COPY infrastructure/docker/production/gateway/default.conf /etc/nginx/conf.d/default.conf
+COPY infrastructure/docker/production/gateway/docker-entrypoint.sh /docker-entrypoint-custom.sh
+
+RUN rm -f /etc/nginx/conf.d/default.conf.bak \
+    && chmod +x /docker-entrypoint-custom.sh
+
+ENTRYPOINT ["/docker-entrypoint-custom.sh"]

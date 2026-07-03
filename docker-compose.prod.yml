@@ -6,8 +6,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      CERT_DOMAIN: ${CERT_DOMAIN:-golifecraft.com}
     volumes:
-      - certbot_certs:/etc/letsencrypt:ro
+      - certbot_certs:/etc/letsencrypt
       - certbot_www:/var/www/certbot:ro
     depends_on:
       - nginx
@@ -21,10 +23,17 @@ services:
   certbot:
     image: certbot/certbot
     container_name: golifecraft_certbot
+    depends_on:
+      - gateway
+    environment:
+      CERT_DOMAIN: ${CERT_DOMAIN:-golifecraft.com}
+      CERTBOT_EMAIL: ${CERTBOT_EMAIL}
+      CERTBOT_STAGING: ${CERTBOT_STAGING:-0}
     volumes:
       - certbot_certs:/etc/letsencrypt
       - certbot_www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done;'"
+      - ./infrastructure/docker/production/certbot/entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
     logging:
       driver: "json-file"
       options:
