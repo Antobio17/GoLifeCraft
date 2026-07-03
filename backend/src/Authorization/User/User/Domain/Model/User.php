@@ -59,6 +59,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         return $this->id;
     }
 
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
     }

@@ -17,7 +17,7 @@ doctrine:
                 url: '%env(resolve:DATABASE_READER_TENANT_TEMPLATE_URL)%'
     orm:
         default_entity_manager: master_manager
-        auto_generate_proxy_classes: '%kernel.debug%'
+        enable_native_lazy_objects: true
         entity_managers:
             master_manager:
                 connection: master
