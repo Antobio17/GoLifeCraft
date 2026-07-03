@@ -58,7 +58,7 @@ export class DomainEventLogComponent implements OnInit {
 
   filterFields: FilterField[] = [];
   columns: ListColumn<DomainEventLog>[] = [];
-  actions: ListAction[] = [];
+  actions: ListAction<DomainEventLog>[] = [];
 
   ngOnInit(): void {
     const params = this.route.snapshot.queryParamMap;
@@ -178,10 +178,10 @@ export class DomainEventLogComponent implements OnInit {
     this.loadLogs();
   }
 
-  onFiltersApplied(values: Record<string, any>): void {
-    this.filterEventName = values["eventName"] || "";
-    this.filterDateFrom = values["dateFrom"] || "";
-    this.filterDateTo = values["dateTo"] || "";
+  onFiltersApplied(values: Record<string, string | boolean>): void {
+    this.filterEventName = (values["eventName"] as string) || "";
+    this.filterDateFrom = (values["dateFrom"] as string) || "";
+    this.filterDateTo = (values["dateTo"] as string) || "";
     this.currentPage.set(1);
     this.loadLogs();
   }

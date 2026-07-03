@@ -24,7 +24,7 @@ export class FloatingSaveButtonComponent implements OnInit {
   @Input() customIcon?: string;
   @Input() fullWidth?: boolean = false;
 
-  @Output() onClick = new EventEmitter<void>();
+  @Output() clicked = new EventEmitter<void>();
 
   config: Required<FloatingSaveButtonConfig>;
 
@@ -57,7 +57,7 @@ export class FloatingSaveButtonComponent implements OnInit {
 
   handleClick(): void {
     if (!this.isDisabled()) {
-      this.onClick.emit();
+      this.clicked.emit();
     }
   }
 

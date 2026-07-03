@@ -53,7 +53,10 @@
     @if (imagePreview) {
       <div
         class="image-uploaded-card"
+        role="button"
+        tabindex="0"
         (click)="openImageModal()"
+        (keydown.enter)="openImageModal()"
         [title]="'imageUploader.viewImageTitle' | t"
       >
         <div class="image-thumbnail-wrap">

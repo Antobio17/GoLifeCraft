@@ -59,12 +59,13 @@
       >
         <div class="form-row">
           <div class="field-group">
-            <label class="field-label"
+            <label class="field-label" for="create-user-password"
               >{{ "createUser.field.password" | t }}
               <span class="required">*</span></label
             >
             <div class="password-input-wrapper">
               <input
+                id="create-user-password"
                 [type]="showPassword ? 'text' : 'password'"
                 formControlName="password"
                 class="form-control"
@@ -154,12 +155,13 @@
           </div>
 
           <div class="field-group">
-            <label class="field-label"
+            <label class="field-label" for="create-user-confirm-password"
               >{{ "createUser.field.confirmPassword" | t }}
               <span class="required">*</span></label
             >
             <div class="password-input-wrapper">
               <input
+                id="create-user-confirm-password"
                 [type]="showPassword ? 'text' : 'password'"
                 formControlName="confirmPassword"
                 class="form-control"
@@ -262,9 +264,9 @@
         [icon]="ICONS['USERS']"
       >
         <div class="field-group">
-          <label class="field-label"
+          <span class="field-label"
             >{{ "createUser.field.role" | t }}
-            <span class="required">*</span></label
+            <span class="required">*</span></span
           >
           <div class="roles-grid">
             @for (role of availableRoles; track role) {

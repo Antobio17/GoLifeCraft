@@ -39,8 +39,8 @@ export class DynamicListComponent implements ControlValueAccessor {
   @Input() config!: DynamicListConfig;
 
   itemsArray: FormArray;
-  onChange: any = () => {};
-  onTouched: any = () => {};
+  onChange: (value: unknown) => void = () => {};
+  onTouched: () => void = () => {};
   disabled: boolean = false;
 
   constructor() {
@@ -85,22 +85,21 @@ export class DynamicListComponent implements ControlValueAccessor {
     );
   }
 
-  writeValue(value: any[]): void {
-    if (value && Array.isArray(value)) {
-      this.itemsArray.clear();
-      value.forEach((item) => {
-        this.itemsArray.push(this.createItemGroup(item));
-      });
-    } else {
-      this.itemsArray.clear();
+  writeValue(value: unknown): void {
+    this.itemsArray.clear();
+    if (!Array.isArray(value)) {
+      return;
     }
+    value.forEach((item) => {
+      this.itemsArray.push(this.createItemGroup(item));
+    });
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: unknown) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
@@ -113,7 +112,7 @@ export class DynamicListComponent implements ControlValueAccessor {
     }
   }
 
-  private createItemGroup(value?: any): FormGroup {
+  private createItemGroup(value?: Record<string, unknown>): FormGroup {
     const validators = [];
 
     if (this.config.required) {

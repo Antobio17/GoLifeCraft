@@ -7,8 +7,11 @@
   <ol class="breadcrumb-list">
     <li
       class="breadcrumb-item breadcrumb-home clickable"
+      role="button"
+      tabindex="0"
       [attr.aria-label]="'breadcrumbs.home' | t"
       (click)="onNavigate('dashboard')"
+      (keydown.enter)="onNavigate('dashboard')"
     >
       <svg
         class="home-icon"
@@ -37,7 +40,10 @@
         class="breadcrumb-item"
         [class.active]="last"
         [class.clickable]="!last && breadcrumb.action"
+        [attr.role]="!last && breadcrumb.action ? 'button' : null"
+        [attr.tabindex]="!last && breadcrumb.action ? 0 : null"
         (click)="!last ? onNavigate(breadcrumb.action) : null"
+        (keydown.enter)="!last ? onNavigate(breadcrumb.action) : null"
       >
         <span>{{ breadcrumb.label | t }}</span>
       </li>

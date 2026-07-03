@@ -102,7 +102,8 @@ export class CreateUserComponent implements OnInit {
 
     this.saving = true;
 
-    const { confirmPassword, ...userData } = this.userForm.value;
+    const userData = { ...this.userForm.value };
+    delete userData.confirmPassword;
     const userRequest: CreateUserRequest = {
       ...userData,
     };

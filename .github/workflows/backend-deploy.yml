@@ -34,6 +34,18 @@ jobs:
           source: docker-compose.prod.yml
           target: ${{ secrets.SERVER_PROJECT_PATH }}
 
+      - name: Copy database schema to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          source: infrastructure/docker/production/mysql/schema.sql
+          target: ${{ secrets.SERVER_PROJECT_PATH }}
+          strip_components: 4
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -75,6 +87,10 @@ jobs:
               fi
               sleep 2
             done
+
+            echo "==> Ensuring database schemas exist (master and tenants)..."
+            docker exec -i golifecraft_mysql mysql -uroot -p"$DATABASE_MASTER_PASSWORD" < schema.sql
+            rm -f schema.sql
 
             echo "==> Fixing ownership of mounted volumes for www-data..."
             docker exec -u root golifecraft_php sh -lc 'chown -R www-data:www-data /var/www/html/config/jwt /var/www/html/var/uploads'

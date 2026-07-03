@@ -1,9 +1,9 @@
 export type ListCellIcon = "folder" | "file";
 
-export interface ListColumn<T = any> {
+export interface ListColumn<T = unknown> {
   key: string;
   label: string;
-  value: (row: T) => any;
+  value: (row: T) => string;
   width?: string;
   minWidth?: string;
   format?: "date" | "datetime";
@@ -24,7 +24,7 @@ export type ListActionIcon =
   | "preview"
   | "download";
 
-export interface ListAction<T = any> {
+export interface ListAction<T = unknown> {
   key: string;
   label: string;
   icon: ListActionIcon;
@@ -32,12 +32,12 @@ export interface ListAction<T = any> {
   visible?: (row: T) => boolean;
 }
 
-export interface ListActionEvent<T = any> {
+export interface ListActionEvent<T = unknown> {
   key: string;
   row: T;
 }
 
-export interface ListCellClickEvent<T = any> {
+export interface ListCellClickEvent<T = unknown> {
   column: string;
   row: T;
 }

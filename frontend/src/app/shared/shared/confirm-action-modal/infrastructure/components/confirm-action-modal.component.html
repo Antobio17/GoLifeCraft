@@ -1,6 +1,16 @@
 @if (show) {
-  <div class="cdm-overlay" (click)="cancelled.emit()">
-    <div class="cdm-content" (click)="$event.stopPropagation()">
+  <div
+    class="cdm-overlay"
+    tabindex="-1"
+    (click)="cancelled.emit()"
+    (keydown.escape)="cancelled.emit()"
+  >
+    <div
+      class="cdm-content"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+      (keydown)="$event.stopPropagation()"
+    >
       <div class="cdm-header">
         <div
           class="cdm-header-icon"

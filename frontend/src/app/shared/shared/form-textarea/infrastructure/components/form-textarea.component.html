@@ -1,6 +1,6 @@
 <div class="form-group" [class.is-focused]="isFocused">
   @if (finalConfig.label) {
-    <label class="form-label">
+    <label class="form-label" [for]="inputId">
       {{ finalConfig.label }}
       @if (finalConfig.required) {
         <span class="required-indicator">*</span>
@@ -9,6 +9,7 @@
   }
 
   <textarea
+    [id]="inputId"
     [value]="value"
     [placeholder]="finalConfig.placeholder || ''"
     [readonly]="finalConfig.readonly || false"

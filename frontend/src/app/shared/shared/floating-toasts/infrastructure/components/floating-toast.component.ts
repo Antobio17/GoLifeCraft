@@ -33,7 +33,7 @@ export class FloatingToastComponent {
 
   toast: FloatingToastMessage | null = null;
   visible = false;
-  private timeoutId: any;
+  private timeoutId: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
     this.destroyRef.onDestroy(() => clearTimeout(this.timeoutId));

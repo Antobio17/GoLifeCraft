@@ -174,7 +174,7 @@
                 <span class="lf-toggle-thumb"></span>
               </span>
             </label>
-            <span class="lf-toggle-label" [class.active]="values[field.key]">
+            <span class="lf-toggle-label" [class.active]="!!values[field.key]">
               {{
                 (values[field.key]
                   ? field.trueLabel || "Sí"

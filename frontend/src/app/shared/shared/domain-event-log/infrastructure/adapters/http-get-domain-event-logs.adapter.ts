@@ -4,6 +4,27 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { GetDomainEventLogsPort } from "../../domain/ports/get-domain-event-logs.port";
 import { GetDomainEventLogsResponse } from "../../domain/models/get-domain-event-logs.model";
+import {
+  DomainEventLogUser,
+  DomainEventLog,
+} from "../../domain/models/domain-event-log.model";
+
+interface RawDomainEventLogResource {
+  id: string;
+  attributes: {
+    eventName: string;
+    aggregateId: string;
+    payload: DomainEventLog["payload"];
+    occurredOn: string;
+    recordedAt: string;
+    user: DomainEventLogUser;
+  };
+}
+
+interface RawGetDomainEventLogsResponse {
+  meta: GetDomainEventLogsResponse["meta"];
+  data: RawDomainEventLogResource[];
+}
 
 @Injectable()
 export class HttpGetDomainEventLogsAdapter implements GetDomainEventLogsPort {
@@ -31,11 +52,13 @@ export class HttpGetDomainEventLogsAdapter implements GetDomainEventLogsPort {
     }
 
     return this.http
-      .get<any>("/api/v1/shared/domain-event-logs", { params })
+      .get<RawGetDomainEventLogsResponse>("/api/v1/shared/domain-event-logs", {
+        params,
+      })
       .pipe(
         map((response) => ({
           meta: response.meta,
-          data: response.data.map((item: any) => ({
+          data: response.data.map((item) => ({
             id: item.id,
             eventName: item.attributes.eventName,
             aggregateId: item.attributes.aggregateId,

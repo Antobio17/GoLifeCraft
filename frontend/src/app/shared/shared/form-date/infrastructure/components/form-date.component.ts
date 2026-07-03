@@ -26,6 +26,7 @@ export class FormDateComponent implements ControlValueAccessor {
   @Input() hint?: string;
   @Input() config?: FormDateConfig;
 
+  readonly inputId = `form-date-${Math.random().toString(36).substring(2, 11)}`;
   value: string | null = "";
   isFocused: boolean = false;
 

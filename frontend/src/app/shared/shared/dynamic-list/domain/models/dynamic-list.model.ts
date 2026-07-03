@@ -13,5 +13,5 @@ export interface DynamicListConfig {
 }
 
 export interface DynamicListItem {
-  [key: string]: any;
+  [key: string]: unknown;
 }

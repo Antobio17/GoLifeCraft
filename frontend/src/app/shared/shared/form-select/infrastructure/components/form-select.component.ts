@@ -4,6 +4,7 @@ import {
   FormSelectConfig,
   FormSelectErrorMessages,
   FormSelectOption,
+  FormSelectValue,
 } from "../../domain/models/form-select.model";
 import { ContextualTranslatePipe } from "../../../i18n/infrastructure/pipes/contextual-translate.pipe";
 
@@ -27,11 +28,12 @@ export class FormSelectComponent implements ControlValueAccessor {
   @Input() optionLabelPrefix?: string;
   @Input() hideEmptyOption: boolean = false;
 
-  value: any = null;
+  readonly inputId = `form-select-${Math.random().toString(36).substring(2, 11)}`;
+  value: FormSelectValue = null;
   isTouched: boolean = false;
   isFocused: boolean = false;
 
-  private onChange: (value: any) => void = () => {};
+  private onChange: (value: FormSelectValue) => void = () => {};
   private onTouched: () => void = () => {};
 
   constructor() {
@@ -79,15 +81,15 @@ export class FormSelectComponent implements ControlValueAccessor {
     return `formSelect.errors.${errorKey}`;
   }
 
-  writeValue(value: any): void {
+  writeValue(value: FormSelectValue): void {
     this.value = value ?? "";
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: FormSelectValue) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
@@ -95,7 +97,7 @@ export class FormSelectComponent implements ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  onSelectChange(value: any): void {
+  onSelectChange(value: FormSelectValue): void {
     // Handle special cases for value conversion
     if (value === "null") {
       value = null;
@@ -121,14 +123,14 @@ export class FormSelectComponent implements ControlValueAccessor {
     this.isFocused = true;
   }
 
-  getOptionValue(option: FormSelectOption): any {
+  getOptionValue(option: FormSelectOption): string {
     if (option.value === null) {
       return "null";
     }
     if (typeof option.value === "boolean") {
       return option.value.toString();
     }
-    return option.value;
+    return String(option.value);
   }
 
   isOptionSelected(option: FormSelectOption): boolean {

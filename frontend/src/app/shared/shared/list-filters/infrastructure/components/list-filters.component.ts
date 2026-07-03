@@ -11,7 +11,10 @@ import {
 import { FormsModule } from "@angular/forms";
 import { Subject } from "rxjs";
 import { debounceTime, takeUntil } from "rxjs/operators";
-import { FilterField } from "../../domain/models/list-filters.model";
+import {
+  FilterField,
+  FilterValue,
+} from "../../domain/models/list-filters.model";
 import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ButtonComponent } from "@shared/shared/button/infrastructure/components/button.component";
 
@@ -25,14 +28,14 @@ export class ListFiltersComponent implements OnInit, OnChanges, OnDestroy {
   @Input() fields: FilterField[] = [];
   @Input() loading: boolean = false;
   @Input() loadingFields: number = 2;
-  @Output() filtersApplied = new EventEmitter<Record<string, any>>();
+  @Output() filtersApplied = new EventEmitter<Record<string, FilterValue>>();
   @Output() filtersCleared = new EventEmitter<void>();
 
   get loadingFieldsArray(): number[] {
     return Array.from({ length: this.loadingFields }, (_, i) => i);
   }
 
-  values: Record<string, any> = {};
+  values: Record<string, FilterValue> = {};
 
   private textChange$ = new Subject<void>();
   private destroy$ = new Subject<void>();
@@ -74,7 +77,7 @@ export class ListFiltersComponent implements OnInit, OnChanges, OnDestroy {
     }).length;
   }
 
-  selectSegment(key: string, value: any): void {
+  selectSegment(key: string, value: string): void {
     if (this.values[key] === value) return;
     this.values[key] = value;
     this.apply();
@@ -88,7 +91,7 @@ export class ListFiltersComponent implements OnInit, OnChanges, OnDestroy {
     this.apply();
   }
 
-  toggleChip(key: string, value: any): void {
+  toggleChip(key: string, value: string): void {
     this.values[key] = this.values[key] === value ? "" : value;
     this.apply();
   }

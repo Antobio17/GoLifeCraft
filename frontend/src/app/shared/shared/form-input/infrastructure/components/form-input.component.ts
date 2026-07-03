@@ -43,11 +43,12 @@ export class FormInputComponent implements ControlValueAccessor, OnDestroy {
   @Input() tooltip?: string;
   @Input() config?: FormInputConfig;
 
-  value: any = "";
+  readonly inputId = `form-input-${Math.random().toString(36).substring(2, 11)}`;
+  value: string = "";
   isFocused: boolean = false;
   showPassword: boolean = false;
 
-  private onChange: (value: any) => void = () => {};
+  private onChange: (value: string | number) => void = () => {};
   private onTouched: () => void = () => {};
   private tooltipEl: HTMLElement | null = null;
 
@@ -128,15 +129,15 @@ export class FormInputComponent implements ControlValueAccessor, OnDestroy {
     return `formInput.errors.${errorKey}`;
   }
 
-  writeValue(value: any): void {
-    this.value = value;
+  writeValue(value: string | number | null): void {
+    this.value = value == null ? "" : String(value);
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string | number) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
@@ -147,7 +148,7 @@ export class FormInputComponent implements ControlValueAccessor, OnDestroy {
   onInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     const value = this.type === "number" ? target.valueAsNumber : target.value;
-    this.value = value;
+    this.value = target.value;
     this.onChange(value);
   }
 

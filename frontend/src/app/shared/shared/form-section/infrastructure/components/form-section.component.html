@@ -8,7 +8,10 @@
     <div
       class="section-header"
       [class.collapsible]="sectionConfig.collapsible"
+      [attr.role]="sectionConfig.collapsible ? 'button' : null"
+      [attr.tabindex]="sectionConfig.collapsible ? 0 : null"
       (click)="toggleCollapse()"
+      (keydown.enter)="toggleCollapse()"
     >
       <h4 class="section-title">
         @if (sectionConfig.iconName) {

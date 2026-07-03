@@ -27,11 +27,12 @@ export class FormTextareaComponent implements ControlValueAccessor {
   @Input() hint?: string;
   @Input() config?: FormTextareaConfig;
 
-  value: any = "";
+  readonly inputId = `form-textarea-${Math.random().toString(36).substring(2, 11)}`;
+  value: string = "";
   isTouched: boolean = false;
   isFocused: boolean = false;
 
-  private onChange: (value: any) => void = () => {};
+  private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
 
   constructor() {
@@ -78,15 +79,15 @@ export class FormTextareaComponent implements ControlValueAccessor {
     return `formTextarea.errors.${errorKey}`;
   }
 
-  writeValue(value: any): void {
-    this.value = value;
+  writeValue(value: string | null): void {
+    this.value = value ?? "";
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 

@@ -3,6 +3,7 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
 import {
   FormCheckboxGridOption,
   FormCheckboxGridConfig,
+  FormCheckboxGridValue,
 } from "../../domain/models/form-checkbox-grid.model";
 import { ContextualTranslatePipe } from "../../../i18n/infrastructure/pipes/contextual-translate.pipe";
 
@@ -23,9 +24,9 @@ export class FormCheckboxGridComponent implements ControlValueAccessor {
   @Input() optionLabelPrefix: string = "";
   @Input() config?: FormCheckboxGridConfig;
 
-  value: any[] = [];
+  value: FormCheckboxGridValue[] = [];
 
-  private onChange: (value: any[]) => void = () => {};
+  private onChange: (value: FormCheckboxGridValue[]) => void = () => {};
   private onTouched: () => void = () => {};
 
   constructor() {
@@ -62,14 +63,14 @@ export class FormCheckboxGridComponent implements ControlValueAccessor {
     return `formCheckboxGrid.errors.${errorKey}`;
   }
 
-  isSelected(optionValue: any): boolean {
+  isSelected(optionValue: FormCheckboxGridValue): boolean {
     if (!this.value || !Array.isArray(this.value)) {
       return false;
     }
     return this.value.includes(optionValue);
   }
 
-  toggle(optionValue: any): void {
+  toggle(optionValue: FormCheckboxGridValue): void {
     if (this.isDisabled) {
       return;
     }
@@ -88,15 +89,15 @@ export class FormCheckboxGridComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
-  writeValue(value: any): void {
+  writeValue(value: unknown): void {
     this.value = Array.isArray(value) ? value : [];
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: FormCheckboxGridValue[]) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 

@@ -58,9 +58,9 @@
         [icon]="ICONS['SETTINGS']"
       >
         <div class="field-group">
-          <label class="field-label">{{
+          <span class="field-label">{{
             "updateUser.field.isActive" | t
-          }}</label>
+          }}</span>
           <div class="toggle-container">
             <label class="toggle-switch">
               <input
@@ -84,9 +84,9 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label"
+          <span class="field-label"
             >{{ "updateUser.field.role" | t }}
-            <span class="required">*</span></label
+            <span class="required">*</span></span
           >
           <div class="roles-grid">
             @for (role of availableRoles; track role) {

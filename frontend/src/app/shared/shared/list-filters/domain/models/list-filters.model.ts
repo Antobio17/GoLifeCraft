@@ -6,8 +6,10 @@ export type FilterFieldType =
   | "chips"
   | "date";
 
+export type FilterValue = string | boolean;
+
 export interface FilterSelectOption {
-  value: any;
+  value: string;
   label: string;
   color?: string;
 }
@@ -18,7 +20,7 @@ export interface FilterField {
   type: FilterFieldType;
   placeholder?: string;
   options?: FilterSelectOption[];
-  defaultValue?: any;
+  defaultValue?: FilterValue;
   disabled?: boolean;
   trueLabel?: string;
   falseLabel?: string;

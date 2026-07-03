@@ -67,7 +67,7 @@ export class GetUsersComponent implements OnInit {
 
   columns: ListColumn<User>[] = [];
 
-  actions: ListAction[] = [];
+  actions: ListAction<User>[] = [];
 
   private readonly PAGE_SIZE_KEY = "pageSize_users";
 
@@ -265,10 +265,10 @@ export class GetUsersComponent implements OnInit {
     this.loadUsers();
   }
 
-  onFiltersApplied(values: Record<string, any>): void {
-    this.filterUsername = values["username"] || "";
-    this.filterEmail = values["email"] || "";
-    this.filterRole = values["role"] || "";
+  onFiltersApplied(values: Record<string, string | boolean>): void {
+    this.filterUsername = (values["username"] as string) || "";
+    this.filterEmail = (values["email"] as string) || "";
+    this.filterRole = (values["role"] as string) || "";
     this.currentPage.set(1);
     this.loadUsers();
   }

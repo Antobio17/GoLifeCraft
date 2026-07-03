@@ -1,5 +1,7 @@
+export type FormCheckboxGridValue = string | number;
+
 export interface FormCheckboxGridOption {
-  value: any;
+  value: FormCheckboxGridValue;
   label: string;
   disabled?: boolean;
 }

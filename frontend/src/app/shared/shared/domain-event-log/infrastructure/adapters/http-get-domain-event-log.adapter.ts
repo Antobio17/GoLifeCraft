@@ -4,6 +4,32 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { GetDomainEventLogPort } from "../../domain/ports/get-domain-event-log.port";
 import { GetDomainEventLogResponse } from "../../domain/models/get-domain-event-log.model";
+import {
+  DomainEventLogUser,
+  DomainEventLog,
+} from "../../domain/models/domain-event-log.model";
+
+interface RawDomainEventLogResource {
+  id: string;
+  attributes: {
+    eventName: string;
+    aggregateId: string;
+    payload: DomainEventLog["payload"];
+    occurredOn: string;
+    recordedAt: string;
+    user: DomainEventLogUser;
+  };
+}
+
+interface RawIncludedResource {
+  id: string;
+  attributes: { name: string };
+}
+
+interface RawGetDomainEventLogResponse {
+  data: RawDomainEventLogResource;
+  included?: RawIncludedResource[];
+}
 
 @Injectable()
 export class HttpGetDomainEventLogAdapter implements GetDomainEventLogPort {
@@ -13,7 +39,9 @@ export class HttpGetDomainEventLogAdapter implements GetDomainEventLogPort {
     domainEventLogId: string,
   ): Observable<GetDomainEventLogResponse> {
     return this.http
-      .get<any>(`/api/v1/shared/domain-event-logs/${domainEventLogId}`)
+      .get<RawGetDomainEventLogResponse>(
+        `/api/v1/shared/domain-event-logs/${domainEventLogId}`,
+      )
       .pipe(
         map((response) => ({
           data: {
@@ -25,7 +53,7 @@ export class HttpGetDomainEventLogAdapter implements GetDomainEventLogPort {
             recordedAt: response.data.attributes.recordedAt,
             user: response.data.attributes.user,
           },
-          included: (response.included ?? []).map((item: any) => ({
+          included: (response.included ?? []).map((item) => ({
             id: item.id,
             name: item.attributes.name,
           })),

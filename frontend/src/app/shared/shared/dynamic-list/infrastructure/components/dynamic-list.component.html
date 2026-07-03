@@ -1,5 +1,5 @@
 <div class="dynamic-list-container">
-  <label class="form-label">{{ config.label | t }}</label>
+  <span class="form-label">{{ config.label | t }}</span>
   <div class="dynamic-list">
     @for (item of itemsArray.controls; track trackByIndex(i); let i = $index) {
       <div class="list-item" [formGroup]="$any(item)">

@@ -28,10 +28,10 @@ import {
     ButtonComponent,
   ],
 })
-export class ListTableComponent<T = any> implements OnChanges {
+export class ListTableComponent<T = unknown> implements OnChanges {
   @Input() items: T[] = [];
   @Input() columns: ListColumn<T>[] = [];
-  @Input() actions: ListAction[] = [];
+  @Input() actions: ListAction<T>[] = [];
   @Input() loading = false;
 
   hasLoaded = false;
@@ -96,7 +96,7 @@ export class ListTableComponent<T = any> implements OnChanges {
     );
   }
 
-  get primaryActions(): ListAction[] {
+  get primaryActions(): ListAction<T>[] {
     return this.actions
       .filter((a) => !a.danger)
       .filter((a) => {
@@ -106,20 +106,20 @@ export class ListTableComponent<T = any> implements OnChanges {
       });
   }
 
-  get dangerActions(): ListAction[] {
+  get dangerActions(): ListAction<T>[] {
     return this.actions.filter((a) => a.danger);
   }
 
-  visibleActions(row: T): ListAction[] {
+  visibleActions(row: T): ListAction<T>[] {
     const all = this.primaryActions.concat(this.dangerActions);
     return all.filter((a) => !a.visible || a.visible(row));
   }
 
-  visiblePrimaryActions(row: T): ListAction[] {
+  visiblePrimaryActions(row: T): ListAction<T>[] {
     return this.primaryActions.filter((a) => !a.visible || a.visible(row));
   }
 
-  visibleDangerActions(row: T): ListAction[] {
+  visibleDangerActions(row: T): ListAction<T>[] {
     return this.dangerActions.filter((a) => !a.visible || a.visible(row));
   }
 

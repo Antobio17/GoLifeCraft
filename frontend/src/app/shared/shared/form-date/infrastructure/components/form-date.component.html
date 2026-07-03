@@ -1,6 +1,6 @@
 <div class="form-group" [class.is-focused]="isFocused">
   @if (finalConfig.label) {
-    <label class="form-label">
+    <label class="form-label" [for]="inputId">
       {{ finalConfig.label }}
       @if (finalConfig.required) {
         <span class="required-indicator">*</span>
@@ -10,6 +10,7 @@
 
   <div class="date-wrapper">
     <input
+      [id]="inputId"
       type="date"
       [value]="value || ''"
       [disabled]="disabled"

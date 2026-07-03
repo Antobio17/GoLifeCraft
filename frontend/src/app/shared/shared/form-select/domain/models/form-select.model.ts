@@ -1,5 +1,7 @@
+export type FormSelectValue = string | number | boolean | null;
+
 export interface FormSelectOption {
-  value: any;
+  value: FormSelectValue;
   label: string;
   disabled?: boolean;
 }

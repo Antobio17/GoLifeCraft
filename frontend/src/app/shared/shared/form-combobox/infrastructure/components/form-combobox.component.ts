@@ -26,6 +26,7 @@ export class FormComboboxComponent implements ControlValueAccessor {
   @Input() hint?: string;
   @Input() config?: FormComboboxConfig;
 
+  readonly inputId = `form-combobox-${Math.random().toString(36).substring(2, 11)}`;
   value: string = "";
   isTouched: boolean = false;
   isFocused: boolean = false;
@@ -87,11 +88,11 @@ export class FormComboboxComponent implements ControlValueAccessor {
     this.value = value || "";
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
