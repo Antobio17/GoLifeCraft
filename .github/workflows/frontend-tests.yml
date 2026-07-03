@@ -23,6 +23,7 @@ on:
       - 'frontend/tsconfig.json'
       - 'frontend/tsconfig.spec.json'
       - '.github/workflows/frontend-tests.yml'
+  workflow_call:
 
 jobs:
   tests:

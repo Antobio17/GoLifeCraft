@@ -27,6 +27,7 @@ on:
       - 'backend/config/**'
       - 'backend/bin/**'
       - '.github/workflows/backend-tests.yml'
+  workflow_call:
 
 jobs:
   tests:

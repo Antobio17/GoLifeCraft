@@ -76,6 +76,9 @@ jobs:
               sleep 2
             done
 
+            echo "==> Fixing ownership of mounted volumes for www-data..."
+            docker exec -u root golifecraft_php sh -lc 'chown -R www-data:www-data /var/www/html/config/jwt /var/www/html/var/uploads'
+
             echo "==> Generating JWT keypair if missing..."
             docker exec golifecraft_php sh -lc 'php bin/console lexik:jwt:generate-keypair --skip-if-exists'
 

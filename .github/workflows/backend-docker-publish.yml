@@ -26,8 +26,13 @@ env:
   IMAGE_PREFIX: ${{ github.repository_owner }}/golifecraft
 
 jobs:
+  test:
+    name: Tests and Linting
+    uses: ./.github/workflows/backend-tests.yml
+
   build-and-push:
     name: Build and Push Production Images
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read
