@@ -256,6 +256,32 @@ $SERVER_PROJECT_PATH/
 > deploy (invalida todas las sesiones activas). Para cambiar variables de entorno,
 > actualizar el secret `PROD_ENV_FILE` y relanzar el deploy.
 
+### Acceso a MySQL en producción
+
+Primero conectar por SSH al servidor (ver [Claves SSH](#claves-ssh)):
+
+```bash
+ssh golifecraft   # o: ssh -i ~/.ssh/id_ed25519_golifecraft deploy@TU_SERVIDOR
+cd $SERVER_PROJECT_PATH
+```
+
+Entrar al cliente `mysql` dentro del contenedor `golifecraft_mysql`, reutilizando
+la contraseña root ya presente en el propio entorno del contenedor (evita tener
+que copiarla a mano desde `.env.local`):
+
+```bash
+docker exec -it golifecraft_mysql sh -lc 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD"'
+```
+
+Solo shell del contenedor, sin entrar a `mysql`:
+
+```bash
+docker exec -it golifecraft_mysql bash
+```
+
+> ⚠️ Es la base de datos real de producción: cualquier `UPDATE`/`DELETE` afecta
+> datos de usuarios. Antes de tocar algo, considera un `mysqldump` de seguridad.
+
 ## Notas
 
 - Las claves JWT (`backend/config/jwt/`) no se versionan. En local se generan con
