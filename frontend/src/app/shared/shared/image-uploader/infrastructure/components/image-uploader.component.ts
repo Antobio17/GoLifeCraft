@@ -766,7 +766,7 @@ export class ImageUploaderComponent implements ControlValueAccessor, OnDestroy {
               this.closeImageModal();
               this.floatingToastService.showToast({
                 status: 200,
-                keyTranslation: "preventionPlan.messages.image.save.success",
+                keyTranslation: "imageUploader.messages.image.save.success",
                 details: [],
               });
               this.imageSaved.emit();
@@ -800,7 +800,7 @@ export class ImageUploaderComponent implements ControlValueAccessor, OnDestroy {
           this.closeImageModal();
           this.floatingToastService.showToast({
             status: 200,
-            keyTranslation: "preventionPlan.messages.image.restore.success",
+            keyTranslation: "imageUploader.messages.image.restore.success",
             details: [],
           });
           this.imageRestored.emit();

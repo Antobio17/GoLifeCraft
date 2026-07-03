@@ -9,13 +9,6 @@ export interface GetMyProfileResponse {
       lastname: string | null;
       role: string;
       isActive: boolean;
-      canCreateFolder: boolean;
-      canDeleteFolder: boolean;
-      canUploadFile: boolean;
-      canDeleteFile: boolean;
-      canSignFile: boolean;
-      canRollbackSign: boolean;
-      canAccessUsers: boolean;
     };
   };
 }

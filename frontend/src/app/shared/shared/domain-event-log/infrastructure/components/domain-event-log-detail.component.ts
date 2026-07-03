@@ -5,11 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { GetDomainEventLogService } from "../../application/services/get-domain-event-log.service";
 import { DomainEventLogUtilsService } from "../../application/services/domain-event-log-utils.service";
-import {
-  DomainEventLog,
-  PreventionPlanIncluded,
-  CenterIncluded,
-} from "../../domain/models/domain-event-log.model";
+import { DomainEventLog } from "../../domain/models/domain-event-log.model";
 import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { TranslationService } from "@shared/shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/shared/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -54,8 +50,6 @@ export class DomainEventLogDetailComponent implements OnInit, OnDestroy {
   readonly ICONS = FORM_SECTION_ICONS;
 
   log = signal<DomainEventLog | null>(null);
-  includedPreventionPlan = signal<PreventionPlanIncluded | null>(null);
-  includedCenter = signal<CenterIncluded | null>(null);
   loading = signal(true);
 
   ngOnInit(): void {
@@ -76,17 +70,6 @@ export class DomainEventLogDetailComponent implements OnInit, OnDestroy {
     this.getDomainEventLogService.getDomainEventLog(id).subscribe({
       next: (response) => {
         this.log.set(response.data);
-        this.includedPreventionPlan.set(
-          response.included.find(
-            (i): i is PreventionPlanIncluded =>
-              "centerId" in i &&
-              i.id === response.data.payload["preventionPlanId"],
-          ) ?? null,
-        );
-        this.includedCenter.set(
-          response.included.find((i): i is CenterIncluded => "name" in i) ??
-            null,
-        );
         this.loading.set(false);
         this.breadcrumbService.setDynamicLastLabel(
           this.eventUtils.translateEventName(response.data.eventName),
@@ -128,7 +111,6 @@ export class DomainEventLogDetailComponent implements OnInit, OnDestroy {
       "updatedAt",
       "deletedByUserId",
       "deletedAt",
-      "preventionPlanId",
     ]);
 
     return Object.entries(payload)
@@ -216,36 +198,11 @@ export class DomainEventLogDetailComponent implements OnInit, OnDestroy {
   }
 
   private readonly ENTITY_ROUTES: Record<string, (id: string) => string> = {
-    preventionPlanId: (id) => `/prevention-plans/${id}/edit/basic-info`,
-    centerId: (id) => `/centers/${id}/edit`,
     userId: (id) => `/users/${id}/edit`,
   };
 
   private readonly AGGREGATE_ROUTES: Record<string, (id: string) => string> = {
-    preventionPlan: (id) => `/prevention-plans/${id}/edit/basic-info`,
-    center: (id) => `/centers/${id}/edit`,
     user: (id) => `/users/${id}/edit`,
-  };
-
-  private readonly PREVENTION_PLAN_SECTION_ENTITY_TO_PATH: Record<
-    string,
-    string
-  > = {
-    companyAndLab: "company-and-lab",
-    coldWaterHumanConsumption: "cold-water-human-consumption",
-    domesticHotWater: "domestic-hot-water",
-    initialDiagnosis: "initial-diagnosis",
-    usePoints: "use-points",
-    reservoirsOrCisterns: "reservoirs-or-cisterns",
-    accumulatorsOrTerms: "accumulators-or-terms",
-    technicalTeam: "technical-team",
-    building: "building",
-    fireProtectionSystem: "fire-protection-system",
-    fireProtectionSystemReservoir: "fire-protection-system-reservoirs",
-    sprayIrrigation: "spray-irrigation",
-    sprayIrrigationReservoir: "spray-irrigation-reservoirs",
-    towersAndEvaporativeCondensers: "towers-and-evaporative-condensers",
-    evaporativeCoolingSystems: "evaporative-cooling-systems",
   };
 
   getEntityRoute(key: string, value: unknown): string | null {
@@ -254,22 +211,10 @@ export class DomainEventLogDetailComponent implements OnInit, OnDestroy {
     return builder ? builder(value) : null;
   }
 
-  getAggregateRoute(
-    eventName: string,
-    aggregateId: string,
-    payload?: Record<string, unknown>,
-  ): string | null {
+  getAggregateRoute(eventName: string, aggregateId: string): string | null {
     const parts = eventName.split(".");
     const entitySegment = parts[4];
     if (!entitySegment) return null;
-
-    const sectionPath =
-      this.PREVENTION_PLAN_SECTION_ENTITY_TO_PATH[entitySegment];
-    if (sectionPath) {
-      const preventionPlanId = payload?.["preventionPlanId"];
-      if (typeof preventionPlanId !== "string") return null;
-      return `/prevention-plans/${preventionPlanId}/edit/${sectionPath}`;
-    }
 
     const builder = this.AGGREGATE_ROUTES[entitySegment];
     return builder ? builder(aggregateId) : null;

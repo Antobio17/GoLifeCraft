@@ -26,13 +26,6 @@ const mockProfileResponse: GetMyProfileResponse = {
       lastname: null,
       role: "ROLE_GOD",
       isActive: true,
-      canCreateFolder: false,
-      canDeleteFolder: false,
-      canUploadFile: false,
-      canDeleteFile: false,
-      canSignFile: false,
-      canRollbackSign: false,
-      canAccessUsers: false,
     },
   },
 };

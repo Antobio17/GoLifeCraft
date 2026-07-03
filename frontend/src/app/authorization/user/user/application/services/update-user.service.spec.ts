@@ -11,13 +11,6 @@ const mockRequest: UpdateUserRequest = {
   email: "u@test.com",
   isActive: true,
   role: "admin",
-  canCreateFolder: false,
-  canDeleteFolder: false,
-  canUploadFile: false,
-  canDeleteFile: false,
-  canSignFile: false,
-  canRollbackSign: false,
-  canAccessUsers: false,
 };
 
 const mockGetUserResponse: GetUserResponse = {
@@ -33,13 +26,6 @@ const mockGetUserResponse: GetUserResponse = {
       role: "admin",
       createdAt: "",
       updatedAt: "",
-      canCreateFolder: false,
-      canDeleteFolder: false,
-      canUploadFile: false,
-      canDeleteFile: false,
-      canSignFile: false,
-      canRollbackSign: false,
-      canAccessUsers: false,
     },
   },
 };

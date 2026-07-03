@@ -36,13 +36,6 @@ export class PerformLoginUseCase {
                 ...session.user,
                 role: profile.data.attributes.role,
                 roles: [profile.data.attributes.role],
-                canCreateFolder: profile.data.attributes.canCreateFolder,
-                canDeleteFolder: profile.data.attributes.canDeleteFolder,
-                canUploadFile: profile.data.attributes.canUploadFile,
-                canDeleteFile: profile.data.attributes.canDeleteFile,
-                canSignFile: profile.data.attributes.canSignFile,
-                canRollbackSign: profile.data.attributes.canRollbackSign,
-                canAccessUsers: profile.data.attributes.canAccessUsers,
               },
             });
           }),

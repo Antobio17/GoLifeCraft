@@ -5,11 +5,4 @@ export interface UpdateUserRequest {
   lastname: string;
   isActive: boolean;
   role: string;
-  canCreateFolder: boolean;
-  canDeleteFolder: boolean;
-  canUploadFile: boolean;
-  canDeleteFile: boolean;
-  canSignFile: boolean;
-  canRollbackSign: boolean;
-  canAccessUsers: boolean;
 }

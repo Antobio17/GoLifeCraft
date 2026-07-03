@@ -65,18 +65,7 @@ export class UpdateUserComponent implements OnInit {
       lastname: ["", [Validators.required]],
       isActive: [true],
       role: [""],
-      canCreateFolder: [false],
-      canDeleteFolder: [false],
-      canUploadFile: [false],
-      canDeleteFile: [false],
-      canSignFile: [false],
-      canRollbackSign: [false],
-      canAccessUsers: [false],
     });
-  }
-
-  isReadOnlyRole(): boolean {
-    return this.userForm.get("role")?.value === USER_ROLES.USER;
   }
 
   ngOnInit(): void {
@@ -108,13 +97,6 @@ export class UpdateUserComponent implements OnInit {
               lastname: user.attributes.lastname,
               isActive: user.attributes.isActive,
               role: user.attributes.role || "",
-              canCreateFolder: !!user.attributes.canCreateFolder,
-              canDeleteFolder: !!user.attributes.canDeleteFolder,
-              canUploadFile: !!user.attributes.canUploadFile,
-              canDeleteFile: !!user.attributes.canDeleteFile,
-              canSignFile: !!user.attributes.canSignFile,
-              canRollbackSign: !!user.attributes.canRollbackSign,
-              canAccessUsers: !!user.attributes.canAccessUsers,
             });
             this.loading = false;
           },
@@ -136,16 +118,8 @@ export class UpdateUserComponent implements OnInit {
     this.saving = true;
 
     const formValue = this.userForm.value;
-    const isReadOnly = formValue.role === USER_ROLES.USER;
     const userData: UpdateUserRequest = {
       ...formValue,
-      canCreateFolder: isReadOnly ? false : !!formValue.canCreateFolder,
-      canDeleteFolder: isReadOnly ? false : !!formValue.canDeleteFolder,
-      canUploadFile: isReadOnly ? false : !!formValue.canUploadFile,
-      canDeleteFile: isReadOnly ? false : !!formValue.canDeleteFile,
-      canSignFile: isReadOnly ? false : !!formValue.canSignFile,
-      canRollbackSign: isReadOnly ? false : !!formValue.canRollbackSign,
-      canAccessUsers: isReadOnly ? false : !!formValue.canAccessUsers,
     };
 
     this.updateUserService.updateUser(this.userId, userData).subscribe({
@@ -165,10 +139,6 @@ export class UpdateUserComponent implements OnInit {
         this.saving = false;
       },
     });
-  }
-
-  isCenterIdRequired(): boolean {
-    return false;
   }
 
   getRoleName(role: string): string {

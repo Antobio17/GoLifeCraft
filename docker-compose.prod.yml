@@ -64,7 +64,7 @@ services:
     container_name: golifecraft_nginx
     restart: always
     volumes:
-      - /home/deploy/golifecraft/prod/volumes/public_uploads:/var/www/upload/
+      - ./volumes/public_uploads:/var/www/upload/
     ports:
       - "8082:80"
     depends_on:
@@ -90,8 +90,8 @@ services:
     env_file:
       - .env.local
     volumes:
-      - /home/deploy/golifecraft/prod/volumes/internal_uploads:/var/www/html/var/uploads
-      - /home/deploy/golifecraft/prod/volumes/jwt_keys:/var/www/html/config/jwt
+      - ./volumes/internal_uploads:/var/www/html/var/uploads
+      - ./volumes/jwt_keys:/var/www/html/config/jwt
     depends_on:
       - db
     logging:

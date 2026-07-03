@@ -45,32 +45,4 @@ export class AuthSessionService {
   isGod(): boolean {
     return this.getCurrentUserRole() === "ROLE_GOD";
   }
-
-  canCreateFolder(): boolean {
-    return this.isGod() || this.getCurrentUser()?.canCreateFolder === true;
-  }
-
-  canDeleteFolder(): boolean {
-    return this.isGod() || this.getCurrentUser()?.canDeleteFolder === true;
-  }
-
-  canUploadFile(): boolean {
-    return this.isGod() || this.getCurrentUser()?.canUploadFile === true;
-  }
-
-  canDeleteFile(): boolean {
-    return this.isGod() || this.getCurrentUser()?.canDeleteFile === true;
-  }
-
-  canSignFile(): boolean {
-    return this.isGod() || this.getCurrentUser()?.canSignFile === true;
-  }
-
-  canRollbackSign(): boolean {
-    return this.isGod() || this.getCurrentUser()?.canRollbackSign === true;
-  }
-
-  canAccessUsers(): boolean {
-    return this.isGod() || this.getCurrentUser()?.canAccessUsers === true;
-  }
 }

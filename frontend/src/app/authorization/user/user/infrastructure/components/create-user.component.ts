@@ -68,20 +68,9 @@ export class CreateUserComponent implements OnInit {
         password: ["", [Validators.required, Validators.minLength(8)]],
         confirmPassword: ["", [Validators.required]],
         role: [USER_ROLES.USER, [Validators.required]],
-        canCreateFolder: [false],
-        canDeleteFolder: [false],
-        canUploadFile: [false],
-        canDeleteFile: [false],
-        canSignFile: [false],
-        canRollbackSign: [false],
-        canAccessUsers: [false],
       },
       { validators: this.passwordMatchValidator },
     );
-  }
-
-  isReadOnlyRole(): boolean {
-    return this.userForm.get("role")?.value === USER_ROLES.USER;
   }
 
   ngOnInit(): void {
@@ -114,16 +103,8 @@ export class CreateUserComponent implements OnInit {
     this.saving = true;
 
     const { confirmPassword, ...userData } = this.userForm.value;
-    const isReadOnly = userData.role === USER_ROLES.USER;
     const userRequest: CreateUserRequest = {
       ...userData,
-      canCreateFolder: isReadOnly ? false : !!userData.canCreateFolder,
-      canDeleteFolder: isReadOnly ? false : !!userData.canDeleteFolder,
-      canUploadFile: isReadOnly ? false : !!userData.canUploadFile,
-      canDeleteFile: isReadOnly ? false : !!userData.canDeleteFile,
-      canSignFile: isReadOnly ? false : !!userData.canSignFile,
-      canRollbackSign: isReadOnly ? false : !!userData.canRollbackSign,
-      canAccessUsers: isReadOnly ? false : !!userData.canAccessUsers,
     };
 
     this.createUserService.createUser(userRequest).subscribe({

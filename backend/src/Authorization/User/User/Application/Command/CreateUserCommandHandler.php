@@ -49,13 +49,6 @@ final readonly class CreateUserCommandHandler
             createdByUserId: $command->createdByUserId,
             passwordHasher: $this->passwordHasher,
             dateTimeGenerator: $this->dateTimeGenerator,
-            canCreateFolder: $command->canCreateFolder,
-            canDeleteFolder: $command->canDeleteFolder,
-            canUploadFile: $command->canUploadFile,
-            canDeleteFile: $command->canDeleteFile,
-            canSignFile: $command->canSignFile,
-            canRollbackSign: $command->canRollbackSign,
-            canAccessUsers: $command->canAccessUsers,
         );
 
         $this->userRepository->save(user: $user);

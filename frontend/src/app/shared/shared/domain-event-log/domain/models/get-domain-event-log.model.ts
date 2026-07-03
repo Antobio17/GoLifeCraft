@@ -1,10 +1,9 @@
-import {
-  CenterIncluded,
-  DomainEventLog,
-  PreventionPlanIncluded,
-} from "./domain-event-log.model";
+import { DomainEventLog } from "./domain-event-log.model";
 
-export type DomainEventLogIncluded = PreventionPlanIncluded | CenterIncluded;
+export interface DomainEventLogIncluded {
+  id: string;
+  name: string;
+}
 
 export interface GetDomainEventLogResponse {
   data: DomainEventLog;

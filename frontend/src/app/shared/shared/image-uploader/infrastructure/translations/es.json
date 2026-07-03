@@ -12,6 +12,16 @@
     "errors": {
       "invalidFile": "Por favor selecciona un archivo de imagen válido",
       "maxSize": "La imagen no puede superar los {{maxSize}}MB"
+    },
+    "messages": {
+      "image": {
+        "save": {
+          "success": "Imagen guardada correctamente"
+        },
+        "restore": {
+          "success": "Imagen original restaurada"
+        }
+      }
     }
   }
 }

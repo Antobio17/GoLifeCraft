@@ -25,20 +25,10 @@ export class HttpGetDomainEventLogAdapter implements GetDomainEventLogPort {
             recordedAt: response.data.attributes.recordedAt,
             user: response.data.attributes.user,
           },
-          included: (response.included ?? []).map((item: any) => {
-            if (item.type === "PreventionPlan") {
-              return {
-                id: item.id,
-                centerId: item.attributes.centerId,
-                revisionNumber: item.attributes.revisionNumber ?? null,
-                executeAt: item.attributes.executeAt ?? null,
-              };
-            }
-            return {
-              id: item.id,
-              name: item.attributes.name,
-            };
-          }),
+          included: (response.included ?? []).map((item: any) => ({
+            id: item.id,
+            name: item.attributes.name,
+          })),
         })),
       );
   }

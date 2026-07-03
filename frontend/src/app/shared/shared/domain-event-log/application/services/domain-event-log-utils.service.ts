@@ -17,7 +17,6 @@ export class DomainEventLogUtilsService {
     if (!eventName) return "status-info";
     if (eventName.includes(".authorization.")) return "status-info";
     if (eventName.includes(".organization.")) return "status-success";
-    if (eventName.includes(".legionella.")) return "status-warning";
     if (eventName.includes(".cloud.")) return "status-accent";
     return "status-info";
   }

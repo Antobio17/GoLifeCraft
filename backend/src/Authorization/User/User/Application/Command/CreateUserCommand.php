@@ -15,13 +15,6 @@ final readonly class CreateUserCommand implements Command
         public string $role,
         public string $createdByUserId,
         public string $createdByUserRole,
-        public bool $canCreateFolder = false,
-        public bool $canDeleteFolder = false,
-        public bool $canUploadFile = false,
-        public bool $canDeleteFile = false,
-        public bool $canSignFile = false,
-        public bool $canRollbackSign = false,
-        public bool $canAccessUsers = false,
     ) {
     }
 

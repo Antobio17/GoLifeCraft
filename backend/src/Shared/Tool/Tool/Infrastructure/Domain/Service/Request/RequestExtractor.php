@@ -384,43 +384,8 @@ final class RequestExtractor
         return $userRole;
     }
 
-    public static function getUserCanCreateFolder(Request $request): bool
-    {
-        return (bool) $request->attributes->get(key: 'userCanCreateFolder', default: false);
-    }
-
-    public static function getUserCanDeleteFolder(Request $request): bool
-    {
-        return (bool) $request->attributes->get(key: 'userCanDeleteFolder', default: false);
-    }
-
-    public static function getUserCanUploadFile(Request $request): bool
-    {
-        return (bool) $request->attributes->get(key: 'userCanUploadFile', default: false);
-    }
-
-    public static function getUserCanDeleteFile(Request $request): bool
-    {
-        return (bool) $request->attributes->get(key: 'userCanDeleteFile', default: false);
-    }
-
-    public static function getUserCanSignFile(Request $request): bool
-    {
-        return (bool) $request->attributes->get(key: 'userCanSignFile', default: false);
-    }
-
-    public static function getUserCanRollbackSign(Request $request): bool
-    {
-        return (bool) $request->attributes->get(key: 'userCanRollbackSign', default: false);
-    }
-
     public static function getTenantSessionId(Request $request): ?string
     {
         return $request->attributes->get(key: 'tenantSessionId');
-    }
-
-    public static function getCenterSessionId(Request $request): ?string
-    {
-        return $request->attributes->get(key: 'centerSessionId');
     }
 }

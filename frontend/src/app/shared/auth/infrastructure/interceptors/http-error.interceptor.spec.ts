@@ -27,7 +27,9 @@ describe("httpErrorInterceptor", () => {
     mockToastService = jasmine.createSpyObj("FloatingToastService", [
       "showToast",
     ]);
-    mockRouter = jasmine.createSpyObj("Router", ["navigate"]);
+    mockRouter = jasmine.createSpyObj("Router", ["navigate"], {
+      url: "/dashboard",
+    });
 
     TestBed.configureTestingModule({
       providers: [
@@ -70,7 +72,7 @@ describe("httpErrorInterceptor", () => {
     expect(mockToastService.showToast).toHaveBeenCalledWith(errorObj);
   });
 
-  it("should not show toast when error response has no errors array", () => {
+  it("should show a generic toast when error response has no errors array", () => {
     httpClient.get("/api/test").subscribe({ error: () => {} });
     httpMock
       .expectOne("/api/test")
@@ -79,7 +81,11 @@ describe("httpErrorInterceptor", () => {
         { status: 500, statusText: "Server Error" },
       );
 
-    expect(mockToastService.showToast).not.toHaveBeenCalled();
+    expect(mockToastService.showToast).toHaveBeenCalledWith({
+      status: 500,
+      keyTranslation: "error.server.generic",
+      details: [],
+    });
   });
 
   it("should rethrow the error after handling", (done) => {

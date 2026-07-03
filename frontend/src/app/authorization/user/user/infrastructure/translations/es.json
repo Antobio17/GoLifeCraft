@@ -142,15 +142,6 @@
       }
     }
   },
-  "centerId": {
-    "required": {
-      "for": {
-        "center": {
-          "role": "Se requiere un centro para este rol"
-        }
-      }
-    }
-  },
   "new": {
     "role": {
       "is": {
@@ -181,7 +172,6 @@
     "field": {
       "username": "Usuario",
       "role": "Rol",
-      "center": "Centro",
       "name": "Nombre",
       "namePlaceholder": "Tu nombre",
       "lastname": "Apellidos",
@@ -219,8 +209,7 @@
     "section": {
       "personal": "Datos personales",
       "security": "Contraseña",
-      "role": "Rol y permisos",
-      "permissions": "Permisos del usuario"
+      "role": "Rol"
     },
     "field": {
       "username": "Usuario",
@@ -234,22 +223,6 @@
       "languagePlaceholder": "Selecciona un idioma",
       "timezoneCode": "Zona horaria",
       "timezonePlaceholder": "Selecciona una zona horaria"
-    },
-    "permissions": {
-      "canCreateFolder": "Crear carpetas",
-      "canDeleteFolder": "Eliminar carpetas",
-      "canUploadFile": "Subir archivos",
-      "canDeleteFile": "Eliminar archivos",
-      "canSignFile": "Firmar PDFs",
-      "canRollbackSign": "Restaurar PDFs firmados",
-      "canCreateFolderDescription": "Permite crear nuevas carpetas dentro del centro asignado.",
-      "canDeleteFolderDescription": "Permite eliminar carpetas existentes y todo su contenido.",
-      "canUploadFileDescription": "Permite subir nuevos archivos al sistema.",
-      "canDeleteFileDescription": "Permite eliminar archivos del sistema de forma definitiva.",
-      "canSignFileDescription": "Permite firmar digitalmente documentos PDF.",
-      "canRollbackSignDescription": "Permite revertir la firma digital de un PDF previamente firmado.",
-      "canAccessUsers": "Ver sección de usuarios",
-      "canAccessUsersDescription": "Permite acceder a la sección de Autorización y gestionar los usuarios del sistema."
     },
     "validation": {
       "passwordRequired": "La contraseña es requerida",
@@ -267,8 +240,7 @@
     "cancel": "Cancelar",
     "section": {
       "personal": "Datos personales",
-      "status": "Estado y rol",
-      "permissions": "Permisos del usuario"
+      "status": "Estado y rol"
     },
     "field": {
       "username": "Usuario",
@@ -283,22 +255,6 @@
       "languagePlaceholder": "Selecciona un idioma",
       "timezoneCode": "Zona horaria",
       "timezonePlaceholder": "Selecciona una zona horaria"
-    },
-    "permissions": {
-      "canCreateFolder": "Crear carpetas",
-      "canDeleteFolder": "Eliminar carpetas",
-      "canUploadFile": "Subir archivos",
-      "canDeleteFile": "Eliminar archivos",
-      "canSignFile": "Firmar PDFs",
-      "canRollbackSign": "Restaurar PDFs firmados",
-      "canCreateFolderDescription": "Permite crear nuevas carpetas dentro del centro asignado.",
-      "canDeleteFolderDescription": "Permite eliminar carpetas existentes y todo su contenido.",
-      "canUploadFileDescription": "Permite subir nuevos archivos al sistema.",
-      "canDeleteFileDescription": "Permite eliminar archivos del sistema de forma definitiva.",
-      "canSignFileDescription": "Permite firmar digitalmente documentos PDF.",
-      "canRollbackSignDescription": "Permite revertir la firma digital de un PDF previamente firmado.",
-      "canAccessUsers": "Ver sección de usuarios",
-      "canAccessUsersDescription": "Permite acceder a la sección de Autorización y gestionar los usuarios del sistema."
     }
   },
   "access": {

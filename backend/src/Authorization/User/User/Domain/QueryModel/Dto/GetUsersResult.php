@@ -17,13 +17,6 @@ final class GetUsersResult extends QueryAggregateResult
         public readonly bool $isActive,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
-        public readonly bool $canCreateFolder = false,
-        public readonly bool $canDeleteFolder = false,
-        public readonly bool $canUploadFile = false,
-        public readonly bool $canDeleteFile = false,
-        public readonly bool $canSignFile = false,
-        public readonly bool $canRollbackSign = false,
-        public readonly bool $canAccessUsers = false,
     ) {
         parent::__construct(id: $id, aggregateName: $aggregateName);
     }

@@ -41,13 +41,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         public readonly string $createdByUserId,
         public string $updatedByUserId,
         public array $roles = [],
-        public bool $canCreateFolder = false,
-        public bool $canDeleteFolder = false,
-        public bool $canUploadFile = false,
-        public bool $canDeleteFile = false,
-        public bool $canSignFile = false,
-        public bool $canRollbackSign = false,
-        public bool $canAccessUsers = false,
     ) {
     }
 
@@ -83,13 +76,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         string $createdByUserId,
         PasswordHasher $passwordHasher,
         DateTimeGenerator $dateTimeGenerator,
-        bool $canCreateFolder = false,
-        bool $canDeleteFolder = false,
-        bool $canUploadFile = false,
-        bool $canDeleteFile = false,
-        bool $canSignFile = false,
-        bool $canRollbackSign = false,
-        bool $canAccessUsers = false,
     ): self {
         if (self::ROLE_GOD === $role) {
             throw CreateUserException::cannotCreateUserWithGodRole();
@@ -101,10 +87,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 availableRoles: self::getAvailableRoles()
             );
         }
-
-        $effectivePermissions = self::ROLE_USER === $role
-            ? [false, false, false, false, false, false, false]
-            : [$canCreateFolder, $canDeleteFolder, $canUploadFile, $canDeleteFile, $canSignFile, $canRollbackSign, $canAccessUsers];
 
         $now = $dateTimeGenerator->now();
 
@@ -123,13 +105,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
             createdByUserId: $createdByUserId,
             updatedByUserId: $createdByUserId,
             roles: [$role],
-            canCreateFolder: $effectivePermissions[0],
-            canDeleteFolder: $effectivePermissions[1],
-            canUploadFile: $effectivePermissions[2],
-            canDeleteFile: $effectivePermissions[3],
-            canSignFile: $effectivePermissions[4],
-            canRollbackSign: $effectivePermissions[5],
-            canAccessUsers: $effectivePermissions[6],
         );
 
         $user->password = $passwordHasher->hash(user: $user, plainPassword: $plainPassword);
@@ -149,13 +124,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 updatedAt: $now,
                 createdByUserId: $createdByUserId,
                 updatedByUserId: $createdByUserId,
-                canCreateFolder: $user->canCreateFolder,
-                canDeleteFolder: $user->canDeleteFolder,
-                canUploadFile: $user->canUploadFile,
-                canDeleteFile: $user->canDeleteFile,
-                canSignFile: $user->canSignFile,
-                canRollbackSign: $user->canRollbackSign,
-                canAccessUsers: $user->canAccessUsers,
             )
         );
 
@@ -171,13 +139,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         bool $isActive,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
-        bool $canCreateFolder = false,
-        bool $canDeleteFolder = false,
-        bool $canUploadFile = false,
-        bool $canDeleteFile = false,
-        bool $canSignFile = false,
-        bool $canRollbackSign = false,
-        bool $canAccessUsers = false,
     ): void {
         if (self::ROLE_GOD === $role) {
             throw UpdateUserException::cannotUpdateUserToGodRole();
@@ -199,8 +160,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
 
         $now = $dateTimeGenerator->now();
 
-        $isReadOnlyRole = self::ROLE_USER === $role;
-
         $this->username = $username;
         $this->email = $email;
         $this->name = $name;
@@ -210,13 +169,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         $this->roles = [$role];
         $this->updatedByUserId = $updatedByUserId;
         $this->updatedAt = $now;
-        $this->canCreateFolder = $isReadOnlyRole ? false : $canCreateFolder;
-        $this->canDeleteFolder = $isReadOnlyRole ? false : $canDeleteFolder;
-        $this->canUploadFile = $isReadOnlyRole ? false : $canUploadFile;
-        $this->canDeleteFile = $isReadOnlyRole ? false : $canDeleteFile;
-        $this->canSignFile = $isReadOnlyRole ? false : $canSignFile;
-        $this->canRollbackSign = $isReadOnlyRole ? false : $canRollbackSign;
-        $this->canAccessUsers = $isReadOnlyRole ? false : $canAccessUsers;
 
         $this->record(
             event: new UserUpdated(
@@ -230,13 +182,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 updatedAt: $now,
                 updatedByUserId: $updatedByUserId,
                 role: $role,
-                canCreateFolder: $this->canCreateFolder,
-                canDeleteFolder: $this->canDeleteFolder,
-                canUploadFile: $this->canUploadFile,
-                canDeleteFile: $this->canDeleteFile,
-                canSignFile: $this->canSignFile,
-                canRollbackSign: $this->canRollbackSign,
-                canAccessUsers: $this->canAccessUsers,
             )
         );
     }
@@ -268,13 +213,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 updatedAt: $now,
                 updatedByUserId: $updatedByUserId,
                 role: $this->role,
-                canCreateFolder: $this->canCreateFolder,
-                canDeleteFolder: $this->canDeleteFolder,
-                canUploadFile: $this->canUploadFile,
-                canDeleteFile: $this->canDeleteFile,
-                canSignFile: $this->canSignFile,
-                canRollbackSign: $this->canRollbackSign,
-                canAccessUsers: $this->canAccessUsers,
             )
         );
     }
@@ -302,13 +240,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 updatedAt: $now,
                 updatedByUserId: $updatedByUserId,
                 role: $this->role,
-                canCreateFolder: $this->canCreateFolder,
-                canDeleteFolder: $this->canDeleteFolder,
-                canUploadFile: $this->canUploadFile,
-                canDeleteFile: $this->canDeleteFile,
-                canSignFile: $this->canSignFile,
-                canRollbackSign: $this->canRollbackSign,
-                canAccessUsers: $this->canAccessUsers,
             )
         );
     }

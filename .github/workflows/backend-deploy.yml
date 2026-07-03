@@ -20,27 +20,64 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy compose file to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          source: docker-compose.prod.yml
+          target: ${{ secrets.SERVER_PROJECT_PATH }}
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
           port: ${{ secrets.SERVER_SSH_PORT || 22 }}
           script: |
             set -e
 
+            echo "==> Bootstrapping project directory..."
+            cd ${{ secrets.SERVER_PROJECT_PATH }}
+            mkdir -p volumes/public_uploads volumes/internal_uploads volumes/jwt_keys
+
+            echo "==> Writing .env.local from secrets..."
+            cat > .env.local <<'GOLIFECRAFT_ENV_EOF'
+            ${{ secrets.PROD_ENV_FILE }}
+            GOLIFECRAFT_ENV_EOF
+            chmod 600 .env.local
+
             echo "==> Logging in to GitHub Container Registry..."
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
-            echo "==> Navigating to project directory..."
-            cd ${{ secrets.SERVER_PROJECT_PATH }}
-
             echo "==> Pulling latest images..."
-            docker compose -f docker-compose.prod.yml pull gateway nginx php
+            docker compose --env-file .env.local -f docker-compose.prod.yml pull gateway nginx php
 
-            echo "==> Restarting updated services..."
-            docker compose -f docker-compose.prod.yml up -d --no-deps --remove-orphans gateway nginx php
+            echo "==> Starting services..."
+            docker compose --env-file .env.local -f docker-compose.prod.yml up -d --remove-orphans
+
+            echo "==> Waiting for database to be ready..."
+            DATABASE_MASTER_PASSWORD=$(grep '^DATABASE_MASTER_PASSWORD=' .env.local | cut -d= -f2-)
+            tries=0
+            until docker exec golifecraft_mysql mysqladmin ping -h127.0.0.1 -uroot -p"$DATABASE_MASTER_PASSWORD" --silent 2>/dev/null; do
+              tries=$((tries + 1))
+              if [ "$tries" -ge 30 ]; then
+                echo "::error::Database did not become ready in time"
+                exit 1
+              fi
+              sleep 2
+            done
+
+            echo "==> Generating JWT keypair if missing..."
+            docker exec golifecraft_php sh -lc 'php bin/console lexik:jwt:generate-keypair --skip-if-exists'
 
             echo "==> Updating database schema on server (master and tenant)..."
             docker exec golifecraft_php sh -lc 'php bin/console doctrine:schema:update --dump-sql --force'

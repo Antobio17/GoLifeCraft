@@ -245,9 +245,6 @@ body {
   --color-role-god-bg: rgba(139, 92, 246, 0.1);
   --color-role-god-text: #7c3aed;
   --color-role-god-border: rgba(139, 92, 246, 0.3);
-  --color-role-central-admin-bg: rgba(239, 68, 68, 0.1);
-  --color-role-central-admin-text: var(--color-error-600);
-  --color-role-central-admin-border: rgba(239, 68, 68, 0.3);
   --color-role-admin-bg: rgba(245, 158, 11, 0.1);
   --color-role-admin-text: var(--color-warning-600);
   --color-role-admin-border: rgba(245, 158, 11, 0.3);
@@ -271,10 +268,6 @@ body {
   --color-role-god-selected-border: var(--color-error-500);
   --color-role-god-selected-text: #fca5a5;
   --color-role-god-selected-icon-bg: rgba(239, 68, 68, 0.2);
-  --color-role-central-admin-selected-bg: rgba(245, 158, 11, 0.15);
-  --color-role-central-admin-selected-border: var(--color-warning-500);
-  --color-role-central-admin-selected-text: #fcd34d;
-  --color-role-central-admin-selected-icon-bg: rgba(245, 158, 11, 0.2);
   --color-role-admin-selected-bg: rgba(56, 189, 248, 0.15);
   --color-role-admin-selected-border: var(--color-primary-600);
   --color-role-admin-selected-text: var(--color-primary-700);
@@ -579,17 +572,14 @@ body {
 
   /* Role badges — dark */
   --color-role-god-bg: rgba(139, 92, 246, 0.15);
-  --color-role-central-admin-bg: rgba(239, 68, 68, 0.15);
   --color-role-admin-bg: rgba(245, 158, 11, 0.15);
   --color-role-manager-bg: rgba(16, 185, 129, 0.15);
   --color-role-technical-bg: rgba(56, 189, 248, 0.15);
   --color-role-god-text: #c4b5fd;
-  --color-role-central-admin-text: #fca5a5;
   --color-role-admin-text: #fcd34d;
   --color-role-manager-text: #6ee7b7;
   --color-role-technical-text: var(--color-primary-300);
   --color-role-god-border: rgba(139, 92, 246, 0.45);
-  --color-role-central-admin-border: rgba(239, 68, 68, 0.45);
   --color-role-admin-border: rgba(245, 158, 11, 0.45);
   --color-role-manager-border: rgba(16, 185, 129, 0.45);
   --color-role-technical-border: rgba(56, 189, 248, 0.45);
@@ -601,7 +591,6 @@ body {
 
   /* Role card selected states — dark */
   --color-role-god-selected-bg: rgba(239, 68, 68, 0.2);
-  --color-role-central-admin-selected-bg: rgba(245, 158, 11, 0.2);
   --color-role-admin-selected-bg: rgba(56, 189, 248, 0.2);
   --color-role-manager-selected-bg: rgba(0, 175, 102, 0.2);
   --color-role-technical-selected-bg: rgba(134, 14, 204, 0.2);

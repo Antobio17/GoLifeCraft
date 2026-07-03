@@ -142,15 +142,6 @@
       }
     }
   },
-  "centerId": {
-    "required": {
-      "for": {
-        "center": {
-          "role": "A center is required for this role"
-        }
-      }
-    }
-  },
   "new": {
     "role": {
       "is": {
@@ -181,7 +172,6 @@
     "field": {
       "username": "Username",
       "role": "Role",
-      "center": "Center",
       "name": "Name",
       "namePlaceholder": "Your name",
       "lastname": "Last name",
@@ -219,8 +209,7 @@
     "section": {
       "personal": "Personal data",
       "security": "Password",
-      "role": "Role and permissions",
-      "permissions": "User permissions"
+      "role": "Role"
     },
     "field": {
       "username": "Username",
@@ -234,22 +223,6 @@
       "languagePlaceholder": "Select a language",
       "timezoneCode": "Timezone",
       "timezonePlaceholder": "Select a timezone"
-    },
-    "permissions": {
-      "canCreateFolder": "Create folders",
-      "canDeleteFolder": "Delete folders",
-      "canUploadFile": "Upload files",
-      "canDeleteFile": "Delete files",
-      "canSignFile": "Sign PDFs",
-      "canRollbackSign": "Restore signed PDFs",
-      "canCreateFolderDescription": "Allows creating new folders within the assigned center.",
-      "canDeleteFolderDescription": "Allows deleting existing folders and all their content.",
-      "canUploadFileDescription": "Allows uploading new files to the system.",
-      "canDeleteFileDescription": "Allows permanently removing files from the system.",
-      "canSignFileDescription": "Allows digitally signing PDF documents.",
-      "canRollbackSignDescription": "Allows reverting the digital signature of a previously signed PDF.",
-      "canAccessUsers": "View users section",
-      "canAccessUsersDescription": "Allows accessing the Authorization section and managing system users."
     },
     "validation": {
       "passwordRequired": "Password is required",
@@ -267,8 +240,7 @@
     "cancel": "Cancel",
     "section": {
       "personal": "Personal data",
-      "status": "Status and role",
-      "permissions": "User permissions"
+      "status": "Status and role"
     },
     "field": {
       "username": "Username",
@@ -283,22 +255,6 @@
       "languagePlaceholder": "Select a language",
       "timezoneCode": "Timezone",
       "timezonePlaceholder": "Select a timezone"
-    },
-    "permissions": {
-      "canCreateFolder": "Create folders",
-      "canDeleteFolder": "Delete folders",
-      "canUploadFile": "Upload files",
-      "canDeleteFile": "Delete files",
-      "canSignFile": "Sign PDFs",
-      "canRollbackSign": "Restore signed PDFs",
-      "canCreateFolderDescription": "Allows creating new folders within the assigned center.",
-      "canDeleteFolderDescription": "Allows deleting existing folders and all their content.",
-      "canUploadFileDescription": "Allows uploading new files to the system.",
-      "canDeleteFileDescription": "Allows permanently removing files from the system.",
-      "canSignFileDescription": "Allows digitally signing PDF documents.",
-      "canRollbackSignDescription": "Allows reverting the digital signature of a previously signed PDF.",
-      "canAccessUsers": "View users section",
-      "canAccessUsersDescription": "Allows accessing the Authorization section and managing system users."
     }
   },
   "access": {

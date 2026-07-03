@@ -10,13 +10,6 @@ const mockRequest: CreateUserRequest = {
   lastname: "User",
   password: "secret",
   role: "admin",
-  canCreateFolder: false,
-  canDeleteFolder: false,
-  canUploadFile: false,
-  canDeleteFile: false,
-  canSignFile: false,
-  canRollbackSign: false,
-  canAccessUsers: false,
 };
 
 class MockCreateUserPort extends CreateUserPort {

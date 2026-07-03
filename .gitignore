@@ -4,6 +4,7 @@ docs/sql/
 # Variables de entorno con secretos (nunca versionar)
 .env.local
 .env.*.local
+.env.prod
 /backend/.env.local
 /backend/.env.*.local
 /backend/.env.prod

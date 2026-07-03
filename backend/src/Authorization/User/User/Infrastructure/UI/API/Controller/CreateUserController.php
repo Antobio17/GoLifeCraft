@@ -39,13 +39,6 @@ final class CreateUserController
                 role: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'role'),
                 createdByUserId: RequestExtractor::getUserSessionId(request: $request),
                 createdByUserRole: RequestExtractor::getUserRole(request: $request),
-                canCreateFolder: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'canCreateFolder', required: false, nullable: false) ?? false,
-                canDeleteFolder: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'canDeleteFolder', required: false, nullable: false) ?? false,
-                canUploadFile: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'canUploadFile', required: false, nullable: false) ?? false,
-                canDeleteFile: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'canDeleteFile', required: false, nullable: false) ?? false,
-                canSignFile: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'canSignFile', required: false, nullable: false) ?? false,
-                canRollbackSign: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'canRollbackSign', required: false, nullable: false) ?? false,
-                canAccessUsers: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'canAccessUsers', required: false, nullable: false) ?? false,
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_CREATED);

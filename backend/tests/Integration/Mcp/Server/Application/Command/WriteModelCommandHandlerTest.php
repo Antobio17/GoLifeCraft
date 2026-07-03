@@ -125,7 +125,7 @@ final class WriteModelCommandHandlerTest extends TestCase
             data: ['name' => 'Barrita proteica', 'status' => 'published', 'calories' => 240],
             id: null,
             userSessionId: 'user-1',
-            role: 'ROLE_CENTER_TECHNICAL',
+            role: 'ROLE_UNAUTHORIZED',
         ));
     }
 

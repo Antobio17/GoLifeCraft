@@ -103,7 +103,7 @@
             <div class="info-code-group">
               <code class="info-code">{{ log.aggregateId }}</code>
               @if (
-                getAggregateRoute(log.eventName, log.aggregateId, log.payload);
+                getAggregateRoute(log.eventName, log.aggregateId);
                 as route
               ) {
                 <a
@@ -326,79 +326,6 @@
             </div>
           }
         </div>
-
-        @if (includedPreventionPlan(); as plan) {
-          <div class="ppcl-box">
-            <div class="ppcl-box__header">
-              <div class="ppcl-box__title">
-                {{ "domainEventLog.detail.preventionPlan" | t }}
-              </div>
-              <a
-                class="ppcl-box__link"
-                [routerLink]="getEntityRoute('preventionPlanId', plan.id)"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.75"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <use
-                    href="assets/icons/golifecraft/sprite.svg#i-external-link"
-                  ></use>
-                </svg>
-              </a>
-            </div>
-            <div class="ppcl-box__body">
-              <div class="ppcl-row">
-                <span class="ppcl-label">{{
-                  "domainEventLog.detail.revisionNumber" | t
-                }}</span>
-                <span class="ppcl-value">{{ plan.revisionNumber ?? "—" }}</span>
-              </div>
-              @if (plan.executeAt) {
-                <div class="ppcl-row">
-                  <span class="ppcl-label">{{
-                    "domainEventLog.detail.executeAt" | t
-                  }}</span>
-                  <span class="date-chip">
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.75"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <use
-                        href="assets/icons/golifecraft/sprite.svg#i-calendar"
-                      ></use>
-                    </svg>
-                    {{ formatDateTime(plan.executeAt) }}
-                  </span>
-                </div>
-              }
-              @if (includedCenter(); as center) {
-                <div class="ppcl-row">
-                  <span class="ppcl-label">{{
-                    "domainEventLog.detail.center" | t
-                  }}</span>
-                  <span class="ppcl-value">{{ center.name }}</span>
-                </div>
-              }
-            </div>
-          </div>
-        }
       </app-form-section>
     </div>
   }

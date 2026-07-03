@@ -73,10 +73,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   canAccessAuthorization(): boolean {
-    return (
-      this.authSessionService.isGod() ||
-      this.authSessionService.canAccessUsers()
-    );
+    return this.authSessionService.isGod();
   }
 
   canAccessReports(): boolean {

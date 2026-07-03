@@ -52,13 +52,6 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
                 role: $row['role'],
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
-                canCreateFolder: (bool) $row['can_create_folder'],
-                canDeleteFolder: (bool) $row['can_delete_folder'],
-                canUploadFile: (bool) $row['can_upload_file'],
-                canDeleteFile: (bool) $row['can_delete_file'],
-                canSignFile: (bool) $row['can_sign_file'],
-                canRollbackSign: (bool) $row['can_rollback_sign'],
-                canAccessUsers: (bool) $row['can_access_users'],
             );
         }, array: $result);
     }
@@ -96,13 +89,6 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
                 'u.role',
                 'u.created_at',
                 'u.updated_at',
-                'u.can_create_folder',
-                'u.can_delete_folder',
-                'u.can_upload_file',
-                'u.can_delete_file',
-                'u.can_sign_file',
-                'u.can_rollback_sign',
-                'u.can_access_users',
             )
             ->from(from: 'user', alias: 'u')
             ->where('u.tenant_id = :tenantId')

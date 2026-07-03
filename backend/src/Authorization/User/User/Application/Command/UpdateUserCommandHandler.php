@@ -35,14 +35,6 @@ final readonly class UpdateUserCommandHandler
         }
 
         $isRoleChanging = $user->role !== $command->role;
-        $arePermissionsChanging =
-            $user->canCreateFolder !== $command->canCreateFolder
-            || $user->canDeleteFolder !== $command->canDeleteFolder
-            || $user->canUploadFile !== $command->canUploadFile
-            || $user->canDeleteFile !== $command->canDeleteFile
-            || $user->canSignFile !== $command->canSignFile
-            || $user->canRollbackSign !== $command->canRollbackSign
-            || $user->canAccessUsers !== $command->canAccessUsers;
         if (
             $user->username === $command->username
             && $user->email === $command->email
@@ -50,7 +42,6 @@ final readonly class UpdateUserCommandHandler
             && $user->lastname === $command->lastname
             && $user->isActive === $command->isActive
             && !$isRoleChanging
-            && !$arePermissionsChanging
         ) {
             return;
         }
@@ -88,13 +79,6 @@ final readonly class UpdateUserCommandHandler
             isActive: $command->isActive,
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
-            canCreateFolder: $command->canCreateFolder,
-            canDeleteFolder: $command->canDeleteFolder,
-            canUploadFile: $command->canUploadFile,
-            canDeleteFile: $command->canDeleteFile,
-            canSignFile: $command->canSignFile,
-            canRollbackSign: $command->canRollbackSign,
-            canAccessUsers: $command->canAccessUsers,
         );
 
         $this->userRepository->save(user: $user);

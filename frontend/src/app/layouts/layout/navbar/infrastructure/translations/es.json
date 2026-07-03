@@ -2,7 +2,7 @@
   "navbar": {
     "authorization": "Autorización",
     "authorizationModule": "Autorización",
-    "authorizationDesc": "Gestión de accesos del equipo, roles y permisos del sistema.",
+    "authorizationDesc": "Gestión de accesos del equipo y roles del sistema.",
     "users": "Usuarios",
     "usersDesc": "Gestión de usuarios del sistema",
     "reports": "Informes",

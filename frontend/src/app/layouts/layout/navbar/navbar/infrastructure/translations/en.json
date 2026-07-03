@@ -2,7 +2,7 @@
   "navbar": {
     "authorization": "Authorization",
     "authorizationModule": "Authorization",
-    "authorizationDesc": "Team access management, roles and system permissions.",
+    "authorizationDesc": "Team access management and roles.",
     "users": "Users",
     "usersDesc": "System user management",
     "reports": "Reports",

@@ -1,5 +1,5 @@
 {
-  "name": "legioapp-icons",
+  "name": "golifecraft-icons",
   "version": "1.0.0",
   "count": 96,
   "viewBox": "0 0 24 24",
@@ -16,10 +16,6 @@
         {
           "name": "dashboard",
           "label": "Dashboard"
-        },
-        {
-          "name": "ppcl",
-          "label": "PPCL"
         },
         {
           "name": "calendar",
@@ -276,76 +272,6 @@
         {
           "name": "agenda",
           "label": "Agenda"
-        }
-      ]
-    },
-    {
-      "id": "legionella",
-      "title": "Dominio · Legionella",
-      "icons": [
-        {
-          "name": "drop",
-          "label": "Agua / gota"
-        },
-        {
-          "name": "drop-broken",
-          "label": "Gota fuera de rango"
-        },
-        {
-          "name": "cooling-tower",
-          "label": "Torre de refrigeración"
-        },
-        {
-          "name": "tank",
-          "label": "Depósito de agua"
-        },
-        {
-          "name": "faucet",
-          "label": "Grifo / punto terminal"
-        },
-        {
-          "name": "shower",
-          "label": "Ducha"
-        },
-        {
-          "name": "thermometer",
-          "label": "Temperatura"
-        },
-        {
-          "name": "sample",
-          "label": "Muestra / tubo"
-        },
-        {
-          "name": "flask",
-          "label": "Análisis / matraz"
-        },
-        {
-          "name": "microbe",
-          "label": "Legionella (microbio)"
-        },
-        {
-          "name": "valve",
-          "label": "Válvula"
-        },
-        {
-          "name": "pipe",
-          "label": "Red / tubería"
-        },
-        {
-          "name": "aerosol",
-          "label": "Aerosol"
-        },
-        {
-          "name": "probe",
-          "label": "Sonda / medidor"
-        },
-        {
-          "name": "chlorination",
-          "label": "Cloración"
-        },
-        {
-          "name": "ph",
-          "label": "pH / análisis químico"
         }
       ]
     },
