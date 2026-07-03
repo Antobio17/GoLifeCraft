@@ -23,7 +23,7 @@ final class McpToolResult
 
     public static function fromHandlerFailure(HandlerFailedException $exception): array
     {
-        foreach ($exception->getNestedExceptions() as $nested) {
+        foreach ($exception->getWrappedExceptions() as $nested) {
             if ($nested instanceof BaseException) {
                 return self::error(exception: $nested);
             }

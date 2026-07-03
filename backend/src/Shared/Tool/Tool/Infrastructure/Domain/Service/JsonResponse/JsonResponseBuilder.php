@@ -92,7 +92,7 @@ final class JsonResponseBuilder
         HandlerFailedException $exception,
         array $exceptionStatusMap,
     ): JsonResponse {
-        foreach ($exception->getNestedExceptions() as $nested) {
+        foreach ($exception->getWrappedExceptions() as $nested) {
             foreach ($exceptionStatusMap as $class => $status) {
                 if ($nested instanceof $class) {
                     return self::buildResponseFromBaseException(
