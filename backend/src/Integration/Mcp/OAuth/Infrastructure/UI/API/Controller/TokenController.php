@@ -5,6 +5,7 @@ namespace Integration\Mcp\OAuth\Infrastructure\UI\API\Controller;
 use Authorization\User\User\Domain\Model\User;
 use Authorization\User\User\Domain\Model\UserRepository;
 use Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\AuthorizationCodeStore;
+use Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\RefreshTokenStore;
 use Integration\Mcp\OAuth\Infrastructure\UI\API\Exception\TokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,7 @@ final class TokenController
         private readonly UserRepository $userRepository,
         private readonly JWTTokenManagerInterface $jwtManager,
         private readonly AuthorizationCodeStore $codeStore,
+        private readonly RefreshTokenStore $refreshTokenStore,
         private readonly int $tokenTtl,
     ) {
     }
@@ -24,28 +26,31 @@ final class TokenController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $this->guardGrant(request: $request);
-            $stored = $this->pullCode(request: $request);
-            $user = $this->resolveUser(userId: $stored['user_id']);
+            $grant = $this->resolveGrant(request: $request);
+            $user = $this->resolveUser(userId: $grant['user_id']);
         } catch (TokenException $e) {
             return $this->error(error: $e->error);
         }
 
-        return new JsonResponse(data: [
-            'access_token' => $this->jwtManager->create(user: $user),
-            'token_type' => 'Bearer',
-            'expires_in' => $this->tokenTtl,
-        ]);
+        return $this->buildTokenResponse(user: $user, clientId: $grant['client_id']);
     }
 
-    private function guardGrant(Request $request): void
+    private function resolveGrant(Request $request): array
     {
-        if ('authorization_code' !== $request->request->get('grant_type')) {
-            throw TokenException::unsupportedGrantType();
+        $grantType = $request->request->get('grant_type');
+
+        if ('authorization_code' === $grantType) {
+            return $this->grantFromCode(request: $request);
         }
+
+        if ('refresh_token' === $grantType) {
+            return $this->grantFromRefreshToken(request: $request);
+        }
+
+        throw TokenException::unsupportedGrantType();
     }
 
-    private function pullCode(Request $request): array
+    private function grantFromCode(Request $request): array
     {
         $code = $request->request->get('code');
         $codeVerifier = $request->request->get('code_verifier');
@@ -70,6 +75,23 @@ final class TokenController
         return $stored;
     }
 
+    private function grantFromRefreshToken(Request $request): array
+    {
+        $refreshToken = $request->request->get('refresh_token');
+
+        if (null === $refreshToken) {
+            throw TokenException::invalidRequest();
+        }
+
+        $stored = $this->refreshTokenStore->pull(token: $refreshToken);
+
+        if (null === $stored || $stored['client_id'] !== $request->request->get('client_id')) {
+            throw TokenException::invalidGrant();
+        }
+
+        return $stored;
+    }
+
     private function resolveUser(string $userId): User
     {
         $user = $this->userRepository->findById(id: $userId);
@@ -79,6 +101,22 @@ final class TokenController
         }
 
         return $user;
+    }
+
+    private function buildTokenResponse(User $user, string $clientId): JsonResponse
+    {
+        $refreshToken = $this->refreshTokenStore->generate();
+        $this->refreshTokenStore->store(token: $refreshToken, data: [
+            'client_id' => $clientId,
+            'user_id' => $user->id,
+        ]);
+
+        return new JsonResponse(data: [
+            'access_token' => $this->jwtManager->create(user: $user),
+            'token_type' => 'Bearer',
+            'expires_in' => $this->tokenTtl,
+            'refresh_token' => $refreshToken,
+        ]);
     }
 
     private function challengeFrom(string $verifier): string

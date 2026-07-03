@@ -18,7 +18,17 @@ mcp_well_known_protected_resource:
   methods: [GET]
   controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\ProtectedResourceMetadataController
 
+mcp_well_known_protected_resource_mcp:
+  path: /.well-known/oauth-protected-resource/_mcp
+  methods: [GET]
+  controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\ProtectedResourceMetadataController
+
 mcp_well_known_authorization_server:
   path: /.well-known/oauth-authorization-server
+  methods: [GET]
+  controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizationServerMetadataController
+
+mcp_well_known_authorization_server_mcp:
+  path: /.well-known/oauth-authorization-server/_mcp
   methods: [GET]
   controller: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizationServerMetadataController

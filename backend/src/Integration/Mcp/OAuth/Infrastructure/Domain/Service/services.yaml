@@ -5,6 +5,12 @@ services:
       $cache: '@cache.app'
       $ttl: 300
 
+  Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\RefreshTokenStore:
+    class: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\RefreshTokenStore
+    arguments:
+      $cache: '@cache.app'
+      $ttl: 2592000
+
   Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\CredentialsVerifier:
     class: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\CredentialsVerifier
     arguments:
