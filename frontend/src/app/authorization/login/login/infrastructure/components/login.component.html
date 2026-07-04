@@ -1,203 +1,143 @@
-<div class="login-page">
-  <!-- ─── Panel izquierdo (marca) ─── -->
-  <div class="brand-panel">
-    <div class="brand-logo-banner">
-      <img src="assets/img/logo.png" alt="GoLifeCraft" />
+<div class="auth">
+  <div class="auth__card">
+    <div class="auth__brand">
+      <app-brand-logo
+        [markSize]="58"
+        [wordmarkSize]="23"
+        [stacked]="true"
+        [tagline]="'login.tagline' | t"
+      ></app-brand-logo>
     </div>
 
-    <div class="brand-content">
-      <div class="brand-deco brand-deco--1"></div>
-      <div class="brand-deco brand-deco--2"></div>
-
-      <div class="brand-logo-platform">
-        <span class="platform-dot"></span>
-        <span>GoLifeCraft</span>
-      </div>
-
-      <div class="brand-tagline-block">
-        <h1 class="brand-tagline-title">{{ "login.brand.tagline" | t }}</h1>
-        <p class="brand-tagline-desc">{{ "login.brand.description" | t }}</p>
-      </div>
-
-      <div class="brand-features">
-        <div class="feature-item">
-          <div class="feature-icon">
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-              <path
-                d="M2 6l3 3 5-5"
-                stroke="white"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <span>{{ "login.brand.feature1" | t }}</span>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon">
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-              <path
-                d="M2 6l3 3 5-5"
-                stroke="white"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <span>{{ "login.brand.feature3" | t }}</span>
-        </div>
-      </div>
+    <div class="auth__tabs" role="tablist">
+      <button type="button" class="auth__tab auth__tab--active" role="tab">
+        {{ "login.tabs.signin" | t }}
+      </button>
+      <button type="button" class="auth__tab" role="tab" (click)="onRegister()">
+        {{ "login.tabs.register" | t }}
+      </button>
     </div>
 
-    <div class="brand-footer">
-      <span>{{ "login.brand.copyright" | t }}</span>
-    </div>
-  </div>
+    <form (ngSubmit)="onSubmit()" class="auth__form">
+      <label class="field" for="username">
+        <span class="field__label">{{ "login.username.label" | t }}</span>
+        <span class="field__control">
+          <svg
+            class="field__icon"
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke-linecap="round" />
+          </svg>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            [(ngModel)]="username"
+            [disabled]="loading"
+            [placeholder]="'login.username.placeholder' | t"
+            required
+            autocomplete="username"
+          />
+        </span>
+      </label>
 
-  <!-- ─── Panel derecho (formulario) ─── -->
-  <div class="form-panel">
-    <div class="form-content">
-      <div class="form-header">
-        <h2 class="form-title">{{ "login.title" | t }}</h2>
-        <p class="form-subtitle">{{ "login.subtitle" | t }}</p>
-      </div>
-
-      <form (ngSubmit)="onSubmit()" class="login-form">
-        <div class="form-group">
-          <label for="username">{{ "login.username.label" | t }}</label>
-          <div class="input-wrapper">
-            <div class="input-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="8"
-                  r="4"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                />
-                <path
-                  d="M4 20c0-4 3.58-7 8-7s8 3 8 7"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                />
+      <label class="field" for="password">
+        <span class="field__label">{{ "login.password.label" | t }}</span>
+        <span class="field__control">
+          <svg
+            class="field__icon"
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="4" y="10" width="16" height="10" rx="2.5" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            [disabled]="loading"
+            [placeholder]="'login.password.placeholder' | t"
+            required
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            class="field__toggle"
+            (click)="toggleShowPassword()"
+            tabindex="-1"
+            [attr.aria-label]="
+              (showPassword
+                ? 'login.togglePassword.hide'
+                : 'login.togglePassword.show'
+              ) | t
+            "
+          >
+            @if (!showPassword) {
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+                <circle cx="12" cy="12" r="2.6" />
               </svg>
-            </div>
-            <input
-              type="text"
-              id="username"
-              [(ngModel)]="username"
-              name="username"
-              [disabled]="loading"
-              [placeholder]="'login.username.placeholder' | t"
-              required
-              class="form-control"
-              autocomplete="username"
-            />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="password">{{ "login.password.label" | t }}</label>
-          <div class="input-wrapper password-wrapper">
-            <div class="input-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="11"
-                  width="18"
-                  height="11"
-                  rx="2"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                />
+            }
+            @if (showPassword) {
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              >
                 <path
-                  d="M7 11V7a5 5 0 0110 0v4"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
                 />
-                <circle cx="12" cy="16" r="1.5" fill="currentColor" />
+                <line x1="1" y1="1" x2="23" y2="23" />
               </svg>
-            </div>
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              id="password"
-              [(ngModel)]="password"
-              name="password"
-              [disabled]="loading"
-              [placeholder]="'login.password.placeholder' | t"
-              required
-              class="form-control"
-              autocomplete="current-password"
-            />
-            <button
-              type="button"
-              class="password-toggle"
-              [class.active]="showPassword"
-              (click)="toggleShowPassword()"
-              tabindex="-1"
-              [attr.aria-label]="
-                (showPassword
-                  ? 'login.togglePassword.hide'
-                  : 'login.togglePassword.show'
-                ) | t
-              "
-            >
-              @if (!showPassword) {
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              }
-              @if (showPassword) {
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
-                  />
-                  <line x1="1" y1="1" x2="23" y2="23" />
-                </svg>
-              }
-            </button>
-          </div>
-        </div>
+            }
+          </button>
+        </span>
+      </label>
 
-        <div class="form-forgot">
-          <a href="#" class="forgot-link">{{ "login.forgotPassword" | t }}</a>
-        </div>
+      <a href="#" class="auth__forgot" (click)="$event.preventDefault()">
+        {{ "login.forgotPassword" | t }}
+      </a>
 
-        <app-button
-          variant="primary"
-          size="lg"
-          type="submit"
-          [loading]="loading"
-          [fullWidth]="true"
-        >
-          {{ "login.submit" | t }}
-        </app-button>
-      </form>
-    </div>
+      <button type="submit" class="auth__submit" [disabled]="loading">
+        @if (!loading) {
+          <span>{{ "login.submit" | t }}</span>
+          <span class="auth__arrow" aria-hidden="true">→</span>
+        }
+        @if (loading) {
+          <span class="auth__spinner" aria-hidden="true"></span>
+          <span>{{ "login.submitting" | t }}</span>
+        }
+      </button>
+    </form>
+
+    <p class="auth__foot">
+      {{ "login.footer.prompt" | t }}
+      <button type="button" class="auth__foot-link" (click)="onRegister()">
+        {{ "login.tabs.register" | t }}
+      </button>
+    </p>
   </div>
 </div>

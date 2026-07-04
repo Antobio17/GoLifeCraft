@@ -2,28 +2,31 @@
   "login": {
     "title": "Iniciar sesión",
     "subtitle": "Accede a tu cuenta para continuar",
+    "tagline": "Tu despensa, con datos.",
     "forgotPassword": "¿Olvidaste tu contraseña?",
+    "tabs": {
+      "signin": "Entrar",
+      "register": "Crear cuenta"
+    },
     "username": {
       "label": "Usuario",
-      "placeholder": "Introduce tu usuario"
+      "placeholder": "marta@correo.com"
     },
     "password": {
       "label": "Contraseña",
       "placeholder": "Introduce tu contraseña"
     },
     "submit": "Iniciar sesión",
-    "submitting": "Cargando...",
+    "submitting": "Entrando…",
     "togglePassword": {
       "show": "Mostrar contraseña",
       "hide": "Ocultar contraseña"
     },
-    "brand": {
-      "title": "Plataforma de seguimiento y control de mantenimiento",
-      "tagline": "Tu cloud siempre disponible.",
-      "description": "Gestiona y descarga tus documentos desde cualquier dispositivo.",
-      "feature1": "Firma de documentos PDF",
-      "feature3": "Sincronización en tiempo real",
-      "copyright": "© 2026 GoLifeCraft. Todos los derechos reservados."
+    "footer": {
+      "prompt": "¿Nuevo aquí?"
+    },
+    "register": {
+      "comingSoon": "El registro estará disponible próximamente."
     },
     "validation": {
       "required": "Por favor, ingrese usuario y contraseña"

@@ -15,6 +15,14 @@ export const APP_ROUTES: Routes = [
     canActivate: [authGuard],
     children: [
       {
+        path: "dashboard",
+        data: { breadcrumb: null },
+        loadChildren: () =>
+          import("./dashboard/dashboard/infrastructure/routes/dashboard.routes").then(
+            (m) => m.DASHBOARD_ROUTES,
+          ),
+      },
+      {
         path: "users",
         canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "user.breadcrumb.list" },
@@ -46,7 +54,7 @@ export const APP_ROUTES: Routes = [
             (m) => m.MyProfileComponent,
           ),
       },
-      { path: "", redirectTo: "me", pathMatch: "full" },
+      { path: "", redirectTo: "dashboard", pathMatch: "full" },
     ],
   },
 ];

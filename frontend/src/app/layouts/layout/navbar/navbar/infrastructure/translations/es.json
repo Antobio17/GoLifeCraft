@@ -16,6 +16,12 @@
     "darkMode": "Modo oscuro",
     "moduleLabel": "Módulo",
     "functions": "Funciones",
-    "account": "Cuenta"
+    "account": "Cuenta",
+    "home": "Inicio",
+    "catalog": "Catálogo",
+    "add": "Añadir",
+    "list": "Lista de compra",
+    "profile": "Perfil",
+    "comingSoon": "Disponible próximamente."
   }
 }

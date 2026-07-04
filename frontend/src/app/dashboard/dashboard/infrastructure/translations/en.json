@@ -1,0 +1,27 @@
+{
+  "dashboard": {
+    "greeting": "Hi",
+    "profile": "View profile",
+    "comingSoon": "Coming soon.",
+    "search": "Search a product…",
+    "summary": {
+      "title": "TODAY'S SUMMARY",
+      "more": "See more",
+      "kcal": "kcal consumed"
+    },
+    "macros": {
+      "protein": "Protein",
+      "fat": "Fat",
+      "carbs": "Carbs"
+    },
+    "explore": {
+      "title": "Explore",
+      "catalog": "Catalog",
+      "catalogMeta": "248 products",
+      "recipes": "Recipes",
+      "list": "Shopping list",
+      "gym": "Gym",
+      "soon": "Coming soon"
+    }
+  }
+}

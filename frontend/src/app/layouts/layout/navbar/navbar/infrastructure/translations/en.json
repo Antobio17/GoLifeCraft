@@ -16,6 +16,12 @@
     "darkMode": "Dark mode",
     "moduleLabel": "Module",
     "functions": "Functions",
-    "account": "Account"
+    "account": "Account",
+    "home": "Home",
+    "catalog": "Catalog",
+    "add": "Add",
+    "list": "Shopping list",
+    "profile": "Profile",
+    "comingSoon": "Coming soon."
   }
 }

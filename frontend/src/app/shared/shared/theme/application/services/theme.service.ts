@@ -33,7 +33,7 @@ export class ThemeService {
     if (metaThemeColor) {
       metaThemeColor.setAttribute(
         "content",
-        theme === "dark" ? "#1e293b" : "#ffffff",
+        theme === "dark" ? "#0e100d" : "#f6f2e9",
       );
     }
   }

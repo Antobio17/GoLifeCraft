@@ -1,0 +1,35 @@
+<span
+  class="brand"
+  [class.brand--stacked]="stacked"
+  [style.--mark-size.px]="markSize"
+  [style.--word-size.px]="wordmarkSize"
+>
+  @if (showMark) {
+    <span class="brand__mark" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none">
+        <path
+          d="M50 21 A29 29 0 1 0 79 50 L63 50"
+          stroke="var(--brand-glyph)"
+          stroke-width="11"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M54 43 C54 32 62 25 73 25 C73 36 65 43 54 43 Z"
+          fill="var(--brand-glyph)"
+        />
+      </svg>
+    </span>
+  }
+
+  @if (showWordmark) {
+    <span class="brand__text">
+      <span class="brand__word"
+        >Go<span class="brand__word-accent">Life</span>Craft</span
+      >
+      @if (tagline) {
+        <span class="brand__tagline">{{ tagline }}</span>
+      }
+    </span>
+  }
+</span>

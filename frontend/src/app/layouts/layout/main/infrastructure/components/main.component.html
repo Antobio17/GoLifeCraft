@@ -1,18 +1,11 @@
-<div class="app-container">
+<div class="app-frame" [class.app-frame--with-tabbar]="showTabBar()">
   <app-floating-toast></app-floating-toast>
 
-  @if (showNavbar) {
-    <app-navbar [username]="username()" (logoutClick)="onLogout()"></app-navbar>
-
-    @if (!breadcrumbService.hidden()) {
-      <app-breadcrumbs
-        [breadcrumbs]="breadcrumbs()"
-        (navigate)="handleBreadcrumbNavigation($event)"
-      ></app-breadcrumbs>
-    }
-  }
-
-  <div class="content">
+  <div class="app-frame__content">
     <router-outlet></router-outlet>
   </div>
+
+  @if (showTabBar()) {
+    <app-bottom-nav></app-bottom-nav>
+  }
 </div>

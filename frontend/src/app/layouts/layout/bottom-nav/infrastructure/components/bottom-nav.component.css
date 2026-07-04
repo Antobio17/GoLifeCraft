@@ -1,0 +1,84 @@
+:host {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.tabbar {
+  pointer-events: auto;
+  width: 100%;
+  max-width: var(--app-frame-width, 480px);
+  height: calc(58px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--color-surface-nav);
+  border-top: 1px solid var(--color-border-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.tabbar__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-meta);
+  transition: color var(--transition-base);
+}
+
+.tabbar__item svg {
+  width: 23px;
+  height: 23px;
+}
+
+.tabbar__item:hover {
+  color: var(--color-text-secondary);
+}
+
+.tabbar__item--active {
+  color: var(--color-text-brand);
+}
+
+.tabbar__fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -14px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  cursor: pointer;
+  box-shadow: 0 8px 18px -6px
+    color-mix(in srgb, var(--color-accent) 85%, transparent);
+  transition:
+    transform var(--transition-base),
+    filter var(--transition-base);
+}
+
+.tabbar__fab svg {
+  width: 22px;
+  height: 22px;
+}
+
+.tabbar__fab:hover {
+  filter: brightness(1.05);
+}
+
+.tabbar__fab:active {
+  transform: scale(0.94);
+}

@@ -1,0 +1,27 @@
+{
+  "dashboard": {
+    "greeting": "Hola",
+    "profile": "Ver perfil",
+    "comingSoon": "Disponible próximamente.",
+    "search": "Buscar formato…",
+    "summary": {
+      "title": "RESUMEN DE HOY",
+      "more": "Ver más",
+      "kcal": "kcal consumidas"
+    },
+    "macros": {
+      "protein": "Proteínas",
+      "fat": "Grasas",
+      "carbs": "Hidratos"
+    },
+    "explore": {
+      "title": "Explora",
+      "catalog": "Catálogo",
+      "catalogMeta": "248 formatos",
+      "recipes": "Recetas",
+      "list": "Lista de compra",
+      "gym": "Gimnasio",
+      "soon": "Próximamente"
+    }
+  }
+}

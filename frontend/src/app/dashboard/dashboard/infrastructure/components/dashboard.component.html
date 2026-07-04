@@ -1,0 +1,163 @@
+<section class="dash">
+  <header class="dash__head">
+    <div>
+      <p class="dash__date">{{ today | date: "EEEE, d MMM" }}</p>
+      <h1 class="dash__greeting">
+        {{ "dashboard.greeting" | t }}{{ name() ? ", " + name() : "" }}
+      </h1>
+    </div>
+    <a
+      class="dash__avatar"
+      routerLink="/me"
+      [attr.aria-label]="'dashboard.profile' | t"
+    >
+      {{ initial() }}
+    </a>
+  </header>
+
+  <div class="dash__body">
+    <!-- Resumen de hoy -->
+    <article class="summary" [style.--progress]="progressPercent">
+      <div class="summary__top">
+        <span class="summary__eyebrow">{{
+          "dashboard.summary.title" | t
+        }}</span>
+        <button type="button" class="summary__more" (click)="comingSoon()">
+          {{ "dashboard.summary.more" | t }} ›
+        </button>
+      </div>
+
+      <div class="summary__main">
+        <div class="summary__ring">
+          <span class="summary__ring-value">{{ progressPercent }}%</span>
+        </div>
+        <div class="summary__kcal">
+          <p class="summary__kcal-value">
+            {{ summary.consumedKcal | number: "1.0-0" : "es" }}
+            <span class="summary__kcal-target"
+              >/ {{ summary.targetKcal | number: "1.0-0" : "es" }}</span
+            >
+          </p>
+          <p class="summary__kcal-label">{{ "dashboard.summary.kcal" | t }}</p>
+        </div>
+      </div>
+
+      <div class="summary__macros">
+        <div class="macro">
+          <span class="macro__label">{{ "dashboard.macros.protein" | t }}</span>
+          <span class="macro__value macro__value--protein"
+            >{{ summary.proteinG }} g</span
+          >
+        </div>
+        <div class="macro">
+          <span class="macro__label">{{ "dashboard.macros.fat" | t }}</span>
+          <span class="macro__value macro__value--fat"
+            >{{ summary.fatG }} g</span
+          >
+        </div>
+        <div class="macro">
+          <span class="macro__label">{{ "dashboard.macros.carbs" | t }}</span>
+          <span class="macro__value">{{ summary.carbsG }} g</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Buscador -->
+    <button type="button" class="search" (click)="comingSoon()">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="11" cy="11" r="7" />
+        <path d="M21 21l-4-4" stroke-linecap="round" />
+      </svg>
+      <span>{{ "dashboard.search" | t }}</span>
+    </button>
+
+    <!-- Explora -->
+    <section class="explore">
+      <h2 class="explore__title">{{ "dashboard.explore.title" | t }}</h2>
+      <div class="explore__grid">
+        <button type="button" class="tile tile--primary" (click)="comingSoon()">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.1"
+          >
+            <rect x="3" y="3" width="8" height="8" rx="2" />
+            <rect x="13" y="3" width="8" height="8" rx="2" />
+            <rect x="3" y="13" width="8" height="8" rx="2" />
+            <rect x="13" y="13" width="8" height="8" rx="2" />
+          </svg>
+          <span class="tile__text">
+            <span class="tile__name">{{
+              "dashboard.explore.catalog" | t
+            }}</span>
+            <span class="tile__meta">{{
+              "dashboard.explore.catalogMeta" | t
+            }}</span>
+          </span>
+        </button>
+
+        <button type="button" class="tile" (click)="comingSoon()">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.1"
+          >
+            <path d="M4 4h13a2 2 0 0 1 2 2v14l-8-3.5L3 20V5a1 1 0 0 1 1-1z" />
+          </svg>
+          <span class="tile__text">
+            <span class="tile__name">{{
+              "dashboard.explore.recipes" | t
+            }}</span>
+            <span class="tile__meta">{{ "dashboard.explore.soon" | t }}</span>
+          </span>
+        </button>
+
+        <button type="button" class="tile" (click)="comingSoon()">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.1"
+          >
+            <circle cx="9" cy="20" r="1.6" />
+            <circle cx="18" cy="20" r="1.6" />
+            <path
+              d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="tile__text">
+            <span class="tile__name">{{ "dashboard.explore.list" | t }}</span>
+            <span class="tile__meta">{{ "dashboard.explore.soon" | t }}</span>
+          </span>
+        </button>
+
+        <button type="button" class="tile" (click)="comingSoon()">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.1"
+          >
+            <path
+              d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"
+              stroke-linecap="round"
+            />
+          </svg>
+          <span class="tile__text">
+            <span class="tile__name">{{ "dashboard.explore.gym" | t }}</span>
+            <span class="tile__meta">{{ "dashboard.explore.soon" | t }}</span>
+          </span>
+        </button>
+      </div>
+    </section>
+  </div>
+</section>

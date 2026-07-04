@@ -6,13 +6,15 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
 import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { ButtonComponent } from "@shared/shared/button/infrastructure/components/button.component";
+import { BrandLogoComponent } from "@shared/shared/brand-logo/infrastructure/components/brand-logo.component";
+
+const HOME_ROUTE = "/dashboard";
 
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.css"],
-  imports: [FormsModule, ContextualTranslatePipe, ButtonComponent],
+  imports: [FormsModule, ContextualTranslatePipe, BrandLogoComponent],
 })
 export class LoginComponent implements OnInit {
   private performLoginUseCase = inject(PerformLoginUseCase);
@@ -27,14 +29,23 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authSessionService.isAuthenticated()) {
-      this.router.navigate(["/me"]);
-    } else {
-      this.authSessionService.clearSession();
+      this.router.navigate([HOME_ROUTE]);
+      return;
     }
+
+    this.authSessionService.clearSession();
   }
 
   toggleShowPassword(): void {
     this.showPassword = !this.showPassword;
+  }
+
+  onRegister(): void {
+    this.floatingToastService.showToast({
+      status: 200,
+      keyTranslation: "login.register.comingSoon",
+      details: [],
+    });
   }
 
   onSubmit(): void {
@@ -51,7 +62,7 @@ export class LoginComponent implements OnInit {
     this.performLoginUseCase.execute(this.username, this.password).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(["/cloud"]);
+        this.router.navigate([HOME_ROUTE]);
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;

@@ -1,0 +1,91 @@
+<nav class="tabbar" aria-label="Principal">
+  <a
+    class="tabbar__item"
+    routerLink="/dashboard"
+    routerLinkActive="tabbar__item--active"
+    [attr.aria-label]="'navbar.home' | t"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.2"
+    >
+      <path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
+    </svg>
+  </a>
+
+  <button
+    type="button"
+    class="tabbar__item"
+    (click)="comingSoon()"
+    [attr.aria-label]="'navbar.catalog' | t"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.1"
+    >
+      <rect x="3" y="3" width="8" height="8" rx="2" />
+      <rect x="13" y="3" width="8" height="8" rx="2" />
+      <rect x="3" y="13" width="8" height="8" rx="2" />
+      <rect x="13" y="13" width="8" height="8" rx="2" />
+    </svg>
+  </button>
+
+  <button
+    type="button"
+    class="tabbar__fab"
+    (click)="comingSoon()"
+    [attr.aria-label]="'navbar.add' | t"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.6"
+    >
+      <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+    </svg>
+  </button>
+
+  <button
+    type="button"
+    class="tabbar__item"
+    (click)="comingSoon()"
+    [attr.aria-label]="'navbar.list' | t"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.1"
+    >
+      <circle cx="9" cy="20" r="1.6" />
+      <circle cx="18" cy="20" r="1.6" />
+      <path
+        d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+
+  <a
+    class="tabbar__item"
+    routerLink="/me"
+    routerLinkActive="tabbar__item--active"
+    [attr.aria-label]="'navbar.profile' | t"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.1"
+    >
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c0-4 3.5-6 8-6s8 2 8 6" stroke-linecap="round" />
+    </svg>
+  </a>
+</nav>

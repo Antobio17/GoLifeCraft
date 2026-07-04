@@ -13,7 +13,7 @@
 /* === iOS OVERSCROLL FIX === */
 html,
 body {
-  background-color: #f4f7fb;
+  background-color: #f6f2e9;
 }
 
 body {
@@ -471,7 +471,7 @@ body {
 /* === DARK MODE OVERRIDES === */
 [data-theme="dark"],
 [data-theme="dark"] body {
-  background-color: #0d1520;
+  background-color: #0e100d;
 }
 
 [data-theme="dark"] {
@@ -640,6 +640,195 @@ body {
   --shadow-card-hover:
     0 2px 8px rgba(0, 0, 0, 0.45), 0 8px 20px rgba(0, 0, 0, 0.3);
   --shadow-primary-sm: 0 4px 14px rgba(14, 165, 233, 0.25);
+}
+
+/* ============================================================
+   GOLIFECRAFT BRAND — token overrides
+   Light  = "Huerto"  (crema + verde bosque + lima + coral)
+   Dark   = "Kinetic" (casi negro + lima eléctrica + naranja)
+   These blocks come after the base tokens on purpose: custom
+   properties are late-bound, so repointing the primitives here
+   cascades through every semantic token without renaming any.
+   ============================================================ */
+
+:root {
+  /* Typography — Huerto */
+  --font-family-base: "Hanken Grotesk", system-ui, sans-serif;
+  --font-family-display:
+    "Bricolage Grotesque", "Hanken Grotesk", system-ui, sans-serif;
+
+  /* Mobile app canvas width (phone-first, centered on wider screens) */
+  --app-frame-width: 480px;
+
+  /* Brand primitives */
+  --color-forest-700: #1b2e20;
+  --color-forest-600: #234230;
+  --color-forest-500: #274b37;
+  --color-forest-400: #3a5a45;
+  --color-lime-400: #c4ef5a;
+  --color-lime-500: #b4e839;
+  --color-lime-600: #a6d92b;
+  --color-coral-500: #f0603e;
+  --color-coral-600: #e04a28;
+  --color-paper-50: #fbf9f3;
+  --color-paper-100: #f6f2e9;
+  --color-paper-200: #efe9db;
+  --color-paper-300: #eae4d6;
+  --color-ink: #1b1a15;
+
+  /* Repoint primary ramp → forest green */
+  --color-primary-50: #eef4ea;
+  --color-primary-100: #dce9d6;
+  --color-primary-200: #bcd4af;
+  --color-primary-300: #8fb47c;
+  --color-primary-400: #3a5a45;
+  --color-primary-500: #274b37;
+  --color-primary-600: #234230;
+  --color-primary-700: #1b2e20;
+  --color-primary-800: #15251a;
+  --color-primary-900: #0f1b13;
+
+  /* Repoint teal (secondary accent) → lime */
+  --color-teal-50: #f5fbe4;
+  --color-teal-100: #e7f3c8;
+  --color-teal-400: #c4ef5a;
+  --color-teal-500: #b4e839;
+  --color-teal-600: #a6d92b;
+  --color-teal-700: #7fa81f;
+
+  /* Error/danger → coral */
+  --color-error-50: #fdeee9;
+  --color-error-200: #f8c7ba;
+  --color-error-400: #f47f63;
+  --color-error-500: #f0603e;
+  --color-error-600: #e04a28;
+
+  /* Brand semantics */
+  --color-accent-brand: var(--color-forest-500);
+  --color-accent-brand-soft: var(--color-primary-100);
+  --gradient-brand: linear-gradient(135deg, #274b37, #3a5a45);
+
+  --color-interactive-default: var(--color-forest-500);
+  --color-interactive-hover: var(--color-forest-600);
+  --color-interactive-active: var(--color-forest-700);
+  --color-interactive-focus-ring: rgba(39, 75, 55, 0.16);
+  --color-on-primary: var(--color-paper-100);
+  --color-accent: var(--color-lime-500);
+  --color-on-accent: #1b2e20;
+
+  /* Text */
+  --color-text-primary: var(--color-ink);
+  --color-text-body: #4a463d;
+  --color-text-secondary: #6f6a5c;
+  --color-text-disabled: #b6b1a4;
+  --color-text-inverse: var(--color-paper-100);
+  --color-text-brand: var(--color-forest-500);
+  --color-text-meta: #9a958a;
+
+  /* Borders */
+  --color-border-default: rgba(27, 26, 21, 0.1);
+  --color-border-strong: rgba(27, 26, 21, 0.16);
+  --color-border-input: rgba(27, 26, 21, 0.12);
+  --color-border-hairline: rgba(27, 26, 21, 0.07);
+  --color-border-focus: var(--color-forest-500);
+  --color-border-glass: rgba(27, 26, 21, 0.08);
+
+  /* Surfaces */
+  --color-surface-page: var(--color-paper-100);
+  --color-surface-default: #ffffff;
+  --color-surface-hover: var(--color-paper-50);
+  --color-surface-glass: rgba(255, 255, 255, 0.7);
+  --color-surface-glass-hover: rgba(255, 255, 255, 0.85);
+  --color-surface-raised: #ffffff;
+  --color-surface-nav: #ffffff;
+  --color-surface-subtle: var(--color-paper-50);
+  --color-surface-inset: var(--color-paper-300);
+  --color-surface-brand: var(--color-forest-500);
+  --color-on-surface-brand: var(--color-paper-100);
+  --color-surface-brand-subtle: var(--color-primary-50);
+  --color-surface-auth-gradient: var(--color-paper-100);
+
+  /* Brand shadows */
+  --shadow-brand-float: 0 12px 26px -12px rgba(39, 75, 55, 0.7);
+  --shadow-brand-lg: 0 10px 22px -10px rgba(39, 75, 55, 0.55);
+  --shadow-primary-sm: 0 8px 18px -8px rgba(39, 75, 55, 0.45);
+
+  /* Scrollbar */
+  --scrollbar-thumb: rgba(27, 26, 21, 0.22);
+  --scrollbar-thumb-hover: rgba(27, 26, 21, 0.38);
+}
+
+[data-theme="dark"] {
+  /* Typography — Kinetic */
+  --font-family-base: "Space Grotesk", system-ui, sans-serif;
+  --font-family-display: "Space Grotesk", system-ui, sans-serif;
+
+  /* Brand primitives */
+  --color-lime-400: #d6ff5e;
+  --color-lime-500: #c9ff3c;
+  --color-lime-600: #b6f024;
+  --color-coral-500: #ff7a4d;
+  --color-coral-600: #ff6a38;
+
+  --color-primary-400: #d6ff5e;
+  --color-primary-500: #c9ff3c;
+  --color-primary-600: #b6f024;
+  --color-primary-700: #a6e02b;
+
+  --color-teal-400: #d6ff5e;
+  --color-teal-500: #c9ff3c;
+  --color-teal-600: #b6f024;
+
+  --color-error-500: #ff7a4d;
+  --color-error-600: #ff6a38;
+
+  --color-accent-brand: var(--color-lime-500);
+  --color-accent-brand-soft: rgba(201, 255, 60, 0.14);
+  --gradient-brand: linear-gradient(135deg, #c9ff3c, #a6e02b);
+
+  --color-interactive-default: var(--color-lime-500);
+  --color-interactive-hover: var(--color-lime-400);
+  --color-interactive-active: var(--color-lime-600);
+  --color-interactive-focus-ring: rgba(201, 255, 60, 0.2);
+  --color-on-primary: #0e100d;
+  --color-accent: var(--color-lime-500);
+  --color-on-accent: #0e100d;
+
+  --color-text-primary: #f3f6ec;
+  --color-text-body: #c7ccbe;
+  --color-text-secondary: #8b9482;
+  --color-text-disabled: #5c6b4f;
+  --color-text-inverse: #0e100d;
+  --color-text-brand: var(--color-lime-500);
+  --color-text-meta: #6b7360;
+
+  --color-border-default: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.14);
+  --color-border-input: rgba(255, 255, 255, 0.1);
+  --color-border-hairline: rgba(255, 255, 255, 0.06);
+  --color-border-focus: var(--color-lime-500);
+  --color-border-glass: rgba(255, 255, 255, 0.08);
+
+  --color-surface-page: #0e100d;
+  --color-surface-default: #171b14;
+  --color-surface-hover: #1c211a;
+  --color-surface-glass: rgba(23, 27, 20, 0.6);
+  --color-surface-glass-hover: rgba(23, 27, 20, 0.8);
+  --color-surface-raised: #171b14;
+  --color-surface-nav: #12150f;
+  --color-surface-subtle: #12150f;
+  --color-surface-inset: #22271c;
+  --color-surface-brand: #171b14;
+  --color-on-surface-brand: #f3f6ec;
+  --color-surface-brand-subtle: rgba(201, 255, 60, 0.1);
+  --color-surface-auth-gradient: #0e100d;
+
+  --shadow-brand-float: 0 8px 20px -6px rgba(201, 255, 60, 0.7);
+  --shadow-brand-lg: 0 10px 24px -8px rgba(0, 0, 0, 0.6);
+  --shadow-primary-sm: 0 6px 16px -6px rgba(201, 255, 60, 0.35);
+
+  --scrollbar-thumb: rgba(243, 246, 236, 0.18);
+  --scrollbar-thumb-hover: rgba(243, 246, 236, 0.32);
 }
 
 /* === GLOBAL ANIMATIONS === */
