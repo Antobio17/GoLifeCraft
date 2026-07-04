@@ -16,7 +16,7 @@ final readonly class DoctrineUpdateUserNeedleDataQuery implements UpdateUserNeed
         $result = $this->connection
             ->createQueryBuilder()
             ->select('role')
-            ->from(from: 'user')
+            ->from(table: 'user')
             ->where('id = :userId')
             ->setParameter(key: 'userId', value: $userId)
             ->executeQuery()
@@ -30,7 +30,7 @@ final readonly class DoctrineUpdateUserNeedleDataQuery implements UpdateUserNeed
         return false !== $this->connection
             ->createQueryBuilder()
             ->select('1')
-            ->from(from: 'user')
+            ->from(table: 'user')
             ->where('username = :username')
             ->andWhere('id != :excludeUserId')
             ->setParameter(key: 'username', value: $username)

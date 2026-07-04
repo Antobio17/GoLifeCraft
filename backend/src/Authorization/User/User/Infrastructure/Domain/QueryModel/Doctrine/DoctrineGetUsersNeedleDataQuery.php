@@ -90,7 +90,7 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
                 'u.created_at',
                 'u.updated_at',
             )
-            ->from(from: 'user', alias: 'u')
+            ->from(table: 'user', alias: 'u')
             ->where('u.tenant_id = :tenantId')
             ->setParameter(key: 'tenantId', value: $tenantId);
 

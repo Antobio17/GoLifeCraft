@@ -19,7 +19,7 @@ final readonly class DoctrineGetUserNeedleDataQuery implements GetUserNeedleData
         $result = $this->masterConnection
             ->createQueryBuilder()
             ->select('role')
-            ->from(from: 'user')
+            ->from(table: 'user')
             ->where('id = :userId')
             ->setParameter(key: 'userId', value: $userId)
             ->executeQuery()
@@ -43,7 +43,7 @@ final readonly class DoctrineGetUserNeedleDataQuery implements GetUserNeedleData
                 'u.created_at',
                 'u.updated_at',
             )
-            ->from(from: 'user', alias: 'u')
+            ->from(table: 'user', alias: 'u')
             ->where('u.id = :userId')
             ->setParameter(key: 'userId', value: $userId)
             ->executeQuery()

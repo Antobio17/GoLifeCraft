@@ -89,7 +89,7 @@ final readonly class DoctrineGetDomainEventLogsNeedleDataQuery implements GetDom
                 'del.occurred_on',
                 'del.recorded_at',
             )
-            ->from(from: 'domain_event_log', alias: 'del');
+            ->from(table: 'domain_event_log', alias: 'del');
 
         if (null !== $filterEventName) {
             $qb->andWhere('del.event_name = :eventName')
@@ -133,7 +133,7 @@ final readonly class DoctrineGetDomainEventLogsNeedleDataQuery implements GetDom
 
         $users = $this->masterConnection->createQueryBuilder()
             ->select('u.id', 'u.username', 'u.name', 'u.lastname')
-            ->from(from: 'user', alias: 'u')
+            ->from(table: 'user', alias: 'u')
             ->where('u.id IN (:ids)')
             ->setParameter(key: 'ids', value: $uniqueUserIds, type: \Doctrine\DBAL\ArrayParameterType::STRING)
             ->executeQuery()

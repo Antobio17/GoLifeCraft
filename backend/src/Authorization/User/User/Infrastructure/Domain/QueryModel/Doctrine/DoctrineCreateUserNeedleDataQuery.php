@@ -16,7 +16,7 @@ final readonly class DoctrineCreateUserNeedleDataQuery implements CreateUserNeed
         return false !== $this->connection
             ->createQueryBuilder()
             ->select('1')
-            ->from(from: 'user')
+            ->from(table: 'user')
             ->where('username = :username')
             ->setParameter(key: 'username', value: $username)
             ->executeQuery()
@@ -28,7 +28,7 @@ final readonly class DoctrineCreateUserNeedleDataQuery implements CreateUserNeed
         return $this->connection
             ->createQueryBuilder()
             ->select('tenant_id')
-            ->from(from: 'user')
+            ->from(table: 'user')
             ->where('id = :userId')
             ->setParameter(key: 'userId', value: $userId)
             ->executeQuery()

@@ -28,7 +28,7 @@ final readonly class DoctrineGetDomainEventLogNeedleDataQuery implements GetDoma
                 'del.occurred_on',
                 'del.recorded_at',
             )
-            ->from(from: 'domain_event_log', alias: 'del')
+            ->from(table: 'domain_event_log', alias: 'del')
             ->where('del.id = :id')
             ->setParameter(key: 'id', value: $domainEventLogId)
             ->executeQuery()
@@ -67,7 +67,7 @@ final readonly class DoctrineGetDomainEventLogNeedleDataQuery implements GetDoma
 
         $row = $this->masterConnection->createQueryBuilder()
             ->select('u.id', 'u.username', 'u.name', 'u.lastname')
-            ->from(from: 'user', alias: 'u')
+            ->from(table: 'user', alias: 'u')
             ->where('u.id = :id')
             ->setParameter(key: 'id', value: $userId)
             ->executeQuery()
