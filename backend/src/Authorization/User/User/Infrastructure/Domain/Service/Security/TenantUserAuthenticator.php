@@ -33,9 +33,9 @@ final class TenantUserAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $username = RequestExtractor::getStringRequestValue(
+        $email = RequestExtractor::getStringRequestValue(
             request: $request,
-            fieldName: 'username',
+            fieldName: 'email',
             required: false
         );
         $plainPassword = RequestExtractor::getStringRequestValue(
@@ -44,7 +44,7 @@ final class TenantUserAuthenticator extends AbstractAuthenticator
             required: false
         );
 
-        if (empty($username) || empty($plainPassword)) {
+        if (empty($email) || empty($plainPassword)) {
             throw new BadCredentialsException();
         }
 
@@ -52,7 +52,7 @@ final class TenantUserAuthenticator extends AbstractAuthenticator
         $userProvider = $this->tenantUserProvider;
 
         $userBadge = new UserBadge(
-            userIdentifier: $username,
+            userIdentifier: $email,
             userLoader: function (string $identifier) use ($userProvider): User {
                 /** @var User $user */
                 $user = $userProvider->loadUserByIdentifier(identifier: $identifier);
@@ -120,7 +120,6 @@ final class TenantUserAuthenticator extends AbstractAuthenticator
                     'expires_at' => $this->jwtEncoder->decode(token: $jwt)['exp'] ?? time(),
                     'token_type' => 'Bearer',
                     'user' => [
-                        'username' => $user->username,
                         'email' => $user->email,
                         'roles' => $user->getRoles(),
                     ],

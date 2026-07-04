@@ -75,7 +75,7 @@ services:
     volumes:
       - ./volumes/public_uploads:/var/www/upload/
     ports:
-      - "8082:80"
+      - "8083:80"
     depends_on:
       - php
     logging:
