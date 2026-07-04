@@ -6,13 +6,14 @@
         {{ "dashboard.greeting" | t }}{{ name() ? ", " + name() : "" }}
       </h1>
     </div>
-    <a
+    <button
+      type="button"
       class="dash__avatar"
-      routerLink="/me"
-      [attr.aria-label]="'dashboard.profile' | t"
+      (click)="openMenu()"
+      [attr.aria-label]="'navbar.openMenu' | t"
     >
       {{ initial() }}
-    </a>
+    </button>
   </header>
 
   <div class="dash__body">

@@ -1,0 +1,22 @@
+services:
+  Nutrition\Catalog\Article\Application\Query\GetArticlesQueryHandler:
+    class: Nutrition\Catalog\Article\Application\Query\GetArticlesQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\GetArticlesNeedleDataQuery'
+      $dataTransform: '@Nutrition\Catalog\Article\Application\Query\GetArticlesDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Article\Application\Query\GetArticlesDataTransform:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\DataTransform\ApiGetArticlesDataTransform
+
+  Nutrition\Catalog\Article\Application\Query\GetArticleQueryHandler:
+    class: Nutrition\Catalog\Article\Application\Query\GetArticleQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\GetArticleNeedleDataQuery'
+      $dataTransform: '@Nutrition\Catalog\Article\Application\Query\GetArticleDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Article\Application\Query\GetArticleDataTransform:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\DataTransform\ApiGetArticleDataTransform

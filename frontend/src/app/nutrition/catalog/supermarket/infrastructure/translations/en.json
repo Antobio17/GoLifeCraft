@@ -1,0 +1,58 @@
+{
+  "getSupermarkets": {
+    "title": "Supermarkets",
+    "subtitle": "Supermarkets catalog",
+    "new": "New Supermarket",
+    "filter": {
+      "name": "Name",
+      "namePlaceholder": "Search by name..."
+    },
+    "table": {
+      "name": "Name",
+      "emptyTitle": "No Supermarkets",
+      "emptyMessage": "No Supermarkets have been registered in the catalog yet"
+    },
+    "actions": {
+      "edit": "Edit"
+    }
+  },
+  "createSupermarket": {
+    "title": "New Supermarket",
+    "description": "Create a new record in the catalog",
+    "section": {
+      "general": "General information"
+    },
+    "field": {
+      "name": "Name"
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
+  "updateSupermarket": {
+    "title": "Edit Supermarket",
+    "description": "Update the record data",
+    "section": {
+      "general": "General information"
+    },
+    "field": {
+      "name": "Name"
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
+  "supermarket": {
+    "breadcrumb": {
+      "list": "Supermarkets",
+      "create": "New Supermarket",
+      "edit": "Edit Supermarket"
+    },
+    "create": {
+      "success": "Record created successfully"
+    },
+    "update": {
+      "success": "Record updated successfully"
+    }
+  }
+}

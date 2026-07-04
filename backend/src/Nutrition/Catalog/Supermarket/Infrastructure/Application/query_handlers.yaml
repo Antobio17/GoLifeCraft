@@ -1,0 +1,22 @@
+services:
+  Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketsQueryHandler:
+    class: Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Catalog\Supermarket\Domain\QueryModel\GetSupermarketsNeedleDataQuery'
+      $dataTransform: '@Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketsDataTransform:
+    class: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\DataTransform\ApiGetSupermarketsDataTransform
+
+  Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketQueryHandler:
+    class: Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Catalog\Supermarket\Domain\QueryModel\GetSupermarketNeedleDataQuery'
+      $dataTransform: '@Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketDataTransform:
+    class: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\DataTransform\ApiGetSupermarketDataTransform

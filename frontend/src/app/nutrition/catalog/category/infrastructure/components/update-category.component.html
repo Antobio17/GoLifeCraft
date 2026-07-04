@@ -1,0 +1,48 @@
+<app-page-wrapper [maxWidth]="'720px'" [gap]="'24px'">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <app-section-page-wrapper
+      [title]="'updateCategory.title' | t"
+      [description]="'updateCategory.description' | t"
+      [loading]="loading"
+      [skeletonRows]="1"
+      [skeletonFieldsPerRow]="1"
+      [showBackButton]="true"
+      (backClicked)="cancel()"
+    >
+      <svg
+        slot="icon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M3 9h18" />
+      </svg>
+
+      <app-form-section
+        [title]="'updateCategory.section.general' | t"
+        [icon]="ICONS['CLIPBOARD']"
+      >
+        <app-form-input
+          [label]="'updateCategory.field.name' | t"
+          [showRequired]="true"
+          formControlName="name"
+        ></app-form-input>
+      </app-form-section>
+    </app-section-page-wrapper>
+
+    <app-form-actions
+      [cancelLabel]="'updateCategory.cancel' | t"
+      [submitLabel]="'updateCategory.save' | t"
+      [savingLabel]="'updateCategory.saving' | t"
+      [saving]="saving"
+      [formInvalid]="form.invalid"
+      (cancelled)="cancel()"
+    ></app-form-actions>
+  </form>
+</app-page-wrapper>

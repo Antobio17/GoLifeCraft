@@ -1,0 +1,54 @@
+<app-page-wrapper>
+  @if (loading()) {
+    <app-skeleton-page-header [showAction]="true"></app-skeleton-page-header>
+  }
+
+  @if (!loading()) {
+    <app-page-header
+      [title]="'getCategories.title' | t"
+      [subtitle]="'getCategories.subtitle' | t"
+    >
+      <div slot="actions">
+        <app-button variant="primary" size="lg" (clicked)="onCreate()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 5V19M5 12H19"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {{ "getCategories.new" | t }}
+        </app-button>
+      </div>
+    </app-page-header>
+  }
+
+  <app-list-filters
+    [fields]="filterFields"
+    [loading]="loading()"
+    (filtersApplied)="onFiltersApplied($event)"
+    (filtersCleared)="onFiltersCleared()"
+  />
+
+  <app-list-table
+    [items]="items()"
+    [columns]="columns"
+    [actions]="actions"
+    [loading]="loading()"
+    [emptyTitle]="'getCategories.table.emptyTitle' | t"
+    [emptyMessage]="'getCategories.table.emptyMessage' | t"
+    (actionClick)="onAction($event)"
+  />
+
+  @if (!loading() && items().length > 0) {
+    <app-pagination
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      [totalItems]="totalItems()"
+      (pageChange)="goToPage($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    />
+  }
+</app-page-wrapper>

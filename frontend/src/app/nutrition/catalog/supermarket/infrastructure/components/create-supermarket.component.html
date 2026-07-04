@@ -1,0 +1,48 @@
+<app-page-wrapper [maxWidth]="'720px'" [gap]="'24px'">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <app-section-page-wrapper
+      [title]="'createSupermarket.title' | t"
+      [description]="'createSupermarket.description' | t"
+      [loading]="loading"
+      [skeletonRows]="1"
+      [skeletonFieldsPerRow]="1"
+      [showBackButton]="true"
+      (backClicked)="cancel()"
+    >
+      <svg
+        slot="icon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M3 9h18" />
+      </svg>
+
+      <app-form-section
+        [title]="'createSupermarket.section.general' | t"
+        [icon]="ICONS['BUILDING']"
+      >
+        <app-form-input
+          [label]="'createSupermarket.field.name' | t"
+          [showRequired]="true"
+          formControlName="name"
+        ></app-form-input>
+      </app-form-section>
+    </app-section-page-wrapper>
+
+    <app-form-actions
+      [cancelLabel]="'createSupermarket.cancel' | t"
+      [submitLabel]="'createSupermarket.save' | t"
+      [savingLabel]="'createSupermarket.saving' | t"
+      [saving]="saving"
+      [formInvalid]="form.invalid"
+      (cancelled)="cancel()"
+    ></app-form-actions>
+  </form>
+</app-page-wrapper>

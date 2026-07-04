@@ -1,0 +1,10 @@
+services:
+  Nutrition\Catalog\Category\Domain\QueryModel\GetCategoriesNeedleDataQuery:
+    class: Nutrition\Catalog\Category\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetCategoriesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Catalog\Category\Domain\QueryModel\GetCategoryNeedleDataQuery:
+    class: Nutrition\Catalog\Category\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetCategoryNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

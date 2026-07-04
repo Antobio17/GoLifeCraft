@@ -1,0 +1,10 @@
+services:
+  Nutrition\Catalog\Article\Domain\QueryModel\GetArticlesNeedleDataQuery:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetArticlesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Catalog\Article\Domain\QueryModel\GetArticleNeedleDataQuery:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetArticleNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

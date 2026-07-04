@@ -1,0 +1,58 @@
+{
+  "getCategories": {
+    "title": "Categorías",
+    "subtitle": "Catálogo de Categorías",
+    "new": "Nueva Categoría",
+    "filter": {
+      "name": "Nombre",
+      "namePlaceholder": "Buscar por nombre..."
+    },
+    "table": {
+      "name": "Nombre",
+      "emptyTitle": "No hay Categorías",
+      "emptyMessage": "Aún no se han registrado Categorías en el catálogo"
+    },
+    "actions": {
+      "edit": "Editar"
+    }
+  },
+  "createCategory": {
+    "title": "Nueva Categoría",
+    "description": "Crea un nuevo registro en el catálogo",
+    "section": {
+      "general": "Información general"
+    },
+    "field": {
+      "name": "Nombre"
+    },
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando..."
+  },
+  "updateCategory": {
+    "title": "Editar Categoría",
+    "description": "Modifica los datos del registro",
+    "section": {
+      "general": "Información general"
+    },
+    "field": {
+      "name": "Nombre"
+    },
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando..."
+  },
+  "category": {
+    "breadcrumb": {
+      "list": "Categorías",
+      "create": "Nueva Categoría",
+      "edit": "Editar Categoría"
+    },
+    "create": {
+      "success": "Registro creado correctamente"
+    },
+    "update": {
+      "success": "Registro actualizado correctamente"
+    }
+  }
+}

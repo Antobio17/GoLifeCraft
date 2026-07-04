@@ -39,6 +39,22 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "supermarkets",
+        data: { breadcrumb: "supermarket.breadcrumb.list" },
+        loadChildren: () =>
+          import(
+            "./nutrition/catalog/supermarket/infrastructure/routes/supermarket.routes"
+          ).then((m) => m.SUPERMARKET_ROUTES),
+      },
+      {
+        path: "categories",
+        data: { breadcrumb: "category.breadcrumb.list" },
+        loadChildren: () =>
+          import(
+            "./nutrition/catalog/category/infrastructure/routes/category.routes"
+          ).then((m) => m.CATEGORY_ROUTES),
+      },
+      {
         path: "reports",
         canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: null },

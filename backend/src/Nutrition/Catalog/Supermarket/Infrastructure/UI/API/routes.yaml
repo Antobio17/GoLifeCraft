@@ -1,0 +1,9 @@
+get_supermarkets:
+  path: /api/v1/nutrition/catalog/supermarkets
+  methods: [GET]
+  controller: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller\GetSupermarketsController
+
+get_supermarket:
+  path: /api/v1/nutrition/catalog/supermarket/{supermarketId}
+  methods: [GET]
+  controller: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller\GetSupermarketController

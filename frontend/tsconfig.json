@@ -6,6 +6,7 @@
       "@app/*": ["app/*"],
       "@authorization/*": ["app/authorization/*"],
       "@layouts/*": ["app/layouts/*"],
+      "@nutrition/*": ["app/nutrition/*"],
       "@shared/*": ["app/shared/*"],
       "@environments/*": ["environments/*"]
     },

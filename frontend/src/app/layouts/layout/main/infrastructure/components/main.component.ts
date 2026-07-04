@@ -3,12 +3,18 @@ import { Router, NavigationEnd, RouterOutlet } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { FloatingToastComponent } from "@shared/shared/floating-toasts/infrastructure/components/floating-toast.component";
 import { BottomNavComponent } from "@layouts/layout/bottom-nav/infrastructure/components/bottom-nav.component";
+import { SideDrawerComponent } from "@layouts/layout/side-drawer/infrastructure/components/side-drawer.component";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 
 @Component({
   selector: "app-main",
   standalone: true,
-  imports: [RouterOutlet, FloatingToastComponent, BottomNavComponent],
+  imports: [
+    RouterOutlet,
+    FloatingToastComponent,
+    BottomNavComponent,
+    SideDrawerComponent,
+  ],
   styleUrls: ["./main.component.css"],
   templateUrl: "./main.component.html",
 })

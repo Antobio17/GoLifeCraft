@@ -1,0 +1,58 @@
+{
+  "getCategories": {
+    "title": "Categories",
+    "subtitle": "Categories catalog",
+    "new": "New Category",
+    "filter": {
+      "name": "Name",
+      "namePlaceholder": "Search by name..."
+    },
+    "table": {
+      "name": "Name",
+      "emptyTitle": "No Categories",
+      "emptyMessage": "No Categories have been registered in the catalog yet"
+    },
+    "actions": {
+      "edit": "Edit"
+    }
+  },
+  "createCategory": {
+    "title": "New Category",
+    "description": "Create a new record in the catalog",
+    "section": {
+      "general": "General information"
+    },
+    "field": {
+      "name": "Name"
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
+  "updateCategory": {
+    "title": "Edit Category",
+    "description": "Update the record data",
+    "section": {
+      "general": "General information"
+    },
+    "field": {
+      "name": "Name"
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
+  "category": {
+    "breadcrumb": {
+      "list": "Categories",
+      "create": "New Category",
+      "edit": "Edit Category"
+    },
+    "create": {
+      "success": "Record created successfully"
+    },
+    "update": {
+      "success": "Record updated successfully"
+    }
+  }
+}

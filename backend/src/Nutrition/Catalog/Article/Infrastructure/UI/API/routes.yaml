@@ -1,0 +1,9 @@
+get_articles:
+  path: /api/v1/nutrition/catalog/articles
+  methods: [GET]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticlesController
+
+get_article:
+  path: /api/v1/nutrition/catalog/article/{articleId}
+  methods: [GET]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleController

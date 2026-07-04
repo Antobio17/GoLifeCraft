@@ -1,8 +1,8 @@
 import { Component, computed, inject } from "@angular/core";
 import { DatePipe, DecimalPipe } from "@angular/common";
-import { RouterLink } from "@angular/router";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
+import { SideDrawerService } from "@layouts/layout/side-drawer/application/services/side-drawer.service";
 import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 
 interface DailySummary {
@@ -18,11 +18,12 @@ interface DailySummary {
   standalone: true,
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.css"],
-  imports: [DatePipe, DecimalPipe, RouterLink, ContextualTranslatePipe],
+  imports: [DatePipe, DecimalPipe, ContextualTranslatePipe],
 })
 export class DashboardComponent {
   private authSessionService = inject(AuthSessionService);
   private floatingToastService = inject(FloatingToastService);
+  private sideDrawerService = inject(SideDrawerService);
 
   readonly today = new Date();
 
@@ -48,6 +49,10 @@ export class DashboardComponent {
       100,
       Math.round((this.summary.consumedKcal / this.summary.targetKcal) * 100),
     );
+  }
+
+  openMenu(): void {
+    this.sideDrawerService.open();
   }
 
   comingSoon(): void {

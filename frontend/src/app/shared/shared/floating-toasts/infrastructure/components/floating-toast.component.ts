@@ -1,8 +1,26 @@
 import { Component, DestroyRef, effect, inject } from "@angular/core";
 import { trigger, style, animate, transition } from "@angular/animations";
+import { Subscription, timer } from "rxjs";
 import { FloatingToastService } from "../../application/services/floating-toast.service";
-import { FloatingToastMessage } from "../../domain/models/floating-toast.model";
+import {
+  FloatingToastMessage,
+  FloatingToastType,
+} from "../../domain/models/floating-toast.model";
 import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+
+interface FloatingToastView extends FloatingToastMessage {
+  id: number;
+  type: FloatingToastType;
+  icon: string;
+  durationMs: number;
+}
+
+const TOAST_ICONS: Record<FloatingToastType, string> = {
+  success: "i-check",
+  info: "i-info",
+  warning: "i-alert",
+  error: "i-x",
+};
 
 @Component({
   selector: "app-floating-toast",
@@ -31,23 +49,18 @@ export class FloatingToastComponent {
   private floatingToastService = inject(FloatingToastService);
   private destroyRef = inject(DestroyRef);
 
-  toast: FloatingToastMessage | null = null;
-  visible = false;
-  private timeoutId: ReturnType<typeof setTimeout> | undefined;
+  toasts: FloatingToastView[] = [];
+  private counter = 0;
+  private timerSubscription?: Subscription;
 
   constructor() {
-    this.destroyRef.onDestroy(() => clearTimeout(this.timeoutId));
+    this.destroyRef.onDestroy(() => this.timerSubscription?.unsubscribe());
 
     effect(() => {
-      const newToast = this.floatingToastService.getToast()();
-      if (!newToast) return;
-      this.toast = newToast;
-      this.show();
+      const message = this.floatingToastService.getToast()();
+      if (!message) return;
+      this.show(message);
     });
-  }
-
-  isSuccess(): boolean {
-    return !!this.toast && this.toast.status >= 200 && this.toast.status < 300;
   }
 
   asParams(
@@ -57,17 +70,34 @@ export class FloatingToastComponent {
     return details;
   }
 
-  show(): void {
-    this.visible = true;
-    clearTimeout(this.timeoutId);
-    const duration = this.isSuccess() ? 3500 : 6000;
-    this.timeoutId = setTimeout(() => {
-      this.visible = false;
-    }, duration);
+  dismiss(): void {
+    this.timerSubscription?.unsubscribe();
+    this.toasts = [];
   }
 
-  dismiss(): void {
-    clearTimeout(this.timeoutId);
-    this.visible = false;
+  private show(message: FloatingToastMessage): void {
+    const type = this.resolveType(message);
+    const durationMs = type === "success" ? 3500 : 6000;
+
+    this.toasts = [
+      {
+        ...message,
+        id: ++this.counter,
+        type,
+        icon: TOAST_ICONS[type],
+        durationMs,
+      },
+    ];
+
+    this.timerSubscription?.unsubscribe();
+    this.timerSubscription = timer(durationMs).subscribe(() => {
+      this.toasts = [];
+    });
+  }
+
+  private resolveType(message: FloatingToastMessage): FloatingToastType {
+    if (message.type) return message.type;
+    if (message.status >= 200 && message.status < 300) return "success";
+    return "error";
   }
 }

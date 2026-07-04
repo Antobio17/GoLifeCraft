@@ -52,3 +52,15 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Nutrition/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Nutrition\Catalog\NutritionFacts\Domain\Model'
                         alias: nutrition_facts
+                    Supermarket:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Catalog/Supermarket/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Catalog\Supermarket\Domain\Model'
+                        alias: supermarket
+                    Category:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Catalog/Category/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Catalog\Category\Domain\Model'
+                        alias: category

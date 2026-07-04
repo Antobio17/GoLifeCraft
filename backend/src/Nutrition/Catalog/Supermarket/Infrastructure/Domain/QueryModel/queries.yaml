@@ -1,0 +1,10 @@
+services:
+  Nutrition\Catalog\Supermarket\Domain\QueryModel\GetSupermarketsNeedleDataQuery:
+    class: Nutrition\Catalog\Supermarket\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetSupermarketsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Catalog\Supermarket\Domain\QueryModel\GetSupermarketNeedleDataQuery:
+    class: Nutrition\Catalog\Supermarket\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetSupermarketNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

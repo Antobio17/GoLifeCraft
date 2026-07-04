@@ -22,3 +22,13 @@ relations:
     kind: oneToOne
     writable: true
     expandable: true
+  supermarket:
+    target: supermarket
+    kind: manyToOne
+    writable: true
+    expandable: true
+  category:
+    target: category
+    kind: manyToOne
+    writable: true
+    expandable: true

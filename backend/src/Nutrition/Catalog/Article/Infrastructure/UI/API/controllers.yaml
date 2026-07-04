@@ -1,0 +1,16 @@
+services:
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticlesController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticlesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $logger: '@logger'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $logger: '@logger'
+    tags:
+      - { name: controller.service_arguments }

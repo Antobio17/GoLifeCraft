@@ -12,6 +12,12 @@
     <one-to-one field="nutritionFacts" target-entity="Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts">
       <join-column name="nutrition_facts_id" referenced-column-name="id" nullable="true" unique="true"/>
     </one-to-one>
+    <many-to-one field="supermarket" target-entity="Nutrition\Catalog\Supermarket\Domain\Model\Supermarket">
+      <join-column name="supermarket_id" referenced-column-name="id" nullable="true"/>
+    </many-to-one>
+    <many-to-one field="category" target-entity="Nutrition\Catalog\Category\Domain\Model\Category">
+      <join-column name="category_id" referenced-column-name="id" nullable="true"/>
+    </many-to-one>
     <unique-constraints>
       <unique-constraint name="uniq_article_name" columns="name"/>
     </unique-constraints>

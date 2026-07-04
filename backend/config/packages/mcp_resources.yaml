@@ -11,3 +11,15 @@ parameters:
             sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping/NutritionFacts.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
             write_roles: [ROLE_GOD, ROLE_USER]
+
+        supermarket:
+            class: 'Nutrition\Catalog\Supermarket\Domain\Model\Supermarket'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/Supermarket/Infrastructure/Domain/Model/Doctrine/Mapping/Supermarket.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+
+        category:
+            class: 'Nutrition\Catalog\Category\Domain\Model\Category'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/Category/Infrastructure/Domain/Model/Doctrine/Mapping/Category.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]

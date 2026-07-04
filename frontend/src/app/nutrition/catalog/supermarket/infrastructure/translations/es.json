@@ -1,0 +1,58 @@
+{
+  "getSupermarkets": {
+    "title": "Supermercados",
+    "subtitle": "Catálogo de Supermercados",
+    "new": "Nuevo Supermercado",
+    "filter": {
+      "name": "Nombre",
+      "namePlaceholder": "Buscar por nombre..."
+    },
+    "table": {
+      "name": "Nombre",
+      "emptyTitle": "No hay Supermercados",
+      "emptyMessage": "Aún no se han registrado Supermercados en el catálogo"
+    },
+    "actions": {
+      "edit": "Editar"
+    }
+  },
+  "createSupermarket": {
+    "title": "Nuevo Supermercado",
+    "description": "Crea un nuevo registro en el catálogo",
+    "section": {
+      "general": "Información general"
+    },
+    "field": {
+      "name": "Nombre"
+    },
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando..."
+  },
+  "updateSupermarket": {
+    "title": "Editar Supermercado",
+    "description": "Modifica los datos del registro",
+    "section": {
+      "general": "Información general"
+    },
+    "field": {
+      "name": "Nombre"
+    },
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando..."
+  },
+  "supermarket": {
+    "breadcrumb": {
+      "list": "Supermercados",
+      "create": "Nuevo Supermercado",
+      "edit": "Editar Supermercado"
+    },
+    "create": {
+      "success": "Registro creado correctamente"
+    },
+    "update": {
+      "success": "Registro actualizado correctamente"
+    }
+  }
+}

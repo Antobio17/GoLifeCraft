@@ -1,0 +1,9 @@
+get_categories:
+  path: /api/v1/nutrition/catalog/categories
+  methods: [GET]
+  controller: Nutrition\Catalog\Category\Infrastructure\UI\API\Controller\GetCategoriesController
+
+get_category:
+  path: /api/v1/nutrition/catalog/category/{categoryId}
+  methods: [GET]
+  controller: Nutrition\Catalog\Category\Infrastructure\UI\API\Controller\GetCategoryController
