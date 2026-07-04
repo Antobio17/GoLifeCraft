@@ -1,6 +1,7 @@
 monolog:
     channels:
         - deprecation
+        - csp
 
 when@dev:
     monolog:
@@ -31,8 +32,14 @@ when@prod:
             main:
                 type: stream
                 path: "php://stderr"
+                level: warning
+                channels: ["!event", "!deprecation", "!csp"]
+                formatter: monolog.formatter.json
+            csp:
+                type: stream
+                path: "php://stderr"
                 level: info
-                channels: ["!event"]
+                channels: [csp]
                 formatter: monolog.formatter.json
             deprecation:
                 type: stream

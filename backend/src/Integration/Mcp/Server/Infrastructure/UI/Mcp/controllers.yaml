@@ -1,0 +1,18 @@
+parameters:
+  mcp.allowed_hosts: '%env(csv:MCP_ALLOWED_HOSTS)%'
+
+services:
+  mcp.server.controller:
+    class: Integration\Mcp\Server\Infrastructure\UI\Mcp\Controller\McpEndpointController
+    public: true
+    arguments:
+      $server: '@mcp.server'
+      $httpMessageFactory: '@mcp.psr_http_factory'
+      $httpFoundationFactory: '@mcp.http_foundation_factory'
+      $responseFactory: '@mcp.psr17_factory'
+      $streamFactory: '@mcp.psr17_factory'
+      $allowedHosts: '%mcp.allowed_hosts%'
+      $logger: '@logger'
+    tags:
+      - { name: 'controller.service_arguments' }
+      - { name: 'monolog.logger', channel: 'mcp' }

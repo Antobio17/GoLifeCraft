@@ -1,6 +1,6 @@
 <?php
 
-namespace Integration\Mcp\Server\Infrastructure\UI\Mcp;
+namespace Integration\Mcp\Server\Infrastructure\UI\Mcp\Tool;
 
 use Shared\Shared\Shared\Domain\Exception\BaseException;
 use Symfony\Component\HttpFoundation\Request;

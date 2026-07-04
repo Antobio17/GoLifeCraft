@@ -1,6 +1,6 @@
 <?php
 
-namespace Integration\Mcp\Server\Infrastructure\UI\Mcp;
+namespace Integration\Mcp\Server\Infrastructure\UI\Mcp\Tool;
 
 use Integration\Mcp\Server\Application\Command\WriteModelCommand;
 use Mcp\Capability\Attribute\McpTool;

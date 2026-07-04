@@ -2,7 +2,7 @@ services:
   Shared\Tool\Tool\Infrastructure\UI\API\Controller\CspReportController:
     class: Shared\Tool\Tool\Infrastructure\UI\API\Controller\CspReportController
     arguments:
-      $logger: '@logger'
+      $logger: '@monolog.logger.csp'
       $cspReportLimiter: '@limiter.csp_report'
     tags:
       - { name: controller.service_arguments }

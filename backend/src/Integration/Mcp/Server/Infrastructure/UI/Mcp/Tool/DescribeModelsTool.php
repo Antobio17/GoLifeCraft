@@ -1,6 +1,6 @@
 <?php
 
-namespace Integration\Mcp\Server\Infrastructure\UI\Mcp;
+namespace Integration\Mcp\Server\Infrastructure\UI\Mcp\Tool;
 
 use Integration\Mcp\Server\Application\Query\DescribeModelsQuery;
 use Mcp\Capability\Attribute\McpTool;

@@ -46,6 +46,7 @@ class Kernel extends BaseKernel
             ->name('query_handlers.yaml')
             ->name('command_handlers.yaml')
             ->name('services.yaml')
+            ->name('tools.yaml')
             ->name('listeners.yaml')
             ->name('managers.yaml')
             ->name('middlewares.yaml')
