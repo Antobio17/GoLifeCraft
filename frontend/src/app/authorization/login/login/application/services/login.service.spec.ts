@@ -27,13 +27,13 @@ describe("LoginService", () => {
   });
 
   it("should delegate login to the port with given credentials", () => {
-    const credentials: LoginRequest = { username: "user", password: "pass" };
+    const credentials: LoginRequest = { email: "user", password: "pass" };
     service.login(credentials).subscribe();
     expect(mockPort.login).toHaveBeenCalledWith(credentials);
   });
 
   it("should return the observable from the port", (done) => {
-    const credentials: LoginRequest = { username: "user", password: "pass" };
+    const credentials: LoginRequest = { email: "user", password: "pass" };
     service.login(credentials).subscribe((response) => {
       expect(response).toEqual(mockResponse);
       done();

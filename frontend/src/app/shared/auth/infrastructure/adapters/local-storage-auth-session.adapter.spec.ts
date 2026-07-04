@@ -9,7 +9,7 @@ const mockSession: AuthSession = {
   expiresAt: futureTimestamp,
   tokenType: "Bearer",
   user: { username: "testuser", email: "test@test.com", roles: ["admin"] },
-  username: "testuser",
+  email: "test@test.com",
 };
 
 describe("LocalStorageAuthSessionAdapter", () => {
@@ -46,7 +46,7 @@ describe("LocalStorageAuthSessionAdapter", () => {
       const retrieved = adapter.get();
       expect(retrieved).not.toBeNull();
       expect(retrieved!.token).toBe("test-token");
-      expect(retrieved!.username).toBe("testuser");
+      expect(retrieved!.email).toBe("test@test.com");
       expect(retrieved!.tokenType).toBe("Bearer");
     });
 

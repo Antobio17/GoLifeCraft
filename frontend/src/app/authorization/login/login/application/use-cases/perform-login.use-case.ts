@@ -12,8 +12,8 @@ export class PerformLoginUseCase {
     private getMyProfilePort: GetMyProfilePort,
   ) {}
 
-  execute(username: string, password: string): Observable<void> {
-    const credentials: LoginRequest = { username, password };
+  execute(email: string, password: string): Observable<void> {
+    const credentials: LoginRequest = { email, password };
 
     return this.loginPort.login(credentials).pipe(
       tap((response) => {
@@ -22,7 +22,7 @@ export class PerformLoginUseCase {
           expiresAt: response.data.expires_at,
           tokenType: response.data.token_type,
           user: response.data.user,
-          username,
+          email,
         });
       }),
       switchMap(() =>

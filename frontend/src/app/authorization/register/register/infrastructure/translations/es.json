@@ -1,0 +1,39 @@
+{
+  "register": {
+    "tagline": "Tu despensa, con datos.",
+    "tabs": {
+      "signin": "Entrar",
+      "register": "Crear cuenta"
+    },
+    "username": {
+      "label": "Nombre de usuario",
+      "placeholder": "Introduce tu nombre de usuario"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Introduce tu email"
+    },
+    "password": {
+      "label": "Contraseña",
+      "placeholder": "Crea una contraseña"
+    },
+    "confirmPassword": {
+      "label": "Confirmar contraseña",
+      "placeholder": "Repite tu contraseña"
+    },
+    "submit": "Crear cuenta",
+    "submitting": "Creando…",
+    "togglePassword": {
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña"
+    },
+    "success": "Cuenta creada correctamente. Ya puedes iniciar sesión.",
+    "validation": {
+      "required": "Por favor, completa todos los campos",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    },
+    "error": {
+      "generic": "No se pudo crear la cuenta"
+    }
+  }
+}

@@ -18,6 +18,7 @@
     <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
     <unique-constraints>
       <unique-constraint name="uniq_user_username" columns="username"/>
+      <unique-constraint name="uniq_user_email" columns="email"/>
     </unique-constraints>
     <indexes>
       <index name="idx_user_tenant_id" columns="tenant_id"/>

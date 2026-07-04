@@ -9,7 +9,7 @@ export class LocalStorageAuthSessionAdapter extends AuthSessionPort {
     EXPIRES_AT: "expires_at",
     TOKEN_TYPE: "token_type",
     USER: "user",
-    USERNAME: "username",
+    EMAIL: "email",
   } as const;
 
   save(session: AuthSession): void {
@@ -17,7 +17,7 @@ export class LocalStorageAuthSessionAdapter extends AuthSessionPort {
     localStorage.setItem(this.KEYS.EXPIRES_AT, session.expiresAt.toString());
     localStorage.setItem(this.KEYS.TOKEN_TYPE, session.tokenType);
     localStorage.setItem(this.KEYS.USER, JSON.stringify(session.user));
-    localStorage.setItem(this.KEYS.USERNAME, session.username);
+    localStorage.setItem(this.KEYS.EMAIL, session.email);
   }
 
   get(): AuthSession | null {
@@ -28,7 +28,7 @@ export class LocalStorageAuthSessionAdapter extends AuthSessionPort {
 
     const expiresAt = localStorage.getItem(this.KEYS.EXPIRES_AT);
     const tokenType = localStorage.getItem(this.KEYS.TOKEN_TYPE);
-    const username = localStorage.getItem(this.KEYS.USERNAME);
+    const email = localStorage.getItem(this.KEYS.EMAIL);
 
     try {
       return {
@@ -36,7 +36,7 @@ export class LocalStorageAuthSessionAdapter extends AuthSessionPort {
         expiresAt: expiresAt ? parseInt(expiresAt) : 0,
         tokenType: tokenType ?? "Bearer",
         user: JSON.parse(user),
-        username: username ?? "",
+        email: email ?? "",
       };
     } catch {
       return null;

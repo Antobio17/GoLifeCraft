@@ -10,5 +10,5 @@ export interface AuthSession {
   expiresAt: number;
   tokenType: string;
   user: AuthUser;
-  username: string;
+  email: string;
 }

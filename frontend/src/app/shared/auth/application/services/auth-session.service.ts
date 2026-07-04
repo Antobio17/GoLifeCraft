@@ -39,7 +39,7 @@ export class AuthSessionService {
   }
 
   getUsername(): string {
-    return this._session()?.username ?? "";
+    return this._session()?.email ?? "";
   }
 
   isGod(): boolean {

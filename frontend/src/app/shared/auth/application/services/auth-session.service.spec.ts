@@ -7,7 +7,7 @@ const mockSession: AuthSession = {
   expiresAt: 9999999999,
   tokenType: "Bearer",
   user: { username: "testuser", email: "test@test.com", roles: ["admin"] },
-  username: "testuser",
+  email: "test@test.com",
 };
 
 class MockAuthSessionPort extends AuthSessionPort {
@@ -93,6 +93,7 @@ describe("AuthSessionService", () => {
       service.saveSession({
         ...mockSession,
         user: { username: "u", email: "e", roles: ["viewer"] },
+        email: "e",
       });
       expect(service.getCurrentUserRole()).toBe("viewer");
     });
@@ -103,9 +104,9 @@ describe("AuthSessionService", () => {
       expect(service.getUsername()).toBe("");
     });
 
-    it("should return username from session", () => {
+    it("should return email from session", () => {
       service.saveSession(mockSession);
-      expect(service.getUsername()).toBe("testuser");
+      expect(service.getUsername()).toBe("test@test.com");
     });
   });
 

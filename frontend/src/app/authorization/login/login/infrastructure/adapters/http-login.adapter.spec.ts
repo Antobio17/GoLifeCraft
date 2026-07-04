@@ -29,7 +29,7 @@ describe("HttpLoginAdapter", () => {
   });
 
   it("should POST credentials to /api/login", () => {
-    const credentials: LoginRequest = { username: "user", password: "pass" };
+    const credentials: LoginRequest = { email: "user", password: "pass" };
     adapter.login(credentials).subscribe();
 
     const req = httpMock.expectOne("/api/login");
@@ -39,7 +39,7 @@ describe("HttpLoginAdapter", () => {
   });
 
   it("should return the response from the API", (done) => {
-    const credentials: LoginRequest = { username: "user", password: "pass" };
+    const credentials: LoginRequest = { email: "user", password: "pass" };
     const mockResponse: LoginResponse = {
       data: {
         token: "tok",

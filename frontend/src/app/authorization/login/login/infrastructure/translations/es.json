@@ -8,9 +8,9 @@
       "signin": "Entrar",
       "register": "Crear cuenta"
     },
-    "username": {
-      "label": "Usuario",
-      "placeholder": "marta@correo.com"
+    "email": {
+      "label": "Email",
+      "placeholder": "Introduce tu email"
     },
     "password": {
       "label": "Contraseña",
@@ -22,17 +22,11 @@
       "show": "Mostrar contraseña",
       "hide": "Ocultar contraseña"
     },
-    "footer": {
-      "prompt": "¿Nuevo aquí?"
-    },
-    "register": {
-      "comingSoon": "El registro estará disponible próximamente."
-    },
     "validation": {
-      "required": "Por favor, ingrese usuario y contraseña"
+      "required": "Por favor, introduce tu email y contraseña"
     },
     "error": {
-      "credentials": "Usuario o contraseña incorrectos"
+      "credentials": "Email o contraseña incorrectos"
     }
   }
 }

@@ -11,6 +11,13 @@ export const APP_ROUTES: Routes = [
       ),
   },
   {
+    path: "register",
+    loadChildren: () =>
+      import("./authorization/register/register/infrastructure/routes/register.routes").then(
+        (m) => m.REGISTER_ROUTES,
+      ),
+  },
+  {
     path: "",
     canActivate: [authGuard],
     children: [

@@ -30,9 +30,11 @@ final class CreateUserController
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            $email = RequestExtractor::getStringRequestValue(request: $request, fieldName: 'email');
+
             $this->handle(message: new CreateUserCommand(
-                username: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'username'),
-                email: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'email'),
+                username: $email,
+                email: $email,
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 lastname: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'lastname'),
                 plainPassword: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'password'),

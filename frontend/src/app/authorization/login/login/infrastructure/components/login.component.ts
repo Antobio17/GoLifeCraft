@@ -9,6 +9,7 @@ import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipe
 import { BrandLogoComponent } from "@shared/shared/brand-logo/infrastructure/components/brand-logo.component";
 
 const HOME_ROUTE = "/dashboard";
+const REGISTER_ROUTE = "/register";
 
 @Component({
   selector: "app-login",
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
   private authSessionService = inject(AuthSessionService);
   private router = inject(Router);
 
-  username = "";
+  email = "";
   password = "";
   loading = false;
   showPassword = false;
@@ -41,15 +42,11 @@ export class LoginComponent implements OnInit {
   }
 
   onRegister(): void {
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation: "login.register.comingSoon",
-      details: [],
-    });
+    this.router.navigate([REGISTER_ROUTE]);
   }
 
   onSubmit(): void {
-    if (!this.username || !this.password) {
+    if (!this.email || !this.password) {
       this.floatingToastService.showToast({
         status: 400,
         keyTranslation: "login.validation.required",
@@ -59,7 +56,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.performLoginUseCase.execute(this.username, this.password).subscribe({
+    this.performLoginUseCase.execute(this.email, this.password).subscribe({
       next: () => {
         this.loading = false;
         this.router.navigate([HOME_ROUTE]);

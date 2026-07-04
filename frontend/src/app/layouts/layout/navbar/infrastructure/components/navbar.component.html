@@ -2,7 +2,11 @@
   <div class="navbar-bar">
     <div class="navbar-inner">
       <a routerLink="/me" class="navbar-logo" (click)="closeAll()">
-        <img src="assets/img/logo.png" alt="GoLifeCraft" class="logo-img" />
+        <img
+          [src]="isDark() ? 'assets/img/logo-dark.png' : 'assets/img/logo-light.png'"
+          alt="GoLifeCraft"
+          class="logo-img"
+        />
       </a>
 
       <span class="navbar-divider"></span>
@@ -289,7 +293,11 @@
     <aside class="drawer" role="dialog" aria-modal="true">
       <header class="drawer-header">
         <div class="drawer-brand">
-          <img src="assets/img/logo.png" alt="GoLifeCraft" class="logo-img" />
+          <img
+            [src]="isDark() ? 'assets/img/logo-dark.png' : 'assets/img/logo-light.png'"
+            alt="GoLifeCraft"
+            class="logo-img"
+          />
         </div>
         <button
           class="drawer-close"

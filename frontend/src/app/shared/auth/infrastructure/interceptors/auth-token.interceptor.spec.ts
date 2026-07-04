@@ -17,7 +17,7 @@ const mockSession: AuthSession = {
   tokenType: "Bearer",
   expiresAt: 9999999999,
   user: { username: "u", email: "e", roles: [] },
-  username: "u",
+  email: "e",
 };
 
 describe("authTokenInterceptor", () => {

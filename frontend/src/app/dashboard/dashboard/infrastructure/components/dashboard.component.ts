@@ -27,7 +27,7 @@ export class DashboardComponent {
   readonly today = new Date();
 
   readonly name = computed(
-    () => this.authSessionService.session()?.username ?? "",
+    () => this.authSessionService.session()?.email ?? "",
   );
 
   readonly initial = computed(() => {

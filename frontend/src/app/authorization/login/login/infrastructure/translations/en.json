@@ -8,9 +8,9 @@
       "signin": "Sign in",
       "register": "Sign up"
     },
-    "username": {
-      "label": "Username",
-      "placeholder": "marta@email.com"
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
     },
     "password": {
       "label": "Password",
@@ -22,17 +22,11 @@
       "show": "Show password",
       "hide": "Hide password"
     },
-    "footer": {
-      "prompt": "New here?"
-    },
-    "register": {
-      "comingSoon": "Sign up will be available soon."
-    },
     "validation": {
-      "required": "Please enter your username and password"
+      "required": "Please enter your email and password"
     },
     "error": {
-      "credentials": "Incorrect username or password"
+      "credentials": "Incorrect email or password"
     }
   }
 }

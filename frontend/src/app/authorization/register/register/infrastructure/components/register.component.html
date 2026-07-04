@@ -5,22 +5,50 @@
         [markSize]="58"
         [wordmarkSize]="23"
         [stacked]="true"
-        [tagline]="'login.tagline' | t"
+        [tagline]="'register.tagline' | t"
       ></app-brand-logo>
     </div>
 
     <div class="auth__tabs" role="tablist">
-      <button type="button" class="auth__tab auth__tab--active" role="tab">
-        {{ "login.tabs.signin" | t }}
+      <button type="button" class="auth__tab" role="tab" (click)="onSignIn()">
+        {{ "register.tabs.signin" | t }}
       </button>
-      <button type="button" class="auth__tab" role="tab" (click)="onRegister()">
-        {{ "login.tabs.register" | t }}
+      <button type="button" class="auth__tab auth__tab--active" role="tab">
+        {{ "register.tabs.register" | t }}
       </button>
     </div>
 
     <form (ngSubmit)="onSubmit()" class="auth__form">
+      <label class="field" for="username">
+        <span class="field__label">{{ "register.username.label" | t }}</span>
+        <span class="field__control">
+          <svg
+            class="field__icon"
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke-linecap="round" />
+          </svg>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            [(ngModel)]="username"
+            [disabled]="loading"
+            [placeholder]="'register.username.placeholder' | t"
+            required
+            autocomplete="username"
+          />
+        </span>
+      </label>
+
       <label class="field" for="email">
-        <span class="field__label">{{ "login.email.label" | t }}</span>
+        <span class="field__label">{{ "register.email.label" | t }}</span>
         <span class="field__control">
           <svg
             class="field__icon"
@@ -40,7 +68,7 @@
             name="email"
             [(ngModel)]="email"
             [disabled]="loading"
-            [placeholder]="'login.email.placeholder' | t"
+            [placeholder]="'register.email.placeholder' | t"
             required
             autocomplete="email"
             inputmode="email"
@@ -49,7 +77,7 @@
       </label>
 
       <label class="field" for="password">
-        <span class="field__label">{{ "login.password.label" | t }}</span>
+        <span class="field__label">{{ "register.password.label" | t }}</span>
         <span class="field__control">
           <svg
             class="field__icon"
@@ -69,9 +97,9 @@
             name="password"
             [(ngModel)]="password"
             [disabled]="loading"
-            [placeholder]="'login.password.placeholder' | t"
+            [placeholder]="'register.password.placeholder' | t"
             required
-            autocomplete="current-password"
+            autocomplete="new-password"
           />
           <button
             type="button"
@@ -80,8 +108,8 @@
             tabindex="-1"
             [attr.aria-label]="
               (showPassword
-                ? 'login.togglePassword.hide'
-                : 'login.togglePassword.show'
+                ? 'register.togglePassword.hide'
+                : 'register.togglePassword.show'
               ) | t
             "
           >
@@ -118,18 +146,44 @@
         </span>
       </label>
 
-      <a href="#" class="auth__forgot" (click)="$event.preventDefault()">
-        {{ "login.forgotPassword" | t }}
-      </a>
+      <label class="field" for="confirmPassword">
+        <span class="field__label">{{
+          "register.confirmPassword.label" | t
+        }}</span>
+        <span class="field__control">
+          <svg
+            class="field__icon"
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="4" y="10" width="16" height="10" rx="2.5" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            [disabled]="loading"
+            [placeholder]="'register.confirmPassword.placeholder' | t"
+            required
+            autocomplete="new-password"
+          />
+        </span>
+      </label>
 
       <button type="submit" class="auth__submit" [disabled]="loading">
         @if (!loading) {
-          <span>{{ "login.submit" | t }}</span>
+          <span>{{ "register.submit" | t }}</span>
           <span class="auth__arrow" aria-hidden="true">→</span>
         }
         @if (loading) {
           <span class="auth__spinner" aria-hidden="true"></span>
-          <span>{{ "login.submitting" | t }}</span>
+          <span>{{ "register.submitting" | t }}</span>
         }
       </button>
     </form>

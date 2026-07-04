@@ -10,6 +10,7 @@ export class ContextualTranslatePipe implements PipeTransform {
 
   private readonly CONTEXT_MAP: { [key: string]: string } = {
     login: "authorization/login/login",
+    register: "authorization/register/register",
     landing: "landing/landing/landing",
     getUsers: "authorization/user/user",
     user: "authorization/user/user",

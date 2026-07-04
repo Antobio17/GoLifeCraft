@@ -63,9 +63,9 @@ describe("PerformLoginUseCase", () => {
   });
 
   it("should call loginPort.login with the correct credentials", (done) => {
-    useCase.execute("testuser", "pass").subscribe(() => {
+    useCase.execute("test@test.com", "pass").subscribe(() => {
       expect(mockLoginPort.login).toHaveBeenCalledWith({
-        username: "testuser",
+        email: "test@test.com",
         password: "pass",
       });
       done();
@@ -73,11 +73,11 @@ describe("PerformLoginUseCase", () => {
   });
 
   it("should save the session after successful login", (done) => {
-    useCase.execute("testuser", "pass").subscribe(() => {
+    useCase.execute("test@test.com", "pass").subscribe(() => {
       expect(mockAuthSessionService.saveSession).toHaveBeenCalledWith(
         jasmine.objectContaining({
           token: "test-token",
-          username: "testuser",
+          email: "test@test.com",
           tokenType: "Bearer",
         }),
       );
@@ -86,7 +86,7 @@ describe("PerformLoginUseCase", () => {
   });
 
   it("should fetch the profile after successful login", (done) => {
-    useCase.execute("testuser", "pass").subscribe(() => {
+    useCase.execute("test@test.com", "pass").subscribe(() => {
       expect(mockGetMyProfilePort.getMyProfile).toHaveBeenCalled();
       done();
     });
