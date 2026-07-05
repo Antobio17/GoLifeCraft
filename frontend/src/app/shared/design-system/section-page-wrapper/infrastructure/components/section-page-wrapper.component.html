@@ -1,0 +1,45 @@
+<div class="spw-wrapper">
+  <div class="spw-container">
+    <div
+      class="section-header"
+      [class.section-header--with-back]="showBackButton"
+    >
+      @if (showBackButton) {
+        <button class="back-button" type="button" (click)="backClicked.emit()">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-arrow-left"></use>
+          </svg>
+        </button>
+      }
+      <div class="section-header-content">
+        <h3 class="section-title-main">
+          <ng-content select="[slot='icon']"></ng-content>
+          {{ title }}
+        </h3>
+        <p class="section-description">{{ description }}</p>
+      </div>
+    </div>
+
+    @if (loading) {
+      <ds-skeleton-form-section
+        [rows]="skeletonRows"
+        [fieldsPerRow]="skeletonFieldsPerRow"
+        [cards]="skeletonCards"
+      ></ds-skeleton-form-section>
+    }
+
+    @if (!loading) {
+      <ng-content></ng-content>
+    }
+  </div>
+</div>

@@ -1,0 +1,142 @@
+.cdm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.cdm-content {
+  background: var(--ds-surface-raised);
+  border-radius: 16px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--ds-border);
+  animation: cdm-appear 0.2s ease-out;
+}
+
+@keyframes cdm-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.cdm-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.cdm-header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--ds-danger-soft);
+  border-radius: 10px;
+  color: var(--ds-danger);
+  flex-shrink: 0;
+}
+
+.cdm-header-icon--success {
+  background: var(--ds-success-soft);
+  color: var(--ds-success);
+}
+
+.cdm-header h2 {
+  flex: 1;
+  margin: 0;
+  color: var(--ds-text);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.cdm-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--ds-text-muted);
+  cursor: pointer;
+  border-radius: 8px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  flex-shrink: 0;
+}
+
+.cdm-close:hover:not(:disabled) {
+  background: var(--ds-surface-subtle);
+  color: var(--ds-text);
+}
+
+.cdm-close:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cdm-body {
+  padding: 24px;
+}
+
+.cdm-body-text {
+  margin: 0 0 12px 0;
+  color: var(--ds-text-body);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.cdm-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--ds-danger-soft);
+  border-radius: 8px;
+  color: var(--ds-danger);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cdm-warning svg {
+  flex-shrink: 0;
+}
+
+.cdm-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--ds-border);
+}
+
+@media (max-width: 480px) {
+  .cdm-footer {
+    flex-direction: column-reverse;
+  }
+
+  .cdm-footer ds-button {
+    width: 100%;
+  }
+
+  .cdm-footer ds-button ::ng-deep .ds-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,6 +1,6 @@
-<app-page-wrapper [maxWidth]="'720px'" [gap]="'24px'">
+<ds-page-wrapper [maxWidth]="'720px'" [gap]="'24px'">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <app-section-page-wrapper
+    <ds-section-page-wrapper
       [title]="'createCategory.title' | t"
       [description]="'createCategory.description' | t"
       [loading]="loading"
@@ -24,25 +24,25 @@
         <path d="M3 9h18" />
       </svg>
 
-      <app-form-section
+      <ds-form-section
         [title]="'createCategory.section.general' | t"
         [icon]="ICONS['CLIPBOARD']"
       >
-        <app-form-input
+        <ds-form-input
           [label]="'createCategory.field.name' | t"
           [showRequired]="true"
           formControlName="name"
-        ></app-form-input>
-      </app-form-section>
-    </app-section-page-wrapper>
+        ></ds-form-input>
+      </ds-form-section>
+    </ds-section-page-wrapper>
 
-    <app-form-actions
+    <ds-form-actions
       [cancelLabel]="'createCategory.cancel' | t"
       [submitLabel]="'createCategory.save' | t"
       [savingLabel]="'createCategory.saving' | t"
       [saving]="saving"
       [formInvalid]="form.invalid"
       (cancelled)="cancel()"
-    ></app-form-actions>
+    ></ds-form-actions>
   </form>
-</app-page-wrapper>
+</ds-page-wrapper>

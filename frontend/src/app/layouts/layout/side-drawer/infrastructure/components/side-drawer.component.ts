@@ -4,12 +4,13 @@ import {
   computed,
   effect,
   inject,
+  signal,
 } from "@angular/core";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
-import { ThemeService } from "@shared/shared/theme/application/services/theme.service";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { ThemeService } from "@shared/theme/application/services/theme.service";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { SideDrawerService } from "../../application/services/side-drawer.service";
 
 @Component({
@@ -26,9 +27,14 @@ export class SideDrawerComponent {
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
 
+  private readonly dockedQuery = window.matchMedia("(min-width: 768px)");
+  private readonly isDocked = signal(this.dockedQuery.matches);
+
   readonly isOpen = this.drawer.isOpen;
   readonly isDark = this.themeService.isDark;
   readonly isGod = computed(() => this.authSessionService.isGod());
+
+  readonly isInteractive = computed(() => this.isOpen() || this.isDocked());
 
   readonly email = computed(() => this.authSessionService.getUsername());
 
@@ -44,8 +50,13 @@ export class SideDrawerComponent {
   });
 
   constructor() {
+    this.dockedQuery.addEventListener("change", (event) =>
+      this.isDocked.set(event.matches),
+    );
+
     effect(() => {
-      document.body.style.overflow = this.isOpen() ? "hidden" : "";
+      const lockScroll = this.isOpen() && !this.isDocked();
+      document.body.style.overflow = lockScroll ? "hidden" : "";
     });
   }
 

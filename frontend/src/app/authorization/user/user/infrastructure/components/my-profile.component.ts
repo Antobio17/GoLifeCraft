@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from "@angular/core";
-import { PageWrapperComponent } from "@shared/shared/page-wrapper/infrastructure/components/page-wrapper.component";
-import { SectionPageWrapperComponent } from "@shared/shared/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
+import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
 import {
   FormBuilder,
   FormGroup,
@@ -17,14 +17,14 @@ import { ChangeMyPasswordService } from "../../application/services/change-my-pa
 import { GetMyProfileProvider } from "../providers/get-my-profile.provider";
 import { UpdateMyProfileProvider } from "../providers/update-my-profile.provider";
 import { ChangeMyPasswordProvider } from "../providers/change-my-password.provider";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
-import { TranslationService } from "@shared/shared/i18n/application/services/translation.service";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { USER_ROLES } from "@authorization/domain/constants/user-roles.constants";
-import { FormSectionComponent } from "@shared/shared/form-section/infrastructure/components/form-section.component";
-import { FormInputComponent } from "@shared/shared/form-input/infrastructure/components/form-input.component";
-import { FORM_SECTION_ICONS } from "@shared/shared/form-section/constants/form-section-icons.constants";
-import { ButtonComponent } from "@shared/shared/button/infrastructure/components/button.component";
+import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
+import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
+import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 
 function passwordStrengthValidator(
   control: AbstractControl,

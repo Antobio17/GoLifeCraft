@@ -1,0 +1,14 @@
+<button
+  type="button"
+  class="tile"
+  [class.tile--primary]="primary"
+  (click)="clicked.emit()"
+>
+  <span class="tile__icon"><ng-content></ng-content></span>
+  <span class="tile__text">
+    <span class="tile__name">{{ name }}</span>
+    @if (meta) {
+      <span class="tile__meta">{{ meta }}</span>
+    }
+  </span>
+</button>

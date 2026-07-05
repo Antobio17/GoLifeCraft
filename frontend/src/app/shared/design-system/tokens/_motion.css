@@ -1,0 +1,12 @@
+/* ============================================================
+   DESIGN SYSTEM — MOTION
+   ============================================================ */
+
+:root {
+  --ds-transition-fast: 0.15s ease;
+  --ds-transition-base: 0.2s ease;
+  --ds-transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-transition-slow: 0.5s ease;
+
+  --ds-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}

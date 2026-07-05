@@ -6,33 +6,33 @@
   justify-content: center;
   pointer-events: none;
 
-  --drawer-bg: var(--color-paper-100);
+  --drawer-bg: var(--ds-paper-100);
   --drawer-border: transparent;
   --drawer-scrim: rgba(27, 26, 21, 0.42);
-  --drawer-active-bg: var(--color-forest-500);
-  --drawer-active-fg: var(--color-paper-100);
-  --drawer-active-icon: var(--color-lime-500);
-  --drawer-mark-bg: var(--color-forest-500);
-  --drawer-mark-fg: var(--color-lime-500);
+  --drawer-active-bg: var(--ds-forest-500);
+  --drawer-active-fg: var(--ds-paper-100);
+  --drawer-active-icon: var(--ds-lime-500);
+  --drawer-mark-bg: var(--ds-forest-500);
+  --drawer-mark-fg: var(--ds-lime-500);
   --drawer-switch-off: #ded7c7;
 }
 
 :host-context([data-theme="dark"]) {
   --drawer-bg: #12150f;
-  --drawer-border: var(--color-border-hairline);
+  --drawer-border: var(--ds-border-hairline);
   --drawer-scrim: rgba(0, 0, 0, 0.5);
-  --drawer-active-bg: var(--color-lime-500);
+  --drawer-active-bg: var(--ds-lime-500);
   --drawer-active-fg: #0e100d;
   --drawer-active-icon: #0e100d;
-  --drawer-mark-bg: var(--color-lime-500);
+  --drawer-mark-bg: var(--ds-lime-500);
   --drawer-mark-fg: #0e100d;
-  --drawer-switch-off: var(--color-surface-inset);
+  --drawer-switch-off: var(--ds-surface-inset);
 }
 
 .drawer-root {
   position: relative;
   width: 100%;
-  max-width: var(--app-frame-width, 480px);
+  max-width: var(--ds-app-frame-width, 480px);
   height: 100%;
 }
 
@@ -102,11 +102,11 @@
 }
 
 .drawer__wordmark {
-  font-family: var(--font-family-display);
+  font-family: var(--ds-font-display);
   font-weight: 800;
   font-size: 17px;
   letter-spacing: -0.02em;
-  color: var(--color-text-primary);
+  color: var(--ds-text);
 }
 
 [data-theme="dark"] .drawer__wordmark {
@@ -114,7 +114,7 @@
 }
 
 .drawer__wordmark-accent {
-  color: var(--color-text-brand);
+  color: var(--ds-primary);
 }
 
 .drawer__close {
@@ -125,14 +125,14 @@
   height: 30px;
   border: none;
   border-radius: 9px;
-  background: var(--color-surface-inset);
-  color: var(--color-text-secondary);
+  background: var(--ds-surface-inset);
+  color: var(--ds-text-muted);
   cursor: pointer;
-  transition: color var(--transition-base);
+  transition: color var(--ds-transition-base);
 }
 
 .drawer__close:hover {
-  color: var(--color-text-primary);
+  color: var(--ds-text);
 }
 
 /* ─── Nav ─── */
@@ -155,7 +155,7 @@
   border: none;
   border-radius: 13px;
   background: transparent;
-  color: var(--color-text-primary);
+  color: var(--ds-text);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -163,8 +163,8 @@
   text-decoration: none;
   cursor: pointer;
   transition:
-    background var(--transition-base),
-    color var(--transition-base);
+    background var(--ds-transition-base),
+    color var(--ds-transition-base);
 }
 
 .drawer__item-icon {
@@ -172,7 +172,7 @@
 }
 
 .drawer__item:hover {
-  background: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+  background: color-mix(in srgb, var(--ds-text) 6%, transparent);
 }
 
 .drawer__item.is-active {
@@ -193,9 +193,9 @@
   gap: 11px;
   margin: 0 12px;
   padding: 12px 13px;
-  border: 1px solid var(--color-border-default);
+  border: 1px solid var(--ds-border);
   border-radius: 14px;
-  background: var(--color-surface-default);
+  background: var(--ds-surface);
   cursor: pointer;
   font-family: inherit;
 }
@@ -209,14 +209,14 @@
 }
 
 .drawer__theme-icon--moon {
-  color: var(--color-lime-500);
+  color: var(--ds-lime-500);
 }
 
 .drawer__theme-label {
   flex: 1;
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--ds-text);
   text-align: left;
 }
 
@@ -229,11 +229,11 @@
   padding: 3px;
   border-radius: 20px;
   background: var(--drawer-switch-off);
-  transition: background var(--transition-base);
+  transition: background var(--ds-transition-base);
 }
 
 .drawer__switch.is-on {
-  background: var(--color-accent);
+  background: var(--ds-accent);
 }
 
 .drawer__switch-knob {
@@ -245,7 +245,7 @@
   transform: translateX(0);
   transition:
     transform 0.22s ease,
-    background var(--transition-base);
+    background var(--ds-transition-base);
 }
 
 .drawer__switch.is-on .drawer__switch-knob {
@@ -261,7 +261,7 @@
   gap: 11px;
   margin: 11px 12px 0;
   padding-top: 13px;
-  border-top: 1px solid var(--color-border-default);
+  border-top: 1px solid var(--ds-border);
   text-decoration: none;
 }
 
@@ -275,7 +275,7 @@
   border-radius: 50%;
   background: var(--drawer-mark-bg);
   color: var(--drawer-mark-fg);
-  font-family: var(--font-family-display);
+  font-family: var(--ds-font-display);
   font-weight: 800;
   font-size: 15px;
 }
@@ -294,7 +294,7 @@
 .drawer__user-name {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--ds-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -302,7 +302,7 @@
 
 .drawer__user-email {
   font-size: 11px;
-  color: var(--color-text-secondary);
+  color: var(--ds-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -317,32 +317,32 @@
   gap: 8px;
   margin: 11px 12px 0;
   padding: 11px;
-  border: 1px solid color-mix(in srgb, var(--color-error-500) 38%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ds-danger) 38%, transparent);
   border-radius: 13px;
   background: transparent;
-  color: var(--color-error-600);
+  color: var(--ds-danger);
   font-family: inherit;
   font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
-  transition: background var(--transition-base);
+  transition: background var(--ds-transition-base);
 }
 
 .drawer__logout:hover {
-  background: color-mix(in srgb, var(--color-error-500) 10%, transparent);
+  background: color-mix(in srgb, var(--ds-danger) 10%, transparent);
 }
 
 @media (min-width: 768px) {
   :host {
     inset: 0 auto 0 0;
-    width: var(--app-sidebar-width);
+    width: var(--ds-app-sidebar-width);
     z-index: 30;
     justify-content: flex-start;
     pointer-events: auto;
   }
 
   .drawer-root {
-    width: var(--app-sidebar-width);
+    width: var(--ds-app-sidebar-width);
     max-width: none;
   }
 
@@ -357,8 +357,8 @@
     height: 100%;
     transform: none;
     box-shadow: none;
-    background: var(--color-surface-nav);
-    border-right: 1px solid var(--color-border-default);
+    background: var(--ds-surface-nav);
+    border-right: 1px solid var(--ds-border);
     pointer-events: auto;
   }
 

@@ -1,7 +1,7 @@
 import { Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 
 @Component({
   selector: "app-bottom-nav",

@@ -11,7 +11,7 @@ import {
 import { Router } from "@angular/router";
 import { httpErrorInterceptor } from "./http-error.interceptor";
 import { AuthSessionService } from "../../application/services/auth-session.service";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 
 describe("httpErrorInterceptor", () => {
   let httpMock: HttpTestingController;

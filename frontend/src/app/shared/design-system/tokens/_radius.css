@@ -1,0 +1,13 @@
+/* ============================================================
+   DESIGN SYSTEM — RADIUS
+   ============================================================ */
+
+:root {
+  --ds-radius-sm: 6px;
+  --ds-radius-md: 8px;
+  --ds-radius-lg: 10px;
+  --ds-radius-xl: 12px;
+  --ds-radius-2xl: 14px;
+  --ds-radius-3xl: 16px;
+  --ds-radius-pill: 9999px;
+}

@@ -18,7 +18,7 @@
 
   <div class="dash__body">
     <!-- Resumen de hoy -->
-    <article class="summary" [style.--progress]="progressPercent">
+    <article class="summary">
       <div class="summary__top">
         <span class="summary__eyebrow">{{
           "dashboard.summary.title" | t
@@ -29,9 +29,9 @@
       </div>
 
       <div class="summary__main">
-        <div class="summary__ring">
+        <ds-progress-ring class="summary__ring" [value]="progressPercent">
           <span class="summary__ring-value">{{ progressPercent }}%</span>
-        </div>
+        </ds-progress-ring>
         <div class="summary__kcal">
           <p class="summary__kcal-value">
             {{ summary.consumedKcal | number: "1.0-0" : "es" }}
@@ -81,7 +81,12 @@
     <section class="explore">
       <h2 class="explore__title">{{ "dashboard.explore.title" | t }}</h2>
       <div class="explore__grid">
-        <button type="button" class="tile tile--primary" (click)="comingSoon()">
+        <ds-action-tile
+          [primary]="true"
+          [name]="'dashboard.explore.catalog' | t"
+          [meta]="'dashboard.explore.catalogMeta' | t"
+          (clicked)="comingSoon()"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -93,17 +98,13 @@
             <rect x="3" y="13" width="8" height="8" rx="2" />
             <rect x="13" y="13" width="8" height="8" rx="2" />
           </svg>
-          <span class="tile__text">
-            <span class="tile__name">{{
-              "dashboard.explore.catalog" | t
-            }}</span>
-            <span class="tile__meta">{{
-              "dashboard.explore.catalogMeta" | t
-            }}</span>
-          </span>
-        </button>
+        </ds-action-tile>
 
-        <button type="button" class="tile" (click)="comingSoon()">
+        <ds-action-tile
+          [name]="'dashboard.explore.recipes' | t"
+          [meta]="'dashboard.explore.soon' | t"
+          (clicked)="comingSoon()"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -112,15 +113,13 @@
           >
             <path d="M4 4h13a2 2 0 0 1 2 2v14l-8-3.5L3 20V5a1 1 0 0 1 1-1z" />
           </svg>
-          <span class="tile__text">
-            <span class="tile__name">{{
-              "dashboard.explore.recipes" | t
-            }}</span>
-            <span class="tile__meta">{{ "dashboard.explore.soon" | t }}</span>
-          </span>
-        </button>
+        </ds-action-tile>
 
-        <button type="button" class="tile" (click)="comingSoon()">
+        <ds-action-tile
+          [name]="'dashboard.explore.list' | t"
+          [meta]="'dashboard.explore.soon' | t"
+          (clicked)="comingSoon()"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -135,13 +134,13 @@
               stroke-linejoin="round"
             />
           </svg>
-          <span class="tile__text">
-            <span class="tile__name">{{ "dashboard.explore.list" | t }}</span>
-            <span class="tile__meta">{{ "dashboard.explore.soon" | t }}</span>
-          </span>
-        </button>
+        </ds-action-tile>
 
-        <button type="button" class="tile" (click)="comingSoon()">
+        <ds-action-tile
+          [name]="'dashboard.explore.gym' | t"
+          [meta]="'dashboard.explore.soon' | t"
+          (clicked)="comingSoon()"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -153,11 +152,7 @@
               stroke-linecap="round"
             />
           </svg>
-          <span class="tile__text">
-            <span class="tile__name">{{ "dashboard.explore.gym" | t }}</span>
-            <span class="tile__meta">{{ "dashboard.explore.soon" | t }}</span>
-          </span>
-        </button>
+        </ds-action-tile>
       </div>
     </section>
   </div>

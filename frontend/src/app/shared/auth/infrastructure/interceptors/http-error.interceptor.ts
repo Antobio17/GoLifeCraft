@@ -3,7 +3,7 @@ import { HttpInterceptorFn, HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { catchError, throwError } from "rxjs";
 import { AuthSessionService } from "../../application/services/auth-session.service";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const toastService = inject(FloatingToastService);

@@ -3,17 +3,17 @@
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
-  max-width: var(--app-frame-width, 480px);
+  max-width: var(--ds-app-frame-width, 480px);
   margin: 0 auto;
-  background: var(--color-surface-page);
+  background: var(--ds-bg);
 }
 
 /* Subtle side rules only where the frame is narrower than the viewport
    (tablet/desktop), so the app reads as a centered phone canvas. */
 @media (min-width: 481px) {
   .app-frame {
-    border-left: 1px solid var(--color-border-hairline);
-    border-right: 1px solid var(--color-border-hairline);
+    border-left: 1px solid var(--ds-border-hairline);
+    border-right: 1px solid var(--ds-border-hairline);
   }
 }
 
@@ -36,7 +36,7 @@
   }
 
   .app-frame--with-tabbar {
-    padding-left: var(--app-sidebar-width);
+    padding-left: var(--ds-app-sidebar-width);
   }
 
   .app-frame--with-tabbar .app-frame__content {

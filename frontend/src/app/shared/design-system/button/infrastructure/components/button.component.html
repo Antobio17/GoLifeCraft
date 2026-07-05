@@ -1,0 +1,13 @@
+<button
+  [type]="type"
+  [class]="buttonClasses"
+  [disabled]="isDisabled"
+  (click)="handleClick()"
+>
+  <span class="ds-btn__content">
+    @if (loading) {
+      <span class="ds-btn__spinner"></span>
+    }
+    <ng-content></ng-content>
+  </span>
+</button>

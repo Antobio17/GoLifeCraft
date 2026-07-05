@@ -1,0 +1,44 @@
+/* ============================================================
+   DESIGN SYSTEM — TYPOGRAPHY
+   Light "Huerto": Bricolage Grotesque (display) + Hanken Grotesk (body)
+   Dark  "Kinetic": Space Grotesk (todo)
+   ============================================================ */
+
+:root {
+  --ds-font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --ds-font-display:
+    "Bricolage Grotesque", "Hanken Grotesk", system-ui, sans-serif;
+
+  /* Escala de tamaños */
+  --ds-text-xs: 11px;
+  --ds-text-sm: 12px;
+  --ds-text-label: 13.5px;
+  --ds-text-base: 14px;
+  --ds-text-md: 15px;
+  --ds-text-lg: 17px;
+  --ds-text-xl: 20px;
+  --ds-text-2xl: 24px;
+  --ds-text-3xl: 28px;
+  --ds-text-4xl: 36px;
+
+  /* Pesos */
+  --ds-weight-regular: 400;
+  --ds-weight-medium: 500;
+  --ds-weight-semibold: 600;
+  --ds-weight-bold: 700;
+  --ds-weight-extrabold: 800;
+
+  /* Interlineado */
+  --ds-leading-tight: 1.2;
+  --ds-leading-snug: 1.4;
+  --ds-leading-normal: 1.5;
+  --ds-leading-relaxed: 1.6;
+
+  /* Tracking */
+  --ds-tracking-tight: -0.01em;
+}
+
+[data-theme="dark"] {
+  --ds-font-body: "Space Grotesk", system-ui, sans-serif;
+  --ds-font-display: "Space Grotesk", system-ui, sans-serif;
+}

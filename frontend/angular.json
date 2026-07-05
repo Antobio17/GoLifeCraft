@@ -28,6 +28,7 @@
               { "glob": "pdf.worker.min.mjs", "input": "node_modules/pdfjs-dist/build", "output": "" }
             ],
             "styles": [
+              "src/app/shared/design-system/tokens/index.css",
               "src/styles.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
@@ -90,6 +91,7 @@
               { "glob": "pdf.worker.min.mjs", "input": "node_modules/pdfjs-dist/build", "output": "" }
             ],
             "styles": [
+              "src/app/shared/design-system/tokens/index.css",
               "src/styles.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],

@@ -1,0 +1,68 @@
+:host {
+  display: block;
+}
+
+.tile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border);
+  border-radius: 16px;
+  padding: 12px 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform var(--ds-transition-base);
+  font-family: var(--ds-font-body);
+}
+
+.tile:active {
+  transform: scale(0.98);
+}
+
+.tile__icon {
+  display: inline-flex;
+}
+
+.tile__icon ::ng-deep svg {
+  width: 22px;
+  height: 22px;
+  color: var(--ds-primary);
+}
+
+.tile__name {
+  display: block;
+  font-size: 13px;
+  font-weight: var(--ds-weight-extrabold);
+  color: var(--ds-text);
+}
+
+.tile__meta {
+  display: block;
+  font-size: 10.5px;
+  font-weight: var(--ds-weight-semibold);
+  color: var(--ds-text-meta);
+  margin-top: 2px;
+}
+
+.tile--primary {
+  background: var(--ds-accent);
+  border-color: transparent;
+}
+
+.tile--primary .tile__icon ::ng-deep svg,
+.tile--primary .tile__name {
+  color: var(--ds-on-accent);
+}
+
+.tile--primary .tile__meta {
+  color: color-mix(in srgb, var(--ds-on-accent) 65%, transparent);
+}
+
+@media (min-width: 1000px) {
+  .tile {
+    padding: 16px 16px;
+    gap: 26px;
+  }
+}

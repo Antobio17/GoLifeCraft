@@ -1,27 +1,27 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { SkeletonPageHeaderComponent } from "@shared/shared/skeleton/infrastructure/components/skeleton-page-header.component";
+import { SkeletonPageHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-page-header.component";
 import { GetUsersService } from "@authorization/user/user/application/services/get-users.service";
 import { DeleteUserService } from "@authorization/user/user/application/services/delete-user.service";
 import { GetUsersResponse } from "@authorization/user/user/domain/models/get-users-response.model";
 import { User } from "../../domain/models/user.model";
 import { USER_ROLES } from "@authorization/domain/constants/user-roles.constants";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
-import { PaginationComponent } from "@shared/shared/pagination/infrastructure/components/pagination.component";
-import { ListTableComponent } from "@shared/shared/list-table/infrastructure/components/list-table.component";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { PaginationComponent } from "@shared/design-system/pagination/infrastructure/components/pagination.component";
+import { ListTableComponent } from "@shared/design-system/list-table/infrastructure/components/list-table.component";
 import {
   ListAction,
   ListActionEvent,
   ListColumn,
-} from "@shared/shared/list-table/domain/models/list-table.model";
-import { ListFiltersComponent } from "@shared/shared/list-filters/infrastructure/components/list-filters.component";
-import { FilterField } from "@shared/shared/list-filters/domain/models/list-filters.model";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { TranslationService } from "@shared/shared/i18n/application/services/translation.service";
-import { ConfirmActionModalComponent } from "@shared/shared/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
-import { ButtonComponent } from "@shared/shared/button/infrastructure/components/button.component";
-import { PageWrapperComponent } from "@shared/shared/page-wrapper/infrastructure/components/page-wrapper.component";
-import { PageHeaderComponent } from "@shared/shared/page-header/infrastructure/components/page-header.component";
+} from "@shared/design-system/list-table/domain/models/list-table.model";
+import { ListFiltersComponent } from "@shared/design-system/list-filters/infrastructure/components/list-filters.component";
+import { FilterField } from "@shared/design-system/list-filters/domain/models/list-filters.model";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { PageHeaderComponent } from "@shared/design-system/page-header/infrastructure/components/page-header.component";
 
 @Component({
   selector: "app-get-users",

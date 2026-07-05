@@ -14,8 +14,8 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { provideRouter, withInMemoryScrolling } from "@angular/router";
 import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/components/main.component";
 import { APP_ROUTES } from "./app/app.routes";
-import { GlobalProviders } from "@shared/shared/shared/infrastructure/providers/main.provider";
-import { ThemeProvider } from "@shared/shared/theme/infrastructure/providers/theme.provider";
+import { GlobalProviders } from "@shared/providers/main.provider";
+import { ThemeProvider } from "@shared/theme/infrastructure/providers/theme.provider";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 
 bootstrapApplication(MainLayoutComponent, {

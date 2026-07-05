@@ -11,8 +11,8 @@
     class="drawer"
     role="dialog"
     aria-modal="true"
-    [attr.aria-hidden]="!isOpen()"
-    [attr.inert]="isOpen() ? null : ''"
+    [attr.aria-hidden]="!isInteractive()"
+    [attr.inert]="isInteractive() ? null : ''"
   >
     <header class="drawer__header">
       <div class="drawer__brand">
@@ -177,30 +177,6 @@
             <path d="M16 5.2a3.2 3.2 0 0 1 0 6M18 19.5c0-2.4-1-4-3-4.6" />
           </svg>
           <span class="drawer__item-label">{{ "navbar.users" | t }}</span>
-        </a>
-
-        <a
-          class="drawer__item"
-          routerLink="/reports/logs"
-          routerLinkActive="is-active"
-          (click)="close()"
-        >
-          <svg
-            class="drawer__item-icon"
-            width="19"
-            height="19"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.1"
-            aria-hidden="true"
-          >
-            <path
-              d="M6 3h8l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"
-            />
-            <path d="M14 3v5h5M8.5 12.5h7M8.5 16h7" />
-          </svg>
-          <span class="drawer__item-label">{{ "navbar.logs" | t }}</span>
         </a>
       }
 

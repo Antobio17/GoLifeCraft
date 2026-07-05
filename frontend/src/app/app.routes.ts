@@ -55,21 +55,6 @@ export const APP_ROUTES: Routes = [
           ).then((m) => m.CATEGORY_ROUTES),
       },
       {
-        path: "reports",
-        canActivate: [blockReadOnlyUserGuard],
-        data: { breadcrumb: null },
-        children: [
-          {
-            path: "logs",
-            data: { breadcrumb: "navbar.logs" },
-            loadChildren: () =>
-              import("./shared/shared/domain-event-log/infrastructure/routes/domain-event-log.routes").then(
-                (m) => m.DOMAIN_EVENT_LOG_ROUTES,
-              ),
-          },
-        ],
-      },
-      {
         path: "me",
         data: { breadcrumb: "profile.breadcrumb" },
         loadComponent: () =>

@@ -1,12 +1,12 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { PerformLoginUseCase } from "@authorization/login/login/application/use-cases/perform-login.use-case";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { BrandLogoComponent } from "@shared/shared/brand-logo/infrastructure/components/brand-logo.component";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
 
 const HOME_ROUTE = "/dashboard";
 const REGISTER_ROUTE = "/register";

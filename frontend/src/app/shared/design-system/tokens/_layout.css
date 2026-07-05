@@ -1,0 +1,17 @@
+/* ============================================================
+   DESIGN SYSTEM — LAYOUT
+   Breakpoints (referencia, para media queries en componentes):
+     Móvil   : ≤ 639px
+     Tablet  : 640px – 1023px
+     Desktop : ≥ 1024px
+   ============================================================ */
+
+:root {
+  --ds-app-frame-width: 480px;
+  --ds-app-sidebar-width: 244px;
+  --ds-app-content-max: 1180px;
+  --ds-form-max-width: 960px;
+  --ds-z-drawer: 100;
+  --ds-z-modal: 200;
+  --ds-z-toast: 300;
+}

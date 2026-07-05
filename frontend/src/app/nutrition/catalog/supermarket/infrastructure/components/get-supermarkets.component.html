@@ -1,15 +1,15 @@
-<app-page-wrapper>
+<ds-page-wrapper>
   @if (loading()) {
-    <app-skeleton-page-header [showAction]="true"></app-skeleton-page-header>
+    <ds-skeleton-page-header [showAction]="true"></ds-skeleton-page-header>
   }
 
   @if (!loading()) {
-    <app-page-header
+    <ds-page-header
       [title]="'getSupermarkets.title' | t"
       [subtitle]="'getSupermarkets.subtitle' | t"
     >
       <div slot="actions">
-        <app-button variant="primary" size="lg" (clicked)="onCreate()">
+        <ds-button variant="primary" size="lg" (clicked)="onCreate()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path
               d="M12 5V19M5 12H19"
@@ -20,19 +20,19 @@
             />
           </svg>
           {{ "getSupermarkets.new" | t }}
-        </app-button>
+        </ds-button>
       </div>
-    </app-page-header>
+    </ds-page-header>
   }
 
-  <app-list-filters
+  <ds-list-filters
     [fields]="filterFields"
     [loading]="loading()"
     (filtersApplied)="onFiltersApplied($event)"
     (filtersCleared)="onFiltersCleared()"
   />
 
-  <app-list-table
+  <ds-list-table
     [items]="items()"
     [columns]="columns"
     [actions]="actions"
@@ -43,7 +43,7 @@
   />
 
   @if (!loading() && items().length > 0) {
-    <app-pagination
+    <ds-pagination
       [currentPage]="currentPage()"
       [pageSize]="pageSize()"
       [totalItems]="totalItems()"
@@ -51,4 +51,4 @@
       (pageSizeChange)="onPageSizeChange($event)"
     />
   }
-</app-page-wrapper>
+</ds-page-wrapper>

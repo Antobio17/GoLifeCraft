@@ -1,0 +1,36 @@
+:host {
+  display: inline-flex;
+}
+
+/* Colores configurables por contexto:
+   --ds-ring-fill   → color del progreso (por defecto acento lima)
+   --ds-ring-track  → pista (por defecto translúcida sobre el color de texto)
+   --ds-ring-center → fondo del círculo central (por defecto la superficie) */
+.ring {
+  flex: none;
+  width: var(--ds-ring-size, 66px);
+  height: var(--ds-ring-size, 66px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: conic-gradient(
+    var(--ds-ring-fill, var(--ds-accent)) 0 calc(var(--ring-progress) * 1%),
+    var(--ds-ring-track, color-mix(in srgb, currentColor 16%, transparent))
+      calc(var(--ring-progress) * 1%) 100%
+  );
+}
+
+.ring__center {
+  width: 76%;
+  height: 76%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ds-ring-center, var(--ds-surface));
+  font-family: var(--ds-font-display);
+  font-weight: var(--ds-weight-bold);
+  font-size: 14px;
+  line-height: 1;
+}

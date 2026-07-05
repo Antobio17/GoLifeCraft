@@ -8,7 +8,7 @@
   gap: 12px;
   padding-bottom: 20px;
   margin-bottom: 20px;
-  border-bottom: 1px solid var(--color-border-glass);
+  border-bottom: 1px solid var(--ds-border);
 }
 
 .info-item {
@@ -19,7 +19,7 @@
 
 .info-label {
   font-size: 12px;
-  color: var(--color-text-disabled);
+  color: var(--ds-text-disabled);
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -28,10 +28,10 @@
 
 .info-value {
   font-size: 13px;
-  color: var(--color-text-body);
+  color: var(--ds-text-body);
   font-weight: 600;
-  background: var(--color-surface-subtle);
-  border: 1px solid var(--color-border-default);
+  background: var(--ds-surface-subtle);
+  border: 1px solid var(--ds-border);
   padding: 4px 12px;
   border-radius: 20px;
 }
@@ -56,23 +56,23 @@
 }
 
 .badge-god {
-  background: var(--color-role-god-bg);
-  color: var(--color-role-god-text);
-  border: 1px solid var(--color-role-god-border);
+  background: var(--ds-accent-soft);
+  color: var(--ds-accent-soft-text);
+  border: 1px solid var(--ds-accent-soft-border);
 }
 
 .badge-god .role-badge-dot {
-  background: var(--color-role-god-text);
+  background: var(--ds-accent-soft-text);
 }
 
 .badge-user {
-  background: var(--color-badge-draft-bg);
-  color: var(--color-badge-draft-text);
-  border: 1px solid var(--color-border-default);
+  background: var(--ds-surface-inset);
+  color: var(--ds-text-meta);
+  border: 1px solid var(--ds-border);
 }
 
 .badge-user .role-badge-dot {
-  background: var(--color-badge-draft-text);
+  background: var(--ds-text-meta);
 }
 
 /* Section footer with sticky save button */
@@ -84,7 +84,7 @@
   justify-content: flex-end;
   padding: 16px 0 0;
   margin-top: 8px;
-  border-top: 1px solid var(--color-border-glass);
+  border-top: 1px solid var(--ds-border);
   background: transparent;
   z-index: 5;
 }
@@ -105,13 +105,13 @@
 .password-hint-error {
   margin: 4px 0 0;
   font-size: 12px;
-  color: var(--color-error-600);
+  color: var(--ds-danger);
   line-height: 1.4;
 }
 
 .timezone-warning {
   margin: 8px 0 0;
   font-size: 12px;
-  color: var(--color-text-disabled);
+  color: var(--ds-text-disabled);
   line-height: 1.4;
 }

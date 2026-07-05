@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: var(--color-surface-page);
+  background: var(--ds-bg);
   padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
 }
 
@@ -46,8 +46,8 @@
 .auth__tabs {
   display: flex;
   gap: 0;
-  background: var(--color-surface-inset);
-  border: 1px solid var(--color-border-hairline);
+  background: var(--ds-surface-inset);
+  border: 1px solid var(--ds-border-hairline);
   border-radius: 13px;
   padding: 4px;
   margin-bottom: 20px;
@@ -59,24 +59,24 @@
   background: transparent;
   padding: 9px;
   border-radius: 10px;
-  font-family: var(--font-family-base);
+  font-family: var(--ds-font-body);
   font-weight: 600;
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--ds-text-muted);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all var(--ds-transition-base);
 }
 
 .auth__tab--active {
-  background: var(--color-surface-raised);
-  color: var(--color-text-primary);
+  background: var(--ds-surface-raised);
+  color: var(--ds-text);
   font-weight: 700;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
 }
 
 [data-theme="dark"] .auth__tab--active {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  background: var(--ds-accent);
+  color: var(--ds-on-accent);
   box-shadow: none;
 }
 
@@ -99,7 +99,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-text-meta);
+  color: var(--ds-text-meta);
 }
 
 .field__control {
@@ -107,22 +107,22 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border-input);
+  background: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border-input);
   border-radius: 12px;
   padding: 12px 13px;
   transition:
-    border-color var(--transition-base),
-    box-shadow var(--transition-base);
+    border-color var(--ds-transition-base),
+    box-shadow var(--ds-transition-base);
 }
 
 .field__control:focus-within {
-  border-color: var(--color-border-focus);
-  box-shadow: 0 0 0 3px var(--color-interactive-focus-ring);
+  border-color: var(--ds-border-focus);
+  box-shadow: 0 0 0 3px var(--ds-primary-soft);
 }
 
 .field__icon {
-  color: var(--color-text-meta);
+  color: var(--ds-text-meta);
   flex: none;
 }
 
@@ -132,13 +132,13 @@
   border: none;
   outline: none;
   background: transparent;
-  font-family: var(--font-family-base);
+  font-family: var(--ds-font-body);
   font-size: 13.5px;
-  color: var(--color-text-primary);
+  color: var(--ds-text);
 }
 
 .field__control input::placeholder {
-  color: var(--color-text-meta);
+  color: var(--ds-text-meta);
 }
 
 .field__toggle {
@@ -148,13 +148,13 @@
   border: none;
   background: none;
   padding: 0;
-  color: var(--color-text-meta);
+  color: var(--ds-text-meta);
   cursor: pointer;
-  transition: color var(--transition-base);
+  transition: color var(--ds-transition-base);
 }
 
 .field__toggle:hover {
-  color: var(--color-text-brand);
+  color: var(--ds-primary);
 }
 
 /* ─── Forgot ─── */
@@ -163,7 +163,7 @@
   align-self: flex-end;
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-text-brand);
+  color: var(--ds-primary);
   text-decoration: none;
   margin-top: -3px;
 }
@@ -175,7 +175,7 @@
 /* ─── Submit ─── */
 
 .auth__submit {
-  --arrow-color: var(--color-accent);
+  --arrow-color: var(--ds-accent);
   margin-top: 8px;
   display: flex;
   align-items: center;
@@ -185,20 +185,20 @@
   border: none;
   border-radius: 14px;
   padding: 15px;
-  background: var(--color-interactive-default);
-  color: var(--color-on-primary);
-  font-family: var(--font-family-base);
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
+  font-family: var(--ds-font-body);
   font-weight: 700;
   font-size: 14.5px;
   cursor: pointer;
   transition:
-    transform var(--transition-base),
-    background var(--transition-base),
-    filter var(--transition-base);
+    transform var(--ds-transition-base),
+    background var(--ds-transition-base),
+    filter var(--ds-transition-base);
 }
 
 [data-theme="dark"] .auth__submit {
-  --arrow-color: var(--color-on-primary);
+  --arrow-color: var(--ds-on-primary);
 }
 
 .auth__submit:hover:not(:disabled) {
@@ -224,8 +224,8 @@
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  border: 2px solid color-mix(in srgb, var(--color-on-primary) 35%, transparent);
-  border-top-color: var(--color-on-primary);
+  border: 2px solid color-mix(in srgb, var(--ds-on-primary) 35%, transparent);
+  border-top-color: var(--ds-on-primary);
   animation: auth-spin 0.7s linear infinite;
 }
 
@@ -241,17 +241,17 @@
   margin-top: 22px;
   text-align: center;
   font-size: 12.5px;
-  color: var(--color-text-secondary);
+  color: var(--ds-text-muted);
 }
 
 .auth__foot-link {
   border: none;
   background: none;
   padding: 0;
-  font-family: var(--font-family-base);
+  font-family: var(--ds-font-body);
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--color-text-brand);
+  color: var(--ds-primary);
   cursor: pointer;
 }
 

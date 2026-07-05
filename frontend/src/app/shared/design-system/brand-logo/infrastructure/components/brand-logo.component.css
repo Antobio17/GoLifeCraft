@@ -1,0 +1,78 @@
+:host {
+  /* Light "Huerto": forest chip, lime glyph. */
+  --brand-chip: var(--ds-forest-500);
+  --brand-glyph: var(--ds-lime-500);
+  --brand-life: var(--ds-forest-500);
+  --brand-chip-shadow: 0 12px 26px -12px rgba(39, 75, 55, 0.7);
+  display: inline-block;
+}
+
+:host-context([data-theme="dark"]) {
+  /* Dark "Kinetic": lime chip, ink glyph. */
+  --brand-chip: var(--ds-lime-500);
+  --brand-glyph: #0e100d;
+  --brand-life: var(--ds-lime-500);
+  --brand-chip-shadow: 0 10px 26px -8px rgba(201, 255, 60, 0.6);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand--stacked {
+  flex-direction: column;
+  gap: 11px;
+}
+
+.brand__mark {
+  width: var(--mark-size);
+  height: var(--mark-size);
+  border-radius: calc(var(--mark-size) * 0.29);
+  background: var(--brand-chip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  box-shadow: var(--brand-chip-shadow);
+}
+
+.brand__mark svg {
+  width: 58%;
+  height: 58%;
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brand--stacked .brand__text {
+  align-items: center;
+}
+
+.brand__word {
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: var(--word-size);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--ds-text);
+}
+
+[data-theme="dark"] .brand__word {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand__word-accent {
+  color: var(--brand-life);
+}
+
+.brand__tagline {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ds-text-muted);
+}

@@ -1,0 +1,256 @@
+/* ============================================================
+   ds-button — solo tokens --ds-*. El tema light/dark lo resuelve
+   la capa de tokens; el componente no lleva overrides de tema.
+   ============================================================ */
+
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--ds-font-body);
+  font-weight: var(--ds-weight-semibold);
+  letter-spacing: var(--ds-tracking-tight);
+  cursor: pointer;
+  position: relative;
+  border: 1.5px solid transparent;
+  flex-shrink: 0;
+  transition:
+    filter var(--ds-transition-fast),
+    background var(--ds-transition-fast),
+    border-color var(--ds-transition-fast),
+    color var(--ds-transition-fast);
+}
+
+.ds-btn__content {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* ---- Tamaños ---- */
+.ds-btn--lg {
+  padding: 10px 22px;
+  font-size: var(--ds-text-base);
+  border-radius: var(--ds-radius-xl);
+}
+
+.ds-btn--md {
+  padding: var(--ds-btn-y) var(--ds-btn-x);
+  font-size: var(--ds-text-label);
+  border-radius: var(--ds-radius-lg);
+}
+
+.ds-btn--sm {
+  padding: var(--ds-btn-sm-y) var(--ds-btn-sm-x);
+  font-size: 12.5px;
+  border-radius: var(--ds-radius-md);
+}
+
+.ds-btn--icon,
+.ds-btn--icon-sm,
+.ds-btn--icon-lg {
+  padding: 0;
+}
+
+.ds-btn--icon .ds-btn__content,
+.ds-btn--icon-sm .ds-btn__content,
+.ds-btn--icon-lg .ds-btn__content {
+  gap: 0;
+}
+
+.ds-btn--icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ds-radius-md);
+}
+
+.ds-btn--icon-sm {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--ds-radius-md);
+  border-width: 1px;
+}
+
+.ds-btn--icon-lg {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--ds-radius-xl);
+}
+
+/* ---- Variante: primary (burbuja suave de marca) ---- */
+.ds-btn--primary {
+  background: var(--ds-primary-soft);
+  color: var(--ds-primary-soft-text);
+  border-color: var(--ds-primary-soft-border);
+}
+
+.ds-btn--primary:hover:not(:disabled) {
+  background: var(--ds-primary-soft-hover);
+  border-color: color-mix(in srgb, var(--ds-primary) 45%, transparent);
+}
+
+.ds-btn--primary:active:not(:disabled) {
+  border-color: color-mix(in srgb, var(--ds-primary) 55%, transparent);
+}
+
+.ds-btn--primary:focus-visible {
+  outline: 2px solid var(--ds-primary);
+  outline-offset: 2px;
+}
+
+/* ---- Variante: secondary ---- */
+.ds-btn--secondary {
+  background: var(--ds-surface-raised);
+  color: var(--ds-text-muted);
+  border-color: var(--ds-border);
+}
+
+.ds-btn--secondary:hover:not(:disabled) {
+  background: var(--ds-surface-hover);
+  border-color: var(--ds-border-strong);
+}
+
+.ds-btn--secondary:focus-visible {
+  outline: 2px solid var(--ds-primary);
+  outline-offset: 2px;
+}
+
+/* ---- Variante: danger ---- */
+.ds-btn--danger {
+  background: var(--ds-danger-soft);
+  color: var(--ds-danger-soft-text);
+  border-color: var(--ds-danger-soft-border);
+}
+
+.ds-btn--danger:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--ds-danger) 45%, transparent);
+  filter: brightness(0.98);
+}
+
+.ds-btn--danger:focus-visible {
+  outline: 2px solid var(--ds-danger);
+  outline-offset: 2px;
+}
+
+/* ---- Variante: outline ---- */
+.ds-btn--outline {
+  background: transparent;
+  color: var(--ds-primary-soft-text);
+  border-color: var(--ds-primary-soft-border);
+}
+
+.ds-btn--outline:hover:not(:disabled) {
+  background: var(--ds-primary-soft);
+  border-color: color-mix(in srgb, var(--ds-primary) 45%, transparent);
+}
+
+.ds-btn--outline:focus-visible {
+  outline: 2px solid var(--ds-primary);
+  outline-offset: 2px;
+}
+
+/* ---- Variante: outline-danger ---- */
+.ds-btn--outline-danger {
+  background: transparent;
+  color: var(--ds-danger-soft-text);
+  border-color: var(--ds-danger-soft-border);
+}
+
+.ds-btn--outline-danger:hover:not(:disabled) {
+  background: var(--ds-danger-soft);
+  border-color: color-mix(in srgb, var(--ds-danger) 45%, transparent);
+}
+
+.ds-btn--outline-danger:focus-visible {
+  outline: 2px solid var(--ds-danger);
+  outline-offset: 2px;
+}
+
+/* ---- Variante: ghost ---- */
+.ds-btn--ghost {
+  background: transparent;
+  color: var(--ds-primary-soft-text);
+  border-color: transparent;
+  padding-inline: 0;
+}
+
+.ds-btn--ghost:hover:not(:disabled) {
+  opacity: 0.75;
+}
+
+.ds-btn--ghost:focus-visible {
+  outline: 2px solid var(--ds-primary);
+  outline-offset: 2px;
+}
+
+/* ---- Estados ---- */
+.ds-btn:disabled,
+.ds-btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ds-btn--primary:disabled,
+.ds-btn--primary[disabled] {
+  opacity: 1;
+  background: var(--ds-surface-inset);
+  color: var(--ds-text-disabled);
+  border-color: var(--ds-border);
+}
+
+.ds-btn--loading {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.ds-btn--full {
+  width: 100%;
+}
+
+/* ---- Spinner ---- */
+.ds-btn__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-top-color: currentColor;
+  border-radius: var(--ds-radius-pill);
+  animation: ds-btn-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+.ds-btn--sm .ds-btn__spinner {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes ds-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Iconos ---- */
+.ds-btn--lg .ds-btn__content svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ds-btn--md .ds-btn__content svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ds-btn--sm .ds-btn__content svg,
+.ds-btn--icon .ds-btn__content svg,
+.ds-btn--icon-sm .ds-btn__content svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ds-btn--icon-lg .ds-btn__content svg {
+  width: 20px;
+  height: 20px;
+}

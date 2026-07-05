@@ -7,14 +7,14 @@
 
 .field-label {
   font-weight: 700;
-  color: var(--color-text-secondary);
+  color: var(--ds-text-muted);
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .required {
-  color: var(--color-role-god-selected-text);
+  color: var(--ds-accent-soft-text);
 }
 
 /* Toggle */
@@ -46,7 +46,7 @@
   right: 0;
   bottom: 0;
   background: rgba(156, 163, 175, 0.3);
-  border: 2px solid var(--color-text-disabled);
+  border: 2px solid var(--ds-text-disabled);
   border-radius: 30px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -59,7 +59,7 @@
   width: 22px;
   left: 2px;
   bottom: 2px;
-  background: linear-gradient(145deg, #d1d5db, var(--color-text-disabled));
+  background: linear-gradient(145deg, #d1d5db, var(--ds-text-disabled));
   border-radius: 50%;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
@@ -73,7 +73,7 @@
     rgba(56, 189, 248, 0.3),
     rgba(14, 165, 233, 0.3)
   );
-  border-color: var(--color-border-focus);
+  border-color: var(--ds-border-focus);
   box-shadow:
     inset 0 2px 4px rgba(0, 0, 0, 0.1),
     0 0 20px rgba(56, 189, 248, 0.3);
@@ -83,8 +83,8 @@
   transform: translateX(30px);
   background: linear-gradient(
     145deg,
-    var(--color-primary-500),
-    var(--color-primary-600)
+    var(--ds-primary),
+    var(--ds-primary)
   );
   box-shadow:
     0 2px 8px rgba(56, 189, 248, 0.5),
@@ -94,14 +94,14 @@
 .toggle-label {
   font-size: 15px;
   font-weight: 700;
-  color: var(--color-text-secondary);
+  color: var(--ds-text-muted);
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .toggle-label.active {
-  color: var(--color-primary-500);
+  color: var(--ds-primary);
   text-shadow: 0 0 10px rgba(125, 211, 252, 0.5);
 }
 
@@ -129,8 +129,8 @@
   align-items: center;
   gap: 16px;
   padding: 16px 20px;
-  background: var(--color-surface-glass);
-  border: 2px solid var(--color-border-brand);
+  background: var(--ds-surface);
+  border: 2px solid var(--ds-primary-soft-border);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -150,9 +150,9 @@
 }
 
 .role-card:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--color-border-focus);
-  box-shadow: var(--shadow-brand-sm);
+  background: var(--ds-surface-hover);
+  border-color: var(--ds-border-focus);
+  box-shadow: var(--ds-shadow-sm);
   transform: translateX(4px);
 }
 
@@ -163,9 +163,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-role-technical-bg);
+  background: var(--ds-surface-subtle);
   border-radius: 10px;
-  color: var(--color-text-secondary);
+  color: var(--ds-text-muted);
   transition: all 0.3s ease;
 }
 
@@ -179,14 +179,14 @@
 .role-name {
   font-size: 15px;
   font-weight: 700;
-  color: var(--color-text-body);
+  color: var(--ds-text-body);
   letter-spacing: 0.3px;
 }
 
 .role-description {
   font-size: 12px;
   font-weight: 500;
-  color: var(--color-text-secondary);
+  color: var(--ds-text-muted);
   line-height: 1.4;
 }
 
@@ -197,15 +197,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--color-text-disabled);
+  border: 2px solid var(--ds-text-disabled);
   border-radius: 50%;
   color: transparent;
   transition: all 0.3s ease;
 }
 
 .role-radio:checked + .role-card[data-role="ROLE_GOD"] {
-  background: var(--color-role-god-selected-bg);
-  border-color: var(--color-role-god-selected-border);
+  background: var(--ds-accent-soft);
+  border-color: var(--ds-accent);
   box-shadow:
     0 0 30px rgba(239, 68, 68, 0.4),
     inset 0 0 20px rgba(239, 68, 68, 0.1);
@@ -214,31 +214,31 @@
 .role-radio:checked + .role-card[data-role="ROLE_GOD"]::before {
   background: linear-gradient(
     to bottom,
-    var(--color-error-500),
-    var(--color-error-600)
+    var(--ds-danger),
+    var(--ds-danger)
   );
 }
 
 .role-radio:checked + .role-card[data-role="ROLE_GOD"] .role-icon {
-  background: var(--color-role-god-selected-icon-bg);
-  color: var(--color-role-god-selected-text);
+  background: var(--ds-accent-soft);
+  color: var(--ds-accent-soft-text);
   box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
 }
 
 .role-radio:checked + .role-card[data-role="ROLE_GOD"] .role-name {
-  color: var(--color-role-god-selected-text);
+  color: var(--ds-accent-soft-text);
 }
 
 .role-radio:checked + .role-card[data-role="ROLE_GOD"] .role-check {
-  background: var(--color-error-500);
-  border-color: var(--color-error-500);
-  color: var(--color-neutral-white);
+  background: var(--ds-danger);
+  border-color: var(--ds-danger);
+  color: var(--ds-on-primary);
   box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
 }
 
 .role-radio:checked + .role-card[data-role="ROLE_USER"] {
-  background: var(--color-role-user-selected-bg);
-  border-color: var(--color-role-user-selected-border);
+  background: var(--ds-primary-soft);
+  border-color: var(--ds-primary);
   box-shadow:
     0 0 30px rgba(22, 163, 74, 0.3),
     inset 0 0 20px rgba(22, 163, 74, 0.05);
@@ -247,24 +247,24 @@
 .role-radio:checked + .role-card[data-role="ROLE_USER"]::before {
   background: linear-gradient(
     to bottom,
-    var(--color-role-user-selected-border),
-    var(--color-role-user-selected-text)
+    var(--ds-primary),
+    var(--ds-primary-soft-text)
   );
 }
 
 .role-radio:checked + .role-card[data-role="ROLE_USER"] .role-icon {
-  background: var(--color-role-user-selected-icon-bg);
-  color: var(--color-role-user-selected-text);
+  background: var(--ds-primary-soft);
+  color: var(--ds-primary-soft-text);
   box-shadow: 0 0 20px rgba(22, 163, 74, 0.3);
 }
 
 .role-radio:checked + .role-card[data-role="ROLE_USER"] .role-name {
-  color: var(--color-role-user-selected-text);
+  color: var(--ds-primary-soft-text);
 }
 
 .role-radio:checked + .role-card[data-role="ROLE_USER"] .role-check {
-  background: var(--color-role-user-selected-border);
-  border-color: var(--color-role-user-selected-border);
-  color: var(--color-neutral-white);
+  background: var(--ds-primary);
+  border-color: var(--ds-primary);
+  color: var(--ds-on-primary);
   box-shadow: 0 0 15px rgba(22, 163, 74, 0.5);
 }

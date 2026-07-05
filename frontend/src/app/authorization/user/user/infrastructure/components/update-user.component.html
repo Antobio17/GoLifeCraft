@@ -1,6 +1,6 @@
-<app-page-wrapper [maxWidth]="'960px'" [gap]="'24px'">
+<ds-page-wrapper [maxWidth]="'960px'" [gap]="'24px'">
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <app-section-page-wrapper
+    <ds-section-page-wrapper
       [title]="'updateUser.title' | t"
       [description]="'updateUser.description' | t"
       [loading]="loading"
@@ -26,34 +26,34 @@
         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
       </svg>
 
-      <app-form-section
+      <ds-form-section
         [title]="'updateUser.section.personal' | t"
         [icon]="ICONS['USERS']"
       >
         <div class="form-row">
-          <app-form-input
+          <ds-form-input
             [label]="'updateUser.field.username' | t"
             formControlName="username"
-          ></app-form-input>
-          <app-form-input
+          ></ds-form-input>
+          <ds-form-input
             [label]="'updateUser.field.email' | t"
             type="email"
             formControlName="email"
-          ></app-form-input>
+          ></ds-form-input>
         </div>
         <div class="form-row">
-          <app-form-input
+          <ds-form-input
             [label]="'updateUser.field.name' | t"
             formControlName="name"
-          ></app-form-input>
-          <app-form-input
+          ></ds-form-input>
+          <ds-form-input
             [label]="'updateUser.field.lastname' | t"
             formControlName="lastname"
-          ></app-form-input>
+          ></ds-form-input>
         </div>
-      </app-form-section>
+      </ds-form-section>
 
-      <app-form-section
+      <ds-form-section
         [title]="'updateUser.section.status' | t"
         [icon]="ICONS['SETTINGS']"
       >
@@ -192,10 +192,10 @@
             }
           </div>
         </div>
-      </app-form-section>
-    </app-section-page-wrapper>
+      </ds-form-section>
+    </ds-section-page-wrapper>
 
-    <app-form-actions
+    <ds-form-actions
       [cancelLabel]="'updateUser.cancel' | t"
       [submitLabel]="'updateUser.save' | t"
       [savingLabel]="'updateUser.saving' | t"
@@ -220,6 +220,6 @@
         <polyline points="17 21 17 13 7 13 7 21" />
         <polyline points="7 3 7 8 15 8" />
       </svg>
-    </app-form-actions>
+    </ds-form-actions>
   </form>
-</app-page-wrapper>
+</ds-page-wrapper>

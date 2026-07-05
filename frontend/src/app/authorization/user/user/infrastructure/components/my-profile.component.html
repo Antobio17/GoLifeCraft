@@ -1,5 +1,5 @@
-<app-page-wrapper [maxWidth]="'960px'" [gap]="'24px'">
-  <app-section-page-wrapper
+<ds-page-wrapper [maxWidth]="'960px'" [gap]="'24px'">
+  <ds-section-page-wrapper
     [title]="'profile.title' | t"
     [description]="'profile.description' | t"
     [loading]="loading"
@@ -22,7 +22,7 @@
     </svg>
 
     @if (!loading) {
-      <app-form-section
+      <ds-form-section
         [title]="'profile.section.personal' | t"
         [icon]="ICONS['USERS']"
       >
@@ -73,29 +73,29 @@
 
         <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
           <div class="form-row">
-            <app-form-input
+            <ds-form-input
               [label]="'profile.field.name' | t"
               [placeholder]="'profile.field.namePlaceholder' | t"
               formControlName="name"
-            ></app-form-input>
-            <app-form-input
+            ></ds-form-input>
+            <ds-form-input
               [label]="'profile.field.lastname' | t"
               [placeholder]="'profile.field.lastnamePlaceholder' | t"
               formControlName="lastname"
-            ></app-form-input>
+            ></ds-form-input>
           </div>
           <div class="form-row">
-            <app-form-input
+            <ds-form-input
               [label]="'profile.field.email' | t"
               placeholder="tu@email.com"
               type="email"
               formControlName="email"
-            ></app-form-input>
+            ></ds-form-input>
           </div>
         </form>
 
         <div class="section-footer">
-          <app-button
+          <ds-button
             variant="primary"
             size="md"
             [disabled]="saving || profileForm.invalid || profileForm.pristine"
@@ -121,31 +121,31 @@
               </svg>
             }
             {{ saving ? ("profile.saving" | t) : ("profile.save" | t) }}
-          </app-button>
+          </ds-button>
         </div>
-      </app-form-section>
+      </ds-form-section>
 
-      <app-form-section
+      <ds-form-section
         [title]="'profile.section.security' | t"
         [icon]="ICONS['LOCK']"
       >
         <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
           <div class="form-row">
-            <app-form-input
+            <ds-form-input
               [label]="'profile.field.currentPassword' | t"
               placeholder="••••••••"
               type="password"
               formControlName="currentPassword"
-            ></app-form-input>
+            ></ds-form-input>
           </div>
           <div class="form-row">
             <div class="form-col">
-              <app-form-input
+              <ds-form-input
                 [label]="'profile.field.newPassword' | t"
                 placeholder="••••••••"
                 type="password"
                 formControlName="newPassword"
-              ></app-form-input>
+              ></ds-form-input>
               @if (
                 passwordForm.get("newPassword")?.errors?.["weakPassword"] &&
                 passwordForm.get("newPassword")?.touched
@@ -155,17 +155,17 @@
                 </p>
               }
             </div>
-            <app-form-input
+            <ds-form-input
               [label]="'profile.field.confirmPassword' | t"
               placeholder="••••••••"
               type="password"
               formControlName="confirmPassword"
-            ></app-form-input>
+            ></ds-form-input>
           </div>
         </form>
 
         <div class="section-footer">
-          <app-button
+          <ds-button
             variant="primary"
             size="md"
             [disabled]="
@@ -194,9 +194,9 @@
                 ? ("profile.changingPassword" | t)
                 : ("profile.changePassword" | t)
             }}
-          </app-button>
+          </ds-button>
         </div>
-      </app-form-section>
+      </ds-form-section>
     }
-  </app-section-page-wrapper>
-</app-page-wrapper>
+  </ds-section-page-wrapper>
+</ds-page-wrapper>

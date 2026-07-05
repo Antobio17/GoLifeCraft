@@ -1,0 +1,203 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.form-label {
+  margin-bottom: 6px;
+  font-weight: var(--ds-weight-medium);
+  color: var(--ds-text-muted);
+  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.required-indicator {
+  color: var(--ds-danger);
+  font-size: 13px;
+}
+
+.form-control {
+  padding: 10px 12px;
+  border: 1.5px solid var(--ds-border-input);
+  border-radius: var(--ds-radius-lg);
+  font-size: var(--ds-text-base);
+  font-family: var(--ds-font-body);
+  transition: border-color var(--ds-transition-fast);
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-control::placeholder {
+  color: var(--ds-text-disabled);
+  font-weight: var(--ds-weight-regular);
+}
+
+.form-control:hover:not(:disabled):not(:read-only) {
+  border-color: color-mix(in srgb, var(--ds-primary) 40%, transparent);
+}
+
+.form-control:focus {
+  border-color: var(--ds-border-focus);
+}
+
+.form-control:disabled {
+  background-color: var(--ds-surface-subtle);
+  cursor: not-allowed;
+  opacity: 0.65;
+  border-color: var(--ds-border-input);
+}
+
+.form-control:read-only {
+  background-color: var(--ds-surface-subtle);
+  color: var(--ds-text-body);
+  cursor: default;
+  border-color: var(--ds-border-input);
+}
+
+.form-control.is-invalid,
+.form-control.is-invalid:focus {
+  border-color: var(--ds-danger);
+}
+
+input[type="date"].form-control,
+input[type="datetime-local"].form-control {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 10px 12px;
+}
+
+input[type="number"].form-control {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="number"].form-control::-webkit-outer-spin-button,
+input[type="number"].form-control::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.input-wrapper.password-field .form-control {
+  padding-right: 46px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  border-radius: var(--ds-radius-md);
+  cursor: pointer;
+  color: var(--ds-text-disabled);
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+  padding: 0;
+}
+
+.password-toggle:hover {
+  color: var(--ds-primary);
+  background: color-mix(in srgb, var(--ds-primary) 8%, transparent);
+}
+
+.password-toggle.active {
+  color: var(--ds-primary);
+}
+
+.tooltip-wrapper {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tooltip-icon {
+  color: var(--ds-text-disabled);
+  transition: color var(--ds-transition-base);
+  flex-shrink: 0;
+}
+
+.tooltip-wrapper:hover .tooltip-icon {
+  color: var(--ds-primary-soft-text);
+}
+
+.form-hint {
+  margin-top: var(--ds-space-1-5);
+  font-size: var(--ds-text-sm);
+  color: var(--ds-text-muted);
+  font-weight: var(--ds-weight-regular);
+  line-height: 1.4;
+  display: block;
+}
+
+.error-message {
+  margin-top: var(--ds-space-1-5);
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-1-5);
+  animation: ds-input-slide-down 0.3s ease-out;
+}
+
+.error-message svg {
+  color: var(--ds-danger);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.error-message small {
+  font-size: var(--ds-text-sm);
+  color: var(--ds-danger);
+  font-weight: var(--ds-weight-medium);
+  line-height: 1.4;
+}
+
+@keyframes ds-input-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .form-label {
+    font-size: 13px;
+  }
+
+  .form-control {
+    font-size: var(--ds-text-label);
+    padding: 9px var(--ds-space-3);
+  }
+
+  input[type="date"].form-control,
+  input[type="datetime-local"].form-control {
+    padding: 10px 12px;
+  }
+
+  .form-hint,
+  .error-message small {
+    font-size: var(--ds-text-xs);
+  }
+}

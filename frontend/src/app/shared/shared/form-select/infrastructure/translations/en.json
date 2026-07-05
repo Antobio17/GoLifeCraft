@@ -1,9 +1,0 @@
-{
-  "formSelect": {
-    "placeholder": "-- Select --",
-    "errors": {
-      "required": "This field is required",
-      "invalid": "Invalid value"
-    }
-  }
-}

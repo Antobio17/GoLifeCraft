@@ -18,11 +18,11 @@
 .tabbar {
   pointer-events: auto;
   width: 100%;
-  max-width: var(--app-frame-width, 480px);
+  max-width: var(--ds-app-frame-width, 480px);
   height: calc(58px + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
-  background: var(--color-surface-nav);
-  border-top: 1px solid var(--color-border-hairline);
+  background: var(--ds-surface-nav);
+  border-top: 1px solid var(--ds-border-hairline);
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -40,8 +40,8 @@
   background: none;
   padding: 0;
   cursor: pointer;
-  color: var(--color-text-meta);
-  transition: color var(--transition-base);
+  color: var(--ds-text-meta);
+  transition: color var(--ds-transition-base);
 }
 
 .tabbar__item svg {
@@ -50,11 +50,11 @@
 }
 
 .tabbar__item:hover {
-  color: var(--color-text-secondary);
+  color: var(--ds-text-muted);
 }
 
 .tabbar__item--active {
-  color: var(--color-text-brand);
+  color: var(--ds-primary);
 }
 
 .tabbar__fab {
@@ -66,14 +66,14 @@
   margin-top: -14px;
   border: none;
   border-radius: 50%;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  background: var(--ds-accent);
+  color: var(--ds-on-accent);
   cursor: pointer;
   box-shadow: 0 8px 18px -6px
-    color-mix(in srgb, var(--color-accent) 85%, transparent);
+    color-mix(in srgb, var(--ds-accent) 85%, transparent);
   transition:
-    transform var(--transition-base),
-    filter var(--transition-base);
+    transform var(--ds-transition-base),
+    filter var(--ds-transition-base);
 }
 
 .tabbar__fab svg {

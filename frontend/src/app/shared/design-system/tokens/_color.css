@@ -1,0 +1,195 @@
+/* ============================================================
+   DESIGN SYSTEM — COLOR
+   Light = "Huerto"  · Dark = "Kinetic"
+   Todos los tokens llevan prefijo --ds- para no colisionar con
+   el sistema heredado (--color-*) durante la convivencia.
+   ============================================================ */
+
+:root {
+  /* ---- Primitivos: Paper (crema) ---- */
+  --ds-paper-50: #fbf9f3;
+  --ds-paper-100: #f6f2e9;
+  --ds-paper-200: #efe9db;
+  --ds-paper-300: #eae4d6;
+
+  /* ---- Primitivos: Forest (verde bosque) ---- */
+  --ds-forest-50: #eef4ea;
+  --ds-forest-100: #dce9d6;
+  --ds-forest-200: #bcd4af;
+  --ds-forest-300: #8fb47c;
+  --ds-forest-400: #3a5a45;
+  --ds-forest-500: #274b37;
+  --ds-forest-600: #234230;
+  --ds-forest-700: #1b2e20;
+  --ds-forest-800: #15251a;
+  --ds-forest-900: #0f1b13;
+
+  /* ---- Primitivos: Lime (acento) ---- */
+  --ds-lime-400: #c4ef5a;
+  --ds-lime-500: #b4e839;
+  --ds-lime-600: #a6d92b;
+  --ds-lime-700: #7fa81f;
+
+  /* ---- Primitivos: Coral (peligro) ---- */
+  --ds-coral-50: #fdeee9;
+  --ds-coral-200: #f8c7ba;
+  --ds-coral-400: #f47f63;
+  --ds-coral-500: #f0603e;
+  --ds-coral-600: #e04a28;
+
+  /* ---- Primitivos: Feedback (emerald / amber) ---- */
+  --ds-emerald-50: #ecfdf5;
+  --ds-emerald-500: #10b981;
+  --ds-emerald-600: #059669;
+  --ds-amber-50: #fffbeb;
+  --ds-amber-500: #f59e0b;
+  --ds-amber-600: #d97706;
+
+  --ds-ink: #1b1a15;
+
+  /* ---- Semánticos: Superficies ---- */
+  --ds-bg: var(--ds-paper-100);
+  --ds-surface: #ffffff;
+  --ds-surface-raised: #ffffff;
+  --ds-surface-hover: var(--ds-paper-50);
+  --ds-surface-subtle: var(--ds-paper-50);
+  --ds-surface-inset: var(--ds-paper-300);
+  --ds-surface-nav: #ffffff;
+  --ds-surface-brand: var(--ds-forest-500);
+  --ds-on-surface-brand: var(--ds-paper-100);
+
+  /* ---- Semánticos: Texto ---- */
+  --ds-text: var(--ds-ink);
+  --ds-text-body: #4a463d;
+  --ds-text-muted: #6f6a5c;
+  --ds-text-disabled: #b6b1a4;
+  --ds-text-meta: #9a958a;
+  --ds-text-inverse: var(--ds-paper-100);
+
+  /* ---- Semánticos: Bordes ---- */
+  --ds-border: rgba(27, 26, 21, 0.1);
+  --ds-border-strong: rgba(27, 26, 21, 0.16);
+  --ds-border-hairline: rgba(27, 26, 21, 0.07);
+  --ds-border-input: rgba(27, 26, 21, 0.12);
+  --ds-border-focus: var(--ds-forest-500);
+
+  /* ---- Semánticos: Primary (interactivo de marca) ---- */
+  --ds-primary: var(--ds-forest-500);
+  --ds-primary-hover: var(--ds-forest-600);
+  --ds-primary-active: var(--ds-forest-700);
+  --ds-on-primary: var(--ds-paper-100);
+  --ds-primary-soft: var(--ds-forest-50);
+  --ds-primary-soft-hover: var(--ds-forest-100);
+  --ds-primary-soft-text: var(--ds-forest-600);
+  --ds-primary-soft-border: color-mix(
+    in srgb,
+    var(--ds-forest-500) 30%,
+    transparent
+  );
+
+  /* ---- Semánticos: Accent (lima) ---- */
+  --ds-accent: var(--ds-lime-500);
+  --ds-on-accent: var(--ds-forest-700);
+  --ds-accent-soft: color-mix(in srgb, var(--ds-accent) 16%, transparent);
+  --ds-accent-soft-text: var(--ds-forest-600);
+  --ds-accent-soft-border: color-mix(in srgb, var(--ds-accent) 50%, transparent);
+
+  /* ---- Semánticos: Peligro ---- */
+  --ds-danger: var(--ds-coral-500);
+  --ds-danger-hover: var(--ds-coral-600);
+  --ds-danger-soft: var(--ds-coral-50);
+  --ds-danger-soft-text: var(--ds-coral-600);
+  --ds-danger-soft-border: color-mix(
+    in srgb,
+    var(--ds-coral-500) 30%,
+    transparent
+  );
+
+  /* ---- Semánticos: Éxito / Aviso ---- */
+  --ds-success: var(--ds-emerald-600);
+  --ds-success-soft: var(--ds-emerald-50);
+  --ds-warning: var(--ds-amber-600);
+  --ds-warning-soft: var(--ds-amber-50);
+
+  /* ---- Anillo de foco ---- */
+  --ds-focus-ring: 0 0 0 4px rgba(39, 75, 55, 0.16);
+  --ds-focus-ring-danger: 0 0 0 4px rgba(240, 96, 62, 0.14);
+
+  /* ---- Skeleton ---- */
+  --ds-skeleton-base: var(--ds-paper-200);
+  --ds-skeleton-highlight: var(--ds-paper-300);
+}
+
+[data-theme="dark"] {
+  /* ---- Primitivos Kinetic: Lime eléctrico ---- */
+  --ds-lime-400: #d6ff5e;
+  --ds-lime-500: #c9ff3c;
+  --ds-lime-600: #b6f024;
+  --ds-lime-700: #a6e02b;
+
+  /* ---- Primitivos Kinetic: Coral naranja ---- */
+  --ds-coral-500: #ff7a4d;
+  --ds-coral-600: #ff6a38;
+
+  /* ---- Superficies ---- */
+  --ds-bg: #0e100d;
+  --ds-surface: #171b14;
+  --ds-surface-raised: #171b14;
+  --ds-surface-hover: #1c211a;
+  --ds-surface-subtle: #12150f;
+  --ds-surface-inset: #22271c;
+  --ds-surface-nav: #12150f;
+  --ds-surface-brand: #171b14;
+  --ds-on-surface-brand: #f3f6ec;
+
+  /* ---- Texto ---- */
+  --ds-text: #f3f6ec;
+  --ds-text-body: #c7ccbe;
+  --ds-text-muted: #8b9482;
+  --ds-text-disabled: #5c6b4f;
+  --ds-text-meta: #6b7360;
+  --ds-text-inverse: #0e100d;
+
+  /* ---- Bordes ---- */
+  --ds-border: rgba(255, 255, 255, 0.08);
+  --ds-border-strong: rgba(255, 255, 255, 0.14);
+  --ds-border-hairline: rgba(255, 255, 255, 0.06);
+  --ds-border-input: rgba(255, 255, 255, 0.1);
+  --ds-border-focus: var(--ds-lime-500);
+
+  /* ---- Primary → lima ---- */
+  --ds-primary: var(--ds-lime-500);
+  --ds-primary-hover: var(--ds-lime-400);
+  --ds-primary-active: var(--ds-lime-600);
+  --ds-on-primary: #0e100d;
+  --ds-primary-soft: rgba(201, 255, 60, 0.1);
+  --ds-primary-soft-hover: rgba(201, 255, 60, 0.16);
+  --ds-primary-soft-text: var(--ds-lime-500);
+  --ds-primary-soft-border: rgba(201, 255, 60, 0.28);
+
+  /* ---- Accent ---- */
+  --ds-accent: var(--ds-lime-500);
+  --ds-on-accent: #0e100d;
+  --ds-accent-soft-text: var(--ds-lime-500);
+
+  /* ---- Peligro ---- */
+  --ds-danger: var(--ds-coral-500);
+  --ds-danger-hover: var(--ds-coral-600);
+  --ds-danger-soft: rgba(255, 122, 77, 0.14);
+  --ds-danger-soft-text: var(--ds-coral-500);
+  --ds-danger-soft-border: rgba(255, 122, 77, 0.32);
+
+  /* ---- Feedback ---- */
+  --ds-success: var(--ds-emerald-500);
+  --ds-success-soft: rgba(16, 185, 129, 0.14);
+  --ds-warning: var(--ds-amber-500);
+  --ds-warning-soft: rgba(245, 158, 11, 0.14);
+
+  /* ---- Foco ---- */
+  --ds-focus-ring: 0 0 0 4px rgba(201, 255, 60, 0.2);
+  --ds-focus-ring-danger: 0 0 0 4px rgba(255, 122, 77, 0.2);
+
+  /* ---- Skeleton ---- */
+  --ds-skeleton-base: #1c211a;
+  --ds-skeleton-highlight: #22271c;
+}

@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { PageWrapperComponent } from "@shared/shared/page-wrapper/infrastructure/components/page-wrapper.component";
-import { SectionPageWrapperComponent } from "@shared/shared/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
-import { FormActionsComponent } from "@shared/shared/form-actions/infrastructure/components/form-actions.component";
+import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
+import { FormActionsComponent } from "@shared/design-system/form-actions/infrastructure/components/form-actions.component";
 import {
   FormBuilder,
   FormGroup,
@@ -12,18 +12,18 @@ import {
 } from "@angular/forms";
 import { of } from "rxjs";
 import { delay } from "rxjs/operators";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { FormSectionComponent } from "@shared/shared/form-section/infrastructure/components/form-section.component";
-import { FormInputComponent } from "@shared/shared/form-input/infrastructure/components/form-input.component";
-import { FORM_SECTION_ICONS } from "@shared/shared/form-section/constants/form-section-icons.constants";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
+import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
+import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
 import { UpdateUserService } from "../../application/services/update-user.service";
 import { UpdateUserRequest } from "../../domain/models/update-user-request.model";
 import { GetUserResponse } from "../../domain/models/get-user-response.model";
 import { USER_ROLES } from "@authorization/domain/constants/user-roles.constants";
 import { UserRole } from "@authorization/domain/models/user-role.model";
 import { getAvailableRoles } from "@authorization/domain/utils/role.utils";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
-import { TranslationService } from "@shared/shared/i18n/application/services/translation.service";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { TranslationService } from "@shared/i18n/application/services/translation.service";
 
 @Component({
   selector: "app-update-user",

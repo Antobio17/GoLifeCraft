@@ -1,23 +1,23 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { SkeletonPageHeaderComponent } from "@shared/shared/skeleton/infrastructure/components/skeleton-page-header.component";
+import { SkeletonPageHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-page-header.component";
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
 import { GetCategoriesResponse } from "@nutrition/catalog/category/domain/models/get-categories-response.model";
 import { Category } from "../../domain/models/category.model";
-import { PaginationComponent } from "@shared/shared/pagination/infrastructure/components/pagination.component";
-import { ListTableComponent } from "@shared/shared/list-table/infrastructure/components/list-table.component";
+import { PaginationComponent } from "@shared/design-system/pagination/infrastructure/components/pagination.component";
+import { ListTableComponent } from "@shared/design-system/list-table/infrastructure/components/list-table.component";
 import {
   ListAction,
   ListActionEvent,
   ListColumn,
-} from "@shared/shared/list-table/domain/models/list-table.model";
-import { ListFiltersComponent } from "@shared/shared/list-filters/infrastructure/components/list-filters.component";
-import { FilterField } from "@shared/shared/list-filters/domain/models/list-filters.model";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { TranslationService } from "@shared/shared/i18n/application/services/translation.service";
-import { ButtonComponent } from "@shared/shared/button/infrastructure/components/button.component";
-import { PageWrapperComponent } from "@shared/shared/page-wrapper/infrastructure/components/page-wrapper.component";
-import { PageHeaderComponent } from "@shared/shared/page-header/infrastructure/components/page-header.component";
+} from "@shared/design-system/list-table/domain/models/list-table.model";
+import { ListFiltersComponent } from "@shared/design-system/list-filters/infrastructure/components/list-filters.component";
+import { FilterField } from "@shared/design-system/list-filters/domain/models/list-filters.model";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { PageHeaderComponent } from "@shared/design-system/page-header/infrastructure/components/page-header.component";
 
 @Component({
   selector: "app-get-categories",

@@ -1,6 +1,6 @@
-<app-page-wrapper [maxWidth]="'720px'" [gap]="'24px'">
+<ds-page-wrapper [maxWidth]="'720px'" [gap]="'24px'">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <app-section-page-wrapper
+    <ds-section-page-wrapper
       [title]="'createSupermarket.title' | t"
       [description]="'createSupermarket.description' | t"
       [loading]="loading"
@@ -24,25 +24,25 @@
         <path d="M3 9h18" />
       </svg>
 
-      <app-form-section
+      <ds-form-section
         [title]="'createSupermarket.section.general' | t"
         [icon]="ICONS['BUILDING']"
       >
-        <app-form-input
+        <ds-form-input
           [label]="'createSupermarket.field.name' | t"
           [showRequired]="true"
           formControlName="name"
-        ></app-form-input>
-      </app-form-section>
-    </app-section-page-wrapper>
+        ></ds-form-input>
+      </ds-form-section>
+    </ds-section-page-wrapper>
 
-    <app-form-actions
+    <ds-form-actions
       [cancelLabel]="'createSupermarket.cancel' | t"
       [submitLabel]="'createSupermarket.save' | t"
       [savingLabel]="'createSupermarket.saving' | t"
       [saving]="saving"
       [formInvalid]="form.invalid"
       (cancelled)="cancel()"
-    ></app-form-actions>
+    ></ds-form-actions>
   </form>
-</app-page-wrapper>
+</ds-page-wrapper>

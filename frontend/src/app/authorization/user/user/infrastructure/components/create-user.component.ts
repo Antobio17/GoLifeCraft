@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from "@angular/core";
-import { TranslationService } from "@shared/shared/i18n/application/services/translation.service";
-import { PageWrapperComponent } from "@shared/shared/page-wrapper/infrastructure/components/page-wrapper.component";
-import { SectionPageWrapperComponent } from "@shared/shared/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
-import { FormActionsComponent } from "@shared/shared/form-actions/infrastructure/components/form-actions.component";
+import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
+import { FormActionsComponent } from "@shared/design-system/form-actions/infrastructure/components/form-actions.component";
 import { Router } from "@angular/router";
 import {
   FormBuilder,
@@ -20,11 +20,11 @@ import { CreateUserRequest } from "../../domain/models/create-user.model";
 import { USER_ROLES } from "@authorization/domain/constants/user-roles.constants";
 import { UserRole } from "@authorization/domain/models/user-role.model";
 import { getAvailableRoles } from "@authorization/domain/utils/role.utils";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { FormSectionComponent } from "@shared/shared/form-section/infrastructure/components/form-section.component";
-import { FormInputComponent } from "@shared/shared/form-input/infrastructure/components/form-input.component";
-import { FORM_SECTION_ICONS } from "@shared/shared/form-section/constants/form-section-icons.constants";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
+import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
+import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
 
 @Component({
   selector: "app-create-user",

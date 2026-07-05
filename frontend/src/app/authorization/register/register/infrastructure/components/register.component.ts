@@ -4,9 +4,9 @@ import { Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
 import { delay } from "rxjs/operators";
 import { RegisterService } from "@authorization/register/register/application/services/register.service";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { BrandLogoComponent } from "@shared/shared/brand-logo/infrastructure/components/brand-logo.component";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
 
 const LOGIN_ROUTE = "/login";
 

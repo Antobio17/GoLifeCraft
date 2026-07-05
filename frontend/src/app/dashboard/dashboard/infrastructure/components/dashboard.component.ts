@@ -1,9 +1,11 @@
 import { Component, computed, inject } from "@angular/core";
 import { DatePipe, DecimalPipe } from "@angular/common";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
-import { FloatingToastService } from "@shared/shared/floating-toasts/application/services/floating-toast.service";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { SideDrawerService } from "@layouts/layout/side-drawer/application/services/side-drawer.service";
-import { ContextualTranslatePipe } from "@shared/shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
+import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
 
 interface DailySummary {
   consumedKcal: number;
@@ -18,7 +20,13 @@ interface DailySummary {
   standalone: true,
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.css"],
-  imports: [DatePipe, DecimalPipe, ContextualTranslatePipe],
+  imports: [
+    DatePipe,
+    DecimalPipe,
+    ContextualTranslatePipe,
+    ProgressRingComponent,
+    ActionTileComponent,
+  ],
 })
 export class DashboardComponent {
   private authSessionService = inject(AuthSessionService);

@@ -1,0 +1,215 @@
+@if (loading) {
+  <div class="lf-toolbar lf-toolbar--skeleton">
+    <div class="lf-indicator">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <use href="assets/icons/golifecraft/sprite.svg#i-filter"></use>
+      </svg>
+    </div>
+    <div class="lf-fields">
+      @for (i of loadingFieldsArray; track i) {
+        <div class="lf-skeleton-field"></div>
+      }
+    </div>
+  </div>
+}
+
+@if (!loading) {
+  <div class="lf-toolbar" [class.lf-has-filters]="activeFiltersCount > 0">
+    <div class="lf-indicator">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <use href="assets/icons/golifecraft/sprite.svg#i-filter"></use>
+      </svg>
+      @if (activeFiltersCount > 0) {
+        <span class="lf-badge">{{ activeFiltersCount }}</span>
+      }
+    </div>
+
+    <div class="lf-fields">
+      @for (field of fields; track field.key) {
+        @if (field.type === "text") {
+          <div class="lf-input-wrapper">
+            <svg
+              class="lf-search-icon"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <use href="assets/icons/golifecraft/sprite.svg#i-search"></use>
+            </svg>
+            <input
+              type="text"
+              [id]="'lf-' + field.key"
+              [(ngModel)]="values[field.key]"
+              [placeholder]="field.placeholder || field.label | t"
+              class="lf-input"
+              (ngModelChange)="onTextChange()"
+            />
+          </div>
+        }
+
+        @if (field.type === "select") {
+          <div
+            class="lf-select-wrapper"
+            [class.lf-select-wrapper--disabled]="field.disabled"
+          >
+            <select
+              [id]="'lf-' + field.key"
+              [(ngModel)]="values[field.key]"
+              class="lf-select"
+              [disabled]="field.disabled ?? false"
+              (ngModelChange)="onInstantChange()"
+            >
+              <option value="">
+                {{ field.placeholder || field.label | t }}
+              </option>
+              @for (opt of field.options; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
+            <svg
+              class="lf-chevron"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <use
+                href="assets/icons/golifecraft/sprite.svg#i-chevron-down"
+              ></use>
+            </svg>
+          </div>
+        }
+
+        @if (field.type === "segmented") {
+          <div
+            class="lf-segmented"
+            role="group"
+            [attr.aria-label]="field.label | t"
+          >
+            @for (opt of field.options; track opt.value) {
+              <button
+                type="button"
+                class="lf-segment"
+                [class.lf-segment-active]="values[field.key] === opt.value"
+                (click)="selectSegment(field.key, opt.value)"
+              >
+                {{ opt.label | t }}
+              </button>
+            }
+          </div>
+        }
+
+        @if (field.type === "chips") {
+          <div class="lf-chips-wrapper">
+            @for (opt of field.options; track opt.value) {
+              <button
+                type="button"
+                class="lf-chip"
+                [class.lf-chip-active]="values[field.key] === opt.value"
+                [style.--chip-color]="opt.color || '#274b37'"
+                (click)="toggleChip(field.key, opt.value)"
+              >
+                <span class="lf-chip-dot"></span>
+                {{ opt.label | t }}
+              </button>
+            }
+          </div>
+        }
+
+        @if (field.type === "date") {
+          <div class="lf-date-wrapper">
+            <span class="lf-date-label">{{ field.label | t }}</span>
+            <input
+              type="date"
+              [id]="'lf-' + field.key"
+              [(ngModel)]="values[field.key]"
+              class="lf-date-input"
+              (ngModelChange)="onInstantChange()"
+            />
+          </div>
+        }
+
+        @if (field.type === "toggle") {
+          <div class="lf-toggle-wrapper">
+            <label class="lf-toggle" [for]="'lf-' + field.key">
+              <input
+                type="checkbox"
+                [id]="'lf-' + field.key"
+                [(ngModel)]="values[field.key]"
+                class="lf-toggle-input"
+                (ngModelChange)="onInstantChange()"
+              />
+              <span class="lf-toggle-track">
+                <span class="lf-toggle-thumb"></span>
+              </span>
+            </label>
+            <span class="lf-toggle-label" [class.active]="!!values[field.key]">
+              {{
+                (values[field.key]
+                  ? field.trueLabel || "Sí"
+                  : field.falseLabel || field.label
+                ) | t
+              }}
+            </span>
+          </div>
+        }
+      }
+    </div>
+
+    @if (activeFiltersCount > 0) {
+      <div class="lf-actions">
+        <ds-button
+          variant="ghost"
+          size="icon"
+          (clicked)="clear()"
+          [attr.title]="'listFilters.clearFilters' | t"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <use href="assets/icons/golifecraft/sprite.svg#i-refresh"></use>
+          </svg>
+        </ds-button>
+      </div>
+    }
+  </div>
+}
