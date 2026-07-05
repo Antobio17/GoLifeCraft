@@ -312,3 +312,86 @@
 .tile--primary .tile__meta {
   color: color-mix(in srgb, var(--color-on-accent) 65%, transparent);
 }
+
+@media (min-width: 768px) {
+  .dash {
+    max-width: var(--app-content-max);
+    padding: 30px 40px 0;
+  }
+
+  .dash__avatar {
+    display: none;
+  }
+
+  .dash__date {
+    font-size: 12.5px;
+  }
+
+  .dash__greeting {
+    font-size: 30px;
+  }
+
+  .dash__body {
+    gap: 18px;
+    padding: 22px 0 36px;
+  }
+
+  .summary {
+    padding: 22px 24px;
+    border-radius: 24px;
+  }
+
+  .summary__ring {
+    width: 84px;
+    height: 84px;
+  }
+
+  .summary__ring-value {
+    width: 64px;
+    height: 64px;
+    font-size: 17px;
+  }
+
+  .summary__kcal-value {
+    font-size: 32px;
+  }
+
+  .explore__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .dash__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "summary explore"
+      "search explore";
+    align-items: start;
+    column-gap: 24px;
+    row-gap: 16px;
+  }
+
+  .summary {
+    grid-area: summary;
+  }
+
+  .search {
+    grid-area: search;
+  }
+
+  .explore {
+    grid-area: explore;
+  }
+
+  .explore__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tile {
+    padding: 16px 16px;
+    gap: 26px;
+  }
+}

@@ -331,3 +331,38 @@
 .drawer__logout:hover {
   background: color-mix(in srgb, var(--color-error-500) 10%, transparent);
 }
+
+@media (min-width: 768px) {
+  :host {
+    inset: 0 auto 0 0;
+    width: var(--app-sidebar-width);
+    z-index: 30;
+    justify-content: flex-start;
+    pointer-events: auto;
+  }
+
+  .drawer-root {
+    width: var(--app-sidebar-width);
+    max-width: none;
+  }
+
+  .drawer-scrim,
+  .drawer__close {
+    display: none;
+  }
+
+  .drawer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: none;
+    box-shadow: none;
+    background: var(--color-surface-nav);
+    border-right: 1px solid var(--color-border-default);
+    pointer-events: auto;
+  }
+
+  .drawer__header {
+    padding-top: 22px;
+  }
+}

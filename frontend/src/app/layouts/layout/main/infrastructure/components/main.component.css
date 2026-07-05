@@ -26,3 +26,20 @@
 .app-frame--with-tabbar .app-frame__content {
   padding-bottom: calc(58px + env(safe-area-inset-bottom));
 }
+
+@media (min-width: 768px) {
+  .app-frame {
+    max-width: none;
+    margin: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .app-frame--with-tabbar {
+    padding-left: var(--app-sidebar-width);
+  }
+
+  .app-frame--with-tabbar .app-frame__content {
+    padding-bottom: 0;
+  }
+}

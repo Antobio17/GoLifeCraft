@@ -9,6 +9,12 @@
   pointer-events: none;
 }
 
+@media (min-width: 768px) {
+  :host {
+    display: none;
+  }
+}
+
 .tabbar {
   pointer-events: auto;
   width: 100%;

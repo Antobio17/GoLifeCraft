@@ -660,6 +660,9 @@ body {
   /* Mobile app canvas width (phone-first, centered on wider screens) */
   --app-frame-width: 480px;
 
+  --app-sidebar-width: 244px;
+  --app-content-max: 1180px;
+
   /* Brand primitives */
   --color-forest-700: #1b2e20;
   --color-forest-600: #234230;

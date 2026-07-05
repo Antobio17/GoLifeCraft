@@ -258,3 +258,51 @@
 .auth__foot-link:hover {
   text-decoration: underline;
 }
+
+@media (min-width: 768px) {
+  .auth {
+    padding: 40px;
+  }
+
+  .auth__card {
+    max-width: 420px;
+  }
+
+  .auth__brand {
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
+}
+
+@media (min-width: 900px) {
+  .auth__card {
+    max-width: 780px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "brand tabs"
+      "brand form";
+    align-items: center;
+    column-gap: 56px;
+  }
+
+  .auth__brand {
+    grid-area: brand;
+    align-self: center;
+    justify-content: center;
+    margin: 0;
+    padding-right: 56px;
+    border-right: 1px solid var(--color-border-hairline);
+    transform: scale(1.15);
+  }
+
+  .auth__tabs {
+    grid-area: tabs;
+    margin-bottom: 0;
+  }
+
+  .auth__form {
+    grid-area: form;
+    margin-top: 18px;
+  }
+}
