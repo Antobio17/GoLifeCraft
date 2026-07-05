@@ -2,11 +2,9 @@
 
 namespace Shared\Shared\DomainEventLog\Infrastructure\UI\API\Controller;
 
-use Psr\Log\LoggerInterface;
 use Shared\Shared\DomainEventLog\Application\Query\GetDomainEventLogsQuery;
 use Shared\Shared\DomainEventLog\Domain\Exception\GetDomainEventLogException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
-use Shared\Tool\Tool\Infrastructure\Domain\Service\Logger\ExceptionLogger;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +19,6 @@ final class GetDomainEventLogsController
 
     public function __construct(
         MessageBusInterface $messageBus,
-        private LoggerInterface $logger,
     ) {
         $this->messageBus = $messageBus;
     }
@@ -40,8 +37,6 @@ final class GetDomainEventLogsController
                 )),
             );
         } catch (HandlerFailedException $e) {
-            ExceptionLogger::log(logger: $this->logger, exception: $e, controller: self::class);
-
             return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
                 exception: $e,
                 exceptionStatusMap: [

@@ -4,9 +4,7 @@ namespace Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller;
 
 use Nutrition\Catalog\Supermarket\Application\Query\GetSupermarketQuery;
 use Nutrition\Catalog\Supermarket\Domain\Exception\GetSupermarketException;
-use Psr\Log\LoggerInterface;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
-use Shared\Tool\Tool\Infrastructure\Domain\Service\Logger\ExceptionLogger;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +18,6 @@ final class GetSupermarketController
 
     public function __construct(
         MessageBusInterface $messageBus,
-        private LoggerInterface $logger,
     ) {
         $this->messageBus = $messageBus;
     }
@@ -34,8 +31,6 @@ final class GetSupermarketController
                 )),
             );
         } catch (HandlerFailedException $e) {
-            ExceptionLogger::log(logger: $this->logger, exception: $e, controller: self::class);
-
             return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
                 exception: $e,
                 exceptionStatusMap: [

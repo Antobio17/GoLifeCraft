@@ -3,7 +3,6 @@ services:
     class: Nutrition\Catalog\Category\Infrastructure\UI\API\Controller\GetCategoriesController
     arguments:
       $messageBus: '@messenger.bus.default'
-      $logger: '@logger'
     tags:
       - { name: controller.service_arguments }
 
@@ -11,6 +10,5 @@ services:
     class: Nutrition\Catalog\Category\Infrastructure\UI\API\Controller\GetCategoryController
     arguments:
       $messageBus: '@messenger.bus.default'
-      $logger: '@logger'
     tags:
       - { name: controller.service_arguments }

@@ -4,10 +4,8 @@ namespace Authorization\User\User\Infrastructure\UI\API\Controller;
 
 use Authorization\User\User\Application\Command\UpdateUserCommand;
 use Authorization\User\User\Domain\Exception\UpdateUserException;
-use Psr\Log\LoggerInterface;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
-use Shared\Tool\Tool\Infrastructure\Domain\Service\Logger\ExceptionLogger;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +20,6 @@ final class UpdateUserController
 
     public function __construct(
         MessageBusInterface $messageBus,
-        private LoggerInterface $logger,
     ) {
         $this->messageBus = $messageBus;
     }
@@ -43,8 +40,6 @@ final class UpdateUserController
 
             return new JsonResponse(data: null, status: Response::HTTP_NO_CONTENT);
         } catch (HandlerFailedException $e) {
-            ExceptionLogger::log(logger: $this->logger, exception: $e, controller: self::class);
-
             return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
                 exception: $e,
                 exceptionStatusMap: [
@@ -52,8 +47,6 @@ final class UpdateUserController
                 ]
             );
         } catch (ArgumentRequestException $e) {
-            ExceptionLogger::log(logger: $this->logger, exception: $e, controller: self::class, level: 'info');
-
             return JsonResponseBuilder::buildResponseFromBaseException(
                 exception: $e,
                 status: Response::HTTP_BAD_REQUEST

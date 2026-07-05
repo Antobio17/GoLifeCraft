@@ -1,4 +1,11 @@
 services:
+  Shared\Shared\Shared\Infrastructure\Application\Middleware\LoggingMiddleware:
+    class: Shared\Shared\Shared\Infrastructure\Application\Middleware\LoggingMiddleware
+    arguments:
+      $logger: '@logger'
+    tags:
+      - { name: 'messenger.middleware', bus: 'messenger.bus.default', priority: 110 }
+
   Shared\Shared\Shared\Infrastructure\Application\Middleware\TransactionMiddleware:
     class: Shared\Shared\Shared\Infrastructure\Application\Middleware\TransactionMiddleware
     arguments:

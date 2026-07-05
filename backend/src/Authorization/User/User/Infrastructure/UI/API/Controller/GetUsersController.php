@@ -5,9 +5,7 @@ namespace Authorization\User\User\Infrastructure\UI\API\Controller;
 use Authorization\User\User\Application\Query\GetUsersQuery;
 use Authorization\User\User\Domain\Exception\CreateUserException;
 use Authorization\User\User\Domain\Exception\GetUserException;
-use Psr\Log\LoggerInterface;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
-use Shared\Tool\Tool\Infrastructure\Domain\Service\Logger\ExceptionLogger;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +20,6 @@ final class GetUsersController
 
     public function __construct(
         MessageBusInterface $messageBus,
-        private LoggerInterface $logger,
     ) {
         $this->messageBus = $messageBus;
     }
@@ -44,8 +41,6 @@ final class GetUsersController
                 )),
             );
         } catch (HandlerFailedException $e) {
-            ExceptionLogger::log(logger: $this->logger, exception: $e, controller: self::class);
-
             return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
                 exception: $e,
                 exceptionStatusMap: [

@@ -3,6 +3,7 @@ framework:
         buses:
             messenger.bus.default:
                 middleware:
+                    - Shared\Shared\Shared\Infrastructure\Application\Middleware\LoggingMiddleware
                     - Shared\Shared\Shared\Infrastructure\Application\Middleware\TransactionMiddleware
                     - Shared\Shared\Shared\Infrastructure\Application\Middleware\DomainEventMiddleware
 

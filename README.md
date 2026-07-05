@@ -289,3 +289,5 @@ docker exec -it golifecraft_mysql bash
   automáticamente si no existen.
 - El dominio debe ajustarse en `infrastructure/docker/production/`.
 - El logo (`frontend/src/assets/img/logo.png`) es un placeholder; sustitúyelo por el definitivo.
+
+claude --resume ab0eda6a-5e46-482e-a500-25ac890921cd

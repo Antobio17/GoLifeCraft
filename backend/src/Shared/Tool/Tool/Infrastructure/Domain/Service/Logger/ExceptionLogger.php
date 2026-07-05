@@ -10,11 +10,11 @@ final class ExceptionLogger
     public static function log(
         LoggerInterface $logger,
         \Throwable $exception,
-        string $controller,
+        string $source,
         string $level = 'warning',
     ): void {
         $context = [
-            'controller' => $controller,
+            'source' => $source,
             'exception' => $exception::class,
             'message' => $exception->getMessage(),
             'file' => $exception->getFile(),
@@ -28,6 +28,6 @@ final class ExceptionLogger
             );
         }
 
-        $logger->log(level: $level, message: 'Exception caught in controller', context: $context);
+        $logger->log(level: $level, message: 'Exception caught while handling message', context: $context);
     }
 }

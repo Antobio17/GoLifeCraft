@@ -3,7 +3,6 @@ services:
     class: Shared\Shared\DomainEventLog\Infrastructure\UI\API\Controller\GetDomainEventLogsController
     arguments:
       $messageBus: '@messenger.bus.default'
-      $logger: '@logger'
     tags:
       - { name: controller.service_arguments }
 
@@ -11,6 +10,5 @@ services:
     class: Shared\Shared\DomainEventLog\Infrastructure\UI\API\Controller\GetDomainEventLogController
     arguments:
       $messageBus: '@messenger.bus.default'
-      $logger: '@logger'
     tags:
       - { name: controller.service_arguments }

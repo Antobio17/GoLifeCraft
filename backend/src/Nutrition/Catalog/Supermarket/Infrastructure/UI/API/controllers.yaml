@@ -3,7 +3,6 @@ services:
     class: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller\GetSupermarketsController
     arguments:
       $messageBus: '@messenger.bus.default'
-      $logger: '@logger'
     tags:
       - { name: controller.service_arguments }
 
@@ -11,6 +10,5 @@ services:
     class: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller\GetSupermarketController
     arguments:
       $messageBus: '@messenger.bus.default'
-      $logger: '@logger'
     tags:
       - { name: controller.service_arguments }
