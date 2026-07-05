@@ -3,7 +3,7 @@
     <ds-section-page-wrapper
       [title]="'createCategory.title' | t"
       [description]="'createCategory.description' | t"
-      [loading]="loading"
+      [loading]="loading()"
       [skeletonRows]="1"
       [skeletonFieldsPerRow]="1"
       [showBackButton]="true"
@@ -40,7 +40,7 @@
       [cancelLabel]="'createCategory.cancel' | t"
       [submitLabel]="'createCategory.save' | t"
       [savingLabel]="'createCategory.saving' | t"
-      [saving]="saving"
+      [saving]="saving()"
       [formInvalid]="form.invalid"
       (cancelled)="cancel()"
     ></ds-form-actions>

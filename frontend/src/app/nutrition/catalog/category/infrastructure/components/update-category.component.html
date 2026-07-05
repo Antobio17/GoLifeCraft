@@ -3,7 +3,7 @@
     <ds-section-page-wrapper
       [title]="'updateCategory.title' | t"
       [description]="'updateCategory.description' | t"
-      [loading]="loading"
+      [loading]="loading()"
       [skeletonRows]="1"
       [skeletonFieldsPerRow]="1"
       [showBackButton]="true"
@@ -40,7 +40,7 @@
       [cancelLabel]="'updateCategory.cancel' | t"
       [submitLabel]="'updateCategory.save' | t"
       [savingLabel]="'updateCategory.saving' | t"
-      [saving]="saving"
+      [saving]="saving()"
       [formInvalid]="form.invalid"
       (cancelled)="cancel()"
     ></ds-form-actions>

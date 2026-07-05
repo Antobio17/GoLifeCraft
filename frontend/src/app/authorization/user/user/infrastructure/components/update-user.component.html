@@ -3,7 +3,7 @@
     <ds-section-page-wrapper
       [title]="'updateUser.title' | t"
       [description]="'updateUser.description' | t"
-      [loading]="loading"
+      [loading]="loading()"
       [skeletonRows]="3"
       [skeletonFieldsPerRow]="2"
       [showBackButton]="true"
@@ -199,7 +199,7 @@
       [cancelLabel]="'updateUser.cancel' | t"
       [submitLabel]="'updateUser.save' | t"
       [savingLabel]="'updateUser.saving' | t"
-      [saving]="saving"
+      [saving]="saving()"
       [formInvalid]="userForm.invalid"
       (cancelled)="cancel()"
     >

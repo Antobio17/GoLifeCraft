@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
@@ -10,8 +10,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { of } from "rxjs";
-import { delay } from "rxjs/operators";
+import { delay, tap } from "rxjs/operators";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
 import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
@@ -19,9 +18,12 @@ import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants
 import { UpdateUserService } from "../../application/services/update-user.service";
 import { UpdateUserRequest } from "../../domain/models/update-user-request.model";
 import { GetUserResponse } from "../../domain/models/get-user-response.model";
-import { USER_ROLES } from "@authorization/domain/constants/user-roles.constants";
 import { UserRole } from "@authorization/domain/models/user-role.model";
-import { getAvailableRoles } from "@authorization/domain/utils/role.utils";
+import {
+  getAvailableRoles,
+  getRoleDescriptionKey,
+  getRoleFullLabelKey,
+} from "@authorization/domain/utils/role.utils";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 
@@ -54,8 +56,8 @@ export class UpdateUserComponent implements OnInit {
   readonly ICONS = FORM_SECTION_ICONS;
 
   userForm: FormGroup;
-  loading: boolean = false;
-  saving: boolean = false;
+  loading = signal(false);
+  saving = signal(false);
   availableRoles: UserRole[] = getAvailableRoles(true);
   constructor() {
     this.userForm = this.formBuilder.group({
@@ -81,7 +83,7 @@ export class UpdateUserComponent implements OnInit {
   }
 
   loadUser(): void {
-    this.loading = true;
+    this.loading.set(true);
 
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
@@ -98,10 +100,10 @@ export class UpdateUserComponent implements OnInit {
               isActive: user.attributes.isActive,
               role: user.attributes.role || "",
             });
-            this.loading = false;
+            this.loading.set(false);
           },
           error: () => {
-            this.loading = false;
+            this.loading.set(false);
           },
         });
       });
@@ -109,52 +111,42 @@ export class UpdateUserComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.invalid) {
-      Object.keys(this.userForm.controls).forEach((key) => {
-        this.userForm.controls[key].markAsTouched();
-      });
+      this.userForm.markAllAsTouched();
       return;
     }
 
-    this.saving = true;
+    this.saving.set(true);
 
     const formValue = this.userForm.value;
     const userData: UpdateUserRequest = {
       ...formValue,
     };
 
-    this.updateUserService.updateUser(this.userId, userData).subscribe({
-      next: () => {
-        this.saving = false;
-        this.floatingToastService.showToast({
-          status: 200,
-          keyTranslation: "user.update.success",
-          details: [],
-        });
-
-        of(null)
-          .pipe(delay(900))
-          .subscribe(() => this.router.navigate(["/users"]));
-      },
-      error: () => {
-        this.saving = false;
-      },
-    });
+    this.updateUserService
+      .updateUser(this.userId, userData)
+      .pipe(
+        tap(() => {
+          this.saving.set(false);
+          this.floatingToastService.showToast({
+            status: 200,
+            keyTranslation: "user.update.success",
+            details: [],
+          });
+        }),
+        delay(900),
+      )
+      .subscribe({
+        next: () => this.router.navigate(["/users"]),
+        error: () => this.saving.set(false),
+      });
   }
 
   getRoleName(role: string): string {
-    const roleNames: { [key: string]: string } = {
-      [USER_ROLES.GOD]: "user.roles.god",
-      [USER_ROLES.USER]: "user.roles.userFull",
-    };
-    return roleNames[role] || role;
+    return getRoleFullLabelKey(role);
   }
 
   getRoleDescription(role: string): string {
-    const descriptions: { [key: string]: string } = {
-      [USER_ROLES.GOD]: "user.roles.godDescription",
-      [USER_ROLES.USER]: "user.roles.userDescription",
-    };
-    return descriptions[role] || "";
+    return getRoleDescriptionKey(role);
   }
 
   cancel(): void {

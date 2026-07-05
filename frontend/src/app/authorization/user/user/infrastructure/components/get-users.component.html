@@ -33,7 +33,7 @@
   />
 
   <ds-list-table
-    [items]="users()"
+    [items]="items()"
     [columns]="columns"
     [actions]="actions"
     [loading]="loading()"
@@ -42,11 +42,11 @@
     (actionClick)="onAction($event)"
   />
 
-  @if (!loading() && users().length > 0) {
+  @if (!loading() && items().length > 0) {
     <ds-pagination
       [currentPage]="currentPage()"
       [pageSize]="pageSize()"
-      [totalItems]="totalUsers()"
+      [totalItems]="totalItems()"
       itemsName="pagination.users"
       (pageChange)="goToPage($event)"
       (pageSizeChange)="onPageSizeChange($event)"

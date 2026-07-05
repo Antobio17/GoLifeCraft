@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
   FormBuilder,
@@ -7,8 +7,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { of } from "rxjs";
-import { delay } from "rxjs/operators";
+import { delay, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
@@ -49,8 +48,8 @@ export class UpdateCategoryComponent implements OnInit {
   readonly ICONS = FORM_SECTION_ICONS;
 
   form: FormGroup;
-  loading = true;
-  saving = false;
+  loading = signal(true);
+  saving = signal(false);
   private id = "";
 
   constructor() {
@@ -68,10 +67,10 @@ export class UpdateCategoryComponent implements OnInit {
         this.getCategoryService.getCategory(this.id).subscribe({
           next: (response: GetCategoryResponse) => {
             this.form.patchValue({ name: response.data.attributes.name });
-            this.loading = false;
+            this.loading.set(false);
           },
           error: () => {
-            this.loading = false;
+            this.loading.set(false);
           },
         });
       });
@@ -79,32 +78,28 @@ export class UpdateCategoryComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.invalid) {
-      Object.keys(this.form.controls).forEach((key) =>
-        this.form.controls[key].markAsTouched(),
-      );
+      this.form.markAllAsTouched();
       return;
     }
 
-    this.saving = true;
+    this.saving.set(true);
 
     this.updateCategoryService
       .updateCategory(this.id, { name: this.form.value.name ?? "" })
-      .subscribe({
-        next: () => {
-          this.saving = false;
+      .pipe(
+        tap(() => {
+          this.saving.set(false);
           this.floatingToastService.showToast({
             status: 200,
             keyTranslation: "category.update.success",
             details: [],
           });
-
-          of(null)
-            .pipe(delay(900))
-            .subscribe(() => this.router.navigate(["/categories"]));
-        },
-        error: () => {
-          this.saving = false;
-        },
+        }),
+        delay(900),
+      )
+      .subscribe({
+        next: () => this.router.navigate(["/categories"]),
+        error: () => this.saving.set(false),
       });
   }
 

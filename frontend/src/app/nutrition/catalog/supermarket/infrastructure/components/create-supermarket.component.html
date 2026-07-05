@@ -3,7 +3,7 @@
     <ds-section-page-wrapper
       [title]="'createSupermarket.title' | t"
       [description]="'createSupermarket.description' | t"
-      [loading]="loading"
+      [loading]="loading()"
       [skeletonRows]="1"
       [skeletonFieldsPerRow]="1"
       [showBackButton]="true"
@@ -40,7 +40,7 @@
       [cancelLabel]="'createSupermarket.cancel' | t"
       [submitLabel]="'createSupermarket.save' | t"
       [savingLabel]="'createSupermarket.saving' | t"
-      [saving]="saving"
+      [saving]="saving()"
       [formInvalid]="form.invalid"
       (cancelled)="cancel()"
     ></ds-form-actions>

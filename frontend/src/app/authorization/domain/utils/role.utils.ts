@@ -22,3 +22,28 @@ export function isAvailableRole(
 export function getRoleLevel(role: UserRole): number {
   return ROLE_HIERARCHY.indexOf(role);
 }
+
+export function getRoleLabelKey(role: string): string {
+  if (role === USER_ROLES.GOD) return "user.roles.god";
+  if (role === USER_ROLES.USER) return "user.roles.user";
+
+  return role;
+}
+
+export function getRoleFullLabelKey(role: string): string {
+  if (role === USER_ROLES.GOD) return "user.roles.god";
+  if (role === USER_ROLES.USER) return "user.roles.userFull";
+
+  return role;
+}
+
+export function getRoleDescriptionKey(role: string): string {
+  if (role === USER_ROLES.GOD) return "user.roles.godDescription";
+  if (role === USER_ROLES.USER) return "user.roles.userDescription";
+
+  return "";
+}
+
+export function getRoleBadgeClass(role: string): string {
+  return role === USER_ROLES.GOD ? "badge-god" : "badge-user";
+}

@@ -2,7 +2,7 @@
   <ds-section-page-wrapper
     [title]="'profile.title' | t"
     [description]="'profile.description' | t"
-    [loading]="loading"
+    [loading]="loading()"
     [skeletonRows]="3"
     [skeletonFieldsPerRow]="2"
   >
@@ -21,7 +21,7 @@
       <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
     </svg>
 
-    @if (!loading) {
+    @if (!loading()) {
       <ds-form-section
         [title]="'profile.section.personal' | t"
         [icon]="ICONS['USERS']"
@@ -98,11 +98,11 @@
           <ds-button
             variant="primary"
             size="md"
-            [disabled]="saving || profileForm.invalid || profileForm.pristine"
-            [loading]="saving"
+            [disabled]="saving() || profileForm.invalid || profileForm.pristine"
+            [loading]="saving()"
             (clicked)="onSubmitProfile()"
           >
-            @if (!saving) {
+            @if (!saving()) {
               <svg
                 width="16"
                 height="16"
@@ -120,7 +120,7 @@
                 <polyline points="7 3 7 8 15 8" />
               </svg>
             }
-            {{ saving ? ("profile.saving" | t) : ("profile.save" | t) }}
+            {{ saving() ? ("profile.saving" | t) : ("profile.save" | t) }}
           </ds-button>
         </div>
       </ds-form-section>
@@ -169,12 +169,14 @@
             variant="primary"
             size="md"
             [disabled]="
-              changingPassword || passwordForm.invalid || passwordForm.pristine
+              changingPassword() ||
+              passwordForm.invalid ||
+              passwordForm.pristine
             "
-            [loading]="changingPassword"
+            [loading]="changingPassword()"
             (clicked)="onSubmitPassword()"
           >
-            @if (!changingPassword) {
+            @if (!changingPassword()) {
               <svg
                 width="16"
                 height="16"
@@ -190,7 +192,7 @@
               </svg>
             }
             {{
-              changingPassword
+              changingPassword()
                 ? ("profile.changingPassword" | t)
                 : ("profile.changePassword" | t)
             }}

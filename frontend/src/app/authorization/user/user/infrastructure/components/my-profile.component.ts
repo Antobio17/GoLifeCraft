@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, signal } from "@angular/core";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
 import {
@@ -9,8 +9,7 @@ import {
   AbstractControl,
   ValidationErrors,
 } from "@angular/forms";
-import { of } from "rxjs";
-import { delay } from "rxjs/operators";
+import { delay, tap } from "rxjs/operators";
 import { GetMyProfileService } from "../../application/services/get-my-profile.service";
 import { UpdateMyProfileService } from "../../application/services/update-my-profile.service";
 import { ChangeMyPasswordService } from "../../application/services/change-my-password.service";
@@ -20,7 +19,10 @@ import { ChangeMyPasswordProvider } from "../providers/change-my-password.provid
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { USER_ROLES } from "@authorization/domain/constants/user-roles.constants";
+import {
+  getRoleBadgeClass as resolveRoleBadgeClass,
+  getRoleLabelKey,
+} from "@authorization/domain/utils/role.utils";
 import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
 import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
 import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
@@ -95,11 +97,11 @@ export class MyProfileComponent implements OnInit {
   profileForm: FormGroup;
   passwordForm: FormGroup;
 
-  username: string = "";
-  role: string = "";
-  loading: boolean = true;
-  saving: boolean = false;
-  changingPassword: boolean = false;
+  username = "";
+  role = "";
+  loading = signal(true);
+  saving = signal(false);
+  changingPassword = signal(false);
 
   constructor() {
     this.profileForm = this.formBuilder.group({
@@ -136,10 +138,10 @@ export class MyProfileComponent implements OnInit {
               email: attrs.email,
             });
 
-            this.loading = false;
+            this.loading.set(false);
           },
           error: () => {
-            this.loading = false;
+            this.loading.set(false);
           },
         });
       });
@@ -147,30 +149,29 @@ export class MyProfileComponent implements OnInit {
 
   onSubmitProfile(): void {
     if (this.profileForm.invalid) {
-      Object.keys(this.profileForm.controls).forEach((key) => {
-        this.profileForm.controls[key].markAsTouched();
-      });
+      this.profileForm.markAllAsTouched();
       return;
     }
 
-    this.saving = true;
+    this.saving.set(true);
 
     this.updateMyProfileService
       .updateMyProfile(this.profileForm.value)
-      .subscribe({
-        next: () => {
-          this.saving = false;
+      .pipe(
+        tap(() => {
+          this.saving.set(false);
           this.floatingToastService.showToast({
             status: 200,
             keyTranslation: "profile.update.success",
             details: [],
           });
-          of(null)
-            .pipe(delay(800))
-            .subscribe(() => window.location.reload());
-        },
+        }),
+        delay(800),
+      )
+      .subscribe({
+        next: () => window.location.reload(),
         error: () => {
-          this.saving = false;
+          this.saving.set(false);
           this.floatingToastService.showToast({
             status: 400,
             keyTranslation: "profile.update.error",
@@ -182,13 +183,11 @@ export class MyProfileComponent implements OnInit {
 
   onSubmitPassword(): void {
     if (this.passwordForm.invalid) {
-      Object.keys(this.passwordForm.controls).forEach((key) => {
-        this.passwordForm.controls[key].markAsTouched();
-      });
+      this.passwordForm.markAllAsTouched();
       return;
     }
 
-    this.changingPassword = true;
+    this.changingPassword.set(true);
 
     const { currentPassword, newPassword } = this.passwordForm.value;
 
@@ -197,7 +196,7 @@ export class MyProfileComponent implements OnInit {
       .subscribe({
         next: () => {
           this.passwordForm.reset();
-          this.changingPassword = false;
+          this.changingPassword.set(false);
           this.floatingToastService.showToast({
             status: 200,
             keyTranslation: "profile.password.change.success",
@@ -205,7 +204,7 @@ export class MyProfileComponent implements OnInit {
           });
         },
         error: (err) => {
-          this.changingPassword = false;
+          this.changingPassword.set(false);
           this.floatingToastService.showToast({
             status: 400,
             keyTranslation:
@@ -217,17 +216,10 @@ export class MyProfileComponent implements OnInit {
   }
 
   getRoleBadgeClass(role: string): string {
-    const badgeClasses: { [key: string]: string } = {
-      [USER_ROLES.GOD]: "badge-god",
-    };
-    return badgeClasses[role] || "badge-user";
+    return resolveRoleBadgeClass(role);
   }
 
   getRoleTranslationKey(role: string): string {
-    const roleKeys: { [key: string]: string } = {
-      [USER_ROLES.GOD]: "user.roles.god",
-      [USER_ROLES.USER]: "user.roles.user",
-    };
-    return roleKeys[role] || role;
+    return getRoleLabelKey(role);
   }
 }
