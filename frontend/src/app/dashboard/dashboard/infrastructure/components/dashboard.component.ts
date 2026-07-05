@@ -2,7 +2,6 @@ import { Component, computed, inject } from "@angular/core";
 import { DatePipe, DecimalPipe } from "@angular/common";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
-import { SideDrawerService } from "@layouts/layout/side-drawer/application/services/side-drawer.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
 import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
@@ -31,7 +30,6 @@ interface DailySummary {
 export class DashboardComponent {
   private authSessionService = inject(AuthSessionService);
   private floatingToastService = inject(FloatingToastService);
-  private sideDrawerService = inject(SideDrawerService);
 
   readonly today = new Date();
 
@@ -57,10 +55,6 @@ export class DashboardComponent {
       100,
       Math.round((this.summary.consumedKcal / this.summary.targetKcal) * 100),
     );
-  }
-
-  openMenu(): void {
-    this.sideDrawerService.open();
   }
 
   comingSoon(): void {

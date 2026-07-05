@@ -2,6 +2,7 @@ import { Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { SideDrawerService } from "@layouts/layout/side-drawer/application/services/side-drawer.service";
 
 @Component({
   selector: "app-bottom-nav",
@@ -12,6 +13,11 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 })
 export class BottomNavComponent {
   private floatingToastService = inject(FloatingToastService);
+  private sideDrawerService = inject(SideDrawerService);
+
+  toggleDrawer(): void {
+    this.sideDrawerService.toggle();
+  }
 
   comingSoon(): void {
     this.floatingToastService.showToast({

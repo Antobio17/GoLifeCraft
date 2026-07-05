@@ -6,14 +6,9 @@
         {{ "dashboard.greeting" | t }}{{ name() ? ", " + name() : "" }}
       </h1>
     </div>
-    <button
-      type="button"
-      class="dash__avatar"
-      (click)="openMenu()"
-      [attr.aria-label]="'navbar.openMenu' | t"
-    >
+    <span class="dash__avatar" aria-hidden="true">
       {{ initial() }}
-    </button>
+    </span>
   </header>
 
   <div class="dash__body">
