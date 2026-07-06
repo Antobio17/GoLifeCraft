@@ -1,0 +1,26 @@
+label: Exercise set
+
+fields:
+  sessionExerciseId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    filterable: true
+  position:
+    writable: true
+    required: true
+    type: int
+    min: 1
+    sortable: true
+  reps:
+    writable: true
+    required: true
+    type: int
+    min: 0
+  weight:
+    writable: true
+    type: float
+    min: 0
+
+relations: {}

@@ -1,0 +1,27 @@
+label: Exercise
+
+fields:
+  name:
+    writable: true
+    required: true
+    min: 2
+    max: 255
+    unique: true
+    filterable: true
+    sortable: true
+  description:
+    writable: true
+    max: 500
+    filterable: true
+  type:
+    writable: true
+    required: true
+    enum: [unilateral, bilateral]
+    filterable: true
+    sortable: true
+  muscleGroups:
+    writable: true
+    type: array
+    filterable: true
+
+relations: {}

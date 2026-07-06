@@ -1,0 +1,18 @@
+label: Training session
+
+fields:
+  name:
+    writable: true
+    required: true
+    min: 2
+    max: 255
+    filterable: true
+    sortable: true
+  estimatedDurationMinutes:
+    writable: true
+    required: true
+    type: int
+    min: 0
+    sortable: true
+
+relations: {}
