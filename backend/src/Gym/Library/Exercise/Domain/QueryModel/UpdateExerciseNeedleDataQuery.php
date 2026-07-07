@@ -2,9 +2,10 @@
 
 namespace Gym\Library\Exercise\Domain\QueryModel;
 
-interface CreateExerciseNeedleDataQuery
+interface UpdateExerciseNeedleDataQuery
 {
     public function exerciseWithNameAlreadyExists(
         string $name,
+        string $excludingExerciseId,
     ): bool;
 }

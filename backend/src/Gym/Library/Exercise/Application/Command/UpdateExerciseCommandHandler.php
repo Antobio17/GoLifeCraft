@@ -6,7 +6,7 @@ use Authorization\User\User\Domain\Model\User;
 use Gym\Library\Exercise\Domain\Exception\CreateExerciseException;
 use Gym\Library\Exercise\Domain\Exception\UpdateExerciseException;
 use Gym\Library\Exercise\Domain\Model\ExerciseRepository;
-use Gym\Library\Exercise\Domain\QueryModel\CreateExerciseNeedleDataQuery;
+use Gym\Library\Exercise\Domain\QueryModel\UpdateExerciseNeedleDataQuery;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -14,7 +14,7 @@ final readonly class UpdateExerciseCommandHandler
 {
     public function __construct(
         private ExerciseRepository $exerciseRepository,
-        private CreateExerciseNeedleDataQuery $needleDataQuery,
+        private UpdateExerciseNeedleDataQuery $needleDataQuery,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
