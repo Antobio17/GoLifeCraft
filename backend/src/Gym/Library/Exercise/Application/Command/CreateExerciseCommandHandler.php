@@ -2,7 +2,6 @@
 
 namespace Gym\Library\Exercise\Application\Command;
 
-use Authorization\User\User\Domain\Model\User;
 use Gym\Library\Exercise\Domain\Exception\CreateExerciseException;
 use Gym\Library\Exercise\Domain\Model\Exercise;
 use Gym\Library\Exercise\Domain\Model\ExerciseRepository;

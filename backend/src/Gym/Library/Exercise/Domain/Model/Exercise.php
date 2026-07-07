@@ -6,6 +6,7 @@ use Gym\Library\Exercise\Domain\Event\ExerciseCreated;
 use Gym\Library\Exercise\Domain\Event\ExerciseDeleted;
 use Gym\Library\Exercise\Domain\Event\ExerciseUpdated;
 use Gym\Library\Exercise\Domain\Exception\CreateExerciseException;
+use Gym\Library\Exercise\Domain\Exception\UpdateExerciseException;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -33,8 +34,13 @@ class Exercise extends GenericAggregate
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
-        self::guardType(type: $type);
-        self::guardMuscleGroups(muscleGroups: $muscleGroups);
+        if (!self::isTypeAvailable(type: $type)) {
+            throw CreateExerciseException::typeIsNotAvailable(type: $type);
+        }
+
+        if (!self::hasMuscleGroups(muscleGroups: $muscleGroups)) {
+            throw CreateExerciseException::atLeastOneMuscleGroupRequired();
+        }
 
         $now = $dateTimeGenerator->now();
 
@@ -70,8 +76,13 @@ class Exercise extends GenericAggregate
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
-        self::guardType(type: $type);
-        self::guardMuscleGroups(muscleGroups: $muscleGroups);
+        if (!self::isTypeAvailable(type: $type)) {
+            throw UpdateExerciseException::typeIsNotAvailable(type: $type);
+        }
+
+        if (!self::hasMuscleGroups(muscleGroups: $muscleGroups)) {
+            throw UpdateExerciseException::atLeastOneMuscleGroupRequired();
+        }
 
         $now = $dateTimeGenerator->now();
 
@@ -116,20 +127,13 @@ class Exercise extends GenericAggregate
         ));
     }
 
-    private static function guardType(string $type): void
+    private static function isTypeAvailable(string $type): bool
     {
-        if (!in_array(needle: $type, haystack: self::AVAILABLE_TYPES, strict: true)) {
-            throw CreateExerciseException::typeIsNotAvailable(
-                type: $type,
-                availableTypes: self::AVAILABLE_TYPES,
-            );
-        }
+        return in_array(needle: $type, haystack: self::AVAILABLE_TYPES, strict: true);
     }
 
-    private static function guardMuscleGroups(array $muscleGroups): void
+    private static function hasMuscleGroups(array $muscleGroups): bool
     {
-        if ([] === $muscleGroups) {
-            throw CreateExerciseException::atLeastOneMuscleGroupRequired();
-        }
+        return [] !== $muscleGroups;
     }
 }

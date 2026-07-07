@@ -2,7 +2,6 @@
 
 namespace Gym\Library\Exercise\Application\Command;
 
-use Authorization\User\User\Domain\Model\User;
 use Gym\Library\Exercise\Domain\Exception\DeleteExerciseException;
 use Gym\Library\Exercise\Domain\Model\ExerciseRepository;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;

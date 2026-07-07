@@ -2,6 +2,7 @@
 
 namespace Gym\Library\Exercise\Domain\Exception;
 
+use Gym\Library\Exercise\Domain\Model\Exercise;
 use Shared\Shared\Shared\Domain\Exception\BaseException;
 
 final class CreateExerciseException extends BaseException
@@ -15,14 +16,14 @@ final class CreateExerciseException extends BaseException
         );
     }
 
-    public static function typeIsNotAvailable(string $type, array $availableTypes): self
+    public static function typeIsNotAvailable(string $type): self
     {
         return new static(
             title: 'The exercise type does not exist.',
             keyTranslation: 'exercise.type.does.not.exist',
             details: [
                 'type' => $type,
-                'availableTypes' => $availableTypes,
+                'availableTypes' => Exercise::AVAILABLE_TYPES,
             ]
         );
     }
