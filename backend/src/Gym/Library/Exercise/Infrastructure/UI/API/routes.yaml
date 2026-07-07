@@ -1,0 +1,24 @@
+create_exercise:
+  path: /api/v1/gym/exercise
+  methods: [POST]
+  controller: Gym\Library\Exercise\Infrastructure\UI\API\Controller\CreateExerciseController
+
+update_exercise:
+  path: /api/v1/gym/exercise/{exerciseId}
+  methods: [PUT]
+  controller: Gym\Library\Exercise\Infrastructure\UI\API\Controller\UpdateExerciseController
+
+delete_exercise:
+  path: /api/v1/gym/exercise/{exerciseId}
+  methods: [DELETE]
+  controller: Gym\Library\Exercise\Infrastructure\UI\API\Controller\DeleteExerciseController
+
+get_exercises:
+  path: /api/v1/gym/exercises
+  methods: [GET]
+  controller: Gym\Library\Exercise\Infrastructure\UI\API\Controller\GetExercisesController
+
+get_exercise:
+  path: /api/v1/gym/exercise/{exerciseId}
+  methods: [GET]
+  controller: Gym\Library\Exercise\Infrastructure\UI\API\Controller\GetExerciseController

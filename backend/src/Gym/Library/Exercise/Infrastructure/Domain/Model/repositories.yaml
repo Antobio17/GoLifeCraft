@@ -1,0 +1,6 @@
+services:
+  Gym\Library\Exercise\Domain\Model\ExerciseRepository:
+    class: Gym\Library\Exercise\Infrastructure\Domain\Model\Doctrine\DoctrineExerciseRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Gym\Library\Exercise\Domain\Model\Exercise
