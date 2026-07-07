@@ -1,0 +1,24 @@
+create_session:
+  path: /api/v1/gym/session
+  methods: [POST]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\CreateSessionController
+
+update_session:
+  path: /api/v1/gym/session/{sessionId}
+  methods: [PUT]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\UpdateSessionController
+
+delete_session:
+  path: /api/v1/gym/session/{sessionId}
+  methods: [DELETE]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\DeleteSessionController
+
+get_sessions:
+  path: /api/v1/gym/sessions
+  methods: [GET]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\GetSessionsController
+
+get_session:
+  path: /api/v1/gym/session/{sessionId}
+  methods: [GET]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\GetSessionController

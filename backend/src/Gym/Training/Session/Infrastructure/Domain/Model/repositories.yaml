@@ -1,0 +1,6 @@
+services:
+  Gym\Training\Session\Domain\Model\SessionRepository:
+    class: Gym\Training\Session\Infrastructure\Domain\Model\Doctrine\DoctrineSessionRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Gym\Training\Session\Domain\Model\Session

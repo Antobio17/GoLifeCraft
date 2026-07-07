@@ -1,0 +1,35 @@
+services:
+  Gym\Training\Session\Infrastructure\UI\API\Controller\CreateSessionController:
+    class: Gym\Training\Session\Infrastructure\UI\API\Controller\CreateSessionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Session\Infrastructure\UI\API\Controller\UpdateSessionController:
+    class: Gym\Training\Session\Infrastructure\UI\API\Controller\UpdateSessionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Session\Infrastructure\UI\API\Controller\DeleteSessionController:
+    class: Gym\Training\Session\Infrastructure\UI\API\Controller\DeleteSessionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Session\Infrastructure\UI\API\Controller\GetSessionsController:
+    class: Gym\Training\Session\Infrastructure\UI\API\Controller\GetSessionsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Session\Infrastructure\UI\API\Controller\GetSessionController:
+    class: Gym\Training\Session\Infrastructure\UI\API\Controller\GetSessionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
