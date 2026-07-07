@@ -1,0 +1,20 @@
+services:
+  Gym\Training\Session\Domain\QueryModel\CreateSessionNeedleDataQuery:
+    class: Gym\Training\Session\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateSessionNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gym\Training\Session\Domain\QueryModel\UpdateSessionNeedleDataQuery:
+    class: Gym\Training\Session\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateSessionNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gym\Training\Session\Domain\QueryModel\GetSessionsNeedleDataQuery:
+    class: Gym\Training\Session\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetSessionsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gym\Training\Session\Domain\QueryModel\GetSessionNeedleDataQuery:
+    class: Gym\Training\Session\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetSessionNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

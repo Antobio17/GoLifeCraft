@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Gym\Training\Session\Domain\Model\SessionExercise" table="session_exercise">
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="sessionId" type="string" column="session_id" length="36"/>
+    <field name="exerciseId" type="string" column="exercise_id" length="36" nullable="true"/>
+    <field name="exerciseName" type="string" column="exercise_name" length="255"/>
+    <field name="muscleGroups" type="json" column="muscle_groups"/>
+    <field name="type" type="string" column="type" length="20"/>
+    <field name="position" type="integer" column="position"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+    <indexes>
+      <index name="idx_session_exercise_session_id" columns="session_id"/>
+      <index name="idx_session_exercise_exercise_id" columns="exercise_id"/>
+    </indexes>
+  </entity>
+</doctrine-mapping>

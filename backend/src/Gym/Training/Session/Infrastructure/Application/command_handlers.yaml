@@ -1,0 +1,36 @@
+services:
+  Gym\Training\Session\Application\Command\SessionExerciseAssembler:
+    class: Gym\Training\Session\Application\Command\SessionExerciseAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Gym\Training\Session\Application\Command\CreateSessionCommandHandler:
+    class: Gym\Training\Session\Application\Command\CreateSessionCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $needleDataQuery: '@Gym\Training\Session\Domain\QueryModel\CreateSessionNeedleDataQuery'
+      $sessionExerciseAssembler: '@Gym\Training\Session\Application\Command\SessionExerciseAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Command\UpdateSessionCommandHandler:
+    class: Gym\Training\Session\Application\Command\UpdateSessionCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $needleDataQuery: '@Gym\Training\Session\Domain\QueryModel\UpdateSessionNeedleDataQuery'
+      $sessionExerciseAssembler: '@Gym\Training\Session\Application\Command\SessionExerciseAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Command\DeleteSessionCommandHandler:
+    class: Gym\Training\Session\Application\Command\DeleteSessionCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

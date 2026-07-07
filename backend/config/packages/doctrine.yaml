@@ -76,15 +76,3 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Gym/Training/Session/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Gym\Training\Session\Domain\Model'
                         alias: session
-                    SessionExercise:
-                        is_bundle: false
-                        type: xml
-                        dir: '%kernel.project_dir%/src/Gym/Training/SessionExercise/Infrastructure/Domain/Model/Doctrine/Mapping'
-                        prefix: 'Gym\Training\SessionExercise\Domain\Model'
-                        alias: session_exercise
-                    ExerciseSet:
-                        is_bundle: false
-                        type: xml
-                        dir: '%kernel.project_dir%/src/Gym/Training/ExerciseSet/Infrastructure/Domain/Model/Doctrine/Mapping'
-                        prefix: 'Gym\Training\ExerciseSet\Domain\Model'
-                        alias: exercise_set

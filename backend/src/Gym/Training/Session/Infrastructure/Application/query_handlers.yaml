@@ -1,0 +1,22 @@
+services:
+  Gym\Training\Session\Application\Query\GetSessionsQueryHandler:
+    class: Gym\Training\Session\Application\Query\GetSessionsQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Training\Session\Domain\QueryModel\GetSessionsNeedleDataQuery'
+      $dataTransform: '@Gym\Training\Session\Application\Query\GetSessionsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Query\GetSessionsDataTransform:
+    class: Gym\Training\Session\Infrastructure\UI\API\DataTransform\ApiGetSessionsDataTransform
+
+  Gym\Training\Session\Application\Query\GetSessionQueryHandler:
+    class: Gym\Training\Session\Application\Query\GetSessionQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Training\Session\Domain\QueryModel\GetSessionNeedleDataQuery'
+      $dataTransform: '@Gym\Training\Session\Application\Query\GetSessionDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Query\GetSessionDataTransform:
+    class: Gym\Training\Session\Infrastructure\UI\API\DataTransform\ApiGetSessionDataTransform
