@@ -50,7 +50,13 @@ class Exercise extends GenericAggregate
             aggregateId: $id,
             occurredOn: $now,
             name: $name,
+            description: $exercise->description,
             type: $type,
+            muscleGroups: $exercise->muscleGroups,
+            createdAt: $exercise->createdAt,
+            updatedAt: $exercise->updatedAt,
+            createdByUserId: $exercise->createdByUserId,
+            updatedByUserId: $exercise->updatedByUserId,
         ));
 
         return $exercise;
@@ -79,7 +85,13 @@ class Exercise extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $name,
+            description: $this->description,
             type: $type,
+            muscleGroups: $this->muscleGroups,
+            createdAt: $this->createdAt,
+            updatedAt: $this->updatedAt,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $this->updatedByUserId,
         ));
     }
 
@@ -93,6 +105,14 @@ class Exercise extends GenericAggregate
         $this->record(event: new ExerciseDeleted(
             aggregateId: $this->id,
             occurredOn: $now,
+            name: $this->name,
+            description: $this->description,
+            type: $this->type,
+            muscleGroups: $this->muscleGroups,
+            createdAt: $this->createdAt,
+            updatedAt: $this->updatedAt,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $this->updatedByUserId,
         ));
     }
 
