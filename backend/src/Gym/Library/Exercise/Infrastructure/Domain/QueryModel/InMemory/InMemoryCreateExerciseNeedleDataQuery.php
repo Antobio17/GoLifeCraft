@@ -15,7 +15,6 @@ final class InMemoryCreateExerciseNeedleDataQuery implements CreateExerciseNeedl
 
     public function exerciseWithNameAlreadyExists(
         string $name,
-        ?string $excludingExerciseId = null,
     ): bool {
         return in_array(needle: $name, haystack: $this->existingNames, strict: true);
     }

@@ -13,7 +13,7 @@ services:
     class: Gym\Library\Exercise\Application\Command\UpdateExerciseCommandHandler
     arguments:
       $exerciseRepository: '@Gym\Library\Exercise\Domain\Model\ExerciseRepository'
-      $needleDataQuery: '@Gym\Library\Exercise\Domain\QueryModel\CreateExerciseNeedleDataQuery'
+      $needleDataQuery: '@Gym\Library\Exercise\Domain\QueryModel\UpdateExerciseNeedleDataQuery'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

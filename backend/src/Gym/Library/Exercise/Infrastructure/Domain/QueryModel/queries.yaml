@@ -4,6 +4,11 @@ services:
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
 
+  Gym\Library\Exercise\Domain\QueryModel\UpdateExerciseNeedleDataQuery:
+    class: Gym\Library\Exercise\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateExerciseNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
   Gym\Library\Exercise\Domain\QueryModel\GetExercisesNeedleDataQuery:
     class: Gym\Library\Exercise\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetExercisesNeedleDataQuery
     arguments:
