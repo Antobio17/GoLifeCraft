@@ -1,0 +1,22 @@
+services:
+  Gym\Library\Exercise\Application\Query\GetExercisesQueryHandler:
+    class: Gym\Library\Exercise\Application\Query\GetExercisesQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Library\Exercise\Domain\QueryModel\GetExercisesNeedleDataQuery'
+      $dataTransform: '@Gym\Library\Exercise\Application\Query\GetExercisesDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Library\Exercise\Application\Query\GetExercisesDataTransform:
+    class: Gym\Library\Exercise\Infrastructure\UI\API\DataTransform\ApiGetExercisesDataTransform
+
+  Gym\Library\Exercise\Application\Query\GetExerciseQueryHandler:
+    class: Gym\Library\Exercise\Application\Query\GetExerciseQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Library\Exercise\Domain\QueryModel\GetExerciseNeedleDataQuery'
+      $dataTransform: '@Gym\Library\Exercise\Application\Query\GetExerciseDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Library\Exercise\Application\Query\GetExerciseDataTransform:
+    class: Gym\Library\Exercise\Infrastructure\UI\API\DataTransform\ApiGetExerciseDataTransform

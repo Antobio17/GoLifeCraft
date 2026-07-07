@@ -1,0 +1,29 @@
+services:
+  Gym\Library\Exercise\Application\Command\CreateExerciseCommandHandler:
+    class: Gym\Library\Exercise\Application\Command\CreateExerciseCommandHandler
+    arguments:
+      $exerciseRepository: '@Gym\Library\Exercise\Domain\Model\ExerciseRepository'
+      $needleDataQuery: '@Gym\Library\Exercise\Domain\QueryModel\CreateExerciseNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Library\Exercise\Application\Command\UpdateExerciseCommandHandler:
+    class: Gym\Library\Exercise\Application\Command\UpdateExerciseCommandHandler
+    arguments:
+      $exerciseRepository: '@Gym\Library\Exercise\Domain\Model\ExerciseRepository'
+      $needleDataQuery: '@Gym\Library\Exercise\Domain\QueryModel\CreateExerciseNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Library\Exercise\Application\Command\DeleteExerciseCommandHandler:
+    class: Gym\Library\Exercise\Application\Command\DeleteExerciseCommandHandler
+    arguments:
+      $exerciseRepository: '@Gym\Library\Exercise\Domain\Model\ExerciseRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

@@ -1,0 +1,35 @@
+services:
+  Gym\Library\Exercise\Infrastructure\UI\API\Controller\CreateExerciseController:
+    class: Gym\Library\Exercise\Infrastructure\UI\API\Controller\CreateExerciseController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Library\Exercise\Infrastructure\UI\API\Controller\UpdateExerciseController:
+    class: Gym\Library\Exercise\Infrastructure\UI\API\Controller\UpdateExerciseController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Library\Exercise\Infrastructure\UI\API\Controller\DeleteExerciseController:
+    class: Gym\Library\Exercise\Infrastructure\UI\API\Controller\DeleteExerciseController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Library\Exercise\Infrastructure\UI\API\Controller\GetExercisesController:
+    class: Gym\Library\Exercise\Infrastructure\UI\API\Controller\GetExercisesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Library\Exercise\Infrastructure\UI\API\Controller\GetExerciseController:
+    class: Gym\Library\Exercise\Infrastructure\UI\API\Controller\GetExerciseController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
