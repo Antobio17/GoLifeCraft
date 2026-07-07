@@ -9,6 +9,14 @@ final readonly class ExerciseDeleted extends DomainEvent
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
+        public string $name,
+        public ?string $description,
+        public string $type,
+        public array $muscleGroups,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }
