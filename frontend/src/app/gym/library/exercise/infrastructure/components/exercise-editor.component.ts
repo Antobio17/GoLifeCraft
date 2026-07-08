@@ -23,11 +23,9 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { CreateExerciseService } from "../../application/services/create-exercise.service";
 import { UpdateExerciseService } from "../../application/services/update-exercise.service";
 import { GetExerciseService } from "../../application/services/get-exercise.service";
+import { MuscleCatalogService } from "../../application/services/muscle-catalog.service";
 import { GetExerciseResponse } from "../../domain/models/get-exercise-response.model";
-import {
-  EXERCISE_TYPES,
-  MUSCLE_GROUPS_BY_REGION,
-} from "../../domain/constants/muscle-groups.constants";
+import { ExerciseType } from "../../domain/models/exercise-type.model";
 
 @Component({
   selector: "app-exercise-editor",
@@ -51,15 +49,16 @@ export class ExerciseEditorComponent implements OnInit {
   private createExerciseService = inject(CreateExerciseService);
   private updateExerciseService = inject(UpdateExerciseService);
   private getExerciseService = inject(GetExerciseService);
+  private muscleCatalog = inject(MuscleCatalogService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   private readonly MODULE_PATH = "gym/library/exercise";
-  readonly muscleGroups = MUSCLE_GROUPS_BY_REGION;
+  readonly muscleGroups = this.muscleCatalog.regions();
   readonly typeOptions = [
-    { value: EXERCISE_TYPES.BILATERAL, label: "Bilateral" },
-    { value: EXERCISE_TYPES.UNILATERAL, label: "Unilateral" },
+    { value: ExerciseType.Bilateral, label: "Bilateral" },
+    { value: ExerciseType.Unilateral, label: "Unilateral" },
   ];
 
   form: FormGroup;
@@ -70,7 +69,7 @@ export class ExerciseEditorComponent implements OnInit {
   constructor() {
     this.form = this.formBuilder.group({
       name: ["", [Validators.required, Validators.minLength(2)]],
-      type: [EXERCISE_TYPES.BILATERAL, [Validators.required]],
+      type: [ExerciseType.Bilateral, [Validators.required]],
       muscleGroups: [[] as string[], [this.atLeastOneMuscle]],
     });
   }
@@ -91,7 +90,7 @@ export class ExerciseEditorComponent implements OnInit {
 
   get modeHint(): string {
     return this.t(
-      this.form.value.type === EXERCISE_TYPES.UNILATERAL
+      this.form.value.type === ExerciseType.Unilateral
         ? "createExercise.mode.unilateralHint"
         : "createExercise.mode.bilateralHint",
     );
@@ -149,7 +148,7 @@ export class ExerciseEditorComponent implements OnInit {
 
     const payload = {
       name: this.form.value.name ?? "",
-      type: this.form.value.type ?? EXERCISE_TYPES.BILATERAL,
+      type: this.form.value.type ?? ExerciseType.Bilateral,
       muscleGroups: this.form.value.muscleGroups ?? [],
     };
 

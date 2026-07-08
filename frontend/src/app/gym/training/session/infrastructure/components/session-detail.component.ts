@@ -30,15 +30,12 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { GetSessionService } from "../../application/services/get-session.service";
 import { UpdateSessionService } from "../../application/services/update-session.service";
 import { DeleteSessionService } from "../../application/services/delete-session.service";
+import { SessionDraftService } from "../../application/services/session-draft.service";
 import { GetExercisesService } from "@gym/library/exercise/application/services/get-exercises.service";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
+import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
 import { GetSessionResponse } from "../../domain/models/get-session-response.model";
-import {
-  SessionExerciseView,
-  ExerciseSetView,
-} from "../../domain/models/session-detail.model";
-import { CreateSessionRequest } from "../../domain/models/session-request.model";
-import { EXERCISE_TYPES } from "@gym/library/exercise/domain/constants/muscle-groups.constants";
+import { SessionExerciseView } from "../../domain/models/session-detail.model";
 
 @Component({
   selector: "app-session-detail",
@@ -71,6 +68,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private getSessionService = inject(GetSessionService);
   private updateSessionService = inject(UpdateSessionService);
   private deleteSessionService = inject(DeleteSessionService);
+  private sessionDraft = inject(SessionDraftService);
   private getExercisesService = inject(GetExercisesService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
@@ -121,12 +119,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
         const attributes = response.data.attributes;
         this.name.set(attributes.name);
         this.estimatedDurationMinutes.set(attributes.estimatedDurationMinutes);
-        this.exercises.set(
-          attributes.exercises.map((exercise) => ({
-            ...exercise,
-            sets: exercise.sets.map((set) => ({ ...set })),
-          })),
-        );
+        this.exercises.set(this.sessionDraft.clone(attributes.exercises));
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
@@ -161,7 +154,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   modeLabel(type: string): string {
     return this.t(
-      type === EXERCISE_TYPES.UNILATERAL
+      type === ExerciseType.Unilateral
         ? "getSession.mode.unilateral"
         : "getSession.mode.bilateral",
     );
@@ -191,10 +184,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     return this.translationService.translate(key, this.MODULE_PATH);
   }
 
-  private uid(prefix: string): string {
-    return `${prefix}_${Math.random().toString(36).slice(2, 10)}`;
-  }
-
   openPicker(): void {
     this.librarySearch.set("");
     this.pickerOpen.set(true);
@@ -209,16 +198,9 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   addFromLibrary(exercise: Exercise): void {
-    const newExercise: SessionExerciseView = {
-      id: this.uid("x"),
-      exerciseId: exercise.id,
-      exerciseName: exercise.attributes.name,
-      muscleGroups: [...exercise.attributes.muscleGroups],
-      type: exercise.attributes.type,
-      position: this.exercises().length + 1,
-      sets: [{ id: this.uid("s"), position: 1, reps: 10, weight: null }],
-    };
-    this.exercises.update((list) => [...list, newExercise]);
+    this.exercises.update((list) =>
+      this.sessionDraft.fromLibrary(list, exercise),
+    );
     this.pickerOpen.set(false);
     this.floatingToastService.showToast({
       status: 200,
@@ -229,82 +211,43 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   removeExercise(exerciseId: string): void {
-    this.exercises.update((list) => list.filter((e) => e.id !== exerciseId));
+    this.exercises.update((list) =>
+      this.sessionDraft.removeExercise(list, exerciseId),
+    );
     this.queuePersist();
   }
 
   toggleMode(exerciseId: string): void {
     this.exercises.update((list) =>
-      list.map((exercise) =>
-        exercise.id !== exerciseId
-          ? exercise
-          : {
-              ...exercise,
-              type:
-                exercise.type === EXERCISE_TYPES.UNILATERAL
-                  ? EXERCISE_TYPES.BILATERAL
-                  : EXERCISE_TYPES.UNILATERAL,
-            },
-      ),
+      this.sessionDraft.toggleMode(list, exerciseId),
     );
     this.queuePersist();
   }
 
   addSet(exerciseId: string): void {
-    this.exercises.update((list) =>
-      list.map((exercise) => {
-        if (exercise.id !== exerciseId) return exercise;
-        const last = exercise.sets[exercise.sets.length - 1];
-        const newSet: ExerciseSetView = {
-          id: this.uid("s"),
-          position: exercise.sets.length + 1,
-          reps: last ? last.reps : 10,
-          weight: last ? last.weight : null,
-        };
-        return { ...exercise, sets: [...exercise.sets, newSet] };
-      }),
-    );
+    this.exercises.update((list) => this.sessionDraft.addSet(list, exerciseId));
     this.queuePersist();
   }
 
   removeSet(exerciseId: string, setId: string): void {
     this.exercises.update((list) =>
-      list.map((exercise) =>
-        exercise.id !== exerciseId
-          ? exercise
-          : { ...exercise, sets: exercise.sets.filter((s) => s.id !== setId) },
-      ),
+      this.sessionDraft.removeSet(list, exerciseId, setId),
     );
     this.queuePersist();
   }
 
   setReps(exerciseId: string, setId: string, value: number): void {
-    this.mutateSet(exerciseId, setId, (set) => ({ ...set, reps: value }));
+    this.exercises.update((list) =>
+      this.sessionDraft.setReps(list, exerciseId, setId, value),
+    );
     this.queuePersist();
   }
 
   setWeight(exerciseId: string, setId: string, value: number): void {
-    this.mutateSet(exerciseId, setId, (set) => ({ ...set, weight: value }));
-    this.queuePersist();
-  }
-
-  private mutateSet(
-    exerciseId: string,
-    setId: string,
-    change: (set: ExerciseSetView) => ExerciseSetView,
-  ): void {
     this.exercises.update((list) =>
-      list.map((exercise) =>
-        exercise.id !== exerciseId
-          ? exercise
-          : {
-              ...exercise,
-              sets: exercise.sets.map((set) =>
-                set.id !== setId ? set : change(set),
-              ),
-            },
-      ),
+      this.sessionDraft.setWeight(list, exerciseId, setId, value),
     );
+    this.queuePersist();
   }
 
   private queuePersist(): void {
@@ -313,22 +256,11 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   private persist(): void {
     this.saving.set(true);
-    const payload: CreateSessionRequest = {
-      name: this.name(),
-      estimatedDurationMinutes: this.estimatedDurationMinutes(),
-      exercises: this.exercises().map((exercise, exerciseIndex) => ({
-        exerciseId: exercise.exerciseId,
-        exerciseName: exercise.exerciseName,
-        muscleGroups: exercise.muscleGroups,
-        type: exercise.type,
-        position: exerciseIndex + 1,
-        sets: exercise.sets.map((set, setIndex) => ({
-          position: setIndex + 1,
-          reps: set.reps,
-          weight: set.weight,
-        })),
-      })),
-    };
+    const payload = this.sessionDraft.toRequest(
+      this.name(),
+      this.estimatedDurationMinutes(),
+      this.exercises(),
+    );
 
     this.updateSessionService.updateSession(this.id, payload).subscribe({
       next: () => this.saving.set(false),

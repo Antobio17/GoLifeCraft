@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { MUSCLE_GROUPS_BY_REGION } from "@gym/library/exercise/domain/constants/muscle-groups.constants";
+import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
@@ -29,7 +29,6 @@ interface ProgressionDelta {
   positive: boolean;
 }
 
-const REGION_ORDER = ["Tren superior", "Core", "Tren inferior"];
 const REGION_COLORS = [
   "var(--ds-primary)",
   "var(--ds-accent)",
@@ -61,7 +60,7 @@ export class GymAnalyticsComponent {
 
   @Output() seeAll = new EventEmitter<void>();
 
-  private readonly regionByMuscle = this.buildRegionLookup();
+  private muscleCatalog = inject(MuscleCatalogService);
   private readonly formatter = new Intl.NumberFormat("es", {
     maximumFractionDigits: 0,
   });
@@ -108,18 +107,18 @@ export class GymAnalyticsComponent {
 
   get regionShares(): RegionShare[] {
     const distribution = this.stats?.muscleDistribution ?? [];
-    const totals = new Map<string, number>(REGION_ORDER.map((r) => [r, 0]));
+    const order = this.muscleCatalog.regionNames();
+    const totals = new Map<string, number>(order.map((region) => [region, 0]));
 
     for (const item of distribution) {
-      const region = this.regionByMuscle.get(item.muscleGroup);
-      if (region) {
-        totals.set(region, (totals.get(region) ?? 0) + item.sets);
-      }
+      const region = this.muscleCatalog.regionOf(item.muscleGroup);
+      if (!region) continue;
+      totals.set(region, (totals.get(region) ?? 0) + item.sets);
     }
 
     const total = [...totals.values()].reduce((acc, value) => acc + value, 0);
 
-    return REGION_ORDER.map((region, index) => ({
+    return order.map((region, index) => ({
       region,
       percent:
         total === 0 ? 0 : Math.round(((totals.get(region) ?? 0) / total) * 100),
@@ -129,15 +128,5 @@ export class GymAnalyticsComponent {
 
   regionColor(index: number): string {
     return REGION_COLORS[index] ?? REGION_COLORS[0];
-  }
-
-  private buildRegionLookup(): Map<string, string> {
-    const lookup = new Map<string, string>();
-    for (const group of MUSCLE_GROUPS_BY_REGION) {
-      for (const muscle of group.items) {
-        lookup.set(muscle, group.region);
-      }
-    }
-    return lookup;
   }
 }
