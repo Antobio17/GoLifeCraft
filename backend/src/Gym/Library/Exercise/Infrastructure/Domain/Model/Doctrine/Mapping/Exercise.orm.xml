@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Gym\Library\Exercise\Domain\Model\Exercise" table="exercise">
+  <entity repository-class="Gym\Library\Exercise\Infrastructure\Domain\Model\Doctrine\DoctrineExerciseRepository" name="Gym\Library\Exercise\Domain\Model\Exercise" table="exercise">
     <id name="id" type="string" column="id" primary="true" length="36"/>
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255"/>

@@ -1,0 +1,112 @@
+{
+  "getSessions": {
+    "heading": "Gym",
+    "library": "Library",
+    "yourSessions": "Your sessions",
+    "stats": {
+      "sessions": "Sessions",
+      "exercises": "Exercises"
+    },
+    "new": "New session",
+    "title": "Sessions",
+    "subtitle": "Your training sessions",
+    "card": {
+      "exercises": "exercises"
+    },
+    "table": {
+      "emptyTitle": "No sessions",
+      "emptyMessage": "You haven't created any training sessions yet"
+    },
+    "actions": {
+      "delete": "Delete"
+    },
+    "deleteModal": {
+      "title": "Delete session?",
+      "body": "Its exercises and sets will be removed.",
+      "warning": "This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Yes, delete",
+      "deleting": "Deleting…"
+    }
+  },
+  "createSession": {
+    "title": "New session",
+    "description": "Give it a name and an estimated duration",
+    "back": "Back",
+    "field": {
+      "name": "Name",
+      "namePlaceholder": "E.g. Push A",
+      "duration": "Estimated duration"
+    },
+    "save": "Create session",
+    "saving": "Saving…"
+  },
+  "updateSession": {
+    "title": "Edit session",
+    "description": "Change the name or duration",
+    "save": "Save changes"
+  },
+  "getSession": {
+    "back": "Sessions",
+    "eyebrow": "Gym",
+    "exercises": "exercises",
+    "saving": "Saving…",
+    "actions": "Actions",
+    "edit": "Edit session",
+    "delete": "Delete session",
+    "start": "Start workout",
+    "empty": {
+      "title": "No exercises yet",
+      "text": "Add the first exercise from your library"
+    },
+    "mode": {
+      "bilateral": "Bilateral",
+      "unilateral": "Unilateral"
+    },
+    "exercise": {
+      "add": "Add exercise",
+      "remove": "Remove exercise"
+    },
+    "set": {
+      "number": "Set",
+      "reps": "Reps",
+      "repsDown": "Decrease reps by one",
+      "repsUp": "Increase reps by one",
+      "weight": "Kg",
+      "weightDown": "Decrease 2.5 kg",
+      "weightUp": "Increase 2.5 kg",
+      "add": "Add set",
+      "remove": "Remove set"
+    },
+    "picker": {
+      "title": "Add exercise",
+      "close": "Close",
+      "search": "Search the library…",
+      "clear": "Clear search",
+      "empty": "No exercises found"
+    }
+  },
+  "session": {
+    "breadcrumb": {
+      "list": "Sessions",
+      "create": "New session",
+      "edit": "Edit session",
+      "detail": "Session"
+    },
+    "create": {
+      "success": "Session created"
+    },
+    "update": {
+      "success": "Session updated"
+    },
+    "delete": {
+      "success": "Session deleted"
+    },
+    "exercise": {
+      "added": "Exercise added"
+    },
+    "start": {
+      "toast": "Let's train!"
+    }
+  }
+}

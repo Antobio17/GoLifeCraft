@@ -1,0 +1,11 @@
+services:
+  Gym\Analytics\Stats\Application\Query\GetGymStatsQueryHandler:
+    class: Gym\Analytics\Stats\Application\Query\GetGymStatsQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Analytics\Stats\Domain\QueryModel\GetGymStatsNeedleDataQuery'
+      $dataTransform: '@Gym\Analytics\Stats\Application\Query\GetGymStatsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Analytics\Stats\Application\Query\GetGymStatsDataTransform:
+    class: Gym\Analytics\Stats\Infrastructure\UI\API\DataTransform\ApiGetGymStatsDataTransform

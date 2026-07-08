@@ -26,7 +26,9 @@ export abstract class AbstractListPageComponent<T> implements OnInit {
 
   protected abstract configureList(): void;
 
-  protected applyFilters(_values: Record<string, string | boolean>): void {}
+  protected applyFilters(values: Record<string, string | boolean>): void {
+    void values;
+  }
 
   protected clearFilters(): void {}
 

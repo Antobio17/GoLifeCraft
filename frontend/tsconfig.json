@@ -5,6 +5,7 @@
     "paths": {
       "@app/*": ["app/*"],
       "@authorization/*": ["app/authorization/*"],
+      "@gym/*": ["app/gym/*"],
       "@layouts/*": ["app/layouts/*"],
       "@nutrition/*": ["app/nutrition/*"],
       "@shared/*": ["app/shared/*"],

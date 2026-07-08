@@ -55,6 +55,14 @@ export const APP_ROUTES: Routes = [
           ).then((m) => m.CATEGORY_ROUTES),
       },
       {
+        path: "gym",
+        data: { breadcrumb: "session.breadcrumb.list" },
+        loadChildren: () =>
+          import("./gym/infrastructure/routes/gym.routes").then(
+            (m) => m.GYM_ROUTES,
+          ),
+      },
+      {
         path: "me",
         data: { breadcrumb: "profile.breadcrumb" },
         loadComponent: () =>

@@ -19,72 +19,62 @@
   pointer-events: auto;
   width: 100%;
   max-width: var(--ds-app-frame-width, 480px);
-  height: calc(58px + env(safe-area-inset-bottom));
-  padding-bottom: env(safe-area-inset-bottom);
   background: var(--ds-surface-nav);
   border-top: 1px solid var(--ds-border-hairline);
   display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 9px 8px calc(16px + env(safe-area-inset-bottom));
 }
 
 .tabbar__item {
+  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
+  gap: 4px;
   border: none;
   background: none;
   padding: 0;
   cursor: pointer;
   color: var(--ds-text-meta);
+  text-decoration: none;
   transition: color var(--ds-transition-base);
 }
 
-.tabbar__item svg {
-  width: 23px;
-  height: 23px;
+.tabbar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.tabbar__item:hover {
-  color: var(--ds-text-muted);
+.tabbar__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.tabbar__label {
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ds-text-meta);
+  transition:
+    color var(--ds-transition-base),
+    font-weight var(--ds-transition-base);
 }
 
 .tabbar__item--active {
   color: var(--ds-primary);
 }
 
-.tabbar__fab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  margin-top: -14px;
-  border: none;
-  border-radius: 50%;
-  background: var(--ds-accent);
-  color: var(--ds-on-accent);
-  cursor: pointer;
-  box-shadow: 0 8px 18px -6px
-    color-mix(in srgb, var(--ds-accent) 85%, transparent);
-  transition:
-    transform var(--ds-transition-base),
-    filter var(--ds-transition-base);
+.tabbar__item--active .tabbar__label {
+  color: var(--ds-primary);
+  font-weight: 800;
 }
 
-.tabbar__fab svg {
-  width: 22px;
-  height: 22px;
+.tabbar--drawer-open .tabbar__item--active:not(button) {
+  color: var(--ds-text-meta);
 }
 
-.tabbar__fab:hover {
-  filter: brightness(1.05);
-}
-
-.tabbar__fab:active {
-  transform: scale(0.94);
+.tabbar--drawer-open .tabbar__item--active:not(button) .tabbar__label {
+  color: var(--ds-text-meta);
+  font-weight: 600;
 }

@@ -1,0 +1,253 @@
+.gym-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---- Header CTA (Biblioteca) ---- */
+.gym-head__cta {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
+  border-radius: var(--ds-radius-xl);
+  padding: 8px 12px;
+  font: inherit;
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-bold);
+  transition: background 0.15s ease;
+}
+
+.gym-head__cta svg {
+  color: var(--ds-accent);
+}
+
+:host-context([data-theme="dark"]) .gym-head__cta svg {
+  color: var(--ds-on-primary);
+}
+
+.gym-head__cta:hover {
+  background: var(--ds-primary-hover);
+}
+
+/* ---- Responsive grid ---- */
+.gym-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 8px;
+}
+
+/* ---- Exercise row ---- */
+.gym-ex-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-2xl);
+  padding: 11px 12px;
+}
+
+.gym-ex-row__icon {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-primary-soft);
+  color: var(--ds-primary-soft-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gym-ex-row__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.gym-ex-row__name {
+  margin: 0;
+  font-size: var(--ds-text-label);
+  font-weight: var(--ds-weight-bold);
+  color: var(--ds-text);
+  line-height: 1.2;
+}
+
+.gym-ex-row__meta {
+  margin: 2px 0 0;
+  font-size: 10.5px;
+  color: var(--ds-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gym-ex-row__action {
+  flex: 0 0 auto;
+  appearance: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ds-text-meta);
+  padding: 4px;
+  border-radius: var(--ds-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.gym-ex-row__action:hover {
+  color: var(--ds-text);
+}
+
+.gym-ex-row__action.is-danger {
+  color: var(--ds-danger);
+}
+
+.gym-ex-row__action.is-danger:hover {
+  color: var(--ds-danger-hover);
+}
+
+.gym-icon-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--ds-text-muted);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--ds-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.gym-icon-btn:hover {
+  background: var(--ds-surface-subtle);
+  color: var(--ds-text);
+}
+
+.gym-icon-btn.is-danger:hover {
+  background: var(--ds-danger-soft);
+  color: var(--ds-danger);
+}
+
+.gym-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--ds-surface);
+  border: 1px dashed var(--ds-border-strong);
+  border-radius: var(--ds-radius-3xl);
+}
+
+.gym-empty__icon {
+  color: var(--ds-text-meta);
+  margin-bottom: 4px;
+}
+
+.gym-empty__title {
+  margin: 0;
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-lg);
+  font-weight: var(--ds-weight-bold);
+  color: var(--ds-text);
+}
+
+.gym-empty__text {
+  margin: 0;
+  font-size: var(--ds-text-sm);
+  color: var(--ds-text-muted);
+  max-width: 34ch;
+}
+
+.gym-skeleton-card {
+  height: 84px;
+  border-radius: var(--ds-radius-3xl);
+  background: linear-gradient(
+    90deg,
+    var(--ds-skeleton-base) 25%,
+    var(--ds-skeleton-highlight) 37%,
+    var(--ds-skeleton-base) 63%
+  );
+  background-size: 400% 100%;
+  animation: gym-shimmer 1.4s ease infinite;
+}
+
+@keyframes gym-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gym-skeleton-card {
+    animation: none;
+  }
+}
+
+/* ---- Grouped-by-muscle view ---- */
+.gym-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.gym-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gym-group__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.gym-group__label {
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-extrabold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ds-text);
+}
+
+.gym-group__count {
+  font-size: 10px;
+  font-weight: var(--ds-weight-extrabold);
+  color: var(--ds-primary-soft-text);
+  background: var(--ds-primary-soft);
+  border-radius: var(--ds-radius-pill);
+  padding: 2px 8px;
+}
+
+.gym-group__rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--ds-border-strong);
+}
+
+/* ---- No results ---- */
+.gym-noresults {
+  margin: 0;
+  text-align: center;
+  color: var(--ds-text-muted);
+  font-size: var(--ds-text-sm);
+  padding: 28px 8px;
+}

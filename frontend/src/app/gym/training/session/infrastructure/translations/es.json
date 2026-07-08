@@ -1,0 +1,112 @@
+{
+  "getSessions": {
+    "heading": "Gimnasio",
+    "library": "Biblioteca",
+    "yourSessions": "Tus sesiones",
+    "stats": {
+      "sessions": "Sesiones",
+      "exercises": "Ejercicios"
+    },
+    "new": "Nueva sesión",
+    "title": "Sesiones",
+    "subtitle": "Tus sesiones de entrenamiento",
+    "card": {
+      "exercises": "ejercicios"
+    },
+    "table": {
+      "emptyTitle": "No hay sesiones",
+      "emptyMessage": "Aún no has creado sesiones de entrenamiento"
+    },
+    "actions": {
+      "delete": "Borrar"
+    },
+    "deleteModal": {
+      "title": "¿Borrar sesión?",
+      "body": "Se eliminarán los ejercicios y sus series.",
+      "warning": "Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Sí, borrar",
+      "deleting": "Borrando…"
+    }
+  },
+  "createSession": {
+    "title": "Nueva sesión",
+    "description": "Ponle nombre y una duración estimada",
+    "back": "Volver",
+    "field": {
+      "name": "Nombre",
+      "namePlaceholder": "Ej. Empuje A",
+      "duration": "Duración estimada"
+    },
+    "save": "Crear sesión",
+    "saving": "Guardando…"
+  },
+  "updateSession": {
+    "title": "Editar sesión",
+    "description": "Modifica el nombre o la duración",
+    "save": "Guardar cambios"
+  },
+  "getSession": {
+    "back": "Sesiones",
+    "eyebrow": "Gimnasio",
+    "exercises": "ejercicios",
+    "saving": "Guardando…",
+    "actions": "Acciones",
+    "edit": "Editar sesión",
+    "delete": "Borrar sesión",
+    "start": "Empezar entrenamiento",
+    "empty": {
+      "title": "Aún no hay ejercicios",
+      "text": "Añade el primer ejercicio desde tu biblioteca"
+    },
+    "mode": {
+      "bilateral": "Bilateral",
+      "unilateral": "Unilateral"
+    },
+    "exercise": {
+      "add": "Añadir ejercicio",
+      "remove": "Quitar ejercicio"
+    },
+    "set": {
+      "number": "Serie",
+      "reps": "Reps",
+      "repsDown": "Restar una repetición",
+      "repsUp": "Sumar una repetición",
+      "weight": "Kg",
+      "weightDown": "Restar 2,5 kg",
+      "weightUp": "Sumar 2,5 kg",
+      "add": "Añadir serie",
+      "remove": "Quitar serie"
+    },
+    "picker": {
+      "title": "Añadir ejercicio",
+      "close": "Cerrar",
+      "search": "Buscar en la biblioteca…",
+      "clear": "Limpiar búsqueda",
+      "empty": "No se han encontrado ejercicios"
+    }
+  },
+  "session": {
+    "breadcrumb": {
+      "list": "Sesiones",
+      "create": "Nueva sesión",
+      "edit": "Editar sesión",
+      "detail": "Sesión"
+    },
+    "create": {
+      "success": "Sesión creada"
+    },
+    "update": {
+      "success": "Sesión actualizada"
+    },
+    "delete": {
+      "success": "Sesión borrada"
+    },
+    "exercise": {
+      "added": "Ejercicio añadido"
+    },
+    "start": {
+      "toast": "¡A entrenar!"
+    }
+  }
+}

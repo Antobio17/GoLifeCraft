@@ -139,7 +139,12 @@
         <span class="drawer__item-label">{{ "navbar.list" | t }}</span>
       </button>
 
-      <button type="button" class="drawer__item" (click)="comingSoon()">
+      <a
+        class="drawer__item"
+        routerLink="/gym"
+        routerLinkActive="is-active"
+        (click)="close()"
+      >
         <svg
           class="drawer__item-icon"
           width="19"
@@ -153,7 +158,7 @@
           <path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" />
         </svg>
         <span class="drawer__item-label">{{ "navbar.gym" | t }}</span>
-      </button>
+      </a>
 
       @if (isGod()) {
         <a

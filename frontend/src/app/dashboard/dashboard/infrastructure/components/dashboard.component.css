@@ -78,7 +78,11 @@
 /* ─── Resumen de hoy (hero de marca) ─── */
 
 .summary {
-  --hero-chip-bg: color-mix(in srgb, var(--ds-on-surface-brand) 9%, transparent);
+  --hero-chip-bg: color-mix(
+    in srgb,
+    var(--ds-on-surface-brand) 9%,
+    transparent
+  );
   background: var(--ds-surface-brand);
   color: var(--ds-on-surface-brand);
   border: 1px solid transparent;
@@ -127,7 +131,11 @@
   --ds-ring-size: 66px;
   --ds-ring-fill: var(--ds-accent);
   --ds-ring-center: var(--ds-surface-brand);
-  --ds-ring-track: color-mix(in srgb, var(--ds-on-surface-brand) 16%, transparent);
+  --ds-ring-track: color-mix(
+    in srgb,
+    var(--ds-on-surface-brand) 16%,
+    transparent
+  );
 }
 
 .summary__ring-value {
@@ -192,30 +200,6 @@
 
 .macro__value--fat {
   color: var(--ds-coral-500);
-}
-
-/* ─── Search ─── */
-
-.search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  background: var(--ds-surface-raised);
-  border: 1px solid var(--ds-border);
-  border-radius: 14px;
-  padding: 11px 14px;
-  cursor: pointer;
-  color: var(--ds-text-meta);
-  font-family: var(--ds-font-body);
-  font-size: 13.5px;
-  text-align: left;
-}
-
-.search svg {
-  width: 17px;
-  height: 17px;
-  flex: none;
 }
 
 /* ─── Explora ─── */
@@ -285,7 +269,7 @@
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     grid-template-areas:
       "summary explore"
-      "search explore";
+      "gym explore";
     align-items: start;
     column-gap: 24px;
     row-gap: 16px;
@@ -295,8 +279,8 @@
     grid-area: summary;
   }
 
-  .search {
-    grid-area: search;
+  .dash__gym {
+    grid-area: gym;
   }
 
   .explore {

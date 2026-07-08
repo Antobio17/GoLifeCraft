@@ -1,10 +1,14 @@
-import { Component, computed, inject } from "@angular/core";
+import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { DatePipe, DecimalPipe } from "@angular/common";
+import { Router } from "@angular/router";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
 import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
+import { GetGymStatsService } from "@gym/analytics/stats/application/services/get-gym-stats.service";
+import { GymStats } from "@gym/analytics/stats/domain/models/gym-stats.model";
+import { GymAnalyticsComponent } from "@gym/analytics/stats/infrastructure/components/gym-analytics.component";
 
 interface DailySummary {
   consumedKcal: number;
@@ -25,13 +29,19 @@ interface DailySummary {
     ContextualTranslatePipe,
     ProgressRingComponent,
     ActionTileComponent,
+    GymAnalyticsComponent,
   ],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   private authSessionService = inject(AuthSessionService);
   private floatingToastService = inject(FloatingToastService);
+  private getGymStatsService = inject(GetGymStatsService);
+  private router = inject(Router);
 
   readonly today = new Date();
+
+  readonly gymStats = signal<GymStats | null>(null);
+  readonly gymStatsLoading = signal(true);
 
   readonly name = computed(
     () => this.authSessionService.session()?.email ?? "",
@@ -55,6 +65,20 @@ export class DashboardComponent {
       100,
       Math.round((this.summary.consumedKcal / this.summary.targetKcal) * 100),
     );
+  }
+
+  ngOnInit(): void {
+    this.getGymStatsService.getGymStats().subscribe({
+      next: (stats) => {
+        this.gymStats.set(stats);
+        this.gymStatsLoading.set(false);
+      },
+      error: () => this.gymStatsLoading.set(false),
+    });
+  }
+
+  goToGym(): void {
+    this.router.navigate(["/gym"]);
   }
 
   comingSoon(): void {
