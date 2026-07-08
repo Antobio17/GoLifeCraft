@@ -1,0 +1,65 @@
+.gym-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.gym-input {
+  width: 100%;
+  background: var(--ds-surface);
+  border: 1.5px solid var(--ds-primary);
+  border-radius: var(--ds-radius-xl);
+  padding: 12px 13px;
+  font: inherit;
+  font-size: var(--ds-text-base);
+  font-weight: var(--ds-weight-bold);
+  color: var(--ds-text);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.gym-input::placeholder {
+  color: var(--ds-text-meta);
+  font-weight: var(--ds-weight-regular);
+}
+
+.gym-input:focus {
+  outline: none;
+  border-color: var(--ds-border-focus);
+  box-shadow: var(--ds-focus-ring);
+}
+
+.gym-input.is-invalid {
+  border-color: var(--ds-danger);
+}
+
+.gym-cta {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
+  border-radius: var(--ds-radius-2xl);
+  padding: 14px;
+  font: inherit;
+  font-size: var(--ds-text-base);
+  font-weight: var(--ds-weight-bold);
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.gym-cta:hover:not(:disabled) {
+  background: var(--ds-primary-hover);
+}
+
+.gym-cta:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

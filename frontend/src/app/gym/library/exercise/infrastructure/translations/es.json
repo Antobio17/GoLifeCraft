@@ -1,0 +1,81 @@
+{
+  "getExercises": {
+    "heading": "Biblioteca",
+    "create": "Crear",
+    "back": "Volver",
+    "title": "Ejercicios",
+    "subtitle": "Tu biblioteca de ejercicios",
+    "new": "Nuevo",
+    "searchPlaceholder": "Buscar ejercicio…",
+    "searchClear": "Limpiar búsqueda",
+    "view": {
+      "list": "Lista",
+      "grouped": "Por músculos"
+    },
+    "noResults": "Sin resultados para",
+    "stats": {
+      "exercises": "Ejercicios"
+    },
+    "type": {
+      "bilateral": "Bilateral",
+      "unilateral": "Unilateral"
+    },
+    "table": {
+      "emptyTitle": "No hay ejercicios",
+      "emptyMessage": "Aún no has añadido ejercicios a la biblioteca"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Borrar"
+    },
+    "deleteModal": {
+      "title": "¿Borrar ejercicio?",
+      "body": "Se eliminará este ejercicio de la biblioteca.",
+      "warning": "Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Sí, borrar",
+      "deleting": "Borrando…"
+    }
+  },
+  "createExercise": {
+    "title": "Nuevo ejercicio",
+    "description": "Crea un ejercicio en tu biblioteca",
+    "back": "Volver",
+    "field": {
+      "name": "Nombre",
+      "namePlaceholder": "Ej: Press inclinado",
+      "type": "Tipo de registro",
+      "muscleGroups": "Músculos"
+    },
+    "mode": {
+      "bilateralHint": "Un solo registro de peso y reps para ambos lados a la vez.",
+      "unilateralHint": "Se registra un solo peso y reps, pero el ejercicio se marca como unilateral (se ejecuta por lado)."
+    },
+    "save": "Crear ejercicio",
+    "saving": "Guardando…"
+  },
+  "updateExercise": {
+    "title": "Editar ejercicio",
+    "description": "Modifica los datos del ejercicio",
+    "save": "Guardar cambios"
+  },
+  "exercise": {
+    "breadcrumb": {
+      "list": "Ejercicios",
+      "create": "Nuevo ejercicio",
+      "edit": "Editar ejercicio"
+    },
+    "create": {
+      "success": "Ejercicio creado"
+    },
+    "update": {
+      "success": "Ejercicio actualizado"
+    },
+    "delete": {
+      "success": "Ejercicio borrado"
+    },
+    "validation": {
+      "muscleGroups": "Selecciona al menos un músculo"
+    }
+  }
+}

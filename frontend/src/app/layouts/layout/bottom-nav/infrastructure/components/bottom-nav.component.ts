@@ -15,6 +15,8 @@ export class BottomNavComponent {
   private floatingToastService = inject(FloatingToastService);
   private sideDrawerService = inject(SideDrawerService);
 
+  isDrawerOpen = this.sideDrawerService.isOpen;
+
   toggleDrawer(): void {
     this.sideDrawerService.toggle();
   }

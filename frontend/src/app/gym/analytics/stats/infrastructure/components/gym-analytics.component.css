@@ -1,0 +1,401 @@
+:host {
+  display: block;
+}
+
+.gym__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.gym__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ds-text);
+}
+
+.gym__more {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: var(--ds-font-body);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ds-primary);
+  cursor: pointer;
+}
+
+.gym__empty {
+  background: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border);
+  border-radius: 16px;
+  padding: 18px;
+  font-size: 12.5px;
+  color: var(--ds-text-muted);
+  text-align: center;
+}
+
+/* ─── Skeleton ─── */
+
+.gym__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gym__skeleton-row,
+.gym__skeleton-block {
+  border-radius: 16px;
+  background: linear-gradient(
+    90deg,
+    var(--ds-surface-raised) 25%,
+    var(--ds-border-hairline) 50%,
+    var(--ds-surface-raised) 75%
+  );
+  background-size: 400% 100%;
+  animation: gym-shimmer 1.4s ease infinite;
+}
+
+.gym__skeleton-row {
+  height: 62px;
+}
+
+.gym__skeleton-block {
+  height: 150px;
+}
+
+@keyframes gym-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* ─── Stat trio ─── */
+
+.gym__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stat {
+  background: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border);
+  border-radius: 14px;
+  padding: 11px 12px;
+}
+
+.stat__value {
+  display: block;
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 21px;
+  line-height: 1;
+  color: var(--ds-text);
+}
+
+[data-theme="dark"] .stat__value {
+  font-weight: 700;
+}
+
+.stat__unit {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ds-text-muted);
+}
+
+.stat__label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ds-text-muted);
+  margin-top: 3px;
+}
+
+/* ─── Cards ─── */
+
+.gym__chart {
+  margin-top: 10px;
+}
+
+.gym__cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.card {
+  background: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.card--brand {
+  background: var(--ds-surface-brand);
+  border-color: transparent;
+  color: var(--ds-on-surface-brand);
+  overflow: hidden;
+}
+
+.card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card__title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ds-text);
+}
+
+.card__title--brand {
+  color: var(--ds-on-surface-brand);
+}
+
+.card__subtitle {
+  font-size: 10.5px;
+  color: var(--ds-text-muted);
+  margin-top: 1px;
+}
+
+.card__subtitle--brand {
+  color: color-mix(in srgb, var(--ds-on-surface-brand) 60%, transparent);
+}
+
+.card__metric {
+  flex: none;
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ds-text);
+}
+
+.card__hint {
+  font-size: 11.5px;
+  color: var(--ds-text-muted);
+  margin-top: 16px;
+}
+
+.card__hint--brand {
+  color: color-mix(in srgb, var(--ds-on-surface-brand) 65%, transparent);
+}
+
+/* ─── Vertical bars (flat colors, from design) ─── */
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 118px;
+  margin-top: 16px;
+}
+
+.bars__col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  height: 100%;
+}
+
+.bars__value {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--ds-text-muted);
+}
+
+.bars__bar {
+  width: 100%;
+  max-width: 34px;
+  min-height: 6px;
+  border-radius: 6px 6px 3px 3px;
+  background: #bfd3af;
+}
+
+.bars__bar--top {
+  background: var(--ds-accent);
+}
+
+[data-theme="dark"] .bars__bar {
+  background: rgba(201, 255, 60, 0.34);
+}
+
+[data-theme="dark"] .bars__bar--top {
+  background: var(--ds-accent);
+}
+
+.bars__label {
+  max-width: 100%;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--ds-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Progression line ─── */
+
+.delta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: color-mix(in srgb, var(--ds-accent) 20%, transparent);
+  color: var(--ds-accent);
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.delta--down .delta__icon {
+  display: inline-block;
+  transform: scaleY(-1);
+}
+
+.delta__icon {
+  font-size: 12px;
+}
+
+.line {
+  display: block;
+  width: 100%;
+  height: 90px;
+  margin-top: 12px;
+  overflow: visible;
+}
+
+.line__area {
+  fill: var(--ds-accent);
+  opacity: 0.16;
+}
+
+.line__stroke {
+  fill: none;
+  stroke: var(--ds-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.line__dot {
+  fill: var(--ds-accent);
+  stroke: var(--ds-surface-brand);
+  stroke-width: 2;
+}
+
+/* ─── Muscle regions (flat colors, from design) ─── */
+
+.muscles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.muscle {
+  --region-color: #2f6b4a;
+}
+
+.muscle[data-region="1"] {
+  --region-color: #e0714a;
+}
+
+.muscle[data-region="2"] {
+  --region-color: #3e7cb1;
+}
+
+[data-theme="dark"] .muscle {
+  --region-color: #c9ff3c;
+}
+
+[data-theme="dark"] .muscle[data-region="1"] {
+  --region-color: #ff9f6b;
+}
+
+[data-theme="dark"] .muscle[data-region="2"] {
+  --region-color: #7fc4ff;
+}
+
+.muscle__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.muscle__dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--region-color);
+}
+
+.muscle__label {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ds-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.muscle__pct {
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 12.5px;
+  color: var(--ds-text);
+}
+
+.muscle__track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ds-border-hairline);
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.muscle__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--region-color);
+}
+
+@media (min-width: 768px) {
+  .gym__stats {
+    gap: 12px;
+  }
+
+  .stat {
+    padding: 14px 16px;
+  }
+
+  .stat__value {
+    font-size: 24px;
+  }
+
+  .gym__cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .bars {
+    height: 140px;
+  }
+}

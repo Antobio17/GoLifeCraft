@@ -1,0 +1,5 @@
+services:
+  Gym\Analytics\Stats\Domain\QueryModel\GetGymStatsNeedleDataQuery:
+    class: Gym\Analytics\Stats\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetGymStatsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

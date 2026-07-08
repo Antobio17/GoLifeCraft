@@ -1,0 +1,135 @@
+<section class="gym">
+  <div class="gym__head">
+    <h2 class="gym__title">{{ "dashboard.gym.title" | t }}</h2>
+    <button type="button" class="gym__more" (click)="seeAll.emit()">
+      {{ "dashboard.gym.seeAll" | t }} ›
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="gym__skeleton">
+      <div class="gym__skeleton-row"></div>
+      <div class="gym__skeleton-block"></div>
+    </div>
+  } @else if (!hasData) {
+    <p class="gym__empty">{{ "dashboard.gym.empty" | t }}</p>
+  } @else {
+    <div class="gym__stats">
+      <div class="stat">
+        <span class="stat__value">{{ stats!.totalSessions }}</span>
+        <span class="stat__label">{{ "dashboard.gym.sessions" | t }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">
+          {{ stats!.totalVolumeKg | number: "1.0-0" : "es" }}
+          <span class="stat__unit">kg</span>
+        </span>
+        <span class="stat__label">{{ "dashboard.gym.volume" | t }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">{{ stats!.totalExercises }}</span>
+        <span class="stat__label">{{ "dashboard.gym.exercises" | t }}</span>
+      </div>
+    </div>
+
+    <article class="card gym__chart">
+      <div class="card__head">
+        <div>
+          <p class="card__title">{{ "dashboard.gym.volumeChart.title" | t }}</p>
+          <p class="card__subtitle">
+            {{ "dashboard.gym.volumeChart.subtitle" | t }}
+          </p>
+        </div>
+        <span class="card__metric">
+          {{ stats!.totalVolumeKg | number: "1.0-0" : "es" }} kg
+        </span>
+      </div>
+
+      <div class="bars">
+        @for (session of sessionVolumes; track session.id) {
+          <div class="bars__col">
+            <span class="bars__value">
+              {{ session.volumeKg | number: "1.0-0" : "es" }}
+            </span>
+            <div
+              class="bars__bar"
+              [class.bars__bar--top]="isTopSession(session.volumeKg)"
+              [style.height]="barHeight(session.volumeKg)"
+            ></div>
+            <span class="bars__label" [title]="session.name">
+              {{ session.name }}
+            </span>
+          </div>
+        }
+      </div>
+    </article>
+
+    <div class="gym__cards">
+      <article class="card card--brand">
+        <div class="card__head">
+          <div>
+            <p class="card__title card__title--brand">
+              {{ "dashboard.gym.progression.title" | t }}
+            </p>
+            <p class="card__subtitle card__subtitle--brand">
+              {{ "dashboard.gym.progression.subtitle" | t }}
+            </p>
+          </div>
+          @if (progression) {
+            <span class="delta" [class.delta--down]="!progression.positive">
+              <span class="delta__icon">↗</span>{{ progression.deltaLabel }}
+            </span>
+          }
+        </div>
+
+        @if (progression) {
+          <svg
+            class="line"
+            viewBox="0 0 300 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path [attr.d]="progression.areaPath" class="line__area" />
+            <polyline
+              [attr.points]="progression.linePoints"
+              class="line__stroke"
+            />
+            <circle
+              [attr.cx]="progression.lastX"
+              [attr.cy]="progression.lastY"
+              r="4"
+              class="line__dot"
+            />
+          </svg>
+        } @else {
+          <p class="card__hint card__hint--brand">
+            {{ "dashboard.gym.progression.empty" | t }}
+          </p>
+        }
+      </article>
+
+      <article class="card">
+        <p class="card__title">{{ "dashboard.gym.muscles.title" | t }}</p>
+        <p class="card__subtitle">{{ "dashboard.gym.muscles.subtitle" | t }}</p>
+
+        <div class="muscles">
+          @for (region of regionShares; track region.region) {
+            <div class="muscle" [attr.data-region]="region.index">
+              <div class="muscle__row">
+                <span class="muscle__dot"></span>
+                <span class="muscle__label">{{ region.region }}</span>
+                <span class="muscle__pct">{{ region.percent }}%</span>
+              </div>
+              <div class="muscle__track">
+                <div
+                  class="muscle__fill"
+                  [style.width.%]="region.percent"
+                ></div>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+    </div>
+  }
+</section>

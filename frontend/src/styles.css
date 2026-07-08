@@ -187,3 +187,20 @@ input:-webkit-autofill::first-line {
   font-family: var(--ds-font-body);
   font-size: var(--ds-text-base);
 }
+
+/* Gym — reusable form field block for custom controls (type-toggle, muscle-chips, set-editor) */
+.ds-field-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2, 8px);
+}
+
+.ds-field-block__label {
+  font-size: var(--ds-text-label, 0.8125rem);
+  font-weight: 600;
+  color: var(--ds-text-label, #55524a);
+}
+
+.ds-field-block__required {
+  color: var(--ds-danger, #c0492f);
+}

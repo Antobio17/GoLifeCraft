@@ -14,6 +14,27 @@
       "fat": "Fat",
       "carbs": "Carbs"
     },
+    "gym": {
+      "title": "Your gym",
+      "seeAll": "See all",
+      "empty": "No workouts yet. Create your first session to see your stats.",
+      "sessions": "Sessions",
+      "volume": "Volume",
+      "exercises": "Exercises",
+      "volumeChart": {
+        "title": "Volume per session",
+        "subtitle": "planned kg per session"
+      },
+      "progression": {
+        "title": "Progression",
+        "subtitle": "cumulative volume",
+        "empty": "Create more sessions to see your progression."
+      },
+      "muscles": {
+        "title": "Muscle groups",
+        "subtitle": "sets split by area"
+      }
+    },
     "explore": {
       "title": "Explore",
       "catalog": "Catalog",
@@ -21,6 +42,7 @@
       "recipes": "Recipes",
       "list": "Shopping list",
       "gym": "Gym",
+      "gymMeta": "Sessions & exercises",
       "soon": "Coming soon"
     }
   }

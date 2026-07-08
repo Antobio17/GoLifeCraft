@@ -1,0 +1,81 @@
+{
+  "getExercises": {
+    "heading": "Library",
+    "create": "Create",
+    "back": "Back",
+    "title": "Exercises",
+    "subtitle": "Your exercise library",
+    "new": "New",
+    "searchPlaceholder": "Search exercise…",
+    "searchClear": "Clear search",
+    "view": {
+      "list": "List",
+      "grouped": "By muscle"
+    },
+    "noResults": "No results for",
+    "stats": {
+      "exercises": "Exercises"
+    },
+    "type": {
+      "bilateral": "Bilateral",
+      "unilateral": "Unilateral"
+    },
+    "table": {
+      "emptyTitle": "No exercises",
+      "emptyMessage": "You haven't added any exercises to the library yet"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "deleteModal": {
+      "title": "Delete exercise?",
+      "body": "This exercise will be removed from the library.",
+      "warning": "This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Yes, delete",
+      "deleting": "Deleting…"
+    }
+  },
+  "createExercise": {
+    "title": "New exercise",
+    "description": "Create an exercise in your library",
+    "back": "Back",
+    "field": {
+      "name": "Name",
+      "namePlaceholder": "E.g. Incline press",
+      "type": "Record type",
+      "muscleGroups": "Muscles"
+    },
+    "mode": {
+      "bilateralHint": "A single weight and reps record for both sides at once.",
+      "unilateralHint": "A single weight and reps are recorded, but the exercise is marked as unilateral (performed per side)."
+    },
+    "save": "Create exercise",
+    "saving": "Saving…"
+  },
+  "updateExercise": {
+    "title": "Edit exercise",
+    "description": "Modify the exercise data",
+    "save": "Save changes"
+  },
+  "exercise": {
+    "breadcrumb": {
+      "list": "Exercises",
+      "create": "New exercise",
+      "edit": "Edit exercise"
+    },
+    "create": {
+      "success": "Exercise created"
+    },
+    "update": {
+      "success": "Exercise updated"
+    },
+    "delete": {
+      "success": "Exercise deleted"
+    },
+    "validation": {
+      "muscleGroups": "Select at least one muscle"
+    }
+  }
+}

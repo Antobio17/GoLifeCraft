@@ -1,0 +1,258 @@
+.gym-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---- Header link (Biblioteca) ---- */
+.gym-head__link {
+  appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border-strong);
+  border-radius: var(--ds-radius-xl);
+  padding: 8px 11px;
+  font: inherit;
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-bold);
+  color: var(--ds-text);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.gym-head__link svg {
+  color: var(--ds-primary);
+}
+
+.gym-head__link:hover {
+  background: var(--ds-surface-hover);
+  border-color: var(--ds-primary-soft-border);
+}
+
+/* ---- Section label ---- */
+.gym-section-label {
+  display: block;
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ds-text-meta);
+}
+
+/* ---- Responsive card grid ---- */
+.gym-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 9px;
+}
+
+/* ---- Session card ---- */
+.gym-session-card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  text-align: left;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-3xl);
+  padding: 13px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.gym-session-card:hover,
+.gym-session-card:focus-visible {
+  outline: none;
+  border-color: var(--ds-primary-soft-border);
+  box-shadow: var(--ds-shadow-card);
+}
+
+.gym-session-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gym-session-card__text {
+  min-width: 0;
+}
+
+.gym-session-card__name {
+  margin: 0;
+  font-family: var(--ds-font-display);
+  font-weight: var(--ds-weight-extrabold);
+  font-size: var(--ds-text-lg);
+  color: var(--ds-text);
+  line-height: 1.2;
+}
+
+.gym-session-card__meta {
+  margin: 1px 0 0;
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-semibold);
+  color: var(--ds-text-muted);
+}
+
+.gym-session-card__delete {
+  flex: 0 0 auto;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-surface-inset);
+  color: var(--ds-danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.gym-session-card__delete:hover {
+  background: var(--ds-danger-soft);
+}
+
+.gym-session-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.gym-tag {
+  font-size: 10px;
+  font-weight: var(--ds-weight-bold);
+  color: var(--ds-primary-soft-text);
+  background: var(--ds-primary-soft);
+  border-radius: var(--ds-radius-sm);
+  padding: 3px 8px;
+}
+
+/* ---- Floating action button ---- */
+.gym-fab {
+  position: sticky;
+  bottom: 14px;
+  align-self: flex-end;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: var(--ds-radius-3xl);
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
+  font: inherit;
+  font-size: var(--ds-text-label);
+  font-weight: var(--ds-weight-bold);
+  box-shadow: var(--ds-shadow-float);
+  transition: background 0.15s ease;
+}
+
+.gym-fab svg {
+  color: var(--ds-accent);
+}
+
+:host-context([data-theme="dark"]) .gym-fab svg {
+  color: var(--ds-on-primary);
+}
+
+.gym-fab:hover {
+  background: var(--ds-primary-hover);
+}
+
+.gym-icon-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--ds-text-muted);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--ds-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.gym-icon-btn:hover {
+  background: var(--ds-surface-subtle);
+  color: var(--ds-text);
+}
+
+.gym-icon-btn.is-danger:hover {
+  background: var(--ds-danger-soft);
+  color: var(--ds-danger);
+}
+
+.gym-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--ds-surface);
+  border: 1px dashed var(--ds-border-strong);
+  border-radius: var(--ds-radius-3xl);
+}
+
+.gym-empty__icon {
+  color: var(--ds-text-meta);
+  margin-bottom: 4px;
+}
+
+.gym-empty__title {
+  margin: 0;
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-lg);
+  font-weight: var(--ds-weight-bold);
+  color: var(--ds-text);
+}
+
+.gym-empty__text {
+  margin: 0;
+  font-size: var(--ds-text-sm);
+  color: var(--ds-text-muted);
+  max-width: 34ch;
+}
+
+.gym-skeleton-card {
+  height: 84px;
+  border-radius: var(--ds-radius-3xl);
+  background: linear-gradient(
+    90deg,
+    var(--ds-skeleton-base) 25%,
+    var(--ds-skeleton-highlight) 37%,
+    var(--ds-skeleton-base) 63%
+  );
+  background-size: 400% 100%;
+  animation: gym-shimmer 1.4s ease infinite;
+}
+
+@keyframes gym-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gym-skeleton-card {
+    animation: none;
+  }
+}

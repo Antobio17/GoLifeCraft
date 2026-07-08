@@ -1,0 +1,7 @@
+services:
+  Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetGymStatsController:
+    class: Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetGymStatsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

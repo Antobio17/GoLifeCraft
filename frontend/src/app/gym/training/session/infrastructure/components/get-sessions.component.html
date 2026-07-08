@@ -1,0 +1,139 @@
+<ds-page-wrapper>
+  <ds-screen-header
+    [title]="'getSessions.heading' | t"
+    [subtitle]="headerSubtitle()"
+  >
+    <button
+      slot="actions"
+      type="button"
+      class="gym-head__link"
+      (click)="onLibrary()"
+    >
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M4 4h13a2 2 0 0 1 2 2v14l-8-3.5L3 20V5a1 1 0 0 1 1-1z" />
+      </svg>
+      {{ "getSessions.library" | t }}
+    </button>
+  </ds-screen-header>
+
+  <span class="gym-section-label">{{ "getSessions.yourSessions" | t }}</span>
+
+  @if (loading()) {
+    <div class="gym-grid">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="gym-skeleton-card"></div>
+      }
+    </div>
+  } @else if (items().length === 0) {
+    <div class="gym-empty">
+      <svg
+        class="gym-empty__icon"
+        width="40"
+        height="40"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" />
+      </svg>
+      <p class="gym-empty__title">{{ "getSessions.table.emptyTitle" | t }}</p>
+      <p class="gym-empty__text">{{ "getSessions.table.emptyMessage" | t }}</p>
+    </div>
+  } @else {
+    <div class="gym-grid">
+      @for (session of items(); track session.id) {
+        <article
+          class="gym-session-card"
+          tabindex="0"
+          role="button"
+          (click)="onOpen(session.id)"
+          (keydown.enter)="onOpen(session.id)"
+          (keydown.space)="onOpen(session.id)"
+        >
+          <div class="gym-session-card__top">
+            <div class="gym-session-card__text">
+              <h3 class="gym-session-card__name">
+                {{ session.attributes.name }}
+              </h3>
+              <p class="gym-session-card__meta">{{ summaryText(session) }}</p>
+            </div>
+            <button
+              type="button"
+              class="gym-session-card__delete"
+              [attr.aria-label]="'getSessions.actions.delete' | t"
+              (click)="onDelete(session, $event)"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"
+                />
+              </svg>
+            </button>
+          </div>
+          @if (session.attributes.muscleGroups.length) {
+            <div class="gym-session-card__tags">
+              @for (tag of session.attributes.muscleGroups; track tag) {
+                <span class="gym-tag">{{ tag }}</span>
+              }
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+
+  <button type="button" class="gym-fab" (click)="onCreate()">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+    {{ "getSessions.new" | t }}
+  </button>
+</ds-page-wrapper>
+
+<ds-confirm-action-modal
+  [show]="showDeleteModal()"
+  [title]="'getSessions.deleteModal.title' | t"
+  [body]="'getSessions.deleteModal.body' | t"
+  [itemName]="sessionToDelete()?.attributes?.name ?? ''"
+  [warningText]="'getSessions.deleteModal.warning' | t"
+  [isDeleting]="isDeleting()"
+  [cancelLabel]="'getSessions.deleteModal.cancel' | t"
+  [confirmLabel]="'getSessions.deleteModal.confirm' | t"
+  [deletingLabel]="'getSessions.deleteModal.deleting' | t"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()"
+/>

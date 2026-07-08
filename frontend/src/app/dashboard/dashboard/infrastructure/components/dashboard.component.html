@@ -58,19 +58,13 @@
       </div>
     </article>
 
-    <!-- Buscador -->
-    <button type="button" class="search" (click)="comingSoon()">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <circle cx="11" cy="11" r="7" />
-        <path d="M21 21l-4-4" stroke-linecap="round" />
-      </svg>
-      <span>{{ "dashboard.search" | t }}</span>
-    </button>
+    <!-- Analítica del gimnasio -->
+    <app-gym-analytics
+      class="dash__gym"
+      [stats]="gymStats()"
+      [loading]="gymStatsLoading()"
+      (seeAll)="goToGym()"
+    />
 
     <!-- Explora -->
     <section class="explore">
@@ -133,8 +127,8 @@
 
         <ds-action-tile
           [name]="'dashboard.explore.gym' | t"
-          [meta]="'dashboard.explore.soon' | t"
-          (clicked)="comingSoon()"
+          [meta]="'dashboard.explore.gymMeta' | t"
+          (clicked)="goToGym()"
         >
           <svg
             viewBox="0 0 24 24"

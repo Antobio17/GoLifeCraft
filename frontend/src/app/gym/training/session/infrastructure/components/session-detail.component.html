@@ -1,0 +1,390 @@
+<ds-page-wrapper [maxWidth]="'680px'" [gap]="'14px'">
+  @if (loading()) {
+    <div class="gym-skeleton-card" style="height: 120px"></div>
+  } @else {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getSession.back' | t"
+      [eyebrow]="'getSession.eyebrow' | t"
+      [title]="name()"
+      (leadingClick)="goBack()"
+    >
+      <div slot="actions" class="sd-menu">
+        <button
+          type="button"
+          class="sd-icon-btn"
+          (click)="toggleMenu()"
+          [attr.aria-label]="'getSession.actions' | t"
+          aria-haspopup="menu"
+          [attr.aria-expanded]="menuOpen()"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <circle cx="5" cy="12" r="1.7" />
+            <circle cx="12" cy="12" r="1.7" />
+            <circle cx="19" cy="12" r="1.7" />
+          </svg>
+        </button>
+
+        @if (menuOpen()) {
+          <div class="sd-menu__backdrop" (click)="closeMenu()"></div>
+          <div class="sd-menu__panel" role="menu">
+            <button
+              type="button"
+              class="sd-menu__item"
+              role="menuitem"
+              (click)="onMenuEdit()"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+              </svg>
+              {{ "getSession.edit" | t }}
+            </button>
+            <button
+              type="button"
+              class="sd-menu__item sd-menu__item--danger"
+              role="menuitem"
+              (click)="onMenuDelete()"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"
+                />
+              </svg>
+              {{ "getSession.delete" | t }}
+            </button>
+          </div>
+        }
+      </div>
+    </ds-screen-header>
+
+    <div class="sd-metrics">
+      <span class="sd-metric">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
+        </svg>
+        ~{{ estimatedDurationMinutes() }} min
+      </span>
+      @if (saving()) {
+        <span class="sd-metric sd-metric--saving">{{
+          "getSession.saving" | t
+        }}</span>
+      }
+    </div>
+
+    @if (exercises().length === 0) {
+      <div class="sd-empty">
+        <span class="sd-empty__icon" aria-hidden="true">
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" />
+          </svg>
+        </span>
+        <div class="sd-empty__text">
+          <p class="sd-empty__title">{{ "getSession.empty.title" | t }}</p>
+          <p class="sd-empty__desc">{{ "getSession.empty.text" | t }}</p>
+        </div>
+        <button type="button" class="sd-empty__cta" (click)="openPicker()">
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          {{ "getSession.exercise.add" | t }}
+        </button>
+      </div>
+    } @else {
+      <div class="sd-exercises">
+        @for (exercise of exercises(); track exercise.id; let i = $index) {
+          <article class="sd-ex">
+            <div class="sd-ex__head">
+              <span class="sd-ex__num">{{ i + 1 }}</span>
+              <div class="sd-ex__title-block">
+                <h3 class="sd-ex__name">{{ exercise.exerciseName }}</h3>
+                <p class="sd-ex__muscles">{{ muscleText(exercise) }}</p>
+              </div>
+              <button
+                type="button"
+                class="sd-mode"
+                (click)="toggleMode(exercise.id)"
+              >
+                {{ modeLabel(exercise.type) }}
+              </button>
+              <button
+                type="button"
+                class="sd-ex__remove"
+                (click)="removeExercise(exercise.id)"
+                [attr.aria-label]="'getSession.exercise.remove' | t"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="sd-sets__head">
+              <span>{{ "getSession.set.number" | t }}</span>
+              <span>{{ "getSession.set.reps" | t }}</span>
+              <span>{{ "getSession.set.weight" | t }}</span>
+              <span></span>
+            </div>
+
+            @for (set of exercise.sets; track set.id; let j = $index) {
+              <div class="sd-set">
+                <span class="sd-set__num">{{ j + 1 }}</span>
+                <div class="sd-set__stepper">
+                  <button
+                    type="button"
+                    class="sd-set__step"
+                    (click)="stepReps(exercise.id, set.id, -1)"
+                    [attr.aria-label]="'getSession.set.repsDown' | t"
+                  >
+                    −
+                  </button>
+                  <input
+                    class="sd-set__input"
+                    type="number"
+                    inputmode="numeric"
+                    min="0"
+                    [value]="set.reps"
+                    (input)="onReps(exercise.id, set.id, $event)"
+                    [attr.aria-label]="'getSession.set.reps' | t"
+                  />
+                  <button
+                    type="button"
+                    class="sd-set__step"
+                    (click)="stepReps(exercise.id, set.id, 1)"
+                    [attr.aria-label]="'getSession.set.repsUp' | t"
+                  >
+                    +
+                  </button>
+                </div>
+                <div class="sd-set__stepper">
+                  <button
+                    type="button"
+                    class="sd-set__step"
+                    (click)="stepWeight(exercise.id, set.id, -2.5)"
+                    [attr.aria-label]="'getSession.set.weightDown' | t"
+                  >
+                    −
+                  </button>
+                  <input
+                    class="sd-set__input"
+                    type="number"
+                    inputmode="decimal"
+                    min="0"
+                    step="2.5"
+                    [value]="set.weight"
+                    (input)="onWeight(exercise.id, set.id, $event)"
+                    [attr.aria-label]="'getSession.set.weight' | t"
+                  />
+                  <button
+                    type="button"
+                    class="sd-set__step"
+                    (click)="stepWeight(exercise.id, set.id, 2.5)"
+                    [attr.aria-label]="'getSession.set.weightUp' | t"
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  class="sd-set__remove"
+                  (click)="removeSet(exercise.id, set.id)"
+                  [attr.aria-label]="'getSession.set.remove' | t"
+                >
+                  ×
+                </button>
+              </div>
+            }
+
+            <button
+              type="button"
+              class="sd-add-set"
+              (click)="addSet(exercise.id)"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              {{ "getSession.set.add" | t }}
+            </button>
+          </article>
+        }
+      </div>
+
+      <button type="button" class="sd-add-ex" (click)="openPicker()">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        {{ "getSession.exercise.add" | t }}
+      </button>
+    }
+
+    <button type="button" class="sd-start" (click)="onStart()">
+      {{ "getSession.start" | t }}
+      <span class="sd-start__arrow" aria-hidden="true">→</span>
+    </button>
+  }
+</ds-page-wrapper>
+
+<ds-modal-sheet
+  [open]="pickerOpen()"
+  [tall]="true"
+  [title]="'getSession.picker.title' | t"
+  [closeLabel]="'getSession.picker.close' | t"
+  (closed)="closePicker()"
+>
+  <ds-search-input
+    [placeholder]="'getSession.picker.search' | t"
+    [clearLabel]="'getSession.picker.clear' | t"
+    (searched)="onLibrarySearch($event)"
+  />
+
+  @if (filteredLibrary.length === 0) {
+    <p class="sd-picker__empty">{{ "getSession.picker.empty" | t }}</p>
+  } @else {
+    <div class="sd-picker__list">
+      @for (exercise of filteredLibrary; track exercise.id) {
+        <div class="sd-picker__item">
+          <span class="sd-picker__icon" aria-hidden="true">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" />
+            </svg>
+          </span>
+          <span class="sd-picker__info">
+            <span class="sd-picker__name">{{ exercise.attributes.name }}</span>
+            <span class="sd-picker__muscles">{{
+              libraryMuscleText(exercise)
+            }}</span>
+          </span>
+          <button
+            type="button"
+            class="sd-picker__add"
+            (click)="addFromLibrary(exercise)"
+            [attr.aria-label]="'getSession.exercise.add' | t"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+  }
+</ds-modal-sheet>
+
+<ds-confirm-action-modal
+  [show]="showDeleteModal()"
+  [title]="'getSessions.deleteModal.title' | t"
+  [body]="'getSessions.deleteModal.body' | t"
+  [itemName]="name()"
+  [warningText]="'getSessions.deleteModal.warning' | t"
+  [isDeleting]="isDeleting()"
+  [cancelLabel]="'getSessions.deleteModal.cancel' | t"
+  [confirmLabel]="'getSessions.deleteModal.confirm' | t"
+  [deletingLabel]="'getSessions.deleteModal.deleting' | t"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()"
+/>

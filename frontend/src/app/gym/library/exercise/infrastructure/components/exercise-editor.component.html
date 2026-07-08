@@ -1,0 +1,47 @@
+<ds-page-wrapper [maxWidth]="'640px'" [gap]="'22px'">
+  <ds-screen-header
+    [leading]="'close'"
+    [leadingLabel]="'createExercise.back' | t"
+    [title]="title"
+    (leadingClick)="cancel()"
+  />
+
+  <form class="gym-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ds-field [label]="'createExercise.field.name' | t">
+      <input
+        class="gym-input"
+        type="text"
+        formControlName="name"
+        [placeholder]="'createExercise.field.namePlaceholder' | t"
+        [class.is-invalid]="
+          form.get('name')?.invalid && form.get('name')?.touched
+        "
+      />
+    </ds-field>
+
+    <ds-field
+      [label]="'createExercise.field.muscleGroups' | t"
+      [count]="form.get('muscleGroups')?.value?.length ?? 0"
+    >
+      <ds-muscle-picker
+        [groups]="muscleGroups"
+        formControlName="muscleGroups"
+      ></ds-muscle-picker>
+    </ds-field>
+
+    <ds-field
+      [label]="'createExercise.field.type' | t"
+      [hint]="modeHint"
+      [hintIcon]="true"
+    >
+      <ds-segmented-toggle
+        [options]="typeOptions"
+        formControlName="type"
+      ></ds-segmented-toggle>
+    </ds-field>
+
+    <button type="submit" class="gym-cta" [disabled]="saving()">
+      {{ saving() ? ("createExercise.saving" | t) : saveLabel }}
+    </button>
+  </form>
+</ds-page-wrapper>
