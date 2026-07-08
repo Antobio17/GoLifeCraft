@@ -4,8 +4,8 @@ import { NgTemplateOutlet } from "@angular/common";
 import { Observable } from "rxjs";
 import { GetExercisesService } from "@gym/library/exercise/application/services/get-exercises.service";
 import { DeleteExerciseService } from "@gym/library/exercise/application/services/delete-exercise.service";
+import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { Exercise } from "../../domain/models/exercise.model";
-import { MUSCLE_GROUPS } from "../../domain/constants/muscle-groups.constants";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
@@ -70,6 +70,7 @@ type LibraryView = "list" | "grouped";
 export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   private getExercisesService = inject(GetExercisesService);
   private deleteExerciseService = inject(DeleteExerciseService);
+  private muscleCatalog = inject(MuscleCatalogService);
   private floatingToastService = inject(FloatingToastService);
 
   protected readonly modulePath = "gym/library/exercise";
@@ -108,12 +109,15 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   groupedItems = computed<ExerciseGroup[]>(() => {
     const items = this.filteredItems();
 
-    return MUSCLE_GROUPS.map((muscle) => {
-      const groupItems = items.filter((exercise) =>
-        exercise.attributes.muscleGroups.includes(muscle),
-      );
-      return { muscle, count: groupItems.length, items: groupItems };
-    }).filter((group) => group.count > 0);
+    return this.muscleCatalog
+      .all()
+      .map((muscle) => {
+        const groupItems = items.filter((exercise) =>
+          exercise.attributes.muscleGroups.includes(muscle),
+        );
+        return { muscle, count: groupItems.length, items: groupItems };
+      })
+      .filter((group) => group.count > 0);
   });
 
   hasResults = computed(() => this.filteredItems().length > 0);

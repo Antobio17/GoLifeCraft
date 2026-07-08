@@ -20,11 +20,8 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { CreateSessionService } from "../../application/services/create-session.service";
 import { UpdateSessionService } from "../../application/services/update-session.service";
 import { GetSessionService } from "../../application/services/get-session.service";
+import { SessionDraftService } from "../../application/services/session-draft.service";
 import { GetSessionResponse } from "../../domain/models/get-session-response.model";
-import {
-  CreateSessionRequest,
-  SessionExerciseRequest,
-} from "../../domain/models/session-request.model";
 import { SessionExerciseView } from "../../domain/models/session-detail.model";
 
 @Component({
@@ -48,6 +45,7 @@ export class SessionFormComponent implements OnInit {
   private createSessionService = inject(CreateSessionService);
   private updateSessionService = inject(UpdateSessionService);
   private getSessionService = inject(GetSessionService);
+  private sessionDraft = inject(SessionDraftService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -63,7 +61,7 @@ export class SessionFormComponent implements OnInit {
   loading = signal(true);
   saving = signal(false);
   private id = "";
-  private existingExercises: SessionExerciseRequest[] = [];
+  private existingExercises: SessionExerciseView[] = [];
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -98,9 +96,7 @@ export class SessionFormComponent implements OnInit {
         this.getSessionService.getSession(this.id).subscribe({
           next: (response: GetSessionResponse) => {
             const attributes = response.data.attributes;
-            this.existingExercises = attributes.exercises.map((exercise) =>
-              this.toRequest(exercise),
-            );
+            this.existingExercises = attributes.exercises;
             this.form.patchValue({
               name: attributes.name,
               estimatedDurationMinutes: attributes.estimatedDurationMinutes,
@@ -116,21 +112,6 @@ export class SessionFormComponent implements OnInit {
     return this.translationService.translate(key, this.MODULE_PATH);
   }
 
-  private toRequest(exercise: SessionExerciseView): SessionExerciseRequest {
-    return {
-      exerciseId: exercise.exerciseId,
-      exerciseName: exercise.exerciseName,
-      muscleGroups: exercise.muscleGroups,
-      type: exercise.type,
-      position: exercise.position,
-      sets: exercise.sets.map((set) => ({
-        position: set.position,
-        reps: set.reps,
-        weight: set.weight,
-      })),
-    };
-  }
-
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -139,11 +120,11 @@ export class SessionFormComponent implements OnInit {
 
     this.saving.set(true);
 
-    const payload: CreateSessionRequest = {
-      name: this.form.value.name ?? "",
-      estimatedDurationMinutes: this.form.value.estimatedDurationMinutes ?? 0,
-      exercises: this.existingExercises,
-    };
+    const payload = this.sessionDraft.toRequest(
+      this.form.value.name ?? "",
+      this.form.value.estimatedDurationMinutes ?? 0,
+      this.existingExercises,
+    );
 
     const request$ = this.isEdit
       ? this.updateSessionService.updateSession(this.id, payload)
