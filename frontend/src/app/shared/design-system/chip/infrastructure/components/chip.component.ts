@@ -14,12 +14,12 @@ type ChipTone = "neutral" | "brand" | "accent";
       .ds-chip {
         display: inline-flex;
         align-items: center;
-        padding: 4px 10px;
-        border-radius: var(--ds-radius-pill);
+        padding: var(--chip-pad, 3px 8px);
+        border-radius: var(--chip-radius, 7px);
         background: var(--chip-bg, var(--ds-surface-inset));
         color: var(--chip-text, var(--ds-text-muted));
-        font-size: var(--ds-text-xs);
-        font-weight: var(--ds-weight-semibold);
+        font-size: var(--chip-size, 10px);
+        font-weight: var(--ds-weight-bold);
         line-height: 1.3;
         white-space: nowrap;
       }

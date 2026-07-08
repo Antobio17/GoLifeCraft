@@ -15,15 +15,15 @@
       "carbs": "Carbs"
     },
     "gym": {
-      "title": "Your gym",
+      "title": "Your week at the gym",
       "seeAll": "See all",
       "empty": "No workouts yet. Create your first session to see your stats.",
       "sessions": "Sessions",
       "volume": "Volume",
       "exercises": "Exercises",
       "volumeChart": {
-        "title": "Volume per session",
-        "subtitle": "planned kg per session"
+        "title": "Training volume",
+        "subtitle": "kg lifted · last 7 days"
       },
       "progression": {
         "title": "Progression",

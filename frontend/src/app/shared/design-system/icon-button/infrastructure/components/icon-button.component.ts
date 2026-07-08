@@ -33,9 +33,9 @@ type IconButtonVariant = "ghost" | "soft" | "danger" | "plain";
         width: var(--icon-btn-size, 36px);
         height: var(--icon-btn-size, 36px);
         border: none;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--icon-btn-radius, var(--ds-radius-lg));
         background: transparent;
-        color: var(--ds-text-muted);
+        color: var(--icon-btn-color, var(--ds-text-muted));
         cursor: pointer;
         transition:
           background var(--ds-transition-fast),
@@ -61,6 +61,8 @@ type IconButtonVariant = "ghost" | "soft" | "danger" | "plain";
   host: {
     "[attr.variant]": "variant",
     "[style.--icon-btn-size.px]": "size",
+    "[style.--icon-btn-color]": "color",
+    "[style.--icon-btn-radius]": "radius",
   },
 })
 export class IconButtonComponent {
@@ -69,6 +71,8 @@ export class IconButtonComponent {
   @Input() size = 36;
   @Input() iconSize = 16;
   @Input() stroke = 2;
+  @Input() color: string | null = null;
+  @Input() radius: string | null = null;
   @Input() ariaLabel = "";
   @Input() disabled = false;
   @Input() haspopup: string | null = null;

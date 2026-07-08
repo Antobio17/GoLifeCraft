@@ -1,102 +1,116 @@
-<ds-stack [gap]="'16px'">
-  <ds-stack direction="row" align="center" justify="between">
-    <ds-heading [level]="2" size="lg">{{
-      "dashboard.gym.title" | t
-    }}</ds-heading>
-    <ds-button variant="ghost" size="sm" (clicked)="seeAll.emit()">
+<section class="gym">
+  <header class="gym__head">
+    <h2 class="gym__title">{{ "dashboard.gym.title" | t }}</h2>
+    <button type="button" class="gym__see-all" (click)="seeAll.emit()">
       {{ "dashboard.gym.seeAll" | t }} ›
-    </ds-button>
-  </ds-stack>
+    </button>
+  </header>
 
   @if (loading) {
-    <ds-stack [gap]="'12px'">
-      <ds-skeleton height="60px" />
+    <div class="gym__loading">
+      <ds-skeleton height="66px" />
       <ds-skeleton height="150px" />
-    </ds-stack>
+    </div>
   } @else if (!hasData) {
     <ds-text variant="muted">{{ "dashboard.gym.empty" | t }}</ds-text>
   } @else {
-    <ds-stack direction="row" [gap]="'12px'">
-      <ds-stat
-        [value]="stats!.totalSessions"
-        [label]="'dashboard.gym.sessions' | t"
-      />
-      <ds-stat
-        [value]="totalVolumeText"
-        unit="kg"
-        [label]="'dashboard.gym.volume' | t"
-      />
-      <ds-stat
-        [value]="stats!.totalExercises"
-        [label]="'dashboard.gym.exercises' | t"
-      />
-    </ds-stack>
-
-    <ds-card>
-      <ds-stack direction="row" align="start" justify="between" [gap]="'12px'">
-        <ds-stack [gap]="'2px'">
-          <ds-text variant="strong">
-            {{ "dashboard.gym.volumeChart.title" | t }}
-          </ds-text>
-          <ds-text variant="meta">
-            {{ "dashboard.gym.volumeChart.subtitle" | t }}
-          </ds-text>
-        </ds-stack>
-        <ds-text variant="strong">{{ totalVolumeText }} kg</ds-text>
-      </ds-stack>
-      <ds-bar-chart [bars]="volumeBars" />
-    </ds-card>
-
-    <ds-grid [minColumn]="'240px'">
-      <ds-card variant="brand">
-        <ds-stack
-          direction="row"
-          align="start"
-          justify="between"
-          [gap]="'12px'"
+    <div class="gym__stats">
+      <div class="stat-card">
+        <span class="stat-card__value">{{ stats!.totalSessions }}</span>
+        <span class="stat-card__label">{{ "dashboard.gym.sessions" | t }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__value"
+          >{{ totalVolumeText }}<span class="stat-card__unit"> kg</span></span
         >
-          <ds-stack [gap]="'2px'">
-            <ds-text variant="strong" [inherit]="true">
-              {{ "dashboard.gym.progression.title" | t }}
-            </ds-text>
-            <ds-text variant="meta" [inherit]="true">
-              {{ "dashboard.gym.progression.subtitle" | t }}
-            </ds-text>
-          </ds-stack>
-          @if (progressionDelta) {
-            <ds-chip [tone]="progressionDelta.positive ? 'brand' : 'neutral'">
-              {{ progressionDelta.label }}
-            </ds-chip>
-          }
-        </ds-stack>
-        @if (hasProgression) {
-          <ds-line-chart [points]="progressionPoints" />
-        } @else {
-          <ds-text variant="meta" [inherit]="true">
-            {{ "dashboard.gym.progression.empty" | t }}
-          </ds-text>
-        }
-      </ds-card>
+        <span class="stat-card__label">{{ "dashboard.gym.volume" | t }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__value">{{ stats!.totalExercises }}</span>
+        <span class="stat-card__label">{{ "dashboard.gym.exercises" | t }}</span>
+      </div>
+    </div>
 
-      <ds-card>
-        <ds-stack [gap]="'2px'">
-          <ds-text variant="strong">
-            {{ "dashboard.gym.muscles.title" | t }}
-          </ds-text>
-          <ds-text variant="meta">
-            {{ "dashboard.gym.muscles.subtitle" | t }}
-          </ds-text>
-        </ds-stack>
-        <ds-stack [gap]="'10px'">
-          @for (region of regionShares; track region.region) {
-            <ds-meter
-              [label]="region.region"
-              [percent]="region.percent"
-              [color]="regionColor(region.index)"
-            />
+    <article class="panel">
+      <div class="panel__head">
+        <div>
+          <p class="panel__title">
+            {{ "dashboard.gym.volumeChart.title" | t }}
+          </p>
+          <p class="panel__subtitle">
+            {{ "dashboard.gym.volumeChart.subtitle" | t }}
+          </p>
+        </div>
+        <span class="panel__figure">{{ totalVolumeText }} kg</span>
+      </div>
+      <ds-bar-chart
+        [bars]="volumeBars"
+        [showValues]="false"
+        chartHeight="108px"
+      />
+    </article>
+
+    <div class="gym__grid">
+      <article class="panel panel--brand">
+        <div class="panel__head">
+          <div>
+            <p class="panel__title">
+              {{ "dashboard.gym.progression.title" | t }}
+            </p>
+            <p class="panel__subtitle">
+              {{ "dashboard.gym.progression.subtitle" | t }}
+            </p>
+          </div>
+          @if (progressionDelta) {
+            <span
+              class="delta"
+              [class.delta--down]="!progressionDelta.positive"
+            >
+              <span class="delta__arrow">{{
+                progressionDelta.positive ? "↗" : "↘"
+              }}</span>
+              {{ progressionDelta.label }}
+            </span>
           }
-        </ds-stack>
-      </ds-card>
-    </ds-grid>
+        </div>
+        @if (hasProgression) {
+          <ds-line-chart class="panel__spark" [points]="progressionPoints" />
+        } @else {
+          <p class="panel__subtitle">
+            {{ "dashboard.gym.progression.empty" | t }}
+          </p>
+        }
+      </article>
+
+      <article class="panel">
+        <div>
+          <p class="panel__title">{{ "dashboard.gym.muscles.title" | t }}</p>
+          <p class="panel__subtitle">
+            {{ "dashboard.gym.muscles.subtitle" | t }}
+          </p>
+        </div>
+        <div class="muscles">
+          @for (region of regionShares; track region.region) {
+            <div class="muscle">
+              <div class="muscle__row">
+                <span
+                  class="muscle__dot"
+                  [style.background]="regionColor(region.index)"
+                ></span>
+                <span class="muscle__label">{{ region.region }}</span>
+                <span class="muscle__pct">{{ region.percent }}%</span>
+              </div>
+              <div class="muscle__track">
+                <div
+                  class="muscle__fill"
+                  [style.width.%]="region.percent"
+                  [style.background]="regionColor(region.index)"
+                ></div>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+    </div>
   }
-</ds-stack>
+</section>

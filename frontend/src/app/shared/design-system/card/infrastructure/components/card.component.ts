@@ -6,22 +6,17 @@ type CardVariant = "plain" | "brand" | "inset";
   selector: "ds-card",
   standalone: true,
   template: `
-    @if (interactive) {
-      <div
-        class="ds-card ds-card--interactive"
-        tabindex="0"
-        role="button"
-        (click)="activated.emit()"
-        (keydown.enter)="activated.emit()"
-        (keydown.space)="activated.emit()"
-      >
-        <ng-content></ng-content>
-      </div>
-    } @else {
-      <div class="ds-card">
-        <ng-content></ng-content>
-      </div>
-    }
+    <div
+      class="ds-card"
+      [class.ds-card--interactive]="interactive"
+      [attr.tabindex]="interactive ? 0 : null"
+      [attr.role]="interactive ? 'button' : null"
+      (click)="onActivate()"
+      (keydown.enter)="onActivate()"
+      (keydown.space)="onActivate()"
+    >
+      <ng-content></ng-content>
+    </div>
   `,
   styles: [
     `
@@ -79,4 +74,9 @@ export class CardComponent {
   @Input() interactive = false;
 
   @Output() activated = new EventEmitter<void>();
+
+  onActivate(): void {
+    if (!this.interactive) return;
+    this.activated.emit();
+  }
 }
