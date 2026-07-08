@@ -43,9 +43,16 @@ export class DashboardComponent implements OnInit {
   readonly gymStats = signal<GymStats | null>(null);
   readonly gymStatsLoading = signal(true);
 
-  readonly name = computed(
-    () => this.authSessionService.session()?.email ?? "",
-  );
+  readonly name = computed(() => {
+    const session = this.authSessionService.session();
+    const username = session?.user?.username?.trim();
+    if (username) return username;
+
+    const email = session?.email ?? "";
+    const local = email.split("@")[0] ?? "";
+    if (!local) return "";
+    return local.charAt(0).toUpperCase() + local.slice(1);
+  });
 
   readonly initial = computed(() => {
     const value = this.name().trim();

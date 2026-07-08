@@ -138,7 +138,9 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   }
 
   muscleText(exercise: Exercise): string {
-    const mode = this.t(`getExercises.type.${exercise.attributes.type}`);
+    const mode = this.t(
+      `getExercises.type.${exercise.attributes.type.toLowerCase()}`,
+    );
     return `${exercise.attributes.muscleGroups.join(" · ")} · ${mode}`;
   }
 

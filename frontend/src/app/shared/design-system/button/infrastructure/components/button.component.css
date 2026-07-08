@@ -78,20 +78,24 @@
   border-radius: var(--ds-radius-xl);
 }
 
-/* ---- Variante: primary (burbuja suave de marca) ---- */
+/* ---- Variante: primary (CTA sólida de marca) ---- */
 .ds-btn--primary {
-  background: var(--ds-primary-soft);
-  color: var(--ds-primary-soft-text);
-  border-color: var(--ds-primary-soft-border);
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
+  border-color: transparent;
 }
 
 .ds-btn--primary:hover:not(:disabled) {
-  background: var(--ds-primary-soft-hover);
-  border-color: color-mix(in srgb, var(--ds-primary) 45%, transparent);
+  background: var(--ds-primary-hover);
+  border-color: transparent;
 }
 
 .ds-btn--primary:active:not(:disabled) {
-  border-color: color-mix(in srgb, var(--ds-primary) 55%, transparent);
+  background: var(--ds-primary-active);
+}
+
+.ds-btn--primary ds-icon {
+  color: var(--ds-accent);
 }
 
 .ds-btn--primary:focus-visible {

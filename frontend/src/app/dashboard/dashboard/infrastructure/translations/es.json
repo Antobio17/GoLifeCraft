@@ -15,15 +15,15 @@
       "carbs": "Hidratos"
     },
     "gym": {
-      "title": "Tu gimnasio",
+      "title": "Tu semana en el gimnasio",
       "seeAll": "Ver todo",
       "empty": "Aún no hay entrenamientos. Crea tu primera sesión para ver tus estadísticas.",
       "sessions": "Sesiones",
       "volume": "Volumen",
       "exercises": "Ejercicios",
       "volumeChart": {
-        "title": "Volumen por sesión",
-        "subtitle": "kg planificados por sesión"
+        "title": "Volumen de entrenamiento",
+        "subtitle": "kg levantados · últimos 7 días"
       },
       "progression": {
         "title": "Progresión",

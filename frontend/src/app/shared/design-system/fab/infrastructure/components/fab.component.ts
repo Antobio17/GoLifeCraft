@@ -26,7 +26,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         position: sticky;
         bottom: 20px;
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
         pointer-events: none;
         z-index: 20;
       }
@@ -51,7 +51,12 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         justify-content: center;
       }
       .ds-fab--extended {
-        padding: 13px 20px;
+        height: 48px;
+        padding: 0 18px;
+        border-radius: 15px;
+      }
+      .ds-fab ds-icon {
+        color: var(--ds-accent);
       }
       .ds-fab:hover {
         background: var(--ds-primary-hover);
@@ -60,7 +65,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         transform: scale(0.96);
       }
       .ds-fab__label {
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-label);
         font-weight: var(--ds-weight-bold);
       }
     `,

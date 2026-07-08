@@ -11,10 +11,12 @@ export interface BarDatum {
   selector: "ds-bar-chart",
   standalone: true,
   template: `
-    <div class="ds-bars">
+    <div class="ds-bars" [style.height]="chartHeight">
       @for (bar of bars; track bar.id) {
         <div class="ds-bars__col">
-          <span class="ds-bars__value">{{ bar.display }}</span>
+          @if (showValues) {
+            <span class="ds-bars__value">{{ bar.display }}</span>
+          }
           <div
             class="ds-bars__bar"
             [class.ds-bars__bar--top]="highlightTop && isTop(bar.value)"
@@ -32,7 +34,7 @@ export interface BarDatum {
       .ds-bars {
         display: flex;
         align-items: flex-end;
-        gap: 10px;
+        gap: 8px;
         height: 148px;
       }
       .ds-bars__col {
@@ -74,6 +76,8 @@ export interface BarDatum {
 export class BarChartComponent {
   @Input() bars: BarDatum[] = [];
   @Input() highlightTop = true;
+  @Input() showValues = true;
+  @Input() chartHeight = "148px";
 
   private get max(): number {
     return Math.max(...this.bars.map((bar) => bar.value), 1);

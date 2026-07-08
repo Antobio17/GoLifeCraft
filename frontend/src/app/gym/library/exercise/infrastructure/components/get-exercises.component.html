@@ -74,10 +74,10 @@
 </ds-page-wrapper>
 
 <ng-template #exerciseRow let-exercise>
-  <ds-card [padding]="'12px'">
-    <ds-stack direction="row" align="center" [gap]="'12px'">
-      <ds-icon-badge icon="dumbbell" />
-      <ds-stack [gap]="'2px'" [grow]="true">
+  <ds-card [padding]="'11px 12px'">
+    <ds-stack direction="row" align="center" [gap]="'11px'">
+      <ds-icon-badge icon="dumbbell" tone="brand" [size]="34" [iconSize]="17" />
+      <ds-stack [gap]="'1px'" [grow]="true">
         <ds-heading [level]="3" size="sm">{{
           exercise.attributes.name
         }}</ds-heading>
@@ -85,12 +85,13 @@
       </ds-stack>
       <ds-icon-button
         icon="pencil"
+        color="var(--ds-text-meta)"
         [ariaLabel]="'getExercises.actions.edit' | t"
         (clicked)="onEdit(exercise.id)"
       />
       <ds-icon-button
         icon="trash"
-        variant="danger"
+        color="var(--ds-danger)"
         [ariaLabel]="'getExercises.actions.delete' | t"
         (clicked)="onDelete(exercise)"
       />
