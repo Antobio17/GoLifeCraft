@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, inject, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
@@ -8,6 +9,22 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import {
+  MenuComponent,
+  MenuItem,
+} from "@shared/design-system/menu/infrastructure/components/menu.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { GetSessionService } from "../../application/services/get-session.service";
@@ -26,14 +43,27 @@ import { EXERCISE_TYPES } from "@gym/library/exercise/domain/constants/muscle-gr
 @Component({
   selector: "app-session-detail",
   templateUrl: "./session-detail.component.html",
-  styleUrls: ["./gym-list.css", "./session-detail.component.css"],
   imports: [
+    FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
     ModalSheetComponent,
     SearchInputComponent,
     ConfirmActionModalComponent,
+    StackComponent,
+    CardComponent,
+    HeadingComponent,
+    TextComponent,
+    ChipComponent,
+    IconComponent,
+    IconButtonComponent,
+    IconBadgeComponent,
+    ButtonComponent,
+    NumberInputComponent,
+    EmptyStateComponent,
+    SkeletonComponent,
+    MenuComponent,
   ],
 })
 export class SessionDetailComponent implements OnInit, OnDestroy {
@@ -62,8 +92,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   showDeleteModal = signal(false);
   isDeleting = signal(false);
-
-  menuOpen = signal(false);
 
   private persist$ = new Subject<void>();
   private sub?: Subscription;
@@ -137,6 +165,26 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
         ? "getSession.mode.unilateral"
         : "getSession.mode.bilateral",
     );
+  }
+
+  get menuItems(): MenuItem[] {
+    return [
+      { value: "edit", label: this.t("getSession.edit"), icon: "pencil" },
+      {
+        value: "delete",
+        label: this.t("getSession.delete"),
+        icon: "trash",
+        danger: true,
+      },
+    ];
+  }
+
+  onMenuAction(value: string): void {
+    if (value === "edit") {
+      this.onEdit();
+      return;
+    }
+    this.onDelete();
   }
 
   private t(key: string): string {
@@ -230,33 +278,13 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.queuePersist();
   }
 
-  onReps(exerciseId: string, setId: string, event: Event): void {
-    const raw = (event.target as HTMLInputElement).value;
-    const value = raw === "" ? 0 : Math.max(0, Math.trunc(Number(raw)));
+  setReps(exerciseId: string, setId: string, value: number): void {
     this.mutateSet(exerciseId, setId, (set) => ({ ...set, reps: value }));
     this.queuePersist();
   }
 
-  onWeight(exerciseId: string, setId: string, event: Event): void {
-    const raw = (event.target as HTMLInputElement).value;
-    const value = raw === "" ? null : Math.max(0, Number(raw));
+  setWeight(exerciseId: string, setId: string, value: number): void {
     this.mutateSet(exerciseId, setId, (set) => ({ ...set, weight: value }));
-    this.queuePersist();
-  }
-
-  stepReps(exerciseId: string, setId: string, delta: number): void {
-    this.mutateSet(exerciseId, setId, (set) => ({
-      ...set,
-      reps: Math.max(0, set.reps + delta),
-    }));
-    this.queuePersist();
-  }
-
-  stepWeight(exerciseId: string, setId: string, delta: number): void {
-    this.mutateSet(exerciseId, setId, (set) => ({
-      ...set,
-      weight: Math.max(0, (set.weight ?? 0) + delta),
-    }));
     this.queuePersist();
   }
 
@@ -306,24 +334,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       next: () => this.saving.set(false),
       error: () => this.saving.set(false),
     });
-  }
-
-  toggleMenu(): void {
-    this.menuOpen.update((open) => !open);
-  }
-
-  closeMenu(): void {
-    this.menuOpen.set(false);
-  }
-
-  onMenuEdit(): void {
-    this.closeMenu();
-    this.onEdit();
-  }
-
-  onMenuDelete(): void {
-    this.closeMenu();
-    this.onDelete();
   }
 
   onEdit(): void {

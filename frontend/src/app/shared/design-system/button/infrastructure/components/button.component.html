@@ -8,6 +8,9 @@
     @if (loading) {
       <span class="ds-btn__spinner"></span>
     }
+    @if (icon) {
+      <ds-icon [name]="icon" [size]="iconSize" [stroke]="2.4" />
+    }
     <ng-content></ng-content>
   </span>
 </button>

@@ -12,6 +12,18 @@ import { ConfirmActionModalComponent } from "@shared/design-system/confirm-actio
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
+import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import {
   SegmentedToggleComponent,
   SegmentedOption,
@@ -32,7 +44,6 @@ type LibraryView = "list" | "grouped";
 @Component({
   selector: "app-get-exercises",
   templateUrl: "./get-exercises.component.html",
-  styleUrls: ["./gym-list.css"],
   imports: [
     FormsModule,
     NgTemplateOutlet,
@@ -42,6 +53,18 @@ type LibraryView = "list" | "grouped";
     ScreenHeaderComponent,
     SearchInputComponent,
     SegmentedToggleComponent,
+    StackComponent,
+    GridComponent,
+    CardComponent,
+    HeadingComponent,
+    TextComponent,
+    ChipComponent,
+    DividerComponent,
+    ButtonComponent,
+    IconButtonComponent,
+    IconBadgeComponent,
+    EmptyStateComponent,
+    SkeletonComponent,
   ],
 })
 export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {

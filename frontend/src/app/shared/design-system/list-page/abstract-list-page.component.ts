@@ -47,12 +47,10 @@ export abstract class AbstractListPageComponent<T> implements OnInit {
     this.currentPage.set(parseInt(params.get("page") || "1", 10));
     this.pageSize.set(parseInt(params.get("pageSize") || savedPageSize, 10));
 
-    this.translationService
-      .loadModuleTranslations(this.modulePath)
-      .then(() => {
-        this.configureList();
-        this.load();
-      });
+    this.translationService.loadModuleTranslations(this.modulePath).then(() => {
+      this.configureList();
+      this.load();
+    });
   }
 
   protected t(key: string): string {

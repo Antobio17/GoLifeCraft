@@ -15,6 +15,9 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { MusclePickerComponent } from "@shared/design-system/muscle-picker/infrastructure/components/muscle-picker.component";
 import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { CreateExerciseService } from "../../application/services/create-exercise.service";
@@ -29,7 +32,6 @@ import {
 @Component({
   selector: "app-exercise-editor",
   templateUrl: "./exercise-editor.component.html",
-  styleUrls: ["./gym-form.css"],
   imports: [
     ReactiveFormsModule,
     ContextualTranslatePipe,
@@ -38,6 +40,9 @@ import {
     FieldComponent,
     MusclePickerComponent,
     SegmentedToggleComponent,
+    StackComponent,
+    TextInputComponent,
+    ButtonComponent,
   ],
 })
 export class ExerciseEditorComponent implements OnInit {

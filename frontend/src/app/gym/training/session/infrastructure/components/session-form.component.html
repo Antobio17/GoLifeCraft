@@ -6,28 +6,31 @@
     (leadingClick)="cancel()"
   />
 
-  <form class="gym-form" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <ds-field [label]="'createSession.field.name' | t">
-      <input
-        class="gym-input"
-        type="text"
-        formControlName="name"
-        [placeholder]="'createSession.field.namePlaceholder' | t"
-        [class.is-invalid]="
-          form.get('name')?.invalid && form.get('name')?.touched
-        "
-      />
-    </ds-field>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ds-stack [gap]="'22px'">
+      <ds-field [label]="'createSession.field.name' | t">
+        <ds-text-input
+          variant="outlined"
+          formControlName="name"
+          [placeholder]="'createSession.field.namePlaceholder' | t"
+        />
+      </ds-field>
 
-    <ds-field [label]="'createSession.field.duration' | t">
-      <ds-choice-chips
-        [options]="estOptions"
-        formControlName="estimatedDurationMinutes"
-      ></ds-choice-chips>
-    </ds-field>
+      <ds-field [label]="'createSession.field.duration' | t">
+        <ds-choice-chips
+          [options]="estOptions"
+          formControlName="estimatedDurationMinutes"
+        />
+      </ds-field>
 
-    <button type="submit" class="gym-cta" [disabled]="saving()">
-      {{ saving() ? ("createSession.saving" | t) : saveLabel }}
-    </button>
+      <ds-button
+        type="submit"
+        [fullWidth]="true"
+        [loading]="saving()"
+        [disabled]="saving()"
+      >
+        {{ saving() ? ("createSession.saving" | t) : saveLabel }}
+      </ds-button>
+    </ds-stack>
   </form>
 </ds-page-wrapper>

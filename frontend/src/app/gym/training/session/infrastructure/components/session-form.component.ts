@@ -12,6 +12,9 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { ChoiceChipsComponent } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { CreateSessionService } from "../../application/services/create-session.service";
@@ -27,7 +30,6 @@ import { SessionExerciseView } from "../../domain/models/session-detail.model";
 @Component({
   selector: "app-session-form",
   templateUrl: "./session-form.component.html",
-  styleUrls: ["./gym-form.css"],
   imports: [
     ReactiveFormsModule,
     ContextualTranslatePipe,
@@ -35,6 +37,9 @@ import { SessionExerciseView } from "../../domain/models/session-detail.model";
     ScreenHeaderComponent,
     FieldComponent,
     ChoiceChipsComponent,
+    StackComponent,
+    TextInputComponent,
+    ButtonComponent,
   ],
 })
 export class SessionFormComponent implements OnInit {
