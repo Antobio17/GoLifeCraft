@@ -1,38 +1,59 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { DecimalPipe } from "@angular/common";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { MUSCLE_GROUPS_BY_REGION } from "@gym/library/exercise/domain/constants/muscle-groups.constants";
-import { GymStats, SessionVolume } from "../../domain/models/gym-stats.model";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { StatComponent } from "@shared/design-system/stat/infrastructure/components/stat.component";
+import {
+  BarChartComponent,
+  BarDatum,
+} from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
+import { LineChartComponent } from "@shared/design-system/line-chart/infrastructure/components/line-chart.component";
+import { MeterComponent } from "@shared/design-system/meter/infrastructure/components/meter.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { GymStats } from "../../domain/models/gym-stats.model";
 
 interface RegionShare {
   region: string;
-  sets: number;
   percent: number;
   index: number;
 }
 
-interface ProgressionChart {
-  linePoints: string;
-  areaPath: string;
-  lastX: number;
-  lastY: number;
-  deltaLabel: string;
+interface ProgressionDelta {
+  label: string;
   positive: boolean;
 }
 
 const REGION_ORDER = ["Tren superior", "Core", "Tren inferior"];
-
-const CHART_WIDTH = 300;
-const CHART_HEIGHT = 100;
-const CHART_PAD_TOP = 14;
-const CHART_PAD_BOTTOM = 14;
+const REGION_COLORS = [
+  "var(--ds-primary)",
+  "var(--ds-accent)",
+  "var(--ds-lime-500)",
+];
 
 @Component({
   selector: "app-gym-analytics",
-  standalone: true,
   templateUrl: "./gym-analytics.component.html",
-  styleUrls: ["./gym-analytics.component.css"],
-  imports: [DecimalPipe, ContextualTranslatePipe],
+  imports: [
+    ContextualTranslatePipe,
+    StackComponent,
+    GridComponent,
+    CardComponent,
+    HeadingComponent,
+    TextComponent,
+    ChipComponent,
+    ButtonComponent,
+    StatComponent,
+    BarChartComponent,
+    LineChartComponent,
+    MeterComponent,
+    SkeletonComponent,
+  ],
 })
 export class GymAnalyticsComponent {
   @Input() stats: GymStats | null = null;
@@ -41,14 +62,48 @@ export class GymAnalyticsComponent {
   @Output() seeAll = new EventEmitter<void>();
 
   private readonly regionByMuscle = this.buildRegionLookup();
+  private readonly formatter = new Intl.NumberFormat("es", {
+    maximumFractionDigits: 0,
+  });
 
   get hasData(): boolean {
     const stats = this.stats;
     return !!stats && (stats.totalSessions > 0 || stats.totalSets > 0);
   }
 
-  get sessionVolumes(): SessionVolume[] {
-    return this.stats?.sessionVolumes ?? [];
+  get totalVolumeText(): string {
+    return this.formatter.format(this.stats?.totalVolumeKg ?? 0);
+  }
+
+  get volumeBars(): BarDatum[] {
+    return (this.stats?.sessionVolumes ?? []).map((session) => ({
+      id: session.id,
+      label: session.name,
+      value: session.volumeKg,
+      display: this.formatter.format(session.volumeKg),
+    }));
+  }
+
+  get progressionPoints(): number[] {
+    return (this.stats?.volumeProgression ?? []).map((point) => point.volumeKg);
+  }
+
+  get hasProgression(): boolean {
+    return this.progressionPoints.length >= 2;
+  }
+
+  get progressionDelta(): ProgressionDelta | null {
+    const values = this.progressionPoints;
+    if (values.length < 2) {
+      return null;
+    }
+
+    const first = values[0] || 1;
+    const delta = ((values[values.length - 1] - values[0]) / first) * 100;
+    return {
+      label: `${delta >= 0 ? "+" : ""}${delta.toFixed(0)}%`,
+      positive: delta >= 0,
+    };
   }
 
   get regionShares(): RegionShare[] {
@@ -64,62 +119,16 @@ export class GymAnalyticsComponent {
 
     const total = [...totals.values()].reduce((acc, value) => acc + value, 0);
 
-    return REGION_ORDER.map((region, index) => {
-      const sets = totals.get(region) ?? 0;
-      return {
-        region,
-        sets,
-        percent: total === 0 ? 0 : Math.round((sets / total) * 100),
-        index,
-      };
-    });
-  }
-
-  get progression(): ProgressionChart | null {
-    const points = this.stats?.volumeProgression ?? [];
-    if (points.length < 2) {
-      return null;
-    }
-
-    const values = points.map((p) => p.volumeKg);
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    const span = max - min || 1;
-    const usableHeight = CHART_HEIGHT - CHART_PAD_TOP - CHART_PAD_BOTTOM;
-
-    const xy = values.map((value, i) => ({
-      x: +((i / (values.length - 1)) * CHART_WIDTH).toFixed(1),
-      y: +(
-        CHART_HEIGHT -
-        CHART_PAD_BOTTOM -
-        ((value - min) / span) * usableHeight
-      ).toFixed(1),
+    return REGION_ORDER.map((region, index) => ({
+      region,
+      percent:
+        total === 0 ? 0 : Math.round(((totals.get(region) ?? 0) / total) * 100),
+      index,
     }));
-
-    const last = xy[xy.length - 1];
-    const first = values[0] || 1;
-    const delta = ((values[values.length - 1] - values[0]) / first) * 100;
-
-    return {
-      linePoints: xy.map((p) => `${p.x},${p.y}`).join(" "),
-      areaPath: `M${xy[0].x},${CHART_HEIGHT} L${xy
-        .map((p) => `${p.x},${p.y}`)
-        .join(" L")} L${last.x},${CHART_HEIGHT} Z`,
-      lastX: last.x,
-      lastY: last.y,
-      deltaLabel: `${delta >= 0 ? "+" : ""}${delta.toFixed(0)}%`,
-      positive: delta >= 0,
-    };
   }
 
-  barHeight(volumeKg: number): string {
-    const max = Math.max(...this.sessionVolumes.map((s) => s.volumeKg), 1);
-    return `${Math.max(6, Math.round((volumeKg / max) * 100))}%`;
-  }
-
-  isTopSession(volumeKg: number): boolean {
-    const max = Math.max(...this.sessionVolumes.map((s) => s.volumeKg), 0);
-    return volumeKg > 0 && volumeKg === max;
+  regionColor(index: number): string {
+    return REGION_COLORS[index] ?? REGION_COLORS[0];
   }
 
   private buildRegionLookup(): Map<string, string> {

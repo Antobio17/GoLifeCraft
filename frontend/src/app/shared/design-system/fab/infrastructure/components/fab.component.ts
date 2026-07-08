@@ -1,0 +1,75 @@
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
+import { DsIconName } from "../../../icon/domain/models/icon.model";
+
+@Component({
+  selector: "ds-fab",
+  standalone: true,
+  imports: [IconComponent],
+  template: `
+    <button
+      type="button"
+      class="ds-fab"
+      [class.ds-fab--extended]="!!label"
+      [attr.aria-label]="label || ariaLabel || null"
+      (click)="clicked.emit()"
+    >
+      <ds-icon [name]="icon" [size]="18" [stroke]="2.6" />
+      @if (label) {
+        <span class="ds-fab__label">{{ label }}</span>
+      }
+    </button>
+  `,
+  styles: [
+    `
+      :host {
+        position: sticky;
+        bottom: 20px;
+        display: flex;
+        justify-content: center;
+        pointer-events: none;
+        z-index: 20;
+      }
+      .ds-fab {
+        pointer-events: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        cursor: pointer;
+        background: var(--ds-primary);
+        color: var(--ds-on-primary);
+        border-radius: var(--ds-radius-pill);
+        box-shadow: var(--ds-shadow-float);
+        transition:
+          background var(--ds-transition-fast),
+          transform var(--ds-transition-fast);
+      }
+      .ds-fab:not(.ds-fab--extended) {
+        width: 52px;
+        height: 52px;
+        justify-content: center;
+      }
+      .ds-fab--extended {
+        padding: 13px 20px;
+      }
+      .ds-fab:hover {
+        background: var(--ds-primary-hover);
+      }
+      .ds-fab:active {
+        transform: scale(0.96);
+      }
+      .ds-fab__label {
+        font-size: var(--ds-text-base);
+        font-weight: var(--ds-weight-bold);
+      }
+    `,
+  ],
+})
+export class FabComponent {
+  @Input({ required: true }) icon!: DsIconName;
+  @Input() label = "";
+  @Input() ariaLabel = "";
+
+  @Output() clicked = new EventEmitter<void>();
+}

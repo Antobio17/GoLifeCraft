@@ -4,12 +4,14 @@ import {
   ButtonSize,
   ButtonType,
 } from "../../domain/models/button.model";
+import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
+import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-button",
   templateUrl: "./button.component.html",
   styleUrls: ["./button.component.css"],
-  imports: [],
+  imports: [IconComponent],
 })
 export class ButtonComponent {
   @Input() variant: ButtonVariant = "primary";
@@ -18,11 +20,17 @@ export class ButtonComponent {
   @Input() disabled = false;
   @Input() loading = false;
   @Input() fullWidth = false;
+  @Input() icon?: DsIconName;
+  @Input() iconSize = 16;
 
   @Output() clicked = new EventEmitter<void>();
 
   get buttonClasses(): string {
-    const classes = ["ds-btn", `ds-btn--${this.variant}`, `ds-btn--${this.size}`];
+    const classes = [
+      "ds-btn",
+      `ds-btn--${this.variant}`,
+      `ds-btn--${this.size}`,
+    ];
     if (this.fullWidth) classes.push("ds-btn--full");
     if (this.loading) classes.push("ds-btn--loading");
     return classes.join(" ");
