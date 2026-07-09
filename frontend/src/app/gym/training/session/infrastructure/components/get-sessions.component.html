@@ -69,17 +69,16 @@
             </ds-stack>
           }
 
-          <div (click)="$event.stopPropagation()">
-            <ds-button
-              variant="outline"
-              size="sm"
-              icon="play"
-              [fullWidth]="true"
-              (clicked)="onStart(session.id)"
-            >
-              {{ "getSessions.actions.start" | t }}
-            </ds-button>
-          </div>
+          <ds-button
+            variant="outline"
+            size="sm"
+            icon="play"
+            [fullWidth]="true"
+            (click)="$event.stopPropagation()"
+            (clicked)="onStart()"
+          >
+            {{ "getSessions.actions.start" | t }}
+          </ds-button>
         </ds-card>
       }
     </ds-grid>
