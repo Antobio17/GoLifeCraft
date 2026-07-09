@@ -42,7 +42,7 @@ interface Point {
       }
       .ds-line__area {
         fill: var(--line-area, var(--ds-primary-soft));
-        opacity: 0.5;
+        opacity: var(--line-area-opacity, 0.5);
       }
       .ds-line__stroke {
         fill: none;
