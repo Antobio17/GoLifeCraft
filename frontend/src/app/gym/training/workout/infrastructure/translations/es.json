@@ -1,0 +1,32 @@
+{
+  "getWorkouts": {
+    "heading": "Historial",
+    "recent": "Entrenos recientes",
+    "stats": {
+      "workouts": "Entrenos"
+    },
+    "card": {
+      "sets": "series"
+    },
+    "empty": {
+      "title": "Aún no hay entrenos",
+      "text": "Cuando finalices una sesión aparecerá aquí tu historial."
+    }
+  },
+  "getWorkout": {
+    "back": "Historial",
+    "eyebrow": "Entreno",
+    "sets": "series",
+    "set": {
+      "number": "Serie",
+      "reps": "Reps",
+      "weight": "Peso (kg)"
+    }
+  },
+  "workout": {
+    "breadcrumb": {
+      "list": "Historial",
+      "detail": "Entreno"
+    }
+  }
+}

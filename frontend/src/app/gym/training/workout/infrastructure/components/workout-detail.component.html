@@ -1,0 +1,72 @@
+<ds-page-wrapper [maxWidth]="'680px'" [gap]="'12px'">
+  @if (loading()) {
+    <ds-skeleton height="120px" />
+  } @else if (workout(); as detail) {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getWorkout.back' | t"
+      [eyebrow]="'getWorkout.eyebrow' | t"
+      [title]="detail.sessionName"
+      (leadingClick)="goBack()"
+    />
+
+    <ds-stack direction="row" align="center" [wrap]="true" [gap]="'8px'">
+      <ds-chip>
+        <ds-stack direction="row" align="center" [gap]="'5px'">
+          <ds-icon name="clock" [size]="13" />
+          {{ durationText(detail.durationSeconds) }}
+        </ds-stack>
+      </ds-chip>
+      <ds-chip tone="brand">
+        {{ completedSets(detail) }}/{{ totalSets(detail) }}
+        {{ "getWorkout.sets" | t }}
+      </ds-chip>
+      <ds-text variant="meta">{{ dateText(detail.startedAt) }}</ds-text>
+    </ds-stack>
+
+    <ds-stack [gap]="'9px'">
+      @for (exercise of detail.exercises; track exercise.id; let i = $index) {
+        <ds-card [gap]="'8px'" [padding]="'11px'">
+          <ds-stack direction="row" align="center" [gap]="'12px'">
+            <ds-chip tone="brand">{{ i + 1 }}</ds-chip>
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-heading [level]="3" size="sm">
+                {{ exercise.exerciseName }}
+              </ds-heading>
+              <ds-text variant="meta">{{ muscleText(exercise) }}</ds-text>
+            </ds-stack>
+          </ds-stack>
+
+          <div class="wset-header">
+            <span class="wset-header__num">{{
+              "getWorkout.set.number" | t
+            }}</span>
+            <span class="wset-header__col">{{
+              "getWorkout.set.reps" | t
+            }}</span>
+            <span class="wset-header__col">{{
+              "getWorkout.set.weight" | t
+            }}</span>
+            <span class="wset-header__done"></span>
+          </div>
+
+          @for (set of exercise.sets; track set.id; let j = $index) {
+            <div class="wset-row" [class.wset-row--done]="set.done">
+              <span class="wset-row__num">{{ j + 1 }}</span>
+              <span class="wset-row__col">{{ set.reps }}</span>
+              <span class="wset-row__col">{{ set.weight ?? 0 }}</span>
+              <span
+                class="wset-row__done"
+                [class.wset-row__done--on]="set.done"
+              >
+                @if (set.done) {
+                  <ds-icon name="check" [size]="14" [stroke]="3" />
+                }
+              </span>
+            </div>
+          }
+        </ds-card>
+      }
+    </ds-stack>
+  }
+</ds-page-wrapper>

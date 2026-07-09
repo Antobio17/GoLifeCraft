@@ -6,6 +6,7 @@ import { CreateSessionProviders } from "../providers/create-session.providers";
 import { UpdateSessionProviders } from "../providers/update-session.providers";
 import { DeleteSessionProviders } from "../providers/delete-session.providers";
 import { GetExercisesProviders } from "@gym/library/exercise/infrastructure/providers/get-exercises.providers";
+import { WorkoutSessionProviders } from "@gym/training/workout/infrastructure/providers/workout-session.providers";
 
 export const SESSION_ROUTES: Routes = [
   {
@@ -17,6 +18,7 @@ export const SESSION_ROUTES: Routes = [
       ...UpdateSessionProviders.getProviders(),
       ...DeleteSessionProviders.getProviders(),
       ...GetExercisesProviders.getProviders(),
+      ...WorkoutSessionProviders.getProviders(),
     ],
     children: [
       {

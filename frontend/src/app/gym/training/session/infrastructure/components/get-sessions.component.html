@@ -75,7 +75,7 @@
             icon="play"
             [fullWidth]="true"
             (click)="$event.stopPropagation()"
-            (clicked)="onStart()"
+            (clicked)="onStart(session.id)"
           >
             {{ "getSessions.actions.start" | t }}
           </ds-button>

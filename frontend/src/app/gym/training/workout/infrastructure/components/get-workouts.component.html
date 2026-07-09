@@ -1,0 +1,48 @@
+<ds-page-wrapper [gap]="'12px'">
+  <ds-screen-header
+    [title]="'getWorkouts.heading' | t"
+    [subtitle]="headerSubtitle()"
+  />
+
+  <ds-text variant="label">{{ "getWorkouts.recent" | t }}</ds-text>
+
+  @if (loading()) {
+    <ds-grid [minColumn]="'260px'" [gap]="'9px'">
+      @for (i of [1, 2, 3]; track i) {
+        <ds-skeleton />
+      }
+    </ds-grid>
+  } @else if (items().length === 0) {
+    <ds-empty-state
+      icon="dumbbell"
+      [title]="'getWorkouts.empty.title' | t"
+      [text]="'getWorkouts.empty.text' | t"
+    />
+  } @else {
+    <ds-grid [minColumn]="'260px'" [gap]="'9px'">
+      @for (workout of items(); track workout.id) {
+        <ds-card
+          [interactive]="true"
+          [padding]="'13px'"
+          [gap]="'9px'"
+          (activated)="onOpen(workout.id)"
+        >
+          <ds-stack [gap]="'1px'">
+            <ds-heading [level]="3" size="md">
+              {{ workout.attributes.sessionName }}
+            </ds-heading>
+            <ds-text variant="meta">{{ summaryText(workout) }}</ds-text>
+          </ds-stack>
+
+          @if (workout.attributes.muscleGroups.length) {
+            <ds-stack direction="row" [wrap]="true" [gap]="'5px'">
+              @for (tag of workout.attributes.muscleGroups; track tag) {
+                <ds-chip tone="brand">{{ tag }}</ds-chip>
+              }
+            </ds-stack>
+          }
+        </ds-card>
+      }
+    </ds-grid>
+  }
+</ds-page-wrapper>

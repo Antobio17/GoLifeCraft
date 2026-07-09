@@ -113,3 +113,206 @@
   font-weight: 700;
   font-size: 12.5px;
 }
+
+/* ---- active workout banner ---- */
+.active-banner {
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  background: var(--ds-surface-brand);
+  color: var(--ds-on-surface-brand);
+  border-radius: 18px;
+  padding: 14px 15px;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
+  transition:
+    padding 0.22s ease,
+    border-radius 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.active-banner--stuck {
+  border-radius: 14px;
+  padding: 9px 12px;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
+}
+
+.active-banner__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.active-banner__pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ds-accent);
+  flex: 0 0 auto;
+  animation: workoutPulse 1.4s ease-in-out infinite;
+}
+
+.active-banner--paused .active-banner__pulse {
+  animation: none;
+  opacity: 0.5;
+}
+
+@keyframes workoutPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+.active-banner__info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.active-banner__state {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  color: var(--ds-accent);
+}
+
+.active-banner__time {
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  transition: font-size 0.22s ease;
+}
+
+.active-banner--stuck .active-banner__time {
+  font-size: 19px;
+}
+
+.active-banner__count {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.active-banner__count-value {
+  display: block;
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--ds-accent);
+}
+
+.active-banner__count-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+.active-banner__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.active-banner--stuck .active-banner__actions {
+  display: none;
+}
+
+.active-banner__compact-actions {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.active-banner--stuck .active-banner__compact-actions {
+  display: flex;
+}
+
+.active-banner__compact-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.active-banner__compact-btn--soft {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--ds-on-surface-brand);
+}
+
+.active-banner__compact-btn--stop {
+  background: var(--ds-danger);
+  color: #fff;
+}
+
+.active-banner__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: none;
+  border-radius: 12px;
+  padding: 11px;
+  cursor: pointer;
+  font-family: var(--ds-font-body);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.active-banner__btn--soft {
+  flex: 1 1 auto;
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--ds-on-surface-brand);
+}
+
+.active-banner__btn--stop {
+  flex: 0 0 auto;
+  padding: 11px 16px;
+  background: var(--ds-danger);
+  color: #fff;
+}
+
+/* ---- per-set completion check ---- */
+.set-check {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.15s ease;
+  background: var(--ds-surface);
+  border: 1.5px solid var(--ds-border-strong);
+  color: var(--ds-accent);
+}
+
+.set-check--on {
+  background: var(--ds-accent);
+  border-color: var(--ds-accent);
+  color: var(--ds-on-accent);
+}
+
+.set-row--done {
+  background: var(--ds-accent-soft);
+  border-radius: 8px;
+}

@@ -14,6 +14,11 @@ export const DS_ICONS = {
   search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
   arrowRight: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   play: '<path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>',
+  pause:
+    '<rect x="6" y="5" width="4" height="14" rx="1.2" fill="currentColor" stroke="none"/><rect x="14" y="5" width="4" height="14" rx="1.2" fill="currentColor" stroke="none"/>',
+  square:
+    '<rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none"/>',
+  check: '<path d="M20 6L9 17l-5-5"/>',
 } as const;
 
 export type DsIconName = keyof typeof DS_ICONS;
