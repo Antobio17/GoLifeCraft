@@ -3,7 +3,6 @@
 namespace Gym\Library\Exercise\Infrastructure\UI\API\Controller;
 
 use Gym\Library\Exercise\Application\Command\UpdateExerciseCommand;
-use Gym\Library\Exercise\Domain\Exception\CreateExerciseException;
 use Gym\Library\Exercise\Domain\Exception\UpdateExerciseException;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
