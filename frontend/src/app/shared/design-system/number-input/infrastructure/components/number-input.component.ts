@@ -7,7 +7,11 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
   standalone: true,
   imports: [IconComponent],
   template: `
-    <div class="ds-num" [class.ds-num--stepper]="stepper">
+    <div
+      class="ds-num"
+      [class.ds-num--stepper]="stepper"
+      [class.ds-num--boxed]="variant === 'boxed'"
+    >
       @if (stepper) {
         <button
           type="button"
@@ -128,6 +132,40 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-meta);
       }
+      .ds-num--boxed {
+        gap: 3px;
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+      }
+      .ds-num--boxed .ds-num__step {
+        width: 24px;
+        height: 28px;
+        border: 1px solid var(--ds-border);
+        border-radius: 7px;
+        background: var(--ds-surface);
+        color: var(--ds-primary);
+        box-shadow: none;
+      }
+      .ds-num--boxed .ds-num__step:hover:not(:disabled) {
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
+      }
+      .ds-num--boxed .ds-num__field {
+        flex: 1 1 0;
+        width: 0;
+        min-width: 0;
+        border: 1px solid var(--ds-border);
+        border-radius: 7px;
+        background: var(--ds-surface);
+        padding: 6px 2px;
+        font-size: 13px;
+        font-weight: var(--ds-weight-bold);
+      }
+      .ds-num--boxed .ds-num__field:focus {
+        box-shadow: none;
+        border-color: var(--ds-border-focus);
+      }
     `,
   ],
 })
@@ -135,6 +173,7 @@ export class NumberInputComponent implements ControlValueAccessor {
   ngControl = inject(NgControl, { optional: true, self: true });
 
   @Input() stepper = false;
+  @Input() variant: "pill" | "boxed" = "pill";
   @Input() step = 1;
   @Input() min = 0;
   @Input() max: number | null = null;

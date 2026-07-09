@@ -1,4 +1,4 @@
-<ds-page-wrapper [maxWidth]="'680px'" [gap]="'14px'">
+<ds-page-wrapper [maxWidth]="'680px'" [gap]="'12px'">
   @if (loading()) {
     <ds-skeleton height="120px" />
   } @else {
@@ -40,9 +40,9 @@
         </ds-button>
       </ds-empty-state>
     } @else {
-      <ds-stack [gap]="'14px'">
+      <ds-stack [gap]="'9px'">
         @for (exercise of exercises(); track exercise.id; let i = $index) {
-          <ds-card [gap]="'14px'">
+          <ds-card [gap]="'8px'" [padding]="'11px'">
             <ds-stack direction="row" align="center" [gap]="'12px'">
               <ds-chip tone="brand">{{ i + 1 }}</ds-chip>
               <ds-stack [gap]="'2px'" [grow]="true">
@@ -65,75 +65,72 @@
               />
             </ds-stack>
 
-            <ds-stack direction="row" align="center" [gap]="'10px'">
-              <ds-text variant="label">{{
+            <div class="set-header">
+              <span class="set-header__num">{{
                 "getSession.set.number" | t
-              }}</ds-text>
-              <ds-stack [grow]="true">
-                <ds-text variant="label">{{
-                  "getSession.set.reps" | t
-                }}</ds-text>
-              </ds-stack>
-              <ds-stack [grow]="true">
-                <ds-text variant="label">
-                  {{ "getSession.set.weight" | t }}
-                </ds-text>
-              </ds-stack>
-              <ds-icon-button icon="close" [size]="30" [disabled]="true" />
-            </ds-stack>
+              }}</span>
+              <span class="set-header__col">{{
+                "getSession.set.reps" | t
+              }}</span>
+              <span class="set-header__col">{{
+                "getSession.set.weight" | t
+              }}</span>
+              <span class="set-header__spacer"></span>
+            </div>
 
             @for (set of exercise.sets; track set.id; let j = $index) {
-              <ds-stack direction="row" align="center" [gap]="'10px'">
-                <ds-text variant="meta">{{ j + 1 }}</ds-text>
-                <ds-stack [grow]="true">
-                  <ds-number-input
-                    [stepper]="true"
-                    [step]="1"
-                    [min]="0"
-                    [ngModel]="set.reps"
-                    (ngModelChange)="setReps(exercise.id, set.id, $event)"
-                    [ariaLabel]="'getSession.set.reps' | t"
-                    [incrementLabel]="'getSession.set.repsUp' | t"
-                    [decrementLabel]="'getSession.set.repsDown' | t"
-                  />
-                </ds-stack>
-                <ds-stack [grow]="true">
-                  <ds-number-input
-                    [stepper]="true"
-                    [step]="2.5"
-                    [precision]="1"
-                    [min]="0"
-                    [ngModel]="set.weight ?? 0"
-                    (ngModelChange)="setWeight(exercise.id, set.id, $event)"
-                    [ariaLabel]="'getSession.set.weight' | t"
-                    [incrementLabel]="'getSession.set.weightUp' | t"
-                    [decrementLabel]="'getSession.set.weightDown' | t"
-                  />
-                </ds-stack>
-                <ds-icon-button
-                  icon="close"
-                  [size]="30"
-                  [ariaLabel]="'getSession.set.remove' | t"
-                  (clicked)="removeSet(exercise.id, set.id)"
+              <div class="set-row">
+                <span class="set-row__num">{{ j + 1 }}</span>
+                <ds-number-input
+                  variant="boxed"
+                  [stepper]="true"
+                  [step]="1"
+                  [min]="0"
+                  [ngModel]="set.reps"
+                  (ngModelChange)="setReps(exercise.id, set.id, $event)"
+                  [ariaLabel]="'getSession.set.reps' | t"
+                  [incrementLabel]="'getSession.set.repsUp' | t"
+                  [decrementLabel]="'getSession.set.repsDown' | t"
                 />
-              </ds-stack>
+                <ds-number-input
+                  variant="boxed"
+                  [stepper]="true"
+                  [step]="2.5"
+                  [precision]="1"
+                  [min]="0"
+                  [ngModel]="set.weight ?? 0"
+                  (ngModelChange)="setWeight(exercise.id, set.id, $event)"
+                  [ariaLabel]="'getSession.set.weight' | t"
+                  [incrementLabel]="'getSession.set.weightUp' | t"
+                  [decrementLabel]="'getSession.set.weightDown' | t"
+                />
+                <button
+                  type="button"
+                  class="set-row__remove"
+                  [attr.aria-label]="'getSession.set.remove' | t"
+                  (click)="removeSet(exercise.id, set.id)"
+                >
+                  ×
+                </button>
+              </div>
             }
 
-            <ds-button
-              variant="ghost"
-              size="sm"
-              icon="plus"
-              (clicked)="addSet(exercise.id)"
+            <button
+              type="button"
+              class="add-set"
+              (click)="addSet(exercise.id)"
             >
-              {{ "getSession.set.add" | t }}
-            </ds-button>
+              <ds-icon name="plus" [size]="14" [stroke]="2.4" />
+              <span>{{ "getSession.set.add" | t }}</span>
+            </button>
           </ds-card>
         }
       </ds-stack>
 
-      <ds-button variant="outline" icon="plus" (clicked)="openPicker()">
-        {{ "getSession.exercise.add" | t }}
-      </ds-button>
+      <button type="button" class="add-exercise" (click)="openPicker()">
+        <ds-icon name="plus" [size]="16" [stroke]="2.4" />
+        <span>{{ "getSession.exercise.add" | t }}</span>
+      </button>
     }
 
     <ds-button

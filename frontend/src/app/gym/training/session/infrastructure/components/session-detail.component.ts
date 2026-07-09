@@ -40,6 +40,7 @@ import { SessionExerciseView } from "../../domain/models/session-detail.model";
 @Component({
   selector: "app-session-detail",
   templateUrl: "./session-detail.component.html",
+  styleUrls: ["./session-detail.component.css"],
   imports: [
     FormsModule,
     ContextualTranslatePipe,

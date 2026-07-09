@@ -1,5 +1,14 @@
 :host {
   display: block;
+  --gym-muscle-1: #2f6b4a;
+  --gym-muscle-2: #e0714a;
+  --gym-muscle-3: #3e7cb1;
+}
+
+:host-context([data-theme="dark"]) {
+  --gym-muscle-1: #c9ff3c;
+  --gym-muscle-2: #ff9f6b;
+  --gym-muscle-3: #7fc4ff;
 }
 
 .gym {
@@ -7,8 +16,6 @@
   flex-direction: column;
   gap: 10px;
 }
-
-/* ─── Header ─── */
 
 .gym__head {
   display: flex;
@@ -40,8 +47,6 @@
   flex-direction: column;
   gap: 12px;
 }
-
-/* ─── Stats grid ─── */
 
 .gym__stats {
   display: grid;
@@ -79,8 +84,6 @@
   color: var(--ds-text-muted);
 }
 
-/* ─── Panels ─── */
-
 .panel {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
@@ -97,7 +100,7 @@
   overflow: hidden;
 }
 
-[data-theme="dark"] .panel--brand {
+:host-context([data-theme="dark"]) .panel--brand {
   border-color: var(--ds-border-hairline);
 }
 
@@ -135,9 +138,13 @@
 
 .panel ds-bar-chart {
   margin-top: 15px;
+  --ds-bar-rest: var(--ds-forest-200);
+  --ds-bar-top: var(--ds-accent);
 }
 
-/* ─── Progression delta pill + sparkline ─── */
+:host-context([data-theme="dark"]) .panel ds-bar-chart {
+  --ds-bar-rest: color-mix(in srgb, var(--ds-accent) 34%, transparent);
+}
 
 .delta {
   display: inline-flex;
@@ -160,12 +167,11 @@
   --line-stroke: var(--ds-accent);
   --line-area: var(--ds-accent);
   --line-area-opacity: 0.16;
+  --line-dot-stroke: var(--ds-surface-brand);
   display: block;
   height: 90px;
   margin-top: 12px;
 }
-
-/* ─── Muscle meters ─── */
 
 .muscles {
   display: flex;
@@ -187,9 +193,9 @@
 }
 
 .muscle__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
   flex: 0 0 auto;
 }
 
@@ -220,8 +226,6 @@
   border-radius: 999px;
   transition: width var(--ds-transition-smooth);
 }
-
-/* ─── Two-column layout (collapses to one on narrow screens) ─── */
 
 .gym__grid {
   display: grid;

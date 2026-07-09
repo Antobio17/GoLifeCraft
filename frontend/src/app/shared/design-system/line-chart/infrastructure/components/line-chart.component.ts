@@ -54,7 +54,7 @@ interface Point {
       }
       .ds-line__dot {
         fill: var(--line-stroke, var(--ds-primary));
-        stroke: var(--ds-surface);
+        stroke: var(--line-dot-stroke, var(--ds-surface));
         stroke-width: 2;
         vector-effect: non-scaling-stroke;
       }
