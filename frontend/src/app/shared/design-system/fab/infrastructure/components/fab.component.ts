@@ -24,11 +24,16 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
     `
       :host {
         position: sticky;
-        bottom: 20px;
+        bottom: calc(72px + 12px);
         display: flex;
         justify-content: flex-end;
         pointer-events: none;
         z-index: 20;
+      }
+      @media (min-width: 768px) {
+        :host {
+          bottom: 20px;
+        }
       }
       .ds-fab {
         pointer-events: auto;
