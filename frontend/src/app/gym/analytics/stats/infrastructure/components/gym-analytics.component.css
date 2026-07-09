@@ -159,6 +159,7 @@
 .panel__spark {
   --line-stroke: var(--ds-accent);
   --line-area: var(--ds-accent);
+  --line-area-opacity: 0.16;
   display: block;
   height: 90px;
   margin-top: 12px;

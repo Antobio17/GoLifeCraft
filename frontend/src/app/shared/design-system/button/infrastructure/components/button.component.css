@@ -98,6 +98,10 @@
   color: var(--ds-accent);
 }
 
+:host-context([data-theme="dark"]) .ds-btn--primary ds-icon {
+  color: var(--ds-on-primary);
+}
+
 .ds-btn--primary:focus-visible {
   outline: 2px solid var(--ds-primary);
   outline-offset: 2px;

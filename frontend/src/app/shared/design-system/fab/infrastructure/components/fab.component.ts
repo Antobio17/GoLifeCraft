@@ -58,6 +58,9 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .ds-fab ds-icon {
         color: var(--ds-accent);
       }
+      :host-context([data-theme="dark"]) .ds-fab ds-icon {
+        color: var(--ds-on-primary);
+      }
       .ds-fab:hover {
         background: var(--ds-primary-hover);
       }

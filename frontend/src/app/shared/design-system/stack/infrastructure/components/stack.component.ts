@@ -18,6 +18,7 @@ type StackJustify = "start" | "center" | "end" | "between";
         justify-content: var(--stack-justify, flex-start);
         flex-wrap: var(--stack-wrap, nowrap);
         min-width: 0;
+        text-align: initial;
       }
       :host([grow]) {
         flex: 1 1 auto;

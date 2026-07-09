@@ -51,13 +51,13 @@
                 </ds-heading>
                 <ds-text variant="meta">{{ muscleText(exercise) }}</ds-text>
               </ds-stack>
-              <ds-button
-                variant="outline"
-                size="sm"
-                (clicked)="toggleMode(exercise.id)"
+              <ds-chip
+                tone="brand"
+                class="mode-badge"
+                (click)="toggleMode(exercise.id)"
               >
                 {{ modeLabel(exercise.type) }}
-              </ds-button>
+              </ds-chip>
               <ds-icon-button
                 icon="close"
                 [ariaLabel]="'getSession.exercise.remove' | t"
