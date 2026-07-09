@@ -18,7 +18,8 @@
       "emptyMessage": "Aún no has creado sesiones de entrenamiento"
     },
     "actions": {
-      "delete": "Borrar"
+      "delete": "Borrar",
+      "start": "Empezar sesión"
     },
     "deleteModal": {
       "title": "¿Borrar sesión?",

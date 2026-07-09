@@ -98,6 +98,14 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
     this.router.navigate(["/gym/exercises"]);
   }
 
+  onStart(id: string): void {
+    this.floatingToastService.showToast({
+      status: 200,
+      keyTranslation: "session.start.toast",
+      details: [],
+    });
+  }
+
   onDelete(session: Session, event: Event): void {
     event.stopPropagation();
     this.sessionToDelete.set(session);

@@ -17,6 +17,7 @@ body {
 body {
   font-family: var(--ds-font-body);
   letter-spacing: -0.01em;
+  color: var(--ds-text);
 }
 
 :root {

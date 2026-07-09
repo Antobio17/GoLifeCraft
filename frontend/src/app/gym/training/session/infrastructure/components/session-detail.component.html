@@ -75,51 +75,53 @@
               <span class="set-header__col">{{
                 "getSession.set.weight" | t
               }}</span>
-              <span class="set-header__spacer"></span>
             </div>
 
             @for (set of exercise.sets; track set.id; let j = $index) {
-              <div class="set-row">
-                <span class="set-row__num">{{ j + 1 }}</span>
-                <ds-number-input
-                  variant="boxed"
-                  [stepper]="true"
-                  [step]="1"
-                  [min]="0"
-                  [ngModel]="set.reps"
-                  (ngModelChange)="setReps(exercise.id, set.id, $event)"
-                  [ariaLabel]="'getSession.set.reps' | t"
-                  [incrementLabel]="'getSession.set.repsUp' | t"
-                  [decrementLabel]="'getSession.set.repsDown' | t"
-                />
-                <ds-number-input
-                  variant="boxed"
-                  [stepper]="true"
-                  [step]="2.5"
-                  [precision]="1"
-                  [min]="0"
-                  [ngModel]="set.weight ?? 0"
-                  (ngModelChange)="setWeight(exercise.id, set.id, $event)"
-                  [ariaLabel]="'getSession.set.weight' | t"
-                  [incrementLabel]="'getSession.set.weightUp' | t"
-                  [decrementLabel]="'getSession.set.weightDown' | t"
-                />
+              <div class="set-row-wrapper">
                 <button
                   type="button"
-                  class="set-row__remove"
+                  class="set-row__delete-action"
                   [attr.aria-label]="'getSession.set.remove' | t"
                   (click)="removeSet(exercise.id, set.id)"
                 >
-                  ×
+                  <ds-icon name="trash" [size]="16" />
                 </button>
+                <div
+                  class="set-row"
+                  [class.set-row--swiped]="isSetSwiped(set.id)"
+                  (touchstart)="onSetTouchStart($event, set.id)"
+                  (touchend)="onSetTouchEnd($event, exercise.id, set.id)"
+                >
+                  <span class="set-row__num">{{ j + 1 }}</span>
+                  <ds-number-input
+                    variant="boxed"
+                    [stepper]="true"
+                    [step]="1"
+                    [min]="0"
+                    [ngModel]="set.reps"
+                    (ngModelChange)="setReps(exercise.id, set.id, $event)"
+                    [ariaLabel]="'getSession.set.reps' | t"
+                    [incrementLabel]="'getSession.set.repsUp' | t"
+                    [decrementLabel]="'getSession.set.repsDown' | t"
+                  />
+                  <ds-number-input
+                    variant="boxed"
+                    [stepper]="true"
+                    [step]="2.5"
+                    [precision]="1"
+                    [min]="0"
+                    [ngModel]="set.weight ?? 0"
+                    (ngModelChange)="setWeight(exercise.id, set.id, $event)"
+                    [ariaLabel]="'getSession.set.weight' | t"
+                    [incrementLabel]="'getSession.set.weightUp' | t"
+                    [decrementLabel]="'getSession.set.weightDown' | t"
+                  />
+                </div>
               </div>
             }
 
-            <button
-              type="button"
-              class="add-set"
-              (click)="addSet(exercise.id)"
-            >
+            <button type="button" class="add-set" (click)="addSet(exercise.id)">
               <ds-icon name="plus" [size]="14" [stroke]="2.4" />
               <span>{{ "getSession.set.add" | t }}</span>
             </button>
@@ -151,37 +153,41 @@
   [closeLabel]="'getSession.picker.close' | t"
   (closed)="closePicker()"
 >
-  <ds-search-input
-    [placeholder]="'getSession.picker.search' | t"
-    [clearLabel]="'getSession.picker.clear' | t"
-    (searched)="onLibrarySearch($event)"
-  />
+  <ds-stack [gap]="'16px'">
+    <ds-search-input
+      [placeholder]="'getSession.picker.search' | t"
+      [clearLabel]="'getSession.picker.clear' | t"
+      (searched)="onLibrarySearch($event)"
+    />
 
-  @if (filteredLibrary.length === 0) {
-    <ds-text variant="muted">{{ "getSession.picker.empty" | t }}</ds-text>
-  } @else {
-    <ds-stack [gap]="'8px'">
-      @for (exercise of filteredLibrary; track exercise.id) {
-        <ds-card [padding]="'10px'">
-          <ds-stack direction="row" align="center" [gap]="'12px'">
-            <ds-icon-badge icon="dumbbell" />
-            <ds-stack [gap]="'2px'" [grow]="true">
-              <ds-text variant="strong">{{ exercise.attributes.name }}</ds-text>
-              <ds-text variant="meta">{{
-                libraryMuscleText(exercise)
-              }}</ds-text>
+    @if (filteredLibrary.length === 0) {
+      <ds-text variant="muted">{{ "getSession.picker.empty" | t }}</ds-text>
+    } @else {
+      <ds-stack [gap]="'8px'">
+        @for (exercise of filteredLibrary; track exercise.id) {
+          <ds-card [padding]="'10px'">
+            <ds-stack direction="row" align="center" [gap]="'12px'">
+              <ds-icon-badge icon="dumbbell" />
+              <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-text variant="strong">{{
+                  exercise.attributes.name
+                }}</ds-text>
+                <ds-text variant="meta">{{
+                  libraryMuscleText(exercise)
+                }}</ds-text>
+              </ds-stack>
+              <ds-icon-button
+                icon="plus"
+                variant="soft"
+                [ariaLabel]="'getSession.exercise.add' | t"
+                (clicked)="addFromLibrary(exercise)"
+              />
             </ds-stack>
-            <ds-icon-button
-              icon="plus"
-              variant="soft"
-              [ariaLabel]="'getSession.exercise.add' | t"
-              (clicked)="addFromLibrary(exercise)"
-            />
-          </ds-stack>
-        </ds-card>
-      }
-    </ds-stack>
-  }
+          </ds-card>
+        }
+      </ds-stack>
+    }
+  </ds-stack>
 </ds-modal-sheet>
 
 <ds-confirm-action-modal

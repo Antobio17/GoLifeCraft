@@ -13,6 +13,7 @@ export const DS_ICONS = {
   bookmark: '<path d="M4 4h13a2 2 0 0 1 2 2v14l-8-3.5L3 20V5a1 1 0 0 1 1-1z"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
   arrowRight: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  play: '<path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>',
 } as const;
 
 export type DsIconName = keyof typeof DS_ICONS;

@@ -18,7 +18,8 @@
       "emptyMessage": "You haven't created any training sessions yet"
     },
     "actions": {
-      "delete": "Delete"
+      "delete": "Delete",
+      "start": "Start session"
     },
     "deleteModal": {
       "title": "Delete session?",

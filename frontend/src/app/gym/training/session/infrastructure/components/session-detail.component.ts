@@ -92,6 +92,11 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   showDeleteModal = signal(false);
   isDeleting = signal(false);
 
+  readonly activeSwipedSetId = signal<string | null>(null);
+  private swipeStartX = 0;
+  private swipeStartY = 0;
+  private readonly SWIPE_THRESHOLD = 48;
+
   private persist$ = new Subject<void>();
   private sub?: Subscription;
 
@@ -223,6 +228,39 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       this.sessionDraft.toggleMode(list, exerciseId),
     );
     this.queuePersist();
+  }
+
+  isSetSwiped(setId: string): boolean {
+    return this.activeSwipedSetId() === setId;
+  }
+
+  onSetTouchStart(event: TouchEvent, setId: string): void {
+    if (this.activeSwipedSetId() !== setId) {
+      this.activeSwipedSetId.set(null);
+    }
+    this.swipeStartX = event.touches[0].clientX;
+    this.swipeStartY = event.touches[0].clientY;
+  }
+
+  onSetTouchEnd(event: TouchEvent, exerciseId: string, setId: string): void {
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - this.swipeStartX;
+    const deltaY = Math.abs(touch.clientY - this.swipeStartY);
+
+    if (deltaY > Math.abs(deltaX)) {
+      return;
+    }
+
+    if (deltaX < -this.SWIPE_THRESHOLD) {
+      if (this.activeSwipedSetId() === setId) {
+        this.activeSwipedSetId.set(null);
+        this.removeSet(exerciseId, setId);
+      } else {
+        this.activeSwipedSetId.set(setId);
+      }
+    } else if (deltaX > this.SWIPE_THRESHOLD / 2) {
+      this.activeSwipedSetId.set(null);
+    }
   }
 
   addSet(exerciseId: string): void {
