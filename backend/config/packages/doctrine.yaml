@@ -76,3 +76,9 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Gym/Training/Session/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Gym\Training\Session\Domain\Model'
                         alias: session
+                    Workout:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Gym/Training/Workout/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Gym\Training\Workout\Domain\Model'
+                        alias: workout

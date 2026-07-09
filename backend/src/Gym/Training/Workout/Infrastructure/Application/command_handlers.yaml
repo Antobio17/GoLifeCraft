@@ -1,0 +1,42 @@
+services:
+  Gym\Training\Workout\Application\Command\WorkoutExerciseAssembler:
+    class: Gym\Training\Workout\Application\Command\WorkoutExerciseAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Gym\Training\Workout\Application\Command\StartWorkoutCommandHandler:
+    class: Gym\Training\Workout\Application\Command\StartWorkoutCommandHandler
+    arguments:
+      $workoutRepository: '@Gym\Training\Workout\Domain\Model\WorkoutRepository'
+      $workoutExerciseAssembler: '@Gym\Training\Workout\Application\Command\WorkoutExerciseAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Workout\Application\Command\UpdateWorkoutCommandHandler:
+    class: Gym\Training\Workout\Application\Command\UpdateWorkoutCommandHandler
+    arguments:
+      $workoutRepository: '@Gym\Training\Workout\Domain\Model\WorkoutRepository'
+      $workoutExerciseAssembler: '@Gym\Training\Workout\Application\Command\WorkoutExerciseAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Workout\Application\Command\FinishWorkoutCommandHandler:
+    class: Gym\Training\Workout\Application\Command\FinishWorkoutCommandHandler
+    arguments:
+      $workoutRepository: '@Gym\Training\Workout\Domain\Model\WorkoutRepository'
+      $workoutExerciseAssembler: '@Gym\Training\Workout\Application\Command\WorkoutExerciseAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Workout\Application\Command\DiscardWorkoutCommandHandler:
+    class: Gym\Training\Workout\Application\Command\DiscardWorkoutCommandHandler
+    arguments:
+      $workoutRepository: '@Gym\Training\Workout\Domain\Model\WorkoutRepository'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

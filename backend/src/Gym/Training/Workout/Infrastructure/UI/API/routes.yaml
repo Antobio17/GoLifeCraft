@@ -1,0 +1,34 @@
+start_workout:
+  path: /api/v1/gym/workouts/start
+  methods: [POST]
+  controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\StartWorkoutController
+
+get_active_workout:
+  path: /api/v1/gym/workouts/active
+  methods: [GET]
+  controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\GetActiveWorkoutController
+
+get_workouts:
+  path: /api/v1/gym/workouts
+  methods: [GET]
+  controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\GetWorkoutsController
+
+finish_workout:
+  path: /api/v1/gym/workouts/{workoutId}/finish
+  methods: [PUT]
+  controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\FinishWorkoutController
+
+update_workout:
+  path: /api/v1/gym/workouts/{workoutId}
+  methods: [PUT]
+  controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\UpdateWorkoutController
+
+get_workout:
+  path: /api/v1/gym/workouts/{workoutId}
+  methods: [GET]
+  controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\GetWorkoutController
+
+discard_workout:
+  path: /api/v1/gym/workouts/{workoutId}
+  methods: [DELETE]
+  controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\DiscardWorkoutController

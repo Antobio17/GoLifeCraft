@@ -1,0 +1,18 @@
+label: Workout set
+
+fields:
+  workoutExerciseId:
+    min: 36
+    max: 36
+    filterable: true
+  position:
+    type: int
+    sortable: true
+  reps:
+    type: int
+  weight:
+    type: float
+  done:
+    type: bool
+
+relations: {}
