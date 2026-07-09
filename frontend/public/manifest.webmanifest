@@ -1,0 +1,18 @@
+{
+  "name": "GoLifeCraft",
+  "short_name": "GoLifeCraft",
+  "description": "GoLifeCraft",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F6F2E9",
+  "theme_color": "#F6F2E9",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/img/icon-light.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
