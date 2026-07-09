@@ -1,4 +1,4 @@
-<ds-page-wrapper>
+<ds-page-wrapper [gap]="'12px'">
   <ds-screen-header
     [title]="'getSessions.heading' | t"
     [subtitle]="headerSubtitle()"
@@ -17,7 +17,7 @@
   <ds-text variant="label">{{ "getSessions.yourSessions" | t }}</ds-text>
 
   @if (loading()) {
-    <ds-grid [minColumn]="'260px'">
+    <ds-grid [minColumn]="'260px'" [gap]="'9px'">
       @for (i of [1, 2, 3]; track i) {
         <ds-skeleton />
       }
@@ -29,7 +29,7 @@
       [text]="'getSessions.table.emptyMessage' | t"
     />
   } @else {
-    <ds-grid [minColumn]="'260px'">
+    <ds-grid [minColumn]="'260px'" [gap]="'9px'">
       @for (session of items(); track session.id) {
         <ds-card
           [interactive]="true"

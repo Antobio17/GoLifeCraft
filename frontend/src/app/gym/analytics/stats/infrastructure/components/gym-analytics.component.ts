@@ -22,9 +22,9 @@ interface ProgressionDelta {
 }
 
 const REGION_COLORS = [
-  "var(--ds-primary)",
-  "var(--ds-accent)",
-  "var(--ds-lime-500)",
+  "var(--gym-muscle-1)",
+  "var(--gym-muscle-2)",
+  "var(--gym-muscle-3)",
 ];
 
 @Component({

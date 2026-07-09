@@ -55,12 +55,12 @@ export interface BarDatum {
       .ds-bars__bar {
         width: 100%;
         max-width: 34px;
-        border-radius: 4px 4px 2px 2px;
-        background: var(--ds-primary-soft);
+        border-radius: 6px 6px 3px 3px;
+        background: var(--ds-bar-rest, var(--ds-primary-soft));
         transition: height var(--ds-transition-smooth);
       }
       .ds-bars__bar--top {
-        background: var(--ds-primary);
+        background: var(--ds-bar-top, var(--ds-primary));
       }
       .ds-bars__label {
         max-width: 100%;
