@@ -2,9 +2,11 @@
 
 namespace Authorization\User\User\Domain\Model;
 
+use Authorization\User\User\Domain\Event\MyThemeChanged;
 use Authorization\User\User\Domain\Event\UserCreated;
 use Authorization\User\User\Domain\Event\UserDeleted;
 use Authorization\User\User\Domain\Event\UserUpdated;
+use Authorization\User\User\Domain\Exception\ChangeMyThemeException;
 use Authorization\User\User\Domain\Exception\CreateUserException;
 use Authorization\User\User\Domain\Exception\DeleteUserException;
 use Authorization\User\User\Domain\Exception\UpdateUserException;
@@ -24,6 +26,9 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         self::ROLE_USER,
     ];
 
+    public const string THEME_LIGHT = 'light';
+    public const string THEME_DARK = 'dark';
+
     private int $version;
 
     public function __construct(
@@ -40,6 +45,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         public \DateTime $updatedAt,
         public readonly string $createdByUserId,
         public string $updatedByUserId,
+        public string $theme = self::THEME_LIGHT,
         public array $roles = [],
     ) {
     }
@@ -278,5 +284,36 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         return [
             self::ROLE_USER,
         ];
+    }
+
+    public function changeTheme(
+        string $theme,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!in_array(needle: $theme, haystack: self::getValidThemes(), strict: true)) {
+            throw ChangeMyThemeException::invalidTheme(theme: $theme);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->theme = $theme;
+        $this->updatedByUserId = $updatedByUserId;
+        $this->updatedAt = $now;
+
+        $this->record(
+            event: new MyThemeChanged(
+                aggregateId: $this->id,
+                occurredOn: $now,
+                theme: $theme,
+                updatedAt: $now,
+                updatedByUserId: $updatedByUserId,
+            )
+        );
+    }
+
+    public static function getValidThemes(): array
+    {
+        return [self::THEME_LIGHT, self::THEME_DARK];
     }
 }

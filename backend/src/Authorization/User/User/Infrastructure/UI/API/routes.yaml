@@ -40,3 +40,8 @@ change_my_password:
   path: /api/v1/authorization/me/password
   methods: [PUT]
   controller: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyPasswordController
+
+change_my_theme:
+  path: /api/v1/authorization/me/theme
+  methods: [PUT]
+  controller: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyThemeController

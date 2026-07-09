@@ -54,3 +54,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyThemeController:
+    class: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyThemeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
