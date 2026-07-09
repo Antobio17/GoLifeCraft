@@ -1,0 +1,78 @@
+:host {
+  display: block;
+}
+
+.wset-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ds-text-meta);
+}
+
+.wset-header__num {
+  width: 34px;
+}
+
+.wset-header__col {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+}
+
+.wset-header__done {
+  width: 30px;
+  flex: 0 0 auto;
+}
+
+.wset-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ds-bg);
+  border-radius: 8px;
+  padding: 8px 6px;
+}
+
+.wset-row--done {
+  background: var(--ds-accent-soft);
+}
+
+.wset-row__num {
+  width: 34px;
+  flex: 0 0 auto;
+  text-align: center;
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--ds-primary);
+}
+
+.wset-row__col {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ds-text);
+}
+
+.wset-row__done {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  color: var(--ds-text-meta);
+}
+
+.wset-row__done--on {
+  background: var(--ds-accent);
+  color: var(--ds-on-accent);
+}

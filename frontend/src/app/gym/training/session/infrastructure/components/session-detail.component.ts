@@ -1,8 +1,17 @@
-import { Component, OnDestroy, OnInit, inject, signal } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  inject,
+  signal,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subject, Subscription } from "rxjs";
-import { debounceTime } from "rxjs/operators";
+import { debounceTime, delay } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -36,6 +45,10 @@ import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
 import { GetSessionResponse } from "../../domain/models/get-session-response.model";
 import { SessionExerciseView } from "../../domain/models/session-detail.model";
+import {
+  ActiveExercise,
+  ActiveWorkoutService,
+} from "@gym/training/workout/application/services/active-workout.service";
 
 @Component({
   selector: "app-session-detail",
@@ -72,6 +85,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private sessionDraft = inject(SessionDraftService);
   private getExercisesService = inject(GetExercisesService);
   private floatingToastService = inject(FloatingToastService);
+  protected activeWorkout = inject(ActiveWorkoutService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -91,6 +105,30 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   showDeleteModal = signal(false);
   isDeleting = signal(false);
+
+  showStopModal = signal(false);
+  finishing = signal(false);
+
+  readonly sessScrolled = signal(false);
+  private readonly STICKY_TOP = 8;
+
+  @ViewChild("activeBanner")
+  private activeBanner?: ElementRef<HTMLElement>;
+
+  @HostListener("window:scroll")
+  onWindowScroll(): void {
+    const element = this.activeBanner?.nativeElement;
+    if (!element) {
+      return;
+    }
+
+    const stuck = element.getBoundingClientRect().top <= this.STICKY_TOP + 1;
+    if (stuck === this.sessScrolled()) {
+      return;
+    }
+
+    this.sessScrolled.set(stuck);
+  }
 
   readonly activeSwipedSetId = signal<string | null>(null);
   private swipeStartX = 0;
@@ -112,7 +150,28 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       .then(() => {
         this.loadSession();
         this.loadLibrary();
+        this.restoreActiveWorkout();
       });
+  }
+
+  private restoreActiveWorkout(): void {
+    if (this.activeWorkout.isActive()) {
+      return;
+    }
+    this.activeWorkout.restoreActive().subscribe();
+  }
+
+  private toActive(): ActiveExercise[] {
+    return this.exercises().map((exercise) => ({
+      exerciseId: exercise.exerciseId,
+      exerciseName: exercise.exerciseName,
+      muscleGroups: exercise.muscleGroups,
+      type: exercise.type,
+      sets: exercise.sets.map((set) => ({
+        reps: set.reps,
+        weight: set.weight,
+      })),
+    }));
   }
 
   ngOnDestroy(): void {
@@ -266,6 +325,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   addSet(exerciseId: string): void {
     this.exercises.update((list) => this.sessionDraft.addSet(list, exerciseId));
     this.queuePersist();
+    this.syncActiveProgress();
   }
 
   removeSet(exerciseId: string, setId: string): void {
@@ -273,6 +333,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       this.sessionDraft.removeSet(list, exerciseId, setId),
     );
     this.queuePersist();
+    this.syncActiveProgress();
   }
 
   setReps(exerciseId: string, setId: string, value: number): void {
@@ -280,6 +341,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       this.sessionDraft.setReps(list, exerciseId, setId, value),
     );
     this.queuePersist();
+    this.syncActiveProgress();
   }
 
   setWeight(exerciseId: string, setId: string, value: number): void {
@@ -287,6 +349,112 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       this.sessionDraft.setWeight(list, exerciseId, setId, value),
     );
     this.queuePersist();
+    this.syncActiveProgress();
+  }
+
+  private syncActiveProgress(): void {
+    if (!this.isActiveHere) {
+      return;
+    }
+    this.activeWorkout.syncProgress(this.toActive());
+  }
+
+  get isActiveHere(): boolean {
+    return this.activeWorkout.isActiveFor(this.id);
+  }
+
+  get doneCount(): number {
+    return this.activeWorkout.doneCount(this.toActive());
+  }
+
+  get totalSets(): number {
+    return this.activeWorkout.totalSets(this.toActive());
+  }
+
+  get startLabel(): string {
+    return this.isActiveHere
+      ? this.t("getSession.finish")
+      : this.t("getSession.start");
+  }
+
+  isSetDone(exerciseIndex: number, setIndex: number): boolean {
+    return (
+      this.isActiveHere && this.activeWorkout.isDone(exerciseIndex, setIndex)
+    );
+  }
+
+  toggleSetDone(exerciseIndex: number, setIndex: number): void {
+    this.activeWorkout.toggleDone(exerciseIndex, setIndex, this.toActive());
+  }
+
+  onPrimaryAction(): void {
+    if (this.isActiveHere) {
+      this.finishWorkout();
+      return;
+    }
+    this.startWorkout();
+  }
+
+  private startWorkout(): void {
+    if (this.exercises().length === 0) {
+      return;
+    }
+
+    this.activeWorkout.start(this.id, this.name(), this.toActive()).subscribe({
+      next: () => {
+        this.floatingToastService.showToast({
+          status: 200,
+          keyTranslation: "session.start.toast",
+          details: [],
+        });
+      },
+    });
+  }
+
+  private finishWorkout(): void {
+    this.finishing.set(true);
+
+    this.activeWorkout
+      .finish(this.toActive())
+      .pipe(delay(400))
+      .subscribe({
+        next: () => {
+          this.finishing.set(false);
+          this.floatingToastService.showToast({
+            status: 200,
+            keyTranslation: "session.finish.toast",
+            details: [],
+          });
+          this.router.navigate(["/gym/history"]);
+        },
+        error: () => this.finishing.set(false),
+      });
+  }
+
+  onPauseWorkout(): void {
+    this.activeWorkout.pause(this.toActive());
+  }
+
+  onRequestStop(): void {
+    this.showStopModal.set(true);
+  }
+
+  onConfirmStop(): void {
+    this.activeWorkout.discard().subscribe({
+      next: () => {
+        this.showStopModal.set(false);
+        this.floatingToastService.showToast({
+          status: 200,
+          keyTranslation: "session.stop.toast",
+          details: [],
+        });
+      },
+      error: () => this.showStopModal.set(false),
+    });
+  }
+
+  onCancelStop(): void {
+    this.showStopModal.set(false);
   }
 
   private queuePersist(): void {
@@ -309,14 +477,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   onEdit(): void {
     this.router.navigate(["/gym/sessions", this.id, "edit"]);
-  }
-
-  onStart(): void {
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation: "session.start.toast",
-      details: [],
-    });
   }
 
   onDelete(): void {

@@ -18,4 +18,12 @@ export const GYM_ROUTES: Routes = [
         (m) => m.EXERCISE_ROUTES,
       ),
   },
+  {
+    path: "history",
+    data: { breadcrumb: "workout.breadcrumb.list" },
+    loadChildren: () =>
+      import("@gym/training/workout/infrastructure/routes/workout.routes").then(
+        (m) => m.WORKOUT_ROUTES,
+      ),
+  },
 ];

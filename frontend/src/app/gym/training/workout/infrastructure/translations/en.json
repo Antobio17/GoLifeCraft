@@ -1,0 +1,32 @@
+{
+  "getWorkouts": {
+    "heading": "History",
+    "recent": "Recent workouts",
+    "stats": {
+      "workouts": "Workouts"
+    },
+    "card": {
+      "sets": "sets"
+    },
+    "empty": {
+      "title": "No workouts yet",
+      "text": "Once you finish a session your history will show up here."
+    }
+  },
+  "getWorkout": {
+    "back": "History",
+    "eyebrow": "Workout",
+    "sets": "sets",
+    "set": {
+      "number": "Set",
+      "reps": "Reps",
+      "weight": "Weight (kg)"
+    }
+  },
+  "workout": {
+    "breadcrumb": {
+      "list": "History",
+      "detail": "Workout"
+    }
+  }
+}

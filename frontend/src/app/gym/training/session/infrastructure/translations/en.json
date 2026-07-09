@@ -56,6 +56,23 @@
     "edit": "Edit session",
     "delete": "Delete session",
     "start": "Start workout",
+    "finish": "Finish workout",
+    "active": {
+      "running": "Active session",
+      "paused": "Paused",
+      "sets": "sets",
+      "pause": "Pause",
+      "resume": "Resume",
+      "stop": "Stop",
+      "markDone": "Mark set as done"
+    },
+    "stopModal": {
+      "title": "Stop the session?",
+      "body": "The timer will be discarded without saving the workout.",
+      "warning": "This workout's progress will not be saved.",
+      "cancel": "Keep training",
+      "confirm": "Yes, stop"
+    },
     "empty": {
       "title": "No exercises yet",
       "text": "Add the first exercise from your library"
@@ -108,6 +125,12 @@
     },
     "start": {
       "toast": "Let's train!"
+    },
+    "finish": {
+      "toast": "Workout completed!"
+    },
+    "stop": {
+      "toast": "Session stopped"
     }
   }
 }
