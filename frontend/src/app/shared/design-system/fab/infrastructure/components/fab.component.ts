@@ -24,7 +24,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
     `
       :host {
         position: sticky;
-        bottom: calc(72px + 12px);
+        bottom: calc(72px + 12px + env(safe-area-inset-bottom));
         display: flex;
         justify-content: flex-end;
         pointer-events: none;
