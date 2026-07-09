@@ -1,0 +1,53 @@
+<?php
+
+namespace Gym\Training\Workout\Domain\Model;
+
+use Integration\Mcp\Server\Domain\Model\GenericAggregate;
+use Ramsey\Uuid\Uuid;
+use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
+
+class WorkoutExercise extends GenericAggregate
+{
+    public string $workoutId;
+    public ?string $exerciseId = null;
+    public string $exerciseName;
+    public array $muscleGroups = [];
+    public string $type;
+    public int $position;
+    public ?string $note = null;
+
+    /** @var WorkoutSet[] */
+    public array $sets = [];
+
+    public static function create(
+        string $workoutId,
+        ?string $exerciseId,
+        string $exerciseName,
+        array $muscleGroups,
+        string $type,
+        int $position,
+        ?string $note,
+        string $createdByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): self {
+        $now = $dateTimeGenerator->now();
+
+        $workoutExercise = new self();
+        $workoutExercise->id = Uuid::uuid4()->toString();
+        $workoutExercise->workoutId = $workoutId;
+        $workoutExercise->exerciseId = $exerciseId;
+        $workoutExercise->exerciseName = $exerciseName;
+        $workoutExercise->muscleGroups = $muscleGroups;
+        $workoutExercise->type = $type;
+        $workoutExercise->position = $position;
+        $workoutExercise->note = $note;
+        $workoutExercise->stampCreation(userId: $createdByUserId, now: $now);
+
+        return $workoutExercise;
+    }
+
+    public function addSet(WorkoutSet $workoutSet): void
+    {
+        $this->sets[] = $workoutSet;
+    }
+}

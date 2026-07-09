@@ -1,0 +1,23 @@
+label: Workout exercise
+
+fields:
+  workoutId:
+    min: 36
+    max: 36
+    filterable: true
+  exerciseId:
+    min: 36
+    max: 36
+    filterable: true
+  exerciseName:
+    filterable: true
+    sortable: true
+  type:
+    enum: [general, perside]
+  position:
+    type: int
+    sortable: true
+  muscleGroups:
+    type: array
+
+relations: {}

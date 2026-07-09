@@ -1,0 +1,30 @@
+services:
+  Gym\Training\Workout\Application\Query\GetWorkoutsQueryHandler:
+    class: Gym\Training\Workout\Application\Query\GetWorkoutsQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Training\Workout\Domain\QueryModel\GetWorkoutsNeedleDataQuery'
+      $dataTransform: '@Gym\Training\Workout\Application\Query\GetWorkoutsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Workout\Application\Query\GetWorkoutsDataTransform:
+    class: Gym\Training\Workout\Infrastructure\UI\API\DataTransform\ApiGetWorkoutsDataTransform
+
+  Gym\Training\Workout\Application\Query\GetWorkoutQueryHandler:
+    class: Gym\Training\Workout\Application\Query\GetWorkoutQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Training\Workout\Domain\QueryModel\GetWorkoutNeedleDataQuery'
+      $dataTransform: '@Gym\Training\Workout\Application\Query\GetWorkoutDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Workout\Application\Query\GetActiveWorkoutQueryHandler:
+    class: Gym\Training\Workout\Application\Query\GetActiveWorkoutQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Training\Workout\Domain\QueryModel\GetActiveWorkoutNeedleDataQuery'
+      $dataTransform: '@Gym\Training\Workout\Application\Query\GetWorkoutDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Workout\Application\Query\GetWorkoutDataTransform:
+    class: Gym\Training\Workout\Infrastructure\UI\API\DataTransform\ApiGetWorkoutDataTransform

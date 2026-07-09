@@ -1,0 +1,24 @@
+label: Workout
+
+fields:
+  sessionId:
+    min: 36
+    max: 36
+    filterable: true
+  sessionName:
+    filterable: true
+    sortable: true
+  status:
+    enum: [in_progress, completed]
+    filterable: true
+  startedAt:
+    type: datetime
+    sortable: true
+  finishedAt:
+    type: datetime
+    sortable: true
+  durationSeconds:
+    type: int
+    sortable: true
+
+relations: {}

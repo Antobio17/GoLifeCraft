@@ -1,0 +1,49 @@
+services:
+  Gym\Training\Workout\Infrastructure\UI\API\Controller\StartWorkoutController:
+    class: Gym\Training\Workout\Infrastructure\UI\API\Controller\StartWorkoutController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Workout\Infrastructure\UI\API\Controller\UpdateWorkoutController:
+    class: Gym\Training\Workout\Infrastructure\UI\API\Controller\UpdateWorkoutController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Workout\Infrastructure\UI\API\Controller\FinishWorkoutController:
+    class: Gym\Training\Workout\Infrastructure\UI\API\Controller\FinishWorkoutController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Workout\Infrastructure\UI\API\Controller\GetWorkoutsController:
+    class: Gym\Training\Workout\Infrastructure\UI\API\Controller\GetWorkoutsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Workout\Infrastructure\UI\API\Controller\GetWorkoutController:
+    class: Gym\Training\Workout\Infrastructure\UI\API\Controller\GetWorkoutController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Workout\Infrastructure\UI\API\Controller\GetActiveWorkoutController:
+    class: Gym\Training\Workout\Infrastructure\UI\API\Controller\GetActiveWorkoutController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gym\Training\Workout\Infrastructure\UI\API\Controller\DiscardWorkoutController:
+    class: Gym\Training\Workout\Infrastructure\UI\API\Controller\DiscardWorkoutController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

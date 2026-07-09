@@ -1,0 +1,15 @@
+services:
+  Gym\Training\Workout\Domain\QueryModel\GetWorkoutsNeedleDataQuery:
+    class: Gym\Training\Workout\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetWorkoutsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gym\Training\Workout\Domain\QueryModel\GetWorkoutNeedleDataQuery:
+    class: Gym\Training\Workout\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetWorkoutNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gym\Training\Workout\Domain\QueryModel\GetActiveWorkoutNeedleDataQuery:
+    class: Gym\Training\Workout\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetActiveWorkoutNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
