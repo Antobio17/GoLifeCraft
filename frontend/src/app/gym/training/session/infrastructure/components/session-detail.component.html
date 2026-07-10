@@ -13,7 +13,7 @@
         <ds-button
           slot="actions"
           variant="primary"
-          size="md"
+          size="sm"
           icon="play"
           [disabled]="exercises().length === 0"
           (clicked)="onStartWorkout()"
@@ -173,11 +173,7 @@
                 </ds-heading>
                 <ds-text variant="meta">{{ muscleText(exercise) }}</ds-text>
               </ds-stack>
-              <ds-chip
-                tone="brand"
-                class="mode-badge"
-                (click)="toggleMode(exercise.id)"
-              >
+              <ds-chip tone="brand">
                 {{ modeLabel(exercise.type) }}
               </ds-chip>
               <ds-icon-button

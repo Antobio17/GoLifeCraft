@@ -123,11 +123,12 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
     private function muscleDistribution(): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('se.muscle_groups AS muscle_groups', 'COUNT(es.id) AS set_count')
+            ->select('e.muscle_groups AS muscle_groups', 'COUNT(es.id) AS set_count')
             ->from(table: 'session_exercise', alias: 'se')
+            ->leftJoin('se', 'exercise', 'e', 'e.id = se.exercise_id')
             ->leftJoin('se', 'exercise_set', 'es', 'es.session_exercise_id = se.id')
             ->groupBy('se.id')
-            ->addGroupBy('se.muscle_groups')
+            ->addGroupBy('e.muscle_groups')
             ->executeQuery()
             ->fetchAllAssociative();
 

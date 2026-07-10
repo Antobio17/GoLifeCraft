@@ -27,6 +27,20 @@
     "breadcrumb": {
       "list": "Historial",
       "detail": "Entreno"
+    },
+    "banner": {
+      "active": "Sesión activa",
+      "paused": "En pausa",
+      "goToSession": "Ir a la sesión",
+      "stop": "Parar sesión",
+      "stopModal": {
+        "title": "¿Parar la sesión?",
+        "body": "Se descartará el cronómetro sin guardar el entreno.",
+        "warning": "Esta acción no se puede deshacer.",
+        "cancel": "Cancelar",
+        "confirm": "Parar sesión",
+        "toast": "Sesión detenida"
+      }
     }
   }
 }

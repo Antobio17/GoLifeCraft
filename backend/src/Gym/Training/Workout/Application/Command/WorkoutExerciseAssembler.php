@@ -35,9 +35,6 @@ final readonly class WorkoutExerciseAssembler
         $workoutExercise = WorkoutExercise::create(
             workoutId: $workoutId,
             exerciseId: $exerciseData->exerciseId,
-            exerciseName: $exerciseData->exerciseName,
-            muscleGroups: $exerciseData->muscleGroups,
-            type: $exerciseData->type,
             position: $exerciseData->position,
             note: $exerciseData->note,
             createdByUserId: $userId,

@@ -9,10 +9,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 class SessionExercise extends GenericAggregate
 {
     public string $sessionId;
-    public ?string $exerciseId = null;
-    public string $exerciseName;
-    public array $muscleGroups = [];
-    public string $type;
+    public string $exerciseId;
     public int $position;
 
     /** @var ExerciseSet[] */
@@ -20,10 +17,7 @@ class SessionExercise extends GenericAggregate
 
     public static function create(
         string $sessionId,
-        ?string $exerciseId,
-        string $exerciseName,
-        array $muscleGroups,
-        string $type,
+        string $exerciseId,
         int $position,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -34,9 +28,6 @@ class SessionExercise extends GenericAggregate
         $sessionExercise->id = Uuid::uuid4()->toString();
         $sessionExercise->sessionId = $sessionId;
         $sessionExercise->exerciseId = $exerciseId;
-        $sessionExercise->exerciseName = $exerciseName;
-        $sessionExercise->muscleGroups = $muscleGroups;
-        $sessionExercise->type = $type;
         $sessionExercise->position = $position;
         $sessionExercise->stampCreation(userId: $createdByUserId, now: $now);
 

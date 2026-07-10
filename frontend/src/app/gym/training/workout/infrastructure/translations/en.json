@@ -27,6 +27,20 @@
     "breadcrumb": {
       "list": "History",
       "detail": "Workout"
+    },
+    "banner": {
+      "active": "Active session",
+      "paused": "Paused",
+      "goToSession": "Go to session",
+      "stop": "Stop session",
+      "stopModal": {
+        "title": "Stop the session?",
+        "body": "The timer will be discarded without saving the workout.",
+        "warning": "This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Stop session",
+        "toast": "Session stopped"
+      }
     }
   }
 }

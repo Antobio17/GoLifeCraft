@@ -85,8 +85,9 @@ final readonly class DoctrineGetWorkoutsNeedleDataQuery implements GetWorkoutsNe
     private function exercisesSummary(array $workoutIds): array
     {
         $exerciseRows = $this->connection->createQueryBuilder()
-            ->select('we.id', 'we.workout_id', 'we.muscle_groups')
+            ->select('we.id', 'we.workout_id', 'e.muscle_groups')
             ->from(table: 'workout_exercise', alias: 'we')
+            ->leftJoin('we', 'exercise', 'e', 'e.id = we.exercise_id')
             ->where('we.workout_id IN (:workoutIds)')
             ->setParameter(
                 key: 'workoutIds',

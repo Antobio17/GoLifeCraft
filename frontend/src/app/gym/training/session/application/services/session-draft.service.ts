@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import {
   SessionExerciseView,
@@ -37,17 +36,6 @@ export class SessionDraftService {
     exerciseId: string,
   ): SessionExerciseView[] {
     return list.filter((exercise) => exercise.id !== exerciseId);
-  }
-
-  toggleMode(
-    list: SessionExerciseView[],
-    exerciseId: string,
-  ): SessionExerciseView[] {
-    return list.map((exercise) =>
-      exercise.id === exerciseId
-        ? { ...exercise, type: this.nextMode(exercise.type) }
-        : exercise,
-    );
   }
 
   addSet(
@@ -102,9 +90,6 @@ export class SessionDraftService {
       estimatedDurationMinutes,
       exercises: list.map((exercise, exerciseIndex) => ({
         exerciseId: exercise.exerciseId,
-        exerciseName: exercise.exerciseName,
-        muscleGroups: exercise.muscleGroups,
-        type: exercise.type,
         position: exerciseIndex + 1,
         sets: exercise.sets.map((set, setIndex) => ({
           position: setIndex + 1,
@@ -113,12 +98,6 @@ export class SessionDraftService {
         })),
       })),
     };
-  }
-
-  private nextMode(type: string): ExerciseType {
-    return type === ExerciseType.Unilateral
-      ? ExerciseType.Bilateral
-      : ExerciseType.Unilateral;
   }
 
   private withNewSet(exercise: SessionExerciseView): SessionExerciseView {

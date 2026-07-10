@@ -16,6 +16,7 @@ import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/co
 import { APP_ROUTES } from "./app/app.routes";
 import { GlobalProviders } from "@shared/providers/main.provider";
 import { ThemeProvider } from "@shared/theme/infrastructure/providers/theme.provider";
+import { WorkoutSessionProviders } from "@gym/training/workout/infrastructure/providers/workout-session.providers";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 
 bootstrapApplication(MainLayoutComponent, {
@@ -36,5 +37,6 @@ bootstrapApplication(MainLayoutComponent, {
     { provide: LOCALE_ID, useValue: "es" },
     ...GlobalProviders.getProviders(),
     ...ThemeProvider.getProviders(),
+    ...WorkoutSessionProviders.getProviders(),
   ],
 }).catch((err) => console.error(err));

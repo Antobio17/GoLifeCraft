@@ -4,6 +4,7 @@ import { filter } from "rxjs/operators";
 import { FloatingToastComponent } from "@shared/floating-toasts/infrastructure/components/floating-toast.component";
 import { BottomNavComponent } from "@layouts/layout/bottom-nav/infrastructure/components/bottom-nav.component";
 import { SideDrawerComponent } from "@layouts/layout/side-drawer/infrastructure/components/side-drawer.component";
+import { ActiveWorkoutBannerComponent } from "@gym/training/workout/infrastructure/components/active-workout-banner.component";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 
 @Component({
@@ -14,6 +15,7 @@ import { AuthSessionService } from "@shared/auth/application/services/auth-sessi
     FloatingToastComponent,
     BottomNavComponent,
     SideDrawerComponent,
+    ActiveWorkoutBannerComponent,
   ],
   styleUrls: ["./main.component.css"],
   templateUrl: "./main.component.html",

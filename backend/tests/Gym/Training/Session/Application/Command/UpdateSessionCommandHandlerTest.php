@@ -43,10 +43,7 @@ final class UpdateSessionCommandHandlerTest extends TestCase
             estimatedDurationMinutes: 55,
             exercises: [
                 new SessionExerciseData(
-                    exerciseId: null,
-                    exerciseName: 'Press banca',
-                    muscleGroups: ['Pecho'],
-                    type: 'bilateral',
+                    exerciseId: 'exercise-1',
                     position: 1,
                     sets: [
                         new ExerciseSetData(position: 1, reps: 10, weight: 40.0),
@@ -76,10 +73,7 @@ final class UpdateSessionCommandHandlerTest extends TestCase
             estimatedDurationMinutes: 50,
             exercises: [
                 new SessionExerciseData(
-                    exerciseId: null,
-                    exerciseName: 'Press militar',
-                    muscleGroups: ['Hombro'],
-                    type: 'bilateral',
+                    exerciseId: 'exercise-2',
                     position: 1,
                     sets: [new ExerciseSetData(position: 1, reps: 12, weight: 20.0)],
                 ),
@@ -90,7 +84,7 @@ final class UpdateSessionCommandHandlerTest extends TestCase
         $session = $this->sessionRepository->findById(id: 'session-1');
         $this->assertEquals(expected: 'Empuje B', actual: $session->name);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises);
-        $this->assertEquals(expected: 'Press militar', actual: $session->exercises[0]->exerciseName);
+        $this->assertEquals(expected: 'exercise-2', actual: $session->exercises[0]->exerciseId);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises[0]->sets);
     }
 

@@ -18,6 +18,7 @@ final readonly class DoctrineCreateExerciseNeedleDataQuery implements CreateExer
             ->select('COUNT(*)')
             ->from(table: 'exercise', alias: 'e')
             ->where('e.name = :name')
+            ->andWhere('e.deleted = 0')
             ->setParameter(key: 'name', value: $name);
 
         return (int) $qb->executeQuery()->fetchOne() > 0;

@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  OnDestroy,
-  computed,
-  inject,
-  signal,
-} from "@angular/core";
+import { Injectable, OnDestroy, computed, inject, signal } from "@angular/core";
 import { Observable, Subject, Subscription, interval, tap } from "rxjs";
 import { debounceTime, switchMap } from "rxjs/operators";
 import { WorkoutSessionPort } from "../../domain/ports/workout-session.port";
@@ -36,6 +30,7 @@ export class ActiveWorkoutService implements OnDestroy {
 
   readonly workoutId = signal<string | null>(null);
   readonly activeSessionId = signal<string | null>(null);
+  readonly activeName = signal("");
   readonly paused = signal(false);
 
   private readonly baseSeconds = signal(0);
@@ -123,6 +118,7 @@ export class ActiveWorkoutService implements OnDestroy {
         tap((response) => {
           this.workoutId.set(response.data.id);
           this.activeSessionId.set(sessionId);
+          this.activeName.set(sessionName);
           this.doneKeys.set(new Set());
           this.baseSeconds.set(0);
           this.startedAtMs.set(Date.now());
@@ -195,6 +191,7 @@ export class ActiveWorkoutService implements OnDestroy {
 
     this.workoutId.set(active.id);
     this.activeSessionId.set(active.attributes.sessionId);
+    this.activeName.set(active.attributes.sessionName);
     this.doneKeys.set(doneKeys);
     this.baseSeconds.set(active.attributes.durationSeconds);
     this.startedAtMs.set(Date.now());
@@ -253,6 +250,7 @@ export class ActiveWorkoutService implements OnDestroy {
     this.progressSub = undefined;
     this.workoutId.set(null);
     this.activeSessionId.set(null);
+    this.activeName.set("");
     this.paused.set(false);
     this.baseSeconds.set(0);
     this.startedAtMs.set(0);
@@ -271,9 +269,6 @@ export class ActiveWorkoutService implements OnDestroy {
   ): WorkoutExerciseRequest[] {
     return exercises.map((exercise, i) => ({
       exerciseId: exercise.exerciseId,
-      exerciseName: exercise.exerciseName,
-      muscleGroups: exercise.muscleGroups,
-      type: exercise.type,
       position: i + 1,
       note: null,
       sets: exercise.sets.map((set, j) => ({

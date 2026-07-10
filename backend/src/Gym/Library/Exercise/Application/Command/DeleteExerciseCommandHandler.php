@@ -4,6 +4,7 @@ namespace Gym\Library\Exercise\Application\Command;
 
 use Gym\Library\Exercise\Domain\Exception\DeleteExerciseException;
 use Gym\Library\Exercise\Domain\Model\ExerciseRepository;
+use Gym\Library\Exercise\Domain\QueryModel\DeleteExerciseNeedleDataQuery;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -11,6 +12,7 @@ final readonly class DeleteExerciseCommandHandler
 {
     public function __construct(
         private ExerciseRepository $exerciseRepository,
+        private DeleteExerciseNeedleDataQuery $needleDataQuery,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -21,6 +23,18 @@ final readonly class DeleteExerciseCommandHandler
         $exercise = $this->exerciseRepository->findById(id: $command->exerciseId);
         if (null === $exercise) {
             throw DeleteExerciseException::exerciseNotFound(exerciseId: $command->exerciseId);
+        }
+
+        if ($this->needleDataQuery->isReferenced(exerciseId: $command->exerciseId)) {
+            $exercise->softDelete(
+                deletedByUserId: $command->deletedByUserId,
+                dateTimeGenerator: $this->dateTimeGenerator,
+            );
+
+            $this->exerciseRepository->save(exercise: $exercise);
+            $this->domainEventCollectorService->register(aggregate: $exercise);
+
+            return;
         }
 
         $exercise->delete(

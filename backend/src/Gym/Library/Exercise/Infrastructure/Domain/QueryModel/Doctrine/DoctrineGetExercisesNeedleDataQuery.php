@@ -79,7 +79,9 @@ final readonly class DoctrineGetExercisesNeedleDataQuery implements GetExercises
         ?string $filterType,
         ?string $filterMuscleGroup,
     ): QueryBuilder {
-        $qb = $this->connection->createQueryBuilder()->from(table: 'exercise', alias: 'e');
+        $qb = $this->connection->createQueryBuilder()
+            ->from(table: 'exercise', alias: 'e')
+            ->where('e.deleted = 0');
 
         if (null !== $filterName) {
             $qb->andWhere('e.name LIKE :name')

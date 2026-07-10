@@ -19,6 +19,7 @@ final readonly class DoctrineUpdateExerciseNeedleDataQuery implements UpdateExer
             ->select('COUNT(*)')
             ->from(table: 'exercise', alias: 'e')
             ->where('e.name = :name')
+            ->andWhere('e.deleted = 0')
             ->andWhere('e.id != :excludingId')
             ->setParameter(key: 'name', value: $name)
             ->setParameter(key: 'excludingId', value: $excludingExerciseId)

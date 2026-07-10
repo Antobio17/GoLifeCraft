@@ -35,9 +35,6 @@ final readonly class SessionExerciseAssembler
         $sessionExercise = SessionExercise::create(
             sessionId: $sessionId,
             exerciseId: $exerciseData->exerciseId,
-            exerciseName: $exerciseData->exerciseName,
-            muscleGroups: $exerciseData->muscleGroups,
-            type: $exerciseData->type,
             position: $exerciseData->position,
             createdByUserId: $userId,
             dateTimeGenerator: $this->dateTimeGenerator,

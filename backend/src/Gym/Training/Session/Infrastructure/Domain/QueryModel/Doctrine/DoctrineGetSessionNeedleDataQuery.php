@@ -58,12 +58,13 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
             ->select(
                 'se.id',
                 'se.exercise_id',
-                'se.exercise_name',
-                'se.muscle_groups',
-                'se.type',
+                'e.name AS exercise_name',
+                'e.muscle_groups',
+                'e.type',
                 'se.position'
             )
             ->from(table: 'session_exercise', alias: 'se')
+            ->leftJoin('se', 'exercise', 'e', 'e.id = se.exercise_id')
             ->where('se.session_id = :sessionId')
             ->setParameter(key: 'sessionId', value: $sessionId)
             ->orderBy('se.position', 'ASC')
