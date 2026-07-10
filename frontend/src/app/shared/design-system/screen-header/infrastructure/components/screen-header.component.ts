@@ -15,8 +15,8 @@ export type ScreenHeaderLeading = "back" | "close" | null;
           (click)="leadingClick.emit()"
         >
           <svg
-            width="16"
-            height="16"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -58,8 +58,8 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       }
       .ds-screen-head__lead {
         flex: 0 0 auto;
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
         padding: 0;
         box-sizing: border-box;
         line-height: 0;

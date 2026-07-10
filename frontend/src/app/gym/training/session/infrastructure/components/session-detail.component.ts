@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -111,23 +110,49 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   readonly sessScrolled = signal(false);
   private readonly STICKY_TOP = 8;
+  private readonly STICKY_BAND = 72;
+  private stickyObservers: IntersectionObserver[] = [];
 
-  @ViewChild("activeBanner")
-  private activeBanner?: ElementRef<HTMLElement>;
+  @ViewChild("stickySentinel")
+  set stickySentinelRef(ref: ElementRef<HTMLElement> | undefined) {
+    this.disconnectStickyObservers();
 
-  @HostListener("window:scroll")
-  onWindowScroll(): void {
-    const element = this.activeBanner?.nativeElement;
+    const element = ref?.nativeElement;
     if (!element) {
+      this.sessScrolled.set(false);
       return;
     }
 
-    const stuck = element.getBoundingClientRect().top <= this.STICKY_TOP + 1;
-    if (stuck === this.sessScrolled()) {
-      return;
-    }
+    const collapseLine = this.STICKY_TOP + 1;
+    const expandLine = collapseLine + this.STICKY_BAND;
 
-    this.sessScrolled.set(stuck);
+    const collapseObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          return;
+        }
+        this.sessScrolled.set(true);
+      },
+      { rootMargin: `-${collapseLine}px 0px 0px 0px`, threshold: 0 },
+    );
+    const expandObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+        this.sessScrolled.set(false);
+      },
+      { rootMargin: `-${expandLine}px 0px 0px 0px`, threshold: 0 },
+    );
+
+    collapseObserver.observe(element);
+    expandObserver.observe(element);
+    this.stickyObservers = [collapseObserver, expandObserver];
+  }
+
+  private disconnectStickyObservers(): void {
+    this.stickyObservers.forEach((observer) => observer.disconnect());
+    this.stickyObservers = [];
   }
 
   readonly activeSwipedSetId = signal<string | null>(null);
@@ -176,6 +201,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.disconnectStickyObservers();
   }
 
   private loadSession(): void {
@@ -371,12 +397,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     return this.activeWorkout.totalSets(this.toActive());
   }
 
-  get startLabel(): string {
-    return this.isActiveHere
-      ? this.t("getSession.finish")
-      : this.t("getSession.start");
-  }
-
   isSetDone(exerciseIndex: number, setIndex: number): boolean {
     return (
       this.isActiveHere && this.activeWorkout.isDone(exerciseIndex, setIndex)
@@ -387,15 +407,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.activeWorkout.toggleDone(exerciseIndex, setIndex, this.toActive());
   }
 
-  onPrimaryAction(): void {
-    if (this.isActiveHere) {
-      this.finishWorkout();
-      return;
-    }
-    this.startWorkout();
-  }
-
-  private startWorkout(): void {
+  onStartWorkout(): void {
     if (this.exercises().length === 0) {
       return;
     }
@@ -411,7 +423,11 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  private finishWorkout(): void {
+  onFinishWorkout(): void {
+    if (this.finishing()) {
+      return;
+    }
+
     this.finishing.set(true);
 
     this.activeWorkout

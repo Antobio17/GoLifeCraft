@@ -16,7 +16,6 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
-import { FabComponent } from "@shared/design-system/fab/infrastructure/components/fab.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import {
@@ -40,7 +39,6 @@ import {
     ChipComponent,
     ButtonComponent,
     IconButtonComponent,
-    FabComponent,
     EmptyStateComponent,
     SkeletonComponent,
   ],
