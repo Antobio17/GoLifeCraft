@@ -24,7 +24,7 @@
 }
 
 .app-frame--with-tabbar .app-frame__content {
-  padding-bottom: calc(66px + env(safe-area-inset-bottom));
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 768px) {
