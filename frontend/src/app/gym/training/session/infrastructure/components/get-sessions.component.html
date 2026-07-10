@@ -6,12 +6,21 @@
     <ds-button
       slot="actions"
       variant="secondary"
-      size="sm"
+      size="icon-lg"
       icon="bookmark"
+      [iconSize]="19"
+      [attr.title]="'getSessions.library' | t"
       (clicked)="onLibrary()"
-    >
-      {{ "getSessions.library" | t }}
-    </ds-button>
+    />
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [attr.title]="'getSessions.new' | t"
+      (clicked)="onCreate()"
+    />
   </ds-screen-header>
 
   <ds-text variant="label">{{ "getSessions.yourSessions" | t }}</ds-text>
@@ -83,8 +92,6 @@
       }
     </ds-grid>
   }
-
-  <ds-fab icon="plus" [label]="'getSessions.new' | t" (clicked)="onCreate()" />
 </ds-page-wrapper>
 
 <ds-confirm-action-modal

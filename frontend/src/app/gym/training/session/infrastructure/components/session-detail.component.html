@@ -9,6 +9,18 @@
       [title]="name()"
       (leadingClick)="goBack()"
     >
+      @if (!isActiveHere) {
+        <ds-button
+          slot="actions"
+          variant="primary"
+          size="md"
+          icon="play"
+          [disabled]="exercises().length === 0"
+          (clicked)="onStartWorkout()"
+        >
+          {{ "getSession.startShort" | t }}
+        </ds-button>
+      }
       <ds-menu
         slot="actions"
         [triggerLabel]="'getSession.actions' | t"
@@ -31,7 +43,11 @@
 
     @if (isActiveHere) {
       <div
-        #activeBanner
+        #stickySentinel
+        class="active-banner__sentinel"
+        aria-hidden="true"
+      ></div>
+      <div
         class="active-banner"
         [class.active-banner--paused]="activeWorkout.paused()"
         [class.active-banner--stuck]="sessScrolled()"
@@ -62,6 +78,15 @@
           <div class="active-banner__compact-actions">
             <button
               type="button"
+              class="active-banner__compact-btn active-banner__compact-btn--finish"
+              [disabled]="finishing()"
+              [attr.aria-label]="'getSession.finish' | t"
+              (click)="onFinishWorkout()"
+            >
+              <ds-icon name="check" [size]="15" [stroke]="3" />
+            </button>
+            <button
+              type="button"
               class="active-banner__compact-btn active-banner__compact-btn--soft"
               [attr.aria-label]="
                 (activeWorkout.paused()
@@ -89,28 +114,39 @@
         <div class="active-banner__actions">
           <button
             type="button"
-            class="active-banner__btn active-banner__btn--soft"
-            (click)="onPauseWorkout()"
+            class="active-banner__finish"
+            [disabled]="finishing()"
+            (click)="onFinishWorkout()"
           >
-            <ds-icon
-              [name]="activeWorkout.paused() ? 'play' : 'pause'"
-              [size]="15"
-            />
-            {{
-              (activeWorkout.paused()
-                ? "getSession.active.resume"
-                : "getSession.active.pause"
-              ) | t
-            }}
+            <ds-icon name="check" [size]="17" [stroke]="3" />
+            {{ "getSession.finish" | t }}
           </button>
-          <button
-            type="button"
-            class="active-banner__btn active-banner__btn--stop"
-            (click)="onRequestStop()"
-          >
-            <ds-icon name="square" [size]="14" />
-            {{ "getSession.active.stop" | t }}
-          </button>
+          <div class="active-banner__actions-row">
+            <button
+              type="button"
+              class="active-banner__btn active-banner__btn--soft"
+              (click)="onPauseWorkout()"
+            >
+              <ds-icon
+                [name]="activeWorkout.paused() ? 'play' : 'pause'"
+                [size]="15"
+              />
+              {{
+                (activeWorkout.paused()
+                  ? "getSession.active.resume"
+                  : "getSession.active.pause"
+                ) | t
+              }}
+            </button>
+            <button
+              type="button"
+              class="active-banner__btn active-banner__btn--stop"
+              (click)="onRequestStop()"
+            >
+              <ds-icon name="square" [size]="14" />
+              {{ "getSession.active.stop" | t }}
+            </button>
+          </div>
         </div>
       </div>
     }
@@ -234,17 +270,6 @@
         <span>{{ "getSession.exercise.add" | t }}</span>
       </button>
     }
-
-    <ds-button
-      variant="primary"
-      size="lg"
-      [fullWidth]="true"
-      [loading]="finishing()"
-      [disabled]="exercises().length === 0"
-      (clicked)="onPrimaryAction()"
-    >
-      {{ startLabel }} →
-    </ds-button>
   }
 </ds-page-wrapper>
 

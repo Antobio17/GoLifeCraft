@@ -19,6 +19,8 @@ export interface MenuItem {
       <ds-icon-button
         [icon]="triggerIcon"
         variant="soft"
+        [size]="40"
+        [iconSize]="18"
         [ariaLabel]="triggerLabel"
         haspopup="menu"
         [expanded]="open()"
