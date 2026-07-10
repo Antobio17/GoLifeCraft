@@ -175,15 +175,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       .then(() => {
         this.loadSession();
         this.loadLibrary();
-        this.restoreActiveWorkout();
       });
-  }
-
-  private restoreActiveWorkout(): void {
-    if (this.activeWorkout.isActive()) {
-      return;
-    }
-    this.activeWorkout.restoreActive().subscribe();
   }
 
   private toActive(): ActiveExercise[] {
@@ -304,13 +296,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   removeExercise(exerciseId: string): void {
     this.exercises.update((list) =>
       this.sessionDraft.removeExercise(list, exerciseId),
-    );
-    this.queuePersist();
-  }
-
-  toggleMode(exerciseId: string): void {
-    this.exercises.update((list) =>
-      this.sessionDraft.toggleMode(list, exerciseId),
     );
     this.queuePersist();
   }

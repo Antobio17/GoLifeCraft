@@ -53,9 +53,6 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
             exercises: [
                 new WorkoutExerciseData(
                     exerciseId: 'ex-1',
-                    exerciseName: 'Press banca',
-                    muscleGroups: ['Pecho'],
-                    type: 'general',
                     position: 1,
                     note: null,
                     sets: [
@@ -111,9 +108,6 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
             exercises: [
                 new WorkoutExerciseData(
                     exerciseId: 'ex-1',
-                    exerciseName: 'Press banca',
-                    muscleGroups: ['Pecho'],
-                    type: 'general',
                     position: 1,
                     note: null,
                     sets: [

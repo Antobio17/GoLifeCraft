@@ -28,6 +28,7 @@ final readonly class DoctrineGetExerciseNeedleDataQuery implements GetExerciseNe
             )
             ->from(table: 'exercise', alias: 'e')
             ->where('e.id = :id')
+            ->andWhere('e.deleted = 0')
             ->setParameter(key: 'id', value: $exerciseId)
             ->executeQuery()
             ->fetchAssociative();

@@ -9,28 +9,15 @@ fields:
     filterable: true
   exerciseId:
     writable: true
+    required: true
     min: 36
     max: 36
     filterable: true
-  exerciseName:
-    writable: true
-    required: true
-    min: 1
-    max: 255
-    filterable: true
-    sortable: true
-  type:
-    writable: true
-    required: true
-    enum: [unilateral, bilateral]
   position:
     writable: true
     required: true
     type: int
     min: 1
     sortable: true
-  muscleGroups:
-    writable: true
-    type: array
 
 relations: {}

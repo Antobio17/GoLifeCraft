@@ -23,5 +23,9 @@ fields:
     writable: true
     type: array
     filterable: true
+  deleted:
+    writable: false
+    type: boolean
+    filterable: true
 
 relations: {}

@@ -24,6 +24,7 @@ class Exercise extends GenericAggregate
     public ?string $description = null;
     public string $type;
     public array $muscleGroups = [];
+    public bool $deleted = false;
 
     public static function create(
         string $id,
@@ -50,6 +51,7 @@ class Exercise extends GenericAggregate
         $exercise->description = $description;
         $exercise->type = $type;
         $exercise->muscleGroups = array_values(array: $muscleGroups);
+        $exercise->deleted = false;
         $exercise->stampCreation(userId: $createdByUserId, now: $now);
 
         $exercise->record(event: new ExerciseCreated(
@@ -104,6 +106,14 @@ class Exercise extends GenericAggregate
             createdByUserId: $this->createdByUserId,
             updatedByUserId: $this->updatedByUserId,
         ));
+    }
+
+    public function softDelete(
+        string $deletedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $this->deleted = true;
+        $this->delete(deletedByUserId: $deletedByUserId, dateTimeGenerator: $dateTimeGenerator);
     }
 
     public function delete(

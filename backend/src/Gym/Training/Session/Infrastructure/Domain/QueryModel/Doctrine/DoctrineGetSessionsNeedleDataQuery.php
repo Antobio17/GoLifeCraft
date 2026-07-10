@@ -75,8 +75,9 @@ final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNe
     private function exercisesSummary(array $sessionIds): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('se.session_id', 'se.muscle_groups')
+            ->select('se.session_id', 'e.muscle_groups')
             ->from(table: 'session_exercise', alias: 'se')
+            ->leftJoin('se', 'exercise', 'e', 'e.id = se.exercise_id')
             ->where('se.session_id IN (:sessionIds)')
             ->setParameter(
                 key: 'sessionIds',

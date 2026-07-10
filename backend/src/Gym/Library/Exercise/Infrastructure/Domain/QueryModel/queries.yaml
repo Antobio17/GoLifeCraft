@@ -18,3 +18,8 @@ services:
     class: Gym\Library\Exercise\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetExerciseNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gym\Library\Exercise\Domain\QueryModel\DeleteExerciseNeedleDataQuery:
+    class: Gym\Library\Exercise\Infrastructure\Domain\QueryModel\Doctrine\DoctrineDeleteExerciseNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

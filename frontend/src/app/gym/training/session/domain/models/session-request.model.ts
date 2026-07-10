@@ -6,9 +6,6 @@ export interface ExerciseSetRequest {
 
 export interface SessionExerciseRequest {
   exerciseId: string | null;
-  exerciseName: string;
-  muscleGroups: string[];
-  type: string;
   position: number;
   sets: ExerciseSetRequest[];
 }

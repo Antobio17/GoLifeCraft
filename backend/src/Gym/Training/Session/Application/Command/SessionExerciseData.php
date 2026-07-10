@@ -8,10 +8,7 @@ final readonly class SessionExerciseData
      * @param ExerciseSetData[] $sets
      */
     public function __construct(
-        public ?string $exerciseId,
-        public string $exerciseName,
-        public array $muscleGroups,
-        public string $type,
+        public string $exerciseId,
         public int $position,
         public array $sets,
     ) {
@@ -20,10 +17,7 @@ final readonly class SessionExerciseData
     public static function fromArray(array $rawExercise, int $position): self
     {
         return new self(
-            exerciseId: $rawExercise['exerciseId'] ?? null,
-            exerciseName: (string) ($rawExercise['exerciseName'] ?? ''),
-            muscleGroups: array_values(array: $rawExercise['muscleGroups'] ?? []),
-            type: (string) ($rawExercise['type'] ?? ''),
+            exerciseId: (string) ($rawExercise['exerciseId'] ?? ''),
             position: (int) ($rawExercise['position'] ?? $position),
             sets: ExerciseSetData::listFromArray(rawSets: $rawExercise['sets'] ?? []),
         );

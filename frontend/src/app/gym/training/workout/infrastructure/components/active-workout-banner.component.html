@@ -1,0 +1,49 @@
+@if (visible()) {
+  <div class="workout-banner" [class.workout-banner--paused]="activeWorkout.paused()">
+    <span class="workout-banner__pulse"></span>
+
+    <div class="workout-banner__info">
+      <span class="workout-banner__state">
+        {{
+          (activeWorkout.paused()
+            ? "workout.banner.paused"
+            : "workout.banner.active"
+          ) | t
+        }}
+      </span>
+      <div class="workout-banner__meta">
+        <span class="workout-banner__time">{{ activeWorkout.elapsedLabel() }}</span>
+        <span class="workout-banner__name">{{ activeWorkout.activeName() }}</span>
+      </div>
+    </div>
+
+    <button type="button" class="workout-banner__go" (click)="goToSession()">
+      {{ "workout.banner.goToSession" | t }}
+    </button>
+
+    <button
+      type="button"
+      class="workout-banner__stop"
+      (click)="requestStop()"
+      [attr.aria-label]="'workout.banner.stop' | t"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="6" y="6" width="12" height="12" rx="2.5" />
+      </svg>
+    </button>
+  </div>
+}
+
+<ds-confirm-action-modal
+  [show]="showStopModal()"
+  [title]="'workout.banner.stopModal.title' | t"
+  [body]="'workout.banner.stopModal.body' | t"
+  [itemName]="activeWorkout.activeName()"
+  [warningText]="'workout.banner.stopModal.warning' | t"
+  [isDeleting]="stopping()"
+  [cancelLabel]="'workout.banner.stopModal.cancel' | t"
+  [confirmLabel]="'workout.banner.stopModal.confirm' | t"
+  [deletingLabel]="'workout.banner.stopModal.confirm' | t"
+  (confirmed)="onConfirmStop()"
+  (cancelled)="onCancelStop()"
+/>

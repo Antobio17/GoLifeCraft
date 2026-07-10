@@ -40,13 +40,14 @@ final class WorkoutResultHydrator
             ->select(
                 'we.id',
                 'we.exercise_id',
-                'we.exercise_name',
-                'we.muscle_groups',
-                'we.type',
+                'e.name AS exercise_name',
+                'e.muscle_groups',
+                'e.type',
                 'we.position',
                 'we.note'
             )
             ->from(table: 'workout_exercise', alias: 'we')
+            ->leftJoin('we', 'exercise', 'e', 'e.id = we.exercise_id')
             ->where('we.workout_id = :workoutId')
             ->setParameter(key: 'workoutId', value: $workoutId)
             ->orderBy('we.position', 'ASC')

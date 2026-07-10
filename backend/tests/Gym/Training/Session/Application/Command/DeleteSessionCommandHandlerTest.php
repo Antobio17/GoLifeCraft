@@ -39,10 +39,7 @@ final class DeleteSessionCommandHandlerTest extends TestCase
             estimatedDurationMinutes: 55,
             exercises: [
                 new SessionExerciseData(
-                    exerciseId: null,
-                    exerciseName: 'Press banca',
-                    muscleGroups: ['Pecho'],
-                    type: 'bilateral',
+                    exerciseId: 'exercise-1',
                     position: 1,
                     sets: [new ExerciseSetData(position: 1, reps: 10, weight: 40.0)],
                 ),

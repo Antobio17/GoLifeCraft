@@ -2,7 +2,6 @@
 
 namespace App\Tests\Gym\Library\Exercise\Application\Command;
 
-use Authorization\User\User\Domain\Model\User;
 use Gym\Library\Exercise\Application\Command\CreateExerciseCommand;
 use Gym\Library\Exercise\Application\Command\CreateExerciseCommandHandler;
 use Gym\Library\Exercise\Application\Command\UpdateExerciseCommand;
