@@ -6,6 +6,7 @@
   z-index: 40;
   display: flex;
   justify-content: center;
+  padding: 0 18px calc(18px + env(safe-area-inset-bottom));
   pointer-events: none;
 }
 
@@ -19,25 +20,33 @@
   pointer-events: auto;
   width: 100%;
   max-width: var(--ds-app-frame-width, 480px);
-  background: var(--ds-surface-nav);
-  border-top: 1px solid var(--ds-border-hairline);
   display: flex;
-  padding: 9px 8px calc(16px + env(safe-area-inset-bottom));
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 6px;
+  background: color-mix(in srgb, var(--ds-surface) 86%, transparent);
+  border: 1px solid var(--ds-border);
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .tabbar__item {
   flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 0;
+  padding: 11px 6px;
   border: none;
-  background: none;
-  padding: 0;
+  background: transparent;
+  border-radius: 14px;
   cursor: pointer;
   color: var(--ds-text-meta);
   text-decoration: none;
-  transition: color var(--ds-transition-base);
+  transition: all 0.3s cubic-bezier(0.6, 0.05, 0.28, 0.98);
 }
 
 .tabbar__icon {
@@ -52,29 +61,32 @@
 }
 
 .tabbar__label {
-  font-size: 9.5px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   line-height: 1;
-  color: var(--ds-text-meta);
-  transition:
-    color var(--ds-transition-base),
-    font-weight var(--ds-transition-base);
+  white-space: nowrap;
+  color: var(--ds-text);
+  display: none;
 }
 
 .tabbar__item--active {
-  color: var(--ds-primary);
+  flex: 1.7;
+  gap: 8px;
+  color: var(--ds-text);
+  background: var(--ds-surface-inset);
 }
 
 .tabbar__item--active .tabbar__label {
-  color: var(--ds-primary);
-  font-weight: 800;
+  display: inline;
 }
 
 .tabbar--drawer-open .tabbar__item--active:not(button) {
+  flex: 1;
+  gap: 0;
   color: var(--ds-text-meta);
+  background: transparent;
 }
 
 .tabbar--drawer-open .tabbar__item--active:not(button) .tabbar__label {
-  color: var(--ds-text-meta);
-  font-weight: 600;
+  display: none;
 }
