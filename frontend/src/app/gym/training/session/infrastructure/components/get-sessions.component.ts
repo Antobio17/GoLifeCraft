@@ -97,7 +97,9 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
   }
 
   onStart(id: string): void {
-    this.router.navigate(["/gym/sessions", id]);
+    this.router.navigate(["/gym/sessions", id], {
+      queryParams: { start: 1 },
+    });
   }
 
   onDelete(session: Session, event: Event): void {

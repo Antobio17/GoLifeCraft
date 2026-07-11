@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  NgZone,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -87,6 +88,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   protected activeWorkout = inject(ActiveWorkoutService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private ngZone = inject(NgZone);
 
   private readonly MODULE_PATH = "gym/training/session";
 
@@ -109,50 +111,67 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   finishing = signal(false);
 
   readonly sessScrolled = signal(false);
-  private readonly STICKY_TOP = 8;
-  private readonly STICKY_BAND = 72;
-  private stickyObservers: IntersectionObserver[] = [];
+  private readonly STICKY_COLLAPSE = 9;
+  private readonly STICKY_EXPAND = 81;
+  private stickySentinel?: HTMLElement;
+  private stickyRaf = 0;
+  private readonly onStickyScroll = () => this.scheduleStickyUpdate();
 
   @ViewChild("stickySentinel")
   set stickySentinelRef(ref: ElementRef<HTMLElement> | undefined) {
-    this.disconnectStickyObservers();
-
     const element = ref?.nativeElement;
+    if (element === this.stickySentinel) {
+      return;
+    }
+
+    this.teardownStickyTracking();
+    this.stickySentinel = element;
     if (!element) {
       this.sessScrolled.set(false);
       return;
     }
 
-    const collapseLine = this.STICKY_TOP + 1;
-    const expandLine = collapseLine + this.STICKY_BAND;
-
-    const collapseObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          return;
-        }
-        this.sessScrolled.set(true);
-      },
-      { rootMargin: `-${collapseLine}px 0px 0px 0px`, threshold: 0 },
-    );
-    const expandObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
-        this.sessScrolled.set(false);
-      },
-      { rootMargin: `-${expandLine}px 0px 0px 0px`, threshold: 0 },
-    );
-
-    collapseObserver.observe(element);
-    expandObserver.observe(element);
-    this.stickyObservers = [collapseObserver, expandObserver];
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener("scroll", this.onStickyScroll, { passive: true });
+      window.addEventListener("resize", this.onStickyScroll, { passive: true });
+    });
+    this.scheduleStickyUpdate();
   }
 
-  private disconnectStickyObservers(): void {
-    this.stickyObservers.forEach((observer) => observer.disconnect());
-    this.stickyObservers = [];
+  private scheduleStickyUpdate(): void {
+    if (this.stickyRaf) {
+      return;
+    }
+    this.stickyRaf = requestAnimationFrame(() => {
+      this.stickyRaf = 0;
+      this.updateStickyState();
+    });
+  }
+
+  private updateStickyState(): void {
+    const element = this.stickySentinel;
+    if (!element) {
+      return;
+    }
+
+    const top = element.getBoundingClientRect().top;
+    const stuck = this.sessScrolled();
+    const next = stuck ? top < this.STICKY_EXPAND : top <= this.STICKY_COLLAPSE;
+    if (next === stuck) {
+      return;
+    }
+
+    this.ngZone.run(() => this.sessScrolled.set(next));
+  }
+
+  private teardownStickyTracking(): void {
+    if (this.stickyRaf) {
+      cancelAnimationFrame(this.stickyRaf);
+      this.stickyRaf = 0;
+    }
+    window.removeEventListener("scroll", this.onStickyScroll);
+    window.removeEventListener("resize", this.onStickyScroll);
+    this.stickySentinel = undefined;
   }
 
   readonly activeSwipedSetId = signal<string | null>(null);
@@ -193,7 +212,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-    this.disconnectStickyObservers();
+    this.teardownStickyTracking();
   }
 
   private loadSession(): void {
@@ -204,9 +223,28 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
         this.estimatedDurationMinutes.set(attributes.estimatedDurationMinutes);
         this.exercises.set(this.sessionDraft.clone(attributes.exercises));
         this.loading.set(false);
+        this.maybeAutoStart();
       },
       error: () => this.loading.set(false),
     });
+  }
+
+  private maybeAutoStart(): void {
+    if (this.route.snapshot.queryParamMap.get("start") !== "1") {
+      return;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+      replaceUrl: true,
+    });
+
+    if (this.isActiveHere) {
+      return;
+    }
+
+    this.onStartWorkout();
   }
 
   private loadLibrary(): void {
@@ -285,11 +323,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       this.sessionDraft.fromLibrary(list, exercise),
     );
     this.pickerOpen.set(false);
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation: "session.exercise.added",
-      details: [],
-    });
     this.queuePersist();
   }
 
@@ -398,13 +431,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     }
 
     this.activeWorkout.start(this.id, this.name(), this.toActive()).subscribe({
-      next: () => {
-        this.floatingToastService.showToast({
-          status: 200,
-          keyTranslation: "session.start.toast",
-          details: [],
-        });
-      },
+      next: () => {},
     });
   }
 

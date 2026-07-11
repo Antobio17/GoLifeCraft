@@ -133,6 +133,9 @@
   border-radius: 18px;
   padding: 14px 15px;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
   transition:
     padding 0.22s ease,
     border-radius 0.22s ease,
