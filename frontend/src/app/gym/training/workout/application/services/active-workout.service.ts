@@ -193,8 +193,8 @@ export class ActiveWorkoutService implements OnDestroy {
     this.activeSessionId.set(active.attributes.sessionId);
     this.activeName.set(active.attributes.sessionName);
     this.doneKeys.set(doneKeys);
-    this.baseSeconds.set(active.attributes.durationSeconds);
-    this.startedAtMs.set(Date.now());
+    this.baseSeconds.set(0);
+    this.startedAtMs.set(new Date(active.attributes.startedAt).getTime());
     this.paused.set(false);
     this.startTicker();
     this.startProgressPipe();
