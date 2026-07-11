@@ -7,6 +7,15 @@
       slot="actions"
       variant="secondary"
       size="icon-lg"
+      icon="history"
+      [iconSize]="19"
+      [attr.title]="'getSessions.history' | t"
+      (clicked)="onHistory()"
+    />
+    <ds-button
+      slot="actions"
+      variant="secondary"
+      size="icon-lg"
       icon="bookmark"
       [iconSize]="19"
       [attr.title]="'getSessions.library' | t"

@@ -2,6 +2,7 @@
   "getSessions": {
     "heading": "Gimnasio",
     "library": "Biblioteca",
+    "history": "Históricos",
     "yourSessions": "Tus sesiones",
     "stats": {
       "sessions": "Sesiones",

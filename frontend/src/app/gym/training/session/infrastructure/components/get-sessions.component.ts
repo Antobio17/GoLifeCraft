@@ -96,6 +96,10 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
     this.router.navigate(["/gym/exercises"]);
   }
 
+  onHistory(): void {
+    this.router.navigate(["/gym/history"]);
+  }
+
   onStart(id: string): void {
     this.router.navigate(["/gym/sessions", id], {
       queryParams: { start: 1 },

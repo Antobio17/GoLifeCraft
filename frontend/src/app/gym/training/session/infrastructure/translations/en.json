@@ -2,6 +2,7 @@
   "getSessions": {
     "heading": "Gym",
     "library": "Library",
+    "history": "History",
     "yourSessions": "Your sessions",
     "stats": {
       "sessions": "Sessions",
