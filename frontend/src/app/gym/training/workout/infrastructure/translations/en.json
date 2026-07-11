@@ -1,21 +1,27 @@
 {
   "getWorkouts": {
+    "back": "Gym",
+    "eyebrow": "Gym",
     "heading": "History",
+    "subtitle": "workouts completed",
     "recent": "Recent workouts",
     "stats": {
       "workouts": "Workouts"
     },
     "card": {
-      "sets": "sets"
+      "sets": "sets",
+      "exercises": "exercises"
     },
     "empty": {
       "title": "No workouts yet",
-      "text": "Once you finish a session your history will show up here."
+      "text": "Once you finish a session it will show up here with the exercises you completed."
     }
   },
   "getWorkout": {
     "back": "History",
-    "eyebrow": "Workout",
+    "eyebrow": "History",
+    "completed": "Completed",
+    "duration": "duration",
     "sets": "sets",
     "set": {
       "number": "Set",

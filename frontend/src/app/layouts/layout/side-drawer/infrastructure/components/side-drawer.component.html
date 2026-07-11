@@ -143,6 +143,7 @@
         class="drawer__item"
         routerLink="/gym"
         routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
         (click)="close()"
       >
         <svg
@@ -158,6 +159,31 @@
           <path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" />
         </svg>
         <span class="drawer__item-label">{{ "navbar.gym" | t }}</span>
+      </a>
+
+      <a
+        class="drawer__item drawer__item--sub"
+        routerLink="/gym/history"
+        routerLinkActive="is-active"
+        (click)="close()"
+      >
+        <svg
+          class="drawer__item-icon"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M3 3v5h5" />
+          <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
+          <path d="M12 7v5l3 2" />
+        </svg>
+        <span class="drawer__item-label">{{ "navbar.history" | t }}</span>
       </a>
 
       @if (isGod()) {

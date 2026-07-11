@@ -1,10 +1,12 @@
 <ds-page-wrapper [gap]="'12px'">
   <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getWorkouts.back' | t"
+    [eyebrow]="'getWorkouts.eyebrow' | t"
     [title]="'getWorkouts.heading' | t"
     [subtitle]="headerSubtitle()"
+    (leadingClick)="goBack()"
   />
-
-  <ds-text variant="label">{{ "getWorkouts.recent" | t }}</ds-text>
 
   @if (loading()) {
     <ds-grid [minColumn]="'260px'" [gap]="'9px'">
@@ -14,7 +16,7 @@
     </ds-grid>
   } @else if (items().length === 0) {
     <ds-empty-state
-      icon="dumbbell"
+      icon="history"
       [title]="'getWorkouts.empty.title' | t"
       [text]="'getWorkouts.empty.text' | t"
     />
@@ -24,23 +26,47 @@
         <ds-card
           [interactive]="true"
           [padding]="'13px'"
-          [gap]="'9px'"
+          [gap]="'11px'"
           (activated)="onOpen(workout.id)"
         >
-          <ds-stack [gap]="'1px'">
-            <ds-heading [level]="3" size="md">
-              {{ workout.attributes.sessionName }}
-            </ds-heading>
-            <ds-text variant="meta">{{ summaryText(workout) }}</ds-text>
+          <ds-stack
+            direction="row"
+            align="start"
+            justify="between"
+            [gap]="'8px'"
+          >
+            <ds-stack [gap]="'2px'">
+              <ds-heading [level]="3" size="md">
+                {{ workout.attributes.sessionName }}
+              </ds-heading>
+              <ds-text variant="meta" class="wk-date">
+                {{ dateText(workout.attributes.startedAt) }}
+              </ds-text>
+            </ds-stack>
+
+            <span class="wk-ratio">
+              <ds-icon name="check" [size]="12" [stroke]="3" />
+              {{ ratioLabel(workout.attributes) }}
+            </span>
           </ds-stack>
 
-          @if (workout.attributes.muscleGroups.length) {
-            <ds-stack direction="row" [wrap]="true" [gap]="'5px'">
-              @for (tag of workout.attributes.muscleGroups; track tag) {
-                <ds-chip tone="brand">{{ tag }}</ds-chip>
-              }
-            </ds-stack>
-          }
+          <div class="wk-bar">
+            <div
+              class="wk-bar__fill"
+              [style.width.%]="progressPercent(workout.attributes)"
+            ></div>
+          </div>
+
+          <ds-stack direction="row" [gap]="'14px'" [wrap]="true">
+            <span class="wk-meta">
+              <ds-icon name="clock" [size]="14" />
+              {{ durationText(workout.attributes.durationSeconds) }}
+            </span>
+            <span class="wk-meta">
+              <ds-icon name="dumbbell" [size]="14" />
+              {{ exercisesLabel(workout.attributes) }}
+            </span>
+          </ds-stack>
         </ds-card>
       }
     </ds-grid>

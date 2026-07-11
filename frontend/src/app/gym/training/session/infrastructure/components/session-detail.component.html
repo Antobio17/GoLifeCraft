@@ -43,16 +43,12 @@
 
     @if (isActiveHere) {
       <div
-        #stickySentinel
-        class="active-banner__sentinel"
-        aria-hidden="true"
-      ></div>
-      <div
-        class="active-banner"
-        [class.active-banner--paused]="activeWorkout.paused()"
-        [class.active-banner--stuck]="sessScrolled()"
+        class="active-banner-compact"
+        [class.active-banner-compact--visible]="sessScrolled()"
+        [class.active-banner-compact--paused]="activeWorkout.paused()"
+        [attr.aria-hidden]="sessScrolled() ? null : 'true'"
       >
-        <div class="active-banner__row">
+        <div class="active-banner-compact__inner">
           <span class="active-banner__pulse"></span>
           <div class="active-banner__info">
             <span class="active-banner__state">
@@ -63,7 +59,7 @@
                 ) | t
               }}
             </span>
-            <span class="active-banner__time">{{
+            <span class="active-banner-compact__time">{{
               activeWorkout.elapsedLabel()
             }}</span>
           </div>
@@ -111,6 +107,35 @@
             </button>
           </div>
         </div>
+      </div>
+      <div
+        class="active-banner"
+        [class.active-banner--paused]="activeWorkout.paused()"
+      >
+        <div class="active-banner__row">
+          <span class="active-banner__pulse"></span>
+          <div class="active-banner__info">
+            <span class="active-banner__state">
+              {{
+                (activeWorkout.paused()
+                  ? "getSession.active.paused"
+                  : "getSession.active.running"
+                ) | t
+              }}
+            </span>
+            <span class="active-banner__time">{{
+              activeWorkout.elapsedLabel()
+            }}</span>
+          </div>
+          <div class="active-banner__count">
+            <span class="active-banner__count-value"
+              >{{ doneCount }}/{{ totalSets }}</span
+            >
+            <span class="active-banner__count-label">{{
+              "getSession.active.sets" | t
+            }}</span>
+          </div>
+        </div>
         <div class="active-banner__actions">
           <button
             type="button"
@@ -149,6 +174,11 @@
           </div>
         </div>
       </div>
+      <div
+        #stickySentinel
+        class="active-banner__sentinel"
+        aria-hidden="true"
+      ></div>
     }
 
     @if (exercises().length === 0) {

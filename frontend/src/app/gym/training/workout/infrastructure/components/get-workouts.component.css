@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.wk-date {
+  text-transform: capitalize;
+}
+
+.wk-ratio {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  border-radius: 9px;
+  background: var(--ds-primary-soft);
+  color: var(--ds-primary-soft-text);
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.wk-bar {
+  height: 6px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-surface-inset);
+  overflow: hidden;
+}
+
+.wk-bar__fill {
+  height: 100%;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-primary);
+  transition: width var(--ds-transition-base);
+}
+
+.wk-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ds-text-muted);
+}
+
+.wk-meta ds-icon {
+  color: var(--ds-primary);
+}

@@ -115,16 +115,15 @@
 }
 
 /* ---- active workout banner ---- */
+/* Zero-height marker after the expanded card: drives the compact-bar toggle
+   without ever changing layout height. */
 .active-banner__sentinel {
   height: 0;
-  margin-bottom: -12px;
+  margin-top: -12px;
   pointer-events: none;
 }
 
 .active-banner {
-  position: sticky;
-  top: 8px;
-  z-index: 20;
   display: flex;
   flex-direction: column;
   gap: 11px;
@@ -133,19 +132,62 @@
   border-radius: 18px;
   padding: 14px 15px;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
-  transform: translateZ(0);
-  will-change: transform;
-  backface-visibility: hidden;
-  transition:
-    padding 0.22s ease,
-    border-radius 0.22s ease,
-    box-shadow 0.22s ease;
 }
 
-.active-banner--stuck {
+/* Compact pinned bar: a 0-height sticky slot (no layout footprint) whose inner
+   bar is painted as an overlay. Shown only once the expanded card scrolls off,
+   so toggling it never shifts the document. */
+.active-banner-compact {
+  position: sticky;
+  top: 8px;
+  height: 0;
+  z-index: 20;
+  margin-bottom: -12px;
+  pointer-events: none;
+}
+
+.active-banner-compact__inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--ds-surface-brand);
+  color: var(--ds-on-surface-brand);
   border-radius: 14px;
   padding: 9px 12px;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
+  will-change: transform;
+  backface-visibility: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateZ(0) translateY(-8px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+
+.active-banner-compact--visible .active-banner-compact__inner {
+  opacity: 1;
+  visibility: visible;
+  transform: translateZ(0) translateY(0);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  pointer-events: auto;
+}
+
+.active-banner-compact--paused .active-banner__pulse {
+  animation: none;
+  opacity: 0.5;
+}
+
+.active-banner-compact__time {
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 19px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
 }
 
 .active-banner__row {
@@ -202,11 +244,6 @@
   line-height: 1;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
-  transition: font-size 0.22s ease;
-}
-
-.active-banner--stuck .active-banner__time {
-  font-size: 19px;
 }
 
 .active-banner__count {
@@ -237,10 +274,6 @@
   gap: 8px;
 }
 
-.active-banner--stuck .active-banner__actions {
-  display: none;
-}
-
 .active-banner__actions-row {
   display: flex;
   gap: 8px;
@@ -268,14 +301,10 @@
 }
 
 .active-banner__compact-actions {
-  display: none;
+  display: flex;
   align-items: center;
   gap: 6px;
   flex: 0 0 auto;
-}
-
-.active-banner--stuck .active-banner__compact-actions {
-  display: flex;
 }
 
 .active-banner__compact-btn {

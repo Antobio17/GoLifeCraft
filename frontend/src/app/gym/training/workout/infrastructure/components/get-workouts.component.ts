@@ -1,7 +1,10 @@
 import { Component, computed, inject } from "@angular/core";
 import { Observable } from "rxjs";
 import { GetWorkoutsService } from "@gym/training/workout/application/services/get-workouts.service";
-import { Workout } from "../../domain/models/workout.model";
+import {
+  Workout,
+  WorkoutListAttributes,
+} from "../../domain/models/workout.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -10,7 +13,7 @@ import { GridComponent } from "@shared/design-system/grid/infrastructure/compone
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import {
@@ -21,6 +24,7 @@ import {
 @Component({
   selector: "app-get-workouts",
   templateUrl: "./get-workouts.component.html",
+  styleUrls: ["./get-workouts.component.css"],
   imports: [
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -30,7 +34,7 @@ import {
     CardComponent,
     HeadingComponent,
     TextComponent,
-    ChipComponent,
+    IconComponent,
     EmptyStateComponent,
     SkeletonComponent,
   ],
@@ -41,10 +45,9 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
   protected readonly modulePath = "gym/training/workout";
   protected readonly storageKey = "pageSize_workouts";
 
-  headerSubtitle = computed(() => {
-    const workouts = this.t("getWorkouts.stats.workouts").toLowerCase();
-    return `${this.totalItems()} ${workouts}`;
-  });
+  headerSubtitle = computed(
+    () => `${this.totalItems()} ${this.t("getWorkouts.subtitle")}`,
+  );
 
   protected configureList(): void {
     this.pageSize.set(50);
@@ -57,11 +60,19 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
     return this.getWorkoutsService.getWorkouts(page, pageSize);
   }
 
-  summaryText(workout: Workout): string {
-    const sets = this.t("getWorkouts.card.sets");
-    return `${this.dateText(workout.attributes.startedAt)} · ${this.durationText(
-      workout.attributes.durationSeconds,
-    )} · ${workout.attributes.completedSets}/${workout.attributes.totalSets} ${sets}`;
+  ratioLabel(attributes: WorkoutListAttributes): string {
+    return `${attributes.completedSets}/${attributes.totalSets}`;
+  }
+
+  progressPercent(attributes: WorkoutListAttributes): number {
+    if (attributes.totalSets <= 0) {
+      return 0;
+    }
+    return Math.round((attributes.completedSets / attributes.totalSets) * 100);
+  }
+
+  exercisesLabel(attributes: WorkoutListAttributes): string {
+    return `${attributes.exerciseCount} ${this.t("getWorkouts.card.exercises")}`;
   }
 
   dateText(value: string): string {
@@ -70,9 +81,9 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
       return value;
     }
     return date.toLocaleDateString(undefined, {
-      day: "2-digit",
+      weekday: "short",
+      day: "numeric",
       month: "short",
-      year: "numeric",
     });
   }
 
@@ -84,6 +95,10 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
       return `${hours}h ${minutes}min`;
     }
     return `${minutes}min`;
+  }
+
+  goBack(): void {
+    this.router.navigate(["/gym"]);
   }
 
   onOpen(id: string): void {

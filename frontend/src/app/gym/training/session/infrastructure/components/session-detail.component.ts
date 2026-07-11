@@ -111,8 +111,8 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   finishing = signal(false);
 
   readonly sessScrolled = signal(false);
-  private readonly STICKY_COLLAPSE = 9;
-  private readonly STICKY_EXPAND = 81;
+  private readonly STICKY_COLLAPSE = 10;
+  private readonly STICKY_EXPAND = 58;
   private stickySentinel?: HTMLElement;
   private stickyRaf = 0;
   private readonly onStickyScroll = () => this.scheduleStickyUpdate();

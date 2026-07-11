@@ -1,5 +1,8 @@
 @if (visible()) {
-  <div class="workout-banner" [class.workout-banner--paused]="activeWorkout.paused()">
+  <div
+    class="workout-banner"
+    [class.workout-banner--paused]="activeWorkout.paused()"
+  >
     <span class="workout-banner__pulse"></span>
 
     <div class="workout-banner__info">
@@ -12,8 +15,12 @@
         }}
       </span>
       <div class="workout-banner__meta">
-        <span class="workout-banner__time">{{ activeWorkout.elapsedLabel() }}</span>
-        <span class="workout-banner__name">{{ activeWorkout.activeName() }}</span>
+        <span class="workout-banner__time">{{
+          activeWorkout.elapsedLabel()
+        }}</span>
+        <span class="workout-banner__name">{{
+          activeWorkout.activeName()
+        }}</span>
       </div>
     </div>
 

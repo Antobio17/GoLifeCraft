@@ -1,21 +1,27 @@
 {
   "getWorkouts": {
-    "heading": "Historial",
+    "back": "Gimnasio",
+    "eyebrow": "Gimnasio",
+    "heading": "Histórico",
+    "subtitle": "entrenos completados",
     "recent": "Entrenos recientes",
     "stats": {
       "workouts": "Entrenos"
     },
     "card": {
-      "sets": "series"
+      "sets": "series",
+      "exercises": "ejercicios"
     },
     "empty": {
       "title": "Aún no hay entrenos",
-      "text": "Cuando finalices una sesión aparecerá aquí tu historial."
+      "text": "Cuando finalices una sesión aparecerá aquí con los ejercicios que completaste."
     }
   },
   "getWorkout": {
-    "back": "Historial",
-    "eyebrow": "Entreno",
+    "back": "Histórico",
+    "eyebrow": "Histórico",
+    "completed": "Completado",
+    "duration": "duración",
     "sets": "series",
     "set": {
       "number": "Serie",

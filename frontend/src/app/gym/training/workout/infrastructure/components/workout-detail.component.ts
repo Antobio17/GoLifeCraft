@@ -8,7 +8,6 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { GetWorkoutService } from "../../application/services/get-workout.service";
@@ -29,7 +28,6 @@ import {
     CardComponent,
     HeadingComponent,
     TextComponent,
-    ChipComponent,
     IconComponent,
     SkeletonComponent,
   ],
@@ -69,18 +67,27 @@ export class WorkoutDetailComponent implements OnInit {
     return exercise.muscleGroups.join(" · ");
   }
 
+  exerciseRatio(exercise: WorkoutExerciseView): string {
+    const done = exercise.sets.filter((set) => set.done).length;
+    return `${done}/${exercise.sets.length}`;
+  }
+
   dateText(value: string): string {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) {
       return value;
     }
     return date.toLocaleDateString(undefined, {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
+      weekday: "long",
+      day: "numeric",
+      month: "long",
       hour: "2-digit",
       minute: "2-digit",
     });
+  }
+
+  ratioLabel(attributes: WorkoutDetailAttributes): string {
+    return `${this.completedSets(attributes)}/${this.totalSets(attributes)}`;
   }
 
   durationText(totalSeconds: number): string {

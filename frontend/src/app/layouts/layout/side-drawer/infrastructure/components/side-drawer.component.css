@@ -171,6 +171,19 @@
   flex: none;
 }
 
+.drawer__item--sub {
+  padding-left: 27px;
+  font-size: 13.5px;
+}
+
+.drawer__item--sub .drawer__item-icon {
+  color: var(--ds-text-meta);
+}
+
+.drawer__item--sub.is-active .drawer__item-icon {
+  color: var(--drawer-active-icon);
+}
+
 .drawer__item:hover {
   background: color-mix(in srgb, var(--ds-text) 6%, transparent);
 }
