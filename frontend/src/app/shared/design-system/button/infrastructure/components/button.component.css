@@ -24,6 +24,8 @@
 
 .ds-btn__content {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 7px;
 }
 
@@ -237,27 +239,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-/* ---- Iconos ---- */
-.ds-btn--lg .ds-btn__content svg {
-  width: 20px;
-  height: 20px;
-}
-
-.ds-btn--md .ds-btn__content svg {
-  width: 18px;
-  height: 18px;
-}
-
-.ds-btn--sm .ds-btn__content svg,
-.ds-btn--icon .ds-btn__content svg,
-.ds-btn--icon-sm .ds-btn__content svg {
-  width: 16px;
-  height: 16px;
-}
-
-.ds-btn--icon-lg .ds-btn__content svg {
-  width: 20px;
-  height: 20px;
 }

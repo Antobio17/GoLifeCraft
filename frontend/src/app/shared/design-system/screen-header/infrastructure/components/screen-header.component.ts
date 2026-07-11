@@ -15,8 +15,8 @@ export type ScreenHeaderLeading = "back" | "close" | null;
           (click)="leadingClick.emit()"
         >
           <svg
-            width="16"
-            height="16"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -58,8 +58,8 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       }
       .ds-screen-head__lead {
         flex: 0 0 auto;
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
         padding: 0;
         box-sizing: border-box;
         line-height: 0;
@@ -83,7 +83,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       }
       .ds-screen-head__eyebrow {
         display: block;
-        font-size: 9.5px;
+        font-size: 10.5px;
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.09em;
         text-transform: uppercase;
@@ -93,7 +93,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         margin: 0;
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
-        font-size: var(--ds-text-xl);
+        font-size: var(--ds-text-2xl);
         letter-spacing: -0.02em;
         color: var(--ds-text);
         line-height: 1.15;
@@ -103,7 +103,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       }
       .ds-screen-head__subtitle {
         margin: 2px 0 0;
-        font-size: var(--ds-text-label);
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
       }

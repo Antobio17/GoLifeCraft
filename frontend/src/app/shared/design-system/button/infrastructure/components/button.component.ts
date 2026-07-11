@@ -21,9 +21,22 @@ export class ButtonComponent {
   @Input() loading = false;
   @Input() fullWidth = false;
   @Input() icon?: DsIconName;
-  @Input() iconSize = 16;
+  @Input() iconSize?: number;
 
   @Output() clicked = new EventEmitter<void>();
+
+  private static readonly ICON_SIZE_BY_SIZE: Record<ButtonSize, number> = {
+    lg: 20,
+    md: 18,
+    sm: 16,
+    icon: 16,
+    "icon-sm": 16,
+    "icon-lg": 20,
+  };
+
+  get resolvedIconSize(): number {
+    return this.iconSize ?? ButtonComponent.ICON_SIZE_BY_SIZE[this.size];
+  }
 
   get buttonClasses(): string {
     const classes = [

@@ -13,6 +13,12 @@ import { DS_ICONS, DsIconName } from "../../domain/models/icon.model";
   ></span>`,
   styles: [
     `
+      :host {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+      }
       .ds-icon {
         display: inline-flex;
         flex: 0 0 auto;
