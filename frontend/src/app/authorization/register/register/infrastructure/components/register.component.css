@@ -12,6 +12,13 @@
   padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
 }
 
+@media (max-width: 767px) {
+  .auth {
+    min-height: calc(100vh / var(--ds-app-scale, 1));
+    min-height: calc(100dvh / var(--ds-app-scale, 1));
+  }
+}
+
 .auth__card {
   width: 100%;
   max-width: 380px;
@@ -74,7 +81,7 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
 }
 
-[data-theme="dark"] .auth__tab--active {
+:host-context([data-theme="dark"]) .auth__tab--active {
   background: var(--ds-accent);
   color: var(--ds-on-accent);
   box-shadow: none;
@@ -197,7 +204,7 @@
     filter var(--ds-transition-base);
 }
 
-[data-theme="dark"] .auth__submit {
+:host-context([data-theme="dark"]) .auth__submit {
   --arrow-color: var(--ds-on-primary);
 }
 

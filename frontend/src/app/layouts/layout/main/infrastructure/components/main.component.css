@@ -27,6 +27,14 @@
   padding-bottom: calc(88px + env(safe-area-inset-bottom));
 }
 
+@media (max-width: 767px) {
+  .app-frame,
+  .app-frame__content {
+    min-height: calc(100vh / var(--ds-app-scale, 1));
+    min-height: calc(100dvh / var(--ds-app-scale, 1));
+  }
+}
+
 @media (min-width: 768px) {
   .app-frame {
     max-width: none;
