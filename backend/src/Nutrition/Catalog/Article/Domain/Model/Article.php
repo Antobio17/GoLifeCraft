@@ -11,6 +11,9 @@ class Article extends GenericAggregate
 {
     public string $name;
     public string $recipeUnit;
+    public ?float $price = null;
+    public ?string $brand = null;
+    public ?string $emoji = null;
     public ?NutritionFacts $nutritionFacts = null;
     public ?Supermarket $supermarket = null;
     public ?Category $category = null;

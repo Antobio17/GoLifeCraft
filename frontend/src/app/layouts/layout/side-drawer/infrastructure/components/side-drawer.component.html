@@ -84,7 +84,12 @@
         <span class="drawer__item-label">{{ "navbar.home" | t }}</span>
       </a>
 
-      <button type="button" class="drawer__item" (click)="comingSoon()">
+      <a
+        class="drawer__item"
+        routerLink="/catalog"
+        routerLinkActive="is-active"
+        (click)="close()"
+      >
         <svg
           class="drawer__item-icon"
           width="19"
@@ -101,7 +106,7 @@
           <rect x="13" y="13" width="8" height="8" rx="2" />
         </svg>
         <span class="drawer__item-label">{{ "navbar.catalog" | t }}</span>
-      </button>
+      </a>
 
       <button type="button" class="drawer__item" (click)="comingSoon()">
         <svg

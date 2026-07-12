@@ -1,0 +1,55 @@
+{
+  "getArticles": {
+    "heading": "Catalog",
+    "formats": "items",
+    "searchPlaceholder": "Search product or brand…",
+    "searchClear": "Clear search",
+    "nutritionCaption": "Nutrition values",
+    "noResults": "No results for",
+    "filter": {
+      "category": "Category",
+      "brand": "Brand",
+      "store": "Store"
+    },
+    "macro": {
+      "kcal": "kcal",
+      "proteinShort": "P",
+      "fatShort": "F",
+      "carbsShort": "C"
+    },
+    "empty": {
+      "title": "Empty catalog",
+      "text": "There are no products in the catalog yet"
+    }
+  },
+  "getArticle": {
+    "back": "Back",
+    "per": "Values per",
+    "noNutrition": "No nutrition information",
+    "notFound": {
+      "title": "Product not found",
+      "text": "We couldn't load this product"
+    },
+    "macro": {
+      "kcal": "kcal",
+      "protein": "Prot",
+      "fat": "Fat",
+      "carbs": "Carb"
+    },
+    "table": {
+      "fat": "Fat",
+      "saturated": "of which saturates",
+      "carbs": "Carbohydrate",
+      "sugars": "of which sugars",
+      "protein": "Protein",
+      "fiber": "Fibre",
+      "salt": "Salt"
+    }
+  },
+  "article": {
+    "breadcrumb": {
+      "list": "Catalog",
+      "detail": "Product"
+    }
+  }
+}

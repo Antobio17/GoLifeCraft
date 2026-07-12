@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, computed, inject, signal } from "@angular/core";
-import { Observable, Subject, Subscription, interval, tap } from "rxjs";
-import { debounceTime, switchMap } from "rxjs/operators";
+import { Observable, Subject, Subscription, interval, of, tap } from "rxjs";
+import { debounceTime, map, shareReplay, switchMap } from "rxjs/operators";
 import { WorkoutSessionPort } from "../../domain/ports/workout-session.port";
 import {
   StartWorkoutResponse,
@@ -38,9 +38,12 @@ export class ActiveWorkoutService implements OnDestroy {
   private readonly nowMs = signal(Date.now());
   private readonly doneKeys = signal<Set<string>>(new Set());
 
+  readonly liveExercises = signal<ActiveExercise[]>([]);
+
   private ticker?: Subscription;
   private readonly progress$ = new Subject<ActiveExercise[]>();
   private progressSub?: Subscription;
+  private restore$?: Observable<void>;
 
   readonly isActive = computed(() => this.workoutId() !== null);
 
@@ -119,10 +122,12 @@ export class ActiveWorkoutService implements OnDestroy {
           this.workoutId.set(response.data.id);
           this.activeSessionId.set(sessionId);
           this.activeName.set(sessionName);
+          this.liveExercises.set(exercises);
           this.doneKeys.set(new Set());
           this.baseSeconds.set(0);
           this.startedAtMs.set(Date.now());
           this.paused.set(false);
+          this.restore$ = undefined;
           this.startTicker();
           this.startProgressPipe();
         }),
@@ -168,15 +173,24 @@ export class ActiveWorkoutService implements OnDestroy {
     return this.port.discard(workoutId).pipe(tap(() => this.reset()));
   }
 
-  restoreActive(): Observable<WorkoutDetail | null> {
-    return this.port.getActive().pipe(
-      tap((active) => {
-        if (!active) {
-          return;
-        }
-        this.hydrate(active);
-      }),
-    );
+  ensureRestored(): Observable<void> {
+    if (this.isActive()) {
+      return of(undefined);
+    }
+
+    if (!this.restore$) {
+      this.restore$ = this.port.getActive().pipe(
+        tap((active) => {
+          if (active) {
+            this.hydrate(active);
+          }
+        }),
+        map(() => undefined),
+        shareReplay(1),
+      );
+    }
+
+    return this.restore$;
   }
 
   private hydrate(active: WorkoutDetail): void {
@@ -192,12 +206,26 @@ export class ActiveWorkoutService implements OnDestroy {
     this.workoutId.set(active.id);
     this.activeSessionId.set(active.attributes.sessionId);
     this.activeName.set(active.attributes.sessionName);
+    this.liveExercises.set(this.fromDetail(active));
     this.doneKeys.set(doneKeys);
     this.baseSeconds.set(0);
     this.startedAtMs.set(new Date(active.attributes.startedAt).getTime());
     this.paused.set(false);
     this.startTicker();
     this.startProgressPipe();
+  }
+
+  private fromDetail(active: WorkoutDetail): ActiveExercise[] {
+    return active.attributes.exercises.map((exercise) => ({
+      exerciseId: exercise.exerciseId,
+      exerciseName: exercise.exerciseName,
+      muscleGroups: [...exercise.muscleGroups],
+      type: exercise.type,
+      sets: exercise.sets.map((set) => ({
+        reps: set.reps,
+        weight: set.weight,
+      })),
+    }));
   }
 
   syncProgress(exercises: ActiveExercise[]): void {
@@ -208,6 +236,7 @@ export class ActiveWorkoutService implements OnDestroy {
   }
 
   private queueProgress(exercises: ActiveExercise[]): void {
+    this.liveExercises.set(exercises);
     this.progress$.next(exercises);
   }
 
@@ -251,10 +280,12 @@ export class ActiveWorkoutService implements OnDestroy {
     this.workoutId.set(null);
     this.activeSessionId.set(null);
     this.activeName.set("");
+    this.liveExercises.set([]);
     this.paused.set(false);
     this.baseSeconds.set(0);
     this.startedAtMs.set(0);
     this.doneKeys.set(new Set());
+    this.restore$ = undefined;
   }
 
   private buildProgress(exercises: ActiveExercise[]): WorkoutProgressRequest {

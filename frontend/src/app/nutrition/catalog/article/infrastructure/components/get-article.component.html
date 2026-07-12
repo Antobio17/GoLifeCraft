@@ -1,0 +1,123 @@
+<ds-page-wrapper [gap]="'14px'">
+  @if (loading()) {
+    <ds-skeleton height="40px" />
+    <ds-skeleton height="118px" />
+    <ds-skeleton height="120px" />
+    <ds-skeleton height="200px" />
+  } @else if (notFound() || detail() === null) {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getArticle.back' | t"
+      [title]="'getArticle.notFound.title' | t"
+      (leadingClick)="goBack()"
+    />
+    <ds-empty-state
+      icon="info"
+      [title]="'getArticle.notFound.title' | t"
+      [text]="'getArticle.notFound.text' | t"
+    />
+  } @else if (detail(); as d) {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getArticle.back' | t"
+      [eyebrow]="d.category"
+      [title]="d.name"
+      (leadingClick)="goBack()"
+    />
+
+    <div class="hero">
+      <span class="hero__emoji">{{ d.emoji }}</span>
+      @if (d.price) {
+        <span class="hero__price">{{ d.price }}</span>
+      }
+    </div>
+
+    @if (d.brand || d.store) {
+      <div class="tags">
+        @if (d.brand) {
+          <span class="tag">{{ d.brand }}</span>
+        }
+        @if (d.store) {
+          <span class="tag tag--store">{{ d.store }}</span>
+        }
+      </div>
+    }
+
+    @if (d.hasNutrition) {
+      <span class="caption">
+        {{ "getArticle.per" | t }} {{ d.referenceLabel }}
+      </span>
+
+      <div class="macro">
+        <div class="macro__kcal">
+          <span class="macro__kcalValue">{{ d.kcal ?? "—" }}</span>
+          <span class="macro__kcalUnit">{{ "getArticle.macro.kcal" | t }}</span>
+        </div>
+        <div class="macro__bars">
+          <div class="macro__bar">
+            <span class="bar bar--prot"></span>
+            <span class="macro__barLabel">{{
+              "getArticle.macro.protein" | t
+            }}</span>
+            <span class="macro__barValue">{{ d.proteinG ?? "—" }}</span>
+          </div>
+          <div class="macro__bar">
+            <span class="bar bar--fat"></span>
+            <span class="macro__barLabel">{{
+              "getArticle.macro.fat" | t
+            }}</span>
+            <span class="macro__barValue">{{ d.fatG ?? "—" }}</span>
+          </div>
+          <div class="macro__bar">
+            <span class="bar bar--carbs"></span>
+            <span class="macro__barLabel">{{
+              "getArticle.macro.carbs" | t
+            }}</span>
+            <span class="macro__barValue">{{ d.carbsG ?? "—" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ntable">
+        <div class="ntable__row">
+          <span class="ntable__label">{{ "getArticle.table.fat" | t }}</span>
+          <span class="ntable__value">{{ d.fatG ?? "—" }}</span>
+        </div>
+        <div class="ntable__row ntable__row--sub">
+          <span class="ntable__label">{{
+            "getArticle.table.saturated" | t
+          }}</span>
+          <span class="ntable__value">{{ d.saturatedG ?? "—" }}</span>
+        </div>
+        <div class="ntable__row">
+          <span class="ntable__label">{{ "getArticle.table.carbs" | t }}</span>
+          <span class="ntable__value">{{ d.carbsG ?? "—" }}</span>
+        </div>
+        <div class="ntable__row ntable__row--sub">
+          <span class="ntable__label">{{ "getArticle.table.sugars" | t }}</span>
+          <span class="ntable__value">{{ d.sugarsG ?? "—" }}</span>
+        </div>
+        <div class="ntable__row">
+          <span class="ntable__label">{{
+            "getArticle.table.protein" | t
+          }}</span>
+          <span class="ntable__value">{{ d.proteinG ?? "—" }}</span>
+        </div>
+        @if (d.fiberG) {
+          <div class="ntable__row">
+            <span class="ntable__label">{{
+              "getArticle.table.fiber" | t
+            }}</span>
+            <span class="ntable__value">{{ d.fiberG }}</span>
+          </div>
+        }
+        <div class="ntable__row ntable__row--last">
+          <span class="ntable__label">{{ "getArticle.table.salt" | t }}</span>
+          <span class="ntable__value">{{ d.saltG ?? "—" }}</span>
+        </div>
+      </div>
+    } @else {
+      <ds-text variant="muted">{{ "getArticle.noNutrition" | t }}</ds-text>
+    }
+  }
+</ds-page-wrapper>

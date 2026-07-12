@@ -9,12 +9,14 @@ doctrine:
                 dbname: '%env(resolve:DATABASE_MASTER_NAME)%'
                 user: '%env(resolve:DATABASE_MASTER_USER)%'
                 password: '%env(resolve:DATABASE_MASTER_PASSWORD)%'
-                charset: UTF8
+                charset: utf8mb4
                 server_version: '%env(resolve:DATABASE_MASTER_SERVER_VERSION)%'
             writer_tenant:
                 url: '%env(resolve:DATABASE_WRITER_TENANT_TEMPLATE_URL)%'
+                charset: utf8mb4
             reader_tenant:
                 url: '%env(resolve:DATABASE_READER_TENANT_TEMPLATE_URL)%'
+                charset: utf8mb4
     orm:
         default_entity_manager: master_manager
         enable_native_lazy_objects: true

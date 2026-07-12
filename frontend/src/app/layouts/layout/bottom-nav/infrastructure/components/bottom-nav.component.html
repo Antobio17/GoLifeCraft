@@ -10,21 +10,31 @@
     [attr.aria-label]="'navbar.home' | t"
   >
     <span class="tabbar__icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+      >
         <path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
       </svg>
     </span>
     <span class="tabbar__label">{{ "navbar.home" | t }}</span>
   </a>
 
-  <button
-    type="button"
+  <a
     class="tabbar__item"
-    (click)="comingSoon()"
+    routerLink="/catalog"
+    routerLinkActive="tabbar__item--active"
     [attr.aria-label]="'navbar.catalog' | t"
   >
     <span class="tabbar__icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.1"
+      >
         <rect x="3" y="3" width="8" height="8" rx="2" />
         <rect x="13" y="3" width="8" height="8" rx="2" />
         <rect x="3" y="13" width="8" height="8" rx="2" />
@@ -32,7 +42,7 @@
       </svg>
     </span>
     <span class="tabbar__label">{{ "navbar.catalog" | t }}</span>
-  </button>
+  </a>
 
   <a
     class="tabbar__item"
@@ -41,7 +51,12 @@
     [attr.aria-label]="'navbar.gym' | t"
   >
     <span class="tabbar__icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.1"
+      >
         <path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" />
       </svg>
     </span>

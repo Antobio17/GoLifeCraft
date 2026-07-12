@@ -54,7 +54,7 @@ final readonly class DoctrineTenantConnectionSwitcher implements TenantConnectio
             'password' => $password,
             'host' => $ip,
             'port' => $port,
-            'charset' => 'UTF8',
+            'charset' => 'utf8mb4',
         ];
 
         if ($connection->isConnected()) {

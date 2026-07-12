@@ -5,6 +5,9 @@
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255"/>
     <field name="recipeUnit" type="string" column="recipe_unit" length="30"/>
+    <field name="price" type="float" column="price" nullable="true"/>
+    <field name="brand" type="string" column="brand" length="120" nullable="true"/>
+    <field name="emoji" type="string" column="emoji" length="16" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

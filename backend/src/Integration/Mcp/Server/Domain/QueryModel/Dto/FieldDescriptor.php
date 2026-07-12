@@ -16,6 +16,7 @@ final readonly class FieldDescriptor
         public ?int $max = null,
         public ?array $enum = null,
         public ?string $regex = null,
+        public ?string $description = null,
     ) {
     }
 
@@ -33,6 +34,7 @@ final readonly class FieldDescriptor
             'max' => $this->max,
             'enum' => $this->enum,
             'regex' => $this->regex,
+            'description' => $this->description,
         ], static fn ($value) => null !== $value);
     }
 }

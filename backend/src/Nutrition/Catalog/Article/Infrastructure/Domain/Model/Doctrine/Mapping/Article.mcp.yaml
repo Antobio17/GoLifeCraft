@@ -15,6 +15,28 @@ fields:
     enum: [gram, milliliter, unit]
     filterable: true
     sortable: true
+  price:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+    sortable: true
+  brand:
+    writable: true
+    max: 120
+    filterable: true
+    sortable: true
+  emoji:
+    writable: true
+    max: 16
+    description: >-
+      A single emoji that best represents the food product, based on its name and category.
+      Always set exactly one emoji when creating or updating an article; do not leave it empty.
+      Prefer the most specific food emoji available. Guidance by category:
+      dairy/eggs 🥛🧀🧈🥚; fruit 🍎🍌🍊🍇🍓🍍🥝; vegetables 🥦🥕🍅🥬🥔🥑;
+      meat/fish 🍗🥩🥓🍤🐟; cereals/bread 🌾🥣🍞🍚🍝; legumes/nuts 🥜🌰🫘;
+      snacks/sweets 🍫🍪🍩🍬🍯; drinks 💧🥤🧃☕🍵; prepared meals 🍕🍔🥪🥗🥘;
+      supplements/protein 💪; canned/other 🥫🧂. If nothing fits, use 🍽️.
 
 relations:
   nutritionFacts:

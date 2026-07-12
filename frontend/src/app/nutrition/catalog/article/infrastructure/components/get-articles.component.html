@@ -1,0 +1,134 @@
+<ds-page-wrapper [gap]="'12px'">
+  <ds-screen-header
+    [title]="'getArticles.heading' | t"
+    [subtitle]="headerSubtitle()"
+  />
+
+  @if (loading()) {
+    <ds-grid [minColumn]="'300px'">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <ds-skeleton height="78px" />
+      }
+    </ds-grid>
+  } @else if (items().length === 0) {
+    <ds-empty-state
+      icon="search"
+      [title]="'getArticles.empty.title' | t"
+      [text]="'getArticles.empty.text' | t"
+    />
+  } @else {
+    <ds-search-input
+      [placeholder]="'getArticles.searchPlaceholder' | t"
+      [clearLabel]="'getArticles.searchClear' | t"
+      (searched)="onSearch($event)"
+    />
+
+    <div class="article-filters">
+      <select
+        class="article-filters__pill"
+        [class.is-active]="selectedCategory() !== ''"
+        [ngModel]="selectedCategory()"
+        (ngModelChange)="selectedCategory.set($event)"
+      >
+        <option value="">{{ "getArticles.filter.category" | t }}</option>
+        @for (option of categories(); track option) {
+          <option [value]="option">{{ option }}</option>
+        }
+      </select>
+
+      <select
+        class="article-filters__pill"
+        [class.is-active]="selectedBrand() !== ''"
+        [ngModel]="selectedBrand()"
+        (ngModelChange)="selectedBrand.set($event)"
+      >
+        <option value="">{{ "getArticles.filter.brand" | t }}</option>
+        @for (option of brands(); track option) {
+          <option [value]="option">{{ option }}</option>
+        }
+      </select>
+
+      <select
+        class="article-filters__pill"
+        [class.is-active]="selectedStore() !== ''"
+        [ngModel]="selectedStore()"
+        (ngModelChange)="selectedStore.set($event)"
+      >
+        <option value="">{{ "getArticles.filter.store" | t }}</option>
+        @for (option of stores(); track option) {
+          <option [value]="option">{{ option }}</option>
+        }
+      </select>
+    </div>
+
+    <span class="article-caption">{{
+      "getArticles.nutritionCaption" | t
+    }}</span>
+
+    @if (!hasResults()) {
+      <ds-text variant="muted">
+        {{ "getArticles.noResults" | t }} “{{ searchQuery() }}”
+      </ds-text>
+    } @else {
+      <ds-grid [minColumn]="'300px'">
+        @for (card of cards(); track card.id) {
+          <button
+            type="button"
+            class="article-card"
+            (click)="onSelect(card.id)"
+          >
+            <span class="article-card__emoji">{{ card.emoji }}</span>
+            <span class="article-card__body">
+              <span class="article-card__head">
+                <span class="article-card__name">{{ card.name }}</span>
+                @if (card.price) {
+                  <span class="article-card__price">{{ card.price }}</span>
+                }
+              </span>
+              @if (card.brand || card.store) {
+                <span class="article-card__meta">
+                  @if (card.brand) {
+                    <span>{{ card.brand }}</span>
+                  }
+                  @if (card.brand && card.store) {
+                    <span> · </span>
+                  }
+                  @if (card.store) {
+                    <span class="article-card__store">{{ card.store }}</span>
+                  }
+                </span>
+              }
+              @if (card.kcal || card.protein || card.fat || card.carbs) {
+                <span class="article-card__badges">
+                  @if (card.kcal) {
+                    <span class="badge badge--kcal"
+                      >{{ card.kcal }} {{ "getArticles.macro.kcal" | t }}</span
+                    >
+                  }
+                  @if (card.protein) {
+                    <span class="badge"
+                      >{{ "getArticles.macro.proteinShort" | t }}
+                      {{ card.protein }}</span
+                    >
+                  }
+                  @if (card.fat) {
+                    <span class="badge"
+                      >{{ "getArticles.macro.fatShort" | t }}
+                      {{ card.fat }}</span
+                    >
+                  }
+                  @if (card.carbs) {
+                    <span class="badge"
+                      >{{ "getArticles.macro.carbsShort" | t }}
+                      {{ card.carbs }}</span
+                    >
+                  }
+                </span>
+              }
+            </span>
+          </button>
+        }
+      </ds-grid>
+    }
+  }
+</ds-page-wrapper>

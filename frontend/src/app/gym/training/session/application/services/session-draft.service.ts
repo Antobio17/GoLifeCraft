@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
+import { ActiveExercise } from "@gym/training/workout/application/services/active-workout.service";
 import {
   SessionExerciseView,
   ExerciseSetView,
@@ -12,6 +13,23 @@ export class SessionDraftService {
     return list.map((exercise) => ({
       ...exercise,
       sets: exercise.sets.map((set) => ({ ...set })),
+    }));
+  }
+
+  fromActive(list: ActiveExercise[]): SessionExerciseView[] {
+    return list.map((exercise, index) => ({
+      id: this.uid("x"),
+      exerciseId: exercise.exerciseId,
+      exerciseName: exercise.exerciseName,
+      muscleGroups: [...exercise.muscleGroups],
+      type: exercise.type,
+      position: index + 1,
+      sets: exercise.sets.map((set, setIndex) => ({
+        id: this.uid("s"),
+        position: setIndex + 1,
+        reps: set.reps,
+        weight: set.weight,
+      })),
     }));
   }
 

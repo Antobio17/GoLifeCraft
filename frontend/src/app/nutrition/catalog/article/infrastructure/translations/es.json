@@ -1,0 +1,55 @@
+{
+  "getArticles": {
+    "heading": "Catálogo",
+    "formats": "formatos",
+    "searchPlaceholder": "Buscar producto o marca…",
+    "searchClear": "Limpiar búsqueda",
+    "nutritionCaption": "Valores nutricionales",
+    "noResults": "Sin resultados para",
+    "filter": {
+      "category": "Categoría",
+      "brand": "Marca",
+      "store": "Súper"
+    },
+    "macro": {
+      "kcal": "kcal",
+      "proteinShort": "P",
+      "fatShort": "G",
+      "carbsShort": "H"
+    },
+    "empty": {
+      "title": "Catálogo vacío",
+      "text": "Aún no hay productos en el catálogo"
+    }
+  },
+  "getArticle": {
+    "back": "Volver",
+    "per": "Valores por",
+    "noNutrition": "Sin información nutricional",
+    "notFound": {
+      "title": "Producto no encontrado",
+      "text": "No hemos podido cargar este producto"
+    },
+    "macro": {
+      "kcal": "kcal",
+      "protein": "Prot",
+      "fat": "Gras",
+      "carbs": "Hidr"
+    },
+    "table": {
+      "fat": "Grasas",
+      "saturated": "de las cuales saturadas",
+      "carbs": "Hidratos de carbono",
+      "sugars": "de los cuales azúcares",
+      "protein": "Proteínas",
+      "fiber": "Fibra",
+      "salt": "Sal"
+    }
+  },
+  "article": {
+    "breadcrumb": {
+      "list": "Catálogo",
+      "detail": "Producto"
+    }
+  }
+}

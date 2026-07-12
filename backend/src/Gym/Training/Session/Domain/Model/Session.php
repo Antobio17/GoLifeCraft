@@ -79,6 +79,26 @@ class Session extends GenericAggregate
         ));
     }
 
+    /**
+     * @param SessionExercise[] $exercises
+     */
+    public function syncExercises(
+        array $exercises,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->exercises = $exercises;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new SessionUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+        ));
+    }
+
     public function delete(
         string $deletedByUserId,
         DateTimeGenerator $dateTimeGenerator,

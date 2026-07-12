@@ -87,6 +87,7 @@ final readonly class DoctrineModelMetadataProvider implements ModelMetadataProvi
                 max: $rules['max'] ?? null,
                 enum: $rules['enum'] ?? null,
                 regex: $rules['regex'] ?? null,
+                description: $rules['description'] ?? null,
             );
         }
 

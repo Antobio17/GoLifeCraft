@@ -26,6 +26,16 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
+  Gym\Training\Session\Application\Command\SyncSessionExercisesCommandHandler:
+    class: Gym\Training\Session\Application\Command\SyncSessionExercisesCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $sessionExerciseAssembler: '@Gym\Training\Session\Application\Command\SessionExerciseAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Gym\Training\Session\Application\Command\DeleteSessionCommandHandler:
     class: Gym\Training\Session\Application\Command\DeleteSessionCommandHandler
     arguments:

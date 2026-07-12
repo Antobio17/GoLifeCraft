@@ -1,0 +1,7 @@
+services:
+  Gym\Training\Session\Application\Subscriber\UpdateSessionOnWorkoutFinished:
+    class: Gym\Training\Session\Application\Subscriber\UpdateSessionOnWorkoutFinished
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.gym.event.1.workout.finished' }

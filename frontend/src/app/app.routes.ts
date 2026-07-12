@@ -42,17 +42,25 @@ export const APP_ROUTES: Routes = [
         path: "supermarkets",
         data: { breadcrumb: "supermarket.breadcrumb.list" },
         loadChildren: () =>
-          import(
-            "./nutrition/catalog/supermarket/infrastructure/routes/supermarket.routes"
-          ).then((m) => m.SUPERMARKET_ROUTES),
+          import("./nutrition/catalog/supermarket/infrastructure/routes/supermarket.routes").then(
+            (m) => m.SUPERMARKET_ROUTES,
+          ),
       },
       {
         path: "categories",
         data: { breadcrumb: "category.breadcrumb.list" },
         loadChildren: () =>
-          import(
-            "./nutrition/catalog/category/infrastructure/routes/category.routes"
-          ).then((m) => m.CATEGORY_ROUTES),
+          import("./nutrition/catalog/category/infrastructure/routes/category.routes").then(
+            (m) => m.CATEGORY_ROUTES,
+          ),
+      },
+      {
+        path: "catalog",
+        data: { breadcrumb: "article.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/catalog/article/infrastructure/routes/article.routes").then(
+            (m) => m.ARTICLE_ROUTES,
+          ),
       },
       {
         path: "gym",

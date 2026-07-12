@@ -46,13 +46,10 @@ export class ActiveWorkoutBannerComponent implements OnInit {
   }
 
   private restoreActiveWorkout(): void {
-    if (
-      !this.authSessionService.isAuthenticated() ||
-      this.activeWorkout.isActive()
-    ) {
+    if (!this.authSessionService.isAuthenticated()) {
       return;
     }
-    this.activeWorkout.restoreActive().subscribe();
+    this.activeWorkout.ensureRestored().subscribe();
   }
 
   private pathOf(url: string): string {

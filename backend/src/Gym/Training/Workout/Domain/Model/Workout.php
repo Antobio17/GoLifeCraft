@@ -100,6 +100,31 @@ class Workout extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             durationSeconds: $this->durationSeconds,
+            sessionId: $this->sessionId,
+            finishedByUserId: $finishedByUserId,
+            exercises: $this->exercisesSnapshot(),
         ));
+    }
+
+    /**
+     * @return array<int, array{exerciseId: string, position: int, sets: array<int, array{position: int, reps: int, weight: float|null}>}>
+     */
+    private function exercisesSnapshot(): array
+    {
+        return array_map(
+            callback: fn (WorkoutExercise $exercise): array => [
+                'exerciseId' => $exercise->exerciseId,
+                'position' => $exercise->position,
+                'sets' => array_map(
+                    callback: fn (WorkoutSet $set): array => [
+                        'position' => $set->position,
+                        'reps' => $set->reps,
+                        'weight' => $set->weight,
+                    ],
+                    array: $exercise->sets,
+                ),
+            ],
+            array: $this->exercises,
+        );
     }
 }

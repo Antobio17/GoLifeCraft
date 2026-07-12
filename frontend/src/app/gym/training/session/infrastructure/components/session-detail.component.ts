@@ -221,12 +221,29 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
         const attributes = response.data.attributes;
         this.name.set(attributes.name);
         this.estimatedDurationMinutes.set(attributes.estimatedDurationMinutes);
-        this.exercises.set(this.sessionDraft.clone(attributes.exercises));
-        this.loading.set(false);
-        this.maybeAutoStart();
+        this.activeWorkout.ensureRestored().subscribe({
+          next: () => this.finalizeLoad(attributes.exercises),
+          error: () => this.finalizeLoad(attributes.exercises),
+        });
       },
       error: () => this.loading.set(false),
     });
+  }
+
+  private finalizeLoad(templateExercises: SessionExerciseView[]): void {
+    this.seedExercises(templateExercises);
+    this.loading.set(false);
+    this.maybeAutoStart();
+  }
+
+  private seedExercises(templateExercises: SessionExerciseView[]): void {
+    if (this.isActiveHere) {
+      this.exercises.set(
+        this.sessionDraft.fromActive(this.activeWorkout.liveExercises()),
+      );
+      return;
+    }
+    this.exercises.set(this.sessionDraft.clone(templateExercises));
   }
 
   private maybeAutoStart(): void {
@@ -323,14 +340,14 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       this.sessionDraft.fromLibrary(list, exercise),
     );
     this.pickerOpen.set(false);
-    this.queuePersist();
+    this.afterEdit();
   }
 
   removeExercise(exerciseId: string): void {
     this.exercises.update((list) =>
       this.sessionDraft.removeExercise(list, exerciseId),
     );
-    this.queuePersist();
+    this.afterEdit();
   }
 
   isSetSwiped(setId: string): boolean {
@@ -368,39 +385,36 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   addSet(exerciseId: string): void {
     this.exercises.update((list) => this.sessionDraft.addSet(list, exerciseId));
-    this.queuePersist();
-    this.syncActiveProgress();
+    this.afterEdit();
   }
 
   removeSet(exerciseId: string, setId: string): void {
     this.exercises.update((list) =>
       this.sessionDraft.removeSet(list, exerciseId, setId),
     );
-    this.queuePersist();
-    this.syncActiveProgress();
+    this.afterEdit();
   }
 
   setReps(exerciseId: string, setId: string, value: number): void {
     this.exercises.update((list) =>
       this.sessionDraft.setReps(list, exerciseId, setId, value),
     );
-    this.queuePersist();
-    this.syncActiveProgress();
+    this.afterEdit();
   }
 
   setWeight(exerciseId: string, setId: string, value: number): void {
     this.exercises.update((list) =>
       this.sessionDraft.setWeight(list, exerciseId, setId, value),
     );
-    this.queuePersist();
-    this.syncActiveProgress();
+    this.afterEdit();
   }
 
-  private syncActiveProgress(): void {
-    if (!this.isActiveHere) {
+  private afterEdit(): void {
+    if (this.isActiveHere) {
+      this.activeWorkout.syncProgress(this.toActive());
       return;
     }
-    this.activeWorkout.syncProgress(this.toActive());
+    this.queuePersist();
   }
 
   get isActiveHere(): boolean {
@@ -476,6 +490,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
           keyTranslation: "session.stop.toast",
           details: [],
         });
+        this.loadSession();
       },
       error: () => this.showStopModal.set(false),
     });
