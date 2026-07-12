@@ -37,13 +37,15 @@
     },
     "explore": {
       "title": "Explora",
+      "quickAccess": "Accesos rápidos",
       "catalog": "Catálogo",
       "catalogMeta": "248 formatos",
       "recipes": "Recetas",
       "list": "Lista de compra",
       "gym": "Gimnasio",
       "gymMeta": "Sesiones y ejercicios",
-      "soon": "Próximamente"
+      "soon": "En camino",
+      "soonBadge": "PRONTO"
     }
   }
 }

@@ -9,7 +9,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 export class ActionTileComponent {
   @Input() name = "";
   @Input() meta = "";
-  @Input() primary = false;
+  @Input() soon = false;
+  @Input() soonLabel = "";
 
   @Output() clicked = new EventEmitter<void>();
 }

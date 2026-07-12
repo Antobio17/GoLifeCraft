@@ -1,10 +1,26 @@
 <button
   type="button"
   class="tile"
-  [class.tile--primary]="primary"
+  [class.tile--soon]="soon"
   (click)="clicked.emit()"
 >
-  <span class="tile__icon"><ng-content></ng-content></span>
+  <span class="tile__top">
+    <span class="tile__icon"><ng-content></ng-content></span>
+    @if (soon) {
+      <span class="tile__badge">{{ soonLabel }}</span>
+    } @else {
+      <svg
+        class="tile__chevron"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+        aria-hidden="true"
+      >
+        <path d="M9 6l6 6-6 6" />
+      </svg>
+    }
+  </span>
   <span class="tile__text">
     <span class="tile__name">{{ name }}</span>
     @if (meta) {

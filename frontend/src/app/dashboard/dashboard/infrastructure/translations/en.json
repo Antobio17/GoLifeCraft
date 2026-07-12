@@ -37,13 +37,15 @@
     },
     "explore": {
       "title": "Explore",
+      "quickAccess": "Quick access",
       "catalog": "Catalog",
       "catalogMeta": "248 products",
       "recipes": "Recipes",
       "list": "Shopping list",
       "gym": "Gym",
       "gymMeta": "Sessions & exercises",
-      "soon": "Coming soon"
+      "soon": "On the way",
+      "soonBadge": "SOON"
     }
   }
 }

@@ -204,11 +204,23 @@
 
 /* ─── Explora ─── */
 
+.explore__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 11px;
+}
+
 .explore__title {
   font-size: 13px;
   font-weight: 700;
   color: var(--ds-text);
-  margin-bottom: 10px;
+}
+
+.explore__label {
+  font-size: 10.5px;
+  font-weight: var(--ds-weight-semibold);
+  color: var(--ds-text-meta);
 }
 
 .explore__grid {

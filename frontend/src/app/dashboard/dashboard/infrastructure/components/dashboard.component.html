@@ -68,10 +68,14 @@
 
     <!-- Explora -->
     <section class="explore">
-      <h2 class="explore__title">{{ "dashboard.explore.title" | t }}</h2>
+      <div class="explore__head">
+        <h2 class="explore__title">{{ "dashboard.explore.title" | t }}</h2>
+        <span class="explore__label">{{
+          "dashboard.explore.quickAccess" | t
+        }}</span>
+      </div>
       <div class="explore__grid">
         <ds-action-tile
-          [primary]="true"
           [name]="'dashboard.explore.catalog' | t"
           [meta]="'dashboard.explore.catalogMeta' | t"
           (clicked)="comingSoon()"
@@ -81,11 +85,13 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2.1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <rect x="3" y="3" width="8" height="8" rx="2" />
-            <rect x="13" y="3" width="8" height="8" rx="2" />
-            <rect x="3" y="13" width="8" height="8" rx="2" />
-            <rect x="13" y="13" width="8" height="8" rx="2" />
+            <path
+              d="M12 8c-1.5-2-4-2.4-5.6-1C4.4 8.7 4.3 12 6 15.4c1 2 2.4 3.6 3.7 3.6.9 0 1.4-.5 2.3-.5s1.4.5 2.3.5c1.3 0 2.7-1.6 3.7-3.6 1.7-3.4 1.6-6.7-.4-8.4-1.6-1.4-4.1-1-5.6 1z"
+            />
+            <path d="M12 8c0-1.8.9-3.4 2.6-4.2" />
           </svg>
         </ds-action-tile>
 
@@ -108,6 +114,8 @@
         </ds-action-tile>
 
         <ds-action-tile
+          [soon]="true"
+          [soonLabel]="'dashboard.explore.soonBadge' | t"
           [name]="'dashboard.explore.recipes' | t"
           [meta]="'dashboard.explore.soon' | t"
           (clicked)="comingSoon()"
@@ -117,12 +125,19 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2.1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <path d="M4 4h13a2 2 0 0 1 2 2v14l-8-3.5L3 20V5a1 1 0 0 1 1-1z" />
+            <circle cx="13" cy="12" r="6" />
+            <path
+              d="M4 3v6M4 3c-1 0-1.6.8-1.6 2v2.4c0 .9.7 1.6 1.6 1.6s1.6-.7 1.6-1.6V5c0-1.2-.6-2-1.6-2zM4 9v12"
+            />
           </svg>
         </ds-action-tile>
 
         <ds-action-tile
+          [soon]="true"
+          [soonLabel]="'dashboard.explore.soonBadge' | t"
           [name]="'dashboard.explore.list' | t"
           [meta]="'dashboard.explore.soon' | t"
           (clicked)="comingSoon()"
