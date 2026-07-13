@@ -35,7 +35,7 @@
   <ds-text variant="label">{{ "getSessions.yourSessions" | t }}</ds-text>
 
   @if (loading()) {
-    <ds-grid [minColumn]="'260px'" [gap]="'9px'">
+    <ds-grid [minColumn]="'260px'" [gap]="'9px'" [tabletColumns]="2">
       @for (i of [1, 2, 3]; track i) {
         <ds-skeleton />
       }
@@ -47,7 +47,7 @@
       [text]="'getSessions.table.emptyMessage' | t"
     />
   } @else {
-    <ds-grid [minColumn]="'260px'" [gap]="'9px'">
+    <ds-grid [minColumn]="'260px'" [gap]="'9px'" [tabletColumns]="2">
       @for (session of items(); track session.id) {
         <ds-card
           [interactive]="true"

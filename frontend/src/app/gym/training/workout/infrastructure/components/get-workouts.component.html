@@ -9,7 +9,7 @@
   />
 
   @if (loading()) {
-    <ds-grid [minColumn]="'260px'" [gap]="'9px'">
+    <ds-grid [minColumn]="'260px'" [gap]="'9px'" [tabletColumns]="2">
       @for (i of [1, 2, 3]; track i) {
         <ds-skeleton />
       }
@@ -21,7 +21,7 @@
       [text]="'getWorkouts.empty.text' | t"
     />
   } @else {
-    <ds-grid [minColumn]="'260px'" [gap]="'9px'">
+    <ds-grid [minColumn]="'260px'" [gap]="'9px'" [tabletColumns]="2">
       @for (workout of items(); track workout.id) {
         <ds-card
           [interactive]="true"
