@@ -6,7 +6,11 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
+import { AuthCardComponent } from "@shared/design-system/auth-card/infrastructure/components/auth-card.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 
 const HOME_ROUTE = "/dashboard";
 const REGISTER_ROUTE = "/register";
@@ -15,7 +19,15 @@ const REGISTER_ROUTE = "/register";
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.css"],
-  imports: [FormsModule, ContextualTranslatePipe, BrandLogoComponent],
+  imports: [
+    FormsModule,
+    ContextualTranslatePipe,
+    AuthCardComponent,
+    StackComponent,
+    FieldComponent,
+    TextInputComponent,
+    ButtonComponent,
+  ],
 })
 export class LoginComponent implements OnInit {
   private performLoginUseCase = inject(PerformLoginUseCase);
@@ -26,7 +38,6 @@ export class LoginComponent implements OnInit {
   email = "";
   password = "";
   loading = false;
-  showPassword = false;
 
   ngOnInit(): void {
     if (this.authSessionService.isAuthenticated()) {
@@ -37,9 +48,12 @@ export class LoginComponent implements OnInit {
     this.authSessionService.clearSession();
   }
 
-  toggleShowPassword(): void {
-    this.showPassword = !this.showPassword;
+  onTab(key: string): void {
+    if (key !== "register") return;
+    this.onRegister();
   }
+
+  onForgot(): void {}
 
   onRegister(): void {
     this.router.navigate([REGISTER_ROUTE]);

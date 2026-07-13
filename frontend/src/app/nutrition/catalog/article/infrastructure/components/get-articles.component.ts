@@ -17,6 +17,9 @@ import { GridComponent } from "@shared/design-system/grid/infrastructure/compone
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
+import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -27,7 +30,6 @@ const ALL = "";
 @Component({
   selector: "app-get-articles",
   templateUrl: "./get-articles.component.html",
-  styleUrl: "./get-articles.component.scss",
   imports: [
     FormsModule,
     ContextualTranslatePipe,
@@ -39,6 +41,9 @@ const ALL = "";
     EmptyStateComponent,
     SkeletonComponent,
     TextComponent,
+    StackComponent,
+    SelectComponent,
+    ProductCardComponent,
   ],
 })
 export class GetArticlesComponent extends AbstractListPageComponent<Article> {

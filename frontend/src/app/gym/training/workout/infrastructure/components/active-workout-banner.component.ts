@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { FloatingWorkoutBannerComponent } from "@shared/design-system/floating-workout-banner/infrastructure/components/floating-workout-banner.component";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ActiveWorkoutService } from "@gym/training/workout/application/services/active-workout.service";
@@ -12,7 +13,11 @@ import { ActiveWorkoutService } from "@gym/training/workout/application/services
   standalone: true,
   templateUrl: "./active-workout-banner.component.html",
   styleUrls: ["./active-workout-banner.component.css"],
-  imports: [ContextualTranslatePipe, ConfirmActionModalComponent],
+  imports: [
+    ContextualTranslatePipe,
+    ConfirmActionModalComponent,
+    FloatingWorkoutBannerComponent,
+  ],
 })
 export class ActiveWorkoutBannerComponent implements OnInit {
   protected activeWorkout = inject(ActiveWorkoutService);

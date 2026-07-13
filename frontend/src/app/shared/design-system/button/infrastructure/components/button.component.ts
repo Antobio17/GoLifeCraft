@@ -21,6 +21,7 @@ export class ButtonComponent {
   @Input() loading = false;
   @Input() fullWidth = false;
   @Input() icon?: DsIconName;
+  @Input() trailingIcon?: DsIconName;
   @Input() iconSize?: number;
 
   @Output() clicked = new EventEmitter<void>();

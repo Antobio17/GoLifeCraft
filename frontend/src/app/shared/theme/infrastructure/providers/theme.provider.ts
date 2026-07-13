@@ -1,4 +1,9 @@
-import { EnvironmentProviders, Provider, inject, provideAppInitializer } from "@angular/core";
+import {
+  EnvironmentProviders,
+  Provider,
+  inject,
+  provideAppInitializer,
+} from "@angular/core";
 import { UpdateThemePort } from "../../domain/ports/update-theme.port";
 import { HttpUpdateThemeAdapter } from "../adapters/http-update-theme.adapter";
 import { ThemeService } from "../../application/services/theme.service";
@@ -12,7 +17,9 @@ export class ThemeProvider {
         useFactory: (port: UpdateThemePort) => new ThemeService(port),
         deps: [UpdateThemePort],
       },
-      provideAppInitializer(() => { inject(ThemeService); }),
+      provideAppInitializer(() => {
+        inject(ThemeService);
+      }),
     ];
   }
 }

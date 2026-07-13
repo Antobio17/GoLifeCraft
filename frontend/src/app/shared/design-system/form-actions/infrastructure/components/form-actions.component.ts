@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-form-actions",
@@ -8,6 +9,7 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
   imports: [ButtonComponent],
 })
 export class FormActionsComponent {
+  @Input() icon?: DsIconName;
   @Input() cancelLabel = "";
   @Input() submitLabel = "";
   @Input() savingLabel = "";

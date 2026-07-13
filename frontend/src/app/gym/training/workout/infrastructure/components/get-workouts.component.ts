@@ -14,6 +14,9 @@ import { CardComponent } from "@shared/design-system/card/infrastructure/compone
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
+import { MetaItemComponent } from "@shared/design-system/meta-item/infrastructure/components/meta-item.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import {
@@ -24,7 +27,6 @@ import {
 @Component({
   selector: "app-get-workouts",
   templateUrl: "./get-workouts.component.html",
-  styleUrls: ["./get-workouts.component.css"],
   imports: [
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -35,6 +37,9 @@ import {
     HeadingComponent,
     TextComponent,
     IconComponent,
+    ChipComponent,
+    ProgressBarComponent,
+    MetaItemComponent,
     EmptyStateComponent,
     SkeletonComponent,
   ],

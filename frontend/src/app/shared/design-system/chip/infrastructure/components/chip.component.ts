@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-type ChipTone = "neutral" | "brand" | "accent";
+type ChipTone = "neutral" | "brand" | "accent" | "warning";
 
 @Component({
   selector: "ds-chip",
@@ -30,6 +30,10 @@ type ChipTone = "neutral" | "brand" | "accent";
       :host([tone="accent"]) .ds-chip {
         --chip-bg: var(--ds-accent-soft);
         --chip-text: var(--ds-accent-soft-text);
+      }
+      :host([tone="warning"]) .ds-chip {
+        --chip-bg: var(--ds-warning-soft);
+        --chip-text: var(--ds-warning);
       }
     `,
   ],

@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-type TextVariant = "body" | "muted" | "meta" | "label" | "strong";
+type TextVariant = "body" | "muted" | "meta" | "label" | "strong" | "danger";
 
 @Component({
   selector: "ds-text",
@@ -30,6 +30,11 @@ type TextVariant = "body" | "muted" | "meta" | "label" | "strong";
       :host([variant="strong"]) {
         color: var(--ds-text);
         font-weight: var(--ds-weight-bold);
+      }
+      :host([variant="danger"]) {
+        color: var(--ds-danger);
+        font-size: var(--ds-text-sm);
+        font-weight: var(--ds-weight-semibold);
       }
       :host([variant="label"]) {
         color: var(--ds-text-meta);

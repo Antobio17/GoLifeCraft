@@ -1,0 +1,31 @@
+<div class="auth">
+  <div class="auth__card">
+    <div class="auth__brand">
+      <ds-brand-logo
+        [markSize]="58"
+        [wordmarkSize]="23"
+        [stacked]="true"
+        [tagline]="tagline"
+      ></ds-brand-logo>
+    </div>
+
+    <div class="auth__tabs" role="tablist">
+      @for (tab of tabs; track tab.key) {
+        <button
+          type="button"
+          class="auth__tab"
+          role="tab"
+          [class.auth__tab--active]="tab.key === activeTab"
+          [attr.aria-selected]="tab.key === activeTab"
+          (click)="select(tab.key)"
+        >
+          {{ tab.label }}
+        </button>
+      }
+    </div>
+
+    <div class="auth__form">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

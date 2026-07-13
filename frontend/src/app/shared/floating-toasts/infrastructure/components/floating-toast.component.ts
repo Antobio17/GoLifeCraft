@@ -7,19 +7,21 @@ import {
   FloatingToastType,
 } from "../../domain/models/floating-toast.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { ToastComponent } from "@shared/design-system/toast/infrastructure/components/toast.component";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 
 interface FloatingToastView extends FloatingToastMessage {
   id: number;
   type: FloatingToastType;
-  icon: string;
+  icon: DsIconName;
   durationMs: number;
 }
 
-const TOAST_ICONS: Record<FloatingToastType, string> = {
-  success: "i-check",
-  info: "i-info",
-  warning: "i-alert",
-  error: "i-x",
+const TOAST_ICONS: Record<FloatingToastType, DsIconName> = {
+  success: "checkCircle",
+  info: "info",
+  warning: "alertCircle",
+  error: "close",
 };
 
 @Component({
@@ -43,7 +45,7 @@ const TOAST_ICONS: Record<FloatingToastType, string> = {
       ]),
     ]),
   ],
-  imports: [ContextualTranslatePipe],
+  imports: [ContextualTranslatePipe, ToastComponent],
 })
 export class FloatingToastComponent {
   private floatingToastService = inject(FloatingToastService);

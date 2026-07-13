@@ -1,26 +1,66 @@
 import { Component, Input, inject } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
+import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
+import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 type TextInputVariant = "default" | "outlined";
 
 @Component({
   selector: "ds-text-input",
   standalone: true,
+  imports: [IconComponent],
   template: `
-    <input
-      class="ds-text-input"
-      [class.ds-text-input--outlined]="variant === 'outlined'"
-      [class.is-invalid]="isInvalid"
-      [type]="type"
-      [value]="value"
-      [placeholder]="placeholder"
-      [disabled]="disabled"
-      [attr.maxlength]="maxLength"
-      [attr.autocomplete]="autocomplete"
-      [attr.aria-label]="ariaLabel || null"
-      (input)="onInput($event)"
-      (blur)="onTouched()"
-    />
+    @if (leadingIcon || passwordToggle) {
+      <span class="ds-text-input__control" [class.is-invalid]="isInvalid">
+        @if (leadingIcon) {
+          <ds-icon
+            class="ds-text-input__lead"
+            [name]="leadingIcon"
+            [size]="17"
+          />
+        }
+        <input
+          class="ds-text-input__bare"
+          [type]="effectiveType"
+          [value]="value"
+          [placeholder]="placeholder"
+          [disabled]="disabled"
+          [attr.maxlength]="maxLength"
+          [attr.inputmode]="inputmode || null"
+          [attr.autocomplete]="autocomplete"
+          [attr.aria-label]="ariaLabel || null"
+          (input)="onInput($event)"
+          (blur)="onTouched()"
+        />
+        @if (passwordToggle) {
+          <button
+            type="button"
+            class="ds-text-input__toggle"
+            tabindex="-1"
+            [attr.aria-label]="togglePasswordLabel || null"
+            (click)="toggleReveal()"
+          >
+            <ds-icon [name]="revealed ? 'eyeOff' : 'eye'" [size]="17" />
+          </button>
+        }
+      </span>
+    } @else {
+      <input
+        class="ds-text-input"
+        [class.ds-text-input--outlined]="variant === 'outlined'"
+        [class.is-invalid]="isInvalid"
+        [type]="type"
+        [value]="value"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [attr.maxlength]="maxLength"
+        [attr.inputmode]="inputmode || null"
+        [attr.autocomplete]="autocomplete"
+        [attr.aria-label]="ariaLabel || null"
+        (input)="onInput($event)"
+        (blur)="onTouched()"
+      />
+    }
   `,
   styles: [
     `
@@ -65,6 +105,59 @@ type TextInputVariant = "default" | "outlined";
         cursor: not-allowed;
         opacity: 0.65;
       }
+      .ds-text-input__control {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        background: var(--ds-surface-raised);
+        border: 1px solid var(--ds-border-input);
+        border-radius: var(--ds-radius-xl);
+        padding: 12px 13px;
+        transition:
+          border-color var(--ds-transition-fast),
+          box-shadow var(--ds-transition-fast);
+      }
+      .ds-text-input__control:focus-within {
+        border-color: var(--ds-border-focus);
+        box-shadow: 0 0 0 3px var(--ds-primary-soft);
+      }
+      .ds-text-input__control.is-invalid,
+      .ds-text-input__control.is-invalid:focus-within {
+        border-color: var(--ds-danger);
+        box-shadow: none;
+      }
+      .ds-text-input__lead {
+        color: var(--ds-text-meta);
+        flex: none;
+      }
+      .ds-text-input__bare {
+        flex: 1;
+        min-width: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        font: inherit;
+        font-size: var(--ds-text-base);
+        color: var(--ds-text);
+      }
+      .ds-text-input__bare::placeholder {
+        color: var(--ds-text-meta);
+      }
+      .ds-text-input__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: none;
+        padding: 0;
+        color: var(--ds-text-meta);
+        cursor: pointer;
+        transition: color var(--ds-transition-fast);
+      }
+      .ds-text-input__toggle:hover {
+        color: var(--ds-primary);
+      }
     `,
   ],
 })
@@ -77,9 +170,14 @@ export class TextInputComponent implements ControlValueAccessor {
   @Input() maxLength?: number;
   @Input() autocomplete = "off";
   @Input() ariaLabel = "";
+  @Input() inputmode = "";
+  @Input() leadingIcon?: DsIconName;
+  @Input() passwordToggle = false;
+  @Input() togglePasswordLabel = "";
 
   value = "";
   disabled = false;
+  revealed = false;
 
   private onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};
@@ -92,6 +190,15 @@ export class TextInputComponent implements ControlValueAccessor {
 
   get isInvalid(): boolean {
     return !!(this.ngControl?.invalid && this.ngControl?.touched);
+  }
+
+  get effectiveType(): string {
+    if (!this.passwordToggle) return this.type;
+    return this.revealed ? "text" : "password";
+  }
+
+  toggleReveal(): void {
+    this.revealed = !this.revealed;
   }
 
   writeValue(value: string | null): void {

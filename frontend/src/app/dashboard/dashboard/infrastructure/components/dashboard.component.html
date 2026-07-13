@@ -1,163 +1,81 @@
-<section class="dash">
-  <header class="dash__head">
-    <div>
-      <p class="dash__date">{{ today | date: "EEEE, d MMM" }}</p>
-      <h1 class="dash__greeting">
-        {{ "dashboard.greeting" | t }}{{ name() ? ", " + name() : "" }}
-      </h1>
-    </div>
-    <span class="dash__avatar" aria-hidden="true">
-      {{ initial() }}
-    </span>
-  </header>
+<ds-dashboard-layout>
+  <ds-greeting-header
+    slot="header"
+    [date]="today | date: 'EEEE, d MMM'"
+    [greeting]="'dashboard.greeting' | t"
+    [name]="name()"
+    [initial]="initial()"
+  />
 
-  <div class="dash__body">
-    <!-- Resumen de hoy -->
-    <article class="summary">
-      <div class="summary__top">
-        <span class="summary__eyebrow">{{
-          "dashboard.summary.title" | t
-        }}</span>
-        <button type="button" class="summary__more" (click)="comingSoon()">
-          {{ "dashboard.summary.more" | t }} ›
-        </button>
-      </div>
+  <ds-daily-summary
+    slot="summary"
+    [eyebrow]="'dashboard.summary.title' | t"
+    [moreLabel]="'dashboard.summary.more' | t"
+    [progressPercent]="progressPercent"
+    [consumedKcal]="summary.consumedKcal | number: '1.0-0' : 'es'"
+    [targetKcal]="summary.targetKcal | number: '1.0-0' : 'es'"
+    [kcalLabel]="'dashboard.summary.kcal' | t"
+    [macros]="[
+      {
+        label: 'dashboard.macros.protein' | t,
+        value: summary.proteinG + ' g',
+        tone: 'protein',
+      },
+      {
+        label: 'dashboard.macros.fat' | t,
+        value: summary.fatG + ' g',
+        tone: 'fat',
+      },
+      {
+        label: 'dashboard.macros.carbs' | t,
+        value: summary.carbsG + ' g',
+        tone: 'carbs',
+      },
+    ]"
+    (more)="comingSoon()"
+  />
 
-      <div class="summary__main">
-        <ds-progress-ring class="summary__ring" [value]="progressPercent">
-          <span class="summary__ring-value">{{ progressPercent }}%</span>
-        </ds-progress-ring>
-        <div class="summary__kcal">
-          <p class="summary__kcal-value">
-            {{ summary.consumedKcal | number: "1.0-0" : "es" }}
-            <span class="summary__kcal-target"
-              >/ {{ summary.targetKcal | number: "1.0-0" : "es" }}</span
-            >
-          </p>
-          <p class="summary__kcal-label">{{ "dashboard.summary.kcal" | t }}</p>
-        </div>
-      </div>
+  <app-gym-analytics
+    slot="gym"
+    [stats]="gymStats()"
+    [loading]="gymStatsLoading()"
+    (seeAll)="goToGym()"
+  />
 
-      <div class="summary__macros">
-        <div class="macro">
-          <span class="macro__label">{{ "dashboard.macros.protein" | t }}</span>
-          <span class="macro__value macro__value--protein"
-            >{{ summary.proteinG }} g</span
-          >
-        </div>
-        <div class="macro">
-          <span class="macro__label">{{ "dashboard.macros.fat" | t }}</span>
-          <span class="macro__value macro__value--fat"
-            >{{ summary.fatG }} g</span
-          >
-        </div>
-        <div class="macro">
-          <span class="macro__label">{{ "dashboard.macros.carbs" | t }}</span>
-          <span class="macro__value">{{ summary.carbsG }} g</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Analítica del gimnasio -->
-    <app-gym-analytics
-      class="dash__gym"
-      [stats]="gymStats()"
-      [loading]="gymStatsLoading()"
-      (seeAll)="goToGym()"
+  <ds-stack slot="explore" [gap]="'11px'">
+    <ds-section-header
+      [title]="'dashboard.explore.title' | t"
+      [staticLabel]="'dashboard.explore.quickAccess' | t"
     />
-
-    <!-- Explora -->
-    <section class="explore">
-      <div class="explore__head">
-        <h2 class="explore__title">{{ "dashboard.explore.title" | t }}</h2>
-        <span class="explore__label">{{
-          "dashboard.explore.quickAccess" | t
-        }}</span>
-      </div>
-      <div class="explore__grid">
-        <ds-action-tile
-          [name]="'dashboard.explore.catalog' | t"
-          [meta]="'dashboard.explore.catalogMeta' | t"
-          (clicked)="goToCatalog()"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.1"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              d="M12 8c-1.5-2-4-2.4-5.6-1C4.4 8.7 4.3 12 6 15.4c1 2 2.4 3.6 3.7 3.6.9 0 1.4-.5 2.3-.5s1.4.5 2.3.5c1.3 0 2.7-1.6 3.7-3.6 1.7-3.4 1.6-6.7-.4-8.4-1.6-1.4-4.1-1-5.6 1z"
-            />
-            <path d="M12 8c0-1.8.9-3.4 2.6-4.2" />
-          </svg>
-        </ds-action-tile>
-
-        <ds-action-tile
-          [name]="'dashboard.explore.gym' | t"
-          [meta]="'dashboard.explore.gymMeta' | t"
-          (clicked)="goToGym()"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.1"
-          >
-            <path
-              d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"
-              stroke-linecap="round"
-            />
-          </svg>
-        </ds-action-tile>
-
-        <ds-action-tile
-          [soon]="true"
-          [soonLabel]="'dashboard.explore.soonBadge' | t"
-          [name]="'dashboard.explore.recipes' | t"
-          [meta]="'dashboard.explore.soon' | t"
-          (clicked)="comingSoon()"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.1"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="13" cy="12" r="6" />
-            <path
-              d="M4 3v6M4 3c-1 0-1.6.8-1.6 2v2.4c0 .9.7 1.6 1.6 1.6s1.6-.7 1.6-1.6V5c0-1.2-.6-2-1.6-2zM4 9v12"
-            />
-          </svg>
-        </ds-action-tile>
-
-        <ds-action-tile
-          [soon]="true"
-          [soonLabel]="'dashboard.explore.soonBadge' | t"
-          [name]="'dashboard.explore.list' | t"
-          [meta]="'dashboard.explore.soon' | t"
-          (clicked)="comingSoon()"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.1"
-          >
-            <circle cx="9" cy="20" r="1.6" />
-            <circle cx="18" cy="20" r="1.6" />
-            <path
-              d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </ds-action-tile>
-      </div>
-    </section>
-  </div>
-</section>
+    <ds-grid [minColumn]="'150px'" [gap]="'10px'">
+      <ds-action-tile
+        icon="leaf"
+        [name]="'dashboard.explore.catalog' | t"
+        [meta]="'dashboard.explore.catalogMeta' | t"
+        (clicked)="goToCatalog()"
+      />
+      <ds-action-tile
+        icon="dumbbell"
+        [name]="'dashboard.explore.gym' | t"
+        [meta]="'dashboard.explore.gymMeta' | t"
+        (clicked)="goToGym()"
+      />
+      <ds-action-tile
+        icon="bookmark"
+        [soon]="true"
+        [soonLabel]="'dashboard.explore.soonBadge' | t"
+        [name]="'dashboard.explore.recipes' | t"
+        [meta]="'dashboard.explore.soon' | t"
+        (clicked)="comingSoon()"
+      />
+      <ds-action-tile
+        icon="list"
+        [soon]="true"
+        [soonLabel]="'dashboard.explore.soonBadge' | t"
+        [name]="'dashboard.explore.list' | t"
+        [meta]="'dashboard.explore.soon' | t"
+        (clicked)="comingSoon()"
+      />
+    </ds-grid>
+  </ds-stack>
+</ds-dashboard-layout>

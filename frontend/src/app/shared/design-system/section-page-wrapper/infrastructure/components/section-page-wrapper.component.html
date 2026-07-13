@@ -23,7 +23,11 @@
       }
       <div class="section-header-content">
         <h3 class="section-title-main">
-          <ng-content select="[slot='icon']"></ng-content>
+          @if (icon) {
+            <ds-icon [name]="icon" [size]="24" />
+          } @else {
+            <ng-content select="[slot='icon']"></ng-content>
+          }
           {{ title }}
         </h3>
         <p class="section-description">{{ description }}</p>

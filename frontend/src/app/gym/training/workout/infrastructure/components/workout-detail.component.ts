@@ -5,11 +5,9 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
-import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { WorkoutSummaryComponent } from "@shared/design-system/workout-summary/infrastructure/components/workout-summary.component";
+import { WorkoutExerciseComponent } from "@shared/design-system/workout-exercise/infrastructure/components/workout-exercise.component";
 import { GetWorkoutService } from "../../application/services/get-workout.service";
 import {
   WorkoutDetailAttributes,
@@ -19,17 +17,14 @@ import {
 @Component({
   selector: "app-workout-detail",
   templateUrl: "./workout-detail.component.html",
-  styleUrls: ["./workout-detail.component.css"],
   imports: [
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
     StackComponent,
-    CardComponent,
-    HeadingComponent,
-    TextComponent,
-    IconComponent,
     SkeletonComponent,
+    WorkoutSummaryComponent,
+    WorkoutExerciseComponent,
   ],
 })
 export class WorkoutDetailComponent implements OnInit {

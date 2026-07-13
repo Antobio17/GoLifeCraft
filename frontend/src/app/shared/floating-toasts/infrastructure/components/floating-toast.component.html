@@ -1,54 +1,16 @@
 @for (toast of toasts; track toast.id) {
-  <div class="toast toast--{{ toast.type }}" [@toastSlide]>
-    <span class="toast__icon">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <use
-          [attr.href]="'assets/icons/golifecraft/sprite.svg#' + toast.icon"
-        ></use>
-      </svg>
-    </span>
-
-    <div class="toast__body">
-      <div class="toast__title">
-        {{ toast.keyTranslation | t: asParams(toast.details) }}
-      </div>
-      @if (toast.subtitleTranslation) {
-        <div class="toast__subtitle">
-          {{ toast.subtitleTranslation | t: asParams(toast.details) }}
-        </div>
-      }
-    </div>
-
-    <button
-      class="toast__close"
-      type="button"
-      [attr.aria-label]="'floatingToast.close' | t"
-      (click)="dismiss()"
-    >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.4"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <use href="assets/icons/golifecraft/sprite.svg#i-x"></use>
-      </svg>
-    </button>
-
-    <span
-      class="toast__progress"
-      [style.animationDuration.ms]="toast.durationMs"
-    ></span>
-  </div>
+  <ds-toast
+    [@toastSlide]
+    [type]="toast.type"
+    [icon]="toast.icon"
+    [title]="toast.keyTranslation | t: asParams(toast.details)"
+    [subtitle]="
+      toast.subtitleTranslation
+        ? (toast.subtitleTranslation | t: asParams(toast.details))
+        : ''
+    "
+    [durationMs]="toast.durationMs"
+    [closeLabel]="'floatingToast.close' | t"
+    (dismissed)="dismiss()"
+  />
 }

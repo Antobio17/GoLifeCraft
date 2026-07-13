@@ -1,0 +1,44 @@
+<ds-card [gap]="'8px'" [padding]="'11px'">
+  <ds-stack direction="row" align="center" [gap]="'9px'">
+    <span class="wk-ex-num">{{ index }}</span>
+    <ds-stack [gap]="'2px'" [grow]="true">
+      <ds-heading [level]="3" size="sm">{{ name }}</ds-heading>
+      <ds-text variant="meta">{{ muscle }}</ds-text>
+    </ds-stack>
+    <span class="wk-ex-ratio">{{ ratio }}</span>
+  </ds-stack>
+
+  @if (note) {
+    <div class="wk-ex-note">{{ note }}</div>
+  }
+
+  <ds-set-header
+    [numLabel]="numLabel"
+    [repsLabel]="repsLabel"
+    [weightLabel]="weightLabel"
+    [doneCol]="true"
+  />
+
+  @for (set of sets; track $index; let j = $index) {
+    <div
+      class="wset-row"
+      [class.wset-row--done]="set.done"
+      [class.wset-row--skipped]="!set.done"
+    >
+      <span class="wset-row__num">{{ j + 1 }}</span>
+      <span class="wset-row__col">{{ set.reps }}</span>
+      <span class="wset-row__col">{{ set.weight ?? 0 }}</span>
+      <span
+        class="wset-row__done"
+        [class.wset-row__done--on]="set.done"
+        [class.wset-row__done--off]="!set.done"
+      >
+        <ds-icon
+          [name]="set.done ? 'check' : 'close'"
+          [size]="14"
+          [stroke]="3"
+        />
+      </span>
+    </div>
+  }
+</ds-card>

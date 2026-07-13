@@ -14,11 +14,8 @@
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-stack [gap]="'20px'">
-        <div class="editor-identity">
-          <ds-field
-            class="editor-identity__icon"
-            [label]="'articleEditor.field.icon' | t"
-          >
+        <ds-stack direction="row" align="end" [gap]="'12px'">
+          <ds-field [label]="'articleEditor.field.icon' | t">
             <ds-emoji-picker
               formControlName="emoji"
               [groups]="emojiGroups"
@@ -31,7 +28,7 @@
             />
           </ds-field>
           <ds-field
-            class="editor-identity__name"
+            [grow]="true"
             [label]="'articleEditor.field.name' | t"
             [required]="true"
           >
@@ -41,13 +38,10 @@
               [placeholder]="'articleEditor.field.namePlaceholder' | t"
             />
           </ds-field>
-        </div>
+        </ds-stack>
 
-        <div class="editor-row">
-          <ds-field
-            class="editor-row__grow"
-            [label]="'articleEditor.field.brand' | t"
-          >
+        <ds-stack direction="row" align="end" [gap]="'12px'">
+          <ds-field [grow]="true" [label]="'articleEditor.field.brand' | t">
             <ds-text-input
               variant="outlined"
               formControlName="brand"
@@ -55,22 +49,10 @@
             />
           </ds-field>
 
-          <ds-field
-            class="editor-row__price"
-            [label]="'articleEditor.field.price' | t"
-          >
-            <div class="editor-price">
-              <input
-                class="editor-price__input"
-                type="text"
-                inputmode="decimal"
-                formControlName="price"
-                placeholder="0,00"
-              />
-              <span class="editor-price__unit">€</span>
-            </div>
+          <ds-field [width]="'128px'" [label]="'articleEditor.field.price' | t">
+            <ds-price-input formControlName="price" />
           </ds-field>
-        </div>
+        </ds-stack>
 
         <ds-field [label]="'articleEditor.field.category' | t">
           <ds-select-chips
@@ -86,144 +68,45 @@
           />
         </ds-field>
 
-        <div class="nutrition-card">
-          <div class="nutrition-card__head">
-            <span class="nutrition-card__title">{{
-              "articleEditor.nutrition.heading" | t
-            }}</span>
-            <span class="nutrition-card__badge">{{
-              "articleEditor.nutrition.reference" | t
-            }}</span>
-          </div>
-
-          <label class="nrow nrow--energy">
-            <span class="nrow__name">
-              <svg
-                class="nrow__flame"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path
-                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
-                />
-              </svg>
-              {{ "articleEditor.nutrition.energy" | t }}
-            </span>
-            <span class="nrow__field">
-              <input
-                class="ninput ninput--energy"
-                type="text"
-                inputmode="decimal"
-                formControlName="calories"
-                placeholder="0"
-              />
-              <span class="nrow__unit nrow__unit--energy">kcal</span>
-            </span>
-          </label>
-
-          <label class="nrow">
-            <span class="nrow__name">{{
-              "articleEditor.nutrition.protein" | t
-            }}</span>
-            <span class="nrow__field">
-              <input
-                class="ninput"
-                type="text"
-                inputmode="decimal"
-                formControlName="protein"
-                placeholder="0"
-              />
-              <span class="nrow__unit">g</span>
-            </span>
-          </label>
-
-          <label class="nrow">
-            <span class="nrow__name">{{
-              "articleEditor.nutrition.fat" | t
-            }}</span>
-            <span class="nrow__field">
-              <input
-                class="ninput"
-                type="text"
-                inputmode="decimal"
-                formControlName="fat"
-                placeholder="0"
-              />
-              <span class="nrow__unit">g</span>
-            </span>
-          </label>
-
-          <label class="nrow nrow--sub">
-            <span class="nrow__name">{{
-              "articleEditor.nutrition.saturatedFat" | t
-            }}</span>
-            <span class="nrow__field">
-              <input
-                class="ninput ninput--sub"
-                type="text"
-                inputmode="decimal"
-                formControlName="saturatedFat"
-                placeholder="0"
-              />
-              <span class="nrow__unit">g</span>
-            </span>
-          </label>
-
-          <label class="nrow">
-            <span class="nrow__name">{{
-              "articleEditor.nutrition.carbs" | t
-            }}</span>
-            <span class="nrow__field">
-              <input
-                class="ninput"
-                type="text"
-                inputmode="decimal"
-                formControlName="carbs"
-                placeholder="0"
-              />
-              <span class="nrow__unit">g</span>
-            </span>
-          </label>
-
-          <label class="nrow nrow--sub">
-            <span class="nrow__name">{{
-              "articleEditor.nutrition.sugars" | t
-            }}</span>
-            <span class="nrow__field">
-              <input
-                class="ninput ninput--sub"
-                type="text"
-                inputmode="decimal"
-                formControlName="sugars"
-                placeholder="0"
-              />
-              <span class="nrow__unit">g</span>
-            </span>
-          </label>
-
-          <label class="nrow nrow--last">
-            <span class="nrow__name">{{
-              "articleEditor.nutrition.salt" | t
-            }}</span>
-            <span class="nrow__field">
-              <input
-                class="ninput"
-                type="text"
-                inputmode="decimal"
-                formControlName="salt"
-                placeholder="0"
-              />
-              <span class="nrow__unit">g</span>
-            </span>
-          </label>
-        </div>
+        <ds-nutrition-editor
+          [title]="'articleEditor.nutrition.heading' | t"
+          [badge]="'articleEditor.nutrition.reference' | t"
+        >
+          <ds-nutrient-input
+            variant="energy"
+            icon="flame"
+            unit="kcal"
+            formControlName="calories"
+            [label]="'articleEditor.nutrition.energy' | t"
+          />
+          <ds-nutrient-input
+            formControlName="protein"
+            [label]="'articleEditor.nutrition.protein' | t"
+          />
+          <ds-nutrient-input
+            formControlName="fat"
+            [label]="'articleEditor.nutrition.fat' | t"
+          />
+          <ds-nutrient-input
+            variant="sub"
+            formControlName="saturatedFat"
+            [label]="'articleEditor.nutrition.saturatedFat' | t"
+          />
+          <ds-nutrient-input
+            formControlName="carbs"
+            [label]="'articleEditor.nutrition.carbs' | t"
+          />
+          <ds-nutrient-input
+            variant="sub"
+            formControlName="sugars"
+            [label]="'articleEditor.nutrition.sugars' | t"
+          />
+          <ds-nutrient-input
+            [last]="true"
+            formControlName="salt"
+            [label]="'articleEditor.nutrition.salt' | t"
+          />
+        </ds-nutrition-editor>
 
         <ds-button
           type="submit"

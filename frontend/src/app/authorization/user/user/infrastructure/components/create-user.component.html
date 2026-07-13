@@ -7,30 +7,14 @@
       [skeletonRows]="3"
       [skeletonFieldsPerRow]="2"
       [showBackButton]="true"
+      [icon]="'users'"
       (backClicked)="cancel()"
     >
-      <svg
-        slot="icon"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="8.5" cy="7" r="4" />
-        <line x1="20" y1="8" x2="20" y2="14" />
-        <line x1="23" y1="11" x2="17" y2="11" />
-      </svg>
-
       <ds-form-section
         [title]="'createUser.section.personal' | t"
         [icon]="ICONS['USERS']"
       >
-        <div class="form-row">
+        <ds-form-row>
           <ds-form-input
             [label]="'createUser.field.username' | t"
             formControlName="username"
@@ -40,8 +24,8 @@
             type="email"
             formControlName="email"
           ></ds-form-input>
-        </div>
-        <div class="form-row">
+        </ds-form-row>
+        <ds-form-row>
           <ds-form-input
             [label]="'createUser.field.name' | t"
             formControlName="name"
@@ -50,318 +34,55 @@
             [label]="'createUser.field.lastname' | t"
             formControlName="lastname"
           ></ds-form-input>
-        </div>
+        </ds-form-row>
       </ds-form-section>
 
       <ds-form-section
         [title]="'createUser.section.security' | t"
         [icon]="ICONS['SETTINGS']"
       >
-        <div class="form-row">
-          <div class="field-group">
-            <label class="field-label" for="create-user-password"
-              >{{ "createUser.field.password" | t }}
-              <span class="required">*</span></label
-            >
-            <div class="password-input-wrapper">
-              <input
-                id="create-user-password"
-                [type]="showPassword ? 'text' : 'password'"
-                formControlName="password"
-                class="form-control"
-                [class.is-invalid]="
-                  userForm.get('password')?.invalid &&
-                  userForm.get('password')?.touched
-                "
-              />
-              <button
-                type="button"
-                class="password-toggle"
-                (click)="togglePasswordVisibility()"
-                tabindex="-1"
-              >
-                @if (!showPassword) {
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="3"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    />
-                  </svg>
-                }
-                @if (showPassword) {
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M17.94 17.94A10.07 10.07 0 0 1 12 20C5 20 1 12 1 12C1 12 3.24 7.82 6.06 5.94M9.9 4.24A9.12 9.12 0 0 1 12 4C19 4 23 12 23 12C23 12 21.93 14.19 20.49 16.06"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <line
-                      x1="1"
-                      y1="1"
-                      x2="23"
-                      y2="23"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                }
-              </button>
-            </div>
-            @if (
-              userForm.get("password")?.invalid &&
-              userForm.get("password")?.touched
-            ) {
-              <div class="error-message">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                @if (userForm.get("password")?.errors?.["required"]) {
-                  <small>{{
-                    "createUser.validation.passwordRequired" | t
-                  }}</small>
-                }
-                @if (userForm.get("password")?.errors?.["minlength"]) {
-                  <small>{{
-                    "createUser.validation.passwordMinLength" | t
-                  }}</small>
-                }
-              </div>
-            }
-          </div>
+        <ds-form-row>
+          <ds-form-input
+            type="password"
+            [label]="'createUser.field.password' | t"
+            [showRequired]="true"
+            formControlName="password"
+            [errorMessages]="{
+              required: 'createUser.validation.passwordRequired',
+              minlength: 'createUser.validation.passwordMinLength',
+            }"
+          ></ds-form-input>
 
-          <div class="field-group">
-            <label class="field-label" for="create-user-confirm-password"
-              >{{ "createUser.field.confirmPassword" | t }}
-              <span class="required">*</span></label
-            >
-            <div class="password-input-wrapper">
-              <input
-                id="create-user-confirm-password"
-                [type]="showPassword ? 'text' : 'password'"
-                formControlName="confirmPassword"
-                class="form-control"
-                [class.is-invalid]="
-                  (userForm.get('confirmPassword')?.invalid &&
-                    userForm.get('confirmPassword')?.touched) ||
-                  (userForm.errors?.['passwordMismatch'] &&
-                    userForm.get('confirmPassword')?.touched)
-                "
-              />
-              <button
-                type="button"
-                class="password-toggle"
-                (click)="togglePasswordVisibility()"
-                tabindex="-1"
-              >
-                @if (!showPassword) {
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="3"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    />
-                  </svg>
-                }
-                @if (showPassword) {
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M17.94 17.94A10.07 10.07 0 0 1 12 20C5 20 1 12 1 12C1 12 3.24 7.82 6.06 5.94M9.9 4.24A9.12 9.12 0 0 1 12 4C19 4 23 12 23 12C23 12 21.93 14.19 20.49 16.06"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <line
-                      x1="1"
-                      y1="1"
-                      x2="23"
-                      y2="23"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                }
-              </button>
-            </div>
+          <ds-stack [gap]="'4px'">
+            <ds-form-input
+              type="password"
+              [label]="'createUser.field.confirmPassword' | t"
+              [showRequired]="true"
+              formControlName="confirmPassword"
+              [errorMessages]="{
+                required: 'createUser.validation.confirmPasswordRequired',
+              }"
+            ></ds-form-input>
             @if (
+              userForm.errors?.["passwordMismatch"] &&
               userForm.get("confirmPassword")?.touched &&
-              (userForm.get("confirmPassword")?.errors?.["required"] ||
-                (userForm.errors?.["passwordMismatch"] &&
-                  !userForm.get("confirmPassword")?.errors?.["required"]))
+              !userForm.get("confirmPassword")?.errors?.["required"]
             ) {
-              <div class="error-message">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                @if (userForm.get("confirmPassword")?.errors?.["required"]) {
-                  <small>{{
-                    "createUser.validation.confirmPasswordRequired" | t
-                  }}</small>
-                }
-                @if (
-                  userForm.errors?.["passwordMismatch"] &&
-                  !userForm.get("confirmPassword")?.errors?.["required"]
-                ) {
-                  <small>{{
-                    "createUser.validation.passwordMismatch" | t
-                  }}</small>
-                }
-              </div>
+              <ds-text variant="danger">
+                {{ "createUser.validation.passwordMismatch" | t }}
+              </ds-text>
             }
-          </div>
-        </div>
+          </ds-stack>
+        </ds-form-row>
       </ds-form-section>
 
       <ds-form-section
         [title]="'createUser.section.role' | t"
         [icon]="ICONS['USERS']"
       >
-        <div class="field-group">
-          <span class="field-label"
-            >{{ "createUser.field.role" | t }}
-            <span class="required">*</span></span
-          >
-          <div class="roles-grid">
-            @for (role of availableRoles; track role) {
-              <div class="role-option">
-                <input
-                  type="radio"
-                  [id]="'role-' + role"
-                  [value]="role"
-                  formControlName="role"
-                  class="role-radio"
-                />
-                <label
-                  [for]="'role-' + role"
-                  class="role-card"
-                  [attr.data-role]="role"
-                >
-                  <div class="role-icon">
-                    @if (role === "ROLE_GOD") {
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M12 2L2 7L12 12L22 7L12 2Z"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M2 17L12 22L22 17"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M2 12L12 17L22 12"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    }
-                    @if (role === "ROLE_USER") {
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <circle
-                          cx="12"
-                          cy="7"
-                          r="4"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    }
-                  </div>
-                  <div class="role-content">
-                    <span class="role-name">{{ getRoleName(role) | t }}</span>
-                    <span class="role-description">{{
-                      getRoleDescription(role) | t
-                    }}</span>
-                  </div>
-                  <div class="role-check">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M20 6L9 17L4 12"
-                        stroke="currentColor"
-                        stroke-width="2.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </label>
-              </div>
-            }
-          </div>
-        </div>
+        <ds-field [label]="'createUser.field.role' | t" [required]="true">
+          <ds-role-picker formControlName="role" [options]="roleOptions()" />
+        </ds-field>
       </ds-form-section>
     </ds-section-page-wrapper>
 
@@ -371,24 +92,8 @@
       [savingLabel]="'createUser.saving' | t"
       [saving]="saving()"
       [formInvalid]="userForm.invalid"
+      [icon]="'users'"
       (cancelled)="cancel()"
-    >
-      <svg
-        slot="icon"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="8.5" cy="7" r="4" />
-        <line x1="20" y1="8" x2="20" y2="14" />
-        <line x1="23" y1="11" x2="17" y2="11" />
-      </svg>
-    </ds-form-actions>
+    ></ds-form-actions>
   </form>
 </ds-page-wrapper>

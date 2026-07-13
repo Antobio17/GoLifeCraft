@@ -76,7 +76,11 @@ export class GetUsersComponent extends AbstractListPageComponent<User> {
         type: "chips",
         options: [
           { value: USER_ROLES.GOD, label: "user.roles.god", color: "#7c3aed" },
-          { value: USER_ROLES.USER, label: "user.roles.user", color: "#16a34a" },
+          {
+            value: USER_ROLES.USER,
+            label: "user.roles.user",
+            color: "#16a34a",
+          },
         ],
       },
     ];

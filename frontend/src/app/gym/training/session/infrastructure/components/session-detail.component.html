@@ -42,143 +42,36 @@
     </ds-stack>
 
     @if (isActiveHere) {
-      <div
-        class="active-banner-compact"
-        [class.active-banner-compact--visible]="sessScrolled()"
-        [class.active-banner-compact--paused]="activeWorkout.paused()"
-        [attr.aria-hidden]="sessScrolled() ? null : 'true'"
-      >
-        <div class="active-banner-compact__inner">
-          <span class="active-banner__pulse"></span>
-          <div class="active-banner__info">
-            <span class="active-banner__state">
-              {{
-                (activeWorkout.paused()
-                  ? "getSession.active.paused"
-                  : "getSession.active.running"
-                ) | t
-              }}
-            </span>
-            <span class="active-banner-compact__time">{{
-              activeWorkout.elapsedLabel()
-            }}</span>
-          </div>
-          <div class="active-banner__count">
-            <span class="active-banner__count-value"
-              >{{ doneCount }}/{{ totalSets }}</span
-            >
-            <span class="active-banner__count-label">{{
-              "getSession.active.sets" | t
-            }}</span>
-          </div>
-          <div class="active-banner__compact-actions">
-            <button
-              type="button"
-              class="active-banner__compact-btn active-banner__compact-btn--finish"
-              [disabled]="finishing()"
-              [attr.aria-label]="'getSession.finish' | t"
-              (click)="onFinishWorkout()"
-            >
-              <ds-icon name="check" [size]="15" [stroke]="3" />
-            </button>
-            <button
-              type="button"
-              class="active-banner__compact-btn active-banner__compact-btn--soft"
-              [attr.aria-label]="
-                (activeWorkout.paused()
-                  ? 'getSession.active.resume'
-                  : 'getSession.active.pause'
-                ) | t
-              "
-              (click)="onPauseWorkout()"
-            >
-              <ds-icon
-                [name]="activeWorkout.paused() ? 'play' : 'pause'"
-                [size]="15"
-              />
-            </button>
-            <button
-              type="button"
-              class="active-banner__compact-btn active-banner__compact-btn--stop"
-              [attr.aria-label]="'getSession.active.stop' | t"
-              (click)="onRequestStop()"
-            >
-              <ds-icon name="square" [size]="13" />
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        class="active-banner"
-        [class.active-banner--paused]="activeWorkout.paused()"
-      >
-        <div class="active-banner__row">
-          <span class="active-banner__pulse"></span>
-          <div class="active-banner__info">
-            <span class="active-banner__state">
-              {{
-                (activeWorkout.paused()
-                  ? "getSession.active.paused"
-                  : "getSession.active.running"
-                ) | t
-              }}
-            </span>
-            <span class="active-banner__time">{{
-              activeWorkout.elapsedLabel()
-            }}</span>
-          </div>
-          <div class="active-banner__count">
-            <span class="active-banner__count-value"
-              >{{ doneCount }}/{{ totalSets }}</span
-            >
-            <span class="active-banner__count-label">{{
-              "getSession.active.sets" | t
-            }}</span>
-          </div>
-        </div>
-        <div class="active-banner__actions">
-          <button
-            type="button"
-            class="active-banner__finish"
-            [disabled]="finishing()"
-            (click)="onFinishWorkout()"
-          >
-            <ds-icon name="check" [size]="17" [stroke]="3" />
-            {{ "getSession.finish" | t }}
-          </button>
-          <div class="active-banner__actions-row">
-            <button
-              type="button"
-              class="active-banner__btn active-banner__btn--soft"
-              (click)="onPauseWorkout()"
-            >
-              <ds-icon
-                [name]="activeWorkout.paused() ? 'play' : 'pause'"
-                [size]="15"
-              />
-              {{
-                (activeWorkout.paused()
-                  ? "getSession.active.resume"
-                  : "getSession.active.pause"
-                ) | t
-              }}
-            </button>
-            <button
-              type="button"
-              class="active-banner__btn active-banner__btn--stop"
-              (click)="onRequestStop()"
-            >
-              <ds-icon name="square" [size]="14" />
-              {{ "getSession.active.stop" | t }}
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        #stickySentinel
-        class="active-banner__sentinel"
-        aria-hidden="true"
-      ></div>
+      <ds-active-workout-banner
+        [scrolled]="sessScrolled()"
+        [paused]="activeWorkout.paused()"
+        [stateLabel]="
+          (activeWorkout.paused()
+            ? 'getSession.active.paused'
+            : 'getSession.active.running'
+          ) | t
+        "
+        [elapsedLabel]="activeWorkout.elapsedLabel()"
+        [doneCount]="doneCount"
+        [totalSets]="totalSets"
+        [setsLabel]="'getSession.active.sets' | t"
+        [finishing]="finishing()"
+        [finishLabel]="'getSession.finish' | t"
+        [pauseLabel]="'getSession.active.pause' | t"
+        [resumeLabel]="'getSession.active.resume' | t"
+        [stopLabel]="'getSession.active.stop' | t"
+        [finishAriaLabel]="'getSession.finish' | t"
+        [pauseAriaLabel]="
+          (activeWorkout.paused()
+            ? 'getSession.active.resume'
+            : 'getSession.active.pause'
+          ) | t
+        "
+        [stopAriaLabel]="'getSession.active.stop' | t"
+        (finished)="onFinishWorkout()"
+        (pauseToggle)="onPauseWorkout()"
+        (stopped)="onRequestStop()"
+      />
     }
 
     @if (exercises().length === 0) {
@@ -213,88 +106,51 @@
               />
             </ds-stack>
 
-            <div class="set-header">
-              <span class="set-header__num">{{
-                "getSession.set.number" | t
-              }}</span>
-              <span class="set-header__col">{{
-                "getSession.set.reps" | t
-              }}</span>
-              <span class="set-header__col">{{
-                "getSession.set.weight" | t
-              }}</span>
-            </div>
+            <ds-set-header
+              [numLabel]="'getSession.set.number' | t"
+              [repsLabel]="'getSession.set.reps' | t"
+              [weightLabel]="'getSession.set.weight' | t"
+            />
 
             @for (set of exercise.sets; track set.id; let j = $index) {
-              <div class="set-row-wrapper">
-                <button
-                  type="button"
-                  class="set-row__delete-action"
-                  [attr.aria-label]="'getSession.set.remove' | t"
-                  (click)="removeSet(exercise.id, set.id)"
-                >
-                  <ds-icon name="trash" [size]="16" />
-                </button>
-                <div
-                  class="set-row"
-                  [class.set-row--swiped]="isSetSwiped(set.id)"
-                  [class.set-row--done]="isSetDone(i, j)"
-                  (touchstart)="onSetTouchStart($event, set.id)"
-                  (touchend)="onSetTouchEnd($event, exercise.id, set.id)"
-                >
-                  @if (isActiveHere) {
-                    <button
-                      type="button"
-                      class="set-check"
-                      [class.set-check--on]="isSetDone(i, j)"
-                      [attr.aria-label]="'getSession.active.markDone' | t"
-                      (click)="toggleSetDone(i, j)"
-                    >
-                      @if (isSetDone(i, j)) {
-                        <ds-icon name="check" [size]="15" [stroke]="3" />
-                      }
-                    </button>
-                  }
-                  <span class="set-row__num">{{ j + 1 }}</span>
-                  <ds-number-input
-                    variant="boxed"
-                    [stepper]="true"
-                    [step]="1"
-                    [min]="0"
-                    [ngModel]="set.reps"
-                    (ngModelChange)="setReps(exercise.id, set.id, $event)"
-                    [ariaLabel]="'getSession.set.reps' | t"
-                    [incrementLabel]="'getSession.set.repsUp' | t"
-                    [decrementLabel]="'getSession.set.repsDown' | t"
-                  />
-                  <ds-number-input
-                    variant="boxed"
-                    [stepper]="true"
-                    [step]="2.5"
-                    [precision]="1"
-                    [min]="0"
-                    [ngModel]="set.weight ?? 0"
-                    (ngModelChange)="setWeight(exercise.id, set.id, $event)"
-                    [ariaLabel]="'getSession.set.weight' | t"
-                    [incrementLabel]="'getSession.set.weightUp' | t"
-                    [decrementLabel]="'getSession.set.weightDown' | t"
-                  />
-                </div>
-              </div>
+              <ds-set-row
+                [displayIndex]="j + 1"
+                [reps]="set.reps"
+                [weight]="set.weight ?? 0"
+                [done]="isSetDone(i, j)"
+                [swiped]="isSetSwiped(set.id)"
+                [showCheck]="isActiveHere"
+                [repsAriaLabel]="'getSession.set.reps' | t"
+                [weightAriaLabel]="'getSession.set.weight' | t"
+                [repsUpLabel]="'getSession.set.repsUp' | t"
+                [repsDownLabel]="'getSession.set.repsDown' | t"
+                [weightUpLabel]="'getSession.set.weightUp' | t"
+                [weightDownLabel]="'getSession.set.weightDown' | t"
+                [removeLabel]="'getSession.set.remove' | t"
+                [markDoneLabel]="'getSession.active.markDone' | t"
+                (repsChange)="setReps(exercise.id, set.id, $event)"
+                (weightChange)="setWeight(exercise.id, set.id, $event)"
+                (toggleDone)="toggleSetDone(i, j)"
+                (remove)="removeSet(exercise.id, set.id)"
+                (swipeStart)="onSetTouchStart($event, set.id)"
+                (swipeEnd)="onSetTouchEnd($event, exercise.id, set.id)"
+              />
             }
 
-            <button type="button" class="add-set" (click)="addSet(exercise.id)">
-              <ds-icon name="plus" [size]="14" [stroke]="2.4" />
-              <span>{{ "getSession.set.add" | t }}</span>
-            </button>
+            <ds-add-tile
+              variant="inline"
+              [label]="'getSession.set.add' | t"
+              (clicked)="addSet(exercise.id)"
+            />
           </ds-card>
         }
       </ds-stack>
 
-      <button type="button" class="add-exercise" (click)="openPicker()">
-        <ds-icon name="plus" [size]="16" [stroke]="2.4" />
-        <span>{{ "getSession.exercise.add" | t }}</span>
-      </button>
+      <ds-add-tile
+        variant="dashed"
+        [label]="'getSession.exercise.add' | t"
+        (clicked)="openPicker()"
+      />
     }
   }
 </ds-page-wrapper>

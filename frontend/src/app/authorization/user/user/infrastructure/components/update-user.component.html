@@ -7,30 +7,14 @@
       [skeletonRows]="3"
       [skeletonFieldsPerRow]="2"
       [showBackButton]="true"
+      [icon]="'users'"
       (backClicked)="cancel()"
     >
-      <svg
-        slot="icon"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-
       <ds-form-section
         [title]="'updateUser.section.personal' | t"
         [icon]="ICONS['USERS']"
       >
-        <div class="form-row">
+        <ds-form-row>
           <ds-form-input
             [label]="'updateUser.field.username' | t"
             formControlName="username"
@@ -40,8 +24,8 @@
             type="email"
             formControlName="email"
           ></ds-form-input>
-        </div>
-        <div class="form-row">
+        </ds-form-row>
+        <ds-form-row>
           <ds-form-input
             [label]="'updateUser.field.name' | t"
             formControlName="name"
@@ -50,148 +34,32 @@
             [label]="'updateUser.field.lastname' | t"
             formControlName="lastname"
           ></ds-form-input>
-        </div>
+        </ds-form-row>
       </ds-form-section>
 
       <ds-form-section
         [title]="'updateUser.section.status' | t"
         [icon]="ICONS['SETTINGS']"
       >
-        <div class="field-group">
-          <span class="field-label">{{
-            "updateUser.field.isActive" | t
-          }}</span>
-          <div class="toggle-container">
-            <label class="toggle-switch">
-              <input
-                type="checkbox"
-                formControlName="isActive"
-                class="toggle-input"
-              />
-              <span class="toggle-slider"></span>
-            </label>
-            <span
-              class="toggle-label"
-              [class.active]="userForm.get('isActive')?.value"
-            >
+        <ds-field [label]="'updateUser.field.isActive' | t">
+          <ds-stack direction="row" align="center" [gap]="'12px'">
+            <ds-toggle-switch
+              formControlName="isActive"
+              [ariaLabel]="'updateUser.field.isActive' | t"
+            />
+            <ds-text variant="strong">
               {{
                 userForm.get("isActive")?.value
                   ? ("updateUser.field.active" | t)
                   : ("updateUser.field.inactive" | t)
               }}
-            </span>
-          </div>
-        </div>
+            </ds-text>
+          </ds-stack>
+        </ds-field>
 
-        <div class="field-group">
-          <span class="field-label"
-            >{{ "updateUser.field.role" | t }}
-            <span class="required">*</span></span
-          >
-          <div class="roles-grid">
-            @for (role of availableRoles; track role) {
-              @if (
-                role !== "ROLE_GOD" ||
-                userForm.get("role")?.value === "ROLE_GOD"
-              ) {
-                <div class="role-option">
-                  <input
-                    type="radio"
-                    [id]="'role-' + role"
-                    [value]="role"
-                    formControlName="role"
-                    class="role-radio"
-                  />
-                  <label
-                    [for]="'role-' + role"
-                    class="role-card"
-                    [attr.data-role]="role"
-                  >
-                    <div class="role-icon">
-                      @if (role === "ROLE_GOD") {
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <path
-                            d="M12 2L2 7L12 12L22 7L12 2Z"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M2 17L12 22L22 17"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M2 12L12 17L22 12"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      }
-                      @if (role === "ROLE_USER") {
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <path
-                            d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <circle
-                            cx="12"
-                            cy="7"
-                            r="4"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      }
-                    </div>
-                    <div class="role-content">
-                      <span class="role-name">{{ getRoleName(role) | t }}</span>
-                      <span class="role-description">{{
-                        getRoleDescription(role) | t
-                      }}</span>
-                    </div>
-                    <div class="role-check">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M20 6L9 17L4 12"
-                          stroke="currentColor"
-                          stroke-width="2.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
-                  </label>
-                </div>
-              }
-            }
-          </div>
-        </div>
+        <ds-field [label]="'updateUser.field.role' | t" [required]="true">
+          <ds-role-picker formControlName="role" [options]="roleOptions()" />
+        </ds-field>
       </ds-form-section>
     </ds-section-page-wrapper>
 
@@ -201,25 +69,8 @@
       [savingLabel]="'updateUser.saving' | t"
       [saving]="saving()"
       [formInvalid]="userForm.invalid"
+      [icon]="'save'"
       (cancelled)="cancel()"
-    >
-      <svg
-        slot="icon"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path
-          d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
-        />
-        <polyline points="17 21 17 13 7 13 7 21" />
-        <polyline points="7 3 7 8 15 8" />
-      </svg>
-    </ds-form-actions>
+    ></ds-form-actions>
   </form>
 </ds-page-wrapper>

@@ -193,6 +193,34 @@
   outline-offset: 2px;
 }
 
+/* ---- Variante: link (texto enlazado) ---- */
+.ds-btn--link {
+  background: transparent;
+  color: var(--ds-primary);
+  border-color: transparent;
+  padding: 0;
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-semibold);
+}
+
+.ds-btn--link:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.ds-btn--link:focus-visible {
+  outline: 2px solid var(--ds-primary);
+  outline-offset: 2px;
+}
+
+/* ---- Icono final ---- */
+.ds-btn__trailing {
+  color: var(--ds-accent);
+}
+
+:host-context([data-theme="dark"]) .ds-btn--primary .ds-btn__trailing {
+  color: var(--ds-on-primary);
+}
+
 /* ---- Estados ---- */
 .ds-btn:disabled,
 .ds-btn[disabled] {

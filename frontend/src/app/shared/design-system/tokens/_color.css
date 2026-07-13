@@ -92,7 +92,11 @@
   --ds-on-accent: var(--ds-forest-700);
   --ds-accent-soft: color-mix(in srgb, var(--ds-accent) 16%, transparent);
   --ds-accent-soft-text: var(--ds-forest-600);
-  --ds-accent-soft-border: color-mix(in srgb, var(--ds-accent) 50%, transparent);
+  --ds-accent-soft-border: color-mix(
+    in srgb,
+    var(--ds-accent) 50%,
+    transparent
+  );
 
   /* ---- Semánticos: Peligro ---- */
   --ds-danger: var(--ds-coral-500);

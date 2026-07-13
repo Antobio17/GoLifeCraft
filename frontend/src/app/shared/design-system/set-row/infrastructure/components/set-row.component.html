@@ -1,0 +1,55 @@
+<div class="set-row-wrapper">
+  <button
+    type="button"
+    class="set-row__delete-action"
+    [attr.aria-label]="removeLabel"
+    (click)="remove.emit()"
+  >
+    <ds-icon name="trash" [size]="16" />
+  </button>
+  <div
+    class="set-row"
+    [class.set-row--swiped]="swiped"
+    [class.set-row--done]="done"
+    (touchstart)="swipeStart.emit($event)"
+    (touchend)="swipeEnd.emit($event)"
+  >
+    @if (showCheck) {
+      <button
+        type="button"
+        class="set-check"
+        [class.set-check--on]="done"
+        [attr.aria-label]="markDoneLabel"
+        (click)="toggleDone.emit()"
+      >
+        @if (done) {
+          <ds-icon name="check" [size]="15" [stroke]="3" />
+        }
+      </button>
+    }
+    <span class="set-row__num">{{ displayIndex }}</span>
+    <ds-number-input
+      variant="boxed"
+      [stepper]="true"
+      [step]="1"
+      [min]="0"
+      [ngModel]="reps"
+      (ngModelChange)="repsChange.emit($event)"
+      [ariaLabel]="repsAriaLabel"
+      [incrementLabel]="repsUpLabel"
+      [decrementLabel]="repsDownLabel"
+    />
+    <ds-number-input
+      variant="boxed"
+      [stepper]="true"
+      [step]="2.5"
+      [precision]="1"
+      [min]="0"
+      [ngModel]="weight"
+      (ngModelChange)="weightChange.emit($event)"
+      [ariaLabel]="weightAriaLabel"
+      [incrementLabel]="weightUpLabel"
+      [decrementLabel]="weightDownLabel"
+    />
+  </div>
+</div>

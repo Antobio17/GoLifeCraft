@@ -39,33 +39,28 @@
               <ds-heading [level]="3" size="md">
                 {{ workout.attributes.sessionName }}
               </ds-heading>
-              <ds-text variant="meta" class="wk-date">
+              <ds-text variant="meta">
                 {{ dateText(workout.attributes.startedAt) }}
               </ds-text>
             </ds-stack>
 
-            <span class="wk-ratio">
-              <ds-icon name="check" [size]="12" [stroke]="3" />
-              {{ ratioLabel(workout.attributes) }}
-            </span>
+            <ds-chip tone="brand">
+              <ds-stack direction="row" align="center" [gap]="'5px'">
+                <ds-icon name="check" [size]="12" [stroke]="3" />
+                {{ ratioLabel(workout.attributes) }}
+              </ds-stack>
+            </ds-chip>
           </ds-stack>
 
-          <div class="wk-bar">
-            <div
-              class="wk-bar__fill"
-              [style.width.%]="progressPercent(workout.attributes)"
-            ></div>
-          </div>
+          <ds-progress-bar [value]="progressPercent(workout.attributes)" />
 
           <ds-stack direction="row" [gap]="'14px'" [wrap]="true">
-            <span class="wk-meta">
-              <ds-icon name="clock" [size]="14" />
+            <ds-meta-item icon="clock">
               {{ durationText(workout.attributes.durationSeconds) }}
-            </span>
-            <span class="wk-meta">
-              <ds-icon name="dumbbell" [size]="14" />
+            </ds-meta-item>
+            <ds-meta-item icon="dumbbell">
               {{ exercisesLabel(workout.attributes) }}
-            </span>
+            </ds-meta-item>
           </ds-stack>
         </ds-card>
       }

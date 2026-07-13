@@ -12,5 +12,13 @@
       <ds-icon [name]="icon" [size]="resolvedIconSize" [stroke]="2.75" />
     }
     <ng-content></ng-content>
+    @if (trailingIcon) {
+      <ds-icon
+        class="ds-btn__trailing"
+        [name]="trailingIcon"
+        [size]="resolvedIconSize"
+        [stroke]="2.75"
+      />
+    }
   </span>
 </button>

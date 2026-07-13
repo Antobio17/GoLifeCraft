@@ -1,11 +1,15 @@
 import { Component, OnInit, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { TranslationService } from "../../application/services/translation.service";
 import { SupportedLanguages } from "../../domain/models/translation.model";
+import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
+import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 
 @Component({
   selector: "app-language-selector",
+  standalone: true,
   templateUrl: "./language-selector.component.html",
-  styleUrls: ["./language-selector.component.css"],
+  imports: [FormsModule, SelectComponent],
 })
 export class LanguageSelectorComponent implements OnInit {
   private translationService = inject(TranslationService);
@@ -15,21 +19,20 @@ export class LanguageSelectorComponent implements OnInit {
     { code: SupportedLanguages.EN, label: "English", flag: "🇬🇧" },
   ];
 
+  readonly languageOptions: SelectOption[] = this.languages.map((language) => ({
+    value: language.code,
+    label: `${language.flag} ${language.label}`,
+  }));
+
   selectedLanguage: SupportedLanguages = SupportedLanguages.ES;
 
   ngOnInit(): void {
     this.selectedLanguage = this.translationService.getCurrentLanguage();
   }
 
-  onLanguageChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const language = target.value as SupportedLanguages;
-    this.selectedLanguage = language;
-    this.changeLanguage(language);
-  }
-
-  changeLanguage(language: SupportedLanguages): void {
-    this.translationService.setLanguage(language);
+  changeLanguage(language: string): void {
+    this.selectedLanguage = language as SupportedLanguages;
+    this.translationService.setLanguage(this.selectedLanguage);
     window.location.reload();
   }
 }

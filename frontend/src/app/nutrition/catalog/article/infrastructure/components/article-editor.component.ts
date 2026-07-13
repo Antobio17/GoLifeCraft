@@ -15,6 +15,9 @@ import { FieldComponent } from "@shared/design-system/field/infrastructure/compo
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
 import { SelectChipsComponent } from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
+import { PriceInputComponent } from "@shared/design-system/price-input/infrastructure/components/price-input.component";
+import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
+import { NutritionEditorComponent } from "@shared/design-system/nutrition-editor/infrastructure/components/nutrition-editor.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -50,6 +53,9 @@ const REFERENCE_AMOUNT = 100;
     TextInputComponent,
     EmojiPickerComponent,
     SelectChipsComponent,
+    PriceInputComponent,
+    NutrientInputComponent,
+    NutritionEditorComponent,
     ButtonComponent,
     ConfirmActionModalComponent,
     StackComponent,

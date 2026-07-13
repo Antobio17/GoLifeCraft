@@ -1,6 +1,5 @@
 import {
   Component,
-  ElementRef,
   NgZone,
   OnDestroy,
   OnInit,
@@ -8,7 +7,6 @@ import {
   inject,
   signal,
 } from "@angular/core";
-import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, delay } from "rxjs/operators";
@@ -27,7 +25,10 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { ActiveWorkoutBannerComponent } from "@shared/design-system/active-workout-banner/infrastructure/components/active-workout-banner.component";
+import { SetHeaderComponent } from "@shared/design-system/set-header/infrastructure/components/set-header.component";
+import { SetRowComponent } from "@shared/design-system/set-row/infrastructure/components/set-row.component";
+import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import {
@@ -55,7 +56,6 @@ import {
   templateUrl: "./session-detail.component.html",
   styleUrls: ["./session-detail.component.css"],
   imports: [
-    FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
@@ -71,7 +71,10 @@ import {
     IconButtonComponent,
     IconBadgeComponent,
     ButtonComponent,
-    NumberInputComponent,
+    ActiveWorkoutBannerComponent,
+    SetHeaderComponent,
+    SetRowComponent,
+    AddTileComponent,
     EmptyStateComponent,
     SkeletonComponent,
     MenuComponent,
@@ -117,9 +120,9 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private stickyRaf = 0;
   private readonly onStickyScroll = () => this.scheduleStickyUpdate();
 
-  @ViewChild("stickySentinel")
-  set stickySentinelRef(ref: ElementRef<HTMLElement> | undefined) {
-    const element = ref?.nativeElement;
+  @ViewChild(ActiveWorkoutBannerComponent)
+  set bannerRef(ref: ActiveWorkoutBannerComponent | undefined) {
+    const element = ref?.sentinelElement;
     if (element === this.stickySentinel) {
       return;
     }

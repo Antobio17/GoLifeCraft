@@ -25,6 +25,13 @@ import {
 } from "@authorization/domain/utils/role.utils";
 import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
 import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
+import { FormRowComponent } from "@shared/design-system/form-row/infrastructure/components/form-row.component";
+import { FormFooterComponent } from "@shared/design-system/form-footer/infrastructure/components/form-footer.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { InfoStripComponent } from "@shared/design-system/info-strip/infrastructure/components/info-strip.component";
+import { InfoRowComponent } from "@shared/design-system/info-row/infrastructure/components/info-row.component";
+import { StatusBadgeComponent } from "@shared/design-system/status-badge/infrastructure/components/status-badge.component";
 import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 
@@ -68,7 +75,6 @@ function passwordMatchValidator(
 @Component({
   selector: "app-my-profile",
   templateUrl: "./my-profile.component.html",
-  styleUrls: ["./my-profile.component.css"],
   providers: [
     ...GetMyProfileProvider.getProviders(),
     ...UpdateMyProfileProvider.getProviders(),
@@ -79,6 +85,13 @@ function passwordMatchValidator(
     ContextualTranslatePipe,
     FormSectionComponent,
     FormInputComponent,
+    FormRowComponent,
+    FormFooterComponent,
+    StackComponent,
+    TextComponent,
+    InfoStripComponent,
+    InfoRowComponent,
+    StatusBadgeComponent,
     ButtonComponent,
     PageWrapperComponent,
     SectionPageWrapperComponent,

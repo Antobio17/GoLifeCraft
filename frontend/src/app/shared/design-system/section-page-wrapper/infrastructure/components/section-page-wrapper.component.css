@@ -75,7 +75,8 @@
 }
 
 .section-title-main svg,
-.section-title-main i {
+.section-title-main i,
+.section-title-main ds-icon {
   color: var(--ds-primary);
 }
 

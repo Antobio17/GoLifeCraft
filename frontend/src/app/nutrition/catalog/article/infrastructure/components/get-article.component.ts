@@ -16,11 +16,16 @@ import { ConfirmActionModalComponent } from "@shared/design-system/confirm-actio
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { ProductHeroComponent } from "@shared/design-system/product-hero/infrastructure/components/product-hero.component";
+import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
+import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
 
 @Component({
   selector: "app-get-article",
   templateUrl: "./get-article.component.html",
-  styleUrl: "./get-article.component.scss",
   imports: [
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -29,6 +34,12 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
     SkeletonComponent,
     EmptyStateComponent,
     TextComponent,
+    StackComponent,
+    ChipComponent,
+    IconButtonComponent,
+    ProductHeroComponent,
+    MacroBarsComponent,
+    NutritionFactsComponent,
   ],
 })
 export class GetArticleComponent implements OnInit {

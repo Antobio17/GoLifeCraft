@@ -1,191 +1,74 @@
-<div class="auth">
-  <div class="auth__card">
-    <div class="auth__brand">
-      <ds-brand-logo
-        [markSize]="58"
-        [wordmarkSize]="23"
-        [stacked]="true"
-        [tagline]="'register.tagline' | t"
-      ></ds-brand-logo>
-    </div>
+<ds-auth-card
+  [tabs]="[
+    { key: 'signin', label: 'register.tabs.signin' | t },
+    { key: 'register', label: 'register.tabs.register' | t },
+  ]"
+  activeTab="register"
+  [tagline]="'register.tagline' | t"
+  (tabSelected)="onTab($event)"
+>
+  <form (ngSubmit)="onSubmit()">
+    <ds-stack [gap]="'13px'">
+      <ds-field [label]="'register.username.label' | t">
+        <ds-text-input
+          name="username"
+          leadingIcon="user"
+          autocomplete="username"
+          [placeholder]="'register.username.placeholder' | t"
+          [(ngModel)]="username"
+          [disabled]="loading"
+        />
+      </ds-field>
 
-    <div class="auth__tabs" role="tablist">
-      <button type="button" class="auth__tab" role="tab" (click)="onSignIn()">
-        {{ "register.tabs.signin" | t }}
-      </button>
-      <button type="button" class="auth__tab auth__tab--active" role="tab">
-        {{ "register.tabs.register" | t }}
-      </button>
-    </div>
+      <ds-field [label]="'register.email.label' | t">
+        <ds-text-input
+          name="email"
+          type="email"
+          leadingIcon="mail"
+          inputmode="email"
+          autocomplete="email"
+          [placeholder]="'register.email.placeholder' | t"
+          [(ngModel)]="email"
+          [disabled]="loading"
+        />
+      </ds-field>
 
-    <form (ngSubmit)="onSubmit()" class="auth__form">
-      <label class="field" for="username">
-        <span class="field__label">{{ "register.username.label" | t }}</span>
-        <span class="field__control">
-          <svg
-            class="field__icon"
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <circle cx="12" cy="8" r="4" />
-            <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke-linecap="round" />
-          </svg>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            [(ngModel)]="username"
-            [disabled]="loading"
-            [placeholder]="'register.username.placeholder' | t"
-            required
-            autocomplete="username"
-          />
-        </span>
-      </label>
+      <ds-field [label]="'register.password.label' | t">
+        <ds-text-input
+          name="password"
+          leadingIcon="lock"
+          autocomplete="new-password"
+          [passwordToggle]="true"
+          [togglePasswordLabel]="'register.togglePassword.show' | t"
+          [placeholder]="'register.password.placeholder' | t"
+          [(ngModel)]="password"
+          [disabled]="loading"
+        />
+      </ds-field>
 
-      <label class="field" for="email">
-        <span class="field__label">{{ "register.email.label" | t }}</span>
-        <span class="field__control">
-          <svg
-            class="field__icon"
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <rect x="3" y="5" width="18" height="14" rx="2.5" />
-            <path d="m3 7 9 6 9-6" stroke-linecap="round" />
-          </svg>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            [(ngModel)]="email"
-            [disabled]="loading"
-            [placeholder]="'register.email.placeholder' | t"
-            required
-            autocomplete="email"
-            inputmode="email"
-          />
-        </span>
-      </label>
+      <ds-field [label]="'register.confirmPassword.label' | t">
+        <ds-text-input
+          name="confirmPassword"
+          leadingIcon="lock"
+          autocomplete="new-password"
+          [passwordToggle]="true"
+          [togglePasswordLabel]="'register.togglePassword.show' | t"
+          [placeholder]="'register.confirmPassword.placeholder' | t"
+          [(ngModel)]="confirmPassword"
+          [disabled]="loading"
+        />
+      </ds-field>
 
-      <label class="field" for="password">
-        <span class="field__label">{{ "register.password.label" | t }}</span>
-        <span class="field__control">
-          <svg
-            class="field__icon"
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <rect x="4" y="10" width="16" height="10" rx="2.5" />
-            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-          </svg>
-          <input
-            [type]="showPassword ? 'text' : 'password'"
-            id="password"
-            name="password"
-            [(ngModel)]="password"
-            [disabled]="loading"
-            [placeholder]="'register.password.placeholder' | t"
-            required
-            autocomplete="new-password"
-          />
-          <button
-            type="button"
-            class="field__toggle"
-            (click)="toggleShowPassword()"
-            tabindex="-1"
-            [attr.aria-label]="
-              (showPassword
-                ? 'register.togglePassword.hide'
-                : 'register.togglePassword.show'
-              ) | t
-            "
-          >
-            @if (!showPassword) {
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
-                <circle cx="12" cy="12" r="2.6" />
-              </svg>
-            }
-            @if (showPassword) {
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              >
-                <path
-                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
-                />
-                <line x1="1" y1="1" x2="23" y2="23" />
-              </svg>
-            }
-          </button>
-        </span>
-      </label>
-
-      <label class="field" for="confirmPassword">
-        <span class="field__label">{{
-          "register.confirmPassword.label" | t
-        }}</span>
-        <span class="field__control">
-          <svg
-            class="field__icon"
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <rect x="4" y="10" width="16" height="10" rx="2.5" />
-            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-          </svg>
-          <input
-            [type]="showPassword ? 'text' : 'password'"
-            id="confirmPassword"
-            name="confirmPassword"
-            [(ngModel)]="confirmPassword"
-            [disabled]="loading"
-            [placeholder]="'register.confirmPassword.placeholder' | t"
-            required
-            autocomplete="new-password"
-          />
-        </span>
-      </label>
-
-      <button type="submit" class="auth__submit" [disabled]="loading">
-        @if (!loading) {
-          <span>{{ "register.submit" | t }}</span>
-          <span class="auth__arrow" aria-hidden="true">→</span>
-        }
-        @if (loading) {
-          <span class="auth__spinner" aria-hidden="true"></span>
-          <span>{{ "register.submitting" | t }}</span>
-        }
-      </button>
-    </form>
-  </div>
-</div>
+      <ds-button
+        type="submit"
+        variant="primary"
+        size="lg"
+        [fullWidth]="true"
+        [loading]="loading"
+        [trailingIcon]="loading ? undefined : 'arrowRight'"
+      >
+        {{ (loading ? "register.submitting" : "register.submit") | t }}
+      </ds-button>
+    </ds-stack>
+  </form>
+</ds-auth-card>

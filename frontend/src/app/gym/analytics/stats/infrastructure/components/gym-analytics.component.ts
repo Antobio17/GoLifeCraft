@@ -8,6 +8,13 @@ import {
 } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
 import { LineChartComponent } from "@shared/design-system/line-chart/infrastructure/components/line-chart.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { StatTileComponent } from "@shared/design-system/stat-tile/infrastructure/components/stat-tile.component";
+import { PanelComponent } from "@shared/design-system/panel/infrastructure/components/panel.component";
+import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
+import { MeterComponent } from "@shared/design-system/meter/infrastructure/components/meter.component";
 import { GymStats } from "../../domain/models/gym-stats.model";
 
 interface RegionShare {
@@ -37,6 +44,13 @@ const REGION_COLORS = [
     BarChartComponent,
     LineChartComponent,
     SkeletonComponent,
+    StackComponent,
+    GridComponent,
+    SectionHeaderComponent,
+    StatTileComponent,
+    PanelComponent,
+    TrendBadgeComponent,
+    MeterComponent,
   ],
 })
 export class GymAnalyticsComponent {

@@ -10,6 +10,12 @@
   pointer-events: none;
 }
 
+@media (display-mode: standalone) {
+  :host {
+    bottom: calc(48px + env(safe-area-inset-bottom));
+  }
+}
+
 @media (min-width: 768px) {
   :host {
     bottom: 20px;
@@ -19,125 +25,7 @@
   }
 }
 
+ds-floating-workout-banner,
 ds-confirm-action-modal {
   pointer-events: auto;
-}
-
-.workout-banner {
-  pointer-events: auto;
-  width: 100%;
-  max-width: var(--ds-app-frame-width, 480px);
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  background: var(--ds-surface-brand);
-  color: var(--ds-on-surface-brand);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 22px;
-  padding: 6px 6px 6px 14px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
-  animation: workoutBannerUp 0.28s cubic-bezier(0.6, 0.05, 0.28, 0.98);
-}
-
-@keyframes workoutBannerUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.workout-banner__pulse {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--ds-accent);
-  flex: 0 0 auto;
-  animation: workoutBannerPulse 1.4s ease-in-out infinite;
-}
-
-.workout-banner--paused .workout-banner__pulse {
-  animation: none;
-  opacity: 0.5;
-}
-
-@keyframes workoutBannerPulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(0.7);
-  }
-}
-
-.workout-banner__info {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.workout-banner__state {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ds-accent);
-}
-
-.workout-banner__meta {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-}
-
-.workout-banner__time {
-  font-family: var(--ds-font-display, inherit);
-  font-weight: 800;
-  font-size: 16px;
-  font-variant-numeric: tabular-nums;
-  flex: 0 0 auto;
-}
-
-.workout-banner__name {
-  font-size: 11.5px;
-  font-weight: 600;
-  opacity: 0.6;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.workout-banner__go {
-  flex: 0 0 auto;
-  border: none;
-  cursor: pointer;
-  background: var(--ds-accent);
-  color: var(--ds-on-accent);
-  border-radius: 16px;
-  padding: 10px 15px;
-  font-weight: 800;
-  font-size: 12.5px;
-}
-
-.workout-banner__stop {
-  flex: 0 0 auto;
-  width: 38px;
-  height: 38px;
-  border: none;
-  cursor: pointer;
-  border-radius: 16px;
-  background: var(--ds-danger);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

@@ -6,7 +6,11 @@ import { delay } from "rxjs/operators";
 import { RegisterService } from "@authorization/register/register/application/services/register.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
+import { AuthCardComponent } from "@shared/design-system/auth-card/infrastructure/components/auth-card.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 
 const LOGIN_ROUTE = "/login";
 
@@ -14,7 +18,15 @@ const LOGIN_ROUTE = "/login";
   selector: "app-register",
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.css"],
-  imports: [FormsModule, ContextualTranslatePipe, BrandLogoComponent],
+  imports: [
+    FormsModule,
+    ContextualTranslatePipe,
+    AuthCardComponent,
+    StackComponent,
+    FieldComponent,
+    TextInputComponent,
+    ButtonComponent,
+  ],
 })
 export class RegisterComponent {
   private registerService = inject(RegisterService);
@@ -26,10 +38,10 @@ export class RegisterComponent {
   password = "";
   confirmPassword = "";
   loading = false;
-  showPassword = false;
 
-  toggleShowPassword(): void {
-    this.showPassword = !this.showPassword;
+  onTab(key: string): void {
+    if (key !== "signin") return;
+    this.onSignIn();
   }
 
   onSignIn(): void {

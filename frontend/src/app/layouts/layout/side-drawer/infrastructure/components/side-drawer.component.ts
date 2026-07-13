@@ -11,12 +11,26 @@ import { AuthSessionService } from "@shared/auth/application/services/auth-sessi
 import { ThemeService } from "@shared/theme/application/services/theme.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { NavItemComponent } from "@shared/design-system/nav-item/infrastructure/components/nav-item.component";
+import { AvatarComponent } from "@shared/design-system/avatar/infrastructure/components/avatar.component";
 import { SideDrawerService } from "../../application/services/side-drawer.service";
 
 @Component({
   selector: "app-side-drawer",
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, ContextualTranslatePipe],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    ContextualTranslatePipe,
+    BrandLogoComponent,
+    IconComponent,
+    IconButtonComponent,
+    NavItemComponent,
+    AvatarComponent,
+  ],
   templateUrl: "./side-drawer.component.html",
   styleUrls: ["./side-drawer.component.css"],
 })

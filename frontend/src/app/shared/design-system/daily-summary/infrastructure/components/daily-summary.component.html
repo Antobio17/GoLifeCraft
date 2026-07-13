@@ -1,0 +1,35 @@
+<div class="summary">
+  <div class="summary__top">
+    <span class="summary__eyebrow">{{ eyebrow }}</span>
+    <button type="button" class="summary__more" (click)="more.emit()">
+      {{ moreLabel }} ›
+    </button>
+  </div>
+
+  <div class="summary__main">
+    <ds-progress-ring class="summary__ring" [value]="progressPercent">
+      <span class="summary__ring-value">{{ progressPercent }}%</span>
+    </ds-progress-ring>
+    <div class="summary__kcal">
+      <p class="summary__kcal-value">
+        {{ consumedKcal }}
+        <span class="summary__kcal-target">/ {{ targetKcal }}</span>
+      </p>
+      <p class="summary__kcal-label">{{ kcalLabel }}</p>
+    </div>
+  </div>
+
+  <div class="summary__macros">
+    @for (macro of macros; track macro.label) {
+      <div class="macro">
+        <span class="macro__label">{{ macro.label }}</span>
+        <span
+          class="macro__value"
+          [class.macro__value--protein]="macro.tone === 'protein'"
+          [class.macro__value--fat]="macro.tone === 'fat'"
+          >{{ macro.value }}</span
+        >
+      </div>
+    }
+  </div>
+</div>

@@ -3,6 +3,7 @@ export type ButtonVariant =
   | "secondary"
   | "danger"
   | "ghost"
+  | "link"
   | "outline"
   | "outline-danger";
 export type ButtonSize = "lg" | "md" | "sm" | "icon" | "icon-sm" | "icon-lg";

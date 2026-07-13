@@ -10,7 +10,6 @@ import {
   Validators,
   AbstractControl,
   ValidationErrors,
-  FormsModule,
   ReactiveFormsModule,
 } from "@angular/forms";
 import { delay, tap } from "rxjs/operators";
@@ -27,18 +26,27 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
 import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
+import { FormRowComponent } from "@shared/design-system/form-row/infrastructure/components/form-row.component";
+import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { RolePickerComponent } from "@shared/design-system/role-picker/infrastructure/components/role-picker.component";
+import { RoleOption } from "@shared/design-system/role-picker/domain/models/role-option.model";
 import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
 
 @Component({
   selector: "app-create-user",
   templateUrl: "./create-user.component.html",
-  styleUrls: ["./create-user.component.css"],
   imports: [
-    FormsModule,
     ReactiveFormsModule,
     ContextualTranslatePipe,
     FormSectionComponent,
     FormInputComponent,
+    FormRowComponent,
+    FieldComponent,
+    StackComponent,
+    TextComponent,
+    RolePickerComponent,
     PageWrapperComponent,
     SectionPageWrapperComponent,
     FormActionsComponent,
@@ -59,7 +67,6 @@ export class CreateUserComponent implements OnInit {
   loading = signal(true);
   saving = signal(false);
   availableRoles: UserRole[] = getAvailableRoles(false);
-  showPassword = false;
 
   constructor() {
     this.userForm = this.formBuilder.group(
@@ -82,6 +89,22 @@ export class CreateUserComponent implements OnInit {
       .then(() => {
         this.loading.set(false);
       });
+  }
+
+  roleOptions(): RoleOption[] {
+    return this.availableRoles.map((role) => ({
+      value: role,
+      icon: role === USER_ROLES.GOD ? "shield" : "user",
+      tone: role === USER_ROLES.GOD ? "accent" : "brand",
+      name: this.translationService.translate(
+        getRoleFullLabelKey(role),
+        this.MODULE_PATH,
+      ),
+      description: this.translationService.translate(
+        getRoleDescriptionKey(role),
+        this.MODULE_PATH,
+      ),
+    }));
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -126,18 +149,6 @@ export class CreateUserComponent implements OnInit {
         next: () => this.router.navigate(["/users"]),
         error: () => this.saving.set(false),
       });
-  }
-
-  getRoleName(role: string): string {
-    return getRoleFullLabelKey(role);
-  }
-
-  getRoleDescription(role: string): string {
-    return getRoleDescriptionKey(role);
-  }
-
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
   }
 
   cancel(): void {

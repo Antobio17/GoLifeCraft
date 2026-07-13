@@ -5,7 +5,13 @@
   (click)="clicked.emit()"
 >
   <span class="tile__top">
-    <span class="tile__icon"><ng-content></ng-content></span>
+    <span class="tile__icon">
+      @if (icon) {
+        <ds-icon [name]="icon" [size]="22" [stroke]="2.1" />
+      } @else {
+        <ng-content></ng-content>
+      }
+    </span>
     @if (soon) {
       <span class="tile__badge">{{ soonLabel }}</span>
     } @else {

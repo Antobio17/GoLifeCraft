@@ -11,10 +11,11 @@
     variant="primary"
     size="md"
     type="submit"
+    [icon]="!saving ? icon : undefined"
     [disabled]="saving || formInvalid"
     [loading]="saving"
   >
-    @if (!saving) {
+    @if (!saving && !icon) {
       <ng-content select="[slot='icon']"></ng-content>
     }
     {{ saving ? savingLabel : submitLabel }}

@@ -96,8 +96,19 @@ import { Component, Input } from "@angular/core";
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-danger);
       }
+      :host {
+        display: block;
+        min-width: 0;
+      }
+      :host([data-grow="true"]) {
+        flex: 1 1 auto;
+      }
     `,
   ],
+  host: {
+    "[attr.data-grow]": "grow ? 'true' : null",
+    "[style.flex]": "width ? '0 0 ' + width : null",
+  },
 })
 export class FieldComponent {
   @Input() label = "";
@@ -106,4 +117,6 @@ export class FieldComponent {
   @Input() hintIcon = false;
   @Input() error = "";
   @Input() count: number | string | null = null;
+  @Input() grow = false;
+  @Input() width: string | null = null;
 }

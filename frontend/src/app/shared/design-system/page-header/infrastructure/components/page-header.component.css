@@ -28,7 +28,8 @@
   font-size: 20px;
   background: var(--ds-primary-soft);
   color: var(--ds-primary-active);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ds-primary) 18%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--ds-primary) 18%, transparent);
 }
 
 .ph-icon svg {

@@ -5,74 +5,34 @@
     [loading]="loading()"
     [skeletonRows]="3"
     [skeletonFieldsPerRow]="2"
+    [icon]="'user'"
   >
-    <svg
-      slot="icon"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-    </svg>
-
     @if (!loading()) {
       <ds-form-section
         [title]="'profile.section.personal' | t"
         [icon]="ICONS['USERS']"
       >
-        <div class="readonly-info">
-          <div class="info-item">
-            <span class="info-label">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-              </svg>
-              {{ "profile.field.username" | t }}
-            </span>
-            <span class="info-value">{{ username }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                />
-              </svg>
-              {{ "profile.field.role" | t }}
-            </span>
-            <span class="role-badge {{ getRoleBadgeClass(role) }}">
-              <span class="role-badge-dot"></span>
+        <ds-info-strip>
+          <ds-info-row icon="user" [label]="'profile.field.username' | t">
+            {{ username }}
+          </ds-info-row>
+          <ds-info-row
+            icon="star"
+            [label]="'profile.field.role' | t"
+            [bare]="true"
+          >
+            <ds-status-badge
+              [tone]="
+                getRoleBadgeClass(role) === 'badge-god' ? 'accent' : 'neutral'
+              "
+            >
               {{ getRoleTranslationKey(role) | t }}
-            </span>
-          </div>
-        </div>
+            </ds-status-badge>
+          </ds-info-row>
+        </ds-info-strip>
 
         <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
-          <div class="form-row">
+          <ds-form-row>
             <ds-form-input
               [label]="'profile.field.name' | t"
               [placeholder]="'profile.field.namePlaceholder' | t"
@@ -83,46 +43,29 @@
               [placeholder]="'profile.field.lastnamePlaceholder' | t"
               formControlName="lastname"
             ></ds-form-input>
-          </div>
-          <div class="form-row">
+          </ds-form-row>
+          <ds-form-row>
             <ds-form-input
               [label]="'profile.field.email' | t"
               placeholder="tu@email.com"
               type="email"
               formControlName="email"
             ></ds-form-input>
-          </div>
+          </ds-form-row>
         </form>
 
-        <div class="section-footer">
+        <ds-form-footer>
           <ds-button
             variant="primary"
             size="md"
+            icon="save"
             [disabled]="saving() || profileForm.invalid || profileForm.pristine"
             [loading]="saving()"
             (clicked)="onSubmitProfile()"
           >
-            @if (!saving()) {
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
-                />
-                <polyline points="17 21 17 13 7 13 7 21" />
-                <polyline points="7 3 7 8 15 8" />
-              </svg>
-            }
             {{ saving() ? ("profile.saving" | t) : ("profile.save" | t) }}
           </ds-button>
-        </div>
+        </ds-form-footer>
       </ds-form-section>
 
       <ds-form-section
@@ -130,16 +73,16 @@
         [icon]="ICONS['LOCK']"
       >
         <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
-          <div class="form-row">
+          <ds-form-row>
             <ds-form-input
               [label]="'profile.field.currentPassword' | t"
               placeholder="••••••••"
               type="password"
               formControlName="currentPassword"
             ></ds-form-input>
-          </div>
-          <div class="form-row">
-            <div class="form-col">
+          </ds-form-row>
+          <ds-form-row>
+            <ds-stack [gap]="'4px'">
               <ds-form-input
                 [label]="'profile.field.newPassword' | t"
                 placeholder="••••••••"
@@ -150,24 +93,25 @@
                 passwordForm.get("newPassword")?.errors?.["weakPassword"] &&
                 passwordForm.get("newPassword")?.touched
               ) {
-                <p class="password-hint-error">
+                <ds-text variant="danger">
                   {{ "profile.password.weak" | t }}
-                </p>
+                </ds-text>
               }
-            </div>
+            </ds-stack>
             <ds-form-input
               [label]="'profile.field.confirmPassword' | t"
               placeholder="••••••••"
               type="password"
               formControlName="confirmPassword"
             ></ds-form-input>
-          </div>
+          </ds-form-row>
         </form>
 
-        <div class="section-footer">
+        <ds-form-footer>
           <ds-button
             variant="primary"
             size="md"
+            icon="lock"
             [disabled]="
               changingPassword() ||
               passwordForm.invalid ||
@@ -176,28 +120,13 @@
             [loading]="changingPassword()"
             (clicked)="onSubmitPassword()"
           >
-            @if (!changingPassword()) {
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-            }
             {{
               changingPassword()
                 ? ("profile.changingPassword" | t)
                 : ("profile.changePassword" | t)
             }}
           </ds-button>
-        </div>
+        </ds-form-footer>
       </ds-form-section>
     }
   </ds-section-page-wrapper>

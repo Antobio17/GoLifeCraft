@@ -1,0 +1,137 @@
+:host {
+  display: block;
+}
+
+.auth {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--ds-bg);
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 767px) {
+  .auth {
+    min-height: calc(100vh / var(--ds-app-scale, 1));
+    min-height: calc(100dvh / var(--ds-app-scale, 1));
+  }
+}
+
+.auth__card {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  animation: auth-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes auth-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth__brand {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 24px;
+}
+
+.auth__tabs {
+  display: flex;
+  gap: 0;
+  background: var(--ds-surface-inset);
+  border: 1px solid var(--ds-border-hairline);
+  border-radius: 13px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.auth__tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 9px;
+  border-radius: 10px;
+  font-family: var(--ds-font-body);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ds-text-muted);
+  cursor: pointer;
+  transition: all var(--ds-transition-base);
+}
+
+.auth__tab--active {
+  background: var(--ds-surface-raised);
+  color: var(--ds-text);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
+}
+
+:host-context([data-theme="dark"]) .auth__tab--active {
+  background: var(--ds-accent);
+  color: var(--ds-on-accent);
+  box-shadow: none;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .auth {
+    padding: 40px;
+  }
+
+  .auth__card {
+    max-width: 420px;
+  }
+
+  .auth__brand {
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
+}
+
+@media (min-width: 900px) {
+  .auth__card {
+    max-width: 780px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "brand tabs"
+      "brand form";
+    align-items: center;
+    column-gap: 56px;
+  }
+
+  .auth__brand {
+    grid-area: brand;
+    align-self: center;
+    justify-content: center;
+    margin: 0;
+    padding-right: 56px;
+    border-right: 1px solid var(--ds-border-hairline);
+    transform: scale(1.15);
+  }
+
+  .auth__tabs {
+    grid-area: tabs;
+    margin-bottom: 0;
+  }
+
+  .auth__form {
+    grid-area: form;
+    margin-top: 18px;
+  }
+}
