@@ -102,7 +102,10 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
 
     private function startActiveWorkout(): string
     {
-        return ($this->startHandler)(new StartWorkoutCommand(
+        $workoutId = 'workout-1';
+
+        ($this->startHandler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
             sessionId: 'session-1',
             sessionName: 'Empuje A',
             exercises: [
@@ -117,5 +120,7 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
             ],
             startedByUserId: 'god-user-id',
         ));
+
+        return $workoutId;
     }
 }

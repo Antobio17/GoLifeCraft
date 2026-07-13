@@ -46,7 +46,10 @@ final class UpdateWorkoutCommandHandlerTest extends TestCase
 
     public function testItSavesProgressOnAnActiveWorkout(): void
     {
-        $workoutId = ($this->startHandler)(new StartWorkoutCommand(
+        $workoutId = 'workout-1';
+
+        ($this->startHandler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
             sessionId: 'session-1',
             sessionName: 'Empuje A',
             exercises: [
