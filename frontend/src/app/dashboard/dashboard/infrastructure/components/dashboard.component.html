@@ -7,33 +7,36 @@
     [initial]="initial()"
   />
 
-  <ds-daily-summary
-    slot="summary"
-    [eyebrow]="'dashboard.summary.title' | t"
-    [moreLabel]="'dashboard.summary.more' | t"
-    [progressPercent]="progressPercent"
-    [consumedKcal]="summary.consumedKcal | number: '1.0-0' : 'es'"
-    [targetKcal]="summary.targetKcal | number: '1.0-0' : 'es'"
-    [kcalLabel]="'dashboard.summary.kcal' | t"
-    [macros]="[
-      {
-        label: 'dashboard.macros.protein' | t,
-        value: summary.proteinG + ' g',
-        tone: 'protein',
-      },
-      {
-        label: 'dashboard.macros.fat' | t,
-        value: summary.fatG + ' g',
-        tone: 'fat',
-      },
-      {
-        label: 'dashboard.macros.carbs' | t,
-        value: summary.carbsG + ' g',
-        tone: 'carbs',
-      },
-    ]"
-    (more)="comingSoon()"
-  />
+  <ds-stack slot="summary" [gap]="'10px'">
+    <ds-section-header
+      [title]="'dashboard.summary.title' | t"
+      [actionLabel]="'dashboard.summary.more' | t"
+      (action)="comingSoon()"
+    />
+    <ds-daily-summary
+      [progressPercent]="progressPercent"
+      [consumedKcal]="summary.consumedKcal | number: '1.0-0' : 'es'"
+      [targetKcal]="summary.targetKcal | number: '1.0-0' : 'es'"
+      [kcalLabel]="'dashboard.summary.kcal' | t"
+      [macros]="[
+        {
+          label: 'dashboard.macros.protein' | t,
+          value: summary.proteinG + ' g',
+          tone: 'protein',
+        },
+        {
+          label: 'dashboard.macros.fat' | t,
+          value: summary.fatG + ' g',
+          tone: 'fat',
+        },
+        {
+          label: 'dashboard.macros.carbs' | t,
+          value: summary.carbsG + ' g',
+          tone: 'carbs',
+        },
+      ]"
+    />
+  </ds-stack>
 
   <app-gym-analytics
     slot="gym"
@@ -47,7 +50,7 @@
       [title]="'dashboard.explore.title' | t"
       [staticLabel]="'dashboard.explore.quickAccess' | t"
     />
-    <ds-grid [minColumn]="'150px'" [gap]="'10px'">
+    <ds-grid [columns]="2" [gap]="'10px'">
       <ds-action-tile
         icon="leaf"
         [name]="'dashboard.explore.catalog' | t"

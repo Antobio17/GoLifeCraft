@@ -1,11 +1,4 @@
 <div class="summary">
-  <div class="summary__top">
-    <span class="summary__eyebrow">{{ eyebrow }}</span>
-    <button type="button" class="summary__more" (click)="more.emit()">
-      {{ moreLabel }} ›
-    </button>
-  </div>
-
   <div class="summary__main">
     <ds-progress-ring class="summary__ring" [value]="progressPercent">
       <span class="summary__ring-value">{{ progressPercent }}%</span>

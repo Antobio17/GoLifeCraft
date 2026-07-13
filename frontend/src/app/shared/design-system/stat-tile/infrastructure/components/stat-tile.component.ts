@@ -22,6 +22,10 @@ import { Component, Input } from "@angular/core";
         min-width: 0;
       }
       .ds-stile {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
         border-radius: 14px;

@@ -18,7 +18,7 @@ import { Component, Input } from "@angular/core";
   ],
   host: {
     "[style.--grid-gap]": "gap",
-    "[style.--grid-min]": "minColumn",
+    "[style.--grid-min]": "columns === null ? minColumn : '0px'",
     "[style.--grid-cols]": "columns === null ? 'auto-fill' : columns",
   },
 })

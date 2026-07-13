@@ -70,7 +70,10 @@ export class GymAnalyticsComponent {
   }
 
   get totalVolumeText(): string {
-    return this.formatter.format(this.stats?.totalVolumeKg ?? 0);
+    return this.formatter
+      .formatToParts(this.stats?.totalVolumeKg ?? 0)
+      .map((part) => (part.type === "group" ? "\u202f" : part.value))
+      .join("");
   }
 
   get volumeBars(): BarDatum[] {
