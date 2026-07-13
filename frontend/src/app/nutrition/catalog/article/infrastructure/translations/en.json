@@ -35,9 +35,9 @@
     },
     "macro": {
       "kcal": "kcal",
-      "protein": "Prot",
+      "protein": "Protein",
       "fat": "Fat",
-      "carbs": "Carb"
+      "carbs": "Carbs"
     },
     "table": {
       "fat": "Fat",
