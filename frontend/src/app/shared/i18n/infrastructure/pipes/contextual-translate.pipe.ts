@@ -34,6 +34,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     gym: "gym/training/session",
     getArticles: "nutrition/catalog/article",
     getArticle: "nutrition/catalog/article",
+    articleEditor: "nutrition/catalog/article",
     article: "nutrition/catalog/article",
     getWorkouts: "gym/training/workout",
     getWorkout: "gym/training/workout",

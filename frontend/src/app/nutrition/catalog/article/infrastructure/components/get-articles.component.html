@@ -2,7 +2,13 @@
   <ds-screen-header
     [title]="'getArticles.heading' | t"
     [subtitle]="headerSubtitle()"
-  />
+  >
+    @if (canWrite) {
+      <ds-button slot="actions" size="md" icon="plus" (clicked)="onCreate()">
+        {{ "getArticles.create" | t }}
+      </ds-button>
+    }
+  </ds-screen-header>
 
   @if (loading()) {
     <ds-grid [minColumn]="'300px'">

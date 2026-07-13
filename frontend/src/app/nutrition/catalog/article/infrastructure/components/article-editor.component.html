@@ -1,0 +1,265 @@
+<ds-page-wrapper [maxWidth]="'640px'" [gap]="'20px'">
+  <ds-screen-header
+    [leading]="'close'"
+    [leadingLabel]="'articleEditor.back' | t"
+    [eyebrow]="'articleEditor.eyebrow' | t"
+    [title]="title"
+    (leadingClick)="cancel()"
+  />
+
+  @if (loading()) {
+    <ds-skeleton height="88px" />
+    <ds-skeleton height="120px" />
+    <ds-skeleton height="180px" />
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <ds-stack [gap]="'20px'">
+        <div class="editor-identity">
+          <ds-field
+            class="editor-identity__icon"
+            [label]="'articleEditor.field.icon' | t"
+          >
+            <ds-emoji-picker
+              formControlName="emoji"
+              [groups]="emojiGroups"
+              [fallback]="fallbackEmoji"
+              [sheetTitle]="'articleEditor.field.emojiSheetTitle' | t"
+              [closeLabel]="'articleEditor.field.emojiClose' | t"
+              [triggerLabel]="'articleEditor.field.emojiTrigger' | t"
+              [searchPlaceholder]="'articleEditor.field.emojiSearch' | t"
+              [emptyLabel]="'articleEditor.field.emojiEmpty' | t"
+            />
+          </ds-field>
+          <ds-field
+            class="editor-identity__name"
+            [label]="'articleEditor.field.name' | t"
+            [required]="true"
+          >
+            <ds-text-input
+              variant="outlined"
+              formControlName="name"
+              [placeholder]="'articleEditor.field.namePlaceholder' | t"
+            />
+          </ds-field>
+        </div>
+
+        <div class="editor-row">
+          <ds-field
+            class="editor-row__grow"
+            [label]="'articleEditor.field.brand' | t"
+          >
+            <ds-text-input
+              variant="outlined"
+              formControlName="brand"
+              [placeholder]="'articleEditor.field.brandPlaceholder' | t"
+            />
+          </ds-field>
+
+          <ds-field
+            class="editor-row__price"
+            [label]="'articleEditor.field.price' | t"
+          >
+            <div class="editor-price">
+              <input
+                class="editor-price__input"
+                type="text"
+                inputmode="decimal"
+                formControlName="price"
+                placeholder="0,00"
+              />
+              <span class="editor-price__unit">€</span>
+            </div>
+          </ds-field>
+        </div>
+
+        <ds-field [label]="'articleEditor.field.category' | t">
+          <ds-select-chips
+            formControlName="categoryId"
+            [options]="categoryOptions()"
+          />
+        </ds-field>
+
+        <ds-field [label]="'articleEditor.field.store' | t">
+          <ds-select-chips
+            formControlName="supermarketId"
+            [options]="supermarketOptions()"
+          />
+        </ds-field>
+
+        <div class="nutrition-card">
+          <div class="nutrition-card__head">
+            <span class="nutrition-card__title">{{
+              "articleEditor.nutrition.heading" | t
+            }}</span>
+            <span class="nutrition-card__badge">{{
+              "articleEditor.nutrition.reference" | t
+            }}</span>
+          </div>
+
+          <label class="nrow nrow--energy">
+            <span class="nrow__name">
+              <svg
+                class="nrow__flame"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                />
+              </svg>
+              {{ "articleEditor.nutrition.energy" | t }}
+            </span>
+            <span class="nrow__field">
+              <input
+                class="ninput ninput--energy"
+                type="text"
+                inputmode="decimal"
+                formControlName="calories"
+                placeholder="0"
+              />
+              <span class="nrow__unit nrow__unit--energy">kcal</span>
+            </span>
+          </label>
+
+          <label class="nrow">
+            <span class="nrow__name">{{
+              "articleEditor.nutrition.protein" | t
+            }}</span>
+            <span class="nrow__field">
+              <input
+                class="ninput"
+                type="text"
+                inputmode="decimal"
+                formControlName="protein"
+                placeholder="0"
+              />
+              <span class="nrow__unit">g</span>
+            </span>
+          </label>
+
+          <label class="nrow">
+            <span class="nrow__name">{{
+              "articleEditor.nutrition.fat" | t
+            }}</span>
+            <span class="nrow__field">
+              <input
+                class="ninput"
+                type="text"
+                inputmode="decimal"
+                formControlName="fat"
+                placeholder="0"
+              />
+              <span class="nrow__unit">g</span>
+            </span>
+          </label>
+
+          <label class="nrow nrow--sub">
+            <span class="nrow__name">{{
+              "articleEditor.nutrition.saturatedFat" | t
+            }}</span>
+            <span class="nrow__field">
+              <input
+                class="ninput ninput--sub"
+                type="text"
+                inputmode="decimal"
+                formControlName="saturatedFat"
+                placeholder="0"
+              />
+              <span class="nrow__unit">g</span>
+            </span>
+          </label>
+
+          <label class="nrow">
+            <span class="nrow__name">{{
+              "articleEditor.nutrition.carbs" | t
+            }}</span>
+            <span class="nrow__field">
+              <input
+                class="ninput"
+                type="text"
+                inputmode="decimal"
+                formControlName="carbs"
+                placeholder="0"
+              />
+              <span class="nrow__unit">g</span>
+            </span>
+          </label>
+
+          <label class="nrow nrow--sub">
+            <span class="nrow__name">{{
+              "articleEditor.nutrition.sugars" | t
+            }}</span>
+            <span class="nrow__field">
+              <input
+                class="ninput ninput--sub"
+                type="text"
+                inputmode="decimal"
+                formControlName="sugars"
+                placeholder="0"
+              />
+              <span class="nrow__unit">g</span>
+            </span>
+          </label>
+
+          <label class="nrow nrow--last">
+            <span class="nrow__name">{{
+              "articleEditor.nutrition.salt" | t
+            }}</span>
+            <span class="nrow__field">
+              <input
+                class="ninput"
+                type="text"
+                inputmode="decimal"
+                formControlName="salt"
+                placeholder="0"
+              />
+              <span class="nrow__unit">g</span>
+            </span>
+          </label>
+        </div>
+
+        <ds-button
+          type="submit"
+          [fullWidth]="true"
+          [loading]="saving()"
+          [disabled]="saving()"
+        >
+          {{ saving() ? ("articleEditor.saving" | t) : saveLabel }}
+        </ds-button>
+
+        @if (isEdit) {
+          <ds-button
+            type="button"
+            variant="outline-danger"
+            [fullWidth]="true"
+            icon="trash"
+            (clicked)="onDelete()"
+          >
+            {{ "articleEditor.delete" | t }}
+          </ds-button>
+        }
+      </ds-stack>
+    </form>
+  }
+</ds-page-wrapper>
+
+<ds-confirm-action-modal
+  [show]="showDeleteModal()"
+  [title]="'articleEditor.deleteModal.title' | t"
+  [body]="'articleEditor.deleteModal.body' | t"
+  [itemName]="articleName()"
+  [warningText]="'articleEditor.deleteModal.warning' | t"
+  [isDeleting]="deleting()"
+  [cancelLabel]="'articleEditor.deleteModal.cancel' | t"
+  [confirmLabel]="'articleEditor.deleteModal.confirm' | t"
+  [deletingLabel]="'articleEditor.deleteModal.deleting' | t"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()"
+/>

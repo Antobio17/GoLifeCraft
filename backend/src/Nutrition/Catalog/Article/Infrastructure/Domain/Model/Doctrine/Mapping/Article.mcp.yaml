@@ -37,20 +37,20 @@ fields:
       meat/fish 🍗🥩🥓🍤🐟; cereals/bread 🌾🥣🍞🍚🍝; legumes/nuts 🥜🌰🫘;
       snacks/sweets 🍫🍪🍩🍬🍯; drinks 💧🥤🧃☕🍵; prepared meals 🍕🍔🥪🥗🥘;
       supplements/protein 💪; canned/other 🥫🧂. If nothing fits, use 🍽️.
+  categoryId:
+    writable: true
+    min: 36
+    max: 36
+    filterable: true
+  supermarketId:
+    writable: true
+    min: 36
+    max: 36
+    filterable: true
+  nutritionFactsId:
+    writable: true
+    min: 36
+    max: 36
+    filterable: true
 
-relations:
-  nutritionFacts:
-    target: nutrition_facts
-    kind: oneToOne
-    writable: true
-    expandable: true
-  supermarket:
-    target: supermarket
-    kind: manyToOne
-    writable: true
-    expandable: true
-  category:
-    target: category
-    kind: manyToOne
-    writable: true
-    expandable: true
+relations: {}

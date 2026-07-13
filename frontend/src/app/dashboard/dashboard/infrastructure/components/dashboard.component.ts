@@ -88,6 +88,10 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(["/gym"]);
   }
 
+  goToCatalog(): void {
+    this.router.navigate(["/catalog"]);
+  }
+
   comingSoon(): void {
     this.floatingToastService.showToast({
       status: 200,

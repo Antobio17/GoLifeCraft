@@ -8,3 +8,13 @@ services:
     class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetArticleNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Catalog\Article\Domain\QueryModel\CreateArticleNeedleDataQuery:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateArticleNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Catalog\Article\Domain\QueryModel\UpdateArticleNeedleDataQuery:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateArticleNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

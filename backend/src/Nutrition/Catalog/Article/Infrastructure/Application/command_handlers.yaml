@@ -1,0 +1,36 @@
+services:
+  Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler:
+    class: Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Nutrition\Catalog\Article\Application\Command\CreateArticleCommandHandler:
+    class: Nutrition\Catalog\Article\Application\Command\CreateArticleCommandHandler
+    arguments:
+      $articleRepository: '@Nutrition\Catalog\Article\Domain\Model\ArticleRepository'
+      $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\CreateArticleNeedleDataQuery'
+      $nutritionFactsAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Article\Application\Command\UpdateArticleCommandHandler:
+    class: Nutrition\Catalog\Article\Application\Command\UpdateArticleCommandHandler
+    arguments:
+      $articleRepository: '@Nutrition\Catalog\Article\Domain\Model\ArticleRepository'
+      $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\UpdateArticleNeedleDataQuery'
+      $nutritionFactsAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Article\Application\Command\DeleteArticleCommandHandler:
+    class: Nutrition\Catalog\Article\Application\Command\DeleteArticleCommandHandler
+    arguments:
+      $articleRepository: '@Nutrition\Catalog\Article\Domain\Model\ArticleRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

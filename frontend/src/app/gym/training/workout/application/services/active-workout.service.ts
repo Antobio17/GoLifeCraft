@@ -2,10 +2,7 @@ import { Injectable, OnDestroy, computed, inject, signal } from "@angular/core";
 import { Observable, Subject, Subscription, interval, of, tap } from "rxjs";
 import { debounceTime, map, shareReplay, switchMap } from "rxjs/operators";
 import { WorkoutSessionPort } from "../../domain/ports/workout-session.port";
-import {
-  StartWorkoutResponse,
-  WorkoutDetail,
-} from "../../domain/models/workout-detail.model";
+import { WorkoutDetail } from "../../domain/models/workout-detail.model";
 import {
   WorkoutExerciseRequest,
   WorkoutProgressRequest,
@@ -110,16 +107,19 @@ export class ActiveWorkoutService implements OnDestroy {
     sessionId: string,
     sessionName: string,
     exercises: ActiveExercise[],
-  ): Observable<StartWorkoutResponse> {
+  ): Observable<void> {
+    const workoutId = crypto.randomUUID();
+
     return this.port
       .start({
+        workoutId,
         sessionId,
         sessionName,
         exercises: this.buildExercises(exercises),
       })
       .pipe(
-        tap((response) => {
-          this.workoutId.set(response.data.id);
+        tap(() => {
+          this.workoutId.set(workoutId);
           this.activeSessionId.set(sessionId);
           this.activeName.set(sessionName);
           this.liveExercises.set(exercises);

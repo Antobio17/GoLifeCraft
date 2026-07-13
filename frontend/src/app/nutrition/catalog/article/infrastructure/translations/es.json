@@ -2,6 +2,7 @@
   "getArticles": {
     "heading": "Catálogo",
     "formats": "formatos",
+    "create": "Nuevo",
     "searchPlaceholder": "Buscar producto o marca…",
     "searchClear": "Limpiar búsqueda",
     "nutritionCaption": "Valores nutricionales",
@@ -24,6 +25,8 @@
   },
   "getArticle": {
     "back": "Volver",
+    "edit": "Editar",
+    "delete": "Borrar artículo",
     "per": "Valores por",
     "noNutrition": "Sin información nutricional",
     "notFound": {
@@ -49,7 +52,64 @@
   "article": {
     "breadcrumb": {
       "list": "Catálogo",
-      "detail": "Producto"
+      "detail": "Producto",
+      "create": "Nuevo artículo",
+      "edit": "Editar artículo"
+    },
+    "create": {
+      "success": "Artículo creado correctamente"
+    },
+    "update": {
+      "success": "Artículo actualizado correctamente"
+    },
+    "delete": {
+      "success": "Artículo borrado correctamente"
+    }
+  },
+  "articleEditor": {
+    "back": "Cancelar",
+    "eyebrow": "CATÁLOGO",
+    "createTitle": "Nuevo artículo",
+    "editTitle": "Editar artículo",
+    "saveCreate": "Crear artículo",
+    "saveEdit": "Guardar cambios",
+    "saving": "Guardando…",
+    "delete": "Borrar artículo",
+    "deleteModal": {
+      "title": "Borrar artículo",
+      "body": "Se eliminará este artículo del catálogo de forma permanente.",
+      "warning": "Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Borrar",
+      "deleting": "Borrando…"
+    },
+    "field": {
+      "icon": "Icono",
+      "name": "Nombre",
+      "namePlaceholder": "Ej: Leche entera 1 L",
+      "emojiSheetTitle": "Elige un icono",
+      "emojiClose": "Cerrar",
+      "emojiTrigger": "Elegir icono",
+      "emojiSearch": "Buscar emoji…",
+      "emojiEmpty": "Sin resultados.",
+      "brand": "Marca",
+      "brandPlaceholder": "Ej: Hacendado",
+      "price": "Precio",
+      "category": "Categoría",
+      "store": "Súper"
+    },
+    "nutrition": {
+      "title": "Nutrición por 100 g",
+      "heading": "Información nutricional",
+      "reference": "por 100 g",
+      "energy": "Energía",
+      "calories": "Energía (kcal)",
+      "protein": "Proteínas",
+      "fat": "Grasas",
+      "saturatedFat": "de las cuales saturadas",
+      "carbs": "Hidratos de carbono",
+      "sugars": "de los cuales azúcares",
+      "salt": "Sal"
     }
   }
 }

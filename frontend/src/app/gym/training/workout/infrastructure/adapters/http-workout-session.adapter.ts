@@ -7,7 +7,6 @@ import {
   WorkoutProgressRequest,
 } from "../../domain/models/workout-request.model";
 import {
-  StartWorkoutResponse,
   WorkoutDetail,
   WorkoutDetailResponse,
 } from "../../domain/models/workout-detail.model";
@@ -18,11 +17,8 @@ export class HttpWorkoutSessionAdapter extends WorkoutSessionPort {
 
   private readonly apiUrl = "/api/v1/gym/workouts";
 
-  start(request: StartWorkoutRequest): Observable<StartWorkoutResponse> {
-    return this.http.post<StartWorkoutResponse>(
-      this.apiUrl + "/start",
-      request,
-    );
+  start(request: StartWorkoutRequest): Observable<void> {
+    return this.http.post<void>(this.apiUrl + "/start", request);
   }
 
   updateProgress(

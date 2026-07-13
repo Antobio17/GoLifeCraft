@@ -36,7 +36,3 @@ export interface WorkoutDetail {
 export interface WorkoutDetailResponse {
   data: WorkoutDetail;
 }
-
-export interface StartWorkoutResponse {
-  data: { type: string; id: string };
-}

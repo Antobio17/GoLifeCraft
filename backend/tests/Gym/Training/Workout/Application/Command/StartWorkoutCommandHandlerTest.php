@@ -35,7 +35,10 @@ final class StartWorkoutCommandHandlerTest extends TestCase
 
     public function testItStartsAWorkoutWithSnapshotOfExercisesAndSets(): void
     {
-        $workoutId = ($this->handler)(new StartWorkoutCommand(
+        $workoutId = 'workout-1';
+
+        ($this->handler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
             sessionId: 'session-1',
             sessionName: 'Empuje A',
             exercises: [
@@ -69,6 +72,7 @@ final class StartWorkoutCommandHandlerTest extends TestCase
         $this->expectException(exception: StartWorkoutException::class);
 
         ($this->handler)(new StartWorkoutCommand(
+            workoutId: 'workout-1',
             sessionId: 'session-1',
             sessionName: 'Empuje A',
             exercises: [],

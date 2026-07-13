@@ -10,6 +10,7 @@ final readonly class StartWorkoutCommand implements Command
      * @param WorkoutExerciseData[] $exercises
      */
     public function __construct(
+        public string $workoutId,
         public ?string $sessionId,
         public string $sessionName,
         public array $exercises,

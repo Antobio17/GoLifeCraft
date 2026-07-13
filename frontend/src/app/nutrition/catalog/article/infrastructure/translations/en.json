@@ -2,6 +2,7 @@
   "getArticles": {
     "heading": "Catalog",
     "formats": "items",
+    "create": "New",
     "searchPlaceholder": "Search product or brand…",
     "searchClear": "Clear search",
     "nutritionCaption": "Nutrition values",
@@ -24,6 +25,8 @@
   },
   "getArticle": {
     "back": "Back",
+    "edit": "Edit",
+    "delete": "Delete item",
     "per": "Values per",
     "noNutrition": "No nutrition information",
     "notFound": {
@@ -49,7 +52,64 @@
   "article": {
     "breadcrumb": {
       "list": "Catalog",
-      "detail": "Product"
+      "detail": "Product",
+      "create": "New item",
+      "edit": "Edit item"
+    },
+    "create": {
+      "success": "Item created successfully"
+    },
+    "update": {
+      "success": "Item updated successfully"
+    },
+    "delete": {
+      "success": "Item deleted successfully"
+    }
+  },
+  "articleEditor": {
+    "back": "Cancel",
+    "eyebrow": "CATALOG",
+    "createTitle": "New item",
+    "editTitle": "Edit item",
+    "saveCreate": "Create item",
+    "saveEdit": "Save changes",
+    "saving": "Saving…",
+    "delete": "Delete item",
+    "deleteModal": {
+      "title": "Delete item",
+      "body": "This item will be permanently removed from the catalog.",
+      "warning": "This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "deleting": "Deleting…"
+    },
+    "field": {
+      "icon": "Icon",
+      "name": "Name",
+      "namePlaceholder": "e.g. Whole milk 1 L",
+      "emojiSheetTitle": "Choose an icon",
+      "emojiClose": "Close",
+      "emojiTrigger": "Choose icon",
+      "emojiSearch": "Search emoji…",
+      "emojiEmpty": "No results.",
+      "brand": "Brand",
+      "brandPlaceholder": "e.g. Store brand",
+      "price": "Price",
+      "category": "Category",
+      "store": "Store"
+    },
+    "nutrition": {
+      "title": "Nutrition per 100 g",
+      "heading": "Nutrition information",
+      "reference": "per 100 g",
+      "energy": "Energy",
+      "calories": "Energy (kcal)",
+      "protein": "Protein",
+      "fat": "Fat",
+      "saturatedFat": "of which saturates",
+      "carbs": "Carbohydrate",
+      "sugars": "of which sugars",
+      "salt": "Salt"
     }
   }
 }

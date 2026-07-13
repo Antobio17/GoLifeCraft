@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Nutrition\Catalog\Article\Domain\Model\Article" table="article">
+  <entity repository-class="Nutrition\Catalog\Article\Infrastructure\Domain\Model\Doctrine\DoctrineArticleRepository" name="Nutrition\Catalog\Article\Domain\Model\Article" table="article">
     <id name="id" type="string" column="id" primary="true" length="36"/>
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255"/>
@@ -8,19 +8,18 @@
     <field name="price" type="float" column="price" nullable="true"/>
     <field name="brand" type="string" column="brand" length="120" nullable="true"/>
     <field name="emoji" type="string" column="emoji" length="16" nullable="true"/>
+    <field name="categoryId" type="string" column="category_id" length="36" nullable="true"/>
+    <field name="supermarketId" type="string" column="supermarket_id" length="36" nullable="true"/>
+    <field name="nutritionFactsId" type="string" column="nutrition_facts_id" length="36" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
     <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
-    <one-to-one field="nutritionFacts" target-entity="Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts">
-      <join-column name="nutrition_facts_id" referenced-column-name="id" nullable="true" unique="true"/>
-    </one-to-one>
-    <many-to-one field="supermarket" target-entity="Nutrition\Catalog\Supermarket\Domain\Model\Supermarket">
-      <join-column name="supermarket_id" referenced-column-name="id" nullable="true"/>
-    </many-to-one>
-    <many-to-one field="category" target-entity="Nutrition\Catalog\Category\Domain\Model\Category">
-      <join-column name="category_id" referenced-column-name="id" nullable="true"/>
-    </many-to-one>
+    <indexes>
+      <index name="idx_article_category_id" columns="category_id"/>
+      <index name="idx_article_supermarket_id" columns="supermarket_id"/>
+      <index name="idx_article_nutrition_facts_id" columns="nutrition_facts_id"/>
+    </indexes>
     <unique-constraints>
       <unique-constraint name="uniq_article_name" columns="name"/>
     </unique-constraints>

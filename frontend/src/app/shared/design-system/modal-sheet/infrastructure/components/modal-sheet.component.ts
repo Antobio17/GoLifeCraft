@@ -14,6 +14,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         <div
           class="ds-sheet"
           [class.ds-sheet--tall]="tall"
+          [class.ds-sheet--compact]="compact"
           role="dialog"
           aria-modal="true"
           tabindex="-1"
@@ -77,6 +78,10 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       .ds-sheet--tall {
         min-height: min(82vh, 640px);
       }
+      .ds-sheet--compact {
+        min-height: 0;
+        max-height: 62vh;
+      }
       .ds-sheet__grip {
         width: 40px;
         height: 4px;
@@ -138,6 +143,9 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
           max-height: 78vh;
           animation-name: ds-sheet-pop;
         }
+        .ds-sheet--compact {
+          max-height: 62vh;
+        }
         .ds-sheet__grip {
           display: none;
         }
@@ -163,6 +171,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 export class ModalSheetComponent {
   @Input() open = false;
   @Input() tall = false;
+  @Input() compact = false;
   @Input() title = "";
   @Input() closeLabel = "Close";
   @Output() closed = new EventEmitter<void>();

@@ -3,15 +3,10 @@ import {
   StartWorkoutRequest,
   WorkoutProgressRequest,
 } from "../models/workout-request.model";
-import {
-  StartWorkoutResponse,
-  WorkoutDetail,
-} from "../models/workout-detail.model";
+import { WorkoutDetail } from "../models/workout-detail.model";
 
 export abstract class WorkoutSessionPort {
-  abstract start(
-    request: StartWorkoutRequest,
-  ): Observable<StartWorkoutResponse>;
+  abstract start(request: StartWorkoutRequest): Observable<void>;
 
   abstract updateProgress(
     workoutId: string,

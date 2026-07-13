@@ -13,6 +13,7 @@ export interface WorkoutExerciseRequest {
 }
 
 export interface StartWorkoutRequest {
+  workoutId: string;
   sessionId: string | null;
   sessionName: string;
   exercises: WorkoutExerciseRequest[];

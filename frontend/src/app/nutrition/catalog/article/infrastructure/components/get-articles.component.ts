@@ -7,9 +7,11 @@ import {
   ArticleViewService,
 } from "@nutrition/catalog/article/application/services/article-view.service";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
@@ -31,6 +33,7 @@ const ALL = "";
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
+    ButtonComponent,
     SearchInputComponent,
     GridComponent,
     EmptyStateComponent,
@@ -40,7 +43,10 @@ const ALL = "";
 })
 export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   private getArticlesService = inject(GetArticlesService);
+  private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
+
+  canWrite = this.authSession.isGod();
 
   protected readonly modulePath = "nutrition/catalog/article";
   protected readonly storageKey = "pageSize_articles";
@@ -102,6 +108,10 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
 
   onSelect(id: string): void {
     this.router.navigate(["/catalog", id]);
+  }
+
+  onCreate(): void {
+    this.router.navigate(["/catalog", "create"]);
   }
 
   private options(pick: (article: Article) => string | null): string[] {

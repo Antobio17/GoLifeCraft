@@ -12,3 +12,24 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\CreateArticleController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\CreateArticleController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\UpdateArticleController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\UpdateArticleController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\DeleteArticleController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\DeleteArticleController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

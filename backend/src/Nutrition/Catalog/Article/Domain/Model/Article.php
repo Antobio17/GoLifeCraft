@@ -3,9 +3,10 @@
 namespace Nutrition\Catalog\Article\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
-use Nutrition\Catalog\Category\Domain\Model\Category;
-use Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts;
-use Nutrition\Catalog\Supermarket\Domain\Model\Supermarket;
+use Nutrition\Catalog\Article\Domain\Event\ArticleCreated;
+use Nutrition\Catalog\Article\Domain\Event\ArticleDeleted;
+use Nutrition\Catalog\Article\Domain\Event\ArticleUpdated;
+use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class Article extends GenericAggregate
 {
@@ -14,7 +15,87 @@ class Article extends GenericAggregate
     public ?float $price = null;
     public ?string $brand = null;
     public ?string $emoji = null;
-    public ?NutritionFacts $nutritionFacts = null;
-    public ?Supermarket $supermarket = null;
-    public ?Category $category = null;
+    public ?string $categoryId = null;
+    public ?string $supermarketId = null;
+    public ?string $nutritionFactsId = null;
+
+    public static function create(
+        string $id,
+        string $name,
+        string $recipeUnit,
+        ?float $price,
+        ?string $brand,
+        ?string $emoji,
+        ?string $categoryId,
+        ?string $supermarketId,
+        ?string $nutritionFactsId,
+        string $createdByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): self {
+        $now = $dateTimeGenerator->now();
+
+        $article = new self();
+        $article->id = $id;
+        $article->name = $name;
+        $article->recipeUnit = $recipeUnit;
+        $article->price = $price;
+        $article->brand = $brand;
+        $article->emoji = $emoji;
+        $article->categoryId = $categoryId;
+        $article->supermarketId = $supermarketId;
+        $article->nutritionFactsId = $nutritionFactsId;
+        $article->stampCreation(userId: $createdByUserId, now: $now);
+
+        $article->record(event: new ArticleCreated(
+            aggregateId: $id,
+            occurredOn: $now,
+            name: $name,
+        ));
+
+        return $article;
+    }
+
+    public function update(
+        string $name,
+        string $recipeUnit,
+        ?float $price,
+        ?string $brand,
+        ?string $emoji,
+        ?string $categoryId,
+        ?string $supermarketId,
+        ?string $nutritionFactsId,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->name = $name;
+        $this->recipeUnit = $recipeUnit;
+        $this->price = $price;
+        $this->brand = $brand;
+        $this->emoji = $emoji;
+        $this->categoryId = $categoryId;
+        $this->supermarketId = $supermarketId;
+        $this->nutritionFactsId = $nutritionFactsId;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new ArticleUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $name,
+        ));
+    }
+
+    public function delete(
+        string $deletedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+        $this->stampUpdate(userId: $deletedByUserId, now: $now);
+
+        $this->record(event: new ArticleDeleted(
+            aggregateId: $this->id,
+            occurredOn: $now,
+        ));
+    }
 }

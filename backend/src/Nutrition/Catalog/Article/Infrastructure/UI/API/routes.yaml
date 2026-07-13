@@ -7,3 +7,18 @@ get_article:
   path: /api/v1/nutrition/catalog/article/{articleId}
   methods: [GET]
   controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleController
+
+create_article:
+  path: /api/v1/nutrition/catalog/article
+  methods: [POST]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\CreateArticleController
+
+update_article:
+  path: /api/v1/nutrition/catalog/article/{articleId}
+  methods: [PUT]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\UpdateArticleController
+
+delete_article:
+  path: /api/v1/nutrition/catalog/article/{articleId}
+  methods: [DELETE]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\DeleteArticleController

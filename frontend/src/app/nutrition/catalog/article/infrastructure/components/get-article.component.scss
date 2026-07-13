@@ -1,3 +1,38 @@
+.detail-actions {
+  display: flex;
+  gap: 9px;
+}
+
+.icon-tile {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  appearance: none;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border-input);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.icon-tile:hover {
+  background: var(--ds-surface-inset);
+}
+
+.icon-tile--edit {
+  color: var(--ds-primary);
+}
+
+.icon-tile--delete {
+  color: var(--ds-warning);
+}
+
 .hero {
   position: relative;
   height: 118px;

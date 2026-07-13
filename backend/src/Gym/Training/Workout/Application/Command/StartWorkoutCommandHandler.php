@@ -18,20 +18,18 @@ final readonly class StartWorkoutCommandHandler
     ) {
     }
 
-    public function __invoke(StartWorkoutCommand $command): string
+    public function __invoke(StartWorkoutCommand $command): void
     {
         if ([] === $command->exercises) {
             throw StartWorkoutException::noExercises();
         }
 
-        $workoutId = $this->workoutRepository->nextId();
-
         $workout = Workout::start(
-            id: $workoutId,
+            id: $command->workoutId,
             sessionId: $command->sessionId,
             sessionName: $command->sessionName,
             exercises: $this->workoutExerciseAssembler->assemble(
-                workoutId: $workoutId,
+                workoutId: $command->workoutId,
                 exercises: $command->exercises,
                 userId: $command->startedByUserId,
             ),
@@ -41,7 +39,5 @@ final readonly class StartWorkoutCommandHandler
 
         $this->workoutRepository->save(workout: $workout);
         $this->domainEventCollectorService->register(aggregate: $workout);
-
-        return $workoutId;
     }
 }

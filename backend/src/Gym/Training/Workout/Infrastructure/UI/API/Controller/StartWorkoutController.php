@@ -28,7 +28,8 @@ final class StartWorkoutController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $workoutId = $this->handle(message: new StartWorkoutCommand(
+            $this->handle(message: new StartWorkoutCommand(
+                workoutId: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'workoutId'),
                 sessionId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'sessionId'),
                 sessionName: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'sessionName'),
                 exercises: WorkoutExerciseData::listFromArray(
@@ -37,10 +38,7 @@ final class StartWorkoutController
                 startedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 
-            return new JsonResponse(
-                data: ['data' => ['type' => 'workout', 'id' => $workoutId]],
-                status: Response::HTTP_CREATED,
-            );
+            return new JsonResponse(data: null, status: Response::HTTP_CREATED);
         } catch (HandlerFailedException $e) {
             return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
                 exception: $e,
