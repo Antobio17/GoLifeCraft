@@ -10,6 +10,12 @@
   pointer-events: none;
 }
 
+@media (display-mode: standalone) {
+  :host {
+    bottom: -30px;
+  }
+}
+
 @media (min-width: 768px) {
   :host {
     display: none;
