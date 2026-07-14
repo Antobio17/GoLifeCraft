@@ -79,7 +79,7 @@ export class FloatingToastComponent {
 
   private show(message: FloatingToastMessage): void {
     const type = this.resolveType(message);
-    const durationMs = type === "success" ? 3500 : 6000;
+    const durationMs = type === "success" ? 1200 : 2000;
 
     this.toasts = [
       {
