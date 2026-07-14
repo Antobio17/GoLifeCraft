@@ -1,0 +1,22 @@
+services:
+  Nutrition\Recipe\Recipe\Application\Query\GetRecipesQueryHandler:
+    class: Nutrition\Recipe\Recipe\Application\Query\GetRecipesQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipesNeedleDataQuery'
+      $dataTransform: '@Nutrition\Recipe\Recipe\Application\Query\GetRecipesDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Recipe\Recipe\Application\Query\GetRecipesDataTransform:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\DataTransform\ApiGetRecipesDataTransform
+
+  Nutrition\Recipe\Recipe\Application\Query\GetRecipeQueryHandler:
+    class: Nutrition\Recipe\Recipe\Application\Query\GetRecipeQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipeNeedleDataQuery'
+      $dataTransform: '@Nutrition\Recipe\Recipe\Application\Query\GetRecipeDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Recipe\Recipe\Application\Query\GetRecipeDataTransform:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\DataTransform\ApiGetRecipeDataTransform

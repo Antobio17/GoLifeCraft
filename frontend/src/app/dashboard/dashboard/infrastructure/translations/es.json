@@ -16,7 +16,7 @@
     },
     "gym": {
       "title": "Tu semana en el gimnasio",
-      "seeAll": "Ver todo",
+      "seeAll": "Ver más",
       "empty": "Aún no hay entrenamientos. Crea tu primera sesión para ver tus estadísticas.",
       "sessions": "Sesiones",
       "volume": "Volumen",
@@ -41,6 +41,7 @@
       "catalog": "Catálogo",
       "catalogMeta": "248 formatos",
       "recipes": "Recetas",
+      "recipesMeta": "Tu recetario",
       "list": "Lista de compra",
       "gym": "Gimnasio",
       "gymMeta": "Sesiones y ejercicios",

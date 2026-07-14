@@ -1,0 +1,6 @@
+services:
+  Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\Model\Doctrine\DoctrineRecipeRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Recipe\Recipe\Domain\Model\Recipe

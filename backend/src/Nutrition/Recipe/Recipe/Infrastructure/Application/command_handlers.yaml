@@ -1,0 +1,36 @@
+services:
+  Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientAssembler:
+    class: Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Nutrition\Recipe\Recipe\Application\Command\CreateRecipeCommandHandler:
+    class: Nutrition\Recipe\Recipe\Application\Command\CreateRecipeCommandHandler
+    arguments:
+      $recipeRepository: '@Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository'
+      $needleDataQuery: '@Nutrition\Recipe\Recipe\Domain\QueryModel\CreateRecipeNeedleDataQuery'
+      $recipeIngredientAssembler: '@Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Recipe\Recipe\Application\Command\UpdateRecipeCommandHandler:
+    class: Nutrition\Recipe\Recipe\Application\Command\UpdateRecipeCommandHandler
+    arguments:
+      $recipeRepository: '@Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository'
+      $needleDataQuery: '@Nutrition\Recipe\Recipe\Domain\QueryModel\UpdateRecipeNeedleDataQuery'
+      $recipeIngredientAssembler: '@Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Recipe\Recipe\Application\Command\DeleteRecipeCommandHandler:
+    class: Nutrition\Recipe\Recipe\Application\Command\DeleteRecipeCommandHandler
+    arguments:
+      $recipeRepository: '@Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

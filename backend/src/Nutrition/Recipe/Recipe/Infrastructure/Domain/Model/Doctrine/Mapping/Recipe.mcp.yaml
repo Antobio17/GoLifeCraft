@@ -1,0 +1,35 @@
+label: Recipe
+
+fields:
+  name:
+    writable: true
+    required: true
+    min: 2
+    max: 255
+    unique: true
+    filterable: true
+    sortable: true
+  emoji:
+    writable: true
+    required: true
+    max: 16
+    description: >-
+      A single emoji that best represents the recipe, based on its name and category.
+      Always set exactly one emoji when creating or updating a recipe; do not leave it empty.
+      Guidance by category: breakfast 🥣🍳🥐🧇; lunch/dinner 🍲🥘🍝🍚🥗🍔🌮; snack 🍎🥜🧀🍪;
+      sauce/base 🥫🧂🫙; dessert 🍰🍮🍫🍩; drink 🥤🧃☕🍵. If nothing fits, use 🍽️.
+  category:
+    writable: true
+    required: true
+    enum: [Desayuno, Comida, Cena, Snack, Salsa base, Postre, Bebida]
+    filterable: true
+    sortable: true
+  servings:
+    writable: true
+    required: true
+    type: int
+    min: 1
+    max: 20
+    sortable: true
+
+relations: {}

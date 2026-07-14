@@ -1,0 +1,115 @@
+{
+  "getRecipes": {
+    "heading": "Recetario",
+    "subtitle": "recetas",
+    "create": "Nueva",
+    "searchPlaceholder": "Buscar receta o categoría…",
+    "searchClear": "Limpiar búsqueda",
+    "perServing": "Por ración",
+    "noResults": "Sin resultados para",
+    "subRecipeTag": "Con subrecetas",
+    "macro": {
+      "kcal": "kcal",
+      "proteinShort": "P",
+      "fatShort": "G",
+      "carbsShort": "H"
+    },
+    "empty": {
+      "title": "Aún no hay recetas",
+      "text": "Crea recetas combinando artículos del catálogo y otras recetas como subrecetas."
+    }
+  },
+  "getRecipe": {
+    "back": "Volver",
+    "edit": "Editar receta",
+    "delete": "Borrar receta",
+    "perServing": "kcal · por ración",
+    "ingredients": "Ingredientes",
+    "total": "Total:",
+    "subRecipe": "Sub",
+    "note": "Las calorías se calculan sumando cada artículo (por 100 g) y cada subreceta (por ración), hasta llegar a los artículos raíz del catálogo.",
+    "macro": {
+      "kcal": "kcal",
+      "protein": "Prot",
+      "fat": "Gras",
+      "carbs": "Hidr"
+    },
+    "notFound": {
+      "title": "Receta no encontrada",
+      "text": "No hemos podido cargar esta receta"
+    },
+    "deleteTitle": "Borrar receta",
+    "deleteBody": "Se eliminará y se quitará de otras recetas que la usen como subreceta.",
+    "deleteWarning": "Esta acción no se puede deshacer.",
+    "cancel": "Cancelar",
+    "deleteConfirm": "Borrar",
+    "deleting": "Borrando…"
+  },
+  "recipe": {
+    "breadcrumb": {
+      "list": "Recetario",
+      "detail": "Receta",
+      "create": "Nueva receta",
+      "edit": "Editar receta"
+    },
+    "create": {
+      "success": "Receta creada correctamente"
+    },
+    "update": {
+      "success": "Receta actualizada correctamente"
+    },
+    "delete": {
+      "success": "Receta borrada correctamente"
+    },
+    "ingredient": {
+      "added": "Ingrediente añadido",
+      "required": "Añade al menos un ingrediente"
+    }
+  },
+  "recipeEditor": {
+    "back": "Cancelar",
+    "eyebrow": "RECETARIO",
+    "createTitle": "Nueva receta",
+    "editTitle": "Editar receta",
+    "saveCreate": "Crear receta",
+    "saveEdit": "Guardar cambios",
+    "icon": "Icono",
+    "name": "Nombre",
+    "namePlaceholder": "Ej: Bowl de pollo y arroz",
+    "emojiTitle": "Elige un icono",
+    "emojiTrigger": "Elegir icono",
+    "emojiSearch": "Buscar emoji…",
+    "close": "Cerrar",
+    "emojiEmpty": "Sin resultados.",
+    "category": "Categoría",
+    "servings": "Raciones",
+    "servingsHint": "Base para el cálculo por ración",
+    "servingsMinus": "Quitar una ración",
+    "servingsPlus": "Añadir una ración",
+    "ingredients": "Ingredientes",
+    "kcalTotal": "kcal total",
+    "perServing": "Por ración",
+    "macro": {
+      "protein": "P",
+      "fat": "G",
+      "carbs": "H",
+      "kcal": "kcal"
+    },
+    "subRecipe": "Sub",
+    "removeIngredient": "Quitar ingrediente",
+    "noIngredients": "Sin ingredientes todavía",
+    "addIngredient": "Añadir ingrediente",
+    "deleteRecipe": "Borrar receta",
+    "pickerTitle": "Añadir ingrediente",
+    "pickerSearch": "Buscar artículo o receta…",
+    "pickerEmpty": "Sin resultados.",
+    "tabProducts": "Artículos",
+    "tabRecipes": "Subrecetas",
+    "deleteTitle": "Borrar receta",
+    "deleteBody": "Se eliminará y se quitará de otras recetas que la usen como subreceta.",
+    "deleteWarning": "Esta acción no se puede deshacer.",
+    "cancel": "Cancelar",
+    "deleteConfirm": "Borrar",
+    "deleting": "Borrando…"
+  }
+}

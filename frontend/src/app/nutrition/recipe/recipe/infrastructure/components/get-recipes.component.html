@@ -1,0 +1,61 @@
+<ds-page-wrapper [gap]="'12px'">
+  <ds-screen-header
+    [title]="'getRecipes.heading' | t"
+    [subtitle]="headerSubtitle()"
+  >
+    @if (canWrite) {
+      <ds-button slot="actions" size="md" icon="plus" (clicked)="onCreate()">
+        {{ "getRecipes.create" | t }}
+      </ds-button>
+    }
+  </ds-screen-header>
+
+  @if (loading()) {
+    <ds-grid [minColumn]="'320px'">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <ds-skeleton height="82px" />
+      }
+    </ds-grid>
+  } @else if (items().length === 0) {
+    <ds-empty-state
+      icon="leaf"
+      [title]="'getRecipes.empty.title' | t"
+      [text]="'getRecipes.empty.text' | t"
+    />
+  } @else {
+    <ds-search-input
+      [placeholder]="'getRecipes.searchPlaceholder' | t"
+      [clearLabel]="'getRecipes.searchClear' | t"
+      (searched)="onSearch($event)"
+    />
+
+    <ds-text variant="label">{{ "getRecipes.perServing" | t }}</ds-text>
+
+    @if (!hasResults()) {
+      <ds-text variant="muted">
+        {{ "getRecipes.noResults" | t }} “{{ searchQuery() }}”
+      </ds-text>
+    } @else {
+      <ds-grid [minColumn]="'320px'">
+        @for (card of cards(); track card.id) {
+          <ds-recipe-card
+            [emoji]="card.emoji"
+            [name]="card.name"
+            [kcal]="card.kcal"
+            [kcalUnit]="'getRecipes.macro.kcal' | t"
+            [meta]="card.meta"
+            [protein]="card.protein"
+            [fat]="card.fat"
+            [carbs]="card.carbs"
+            [proteinShort]="'getRecipes.macro.proteinShort' | t"
+            [fatShort]="'getRecipes.macro.fatShort' | t"
+            [carbsShort]="'getRecipes.macro.carbsShort' | t"
+            [hasSubRecipe]="card.hasSubRecipe"
+            [subRecipeLabel]="'getRecipes.subRecipeTag' | t"
+            (activated)="onSelect(card.id)"
+          />
+        }
+      </ds-grid>
+    }
+  }
+</ds-page-wrapper>

@@ -24,6 +24,18 @@ parameters:
             read_roles: [ROLE_GOD, ROLE_USER]
             write_roles: [ROLE_GOD, ROLE_USER]
 
+        recipe:
+            class: 'Nutrition\Recipe\Recipe\Domain\Model\Recipe'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Recipe/Recipe/Infrastructure/Domain/Model/Doctrine/Mapping/Recipe.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+
+        recipe_ingredient:
+            class: 'Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Recipe/Recipe/Infrastructure/Domain/Model/Doctrine/Mapping/RecipeIngredient.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+
         exercise:
             class: 'Gym\Library\Exercise\Domain\Model\Exercise'
             sidecar: '%kernel.project_dir%/src/Gym/Library/Exercise/Infrastructure/Domain/Model/Doctrine/Mapping/Exercise.mcp.yaml'
