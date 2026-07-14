@@ -29,20 +29,23 @@
       (searched)="onSearch($event)"
     />
 
-    <ds-stack direction="row" [wrap]="true" [gap]="'7px'">
+    <ds-stack direction="row" [gap]="'7px'">
       <ds-select
+        [fluid]="true"
         [placeholder]="'getArticles.filter.category' | t"
         [options]="categories()"
         [ngModel]="selectedCategory()"
         (ngModelChange)="selectedCategory.set($event)"
       />
       <ds-select
+        [fluid]="true"
         [placeholder]="'getArticles.filter.brand' | t"
         [options]="brands()"
         [ngModel]="selectedBrand()"
         (ngModelChange)="selectedBrand.set($event)"
       />
       <ds-select
+        [fluid]="true"
         [placeholder]="'getArticles.filter.store' | t"
         [options]="stores()"
         [ngModel]="selectedStore()"

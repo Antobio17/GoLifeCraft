@@ -8,6 +8,8 @@ import { Component, Input } from "@angular/core";
       <span class="ds-product-hero__emoji">{{ emoji }}</span>
       @if (price) {
         <span class="ds-product-hero__price">{{ price }}</span>
+      } @else if (badge) {
+        <span class="ds-product-hero__price">{{ badge }}</span>
       }
     </div>
   `,
@@ -44,4 +46,5 @@ import { Component, Input } from "@angular/core";
 export class ProductHeroComponent {
   @Input() emoji = "";
   @Input() price: string | null = null;
+  @Input() badge: string | null = null;
 }

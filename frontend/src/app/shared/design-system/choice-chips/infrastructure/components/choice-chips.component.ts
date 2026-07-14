@@ -10,7 +10,11 @@ export interface ChoiceChipOption {
   selector: "ds-choice-chips",
   standalone: true,
   template: `
-    <div class="ds-choice-chips" role="radiogroup">
+    <div
+      class="ds-choice-chips"
+      [class.ds-choice-chips--wrap]="wrap"
+      role="radiogroup"
+    >
       @for (option of options; track option.value) {
         <button
           type="button"
@@ -32,6 +36,10 @@ export interface ChoiceChipOption {
         display: flex;
         gap: 10px;
       }
+      .ds-choice-chips--wrap {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
       .ds-choice-chip {
         flex: 1 1 0;
         appearance: none;
@@ -52,6 +60,11 @@ export interface ChoiceChipOption {
       }
       .ds-choice-chip:hover:not(:disabled):not(.is-selected) {
         border-color: var(--ds-primary-soft-border);
+      }
+      .ds-choice-chips--wrap .ds-choice-chip {
+        flex: 0 0 auto;
+        padding: 8px 14px;
+        border-radius: var(--ds-radius-pill);
       }
       .ds-choice-chip.is-selected {
         background: var(--ds-primary);
@@ -75,6 +88,7 @@ export interface ChoiceChipOption {
 })
 export class ChoiceChipsComponent implements ControlValueAccessor {
   @Input() options: ChoiceChipOption[] = [];
+  @Input() wrap = false;
 
   value: string | number | null = null;
   disabled = false;
