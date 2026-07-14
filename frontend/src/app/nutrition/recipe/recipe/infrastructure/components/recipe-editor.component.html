@@ -1,0 +1,260 @@
+<ds-page-wrapper [maxWidth]="'640px'" [gap]="'16px'">
+  @if (loading()) {
+    <ds-skeleton height="64px" />
+    <ds-skeleton height="120px" />
+    <ds-skeleton height="200px" />
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="recipe-form">
+      <ds-screen-header
+        leading="close"
+        [leadingLabel]="'recipeEditor.back' | t"
+        [eyebrow]="'recipeEditor.eyebrow' | t"
+        [title]="title"
+        (leadingClick)="cancel()"
+      />
+
+      <div class="recipe-form__id-row">
+        <div class="recipe-form__field recipe-form__field--icon">
+          <span class="recipe-form__label">{{ "recipeEditor.icon" | t }}</span>
+          <ds-emoji-picker
+            formControlName="emoji"
+            [groups]="emojiGroups"
+            [fallback]="fallbackEmoji"
+            [sheetTitle]="'recipeEditor.emojiTitle' | t"
+            [triggerLabel]="'recipeEditor.emojiTrigger' | t"
+            [searchPlaceholder]="'recipeEditor.emojiSearch' | t"
+            [closeLabel]="'recipeEditor.close' | t"
+            [emptyLabel]="'recipeEditor.emojiEmpty' | t"
+          />
+        </div>
+        <div class="recipe-form__field recipe-form__field--name">
+          <span class="recipe-form__label">{{ "recipeEditor.name" | t }}</span>
+          <input
+            class="recipe-form__name-input"
+            formControlName="name"
+            [placeholder]="'recipeEditor.namePlaceholder' | t"
+          />
+        </div>
+      </div>
+
+      <div class="recipe-form__field">
+        <span class="recipe-form__label">{{
+          "recipeEditor.category" | t
+        }}</span>
+        <ds-choice-chips
+          formControlName="category"
+          [options]="categoryOptions()"
+        />
+      </div>
+
+      <div class="recipe-form__servings">
+        <div class="recipe-form__servings-text">
+          <div class="recipe-form__servings-title">
+            {{ "recipeEditor.servings" | t }}
+          </div>
+          <div class="recipe-form__servings-sub">
+            {{ "recipeEditor.servingsHint" | t }}
+          </div>
+        </div>
+        <button
+          type="button"
+          class="recipe-form__step recipe-form__step--minus"
+          [attr.aria-label]="'recipeEditor.servingsMinus' | t"
+          (click)="onServingsStep(-1)"
+        >
+          −
+        </button>
+        <div class="recipe-form__servings-value">{{ servings() }}</div>
+        <button
+          type="button"
+          class="recipe-form__step recipe-form__step--plus"
+          [attr.aria-label]="'recipeEditor.servingsPlus' | t"
+          (click)="onServingsStep(1)"
+        >
+          +
+        </button>
+      </div>
+
+      <div class="recipe-form__divider-head">
+        <span class="recipe-form__label">{{
+          "recipeEditor.ingredients" | t
+        }}</span>
+        <span class="recipe-form__divider-line"></span>
+      </div>
+
+      <div class="recipe-form__feature">
+        <div>
+          <div class="recipe-form__feature-total">
+            {{ formatMacro(totals().calories) }}
+          </div>
+          <div class="recipe-form__feature-caption">
+            {{ "recipeEditor.kcalTotal" | t }}
+          </div>
+        </div>
+        <div class="recipe-form__feature-sep"></div>
+        <div class="recipe-form__feature-per">
+          <div>
+            <div class="recipe-form__feature-caption">
+              {{ "recipeEditor.perServing" | t }}
+            </div>
+            <div class="recipe-form__feature-perkcal">
+              {{ formatMacro(perServing().calories) }}
+            </div>
+          </div>
+          <div class="recipe-form__feature-macros">
+            {{ "recipeEditor.macro.protein" | t }}
+            {{ formatMacro(perServing().protein) }} ·
+            {{ "recipeEditor.macro.fat" | t }}
+            {{ formatMacro(perServing().fat) }} ·
+            {{ "recipeEditor.macro.carbs" | t }}
+            {{ formatMacro(perServing().carbs) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-form__ings">
+        @for (ingredient of ingredients(); track ingredient.key) {
+          <div class="recipe-form__ing">
+            <span class="recipe-form__ing-emoji">{{ ingredient.emoji }}</span>
+            <div class="recipe-form__ing-body">
+              <div class="recipe-form__ing-head">
+                <span class="recipe-form__ing-name">{{ ingredient.name }}</span>
+                @if (ingredient.kind === "recipe") {
+                  <span class="recipe-form__ing-badge">{{
+                    "recipeEditor.subRecipe" | t
+                  }}</span>
+                }
+              </div>
+              <div class="recipe-form__ing-kcal">
+                {{ ingredientCalories(ingredient) }}
+                {{ "recipeEditor.macro.kcal" | t }}
+              </div>
+            </div>
+            <div class="recipe-form__ing-qty">
+              <input
+                class="recipe-form__ing-qty-input"
+                inputmode="decimal"
+                [value]="ingredient.quantity"
+                (input)="
+                  onIngredientQuantity(
+                    ingredient.key,
+                    $any($event.target).value
+                  )
+                "
+              />
+              <span class="recipe-form__ing-unit">{{ ingredient.unit }}</span>
+            </div>
+            <button
+              type="button"
+              class="recipe-form__ing-remove"
+              [attr.aria-label]="'recipeEditor.removeIngredient' | t"
+              (click)="onRemoveIngredient(ingredient.key)"
+            >
+              <ds-icon name="close" [size]="15" [stroke]="2.4" />
+            </button>
+          </div>
+        }
+      </div>
+
+      @if (!hasIngredients) {
+        <div class="recipe-form__ing-empty">
+          {{ "recipeEditor.noIngredients" | t }}
+        </div>
+      }
+
+      <button type="button" class="recipe-form__add" (click)="openPicker()">
+        <ds-icon name="plus" [size]="16" [stroke]="2.6" />
+        {{ "recipeEditor.addIngredient" | t }}
+      </button>
+
+      <ds-button
+        type="submit"
+        variant="primary"
+        [fullWidth]="true"
+        [loading]="saving()"
+      >
+        {{ saveLabel }}
+      </ds-button>
+
+      @if (isEdit) {
+        <button type="button" class="recipe-form__delete" (click)="onDelete()">
+          <ds-icon name="trash" [size]="16" [stroke]="2" />
+          {{ "recipeEditor.deleteRecipe" | t }}
+        </button>
+      }
+    </form>
+  }
+
+  <ds-modal-sheet
+    [open]="pickerOpen()"
+    [tall]="true"
+    [title]="'recipeEditor.pickerTitle' | t"
+    [closeLabel]="'recipeEditor.close' | t"
+    (closed)="closePicker()"
+  >
+    <div class="recipe-picker">
+      <div class="recipe-picker__tabs">
+        <button
+          type="button"
+          class="recipe-picker__tab"
+          [class.is-active]="pickerTab() === 'product'"
+          (click)="onPickerTab('product')"
+        >
+          {{ "recipeEditor.tabProducts" | t }}
+        </button>
+        <button
+          type="button"
+          class="recipe-picker__tab"
+          [class.is-active]="pickerTab() === 'recipe'"
+          (click)="onPickerTab('recipe')"
+        >
+          {{ "recipeEditor.tabRecipes" | t }}
+        </button>
+      </div>
+
+      <ds-search-input
+        [placeholder]="'recipeEditor.pickerSearch' | t"
+        [clearLabel]="'recipeEditor.close' | t"
+        [debounce]="120"
+        (searched)="onPickerSearch($event)"
+      />
+
+      @if (pickerChoices().length === 0) {
+        <p class="recipe-picker__empty">{{ "recipeEditor.pickerEmpty" | t }}</p>
+      }
+
+      <div class="recipe-picker__list">
+        @for (choice of pickerChoices(); track choice.refId) {
+          <button
+            type="button"
+            class="recipe-picker__item"
+            (click)="onPickIngredient(choice)"
+          >
+            <span class="recipe-picker__item-emoji">{{ choice.emoji }}</span>
+            <span class="recipe-picker__item-body">
+              <span class="recipe-picker__item-name">{{ choice.name }}</span>
+              <span class="recipe-picker__item-detail">{{
+                choice.detail
+              }}</span>
+            </span>
+            <ds-icon name="plus" [size]="16" [stroke]="2.4" />
+          </button>
+        }
+      </div>
+    </div>
+  </ds-modal-sheet>
+
+  <ds-confirm-action-modal
+    [show]="showDeleteModal()"
+    [title]="'recipeEditor.deleteTitle' | t"
+    [body]="'recipeEditor.deleteBody' | t"
+    [itemName]="form.value.name || ''"
+    [warningText]="'recipeEditor.deleteWarning' | t"
+    [isDeleting]="deleting()"
+    [cancelLabel]="'recipeEditor.cancel' | t"
+    [confirmLabel]="'recipeEditor.deleteConfirm' | t"
+    [deletingLabel]="'recipeEditor.deleting' | t"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()"
+  />
+</ds-page-wrapper>

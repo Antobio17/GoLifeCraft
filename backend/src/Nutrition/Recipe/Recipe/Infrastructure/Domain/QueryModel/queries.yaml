@@ -1,0 +1,20 @@
+services:
+  Nutrition\Recipe\Recipe\Domain\QueryModel\CreateRecipeNeedleDataQuery:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateRecipeNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Recipe\Recipe\Domain\QueryModel\UpdateRecipeNeedleDataQuery:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateRecipeNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipesNeedleDataQuery:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetRecipesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipeNeedleDataQuery:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetRecipeNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

@@ -1,0 +1,42 @@
+label: Recipe ingredient
+
+fields:
+  recipeId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    filterable: true
+  kind:
+    writable: true
+    required: true
+    enum: [product, recipe]
+    description: >-
+      Whether this ingredient references a catalog article ("product", quantity in grams)
+      or another recipe used as a sub-recipe ("recipe", quantity in servings).
+    filterable: true
+  refId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      The id of the referenced entity: an Article id when kind is "product",
+      or a Recipe id when kind is "recipe".
+    filterable: true
+  quantity:
+    writable: true
+    required: true
+    type: float
+    min: 0
+    description: >-
+      Grams of the article when kind is "product", or number of servings of the
+      sub-recipe when kind is "recipe".
+  position:
+    writable: true
+    required: true
+    type: int
+    min: 1
+    sortable: true
+
+relations: {}

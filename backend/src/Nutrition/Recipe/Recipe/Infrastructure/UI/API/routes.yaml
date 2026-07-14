@@ -1,0 +1,24 @@
+create_recipe:
+  path: /api/v1/nutrition/recipe
+  methods: [POST]
+  controller: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\CreateRecipeController
+
+update_recipe:
+  path: /api/v1/nutrition/recipe/{recipeId}
+  methods: [PUT]
+  controller: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\UpdateRecipeController
+
+delete_recipe:
+  path: /api/v1/nutrition/recipe/{recipeId}
+  methods: [DELETE]
+  controller: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\DeleteRecipeController
+
+get_recipes:
+  path: /api/v1/nutrition/recipes
+  methods: [GET]
+  controller: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipesController
+
+get_recipe:
+  path: /api/v1/nutrition/recipe/{recipeId}
+  methods: [GET]
+  controller: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipeController

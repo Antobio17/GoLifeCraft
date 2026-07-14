@@ -1,0 +1,115 @@
+{
+  "getRecipes": {
+    "heading": "Recipes",
+    "subtitle": "recipes",
+    "create": "New",
+    "searchPlaceholder": "Search recipe or category…",
+    "searchClear": "Clear search",
+    "perServing": "Per serving",
+    "noResults": "No results for",
+    "subRecipeTag": "With sub-recipes",
+    "macro": {
+      "kcal": "kcal",
+      "proteinShort": "P",
+      "fatShort": "F",
+      "carbsShort": "C"
+    },
+    "empty": {
+      "title": "No recipes yet",
+      "text": "Create recipes by combining catalog articles and other recipes as sub-recipes."
+    }
+  },
+  "getRecipe": {
+    "back": "Back",
+    "edit": "Edit recipe",
+    "delete": "Delete recipe",
+    "perServing": "kcal · per serving",
+    "ingredients": "Ingredients",
+    "total": "Total:",
+    "subRecipe": "Sub",
+    "note": "Calories are computed by summing each article (per 100 g) and each sub-recipe (per serving), all the way down to the catalog root articles.",
+    "macro": {
+      "kcal": "kcal",
+      "protein": "Prot",
+      "fat": "Fat",
+      "carbs": "Carb"
+    },
+    "notFound": {
+      "title": "Recipe not found",
+      "text": "We couldn't load this recipe"
+    },
+    "deleteTitle": "Delete recipe",
+    "deleteBody": "It will be removed and taken out of any recipe using it as a sub-recipe.",
+    "deleteWarning": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "deleteConfirm": "Delete",
+    "deleting": "Deleting…"
+  },
+  "recipe": {
+    "breadcrumb": {
+      "list": "Recipes",
+      "detail": "Recipe",
+      "create": "New recipe",
+      "edit": "Edit recipe"
+    },
+    "create": {
+      "success": "Recipe created successfully"
+    },
+    "update": {
+      "success": "Recipe updated successfully"
+    },
+    "delete": {
+      "success": "Recipe deleted successfully"
+    },
+    "ingredient": {
+      "added": "Ingredient added",
+      "required": "Add at least one ingredient"
+    }
+  },
+  "recipeEditor": {
+    "back": "Cancel",
+    "eyebrow": "RECIPES",
+    "createTitle": "New recipe",
+    "editTitle": "Edit recipe",
+    "saveCreate": "Create recipe",
+    "saveEdit": "Save changes",
+    "icon": "Icon",
+    "name": "Name",
+    "namePlaceholder": "e.g. Chicken and rice bowl",
+    "emojiTitle": "Pick an icon",
+    "emojiTrigger": "Pick icon",
+    "emojiSearch": "Search emoji…",
+    "close": "Close",
+    "emojiEmpty": "No results.",
+    "category": "Category",
+    "servings": "Servings",
+    "servingsHint": "Base for the per-serving calculation",
+    "servingsMinus": "Remove one serving",
+    "servingsPlus": "Add one serving",
+    "ingredients": "Ingredients",
+    "kcalTotal": "kcal total",
+    "perServing": "Per serving",
+    "macro": {
+      "protein": "P",
+      "fat": "F",
+      "carbs": "C",
+      "kcal": "kcal"
+    },
+    "subRecipe": "Sub",
+    "removeIngredient": "Remove ingredient",
+    "noIngredients": "No ingredients yet",
+    "addIngredient": "Add ingredient",
+    "deleteRecipe": "Delete recipe",
+    "pickerTitle": "Add ingredient",
+    "pickerSearch": "Search article or recipe…",
+    "pickerEmpty": "No results.",
+    "tabProducts": "Articles",
+    "tabRecipes": "Sub-recipes",
+    "deleteTitle": "Delete recipe",
+    "deleteBody": "It will be removed and taken out of any recipe using it as a sub-recipe.",
+    "deleteWarning": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "deleteConfirm": "Delete",
+    "deleting": "Deleting…"
+  }
+}

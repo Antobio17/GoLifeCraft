@@ -1,0 +1,35 @@
+services:
+  Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\CreateRecipeController:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\CreateRecipeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\UpdateRecipeController:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\UpdateRecipeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\DeleteRecipeController:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\DeleteRecipeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipesController:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipeController:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

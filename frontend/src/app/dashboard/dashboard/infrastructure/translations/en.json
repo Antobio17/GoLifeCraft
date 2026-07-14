@@ -16,7 +16,7 @@
     },
     "gym": {
       "title": "Your week at the gym",
-      "seeAll": "See all",
+      "seeAll": "See more",
       "empty": "No workouts yet. Create your first session to see your stats.",
       "sessions": "Sessions",
       "volume": "Volume",
@@ -41,6 +41,7 @@
       "catalog": "Catalog",
       "catalogMeta": "248 products",
       "recipes": "Recipes",
+      "recipesMeta": "Your recipe book",
       "list": "Shopping list",
       "gym": "Gym",
       "gymMeta": "Sessions & exercises",

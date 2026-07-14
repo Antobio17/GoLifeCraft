@@ -66,6 +66,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Nutrition/Catalog/Category/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Nutrition\Catalog\Category\Domain\Model'
                         alias: category
+                    Recipe:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Recipe/Recipe/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Recipe\Recipe\Domain\Model'
+                        alias: recipe
                     Exercise:
                         is_bundle: false
                         type: xml

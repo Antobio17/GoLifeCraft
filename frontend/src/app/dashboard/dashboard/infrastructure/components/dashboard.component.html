@@ -65,11 +65,9 @@
       />
       <ds-action-tile
         icon="bookmark"
-        [soon]="true"
-        [soonLabel]="'dashboard.explore.soonBadge' | t"
         [name]="'dashboard.explore.recipes' | t"
-        [meta]="'dashboard.explore.soon' | t"
-        (clicked)="comingSoon()"
+        [meta]="'dashboard.explore.recipesMeta' | t"
+        (clicked)="goToRecipes()"
       />
       <ds-action-tile
         icon="list"

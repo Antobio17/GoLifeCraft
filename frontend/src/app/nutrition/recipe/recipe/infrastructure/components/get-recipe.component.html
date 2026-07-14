@@ -1,0 +1,170 @@
+<ds-page-wrapper [maxWidth]="'640px'" [gap]="'13px'">
+  @if (loading()) {
+    <ds-skeleton height="118px" />
+    <ds-skeleton height="90px" />
+    <ds-skeleton height="220px" />
+  } @else if (attributes(); as recipe) {
+    <div class="recipe-detail__topbar">
+      <button
+        type="button"
+        class="recipe-detail__icon-btn"
+        [attr.aria-label]="'getRecipe.back' | t"
+        (click)="back()"
+      >
+        <ds-icon name="arrowLeft" [size]="18" [stroke]="2.2" />
+      </button>
+      @if (canWrite) {
+        <div class="recipe-detail__actions">
+          <button
+            type="button"
+            class="recipe-detail__icon-btn recipe-detail__icon-btn--edit"
+            [attr.aria-label]="'getRecipe.edit' | t"
+            (click)="onEdit()"
+          >
+            <ds-icon name="pencil" [size]="17" [stroke]="2" />
+          </button>
+          <button
+            type="button"
+            class="recipe-detail__icon-btn recipe-detail__icon-btn--delete"
+            [attr.aria-label]="'getRecipe.delete' | t"
+            (click)="onDelete()"
+          >
+            <ds-icon name="trash" [size]="17" [stroke]="2" />
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="recipe-detail__hero">
+      <span>{{ recipe.emoji }}</span>
+      <span class="recipe-detail__hero-badge">{{
+        view.servingsLabel(recipe.servings)
+      }}</span>
+    </div>
+
+    <div class="recipe-detail__title-block">
+      <div class="recipe-detail__title">{{ recipe.name }}</div>
+      <div class="recipe-detail__tags">
+        <span class="recipe-detail__tag recipe-detail__tag--cat">{{
+          recipe.category
+        }}</span>
+        <span class="recipe-detail__tag">{{
+          view.ingredientsLabel(recipe.ingredients.length)
+        }}</span>
+      </div>
+    </div>
+
+    <div class="recipe-detail__feature">
+      <div>
+        <div class="recipe-detail__feature-kcal">
+          {{ view.integer(recipe.perServing.calories) }}
+        </div>
+        <div class="recipe-detail__feature-caption">
+          {{ "getRecipe.perServing" | t }}
+        </div>
+      </div>
+      <div class="recipe-detail__bars">
+        <div class="recipe-detail__bar">
+          <span
+            class="recipe-detail__bar-fill recipe-detail__bar-fill--p"
+          ></span>
+          <span class="recipe-detail__bar-label">{{
+            "getRecipe.macro.protein" | t
+          }}</span>
+          <span class="recipe-detail__bar-value"
+            >{{ view.decimal(recipe.perServing.protein) }}g</span
+          >
+        </div>
+        <div class="recipe-detail__bar">
+          <span
+            class="recipe-detail__bar-fill recipe-detail__bar-fill--f"
+          ></span>
+          <span class="recipe-detail__bar-label">{{
+            "getRecipe.macro.fat" | t
+          }}</span>
+          <span class="recipe-detail__bar-value"
+            >{{ view.decimal(recipe.perServing.fat) }}g</span
+          >
+        </div>
+        <div class="recipe-detail__bar">
+          <span
+            class="recipe-detail__bar-fill recipe-detail__bar-fill--c"
+          ></span>
+          <span class="recipe-detail__bar-label">{{
+            "getRecipe.macro.carbs" | t
+          }}</span>
+          <span class="recipe-detail__bar-value"
+            >{{ view.decimal(recipe.perServing.carbs) }}g</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="recipe-detail__ing-head">
+      <span class="recipe-detail__label">{{
+        "getRecipe.ingredients" | t
+      }}</span>
+      <span class="recipe-detail__total"
+        >{{ "getRecipe.total" | t }}
+        <strong
+          >{{ view.integer(recipe.total.calories) }}
+          {{ "getRecipe.macro.kcal" | t }}</strong
+        ></span
+      >
+    </div>
+
+    <div class="recipe-detail__ings">
+      @for (ingredient of recipe.ingredients; track ingredient.id) {
+        <div class="recipe-detail__ing">
+          <span class="recipe-detail__ing-emoji">{{ ingredient.emoji }}</span>
+          <div class="recipe-detail__ing-body">
+            <div class="recipe-detail__ing-head-row">
+              <span class="recipe-detail__ing-name">{{ ingredient.name }}</span>
+              @if (ingredient.kind === "recipe") {
+                <span class="recipe-detail__ing-badge">{{
+                  "getRecipe.subRecipe" | t
+                }}</span>
+              }
+            </div>
+            <div class="recipe-detail__ing-qty">
+              {{ view.ingredientQuantityLabel(ingredient) }}
+            </div>
+          </div>
+          <div class="recipe-detail__ing-kcal">
+            <div class="recipe-detail__ing-kcal-value">
+              {{ view.integer(ingredient.macros.calories) }}
+            </div>
+            <div class="recipe-detail__ing-kcal-unit">
+              {{ "getRecipe.macro.kcal" | t }}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="recipe-detail__note">
+      <ds-icon name="info" [size]="17" [stroke]="2.2" />
+      <span>{{ "getRecipe.note" | t }}</span>
+    </div>
+  } @else {
+    <ds-empty-state
+      icon="leaf"
+      [title]="'getRecipe.notFound.title' | t"
+      [text]="'getRecipe.notFound.text' | t"
+    />
+  }
+
+  <ds-confirm-action-modal
+    [show]="showDeleteModal()"
+    [title]="'getRecipe.deleteTitle' | t"
+    [body]="'getRecipe.deleteBody' | t"
+    [itemName]="attributes()?.name || ''"
+    [warningText]="'getRecipe.deleteWarning' | t"
+    [isDeleting]="deleting()"
+    [cancelLabel]="'getRecipe.cancel' | t"
+    [confirmLabel]="'getRecipe.deleteConfirm' | t"
+    [deletingLabel]="'getRecipe.deleting' | t"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()"
+  />
+</ds-page-wrapper>
