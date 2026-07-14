@@ -97,6 +97,7 @@
     },
     "subRecipe": "Sub",
     "removeIngredient": "Remove ingredient",
+    "quantity": "Quantity",
     "noIngredients": "No ingredients yet",
     "addIngredient": "Add ingredient",
     "deleteRecipe": "Delete recipe",

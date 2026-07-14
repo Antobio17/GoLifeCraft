@@ -10,11 +10,17 @@ type SelectVariant = "pill" | "bare";
   selector: "ds-select",
   standalone: true,
   imports: [IconComponent],
+  host: {
+    "[style.display]": "fluid ? 'flex' : null",
+    "[style.flex]": "fluid ? '1 1 0' : null",
+    "[style.min-width.px]": "fluid ? 0 : null",
+  },
   template: `
     <span
       class="ds-select"
       [class.ds-select--pill]="variant === 'pill'"
       [class.ds-select--bare]="variant === 'bare'"
+      [class.ds-select--fluid]="fluid"
       [class.is-active]="variant === 'pill' && value !== ''"
     >
       @if (leadingIcon) {
@@ -48,6 +54,14 @@ type SelectVariant = "pill" | "bare";
         display: inline-flex;
         align-items: center;
         gap: 7px;
+      }
+      .ds-select--fluid {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+      .ds-select--fluid .ds-select__native {
+        min-width: 0;
+        text-overflow: ellipsis;
       }
       .ds-select__native {
         appearance: none;
@@ -117,6 +131,7 @@ export class SelectComponent implements ControlValueAccessor {
   @Input() ariaLabel = "";
   @Input() variant: SelectVariant = "pill";
   @Input() leadingIcon?: DsIconName;
+  @Input() fluid = false;
 
   value = "";
   disabled = false;

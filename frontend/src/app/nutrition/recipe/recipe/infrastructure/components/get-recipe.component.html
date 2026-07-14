@@ -1,151 +1,107 @@
 <ds-page-wrapper [maxWidth]="'640px'" [gap]="'13px'">
   @if (loading()) {
+    <ds-skeleton height="40px" />
     <ds-skeleton height="118px" />
     <ds-skeleton height="90px" />
     <ds-skeleton height="220px" />
   } @else if (attributes(); as recipe) {
-    <div class="recipe-detail__topbar">
-      <button
-        type="button"
-        class="recipe-detail__icon-btn"
-        [attr.aria-label]="'getRecipe.back' | t"
-        (click)="back()"
-      >
-        <ds-icon name="arrowLeft" [size]="18" [stroke]="2.2" />
-      </button>
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getRecipe.back' | t"
+      [eyebrow]="recipe.category"
+      [title]="recipe.name"
+      (leadingClick)="back()"
+    >
       @if (canWrite) {
-        <div class="recipe-detail__actions">
-          <button
-            type="button"
-            class="recipe-detail__icon-btn recipe-detail__icon-btn--edit"
-            [attr.aria-label]="'getRecipe.edit' | t"
-            (click)="onEdit()"
-          >
-            <ds-icon name="pencil" [size]="17" [stroke]="2" />
-          </button>
-          <button
-            type="button"
-            class="recipe-detail__icon-btn recipe-detail__icon-btn--delete"
-            [attr.aria-label]="'getRecipe.delete' | t"
-            (click)="onDelete()"
-          >
-            <ds-icon name="trash" [size]="17" [stroke]="2" />
-          </button>
-        </div>
+        <ds-stack slot="actions" direction="row" [gap]="'9px'">
+          <ds-icon-button
+            icon="pencil"
+            variant="outlined"
+            color="var(--ds-primary)"
+            [iconSize]="17"
+            [radius]="'11px'"
+            [ariaLabel]="'getRecipe.edit' | t"
+            (clicked)="onEdit()"
+          />
+          <ds-icon-button
+            icon="trash"
+            variant="outlined"
+            color="var(--ds-warning)"
+            [iconSize]="17"
+            [radius]="'11px'"
+            [ariaLabel]="'getRecipe.delete' | t"
+            (clicked)="onDelete()"
+          />
+        </ds-stack>
       }
-    </div>
+    </ds-screen-header>
 
-    <div class="recipe-detail__hero">
-      <span>{{ recipe.emoji }}</span>
-      <span class="recipe-detail__hero-badge">{{
-        view.servingsLabel(recipe.servings)
-      }}</span>
-    </div>
+    <ds-product-hero
+      [emoji]="recipe.emoji"
+      [badge]="view.servingsLabel(recipe.servings)"
+    />
 
-    <div class="recipe-detail__title-block">
-      <div class="recipe-detail__title">{{ recipe.name }}</div>
-      <div class="recipe-detail__tags">
-        <span class="recipe-detail__tag recipe-detail__tag--cat">{{
-          recipe.category
-        }}</span>
-        <span class="recipe-detail__tag">{{
-          view.ingredientsLabel(recipe.ingredients.length)
-        }}</span>
-      </div>
-    </div>
+    <ds-stack direction="row" [wrap]="true" [gap]="'6px'">
+      <ds-chip>{{ view.ingredientsLabel(recipe.ingredients.length) }}</ds-chip>
+    </ds-stack>
 
-    <div class="recipe-detail__feature">
-      <div>
-        <div class="recipe-detail__feature-kcal">
-          {{ view.integer(recipe.perServing.calories) }}
-        </div>
-        <div class="recipe-detail__feature-caption">
-          {{ "getRecipe.perServing" | t }}
-        </div>
-      </div>
-      <div class="recipe-detail__bars">
-        <div class="recipe-detail__bar">
-          <span
-            class="recipe-detail__bar-fill recipe-detail__bar-fill--p"
-          ></span>
-          <span class="recipe-detail__bar-label">{{
-            "getRecipe.macro.protein" | t
-          }}</span>
-          <span class="recipe-detail__bar-value"
-            >{{ view.decimal(recipe.perServing.protein) }}g</span
-          >
-        </div>
-        <div class="recipe-detail__bar">
-          <span
-            class="recipe-detail__bar-fill recipe-detail__bar-fill--f"
-          ></span>
-          <span class="recipe-detail__bar-label">{{
-            "getRecipe.macro.fat" | t
-          }}</span>
-          <span class="recipe-detail__bar-value"
-            >{{ view.decimal(recipe.perServing.fat) }}g</span
-          >
-        </div>
-        <div class="recipe-detail__bar">
-          <span
-            class="recipe-detail__bar-fill recipe-detail__bar-fill--c"
-          ></span>
-          <span class="recipe-detail__bar-label">{{
-            "getRecipe.macro.carbs" | t
-          }}</span>
-          <span class="recipe-detail__bar-value"
-            >{{ view.decimal(recipe.perServing.carbs) }}g</span
-          >
-        </div>
-      </div>
-    </div>
+    <ds-macro-bars
+      [kcal]="view.integer(recipe.perServing.calories)"
+      [kcalUnit]="'getRecipe.perServing' | t"
+      [macros]="[
+        {
+          label: 'getRecipe.macro.protein' | t,
+          value: view.grams(recipe.perServing.protein),
+          tone: 'protein',
+        },
+        {
+          label: 'getRecipe.macro.fat' | t,
+          value: view.grams(recipe.perServing.fat),
+          tone: 'fat',
+        },
+        {
+          label: 'getRecipe.macro.carbs' | t,
+          value: view.grams(recipe.perServing.carbs),
+          tone: 'carbs',
+        },
+      ]"
+    />
 
-    <div class="recipe-detail__ing-head">
-      <span class="recipe-detail__label">{{
-        "getRecipe.ingredients" | t
-      }}</span>
-      <span class="recipe-detail__total"
-        >{{ "getRecipe.total" | t }}
-        <strong
-          >{{ view.integer(recipe.total.calories) }}
-          {{ "getRecipe.macro.kcal" | t }}</strong
-        ></span
-      >
-    </div>
+    <ds-section-header
+      [title]="'getRecipe.ingredients' | t"
+      [staticLabel]="totalLabel(recipe.total.calories)"
+    />
 
-    <div class="recipe-detail__ings">
+    <ds-stack [gap]="'8px'">
       @for (ingredient of recipe.ingredients; track ingredient.id) {
-        <div class="recipe-detail__ing">
-          <span class="recipe-detail__ing-emoji">{{ ingredient.emoji }}</span>
-          <div class="recipe-detail__ing-body">
-            <div class="recipe-detail__ing-head-row">
-              <span class="recipe-detail__ing-name">{{ ingredient.name }}</span>
-              @if (ingredient.kind === "recipe") {
-                <span class="recipe-detail__ing-badge">{{
-                  "getRecipe.subRecipe" | t
-                }}</span>
-              }
-            </div>
-            <div class="recipe-detail__ing-qty">
-              {{ view.ingredientQuantityLabel(ingredient) }}
-            </div>
-          </div>
-          <div class="recipe-detail__ing-kcal">
-            <div class="recipe-detail__ing-kcal-value">
-              {{ view.integer(ingredient.macros.calories) }}
-            </div>
-            <div class="recipe-detail__ing-kcal-unit">
-              {{ "getRecipe.macro.kcal" | t }}
-            </div>
-          </div>
-        </div>
+        <ds-card [padding]="'10px'">
+          <ds-stack direction="row" align="center" [gap]="'11px'">
+            <ds-emoji-tile [emoji]="ingredient.emoji" />
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-stack direction="row" align="center" [gap]="'6px'">
+                <ds-text variant="strong">{{ ingredient.name }}</ds-text>
+                @if (ingredient.kind === "recipe") {
+                  <ds-chip tone="brand">{{
+                    "getRecipe.subRecipe" | t
+                  }}</ds-chip>
+                }
+              </ds-stack>
+              <ds-text variant="meta">
+                {{ view.ingredientQuantityLabel(ingredient) }}
+              </ds-text>
+            </ds-stack>
+            <ds-stack align="end" [gap]="'0'">
+              <ds-heading [level]="3" size="sm">
+                {{ view.integer(ingredient.macros.calories) }}
+              </ds-heading>
+              <ds-text variant="meta">{{ "getRecipe.macro.kcal" | t }}</ds-text>
+            </ds-stack>
+          </ds-stack>
+        </ds-card>
       }
-    </div>
+    </ds-stack>
 
-    <div class="recipe-detail__note">
-      <ds-icon name="info" [size]="17" [stroke]="2.2" />
-      <span>{{ "getRecipe.note" | t }}</span>
-    </div>
+    <ds-note icon="info">{{ "getRecipe.note" | t }}</ds-note>
   } @else {
     <ds-empty-state
       icon="leaf"

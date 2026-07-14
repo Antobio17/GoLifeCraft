@@ -6,7 +6,18 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
-import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
+import { ProductHeroComponent } from "@shared/design-system/product-hero/infrastructure/components/product-hero.component";
+import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
@@ -18,11 +29,21 @@ import { RecipeDetail } from "@nutrition/recipe/recipe/domain/models/recipe.mode
 @Component({
   selector: "app-get-recipe",
   templateUrl: "./get-recipe.component.html",
-  styleUrl: "./get-recipe.component.scss",
   imports: [
     ContextualTranslatePipe,
     PageWrapperComponent,
-    IconComponent,
+    ScreenHeaderComponent,
+    ProductHeroComponent,
+    MacroBarsComponent,
+    SectionHeaderComponent,
+    CardComponent,
+    StackComponent,
+    ChipComponent,
+    TextComponent,
+    HeadingComponent,
+    IconButtonComponent,
+    EmojiTileComponent,
+    NoteComponent,
     SkeletonComponent,
     EmptyStateComponent,
     ConfirmActionModalComponent,
@@ -69,6 +90,10 @@ export class GetRecipeComponent implements OnInit {
 
   t(key: string): string {
     return this.translationService.translate(key, this.MODULE_PATH);
+  }
+
+  totalLabel(calories: number): string {
+    return `${this.t("getRecipe.total")} ${this.view.integer(calories)} ${this.t("getRecipe.macro.kcal")}`;
   }
 
   back(): void {

@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  FormsModule,
 } from "@angular/forms";
 import { forkJoin } from "rxjs";
 import { delay, tap } from "rxjs/operators";
@@ -16,7 +17,23 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
 import { ChoiceChipsComponent } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
+import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
+import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
+import {
+  SegmentedToggleComponent,
+  SegmentedOption,
+} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
@@ -47,16 +64,29 @@ type PickerTab = "product" | "recipe";
 @Component({
   selector: "app-recipe-editor",
   templateUrl: "./recipe-editor.component.html",
-  styleUrl: "./recipe-editor.component.scss",
   imports: [
     ReactiveFormsModule,
+    FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
     EmojiPickerComponent,
     ChoiceChipsComponent,
     ButtonComponent,
-    IconComponent,
+    FieldComponent,
+    TextInputComponent,
+    CardComponent,
+    StackComponent,
+    ChipComponent,
+    TextComponent,
+    SectionHeaderComponent,
+    MacroBarsComponent,
+    NumberInputComponent,
+    IconButtonComponent,
+    AddTileComponent,
+    EmojiTileComponent,
+    EmptyStateComponent,
+    SegmentedToggleComponent,
     ModalSheetComponent,
     SearchInputComponent,
     ConfirmActionModalComponent,
@@ -89,9 +119,13 @@ export class RecipeEditorComponent implements OnInit {
   showDeleteModal = signal(false);
   deleting = signal(false);
 
+  readonly minServings = MIN_SERVINGS;
+  readonly maxServings = MAX_SERVINGS;
+
   servings = signal(2);
   ingredients = signal<FormIngredient[]>([]);
   categoryOptions = signal<ChoiceChipOption[]>([]);
+  pickerTabs = signal<SegmentedOption[]>([]);
 
   pickerOpen = signal(false);
   pickerTab = signal<PickerTab>("product");
@@ -150,6 +184,11 @@ export class RecipeEditorComponent implements OnInit {
             .map((category) => ({ value: category, label: category })),
         );
 
+        this.pickerTabs.set([
+          { value: "product", label: this.t("recipeEditor.tabProducts") },
+          { value: "recipe", label: this.t("recipeEditor.tabRecipes") },
+        ]);
+
         forkJoin({
           articles: this.getArticlesService.getArticles(1, 500),
           recipes: this.getRecipesService.getRecipes(1, 500),
@@ -170,18 +209,11 @@ export class RecipeEditorComponent implements OnInit {
       });
   }
 
-  onServingsStep(delta: number): void {
-    const next = Math.min(
-      MAX_SERVINGS,
-      Math.max(MIN_SERVINGS, this.servings() + delta),
-    );
-    this.servings.set(next);
+  totalLabel(): string {
+    return `${this.formatMacro(this.totals().calories)} ${this.t("recipeEditor.kcalTotal")}`;
   }
 
-  onIngredientQuantity(key: string, rawValue: string): void {
-    const parsed = Number(rawValue.replace(",", "."));
-    const quantity = Number.isFinite(parsed) ? parsed : 0;
-
+  onIngredientQuantity(key: string, quantity: number): void {
     this.ingredients.update((list) =>
       list.map((ingredient) =>
         ingredient.key === key ? { ...ingredient, quantity } : ingredient,
@@ -213,8 +245,8 @@ export class RecipeEditorComponent implements OnInit {
     this.pickerOpen.set(false);
   }
 
-  onPickerTab(tab: PickerTab): void {
-    this.pickerTab.set(tab);
+  onPickerTab(tab: string): void {
+    this.pickerTab.set(tab as PickerTab);
     this.pickerQuery.set("");
   }
 
