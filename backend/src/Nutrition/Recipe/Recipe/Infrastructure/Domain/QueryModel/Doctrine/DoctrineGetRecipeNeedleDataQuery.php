@@ -6,12 +6,17 @@ use Doctrine\DBAL\Connection;
 use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\GetRecipeResult;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeIngredientView;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipeNeedleDataQuery;
+use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
 
 final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedleDataQuery
 {
-    public function __construct(private Connection $connection)
-    {
+    public function __construct(
+        private Connection $connection,
+        private DoctrineRecipeNutritionGraphProvider $graphProvider,
+        private RecipeNutritionCalculator $calculator,
+    ) {
     }
 
     public function findRecipeById(string $recipeId): ?GetRecipeResult
@@ -38,7 +43,7 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
             return null;
         }
 
-        $calculator = new RecipeNutritionCalculator(connection: $this->connection);
+        $graph = $this->graphProvider->load();
         $utc = new \DateTimeZone(timezone: 'UTC');
 
         return new GetRecipeResult(
@@ -48,9 +53,9 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
             emoji: $row['emoji'],
             category: $row['category'],
             servings: (int) $row['servings'],
-            ingredients: $this->ingredients(recipeId: $recipeId, calculator: $calculator),
-            total: $calculator->totalsFor(recipeId: $recipeId)->rounded(),
-            perServing: $calculator->perServingFor(recipeId: $recipeId)->rounded(),
+            ingredients: $this->ingredients(recipeId: $recipeId, graph: $graph),
+            total: $this->calculator->totalsFor(graph: $graph, recipeId: $recipeId)->rounded(),
+            perServing: $this->calculator->perServingFor(graph: $graph, recipeId: $recipeId)->rounded(),
             createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
             createdByUserId: $row['created_by_user_id'],
@@ -58,7 +63,7 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
         );
     }
 
-    private function ingredients(string $recipeId, RecipeNutritionCalculator $calculator): array
+    private function ingredients(string $recipeId, RecipeNutritionGraph $graph): array
     {
         $rows = $this->connection->createQueryBuilder()
             ->select('ri.id', 'ri.kind', 'ri.ref_id', 'ri.quantity', 'ri.position')
@@ -69,7 +74,9 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
             ->executeQuery()
             ->fetchAllAssociative();
 
-        return array_map(callback: static function ($row) use ($calculator): RecipeIngredientView {
+        $calculator = $this->calculator;
+
+        return array_map(callback: static function ($row) use ($graph, $calculator): RecipeIngredientView {
             $isSubRecipe = RecipeIngredient::KIND_RECIPE === $row['kind'];
             $quantity = (float) $row['quantity'];
 
@@ -77,12 +84,13 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
                 id: $row['id'],
                 kind: $row['kind'],
                 refId: $row['ref_id'],
-                name: ($isSubRecipe ? $calculator->recipeName(recipeId: $row['ref_id']) : $calculator->articleName(articleId: $row['ref_id'])) ?? 'Desconocido',
-                emoji: $isSubRecipe ? $calculator->recipeEmoji(recipeId: $row['ref_id']) : $calculator->articleEmoji(articleId: $row['ref_id']),
+                name: ($isSubRecipe ? $graph->recipeName(recipeId: $row['ref_id']) : $graph->articleName(articleId: $row['ref_id'])) ?? 'Desconocido',
+                emoji: $isSubRecipe ? $graph->recipeEmoji(recipeId: $row['ref_id']) : $graph->articleEmoji(articleId: $row['ref_id']),
                 quantity: $quantity,
                 unit: $isSubRecipe ? 'ración' : 'g',
                 position: (int) $row['position'],
                 macros: $calculator->ingredientContribution(
+                    graph: $graph,
                     kind: $row['kind'],
                     refId: $row['ref_id'],
                     quantity: $quantity,

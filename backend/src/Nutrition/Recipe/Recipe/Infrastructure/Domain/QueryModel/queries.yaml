@@ -1,4 +1,12 @@
 services:
+  Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator:
+    class: Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator
+
+  Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
   Nutrition\Recipe\Recipe\Domain\QueryModel\CreateRecipeNeedleDataQuery:
     class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateRecipeNeedleDataQuery
     arguments:
@@ -13,8 +21,12 @@ services:
     class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetRecipesNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
 
   Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipeNeedleDataQuery:
     class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetRecipeNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'

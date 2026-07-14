@@ -8,11 +8,15 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\GetRecipesResult;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipesNeedleDataQuery;
+use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
 
 final readonly class DoctrineGetRecipesNeedleDataQuery implements GetRecipesNeedleDataQuery
 {
-    public function __construct(private Connection $connection)
-    {
+    public function __construct(
+        private Connection $connection,
+        private DoctrineRecipeNutritionGraphProvider $graphProvider,
+        private RecipeNutritionCalculator $calculator,
+    ) {
     }
 
     public function findRecipes(
@@ -48,10 +52,11 @@ final readonly class DoctrineGetRecipesNeedleDataQuery implements GetRecipesNeed
         $ingredientSummary = $this->ingredientSummary(
             recipeIds: array_column(array: $rows, column_key: 'id'),
         );
-        $calculator = new RecipeNutritionCalculator(connection: $this->connection);
+        $graph = $this->graphProvider->load();
+        $calculator = $this->calculator;
         $utc = new \DateTimeZone(timezone: 'UTC');
 
-        return array_map(callback: function ($row) use ($ingredientSummary, $calculator, $utc): GetRecipesResult {
+        return array_map(callback: function ($row) use ($ingredientSummary, $graph, $calculator, $utc): GetRecipesResult {
             $summary = $ingredientSummary[$row['id']] ?? ['count' => 0, 'hasSubRecipe' => false];
 
             return new GetRecipesResult(
@@ -63,8 +68,8 @@ final readonly class DoctrineGetRecipesNeedleDataQuery implements GetRecipesNeed
                 servings: (int) $row['servings'],
                 ingredientCount: $summary['count'],
                 hasSubRecipe: $summary['hasSubRecipe'],
-                total: $calculator->totalsFor(recipeId: $row['id'])->rounded(),
-                perServing: $calculator->perServingFor(recipeId: $row['id'])->rounded(),
+                total: $calculator->totalsFor(graph: $graph, recipeId: $row['id'])->rounded(),
+                perServing: $calculator->perServingFor(graph: $graph, recipeId: $row['id'])->rounded(),
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
                 createdByUserId: $row['created_by_user_id'],
