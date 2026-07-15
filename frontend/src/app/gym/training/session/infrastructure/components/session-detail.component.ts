@@ -31,6 +31,7 @@ import { SetRowComponent } from "@shared/design-system/set-row/infrastructure/co
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
 import {
   MenuComponent,
   MenuItem,
@@ -77,6 +78,7 @@ import {
     AddTileComponent,
     EmptyStateComponent,
     SkeletonComponent,
+    TextareaComponent,
     MenuComponent,
   ],
 })
