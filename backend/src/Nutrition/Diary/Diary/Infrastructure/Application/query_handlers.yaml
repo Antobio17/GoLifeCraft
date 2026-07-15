@@ -1,0 +1,11 @@
+services:
+  Nutrition\Diary\Diary\Application\Query\GetDiaryQueryHandler:
+    class: Nutrition\Diary\Diary\Application\Query\GetDiaryQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryNeedleDataQuery'
+      $dataTransform: '@Nutrition\Diary\Diary\Application\Query\GetDiaryDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Query\GetDiaryDataTransform:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\DataTransform\ApiGetDiaryDataTransform

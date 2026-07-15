@@ -1,0 +1,44 @@
+{
+  "getDiary": {
+    "title": "Diary",
+    "titleToday": "Today's diary",
+    "kcal": "kcal",
+    "add": "Add",
+    "quantity": "Quantity",
+    "remove": "Remove",
+    "summary": {
+      "total": "DAILY TOTAL"
+    },
+    "badge": {
+      "product": "ARTICLE",
+      "recipe": "RECIPE"
+    },
+    "meals": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "snack": "Snacks"
+    },
+    "nav": {
+      "previous": "Previous day",
+      "next": "Next day",
+      "today": "Today"
+    },
+    "picker": {
+      "title": "Log to the diary",
+      "subtitle": "Add to",
+      "products": "Articles",
+      "recipes": "Recipes",
+      "search": "Search article or recipe…",
+      "close": "Close",
+      "empty": "No results"
+    },
+    "toast": {
+      "added": "Added to the diary",
+      "removed": "Removed from the diary"
+    },
+    "empty": "No food logged",
+    "emptyAction": "No food · tap to add",
+    "error": "We couldn't load this day's diary"
+  }
+}

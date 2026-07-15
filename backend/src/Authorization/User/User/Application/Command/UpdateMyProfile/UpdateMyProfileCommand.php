@@ -10,7 +10,6 @@ final readonly class UpdateMyProfileCommand implements Command
         public string $userSessionId,
         public string $name,
         public string $lastname,
-        public string $email,
     ) {
     }
 

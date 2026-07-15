@@ -40,6 +40,7 @@ final readonly class DoctrineGetUserNeedleDataQuery implements GetUserNeedleData
                 'u.lastname',
                 'u.is_active',
                 'u.role',
+                'u.tenant_id',
                 'u.created_at',
                 'u.updated_at',
             )
@@ -64,6 +65,7 @@ final readonly class DoctrineGetUserNeedleDataQuery implements GetUserNeedleData
             lastname: $result['lastname'],
             role: $result['role'],
             isActive: (bool) $result['is_active'],
+            tenantId: $result['tenant_id'],
             createdAt: new \DateTime(datetime: $result['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $result['updated_at'], timezone: $utc),
         );

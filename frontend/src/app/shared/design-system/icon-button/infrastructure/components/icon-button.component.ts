@@ -2,7 +2,13 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 
-type IconButtonVariant = "ghost" | "soft" | "danger" | "plain" | "outlined";
+type IconButtonVariant =
+  | "ghost"
+  | "soft"
+  | "solid"
+  | "danger"
+  | "plain"
+  | "outlined";
 
 @Component({
   selector: "ds-icon-button",
@@ -51,6 +57,15 @@ type IconButtonVariant = "ghost" | "soft" | "danger" | "plain" | "outlined";
       }
       :host([variant="soft"]) .ds-icon-btn {
         background: var(--ds-surface-inset);
+      }
+      :host([variant="solid"]) .ds-icon-btn {
+        background: var(--ds-primary);
+        color: var(--icon-btn-color, var(--ds-accent));
+      }
+      :host([variant="solid"]) .ds-icon-btn:hover:not(:disabled) {
+        background: var(--ds-primary);
+        color: var(--icon-btn-color, var(--ds-accent));
+        filter: brightness(1.05);
       }
       :host([variant="outlined"]) .ds-icon-btn {
         background: var(--ds-surface);

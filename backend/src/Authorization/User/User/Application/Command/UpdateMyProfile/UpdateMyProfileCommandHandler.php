@@ -26,7 +26,6 @@ final readonly class UpdateMyProfileCommandHandler
         $user->updateProfile(
             name: $command->name,
             lastname: $command->lastname,
-            email: $command->email,
             updatedByUserId: $command->userSessionId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

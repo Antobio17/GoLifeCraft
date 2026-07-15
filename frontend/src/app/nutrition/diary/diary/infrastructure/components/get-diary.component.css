@@ -1,0 +1,94 @@
+.diary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.diary-head__title {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.diary-head__nav {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.diary-head__today {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0 4px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ds-primary);
+}
+
+.diary-head__today.is-disabled {
+  cursor: default;
+}
+
+.meal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.meal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.meal__headText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.meal__add {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border-strong);
+  color: var(--ds-primary);
+  border-radius: 11px;
+  padding: 7px 11px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.meal__add-icon {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.meal__empty {
+  text-align: center;
+  color: var(--ds-text-muted);
+  font-size: 12px;
+  padding: 15px 8px;
+  border: 1.5px dashed var(--ds-border-strong);
+  border-radius: 14px;
+}
+
+.meal__empty--action {
+  display: block;
+  width: 100%;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}

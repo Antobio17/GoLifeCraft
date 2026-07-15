@@ -1,0 +1,179 @@
+<ds-page-wrapper [maxWidth]="'640px'" [gap]="'14px'">
+  <header class="diary-head">
+    <div class="diary-head__title">
+      <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
+      <ds-heading [level]="2" size="xl">{{ titleKey() | t }}</ds-heading>
+    </div>
+
+    <div class="diary-head__nav">
+      <ds-icon-button
+        icon="chevronLeft"
+        variant="soft"
+        [size]="32"
+        [iconSize]="16"
+        [stroke]="2.4"
+        [radius]="'10px'"
+        [ariaLabel]="'getDiary.nav.previous' | t"
+        (clicked)="previousDay()"
+      />
+      <button
+        type="button"
+        class="diary-head__today"
+        [class.is-disabled]="view.isToday(date())"
+        (click)="goToday()"
+      >
+        {{ view.navLabel(date()) }}
+      </button>
+      <ds-icon-button
+        icon="chevronRight"
+        variant="soft"
+        [size]="32"
+        [iconSize]="16"
+        [stroke]="2.4"
+        [radius]="'10px'"
+        [disabled]="!canGoNext()"
+        [ariaLabel]="'getDiary.nav.next' | t"
+        (clicked)="nextDay()"
+      />
+    </div>
+  </header>
+
+  @if (loading()) {
+    <ds-skeleton height="190px" />
+    <ds-skeleton height="120px" />
+    <ds-skeleton height="120px" />
+  } @else if (attributes(); as diary) {
+    <ds-diary-summary
+      [eyebrow]="'getDiary.summary.total' | t"
+      [countLabel]="view.countLabel(diary.entryCount)"
+      [percent]="diary.percent"
+      [consumed]="view.integer(diary.consumedCalories)"
+      [goal]="view.integer(diary.goalCalories)"
+      [footnote]="view.remainingFootnote(diary.remainingCalories)"
+      [macros]="view.goalMacros(diary)"
+    />
+
+    @for (meal of diary.meals; track meal.key) {
+      <section class="meal">
+        <div class="meal__head">
+          <div class="meal__headText">
+            <ds-heading [level]="3" size="sm">{{ mealLabel(meal.key) }}</ds-heading>
+            <ds-text variant="meta">{{ view.mealMeta(meal) }}</ds-text>
+          </div>
+          @if (canWrite) {
+            <button
+              type="button"
+              class="meal__add"
+              (click)="openPicker(meal.key)"
+            >
+              <span class="meal__add-icon">+</span>
+              {{ "getDiary.add" | t }}
+            </button>
+          }
+        </div>
+
+        @if (meal.entries.length > 0) {
+          <ds-stack [gap]="'8px'">
+            @for (entry of meal.entries; track entry.id) {
+              <ds-diary-entry
+                [emoji]="entry.emoji"
+                [name]="entry.name"
+                [badge]="badgeLabel(entry.kind)"
+                [badgeTone]="view.entryBadgeTone(entry.kind)"
+                [kcalLabel]="
+                  view.integer(entry.macros.calories) +
+                  ' ' +
+                  ('getDiary.kcal' | t)
+                "
+                [unit]="entry.unit"
+                [quantity]="entry.quantity"
+                [quantityLabel]="view.entryQuantityLabel(entry)"
+                [canWrite]="canWrite"
+                [swiped]="isEntrySwiped(entry.id)"
+                [quantityAriaLabel]="'getDiary.quantity' | t"
+                [removeLabel]="'getDiary.remove' | t"
+                (quantityChange)="onQuantityChange(entry.id, $event)"
+                (remove)="onRemove(entry.id)"
+                (swipeStart)="onEntryTouchStart($event, entry.id)"
+                (swipeEnd)="onEntryTouchEnd($event, entry.id)"
+              />
+            }
+          </ds-stack>
+        } @else if (canWrite) {
+          <button
+            type="button"
+            class="meal__empty meal__empty--action"
+            (click)="openPicker(meal.key)"
+          >
+            {{ "getDiary.emptyAction" | t }}
+          </button>
+        } @else {
+          <div class="meal__empty">{{ "getDiary.empty" | t }}</div>
+        }
+      </section>
+    }
+  } @else {
+    <div class="meal__empty">{{ "getDiary.error" | t }}</div>
+  }
+
+  <ds-modal-sheet
+    [open]="pickerOpen()"
+    [tall]="true"
+    [title]="'getDiary.picker.title' | t"
+    [closeLabel]="'getDiary.picker.close' | t"
+    (closed)="closePicker()"
+  >
+    <ds-stack [gap]="'12px'">
+      <ds-text variant="meta"
+        >{{ "getDiary.picker.subtitle" | t }} · {{ pickerMealLabel() }}</ds-text
+      >
+
+      <ds-segmented-toggle
+        [options]="pickerTabs()"
+        [ngModel]="pickerTab()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onPickerTab($event)"
+      />
+
+      <ds-search-input
+        [placeholder]="'getDiary.picker.search' | t"
+        [clearLabel]="'getDiary.picker.close' | t"
+        [debounce]="120"
+        (searched)="onPickerSearch($event)"
+      />
+
+      @if (pickerChoices().length === 0) {
+        <ds-text variant="muted">{{ "getDiary.picker.empty" | t }}</ds-text>
+      } @else {
+        <ds-stack [gap]="'8px'">
+          @for (choice of pickerChoices(); track choice.refId) {
+            <ds-card [padding]="'9px 11px'">
+              <ds-stack direction="row" align="center" [gap]="'11px'">
+                <ds-emoji-tile
+                  [emoji]="choice.emoji"
+                  [size]="36"
+                  [radius]="10"
+                />
+                <ds-stack [gap]="'2px'" [grow]="true">
+                  <ds-text variant="strong" [truncate]="true">{{
+                    choice.name
+                  }}</ds-text>
+                  <ds-text variant="meta">{{ choice.detail }}</ds-text>
+                </ds-stack>
+                <ds-icon-button
+                  icon="plus"
+                  variant="solid"
+                  [size]="32"
+                  [iconSize]="17"
+                  [radius]="'10px'"
+                  [ariaLabel]="'getDiary.add' | t"
+                  (clicked)="onPick(choice)"
+                />
+              </ds-stack>
+            </ds-card>
+          }
+        </ds-stack>
+      }
+    </ds-stack>
+  </ds-modal-sheet>
+</ds-page-wrapper>

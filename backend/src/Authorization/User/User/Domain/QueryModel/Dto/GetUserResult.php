@@ -15,6 +15,7 @@ final class GetUserResult extends QueryAggregateResult
         public readonly string $lastname,
         public readonly string $role,
         public readonly bool $isActive,
+        public readonly string $tenantId,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
     ) {

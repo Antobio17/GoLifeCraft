@@ -166,6 +166,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         box-shadow: none;
         border-color: var(--ds-border-focus);
       }
+      .ds-num--boxed .ds-num__unit {
+        margin-left: 3px;
+      }
     `,
   ],
 })

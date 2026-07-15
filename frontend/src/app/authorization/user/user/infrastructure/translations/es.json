@@ -200,6 +200,54 @@
       "weak": "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial"
     }
   },
+  "settings": {
+    "eyebrow": "Cuenta",
+    "title": "Ajustes",
+    "back": "Volver",
+    "status": {
+      "active": "Cuenta activa",
+      "inactive": "Cuenta inactiva"
+    },
+    "section": {
+      "personal": "Datos personales",
+      "preferences": "Preferencias",
+      "security": "Seguridad"
+    },
+    "field": {
+      "name": "Nombre",
+      "lastname": "Apellidos",
+      "username": "Usuario",
+      "email": "Email",
+      "organization": "Organización",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Repetir nueva contraseña"
+    },
+    "organization": {
+      "managed": "gestionado por tu admin"
+    },
+    "save": "Guardar cambios",
+    "saving": "Guardando...",
+    "theme": {
+      "title": "Modo oscuro",
+      "dark": "Tema oscuro",
+      "light": "Tema claro"
+    },
+    "password": {
+      "title": "Cambiar contraseña",
+      "hint": "Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo",
+      "weak": "La contraseña no cumple los requisitos mínimos de seguridad",
+      "mismatch": "Las contraseñas no coinciden",
+      "update": "Actualizar contraseña",
+      "updating": "Actualizando..."
+    },
+    "strength": {
+      "weak": "Débil",
+      "medium": "Media",
+      "strong": "Fuerte"
+    },
+    "logout": "Cerrar sesión"
+  },
   "createUser": {
     "title": "Crear Nuevo Usuario",
     "description": "Completa los datos para registrar un nuevo usuario en el sistema",

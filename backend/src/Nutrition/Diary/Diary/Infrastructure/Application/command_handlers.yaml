@@ -1,0 +1,27 @@
+services:
+  Nutrition\Diary\Diary\Application\Command\CreateDiaryEntryCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\CreateDiaryEntryCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\UpdateDiaryEntryQuantityCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\UpdateDiaryEntryQuantityCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\DeleteDiaryEntryCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\DeleteDiaryEntryCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

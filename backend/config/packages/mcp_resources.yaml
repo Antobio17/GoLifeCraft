@@ -36,6 +36,12 @@ parameters:
             read_roles: [ROLE_GOD, ROLE_USER]
             write_roles: [ROLE_GOD, ROLE_USER]
 
+        diary_entry:
+            class: 'Nutrition\Diary\Diary\Domain\Model\DiaryEntry'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Diary/Diary/Infrastructure/Domain/Model/Doctrine/Mapping/DiaryEntry.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+
         exercise:
             class: 'Gym\Library\Exercise\Domain\Model\Exercise'
             sidecar: '%kernel.project_dir%/src/Gym/Library/Exercise/Infrastructure/Domain/Model/Doctrine/Mapping/Exercise.mcp.yaml'

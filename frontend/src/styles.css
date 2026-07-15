@@ -9,6 +9,12 @@ body {
   color: var(--ds-text);
 }
 
+body.ds-scroll-locked {
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
 @media (max-width: 767px) {
   :root {
     zoom: var(--ds-app-scale, 1);

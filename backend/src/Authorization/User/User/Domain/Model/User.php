@@ -196,7 +196,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
     public function updateProfile(
         string $name,
         string $lastname,
-        string $email,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -204,7 +203,6 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
 
         $this->name = $name;
         $this->lastname = $lastname;
-        $this->email = $email;
         $this->updatedByUserId = $updatedByUserId;
         $this->updatedAt = $now;
 
@@ -213,7 +211,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 aggregateId: $this->id,
                 occurredOn: $now,
                 username: $this->username,
-                email: $email,
+                email: $this->email,
                 name: $name,
                 lastname: $lastname,
                 isActive: $this->isActive,

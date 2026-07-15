@@ -13,12 +13,14 @@ import {
   FormInputType,
 } from "../../domain/models/form-input.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-form-input",
   templateUrl: "./form-input.component.html",
   styleUrls: ["./form-input.component.css"],
-  imports: [ContextualTranslatePipe],
+  imports: [ContextualTranslatePipe, IconComponent],
 })
 export class FormInputComponent implements ControlValueAccessor, OnDestroy {
   ngControl = inject(NgControl, { optional: true, self: true })!;
@@ -42,9 +44,15 @@ export class FormInputComponent implements ControlValueAccessor, OnDestroy {
   @Input() hint?: string;
   @Input() tooltip?: string;
   @Input() config?: FormInputConfig;
+  @Input() leadingIcon?: DsIconName;
+  @Input() prefix?: string;
+
+  get hasLeading(): boolean {
+    return !!this.leadingIcon || !!this.prefix;
+  }
 
   readonly inputId = `ds-form-input-${Math.random().toString(36).substring(2, 11)}`;
-  value = "";
+  @Input() value = "";
   isFocused = false;
   showPassword = false;
 

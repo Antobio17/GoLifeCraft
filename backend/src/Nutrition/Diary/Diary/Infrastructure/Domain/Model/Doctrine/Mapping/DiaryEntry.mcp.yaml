@@ -1,0 +1,49 @@
+label: Diary entry
+
+fields:
+  entryDate:
+    writable: true
+    required: true
+    min: 10
+    max: 10
+    regex: '^\d{4}-\d{2}-\d{2}$'
+    description: >-
+      The calendar day the food is logged to, as an ISO date "YYYY-MM-DD".
+      Use the user's local date; default to today when not specified.
+    filterable: true
+    sortable: true
+  meal:
+    writable: true
+    required: true
+    enum: [breakfast, lunch, dinner, snack]
+    description: >-
+      The meal slot the entry belongs to: "breakfast", "lunch", "dinner" or "snack".
+      Pick the slot that best fits the time or the food.
+    filterable: true
+  kind:
+    writable: true
+    required: true
+    enum: [product, recipe]
+    description: >-
+      Whether this entry references a catalog article ("product", quantity in grams)
+      or a recipe ("recipe", quantity in servings).
+    filterable: true
+  refId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      The id of the referenced entity: an Article id when kind is "product",
+      or a Recipe id when kind is "recipe".
+    filterable: true
+  quantity:
+    writable: true
+    required: true
+    type: float
+    min: 0
+    description: >-
+      Grams of the article when kind is "product", or number of servings of the
+      recipe when kind is "recipe".
+
+relations: {}

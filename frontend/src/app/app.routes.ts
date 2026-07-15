@@ -39,6 +39,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "diary",
+        data: { breadcrumb: "diary.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/diary/diary/infrastructure/routes/diary.routes").then(
+            (m) => m.DIARY_ROUTES,
+          ),
+      },
+      {
         path: "supermarkets",
         data: { breadcrumb: "supermarket.breadcrumb.list" },
         loadChildren: () =>
