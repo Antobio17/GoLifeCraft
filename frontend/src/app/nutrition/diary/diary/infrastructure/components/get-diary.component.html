@@ -116,12 +116,12 @@
 
   <ds-modal-sheet
     [open]="pickerOpen()"
-    [tall]="true"
+    [compact]="true"
     [title]="'getDiary.picker.title' | t"
     [closeLabel]="'getDiary.picker.close' | t"
     (closed)="closePicker()"
   >
-    <ds-stack [gap]="'12px'">
+    <ds-stack [gap]="'16px'">
       <ds-text variant="meta"
         >{{ "getDiary.picker.subtitle" | t }} · {{ pickerMealLabel() }}</ds-text
       >
@@ -145,8 +145,8 @@
       } @else {
         <ds-stack [gap]="'8px'">
           @for (choice of pickerChoices(); track choice.refId) {
-            <ds-card [padding]="'9px 11px'">
-              <ds-stack direction="row" align="center" [gap]="'11px'">
+            <ds-card [padding]="'10px'">
+              <ds-stack direction="row" align="center" [gap]="'12px'">
                 <ds-emoji-tile
                   [emoji]="choice.emoji"
                   [size]="36"
@@ -160,10 +160,7 @@
                 </ds-stack>
                 <ds-icon-button
                   icon="plus"
-                  variant="solid"
-                  [size]="32"
-                  [iconSize]="17"
-                  [radius]="'10px'"
+                  variant="soft"
                   [ariaLabel]="'getDiary.add' | t"
                   (clicked)="onPick(choice)"
                 />
