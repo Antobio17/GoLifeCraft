@@ -1,11 +1,13 @@
 <ds-page-wrapper [maxWidth]="'640px'" [gap]="'14px'">
-  <header class="diary-head">
-    <div class="diary-head__title">
+  <ds-stack direction="row" justify="between" align="center" [gap]="'12px'">
+    <ds-stack [gap]="'2px'" [grow]="true">
       <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
-      <ds-heading [level]="2" size="xl">{{ titleKey() | t }}</ds-heading>
-    </div>
+      <ds-heading [level]="2" size="xl" [truncate]="true">{{
+        titleKey() | t
+      }}</ds-heading>
+    </ds-stack>
 
-    <div class="diary-head__nav">
+    <ds-stack direction="row" align="center" [gap]="'6px'">
       <ds-icon-button
         icon="chevronLeft"
         variant="soft"
@@ -16,14 +18,9 @@
         [ariaLabel]="'getDiary.nav.previous' | t"
         (clicked)="previousDay()"
       />
-      <button
-        type="button"
-        class="diary-head__today"
-        [class.is-disabled]="view.isToday(date())"
-        (click)="goToday()"
-      >
+      <ds-button variant="link" (clicked)="goToday()">
         {{ view.navLabel(date()) }}
-      </button>
+      </ds-button>
       <ds-icon-button
         icon="chevronRight"
         variant="soft"
@@ -35,8 +32,8 @@
         [ariaLabel]="'getDiary.nav.next' | t"
         (clicked)="nextDay()"
       />
-    </div>
-  </header>
+    </ds-stack>
+  </ds-stack>
 
   @if (loading()) {
     <ds-skeleton height="190px" />
@@ -54,23 +51,30 @@
     />
 
     @for (meal of diary.meals; track meal.key) {
-      <section class="meal">
-        <div class="meal__head">
-          <div class="meal__headText">
-            <ds-heading [level]="3" size="sm">{{ mealLabel(meal.key) }}</ds-heading>
+      <ds-stack [gap]="'10px'">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'10px'"
+        >
+          <ds-stack [gap]="'1px'" [grow]="true">
+            <ds-heading [level]="3" size="sm" [truncate]="true">{{
+              mealLabel(meal.key)
+            }}</ds-heading>
             <ds-text variant="meta">{{ view.mealMeta(meal) }}</ds-text>
-          </div>
+          </ds-stack>
           @if (canWrite) {
-            <button
-              type="button"
-              class="meal__add"
-              (click)="openPicker(meal.key)"
+            <ds-button
+              variant="outline"
+              size="sm"
+              icon="plus"
+              (clicked)="openPicker(meal.key)"
             >
-              <span class="meal__add-icon">+</span>
               {{ "getDiary.add" | t }}
-            </button>
+            </ds-button>
           }
-        </div>
+        </ds-stack>
 
         @if (meal.entries.length > 0) {
           <ds-stack [gap]="'8px'">
@@ -100,20 +104,18 @@
             }
           </ds-stack>
         } @else if (canWrite) {
-          <button
-            type="button"
-            class="meal__empty meal__empty--action"
-            (click)="openPicker(meal.key)"
-          >
-            {{ "getDiary.emptyAction" | t }}
-          </button>
+          <ds-add-tile
+            variant="dashed"
+            [label]="'getDiary.emptyAction' | t"
+            (clicked)="openPicker(meal.key)"
+          />
         } @else {
-          <div class="meal__empty">{{ "getDiary.empty" | t }}</div>
+          <ds-placeholder-note [message]="'getDiary.empty' | t" />
         }
-      </section>
+      </ds-stack>
     }
   } @else {
-    <div class="meal__empty">{{ "getDiary.error" | t }}</div>
+    <ds-placeholder-note [message]="'getDiary.error' | t" />
   }
 
   <ds-modal-sheet
