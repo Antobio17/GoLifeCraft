@@ -1,0 +1,19 @@
+get_diary:
+  path: /api/v1/nutrition/diary
+  methods: [GET]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\GetDiaryController
+
+create_diary_entry:
+  path: /api/v1/nutrition/diary
+  methods: [POST]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\CreateDiaryEntryController
+
+update_diary_entry:
+  path: /api/v1/nutrition/diary/{diaryEntryId}
+  methods: [PUT]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryController
+
+delete_diary_entry:
+  path: /api/v1/nutrition/diary/{diaryEntryId}
+  methods: [DELETE]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\DeleteDiaryEntryController

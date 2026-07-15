@@ -200,6 +200,54 @@
       "weak": "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number and a special character"
     }
   },
+  "settings": {
+    "eyebrow": "Account",
+    "title": "Settings",
+    "back": "Back",
+    "status": {
+      "active": "Account active",
+      "inactive": "Account inactive"
+    },
+    "section": {
+      "personal": "Personal data",
+      "preferences": "Preferences",
+      "security": "Security"
+    },
+    "field": {
+      "name": "First name",
+      "lastname": "Last name",
+      "username": "Username",
+      "email": "Email",
+      "organization": "Organization",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Repeat new password"
+    },
+    "organization": {
+      "managed": "managed by your admin"
+    },
+    "save": "Save changes",
+    "saving": "Saving...",
+    "theme": {
+      "title": "Dark mode",
+      "dark": "Dark theme",
+      "light": "Light theme"
+    },
+    "password": {
+      "title": "Change password",
+      "hint": "At least 8 characters, with uppercase, lowercase, number and symbol",
+      "weak": "The password does not meet the minimum security requirements",
+      "mismatch": "Passwords do not match",
+      "update": "Update password",
+      "updating": "Updating..."
+    },
+    "strength": {
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "logout": "Log out"
+  },
   "createUser": {
     "title": "Create New User",
     "description": "Fill in the details to register a new user in the system",

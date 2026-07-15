@@ -9,6 +9,7 @@ export interface GetMyProfileResponse {
       lastname: string | null;
       role: string;
       isActive: boolean;
+      tenantId: string;
     };
   };
 }

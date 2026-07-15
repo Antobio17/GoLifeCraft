@@ -39,6 +39,13 @@
         (click)="close()"
       />
       <ds-nav-item
+        routerLink="/diary"
+        routerLinkActive="is-active"
+        icon="diary"
+        [label]="'navbar.diary' | t"
+        (click)="close()"
+      />
+      <ds-nav-item
         routerLink="/catalog"
         routerLinkActive="is-active"
         icon="leaf"
@@ -83,9 +90,11 @@
         />
       }
       <ds-nav-item
+        routerLink="/me"
+        routerLinkActive="is-active"
         icon="settings"
         [label]="'navbar.settings' | t"
-        (click)="comingSoon()"
+        (click)="close()"
       />
     </nav>
 

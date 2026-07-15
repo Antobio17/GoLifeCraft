@@ -26,6 +26,7 @@ const mockProfileResponse: GetMyProfileResponse = {
       lastname: null,
       role: "ROLE_GOD",
       isActive: true,
+      tenantId: "GLC0000000001",
     },
   },
 };

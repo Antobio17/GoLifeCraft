@@ -1,0 +1,6 @@
+services:
+  Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\Model\Doctrine\DoctrineDiaryEntryRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Diary\Diary\Domain\Model\DiaryEntry

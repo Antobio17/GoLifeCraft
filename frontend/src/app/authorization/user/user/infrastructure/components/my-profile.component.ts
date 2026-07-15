@@ -1,6 +1,6 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
-import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
-import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
+import { Component, OnInit, computed, inject, signal } from "@angular/core";
+import { Location } from "@angular/common";
+import { Router } from "@angular/router";
 import {
   FormBuilder,
   FormGroup,
@@ -19,21 +19,23 @@ import { ChangeMyPasswordProvider } from "../providers/change-my-password.provid
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import {
-  getRoleBadgeClass as resolveRoleBadgeClass,
-  getRoleLabelKey,
-} from "@authorization/domain/utils/role.utils";
-import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
-import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
-import { FormRowComponent } from "@shared/design-system/form-row/infrastructure/components/form-row.component";
-import { FormFooterComponent } from "@shared/design-system/form-footer/infrastructure/components/form-footer.component";
+import { ThemeService } from "@shared/theme/application/services/theme.service";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { getRoleLabelKey } from "@authorization/domain/utils/role.utils";
+import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { InfoStripComponent } from "@shared/design-system/info-strip/infrastructure/components/info-strip.component";
-import { InfoRowComponent } from "@shared/design-system/info-row/infrastructure/components/info-row.component";
-import { StatusBadgeComponent } from "@shared/design-system/status-badge/infrastructure/components/status-badge.component";
-import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
+import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { ReadonlyStripComponent } from "@shared/design-system/readonly-strip/infrastructure/components/readonly-strip.component";
+import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { ProfileCardComponent } from "@shared/design-system/profile-card/infrastructure/components/profile-card.component";
+import { PreferenceToggleComponent } from "@shared/design-system/preference-toggle/infrastructure/components/preference-toggle.component";
+import { PasswordStrengthComponent } from "@shared/design-system/password-strength/infrastructure/components/password-strength.component";
 
 function passwordStrengthValidator(
   control: AbstractControl,
@@ -63,10 +65,8 @@ function passwordMatchValidator(
 
   if (newPassword !== confirmPassword.value) {
     confirmPassword.setErrors({ passwordMismatch: true });
-  } else {
-    if (confirmPassword.errors?.["passwordMismatch"]) {
-      confirmPassword.setErrors(null);
-    }
+  } else if (confirmPassword.errors?.["passwordMismatch"]) {
+    confirmPassword.setErrors(null);
   }
 
   return null;
@@ -83,18 +83,20 @@ function passwordMatchValidator(
   imports: [
     ReactiveFormsModule,
     ContextualTranslatePipe,
-    FormSectionComponent,
-    FormInputComponent,
-    FormRowComponent,
-    FormFooterComponent,
+    PageWrapperComponent,
+    ScreenHeaderComponent,
     StackComponent,
     TextComponent,
-    InfoStripComponent,
-    InfoRowComponent,
-    StatusBadgeComponent,
+    FormInputComponent,
     ButtonComponent,
-    PageWrapperComponent,
-    SectionPageWrapperComponent,
+    CardComponent,
+    FieldComponent,
+    ReadonlyStripComponent,
+    IconBadgeComponent,
+    SkeletonComponent,
+    ProfileCardComponent,
+    PreferenceToggleComponent,
+    PasswordStrengthComponent,
   ],
 })
 export class MyProfileComponent implements OnInit {
@@ -104,23 +106,46 @@ export class MyProfileComponent implements OnInit {
   private changeMyPasswordService = inject(ChangeMyPasswordService);
   private floatingToastService = inject(FloatingToastService);
   private translationService = inject(TranslationService);
+  private themeService = inject(ThemeService);
+  private authSessionService = inject(AuthSessionService);
+  private router = inject(Router);
+  private location = inject(Location);
 
-  readonly ICONS = FORM_SECTION_ICONS;
+  private readonly MODULE_PATH = "authorization/user/user";
 
   profileForm: FormGroup;
   passwordForm: FormGroup;
 
-  username = "";
-  role = "";
+  username = signal("");
+  email = signal("");
+  role = signal("");
+  isActive = signal(false);
+  tenantId = signal("");
   loading = signal(true);
   saving = signal(false);
   changingPassword = signal(false);
+
+  readonly isDark = this.themeService.isDark;
+
+  readonly fullName = computed(() => {
+    const name = this.profileForm.get("name")?.value ?? "";
+    const lastname = this.profileForm.get("lastname")?.value ?? "";
+    const composed = `${name} ${lastname}`.trim();
+    if (composed) return composed;
+    return this.username() || this.email().split("@")[0];
+  });
+
+  readonly initial = computed(() => {
+    const source = this.fullName().trim() || this.email().trim();
+    return source ? source.charAt(0).toUpperCase() : "?";
+  });
+
+  readonly roleLabelKey = computed(() => getRoleLabelKey(this.role()));
 
   constructor() {
     this.profileForm = this.formBuilder.group({
       name: ["", [Validators.required, Validators.minLength(2)]],
       lastname: ["", [Validators.required, Validators.minLength(2)]],
-      email: ["", [Validators.required, Validators.email]],
     });
 
     this.passwordForm = this.formBuilder.group(
@@ -133,31 +158,44 @@ export class MyProfileComponent implements OnInit {
     );
   }
 
-  private readonly MODULE_PATH = "authorization/user/user";
-
   ngOnInit(): void {
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
-      .then(() => {
-        this.getMyProfileService.getMyProfile().subscribe({
-          next: (response) => {
-            const attrs = response.data.attributes;
-            this.username = attrs.username;
-            this.role = attrs.role;
+      .then(() => this.loadProfile());
+  }
 
-            this.profileForm.patchValue({
-              name: attrs.name ?? "",
-              lastname: attrs.lastname ?? "",
-              email: attrs.email,
-            });
+  private loadProfile(): void {
+    this.getMyProfileService.getMyProfile().subscribe({
+      next: (response) => {
+        const attrs = response.data.attributes;
+        this.username.set(attrs.username);
+        this.email.set(attrs.email);
+        this.role.set(attrs.role);
+        this.isActive.set(attrs.isActive);
+        this.tenantId.set(attrs.tenantId);
 
-            this.loading.set(false);
-          },
-          error: () => {
-            this.loading.set(false);
-          },
+        this.profileForm.patchValue({
+          name: attrs.name ?? "",
+          lastname: attrs.lastname ?? "",
         });
-      });
+
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
+  }
+
+  back(): void {
+    this.location.back();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggle();
+  }
+
+  logout(): void {
+    this.authSessionService.clearSession();
+    this.router.navigate(["/login"]);
   }
 
   onSubmitProfile(): void {
@@ -226,13 +264,5 @@ export class MyProfileComponent implements OnInit {
           });
         },
       });
-  }
-
-  getRoleBadgeClass(role: string): string {
-    return resolveRoleBadgeClass(role);
-  }
-
-  getRoleTranslationKey(role: string): string {
-    return getRoleLabelKey(role);
   }
 }

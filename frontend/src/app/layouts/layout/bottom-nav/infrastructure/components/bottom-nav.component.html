@@ -14,6 +14,16 @@
   />
 
   <ds-tab-item
+    routerLink="/diary"
+    routerLinkActive
+    #diaryActive="routerLinkActive"
+    icon="diary"
+    [label]="'navbar.diary' | t"
+    [active]="diaryActive.isActive && !isDrawerOpen()"
+    [attr.aria-label]="'navbar.diary' | t"
+  />
+
+  <ds-tab-item
     routerLink="/catalog"
     routerLinkActive
     #catalogActive="routerLinkActive"

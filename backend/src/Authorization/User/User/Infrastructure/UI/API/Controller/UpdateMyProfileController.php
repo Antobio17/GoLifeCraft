@@ -31,7 +31,6 @@ final class UpdateMyProfileController
                 userSessionId: RequestExtractor::getUserSessionId(request: $request),
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 lastname: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'lastname'),
-                email: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'email'),
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_NO_CONTENT);

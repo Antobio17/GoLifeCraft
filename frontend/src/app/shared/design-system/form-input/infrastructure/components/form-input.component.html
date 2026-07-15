@@ -33,7 +33,21 @@
     </label>
   }
 
-  <div class="input-wrapper" [class.password-field]="isPassword">
+  <div
+    class="input-wrapper"
+    [class.password-field]="isPassword"
+    [class.has-leading]="hasLeading"
+  >
+    @if (hasLeading) {
+      <span class="input-leading">
+        @if (leadingIcon) {
+          <ds-icon [name]="leadingIcon" [size]="17" [stroke]="2" />
+        }
+        @if (prefix) {
+          <span class="input-leading__prefix">{{ prefix }}</span>
+        }
+      </span>
+    }
     <input
       [id]="inputId"
       [type]="effectiveType"

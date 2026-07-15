@@ -1,0 +1,45 @@
+<div class="diary-entry" [class.diary-entry--swiped]="swiped">
+  @if (canWrite) {
+    <button
+      type="button"
+      class="diary-entry__delete"
+      [attr.aria-label]="removeLabel"
+      (click)="remove.emit()"
+    >
+      <ds-icon name="trash" [size]="17" />
+    </button>
+  }
+
+  <div
+    class="diary-entry__row"
+    (touchstart)="canWrite && swipeStart.emit($event)"
+    (touchend)="canWrite && swipeEnd.emit($event)"
+  >
+    <ds-emoji-tile [emoji]="emoji" [size]="38" [radius]="10" />
+
+    <div class="diary-entry__body">
+      <span class="diary-entry__name">{{ name }}</span>
+      <div class="diary-entry__meta">
+        <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
+        <span class="diary-entry__kcal">{{ kcalLabel }}</span>
+      </div>
+    </div>
+
+    @if (canWrite) {
+      <ds-field [width]="'92px'">
+        <ds-number-input
+          variant="boxed"
+          [precision]="1"
+          [min]="0"
+          [unit]="unit"
+          [ngModel]="quantity"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="quantityChange.emit($event)"
+          [ariaLabel]="quantityAriaLabel"
+        />
+      </ds-field>
+    } @else {
+      <span class="diary-entry__qty">{{ quantityLabel }}</span>
+    }
+  </div>
+</div>

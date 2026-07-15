@@ -72,6 +72,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Nutrition/Recipe/Recipe/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Nutrition\Recipe\Recipe\Domain\Model'
                         alias: recipe
+                    DiaryEntry:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Diary/Diary/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Diary\Diary\Domain\Model'
+                        alias: diary_entry
                     Exercise:
                         is_bundle: false
                         type: xml

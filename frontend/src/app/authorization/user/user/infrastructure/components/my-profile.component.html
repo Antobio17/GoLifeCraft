@@ -1,133 +1,197 @@
-<ds-page-wrapper [maxWidth]="'960px'" [gap]="'24px'">
-  <ds-section-page-wrapper
-    [title]="'profile.title' | t"
-    [description]="'profile.description' | t"
-    [loading]="loading()"
-    [skeletonRows]="3"
-    [skeletonFieldsPerRow]="2"
-    [icon]="'user'"
-  >
-    @if (!loading()) {
-      <ds-form-section
-        [title]="'profile.section.personal' | t"
-        [icon]="ICONS['USERS']"
-      >
-        <ds-info-strip>
-          <ds-info-row icon="user" [label]="'profile.field.username' | t">
-            {{ username }}
-          </ds-info-row>
-          <ds-info-row
-            icon="star"
-            [label]="'profile.field.role' | t"
-            [bare]="true"
-          >
-            <ds-status-badge
-              [tone]="
-                getRoleBadgeClass(role) === 'badge-god' ? 'accent' : 'neutral'
-              "
-            >
-              {{ getRoleTranslationKey(role) | t }}
-            </ds-status-badge>
-          </ds-info-row>
-        </ds-info-strip>
+<ds-page-wrapper [maxWidth]="'560px'" [gap]="'0'">
+  <ds-stack [gap]="'14px'">
+    <ds-screen-header
+      leading="back"
+      [leadingLabel]="'settings.back' | t"
+      [eyebrow]="'settings.eyebrow' | t"
+      [title]="'settings.title' | t"
+      (leadingClick)="back()"
+    ></ds-screen-header>
 
-        <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
-          <ds-form-row>
-            <ds-form-input
-              [label]="'profile.field.name' | t"
-              [placeholder]="'profile.field.namePlaceholder' | t"
-              formControlName="name"
-            ></ds-form-input>
-            <ds-form-input
-              [label]="'profile.field.lastname' | t"
-              [placeholder]="'profile.field.lastnamePlaceholder' | t"
-              formControlName="lastname"
-            ></ds-form-input>
-          </ds-form-row>
-          <ds-form-row>
-            <ds-form-input
-              [label]="'profile.field.email' | t"
-              placeholder="tu@email.com"
-              type="email"
-              formControlName="email"
-            ></ds-form-input>
-          </ds-form-row>
-        </form>
+    @if (loading()) {
+      <ds-stack [gap]="'16px'">
+        <ds-skeleton height="84px"></ds-skeleton>
+        <ds-skeleton height="240px"></ds-skeleton>
+        <ds-skeleton height="200px"></ds-skeleton>
+      </ds-stack>
+    } @else {
+      <ds-stack [gap]="'24px'">
+        <ds-profile-card
+          [initial]="initial()"
+          [name]="fullName()"
+          [email]="email()"
+          [roleLabel]="roleLabelKey() | t"
+          [active]="isActive()"
+          [activeLabel]="
+            (isActive() ? 'settings.status.active' : 'settings.status.inactive')
+              | t
+          "
+        ></ds-profile-card>
 
-        <ds-form-footer>
+        <ds-stack [gap]="'14px'">
+          <ds-text variant="label">{{
+            "settings.section.personal" | t
+          }}</ds-text>
+
+          <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
+            <ds-stack [gap]="'14px'">
+              <ds-stack direction="row" [gap]="'10px'">
+                <ds-field [label]="'settings.field.name' | t" [grow]="true">
+                  <ds-form-input
+                    [placeholder]="'settings.field.name' | t"
+                    formControlName="name"
+                  ></ds-form-input>
+                </ds-field>
+                <ds-field [label]="'settings.field.lastname' | t" [grow]="true">
+                  <ds-form-input
+                    [placeholder]="'settings.field.lastname' | t"
+                    formControlName="lastname"
+                  ></ds-form-input>
+                </ds-field>
+              </ds-stack>
+
+              <ds-field [label]="'settings.field.email' | t">
+                <ds-form-input
+                  type="email"
+                  leadingIcon="mail"
+                  [readonly]="true"
+                  [value]="email()"
+                ></ds-form-input>
+              </ds-field>
+
+              <ds-readonly-strip
+                [label]="'settings.field.organization' | t"
+                [value]="tenantId()"
+                [note]="'settings.organization.managed' | t"
+              ></ds-readonly-strip>
+            </ds-stack>
+          </form>
+
           <ds-button
             variant="primary"
             size="md"
-            icon="save"
-            [disabled]="saving() || profileForm.invalid || profileForm.pristine"
+            icon="check"
+            [fullWidth]="true"
+            [disabled]="saving()"
             [loading]="saving()"
             (clicked)="onSubmitProfile()"
           >
-            {{ saving() ? ("profile.saving" | t) : ("profile.save" | t) }}
+            {{ (saving() ? "settings.saving" : "settings.save") | t }}
           </ds-button>
-        </ds-form-footer>
-      </ds-form-section>
+        </ds-stack>
 
-      <ds-form-section
-        [title]="'profile.section.security' | t"
-        [icon]="ICONS['LOCK']"
-      >
-        <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
-          <ds-form-row>
-            <ds-form-input
-              [label]="'profile.field.currentPassword' | t"
-              placeholder="••••••••"
-              type="password"
-              formControlName="currentPassword"
-            ></ds-form-input>
-          </ds-form-row>
-          <ds-form-row>
-            <ds-stack [gap]="'4px'">
-              <ds-form-input
-                [label]="'profile.field.newPassword' | t"
-                placeholder="••••••••"
-                type="password"
-                formControlName="newPassword"
-              ></ds-form-input>
-              @if (
-                passwordForm.get("newPassword")?.errors?.["weakPassword"] &&
-                passwordForm.get("newPassword")?.touched
-              ) {
-                <ds-text variant="danger">
-                  {{ "profile.password.weak" | t }}
-                </ds-text>
-              }
-            </ds-stack>
-            <ds-form-input
-              [label]="'profile.field.confirmPassword' | t"
-              placeholder="••••••••"
-              type="password"
-              formControlName="confirmPassword"
-            ></ds-form-input>
-          </ds-form-row>
-        </form>
-
-        <ds-form-footer>
-          <ds-button
-            variant="primary"
-            size="md"
-            icon="lock"
-            [disabled]="
-              changingPassword() ||
-              passwordForm.invalid ||
-              passwordForm.pristine
+        <ds-stack [gap]="'12px'">
+          <ds-text variant="label">
+            {{ "settings.section.preferences" | t }}
+          </ds-text>
+          <ds-preference-toggle
+            [icon]="isDark() ? '🌙' : '☀️'"
+            [title]="'settings.theme.title' | t"
+            [subtitle]="
+              (isDark() ? 'settings.theme.dark' : 'settings.theme.light') | t
             "
-            [loading]="changingPassword()"
-            (clicked)="onSubmitPassword()"
-          >
-            {{
-              changingPassword()
-                ? ("profile.changingPassword" | t)
-                : ("profile.changePassword" | t)
-            }}
-          </ds-button>
-        </ds-form-footer>
-      </ds-form-section>
+            [checked]="isDark()"
+            (toggled)="toggleTheme()"
+          ></ds-preference-toggle>
+        </ds-stack>
+
+        <ds-stack [gap]="'12px'">
+          <ds-text variant="label">{{
+            "settings.section.security" | t
+          }}</ds-text>
+
+          <ds-card [padding]="'16px'" [gap]="'16px'">
+            <ds-stack direction="row" [gap]="'10px'" align="center">
+              <ds-icon-badge
+                icon="lock"
+                tone="brand"
+                [size]="36"
+              ></ds-icon-badge>
+              <ds-stack [gap]="'2px'">
+                <ds-text variant="strong">
+                  {{ "settings.password.title" | t }}
+                </ds-text>
+                <ds-text variant="meta">
+                  {{ "settings.password.hint" | t }}
+                </ds-text>
+              </ds-stack>
+            </ds-stack>
+
+            <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+              <ds-stack [gap]="'14px'">
+                <ds-field [label]="'settings.field.currentPassword' | t">
+                  <ds-form-input
+                    type="password"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    formControlName="currentPassword"
+                  ></ds-form-input>
+                </ds-field>
+
+                <ds-field [label]="'settings.field.newPassword' | t">
+                  <ds-form-input
+                    type="password"
+                    [placeholder]="'settings.field.newPassword' | t"
+                    autocomplete="new-password"
+                    formControlName="newPassword"
+                    [errorMessages]="{ weakPassword: 'settings.password.weak' }"
+                  ></ds-form-input>
+                  <ds-password-strength
+                    [password]="passwordForm.get('newPassword')?.value"
+                    [weakLabel]="'settings.strength.weak' | t"
+                    [mediumLabel]="'settings.strength.medium' | t"
+                    [strongLabel]="'settings.strength.strong' | t"
+                  ></ds-password-strength>
+                </ds-field>
+
+                <ds-field [label]="'settings.field.confirmPassword' | t">
+                  <ds-form-input
+                    type="password"
+                    [placeholder]="'settings.field.confirmPassword' | t"
+                    autocomplete="new-password"
+                    formControlName="confirmPassword"
+                  ></ds-form-input>
+                  @if (
+                    passwordForm.get("confirmPassword")?.errors?.[
+                      "passwordMismatch"
+                    ] && passwordForm.get("confirmPassword")?.touched
+                  ) {
+                    <ds-text variant="danger">
+                      {{ "settings.password.mismatch" | t }}
+                    </ds-text>
+                  }
+                </ds-field>
+
+                <ds-button
+                  variant="outline"
+                  size="md"
+                  [fullWidth]="true"
+                  [disabled]="changingPassword() || passwordForm.invalid"
+                  [loading]="changingPassword()"
+                  (clicked)="onSubmitPassword()"
+                >
+                  {{
+                    (changingPassword()
+                      ? "settings.password.updating"
+                      : "settings.password.update"
+                    ) | t
+                  }}
+                </ds-button>
+              </ds-stack>
+            </form>
+          </ds-card>
+        </ds-stack>
+
+        <ds-button
+          variant="outline-danger"
+          size="md"
+          icon="logout"
+          [fullWidth]="true"
+          (clicked)="logout()"
+        >
+          {{ "settings.logout" | t }}
+        </ds-button>
+      </ds-stack>
     }
-  </ds-section-page-wrapper>
+  </ds-stack>
 </ds-page-wrapper>

@@ -1,0 +1,7 @@
+services:
+  Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryNeedleDataQuery:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDiaryNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'

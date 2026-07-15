@@ -1,0 +1,44 @@
+{
+  "getDiary": {
+    "title": "Diario",
+    "titleToday": "Diario de hoy",
+    "kcal": "kcal",
+    "add": "Añadir",
+    "quantity": "Cantidad",
+    "remove": "Eliminar",
+    "summary": {
+      "total": "TOTAL DEL DÍA"
+    },
+    "badge": {
+      "product": "ARTÍCULO",
+      "recipe": "RECETA"
+    },
+    "meals": {
+      "breakfast": "Desayuno",
+      "lunch": "Comida",
+      "dinner": "Cena",
+      "snack": "Snacks"
+    },
+    "nav": {
+      "previous": "Día anterior",
+      "next": "Día siguiente",
+      "today": "Hoy"
+    },
+    "picker": {
+      "title": "Registrar en el diario",
+      "subtitle": "Añadir a",
+      "products": "Artículos",
+      "recipes": "Recetas",
+      "search": "Buscar artículo o receta…",
+      "close": "Cerrar",
+      "empty": "Sin resultados"
+    },
+    "toast": {
+      "added": "Añadido al diario",
+      "removed": "Eliminado del diario"
+    },
+    "empty": "Sin alimentos registrados",
+    "emptyAction": "Sin alimentos · toca para añadir",
+    "error": "No hemos podido cargar el diario de este día"
+  }
+}

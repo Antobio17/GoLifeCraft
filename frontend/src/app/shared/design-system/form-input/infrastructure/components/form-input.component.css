@@ -94,6 +94,26 @@ input[type="number"].form-control::-webkit-inner-spin-button {
   padding-right: 46px;
 }
 
+.input-leading {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  color: var(--ds-text-meta);
+  pointer-events: none;
+}
+
+.input-leading__prefix {
+  font-size: 15px;
+  font-weight: var(--ds-weight-extrabold);
+}
+
+.input-wrapper.has-leading .form-control {
+  padding-left: 40px;
+}
+
 .password-toggle {
   position: absolute;
   right: 12px;

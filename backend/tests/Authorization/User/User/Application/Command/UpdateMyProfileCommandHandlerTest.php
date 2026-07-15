@@ -55,14 +55,27 @@ final class UpdateMyProfileCommandHandlerTest extends TestCase
             userSessionId: 'user-1',
             name: 'New Name',
             lastname: 'New Lastname',
-            email: 'new@example.com',
         ));
 
         $saved = $this->repository->findById(id: 'user-1');
         $this->assertNotNull(actual: $saved);
         $this->assertEquals(expected: 'New Name', actual: $saved->name);
         $this->assertEquals(expected: 'New Lastname', actual: $saved->lastname);
-        $this->assertEquals(expected: 'new@example.com', actual: $saved->email);
+    }
+
+    public function testItDoesNotModifyEmail(): void
+    {
+        $user = $this->buildUser(id: 'user-1');
+        $this->repository->save(user: $user);
+
+        ($this->handler)(new UpdateMyProfileCommand(
+            userSessionId: 'user-1',
+            name: 'New Name',
+            lastname: 'New Lastname',
+        ));
+
+        $saved = $this->repository->findById(id: 'user-1');
+        $this->assertEquals(expected: 'original@example.com', actual: $saved->email);
     }
 
     public function testItDoesNotModifyRoleOrIsActive(): void
@@ -74,7 +87,6 @@ final class UpdateMyProfileCommandHandlerTest extends TestCase
             userSessionId: 'user-1',
             name: 'New Name',
             lastname: 'New Lastname',
-            email: 'new@example.com',
         ));
 
         $saved = $this->repository->findById(id: 'user-1');
@@ -90,7 +102,6 @@ final class UpdateMyProfileCommandHandlerTest extends TestCase
             userSessionId: 'non-existent',
             name: 'Name',
             lastname: 'Lastname',
-            email: 'email@example.com',
         ));
     }
 }

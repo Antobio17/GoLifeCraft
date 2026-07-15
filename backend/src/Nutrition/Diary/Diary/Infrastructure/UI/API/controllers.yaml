@@ -1,0 +1,28 @@
+services:
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\GetDiaryController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\GetDiaryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\CreateDiaryEntryController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\CreateDiaryEntryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\DeleteDiaryEntryController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\DeleteDiaryEntryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

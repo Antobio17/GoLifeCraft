@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { DOCUMENT } from "@angular/common";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  Renderer2,
+  inject,
+} from "@angular/core";
 
 @Component({
   selector: "ds-modal-sheet",
@@ -168,11 +177,42 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
     `,
   ],
 })
-export class ModalSheetComponent {
-  @Input() open = false;
+export class ModalSheetComponent implements OnDestroy {
+  private static readonly SCROLL_LOCK_CLASS = "ds-scroll-locked";
+
+  private renderer = inject(Renderer2);
+  private document = inject(DOCUMENT);
+
+  private isOpen = false;
+
+  @Input()
+  set open(value: boolean) {
+    this.isOpen = value;
+    this.toggleScrollLock(value);
+  }
+
+  get open(): boolean {
+    return this.isOpen;
+  }
+
   @Input() tall = false;
   @Input() compact = false;
   @Input() title = "";
   @Input() closeLabel = "Close";
   @Output() closed = new EventEmitter<void>();
+
+  ngOnDestroy(): void {
+    this.toggleScrollLock(false);
+  }
+
+  private toggleScrollLock(locked: boolean): void {
+    const body = this.document.body;
+
+    if (locked) {
+      this.renderer.addClass(body, ModalSheetComponent.SCROLL_LOCK_CLASS);
+      return;
+    }
+
+    this.renderer.removeClass(body, ModalSheetComponent.SCROLL_LOCK_CLASS);
+  }
 }
