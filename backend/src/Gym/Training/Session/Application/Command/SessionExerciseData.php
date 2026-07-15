@@ -10,8 +10,8 @@ final readonly class SessionExerciseData
     public function __construct(
         public string $exerciseId,
         public int $position,
-        public ?string $note,
         public array $sets,
+        public ?string $note = null,
     ) {
     }
 
