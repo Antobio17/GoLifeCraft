@@ -104,11 +104,7 @@
             }
           </ds-stack>
         } @else if (canWrite) {
-          <ds-add-tile
-            variant="dashed"
-            [label]="'getDiary.emptyAction' | t"
-            (clicked)="openPicker(meal.key)"
-          />
+          <ds-placeholder-note [message]="'getDiary.emptyAction' | t" />
         } @else {
           <ds-placeholder-note [message]="'getDiary.empty' | t" />
         }

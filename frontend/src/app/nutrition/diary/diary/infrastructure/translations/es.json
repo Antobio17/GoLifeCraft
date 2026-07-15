@@ -38,7 +38,7 @@
       "removed": "Eliminado del diario"
     },
     "empty": "Sin alimentos registrados",
-    "emptyAction": "Sin alimentos · toca para añadir",
+    "emptyAction": "Sin alimentos, añade uno desde el botón +",
     "error": "No hemos podido cargar el diario de este día"
   }
 }
