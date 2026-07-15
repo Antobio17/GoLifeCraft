@@ -112,6 +112,15 @@
               [weightLabel]="'getSession.set.weight' | t"
             />
 
+            <textarea
+              class="exercise-note"
+              [value]="exercise.note ?? ''"
+              [placeholder]="'getSession.exercise.notePlaceholder' | t"
+              [attr.aria-label]="'getSession.exercise.noteLabel' | t"
+              rows="2"
+              (input)="setNote(exercise.id, $any($event.target).value)"
+            ></textarea>
+
             @for (set of exercise.sets; track set.id; let j = $index) {
               <ds-set-row
                 [displayIndex]="j + 1"

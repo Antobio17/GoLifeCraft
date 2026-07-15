@@ -6,6 +6,7 @@
     <field name="sessionId" type="string" column="session_id" length="36"/>
     <field name="exerciseId" type="string" column="exercise_id" length="36"/>
     <field name="position" type="integer" column="position"/>
+    <field name="note" type="text" column="note" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

@@ -36,6 +36,7 @@ final readonly class SessionExerciseAssembler
             sessionId: $sessionId,
             exerciseId: $exerciseData->exerciseId,
             position: $exerciseData->position,
+            note: $exerciseData->note,
             createdByUserId: $userId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

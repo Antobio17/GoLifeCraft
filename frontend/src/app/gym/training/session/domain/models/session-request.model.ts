@@ -7,6 +7,7 @@ export interface ExerciseSetRequest {
 export interface SessionExerciseRequest {
   exerciseId: string | null;
   position: number;
+  note: string | null;
   sets: ExerciseSetRequest[];
 }
 

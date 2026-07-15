@@ -107,7 +107,7 @@ class Workout extends GenericAggregate
     }
 
     /**
-     * @return array<int, array{exerciseId: string, position: int, sets: array<int, array{position: int, reps: int, weight: float|null}>}>
+     * @return array<int, array{exerciseId: string, position: int, note: string|null, sets: array<int, array{position: int, reps: int, weight: float|null}>}>
      */
     private function exercisesSnapshot(): array
     {
@@ -115,6 +115,7 @@ class Workout extends GenericAggregate
             callback: fn (WorkoutExercise $exercise): array => [
                 'exerciseId' => $exercise->exerciseId,
                 'position' => $exercise->position,
+                'note' => $exercise->note,
                 'sets' => array_map(
                     callback: fn (WorkoutSet $set): array => [
                         'position' => $set->position,

@@ -24,6 +24,7 @@ export class SessionDraftService {
       muscleGroups: [...exercise.muscleGroups],
       type: exercise.type,
       position: index + 1,
+      note: exercise.note,
       sets: exercise.sets.map((set, setIndex) => ({
         id: this.uid("s"),
         position: setIndex + 1,
@@ -44,6 +45,7 @@ export class SessionDraftService {
       muscleGroups: [...exercise.attributes.muscleGroups],
       type: exercise.attributes.type,
       position: list.length + 1,
+      note: null,
       sets: [{ id: this.uid("s"), position: 1, reps: 10, weight: null }],
     };
     return [...list, added];
@@ -98,6 +100,21 @@ export class SessionDraftService {
     }));
   }
 
+  setNote(
+    list: SessionExerciseView[],
+    exerciseId: string,
+    note: string,
+  ): SessionExerciseView[] {
+    return list.map((exercise) =>
+      exercise.id !== exerciseId
+        ? exercise
+        : {
+            ...exercise,
+            note: this.toNullableText(note),
+          },
+    );
+  }
+
   toRequest(
     name: string,
     estimatedDurationMinutes: number,
@@ -109,6 +126,7 @@ export class SessionDraftService {
       exercises: list.map((exercise, exerciseIndex) => ({
         exerciseId: exercise.exerciseId,
         position: exerciseIndex + 1,
+        note: exercise.note,
         sets: exercise.sets.map((set, setIndex) => ({
           position: setIndex + 1,
           reps: set.reps,
@@ -127,6 +145,16 @@ export class SessionDraftService {
       weight: last ? last.weight : null,
     };
     return { ...exercise, sets: [...exercise.sets, set] };
+  }
+
+  private toNullableText(note: string): string | null {
+    const normalized = note.trim();
+
+    if (normalized === "") {
+      return null;
+    }
+
+    return normalized;
   }
 
   private mutateSet(

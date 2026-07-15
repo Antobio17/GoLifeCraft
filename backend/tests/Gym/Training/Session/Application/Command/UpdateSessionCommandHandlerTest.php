@@ -45,6 +45,7 @@ final class UpdateSessionCommandHandlerTest extends TestCase
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',
                     position: 1,
+                    note: null,
                     sets: [
                         new ExerciseSetData(position: 1, reps: 10, weight: 40.0),
                         new ExerciseSetData(position: 2, reps: 8, weight: 45.0),
@@ -75,6 +76,7 @@ final class UpdateSessionCommandHandlerTest extends TestCase
                 new SessionExerciseData(
                     exerciseId: 'exercise-2',
                     position: 1,
+                    note: 'Controla la bajada',
                     sets: [new ExerciseSetData(position: 1, reps: 12, weight: 20.0)],
                 ),
             ],
@@ -85,6 +87,7 @@ final class UpdateSessionCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'Empuje B', actual: $session->name);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises);
         $this->assertEquals(expected: 'exercise-2', actual: $session->exercises[0]->exerciseId);
+        $this->assertEquals(expected: 'Controla la bajada', actual: $session->exercises[0]->note);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises[0]->sets);
     }
 

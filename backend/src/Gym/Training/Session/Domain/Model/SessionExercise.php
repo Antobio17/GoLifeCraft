@@ -11,6 +11,7 @@ class SessionExercise extends GenericAggregate
     public string $sessionId;
     public string $exerciseId;
     public int $position;
+    public ?string $note = null;
 
     /** @var ExerciseSet[] */
     public array $sets = [];
@@ -19,6 +20,7 @@ class SessionExercise extends GenericAggregate
         string $sessionId,
         string $exerciseId,
         int $position,
+        ?string $note,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
@@ -29,6 +31,7 @@ class SessionExercise extends GenericAggregate
         $sessionExercise->sessionId = $sessionId;
         $sessionExercise->exerciseId = $exerciseId;
         $sessionExercise->position = $position;
+        $sessionExercise->note = $note;
         $sessionExercise->stampCreation(userId: $createdByUserId, now: $now);
 
         return $sessionExercise;

@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class WorkoutFinished extends DomainEvent
 {
     /**
-     * @param array<int, array{exerciseId: string, position: int, sets: array<int, array{position: int, reps: int, weight: float|null}>}> $exercises
+     * @param array<int, array{exerciseId: string, position: int, note: string|null, sets: array<int, array{position: int, reps: int, weight: float|null}>}> $exercises
      */
     public function __construct(
         string $aggregateId,

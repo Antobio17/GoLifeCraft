@@ -41,6 +41,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',
                     position: 1,
+                    note: null,
                     sets: [new ExerciseSetData(position: 1, reps: 10, weight: 40.0)],
                 ),
             ],
@@ -63,6 +64,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
                 new SessionExerciseData(
                     exerciseId: 'exercise-2',
                     position: 1,
+                    note: 'No bloquear codos',
                     sets: [
                         new ExerciseSetData(position: 1, reps: 12, weight: 20.0),
                         new ExerciseSetData(position: 2, reps: 12, weight: 22.5),
@@ -77,6 +79,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 55, actual: $session->estimatedDurationMinutes);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises);
         $this->assertEquals(expected: 'exercise-2', actual: $session->exercises[0]->exerciseId);
+        $this->assertEquals(expected: 'No bloquear codos', actual: $session->exercises[0]->note);
         $this->assertCount(expectedCount: 2, haystack: $session->exercises[0]->sets);
     }
 

@@ -85,7 +85,9 @@
     },
     "exercise": {
       "add": "Añadir ejercicio",
-      "remove": "Quitar ejercicio"
+      "remove": "Quitar ejercicio",
+      "noteLabel": "Comentario del ejercicio",
+      "notePlaceholder": "Comentario…"
     },
     "set": {
       "number": "Serie",

@@ -85,7 +85,9 @@
     },
     "exercise": {
       "add": "Add exercise",
-      "remove": "Remove exercise"
+      "remove": "Remove exercise",
+      "noteLabel": "Exercise note",
+      "notePlaceholder": "Comment…"
     },
     "set": {
       "number": "Set",

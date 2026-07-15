@@ -12,6 +12,7 @@ export interface SessionExerciseView {
   muscleGroups: string[];
   type: string;
   position: number;
+  note: string | null;
   sets: ExerciseSetView[];
 }
 

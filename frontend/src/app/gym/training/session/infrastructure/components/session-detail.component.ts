@@ -206,6 +206,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       exerciseName: exercise.exerciseName,
       muscleGroups: exercise.muscleGroups,
       type: exercise.type,
+      note: exercise.note,
       sets: exercise.sets.map((set) => ({
         reps: set.reps,
         weight: set.weight,
@@ -408,6 +409,13 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   setWeight(exerciseId: string, setId: string, value: number): void {
     this.exercises.update((list) =>
       this.sessionDraft.setWeight(list, exerciseId, setId, value),
+    );
+    this.afterEdit();
+  }
+
+  setNote(exerciseId: string, value: string): void {
+    this.exercises.update((list) =>
+      this.sessionDraft.setNote(list, exerciseId, value),
     );
     this.afterEdit();
   }

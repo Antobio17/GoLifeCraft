@@ -61,7 +61,8 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
                 'e.name AS exercise_name',
                 'e.muscle_groups',
                 'e.type',
-                'se.position'
+                'se.position',
+                'se.note'
             )
             ->from(table: 'session_exercise', alias: 'se')
             ->leftJoin('se', 'exercise', 'e', 'e.id = se.exercise_id')
@@ -87,6 +88,7 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
                 muscleGroups: json_decode(json: $row['muscle_groups'] ?? '[]', associative: true) ?? [],
                 type: $row['type'],
                 position: (int) $row['position'],
+                note: $row['note'],
                 sets: $setsByExercise[$row['id']] ?? [],
             );
         }, array: $exerciseRows);

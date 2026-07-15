@@ -14,6 +14,7 @@ final readonly class SessionExerciseView
         public array $muscleGroups,
         public string $type,
         public int $position,
+        public ?string $note,
         public array $sets,
     ) {
     }
