@@ -60,11 +60,11 @@ type IconButtonVariant =
       }
       :host([variant="solid"]) .ds-icon-btn {
         background: var(--ds-primary);
-        color: var(--icon-btn-color, var(--ds-accent));
+        color: var(--icon-btn-color, var(--ds-on-primary));
       }
       :host([variant="solid"]) .ds-icon-btn:hover:not(:disabled) {
         background: var(--ds-primary);
-        color: var(--icon-btn-color, var(--ds-accent));
+        color: var(--icon-btn-color, var(--ds-on-primary));
         filter: brightness(1.05);
       }
       :host([variant="outlined"]) .ds-icon-btn {
