@@ -12,7 +12,6 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
-import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { PlaceholderNoteComponent } from "@shared/design-system/placeholder-note/infrastructure/components/placeholder-note.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -53,7 +52,6 @@ type PickerTab = "product" | "recipe";
     HeadingComponent,
     ButtonComponent,
     IconButtonComponent,
-    AddTileComponent,
     PlaceholderNoteComponent,
     CardComponent,
     StackComponent,

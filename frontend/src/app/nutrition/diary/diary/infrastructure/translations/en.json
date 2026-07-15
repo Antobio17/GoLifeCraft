@@ -38,7 +38,7 @@
       "removed": "Removed from the diary"
     },
     "empty": "No food logged",
-    "emptyAction": "No food · tap to add",
+    "emptyAction": "No food yet, add one with the + button",
     "error": "We couldn't load this day's diary"
   }
 }
