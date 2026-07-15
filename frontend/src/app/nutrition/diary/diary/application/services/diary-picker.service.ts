@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { RecipeListItem } from "@nutrition/recipe/recipe/domain/models/recipe.model";
 
@@ -27,11 +27,11 @@ const FALLBACK_RECIPE_EMOJI = "🍲";
 
 @Injectable()
 export class DiaryPickerService {
-  private products = new Map<string, ProductEntry>();
-  private recipes = new Map<string, RecipeEntry>();
+  private products = signal(new Map<string, ProductEntry>());
+  private recipes = signal(new Map<string, RecipeEntry>());
 
   setProducts(articles: Article[]): void {
-    this.products.clear();
+    const map = new Map<string, ProductEntry>();
 
     articles.forEach((article) => {
       const facts = article.relationships?.nutritionFacts?.data.attributes;
@@ -42,7 +42,7 @@ export class DiaryPickerService {
           : 0;
       const brand = article.attributes.brand;
 
-      this.products.set(article.id, {
+      map.set(article.id, {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
         detail: brand
@@ -50,28 +50,32 @@ export class DiaryPickerService {
           : `${kcalPer100} kcal / 100 g`,
       });
     });
+
+    this.products.set(map);
   }
 
   setRecipes(recipes: RecipeListItem[]): void {
-    this.recipes.clear();
+    const map = new Map<string, RecipeEntry>();
 
     recipes.forEach((recipe) => {
-      this.recipes.set(recipe.id, {
+      map.set(recipe.id, {
         name: recipe.attributes.name,
         emoji: recipe.attributes.emoji || FALLBACK_RECIPE_EMOJI,
         detail: `${Math.round(recipe.attributes.perServing.calories)} kcal / ración · ${recipe.attributes.category}`,
       });
     });
+
+    this.recipes.set(map);
   }
 
   hasRecipes(): boolean {
-    return this.recipes.size > 0;
+    return this.recipes().size > 0;
   }
 
   productChoices(query: string): DiaryChoice[] {
     const needle = query.trim().toLowerCase();
 
-    return Array.from(this.products.entries())
+    return Array.from(this.products().entries())
       .filter(
         ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
       )
@@ -87,7 +91,7 @@ export class DiaryPickerService {
   recipeChoices(query: string): DiaryChoice[] {
     const needle = query.trim().toLowerCase();
 
-    return Array.from(this.recipes.entries())
+    return Array.from(this.recipes().entries())
       .filter(
         ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
       )
