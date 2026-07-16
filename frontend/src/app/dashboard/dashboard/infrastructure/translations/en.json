@@ -2,6 +2,9 @@
   "dashboard": {
     "greeting": "Hi",
     "profile": "View profile",
+    "avatar": {
+      "settings": "Go to settings"
+    },
     "comingSoon": "Coming soon.",
     "search": "Search a product…",
     "summary": {

@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
   selector: "ds-greeting-header",
@@ -11,7 +11,14 @@ import { Component, Input } from "@angular/core";
           {{ greeting }}{{ name ? ", " + name : "" }}
         </h1>
       </div>
-      <span class="dash__avatar" aria-hidden="true">{{ initial }}</span>
+      <button
+        type="button"
+        class="dash__avatar"
+        [attr.aria-label]="avatarLabel"
+        (click)="avatarClick.emit()"
+      >
+        {{ initial }}
+      </button>
     </header>
   `,
   styles: [
@@ -53,6 +60,9 @@ import { Component, Input } from "@angular/core";
         flex: none;
         width: 42px;
         height: 42px;
+        border: none;
+        padding: 0;
+        cursor: pointer;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -62,6 +72,13 @@ import { Component, Input } from "@angular/core";
         font-family: var(--ds-font-display);
         font-weight: 800;
         font-size: 16px;
+        transition: transform 0.15s ease;
+      }
+      .dash__avatar:hover {
+        transform: scale(1.05);
+      }
+      .dash__avatar:active {
+        transform: scale(0.96);
       }
       :host-context([data-theme="dark"]) .dash__avatar {
         background: var(--ds-accent);
@@ -87,4 +104,6 @@ export class GreetingHeaderComponent {
   @Input() greeting = "";
   @Input() name = "";
   @Input() initial = "";
+  @Input() avatarLabel = "";
+  @Output() avatarClick = new EventEmitter<void>();
 }

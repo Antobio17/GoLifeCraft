@@ -5,6 +5,8 @@
     [greeting]="'dashboard.greeting' | t"
     [name]="name()"
     [initial]="initial()"
+    [avatarLabel]="'dashboard.avatar.settings' | t"
+    (avatarClick)="goToSettings()"
   />
 
   <ds-stack slot="summary" [gap]="'10px'">

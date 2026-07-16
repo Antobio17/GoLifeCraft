@@ -93,6 +93,10 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  goToSettings(): void {
+    this.router.navigate(["/me"]);
+  }
+
   goToGym(): void {
     this.router.navigate(["/gym"]);
   }
