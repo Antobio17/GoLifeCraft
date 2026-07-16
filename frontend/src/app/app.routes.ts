@@ -1,6 +1,5 @@
 import { Routes } from "@angular/router";
 import { authGuard } from "./authorization/login/login/domain/guards/auth.guard";
-import { blockReadOnlyUserGuard } from "./authorization/login/login/domain/guards/role.guard";
 
 export const APP_ROUTES: Routes = [
   {
@@ -27,15 +26,6 @@ export const APP_ROUTES: Routes = [
         loadChildren: () =>
           import("./dashboard/dashboard/infrastructure/routes/dashboard.routes").then(
             (m) => m.DASHBOARD_ROUTES,
-          ),
-      },
-      {
-        path: "users",
-        canActivate: [blockReadOnlyUserGuard],
-        data: { breadcrumb: "user.breadcrumb.list" },
-        loadChildren: () =>
-          import("./authorization/user/user/infrastructure/routes/user.routes").then(
-            (m) => m.USER_ROUTES,
           ),
       },
       {
