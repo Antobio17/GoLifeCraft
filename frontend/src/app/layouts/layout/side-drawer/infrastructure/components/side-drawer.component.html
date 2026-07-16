@@ -98,34 +98,38 @@
       />
     </nav>
 
-    <button
-      type="button"
-      class="drawer__theme"
-      role="switch"
-      [attr.aria-checked]="isDark()"
-      (click)="toggleTheme()"
-    >
-      <ds-icon
-        class="drawer__theme-icon"
-        [class.drawer__theme-icon--moon]="isDark()"
-        [class.drawer__theme-icon--sun]="!isDark()"
-        [name]="isDark() ? 'moon' : 'sun'"
-        [size]="18"
-        [stroke]="2.1"
-      />
-      <span class="drawer__theme-label">{{ "navbar.darkMode" | t }}</span>
-      <span class="drawer__switch" [class.is-on]="isDark()">
-        <span class="drawer__switch-knob"></span>
-      </span>
-    </button>
+    <div class="drawer__footer">
+      <div class="drawer__account">
+        <a class="drawer__user" routerLink="/me" (click)="close()">
+          <ds-avatar [initial]="initial()" />
+          <span class="drawer__user-text">
+            <span class="drawer__user-name">{{ displayName() }}</span>
+            <span class="drawer__user-email">{{ email() }}</span>
+          </span>
+        </a>
 
-    <a class="drawer__user" routerLink="/me" (click)="close()">
-      <ds-avatar [initial]="initial()" />
-      <span class="drawer__user-text">
-        <span class="drawer__user-name">{{ displayName() }}</span>
-        <span class="drawer__user-email">{{ email() }}</span>
-      </span>
-    </a>
+        <button
+          type="button"
+          class="drawer__theme"
+          role="switch"
+          [attr.aria-checked]="isDark()"
+          (click)="toggleTheme()"
+        >
+          <ds-icon
+            class="drawer__theme-icon"
+            [class.drawer__theme-icon--moon]="isDark()"
+            [class.drawer__theme-icon--sun]="!isDark()"
+            [name]="isDark() ? 'moon' : 'sun'"
+            [size]="18"
+            [stroke]="2.1"
+          />
+          <span class="drawer__theme-label">{{ "navbar.darkMode" | t }}</span>
+          <span class="drawer__switch" [class.is-on]="isDark()">
+            <span class="drawer__switch-knob"></span>
+          </span>
+        </button>
+      </div>
+    </div>
 
     <button type="button" class="drawer__logout" (click)="logout()">
       <ds-icon name="logout" [size]="17" [stroke]="2.2" />

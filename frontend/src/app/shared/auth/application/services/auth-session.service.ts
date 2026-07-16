@@ -42,6 +42,16 @@ export class AuthSessionService {
     return this._session()?.email ?? "";
   }
 
+  getName(): string {
+    return this._session()?.user?.name?.trim() ?? "";
+  }
+
+  setUserName(name: string | null): void {
+    const session = this._session();
+    if (!session) return;
+    this.saveSession({ ...session, user: { ...session.user, name } });
+  }
+
   isGod(): boolean {
     return this.getCurrentUserRole() === "ROLE_GOD";
   }

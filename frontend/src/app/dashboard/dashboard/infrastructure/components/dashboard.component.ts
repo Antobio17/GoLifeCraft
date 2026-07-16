@@ -54,8 +54,8 @@ export class DashboardComponent implements OnInit {
 
   readonly name = computed(() => {
     const session = this.authSessionService.session();
-    const username = session?.user?.username?.trim();
-    if (username) return username;
+    const name = session?.user?.name?.trim();
+    if (name) return name;
 
     const email = session?.email ?? "";
     const local = email.split("@")[0] ?? "";

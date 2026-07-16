@@ -53,13 +53,16 @@ export class SideDrawerComponent {
   readonly email = computed(() => this.authSessionService.getUsername());
 
   readonly displayName = computed(() => {
+    const name = this.authSessionService.getName();
+    if (name) return name;
+
     const local = this.email().trim().split("@")[0];
     if (!local) return "";
     return local.charAt(0).toUpperCase() + local.slice(1);
   });
 
   readonly initial = computed(() => {
-    const value = this.email().trim();
+    const value = this.displayName().trim();
     return value ? value.charAt(0).toUpperCase() : "?";
   });
 

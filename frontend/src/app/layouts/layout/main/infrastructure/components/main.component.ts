@@ -6,6 +6,8 @@ import { BottomNavComponent } from "@layouts/layout/bottom-nav/infrastructure/co
 import { SideDrawerComponent } from "@layouts/layout/side-drawer/infrastructure/components/side-drawer.component";
 import { ActiveWorkoutBannerComponent } from "@gym/training/workout/infrastructure/components/active-workout-banner.component";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { GetMyProfileService } from "@authorization/user/user/application/services/get-my-profile.service";
+import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/providers/get-my-profile.provider";
 
 @Component({
   selector: "app-main",
@@ -17,12 +19,14 @@ import { AuthSessionService } from "@shared/auth/application/services/auth-sessi
     SideDrawerComponent,
     ActiveWorkoutBannerComponent,
   ],
+  providers: [...GetMyProfileProvider.getProviders()],
   styleUrls: ["./main.component.css"],
   templateUrl: "./main.component.html",
 })
 export class MainLayoutComponent implements OnInit {
   private router = inject(Router);
   private authSessionService = inject(AuthSessionService);
+  private getMyProfileService = inject(GetMyProfileService);
 
   showTabBar = signal(this.computeShowTabBar());
 
@@ -30,6 +34,17 @@ export class MainLayoutComponent implements OnInit {
     this.router.events
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => this.showTabBar.set(this.computeShowTabBar()));
+
+    this.refreshProfileName();
+  }
+
+  private refreshProfileName(): void {
+    if (!this.authSessionService.isAuthenticated()) return;
+
+    this.getMyProfileService.getMyProfile().subscribe({
+      next: (profile) =>
+        this.authSessionService.setUserName(profile.data.attributes.name),
+    });
   }
 
   private computeShowTabBar(): boolean {
