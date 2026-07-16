@@ -1,0 +1,9 @@
+{
+  "verifyEmail": {
+    "tagline": "Account verification.",
+    "verifying": "We're verifying your email…",
+    "success": "Your email has been verified! Your account will become active once an administrator validates your registration.",
+    "error": "We couldn't verify your email. The link is invalid or has expired.",
+    "goToLogin": "Go to sign in"
+  }
+}

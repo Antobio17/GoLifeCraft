@@ -1,0 +1,25 @@
+subject: "Verifica tu cuenta de GoLifeCraft"
+preheader: "Confirma tu dirección de email para activar tu cuenta. El enlace caduca en %hours% horas."
+brand:
+    tag: "Bienvenida · Cuenta"
+hero:
+    eyebrow: "Un último paso"
+    title: "Verifica tu email"
+    subtitle: "Ya casi estás dentro de GoLifeCraft."
+greeting: "Hola, %name%"
+intro: "Gracias por registrarte en <strong style=\"color:#0f1923; font-weight:600;\">GoLifeCraft</strong>. Confirma tu dirección de email para que podamos activar tu cuenta."
+cta: "Verificar mi email →"
+expires: "ESTE ENLACE CADUCA EN %hours% HORAS"
+fallback:
+    label: "¿No funciona el botón?"
+warning:
+    title: "¿No te registraste tú?"
+    body: "Ignora este mensaje — no se creará ninguna cuenta si no confirmas. Si tienes dudas, escríbenos a"
+    support_email: "soporte@golifecraft.com"
+footer:
+    compliance: "GoLifeCraft · Nutrición y entrenamiento"
+    copyright: "© 2026 GoLifeCraft"
+    confidential: "Este mensaje es confidencial. Si lo has recibido por error, elimínalo."
+    help: "Ayuda"
+    privacy: "Privacidad"
+    site: "golifecraft.com"

@@ -1,0 +1,16 @@
+services:
+  Authorization\User\PasswordResetToken\Infrastructure\UI\API\Controller\RequestPasswordResetController:
+    class: Authorization\User\PasswordResetToken\Infrastructure\UI\API\Controller\RequestPasswordResetController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $logger: '@logger'
+    tags:
+      - { name: controller.service_arguments }
+
+  Authorization\User\PasswordResetToken\Infrastructure\UI\API\Controller\ConfirmPasswordResetController:
+    class: Authorization\User\PasswordResetToken\Infrastructure\UI\API\Controller\ConfirmPasswordResetController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $logger: '@logger'
+    tags:
+      - { name: controller.service_arguments }

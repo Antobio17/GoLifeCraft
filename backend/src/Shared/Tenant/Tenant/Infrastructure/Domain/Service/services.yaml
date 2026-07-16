@@ -1,4 +1,9 @@
 services:
+  Shared\Tenant\Tenant\Domain\Service\TenantIdentifierGenerator:
+    class: Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\DoctrineTenantIdentifierGenerator
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'
+
   Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher:
     class: Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\DoctrineTenantConnectionSwitcher
     arguments:

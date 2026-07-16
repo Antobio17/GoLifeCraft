@@ -1,0 +1,4 @@
+footer:
+    legal: "© GoLifeCraft. Este mensaje es confidencial."
+transport:
+    failed: "El email no pudo enviarse."

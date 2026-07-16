@@ -17,12 +17,15 @@
         "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.4.*",
+        "symfony/mailer": "7.4.*",
         "symfony/mcp-bundle": "^0.10",
         "symfony/messenger": "7.4.*",
         "symfony/monolog-bundle": "^3.11",
         "symfony/rate-limiter": "7.4.*",
         "symfony/runtime": "7.4.*",
         "symfony/security-bundle": "7.4.*",
+        "symfony/translation": "7.4.*",
+        "symfony/twig-bundle": "7.4.*",
         "symfony/yaml": "7.4.*"
     },
     "config": {

@@ -1,0 +1,17 @@
+{
+  "forgotPassword": {
+    "tagline": "Recupera el acceso a tu cuenta.",
+    "intro": "Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.",
+    "email": {
+      "label": "Email",
+      "placeholder": "Introduce tu email"
+    },
+    "submit": "Enviar enlace",
+    "submitting": "Enviando…",
+    "sent": "Si existe una cuenta con ese email, te hemos enviado un enlace para restablecer tu contraseña. Revisa tu bandeja de entrada.",
+    "backToLogin": "Volver a iniciar sesión",
+    "validation": {
+      "required": "Por favor, introduce tu email"
+    }
+  }
+}

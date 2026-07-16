@@ -25,12 +25,24 @@ doctrine:
                 connection: master
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 mappings:
-                    User: 
+                    User:
                         is_bundle: false
                         type: xml
                         dir: '%kernel.project_dir%/src/Authorization/User/User/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Authorization\User\User\Domain\Model'
                         alias: user
+                    PasswordResetToken:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Authorization/User/PasswordResetToken/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Authorization\User\PasswordResetToken\Domain\Model'
+                        alias: password_reset_token
+                    EmailVerificationToken:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Authorization/User/EmailVerificationToken/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Authorization\User\EmailVerificationToken\Domain\Model'
+                        alias: email_verification_token
             tenant_manager:
                 connection: writer_tenant
                 naming_strategy: doctrine.orm.naming_strategy.underscore

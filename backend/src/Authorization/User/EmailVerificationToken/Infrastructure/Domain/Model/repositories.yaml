@@ -1,0 +1,6 @@
+services:
+  Authorization\User\EmailVerificationToken\Domain\Model\EmailVerificationTokenRepository:
+    class: Authorization\User\EmailVerificationToken\Infrastructure\Domain\Model\Doctrine\DoctrineEmailVerificationTokenRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - Authorization\User\EmailVerificationToken\Domain\Model\EmailVerificationToken

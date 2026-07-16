@@ -1,0 +1,4 @@
+register_user:
+  path: /api/register
+  methods: [POST]
+  controller: Authorization\User\Registration\Infrastructure\UI\API\Controller\RegisterUserController

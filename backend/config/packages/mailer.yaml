@@ -1,0 +1,8 @@
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+        message_bus: false
+        envelope:
+            sender: '%env(MAILER_FROM_EMAIL)%'
+        headers:
+            From: '"%env(MAILER_FROM_NAME)%" <%env(MAILER_FROM_EMAIL)%>'

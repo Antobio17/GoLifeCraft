@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
@@ -91,6 +92,17 @@ final class TenantUserAuthenticator extends AbstractAuthenticator
             $response->headers->set('Retry-After', '300');
 
             return $response;
+        }
+
+        if ($exception instanceof AccountStatusException) {
+            return JsonResponseBuilder::buildResponseFromBaseException(
+                exception: new BaseException(
+                    title: 'Account is not active.',
+                    keyTranslation: $exception->getMessage(),
+                    details: []
+                ),
+                status: Response::HTTP_FORBIDDEN
+            );
         }
 
         return JsonResponseBuilder::buildResponseFromBaseException(

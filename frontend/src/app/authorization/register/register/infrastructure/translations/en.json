@@ -27,7 +27,7 @@
       "show": "Show password",
       "hide": "Hide password"
     },
-    "success": "Account created successfully. You can now sign in.",
+    "success": "Account created. We've sent you an email to verify your account.",
     "validation": {
       "required": "Please fill in all fields",
       "passwordMismatch": "Passwords do not match"

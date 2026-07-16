@@ -1,0 +1,7 @@
+services:
+  Shared\Email\Email\Domain\Service\EmailSender:
+    class: Shared\Email\Email\Infrastructure\Domain\Service\SymfonyMailer\SymfonyMailerEmailSender
+    arguments:
+      $mailer: '@mailer.mailer'
+      $translator: '@translator'
+      $twig: '@twig'

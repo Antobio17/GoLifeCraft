@@ -1,0 +1,7 @@
+services:
+  Authorization\User\EmailVerificationToken\Domain\Service\SendVerificationEmail:
+    class: Authorization\User\EmailVerificationToken\Infrastructure\Domain\Service\Mailer\MailerSendVerificationEmail
+    arguments:
+      $emailSender: '@Shared\Email\Email\Domain\Service\EmailSender'
+      $frontendUrl: '%env(EMAIL_VERIFICATION_FRONTEND_URL)%'
+      $ttlMinutes: '%env(int:EMAIL_VERIFICATION_TOKEN_TTL_MINUTES)%'

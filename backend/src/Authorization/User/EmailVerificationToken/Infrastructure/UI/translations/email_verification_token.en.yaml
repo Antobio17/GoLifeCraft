@@ -1,0 +1,25 @@
+subject: "Verify your GoLifeCraft account"
+preheader: "Confirm your email address to activate your account. The link expires in %hours% hours."
+brand:
+    tag: "Welcome · Account"
+hero:
+    eyebrow: "One last step"
+    title: "Verify your email"
+    subtitle: "You're almost inside GoLifeCraft."
+greeting: "Hi, %name%"
+intro: "Thanks for signing up to <strong style=\"color:#0f1923; font-weight:600;\">GoLifeCraft</strong>. Confirm your email address so we can activate your account."
+cta: "Verify my email →"
+expires: "THIS LINK EXPIRES IN %hours% HOURS"
+fallback:
+    label: "Button not working?"
+warning:
+    title: "Didn't sign up?"
+    body: "Ignore this message — no account will be created unless you confirm. If in doubt, write to us at"
+    support_email: "soporte@golifecraft.com"
+footer:
+    compliance: "GoLifeCraft · Nutrition and training"
+    copyright: "© 2026 GoLifeCraft"
+    confidential: "This message is confidential. If you received it by mistake, delete it."
+    help: "Help"
+    privacy: "Privacy"
+    site: "golifecraft.com"

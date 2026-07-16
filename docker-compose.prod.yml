@@ -103,6 +103,7 @@ services:
       - ./volumes/jwt_keys:/var/www/html/config/jwt
     depends_on:
       - db
+      - postfix
     logging:
       driver: "json-file"
       options:
@@ -116,6 +117,34 @@ services:
         reservations:
           cpus: '0.50'
           memory: 256M
+
+  postfix:
+    image: boky/postfix:latest
+    container_name: golifecraft_postfix
+    restart: always
+    environment:
+      ALLOWED_SENDER_DOMAINS: "${MAIL_DOMAIN:-golifecraft.com}"
+      HOSTNAME: "mail.${MAIL_DOMAIN:-golifecraft.com}"
+      POSTFIX_smtp_tls_security_level: "may"
+      POSTFIX_smtpd_tls_security_level: "none"
+      POSTFIX_mynetworks: "127.0.0.0/8,172.42.0.0/16"
+      POSTFIX_inet_protocols: "ipv4"
+      DKIM_AUTOGENERATE: "1"
+    volumes:
+      - ./volumes/postfix_dkim:/etc/opendkim/keys
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
 
   db:
     image: mysql:8.0.28

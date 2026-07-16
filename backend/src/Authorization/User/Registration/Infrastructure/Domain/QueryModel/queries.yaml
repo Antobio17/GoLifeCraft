@@ -1,0 +1,5 @@
+services:
+  Authorization\User\Registration\Domain\QueryModel\RegisterUserNeedleDataQuery:
+    class: Authorization\User\Registration\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRegisterUserNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'

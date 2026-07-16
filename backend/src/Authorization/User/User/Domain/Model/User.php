@@ -3,8 +3,11 @@
 namespace Authorization\User\User\Domain\Model;
 
 use Authorization\User\User\Domain\Event\MyThemeChanged;
+use Authorization\User\User\Domain\Event\UserEmailVerified;
+use Authorization\User\User\Domain\Event\UserRegistered;
 use Authorization\User\User\Domain\Event\UserUpdated;
 use Authorization\User\User\Domain\Exception\ChangeMyThemeException;
+use Authorization\User\User\Domain\Service\PasswordHasher;
 use Shared\Shared\Shared\Domain\Model\Aggregate;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -41,7 +44,72 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         public string $updatedByUserId,
         public string $theme = self::THEME_LIGHT,
         public array $roles = [],
+        public bool $emailVerified = false,
     ) {
+    }
+
+    public static function register(
+        string $id,
+        string $username,
+        string $tenantId,
+        string $email,
+        string $name,
+        string $lastname,
+        string $plainPassword,
+        string $role,
+        PasswordHasher $passwordHasher,
+        DateTimeGenerator $dateTimeGenerator,
+    ): self {
+        $now = $dateTimeGenerator->now();
+
+        $user = new self(
+            id: $id,
+            username: $username,
+            tenantId: $tenantId,
+            email: $email,
+            name: $name,
+            lastname: $lastname,
+            password: '',
+            role: $role,
+            isActive: false,
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $id,
+            updatedByUserId: $id,
+            emailVerified: false,
+        );
+
+        $user->password = $passwordHasher->hash(user: $user, plainPassword: $plainPassword);
+
+        $user->record(event: new UserRegistered(
+            aggregateId: $id,
+            occurredOn: $now,
+            username: $username,
+            email: $email,
+            name: $name,
+            tenantId: $tenantId,
+            role: $role,
+        ));
+
+        return $user;
+    }
+
+    public function verifyEmail(DateTimeGenerator $dateTimeGenerator): void
+    {
+        if ($this->emailVerified) {
+            return;
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->emailVerified = true;
+        $this->updatedAt = $now;
+
+        $this->record(event: new UserEmailVerified(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            email: $this->email,
+        ));
     }
 
     public function getPassword(): string
