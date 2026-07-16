@@ -2,11 +2,11 @@
 
 namespace Authorization\User\User\Infrastructure\Domain\QueryModel\Doctrine;
 
-use Authorization\User\User\Domain\QueryModel\Dto\GetUserResult;
-use Authorization\User\User\Domain\QueryModel\GetUserNeedleDataQuery;
+use Authorization\User\User\Domain\QueryModel\Dto\GetMyProfileResult;
+use Authorization\User\User\Domain\QueryModel\GetMyProfileNeedleDataQuery;
 use Doctrine\DBAL\Connection;
 
-final readonly class DoctrineGetUserNeedleDataQuery implements GetUserNeedleDataQuery
+final readonly class DoctrineGetMyProfileNeedleDataQuery implements GetMyProfileNeedleDataQuery
 {
     public function __construct(
         private Connection $masterConnection,
@@ -28,7 +28,7 @@ final readonly class DoctrineGetUserNeedleDataQuery implements GetUserNeedleData
         return false !== $result ? $result : null;
     }
 
-    public function findUserById(string $userId): ?GetUserResult
+    public function findUserById(string $userId): ?GetMyProfileResult
     {
         $result = $this->masterConnection
             ->createQueryBuilder()
@@ -56,7 +56,7 @@ final readonly class DoctrineGetUserNeedleDataQuery implements GetUserNeedleData
 
         $utc = new \DateTimeZone(timezone: 'UTC');
 
-        return new GetUserResult(
+        return new GetMyProfileResult(
             id: $result['id'],
             aggregateName: 'User',
             username: $result['username'],

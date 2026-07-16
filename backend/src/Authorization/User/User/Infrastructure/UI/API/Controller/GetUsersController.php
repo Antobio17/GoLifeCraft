@@ -3,7 +3,6 @@
 namespace Authorization\User\User\Infrastructure\UI\API\Controller;
 
 use Authorization\User\User\Application\Query\GetUsersQuery;
-use Authorization\User\User\Domain\Exception\CreateUserException;
 use Authorization\User\User\Domain\Exception\GetUserException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
@@ -44,7 +43,6 @@ final class GetUsersController
             return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
                 exception: $e,
                 exceptionStatusMap: [
-                    CreateUserException::class => Response::HTTP_BAD_REQUEST,
                     GetUserException::class => Response::HTTP_FORBIDDEN,
                 ]
             );

@@ -4,7 +4,7 @@ namespace Authorization\User\User\Domain\QueryModel\Dto;
 
 use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryAggregateResult;
 
-final class GetUserResult extends QueryAggregateResult
+final class GetMyProfileResult extends QueryAggregateResult
 {
     public function __construct(
         string $id,

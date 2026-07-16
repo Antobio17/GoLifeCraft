@@ -1,30 +1,10 @@
 api_tenant_login:
   path: /api/login
 
-create_tenant_user:
-  path: /api/v1/authorization/user
-  methods: [POST]
-  controller: Authorization\User\User\Infrastructure\UI\API\Controller\CreateUserController
-
-update_tenant_user:
-  path: /api/v1/authorization/user/{userId}
-  methods: [PUT]
-  controller: Authorization\User\User\Infrastructure\UI\API\Controller\UpdateUserController
-
-delete_tenant_user:
-  path: /api/v1/authorization/user/{userId}
-  methods: [DELETE]
-  controller: Authorization\User\User\Infrastructure\UI\API\Controller\DeleteUserController
-
 get_users:
   path: /api/v1/authorization/users
   methods: [GET]
   controller: Authorization\User\User\Infrastructure\UI\API\Controller\GetUsersController
-
-get_user:
-  path: /api/v1/authorization/user/{userId}
-  methods: [GET]
-  controller: Authorization\User\User\Infrastructure\UI\API\Controller\GetUserController
 
 get_my_profile:
   path: /api/v1/authorization/me

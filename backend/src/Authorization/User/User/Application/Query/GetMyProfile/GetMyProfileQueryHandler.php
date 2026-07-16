@@ -3,13 +3,13 @@
 namespace Authorization\User\User\Application\Query\GetMyProfile;
 
 use Authorization\User\User\Domain\Exception\GetUserException;
-use Authorization\User\User\Domain\QueryModel\GetUserNeedleDataQuery;
+use Authorization\User\User\Domain\QueryModel\GetMyProfileNeedleDataQuery;
 use Shared\Shared\Shared\Application\Query\QueryResult;
 
 final readonly class GetMyProfileQueryHandler
 {
     public function __construct(
-        private GetUserNeedleDataQuery $needleDataQuery,
+        private GetMyProfileNeedleDataQuery $needleDataQuery,
         private GetMyProfileDataTransform $dataTransform,
     ) {
     }

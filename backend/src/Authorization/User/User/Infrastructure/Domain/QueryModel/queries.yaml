@@ -1,21 +1,11 @@
 services:
-  Authorization\User\User\Domain\QueryModel\CreateUserNeedleDataQuery:
-    class: Authorization\User\User\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateUserNeedleDataQuery
-    arguments:
-      $connection: '@doctrine.dbal.master_connection'
-
   Authorization\User\User\Domain\QueryModel\GetUsersNeedleDataQuery:
     class: Authorization\User\User\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetUsersNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.master_connection'
 
-  Authorization\User\User\Domain\QueryModel\GetUserNeedleDataQuery:
-    class: Authorization\User\User\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetUserNeedleDataQuery
+  Authorization\User\User\Domain\QueryModel\GetMyProfileNeedleDataQuery:
+    class: Authorization\User\User\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetMyProfileNeedleDataQuery
     arguments:
       $masterConnection: '@doctrine.dbal.master_connection'
       $tenantConnection: '@doctrine.dbal.reader_tenant_connection'
-
-  Authorization\User\User\Domain\QueryModel\UpdateUserNeedleDataQuery:
-    class: Authorization\User\User\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateUserNeedleDataQuery
-    arguments:
-      $connection: '@doctrine.dbal.master_connection'

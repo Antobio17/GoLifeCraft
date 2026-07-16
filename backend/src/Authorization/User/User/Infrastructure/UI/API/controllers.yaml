@@ -1,34 +1,6 @@
 services:
-  Authorization\User\User\Infrastructure\UI\API\Controller\CreateUserController:
-    class: Authorization\User\User\Infrastructure\UI\API\Controller\CreateUserController
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: controller.service_arguments }
-
   Authorization\User\User\Infrastructure\UI\API\Controller\GetUsersController:
     class: Authorization\User\User\Infrastructure\UI\API\Controller\GetUsersController
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: controller.service_arguments }
-
-  Authorization\User\User\Infrastructure\UI\API\Controller\GetUserController:
-    class: Authorization\User\User\Infrastructure\UI\API\Controller\GetUserController
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: controller.service_arguments }
-
-  Authorization\User\User\Infrastructure\UI\API\Controller\UpdateUserController:
-    class: Authorization\User\User\Infrastructure\UI\API\Controller\UpdateUserController
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: controller.service_arguments }
-
-  Authorization\User\User\Infrastructure\UI\API\Controller\DeleteUserController:
-    class: Authorization\User\User\Infrastructure\UI\API\Controller\DeleteUserController
     arguments:
       $messageBus: '@messenger.bus.default'
     tags:
