@@ -9,6 +9,7 @@ use Gym\Analytics\Stats\Domain\QueryModel\GetGymStatsNeedleDataQuery;
 final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNeedleDataQuery
 {
     private const int SESSION_VOLUMES_LIMIT = 7;
+    private const string COMPLETED_STATUS = 'completed';
 
     public function __construct(private Connection $connection)
     {
@@ -18,19 +19,24 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
     {
         $setAggregates = $this->connection->createQueryBuilder()
             ->select(
-                'COUNT(es.id) AS total_sets',
-                'COALESCE(SUM(es.reps * COALESCE(es.weight, 0)), 0) AS total_volume',
+                'COUNT(ws.id) AS total_sets',
+                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS total_volume',
             )
-            ->from(table: 'exercise_set', alias: 'es')
+            ->from(table: 'workout_set', alias: 'ws')
+            ->innerJoin('ws', 'workout_exercise', 'we', 'we.id = ws.workout_exercise_id')
+            ->innerJoin('we', 'training_workout', 'tw', 'tw.id = we.workout_id')
+            ->where('tw.status = :status')
+            ->andWhere('ws.done = 1')
+            ->setParameter('status', self::COMPLETED_STATUS)
             ->executeQuery()
             ->fetchAssociative();
 
         return new GetGymStatsResult(
-            totalSessions: $this->countTable(table: 'training_session'),
+            totalSessions: $this->totalCompletedWorkouts(),
             totalExercises: $this->countTable(table: 'exercise'),
             totalSets: (int) ($setAggregates['total_sets'] ?? 0),
             totalVolumeKg: (float) ($setAggregates['total_volume'] ?? 0),
-            totalPlannedMinutes: $this->totalPlannedMinutes(),
+            totalPlannedMinutes: $this->totalTrainedMinutes(),
             sessionVolumes: $this->sessionVolumes(),
             muscleDistribution: $this->muscleDistribution(),
             volumeProgression: $this->volumeProgression(),
@@ -46,13 +52,28 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
             ->fetchOne();
     }
 
-    private function totalPlannedMinutes(): int
+    private function totalCompletedWorkouts(): int
     {
         return (int) $this->connection->createQueryBuilder()
-            ->select('COALESCE(SUM(estimated_duration_minutes), 0)')
-            ->from(table: 'training_session')
+            ->select('COUNT(*)')
+            ->from(table: 'training_workout')
+            ->where('status = :status')
+            ->setParameter('status', self::COMPLETED_STATUS)
             ->executeQuery()
             ->fetchOne();
+    }
+
+    private function totalTrainedMinutes(): int
+    {
+        $seconds = (int) $this->connection->createQueryBuilder()
+            ->select('COALESCE(SUM(duration_seconds), 0)')
+            ->from(table: 'training_workout')
+            ->where('status = :status')
+            ->setParameter('status', self::COMPLETED_STATUS)
+            ->executeQuery()
+            ->fetchOne();
+
+        return intdiv($seconds, 60);
     }
 
     /**
@@ -62,18 +83,20 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
     {
         $rows = $this->connection->createQueryBuilder()
             ->select(
-                's.id AS id',
-                's.name AS name',
-                'COUNT(DISTINCT se.id) AS exercise_count',
-                'COALESCE(SUM(es.reps * COALESCE(es.weight, 0)), 0) AS volume',
+                'tw.session_id AS id',
+                'tw.session_name AS name',
+                'COUNT(DISTINCT we.id) AS exercise_count',
+                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS volume',
             )
-            ->from(table: 'training_session', alias: 's')
-            ->leftJoin('s', 'session_exercise', 'se', 'se.session_id = s.id')
-            ->leftJoin('se', 'exercise_set', 'es', 'es.session_exercise_id = se.id')
-            ->groupBy('s.id')
-            ->addGroupBy('s.name')
+            ->from(table: 'training_workout', alias: 'tw')
+            ->leftJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')
+            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
+            ->where('tw.status = :status')
+            ->setParameter('status', self::COMPLETED_STATUS)
+            ->groupBy('tw.session_id')
+            ->addGroupBy('tw.session_name')
             ->orderBy(sort: 'volume', order: 'DESC')
-            ->addOrderBy(sort: 's.name', order: 'ASC')
+            ->addOrderBy(sort: 'tw.session_name', order: 'ASC')
             ->setMaxResults(maxResults: self::SESSION_VOLUMES_LIMIT)
             ->executeQuery()
             ->fetchAllAssociative();
@@ -93,16 +116,18 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
     {
         $rows = $this->connection->createQueryBuilder()
             ->select(
-                's.name AS name',
-                'COALESCE(SUM(es.reps * COALESCE(es.weight, 0)), 0) AS volume',
+                'tw.session_name AS name',
+                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS volume',
             )
-            ->from(table: 'training_session', alias: 's')
-            ->leftJoin('s', 'session_exercise', 'se', 'se.session_id = s.id')
-            ->leftJoin('se', 'exercise_set', 'es', 'es.session_exercise_id = se.id')
-            ->groupBy('s.id')
-            ->addGroupBy('s.name')
-            ->addGroupBy('s.created_at')
-            ->orderBy(sort: 's.created_at', order: 'ASC')
+            ->from(table: 'training_workout', alias: 'tw')
+            ->leftJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')
+            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
+            ->where('tw.status = :status')
+            ->setParameter('status', self::COMPLETED_STATUS)
+            ->groupBy('tw.id')
+            ->addGroupBy('tw.session_name')
+            ->addGroupBy('tw.finished_at')
+            ->orderBy(sort: 'tw.finished_at', order: 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
 
@@ -123,11 +148,14 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
     private function muscleDistribution(): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('e.muscle_groups AS muscle_groups', 'COUNT(es.id) AS set_count')
-            ->from(table: 'session_exercise', alias: 'se')
-            ->leftJoin('se', 'exercise', 'e', 'e.id = se.exercise_id')
-            ->leftJoin('se', 'exercise_set', 'es', 'es.session_exercise_id = se.id')
-            ->groupBy('se.id')
+            ->select('e.muscle_groups AS muscle_groups', 'COUNT(ws.id) AS set_count')
+            ->from(table: 'workout_exercise', alias: 'we')
+            ->innerJoin('we', 'training_workout', 'tw', 'tw.id = we.workout_id')
+            ->leftJoin('we', 'exercise', 'e', 'e.id = we.exercise_id')
+            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
+            ->where('tw.status = :status')
+            ->setParameter('status', self::COMPLETED_STATUS)
+            ->groupBy('we.id')
             ->addGroupBy('e.muscle_groups')
             ->executeQuery()
             ->fetchAllAssociative();
