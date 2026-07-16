@@ -1,0 +1,8 @@
+services:
+  Authorization\User\EmailVerificationToken\Infrastructure\UI\API\Controller\ConfirmEmailVerificationController:
+    class: Authorization\User\EmailVerificationToken\Infrastructure\UI\API\Controller\ConfirmEmailVerificationController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $logger: '@logger'
+    tags:
+      - { name: controller.service_arguments }

@@ -1,0 +1,7 @@
+services:
+  Authorization\User\PasswordResetToken\Domain\Service\SendPasswordResetEmail:
+    class: Authorization\User\PasswordResetToken\Infrastructure\Domain\Service\Mailer\MailerSendPasswordResetEmail
+    arguments:
+      $emailSender: '@Shared\Email\Email\Domain\Service\EmailSender'
+      $frontendUrl: '%env(PASSWORD_RESET_FRONTEND_URL)%'
+      $ttlMinutes: '%env(int:PASSWORD_RESET_TOKEN_TTL_MINUTES)%'

@@ -1,0 +1,10 @@
+framework:
+    default_locale: es
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks:
+            - es
+        paths:
+            - '%kernel.project_dir%/src/Shared/Email/Email/Infrastructure/UI/translations'
+            - '%kernel.project_dir%/src/Authorization/User/PasswordResetToken/Infrastructure/UI/translations'
+            - '%kernel.project_dir%/src/Authorization/User/EmailVerificationToken/Infrastructure/UI/translations'

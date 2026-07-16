@@ -1,0 +1,35 @@
+<ds-auth-card [tagline]="'verifyEmail.tagline' | t">
+  <ds-stack [gap]="'16px'">
+    @if (status === "verifying") {
+      <p class="verify__message">{{ "verifyEmail.verifying" | t }}</p>
+    }
+
+    @if (status === "success") {
+      <p class="verify__message verify__message--success">
+        {{ "verifyEmail.success" | t }}
+      </p>
+      <ds-button
+        variant="primary"
+        size="lg"
+        [fullWidth]="true"
+        (clicked)="onBackToLogin()"
+      >
+        {{ "verifyEmail.goToLogin" | t }}
+      </ds-button>
+    }
+
+    @if (status === "error") {
+      <p class="verify__message verify__message--error">
+        {{ "verifyEmail.error" | t }}
+      </p>
+      <ds-button
+        variant="primary"
+        size="lg"
+        [fullWidth]="true"
+        (clicked)="onBackToLogin()"
+      >
+        {{ "verifyEmail.goToLogin" | t }}
+      </ds-button>
+    }
+  </ds-stack>
+</ds-auth-card>

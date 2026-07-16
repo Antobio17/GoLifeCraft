@@ -1,0 +1,4 @@
+confirm_email_verification:
+  path: /api/verify-email
+  methods: [POST]
+  controller: Authorization\User\EmailVerificationToken\Infrastructure\UI\API\Controller\ConfirmEmailVerificationController

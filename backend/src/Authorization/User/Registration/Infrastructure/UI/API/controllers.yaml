@@ -1,0 +1,8 @@
+services:
+  Authorization\User\Registration\Infrastructure\UI\API\Controller\RegisterUserController:
+    class: Authorization\User\Registration\Infrastructure\UI\API\Controller\RegisterUserController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $logger: '@logger'
+    tags:
+      - { name: controller.service_arguments }

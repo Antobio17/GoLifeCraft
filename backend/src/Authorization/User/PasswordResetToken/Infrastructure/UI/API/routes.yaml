@@ -1,0 +1,9 @@
+request_password_reset:
+  path: /api/v1/authorization/password-reset-requests
+  methods: [POST]
+  controller: Authorization\User\PasswordResetToken\Infrastructure\UI\API\Controller\RequestPasswordResetController
+
+confirm_password_reset:
+  path: /api/v1/authorization/password-resets
+  methods: [POST]
+  controller: Authorization\User\PasswordResetToken\Infrastructure\UI\API\Controller\ConfirmPasswordResetController

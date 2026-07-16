@@ -12,6 +12,7 @@
     <field name="tenantId" type="string" column="tenant_id" length="14"/>
     <field name="role" type="string" column="role" length="30"/>
     <field name="isActive" type="boolean" column="is_active"/>
+    <field name="emailVerified" type="boolean" column="email_verified"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

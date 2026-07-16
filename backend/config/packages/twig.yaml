@@ -1,0 +1,12 @@
+twig:
+    file_name_pattern: '*.twig'
+    default_path: '%kernel.project_dir%/templates'
+    strict_variables: true
+    paths:
+        '%kernel.project_dir%/src/Shared/Email/Email/Infrastructure/Domain/Service/SymfonyMailer/templates': Email
+        '%kernel.project_dir%/src/Authorization/User/PasswordResetToken/Infrastructure/Domain/Service/Mailer/templates': PasswordResetToken
+        '%kernel.project_dir%/src/Authorization/User/EmailVerificationToken/Infrastructure/Domain/Service/Mailer/templates': EmailVerificationToken
+
+when@test:
+    twig:
+        strict_variables: true

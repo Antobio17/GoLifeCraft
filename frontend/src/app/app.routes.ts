@@ -17,6 +17,27 @@ export const APP_ROUTES: Routes = [
       ),
   },
   {
+    path: "auth/verify-email",
+    loadChildren: () =>
+      import("./authorization/verify-email/verify-email/infrastructure/routes/verify-email.routes").then(
+        (m) => m.VERIFY_EMAIL_ROUTES,
+      ),
+  },
+  {
+    path: "auth/forgot-password",
+    loadChildren: () =>
+      import("./authorization/forgot-password/forgot-password/infrastructure/routes/forgot-password.routes").then(
+        (m) => m.FORGOT_PASSWORD_ROUTES,
+      ),
+  },
+  {
+    path: "auth/reset-password",
+    loadChildren: () =>
+      import("./authorization/reset-password/reset-password/infrastructure/routes/reset-password.routes").then(
+        (m) => m.RESET_PASSWORD_ROUTES,
+      ),
+  },
+  {
     path: "",
     canActivate: [authGuard],
     children: [

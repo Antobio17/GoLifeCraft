@@ -49,6 +49,10 @@
       "failed": "Incorrect username or password",
       "too_many_attempts": "Too many login attempts. Please try again later."
     },
+    "account": {
+      "not_verified": "You must verify your email before signing in. Check your inbox.",
+      "pending_validation": "Your email is verified. Your account will be activated once an administrator validates your registration."
+    },
     "create": {
       "success": "User created successfully"
     },

@@ -14,6 +14,7 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 
 const HOME_ROUTE = "/dashboard";
 const REGISTER_ROUTE = "/register";
+const FORGOT_PASSWORD_ROUTE = "/auth/forgot-password";
 
 @Component({
   selector: "app-login",
@@ -53,7 +54,9 @@ export class LoginComponent implements OnInit {
     this.onRegister();
   }
 
-  onForgot(): void {}
+  onForgot(): void {
+    this.router.navigate([FORGOT_PASSWORD_ROUTE]);
+  }
 
   onRegister(): void {
     this.router.navigate([REGISTER_ROUTE]);

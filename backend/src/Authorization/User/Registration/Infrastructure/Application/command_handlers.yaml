@@ -1,0 +1,15 @@
+services:
+  Authorization\User\Registration\Application\Command\RegisterUser\RegisterUserCommandHandler:
+    class: Authorization\User\Registration\Application\Command\RegisterUser\RegisterUserCommandHandler
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $tokenRepository: '@Authorization\User\EmailVerificationToken\Domain\Model\EmailVerificationTokenRepository'
+      $needleDataQuery: '@Authorization\User\Registration\Domain\QueryModel\RegisterUserNeedleDataQuery'
+      $tenantIdentifierGenerator: '@Shared\Tenant\Tenant\Domain\Service\TenantIdentifierGenerator'
+      $sendVerificationEmail: '@Authorization\User\EmailVerificationToken\Domain\Service\SendVerificationEmail'
+      $passwordHasher: '@Authorization\User\User\Domain\Service\PasswordHasher'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+      $tokenTtlMinutes: '%env(int:EMAIL_VERIFICATION_TOKEN_TTL_MINUTES)%'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

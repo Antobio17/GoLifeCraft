@@ -24,3 +24,6 @@ services:
         class: Authorization\User\User\Infrastructure\Domain\Service\Security\SymfonyPasswordHasher
         arguments:
             - '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
+
+    Authorization\User\User\Infrastructure\Domain\Service\Security\ActiveUserChecker:
+        class: Authorization\User\User\Infrastructure\Domain\Service\Security\ActiveUserChecker

@@ -1,0 +1,5 @@
+services:
+  Authorization\User\PasswordResetToken\Domain\QueryModel\RequestPasswordResetNeedleDataQuery:
+    class: Authorization\User\PasswordResetToken\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRequestPasswordResetNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'

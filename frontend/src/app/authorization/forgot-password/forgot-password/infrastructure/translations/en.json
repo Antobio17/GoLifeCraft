@@ -1,0 +1,17 @@
+{
+  "forgotPassword": {
+    "tagline": "Recover access to your account.",
+    "intro": "Enter your email and we'll send you a link to reset your password.",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
+    },
+    "submit": "Send link",
+    "submitting": "Sending…",
+    "sent": "If an account exists with that email, we've sent you a link to reset your password. Check your inbox.",
+    "backToLogin": "Back to sign in",
+    "validation": {
+      "required": "Please enter your email"
+    }
+  }
+}

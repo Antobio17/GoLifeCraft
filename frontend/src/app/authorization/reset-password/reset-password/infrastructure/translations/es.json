@@ -1,0 +1,35 @@
+{
+  "resetPassword": {
+    "tagline": "Crea una nueva contraseña.",
+    "intro": "Elige una contraseña nueva para tu cuenta.",
+    "password": {
+      "label": "Nueva contraseña",
+      "placeholder": "Crea una contraseña"
+    },
+    "confirmPassword": {
+      "label": "Confirmar contraseña",
+      "placeholder": "Repite tu contraseña"
+    },
+    "togglePassword": {
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña"
+    },
+    "strength": {
+      "weak": "Débil",
+      "medium": "Media",
+      "strong": "Fuerte"
+    },
+    "submit": "Restablecer contraseña",
+    "submitting": "Guardando…",
+    "backToLogin": "Volver a iniciar sesión",
+    "success": "Tu contraseña se ha actualizado. Ya puedes iniciar sesión.",
+    "validation": {
+      "required": "Por favor, completa todos los campos",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    },
+    "error": {
+      "generic": "No se pudo restablecer la contraseña. El enlace puede haber caducado.",
+      "invalidLink": "El enlace de restablecimiento no es válido o ha caducado."
+    }
+  }
+}

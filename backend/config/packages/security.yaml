@@ -12,6 +12,7 @@ security:
             pattern:  ^/api/login
             stateless: true
             provider: tenant_user
+            user_checker: Authorization\User\User\Infrastructure\Domain\Service\Security\ActiveUserChecker
             custom_authenticators:
                 - Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserAuthenticator
             login_throttling:
@@ -34,6 +35,10 @@ security:
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1/csp-report, roles: PUBLIC_ACCESS }
+        - { path: ^/api/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/verify-email, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/authorization/password-reset-requests, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/authorization/password-resets, roles: PUBLIC_ACCESS }
         - { path: '^/\.well-known', roles: PUBLIC_ACCESS }
         - { path: ^/oauth, roles: PUBLIC_ACCESS }
         - { path: ^/_mcp, roles: IS_AUTHENTICATED_FULLY }

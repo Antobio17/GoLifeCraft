@@ -1,0 +1,9 @@
+{
+  "verifyEmail": {
+    "tagline": "Verificación de cuenta.",
+    "verifying": "Estamos verificando tu email…",
+    "success": "¡Tu email ha sido verificado! Tu cuenta quedará activa cuando un administrador valide tu registro.",
+    "error": "No hemos podido verificar tu email. El enlace no es válido o ha caducado.",
+    "goToLogin": "Ir a iniciar sesión"
+  }
+}

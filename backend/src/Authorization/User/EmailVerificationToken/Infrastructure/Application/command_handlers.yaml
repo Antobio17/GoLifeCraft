@@ -1,0 +1,10 @@
+services:
+  Authorization\User\EmailVerificationToken\Application\Command\ConfirmEmailVerification\ConfirmEmailVerificationCommandHandler:
+    class: Authorization\User\EmailVerificationToken\Application\Command\ConfirmEmailVerification\ConfirmEmailVerificationCommandHandler
+    arguments:
+      $repository: '@Authorization\User\EmailVerificationToken\Domain\Model\EmailVerificationTokenRepository'
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

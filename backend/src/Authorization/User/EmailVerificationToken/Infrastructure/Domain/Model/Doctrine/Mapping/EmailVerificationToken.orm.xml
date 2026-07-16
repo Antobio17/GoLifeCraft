@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="Authorization\User\EmailVerificationToken\Infrastructure\Domain\Model\Doctrine\DoctrineEmailVerificationTokenRepository" name="Authorization\User\EmailVerificationToken\Domain\Model\EmailVerificationToken" table="email_verification_token">
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="userId" type="string" column="user_id" length="36"/>
+    <field name="tokenHash" type="string" column="token_hash" length="64"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="expiresAt" type="datetime" column="expires_at"/>
+    <field name="consumedAt" type="datetime" column="consumed_at" nullable="true"/>
+    <indexes>
+      <index name="idx_email_verification_token_hash" columns="token_hash"/>
+      <index name="idx_email_verification_user_id" columns="user_id"/>
+    </indexes>
+  </entity>
+</doctrine-mapping>

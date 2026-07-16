@@ -1,0 +1,35 @@
+{
+  "resetPassword": {
+    "tagline": "Create a new password.",
+    "intro": "Choose a new password for your account.",
+    "password": {
+      "label": "New password",
+      "placeholder": "Create a password"
+    },
+    "confirmPassword": {
+      "label": "Confirm password",
+      "placeholder": "Repeat your password"
+    },
+    "togglePassword": {
+      "show": "Show password",
+      "hide": "Hide password"
+    },
+    "strength": {
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "submit": "Reset password",
+    "submitting": "Saving…",
+    "backToLogin": "Back to sign in",
+    "success": "Your password has been updated. You can now sign in.",
+    "validation": {
+      "required": "Please complete all fields",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "error": {
+      "generic": "Could not reset the password. The link may have expired.",
+      "invalidLink": "The reset link is invalid or has expired."
+    }
+  }
+}

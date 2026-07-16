@@ -1,0 +1,6 @@
+services:
+  Authorization\User\PasswordResetToken\Domain\Model\PasswordResetTokenRepository:
+    class: Authorization\User\PasswordResetToken\Infrastructure\Domain\Model\Doctrine\DoctrinePasswordResetTokenRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - Authorization\User\PasswordResetToken\Domain\Model\PasswordResetToken

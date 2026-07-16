@@ -49,6 +49,10 @@
       "failed": "Usuario o contraseña incorrectos (Si falla 5 veces, se bloqueará el acceso durante 5 minutos)",
       "too_many_attempts": "Demasiados intentos de inicio de sesión. Por favor, inténtalo de nuevo dentro de 5 minutos."
     },
+    "account": {
+      "not_verified": "Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.",
+      "pending_validation": "Tu email está verificado. Tu cuenta se activará cuando un administrador valide tu registro."
+    },
     "create": {
       "success": "Usuario creado correctamente"
     },

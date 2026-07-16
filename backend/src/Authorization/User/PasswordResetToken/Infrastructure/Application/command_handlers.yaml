@@ -1,0 +1,23 @@
+services:
+  Authorization\User\PasswordResetToken\Application\Command\RequestPasswordReset\RequestPasswordResetCommandHandler:
+    class: Authorization\User\PasswordResetToken\Application\Command\RequestPasswordReset\RequestPasswordResetCommandHandler
+    arguments:
+      $repository: '@Authorization\User\PasswordResetToken\Domain\Model\PasswordResetTokenRepository'
+      $needleDataQuery: '@Authorization\User\PasswordResetToken\Domain\QueryModel\RequestPasswordResetNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+      $sendPasswordResetEmail: '@Authorization\User\PasswordResetToken\Domain\Service\SendPasswordResetEmail'
+      $ttlMinutes: '%env(int:PASSWORD_RESET_TOKEN_TTL_MINUTES)%'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Authorization\User\PasswordResetToken\Application\Command\ConfirmPasswordReset\ConfirmPasswordResetCommandHandler:
+    class: Authorization\User\PasswordResetToken\Application\Command\ConfirmPasswordReset\ConfirmPasswordResetCommandHandler
+    arguments:
+      $repository: '@Authorization\User\PasswordResetToken\Domain\Model\PasswordResetTokenRepository'
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $passwordHasher: '@Authorization\User\User\Domain\Service\PasswordHasher'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
