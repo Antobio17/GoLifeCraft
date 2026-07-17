@@ -9,27 +9,29 @@
 >
   <form (ngSubmit)="onSubmit()">
     <ds-stack [gap]="'13px'">
-      <ds-field [label]="'register.name.label' | t">
-        <ds-text-input
-          name="name"
-          leadingIcon="user"
-          autocomplete="given-name"
-          [placeholder]="'register.name.placeholder' | t"
-          [(ngModel)]="name"
-          [disabled]="loading"
-        />
-      </ds-field>
+      <ds-stack direction="row" gap="13px">
+        <ds-field [label]="'register.name.label' | t" style="flex: 1; min-width: 0">
+          <ds-text-input
+            name="name"
+            leadingIcon="user"
+            autocomplete="given-name"
+            [placeholder]="'register.name.placeholder' | t"
+            [(ngModel)]="name"
+            [disabled]="loading"
+          />
+        </ds-field>
 
-      <ds-field [label]="'register.lastname.label' | t">
-        <ds-text-input
-          name="lastname"
-          leadingIcon="user"
-          autocomplete="family-name"
-          [placeholder]="'register.lastname.placeholder' | t"
-          [(ngModel)]="lastname"
-          [disabled]="loading"
-        />
-      </ds-field>
+        <ds-field [label]="'register.lastname.label' | t" style="flex: 1; min-width: 0">
+          <ds-text-input
+            name="lastname"
+            leadingIcon="user"
+            autocomplete="family-name"
+            [placeholder]="'register.lastname.placeholder' | t"
+            [(ngModel)]="lastname"
+            [disabled]="loading"
+          />
+        </ds-field>
+      </ds-stack>
 
       <ds-field [label]="'register.email.label' | t">
         <ds-text-input
@@ -37,7 +39,7 @@
           type="email"
           leadingIcon="mail"
           inputmode="email"
-          autocomplete="email"
+          autocomplete="username"
           [placeholder]="'register.email.placeholder' | t"
           [(ngModel)]="email"
           [disabled]="loading"
