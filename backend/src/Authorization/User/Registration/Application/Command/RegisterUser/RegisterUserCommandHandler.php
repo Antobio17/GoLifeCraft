@@ -47,7 +47,7 @@ final readonly class RegisterUserCommandHandler
             tenantId: $tenantId,
             email: $command->email,
             name: $command->name,
-            lastname: '',
+            lastname: $command->lastname,
             plainPassword: $command->password,
             role: User::ROLE_USER,
             passwordHasher: $this->passwordHasher,

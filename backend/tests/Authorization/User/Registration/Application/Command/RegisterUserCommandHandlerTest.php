@@ -68,6 +68,7 @@ final class RegisterUserCommandHandlerTest extends TestCase
             email: 'jane@example.com',
             password: 'StrongPass1!',
             name: 'Jane',
+            lastname: 'Doe',
         ));
 
         $user = $this->userRepository->findByUsername(username: 'jane@example.com');
@@ -77,6 +78,8 @@ final class RegisterUserCommandHandlerTest extends TestCase
         $this->assertSame(expected: 'GLC0000000001', actual: $user->tenantId);
         $this->assertSame(expected: User::ROLE_USER, actual: $user->role);
         $this->assertSame(expected: 'hashed_StrongPass1!', actual: $user->password);
+        $this->assertSame(expected: 'Jane', actual: $user->name);
+        $this->assertSame(expected: 'Doe', actual: $user->lastname);
 
         $this->assertSame(expected: 1, actual: $this->sendVerificationEmail->calls);
         $this->assertSame(expected: 'jane@example.com', actual: $this->sendVerificationEmail->lastEmail);
@@ -93,6 +96,7 @@ final class RegisterUserCommandHandlerTest extends TestCase
             email: 'jane@example.com',
             password: 'StrongPass1!',
             name: 'Jane',
+            lastname: 'Doe',
         ));
     }
 
@@ -104,6 +108,7 @@ final class RegisterUserCommandHandlerTest extends TestCase
             email: 'jane@example.com',
             password: 'weak',
             name: 'Jane',
+            lastname: 'Doe',
         ));
     }
 }

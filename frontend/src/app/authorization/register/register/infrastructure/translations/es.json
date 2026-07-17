@@ -5,9 +5,13 @@
       "signin": "Entrar",
       "register": "Crear cuenta"
     },
-    "username": {
-      "label": "Nombre de usuario",
-      "placeholder": "Introduce tu nombre de usuario"
+    "name": {
+      "label": "Nombre",
+      "placeholder": "Introduce tu nombre"
+    },
+    "lastname": {
+      "label": "Apellido",
+      "placeholder": "Introduce tu apellido"
     },
     "email": {
       "label": "Email",

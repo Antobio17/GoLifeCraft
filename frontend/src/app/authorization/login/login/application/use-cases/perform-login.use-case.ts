@@ -35,6 +35,7 @@ export class PerformLoginUseCase {
               user: {
                 ...session.user,
                 name: profile.data.attributes.name,
+                lastname: profile.data.attributes.lastname,
                 role: profile.data.attributes.role,
                 roles: [profile.data.attributes.role],
               },

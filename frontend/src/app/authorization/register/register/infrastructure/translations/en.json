@@ -5,9 +5,13 @@
       "signin": "Sign in",
       "register": "Sign up"
     },
-    "username": {
-      "label": "Username",
-      "placeholder": "Enter your username"
+    "name": {
+      "label": "First name",
+      "placeholder": "Enter your first name"
+    },
+    "lastname": {
+      "label": "Last name",
+      "placeholder": "Enter your last name"
     },
     "email": {
       "label": "Email",

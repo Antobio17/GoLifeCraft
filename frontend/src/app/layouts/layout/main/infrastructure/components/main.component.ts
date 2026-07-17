@@ -43,7 +43,10 @@ export class MainLayoutComponent implements OnInit {
 
     this.getMyProfileService.getMyProfile().subscribe({
       next: (profile) =>
-        this.authSessionService.setUserName(profile.data.attributes.name),
+        this.authSessionService.setUserIdentity(
+          profile.data.attributes.name,
+          profile.data.attributes.lastname,
+        ),
     });
   }
 

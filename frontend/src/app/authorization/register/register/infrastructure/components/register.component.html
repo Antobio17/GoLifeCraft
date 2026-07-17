@@ -9,13 +9,24 @@
 >
   <form (ngSubmit)="onSubmit()">
     <ds-stack [gap]="'13px'">
-      <ds-field [label]="'register.username.label' | t">
+      <ds-field [label]="'register.name.label' | t">
         <ds-text-input
-          name="username"
+          name="name"
           leadingIcon="user"
-          autocomplete="username"
-          [placeholder]="'register.username.placeholder' | t"
-          [(ngModel)]="username"
+          autocomplete="given-name"
+          [placeholder]="'register.name.placeholder' | t"
+          [(ngModel)]="name"
+          [disabled]="loading"
+        />
+      </ds-field>
+
+      <ds-field [label]="'register.lastname.label' | t">
+        <ds-text-input
+          name="lastname"
+          leadingIcon="user"
+          autocomplete="family-name"
+          [placeholder]="'register.lastname.placeholder' | t"
+          [(ngModel)]="lastname"
           [disabled]="loading"
         />
       </ds-field>

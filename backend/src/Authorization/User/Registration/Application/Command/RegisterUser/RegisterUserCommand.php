@@ -10,6 +10,7 @@ final readonly class RegisterUserCommand implements Command
         public string $email,
         public string $password,
         public string $name,
+        public string $lastname,
     ) {
     }
 

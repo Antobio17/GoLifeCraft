@@ -33,7 +33,8 @@ export class RegisterComponent {
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
 
-  username = "";
+  name = "";
+  lastname = "";
   email = "";
   password = "";
   confirmPassword = "";
@@ -50,7 +51,8 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (
-      !this.username ||
+      !this.name ||
+      !this.lastname ||
       !this.email ||
       !this.password ||
       !this.confirmPassword
@@ -75,7 +77,8 @@ export class RegisterComponent {
     this.loading = true;
     this.registerService
       .register({
-        username: this.username,
+        name: this.name,
+        lastname: this.lastname,
         email: this.email,
         password: this.password,
       })

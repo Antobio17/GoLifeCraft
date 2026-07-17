@@ -32,11 +32,13 @@ final class RegisterUserController
         try {
             $email = RequestExtractor::getStringRequestValue(request: $request, fieldName: 'email');
             $name = RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'name');
+            $lastname = RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'lastname');
 
             $this->handle(message: new RegisterUserCommand(
                 email: $email,
                 password: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'password'),
                 name: $name ?? strstr(haystack: $email, needle: '@', before_needle: true) ?: $email,
+                lastname: $lastname ?? '',
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_ACCEPTED);
