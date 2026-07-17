@@ -125,6 +125,10 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(["/catalog"]);
   }
 
+  goToDiary(): void {
+    this.router.navigate(["/diary"]);
+  }
+
   goToRecipes(): void {
     this.router.navigate(["/recipes"]);
   }
