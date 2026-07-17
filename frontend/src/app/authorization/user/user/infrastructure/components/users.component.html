@@ -7,9 +7,9 @@
       [title]="'users.title' | t"
       (leadingClick)="back()"
     >
-      <span slot="actions" class="users-admin-badge">{{
+      <ds-chip slot="actions" tone="brand-solid" [uppercase]="true">{{
         "users.adminOnly" | t
-      }}</span>
+      }}</ds-chip>
     </ds-screen-header>
 
     @if (loading()) {
@@ -66,29 +66,7 @@
           }
         </ds-stack>
 
-        <div class="users-note">
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.1"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="9"></circle>
-            <path d="M12 11v5.5"></path>
-            <circle
-              cx="12"
-              cy="7.6"
-              r="0.7"
-              fill="currentColor"
-              stroke="none"
-            ></circle>
-          </svg>
-          <span>{{ "users.note" | t }}</span>
-        </div>
+        <ds-note icon="info">{{ "users.note" | t }}</ds-note>
       </ds-stack>
     }
   </ds-stack>

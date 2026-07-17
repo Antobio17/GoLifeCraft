@@ -16,6 +16,8 @@ import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { MetricCardComponent } from "@shared/design-system/metric-card/infrastructure/components/metric-card.component";
 import { UserAccessRowComponent } from "@shared/design-system/user-access-row/infrastructure/components/user-access-row.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 
 interface UserRowViewModel {
   id: string;
@@ -30,38 +32,6 @@ interface UserRowViewModel {
 @Component({
   selector: "app-users",
   templateUrl: "./users.component.html",
-  styles: [
-    `
-      .users-admin-badge {
-        display: inline-flex;
-        align-items: center;
-        background: var(--ds-surface-brand);
-        color: var(--ds-on-surface-brand);
-        border-radius: var(--ds-radius-sm);
-        padding: 3px 8px;
-        font-size: var(--ds-text-xs);
-        font-weight: var(--ds-weight-extrabold);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        white-space: nowrap;
-      }
-      .users-note {
-        display: flex;
-        align-items: flex-start;
-        gap: 9px;
-        margin: 2px;
-        color: var(--ds-text-muted);
-      }
-      .users-note svg {
-        flex: 0 0 auto;
-        margin-top: 1px;
-      }
-      .users-note span {
-        font-size: var(--ds-text-sm);
-        line-height: 1.5;
-      }
-    `,
-  ],
   providers: [
     ...GetUsersProvider.getProviders(),
     ...SetUserAccessProvider.getProviders(),
@@ -76,6 +46,8 @@ interface UserRowViewModel {
     EmptyStateComponent,
     MetricCardComponent,
     UserAccessRowComponent,
+    ChipComponent,
+    NoteComponent,
   ],
 })
 export class UsersComponent implements OnInit {
