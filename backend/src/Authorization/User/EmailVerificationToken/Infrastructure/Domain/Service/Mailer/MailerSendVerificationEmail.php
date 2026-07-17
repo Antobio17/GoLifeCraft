@@ -48,6 +48,6 @@ final readonly class MailerSendVerificationEmail implements SendVerificationEmai
         $host = parse_url(url: $this->frontendUrl, component: PHP_URL_HOST) ?? 'golifecraft.com';
         $port = parse_url(url: $this->frontendUrl, component: PHP_URL_PORT);
 
-        return $scheme.'://'.$host.($port !== null ? ':'.$port : '').'/assets/img/logo-dark.png';
+        return $scheme.'://'.$host.(null !== $port ? ':'.$port : '').'/assets/img/logo-dark.png';
     }
 }
