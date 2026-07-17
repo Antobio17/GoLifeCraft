@@ -46,6 +46,7 @@ export class SideDrawerComponent {
 
   readonly isOpen = this.drawer.isOpen;
   readonly isDark = this.themeService.isDark;
+  readonly isGod = computed(() => this.authSessionService.isGod());
 
   readonly isInteractive = computed(() => this.isOpen() || this.isDocked());
 

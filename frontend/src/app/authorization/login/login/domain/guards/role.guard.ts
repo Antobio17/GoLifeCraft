@@ -12,3 +12,13 @@ export const blockReadOnlyUserGuard: CanActivateFn = (): boolean | UrlTree => {
 
   return inject(Router).createUrlTree(["/cloud"]);
 };
+
+export const godOnlyGuard: CanActivateFn = (): boolean | UrlTree => {
+  const authSessionService = inject(AuthSessionService);
+
+  if (authSessionService.getCurrentUserRole() === USER_ROLES.GOD) {
+    return true;
+  }
+
+  return inject(Router).createUrlTree(["/dashboard"]);
+};

@@ -4,6 +4,15 @@ services:
     arguments:
       $connection: '@doctrine.dbal.master_connection'
 
+  Shared\Tenant\Tenant\Domain\Service\TenantProvisioner:
+    class: Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\DoctrineTenantProvisioner
+    arguments:
+      $tenantEntityManager: '@doctrine.orm.tenant_manager_entity_manager'
+      $writerHost: '%env(DATABASE_TENANT_WRITER_HOST)%'
+      $port: '%env(DATABASE_TENANT_PORT)%'
+      $serverUsername: '%env(DATABASE_TENANT_USER)%'
+      $serverPassword: '%env(DATABASE_TENANT_PASSWORD)%'
+
   Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher:
     class: Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\DoctrineTenantConnectionSwitcher
     arguments:

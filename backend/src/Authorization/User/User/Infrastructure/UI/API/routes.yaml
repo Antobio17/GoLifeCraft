@@ -6,6 +6,11 @@ get_users:
   methods: [GET]
   controller: Authorization\User\User\Infrastructure\UI\API\Controller\GetUsersController
 
+set_user_access:
+  path: /api/v1/authorization/users/{id}/access
+  methods: [PUT]
+  controller: Authorization\User\User\Infrastructure\UI\API\Controller\SetUserAccessController
+
 get_my_profile:
   path: /api/v1/authorization/me
   methods: [GET]

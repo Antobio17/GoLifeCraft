@@ -105,6 +105,14 @@ export const APP_ROUTES: Routes = [
             (m) => m.MyProfileComponent,
           ),
       },
+      {
+        path: "users",
+        data: { breadcrumb: "users.breadcrumb" },
+        loadChildren: () =>
+          import("./authorization/user/user/infrastructure/routes/users.routes").then(
+            (m) => m.USERS_ROUTES,
+          ),
+      },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
     ],
   },

@@ -15,6 +15,9 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         [stroke]="2.1"
       />
       <span class="item__label">{{ label }}</span>
+      @if (badge) {
+        <span class="item__badge">{{ badge }}</span>
+      }
     </span>
   `,
   styles: [
@@ -38,8 +41,31 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
           background var(--ds-transition-base),
           color var(--ds-transition-base);
       }
+      .item__label {
+        flex: 1 1 auto;
+      }
       .item__icon {
         flex: none;
+      }
+      .item__badge {
+        flex: none;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--ds-accent) 18%, transparent);
+        color: var(--ds-accent);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        line-height: 1.4;
+      }
+      :host(.is-active) .item__badge {
+        background: color-mix(
+          in srgb,
+          var(--drawer-active-fg, var(--ds-on-primary)) 22%,
+          transparent
+        );
+        color: var(--drawer-active-fg, var(--ds-on-primary));
       }
       :host(.is-sub) .item {
         padding-left: 27px;
@@ -69,4 +95,5 @@ export class NavItemComponent {
   @Input({ required: true }) icon!: DsIconName;
   @Input() label = "";
   @Input() sub = false;
+  @Input() badge = "";
 }

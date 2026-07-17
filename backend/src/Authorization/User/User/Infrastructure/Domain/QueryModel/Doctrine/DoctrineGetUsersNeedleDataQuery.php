@@ -13,8 +13,7 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
     {
     }
 
-    public function findUsersByTenantId(
-        string $tenantId,
+    public function findUsers(
         int $pageSize,
         int $pageNumber,
         ?string $filterUsername = null,
@@ -23,15 +22,12 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
         ?string $orderBy = null,
     ): array {
         $qb = $this->getBaseQuery(
-            tenantId: $tenantId,
             filterUsername: $filterUsername,
             filterEmail: $filterEmail,
             filterRole: $filterRole,
         );
 
-        if (null !== $orderBy) {
-            $this->applyOrdering(qb: $qb, orderBy: $orderBy);
-        }
+        $this->applyOrdering(qb: $qb, orderBy: $orderBy ?? '-createdAt');
 
         $result = $qb->setFirstResult(firstResult: ($pageNumber - 1) * $pageSize)
            ->setMaxResults(maxResults: $pageSize)
@@ -48,8 +44,10 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
                 email: $row['email'],
                 name: $row['name'],
                 lastname: $row['lastname'],
-                isActive: (bool) $row['is_active'],
                 role: $row['role'],
+                tenantId: $row['tenant_id'],
+                isActive: (bool) $row['is_active'],
+                emailVerified: (bool) $row['email_verified'],
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
             );
@@ -57,23 +55,21 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
     }
 
     public function totalUsers(
-        string $tenantId,
         ?string $filterUsername = null,
         ?string $filterEmail = null,
         ?string $filterRole = null,
     ): int {
-        return $this->getBaseQuery(
-            tenantId: $tenantId,
+        return (int) $this->getBaseQuery(
             filterUsername: $filterUsername,
             filterEmail: $filterEmail,
             filterRole: $filterRole,
         )
+            ->select('COUNT(u.id)')
             ->executeQuery()
-            ->rowCount();
+            ->fetchOne();
     }
 
     private function getBaseQuery(
-        string $tenantId,
         ?string $filterUsername = null,
         ?string $filterEmail = null,
         ?string $filterRole = null,
@@ -86,13 +82,13 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
                 'u.name',
                 'u.lastname',
                 'u.is_active',
+                'u.email_verified',
+                'u.tenant_id',
                 'u.role',
                 'u.created_at',
                 'u.updated_at',
             )
-            ->from(table: 'user', alias: 'u')
-            ->where('u.tenant_id = :tenantId')
-            ->setParameter(key: 'tenantId', value: $tenantId);
+            ->from(table: 'user', alias: 'u');
 
         if (null !== $filterUsername) {
             $qb->andWhere('u.username LIKE :username')

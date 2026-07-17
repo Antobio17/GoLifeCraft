@@ -80,6 +80,16 @@
         [label]="'navbar.history' | t"
         (click)="close()"
       />
+      @if (isGod()) {
+        <ds-nav-item
+          routerLink="/users"
+          routerLinkActive="is-active"
+          icon="users"
+          [label]="'navbar.users' | t"
+          badge="ADMIN"
+          (click)="close()"
+        />
+      }
     </nav>
 
     <div class="drawer__footer">

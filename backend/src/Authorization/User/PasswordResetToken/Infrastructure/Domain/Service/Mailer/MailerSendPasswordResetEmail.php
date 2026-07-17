@@ -35,6 +35,7 @@ final readonly class MailerSendPasswordResetEmail implements SendPasswordResetEm
                     'ttlMinutes' => $this->ttlMinutes,
                     'languageCode' => $languageCode,
                     'requestedAtFormatted' => $requestedAt->format(format: 'd/m/Y · H:i'),
+                    'logoPath' => '@PasswordResetToken/golifecraft-logo.png',
                 ],
             ),
             translationDomain: 'password_reset_token',

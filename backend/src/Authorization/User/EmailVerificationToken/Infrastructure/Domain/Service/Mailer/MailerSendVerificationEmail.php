@@ -33,6 +33,7 @@ final readonly class MailerSendVerificationEmail implements SendVerificationEmai
                     'verifyUrl' => $this->frontendUrl.'?token='.urlencode(string: $rawToken),
                     'ttlHours' => intdiv($this->ttlMinutes, 60),
                     'languageCode' => $languageCode,
+                    'logoPath' => '@EmailVerificationToken/golifecraft-logo.png',
                 ],
             ),
             translationDomain: 'email_verification_token',

@@ -250,7 +250,42 @@
       "medium": "Media",
       "strong": "Fuerte"
     },
+    "manageUsers": "Gestión de usuarios",
     "logout": "Cerrar sesión"
+  },
+  "users": {
+    "breadcrumb": "Usuarios",
+    "back": "Atrás",
+    "eyebrow": "Administración",
+    "title": "Usuarios",
+    "adminOnly": "Solo admin",
+    "summary": {
+      "requests": "Solicitudes",
+      "verified": "Verificados",
+      "withAccess": "Con acceso"
+    },
+    "section": {
+      "requests": "Solicitudes de registro"
+    },
+    "badge": {
+      "verified": "Verificado",
+      "unverified": "Sin verificar"
+    },
+    "access": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "toggleAria": "Conceder o retirar acceso a la app para este usuario"
+    },
+    "empty": {
+      "title": "Sin solicitudes",
+      "text": "Todavía no hay usuarios que hayan solicitado acceso a la app."
+    },
+    "note": "Activa el interruptor para conceder acceso a la app. Solo los administradores ven esta pantalla.",
+    "toast": {
+      "granted": "Acceso concedido. Se está preparando el espacio del usuario.",
+      "revoked": "Acceso retirado.",
+      "error": "No se pudo guardar el cambio de acceso."
+    }
   },
   "createUser": {
     "title": "Crear Nuevo Usuario",

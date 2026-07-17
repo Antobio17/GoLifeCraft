@@ -15,6 +15,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     forgotPassword: "authorization/forgot-password/forgot-password",
     resetPassword: "authorization/reset-password/reset-password",
     user: "authorization/user/user",
+    users: "authorization/user/user",
     profile: "authorization/user/user",
     settings: "authorization/user/user",
     dashboard: "dashboard/dashboard",

@@ -4,8 +4,7 @@ namespace Authorization\User\User\Domain\QueryModel;
 
 interface GetUsersNeedleDataQuery
 {
-    public function findUsersByTenantId(
-        string $tenantId,
+    public function findUsers(
         int $pageSize,
         int $pageNumber,
         ?string $filterUsername = null,
@@ -15,7 +14,6 @@ interface GetUsersNeedleDataQuery
     ): array;
 
     public function totalUsers(
-        string $tenantId,
         ?string $filterUsername = null,
         ?string $filterEmail = null,
         ?string $filterRole = null,

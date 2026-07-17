@@ -3,6 +3,8 @@
 namespace Authorization\User\User\Domain\Model;
 
 use Authorization\User\User\Domain\Event\MyThemeChanged;
+use Authorization\User\User\Domain\Event\UserAccessGranted;
+use Authorization\User\User\Domain\Event\UserAccessRevoked;
 use Authorization\User\User\Domain\Event\UserEmailVerified;
 use Authorization\User\User\Domain\Event\UserRegistered;
 use Authorization\User\User\Domain\Event\UserUpdated;
@@ -108,6 +110,50 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         $this->record(event: new UserEmailVerified(
             aggregateId: $this->id,
             occurredOn: $now,
+            email: $this->email,
+        ));
+    }
+
+    public function grantAccess(
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if ($this->isActive) {
+            return;
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->isActive = true;
+        $this->updatedByUserId = $updatedByUserId;
+        $this->updatedAt = $now;
+
+        $this->record(event: new UserAccessGranted(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            tenantId: $this->tenantId,
+            email: $this->email,
+        ));
+    }
+
+    public function revokeAccess(
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!$this->isActive) {
+            return;
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->isActive = false;
+        $this->updatedByUserId = $updatedByUserId;
+        $this->updatedAt = $now;
+
+        $this->record(event: new UserAccessRevoked(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            tenantId: $this->tenantId,
             email: $this->email,
         ));
     }

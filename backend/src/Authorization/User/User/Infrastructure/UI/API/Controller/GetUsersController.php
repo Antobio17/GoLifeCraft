@@ -28,7 +28,6 @@ final class GetUsersController
         try {
             return JsonResponseBuilder::buildCollectionResponse(
                 queryCollectionResult: $this->handle(message: new GetUsersQuery(
-                    tenantId: RequestExtractor::getTenantSessionId(request: $request),
                     userSessionId: RequestExtractor::getUserSessionId(request: $request),
                     userRole: RequestExtractor::getUserRole(request: $request),
                     pageSize: RequestExtractor::getPageSize(request: $request),

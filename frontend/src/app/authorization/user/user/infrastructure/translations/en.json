@@ -250,7 +250,42 @@
       "medium": "Medium",
       "strong": "Strong"
     },
+    "manageUsers": "User management",
     "logout": "Log out"
+  },
+  "users": {
+    "breadcrumb": "Users",
+    "back": "Back",
+    "eyebrow": "Administration",
+    "title": "Users",
+    "adminOnly": "Admin only",
+    "summary": {
+      "requests": "Requests",
+      "verified": "Verified",
+      "withAccess": "With access"
+    },
+    "section": {
+      "requests": "Registration requests"
+    },
+    "badge": {
+      "verified": "Verified",
+      "unverified": "Unverified"
+    },
+    "access": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "toggleAria": "Toggle app access for this user"
+    },
+    "empty": {
+      "title": "No requests",
+      "text": "No users have requested access to the app yet."
+    },
+    "note": "Turn on the switch to grant access to the app. Only administrators can see this screen.",
+    "toast": {
+      "granted": "Access granted. The user's workspace is being prepared.",
+      "revoked": "Access revoked.",
+      "error": "The access change could not be saved."
+    }
   },
   "createUser": {
     "title": "Create New User",

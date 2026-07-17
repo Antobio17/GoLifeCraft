@@ -1,0 +1,95 @@
+<ds-page-wrapper [maxWidth]="'560px'" [gap]="'0'">
+  <ds-stack [gap]="'14px'">
+    <ds-screen-header
+      leading="back"
+      [leadingLabel]="'users.back' | t"
+      [eyebrow]="'users.eyebrow' | t"
+      [title]="'users.title' | t"
+      (leadingClick)="back()"
+    >
+      <span slot="actions" class="users-admin-badge">{{
+        "users.adminOnly" | t
+      }}</span>
+    </ds-screen-header>
+
+    @if (loading()) {
+      <ds-stack [gap]="'14px'">
+        <ds-skeleton height="72px"></ds-skeleton>
+        <ds-skeleton height="76px"></ds-skeleton>
+        <ds-skeleton height="76px"></ds-skeleton>
+        <ds-skeleton height="76px"></ds-skeleton>
+      </ds-stack>
+    } @else {
+      <ds-stack [gap]="'22px'">
+        <ds-stack direction="row" [gap]="'10px'">
+          <ds-metric-card
+            [value]="total()"
+            [label]="'users.summary.requests' | t"
+          ></ds-metric-card>
+          <ds-metric-card
+            [value]="verifiedCount()"
+            [label]="'users.summary.verified' | t"
+          ></ds-metric-card>
+          <ds-metric-card
+            variant="feature"
+            [value]="activeCount()"
+            [label]="'users.summary.withAccess' | t"
+          ></ds-metric-card>
+        </ds-stack>
+
+        <ds-stack [gap]="'10px'">
+          <ds-text variant="label">{{ "users.section.requests" | t }}</ds-text>
+
+          @if (rows().length === 0) {
+            <ds-empty-state
+              icon="users"
+              [title]="'users.empty.title' | t"
+              [text]="'users.empty.text' | t"
+            ></ds-empty-state>
+          } @else {
+            @for (row of rows(); track row.id) {
+              <ds-user-access-row
+                [initial]="row.initial"
+                [name]="row.name"
+                [email]="row.email"
+                [verified]="row.verified"
+                [verifiedLabel]="'users.badge.verified' | t"
+                [unverifiedLabel]="'users.badge.unverified' | t"
+                [active]="row.active"
+                [activeLabel]="'users.access.active' | t"
+                [inactiveLabel]="'users.access.inactive' | t"
+                [disabled]="row.saving"
+                [ariaLabel]="'users.access.toggleAria' | t"
+                (toggled)="onToggle(row)"
+              ></ds-user-access-row>
+            }
+          }
+        </ds-stack>
+
+        <div class="users-note">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.1"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 11v5.5"></path>
+            <circle
+              cx="12"
+              cy="7.6"
+              r="0.7"
+              fill="currentColor"
+              stroke="none"
+            ></circle>
+          </svg>
+          <span>{{ "users.note" | t }}</span>
+        </div>
+      </ds-stack>
+    }
+  </ds-stack>
+</ds-page-wrapper>

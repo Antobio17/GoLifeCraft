@@ -7,7 +7,6 @@ use Shared\Shared\Shared\Application\Query\Query;
 final class GetUsersQuery implements Query
 {
     public function __construct(
-        public readonly string $tenantId,
         public readonly string $userSessionId,
         public readonly string $userRole,
         public readonly int $pageNumber,

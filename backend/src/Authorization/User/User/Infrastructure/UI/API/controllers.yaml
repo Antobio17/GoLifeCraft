@@ -33,3 +33,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Authorization\User\User\Infrastructure\UI\API\Controller\SetUserAccessController:
+    class: Authorization\User\User\Infrastructure\UI\API\Controller\SetUserAccessController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

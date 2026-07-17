@@ -1,0 +1,7 @@
+services:
+  Authorization\User\User\Application\Subscriber\ProvisionTenantOnUserAccessGranted:
+    class: Authorization\User\User\Application\Subscriber\ProvisionTenantOnUserAccessGranted
+    arguments:
+      $tenantProvisioner: '@Shared\Tenant\Tenant\Domain\Service\TenantProvisioner'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.authorization.event.1.user.access_granted' }
