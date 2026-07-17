@@ -11,13 +11,13 @@ import { FieldComponent } from "@shared/design-system/field/infrastructure/compo
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { PasswordStrengthComponent } from "@shared/design-system/password-strength/infrastructure/components/password-strength.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 
 const LOGIN_ROUTE = "/login";
 
 @Component({
   selector: "app-reset-password",
   templateUrl: "./reset-password.component.html",
-  styleUrls: ["./reset-password.component.css"],
   imports: [
     FormsModule,
     ContextualTranslatePipe,
@@ -27,6 +27,7 @@ const LOGIN_ROUTE = "/login";
     TextInputComponent,
     ButtonComponent,
     PasswordStrengthComponent,
+    TextComponent,
   ],
 })
 export class ResetPasswordComponent implements OnInit {

@@ -10,13 +10,13 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 
 const LOGIN_ROUTE = "/login";
 
 @Component({
   selector: "app-forgot-password",
   templateUrl: "./forgot-password.component.html",
-  styleUrls: ["./forgot-password.component.css"],
   imports: [
     FormsModule,
     ContextualTranslatePipe,
@@ -25,6 +25,7 @@ const LOGIN_ROUTE = "/login";
     FieldComponent,
     TextInputComponent,
     ButtonComponent,
+    TextComponent,
   ],
 })
 export class ForgotPasswordComponent {

@@ -6,6 +6,7 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { AuthCardComponent } from "@shared/design-system/auth-card/infrastructure/components/auth-card.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 
 const LOGIN_ROUTE = "/login";
 
@@ -14,12 +15,12 @@ type VerificationStatus = "verifying" | "success" | "error";
 @Component({
   selector: "app-verify-email",
   templateUrl: "./verify-email.component.html",
-  styleUrls: ["./verify-email.component.css"],
   imports: [
     ContextualTranslatePipe,
     AuthCardComponent,
     StackComponent,
     ButtonComponent,
+    TextComponent,
   ],
 })
 export class VerifyEmailComponent implements OnInit {

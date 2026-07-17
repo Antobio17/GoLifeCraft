@@ -1,13 +1,13 @@
 <ds-auth-card [tagline]="'verifyEmail.tagline' | t">
   <ds-stack [gap]="'16px'">
     @if (status === "verifying") {
-      <p class="verify__message">{{ "verifyEmail.verifying" | t }}</p>
+      <ds-text align="center">{{ "verifyEmail.verifying" | t }}</ds-text>
     }
 
     @if (status === "success") {
-      <p class="verify__message verify__message--success">
+      <ds-text variant="success" align="center">
         {{ "verifyEmail.success" | t }}
-      </p>
+      </ds-text>
       <ds-button
         variant="primary"
         size="lg"
@@ -19,9 +19,9 @@
     }
 
     @if (status === "error") {
-      <p class="verify__message verify__message--error">
+      <ds-text variant="danger" align="center">
         {{ "verifyEmail.error" | t }}
-      </p>
+      </ds-text>
       <ds-button
         variant="primary"
         size="lg"

@@ -1,6 +1,15 @@
 import { Component, Input } from "@angular/core";
 
-type TextVariant = "body" | "muted" | "meta" | "label" | "strong" | "danger";
+type TextVariant =
+  | "body"
+  | "muted"
+  | "meta"
+  | "label"
+  | "strong"
+  | "danger"
+  | "success";
+
+type TextAlign = "start" | "center" | "end";
 
 @Component({
   selector: "ds-text",
@@ -36,6 +45,16 @@ type TextVariant = "body" | "muted" | "meta" | "label" | "strong" | "danger";
         font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-semibold);
       }
+      :host([variant="success"]) {
+        color: var(--ds-success);
+        font-weight: var(--ds-weight-semibold);
+      }
+      :host([align="center"]) {
+        text-align: center;
+      }
+      :host([align="end"]) {
+        text-align: end;
+      }
       :host([variant="label"]) {
         color: var(--ds-text-meta);
         font-size: var(--ds-text-xs);
@@ -58,6 +77,7 @@ type TextVariant = "body" | "muted" | "meta" | "label" | "strong" | "danger";
   ],
   host: {
     "[attr.variant]": "variant",
+    "[attr.align]": "align !== 'start' ? align : null",
     "[attr.inline]": "inline ? '' : null",
     "[attr.truncate]": "truncate ? '' : null",
     "[attr.inherit]": "inherit ? '' : null",
@@ -65,6 +85,7 @@ type TextVariant = "body" | "muted" | "meta" | "label" | "strong" | "danger";
 })
 export class TextComponent {
   @Input() variant: TextVariant = "body";
+  @Input() align: TextAlign = "start";
   @Input() inline = false;
   @Input() truncate = false;
   @Input() inherit = false;
