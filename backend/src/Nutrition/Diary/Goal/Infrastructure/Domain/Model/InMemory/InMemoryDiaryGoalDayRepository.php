@@ -26,6 +26,17 @@ final class InMemoryDiaryGoalDayRepository implements DiaryGoalDayRepository
         return false;
     }
 
+    public function findByDate(string $entryDate): ?DiaryGoalDay
+    {
+        foreach ($this->diaryGoalDays as $diaryGoalDay) {
+            if ($diaryGoalDay->entryDate === $entryDate) {
+                return $diaryGoalDay;
+            }
+        }
+
+        return null;
+    }
+
     public function save(DiaryGoalDay $diaryGoalDay): void
     {
         foreach ($this->diaryGoalDays as $key => $existing) {

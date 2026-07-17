@@ -8,5 +8,7 @@ interface DiaryGoalDayRepository
 
     public function existsForDate(string $entryDate): bool;
 
+    public function findByDate(string $entryDate): ?DiaryGoalDay;
+
     public function save(DiaryGoalDay $diaryGoalDay): void;
 }

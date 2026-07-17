@@ -41,7 +41,9 @@
       "open": "Configurar calorías",
       "close": "Cerrar",
       "title": "Objetivo de calorías",
+      "titleDay": "Objetivo del día",
       "subtitle": "Configura tus metas diarias",
+      "dayScope": "Editas solo el objetivo de este día pasado; tu objetivo actual no cambia.",
       "caloriesLabel": "CALORÍAS DIARIAS",
       "calories": "Calorías",
       "perDay": "kcal / día",
@@ -54,7 +56,8 @@
       "save": "Guardar objetivo",
       "saveInvalid": "Los porcentajes deben sumar 100%",
       "toast": {
-        "saved": "Objetivo actualizado"
+        "saved": "Objetivo actualizado",
+        "savedDay": "Objetivo del día actualizado"
       }
     },
     "empty": "Sin alimentos registrados",

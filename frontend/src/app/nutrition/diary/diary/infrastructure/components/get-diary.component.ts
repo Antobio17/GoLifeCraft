@@ -39,8 +39,8 @@ import { CreateDiaryEntryService } from "@nutrition/diary/diary/application/serv
 import { UpdateDiaryEntryService } from "@nutrition/diary/diary/application/services/update-diary-entry.service";
 import { DeleteDiaryEntryService } from "@nutrition/diary/diary/application/services/delete-diary-entry.service";
 import { DiaryDay } from "@nutrition/diary/diary/domain/models/diary.model";
-import { GetDiaryGoalService } from "@nutrition/diary/goal/application/services/get-diary-goal.service";
 import { UpdateDiaryGoalService } from "@nutrition/diary/goal/application/services/update-diary-goal.service";
+import { SetDiaryGoalDayService } from "@nutrition/diary/goal/application/services/set-diary-goal-day.service";
 import {
   DiaryGoalForm,
   DiaryGoalFormService,
@@ -86,8 +86,8 @@ export class GetDiaryComponent implements OnInit {
   private createDiaryEntryService = inject(CreateDiaryEntryService);
   private updateDiaryEntryService = inject(UpdateDiaryEntryService);
   private deleteDiaryEntryService = inject(DeleteDiaryEntryService);
-  private getDiaryGoalService = inject(GetDiaryGoalService);
   private updateDiaryGoalService = inject(UpdateDiaryGoalService);
+  private setDiaryGoalDayService = inject(SetDiaryGoalDayService);
   protected goalForm = inject(DiaryGoalFormService);
   protected view = inject(DiaryViewService);
   protected picker = inject(DiaryPickerService);
@@ -128,7 +128,6 @@ export class GetDiaryComponent implements OnInit {
   );
 
   goalSheetOpen = signal(false);
-  goalLoading = signal(false);
   goalSaving = signal(false);
   goal = signal<DiaryGoalForm>({
     calories: 0,
@@ -136,6 +135,16 @@ export class GetDiaryComponent implements OnInit {
     fatPct: 0,
     carbsPct: 0,
   });
+
+  editingPastDay = computed(() => !this.view.isToday(this.date()));
+  goalTitleKey = computed(() =>
+    this.editingPastDay() ? "getDiary.goal.titleDay" : "getDiary.goal.title",
+  );
+  goalSubtitle = computed(() =>
+    this.editingPastDay()
+      ? this.view.dateLine(this.date())
+      : this.t("getDiary.goal.subtitle"),
+  );
 
   goalProteinGrams = computed(() =>
     this.goalForm.grams(
@@ -283,16 +292,11 @@ export class GetDiaryComponent implements OnInit {
   }
 
   openGoalSheet(): void {
-    this.goalLoading.set(true);
-    this.goalSheetOpen.set(true);
+    const goals = this.attributes()?.goals;
+    if (!goals) return;
 
-    this.getDiaryGoalService.getDiaryGoal().subscribe({
-      next: (response) => {
-        this.goal.set(this.goalForm.toForm(response.data.attributes));
-        this.goalLoading.set(false);
-      },
-      error: () => this.goalLoading.set(false),
-    });
+    this.goal.set(this.goalForm.toForm(goals));
+    this.goalSheetOpen.set(true);
   }
 
   closeGoalSheet(): void {
@@ -327,20 +331,26 @@ export class GetDiaryComponent implements OnInit {
   saveGoals(): void {
     if (!this.goalValid() || this.goalSaving()) return;
 
+    const config = this.goalForm.toConfig(this.goal());
+    const request$ = this.editingPastDay()
+      ? this.setDiaryGoalDayService.setDiaryGoalDay(this.date(), config)
+      : this.updateDiaryGoalService.updateDiaryGoal(config);
+
     this.goalSaving.set(true);
 
-    this.updateDiaryGoalService
-      .updateDiaryGoal(this.goalForm.toConfig(this.goal()))
-      .pipe(delay(600))
-      .subscribe({
-        next: () => {
-          this.goalSaving.set(false);
-          this.goalSheetOpen.set(false);
-          this.toast("getDiary.goal.toast.saved");
-          this.load(this.date());
-        },
-        error: () => this.goalSaving.set(false),
-      });
+    request$.pipe(delay(600)).subscribe({
+      next: () => {
+        this.goalSaving.set(false);
+        this.goalSheetOpen.set(false);
+        this.toast(
+          this.editingPastDay()
+            ? "getDiary.goal.toast.savedDay"
+            : "getDiary.goal.toast.saved",
+        );
+        this.load(this.date());
+      },
+      error: () => this.goalSaving.set(false),
+    });
   }
 
   private clampPercent(percent: number): number {

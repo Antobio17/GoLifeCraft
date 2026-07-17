@@ -27,6 +27,18 @@ final class DoctrineDiaryGoalDayRepository extends EntityRepository implements D
         return (int) $count > 0;
     }
 
+    public function findByDate(string $entryDate): ?DiaryGoalDay
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('goalDay')
+            ->from(from: DiaryGoalDay::class, alias: 'goalDay')
+            ->where('goalDay.entryDate = :entryDate')
+            ->setParameter(key: 'entryDate', value: $entryDate)
+            ->setMaxResults(maxResults: 1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function save(DiaryGoalDay $diaryGoalDay): void
     {
         $this->getEntityManager()->persist(object: $diaryGoalDay);

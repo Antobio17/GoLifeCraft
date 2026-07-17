@@ -12,3 +12,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\SetDiaryGoalDayController:
+    class: Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\SetDiaryGoalDayController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

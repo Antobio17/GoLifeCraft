@@ -7,3 +7,10 @@ update_diary_goal:
   path: /api/v1/nutrition/diary/goal
   methods: [PUT]
   controller: Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\UpdateDiaryGoalController
+
+set_diary_goal_day:
+  path: /api/v1/nutrition/diary/goal/day/{date}
+  methods: [PUT]
+  controller: Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\SetDiaryGoalDayController
+  requirements:
+    date: '\d{4}-\d{2}-\d{2}'

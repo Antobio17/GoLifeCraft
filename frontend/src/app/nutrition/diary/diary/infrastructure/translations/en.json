@@ -41,7 +41,9 @@
       "open": "Configure calories",
       "close": "Close",
       "title": "Calorie goal",
+      "titleDay": "Day goal",
       "subtitle": "Set your daily targets",
+      "dayScope": "You're editing only this past day's goal; your current goal stays unchanged.",
       "caloriesLabel": "DAILY CALORIES",
       "calories": "Calories",
       "perDay": "kcal / day",
@@ -54,7 +56,8 @@
       "save": "Save goal",
       "saveInvalid": "Percentages must add up to 100%",
       "toast": {
-        "saved": "Goal updated"
+        "saved": "Goal updated",
+        "savedDay": "Day goal updated"
       }
     },
     "empty": "No food logged",

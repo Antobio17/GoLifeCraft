@@ -89,6 +89,15 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
 
     private function resolveGoals(string $date): DiaryGoals
     {
+        if ($date < $this->today()) {
+            return $this->resolvePastDayGoals(date: $date);
+        }
+
+        return $this->resolveCurrentGoals();
+    }
+
+    private function resolvePastDayGoals(string $date): DiaryGoals
+    {
         $snapshot = $this->connection->createQueryBuilder()
             ->select('d.calories', 'd.protein', 'd.fat', 'd.carbs')
             ->from(table: 'diary_goal_day', alias: 'd')
@@ -102,6 +111,11 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
             return $this->mapGoals(row: $snapshot);
         }
 
+        return $this->resolveCurrentGoals();
+    }
+
+    private function resolveCurrentGoals(): DiaryGoals
+    {
         $config = $this->connection->createQueryBuilder()
             ->select('g.calories', 'g.protein', 'g.fat', 'g.carbs')
             ->from(table: 'diary_goal', alias: 'g')
@@ -114,6 +128,12 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
         }
 
         return DiaryGoals::default();
+    }
+
+    private function today(): string
+    {
+        return (new \DateTime(datetime: 'now', timezone: new \DateTimeZone(timezone: 'Europe/Madrid')))
+            ->format(format: 'Y-m-d');
     }
 
     /**

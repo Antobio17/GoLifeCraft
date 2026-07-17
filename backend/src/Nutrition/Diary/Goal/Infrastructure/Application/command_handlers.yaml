@@ -17,3 +17,12 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Goal\Application\Command\SetDiaryGoalDayCommandHandler:
+    class: Nutrition\Diary\Goal\Application\Command\SetDiaryGoalDayCommandHandler
+    arguments:
+      $diaryGoalDayRepository: '@Nutrition\Diary\Goal\Domain\Model\DiaryGoalDayRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
