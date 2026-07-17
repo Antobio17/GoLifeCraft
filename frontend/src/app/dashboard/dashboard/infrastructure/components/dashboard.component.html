@@ -17,23 +17,23 @@
     />
     <ds-daily-summary
       [progressPercent]="progressPercent"
-      [consumedKcal]="summary.consumedKcal | number: '1.0-0' : 'es'"
-      [targetKcal]="summary.targetKcal | number: '1.0-0' : 'es'"
+      [consumedKcal]="summary().consumedKcal | number: '1.0-0' : 'es'"
+      [targetKcal]="summary().targetKcal | number: '1.0-0' : 'es'"
       [kcalLabel]="'dashboard.summary.kcal' | t"
       [macros]="[
         {
           label: 'dashboard.macros.protein' | t,
-          value: summary.proteinG + ' g',
+          value: summary().proteinG + ' g',
           tone: 'protein',
         },
         {
           label: 'dashboard.macros.fat' | t,
-          value: summary.fatG + ' g',
+          value: summary().fatG + ' g',
           tone: 'fat',
         },
         {
           label: 'dashboard.macros.carbs' | t,
-          value: summary.carbsG + ' g',
+          value: summary().carbsG + ' g',
           tone: 'carbs',
         },
       ]"

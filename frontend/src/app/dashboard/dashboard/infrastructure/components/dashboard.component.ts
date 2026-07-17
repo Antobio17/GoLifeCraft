@@ -14,6 +14,7 @@ import { GridComponent } from "@shared/design-system/grid/infrastructure/compone
 import { GetGymStatsService } from "@gym/analytics/stats/application/services/get-gym-stats.service";
 import { GymStats } from "@gym/analytics/stats/domain/models/gym-stats.model";
 import { GymAnalyticsComponent } from "@gym/analytics/stats/infrastructure/components/gym-analytics.component";
+import { GetDiaryService } from "@nutrition/diary/diary/application/services/get-diary.service";
 
 interface DailySummary {
   consumedKcal: number;
@@ -44,6 +45,7 @@ interface DailySummary {
 export class DashboardComponent implements OnInit {
   private authSessionService = inject(AuthSessionService);
   private floatingToastService = inject(FloatingToastService);
+  private getDiaryService = inject(GetDiaryService);
   private getGymStatsService = inject(GetGymStatsService);
   private router = inject(Router);
 
@@ -68,22 +70,40 @@ export class DashboardComponent implements OnInit {
     return value ? value.charAt(0).toUpperCase() : "?";
   });
 
-  readonly summary: DailySummary = {
-    consumedKcal: 1480,
-    targetKcal: 2100,
-    proteinG: 82,
-    fatG: 54,
-    carbsG: 160,
-  };
+  readonly summary = signal<DailySummary>({
+    consumedKcal: 0,
+    targetKcal: 0,
+    proteinG: 0,
+    fatG: 0,
+    carbsG: 0,
+  });
 
   get progressPercent(): number {
+    const summary = this.summary();
+
+    if (summary.targetKcal <= 0) return 0;
+
     return Math.min(
       100,
-      Math.round((this.summary.consumedKcal / this.summary.targetKcal) * 100),
+      Math.round((summary.consumedKcal / summary.targetKcal) * 100),
     );
   }
 
   ngOnInit(): void {
+    this.getDiaryService.getDiary().subscribe({
+      next: (response) => {
+        const attributes = response.data.attributes;
+
+        this.summary.set({
+          consumedKcal: attributes.consumedCalories,
+          targetKcal: attributes.goalCalories,
+          proteinG: attributes.totals.protein,
+          fatG: attributes.totals.fat,
+          carbsG: attributes.totals.carbs,
+        });
+      },
+    });
+
     this.getGymStatsService.getGymStats().subscribe({
       next: (stats) => {
         this.gymStats.set(stats);
