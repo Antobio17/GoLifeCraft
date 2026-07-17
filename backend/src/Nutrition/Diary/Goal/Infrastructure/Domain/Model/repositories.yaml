@@ -1,0 +1,12 @@
+services:
+  Nutrition\Diary\Goal\Domain\Model\DiaryGoalRepository:
+    class: Nutrition\Diary\Goal\Infrastructure\Domain\Model\Doctrine\DoctrineDiaryGoalRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Diary\Goal\Domain\Model\DiaryGoal
+
+  Nutrition\Diary\Goal\Domain\Model\DiaryGoalDayRepository:
+    class: Nutrition\Diary\Goal\Infrastructure\Domain\Model\Doctrine\DoctrineDiaryGoalDayRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Diary\Goal\Domain\Model\DiaryGoalDay

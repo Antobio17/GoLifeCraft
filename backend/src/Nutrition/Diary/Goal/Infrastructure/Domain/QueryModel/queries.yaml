@@ -1,0 +1,5 @@
+services:
+  Nutrition\Diary\Goal\Domain\QueryModel\GetDiaryGoalNeedleDataQuery:
+    class: Nutrition\Diary\Goal\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDiaryGoalNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

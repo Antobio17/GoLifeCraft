@@ -1,0 +1,20 @@
+.goal-dot {
+  flex: 0 0 auto;
+}
+
+.goal-dot--protein {
+  color: var(--ds-primary);
+}
+
+.goal-dot--fat {
+  color: var(--ds-warning);
+}
+
+.goal-dot--carbs {
+  color: var(--ds-accent);
+}
+
+.goal-pct {
+  flex: 0 0 auto;
+  width: 96px;
+}

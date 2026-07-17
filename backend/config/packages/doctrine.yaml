@@ -108,3 +108,9 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Gym/Training/Workout/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Gym\Training\Workout\Domain\Model'
                         alias: workout
+                    DiaryGoal:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Diary/Goal/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Diary\Goal\Domain\Model'
+                        alias: diary_goal

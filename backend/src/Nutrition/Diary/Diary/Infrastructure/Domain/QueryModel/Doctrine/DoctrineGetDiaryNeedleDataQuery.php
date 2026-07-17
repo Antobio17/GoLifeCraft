@@ -27,7 +27,7 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
     {
         $rows = $this->fetchEntries(date: $date);
         $graph = $this->graphProvider->load();
-        $goals = DiaryGoals::default();
+        $goals = $this->resolveGoals(date: $date);
 
         $meals = [];
         $totals = MacroBreakdown::zero();
@@ -84,6 +84,48 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
             remainingCalories: max(0, $goalCalories - $consumed),
             percent: $percent,
             meals: $meals,
+        );
+    }
+
+    private function resolveGoals(string $date): DiaryGoals
+    {
+        $snapshot = $this->connection->createQueryBuilder()
+            ->select('d.calories', 'd.protein', 'd.fat', 'd.carbs')
+            ->from(table: 'diary_goal_day', alias: 'd')
+            ->where('d.entry_date = :date')
+            ->setParameter(key: 'date', value: $date)
+            ->setMaxResults(maxResults: 1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        if (false !== $snapshot) {
+            return $this->mapGoals(row: $snapshot);
+        }
+
+        $config = $this->connection->createQueryBuilder()
+            ->select('g.calories', 'g.protein', 'g.fat', 'g.carbs')
+            ->from(table: 'diary_goal', alias: 'g')
+            ->setMaxResults(maxResults: 1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        if (false !== $config) {
+            return $this->mapGoals(row: $config);
+        }
+
+        return DiaryGoals::default();
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function mapGoals(array $row): DiaryGoals
+    {
+        return new DiaryGoals(
+            calories: (float) $row['calories'],
+            protein: (float) $row['protein'],
+            fat: (float) $row['fat'],
+            carbs: (float) $row['carbs'],
         );
     }
 

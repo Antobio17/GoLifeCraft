@@ -37,6 +37,26 @@
       "added": "Añadido al diario",
       "removed": "Eliminado del diario"
     },
+    "goal": {
+      "open": "Configurar calorías",
+      "close": "Cerrar",
+      "title": "Objetivo de calorías",
+      "subtitle": "Configura tus metas diarias",
+      "caloriesLabel": "CALORÍAS DIARIAS",
+      "calories": "Calorías",
+      "perDay": "kcal / día",
+      "macrosLabel": "REPARTO DE MACRONUTRIENTES (%)",
+      "protein": "Proteínas",
+      "fat": "Grasas",
+      "carbs": "Hidratos",
+      "hintSum": "Los porcentajes suman",
+      "hintFormula": "Los gramos se calculan sobre tu objetivo calórico (4 kcal/g proteínas e hidratos, 9 kcal/g grasas).",
+      "save": "Guardar objetivo",
+      "saveInvalid": "Los porcentajes deben sumar 100%",
+      "toast": {
+        "saved": "Objetivo actualizado"
+      }
+    },
     "empty": "Sin alimentos registrados",
     "emptyAction": "Sin alimentos, añade uno desde el botón +",
     "error": "No hemos podido cargar el diario de este día"

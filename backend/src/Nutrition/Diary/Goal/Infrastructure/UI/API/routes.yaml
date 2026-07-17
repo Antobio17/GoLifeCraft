@@ -1,0 +1,9 @@
+get_diary_goal:
+  path: /api/v1/nutrition/diary/goal
+  methods: [GET]
+  controller: Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\GetDiaryGoalController
+
+update_diary_goal:
+  path: /api/v1/nutrition/diary/goal
+  methods: [PUT]
+  controller: Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\UpdateDiaryGoalController

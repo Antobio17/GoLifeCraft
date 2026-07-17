@@ -3,6 +3,7 @@ import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/
 import { GetRecipesProviders } from "@nutrition/recipe/recipe/infrastructure/providers/get-recipes.providers";
 import { GetDiaryProviders } from "../providers/get-diary.providers";
 import { DiaryWriteProviders } from "../providers/diary-write.providers";
+import { DiaryGoalProviders } from "@nutrition/diary/goal/infrastructure/providers/diary-goal.providers";
 
 export const DIARY_ROUTES: Routes = [
   {
@@ -10,6 +11,7 @@ export const DIARY_ROUTES: Routes = [
     providers: [
       ...GetDiaryProviders.getProviders(),
       ...DiaryWriteProviders.getProviders(),
+      ...DiaryGoalProviders.getProviders(),
       ...GetArticlesProviders.getProviders(),
       ...GetRecipesProviders.getProviders(),
     ],

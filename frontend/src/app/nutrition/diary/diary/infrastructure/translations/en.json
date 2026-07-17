@@ -37,6 +37,26 @@
       "added": "Added to the diary",
       "removed": "Removed from the diary"
     },
+    "goal": {
+      "open": "Configure calories",
+      "close": "Close",
+      "title": "Calorie goal",
+      "subtitle": "Set your daily targets",
+      "caloriesLabel": "DAILY CALORIES",
+      "calories": "Calories",
+      "perDay": "kcal / day",
+      "macrosLabel": "MACRONUTRIENT SPLIT (%)",
+      "protein": "Protein",
+      "fat": "Fat",
+      "carbs": "Carbs",
+      "hintSum": "Percentages add up to",
+      "hintFormula": "Grams are computed from your calorie goal (4 kcal/g protein and carbs, 9 kcal/g fat).",
+      "save": "Save goal",
+      "saveInvalid": "Percentages must add up to 100%",
+      "toast": {
+        "saved": "Goal updated"
+      }
+    },
     "empty": "No food logged",
     "emptyAction": "No food yet, add one with the + button",
     "error": "We couldn't load this day's diary"

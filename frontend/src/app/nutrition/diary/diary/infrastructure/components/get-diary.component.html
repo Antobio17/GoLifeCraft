@@ -8,6 +8,18 @@
     </ds-stack>
 
     <ds-stack direction="row" align="center" [gap]="'6px'">
+      @if (canWrite) {
+        <ds-icon-button
+          icon="settings"
+          variant="soft"
+          [size]="32"
+          [iconSize]="17"
+          [stroke]="2.1"
+          [radius]="'10px'"
+          [ariaLabel]="'getDiary.goal.open' | t"
+          (clicked)="openGoalSheet()"
+        />
+      }
       <ds-icon-button
         icon="chevronLeft"
         variant="soft"
@@ -168,6 +180,117 @@
             </ds-card>
           }
         </ds-stack>
+      }
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <ds-modal-sheet
+    [open]="goalSheetOpen()"
+    [compact]="true"
+    [title]="'getDiary.goal.title' | t"
+    [closeLabel]="'getDiary.goal.close' | t"
+    (closed)="closeGoalSheet()"
+  >
+    <ds-stack [gap]="'18px'">
+      <ds-text variant="meta">{{ "getDiary.goal.subtitle" | t }}</ds-text>
+
+      @if (goalLoading()) {
+        <ds-skeleton height="74px" />
+        <ds-skeleton height="150px" />
+      } @else {
+        <ds-stack [gap]="'8px'">
+          <ds-text variant="label">{{
+            "getDiary.goal.caloriesLabel" | t
+          }}</ds-text>
+          <ds-nutrient-input
+            variant="energy"
+            [label]="'🎯 ' + ('getDiary.goal.calories' | t)"
+            [unit]="'getDiary.goal.perDay' | t"
+            [ngModel]="goal().calories"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onGoalCalories(+$event)"
+          />
+        </ds-stack>
+
+        <ds-stack [gap]="'12px'">
+          <ds-text variant="label">{{
+            "getDiary.goal.macrosLabel" | t
+          }}</ds-text>
+
+          <ds-stack direction="row" align="center" [gap]="'11px'">
+            <ds-icon
+              class="goal-dot goal-dot--protein"
+              name="dot"
+              [size]="11"
+            />
+            <ds-stack [gap]="'1px'" [grow]="true">
+              <ds-text variant="strong">{{
+                "getDiary.goal.protein" | t
+              }}</ds-text>
+              <ds-text variant="meta">≈ {{ goalProteinGrams() }} g</ds-text>
+            </ds-stack>
+            <ds-number-input
+              class="goal-pct"
+              unit="%"
+              [max]="100"
+              [ngModel]="goal().proteinPct"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onGoalProtein($event)"
+            />
+          </ds-stack>
+
+          <ds-stack direction="row" align="center" [gap]="'11px'">
+            <ds-icon class="goal-dot goal-dot--fat" name="dot" [size]="11" />
+            <ds-stack [gap]="'1px'" [grow]="true">
+              <ds-text variant="strong">{{ "getDiary.goal.fat" | t }}</ds-text>
+              <ds-text variant="meta">≈ {{ goalFatGrams() }} g</ds-text>
+            </ds-stack>
+            <ds-number-input
+              class="goal-pct"
+              unit="%"
+              [max]="100"
+              [ngModel]="goal().fatPct"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onGoalFat($event)"
+            />
+          </ds-stack>
+
+          <ds-stack direction="row" align="center" [gap]="'11px'">
+            <ds-icon class="goal-dot goal-dot--carbs" name="dot" [size]="11" />
+            <ds-stack [gap]="'1px'" [grow]="true">
+              <ds-text variant="strong">{{
+                "getDiary.goal.carbs" | t
+              }}</ds-text>
+              <ds-text variant="meta">≈ {{ goalCarbsGrams() }} g</ds-text>
+            </ds-stack>
+            <ds-number-input
+              class="goal-pct"
+              unit="%"
+              [max]="100"
+              [ngModel]="goal().carbsPct"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onGoalCarbs($event)"
+            />
+          </ds-stack>
+        </ds-stack>
+
+        <ds-note icon="info">
+          {{ "getDiary.goal.hintSum" | t }} {{ goalPercentTotal() }}%.
+          {{ "getDiary.goal.hintFormula" | t }}
+        </ds-note>
+
+        <ds-button
+          variant="primary"
+          [fullWidth]="true"
+          [disabled]="!goalValid()"
+          [loading]="goalSaving()"
+          (clicked)="saveGoals()"
+        >
+          {{
+            (goalValid() ? "getDiary.goal.save" : "getDiary.goal.saveInvalid")
+              | t
+          }}
+        </ds-button>
       }
     </ds-stack>
   </ds-modal-sheet>

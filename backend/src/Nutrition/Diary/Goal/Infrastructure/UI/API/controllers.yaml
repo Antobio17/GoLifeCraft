@@ -1,0 +1,14 @@
+services:
+  Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\GetDiaryGoalController:
+    class: Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\GetDiaryGoalController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\UpdateDiaryGoalController:
+    class: Nutrition\Diary\Goal\Infrastructure\UI\API\Controller\UpdateDiaryGoalController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

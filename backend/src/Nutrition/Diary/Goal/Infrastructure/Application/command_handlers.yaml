@@ -1,0 +1,19 @@
+services:
+  Nutrition\Diary\Goal\Application\Command\UpdateDiaryGoalCommandHandler:
+    class: Nutrition\Diary\Goal\Application\Command\UpdateDiaryGoalCommandHandler
+    arguments:
+      $diaryGoalRepository: '@Nutrition\Diary\Goal\Domain\Model\DiaryGoalRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Goal\Application\Command\CaptureDiaryGoalDayCommandHandler:
+    class: Nutrition\Diary\Goal\Application\Command\CaptureDiaryGoalDayCommandHandler
+    arguments:
+      $diaryGoalDayRepository: '@Nutrition\Diary\Goal\Domain\Model\DiaryGoalDayRepository'
+      $diaryGoalRepository: '@Nutrition\Diary\Goal\Domain\Model\DiaryGoalRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { delay } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
@@ -18,6 +19,10 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
+import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
+import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import {
   SegmentedOption,
   SegmentedToggleComponent,
@@ -34,6 +39,12 @@ import { CreateDiaryEntryService } from "@nutrition/diary/diary/application/serv
 import { UpdateDiaryEntryService } from "@nutrition/diary/diary/application/services/update-diary-entry.service";
 import { DeleteDiaryEntryService } from "@nutrition/diary/diary/application/services/delete-diary-entry.service";
 import { DiaryDay } from "@nutrition/diary/diary/domain/models/diary.model";
+import { GetDiaryGoalService } from "@nutrition/diary/goal/application/services/get-diary-goal.service";
+import { UpdateDiaryGoalService } from "@nutrition/diary/goal/application/services/update-diary-goal.service";
+import {
+  DiaryGoalForm,
+  DiaryGoalFormService,
+} from "@nutrition/diary/goal/application/services/diary-goal-form.service";
 
 type PickerTab = "product" | "recipe";
 
@@ -59,6 +70,10 @@ type PickerTab = "product" | "recipe";
     ModalSheetComponent,
     SearchInputComponent,
     SegmentedToggleComponent,
+    NutrientInputComponent,
+    NumberInputComponent,
+    NoteComponent,
+    IconComponent,
   ],
 })
 export class GetDiaryComponent implements OnInit {
@@ -71,6 +86,9 @@ export class GetDiaryComponent implements OnInit {
   private createDiaryEntryService = inject(CreateDiaryEntryService);
   private updateDiaryEntryService = inject(UpdateDiaryEntryService);
   private deleteDiaryEntryService = inject(DeleteDiaryEntryService);
+  private getDiaryGoalService = inject(GetDiaryGoalService);
+  private updateDiaryGoalService = inject(UpdateDiaryGoalService);
+  protected goalForm = inject(DiaryGoalFormService);
   protected view = inject(DiaryViewService);
   protected picker = inject(DiaryPickerService);
 
@@ -108,6 +126,32 @@ export class GetDiaryComponent implements OnInit {
   pickerMealLabel = computed(() =>
     this.pickerMeal() ? this.mealLabel(this.pickerMeal()) : "",
   );
+
+  goalSheetOpen = signal(false);
+  goalLoading = signal(false);
+  goalSaving = signal(false);
+  goal = signal<DiaryGoalForm>({
+    calories: 0,
+    proteinPct: 0,
+    fatPct: 0,
+    carbsPct: 0,
+  });
+
+  goalProteinGrams = computed(() =>
+    this.goalForm.grams(
+      this.goal().calories,
+      this.goal().proteinPct,
+      "protein",
+    ),
+  );
+  goalFatGrams = computed(() =>
+    this.goalForm.grams(this.goal().calories, this.goal().fatPct, "fat"),
+  );
+  goalCarbsGrams = computed(() =>
+    this.goalForm.grams(this.goal().calories, this.goal().carbsPct, "carbs"),
+  );
+  goalPercentTotal = computed(() => this.goalForm.percentTotal(this.goal()));
+  goalValid = computed(() => this.goalForm.isValid(this.goal()));
 
   ngOnInit(): void {
     this.translationService
@@ -236,6 +280,71 @@ export class GetDiaryComponent implements OnInit {
         this.load(this.date());
       },
     });
+  }
+
+  openGoalSheet(): void {
+    this.goalLoading.set(true);
+    this.goalSheetOpen.set(true);
+
+    this.getDiaryGoalService.getDiaryGoal().subscribe({
+      next: (response) => {
+        this.goal.set(this.goalForm.toForm(response.data.attributes));
+        this.goalLoading.set(false);
+      },
+      error: () => this.goalLoading.set(false),
+    });
+  }
+
+  closeGoalSheet(): void {
+    this.goalSheetOpen.set(false);
+  }
+
+  onGoalCalories(calories: number): void {
+    this.goal.update((form) => ({ ...form, calories: Math.max(0, calories) }));
+  }
+
+  onGoalProtein(percent: number): void {
+    this.goal.update((form) => ({
+      ...form,
+      proteinPct: this.clampPercent(percent),
+    }));
+  }
+
+  onGoalFat(percent: number): void {
+    this.goal.update((form) => ({
+      ...form,
+      fatPct: this.clampPercent(percent),
+    }));
+  }
+
+  onGoalCarbs(percent: number): void {
+    this.goal.update((form) => ({
+      ...form,
+      carbsPct: this.clampPercent(percent),
+    }));
+  }
+
+  saveGoals(): void {
+    if (!this.goalValid() || this.goalSaving()) return;
+
+    this.goalSaving.set(true);
+
+    this.updateDiaryGoalService
+      .updateDiaryGoal(this.goalForm.toConfig(this.goal()))
+      .pipe(delay(600))
+      .subscribe({
+        next: () => {
+          this.goalSaving.set(false);
+          this.goalSheetOpen.set(false);
+          this.toast("getDiary.goal.toast.saved");
+          this.load(this.date());
+        },
+        error: () => this.goalSaving.set(false),
+      });
+  }
+
+  private clampPercent(percent: number): number {
+    return Math.min(100, Math.max(0, Math.round(percent)));
   }
 
   private loadChoices(): void {

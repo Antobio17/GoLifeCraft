@@ -12,8 +12,12 @@ update_diary_entry:
   path: /api/v1/nutrition/diary/{diaryEntryId}
   methods: [PUT]
   controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryController
+  requirements:
+    diaryEntryId: '[0-9a-fA-F-]{36}'
 
 delete_diary_entry:
   path: /api/v1/nutrition/diary/{diaryEntryId}
   methods: [DELETE]
   controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\DeleteDiaryEntryController
+  requirements:
+    diaryEntryId: '[0-9a-fA-F-]{36}'

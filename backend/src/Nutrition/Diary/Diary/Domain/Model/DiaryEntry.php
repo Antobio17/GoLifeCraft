@@ -82,6 +82,7 @@ class DiaryEntry extends GenericAggregate
             occurredOn: $now,
             entryDate: $entryDate,
             meal: $meal,
+            createdByUserId: $createdByUserId,
         ));
 
         return $entry;
