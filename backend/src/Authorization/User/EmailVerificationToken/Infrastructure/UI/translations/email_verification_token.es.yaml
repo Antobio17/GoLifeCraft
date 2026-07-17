@@ -7,7 +7,7 @@ hero:
     title: "Verifica tu email"
     subtitle: "Ya casi estás dentro de GoLifeCraft."
 greeting: "Hola, %name%"
-intro: "Gracias por registrarte en <strong style=\"color:#0f1923; font-weight:600;\">GoLifeCraft</strong>. Confirma tu dirección de email para que podamos activar tu cuenta."
+intro: "Gracias por registrarte en <strong style=\"color:#1b1a15; font-weight:600;\">GoLifeCraft</strong>. Confirma tu dirección de email para que podamos activar tu cuenta."
 cta: "Verificar mi email →"
 expires: "ESTE ENLACE CADUCA EN %hours% HORAS"
 fallback:

@@ -2,25 +2,27 @@
 <html lang="{{ languageCode|default('es') }}">
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light">
     <title>{{ subject|default('GoLifeCraft') }}</title>
 </head>
-<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;color:#0f172a;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:32px 0;">
+<body style="margin:0;padding:0;background:#f6f2e9;font-family:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1b1a15;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f2e9;padding:32px 0;">
         <tr>
             <td align="center">
-                <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,0.08);">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #eae4d6;border-radius:16px;overflow:hidden;box-shadow:0 22px 50px -34px rgba(27,26,21,0.18),0 6px 14px rgba(27,26,21,0.05);">
                     <tr>
-                        <td style="background:#2f9e44;padding:24px 32px;color:#ffffff;font-size:20px;font-weight:600;">
+                        <td style="background:#274b37;padding:24px 32px;color:#ffffff;font-size:20px;font-weight:700;letter-spacing:-0.01em;">
                             GoLifeCraft
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:32px;font-size:15px;line-height:1.55;">
+                        <td style="padding:32px;font-size:15px;line-height:1.55;color:#4a463d;">
                             {% block content %}{% endblock %}
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:20px 32px;background:#f1f5f9;color:#64748b;font-size:12px;line-height:1.5;">
+                        <td style="padding:20px 32px;background:#f6f2e9;color:#9a958a;font-size:12px;line-height:1.5;border-top:1px solid #eae4d6;">
                             {{ 'footer.legal'|trans({}, 'email', languageCode|default('es')) }}
                         </td>
                     </tr>
