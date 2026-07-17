@@ -49,7 +49,7 @@ final readonly class RegisterUserCommandHandler
             name: $command->name,
             lastname: '',
             plainPassword: $command->password,
-            role: User::ROLE_GOD,
+            role: User::ROLE_USER,
             passwordHasher: $this->passwordHasher,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

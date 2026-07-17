@@ -75,7 +75,7 @@ final class RegisterUserCommandHandlerTest extends TestCase
         $this->assertFalse(condition: $user->isActive);
         $this->assertFalse(condition: $user->emailVerified);
         $this->assertSame(expected: 'GLC0000000001', actual: $user->tenantId);
-        $this->assertSame(expected: User::ROLE_GOD, actual: $user->role);
+        $this->assertSame(expected: User::ROLE_USER, actual: $user->role);
         $this->assertSame(expected: 'hashed_StrongPass1!', actual: $user->password);
 
         $this->assertSame(expected: 1, actual: $this->sendVerificationEmail->calls);
