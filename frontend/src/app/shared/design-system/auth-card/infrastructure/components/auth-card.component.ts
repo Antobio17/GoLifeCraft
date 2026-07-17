@@ -14,6 +14,10 @@ export class AuthCardComponent {
   @Input() activeTab = "";
   @Input() tagline: string | null = null;
 
+  get hasTabs(): boolean {
+    return this.tabs.length > 0;
+  }
+
   @Output() tabSelected = new EventEmitter<string>();
 
   select(key: string): void {

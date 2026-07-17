@@ -115,6 +115,10 @@
     column-gap: 56px;
   }
 
+  .auth__card--without-tabs {
+    grid-template-areas: "brand form";
+  }
+
   .auth__brand {
     grid-area: brand;
     align-self: center;
@@ -128,6 +132,14 @@
   .auth__tabs {
     grid-area: tabs;
     margin-bottom: 0;
+  }
+
+  .auth__card--without-tabs .auth__brand {
+    padding-right: 56px;
+  }
+
+  .auth__card--without-tabs .auth__form {
+    margin-top: 0;
   }
 
   .auth__form {
