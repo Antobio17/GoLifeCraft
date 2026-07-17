@@ -26,13 +26,16 @@
   .footer-pad { padding:24px 8px 15px; }
   @media only screen and (max-width:620px) {
     .container { width:100% !important; }
-    .pad-x { padding-left:24px !important; padding-right:24px !important; }
-    .hero-pad { padding:48px 24px 40px !important; }
-    .h1 { font-size:24px !important; line-height:1.25 !important; }
-    .brand-row { padding:24px 24px 20px !important; }
-    .brand-logo { width:156px !important; }
-    .content-pad { padding:36px 24px 0 !important; }
-    .button-cell { padding:24px 24px 8px !important; }
+    .shell { padding:36px 16px 44px !important; }
+    .pad-x { padding-left:28px !important; padding-right:28px !important; }
+    .hero-pad { padding:44px 28px 40px !important; }
+    .h1 { font-size:23px !important; line-height:1.32 !important; letter-spacing:-0.018em !important; }
+    .brand-row { padding:22px 28px 18px !important; }
+    .brand-logo { width:150px !important; }
+    .brand-logo-cell, .brand-tag-cell { display:block !important; width:100% !important; text-align:left !important; }
+    .brand-tag-cell { padding-top:12px !important; }
+    .content-pad { padding:36px 28px 0 !important; }
+    .button-cell { padding:30px 28px 8px !important; }
     .button { min-width:0 !important; width:100% !important; }
     .footer-pad { padding-left:0 !important; padding-right:0 !important; }
   }
@@ -54,11 +57,11 @@
             <td class="brand-row" style="font-size:0; line-height:0;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td align="left" valign="middle" style="line-height:0;">
+                  <td align="left" valign="middle" class="brand-logo-cell" style="line-height:0;">
                     {% set logoSource = logoUrl is defined and logoUrl ? logoUrl : email.image(logoPath) %}
                     <img src="{{ logoSource }}" alt="GoLifeCraft" width="180" height="57" class="brand-logo" style="display:block; border:0; outline:none; text-decoration:none;">
                   </td>
-                  <td align="right" valign="middle" style="font-family:'JetBrains Mono','Courier New',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#94a3b8;">
+                  <td align="right" valign="middle" class="brand-tag-cell" style="font-family:'JetBrains Mono','Courier New',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#94a3b8; white-space:nowrap;">
                     {{ 'brand.tag'|trans({}, 'email_verification_token', lang) }}
                   </td>
                 </tr>

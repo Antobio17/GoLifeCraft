@@ -1,11 +1,12 @@
 import { Component, Input } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
+import { ChipComponent } from "../../../chip/infrastructure/components/chip.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-nav-item",
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, ChipComponent],
   template: `
     <span class="item">
       <ds-icon
@@ -16,7 +17,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       />
       <span class="item__label">{{ label }}</span>
       @if (badge) {
-        <span class="item__badge">{{ badge }}</span>
+        <ds-chip class="item__badge" [uppercase]="true">{{ badge }}</ds-chip>
       }
     </span>
   `,
@@ -49,23 +50,18 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       }
       .item__badge {
         flex: none;
-        padding: 2px 7px;
-        border-radius: 999px;
-        background: color-mix(in srgb, var(--ds-accent) 18%, transparent);
-        color: var(--ds-accent);
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        line-height: 1.4;
+        --chip-pad: 2px 7px;
+        --chip-radius: 999px;
+        --chip-bg: color-mix(in srgb, var(--ds-accent) 18%, transparent);
+        --chip-text: var(--ds-accent);
       }
       :host(.is-active) .item__badge {
-        background: color-mix(
+        --chip-bg: color-mix(
           in srgb,
           var(--drawer-active-fg, var(--ds-on-primary)) 22%,
           transparent
         );
-        color: var(--drawer-active-fg, var(--ds-on-primary));
+        --chip-text: var(--drawer-active-fg, var(--ds-on-primary));
       }
       :host(.is-sub) .item {
         padding-left: 27px;
