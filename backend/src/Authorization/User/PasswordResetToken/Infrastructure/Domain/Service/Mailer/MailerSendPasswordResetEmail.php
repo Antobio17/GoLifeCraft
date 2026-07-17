@@ -36,10 +36,20 @@ final readonly class MailerSendPasswordResetEmail implements SendPasswordResetEm
                     'languageCode' => $languageCode,
                     'requestedAtFormatted' => $requestedAt->format(format: 'd/m/Y · H:i'),
                     'logoPath' => '@PasswordResetToken/golifecraft-logo.png',
+                    'logoUrl' => $this->getLogoUrl(),
                 ],
             ),
             translationDomain: 'password_reset_token',
             languageCode: $languageCode,
         ));
+    }
+
+    private function getLogoUrl(): string
+    {
+        $scheme = parse_url(url: $this->frontendUrl, component: PHP_URL_SCHEME) ?: 'https';
+        $host = parse_url(url: $this->frontendUrl, component: PHP_URL_HOST) ?? 'golifecraft.com';
+        $port = parse_url(url: $this->frontendUrl, component: PHP_URL_PORT);
+
+        return $scheme.'://'.$host.($port !== null ? ':'.$port : '').'/assets/img/logo-dark.png';
     }
 }

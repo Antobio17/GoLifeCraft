@@ -34,10 +34,20 @@ final readonly class MailerSendVerificationEmail implements SendVerificationEmai
                     'ttlHours' => intdiv($this->ttlMinutes, 60),
                     'languageCode' => $languageCode,
                     'logoPath' => '@EmailVerificationToken/golifecraft-logo.png',
+                    'logoUrl' => $this->getLogoUrl(),
                 ],
             ),
             translationDomain: 'email_verification_token',
             languageCode: $languageCode,
         ));
+    }
+
+    private function getLogoUrl(): string
+    {
+        $scheme = parse_url(url: $this->frontendUrl, component: PHP_URL_SCHEME) ?: 'https';
+        $host = parse_url(url: $this->frontendUrl, component: PHP_URL_HOST) ?? 'golifecraft.com';
+        $port = parse_url(url: $this->frontendUrl, component: PHP_URL_PORT);
+
+        return $scheme.'://'.$host.($port !== null ? ':'.$port : '').'/assets/img/logo-dark.png';
     }
 }

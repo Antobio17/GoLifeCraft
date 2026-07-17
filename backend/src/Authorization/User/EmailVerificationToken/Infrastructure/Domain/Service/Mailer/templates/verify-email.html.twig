@@ -10,36 +10,53 @@
 <title>{{ 'subject'|trans({}, 'email_verification_token', lang) }}</title>
 <style>
   :root { color-scheme: light only; supported-color-schemes: light; }
-  body { margin:0; padding:0; background:#eef2f7; font-family:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased; }
+  html, body { margin:0; padding:0; background:#ffffff; font-family:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased; }
   table { border-collapse:collapse; }
   img { border:0; display:block; }
   a { color:#2f9e44; }
+  .brand-logo { width:180px; max-width:100%; height:auto; }
+  .shell { padding:48px 16px 56px; }
+  .card { width:600px; max-width:600px; background:#f4f7fb; border:0; border-radius:32px; overflow:hidden; box-shadow:0 22px 50px -34px rgba(15,25,35,0.18), 0 6px 14px rgba(15,25,35,0.05); }
+  .brand-row { padding:30px 40px 24px; }
+  .hero { background:#edf9f1; border-bottom:1px solid #dce7df; }
+  .hero-pad { padding:52px 40px 44px; }
+  .content-pad { padding:40px 40px 0; }
+  .button-cell { padding:28px 40px 8px; }
+  .button { min-width:260px; }
+  .footer-pad { padding:24px 8px 15px; }
   @media only screen and (max-width:620px) {
     .container { width:100% !important; }
     .pad-x { padding-left:24px !important; padding-right:24px !important; }
     .hero-pad { padding:48px 24px 40px !important; }
     .h1 { font-size:24px !important; line-height:1.25 !important; }
+    .brand-row { padding:24px 24px 20px !important; }
+    .brand-logo { width:156px !important; }
+    .content-pad { padding:36px 24px 0 !important; }
+    .button-cell { padding:24px 24px 8px !important; }
+    .button { min-width:0 !important; width:100% !important; }
+    .footer-pad { padding-left:0 !important; padding-right:0 !important; }
   }
 </style>
 </head>
-<body style="margin:0; padding:0; background:#eef2f7; font-family:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color:#0f1923;">
+<body style="margin:0; padding:0; background:#ffffff; font-family:'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color:#0f1923;">
 
   <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent; visibility:hidden; mso-hide:all;">
     {{ 'preheader'|trans({ '%hours%': ttlHours }, 'email_verification_token', lang) }}
   </div>
 
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef2f7; padding:64px 16px 72px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;">
     <tr>
-      <td align="center">
+      <td align="center" class="shell">
 
-        <table role="presentation" class="container" width="560" cellpadding="0" cellspacing="0" border="0" style="width:560px; max-width:560px;">
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px;">
 
           <tr>
-            <td style="padding:10px 4px 18px; font-size:0; line-height:0;">
+            <td class="brand-row" style="font-size:0; line-height:0;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td align="left" valign="middle" style="line-height:0;">
-                    <img src="{{ email.image(logoPath) }}" alt="GoLifeCraft" width="94" height="32" style="display:block; width:94px; height:32px; border:0; outline:none; text-decoration:none;">
+                    {% set logoSource = logoUrl is defined and logoUrl ? logoUrl : email.image(logoPath) %}
+                    <img src="{{ logoSource }}" alt="GoLifeCraft" width="180" height="57" class="brand-logo" style="display:block; border:0; outline:none; text-decoration:none;">
                   </td>
                   <td align="right" valign="middle" style="font-family:'JetBrains Mono','Courier New',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#94a3b8;">
                     {{ 'brand.tag'|trans({}, 'email_verification_token', lang) }}
@@ -50,11 +67,11 @@
           </tr>
 
           <tr>
-            <td style="background:#ffffff; border-radius:18px; box-shadow:0 1px 0 rgba(255,255,255,0.6) inset, 0 24px 48px -20px rgba(13,21,32,0.18), 0 4px 12px -4px rgba(13,21,32,0.08); overflow:hidden;">
+            <td class="card" style="background:#f4f7fb; border:0; border-radius:32px; overflow:hidden;">
 
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eefaf0; border-bottom:1px solid #e2e8f0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="hero" style="background:#edf9f1; border-bottom:1px solid #dce7df;">
                 <tr>
-                  <td class="hero-pad" style="padding:52px 40px 44px; font-family:'DM Sans', Helvetica, Arial, sans-serif;">
+                  <td class="hero-pad" style="font-family:'DM Sans', Helvetica, Arial, sans-serif;">
 
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff; border:1px solid #d3f0da; border-radius:100px;">
                       <tr>
@@ -76,7 +93,7 @@
 
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td class="pad-x" style="padding:44px 40px 8px;">
+                  <td class="content-pad pad-x">
                     <p style="margin:0; font-size:17px; font-weight:600; color:#0f1923; letter-spacing:-0.01em;">
                       {{ 'greeting'|trans({ '%name%': name }, 'email_verification_token', lang) }}
                     </p>
@@ -89,12 +106,12 @@
 
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td align="center" class="pad-x" style="padding:28px 40px 8px;">
+                  <td align="center" class="button-cell pad-x">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                       <tr>
-                        <td align="center" style="background:#2f9e44; border-radius:10px; box-shadow:0 6px 14px rgba(47,158,68,0.28);">
+                        <td align="center" class="button" style="background:#2f9e44; border-radius:14px;">
                           <a href="{{ verifyUrl }}" target="_blank"
-                             style="display:inline-block; padding:14px 28px; font-family:'DM Sans', Helvetica, Arial, sans-serif; font-size:15px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:-0.005em;">
+                             style="display:block; padding:16px 28px; font-family:'DM Sans', Helvetica, Arial, sans-serif; font-size:15px; font-weight:700; color:#ffffff; text-decoration:none; letter-spacing:-0.005em; text-align:center;">
                             {{ 'cta'|trans({}, 'email_verification_token', lang) }}
                           </a>
                         </td>
@@ -155,7 +172,7 @@
           </tr>
 
           <tr>
-            <td style="padding:24px 8px 15px;">
+            <td style="padding:24px 8px 15px; font-family:'DM Sans', Helvetica, Arial, sans-serif; background:#ffffff;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td align="center" style="font-family:'JetBrains Mono','Courier New',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#94a3b8;">
