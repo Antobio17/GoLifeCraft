@@ -1,11 +1,11 @@
 {
   "getGlobalArticles": {
-    "heading": "Descargar al catálogo",
+    "heading": "Importar al catálogo",
     "pending": "productos listos para añadir",
-    "info": "Selección de productos precargados con sus valores nutricionales. Busca los que necesites y descárgalos uno a uno para añadirlos a tu catálogo.",
-    "importAll": "Descargar todo",
-    "allImported": "Todo descargado",
-    "add": "Descargar",
+    "info": "Selección de productos precargados con sus valores nutricionales. Busca los que necesites e impórtalos uno a uno para añadirlos a tu catálogo.",
+    "importAll": "Importar todo",
+    "allImported": "Todo importado",
+    "add": "Importar",
     "added": "Añadido",
     "searchPlaceholder": "Buscar producto o marca…",
     "searchClear": "Limpiar búsqueda",
@@ -19,7 +19,7 @@
     },
     "empty": {
       "title": "Catálogo global vacío",
-      "text": "Aún no hay productos disponibles para descargar"
+      "text": "Aún no hay productos disponibles para importar"
     },
     "toast": {
       "imported": "Producto añadido a tu catálogo",

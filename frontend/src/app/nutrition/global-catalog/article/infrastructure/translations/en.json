@@ -1,11 +1,11 @@
 {
   "getGlobalArticles": {
-    "heading": "Download to catalog",
+    "heading": "Import to catalog",
     "pending": "products ready to add",
-    "info": "A selection of preloaded products with their nutrition values. Search for the ones you need and download them one by one to add them to your catalog.",
-    "importAll": "Download all",
-    "allImported": "All downloaded",
-    "add": "Download",
+    "info": "A selection of preloaded products with their nutrition values. Search for the ones you need and import them one by one to add them to your catalog.",
+    "importAll": "Import all",
+    "allImported": "All imported",
+    "add": "Import",
     "added": "Added",
     "searchPlaceholder": "Search product or brand…",
     "searchClear": "Clear search",
@@ -19,7 +19,7 @@
     },
     "empty": {
       "title": "Global catalog is empty",
-      "text": "There are no products available to download yet"
+      "text": "There are no products available to import yet"
     },
     "toast": {
       "imported": "Product added to your catalog",
