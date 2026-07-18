@@ -10,6 +10,7 @@ import {
 import { GetGlobalArticlesService } from "@nutrition/global-catalog/article/application/services/get-global-articles.service";
 import { ImportGlobalArticleService } from "@nutrition/global-catalog/article/application/services/import-global-article.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -47,7 +48,9 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
   private getGlobalArticlesService = inject(GetGlobalArticlesService);
   private importGlobalArticleService = inject(ImportGlobalArticleService);
   private floatingToastService = inject(FloatingToastService);
+  private authSession = inject(AuthSessionService);
   protected view = inject(GlobalArticleViewService);
+  canImport = this.authSession.isAuthenticated();
 
   protected readonly modulePath = "nutrition/global-catalog/article";
   protected readonly storageKey = "pageSize_globalArticles";
@@ -134,7 +137,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
   }
 
   onImport(id: string): void {
-    if (this.isAdded(id) || this.isPending(id)) return;
+    if (!this.canImport || this.isAdded(id) || this.isPending(id)) return;
 
     this.markPending(id);
 

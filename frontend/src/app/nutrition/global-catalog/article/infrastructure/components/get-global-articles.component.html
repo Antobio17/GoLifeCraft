@@ -47,7 +47,7 @@
       <ds-grid [minColumn]="'320px'">
         @for (card of cards(); track card.id) {
           <ds-product-card
-            [actionable]="true"
+            [actionable]="canImport"
             [emoji]="card.emoji"
             [name]="card.name"
             [brand]="card.brand"

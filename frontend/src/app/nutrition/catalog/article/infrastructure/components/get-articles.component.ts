@@ -56,7 +56,7 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
 
-  canWrite = this.authSession.isGod();
+  canCreate = this.authSession.isAuthenticated();
 
   protected readonly modulePath = "nutrition/catalog/article";
   protected readonly storageKey = "pageSize_articles";

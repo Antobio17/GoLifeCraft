@@ -32,7 +32,6 @@ export const ARTICLE_ROUTES: Routes = [
       },
       {
         path: "create",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "article.breadcrumb.create" },
         loadComponent: () =>
           import("../components/article-editor.component").then(
