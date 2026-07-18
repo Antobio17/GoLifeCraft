@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Observable } from "rxjs";
 import { Article } from "../../domain/models/article.model";
@@ -7,6 +8,7 @@ import {
   ArticleViewService,
 } from "@nutrition/catalog/article/application/services/article-view.service";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
+import { GetArticleFacetsService } from "@nutrition/catalog/article/application/services/get-article-facets.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -20,6 +22,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
+import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -44,10 +47,12 @@ const ALL = "";
     StackComponent,
     SelectComponent,
     ProductCardComponent,
+    InfiniteScrollComponent,
   ],
 })
 export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   private getArticlesService = inject(GetArticlesService);
+  private getArticleFacetsService = inject(GetArticleFacetsService);
   private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
 
@@ -61,54 +66,85 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   selectedBrand = signal(ALL);
   selectedStore = signal(ALL);
 
-  categories = computed(() => this.options((a) => this.view.category(a)));
-  brands = computed(() => this.options((a) => this.view.brand(a)));
-  stores = computed(() => this.options((a) => this.view.store(a)));
+  reloading = signal(false);
+  loadingMore = signal(false);
 
-  filteredArticles = computed<Article[]>(() => {
-    const query = this.searchQuery().trim().toLowerCase();
-    const category = this.selectedCategory();
-    const brand = this.selectedBrand();
-    const store = this.selectedStore();
-
-    return this.items().filter((article) => {
-      const matchesQuery =
-        !query ||
-        article.attributes.name.toLowerCase().includes(query) ||
-        (this.view.brand(article) ?? "").toLowerCase().includes(query);
-      const matchesCategory =
-        !category || this.view.category(article) === category;
-      const matchesBrand = !brand || this.view.brand(article) === brand;
-      const matchesStore = !store || this.view.store(article) === store;
-
-      return matchesQuery && matchesCategory && matchesBrand && matchesStore;
-    });
-  });
+  categories = signal<string[]>([]);
+  brands = signal<string[]>([]);
+  stores = signal<string[]>([]);
 
   cards = computed<ArticleCardView[]>(() =>
-    this.filteredArticles().map((article) => this.view.toCard(article)),
+    this.items().map((article) => this.view.toCard(article)),
   );
 
+  hasMore = computed(() => this.items().length < this.totalItems());
+
   headerSubtitle = computed(() => {
-    const label = this.t("getArticles.formats").toLowerCase();
-    return `${this.filteredArticles().length} ${label}`;
+    const total = new Intl.NumberFormat("es-ES").format(this.totalItems());
+    return `${total} ${this.t("getArticles.formats")}`;
   });
 
-  hasResults = computed(() => this.filteredArticles().length > 0);
-
   protected configureList(): void {
-    this.pageSize.set(100);
+    this.currentPage.set(1);
+    this.pageSize.set(20);
+    this.loadFacets();
   }
 
   protected fetch(
     page: number,
     pageSize: number,
   ): Observable<PagedResult<Article>> {
-    return this.getArticlesService.getArticles(page, pageSize);
+    return this.getArticlesService.getArticles(page, pageSize, {
+      name: this.searchQuery().trim() || undefined,
+      category: this.selectedCategory() || undefined,
+      brand: this.selectedBrand() || undefined,
+      store: this.selectedStore() || undefined,
+    });
+  }
+
+  loadMore(): void {
+    if (
+      this.loading() ||
+      this.loadingMore() ||
+      this.reloading() ||
+      !this.hasMore()
+    )
+      return;
+
+    const nextPage = this.currentPage() + 1;
+    this.loadingMore.set(true);
+
+    this.fetch(nextPage, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.currentPage.set(nextPage);
+          this.items.update((current) => [...current, ...response.data]);
+          this.totalItems.set(response.meta.total);
+          this.loadingMore.set(false);
+        },
+        error: () => this.loadingMore.set(false),
+      });
   }
 
   onSearch(query: string): void {
     this.searchQuery.set(query);
+    this.reload();
+  }
+
+  onCategoryChange(value: string): void {
+    this.selectedCategory.set(value);
+    this.reload();
+  }
+
+  onBrandChange(value: string): void {
+    this.selectedBrand.set(value);
+    this.reload();
+  }
+
+  onStoreChange(value: string): void {
+    this.selectedStore.set(value);
+    this.reload();
   }
 
   onSelect(id: string): void {
@@ -123,11 +159,30 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     this.router.navigate(["/global-catalog"]);
   }
 
-  private options(pick: (article: Article) => string | null): string[] {
-    const values = this.items()
-      .map(pick)
-      .filter((value): value is string => null !== value && "" !== value);
+  private reload(): void {
+    this.currentPage.set(1);
+    this.reloading.set(true);
 
-    return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
+    this.fetch(1, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.items.set(response.data);
+          this.totalItems.set(response.meta.total);
+          this.reloading.set(false);
+        },
+        error: () => this.reloading.set(false),
+      });
+  }
+
+  private loadFacets(): void {
+    this.getArticleFacetsService
+      .getArticleFacets()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((facets) => {
+        this.categories.set(facets.categories);
+        this.brands.set(facets.brands);
+        this.stores.set(facets.stores);
+      });
   }
 }

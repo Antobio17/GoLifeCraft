@@ -1,5 +1,8 @@
 import { Observable } from "rxjs";
-import { GetArticlesPort } from "../../domain/ports/get-articles.port";
+import {
+  GetArticlesFilters,
+  GetArticlesPort,
+} from "../../domain/ports/get-articles.port";
 import { GetArticlesResponse } from "../../domain/models/get-articles-response.model";
 
 export class GetArticlesService {
@@ -7,9 +10,9 @@ export class GetArticlesService {
 
   getArticles(
     page: number = 1,
-    pageSize: number = 100,
-    filterName?: string,
+    pageSize: number = 20,
+    filters: GetArticlesFilters = {},
   ): Observable<GetArticlesResponse> {
-    return this.getArticlesPort.getArticles(page, pageSize, filterName);
+    return this.getArticlesPort.getArticles(page, pageSize, filters);
   }
 }

@@ -29,6 +29,9 @@ final class GetArticlesController
                     pageNumber: RequestExtractor::getPageNumber(request: $request),
                     pageSize: RequestExtractor::getPageSize(request: $request),
                     filterName: RequestExtractor::getFilterParam(request: $request, filterName: 'name'),
+                    filterCategory: RequestExtractor::getFilterParam(request: $request, filterName: 'category'),
+                    filterBrand: RequestExtractor::getFilterParam(request: $request, filterName: 'brand'),
+                    filterStore: RequestExtractor::getFilterParam(request: $request, filterName: 'store'),
                     orderBy: RequestExtractor::getOrderByParam(request: $request),
                 )),
             );

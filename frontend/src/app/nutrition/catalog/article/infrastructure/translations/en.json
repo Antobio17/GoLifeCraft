@@ -8,6 +8,7 @@
     "searchClear": "Clear search",
     "nutritionCaption": "Nutrition values",
     "noResults": "No results for",
+    "noResultsFilters": "No products match these filters",
     "filter": {
       "category": "Category",
       "brand": "Brand",

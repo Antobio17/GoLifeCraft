@@ -20,3 +20,10 @@ services:
 
   Nutrition\Catalog\Article\Application\Query\GetArticleDataTransform:
     class: Nutrition\Catalog\Article\Infrastructure\UI\API\DataTransform\ApiGetArticleDataTransform
+
+  Nutrition\Catalog\Article\Application\Query\GetArticleFacetsQueryHandler:
+    class: Nutrition\Catalog\Article\Application\Query\GetArticleFacetsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\GetArticleFacetsNeedleDataQuery'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

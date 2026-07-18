@@ -21,9 +21,17 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         int $pageSize,
         int $pageNumber,
         ?string $filterName = null,
+        ?string $filterCategory = null,
+        ?string $filterBrand = null,
+        ?string $filterStore = null,
         ?string $orderBy = null,
     ): array {
-        $qb = $this->getBaseQuery(filterName: $filterName);
+        $qb = $this->getBaseQuery(
+            filterName: $filterName,
+            filterCategory: $filterCategory,
+            filterBrand: $filterBrand,
+            filterStore: $filterStore,
+        );
 
         if (null !== $orderBy) {
             $this->applyOrdering(qb: $qb, orderBy: $orderBy);
@@ -62,21 +70,33 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
 
     public function totalArticles(
         ?string $filterName = null,
+        ?string $filterCategory = null,
+        ?string $filterBrand = null,
+        ?string $filterStore = null,
     ): int {
         $qb = $this->connection->createQueryBuilder()
             ->select('COUNT(*)')
-            ->from(table: 'article', alias: 't');
+            ->from(table: 'article', alias: 't')
+            ->leftJoin(fromAlias: 't', join: 'category', alias: 'c', condition: 't.category_id = c.id')
+            ->leftJoin(fromAlias: 't', join: 'supermarket', alias: 's', condition: 't.supermarket_id = s.id');
 
-        if (null !== $filterName) {
-            $qb->andWhere('t.name LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        $this->applyFilters(
+            qb: $qb,
+            filterName: $filterName,
+            filterCategory: $filterCategory,
+            filterBrand: $filterBrand,
+            filterStore: $filterStore,
+        );
 
         return (int) $qb->executeQuery()->fetchOne();
     }
 
-    private function getBaseQuery(?string $filterName = null): QueryBuilder
-    {
+    private function getBaseQuery(
+        ?string $filterName = null,
+        ?string $filterCategory = null,
+        ?string $filterBrand = null,
+        ?string $filterStore = null,
+    ): QueryBuilder {
         $qb = $this->connection->createQueryBuilder()
             ->select(
                 't.id',
@@ -109,12 +129,43 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             ->leftJoin(fromAlias: 't', join: 'supermarket', alias: 's', condition: 't.supermarket_id = s.id')
             ->leftJoin(fromAlias: 't', join: 'nutrition_facts', alias: 'nf', condition: 't.nutrition_facts_id = nf.id');
 
+        $this->applyFilters(
+            qb: $qb,
+            filterName: $filterName,
+            filterCategory: $filterCategory,
+            filterBrand: $filterBrand,
+            filterStore: $filterStore,
+        );
+
+        return $qb;
+    }
+
+    private function applyFilters(
+        QueryBuilder $qb,
+        ?string $filterName,
+        ?string $filterCategory,
+        ?string $filterBrand,
+        ?string $filterStore,
+    ): void {
         if (null !== $filterName) {
             $qb->andWhere('t.name LIKE :name')
                 ->setParameter(key: 'name', value: '%'.$filterName.'%');
         }
 
-        return $qb;
+        if (null !== $filterCategory) {
+            $qb->andWhere('c.name = :category')
+                ->setParameter(key: 'category', value: $filterCategory);
+        }
+
+        if (null !== $filterBrand) {
+            $qb->andWhere('t.brand = :brand')
+                ->setParameter(key: 'brand', value: $filterBrand);
+        }
+
+        if (null !== $filterStore) {
+            $qb->andWhere('s.name = :store')
+                ->setParameter(key: 'store', value: $filterStore);
+        }
     }
 
     private function applyOrdering(QueryBuilder $qb, string $orderBy): void

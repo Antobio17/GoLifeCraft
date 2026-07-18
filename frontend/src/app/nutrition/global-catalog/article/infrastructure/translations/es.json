@@ -2,7 +2,7 @@
   "getGlobalArticles": {
     "heading": "Descargar al catálogo",
     "pending": "productos listos para añadir",
-    "info": "Selección de productos precargados con sus valores nutricionales. Descárgalos uno a uno o todos a la vez para añadirlos a tu catálogo.",
+    "info": "Selección de productos precargados con sus valores nutricionales. Busca los que necesites y descárgalos uno a uno para añadirlos a tu catálogo.",
     "importAll": "Descargar todo",
     "allImported": "Todo descargado",
     "add": "Descargar",

@@ -17,12 +17,6 @@
         <ds-skeleton height="66px" />
       }
     </ds-grid>
-  } @else if (items().length === 0) {
-    <ds-empty-state
-      icon="dumbbell"
-      [title]="'getExercises.table.emptyTitle' | t"
-      [text]="'getExercises.table.emptyMessage' | t"
-    />
   } @else {
     <ds-search-input
       [placeholder]="'getExercises.searchPlaceholder' | t"
@@ -33,22 +27,49 @@
     <ds-segmented-toggle
       [options]="viewOptions()"
       [ngModel]="view()"
-      (ngModelChange)="view.set($event)"
+      (ngModelChange)="onViewChange($event)"
     />
 
-    @if (!hasResults()) {
-      <ds-text variant="muted">
-        {{ "getExercises.noResults" | t }} “{{ searchQuery() }}”
-      </ds-text>
+    @if (reloading()) {
+      <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <ds-skeleton height="66px" />
+        }
+      </ds-grid>
+    } @else if (items().length === 0) {
+      @if (searchQuery()) {
+        <ds-text variant="muted">
+          {{ "getExercises.noResults" | t }} “{{ searchQuery() }}”
+        </ds-text>
+      } @else {
+        <ds-empty-state
+          icon="dumbbell"
+          [title]="'getExercises.table.emptyTitle' | t"
+          [text]="'getExercises.table.emptyMessage' | t"
+        />
+      }
     } @else if (view() === "list") {
       <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
-        @for (row of filteredRows(); track row.id) {
+        @for (row of rows(); track row.id) {
           <ng-container
             [ngTemplateOutlet]="exerciseRow"
             [ngTemplateOutletContext]="{ $implicit: row }"
           />
         }
       </ds-grid>
+
+      @if (loadingMore()) {
+        <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
+          @for (i of [1, 2]; track i) {
+            <ds-skeleton height="66px" />
+          }
+        </ds-grid>
+      }
+
+      <ds-infinite-scroll
+        [disabled]="loadingMore() || !hasMore()"
+        (reached)="loadMore()"
+      />
     } @else {
       <ds-stack [gap]="'18px'">
         @for (group of groupedItems(); track group.muscle) {

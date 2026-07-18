@@ -33,15 +33,6 @@ export class GlobalArticleViewService {
     };
   }
 
-  matchesQuery(globalArticle: GlobalArticle, query: string): boolean {
-    const attributes = globalArticle.attributes;
-
-    return (
-      attributes.name.toLowerCase().includes(query) ||
-      (attributes.brand ?? "").toLowerCase().includes(query)
-    );
-  }
-
   private store(stores: string | null): string | null {
     if (!stores) return null;
 

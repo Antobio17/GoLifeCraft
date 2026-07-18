@@ -32,12 +32,6 @@
         <ds-skeleton height="78px" />
       }
     </ds-grid>
-  } @else if (items().length === 0) {
-    <ds-empty-state
-      icon="search"
-      [title]="'getArticles.empty.title' | t"
-      [text]="'getArticles.empty.text' | t"
-    />
   } @else {
     <ds-search-input
       [placeholder]="'getArticles.searchPlaceholder' | t"
@@ -51,30 +45,48 @@
         [placeholder]="'getArticles.filter.category' | t"
         [options]="categories()"
         [ngModel]="selectedCategory()"
-        (ngModelChange)="selectedCategory.set($event)"
+        (ngModelChange)="onCategoryChange($event)"
       />
       <ds-select
         [fluid]="true"
         [placeholder]="'getArticles.filter.brand' | t"
         [options]="brands()"
         [ngModel]="selectedBrand()"
-        (ngModelChange)="selectedBrand.set($event)"
+        (ngModelChange)="onBrandChange($event)"
       />
       <ds-select
         [fluid]="true"
         [placeholder]="'getArticles.filter.store' | t"
         [options]="stores()"
         [ngModel]="selectedStore()"
-        (ngModelChange)="selectedStore.set($event)"
+        (ngModelChange)="onStoreChange($event)"
       />
     </ds-stack>
 
     <ds-text variant="label">{{ "getArticles.nutritionCaption" | t }}</ds-text>
 
-    @if (!hasResults()) {
-      <ds-text variant="muted">
-        {{ "getArticles.noResults" | t }} “{{ searchQuery() }}”
-      </ds-text>
+    @if (reloading()) {
+      <ds-grid [minColumn]="'300px'">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <ds-skeleton height="78px" />
+        }
+      </ds-grid>
+    } @else if (items().length === 0) {
+      @if (searchQuery()) {
+        <ds-text variant="muted">
+          {{ "getArticles.noResults" | t }} “{{ searchQuery() }}”
+        </ds-text>
+      } @else if (selectedCategory() || selectedBrand() || selectedStore()) {
+        <ds-text variant="muted">
+          {{ "getArticles.noResultsFilters" | t }}
+        </ds-text>
+      } @else {
+        <ds-empty-state
+          icon="search"
+          [title]="'getArticles.empty.title' | t"
+          [text]="'getArticles.empty.text' | t"
+        />
+      }
     } @else {
       <ds-grid [minColumn]="'300px'">
         @for (card of cards(); track card.id) {
@@ -108,6 +120,19 @@
           />
         }
       </ds-grid>
+
+      @if (loadingMore()) {
+        <ds-grid [minColumn]="'300px'">
+          @for (i of [1, 2]; track i) {
+            <ds-skeleton height="78px" />
+          }
+        </ds-grid>
+      }
+
+      <ds-infinite-scroll
+        [disabled]="loadingMore() || !hasMore()"
+        (reached)="loadMore()"
+      />
     }
   }
 </ds-page-wrapper>

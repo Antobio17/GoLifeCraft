@@ -9,6 +9,11 @@ services:
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
 
+  Nutrition\Catalog\Article\Domain\QueryModel\GetArticleFacetsNeedleDataQuery:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetArticleFacetsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
   Nutrition\Catalog\Article\Domain\QueryModel\CreateArticleNeedleDataQuery:
     class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateArticleNeedleDataQuery
     arguments:

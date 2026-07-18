@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from "@angular/core";
-import { Observable, forkJoin, of } from "rxjs";
-import { catchError, delay } from "rxjs/operators";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Observable } from "rxjs";
+import { delay } from "rxjs/operators";
 import { GlobalArticle } from "../../domain/models/global-article.model";
 import {
   GlobalArticleCardView,
@@ -12,7 +13,6 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
@@ -20,6 +20,7 @@ import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastru
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
+import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -32,7 +33,6 @@ import {
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
-    ButtonComponent,
     NoteComponent,
     SearchInputComponent,
     GridComponent,
@@ -40,6 +40,7 @@ import {
     SkeletonComponent,
     TextComponent,
     ProductCardComponent,
+    InfiniteScrollComponent,
   ],
 })
 export class GetGlobalArticlesComponent extends AbstractListPageComponent<GlobalArticle> {
@@ -52,50 +53,55 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
   protected readonly storageKey = "pageSize_globalArticles";
 
   searchQuery = signal("");
+  reloading = signal(false);
+  loadingMore = signal(false);
   importedIds = signal<Set<string>>(new Set());
   pendingIds = signal<Set<string>>(new Set());
 
-  filteredArticles = computed<GlobalArticle[]>(() => {
-    const query = this.searchQuery().trim().toLowerCase();
-
-    return this.items().filter(
-      (article) => !query || this.view.matchesQuery(article, query),
-    );
-  });
-
   cards = computed<GlobalArticleCardView[]>(() =>
-    this.filteredArticles().map((article) => this.view.toCard(article)),
+    this.items().map((article) => this.view.toCard(article)),
   );
 
-  pendingCount = computed(
-    () =>
-      this.filteredArticles().filter(
-        (article) => !this.importedIds().has(article.id),
-      ).length,
-  );
+  hasMore = computed(() => this.items().length < this.totalItems());
 
   headerSubtitle = computed(() => {
-    const label = this.t("getGlobalArticles.pending").toLowerCase();
-    return `${this.pendingCount()} ${label}`;
+    const total = new Intl.NumberFormat("es-ES").format(this.totalItems());
+    return `${total} ${this.t("getGlobalArticles.pending")}`;
   });
 
-  importAllLabel = computed(() =>
-    this.pendingCount() > 0
-      ? `${this.t("getGlobalArticles.importAll")} (${this.pendingCount()})`
-      : this.t("getGlobalArticles.allImported"),
-  );
-
-  hasResults = computed(() => this.filteredArticles().length > 0);
-
   protected configureList(): void {
-    this.pageSize.set(100);
+    this.currentPage.set(1);
+    this.pageSize.set(20);
   }
 
   protected fetch(
     page: number,
     pageSize: number,
   ): Observable<PagedResult<GlobalArticle>> {
-    return this.getGlobalArticlesService.getGlobalArticles(page, pageSize);
+    return this.getGlobalArticlesService.getGlobalArticles(
+      page,
+      pageSize,
+      this.searchQuery().trim() || undefined,
+    );
+  }
+
+  loadMore(): void {
+    if (this.loading() || this.loadingMore() || !this.hasMore()) return;
+
+    const nextPage = this.currentPage() + 1;
+    this.loadingMore.set(true);
+
+    this.fetch(nextPage, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.currentPage.set(nextPage);
+          this.items.update((current) => [...current, ...response.data]);
+          this.totalItems.set(response.meta.total);
+          this.loadingMore.set(false);
+        },
+        error: () => this.loadingMore.set(false),
+      });
   }
 
   isAdded(id: string): boolean {
@@ -108,6 +114,19 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
 
   onSearch(query: string): void {
     this.searchQuery.set(query);
+    this.currentPage.set(1);
+    this.reloading.set(true);
+
+    this.fetch(1, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.items.set(response.data);
+          this.totalItems.set(response.meta.total);
+          this.reloading.set(false);
+        },
+        error: () => this.reloading.set(false),
+      });
   }
 
   back(): void {
@@ -133,31 +152,6 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
         },
         error: (error) => this.handleImportError(id, error),
       });
-  }
-
-  importAll(): void {
-    const ids = this.filteredArticles()
-      .map((article) => article.id)
-      .filter((id) => !this.isAdded(id) && !this.isPending(id));
-
-    if (0 === ids.length) return;
-
-    ids.forEach((id) => this.markPending(id));
-
-    forkJoin(
-      ids.map((id) =>
-        this.importGlobalArticleService
-          .importGlobalArticle(id)
-          .pipe(catchError(() => of(null))),
-      ),
-    ).subscribe(() => {
-      ids.forEach((id) => this.markImported(id));
-      this.floatingToastService.showToast({
-        status: 200,
-        keyTranslation: "getGlobalArticles.toast.importedAll",
-        details: [],
-      });
-    });
   }
 
   private handleImportError(id: string, error: { status?: number }): void {

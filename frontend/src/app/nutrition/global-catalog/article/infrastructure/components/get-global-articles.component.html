@@ -12,24 +12,8 @@
         <ds-skeleton height="78px" />
       }
     </ds-grid>
-  } @else if (items().length === 0) {
-    <ds-empty-state
-      icon="search"
-      [title]="'getGlobalArticles.empty.title' | t"
-      [text]="'getGlobalArticles.empty.text' | t"
-    />
   } @else {
     <ds-note icon="download">{{ "getGlobalArticles.info" | t }}</ds-note>
-
-    <ds-button
-      variant="primary"
-      [fullWidth]="true"
-      icon="download"
-      [disabled]="pendingCount() === 0"
-      (clicked)="importAll()"
-    >
-      {{ importAllLabel() }}
-    </ds-button>
 
     <ds-search-input
       [placeholder]="'getGlobalArticles.searchPlaceholder' | t"
@@ -41,10 +25,24 @@
       {{ "getGlobalArticles.nutritionCaption" | t }}
     </ds-text>
 
-    @if (!hasResults()) {
-      <ds-text variant="muted">
-        {{ "getGlobalArticles.noResults" | t }} “{{ searchQuery() }}”
-      </ds-text>
+    @if (reloading()) {
+      <ds-grid [minColumn]="'320px'">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <ds-skeleton height="78px" />
+        }
+      </ds-grid>
+    } @else if (items().length === 0) {
+      @if (searchQuery()) {
+        <ds-text variant="muted">
+          {{ "getGlobalArticles.noResults" | t }} “{{ searchQuery() }}”
+        </ds-text>
+      } @else {
+        <ds-empty-state
+          icon="search"
+          [title]="'getGlobalArticles.empty.title' | t"
+          [text]="'getGlobalArticles.empty.text' | t"
+        />
+      }
     } @else {
       <ds-grid [minColumn]="'320px'">
         @for (card of cards(); track card.id) {
@@ -85,6 +83,19 @@
           />
         }
       </ds-grid>
+
+      @if (loadingMore()) {
+        <ds-grid [minColumn]="'320px'">
+          @for (i of [1, 2]; track i) {
+            <ds-skeleton height="78px" />
+          }
+        </ds-grid>
+      }
+
+      <ds-infinite-scroll
+        [disabled]="loadingMore() || !hasMore()"
+        (reached)="loadMore()"
+      />
     }
   }
 </ds-page-wrapper>

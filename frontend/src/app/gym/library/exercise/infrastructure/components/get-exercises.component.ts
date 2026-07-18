@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { NgTemplateOutlet } from "@angular/common";
 import { Observable } from "rxjs";
@@ -24,6 +25,7 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
   SegmentedToggleComponent,
   SegmentedOption,
@@ -72,9 +74,13 @@ type LibraryView = "list" | "grouped";
     IconBadgeComponent,
     EmptyStateComponent,
     SkeletonComponent,
+    InfiniteScrollComponent,
   ],
 })
 export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
+  private static readonly LIST_PAGE_SIZE = 20;
+  private static readonly GROUPED_PAGE_SIZE = 1000;
+
   private getExercisesService = inject(GetExercisesService);
   private deleteExerciseService = inject(DeleteExerciseService);
   private muscleCatalog = inject(MuscleCatalogService);
@@ -85,6 +91,9 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
 
   searchQuery = signal("");
   view = signal<LibraryView>("list");
+
+  reloading = signal(false);
+  loadingMore = signal(false);
 
   showDeleteModal = signal(false);
   exerciseToDelete = signal<Exercise | null>(null);
@@ -100,25 +109,12 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
     return `${this.totalItems()} ${exercises}`;
   });
 
-  filteredItems = computed<Exercise[]>(() => {
-    const query = this.searchQuery().trim().toLowerCase();
-    if (!query) return this.items();
-
-    return this.items().filter(
-      (exercise) =>
-        exercise.attributes.name.toLowerCase().includes(query) ||
-        exercise.attributes.muscleGroups.some((muscle) =>
-          muscle.toLowerCase().includes(query),
-        ),
-    );
-  });
-
-  filteredRows = computed<ExerciseRow[]>(() =>
-    this.filteredItems().map((exercise) => this.toRow(exercise)),
+  rows = computed<ExerciseRow[]>(() =>
+    this.items().map((exercise) => this.toRow(exercise)),
   );
 
   groupedItems = computed<ExerciseGroup[]>(() => {
-    const items = this.filteredItems();
+    const items = this.items();
 
     return this.muscleCatalog
       .all()
@@ -135,21 +131,81 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
       .filter((group) => group.count > 0);
   });
 
-  hasResults = computed(() => this.filteredItems().length > 0);
+  hasMore = computed(
+    () => "list" === this.view() && this.items().length < this.totalItems(),
+  );
 
   protected configureList(): void {
-    this.pageSize.set(100);
+    this.currentPage.set(1);
+    this.pageSize.set(GetExercisesComponent.LIST_PAGE_SIZE);
   }
 
   protected fetch(
     page: number,
     pageSize: number,
   ): Observable<PagedResult<Exercise>> {
-    return this.getExercisesService.getExercises(page, pageSize);
+    return this.getExercisesService.getExercises(
+      page,
+      pageSize,
+      this.searchQuery().trim() || undefined,
+    );
+  }
+
+  loadMore(): void {
+    if (
+      "list" !== this.view() ||
+      this.loading() ||
+      this.loadingMore() ||
+      this.reloading() ||
+      !this.hasMore()
+    )
+      return;
+
+    const nextPage = this.currentPage() + 1;
+    this.loadingMore.set(true);
+
+    this.fetch(nextPage, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.currentPage.set(nextPage);
+          this.items.update((current) => [...current, ...response.data]);
+          this.totalItems.set(response.meta.total);
+          this.loadingMore.set(false);
+        },
+        error: () => this.loadingMore.set(false),
+      });
   }
 
   onSearch(query: string): void {
     this.searchQuery.set(query);
+    this.reload();
+  }
+
+  onViewChange(view: LibraryView): void {
+    this.view.set(view);
+    this.pageSize.set(
+      "grouped" === view
+        ? GetExercisesComponent.GROUPED_PAGE_SIZE
+        : GetExercisesComponent.LIST_PAGE_SIZE,
+    );
+    this.reload();
+  }
+
+  private reload(): void {
+    this.currentPage.set(1);
+    this.reloading.set(true);
+
+    this.fetch(1, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.items.set(response.data);
+          this.totalItems.set(response.meta.total);
+          this.reloading.set(false);
+        },
+        error: () => this.reloading.set(false),
+      });
   }
 
   private toRow(exercise: Exercise): ExerciseRow {

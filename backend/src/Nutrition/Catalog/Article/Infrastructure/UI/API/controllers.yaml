@@ -13,6 +13,13 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleFacetsController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleFacetsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\CreateArticleController:
     class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\CreateArticleController
     arguments:
