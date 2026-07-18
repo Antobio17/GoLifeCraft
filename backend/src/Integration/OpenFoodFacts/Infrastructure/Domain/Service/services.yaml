@@ -1,7 +1,7 @@
 parameters:
   env(OPENFOODFACTS_BASE_URL): 'https://es.openfoodfacts.org'
   env(OPENFOODFACTS_STORE_FILTER): 'mercadona'
-  env(OPENFOODFACTS_USER_AGENT): 'GoLifeCraft/1.0 (nutrition catalog sync)'
+  env(OPENFOODFACTS_USER_AGENT): 'GoLifeCraft/1.0 (catalog sync; antoniojr997@gmail.com)'
 
 services:
   Integration\OpenFoodFacts\Domain\Service\OpenFoodFactsCatalogProvider:

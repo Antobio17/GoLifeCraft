@@ -31,7 +31,7 @@ final class SyncOpenFoodFactsCatalogCommand extends Command
             ->addOption(name: 'pages', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Number of pages to fetch.', default: '1')
             ->addOption(name: 'page-size', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Products per page.', default: '100')
             ->addOption(name: 'start-page', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'First page to fetch.', default: '1')
-            ->addOption(name: 'delay', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Seconds to wait between pages (OpenFoodFacts search allows ~10 req/min).', default: '6');
+            ->addOption(name: 'delay', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Seconds to wait between pages (OpenFoodFacts search allows ~10 req/min).', default: '10');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
