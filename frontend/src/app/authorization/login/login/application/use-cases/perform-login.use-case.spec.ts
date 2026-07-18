@@ -11,6 +11,7 @@ const mockLoginResponse: LoginResponse = {
     token: "test-token",
     expires_at: 9999999999,
     token_type: "Bearer",
+    refresh_token: "test-refresh-token",
     user: { username: "testuser", email: "test@test.com", roles: ["admin"] },
   },
 };

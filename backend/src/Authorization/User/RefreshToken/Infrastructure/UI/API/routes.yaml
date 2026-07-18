@@ -1,0 +1,4 @@
+refresh_token:
+  path: /api/token/refresh
+  methods: [POST]
+  controller: Authorization\User\RefreshToken\Infrastructure\UI\API\Controller\RefreshTokenController

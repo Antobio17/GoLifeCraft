@@ -26,6 +26,8 @@ type CardVariant = "plain" | "brand" | "inset";
       .ds-card {
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        height: 100%;
         gap: var(--card-gap, 12px);
         padding: var(--card-pad, 16px);
         border-radius: var(--ds-radius-3xl);

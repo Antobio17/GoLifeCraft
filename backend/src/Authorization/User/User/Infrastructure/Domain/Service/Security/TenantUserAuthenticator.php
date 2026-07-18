@@ -2,6 +2,7 @@
 
 namespace Authorization\User\User\Infrastructure\Domain\Service\Security;
 
+use Authorization\User\RefreshToken\Infrastructure\Domain\Service\RefreshTokenManager;
 use Authorization\User\User\Domain\Model\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -29,6 +30,8 @@ final class TenantUserAuthenticator extends AbstractAuthenticator
         private readonly TenantUserProvider $tenantUserProvider,
         private readonly JWTTokenManagerInterface $jwtManager,
         private readonly JWTEncoderInterface $jwtEncoder,
+        private readonly RefreshTokenManager $refreshTokenManager,
+        private readonly int $refreshTokenTtlDays,
     ) {
     }
 
@@ -124,6 +127,11 @@ final class TenantUserAuthenticator extends AbstractAuthenticator
         $user = $token->getUser();
 
         $jwt = $this->jwtManager->create(user: $user);
+        $refreshToken = $this->refreshTokenManager->issue(
+            userId: $user->id,
+            clientId: null,
+            ttlDays: $this->refreshTokenTtlDays,
+        );
 
         return new JsonResponse(
             data: [
@@ -131,6 +139,7 @@ final class TenantUserAuthenticator extends AbstractAuthenticator
                     'token' => $jwt,
                     'expires_at' => $this->jwtEncoder->decode(token: $jwt)['exp'] ?? time(),
                     'token_type' => 'Bearer',
+                    'refresh_token' => $refreshToken,
                     'user' => [
                         'email' => $user->email,
                         'roles' => $user->getRoles(),

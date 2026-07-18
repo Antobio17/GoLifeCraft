@@ -1,0 +1,11 @@
+services:
+  Authorization\User\RefreshToken\Infrastructure\UI\API\Controller\RefreshTokenController:
+    class: Authorization\User\RefreshToken\Infrastructure\UI\API\Controller\RefreshTokenController
+    arguments:
+      $refreshTokenManager: '@Authorization\User\RefreshToken\Infrastructure\Domain\Service\RefreshTokenManager'
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $jwtManager: '@Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface'
+      $jwtEncoder: '@Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface'
+      $refreshTokenTtlDays: '%env(int:REFRESH_TOKEN_TTL_DAYS)%'
+    tags:
+      - { name: controller.service_arguments }

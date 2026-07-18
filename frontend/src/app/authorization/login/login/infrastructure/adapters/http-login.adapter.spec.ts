@@ -45,6 +45,7 @@ describe("HttpLoginAdapter", () => {
         token: "tok",
         expires_at: 9999,
         token_type: "Bearer",
+        refresh_token: "ref",
         user: { username: "user", email: "u@e.com", roles: [] },
       },
     };

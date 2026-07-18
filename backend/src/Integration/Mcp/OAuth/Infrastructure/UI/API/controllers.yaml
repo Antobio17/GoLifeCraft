@@ -13,8 +13,9 @@ services:
       $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
       $jwtManager: '@Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface'
       $codeStore: '@Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\AuthorizationCodeStore'
-      $refreshTokenStore: '@Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\RefreshTokenStore'
+      $refreshTokenManager: '@Authorization\User\RefreshToken\Infrastructure\Domain\Service\RefreshTokenManager'
       $tokenTtl: '%env(int:JWT_TTL)%'
+      $refreshTokenTtlDays: '%env(int:MCP_REFRESH_TOKEN_TTL_DAYS)%'
     tags:
       - { name: controller.service_arguments }
 

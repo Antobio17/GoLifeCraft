@@ -11,6 +11,8 @@ services:
             - '@Authorization\User\User\Infrastructure\Domain\Service\Security\TenantUserProvider'
             - '@Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface'
             - '@Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface'
+            - '@Authorization\User\RefreshToken\Infrastructure\Domain\Service\RefreshTokenManager'
+            - '%env(int:REFRESH_TOKEN_TTL_DAYS)%'
 
     Authorization\User\User\Infrastructure\Domain\Service\Security\TenantTokenAuthenticator:
         class: Authorization\User\User\Infrastructure\Domain\Service\Security\TenantTokenAuthenticator

@@ -1,0 +1,6 @@
+services:
+  Authorization\User\RefreshToken\Infrastructure\Domain\Service\RefreshTokenManager:
+    class: Authorization\User\RefreshToken\Infrastructure\Domain\Service\RefreshTokenManager
+    arguments:
+      $repository: '@Authorization\User\RefreshToken\Domain\Model\RefreshTokenRepository'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'

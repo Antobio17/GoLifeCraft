@@ -2,10 +2,10 @@
 
 namespace Integration\Mcp\OAuth\Infrastructure\UI\API\Controller;
 
+use Authorization\User\RefreshToken\Infrastructure\Domain\Service\RefreshTokenManager;
 use Authorization\User\User\Domain\Model\User;
 use Authorization\User\User\Domain\Model\UserRepository;
 use Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\AuthorizationCodeStore;
-use Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\RefreshTokenStore;
 use Integration\Mcp\OAuth\Infrastructure\UI\API\Exception\TokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,21 +18,22 @@ final class TokenController
         private readonly UserRepository $userRepository,
         private readonly JWTTokenManagerInterface $jwtManager,
         private readonly AuthorizationCodeStore $codeStore,
-        private readonly RefreshTokenStore $refreshTokenStore,
+        private readonly RefreshTokenManager $refreshTokenManager,
         private readonly int $tokenTtl,
+        private readonly int $refreshTokenTtlDays,
     ) {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $grant = $this->resolveGrant(request: $request);
-            $user = $this->resolveUser(userId: $grant['user_id']);
+            [$userId, $clientId, $refreshToken] = $this->resolveGrant(request: $request);
+            $user = $this->resolveUser(userId: $userId);
         } catch (TokenException $e) {
             return $this->error(error: $e->error);
         }
 
-        return $this->buildTokenResponse(user: $user, clientId: $grant['client_id']);
+        return $this->buildTokenResponse(user: $user, refreshToken: $refreshToken);
     }
 
     private function resolveGrant(Request $request): array
@@ -72,7 +73,13 @@ final class TokenController
             throw TokenException::invalidGrant();
         }
 
-        return $stored;
+        $refreshToken = $this->refreshTokenManager->issue(
+            userId: $stored['user_id'],
+            clientId: $stored['client_id'],
+            ttlDays: $this->refreshTokenTtlDays,
+        );
+
+        return [$stored['user_id'], $stored['client_id'], $refreshToken];
     }
 
     private function grantFromRefreshToken(Request $request): array
@@ -83,13 +90,17 @@ final class TokenController
             throw TokenException::invalidRequest();
         }
 
-        $stored = $this->refreshTokenStore->pull(token: $refreshToken);
+        $grant = $this->refreshTokenManager->rotate(
+            rawToken: $refreshToken,
+            clientId: $request->request->get('client_id'),
+            ttlDays: $this->refreshTokenTtlDays,
+        );
 
-        if (null === $stored || $stored['client_id'] !== $request->request->get('client_id')) {
+        if (null === $grant) {
             throw TokenException::invalidGrant();
         }
 
-        return $stored;
+        return [$grant->userId, $grant->clientId, $grant->rawToken];
     }
 
     private function resolveUser(string $userId): User
@@ -103,14 +114,8 @@ final class TokenController
         return $user;
     }
 
-    private function buildTokenResponse(User $user, string $clientId): JsonResponse
+    private function buildTokenResponse(User $user, string $refreshToken): JsonResponse
     {
-        $refreshToken = $this->refreshTokenStore->generate();
-        $this->refreshTokenStore->store(token: $refreshToken, data: [
-            'client_id' => $clientId,
-            'user_id' => $user->id,
-        ]);
-
         return new JsonResponse(data: [
             'access_token' => $this->jwtManager->create(user: $user),
             'token_type' => 'Bearer',

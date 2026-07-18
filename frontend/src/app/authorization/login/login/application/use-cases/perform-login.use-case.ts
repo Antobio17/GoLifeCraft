@@ -21,6 +21,7 @@ export class PerformLoginUseCase {
           token: response.data.token,
           expiresAt: response.data.expires_at,
           tokenType: response.data.token_type,
+          refreshToken: response.data.refresh_token,
           user: response.data.user,
           email,
         });

@@ -1,0 +1,6 @@
+services:
+  Authorization\User\RefreshToken\Domain\Model\RefreshTokenRepository:
+    class: Authorization\User\RefreshToken\Infrastructure\Domain\Model\Doctrine\DoctrineRefreshTokenRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - Authorization\User\RefreshToken\Domain\Model\RefreshToken

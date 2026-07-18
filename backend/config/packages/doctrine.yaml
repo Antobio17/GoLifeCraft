@@ -37,6 +37,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Authorization/User/PasswordResetToken/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Authorization\User\PasswordResetToken\Domain\Model'
                         alias: password_reset_token
+                    RefreshToken:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Authorization/User/RefreshToken/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Authorization\User\RefreshToken\Domain\Model'
+                        alias: refresh_token
                     EmailVerificationToken:
                         is_bundle: false
                         type: xml
