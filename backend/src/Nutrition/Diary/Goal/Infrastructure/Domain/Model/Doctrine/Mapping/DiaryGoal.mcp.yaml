@@ -1,0 +1,30 @@
+label: Diary goal
+
+fields:
+  calories:
+    writable: false
+    type: float
+    min: 0
+    description: >-
+      The user's daily calorie target (kcal). There is a single diary goal per tenant.
+    sortable: true
+  protein:
+    writable: false
+    type: float
+    min: 0
+    description: The user's daily protein target in grams.
+    sortable: true
+  fat:
+    writable: false
+    type: float
+    min: 0
+    description: The user's daily fat target in grams.
+    sortable: true
+  carbs:
+    writable: false
+    type: float
+    min: 0
+    description: The user's daily carbohydrate target in grams.
+    sortable: true
+
+relations: {}
