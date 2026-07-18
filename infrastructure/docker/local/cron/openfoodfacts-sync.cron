@@ -1,0 +1,4 @@
+# OpenFoodFacts global catalog sync — runs every night at 03:00.
+# Symfony's console loads backend/.env.local itself, so no env inheritance is needed.
+# Job output is redirected to PID 1 so it shows up in `docker logs golifecraft_cron`.
+0 3 * * * root cd /var/www/html && /usr/local/bin/php bin/console app:catalog:sync-openfoodfacts --pages=50 --page-size=100 > /proc/1/fd/1 2> /proc/1/fd/2

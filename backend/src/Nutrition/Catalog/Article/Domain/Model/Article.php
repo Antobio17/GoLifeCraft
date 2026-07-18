@@ -18,6 +18,7 @@ class Article extends GenericAggregate
     public ?string $categoryId = null;
     public ?string $supermarketId = null;
     public ?string $nutritionFactsId = null;
+    public ?string $barcode = null;
 
     public static function create(
         string $id,
@@ -53,6 +54,11 @@ class Article extends GenericAggregate
         ));
 
         return $article;
+    }
+
+    public function assignBarcode(?string $barcode): void
+    {
+        $this->barcode = $barcode;
     }
 
     public function update(

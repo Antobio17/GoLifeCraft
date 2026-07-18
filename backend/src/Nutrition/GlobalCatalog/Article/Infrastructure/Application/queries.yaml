@@ -1,0 +1,5 @@
+services:
+  Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticlesNeedleDataQuery:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetGlobalArticlesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'

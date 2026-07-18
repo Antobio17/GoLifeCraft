@@ -1,0 +1,8 @@
+services:
+  Nutrition\GlobalCatalog\Article\Application\Command\UpsertGlobalArticleCommandHandler:
+    class: Nutrition\GlobalCatalog\Article\Application\Command\UpsertGlobalArticleCommandHandler
+    arguments:
+      $globalArticleRepository: '@Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleRepository'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

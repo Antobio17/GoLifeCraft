@@ -1,7 +1,7 @@
 <ds-page-wrapper [maxWidth]="'680px'" [gap]="'12px'">
   @if (loading()) {
     <ds-skeleton height="120px" />
-  } @else if (workout(); as detail) {
+  } @else if (vm(); as detail) {
     <ds-screen-header
       [leading]="'back'"
       [leadingLabel]="'getWorkout.back' | t"
@@ -12,14 +12,14 @@
 
     <ds-workout-summary
       [eyebrow]="'getWorkout.completed' | t"
-      [date]="dateText(detail.startedAt)"
+      [date]="detail.dateLabel"
       [stats]="[
         {
-          value: durationText(detail.durationSeconds),
+          value: detail.durationLabel,
           label: 'getWorkout.duration' | t,
         },
         {
-          value: ratioLabel(detail),
+          value: detail.ratioLabel,
           label: 'getWorkout.sets' | t,
           accent: true,
         },
@@ -30,9 +30,9 @@
       @for (exercise of detail.exercises; track exercise.id; let i = $index) {
         <ds-workout-exercise
           [index]="i + 1"
-          [name]="exercise.exerciseName"
-          [muscle]="muscleText(exercise)"
-          [ratio]="exerciseRatio(exercise)"
+          [name]="exercise.name"
+          [muscle]="exercise.muscleLabel"
+          [ratio]="exercise.ratio"
           [note]="exercise.note"
           [sets]="exercise.sets"
           [numLabel]="'getWorkout.set.number' | t"

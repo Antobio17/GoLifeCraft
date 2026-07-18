@@ -1,0 +1,6 @@
+services:
+  Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleRepository:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\Domain\Model\Doctrine\DoctrineGlobalArticleRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticle

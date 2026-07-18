@@ -1,0 +1,31 @@
+{
+  "getGlobalArticles": {
+    "heading": "Descargar al catálogo",
+    "pending": "productos listos para añadir",
+    "info": "Selección de productos precargados con sus valores nutricionales. Descárgalos uno a uno o todos a la vez para añadirlos a tu catálogo.",
+    "importAll": "Descargar todo",
+    "allImported": "Todo descargado",
+    "add": "Descargar",
+    "added": "Añadido",
+    "searchPlaceholder": "Buscar producto o marca…",
+    "searchClear": "Limpiar búsqueda",
+    "nutritionCaption": "Valores por 100 g",
+    "noResults": "Sin resultados para",
+    "macro": {
+      "kcal": "kcal",
+      "proteinShort": "P",
+      "fatShort": "G",
+      "carbsShort": "H"
+    },
+    "empty": {
+      "title": "Catálogo global vacío",
+      "text": "Aún no hay productos disponibles para descargar"
+    },
+    "toast": {
+      "imported": "Producto añadido a tu catálogo",
+      "importedAll": "Productos añadidos a tu catálogo",
+      "alreadyImported": "Este producto ya estaba en tu catálogo",
+      "error": "No se pudo añadir el producto"
+    }
+  }
+}

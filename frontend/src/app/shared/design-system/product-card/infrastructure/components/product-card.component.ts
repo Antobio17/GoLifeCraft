@@ -1,11 +1,14 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
 import { ProductBadge } from "../../domain/models/product-badge.model";
+import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 
 @Component({
   selector: "ds-product-card",
   standalone: true,
+  imports: [NgTemplateOutlet, IconComponent],
   template: `
-    <button type="button" class="ds-pcard" (click)="activated.emit()">
+    <ng-template #content>
       <span class="ds-pcard__emoji">{{ emoji }}</span>
       <span class="ds-pcard__body">
         <span class="ds-pcard__head">
@@ -39,7 +42,33 @@ import { ProductBadge } from "../../domain/models/product-badge.model";
           </span>
         }
       </span>
-    </button>
+    </ng-template>
+
+    @if (actionable) {
+      <div class="ds-pcard ds-pcard--static">
+        <ng-container [ngTemplateOutlet]="content"></ng-container>
+        <button
+          type="button"
+          class="ds-pcard__action"
+          [class.ds-pcard__action--added]="added"
+          [disabled]="pending || added"
+          (click)="action.emit()"
+        >
+          @if (added) {
+            <ds-icon name="check" [size]="14" [stroke]="2.6" />
+          } @else {
+            <ds-icon name="download" [size]="14" [stroke]="2.6" />
+          }
+          @if (actionCaption) {
+            <span>{{ actionCaption }}</span>
+          }
+        </button>
+      </div>
+    } @else {
+      <button type="button" class="ds-pcard" (click)="activated.emit()">
+        <ng-container [ngTemplateOutlet]="content"></ng-container>
+      </button>
+    }
   `,
   styles: [
     `
@@ -63,9 +92,40 @@ import { ProductBadge } from "../../domain/models/product-badge.model";
           border-color 0.15s ease,
           background 0.15s ease;
       }
-      .ds-pcard:hover {
+      button.ds-pcard:hover {
         border-color: var(--ds-border-strong);
         background: var(--ds-surface-hover);
+      }
+      .ds-pcard--static {
+        cursor: default;
+        align-items: center;
+      }
+      .ds-pcard__action {
+        flex: 0 0 auto;
+        align-self: center;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        appearance: none;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--ds-on-primary);
+        background: var(--ds-primary);
+        border: none;
+        border-radius: 11px;
+        padding: 8px 11px;
+        cursor: pointer;
+        transition:
+          background 0.15s ease,
+          color 0.15s ease;
+      }
+      .ds-pcard__action:disabled {
+        cursor: default;
+      }
+      .ds-pcard__action--added {
+        background: var(--ds-surface-inset);
+        color: var(--ds-text-muted);
       }
       .ds-pcard__emoji {
         width: 56px;
@@ -143,10 +203,20 @@ export class ProductCardComponent {
   @Input() brand: string | null = null;
   @Input() store: string | null = null;
   @Input() badges: ProductBadge[] = [];
+  @Input() actionable = false;
+  @Input() added = false;
+  @Input() pending = false;
+  @Input() actionLabel = "";
+  @Input() addedLabel = "";
 
   @Output() activated = new EventEmitter<void>();
+  @Output() action = new EventEmitter<void>();
 
   get visibleBadges(): ProductBadge[] {
     return this.badges.filter((badge) => !badge.hidden);
+  }
+
+  get actionCaption(): string {
+    return this.added ? this.addedLabel : this.actionLabel;
   }
 }

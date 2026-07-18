@@ -5,7 +5,7 @@
     (action)="seeAll.emit()"
   />
 
-  @if (loading) {
+  @if (loading()) {
     <ds-stack [gap]="'12px'">
       <ds-skeleton height="66px" />
       <ds-skeleton height="150px" />
@@ -15,7 +15,7 @@
   } @else {
     <ds-stack direction="row" [gap]="'8px'">
       <ds-stat-tile
-        [value]="stats!.totalSessions"
+        [value]="stats()!.totalSessions"
         [label]="'dashboard.gym.sessions' | t"
       />
       <ds-stat-tile
@@ -24,7 +24,7 @@
         [label]="'dashboard.gym.volume' | t"
       />
       <ds-stat-tile
-        [value]="stats!.totalExercises"
+        [value]="stats()!.totalExercises"
         [label]="'dashboard.gym.exercises' | t"
       />
     </ds-stack>

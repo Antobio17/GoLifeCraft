@@ -1,0 +1,90 @@
+<ds-page-wrapper [gap]="'12px'">
+  <ds-screen-header
+    leading="back"
+    [title]="'getGlobalArticles.heading' | t"
+    [subtitle]="headerSubtitle()"
+    (leadingClick)="back()"
+  />
+
+  @if (loading()) {
+    <ds-grid [minColumn]="'320px'">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <ds-skeleton height="78px" />
+      }
+    </ds-grid>
+  } @else if (items().length === 0) {
+    <ds-empty-state
+      icon="search"
+      [title]="'getGlobalArticles.empty.title' | t"
+      [text]="'getGlobalArticles.empty.text' | t"
+    />
+  } @else {
+    <ds-note icon="download">{{ "getGlobalArticles.info" | t }}</ds-note>
+
+    <ds-button
+      variant="primary"
+      [fullWidth]="true"
+      icon="download"
+      [disabled]="pendingCount() === 0"
+      (clicked)="importAll()"
+    >
+      {{ importAllLabel() }}
+    </ds-button>
+
+    <ds-search-input
+      [placeholder]="'getGlobalArticles.searchPlaceholder' | t"
+      [clearLabel]="'getGlobalArticles.searchClear' | t"
+      (searched)="onSearch($event)"
+    />
+
+    <ds-text variant="label">
+      {{ "getGlobalArticles.nutritionCaption" | t }}
+    </ds-text>
+
+    @if (!hasResults()) {
+      <ds-text variant="muted">
+        {{ "getGlobalArticles.noResults" | t }} “{{ searchQuery() }}”
+      </ds-text>
+    } @else {
+      <ds-grid [minColumn]="'320px'">
+        @for (card of cards(); track card.id) {
+          <ds-product-card
+            [actionable]="true"
+            [emoji]="card.emoji"
+            [name]="card.name"
+            [brand]="card.brand"
+            [store]="card.store"
+            [added]="isAdded(card.id)"
+            [pending]="isPending(card.id)"
+            [actionLabel]="'getGlobalArticles.add' | t"
+            [addedLabel]="'getGlobalArticles.added' | t"
+            [badges]="[
+              {
+                text: card.kcal + ' ' + ('getGlobalArticles.macro.kcal' | t),
+                kcal: true,
+                hidden: !card.kcal,
+              },
+              {
+                text:
+                  ('getGlobalArticles.macro.proteinShort' | t) +
+                  ' ' +
+                  card.protein,
+                hidden: !card.protein,
+              },
+              {
+                text: ('getGlobalArticles.macro.fatShort' | t) + ' ' + card.fat,
+                hidden: !card.fat,
+              },
+              {
+                text:
+                  ('getGlobalArticles.macro.carbsShort' | t) + ' ' + card.carbs,
+                hidden: !card.carbs,
+              },
+            ]"
+            (action)="onImport(card.id)"
+          />
+        }
+      </ds-grid>
+    }
+  }
+</ds-page-wrapper>

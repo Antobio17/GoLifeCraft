@@ -55,11 +55,20 @@ php bin/phpunit
 ./vendor/bin/php-cs-fixer fix src/
 ```
 
+## Reglas de oro del backend
+
+- **Un caso de uso (CommandHandler/QueryHandler) toca UN solo agregado.** Está prohibido que un handler cargue, modifique o guarde dos agregados distintos.
+  - Si una acción debe afectar a otro agregado, el primer agregado **registra un evento de dominio** y un **Subscriber** en el bounded context del segundo agregado reacciona a ese evento y despacha su propio comando. Ver el patrón *Subscriber* más abajo.
+  - Ejemplo real: al finalizar un `Workout` se emite `WorkoutFinished`; `UpdateSessionOnWorkoutFinished` (subscriber) despacha `SyncSessionExercisesCommand` sobre el agregado `Session`. Ningún handler toca ambos.
+- **Los eventos de dominio se registran completos (hidratados).** Cada evento debe llevar **todas las propiedades relevantes del modelo** en su estado tras la acción, no solo el `id` o un par de campos. El log de eventos es el registro histórico: si el evento va incompleto, la traza queda incompleta e irreconstruible.
+  - Los ejemplos de esta guía muestran a veces eventos con pocos campos por brevedad; **eso NO es el patrón a seguir** — hidrata siempre con el estado completo del agregado.
+
 ## Criterio de validación: Dominio vs Aplicación
 
 - **¿La regla depende solo del estado de la entidad?** → Dominio (`create`/`update` del aggregate).
 - **¿La regla garantiza que el objeto no sea inválido?** → Dominio.
 - **¿La regla depende del contexto de quién ejecuta (roles, permisos, sesión)?** → Aplicación (CommandHandler o NeedleDataQuery).
+- **¿La regla necesita tocar otro agregado?** → Aplicación, vía **Subscriber** (nunca dentro del mismo handler).
 
 ## Arquitectura: DDD + Hexagonal + CQRS
 
@@ -209,6 +218,10 @@ class Foo extends Aggregate
             aggregateId: $id,
             occurredOn: $now,
             name: $name,
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $createdByUserId,
+            updatedByUserId: $createdByUserId,
         ));
 
         return $foo;
@@ -254,6 +267,8 @@ final class CreateFooController
 
 ### Domain Event
 
+> Hidratar **todas** las propiedades del modelo tras la acción, no solo el `id`. El evento es el registro histórico completo.
+
 ```php
 final readonly class FooCreated extends DomainEvent
 {
@@ -261,6 +276,10 @@ final readonly class FooCreated extends DomainEvent
         string $aggregateId,
         \DateTime $occurredOn,
         public string $name,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }
@@ -270,6 +289,44 @@ final readonly class FooCreated extends DomainEvent
         return 'golifecraft.{boundedContext}.event.1.{entity}.created';
     }
 }
+```
+
+### Subscriber (reacción cross-agregado)
+
+> Único mecanismo permitido para que una acción sobre un agregado afecte a otro. Vive en el `Application/Subscriber/` del bounded context del agregado **destino**. Implementa `DomainEventSubscriber`, filtra el evento con guarda y despacha un comando por el bus. Nunca modifica el otro agregado directamente.
+
+```php
+final readonly class UpdateBarOnFooCreated implements DomainEventSubscriber
+{
+    public function __construct(
+        private MessageBusInterface $messageBus,
+    ) {}
+
+    public function __invoke(DomainEvent $event): void
+    {
+        if (!$event instanceof FooCreated) {
+            return;
+        }
+
+        $this->messageBus->dispatch(new UpdateBarCommand(
+            fooId: $event->aggregateId,
+            name: $event->name,
+            updatedByUserId: $event->createdByUserId,
+        ));
+    }
+}
+```
+
+`subscribers.yaml` (en `Infrastructure/Application/`) — se suscribe por el **nombre del evento**:
+
+```yaml
+services:
+  Foo\Bar\Baz\Application\Subscriber\UpdateBarOnFooCreated:
+    class: Foo\Bar\Baz\Application\Subscriber\UpdateBarOnFooCreated
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.{context}.event.1.{entity}.created' }
 ```
 
 ### Domain Exception
@@ -417,7 +474,9 @@ Bounded context que implementa el flujo OAuth 2.0 propio del MCP y la autenticac
 - [ ] Interfaz `{Action}NeedleDataQuery` (si se necesita)
 - [ ] `Doctrine*` e `InMemory*` del NeedleDataQuery
 - [ ] `{Action}{Entity}Controller`
-- [ ] Registrar en los YAML correspondientes (`command_handlers`, `query_handlers`, `queries`, `controllers`, `routes`)
+- [ ] Eventos de dominio **hidratados con todas las propiedades del modelo**
+- [ ] El handler toca **un solo agregado**; si afecta a otro → `Subscriber` + `subscribers.yaml`
+- [ ] Registrar en los YAML correspondientes (`command_handlers`, `query_handlers`, `queries`, `controllers`, `routes`, `subscribers`)
 - [ ] Tests unitarios con InMemory
 
 ---
@@ -599,6 +658,9 @@ export class CreateCenterComponent {
 
 ## Reglas específicas del frontend
 
+- **Los templates HTML NO pueden usar etiquetas HTML nativas** (`<div>`, `<span>`, `<p>`, `<button>`, `<input>`, `<h1>`…). Solo se permiten **componentes del design system (`<ds-*>`)** y las construcciones estructurales de Angular (`@if`, `@for`, `@switch`, `<ng-container>`, `<ng-template>`, `<ng-content>`).
+  - Si un elemento visual no existe todavía como `<ds-*>`, **se crea el componente en `shared/design-system/`** y se usa desde ahí; nunca se recurre a una etiqueta nativa como atajo.
+  - Layout, tipografía y espaciado se resuelven con `<ds-stack>`, `<ds-grid>`, `<ds-page-wrapper>`, `<ds-text>`, `<ds-heading>`, etc. — no con `<div>` + CSS ad-hoc.
 - **Usar siempre `inject()`** en lugar de constructor injection (componentes y servicios).
 - **No leer `localStorage` directamente en adaptadores.** El interceptor `auth-token.interceptor.ts` añade el token a todas las peticiones HTTP automáticamente.
 - **No usar `setTimeout` para diferir navegación.** Usar el operador `delay()` de RxJS en el pipeline del observable.
@@ -620,7 +682,7 @@ Solo existen dos roles (ver `User::ROLE_HERARCHY` en backend y `USER_ROLES` en `
 - [ ] Abstract class port en `domain/ports/`
 - [ ] Service en `application/services/`
 - [ ] HTTP Adapter en `infrastructure/adapters/`
-- [ ] Component standalone en `infrastructure/components/`
+- [ ] Component standalone en `infrastructure/components/` — template **solo con `<ds-*>`** + control flow de Angular (cero etiquetas HTML nativas)
 - [ ] Provider en `infrastructure/providers/`
 - [ ] Registrar provider en el componente/ruta correspondiente
 - [ ] Rutas lazy en `infrastructure/routes/{module}.routes.ts` y enganchadas en `app.routes.ts`

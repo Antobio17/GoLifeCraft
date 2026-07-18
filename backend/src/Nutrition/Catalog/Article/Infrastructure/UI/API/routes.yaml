@@ -13,6 +13,11 @@ create_article:
   methods: [POST]
   controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\CreateArticleController
 
+import_global_article:
+  path: /api/v1/nutrition/catalog/article/import/{globalArticleId}
+  methods: [POST]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\ImportGlobalArticleController
+
 update_article:
   path: /api/v1/nutrition/catalog/article/{articleId}
   methods: [PUT]

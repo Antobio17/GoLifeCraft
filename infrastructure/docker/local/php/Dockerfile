@@ -13,6 +13,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
         unzip \
+        cron \
         default-mysql-client \
         qpdf \
         ghostscript \
@@ -35,6 +36,9 @@ RUN wget -O /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-11.phar && \
     chmod +x /usr/local/bin/phpunit
 
 COPY infrastructure/docker/local/php/www.conf /usr/local/etc/php-fpm.d/www.conf
+
+COPY infrastructure/docker/local/cron/openfoodfacts-sync.cron /etc/cron.d/openfoodfacts-sync
+RUN chmod 0644 /etc/cron.d/openfoodfacts-sync
 
 COPY backend/ /var/www/html/
 WORKDIR /var/www/html/

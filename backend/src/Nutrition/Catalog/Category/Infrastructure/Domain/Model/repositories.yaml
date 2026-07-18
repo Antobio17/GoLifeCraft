@@ -1,0 +1,6 @@
+services:
+  Nutrition\Catalog\Category\Domain\Model\CategoryRepository:
+    class: Nutrition\Catalog\Category\Infrastructure\Domain\Model\Doctrine\DoctrineCategoryRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Catalog\Category\Domain\Model\Category

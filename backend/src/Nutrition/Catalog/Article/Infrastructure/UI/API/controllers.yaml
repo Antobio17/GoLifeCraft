@@ -20,6 +20,13 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\ImportGlobalArticleController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\ImportGlobalArticleController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\UpdateArticleController:
     class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\UpdateArticleController
     arguments:

@@ -11,6 +11,7 @@
     <field name="categoryId" type="string" column="category_id" length="36" nullable="true"/>
     <field name="supermarketId" type="string" column="supermarket_id" length="36" nullable="true"/>
     <field name="nutritionFactsId" type="string" column="nutrition_facts_id" length="36" nullable="true"/>
+    <field name="barcode" type="string" column="barcode" length="64" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
@@ -19,6 +20,7 @@
       <index name="idx_article_category_id" columns="category_id"/>
       <index name="idx_article_supermarket_id" columns="supermarket_id"/>
       <index name="idx_article_nutrition_facts_id" columns="nutrition_facts_id"/>
+      <index name="idx_article_barcode" columns="barcode"/>
     </indexes>
     <unique-constraints>
       <unique-constraint name="uniq_article_name" columns="name"/>

@@ -24,6 +24,16 @@ import {
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 
+interface WorkoutRow {
+  id: string;
+  sessionName: string;
+  dateLabel: string;
+  ratioLabel: string;
+  progressPercent: number;
+  durationLabel: string;
+  exercisesLabel: string;
+}
+
 @Component({
   selector: "app-get-workouts",
   templateUrl: "./get-workouts.component.html",
@@ -54,6 +64,18 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
     () => `${this.totalItems()} ${this.t("getWorkouts.subtitle")}`,
   );
 
+  rows = computed<WorkoutRow[]>(() =>
+    this.items().map((workout) => ({
+      id: workout.id,
+      sessionName: workout.attributes.sessionName,
+      dateLabel: this.dateText(workout.attributes.startedAt),
+      ratioLabel: this.ratioLabel(workout.attributes),
+      progressPercent: this.progressPercent(workout.attributes),
+      durationLabel: this.durationText(workout.attributes.durationSeconds),
+      exercisesLabel: this.exercisesLabel(workout.attributes),
+    })),
+  );
+
   protected configureList(): void {
     this.pageSize.set(50);
   }
@@ -65,22 +87,22 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
     return this.getWorkoutsService.getWorkouts(page, pageSize);
   }
 
-  ratioLabel(attributes: WorkoutListAttributes): string {
+  private ratioLabel(attributes: WorkoutListAttributes): string {
     return `${attributes.completedSets}/${attributes.totalSets}`;
   }
 
-  progressPercent(attributes: WorkoutListAttributes): number {
+  private progressPercent(attributes: WorkoutListAttributes): number {
     if (attributes.totalSets <= 0) {
       return 0;
     }
     return Math.round((attributes.completedSets / attributes.totalSets) * 100);
   }
 
-  exercisesLabel(attributes: WorkoutListAttributes): string {
+  private exercisesLabel(attributes: WorkoutListAttributes): string {
     return `${attributes.exerciseCount} ${this.t("getWorkouts.card.exercises")}`;
   }
 
-  dateText(value: string): string {
+  private dateText(value: string): string {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) {
       return value;
@@ -92,7 +114,7 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
     });
   }
 
-  durationText(totalSeconds: number): string {
+  private durationText(totalSeconds: number): string {
     const seconds = Math.max(0, totalSeconds);
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);

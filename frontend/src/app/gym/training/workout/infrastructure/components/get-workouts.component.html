@@ -22,7 +22,7 @@
     />
   } @else {
     <ds-grid [minColumn]="'260px'" [gap]="'9px'" [tabletColumns]="2">
-      @for (workout of items(); track workout.id) {
+      @for (workout of rows(); track workout.id) {
         <ds-card
           [interactive]="true"
           [padding]="'13px'"
@@ -37,29 +37,29 @@
           >
             <ds-stack [gap]="'2px'">
               <ds-heading [level]="3" size="md">
-                {{ workout.attributes.sessionName }}
+                {{ workout.sessionName }}
               </ds-heading>
               <ds-text variant="meta">
-                {{ dateText(workout.attributes.startedAt) }}
+                {{ workout.dateLabel }}
               </ds-text>
             </ds-stack>
 
             <ds-chip tone="brand">
               <ds-stack direction="row" align="center" [gap]="'5px'">
                 <ds-icon name="check" [size]="12" [stroke]="3" />
-                {{ ratioLabel(workout.attributes) }}
+                {{ workout.ratioLabel }}
               </ds-stack>
             </ds-chip>
           </ds-stack>
 
-          <ds-progress-bar [value]="progressPercent(workout.attributes)" />
+          <ds-progress-bar [value]="workout.progressPercent" />
 
           <ds-stack direction="row" [gap]="'14px'" [wrap]="true">
             <ds-meta-item icon="clock">
-              {{ durationText(workout.attributes.durationSeconds) }}
+              {{ workout.durationLabel }}
             </ds-meta-item>
             <ds-meta-item icon="dumbbell">
-              {{ exercisesLabel(workout.attributes) }}
+              {{ workout.exercisesLabel }}
             </ds-meta-item>
           </ds-stack>
         </ds-card>

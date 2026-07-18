@@ -34,3 +34,16 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Article\Application\Command\ImportGlobalArticleCommandHandler:
+    class: Nutrition\Catalog\Article\Application\Command\ImportGlobalArticleCommandHandler
+    arguments:
+      $globalArticleRepository: '@Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleRepository'
+      $articleRepository: '@Nutrition\Catalog\Article\Domain\Model\ArticleRepository'
+      $categoryRepository: '@Nutrition\Catalog\Category\Domain\Model\CategoryRepository'
+      $supermarketRepository: '@Nutrition\Catalog\Supermarket\Domain\Model\SupermarketRepository'
+      $nutritionFactsAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

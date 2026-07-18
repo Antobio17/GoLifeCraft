@@ -1,0 +1,11 @@
+services:
+  Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesQueryHandler:
+    class: Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticlesNeedleDataQuery'
+      $dataTransform: '@Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesDataTransform:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\DataTransform\ApiGetGlobalArticlesDataTransform

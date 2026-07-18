@@ -1,0 +1,8 @@
+services:
+  Integration\OpenFoodFacts\Infrastructure\Application\Console\SyncOpenFoodFactsCatalogCommand:
+    class: Integration\OpenFoodFacts\Infrastructure\Application\Console\SyncOpenFoodFactsCatalogCommand
+    arguments:
+      $catalogProvider: '@Integration\OpenFoodFacts\Domain\Service\OpenFoodFactsCatalogProvider'
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'console.command' }

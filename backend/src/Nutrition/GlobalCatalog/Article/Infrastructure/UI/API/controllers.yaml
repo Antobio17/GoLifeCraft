@@ -1,0 +1,7 @@
+services:
+  Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\GetGlobalArticlesController:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\GetGlobalArticlesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

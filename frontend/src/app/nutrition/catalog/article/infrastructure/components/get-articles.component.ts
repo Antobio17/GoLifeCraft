@@ -119,6 +119,10 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     this.router.navigate(["/catalog", "create"]);
   }
 
+  onImportCatalog(): void {
+    this.router.navigate(["/global-catalog"]);
+  }
+
   private options(pick: (article: Article) => string | null): string[] {
     const values = this.items()
       .map(pick)

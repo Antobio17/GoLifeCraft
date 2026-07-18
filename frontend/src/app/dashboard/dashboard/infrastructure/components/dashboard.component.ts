@@ -1,4 +1,12 @@
-import { Component, OnInit, computed, inject, signal } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatePipe, DecimalPipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
@@ -48,6 +56,7 @@ export class DashboardComponent implements OnInit {
   private getDiaryService = inject(GetDiaryService);
   private getGymStatsService = inject(GetGymStatsService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   readonly today = new Date();
 
@@ -90,27 +99,34 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDiaryService.getDiary().subscribe({
-      next: (response) => {
-        const attributes = response.data.attributes;
+    this.getDiaryService
+      .getDiary()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          const attributes = response.data.attributes;
 
-        this.summary.set({
-          consumedKcal: attributes.consumedCalories,
-          targetKcal: attributes.goalCalories,
-          proteinG: attributes.totals.protein,
-          fatG: attributes.totals.fat,
-          carbsG: attributes.totals.carbs,
-        });
-      },
-    });
+          this.summary.set({
+            consumedKcal: attributes.consumedCalories,
+            targetKcal: attributes.goalCalories,
+            proteinG: attributes.totals.protein,
+            fatG: attributes.totals.fat,
+            carbsG: attributes.totals.carbs,
+          });
+        },
+        error: () => {},
+      });
 
-    this.getGymStatsService.getGymStats().subscribe({
-      next: (stats) => {
-        this.gymStats.set(stats);
-        this.gymStatsLoading.set(false);
-      },
-      error: () => this.gymStatsLoading.set(false),
-    });
+    this.getGymStatsService
+      .getGymStats()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (stats) => {
+          this.gymStats.set(stats);
+          this.gymStatsLoading.set(false);
+        },
+        error: () => this.gymStatsLoading.set(false),
+      });
   }
 
   goToSettings(): void {

@@ -1,0 +1,4 @@
+get_global_articles:
+  path: /api/v1/nutrition/global-catalog/articles
+  methods: [GET]
+  controller: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\GetGlobalArticlesController

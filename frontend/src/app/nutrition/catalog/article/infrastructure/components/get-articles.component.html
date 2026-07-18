@@ -4,9 +4,19 @@
     [subtitle]="headerSubtitle()"
   >
     @if (canWrite) {
-      <ds-button slot="actions" size="md" icon="plus" (clicked)="onCreate()">
-        {{ "getArticles.create" | t }}
-      </ds-button>
+      <ng-container slot="actions">
+        <ds-button
+          variant="outline"
+          size="md"
+          icon="download"
+          (clicked)="onImportCatalog()"
+        >
+          {{ "getArticles.download" | t }}
+        </ds-button>
+        <ds-button size="md" icon="plus" (clicked)="onCreate()">
+          {{ "getArticles.create" | t }}
+        </ds-button>
+      </ng-container>
     }
   </ds-screen-header>
 

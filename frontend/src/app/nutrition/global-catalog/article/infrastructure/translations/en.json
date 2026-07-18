@@ -1,0 +1,31 @@
+{
+  "getGlobalArticles": {
+    "heading": "Download to catalog",
+    "pending": "products ready to add",
+    "info": "A selection of preloaded products with their nutrition values. Download them one by one or all at once to add them to your catalog.",
+    "importAll": "Download all",
+    "allImported": "All downloaded",
+    "add": "Download",
+    "added": "Added",
+    "searchPlaceholder": "Search product or brand…",
+    "searchClear": "Clear search",
+    "nutritionCaption": "Values per 100 g",
+    "noResults": "No results for",
+    "macro": {
+      "kcal": "kcal",
+      "proteinShort": "P",
+      "fatShort": "F",
+      "carbsShort": "C"
+    },
+    "empty": {
+      "title": "Global catalog is empty",
+      "text": "There are no products available to download yet"
+    },
+    "toast": {
+      "imported": "Product added to your catalog",
+      "importedAll": "Products added to your catalog",
+      "alreadyImported": "This product was already in your catalog",
+      "error": "Could not add the product"
+    }
+  }
+}

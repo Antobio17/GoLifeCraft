@@ -17,6 +17,7 @@
         "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.4.*",
+        "symfony/http-client": "7.4.*",
         "symfony/mailer": "7.4.*",
         "symfony/mcp-bundle": "^0.10",
         "symfony/messenger": "7.4.*",

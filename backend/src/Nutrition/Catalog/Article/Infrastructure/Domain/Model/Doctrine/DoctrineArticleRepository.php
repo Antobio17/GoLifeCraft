@@ -20,6 +20,11 @@ final class DoctrineArticleRepository extends EntityRepository implements Articl
         return $this->getEntityManager()->find(className: Article::class, id: $id);
     }
 
+    public function findByBarcode(string $barcode): ?Article
+    {
+        return $this->findOneBy(['barcode' => $barcode]);
+    }
+
     public function save(Article $article): void
     {
         $this->getEntityManager()->persist(object: $article);

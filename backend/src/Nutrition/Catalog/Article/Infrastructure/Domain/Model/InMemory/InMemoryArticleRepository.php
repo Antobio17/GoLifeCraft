@@ -27,6 +27,17 @@ final class InMemoryArticleRepository implements ArticleRepository
         return null;
     }
 
+    public function findByBarcode(string $barcode): ?Article
+    {
+        foreach ($this->articles as $article) {
+            if ($article->barcode === $barcode) {
+                return $article;
+            }
+        }
+
+        return null;
+    }
+
     public function save(Article $article): void
     {
         foreach ($this->articles as $key => $existing) {

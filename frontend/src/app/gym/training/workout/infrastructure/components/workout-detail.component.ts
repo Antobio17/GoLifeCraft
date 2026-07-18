@@ -1,4 +1,12 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -32,11 +40,34 @@ export class WorkoutDetailComponent implements OnInit {
   private getWorkoutService = inject(GetWorkoutService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "gym/training/workout";
 
   loading = signal(true);
   workout = signal<WorkoutDetailAttributes | null>(null);
+
+  vm = computed(() => {
+    const detail = this.workout();
+    if (!detail) {
+      return null;
+    }
+
+    return {
+      sessionName: detail.sessionName,
+      dateLabel: this.dateText(detail.startedAt),
+      durationLabel: this.durationText(detail.durationSeconds),
+      ratioLabel: this.ratioLabel(detail),
+      exercises: detail.exercises.map((exercise) => ({
+        id: exercise.id,
+        name: exercise.exerciseName,
+        muscleLabel: this.muscleText(exercise),
+        ratio: this.exerciseRatio(exercise),
+        note: exercise.note,
+        sets: exercise.sets,
+      })),
+    };
+  });
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get("id") ?? "";
@@ -44,13 +75,16 @@ export class WorkoutDetailComponent implements OnInit {
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
-        this.getWorkoutService.getWorkout(id).subscribe({
-          next: (response) => {
-            this.workout.set(response.data.attributes);
-            this.loading.set(false);
-          },
-          error: () => this.loading.set(false),
-        });
+        this.getWorkoutService
+          .getWorkout(id)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: (response) => {
+              this.workout.set(response.data.attributes);
+              this.loading.set(false);
+            },
+            error: () => this.loading.set(false),
+          });
       });
   }
 
@@ -58,16 +92,16 @@ export class WorkoutDetailComponent implements OnInit {
     return this.translationService.translate(key, this.MODULE_PATH);
   }
 
-  muscleText(exercise: WorkoutExerciseView): string {
+  private muscleText(exercise: WorkoutExerciseView): string {
     return exercise.muscleGroups.join(" · ");
   }
 
-  exerciseRatio(exercise: WorkoutExerciseView): string {
+  private exerciseRatio(exercise: WorkoutExerciseView): string {
     const done = exercise.sets.filter((set) => set.done).length;
     return `${done}/${exercise.sets.length}`;
   }
 
-  dateText(value: string): string {
+  private dateText(value: string): string {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) {
       return value;
@@ -81,11 +115,11 @@ export class WorkoutDetailComponent implements OnInit {
     });
   }
 
-  ratioLabel(attributes: WorkoutDetailAttributes): string {
+  private ratioLabel(attributes: WorkoutDetailAttributes): string {
     return `${this.completedSets(attributes)}/${this.totalSets(attributes)}`;
   }
 
-  durationText(totalSeconds: number): string {
+  private durationText(totalSeconds: number): string {
     const seconds = Math.max(0, totalSeconds);
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -97,7 +131,7 @@ export class WorkoutDetailComponent implements OnInit {
     return `${pad(minutes)}:${pad(secs)}`;
   }
 
-  completedSets(attributes: WorkoutDetailAttributes): number {
+  private completedSets(attributes: WorkoutDetailAttributes): number {
     return attributes.exercises.reduce(
       (total, exercise) =>
         total + exercise.sets.filter((set) => set.done).length,
@@ -105,7 +139,7 @@ export class WorkoutDetailComponent implements OnInit {
     );
   }
 
-  totalSets(attributes: WorkoutDetailAttributes): number {
+  private totalSets(attributes: WorkoutDetailAttributes): number {
     return attributes.exercises.reduce(
       (total, exercise) => total + exercise.sets.length,
       0,

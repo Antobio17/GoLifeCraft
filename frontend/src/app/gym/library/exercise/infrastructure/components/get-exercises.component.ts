@@ -33,10 +33,17 @@ import {
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 
+interface ExerciseRow {
+  id: string;
+  name: string;
+  muscleText: string;
+  exercise: Exercise;
+}
+
 interface ExerciseGroup {
   muscle: string;
   count: number;
-  items: Exercise[];
+  items: ExerciseRow[];
 }
 
 type LibraryView = "list" | "grouped";
@@ -106,6 +113,10 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
     );
   });
 
+  filteredRows = computed<ExerciseRow[]>(() =>
+    this.filteredItems().map((exercise) => this.toRow(exercise)),
+  );
+
   groupedItems = computed<ExerciseGroup[]>(() => {
     const items = this.filteredItems();
 
@@ -115,7 +126,11 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
         const groupItems = items.filter((exercise) =>
           exercise.attributes.muscleGroups.includes(muscle),
         );
-        return { muscle, count: groupItems.length, items: groupItems };
+        return {
+          muscle,
+          count: groupItems.length,
+          items: groupItems.map((exercise) => this.toRow(exercise)),
+        };
       })
       .filter((group) => group.count > 0);
   });
@@ -137,7 +152,16 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
     this.searchQuery.set(query);
   }
 
-  muscleText(exercise: Exercise): string {
+  private toRow(exercise: Exercise): ExerciseRow {
+    return {
+      id: exercise.id,
+      name: exercise.attributes.name,
+      muscleText: this.muscleText(exercise),
+      exercise,
+    };
+  }
+
+  private muscleText(exercise: Exercise): string {
     const mode = this.t(
       `getExercises.type.${exercise.attributes.type.toLowerCase()}`,
     );

@@ -86,7 +86,7 @@
       </ds-empty-state>
     } @else {
       <ds-stack [gap]="'9px'">
-        @for (exercise of exercises(); track exercise.id; let i = $index) {
+        @for (exercise of exerciseRows(); track exercise.id; let i = $index) {
           <ds-card [gap]="'8px'" [padding]="'11px'">
             <ds-stack direction="row" align="center" [gap]="'12px'">
               <ds-chip tone="brand">{{ i + 1 }}</ds-chip>
@@ -94,10 +94,10 @@
                 <ds-heading [level]="3" size="sm">
                   {{ exercise.exerciseName }}
                 </ds-heading>
-                <ds-text variant="meta">{{ muscleText(exercise) }}</ds-text>
+                <ds-text variant="meta">{{ exercise.muscleLabel }}</ds-text>
               </ds-stack>
               <ds-chip tone="brand">
-                {{ modeLabel(exercise.type) }}
+                {{ exercise.modeLabel }}
               </ds-chip>
               <ds-icon-button
                 icon="close"
@@ -178,27 +178,23 @@
       (searched)="onLibrarySearch($event)"
     />
 
-    @if (filteredLibrary.length === 0) {
+    @if (libraryRows().length === 0) {
       <ds-text variant="muted">{{ "getSession.picker.empty" | t }}</ds-text>
     } @else {
       <ds-stack [gap]="'8px'">
-        @for (exercise of filteredLibrary; track exercise.id) {
+        @for (row of libraryRows(); track row.id) {
           <ds-card [padding]="'10px'">
             <ds-stack direction="row" align="center" [gap]="'12px'">
               <ds-icon-badge icon="dumbbell" />
               <ds-stack [gap]="'2px'" [grow]="true">
-                <ds-text variant="strong">{{
-                  exercise.attributes.name
-                }}</ds-text>
-                <ds-text variant="meta">{{
-                  libraryMuscleText(exercise)
-                }}</ds-text>
+                <ds-text variant="strong">{{ row.name }}</ds-text>
+                <ds-text variant="meta">{{ row.muscleLabel }}</ds-text>
               </ds-stack>
               <ds-icon-button
                 icon="plus"
                 variant="soft"
                 [ariaLabel]="'getSession.exercise.add' | t"
-                (clicked)="addFromLibrary(exercise)"
+                (clicked)="addFromLibrary(row.exercise)"
               />
             </ds-stack>
           </ds-card>

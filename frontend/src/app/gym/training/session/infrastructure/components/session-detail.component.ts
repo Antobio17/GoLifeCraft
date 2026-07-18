@@ -1,12 +1,15 @@
 import {
   Component,
+  DestroyRef,
   NgZone,
   OnDestroy,
   OnInit,
   ViewChild,
+  computed,
   inject,
   signal,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, delay } from "rxjs/operators";
@@ -94,6 +97,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private ngZone = inject(NgZone);
+  private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "gym/training/session";
 
@@ -105,9 +109,37 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   estimatedDurationMinutes = signal(0);
   exercises = signal<SessionExerciseView[]>([]);
 
+  exerciseRows = computed(() =>
+    this.exercises().map((exercise) => ({
+      ...exercise,
+      muscleLabel: this.muscleText(exercise),
+      modeLabel: this.modeLabel(exercise.type),
+    })),
+  );
+
   pickerOpen = signal(false);
   library = signal<Exercise[]>([]);
   librarySearch = signal("");
+
+  libraryRows = computed(() => {
+    const query = this.librarySearch().trim().toLowerCase();
+    const items = query
+      ? this.library().filter(
+          (exercise) =>
+            exercise.attributes.name.toLowerCase().includes(query) ||
+            exercise.attributes.muscleGroups.some((muscle) =>
+              muscle.toLowerCase().includes(query),
+            ),
+        )
+      : this.library();
+
+    return items.map((exercise) => ({
+      id: exercise.id,
+      name: exercise.attributes.name,
+      muscleLabel: this.libraryMuscleText(exercise),
+      exercise,
+    }));
+  });
 
   showDeleteModal = signal(false);
   isDeleting = signal(false);
@@ -222,18 +254,23 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   private loadSession(): void {
-    this.getSessionService.getSession(this.id).subscribe({
-      next: (response: GetSessionResponse) => {
-        const attributes = response.data.attributes;
-        this.name.set(attributes.name);
-        this.estimatedDurationMinutes.set(attributes.estimatedDurationMinutes);
-        this.activeWorkout.ensureRestored().subscribe({
-          next: () => this.finalizeLoad(attributes.exercises),
-          error: () => this.finalizeLoad(attributes.exercises),
-        });
-      },
-      error: () => this.loading.set(false),
-    });
+    this.getSessionService
+      .getSession(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: GetSessionResponse) => {
+          const attributes = response.data.attributes;
+          this.name.set(attributes.name);
+          this.estimatedDurationMinutes.set(
+            attributes.estimatedDurationMinutes,
+          );
+          this.activeWorkout.ensureRestored().subscribe({
+            next: () => this.finalizeLoad(attributes.exercises),
+            error: () => this.finalizeLoad(attributes.exercises),
+          });
+        },
+        error: () => this.loading.set(false),
+      });
   }
 
   private finalizeLoad(templateExercises: SessionExerciseView[]): void {
@@ -271,32 +308,24 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   private loadLibrary(): void {
-    this.getExercisesService.getExercises(1, 200).subscribe({
-      next: (response) => this.library.set(response.data),
-    });
+    this.getExercisesService
+      .getExercises(1, 200)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => this.library.set(response.data),
+        error: () => {},
+      });
   }
 
-  get filteredLibrary(): Exercise[] {
-    const query = this.librarySearch().trim().toLowerCase();
-    if (!query) return this.library();
-    return this.library().filter(
-      (exercise) =>
-        exercise.attributes.name.toLowerCase().includes(query) ||
-        exercise.attributes.muscleGroups.some((muscle) =>
-          muscle.toLowerCase().includes(query),
-        ),
-    );
-  }
-
-  muscleText(exercise: SessionExerciseView): string {
+  private muscleText(exercise: SessionExerciseView): string {
     return exercise.muscleGroups.join(" · ");
   }
 
-  libraryMuscleText(exercise: Exercise): string {
+  private libraryMuscleText(exercise: Exercise): string {
     return exercise.attributes.muscleGroups.join(" · ");
   }
 
-  modeLabel(type: string): string {
+  private modeLabel(type: string): string {
     return this.t(
       type === ExerciseType.Unilateral
         ? "getSession.mode.unilateral"

@@ -23,6 +23,14 @@ import {
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 
+interface SessionRow {
+  id: string;
+  name: string;
+  summary: string;
+  muscleGroups: string[];
+  session: Session;
+}
+
 @Component({
   selector: "app-get-sessions",
   templateUrl: "./get-sessions.component.html",
@@ -68,6 +76,16 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
   sessionToDelete = signal<Session | null>(null);
   isDeleting = signal(false);
 
+  rows = computed<SessionRow[]>(() =>
+    this.items().map((session) => ({
+      id: session.id,
+      name: session.attributes.name,
+      summary: this.summaryText(session),
+      muscleGroups: session.attributes.muscleGroups,
+      session,
+    })),
+  );
+
   protected configureList(): void {
     this.pageSize.set(100);
   }
@@ -79,7 +97,7 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
     return this.getSessionsService.getSessions(page, pageSize);
   }
 
-  summaryText(session: Session): string {
+  private summaryText(session: Session): string {
     const exercises = this.t("getSessions.card.exercises");
     return `${session.attributes.exerciseCount} ${exercises} · ~${session.attributes.estimatedDurationMinutes} min`;
   }

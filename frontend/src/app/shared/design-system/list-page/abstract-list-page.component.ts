@@ -1,4 +1,12 @@
-import { Directive, OnInit, computed, inject, signal } from "@angular/core";
+import {
+  Directive,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
@@ -15,6 +23,7 @@ export abstract class AbstractListPageComponent<T> implements OnInit {
   protected readonly router = inject(Router);
   protected readonly route = inject(ActivatedRoute);
   protected readonly translationService = inject(TranslationService);
+  protected readonly destroyRef = inject(DestroyRef);
 
   protected abstract readonly modulePath: string;
   protected abstract readonly storageKey: string;
@@ -68,14 +77,16 @@ export abstract class AbstractListPageComponent<T> implements OnInit {
   load(): void {
     this.loading.set(true);
 
-    this.fetch(this.currentPage(), this.pageSize()).subscribe({
-      next: (response) => {
-        this.items.set(response.data);
-        this.totalItems.set(response.meta.total);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false),
-    });
+    this.fetch(this.currentPage(), this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.items.set(response.data);
+          this.totalItems.set(response.meta.total);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
   }
 
   goToPage(page: number): void {

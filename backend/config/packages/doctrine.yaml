@@ -43,6 +43,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Authorization/User/EmailVerificationToken/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Authorization\User\EmailVerificationToken\Domain\Model'
                         alias: email_verification_token
+                    GlobalArticle:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/GlobalCatalog/Article/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\GlobalCatalog\Article\Domain\Model'
+                        alias: global_article
             tenant_manager:
                 connection: writer_tenant
                 naming_strategy: doctrine.orm.naming_strategy.underscore

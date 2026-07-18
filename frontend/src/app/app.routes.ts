@@ -82,6 +82,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "global-catalog",
+        data: { breadcrumb: "getGlobalArticles.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/global-catalog/article/infrastructure/routes/global-catalog.routes").then(
+            (m) => m.GLOBAL_CATALOG_ROUTES,
+          ),
+      },
+      {
         path: "recipes",
         data: { breadcrumb: "recipe.breadcrumb.list" },
         loadChildren: () =>

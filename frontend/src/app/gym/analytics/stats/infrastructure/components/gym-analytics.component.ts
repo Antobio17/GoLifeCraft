@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
+import { Component, inject, input, output } from "@angular/core";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
@@ -54,10 +54,10 @@ const REGION_COLORS = [
   ],
 })
 export class GymAnalyticsComponent {
-  @Input() stats: GymStats | null = null;
-  @Input() loading = false;
+  readonly stats = input<GymStats | null>(null);
+  readonly loading = input(false);
 
-  @Output() seeAll = new EventEmitter<void>();
+  readonly seeAll = output<void>();
 
   private muscleCatalog = inject(MuscleCatalogService);
   private readonly formatter = new Intl.NumberFormat("es", {
@@ -65,19 +65,19 @@ export class GymAnalyticsComponent {
   });
 
   get hasData(): boolean {
-    const stats = this.stats;
+    const stats = this.stats();
     return !!stats && (stats.totalSessions > 0 || stats.totalSets > 0);
   }
 
   get totalVolumeText(): string {
     return this.formatter
-      .formatToParts(this.stats?.totalVolumeKg ?? 0)
+      .formatToParts(this.stats()?.totalVolumeKg ?? 0)
       .map((part) => (part.type === "group" ? "\u202f" : part.value))
       .join("");
   }
 
   get volumeBars(): BarDatum[] {
-    return (this.stats?.sessionVolumes ?? []).map((session) => ({
+    return (this.stats()?.sessionVolumes ?? []).map((session) => ({
       id: session.id,
       label: session.name,
       value: session.volumeKg,
@@ -86,7 +86,9 @@ export class GymAnalyticsComponent {
   }
 
   get progressionPoints(): number[] {
-    return (this.stats?.volumeProgression ?? []).map((point) => point.volumeKg);
+    return (this.stats()?.volumeProgression ?? []).map(
+      (point) => point.volumeKg,
+    );
   }
 
   get hasProgression(): boolean {
@@ -108,7 +110,7 @@ export class GymAnalyticsComponent {
   }
 
   get regionShares(): RegionShare[] {
-    const distribution = this.stats?.muscleDistribution ?? [];
+    const distribution = this.stats()?.muscleDistribution ?? [];
     const order = this.muscleCatalog.regionNames();
     const totals = new Map<string, number>(order.map((region) => [region, 0]));
 

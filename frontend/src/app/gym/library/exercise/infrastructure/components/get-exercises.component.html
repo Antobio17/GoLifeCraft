@@ -42,10 +42,10 @@
       </ds-text>
     } @else if (view() === "list") {
       <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
-        @for (exercise of filteredItems(); track exercise.id) {
+        @for (row of filteredRows(); track row.id) {
           <ng-container
             [ngTemplateOutlet]="exerciseRow"
-            [ngTemplateOutletContext]="{ $implicit: exercise }"
+            [ngTemplateOutletContext]="{ $implicit: row }"
           />
         }
       </ds-grid>
@@ -59,10 +59,10 @@
               <ds-divider [grow]="true" />
             </ds-stack>
             <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
-              @for (exercise of group.items; track exercise.id) {
+              @for (row of group.items; track row.id) {
                 <ng-container
                   [ngTemplateOutlet]="exerciseRow"
-                  [ngTemplateOutletContext]="{ $implicit: exercise }"
+                  [ngTemplateOutletContext]="{ $implicit: row }"
                 />
               }
             </ds-grid>
@@ -73,27 +73,25 @@
   }
 </ds-page-wrapper>
 
-<ng-template #exerciseRow let-exercise>
+<ng-template #exerciseRow let-row>
   <ds-card [padding]="'11px 12px'">
     <ds-stack direction="row" align="center" [gap]="'11px'">
       <ds-icon-badge icon="dumbbell" tone="brand" [size]="34" [iconSize]="17" />
       <ds-stack [gap]="'1px'" [grow]="true">
-        <ds-heading [level]="3" size="sm">{{
-          exercise.attributes.name
-        }}</ds-heading>
-        <ds-text variant="meta">{{ muscleText(exercise) }}</ds-text>
+        <ds-heading [level]="3" size="sm">{{ row.name }}</ds-heading>
+        <ds-text variant="meta">{{ row.muscleText }}</ds-text>
       </ds-stack>
       <ds-icon-button
         icon="pencil"
         color="var(--ds-text-meta)"
         [ariaLabel]="'getExercises.actions.edit' | t"
-        (clicked)="onEdit(exercise.id)"
+        (clicked)="onEdit(row.id)"
       />
       <ds-icon-button
         icon="trash"
         color="var(--ds-danger)"
         [ariaLabel]="'getExercises.actions.delete' | t"
-        (clicked)="onDelete(exercise)"
+        (clicked)="onDelete(row.exercise)"
       />
     </ds-stack>
   </ds-card>

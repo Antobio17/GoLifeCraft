@@ -60,6 +60,7 @@ export const DS_ICONS = {
   dot: '<circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/>',
   category:
     '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>',
+  download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
 } as const;
 
 export type DsIconName = keyof typeof DS_ICONS;

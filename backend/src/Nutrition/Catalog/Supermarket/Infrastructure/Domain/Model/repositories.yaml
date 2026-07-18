@@ -1,0 +1,6 @@
+services:
+  Nutrition\Catalog\Supermarket\Domain\Model\SupermarketRepository:
+    class: Nutrition\Catalog\Supermarket\Infrastructure\Domain\Model\Doctrine\DoctrineSupermarketRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Catalog\Supermarket\Domain\Model\Supermarket

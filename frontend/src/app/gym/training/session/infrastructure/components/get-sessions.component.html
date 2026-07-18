@@ -48,7 +48,7 @@
     />
   } @else {
     <ds-grid [minColumn]="'260px'" [gap]="'9px'" [tabletColumns]="2">
-      @for (session of items(); track session.id) {
+      @for (session of rows(); track session.id) {
         <ds-card
           [interactive]="true"
           [padding]="'13px'"
@@ -63,9 +63,9 @@
           >
             <ds-stack [gap]="'1px'">
               <ds-heading [level]="3" size="md">
-                {{ session.attributes.name }}
+                {{ session.name }}
               </ds-heading>
-              <ds-text variant="meta">{{ summaryText(session) }}</ds-text>
+              <ds-text variant="meta">{{ session.summary }}</ds-text>
             </ds-stack>
             <ds-icon-button
               icon="trash"
@@ -75,13 +75,13 @@
               radius="8px"
               color="var(--ds-danger)"
               [ariaLabel]="'getSessions.actions.delete' | t"
-              (clicked)="onDelete(session, $event)"
+              (clicked)="onDelete(session.session, $event)"
             />
           </ds-stack>
 
-          @if (session.attributes.muscleGroups.length) {
+          @if (session.muscleGroups.length) {
             <ds-stack direction="row" [wrap]="true" [gap]="'5px'">
-              @for (tag of session.attributes.muscleGroups; track tag) {
+              @for (tag of session.muscleGroups; track tag) {
                 <ds-chip tone="brand">{{ tag }}</ds-chip>
               }
             </ds-stack>

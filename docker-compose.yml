@@ -58,6 +58,28 @@ services:
           cpus: '0.50'
           memory: 256M
 
+  cron:
+    container_name: golifecraft_cron
+    restart: always
+    build:
+      context: .
+      dockerfile: infrastructure/docker/local/php/Dockerfile
+    command: ["cron", "-f"]
+    volumes:
+      - ./backend:/var/www/html/
+      - ./backend/vendor:/var/www/html/vendor:delegated
+    links:
+      - db:golifecraft_mysql
+      - mailpit:golifecraft_mailpit
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+
   mailpit:
     container_name: golifecraft_mailpit
     image: axllent/mailpit:latest

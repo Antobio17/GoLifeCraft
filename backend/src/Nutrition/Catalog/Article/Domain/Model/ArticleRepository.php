@@ -10,6 +10,8 @@ interface ArticleRepository
 
     public function findById(string $id): ?Article;
 
+    public function findByBarcode(string $barcode): ?Article;
+
     public function save(Article $article): void;
 
     public function delete(Article $article): void;
