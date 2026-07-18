@@ -9,11 +9,17 @@
           variant="outline"
           size="md"
           icon="download"
+          [iconOnlyMobile]="true"
           (clicked)="onImportCatalog()"
         >
           {{ "getArticles.download" | t }}
         </ds-button>
-        <ds-button size="md" icon="plus" (clicked)="onCreate()">
+        <ds-button
+          size="md"
+          icon="plus"
+          [iconOnlyMobile]="true"
+          (clicked)="onCreate()"
+        >
           {{ "getArticles.create" | t }}
         </ds-button>
       </ng-container>

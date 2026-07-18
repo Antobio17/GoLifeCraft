@@ -20,6 +20,7 @@ export class ButtonComponent {
   @Input() disabled = false;
   @Input() loading = false;
   @Input() fullWidth = false;
+  @Input() iconOnlyMobile = false;
   @Input() icon?: DsIconName;
   @Input() trailingIcon?: DsIconName;
   @Input() iconSize?: number;
@@ -46,6 +47,7 @@ export class ButtonComponent {
       `ds-btn--${this.size}`,
     ];
     if (this.fullWidth) classes.push("ds-btn--full");
+    if (this.iconOnlyMobile) classes.push("ds-btn--icon-only-mobile");
     if (this.loading) classes.push("ds-btn--loading");
     return classes.join(" ");
   }

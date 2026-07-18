@@ -246,6 +246,23 @@
   width: 100%;
 }
 
+/* ---- Solo icono en móvil ---- */
+@media (max-width: 767px) {
+  .ds-btn--icon-only-mobile {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+  }
+
+  .ds-btn--icon-only-mobile .ds-btn__content {
+    gap: 0;
+  }
+
+  .ds-btn--icon-only-mobile .ds-btn__label {
+    display: none;
+  }
+}
+
 /* ---- Spinner ---- */
 .ds-btn__spinner {
   display: inline-block;
