@@ -30,7 +30,8 @@ final class SyncOpenFoodFactsCatalogCommand extends Command
             ->setDescription(description: 'Sync the global product catalog from OpenFoodFacts.')
             ->addOption(name: 'pages', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Number of pages to fetch.', default: '1')
             ->addOption(name: 'page-size', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Products per page.', default: '100')
-            ->addOption(name: 'start-page', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'First page to fetch.', default: '1');
+            ->addOption(name: 'start-page', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'First page to fetch.', default: '1')
+            ->addOption(name: 'delay', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Seconds to wait between pages (OpenFoodFacts search allows ~10 req/min).', default: '6');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -38,11 +39,16 @@ final class SyncOpenFoodFactsCatalogCommand extends Command
         $pages = max(1, (int) $input->getOption('pages'));
         $pageSize = max(1, (int) $input->getOption('page-size'));
         $startPage = max(1, (int) $input->getOption('start-page'));
+        $delay = max(0, (int) $input->getOption('delay'));
 
         $upserted = 0;
         $failed = 0;
 
         for ($page = $startPage; $page < $startPage + $pages; ++$page) {
+            if ($page > $startPage && $delay > 0) {
+                sleep($delay);
+            }
+
             try {
                 $products = $this->catalogProvider->fetchPage(page: $page, pageSize: $pageSize);
             } catch (\Throwable $e) {

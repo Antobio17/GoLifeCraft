@@ -1,4 +1,6 @@
 # OpenFoodFacts global catalog sync — runs every night at 03:00.
 # Symfony's console loads backend/.env.local itself, so no env inheritance is needed.
+# Results are sorted by last_modified_t, so the first pages already hold the day's
+# changes; --delay spaces requests to respect the ~10 req/min search limit.
 # Job output is redirected to PID 1 so it shows up in `docker logs golifecraft_cron`.
-0 3 * * * root cd /var/www/html && /usr/local/bin/php bin/console app:catalog:sync-openfoodfacts --pages=50 --page-size=100 > /proc/1/fd/1 2> /proc/1/fd/2
+0 3 * * * root cd /var/www/html && /usr/local/bin/php bin/console app:catalog:sync-openfoodfacts --pages=15 --page-size=100 --delay=6 > /proc/1/fd/1 2> /proc/1/fd/2
