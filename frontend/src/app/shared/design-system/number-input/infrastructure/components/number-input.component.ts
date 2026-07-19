@@ -25,16 +25,13 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       }
       <input
         class="ds-num__field"
-        type="number"
+        type="text"
         [attr.inputmode]="precision > 0 ? 'decimal' : 'numeric'"
-        [value]="display"
+        [value]="raw"
         [disabled]="disabled"
-        [attr.min]="min"
-        [attr.max]="max ?? null"
-        [attr.step]="step"
         [attr.aria-label]="ariaLabel || null"
         (input)="onInput($event)"
-        (blur)="onTouched()"
+        (blur)="onBlur()"
       />
       @if (unit) {
         <span class="ds-num__unit">{{ unit }}</span>
@@ -187,6 +184,7 @@ export class NumberInputComponent implements ControlValueAccessor {
   @Input() decrementLabel = "";
 
   value = 0;
+  raw = "0";
   disabled = false;
 
   private onChange: (value: number) => void = () => {};
@@ -198,12 +196,9 @@ export class NumberInputComponent implements ControlValueAccessor {
     }
   }
 
-  get display(): string {
-    return Number.isFinite(this.value) ? String(this.value) : "";
-  }
-
   writeValue(value: number | null): void {
     this.value = value ?? 0;
+    this.raw = this.format(this.value);
   }
 
   registerOnChange(fn: (value: number) => void): void {
@@ -219,21 +214,46 @@ export class NumberInputComponent implements ControlValueAccessor {
   }
 
   onInput(event: Event): void {
-    const raw = (event.target as HTMLInputElement).valueAsNumber;
-    this.commit(Number.isNaN(raw) ? this.min : raw);
+    const text = (event.target as HTMLInputElement).value;
+    this.raw = text;
+
+    const normalized = text.replace(",", ".").trim();
+    const parsed = Number(normalized);
+    if (normalized === "" || Number.isNaN(parsed)) {
+      return;
+    }
+
+    this.value = this.clamp(parsed);
+    this.onChange(this.value);
   }
 
-  nudge(direction: number): void {
-    this.commit(this.value + direction * this.step);
+  onBlur(): void {
+    const normalized = this.raw.replace(",", ".").trim();
+    const parsed = Number(normalized);
+    this.value = this.clamp(
+      normalized === "" || Number.isNaN(parsed) ? this.min : parsed,
+    );
+    this.raw = this.format(this.value);
+    this.onChange(this.value);
     this.onTouched();
   }
 
-  private commit(next: number): void {
+  nudge(direction: number): void {
+    this.value = this.clamp(this.value + direction * this.step);
+    this.raw = this.format(this.value);
+    this.onChange(this.value);
+    this.onTouched();
+  }
+
+  private clamp(next: number): number {
     const clampedLow = Math.max(this.min, next);
     const clamped =
       this.max === null ? clampedLow : Math.min(this.max, clampedLow);
     const factor = 10 ** this.precision;
-    this.value = Math.round(clamped * factor) / factor;
-    this.onChange(this.value);
+    return Math.round(clamped * factor) / factor;
+  }
+
+  private format(value: number): string {
+    return Number.isFinite(value) ? String(value) : "";
   }
 }

@@ -21,12 +21,6 @@
   color: #fff;
   border: none;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.diary-entry--swiped .diary-entry__delete {
-  opacity: 1;
 }
 
 .diary-entry__row {
@@ -40,11 +34,9 @@
   border-radius: 14px;
   padding: 10px 11px;
   touch-action: pan-y;
-  transition: transform 0.2s ease;
 }
 
-.diary-entry--swiped .diary-entry__row {
-  transform: translateX(-66px);
+.diary-entry__row--slid {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -52,9 +44,6 @@
 .diary-entry__body {
   flex: 1 1 auto;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .diary-entry__name {
@@ -73,12 +62,46 @@
   display: flex;
   align-items: center;
   gap: 7px;
+  margin-top: 4px;
 }
 
 .diary-entry__kcal {
   font-size: 10.5px;
   font-weight: 700;
-  color: var(--ds-text-muted);
+  color: var(--ds-text-meta);
+  white-space: nowrap;
+}
+
+.diary-entry__qty-box {
+  flex: 0 0 auto;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--ds-surface-inset);
+  border-radius: 10px;
+  padding: 4px 8px;
+}
+
+.diary-entry__qty-input {
+  width: 42px;
+  text-align: right;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  font-family: var(--ds-font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ds-text);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.diary-entry__qty-unit {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ds-text-meta);
   white-space: nowrap;
 }
 

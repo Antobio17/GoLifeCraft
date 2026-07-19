@@ -102,20 +102,18 @@ export class GetDiaryComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "nutrition/diary/diary";
-  private readonly SWIPE_THRESHOLD = 48;
   private readonly QUANTITY_DEBOUNCE = 500;
 
-  private quantityChanges = new Subject<{ entryId: string; quantity: number }>();
+  private quantityChanges = new Subject<{
+    entryId: string;
+    quantity: number;
+  }>();
 
   canWrite = this.authSession.isGod();
 
   loading = signal(true);
   day = signal<DiaryDay | null>(null);
   date = signal(this.view.todayIso());
-
-  swipedEntryId = signal<string | null>(null);
-  private swipeStartX = 0;
-  private swipeStartY = 0;
 
   pickerOpen = signal(false);
   pickerMeal = signal("");
@@ -282,37 +280,7 @@ export class GetDiaryComponent implements OnInit {
     this.quantityChanges.next({ entryId, quantity });
   }
 
-  isEntrySwiped(entryId: string): boolean {
-    return this.swipedEntryId() === entryId;
-  }
-
-  onEntryTouchStart(event: TouchEvent, entryId: string): void {
-    if (this.swipedEntryId() !== entryId) {
-      this.swipedEntryId.set(null);
-    }
-    this.swipeStartX = event.touches[0].clientX;
-    this.swipeStartY = event.touches[0].clientY;
-  }
-
-  onEntryTouchEnd(event: TouchEvent, entryId: string): void {
-    const touch = event.changedTouches[0];
-    const deltaX = touch.clientX - this.swipeStartX;
-    const deltaY = Math.abs(touch.clientY - this.swipeStartY);
-
-    if (deltaY > Math.abs(deltaX)) return;
-
-    if (deltaX < -this.SWIPE_THRESHOLD) {
-      this.swipedEntryId.set(this.swipedEntryId() === entryId ? null : entryId);
-      return;
-    }
-
-    if (deltaX > this.SWIPE_THRESHOLD / 2) {
-      this.swipedEntryId.set(null);
-    }
-  }
-
   onRemove(entryId: string): void {
-    this.swipedEntryId.set(null);
     this.deleteDiaryEntryService.deleteDiaryEntry(entryId).subscribe({
       next: () => {
         this.toast("getDiary.toast.removed");

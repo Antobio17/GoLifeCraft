@@ -105,13 +105,10 @@
                 [quantity]="entry.quantity"
                 [quantityLabel]="view.entryQuantityLabel(entry)"
                 [canWrite]="canWrite"
-                [swiped]="isEntrySwiped(entry.id)"
                 [quantityAriaLabel]="'getDiary.quantity' | t"
                 [removeLabel]="'getDiary.remove' | t"
                 (quantityChange)="onQuantityChange(entry.id, $event)"
                 (remove)="onRemove(entry.id)"
-                (swipeStart)="onEntryTouchStart($event, entry.id)"
-                (swipeEnd)="onEntryTouchEnd($event, entry.id)"
               />
             }
           </ds-stack>
