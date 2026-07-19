@@ -44,7 +44,7 @@ final class UpdateTenantSchemaCommand extends Command
         $dump = (bool) $input->getOption('dump-sql');
         $force = (bool) $input->getOption('force');
 
-        $sql = "SHOW DATABASES LIKE 'tenant\\_%'";
+        $sql = "SHOW DATABASES LIKE 'GLC%'";
         $databases = $this->writerTenantConnection->executeQuery($sql)->fetchFirstColumn();
 
         if (empty($databases)) {
