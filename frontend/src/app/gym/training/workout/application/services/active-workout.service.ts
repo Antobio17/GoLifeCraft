@@ -7,6 +7,7 @@ import {
   WorkoutExerciseRequest,
   WorkoutProgressRequest,
 } from "../../domain/models/workout-request.model";
+import { uuidV4 } from "@shared/uuid/uuid";
 
 export interface ActiveExerciseSet {
   reps: number;
@@ -109,7 +110,7 @@ export class ActiveWorkoutService implements OnDestroy {
     sessionName: string,
     exercises: ActiveExercise[],
   ): Observable<void> {
-    const workoutId = crypto.randomUUID();
+    const workoutId = uuidV4();
 
     return this.port
       .start({

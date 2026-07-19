@@ -1,0 +1,27 @@
+<div class="swipe" [style.border-radius.px]="radius">
+  @if (!disabled) {
+    <button
+      type="button"
+      class="swipe__delete"
+      [style.width.px]="reveal"
+      [style.border-top-right-radius.px]="radius + 3"
+      [style.border-bottom-right-radius.px]="radius + 3"
+      [attr.aria-label]="removeLabel"
+      (click)="onDelete()"
+    >
+      <ds-icon name="trash" [size]="17" />
+    </button>
+  }
+
+  <div
+    class="swipe__surface"
+    [style.transform]="transform"
+    [style.transition]="transition"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp()"
+    (pointercancel)="onPointerUp()"
+  >
+    <ng-content />
+  </div>
+</div>

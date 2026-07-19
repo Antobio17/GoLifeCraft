@@ -1,25 +1,12 @@
-<div class="diary-entry">
-  @if (canWrite) {
-    <button
-      type="button"
-      class="diary-entry__delete"
-      [attr.aria-label]="removeLabel"
-      (click)="onDelete()"
-    >
-      <ds-icon name="trash" [size]="17" />
-    </button>
-  }
-
-  <div
-    class="diary-entry__row"
-    [class.diary-entry__row--slid]="slid"
-    [style.transform]="transform"
-    [style.transition]="transition"
-    (pointerdown)="onPointerDown($event)"
-    (pointermove)="onPointerMove($event)"
-    (pointerup)="onPointerUp()"
-    (pointercancel)="onPointerUp()"
-  >
+<ds-swipe-to-delete
+  #swipe
+  [disabled]="!canWrite"
+  [reveal]="66"
+  [radius]="14"
+  [removeLabel]="removeLabel"
+  (remove)="remove.emit()"
+>
+  <div class="diary-entry__row" [class.diary-entry__row--slid]="swipe.slid">
     <ds-emoji-tile [emoji]="emoji" [size]="38" [radius]="10" />
 
     <div class="diary-entry__body">
@@ -46,4 +33,4 @@
       <span class="diary-entry__qty">{{ quantityLabel }}</span>
     }
   </div>
-</div>
+</ds-swipe-to-delete>

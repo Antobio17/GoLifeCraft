@@ -2,30 +2,7 @@
   display: block;
 }
 
-.diary-entry {
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.diary-entry__delete {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 66px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--ds-danger);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
 .diary-entry__row {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
   gap: 11px;
@@ -33,7 +10,6 @@
   border: 1px solid var(--ds-border);
   border-radius: 14px;
   padding: 10px 11px;
-  touch-action: pan-y;
 }
 
 .diary-entry__row--slid {

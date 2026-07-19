@@ -2,52 +2,22 @@
   display: block;
 }
 
-.set-row-wrapper {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  width: 100%;
-}
-
-.set-row__delete-action {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--ds-danger);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.set-row-wrapper:has(.set-row--swiped) .set-row__delete-action {
-  opacity: 1;
-}
-
 .set-row {
   display: flex;
   align-items: center;
   gap: 6px;
   background: var(--ds-bg);
   padding: 5px 6px;
-  transition: transform 0.2s ease;
-  position: relative;
-  z-index: 1;
+  border-radius: 8px;
 }
 
-.set-row--swiped {
-  transform: translateX(-64px);
+.set-row--slid {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .set-row--done {
-  background: var(--ds-accent-soft);
-  border-radius: 8px;
+  background: color-mix(in srgb, var(--ds-accent) 16%, var(--ds-bg));
 }
 
 .set-row__num {

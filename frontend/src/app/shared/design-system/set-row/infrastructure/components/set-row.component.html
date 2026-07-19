@@ -1,18 +1,14 @@
-<div class="set-row-wrapper">
-  <button
-    type="button"
-    class="set-row__delete-action"
-    [attr.aria-label]="removeLabel"
-    (click)="remove.emit()"
-  >
-    <ds-icon name="trash" [size]="16" />
-  </button>
+<ds-swipe-to-delete
+  #swipe
+  [reveal]="64"
+  [radius]="8"
+  [removeLabel]="removeLabel"
+  (remove)="remove.emit()"
+>
   <div
     class="set-row"
-    [class.set-row--swiped]="swiped"
+    [class.set-row--slid]="swipe.slid"
     [class.set-row--done]="done"
-    (touchstart)="swipeStart.emit($event)"
-    (touchend)="swipeEnd.emit($event)"
   >
     @if (showCheck) {
       <button
@@ -52,4 +48,4 @@
       [decrementLabel]="weightDownLabel"
     />
   </div>
-</div>
+</ds-swipe-to-delete>

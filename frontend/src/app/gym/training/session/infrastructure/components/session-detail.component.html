@@ -127,7 +127,6 @@
                 [reps]="set.reps"
                 [weight]="set.weight ?? 0"
                 [done]="isSetDone(i, j)"
-                [swiped]="isSetSwiped(set.id)"
                 [showCheck]="isActiveHere"
                 [repsAriaLabel]="'getSession.set.reps' | t"
                 [weightAriaLabel]="'getSession.set.weight' | t"
@@ -141,8 +140,6 @@
                 (weightChange)="setWeight(exercise.id, set.id, $event)"
                 (toggleDone)="toggleSetDone(i, j)"
                 (remove)="removeSet(exercise.id, set.id)"
-                (swipeStart)="onSetTouchStart($event, set.id)"
-                (swipeEnd)="onSetTouchEnd($event, exercise.id, set.id)"
               />
             }
 

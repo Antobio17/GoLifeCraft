@@ -53,7 +53,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         --chip-pad: 2px 7px;
         --chip-radius: 999px;
         --chip-bg: color-mix(in srgb, var(--ds-accent) 18%, transparent);
-        --chip-text: var(--ds-accent);
+        --chip-text: var(--ds-accent-soft-text);
       }
       :host(.is-active) .item__badge {
         --chip-bg: color-mix(
