@@ -122,7 +122,7 @@ export class RecipeEditorComponent implements OnInit {
   readonly minServings = MIN_SERVINGS;
   readonly maxServings = MAX_SERVINGS;
 
-  servings = signal(2);
+  servings = signal(1);
   ingredients = signal<FormIngredient[]>([]);
   categoryOptions = signal<ChoiceChipOption[]>([]);
   pickerTabs = signal<SegmentedOption[]>([]);
