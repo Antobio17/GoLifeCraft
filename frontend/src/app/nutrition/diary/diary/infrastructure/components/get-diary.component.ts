@@ -1,6 +1,14 @@
-import { Component, OnInit, computed, inject, signal } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { delay } from "rxjs";
+import { Subject, debounceTime, delay, groupBy, mergeMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
@@ -91,9 +99,13 @@ export class GetDiaryComponent implements OnInit {
   protected goalForm = inject(DiaryGoalFormService);
   protected view = inject(DiaryViewService);
   protected picker = inject(DiaryPickerService);
+  private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "nutrition/diary/diary";
   private readonly SWIPE_THRESHOLD = 48;
+  private readonly QUANTITY_DEBOUNCE = 500;
+
+  private quantityChanges = new Subject<{ entryId: string; quantity: number }>();
 
   canWrite = this.authSession.isGod();
 
@@ -135,6 +147,12 @@ export class GetDiaryComponent implements OnInit {
     fatPct: 0,
     carbsPct: 0,
   });
+  goalSeed = signal<DiaryGoalForm>({
+    calories: 0,
+    proteinPct: 0,
+    fatPct: 0,
+    carbsPct: 0,
+  });
 
   editingPastDay = computed(() => !this.view.isToday(this.date()));
   goalTitleKey = computed(() =>
@@ -163,6 +181,20 @@ export class GetDiaryComponent implements OnInit {
   goalValid = computed(() => this.goalForm.isValid(this.goal()));
 
   ngOnInit(): void {
+    this.quantityChanges
+      .pipe(
+        groupBy((change) => change.entryId),
+        mergeMap((group) => group.pipe(debounceTime(this.QUANTITY_DEBOUNCE))),
+        mergeMap((change) =>
+          this.updateDiaryEntryService.updateDiaryEntryQuantity(
+            change.entryId,
+            change.quantity,
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({ next: () => this.load(this.date(), true) });
+
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
@@ -247,9 +279,7 @@ export class GetDiaryComponent implements OnInit {
   onQuantityChange(entryId: string, quantity: number): void {
     if (!quantity || quantity <= 0) return;
 
-    this.updateDiaryEntryService
-      .updateDiaryEntryQuantity(entryId, quantity)
-      .subscribe({ next: () => this.load(this.date()) });
+    this.quantityChanges.next({ entryId, quantity });
   }
 
   isEntrySwiped(entryId: string): boolean {
@@ -295,7 +325,9 @@ export class GetDiaryComponent implements OnInit {
     const goals = this.attributes()?.goals;
     if (!goals) return;
 
-    this.goal.set(this.goalForm.toForm(goals));
+    const form = this.goalForm.toForm(goals);
+    this.goal.set(form);
+    this.goalSeed.set(form);
     this.goalSheetOpen.set(true);
   }
 
@@ -366,9 +398,9 @@ export class GetDiaryComponent implements OnInit {
     });
   }
 
-  private load(date: string): void {
+  private load(date: string, silent = false): void {
     this.date.set(date);
-    this.loading.set(true);
+    if (!silent) this.loading.set(true);
 
     this.getDiaryService.getDiary(date).subscribe({
       next: (response) => {

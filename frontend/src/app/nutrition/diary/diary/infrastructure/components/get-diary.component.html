@@ -206,7 +206,7 @@
           variant="energy"
           [label]="'🎯 ' + ('getDiary.goal.calories' | t)"
           [unit]="'getDiary.goal.perDay' | t"
-          [ngModel]="goal().calories"
+          [ngModel]="goalSeed().calories"
           [ngModelOptions]="{ standalone: true }"
           (ngModelChange)="onGoalCalories(+$event)"
         />
@@ -227,7 +227,7 @@
             class="goal-pct"
             unit="%"
             [max]="100"
-            [ngModel]="goal().proteinPct"
+            [ngModel]="goalSeed().proteinPct"
             [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="onGoalProtein($event)"
           />
@@ -243,7 +243,7 @@
             class="goal-pct"
             unit="%"
             [max]="100"
-            [ngModel]="goal().fatPct"
+            [ngModel]="goalSeed().fatPct"
             [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="onGoalFat($event)"
           />
@@ -259,7 +259,7 @@
             class="goal-pct"
             unit="%"
             [max]="100"
-            [ngModel]="goal().carbsPct"
+            [ngModel]="goalSeed().carbsPct"
             [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="onGoalCarbs($event)"
           />
