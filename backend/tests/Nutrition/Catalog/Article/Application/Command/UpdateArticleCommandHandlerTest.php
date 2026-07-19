@@ -43,6 +43,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             articleId: 'article-1',
             name: 'Leche semidesnatada 1 L',
             recipeUnit: 'gram',
+            servingSize: 45.0,
             price: 1.05,
             brand: 'Central Lechera',
             emoji: '🥛',
@@ -64,6 +65,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
 
         $article = $this->articleRepository->findById(id: 'article-1');
         $this->assertEquals(expected: 'Leche semidesnatada 1 L', actual: $article->name);
+        $this->assertEquals(expected: 45.0, actual: $article->servingSize);
         $this->assertEquals(expected: 1.05, actual: $article->price);
         $this->assertEquals(expected: 'category-2', actual: $article->categoryId);
         $this->assertNull(actual: $article->supermarketId);
@@ -79,6 +81,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             articleId: 'missing',
             name: 'Cualquiera',
             recipeUnit: 'gram',
+            servingSize: null,
             price: null,
             brand: null,
             emoji: null,
@@ -100,6 +103,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             articleId: 'article-1',
             name: 'Pan de molde',
             recipeUnit: 'gram',
+            servingSize: null,
             price: null,
             brand: null,
             emoji: null,
@@ -116,6 +120,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             id: $id,
             name: $name,
             recipeUnit: 'gram',
+            servingSize: null,
             price: 1.15,
             brand: 'Hacendado',
             emoji: '🥛',

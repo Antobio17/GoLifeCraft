@@ -5,6 +5,7 @@
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255"/>
     <field name="recipeUnit" type="string" column="recipe_unit" length="30"/>
+    <field name="servingSize" type="float" column="serving_size" nullable="true"/>
     <field name="price" type="float" column="price" nullable="true"/>
     <field name="brand" type="string" column="brand" length="120" nullable="true"/>
     <field name="emoji" type="string" column="emoji" length="16" nullable="true"/>

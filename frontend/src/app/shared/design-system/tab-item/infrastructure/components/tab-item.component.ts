@@ -21,9 +21,6 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         display: block;
         cursor: pointer;
       }
-      :host(.is-grow) {
-        flex: 1.7;
-      }
       .tab {
         display: flex;
         align-items: center;
@@ -41,26 +38,14 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         justify-content: center;
       }
       .tab__label {
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 1;
-        white-space: nowrap;
-        color: var(--ds-text);
         display: none;
       }
       .tab--active {
-        gap: 8px;
         color: var(--ds-text);
         background: var(--ds-surface-inset);
       }
-      .tab--active .tab__label {
-        display: inline;
-      }
     `,
   ],
-  host: {
-    "[class.is-grow]": "active",
-  },
 })
 export class TabItemComponent {
   @Input({ required: true }) icon!: DsIconName;

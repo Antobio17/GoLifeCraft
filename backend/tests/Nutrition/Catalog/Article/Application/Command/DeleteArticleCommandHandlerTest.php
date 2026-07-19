@@ -34,6 +34,7 @@ final class DeleteArticleCommandHandlerTest extends TestCase
             id: 'article-1',
             name: 'Leche entera 1 L',
             recipeUnit: 'gram',
+            servingSize: null,
             price: null,
             brand: null,
             emoji: null,

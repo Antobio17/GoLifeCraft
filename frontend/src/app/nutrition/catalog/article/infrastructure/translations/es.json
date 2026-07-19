@@ -31,6 +31,14 @@
     "delete": "Borrar artículo",
     "per": "Valores por",
     "noNutrition": "Sin información nutricional",
+    "tab": {
+      "serving": "Por ración",
+      "per100": "Por 100 g"
+    },
+    "noServing": {
+      "title": "Ración sin definir",
+      "text": "Edita el artículo para indicar los gramos por ración"
+    },
     "notFound": {
       "title": "Producto no encontrado",
       "text": "No hemos podido cargar este producto"
@@ -98,7 +106,9 @@
       "brandPlaceholder": "Ej: Hacendado",
       "price": "Precio",
       "category": "Categoría",
-      "store": "Súper"
+      "store": "Súper",
+      "servingSize": "Ración",
+      "servingSizeHint": "Gramos por ración. Cantidad por defecto al añadir a una receta."
     },
     "nutrition": {
       "title": "Nutrición por 100 g",

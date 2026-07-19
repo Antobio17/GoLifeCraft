@@ -1,8 +1,10 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
+import { Component, OnInit, computed, inject, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { delay, tap } from "rxjs/operators";
 import {
   ArticleDetailView,
+  ArticleMacroSet,
   ArticleViewService,
 } from "@nutrition/catalog/article/application/services/article-view.service";
 import { GetArticleService } from "@nutrition/catalog/article/application/services/get-article.service";
@@ -22,11 +24,15 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { ProductHeroComponent } from "@shared/design-system/product-hero/infrastructure/components/product-hero.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
+import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+
+type NutritionMode = "serving" | "per100";
 
 @Component({
   selector: "app-get-article",
   templateUrl: "./get-article.component.html",
   imports: [
+    FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
@@ -40,6 +46,7 @@ import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/i
     ProductHeroComponent,
     MacroBarsComponent,
     NutritionFactsComponent,
+    SegmentedToggleComponent,
   ],
 })
 export class GetArticleComponent implements OnInit {
@@ -57,6 +64,13 @@ export class GetArticleComponent implements OnInit {
   showDeleteModal = signal(false);
   deleting = signal(false);
   canWrite = this.authSession.isGod();
+  mode = signal<NutritionMode>("serving");
+  activeMacros = computed<ArticleMacroSet | null>(() => {
+    const detail = this.detail();
+    if (null === detail) return null;
+
+    return "serving" === this.mode() ? detail.serving : detail.per100;
+  });
   private id = "";
 
   ngOnInit(): void {
@@ -72,7 +86,9 @@ export class GetArticleComponent implements OnInit {
 
     this.getArticleService.getArticle(id).subscribe({
       next: (response) => {
-        this.detail.set(this.view.toDetail(response.data));
+        const detail = this.view.toDetail(response.data);
+        this.detail.set(detail);
+        this.mode.set(detail.hasServing ? "serving" : "per100");
         this.loading.set(false);
       },
       error: () => {
@@ -84,6 +100,10 @@ export class GetArticleComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(["/catalog"]);
+  }
+
+  setMode(value: string): void {
+    this.mode.set(value as NutritionMode);
   }
 
   onEdit(): void {

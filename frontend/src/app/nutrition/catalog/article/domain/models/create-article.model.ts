@@ -13,6 +13,7 @@ export interface ArticleNutritionRequest {
 export interface CreateArticleRequest {
   name: string;
   recipeUnit: string;
+  servingSize: number | null;
   price: number | null;
   brand: string | null;
   emoji: string | null;

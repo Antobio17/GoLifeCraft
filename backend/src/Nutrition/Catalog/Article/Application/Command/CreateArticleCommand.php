@@ -9,6 +9,7 @@ final readonly class CreateArticleCommand implements Command
     public function __construct(
         public string $name,
         public string $recipeUnit,
+        public ?float $servingSize,
         public ?float $price,
         public ?string $brand,
         public ?string $emoji,

@@ -48,8 +48,17 @@
       <ds-nav-item
         routerLink="/catalog"
         routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
         icon="leaf"
         [label]="'navbar.catalog' | t"
+        (click)="close()"
+      />
+      <ds-nav-item
+        routerLink="/global-catalog"
+        routerLinkActive="is-active"
+        [sub]="true"
+        icon="download"
+        [label]="'navbar.import' | t"
         (click)="close()"
       />
       <ds-nav-item
@@ -70,6 +79,14 @@
         [routerLinkActiveOptions]="{ exact: true }"
         icon="dumbbell"
         [label]="'navbar.gym' | t"
+        (click)="close()"
+      />
+      <ds-nav-item
+        routerLink="/gym/exercises"
+        routerLinkActive="is-active"
+        [sub]="true"
+        icon="dumbbell"
+        [label]="'navbar.exercises' | t"
         (click)="close()"
       />
       <ds-nav-item

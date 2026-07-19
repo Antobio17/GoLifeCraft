@@ -68,45 +68,60 @@
           />
         </ds-field>
 
-        <ds-nutrition-editor
-          [title]="'articleEditor.nutrition.heading' | t"
-          [badge]="'articleEditor.nutrition.reference' | t"
-        >
-          <ds-nutrient-input
-            variant="energy"
-            icon="flame"
-            unit="kcal"
-            formControlName="calories"
-            [label]="'articleEditor.nutrition.energy' | t"
-          />
-          <ds-nutrient-input
-            formControlName="protein"
-            [label]="'articleEditor.nutrition.protein' | t"
-          />
-          <ds-nutrient-input
-            formControlName="fat"
-            [label]="'articleEditor.nutrition.fat' | t"
-          />
-          <ds-nutrient-input
-            variant="sub"
-            formControlName="saturatedFat"
-            [label]="'articleEditor.nutrition.saturatedFat' | t"
-          />
-          <ds-nutrient-input
-            formControlName="carbs"
-            [label]="'articleEditor.nutrition.carbs' | t"
-          />
-          <ds-nutrient-input
-            variant="sub"
-            formControlName="sugars"
-            [label]="'articleEditor.nutrition.sugars' | t"
-          />
-          <ds-nutrient-input
-            [last]="true"
-            formControlName="salt"
-            [label]="'articleEditor.nutrition.salt' | t"
-          />
-        </ds-nutrition-editor>
+        <ds-stack [gap]="'10px'">
+          <ds-field
+            [label]="'articleEditor.field.servingSize' | t"
+            [hint]="'articleEditor.field.servingSizeHint' | t"
+          >
+            <ds-number-input
+              variant="boxed"
+              formControlName="servingSize"
+              [unit]="servingUnitSuffix"
+              [min]="0"
+              [precision]="0"
+            />
+          </ds-field>
+
+          <ds-nutrition-editor
+            [title]="'articleEditor.nutrition.heading' | t"
+            [badge]="'articleEditor.nutrition.reference' | t"
+          >
+            <ds-nutrient-input
+              variant="energy"
+              icon="flame"
+              unit="kcal"
+              formControlName="calories"
+              [label]="'articleEditor.nutrition.energy' | t"
+            />
+            <ds-nutrient-input
+              formControlName="protein"
+              [label]="'articleEditor.nutrition.protein' | t"
+            />
+            <ds-nutrient-input
+              formControlName="fat"
+              [label]="'articleEditor.nutrition.fat' | t"
+            />
+            <ds-nutrient-input
+              variant="sub"
+              formControlName="saturatedFat"
+              [label]="'articleEditor.nutrition.saturatedFat' | t"
+            />
+            <ds-nutrient-input
+              formControlName="carbs"
+              [label]="'articleEditor.nutrition.carbs' | t"
+            />
+            <ds-nutrient-input
+              variant="sub"
+              formControlName="sugars"
+              [label]="'articleEditor.nutrition.sugars' | t"
+            />
+            <ds-nutrient-input
+              [last]="true"
+              formControlName="salt"
+              [label]="'articleEditor.nutrition.salt' | t"
+            />
+          </ds-nutrition-editor>
+        </ds-stack>
 
         <ds-button
           type="submit"

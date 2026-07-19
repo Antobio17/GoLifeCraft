@@ -11,6 +11,7 @@ final class GetArticleResult extends QueryAggregateResult
         string $aggregateName,
         public readonly string $name,
         public readonly string $recipeUnit,
+        public readonly ?float $servingSize,
         public readonly ?float $price,
         public readonly ?string $brand,
         public readonly ?string $emoji,

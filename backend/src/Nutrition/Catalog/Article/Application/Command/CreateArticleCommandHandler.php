@@ -37,6 +37,7 @@ final readonly class CreateArticleCommandHandler
             id: $this->articleRepository->nextId(),
             name: $command->name,
             recipeUnit: $command->recipeUnit,
+            servingSize: $command->servingSize,
             price: $command->price,
             brand: $command->brand,
             emoji: $command->emoji,

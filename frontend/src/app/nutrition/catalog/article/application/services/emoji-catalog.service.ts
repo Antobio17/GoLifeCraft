@@ -9,10 +9,16 @@ export class EmojiCatalogService {
         label: "Lácteos y huevos",
         items: [
           { emoji: "🥛", label: "Leche", keywords: ["lacteo", "batido"] },
+          {
+            emoji: "🍼",
+            label: "Leche infantil",
+            keywords: ["biberon", "bebe"],
+          },
           { emoji: "🧀", label: "Queso" },
           { emoji: "🧈", label: "Mantequilla" },
           { emoji: "🍦", label: "Helado" },
           { emoji: "🍨", label: "Helado tarrina", keywords: ["postre"] },
+          { emoji: "🍮", label: "Flan", keywords: ["natillas", "pudin"] },
           { emoji: "🥚", label: "Huevo" },
           { emoji: "🍳", label: "Huevo frito", keywords: ["tortilla"] },
         ],
@@ -56,6 +62,15 @@ export class EmojiCatalogService {
           { emoji: "🥑", label: "Aguacate" },
           { emoji: "🍄", label: "Champiñón", keywords: ["seta"] },
           { emoji: "🫒", label: "Aceituna" },
+          { emoji: "🌶️", label: "Guindilla", keywords: ["picante", "chile"] },
+          { emoji: "🫛", label: "Guisantes", keywords: ["vaina", "arveja"] },
+          { emoji: "🫚", label: "Jengibre", keywords: ["raiz"] },
+          { emoji: "🍠", label: "Boniato", keywords: ["batata", "camote"] },
+          {
+            emoji: "🌱",
+            label: "Brotes",
+            keywords: ["germinado", "soja", "hierba"],
+          },
         ],
       },
       {
@@ -70,6 +85,19 @@ export class EmojiCatalogService {
           { emoji: "🐟", label: "Pescado", keywords: ["merluza", "atun"] },
           { emoji: "🦑", label: "Calamar" },
           { emoji: "🦪", label: "Ostra", keywords: ["marisco"] },
+          { emoji: "🦐", label: "Langostino", keywords: ["marisco", "gamba"] },
+          { emoji: "🦀", label: "Cangrejo", keywords: ["marisco", "buey"] },
+          {
+            emoji: "🦞",
+            label: "Bogavante",
+            keywords: ["marisco", "langosta"],
+          },
+          { emoji: "🐙", label: "Pulpo", keywords: ["marisco"] },
+          {
+            emoji: "🐚",
+            label: "Concha",
+            keywords: ["mejillon", "almeja", "marisco"],
+          },
         ],
       },
       {
@@ -93,6 +121,8 @@ export class EmojiCatalogService {
             keywords: ["espagueti", "macarrones"],
           },
           { emoji: "🥨", label: "Pretzel" },
+          { emoji: "🥞", label: "Tortitas", keywords: ["pancake", "desayuno"] },
+          { emoji: "🧇", label: "Gofre", keywords: ["waffle", "desayuno"] },
         ],
       },
       {
@@ -120,6 +150,14 @@ export class EmojiCatalogService {
           { emoji: "🍯", label: "Miel" },
           { emoji: "🍿", label: "Palomitas" },
           { emoji: "🥧", label: "Pie", keywords: ["empanada"] },
+          { emoji: "🍧", label: "Granizado", keywords: ["hielo", "postre"] },
+          { emoji: "🍡", label: "Dango", keywords: ["brocheta", "dulce"] },
+          { emoji: "🥮", label: "Pastel de luna", keywords: ["mooncake"] },
+          {
+            emoji: "🎂",
+            label: "Tarta de cumpleaños",
+            keywords: ["pastel", "cumple"],
+          },
         ],
       },
       {
@@ -133,6 +171,15 @@ export class EmojiCatalogService {
           { emoji: "🍵", label: "Té", keywords: ["infusion"] },
           { emoji: "🧉", label: "Mate" },
           { emoji: "🍶", label: "Bebida", keywords: ["botella"] },
+          { emoji: "🍷", label: "Vino", keywords: ["tinto", "copa"] },
+          { emoji: "🍺", label: "Cerveza", keywords: ["birra", "jarra"] },
+          { emoji: "🍻", label: "Cervezas", keywords: ["brindis", "birra"] },
+          { emoji: "🍹", label: "Cóctel", keywords: ["combinado", "tropical"] },
+          { emoji: "🍸", label: "Martini", keywords: ["coctel", "copa"] },
+          { emoji: "🥃", label: "Whisky", keywords: ["ron", "licor"] },
+          { emoji: "🥂", label: "Champán", keywords: ["cava", "brindis"] },
+          { emoji: "🍾", label: "Botella", keywords: ["cava", "espumoso"] },
+          { emoji: "🫖", label: "Tetera", keywords: ["te", "infusion"] },
         ],
       },
       {
@@ -148,6 +195,92 @@ export class EmojiCatalogService {
           { emoji: "🍱", label: "Bento", keywords: ["sushi", "japones"] },
           { emoji: "🍲", label: "Guiso", keywords: ["sopa", "puchero"] },
           { emoji: "🥘", label: "Paella", keywords: ["arroz", "cazuela"] },
+          {
+            emoji: "🍟",
+            label: "Patatas fritas",
+            keywords: ["fritas", "fast food"],
+          },
+          {
+            emoji: "🍜",
+            label: "Ramen",
+            keywords: ["fideos", "sopa", "noodles"],
+          },
+          { emoji: "🍛", label: "Curry", keywords: ["arroz", "hindu"] },
+          { emoji: "🍣", label: "Sushi", keywords: ["nigiri", "japones"] },
+          {
+            emoji: "🍙",
+            label: "Onigiri",
+            keywords: ["bola de arroz", "japones"],
+          },
+          {
+            emoji: "🥟",
+            label: "Empanadilla",
+            keywords: ["gyoza", "dumpling"],
+          },
+          { emoji: "🫔", label: "Tamal", keywords: ["mexicano"] },
+          { emoji: "🧆", label: "Falafel", keywords: ["arabe", "croqueta"] },
+        ],
+      },
+      {
+        label: "Platos y recetas",
+        items: [
+          {
+            emoji: "🍽️",
+            label: "Plato",
+            keywords: ["receta", "comida", "menu"],
+          },
+          {
+            emoji: "🫕",
+            label: "Fondue",
+            keywords: ["queso", "chocolate", "cazuela"],
+          },
+          {
+            emoji: "🍢",
+            label: "Brocheta",
+            keywords: ["pincho", "oden", "parrilla"],
+          },
+          {
+            emoji: "🥩",
+            label: "Asado",
+            keywords: ["parrilla", "barbacoa", "filete"],
+          },
+          {
+            emoji: "🍳",
+            label: "Sartén",
+            keywords: ["frito", "cocina", "revuelto"],
+          },
+          {
+            emoji: "🥣",
+            label: "Bol",
+            keywords: ["cuenco", "sopa", "porridge"],
+          },
+          {
+            emoji: "🥡",
+            label: "Para llevar",
+            keywords: ["take away", "chino"],
+          },
+          { emoji: "🍥", label: "Naruto", keywords: ["pescado", "ramen"] },
+          { emoji: "🍘", label: "Galleta de arroz", keywords: ["japones"] },
+          { emoji: "🥠", label: "Galleta de la fortuna", keywords: ["china"] },
+        ],
+      },
+      {
+        label: "Utensilios y cocina",
+        items: [
+          { emoji: "🧑‍🍳", label: "Cocinero", keywords: ["chef", "cocina"] },
+          { emoji: "🔪", label: "Cuchillo", keywords: ["cortar", "cocina"] },
+          { emoji: "🥄", label: "Cuchara", keywords: ["cubierto"] },
+          {
+            emoji: "🍴",
+            label: "Cubiertos",
+            keywords: ["tenedor", "cuchillo"],
+          },
+          { emoji: "🥢", label: "Palillos", keywords: ["chinos", "asiatico"] },
+          {
+            emoji: "🔥",
+            label: "Al fuego",
+            keywords: ["cocinar", "asar", "parrilla"],
+          },
         ],
       },
       {
@@ -162,6 +295,21 @@ export class EmojiCatalogService {
           { emoji: "🥫", label: "Conserva", keywords: ["lata", "enlatado"] },
           { emoji: "🫙", label: "Tarro", keywords: ["bote", "mermelada"] },
           { emoji: "🧊", label: "Hielo", keywords: ["congelado"] },
+          {
+            emoji: "💊",
+            label: "Vitaminas",
+            keywords: ["suplemento", "pastilla", "omega"],
+          },
+          {
+            emoji: "🌿",
+            label: "Especias",
+            keywords: ["hierbas", "condimento", "oregano"],
+          },
+          {
+            emoji: "🍃",
+            label: "Hierbabuena",
+            keywords: ["menta", "albahaca", "hierba"],
+          },
         ],
       },
     ];

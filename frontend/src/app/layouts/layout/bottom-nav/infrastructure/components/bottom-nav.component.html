@@ -34,6 +34,16 @@
   />
 
   <ds-tab-item
+    routerLink="/recipes"
+    routerLinkActive
+    #recipesActive="routerLinkActive"
+    icon="bookmark"
+    [label]="'navbar.recipes' | t"
+    [active]="recipesActive.isActive && !isDrawerOpen()"
+    [attr.aria-label]="'navbar.recipes' | t"
+  />
+
+  <ds-tab-item
     routerLink="/gym"
     routerLinkActive
     #gymActive="routerLinkActive"

@@ -16,6 +16,7 @@ import { TextInputComponent } from "@shared/design-system/text-input/infrastruct
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
 import { SelectChipsComponent } from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
 import { PriceInputComponent } from "@shared/design-system/price-input/infrastructure/components/price-input.component";
+import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
 import { NutritionEditorComponent } from "@shared/design-system/nutrition-editor/infrastructure/components/nutrition-editor.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
@@ -39,6 +40,11 @@ import {
 
 const FALLBACK_EMOJI = "🍽️";
 const REFERENCE_AMOUNT = 100;
+const UNIT_SUFFIX: Record<string, string> = {
+  gram: "g",
+  milliliter: "ml",
+  unit: "ud",
+};
 
 @Component({
   selector: "app-article-editor",
@@ -54,6 +60,7 @@ const REFERENCE_AMOUNT = 100;
     EmojiPickerComponent,
     SelectChipsComponent,
     PriceInputComponent,
+    NumberInputComponent,
     NutrientInputComponent,
     NutritionEditorComponent,
     ButtonComponent,
@@ -99,6 +106,7 @@ export class ArticleEditorComponent implements OnInit {
       emoji: [""],
       brand: [""],
       price: [""],
+      servingSize: [null as number | null],
       categoryId: [null as string | null],
       supermarketId: [null as string | null],
       calories: [""],
@@ -113,6 +121,10 @@ export class ArticleEditorComponent implements OnInit {
 
   get isEdit(): boolean {
     return "" !== this.id;
+  }
+
+  get servingUnitSuffix(): string {
+    return UNIT_SUFFIX[this.recipeUnit] ?? "g";
   }
 
   get title(): string {
@@ -256,6 +268,7 @@ export class ArticleEditorComponent implements OnInit {
       emoji: article.attributes.emoji ?? "",
       brand: article.attributes.brand ?? "",
       price: this.formatNumber(article.attributes.price),
+      servingSize: article.attributes.servingSize ?? null,
       categoryId: article.relationships?.category?.data.id ?? null,
       supermarketId: article.relationships?.supermarket?.data.id ?? null,
       calories: this.formatNumber(nutrition?.calories ?? null),
@@ -286,6 +299,7 @@ export class ArticleEditorComponent implements OnInit {
     return {
       name: (value.name ?? "").trim(),
       recipeUnit: this.recipeUnit,
+      servingSize: this.parseDecimal(value.servingSize),
       price: this.parseDecimal(value.price),
       brand: this.emptyToNull(value.brand),
       emoji: this.emptyToNull(value.emoji),

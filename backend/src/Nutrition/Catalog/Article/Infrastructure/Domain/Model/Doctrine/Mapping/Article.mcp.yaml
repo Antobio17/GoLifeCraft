@@ -15,6 +15,15 @@ fields:
     enum: [gram, milliliter, unit]
     filterable: true
     sortable: true
+  servingSize:
+    writable: true
+    type: float
+    min: 0
+    filterable: true
+    sortable: true
+    description: >-
+      Weight in grams (or amount in the article's recipe unit) of a single serving/portion.
+      Used to show per-serving nutrition and as the default quantity when the article is added to a recipe.
   price:
     writable: true
     type: float

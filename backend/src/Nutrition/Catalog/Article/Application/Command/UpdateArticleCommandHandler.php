@@ -47,6 +47,7 @@ final readonly class UpdateArticleCommandHandler
         $article->update(
             name: $command->name,
             recipeUnit: $command->recipeUnit,
+            servingSize: $command->servingSize,
             price: $command->price,
             brand: $command->brand,
             emoji: $command->emoji,

@@ -1,6 +1,7 @@
 export interface ArticleAttributes {
   name: string;
   recipeUnit: string;
+  servingSize: number | null;
   price: number | null;
   brand: string | null;
   emoji: string | null;

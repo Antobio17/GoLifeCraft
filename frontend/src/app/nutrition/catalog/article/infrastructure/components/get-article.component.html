@@ -62,55 +62,73 @@
     }
 
     @if (d.hasNutrition) {
-      <ds-text variant="label">
-        {{ "getArticle.per" | t }} {{ d.referenceLabel }}
-      </ds-text>
-
-      <ds-macro-bars
-        [kcal]="d.kcal ?? '—'"
-        [kcalUnit]="'getArticle.macro.kcal' | t"
-        [macros]="[
-          {
-            label: 'getArticle.macro.protein' | t,
-            value: d.proteinG ?? '—',
-            tone: 'protein',
-          },
-          {
-            label: 'getArticle.macro.fat' | t,
-            value: d.fatG ?? '—',
-            tone: 'fat',
-          },
-          {
-            label: 'getArticle.macro.carbs' | t,
-            value: d.carbsG ?? '—',
-            tone: 'carbs',
-          },
+      <ds-segmented-toggle
+        [options]="[
+          { value: 'serving', label: 'getArticle.tab.serving' | t },
+          { value: 'per100', label: 'getArticle.tab.per100' | t },
         ]"
+        [ngModel]="mode()"
+        (ngModelChange)="setMode($event)"
       />
 
-      <ds-nutrition-facts
-        [rows]="[
-          { label: 'getArticle.table.fat' | t, value: d.fatG ?? '—' },
-          {
-            label: 'getArticle.table.saturated' | t,
-            value: d.saturatedG ?? '—',
-            sub: true,
-          },
-          { label: 'getArticle.table.carbs' | t, value: d.carbsG ?? '—' },
-          {
-            label: 'getArticle.table.sugars' | t,
-            value: d.sugarsG ?? '—',
-            sub: true,
-          },
-          { label: 'getArticle.table.protein' | t, value: d.proteinG ?? '—' },
-          {
-            label: 'getArticle.table.fiber' | t,
-            value: d.fiberG ?? '—',
-            hidden: !d.fiberG,
-          },
-          { label: 'getArticle.table.salt' | t, value: d.saltG ?? '—' },
-        ]"
-      />
+      @if (activeMacros(); as m) {
+        <ds-text variant="label">
+          {{ "getArticle.per" | t }}
+          {{ "serving" === mode() ? d.servingLabel : d.per100Label }}
+        </ds-text>
+
+        <ds-macro-bars
+          [kcal]="m.kcal ?? '—'"
+          [kcalUnit]="'getArticle.macro.kcal' | t"
+          [macros]="[
+            {
+              label: 'getArticle.macro.protein' | t,
+              value: m.proteinG ?? '—',
+              tone: 'protein',
+            },
+            {
+              label: 'getArticle.macro.fat' | t,
+              value: m.fatG ?? '—',
+              tone: 'fat',
+            },
+            {
+              label: 'getArticle.macro.carbs' | t,
+              value: m.carbsG ?? '—',
+              tone: 'carbs',
+            },
+          ]"
+        />
+
+        <ds-nutrition-facts
+          [rows]="[
+            { label: 'getArticle.table.fat' | t, value: m.fatG ?? '—' },
+            {
+              label: 'getArticle.table.saturated' | t,
+              value: m.saturatedG ?? '—',
+              sub: true,
+            },
+            { label: 'getArticle.table.carbs' | t, value: m.carbsG ?? '—' },
+            {
+              label: 'getArticle.table.sugars' | t,
+              value: m.sugarsG ?? '—',
+              sub: true,
+            },
+            { label: 'getArticle.table.protein' | t, value: m.proteinG ?? '—' },
+            {
+              label: 'getArticle.table.fiber' | t,
+              value: m.fiberG ?? '—',
+              hidden: !m.fiberG,
+            },
+            { label: 'getArticle.table.salt' | t, value: m.saltG ?? '—' },
+          ]"
+        />
+      } @else {
+        <ds-empty-state
+          icon="info"
+          [title]="'getArticle.noServing.title' | t"
+          [text]="'getArticle.noServing.text' | t"
+        />
+      }
     } @else {
       <ds-text variant="muted">{{ "getArticle.noNutrition" | t }}</ds-text>
     }

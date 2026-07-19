@@ -17,15 +17,7 @@ export interface ArticleCardView {
   carbs: string | null;
 }
 
-export interface ArticleDetailView {
-  emoji: string;
-  name: string;
-  price: string | null;
-  brand: string | null;
-  store: string | null;
-  category: string | null;
-  referenceLabel: string;
-  hasNutrition: boolean;
+export interface ArticleMacroSet {
   kcal: string | null;
   proteinG: string | null;
   fatG: string | null;
@@ -34,6 +26,21 @@ export interface ArticleDetailView {
   sugarsG: string | null;
   fiberG: string | null;
   saltG: string | null;
+}
+
+export interface ArticleDetailView {
+  emoji: string;
+  name: string;
+  price: string | null;
+  brand: string | null;
+  store: string | null;
+  category: string | null;
+  hasNutrition: boolean;
+  hasServing: boolean;
+  servingLabel: string;
+  per100Label: string;
+  per100: ArticleMacroSet;
+  serving: ArticleMacroSet | null;
 }
 
 const FALLBACK_EMOJI = "🍽️";
@@ -70,11 +77,8 @@ export class ArticleViewService {
     return UNIT_SUFFIX[article.attributes.recipeUnit] ?? "";
   }
 
-  referenceLabel(article: Article): string {
-    const nutrition = this.nutrition(article);
-    if (!nutrition) return "";
-
-    return `${this.number(nutrition.referenceAmount)} ${this.unitSuffix(article)}`.trim();
+  servingSize(article: Article): number | null {
+    return article.attributes.servingSize ?? null;
   }
 
   price(article: Article): string | null {
@@ -115,6 +119,9 @@ export class ArticleViewService {
 
   toDetail(article: Article): ArticleDetailView {
     const nutrition = this.nutrition(article);
+    const suffix = this.unitSuffix(article) || "g";
+    const servingSize = this.servingSize(article);
+    const hasServing = null !== servingSize && servingSize > 0;
 
     return {
       emoji: this.emoji(article),
@@ -123,17 +130,53 @@ export class ArticleViewService {
       brand: this.brand(article),
       store: this.store(article),
       category: this.category(article),
-      referenceLabel: this.referenceLabel(article),
       hasNutrition: null !== nutrition,
-      kcal: nutrition ? this.integer(nutrition.calories) : null,
-      proteinG: this.grams(nutrition?.protein ?? null),
-      fatG: this.grams(nutrition?.fat ?? null),
-      carbsG: this.grams(nutrition?.carbs ?? null),
-      saturatedG: this.grams(nutrition?.saturatedFat ?? null),
-      sugarsG: this.grams(nutrition?.sugars ?? null),
-      fiberG: this.grams(nutrition?.fiber ?? null),
-      saltG: this.grams(nutrition?.salt ?? null),
+      hasServing,
+      servingLabel: hasServing
+        ? `${this.number(servingSize)} ${suffix}`.trim()
+        : "",
+      per100Label: `100 ${suffix}`.trim(),
+      per100: this.scale(nutrition, 100),
+      serving: hasServing ? this.scale(nutrition, servingSize) : null,
     };
+  }
+
+  private scale(
+    nutrition: ArticleNutritionFacts | null,
+    amount: number,
+  ): ArticleMacroSet {
+    const reference = nutrition?.referenceAmount ?? 0;
+    if (null === nutrition || reference <= 0) {
+      return {
+        kcal: null,
+        proteinG: null,
+        fatG: null,
+        carbsG: null,
+        saturatedG: null,
+        sugarsG: null,
+        fiberG: null,
+        saltG: null,
+      };
+    }
+
+    const factor = amount / reference;
+
+    return {
+      kcal: this.integer(this.times(nutrition.calories, factor)),
+      proteinG: this.grams(this.times(nutrition.protein, factor)),
+      fatG: this.grams(this.times(nutrition.fat, factor)),
+      carbsG: this.grams(this.times(nutrition.carbs, factor)),
+      saturatedG: this.grams(this.times(nutrition.saturatedFat, factor)),
+      sugarsG: this.grams(this.times(nutrition.sugars, factor)),
+      fiberG: this.grams(this.times(nutrition.fiber, factor)),
+      saltG: this.grams(this.times(nutrition.salt, factor)),
+    };
+  }
+
+  private times(value: number | null, factor: number): number | null {
+    if (null === value || undefined === value) return null;
+
+    return value * factor;
   }
 
   private number(value: number, decimals = 1): string {

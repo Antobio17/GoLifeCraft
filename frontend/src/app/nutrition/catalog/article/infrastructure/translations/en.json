@@ -31,6 +31,14 @@
     "delete": "Delete item",
     "per": "Values per",
     "noNutrition": "No nutrition information",
+    "tab": {
+      "serving": "Per serving",
+      "per100": "Per 100 g"
+    },
+    "noServing": {
+      "title": "Serving not set",
+      "text": "Edit the article to set the grams per serving"
+    },
     "notFound": {
       "title": "Product not found",
       "text": "We couldn't load this product"
@@ -98,7 +106,9 @@
       "brandPlaceholder": "e.g. Store brand",
       "price": "Price",
       "category": "Category",
-      "store": "Store"
+      "store": "Store",
+      "servingSize": "Serving",
+      "servingSizeHint": "Grams per serving. Default quantity when adding to a recipe."
     },
     "nutrition": {
       "title": "Nutrition per 100 g",

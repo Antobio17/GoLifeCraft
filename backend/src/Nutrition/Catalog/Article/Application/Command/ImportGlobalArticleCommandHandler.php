@@ -51,6 +51,7 @@ final readonly class ImportGlobalArticleCommandHandler
             id: $this->articleRepository->nextId(),
             name: $globalArticle->name,
             recipeUnit: 'gram',
+            servingSize: null,
             price: null,
             brand: $globalArticle->brand,
             emoji: null,

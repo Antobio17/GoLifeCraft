@@ -34,6 +34,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         display: flex;
         gap: 12px;
         width: 100%;
+        height: 100%;
         text-align: left;
         appearance: none;
         font: inherit;

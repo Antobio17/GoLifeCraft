@@ -40,6 +40,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         ($this->handler)(new CreateArticleCommand(
             name: 'Leche entera 1 L',
             recipeUnit: 'gram',
+            servingSize: 30.0,
             price: 1.15,
             brand: 'Hacendado',
             emoji: '🥛',
@@ -62,6 +63,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $article = $this->articleRepository->findById(id: 'article-1');
         $this->assertNotNull(actual: $article);
         $this->assertEquals(expected: 'Leche entera 1 L', actual: $article->name);
+        $this->assertEquals(expected: 30.0, actual: $article->servingSize);
         $this->assertEquals(expected: 1.15, actual: $article->price);
         $this->assertEquals(expected: '🥛', actual: $article->emoji);
         $this->assertEquals(expected: 'category-1', actual: $article->categoryId);
@@ -79,6 +81,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         ($this->handler)(new CreateArticleCommand(
             name: 'Producto suelto',
             recipeUnit: 'gram',
+            servingSize: null,
             price: null,
             brand: null,
             emoji: null,
@@ -104,6 +107,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         ($this->handler)(new CreateArticleCommand(
             name: 'Leche entera 1 L',
             recipeUnit: 'gram',
+            servingSize: null,
             price: null,
             brand: null,
             emoji: null,

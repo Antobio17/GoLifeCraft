@@ -12,6 +12,7 @@ class Article extends GenericAggregate
 {
     public string $name;
     public string $recipeUnit;
+    public ?float $servingSize = null;
     public ?float $price = null;
     public ?string $brand = null;
     public ?string $emoji = null;
@@ -24,6 +25,7 @@ class Article extends GenericAggregate
         string $id,
         string $name,
         string $recipeUnit,
+        ?float $servingSize,
         ?float $price,
         ?string $brand,
         ?string $emoji,
@@ -39,6 +41,7 @@ class Article extends GenericAggregate
         $article->id = $id;
         $article->name = $name;
         $article->recipeUnit = $recipeUnit;
+        $article->servingSize = $servingSize;
         $article->price = $price;
         $article->brand = $brand;
         $article->emoji = $emoji;
@@ -64,6 +67,7 @@ class Article extends GenericAggregate
     public function update(
         string $name,
         string $recipeUnit,
+        ?float $servingSize,
         ?float $price,
         ?string $brand,
         ?string $emoji,
@@ -77,6 +81,7 @@ class Article extends GenericAggregate
 
         $this->name = $name;
         $this->recipeUnit = $recipeUnit;
+        $this->servingSize = $servingSize;
         $this->price = $price;
         $this->brand = $brand;
         $this->emoji = $emoji;

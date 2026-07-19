@@ -32,6 +32,7 @@ final class UpdateArticleController
                 articleId: $request->attributes->get(key: 'articleId'),
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 recipeUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'recipeUnit') ?? 'gram',
+                servingSize: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'servingSize', required: false),
                 price: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'price', required: false),
                 brand: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'brand'),
                 emoji: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'emoji'),

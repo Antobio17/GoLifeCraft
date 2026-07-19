@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { RecipeListItem, RecipeMacros } from "../../domain/models/recipe.model";
 
@@ -24,6 +24,7 @@ interface ProductEntry {
   name: string;
   emoji: string;
   unit: string;
+  servingQuantity: number;
   perUnit: RecipeMacros;
 }
 
@@ -35,6 +36,7 @@ interface RecipeEntry {
 
 const FALLBACK_PRODUCT_EMOJI = "🍽️";
 const FALLBACK_RECIPE_EMOJI = "🍲";
+const DEFAULT_PRODUCT_QUANTITY = 100;
 const UNIT_SUFFIX: Record<string, string> = {
   gram: "g",
   milliliter: "ml",
@@ -43,12 +45,12 @@ const UNIT_SUFFIX: Record<string, string> = {
 
 @Injectable()
 export class RecipeFormService {
-  private products = new Map<string, ProductEntry>();
-  private recipes = new Map<string, RecipeEntry>();
+  private products = signal(new Map<string, ProductEntry>());
+  private recipes = signal(new Map<string, RecipeEntry>());
   private counter = 0;
 
   setProducts(articles: Article[]): void {
-    this.products.clear();
+    const products = new Map<string, ProductEntry>();
 
     articles.forEach((article) => {
       const facts = article.relationships?.nutritionFacts?.data.attributes;
@@ -63,31 +65,42 @@ export class RecipeFormService {
             }
           : { calories: 0, protein: 0, fat: 0, carbs: 0 };
 
-      this.products.set(article.id, {
+      const servingSize = article.attributes.servingSize;
+      const servingQuantity =
+        null !== servingSize && undefined !== servingSize && servingSize > 0
+          ? servingSize
+          : DEFAULT_PRODUCT_QUANTITY;
+
+      products.set(article.id, {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
         unit: UNIT_SUFFIX[article.attributes.recipeUnit] ?? "g",
+        servingQuantity,
         perUnit,
       });
     });
+
+    this.products.set(products);
   }
 
   setRecipes(recipes: RecipeListItem[]): void {
-    this.recipes.clear();
+    const entries = new Map<string, RecipeEntry>();
 
     recipes.forEach((recipe) => {
-      this.recipes.set(recipe.id, {
+      entries.set(recipe.id, {
         name: recipe.attributes.name,
         emoji: recipe.attributes.emoji || FALLBACK_RECIPE_EMOJI,
         perServing: recipe.attributes.perServing,
       });
     });
+
+    this.recipes.set(entries);
   }
 
   productChoices(query: string): PickableIngredient[] {
     const needle = query.trim().toLowerCase();
 
-    return Array.from(this.products.entries())
+    return Array.from(this.products().entries())
       .filter(
         ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
       )
@@ -103,7 +116,7 @@ export class RecipeFormService {
   recipeChoices(query: string, excludeId: string): PickableIngredient[] {
     const needle = query.trim().toLowerCase();
 
-    return Array.from(this.recipes.entries())
+    return Array.from(this.recipes().entries())
       .filter(([refId]) => refId !== excludeId)
       .filter(
         ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
@@ -122,7 +135,7 @@ export class RecipeFormService {
     const key = `ing-${this.counter}-${refId}`;
 
     if (kind === "recipe") {
-      const entry = this.recipes.get(refId);
+      const entry = this.recipes().get(refId);
       return {
         key,
         kind,
@@ -134,14 +147,14 @@ export class RecipeFormService {
       };
     }
 
-    const entry = this.products.get(refId);
+    const entry = this.products().get(refId);
     return {
       key,
       kind,
       refId,
       name: entry?.name ?? "Artículo",
       emoji: entry?.emoji ?? FALLBACK_PRODUCT_EMOJI,
-      quantity: 100,
+      quantity: entry?.servingQuantity ?? DEFAULT_PRODUCT_QUANTITY,
       unit: entry?.unit ?? "g",
     };
   }
@@ -181,13 +194,13 @@ export class RecipeFormService {
     const quantity = this.toNumber(ingredient.quantity);
 
     if (ingredient.kind === "recipe") {
-      const entry = this.recipes.get(ingredient.refId);
+      const entry = this.recipes().get(ingredient.refId);
       if (!entry) return { calories: 0, protein: 0, fat: 0, carbs: 0 };
 
       return this.scale(entry.perServing, quantity);
     }
 
-    const entry = this.products.get(ingredient.refId);
+    const entry = this.products().get(ingredient.refId);
     if (!entry) return { calories: 0, protein: 0, fat: 0, carbs: 0 };
 
     return this.scale(entry.perUnit, quantity);
