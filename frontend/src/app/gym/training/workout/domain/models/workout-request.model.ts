@@ -7,6 +7,9 @@ export interface WorkoutSetRequest {
 
 export interface WorkoutExerciseRequest {
   exerciseId: string | null;
+  exerciseName: string;
+  type: string;
+  muscleGroups: string[];
   position: number;
   note: string | null;
   sets: WorkoutSetRequest[];

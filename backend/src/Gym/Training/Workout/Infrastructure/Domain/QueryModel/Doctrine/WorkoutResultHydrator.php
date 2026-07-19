@@ -40,14 +40,13 @@ final class WorkoutResultHydrator
             ->select(
                 'we.id',
                 'we.exercise_id',
-                'e.name AS exercise_name',
-                'e.muscle_groups',
-                'e.type',
+                'we.exercise_name',
+                'we.muscle_groups',
+                'we.type',
                 'we.position',
                 'we.note'
             )
             ->from(table: 'workout_exercise', alias: 'we')
-            ->leftJoin('we', 'exercise', 'e', 'e.id = we.exercise_id')
             ->where('we.workout_id = :workoutId')
             ->setParameter(key: 'workoutId', value: $workoutId)
             ->orderBy('we.position', 'ASC')
@@ -67,9 +66,9 @@ final class WorkoutResultHydrator
             return new WorkoutExerciseView(
                 id: $row['id'],
                 exerciseId: $row['exercise_id'],
-                exerciseName: $row['exercise_name'],
+                exerciseName: $row['exercise_name'] ?? '',
                 muscleGroups: json_decode(json: $row['muscle_groups'] ?? '[]', associative: true) ?? [],
-                type: $row['type'],
+                type: $row['type'] ?? '',
                 position: (int) $row['position'],
                 note: $row['note'],
                 sets: $setsByExercise[$row['id']] ?? [],

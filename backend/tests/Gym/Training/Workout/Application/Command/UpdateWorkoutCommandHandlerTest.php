@@ -55,6 +55,9 @@ final class UpdateWorkoutCommandHandlerTest extends TestCase
             exercises: [
                 new WorkoutExerciseData(
                     exerciseId: 'ex-1',
+                    exerciseName: 'Press banca',
+                    type: 'bilateral',
+                    muscleGroups: ['Pecho', 'Tríceps'],
                     position: 1,
                     note: null,
                     sets: [
@@ -70,6 +73,9 @@ final class UpdateWorkoutCommandHandlerTest extends TestCase
             exercises: [
                 new WorkoutExerciseData(
                     exerciseId: 'ex-1',
+                    exerciseName: 'Press banca',
+                    type: 'bilateral',
+                    muscleGroups: ['Pecho', 'Tríceps'],
                     position: 1,
                     note: 'Buenas sensaciones',
                     sets: [

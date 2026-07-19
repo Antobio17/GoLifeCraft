@@ -44,6 +44,9 @@ final class StartWorkoutCommandHandlerTest extends TestCase
             exercises: [
                 new WorkoutExerciseData(
                     exerciseId: 'ex-1',
+                    exerciseName: 'Press banca',
+                    type: 'bilateral',
+                    muscleGroups: ['Pecho', 'Tríceps'],
                     position: 1,
                     note: null,
                     sets: [
@@ -62,6 +65,9 @@ final class StartWorkoutCommandHandlerTest extends TestCase
         $this->assertNull(actual: $workout->finishedAt);
         $this->assertCount(expectedCount: 1, haystack: $workout->exercises);
         $this->assertEquals(expected: $workout->id, actual: $workout->exercises[0]->workoutId);
+        $this->assertEquals(expected: 'Press banca', actual: $workout->exercises[0]->exerciseName);
+        $this->assertEquals(expected: 'bilateral', actual: $workout->exercises[0]->type);
+        $this->assertEquals(expected: ['Pecho', 'Tríceps'], actual: $workout->exercises[0]->muscleGroups);
         $this->assertCount(expectedCount: 2, haystack: $workout->exercises[0]->sets);
         $this->assertEquals(expected: $workout->exercises[0]->id, actual: $workout->exercises[0]->sets[0]->workoutExerciseId);
         $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());

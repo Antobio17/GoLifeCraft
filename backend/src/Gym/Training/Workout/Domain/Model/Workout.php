@@ -107,13 +107,16 @@ class Workout extends GenericAggregate
     }
 
     /**
-     * @return array<int, array{exerciseId: string, position: int, note: string|null, sets: array<int, array{position: int, reps: int, weight: float|null}>}>
+     * @return array<int, array{exerciseId: string, exerciseName: string, type: string, muscleGroups: string[], position: int, note: string|null, sets: array<int, array{position: int, reps: int, weight: float|null}>}>
      */
     private function exercisesSnapshot(): array
     {
         return array_map(
             callback: fn (WorkoutExercise $exercise): array => [
                 'exerciseId' => $exercise->exerciseId,
+                'exerciseName' => $exercise->exerciseName,
+                'type' => $exercise->type,
+                'muscleGroups' => $exercise->muscleGroups,
                 'position' => $exercise->position,
                 'note' => $exercise->note,
                 'sets' => array_map(

@@ -5,6 +5,9 @@
     <field name="version" type="integer" version="true"/>
     <field name="workoutId" type="string" column="workout_id" length="36"/>
     <field name="exerciseId" type="string" column="exercise_id" length="36"/>
+    <field name="exerciseName" type="string" column="exercise_name" length="255"/>
+    <field name="type" type="string" column="type" length="20"/>
+    <field name="muscleGroups" type="json" column="muscle_groups"/>
     <field name="position" type="integer" column="position"/>
     <field name="note" type="text" column="note" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>

@@ -303,6 +303,9 @@ export class ActiveWorkoutService implements OnDestroy {
   ): WorkoutExerciseRequest[] {
     return exercises.map((exercise, i) => ({
       exerciseId: exercise.exerciseId,
+      exerciseName: exercise.exerciseName,
+      type: exercise.type,
+      muscleGroups: [...exercise.muscleGroups],
       position: i + 1,
       note: exercise.note,
       sets: exercise.sets.map((set, j) => ({

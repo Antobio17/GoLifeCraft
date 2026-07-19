@@ -9,6 +9,9 @@ final readonly class WorkoutExerciseData
      */
     public function __construct(
         public string $exerciseId,
+        public string $exerciseName,
+        public string $type,
+        public array $muscleGroups,
         public int $position,
         public ?string $note,
         public array $sets,
@@ -19,6 +22,9 @@ final readonly class WorkoutExerciseData
     {
         return new self(
             exerciseId: (string) ($rawExercise['exerciseId'] ?? ''),
+            exerciseName: (string) ($rawExercise['exerciseName'] ?? ''),
+            type: (string) ($rawExercise['type'] ?? ''),
+            muscleGroups: self::stringList(value: $rawExercise['muscleGroups'] ?? []),
             position: (int) ($rawExercise['position'] ?? $position),
             note: self::nullableString(value: $rawExercise['note'] ?? null),
             sets: WorkoutSetData::listFromArray(rawSets: $rawExercise['sets'] ?? []),
@@ -46,5 +52,17 @@ final readonly class WorkoutExerciseData
         }
 
         return (string) $value;
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function stringList(mixed $value): array
+    {
+        if (!is_array(value: $value)) {
+            return [];
+        }
+
+        return array_values(array: array_map(callback: 'strval', array: $value));
     }
 }

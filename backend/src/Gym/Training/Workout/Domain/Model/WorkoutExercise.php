@@ -10,6 +10,9 @@ class WorkoutExercise extends GenericAggregate
 {
     public string $workoutId;
     public string $exerciseId;
+    public string $exerciseName;
+    public string $type;
+    public array $muscleGroups = [];
     public int $position;
     public ?string $note = null;
 
@@ -19,6 +22,9 @@ class WorkoutExercise extends GenericAggregate
     public static function create(
         string $workoutId,
         string $exerciseId,
+        string $exerciseName,
+        string $type,
+        array $muscleGroups,
         int $position,
         ?string $note,
         string $createdByUserId,
@@ -30,6 +36,9 @@ class WorkoutExercise extends GenericAggregate
         $workoutExercise->id = Uuid::uuid4()->toString();
         $workoutExercise->workoutId = $workoutId;
         $workoutExercise->exerciseId = $exerciseId;
+        $workoutExercise->exerciseName = $exerciseName;
+        $workoutExercise->type = $type;
+        $workoutExercise->muscleGroups = array_values(array: $muscleGroups);
         $workoutExercise->position = $position;
         $workoutExercise->note = $note;
         $workoutExercise->stampCreation(userId: $createdByUserId, now: $now);

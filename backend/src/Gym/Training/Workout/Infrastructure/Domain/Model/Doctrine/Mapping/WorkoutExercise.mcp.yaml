@@ -10,6 +10,13 @@ fields:
     min: 36
     max: 36
     filterable: true
+  exerciseName:
+    description: Snapshot of the exercise name at the moment the workout was performed. Frozen for history; editing the library exercise does not change it.
+  type:
+    description: Snapshot of the exercise laterality (bilateral/unilateral) at the moment the workout was performed.
+  muscleGroups:
+    type: object
+    description: Snapshot of the exercise muscle groups at the moment the workout was performed.
   position:
     type: int
     sortable: true

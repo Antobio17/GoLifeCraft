@@ -148,11 +148,10 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   finishing = signal(false);
 
   readonly sessScrolled = signal(false);
-  private readonly STICKY_COLLAPSE = 10;
-  private readonly STICKY_EXPAND = 58;
+  private readonly STICKY_TOP = 8;
+  private readonly STICKY_BAND = 72;
   private stickySentinel?: HTMLElement;
-  private stickyRaf = 0;
-  private readonly onStickyScroll = () => this.scheduleStickyUpdate();
+  private stickyObservers: IntersectionObserver[] = [];
 
   @ViewChild(ActiveWorkoutBannerComponent)
   set bannerRef(ref: ActiveWorkoutBannerComponent | undefined) {
@@ -168,46 +167,36 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.ngZone.runOutsideAngular(() => {
-      window.addEventListener("scroll", this.onStickyScroll, { passive: true });
-      window.addEventListener("resize", this.onStickyScroll, { passive: true });
-    });
-    this.scheduleStickyUpdate();
-  }
+    const collapseLine = this.STICKY_TOP + 1;
+    const expandLine = collapseLine + this.STICKY_BAND;
 
-  private scheduleStickyUpdate(): void {
-    if (this.stickyRaf) {
-      return;
-    }
-    this.stickyRaf = requestAnimationFrame(() => {
-      this.stickyRaf = 0;
-      this.updateStickyState();
-    });
-  }
+    const collapseObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          return;
+        }
+        this.ngZone.run(() => this.sessScrolled.set(true));
+      },
+      { rootMargin: `-${collapseLine}px 0px 0px 0px`, threshold: 0 },
+    );
+    const expandObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+        this.ngZone.run(() => this.sessScrolled.set(false));
+      },
+      { rootMargin: `-${expandLine}px 0px 0px 0px`, threshold: 0 },
+    );
 
-  private updateStickyState(): void {
-    const element = this.stickySentinel;
-    if (!element) {
-      return;
-    }
-
-    const top = element.getBoundingClientRect().top;
-    const stuck = this.sessScrolled();
-    const next = stuck ? top < this.STICKY_EXPAND : top <= this.STICKY_COLLAPSE;
-    if (next === stuck) {
-      return;
-    }
-
-    this.ngZone.run(() => this.sessScrolled.set(next));
+    collapseObserver.observe(element);
+    expandObserver.observe(element);
+    this.stickyObservers = [collapseObserver, expandObserver];
   }
 
   private teardownStickyTracking(): void {
-    if (this.stickyRaf) {
-      cancelAnimationFrame(this.stickyRaf);
-      this.stickyRaf = 0;
-    }
-    window.removeEventListener("scroll", this.onStickyScroll);
-    window.removeEventListener("resize", this.onStickyScroll);
+    this.stickyObservers.forEach((observer) => observer.disconnect());
+    this.stickyObservers = [];
     this.stickySentinel = undefined;
   }
 
