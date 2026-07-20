@@ -1,0 +1,83 @@
+<ds-swipe-to-delete
+  #swipe
+  [disabled]="!canWrite"
+  [reveal]="66"
+  [radius]="16"
+  [removeLabel]="removeLabel"
+  (remove)="remove.emit()"
+>
+  <ds-stack
+    class="shopping-item"
+    direction="row"
+    align="center"
+    [gap]="'11px'"
+    [class.shopping-item--checked]="checked"
+    [class.shopping-item--slid]="swipe.slid"
+  >
+    @if (canWrite) {
+      <button
+        type="button"
+        class="shopping-item__check"
+        [class.is-checked]="checked"
+        [attr.aria-label]="toggleAriaLabel"
+        [attr.aria-pressed]="checked"
+        (click)="toggled.emit()"
+      >
+        @if (checked) {
+          <ds-icon name="check" [size]="15" [stroke]="3" />
+        }
+      </button>
+    }
+
+    <ds-emoji-tile [emoji]="emoji" [size]="44" [radius]="12" />
+
+    <ds-stack class="shopping-item__body" [gap]="'2px'" [grow]="true">
+      <ds-text variant="strong" class="shopping-item__name">{{ name }}</ds-text>
+      <ds-stack
+        class="shopping-item__meta"
+        direction="row"
+        align="center"
+        [gap]="'4px'"
+        [wrap]="true"
+      >
+        @if (brand) {
+          <ds-text variant="meta" [inline]="true">{{ brand }} ·</ds-text>
+        }
+        <ds-text [inline]="true" class="shopping-item__store">{{ store }}</ds-text>
+      </ds-stack>
+    </ds-stack>
+
+    <ds-stack class="shopping-item__trailing" align="end" [gap]="'6px'">
+      <ds-text class="shopping-item__price">{{ priceLabel }}</ds-text>
+      @if (canWrite) {
+        <ds-stack
+          class="shopping-item__stepper"
+          direction="row"
+          align="center"
+        >
+          <button
+            type="button"
+            class="shopping-item__step"
+            [attr.aria-label]="decrementLabel"
+            (click)="decrement.emit()"
+          >
+            −
+          </button>
+          <ds-text [inline]="true" class="shopping-item__qty">{{
+            quantity
+          }}</ds-text>
+          <button
+            type="button"
+            class="shopping-item__step"
+            [attr.aria-label]="incrementLabel"
+            (click)="increment.emit()"
+          >
+            +
+          </button>
+        </ds-stack>
+      } @else {
+        <ds-chip class="shopping-item__qty-static">×{{ quantity }}</ds-chip>
+      }
+    </ds-stack>
+  </ds-stack>
+</ds-swipe-to-delete>

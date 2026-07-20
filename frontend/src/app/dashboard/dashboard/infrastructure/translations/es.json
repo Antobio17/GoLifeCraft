@@ -5,7 +5,6 @@
     "avatar": {
       "settings": "Ir a ajustes"
     },
-    "comingSoon": "Disponible próximamente.",
     "search": "Buscar formato…",
     "summary": {
       "title": "Resumen de hoy",
@@ -46,10 +45,9 @@
       "recipes": "Recetas",
       "recipesMeta": "Tu recetario",
       "list": "Lista de compra",
+      "listMeta": "Tu compra por súper",
       "gym": "Gimnasio",
-      "gymMeta": "Sesiones y ejercicios",
-      "soon": "En camino",
-      "soonBadge": "PRONTO"
+      "gymMeta": "Sesiones y ejercicios"
     }
   }
 }

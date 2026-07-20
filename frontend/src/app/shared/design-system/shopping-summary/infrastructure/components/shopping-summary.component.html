@@ -1,0 +1,11 @@
+<ds-stack class="shopping-summary" [gap]="'11px'">
+  <ds-stack direction="row" justify="between" align="end" [gap]="'10px'">
+    <ds-stack [gap]="'2px'">
+      <ds-text [inherit]="true" class="shopping-summary__eyebrow">{{ eyebrow }}</ds-text>
+      <ds-text class="shopping-summary__amount">{{ totalLabel }}</ds-text>
+    </ds-stack>
+    <ds-text [inherit]="true" class="shopping-summary__bought">{{ boughtLabel }}</ds-text>
+  </ds-stack>
+
+  <ds-progress-bar class="shopping-summary__bar" [value]="clampedPercent" />
+</ds-stack>

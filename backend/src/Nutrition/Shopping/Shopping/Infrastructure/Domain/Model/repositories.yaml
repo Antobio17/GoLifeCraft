@@ -1,0 +1,6 @@
+services:
+  Nutrition\Shopping\Shopping\Domain\Model\ShoppingListItemRepository:
+    class: Nutrition\Shopping\Shopping\Infrastructure\Domain\Model\Doctrine\DoctrineShoppingListItemRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Shopping\Shopping\Domain\Model\ShoppingListItem

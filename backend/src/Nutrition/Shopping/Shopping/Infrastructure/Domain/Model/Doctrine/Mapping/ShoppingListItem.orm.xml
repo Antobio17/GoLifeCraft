@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="Nutrition\Shopping\Shopping\Infrastructure\Domain\Model\Doctrine\DoctrineShoppingListItemRepository" name="Nutrition\Shopping\Shopping\Domain\Model\ShoppingListItem" table="shopping_list_item">
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="articleId" type="string" column="article_id" length="36"/>
+    <field name="quantity" type="integer" column="quantity"/>
+    <field name="checked" type="boolean" column="checked"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+    <indexes>
+      <index name="idx_shopping_list_item_article_id" columns="article_id"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="uniq_shopping_list_item_article" columns="article_id"/>
+    </unique-constraints>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,28 @@
+services:
+  Nutrition\Shopping\Shopping\Application\Command\AddShoppingListItemCommandHandler:
+    class: Nutrition\Shopping\Shopping\Application\Command\AddShoppingListItemCommandHandler
+    arguments:
+      $shoppingListItemRepository: '@Nutrition\Shopping\Shopping\Domain\Model\ShoppingListItemRepository'
+      $needleDataQuery: '@Nutrition\Shopping\Shopping\Domain\QueryModel\AddShoppingListItemNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Shopping\Application\Command\UpdateShoppingListItemCommandHandler:
+    class: Nutrition\Shopping\Shopping\Application\Command\UpdateShoppingListItemCommandHandler
+    arguments:
+      $shoppingListItemRepository: '@Nutrition\Shopping\Shopping\Domain\Model\ShoppingListItemRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Shopping\Application\Command\DeleteShoppingListItemCommandHandler:
+    class: Nutrition\Shopping\Shopping\Application\Command\DeleteShoppingListItemCommandHandler
+    arguments:
+      $shoppingListItemRepository: '@Nutrition\Shopping\Shopping\Domain\Model\ShoppingListItemRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

@@ -1,0 +1,55 @@
+{
+  "getShopping": {
+    "title": "Shopping list",
+    "subtitle": "Add items from your catalog",
+    "add": "Add",
+    "items": "items",
+    "toggle": "Mark as bought",
+    "increment": "Increase quantity",
+    "decrement": "Decrease quantity",
+    "remove": "Remove",
+    "clearChecked": "Remove bought",
+    "tabEmpty": "No items for this supermarket",
+    "error": "Could not load the shopping list",
+    "summary": {
+      "total": "Estimated total"
+    },
+    "bought": "{done} of {count} bought",
+    "tabs": {
+      "all": "All"
+    },
+    "empty": {
+      "title": "Your list is empty",
+      "text": "Add items already in your catalog to build your shopping list.",
+      "action": "Add items"
+    },
+    "filters": {
+      "all": "All",
+      "store": "Store",
+      "cat": "Category",
+      "brand": "Brand"
+    },
+    "sheet": {
+      "title": "Add to the list",
+      "subtitle": "Tap an item from your catalog",
+      "close": "Close",
+      "search": "Search product or brand…",
+      "empty": "No results",
+      "addAction": "Add",
+      "addedAction": "Added"
+    },
+    "clearModal": {
+      "title": "Remove bought",
+      "body": "All items marked as bought will be removed from this list.",
+      "warning": "This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Remove bought",
+      "clearing": "Removing…"
+    },
+    "toast": {
+      "added": "Added to your list",
+      "removed": "Item removed",
+      "cleared": "Bought items removed"
+    }
+  }
+}

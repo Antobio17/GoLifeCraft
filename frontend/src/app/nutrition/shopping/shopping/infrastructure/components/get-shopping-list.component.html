@@ -1,0 +1,193 @@
+<ds-page-wrapper [maxWidth]="'640px'" [gap]="'14px'">
+  <ds-stack direction="row" justify="between" align="center" [gap]="'12px'">
+    <ds-stack [gap]="'2px'" [grow]="true">
+      <ds-heading [level]="2" size="xl" [truncate]="true">{{
+        "getShopping.title" | t
+      }}</ds-heading>
+      <ds-text variant="meta">{{ "getShopping.subtitle" | t }}</ds-text>
+    </ds-stack>
+
+    @if (canWrite) {
+      <ds-button
+        variant="primary"
+        size="sm"
+        icon="plus"
+        (clicked)="openSheet()"
+      >
+        {{ "getShopping.add" | t }}
+      </ds-button>
+    }
+  </ds-stack>
+
+  @if (loading()) {
+    <ds-skeleton height="120px" />
+    <ds-skeleton height="72px" />
+    <ds-skeleton height="72px" />
+  } @else if (attributes(); as list) {
+    @if (list.itemCount > 0) {
+      @if (showTabs()) {
+        <ds-store-tabs
+          [tabs]="storeTabs()"
+          [active]="effectiveTab()"
+          (selected)="onTab($event)"
+        />
+      }
+
+      <ds-shopping-summary
+        [eyebrow]="'getShopping.summary.total' | t"
+        [totalLabel]="summary().totalLabel"
+        [boughtLabel]="summary().boughtLabel"
+        [percent]="summary().percent"
+      />
+
+      @if (tabEmpty()) {
+        <ds-empty-state icon="cart" [title]="'getShopping.tabEmpty' | t" />
+      } @else {
+        @for (group of groups(); track group.category) {
+          <ds-stack [gap]="'8px'">
+            <ds-stack direction="row" align="center" [gap]="'8px'">
+              <ds-text variant="meta">{{ group.label }}</ds-text>
+              <ds-text variant="meta">{{ group.countLabel }}</ds-text>
+              <ds-divider [grow]="true" />
+            </ds-stack>
+
+            @for (item of group.items; track item.id) {
+              <ds-shopping-item
+                [emoji]="item.emoji"
+                [name]="item.name"
+                [brand]="item.brand"
+                [store]="item.store"
+                [priceLabel]="view.lineLabel(item)"
+                [quantity]="item.quantity"
+                [checked]="item.checked"
+                [canWrite]="canWrite"
+                [toggleAriaLabel]="'getShopping.toggle' | t"
+                [incrementLabel]="'getShopping.increment' | t"
+                [decrementLabel]="'getShopping.decrement' | t"
+                [removeLabel]="'getShopping.remove' | t"
+                (toggled)="toggleChecked(item)"
+                (increment)="increment(item)"
+                (decrement)="decrement(item)"
+                (remove)="removeItem(item)"
+              />
+            }
+          </ds-stack>
+        }
+
+        @if (canWrite && hasChecked()) {
+          <ds-button
+            variant="outline"
+            [fullWidth]="true"
+            icon="trash"
+            (clicked)="askClearChecked()"
+          >
+            {{ "getShopping.clearChecked" | t }}
+          </ds-button>
+        }
+      }
+    } @else {
+      <ds-empty-state
+        icon="cart"
+        [title]="'getShopping.empty.title' | t"
+        [text]="'getShopping.empty.text' | t"
+      >
+        @if (canWrite) {
+          <ds-button variant="primary" icon="plus" (clicked)="openSheet()">
+            {{ "getShopping.empty.action" | t }}
+          </ds-button>
+        }
+      </ds-empty-state>
+    }
+  } @else {
+    <ds-empty-state icon="alertCircle" [title]="'getShopping.error' | t" />
+  }
+
+  <ds-modal-sheet
+    [open]="sheetOpen()"
+    [title]="'getShopping.sheet.title' | t"
+    [closeLabel]="'getShopping.sheet.close' | t"
+    (closed)="closeSheet()"
+  >
+    <ds-stack [gap]="'14px'">
+      <ds-text variant="meta">{{ "getShopping.sheet.subtitle" | t }}</ds-text>
+
+      <ds-search-input
+        [placeholder]="'getShopping.sheet.search' | t"
+        [clearLabel]="'getShopping.sheet.close' | t"
+        [debounce]="120"
+        (searched)="onSheetSearch($event)"
+      />
+
+      <ds-stack direction="row" [gap]="'8px'" [wrap]="true">
+        <ds-button
+          variant="secondary"
+          size="sm"
+          [trailingIcon]="filterChevron('store')"
+          (clicked)="toggleFilter('store')"
+        >
+          {{ filterLabel("store") }}
+        </ds-button>
+        <ds-button
+          variant="secondary"
+          size="sm"
+          [trailingIcon]="filterChevron('cat')"
+          (clicked)="toggleFilter('cat')"
+        >
+          {{ filterLabel("cat") }}
+        </ds-button>
+        <ds-button
+          variant="secondary"
+          size="sm"
+          [trailingIcon]="filterChevron('brand')"
+          (clicked)="toggleFilter('brand')"
+        >
+          {{ filterLabel("brand") }}
+        </ds-button>
+      </ds-stack>
+
+      @if (openFilter()) {
+        <ds-choice-chips
+          [options]="filterOptions()"
+          [wrap]="true"
+          [ngModel]="currentFilterValue()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onPickFilter($event)"
+        />
+      }
+
+      @if (sheetProducts().length === 0) {
+        <ds-text variant="muted">{{ "getShopping.sheet.empty" | t }}</ds-text>
+      } @else {
+        <ds-stack [gap]="'8px'">
+          @for (product of sheetProducts(); track product.articleId) {
+            <ds-product-card
+              [emoji]="product.emoji"
+              [name]="product.name"
+              [price]="product.priceLabel"
+              [brand]="product.brand"
+              [store]="product.store"
+              [actionable]="true"
+              [added]="product.added"
+              [actionLabel]="'getShopping.sheet.addAction' | t"
+              [addedLabel]="'getShopping.sheet.addedAction' | t"
+              (action)="addProduct(product.articleId)"
+            />
+          }
+        </ds-stack>
+      }
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <ds-confirm-action-modal
+    [show]="clearModalOpen()"
+    [title]="'getShopping.clearModal.title' | t"
+    [body]="'getShopping.clearModal.body' | t"
+    [warningText]="'getShopping.clearModal.warning' | t"
+    [isDeleting]="clearing()"
+    [cancelLabel]="'getShopping.clearModal.cancel' | t"
+    [confirmLabel]="'getShopping.clearModal.confirm' | t"
+    [deletingLabel]="'getShopping.clearModal.clearing' | t"
+    (confirmed)="confirmClearChecked()"
+    (cancelled)="cancelClearChecked()"
+  />
+</ds-page-wrapper>

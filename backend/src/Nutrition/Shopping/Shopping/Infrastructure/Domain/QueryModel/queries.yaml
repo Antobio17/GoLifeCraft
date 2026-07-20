@@ -1,0 +1,10 @@
+services:
+  Nutrition\Shopping\Shopping\Domain\QueryModel\AddShoppingListItemNeedleDataQuery:
+    class: Nutrition\Shopping\Shopping\Infrastructure\Domain\QueryModel\Doctrine\DoctrineAddShoppingListItemNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Shopping\Shopping\Domain\QueryModel\GetShoppingListNeedleDataQuery:
+    class: Nutrition\Shopping\Shopping\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetShoppingListNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

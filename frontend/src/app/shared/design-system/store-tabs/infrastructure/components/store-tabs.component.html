@@ -1,0 +1,15 @@
+<ds-stack class="store-tabs" direction="row" [gap]="'7px'" role="tablist">
+  @for (tab of tabs; track tab.key) {
+    <button
+      type="button"
+      role="tab"
+      class="store-tab"
+      [class.is-active]="tab.key === active"
+      [attr.aria-selected]="tab.key === active"
+      (click)="selected.emit(tab.key)"
+    >
+      <ds-text [inline]="true" [inherit]="true">{{ tab.label }}</ds-text>
+      <ds-chip class="store-tab__badge">{{ tab.count }}</ds-chip>
+    </button>
+  }
+</ds-stack>

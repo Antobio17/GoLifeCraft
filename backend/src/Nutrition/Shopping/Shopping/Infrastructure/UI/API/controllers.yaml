@@ -1,0 +1,28 @@
+services:
+  Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\GetShoppingListController:
+    class: Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\GetShoppingListController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\AddShoppingListItemController:
+    class: Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\AddShoppingListItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\UpdateShoppingListItemController:
+    class: Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\UpdateShoppingListItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\DeleteShoppingListItemController:
+    class: Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\DeleteShoppingListItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

@@ -1,0 +1,11 @@
+services:
+  Nutrition\Shopping\Shopping\Application\Query\GetShoppingListQueryHandler:
+    class: Nutrition\Shopping\Shopping\Application\Query\GetShoppingListQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Shopping\Shopping\Domain\QueryModel\GetShoppingListNeedleDataQuery'
+      $dataTransform: '@Nutrition\Shopping\Shopping\Application\Query\GetShoppingListDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Shopping\Application\Query\GetShoppingListDataTransform:
+    class: Nutrition\Shopping\Shopping\Infrastructure\UI\API\DataTransform\ApiGetShoppingListDataTransform

@@ -42,6 +42,7 @@ export const DS_ICONS = {
   logout:
     '<path d="M15 12H4M8 8l-4 4 4 4"/><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>',
   chevronDown: '<path d="M6 9l6 6 6-6"/>',
+  chevronUp: '<path d="M6 15l6-6 6 6"/>',
   chevronLeft: '<path d="M15 6l-6 6 6 6"/>',
   chevronRight: '<path d="M9 6l6 6-6 6"/>',
   diary:
@@ -61,6 +62,7 @@ export const DS_ICONS = {
   category:
     '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>',
   download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
+  cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/>',
 } as const;
 
 export type DsIconName = keyof typeof DS_ICONS;

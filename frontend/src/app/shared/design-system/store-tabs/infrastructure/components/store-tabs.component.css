@@ -1,0 +1,54 @@
+:host {
+  display: block;
+}
+
+.store-tabs {
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.store-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.store-tab {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  appearance: none;
+  font: inherit;
+  white-space: nowrap;
+  border-radius: var(--ds-radius-pill);
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--ds-surface-inset);
+  border: 1px solid var(--ds-border-input);
+  color: var(--ds-text);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.store-tab.is-active {
+  background: var(--ds-primary);
+  border-color: var(--ds-primary);
+  color: var(--ds-on-primary);
+}
+
+.store-tab__badge {
+  --chip-pad: 1px 6px;
+  --chip-radius: var(--ds-radius-pill);
+  --chip-bg: var(--ds-surface);
+  --chip-text: var(--ds-text-meta);
+  --chip-size: 10px;
+}
+
+.store-tab.is-active .store-tab__badge {
+  --chip-bg: var(--ds-accent);
+  --chip-text: var(--ds-on-accent);
+}

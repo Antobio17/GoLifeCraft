@@ -5,7 +5,6 @@
     "avatar": {
       "settings": "Go to settings"
     },
-    "comingSoon": "Coming soon.",
     "search": "Search a product…",
     "summary": {
       "title": "Today's summary",
@@ -46,10 +45,9 @@
       "recipes": "Recipes",
       "recipesMeta": "Your recipe book",
       "list": "Shopping list",
+      "listMeta": "Your shop by store",
       "gym": "Gym",
-      "gymMeta": "Sessions & exercises",
-      "soon": "On the way",
-      "soonBadge": "SOON"
+      "gymMeta": "Sessions & exercises"
     }
   }
 }

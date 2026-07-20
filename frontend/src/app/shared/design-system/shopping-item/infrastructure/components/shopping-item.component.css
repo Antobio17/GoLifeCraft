@@ -1,0 +1,128 @@
+:host {
+  display: block;
+}
+
+.shopping-item {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: 16px;
+  padding: 9px 11px;
+  transition: background 0.2s ease;
+}
+
+.shopping-item--checked {
+  background: var(--ds-surface-subtle);
+}
+
+.shopping-item--slid {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.shopping-item--checked ds-emoji-tile,
+.shopping-item--checked .shopping-item__body,
+.shopping-item--checked .shopping-item__price {
+  opacity: 0.5;
+}
+
+.shopping-item__check {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  appearance: none;
+  background: var(--ds-surface-inset);
+  border: 1.5px solid var(--ds-border-input);
+  color: transparent;
+  transition: all 0.15s ease;
+}
+
+.shopping-item__check.is-checked {
+  background: var(--ds-accent);
+  border-color: var(--ds-accent);
+  color: var(--ds-on-accent);
+}
+
+.shopping-item__check ds-icon {
+  pointer-events: none;
+}
+
+.shopping-item__body {
+  min-width: 0;
+}
+
+.shopping-item__meta ds-text {
+  white-space: nowrap;
+}
+
+.shopping-item__name {
+  --ds-text-base: 13.5px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.shopping-item--checked .shopping-item__name {
+  text-decoration: line-through;
+}
+
+.shopping-item__store {
+  --ds-text-body: var(--ds-warning);
+  --ds-text-base: var(--ds-text-sm);
+  font-weight: 700;
+}
+
+.shopping-item__trailing {
+  flex: 0 0 auto;
+}
+
+.shopping-item__price {
+  --ds-text-body: var(--ds-primary);
+  --ds-text-base: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.shopping-item__stepper {
+  background: var(--ds-surface-inset);
+  border-radius: 9px;
+  padding: 2px;
+}
+
+.shopping-item__step {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ds-primary);
+}
+
+.shopping-item__qty {
+  --ds-text-base: 13px;
+  min-width: 20px;
+  text-align: center;
+  font-weight: 800;
+}
+
+.shopping-item__qty-static {
+  --chip-bg: var(--ds-surface-inset);
+  --chip-text: var(--ds-text);
+  --chip-radius: 9px;
+  --chip-pad: 5px 9px;
+  --chip-size: 12.5px;
+  --chip-weight: var(--ds-weight-extrabold);
+  font-family: var(--ds-font-display);
+}

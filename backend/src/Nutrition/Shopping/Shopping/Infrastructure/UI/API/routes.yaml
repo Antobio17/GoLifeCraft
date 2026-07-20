@@ -1,0 +1,23 @@
+get_shopping_list:
+  path: /api/v1/nutrition/shopping-list
+  methods: [GET]
+  controller: Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\GetShoppingListController
+
+add_shopping_list_item:
+  path: /api/v1/nutrition/shopping-list
+  methods: [POST]
+  controller: Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\AddShoppingListItemController
+
+update_shopping_list_item:
+  path: /api/v1/nutrition/shopping-list/{shoppingListItemId}
+  methods: [PUT]
+  controller: Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\UpdateShoppingListItemController
+  requirements:
+    shoppingListItemId: '[0-9a-fA-F-]{36}'
+
+delete_shopping_list_item:
+  path: /api/v1/nutrition/shopping-list/{shoppingListItemId}
+  methods: [DELETE]
+  controller: Nutrition\Shopping\Shopping\Infrastructure\UI\API\Controller\DeleteShoppingListItemController
+  requirements:
+    shoppingListItemId: '[0-9a-fA-F-]{36}'

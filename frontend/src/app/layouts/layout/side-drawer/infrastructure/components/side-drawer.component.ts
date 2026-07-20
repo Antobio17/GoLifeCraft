@@ -9,7 +9,6 @@ import {
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ThemeService } from "@shared/theme/application/services/theme.service";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
@@ -38,7 +37,6 @@ export class SideDrawerComponent {
   private drawer = inject(SideDrawerService);
   private themeService = inject(ThemeService);
   private authSessionService = inject(AuthSessionService);
-  private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
 
   private readonly dockedQuery = window.matchMedia("(min-width: 768px)");
@@ -83,15 +81,6 @@ export class SideDrawerComponent {
 
   toggleTheme(): void {
     this.themeService.toggle();
-  }
-
-  comingSoon(): void {
-    this.close();
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation: "navbar.comingSoon",
-      details: [],
-    });
   }
 
   logout(): void {

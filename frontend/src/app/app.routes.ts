@@ -98,6 +98,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "shopping-list",
+        data: { breadcrumb: "getShopping.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/shopping/shopping/infrastructure/routes/shopping.routes").then(
+            (m) => m.SHOPPING_ROUTES,
+          ),
+      },
+      {
         path: "gym",
         data: { breadcrumb: "session.breadcrumb.list" },
         loadChildren: () =>

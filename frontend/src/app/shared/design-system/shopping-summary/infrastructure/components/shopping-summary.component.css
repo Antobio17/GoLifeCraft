@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+.shopping-summary {
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
+  border: 1px solid transparent;
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+:host-context([data-theme="dark"]) .shopping-summary {
+  background: var(--ds-surface-inset);
+  color: var(--ds-text);
+  border-color: var(--ds-border);
+}
+
+.shopping-summary__eyebrow {
+  --ds-text-base: 11px;
+  font-weight: 600;
+  opacity: 0.72;
+}
+
+.shopping-summary__amount {
+  --ds-text-body: var(--ds-accent);
+  --ds-text-base: 26px;
+  --ds-font-body: var(--ds-font-display);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.shopping-summary__bought {
+  --ds-text-base: 11.5px;
+  font-weight: 700;
+  opacity: 0.85;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.shopping-summary__bar {
+  --ds-primary: var(--ds-accent);
+  --ds-surface-inset: rgba(255, 255, 255, 0.18);
+  margin-top: 3px;
+}
+
+:host-context([data-theme="dark"]) .shopping-summary__bar {
+  --ds-surface-inset: rgba(255, 255, 255, 0.1);
+}

@@ -1,0 +1,55 @@
+{
+  "getShopping": {
+    "title": "Lista de compra",
+    "subtitle": "Añade artículos de tu catálogo",
+    "add": "Añadir",
+    "items": "art.",
+    "toggle": "Marcar como comprado",
+    "increment": "Aumentar cantidad",
+    "decrement": "Reducir cantidad",
+    "remove": "Eliminar",
+    "clearChecked": "Quitar comprados",
+    "tabEmpty": "No hay artículos en este supermercado",
+    "error": "No se pudo cargar la lista de compra",
+    "summary": {
+      "total": "Total estimado"
+    },
+    "bought": "{done} de {count} comprados",
+    "tabs": {
+      "all": "Todos"
+    },
+    "empty": {
+      "title": "Tu lista está vacía",
+      "text": "Añade artículos ya existentes en tu catálogo para armar la compra.",
+      "action": "Añadir artículos"
+    },
+    "filters": {
+      "all": "Todos",
+      "store": "Súper",
+      "cat": "Categoría",
+      "brand": "Marca"
+    },
+    "sheet": {
+      "title": "Añadir a la lista",
+      "subtitle": "Toca un artículo de tu catálogo",
+      "close": "Cerrar",
+      "search": "Buscar producto o marca…",
+      "empty": "Sin resultados",
+      "addAction": "Añadir",
+      "addedAction": "Añadido"
+    },
+    "clearModal": {
+      "title": "Quitar comprados",
+      "body": "Se eliminarán todos los artículos marcados como comprados de esta lista.",
+      "warning": "Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Quitar comprados",
+      "clearing": "Quitando…"
+    },
+    "toast": {
+      "added": "Añadido a tu lista",
+      "removed": "Artículo eliminado",
+      "cleared": "Comprados eliminados"
+    }
+  }
+}

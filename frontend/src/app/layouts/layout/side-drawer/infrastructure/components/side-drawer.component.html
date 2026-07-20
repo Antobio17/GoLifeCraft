@@ -69,9 +69,11 @@
         (click)="close()"
       />
       <ds-nav-item
-        icon="list"
+        routerLink="/shopping-list"
+        routerLinkActive="is-active"
+        icon="cart"
         [label]="'navbar.list' | t"
-        (click)="comingSoon()"
+        (click)="close()"
       />
       <ds-nav-item
         routerLink="/gym"

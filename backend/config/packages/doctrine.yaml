@@ -126,3 +126,9 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Nutrition/Diary/Goal/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Nutrition\Diary\Goal\Domain\Model'
                         alias: diary_goal
+                    ShoppingListItem:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Shopping/Shopping/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Shopping\Shopping\Domain\Model'
+                        alias: shopping_list_item

@@ -10,7 +10,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatePipe, DecimalPipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
 import { DashboardLayoutComponent } from "@shared/design-system/dashboard-layout/infrastructure/components/dashboard-layout.component";
@@ -52,7 +51,6 @@ interface DailySummary {
 })
 export class DashboardComponent implements OnInit {
   private authSessionService = inject(AuthSessionService);
-  private floatingToastService = inject(FloatingToastService);
   private getDiaryService = inject(GetDiaryService);
   private getGymStatsService = inject(GetGymStatsService);
   private router = inject(Router);
@@ -149,11 +147,7 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(["/recipes"]);
   }
 
-  comingSoon(): void {
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation: "dashboard.comingSoon",
-      details: [],
-    });
+  goToShopping(): void {
+    this.router.navigate(["/shopping-list"]);
   }
 }

@@ -72,12 +72,10 @@
         (clicked)="goToRecipes()"
       />
       <ds-action-tile
-        icon="list"
-        [soon]="true"
-        [soonLabel]="'dashboard.explore.soonBadge' | t"
+        icon="cart"
         [name]="'dashboard.explore.list' | t"
-        [meta]="'dashboard.explore.soon' | t"
-        (clicked)="comingSoon()"
+        [meta]="'dashboard.explore.listMeta' | t"
+        (clicked)="goToShopping()"
       />
     </ds-grid>
   </ds-stack>
