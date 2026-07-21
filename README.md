@@ -306,7 +306,7 @@ ssh golifecraft
 cd $SERVER_PROJECT_PATH
 # En .env.local:
 #   MERCADONA_GEMINI_KEY=AIza...tu_clave...
-#   MERCADONA_GEMINI_MODEL=gemini-2.5-flash
+#   MERCADONA_GEMINI_MODEL=gemini-flash-latest
 ```
 
 > Mientras la facturación de ese proyecto de Google siga **desactivada**, no hay
