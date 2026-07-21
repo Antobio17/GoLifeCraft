@@ -1,7 +1,6 @@
 {
   "getDiary": {
     "title": "Diary",
-    "titleToday": "Today's diary",
     "kcal": "kcal",
     "add": "Add",
     "quantity": "Quantity",
@@ -36,6 +35,24 @@
     "toast": {
       "added": "Added to the diary",
       "removed": "Removed from the diary"
+    },
+    "calendar": {
+      "open": "Open calendar",
+      "title": "Calendar",
+      "subtitle": "Tap a day to open its diary",
+      "close": "Close",
+      "previous": "Previous month",
+      "next": "Next month",
+      "legend": {
+        "green": "Goal met",
+        "orange": "Close to goal",
+        "red": "Off goal",
+        "rest": "No records"
+      },
+      "toast": {
+        "today": "Today's diary",
+        "viewing": "Viewing"
+      }
     },
     "goal": {
       "open": "Configure calories",

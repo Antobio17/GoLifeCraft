@@ -1,7 +1,6 @@
 {
   "getDiary": {
     "title": "Diario",
-    "titleToday": "Diario de hoy",
     "kcal": "kcal",
     "add": "Añadir",
     "quantity": "Cantidad",
@@ -36,6 +35,24 @@
     "toast": {
       "added": "Añadido al diario",
       "removed": "Eliminado del diario"
+    },
+    "calendar": {
+      "open": "Abrir calendario",
+      "title": "Calendario",
+      "subtitle": "Toca un día para abrir su diario",
+      "close": "Cerrar",
+      "previous": "Mes anterior",
+      "next": "Mes siguiente",
+      "legend": {
+        "green": "Objetivo cumplido",
+        "orange": "Cerca del objetivo",
+        "red": "Fuera de objetivo",
+        "rest": "Sin registros"
+      },
+      "toast": {
+        "today": "Diario de hoy",
+        "viewing": "Viendo"
+      }
     },
     "goal": {
       "open": "Configurar calorías",

@@ -31,6 +31,12 @@ import { NutrientInputComponent } from "@shared/design-system/nutrient-input/inf
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import {
+  CalendarComponent,
+  CalendarCell,
+  CalendarLegendItem,
+} from "@shared/design-system/calendar/infrastructure/components/calendar.component";
 import {
   SegmentedOption,
   SegmentedToggleComponent,
@@ -38,7 +44,13 @@ import {
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
 import { GetRecipesService } from "@nutrition/recipe/recipe/application/services/get-recipes.service";
 import { GetDiaryService } from "@nutrition/diary/diary/application/services/get-diary.service";
+import { GetDiaryCalendarService } from "@nutrition/diary/diary/application/services/get-diary-calendar.service";
 import { DiaryViewService } from "@nutrition/diary/diary/application/services/diary-view.service";
+import { DiaryCalendarViewService } from "@nutrition/diary/diary/application/services/diary-calendar-view.service";
+import {
+  DiaryCalendarDay,
+  DiaryCalendarStatus,
+} from "@nutrition/diary/diary/domain/models/diary-calendar.model";
 import {
   DiaryChoice,
   DiaryPickerService,
@@ -82,6 +94,8 @@ type PickerTab = "product" | "recipe";
     NumberInputComponent,
     NoteComponent,
     IconComponent,
+    ChipComponent,
+    CalendarComponent,
   ],
 })
 export class GetDiaryComponent implements OnInit {
@@ -89,6 +103,7 @@ export class GetDiaryComponent implements OnInit {
   private floatingToastService = inject(FloatingToastService);
   private authSession = inject(AuthSessionService);
   private getDiaryService = inject(GetDiaryService);
+  private getDiaryCalendarService = inject(GetDiaryCalendarService);
   private getArticlesService = inject(GetArticlesService);
   private getRecipesService = inject(GetRecipesService);
   private createDiaryEntryService = inject(CreateDiaryEntryService);
@@ -98,6 +113,7 @@ export class GetDiaryComponent implements OnInit {
   private setDiaryGoalDayService = inject(SetDiaryGoalDayService);
   protected goalForm = inject(DiaryGoalFormService);
   protected view = inject(DiaryViewService);
+  protected calendarView = inject(DiaryCalendarViewService);
   protected picker = inject(DiaryPickerService);
   private destroyRef = inject(DestroyRef);
 
@@ -123,9 +139,6 @@ export class GetDiaryComponent implements OnInit {
 
   attributes = computed(() => this.day()?.attributes ?? null);
   canGoNext = computed(() => !this.view.isToday(this.date()));
-  titleKey = computed(() =>
-    this.view.isToday(this.date()) ? "getDiary.titleToday" : "getDiary.title",
-  );
 
   pickerChoices = computed<DiaryChoice[]>(() =>
     this.pickerTab() === "product"
@@ -136,6 +149,41 @@ export class GetDiaryComponent implements OnInit {
   pickerMealLabel = computed(() =>
     this.pickerMeal() ? this.mealLabel(this.pickerMeal()) : "",
   );
+
+  calendarOpen = signal(false);
+  calendarMonth = signal(this.calendarView.monthOf(this.view.todayIso()));
+  calendarDays = signal<DiaryCalendarDay[]>([]);
+
+  calendarMonthLabel = computed(() =>
+    this.calendarView.monthLabel(this.calendarMonth()),
+  );
+  calendarWeekdays = this.calendarView.weekdays();
+  calendarCells = computed<CalendarCell[]>(() =>
+    this.calendarView.buildCells(
+      this.calendarMonth(),
+      this.calendarDays(),
+      this.date(),
+      this.view.todayIso(),
+    ),
+  );
+  calendarLegend = signal<CalendarLegendItem[]>([]);
+
+  dayStatus = computed<DiaryCalendarStatus | null>(() => {
+    const diary = this.attributes();
+    if (!diary) return null;
+
+    return this.calendarView.dayStatus(
+      diary.consumedCalories,
+      diary.goalCalories,
+      diary.entryCount,
+    );
+  });
+  dayStatusLabel = computed(() => {
+    const status = this.dayStatus();
+    if (!status) return "";
+
+    return this.t(`getDiary.calendar.legend.${status}`);
+  });
 
   goalSheetOpen = signal(false);
   goalSaving = signal(false);
@@ -200,6 +248,14 @@ export class GetDiaryComponent implements OnInit {
           { value: "product", label: this.t("getDiary.picker.products") },
           { value: "recipe", label: this.t("getDiary.picker.recipes") },
         ]);
+        this.calendarLegend.set(
+          this.calendarView.legend({
+            green: this.t("getDiary.calendar.legend.green"),
+            orange: this.t("getDiary.calendar.legend.orange"),
+            red: this.t("getDiary.calendar.legend.red"),
+            rest: this.t("getDiary.calendar.legend.rest"),
+          }),
+        );
         this.loadChoices();
         this.load(this.date());
       });
@@ -233,6 +289,49 @@ export class GetDiaryComponent implements OnInit {
     if (this.view.isToday(this.date())) return;
 
     this.load(this.view.todayIso());
+  }
+
+  openCalendar(): void {
+    this.calendarMonth.set(this.calendarView.monthOf(this.date()));
+    this.calendarOpen.set(true);
+    this.loadCalendar();
+  }
+
+  closeCalendar(): void {
+    this.calendarOpen.set(false);
+  }
+
+  calendarPreviousMonth(): void {
+    this.calendarMonth.set(
+      this.calendarView.shiftMonth(this.calendarMonth(), -1),
+    );
+    this.loadCalendar();
+  }
+
+  calendarNextMonth(): void {
+    this.calendarMonth.set(
+      this.calendarView.shiftMonth(this.calendarMonth(), 1),
+    );
+    this.loadCalendar();
+  }
+
+  onCalendarDay(date: string): void {
+    this.calendarOpen.set(false);
+    this.toast(
+      this.view.isToday(date)
+        ? "getDiary.calendar.toast.today"
+        : "getDiary.calendar.toast.viewing",
+    );
+    this.load(date);
+  }
+
+  private loadCalendar(): void {
+    this.getDiaryCalendarService
+      .getDiaryCalendar(this.calendarMonth())
+      .subscribe({
+        next: (response) =>
+          this.calendarDays.set(response.data.attributes.days),
+      });
   }
 
   openPicker(mealKey: string): void {

@@ -1,3 +1,8 @@
+get_diary_calendar:
+  path: /api/v1/nutrition/diary/calendar
+  methods: [GET]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\GetDiaryCalendarController
+
 get_diary:
   path: /api/v1/nutrition/diary
   methods: [GET]

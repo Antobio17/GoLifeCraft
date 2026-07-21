@@ -9,3 +9,14 @@ services:
 
   Nutrition\Diary\Diary\Application\Query\GetDiaryDataTransform:
     class: Nutrition\Diary\Diary\Infrastructure\UI\API\DataTransform\ApiGetDiaryDataTransform
+
+  Nutrition\Diary\Diary\Application\Query\GetDiaryCalendarQueryHandler:
+    class: Nutrition\Diary\Diary\Application\Query\GetDiaryCalendarQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryCalendarNeedleDataQuery'
+      $dataTransform: '@Nutrition\Diary\Diary\Application\Query\GetDiaryCalendarDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Query\GetDiaryCalendarDataTransform:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\DataTransform\ApiGetDiaryCalendarDataTransform

@@ -1,13 +1,38 @@
 <ds-page-wrapper [maxWidth]="'640px'" [gap]="'14px'">
   <ds-stack direction="row" justify="between" align="center" [gap]="'12px'">
-    <ds-stack [gap]="'2px'" [grow]="true">
+    <ds-stack [gap]="'6px'" [grow]="true">
       <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
       <ds-heading [level]="2" size="xl" [truncate]="true">{{
-        titleKey() | t
+        "getDiary.title" | t
       }}</ds-heading>
+      @if (dayStatus(); as status) {
+        <ds-chip>
+          <ds-stack direction="row" align="center" [gap]="'6px'">
+            <ds-icon
+              class="day-status-dot"
+              [class.day-status-dot--green]="status === 'green'"
+              [class.day-status-dot--orange]="status === 'orange'"
+              [class.day-status-dot--red]="status === 'red'"
+              name="dot"
+              [size]="8"
+            />
+            {{ dayStatusLabel() }}
+          </ds-stack>
+        </ds-chip>
+      }
     </ds-stack>
 
     <ds-stack direction="row" align="center" [gap]="'6px'">
+      <ds-icon-button
+        icon="calendar"
+        variant="soft"
+        [size]="32"
+        [iconSize]="17"
+        [stroke]="2.1"
+        [radius]="'10px'"
+        [ariaLabel]="'getDiary.calendar.open' | t"
+        (clicked)="openCalendar()"
+      />
       @if (canWrite) {
         <ds-icon-button
           icon="settings"
@@ -279,6 +304,30 @@
           (goalValid() ? "getDiary.goal.save" : "getDiary.goal.saveInvalid") | t
         }}
       </ds-button>
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <ds-modal-sheet
+    [open]="calendarOpen()"
+    [compact]="true"
+    [title]="'getDiary.calendar.title' | t"
+    [closeLabel]="'getDiary.calendar.close' | t"
+    (closed)="closeCalendar()"
+  >
+    <ds-stack [gap]="'14px'">
+      <ds-text variant="meta">{{ "getDiary.calendar.subtitle" | t }}</ds-text>
+
+      <ds-calendar
+        [monthLabel]="calendarMonthLabel()"
+        [weekdays]="calendarWeekdays"
+        [cells]="calendarCells()"
+        [legend]="calendarLegend()"
+        [previousLabel]="'getDiary.calendar.previous' | t"
+        [nextLabel]="'getDiary.calendar.next' | t"
+        (previousMonth)="calendarPreviousMonth()"
+        (nextMonth)="calendarNextMonth()"
+        (daySelected)="onCalendarDay($event)"
+      />
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>

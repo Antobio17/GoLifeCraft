@@ -18,3 +18,20 @@
   flex: 0 0 auto;
   width: 96px;
 }
+
+.day-status-dot {
+  flex: 0 0 auto;
+  color: var(--ds-text-disabled);
+}
+
+.day-status-dot--green {
+  color: #3e7c57;
+}
+
+.day-status-dot--orange {
+  color: #e0a83e;
+}
+
+.day-status-dot--red {
+  color: #c0553b;
+}

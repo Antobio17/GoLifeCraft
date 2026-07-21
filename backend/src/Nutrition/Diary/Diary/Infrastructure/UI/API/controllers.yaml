@@ -6,6 +6,13 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\GetDiaryCalendarController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\GetDiaryCalendarController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\CreateDiaryEntryController:
     class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\CreateDiaryEntryController
     arguments:
