@@ -118,6 +118,31 @@ services:
           cpus: '0.50'
           memory: 256M
 
+  worker:
+    image: ghcr.io/antobio17/golifecraft-php-production:latest
+    container_name: golifecraft_worker
+    profiles:
+      - tools
+    env_file:
+      - .env.local
+    volumes:
+      - ./volumes/worker_logs:/var/log/worker
+    depends_on:
+      - db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
   postfix:
     image: boky/postfix:latest
     container_name: golifecraft_postfix

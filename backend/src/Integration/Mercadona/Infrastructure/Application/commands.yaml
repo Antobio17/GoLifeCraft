@@ -1,0 +1,10 @@
+services:
+  Integration\Mercadona\Infrastructure\Application\Console\SyncMercadonaCatalogCommand:
+    class: Integration\Mercadona\Infrastructure\Application\Console\SyncMercadonaCatalogCommand
+    arguments:
+      $catalogProvider: '@Integration\Mercadona\Domain\Service\MercadonaCatalogProvider'
+      $nutritionExtractor: '@Integration\Mercadona\Domain\Service\MercadonaNutritionExtractor'
+      $importedRegistry: '@Integration\Mercadona\Domain\Service\ImportedProductRegistry'
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'console.command' }

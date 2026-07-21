@@ -1,0 +1,32 @@
+parameters:
+  env(MERCADONA_BASE_URL): 'https://tienda.mercadona.es'
+  env(MERCADONA_WAREHOUSE): 'mad1'
+  env(MERCADONA_LANG): 'es'
+  env(MERCADONA_USER_AGENT): 'GoLifeCraft/1.0 (catalog sync; antoniojr997@gmail.com)'
+  env(MERCADONA_GEMINI_BASE_URL): 'https://generativelanguage.googleapis.com'
+  env(MERCADONA_GEMINI_KEY): ''
+  env(MERCADONA_GEMINI_MODEL): 'gemini-2.5-flash'
+
+services:
+  Integration\Mercadona\Domain\Service\MercadonaCatalogProvider:
+    class: Integration\Mercadona\Infrastructure\Domain\Service\Http\HttpMercadonaCatalogProvider
+    arguments:
+      $httpClient: '@http_client'
+      $baseUrl: '%env(MERCADONA_BASE_URL)%'
+      $warehouse: '%env(MERCADONA_WAREHOUSE)%'
+      $lang: '%env(MERCADONA_LANG)%'
+      $userAgent: '%env(MERCADONA_USER_AGENT)%'
+
+  Integration\Mercadona\Domain\Service\MercadonaNutritionExtractor:
+    class: Integration\Mercadona\Infrastructure\Domain\Service\Gemini\GeminiNutritionExtractor
+    arguments:
+      $httpClient: '@http_client'
+      $baseUrl: '%env(MERCADONA_GEMINI_BASE_URL)%'
+      $apiKey: '%env(MERCADONA_GEMINI_KEY)%'
+      $model: '%env(MERCADONA_GEMINI_MODEL)%'
+      $userAgent: '%env(MERCADONA_USER_AGENT)%'
+
+  Integration\Mercadona\Domain\Service\ImportedProductRegistry:
+    class: Integration\Mercadona\Infrastructure\Domain\Service\Doctrine\DbalImportedProductRegistry
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'

@@ -282,6 +282,97 @@ docker exec -it golifecraft_mysql bash
 > ⚠️ Es la base de datos real de producción: cualquier `UPDATE`/`DELETE` afecta
 > datos de usuarios. Antes de tocar algo, considera un `mysqldump` de seguridad.
 
+### Sincronización del catálogo global (Mercadona / OpenFoodFacts)
+
+Las cargas del catálogo global corren en un contenedor de batch aparte, **`worker`**
+(misma imagen `golifecraft-php-production`, pero un contenedor propio para no tocar
+el `php` que sirve la web). El servicio está bajo el profile `tools`, así que **no
+arranca** con `docker compose up`; se ejecuta a demanda.
+
+La nutrición se extrae con **Gemini** (visión). Un producto solo se guarda si se
+extraen **y validan** identidad y nutrición; el resto se descarta con motivo. La
+carga es **reanudable**: los productos ya importados se saltan sin volver a llamar
+a Gemini.
+
+#### 1. Configurar la API key de Gemini (una vez)
+
+Consigue una key gratis en [aistudio.google.com](https://aistudio.google.com)
+(*Get API key*, sin tarjeta → free tier: 1.500 peticiones/día). Añádela al secret
+`PROD_ENV_FILE` (ver [Secrets de GitHub Actions](#secrets-de-github-actions)) y
+redespliega, o edítala directamente en el `.env.local` del servidor:
+
+```bash
+ssh golifecraft
+cd $SERVER_PROJECT_PATH
+# En .env.local:
+#   MERCADONA_GEMINI_KEY=AIza...tu_clave...
+#   MERCADONA_GEMINI_MODEL=gemini-2.5-flash
+```
+
+> Mientras la facturación de ese proyecto de Google siga **desactivada**, no hay
+> riesgo de cobro: al agotar la cuota diaria devuelve error `429`, nunca un cargo.
+
+#### 2. Preparar el servidor
+
+```bash
+docker compose -f docker-compose.prod.yml pull worker      # última imagen del CI
+mkdir -p volumes/worker_logs && chmod 777 volumes/worker_logs   # log escribible por el worker
+```
+
+#### 3. Prueba en pequeño
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm worker \
+  php bin/console app:catalog:sync-mercadona --category 11 --limit 10 --delay 6000
+```
+
+#### 4. Carga completa en segundo plano, con log a fichero
+
+El free tier permite ~1.500/día, así que se pacea con `--delay 60000` (60 s entre
+extracciones): el catálogo entero (~4.300 productos) tarda ~3-4 días corriendo sin
+parar. Se lanza **desacoplado** (`-d`, sobrevive a cerrar la sesión SSH) y con la
+salida redirigida a un fichero del host:
+
+```bash
+docker compose -f docker-compose.prod.yml run -d --rm --name golifecraft_mercadona_sync worker \
+  sh -c 'php bin/console app:catalog:sync-mercadona --delay 60000 >> /var/log/worker/mercadona-sync.log 2>&1'
+```
+
+**Seguir el progreso** (el fichero está en el host):
+
+```bash
+tail -f volumes/worker_logs/mercadona-sync.log
+
+# Cuántos productos de Mercadona llevas guardados:
+docker exec golifecraft_mysql sh -lc \
+  'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SELECT COUNT(*) FROM global_article WHERE source=\"mercadona\"" master'
+```
+
+**Si se corta** (reinicio, caída, host apagado): **relanza el mismo comando**. Al
+ser reanudable, salta lo ya importado sin gastar cuota y continúa donde iba.
+
+**Parar** la carga en marcha:
+
+```bash
+docker stop golifecraft_mercadona_sync
+```
+
+Opciones del comando: `--category` (acotar a una categoría), `--limit`
+(máximo de productos, `0` = todos), `--delay` (ms entre extracciones),
+`--force` (reimportar también los ya presentes).
+
+**OpenFoodFacts** (fuente comunitaria, se distingue por `source` en `global_article`):
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm worker \
+  php bin/console app:catalog:sync-openfoodfacts --pages 5
+```
+
+> El worker corre solo mientras dura el sync (`--rm` lo elimina al terminar), sin
+> tocar el `php` que sirve la web. Reutiliza la imagen `golifecraft-php-production`
+> que ya publica el CI, así que en un servidor recién actualizado basta con el
+> `pull`. El log del host persiste aunque el contenedor se elimine.
+
 ## Notas
 
 - Las claves JWT (`backend/config/jwt/`) no se versionan. En local se generan con
