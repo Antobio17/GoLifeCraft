@@ -115,14 +115,22 @@ export interface CalendarLegendItem {
     `
       :host {
         display: block;
+        width: 100%;
+        min-width: 0;
         --ds-cal-green: #3e7c57;
         --ds-cal-orange: #e0a83e;
         --ds-cal-red: #c0553b;
+      }
+      .ds-cal {
+        width: 100%;
+        min-width: 0;
       }
       .ds-cal__nav {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 8px;
+        min-width: 0;
         margin-bottom: 14px;
       }
       .ds-cal__navbtn {
@@ -143,6 +151,12 @@ export interface CalendarLegendItem {
         color: var(--ds-text);
       }
       .ds-cal__month {
+        flex: 1 1 auto;
+        min-width: 0;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-bold);
         font-size: var(--ds-text-md);
@@ -151,8 +165,10 @@ export interface CalendarLegendItem {
       .ds-cal__weekdays,
       .ds-cal__grid {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(7, minmax(0, 1fr));
         gap: 6px;
+        width: 100%;
+        min-width: 0;
       }
       .ds-cal__weekdays {
         margin-bottom: 6px;
@@ -168,6 +184,8 @@ export interface CalendarLegendItem {
         appearance: none;
         border: 2px solid transparent;
         aspect-ratio: 1;
+        width: 100%;
+        min-width: 0;
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -248,6 +266,7 @@ export interface CalendarLegendItem {
         font-size: 11.5px;
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
+        overflow-wrap: anywhere;
       }
     `,
   ],

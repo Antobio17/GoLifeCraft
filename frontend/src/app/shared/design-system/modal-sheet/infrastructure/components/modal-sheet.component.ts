@@ -107,11 +107,15 @@ import {
       }
       .ds-sheet__title {
         flex: 1;
+        min-width: 0;
         margin: 0;
         font-family: var(--ds-font-display);
         font-size: var(--ds-text-lg);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .ds-sheet__close {
         appearance: none;
@@ -132,7 +136,9 @@ import {
       }
       .ds-sheet__body {
         flex: 1 1 auto;
+        min-width: 0;
         padding: 16px 18px 22px;
+        overflow-x: hidden;
         overflow-y: auto;
       }
       @keyframes ds-sheet-up {
