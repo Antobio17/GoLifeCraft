@@ -16,6 +16,7 @@ final class GetGlobalArticlesResult extends QueryAggregateResult
         public readonly ?string $imageUrl,
         public readonly ?string $quantity,
         public readonly ?string $stores,
+        public readonly string $source,
         public readonly float $referenceAmount,
         public readonly ?float $calories,
         public readonly ?float $protein,

@@ -17,9 +17,10 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
         int $pageSize,
         int $pageNumber,
         ?string $filterName = null,
+        ?string $filterSource = null,
         ?string $orderBy = null,
     ): array {
-        $qb = $this->getBaseQuery(filterName: $filterName)
+        $qb = $this->getBaseQuery(filterName: $filterName, filterSource: $filterSource)
             ->select(
                 't.id',
                 't.barcode',
@@ -29,6 +30,7 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
                 't.image_url',
                 't.quantity',
                 't.stores',
+                't.source',
                 't.reference_amount',
                 't.calories',
                 't.protein',
@@ -57,6 +59,7 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
             imageUrl: $row['image_url'],
             quantity: $row['quantity'],
             stores: $row['stores'],
+            source: $row['source'],
             referenceAmount: (float) $row['reference_amount'],
             calories: null !== $row['calories'] ? (float) $row['calories'] : null,
             protein: null !== $row['protein'] ? (float) $row['protein'] : null,
@@ -71,14 +74,15 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
 
     public function totalGlobalArticles(
         ?string $filterName = null,
+        ?string $filterSource = null,
     ): int {
-        return (int) $this->getBaseQuery(filterName: $filterName)
+        return (int) $this->getBaseQuery(filterName: $filterName, filterSource: $filterSource)
             ->select('COUNT(*)')
             ->executeQuery()
             ->fetchOne();
     }
 
-    private function getBaseQuery(?string $filterName = null): QueryBuilder
+    private function getBaseQuery(?string $filterName = null, ?string $filterSource = null): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
             ->from(table: 'global_article', alias: 't');
@@ -86,6 +90,11 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
         if (null !== $filterName) {
             $qb->andWhere('t.name LIKE :name OR t.brand LIKE :name')
                 ->setParameter(key: 'name', value: '%'.$filterName.'%');
+        }
+
+        if (null !== $filterSource) {
+            $qb->andWhere('t.source = :source')
+                ->setParameter(key: 'source', value: $filterSource);
         }
 
         return $qb;

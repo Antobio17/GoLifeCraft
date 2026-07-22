@@ -29,6 +29,7 @@ final class GetGlobalArticlesController
                     pageNumber: RequestExtractor::getPageNumber(request: $request),
                     pageSize: RequestExtractor::getPageSize(request: $request),
                     filterName: RequestExtractor::getFilterParam(request: $request, filterName: 'name'),
+                    filterSource: RequestExtractor::getFilterParam(request: $request, filterName: 'source'),
                     orderBy: RequestExtractor::getOrderByParam(request: $request),
                 )),
             );

@@ -9,11 +9,13 @@ export class GetGlobalArticlesService {
     page: number = 1,
     pageSize: number = 100,
     filterName?: string,
+    filterSource?: string,
   ): Observable<GetGlobalArticlesResponse> {
     return this.getGlobalArticlesPort.getGlobalArticles(
       page,
       pageSize,
       filterName,
+      filterSource,
     );
   }
 }

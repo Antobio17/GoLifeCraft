@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
 import { GlobalArticle } from "../../domain/models/global-article.model";
+import { GlobalArticleSource } from "../../domain/models/global-article-source.model";
 
 export interface GlobalArticleCardView {
   id: string;
   emoji: string;
   name: string;
   brand: string | null;
-  store: string | null;
+  source: string | null;
   kcal: string | null;
   protein: string | null;
   fat: string | null;
@@ -14,6 +15,11 @@ export interface GlobalArticleCardView {
 }
 
 const FALLBACK_EMOJI = "🛒";
+
+const SOURCE_LABELS: Record<string, string> = {
+  [GlobalArticleSource.Mercadona]: "Mercadona",
+  [GlobalArticleSource.OpenFoodFacts]: "Open Food Facts",
+};
 
 @Injectable()
 export class GlobalArticleViewService {
@@ -25,7 +31,7 @@ export class GlobalArticleViewService {
       emoji: FALLBACK_EMOJI,
       name: attributes.name,
       brand: attributes.brand,
-      store: this.store(attributes.stores),
+      source: this.sourceLabel(attributes.source),
       kcal: this.integer(attributes.calories),
       protein: this.integer(attributes.protein),
       fat: this.integer(attributes.fat),
@@ -33,13 +39,10 @@ export class GlobalArticleViewService {
     };
   }
 
-  private store(stores: string | null): string | null {
-    if (!stores) return null;
+  sourceLabel(source: string | null): string | null {
+    if (!source) return null;
 
-    const first = stores.split(",")[0].trim();
-    if ("" === first) return null;
-
-    return first.charAt(0).toUpperCase() + first.slice(1);
+    return SOURCE_LABELS[source] ?? source;
   }
 
   private integer(value: number | null): string | null {

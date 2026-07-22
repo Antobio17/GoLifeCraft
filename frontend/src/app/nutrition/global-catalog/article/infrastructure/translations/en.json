@@ -11,6 +11,10 @@
     "searchClear": "Clear search",
     "nutritionCaption": "Values per 100 g",
     "noResults": "No results for",
+    "source": {
+      "all": "All",
+      "noResults": "No products from this source"
+    },
     "macro": {
       "kcal": "kcal",
       "proteinShort": "P",

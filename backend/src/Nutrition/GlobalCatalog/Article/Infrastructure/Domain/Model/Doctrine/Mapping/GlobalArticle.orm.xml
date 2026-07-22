@@ -29,6 +29,7 @@
     </unique-constraints>
     <indexes>
       <index name="idx_global_article_name" columns="name"/>
+      <index name="idx_global_article_source" columns="source"/>
     </indexes>
   </entity>
 </doctrine-mapping>

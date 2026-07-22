@@ -73,12 +73,14 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
   styles: [
     `
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
       }
       .ds-pcard {
         display: flex;
         gap: 11px;
         width: 100%;
+        height: 100%;
         text-align: left;
         appearance: none;
         font: inherit;

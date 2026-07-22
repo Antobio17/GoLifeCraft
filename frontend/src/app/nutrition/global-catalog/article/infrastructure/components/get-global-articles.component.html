@@ -21,6 +21,13 @@
       (searched)="onSearch($event)"
     />
 
+    <ds-segmented-toggle
+      [options]="sourceOptions()"
+      [ngModel]="sourceFilter()"
+      [ngModelOptions]="{ standalone: true }"
+      (ngModelChange)="onSourceChange($event)"
+    />
+
     <ds-text variant="label">
       {{ "getGlobalArticles.nutritionCaption" | t }}
     </ds-text>
@@ -35,6 +42,10 @@
       @if (searchQuery()) {
         <ds-text variant="muted">
           {{ "getGlobalArticles.noResults" | t }} “{{ searchQuery() }}”
+        </ds-text>
+      } @else if (sourceFilter()) {
+        <ds-text variant="muted">
+          {{ "getGlobalArticles.source.noResults" | t }}
         </ds-text>
       } @else {
         <ds-empty-state
@@ -51,7 +62,7 @@
             [emoji]="card.emoji"
             [name]="card.name"
             [brand]="card.brand"
-            [store]="card.store"
+            [store]="card.source"
             [added]="isAdded(card.id)"
             [pending]="isPending(card.id)"
             [actionLabel]="'getGlobalArticles.add' | t"

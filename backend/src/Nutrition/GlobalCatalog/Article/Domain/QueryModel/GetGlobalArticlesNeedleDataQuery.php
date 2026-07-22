@@ -8,10 +8,12 @@ interface GetGlobalArticlesNeedleDataQuery
         int $pageSize,
         int $pageNumber,
         ?string $filterName = null,
+        ?string $filterSource = null,
         ?string $orderBy = null,
     ): array;
 
     public function totalGlobalArticles(
         ?string $filterName = null,
+        ?string $filterSource = null,
     ): int;
 }

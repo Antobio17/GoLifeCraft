@@ -1,8 +1,10 @@
 import { Component, computed, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
 import { Observable } from "rxjs";
 import { delay } from "rxjs/operators";
 import { GlobalArticle } from "../../domain/models/global-article.model";
+import { GlobalArticleSource } from "../../domain/models/global-article-source.model";
 import {
   GlobalArticleCardView,
   GlobalArticleViewService,
@@ -23,6 +25,10 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
+  SegmentedOption,
+  SegmentedToggleComponent,
+} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
@@ -31,6 +37,7 @@ import {
   selector: "app-get-global-articles",
   templateUrl: "./get-global-articles.component.html",
   imports: [
+    FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
@@ -42,6 +49,7 @@ import {
     TextComponent,
     ProductCardComponent,
     InfiniteScrollComponent,
+    SegmentedToggleComponent,
   ],
 })
 export class GetGlobalArticlesComponent extends AbstractListPageComponent<GlobalArticle> {
@@ -56,6 +64,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
   protected readonly storageKey = "pageSize_globalArticles";
 
   searchQuery = signal("");
+  sourceFilter = signal<string>(GlobalArticleSource.All);
   reloading = signal(false);
   loadingMore = signal(false);
   importedIds = signal<Set<string>>(new Set());
@@ -66,6 +75,21 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
   );
 
   hasMore = computed(() => this.items().length < this.totalItems());
+
+  sourceOptions = computed<SegmentedOption[]>(() => [
+    {
+      value: GlobalArticleSource.All,
+      label: this.t("getGlobalArticles.source.all"),
+    },
+    {
+      value: GlobalArticleSource.Mercadona,
+      label: this.view.sourceLabel(GlobalArticleSource.Mercadona) ?? "",
+    },
+    {
+      value: GlobalArticleSource.OpenFoodFacts,
+      label: this.view.sourceLabel(GlobalArticleSource.OpenFoodFacts) ?? "",
+    },
+  ]);
 
   headerSubtitle = computed(() => {
     const total = new Intl.NumberFormat("es-ES").format(this.totalItems());
@@ -85,6 +109,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
       page,
       pageSize,
       this.searchQuery().trim() || undefined,
+      this.sourceFilter() || undefined,
     );
   }
 
@@ -117,6 +142,17 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
 
   onSearch(query: string): void {
     this.searchQuery.set(query);
+    this.reloadFirstPage();
+  }
+
+  onSourceChange(source: string): void {
+    if (source === this.sourceFilter()) return;
+
+    this.sourceFilter.set(source);
+    this.reloadFirstPage();
+  }
+
+  private reloadFirstPage(): void {
     this.currentPage.set(1);
     this.reloading.set(true);
 
