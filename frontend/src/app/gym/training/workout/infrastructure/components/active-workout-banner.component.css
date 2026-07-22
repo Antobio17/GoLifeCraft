@@ -2,7 +2,7 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(78px + env(safe-area-inset-bottom));
+  bottom: calc(68px + env(safe-area-inset-bottom));
   z-index: 39;
   display: flex;
   justify-content: center;
@@ -12,7 +12,7 @@
 
 @media (display-mode: standalone) {
   :host {
-    bottom: calc(48px + env(safe-area-inset-bottom));
+    bottom: calc(40px + env(safe-area-inset-bottom));
   }
 }
 
