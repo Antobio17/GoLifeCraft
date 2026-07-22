@@ -5,6 +5,7 @@ namespace Integration\Mercadona\Infrastructure\Application\Console;
 use Integration\Mercadona\Domain\Exception\MercadonaThrottledException;
 use Integration\Mercadona\Domain\Model\MercadonaNutrition;
 use Integration\Mercadona\Domain\Model\MercadonaProduct;
+use Integration\Mercadona\Domain\Model\NutritionExtraction;
 use Integration\Mercadona\Domain\Service\ImportedProductRegistry;
 use Integration\Mercadona\Domain\Service\MercadonaCatalogProvider;
 use Integration\Mercadona\Domain\Service\MercadonaImportQueue;
@@ -27,6 +28,8 @@ final class SyncMercadonaCatalogCommand extends Command
     private const int RESULT_FAILED = 3;
     private const int RESULT_EXISTING = 4;
 
+    private bool $showDetails = false;
+
     public function __construct(
         private readonly MercadonaCatalogProvider $catalogProvider,
         private readonly MercadonaNutritionExtractor $nutritionExtractor,
@@ -46,6 +49,7 @@ final class SyncMercadonaCatalogCommand extends Command
             ->addOption(name: 'scan', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Max number of subcategories to explore in this run when the pending buffer is low.', default: '1')
             ->addOption(name: 'delay', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Milliseconds to wait between imports (only relevant when limit > 1).', default: '500')
             ->addOption(name: 'refresh', shortcut: null, mode: InputOption::VALUE_NONE, description: 'Reset the queue and rediscover the catalog from scratch.')
+            ->addOption(name: 'show-details', shortcut: null, mode: InputOption::VALUE_NONE, description: 'Print the label image URLs, their download result and the raw Gemini answer for every product.')
             ->addOption(name: 'force', shortcut: null, mode: InputOption::VALUE_NONE, description: 'Re-extract and re-import products already present in the catalog.');
     }
 
@@ -56,6 +60,7 @@ final class SyncMercadonaCatalogCommand extends Command
         $scanLimit = max(0, (int) $input->getOption('scan'));
         $delayMilliseconds = max(0, (int) $input->getOption('delay'));
         $force = (bool) $input->getOption('force');
+        $this->showDetails = (bool) $input->getOption('show-details');
 
         if ((bool) $input->getOption('refresh')) {
             $this->importQueue->reset();
@@ -161,14 +166,27 @@ final class SyncMercadonaCatalogCommand extends Command
             return self::RESULT_EXISTING;
         }
 
-        $nutrition = $this->nutritionExtractor->extract(imageUrls: $product->labelImageUrls);
-        if (null === $nutrition) {
-            $output->writeln(messages: sprintf('<comment>Skip %s (%s): nutrition not extracted.</comment>', $product->barcode, $product->name));
+        $extraction = $this->nutritionExtractor->extract(imageUrls: $product->labelImageUrls);
+        $this->writeDetails(extraction: $extraction, output: $output);
+
+        if (!$extraction->isSuccessful()) {
+            $output->writeln(messages: sprintf('<comment>Skip %s (%s): %s.</comment>', $product->barcode, $product->name, $extraction->status));
 
             return self::RESULT_SKIPPED;
         }
 
-        return $this->upsert(product: $product, nutrition: $nutrition, output: $output);
+        return $this->upsert(product: $product, nutrition: $extraction->nutrition, output: $output);
+    }
+
+    private function writeDetails(NutritionExtraction $extraction, OutputInterface $output): void
+    {
+        if (!$this->showDetails) {
+            return;
+        }
+
+        foreach ($extraction->notes as $note) {
+            $output->writeln(messages: sprintf('<comment>  %s</comment>', $note));
+        }
     }
 
     private function fetch(int $id, OutputInterface $output): ?MercadonaProduct

@@ -5,7 +5,7 @@ namespace Integration\Mercadona\Domain\Model;
 final readonly class MercadonaProduct
 {
     private const array FRONTAL_PERSPECTIVES = [1, 2, 3];
-    private const string LABEL_IMAGE_QUERY = '?fit=crop&w=1280&h=1280';
+    private const string LABEL_IMAGE_QUERY = '?fit=max&w=1600';
 
     /**
      * @param string[] $labelImageUrls
@@ -89,24 +89,22 @@ final readonly class MercadonaProduct
      */
     private static function labelImageUrls(array $photos): array
     {
-        $labels = [];
-        $all = [];
+        $urls = [];
 
         foreach ($photos as $photo) {
+            if (!is_array($photo)) {
+                continue;
+            }
+
             $url = self::toTrimmedString(value: $photo['zoom'] ?? $photo['regular'] ?? null);
             if (null === $url) {
                 continue;
             }
 
-            $ocrUrl = self::ocrUrl(url: $url);
-            $all[] = $ocrUrl;
-
-            if (!in_array((int) ($photo['perspective'] ?? 0), self::FRONTAL_PERSPECTIVES, true)) {
-                $labels[] = $ocrUrl;
-            }
+            $urls[self::ocrUrl(url: $url)] = true;
         }
 
-        return [] === $labels ? $all : $labels;
+        return array_keys($urls);
     }
 
     private static function ocrUrl(string $url): string

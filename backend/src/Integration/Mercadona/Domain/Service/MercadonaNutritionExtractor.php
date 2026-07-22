@@ -2,12 +2,12 @@
 
 namespace Integration\Mercadona\Domain\Service;
 
-use Integration\Mercadona\Domain\Model\MercadonaNutrition;
+use Integration\Mercadona\Domain\Model\NutritionExtraction;
 
 interface MercadonaNutritionExtractor
 {
     /**
      * @param string[] $imageUrls
      */
-    public function extract(array $imageUrls): ?MercadonaNutrition;
+    public function extract(array $imageUrls): NutritionExtraction;
 }

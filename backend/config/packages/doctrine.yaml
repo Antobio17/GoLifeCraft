@@ -11,12 +11,21 @@ doctrine:
                 password: '%env(resolve:DATABASE_MASTER_PASSWORD)%'
                 charset: utf8mb4
                 server_version: '%env(resolve:DATABASE_MASTER_SERVER_VERSION)%'
+                default_table_options:
+                    charset: utf8mb4
+                    collation: utf8mb4_unicode_ci
             writer_tenant:
                 url: '%env(resolve:DATABASE_WRITER_TENANT_TEMPLATE_URL)%'
                 charset: utf8mb4
+                default_table_options:
+                    charset: utf8mb4
+                    collation: utf8mb4_unicode_ci
             reader_tenant:
                 url: '%env(resolve:DATABASE_READER_TENANT_TEMPLATE_URL)%'
                 charset: utf8mb4
+                default_table_options:
+                    charset: utf8mb4
+                    collation: utf8mb4_unicode_ci
     orm:
         default_entity_manager: master_manager
         enable_native_lazy_objects: true

@@ -4,6 +4,7 @@ namespace Integration\Mercadona\Infrastructure\Domain\Service\Gemini;
 
 use Integration\Mercadona\Domain\Exception\MercadonaThrottledException;
 use Integration\Mercadona\Domain\Model\MercadonaNutrition;
+use Integration\Mercadona\Domain\Model\NutritionExtraction;
 use Integration\Mercadona\Domain\Service\MercadonaNutritionExtractor;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
@@ -34,45 +35,68 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
     ) {
     }
 
-    public function extract(array $imageUrls): ?MercadonaNutrition
+    public function extract(array $imageUrls): NutritionExtraction
     {
-        if ([] === $imageUrls || '' === $this->apiKey) {
-            return null;
+        if ('' === $this->apiKey) {
+            return NutritionExtraction::failure(
+                status: NutritionExtraction::STATUS_MISSING_API_KEY,
+                notes: ['MERCADONA_GEMINI_KEY is empty: every product would be skipped.'],
+            );
         }
 
-        $parts = $this->imageParts(imageUrls: $imageUrls);
+        if ([] === $imageUrls) {
+            return NutritionExtraction::failure(
+                status: NutritionExtraction::STATUS_NO_IMAGES,
+                notes: ['The product exposes no label photos.'],
+            );
+        }
+
+        $notes = [sprintf('Label images sent to Gemini: %d', count($imageUrls))];
+
+        $parts = $this->imageParts(imageUrls: $imageUrls, notes: $notes);
         if ([] === $parts) {
-            return null;
+            return NutritionExtraction::failure(status: NutritionExtraction::STATUS_IMAGES_UNAVAILABLE, notes: $notes);
         }
 
         $parts[] = ['text' => self::PROMPT];
 
         $data = $this->generate(parts: $parts);
         if (null === $data) {
-            return null;
+            $notes[] = 'Gemini returned no usable response (network error, quota, or unparseable JSON).';
+
+            return NutritionExtraction::failure(status: NutritionExtraction::STATUS_NO_RESPONSE, notes: $notes);
         }
+
+        $notes[] = 'Gemini answered: '.json_encode($data, JSON_UNESCAPED_UNICODE);
 
         $nutrition = $this->toNutrition(data: $data);
-        if (null === $nutrition || !$nutrition->isCoherent()) {
-            return null;
+        if (null === $nutrition) {
+            return NutritionExtraction::failure(status: NutritionExtraction::STATUS_NOT_FOUND, notes: $notes);
         }
 
-        return $nutrition;
+        if (!$nutrition->isCoherent()) {
+            return NutritionExtraction::failure(status: NutritionExtraction::STATUS_INCOHERENT, notes: $notes);
+        }
+
+        return NutritionExtraction::success(nutrition: $nutrition, notes: $notes);
     }
 
     /**
      * @param string[] $imageUrls
+     * @param string[] $notes
      *
      * @return array<int, array{inline_data: array{mime_type: string, data: string}}>
      */
-    private function imageParts(array $imageUrls): array
+    private function imageParts(array $imageUrls, array &$notes): array
     {
         $parts = [];
         foreach ($imageUrls as $imageUrl) {
-            $bytes = $this->download(url: $imageUrl);
+            $bytes = $this->download(url: $imageUrl, notes: $notes);
             if (null === $bytes) {
                 continue;
             }
+
+            $notes[] = sprintf('  ok (%d KB) %s', intdiv(strlen($bytes), 1024), $imageUrl);
 
             $parts[] = [
                 'inline_data' => [
@@ -85,7 +109,10 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
         return $parts;
     }
 
-    private function download(string $url): ?string
+    /**
+     * @param string[] $notes
+     */
+    private function download(string $url, array &$notes): ?string
     {
         try {
             return $this->httpClient->request(
@@ -93,7 +120,9 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
                 url: $url,
                 options: ['headers' => ['User-Agent' => $this->userAgent]],
             )->getContent();
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $e) {
+            $notes[] = sprintf('  FAILED %s (%s)', $url, $e->getMessage());
+
             return null;
         }
     }
