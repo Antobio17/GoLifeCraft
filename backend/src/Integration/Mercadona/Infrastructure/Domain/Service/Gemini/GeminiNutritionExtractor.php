@@ -60,10 +60,8 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
 
         $parts[] = ['text' => self::PROMPT];
 
-        $data = $this->generate(parts: $parts);
+        $data = $this->generate(parts: $parts, notes: $notes);
         if (null === $data) {
-            $notes[] = 'Gemini returned no usable response (network error, quota, or unparseable JSON).';
-
             return NutritionExtraction::failure(status: NutritionExtraction::STATUS_NO_RESPONSE, notes: $notes);
         }
 
@@ -130,7 +128,11 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
     /**
      * @param array<int, array<string, mixed>> $parts
      */
-    private function generate(array $parts): ?array
+    /**
+     * @param array<int, array<string, mixed>> $parts
+     * @param string[]                         $notes
+     */
+    private function generate(array $parts, array &$notes): ?array
     {
         $payload = [
             'contents' => [['parts' => $parts]],
@@ -141,22 +143,32 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
             ],
         ];
 
-        $response = $this->requestWithRetry(payload: $payload);
+        $response = $this->requestWithRetry(payload: $payload, notes: $notes);
         if (null === $response) {
             return null;
         }
 
         $text = $response['candidates'][0]['content']['parts'][0]['text'] ?? null;
         if (!is_string($text)) {
+            $notes[] = 'Gemini replied without usable text: '.self::truncate(value: json_encode($response, JSON_UNESCAPED_UNICODE));
+
             return null;
         }
 
         $decoded = json_decode($text, true);
+        if (!is_array($decoded)) {
+            $notes[] = 'Gemini text is not valid JSON: '.self::truncate(value: $text);
 
-        return is_array($decoded) ? $decoded : null;
+            return null;
+        }
+
+        return $decoded;
     }
 
-    private function requestWithRetry(array $payload): ?array
+    /**
+     * @param string[] $notes
+     */
+    private function requestWithRetry(array $payload, array &$notes): ?array
     {
         $url = rtrim($this->baseUrl, '/').'/v1beta/models/'.$this->model.':generateContent';
 
@@ -177,6 +189,8 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
             } catch (ExceptionInterface $e) {
                 $this->abortOnThrottle(exception: $e);
 
+                $notes[] = sprintf('Gemini call failed (attempt %d/%d) on %s: %s', $attempt, self::MAX_ATTEMPTS, $url, $this->describeFailure(exception: $e));
+
                 if ($attempt >= self::MAX_ATTEMPTS) {
                     return null;
                 }
@@ -186,6 +200,26 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
         }
 
         return null;
+    }
+
+    private function describeFailure(ExceptionInterface $exception): string
+    {
+        if (!$exception instanceof HttpExceptionInterface) {
+            return $exception->getMessage();
+        }
+
+        $response = $exception->getResponse();
+
+        return sprintf('HTTP %d — %s', $response->getStatusCode(), self::truncate(value: $response->getContent(throw: false)));
+    }
+
+    private static function truncate(string|false $value): string
+    {
+        if (false === $value) {
+            return '(empty)';
+        }
+
+        return mb_strimwidth(trim($value), 0, 600, '…');
     }
 
     private function toNutrition(array $data): ?MercadonaNutrition
