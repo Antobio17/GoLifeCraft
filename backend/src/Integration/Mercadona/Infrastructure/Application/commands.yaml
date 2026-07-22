@@ -5,6 +5,7 @@ services:
       $catalogProvider: '@Integration\Mercadona\Domain\Service\MercadonaCatalogProvider'
       $nutritionExtractor: '@Integration\Mercadona\Domain\Service\MercadonaNutritionExtractor'
       $importedRegistry: '@Integration\Mercadona\Domain\Service\ImportedProductRegistry'
+      $importQueue: '@Integration\Mercadona\Domain\Service\MercadonaImportQueue'
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'console.command' }

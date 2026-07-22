@@ -2,19 +2,19 @@
 
 namespace Integration\Mercadona\Infrastructure\Domain\Service\Gemini;
 
+use Integration\Mercadona\Domain\Exception\MercadonaThrottledException;
 use Integration\Mercadona\Domain\Model\MercadonaNutrition;
 use Integration\Mercadona\Domain\Service\MercadonaNutritionExtractor;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtractor
 {
+    private const string SERVICE = 'Gemini';
     private const float REFERENCE_AMOUNT = 100.0;
-    private const int MAX_ATTEMPTS = 4;
+    private const int MAX_ATTEMPTS = 2;
     private const int RETRY_BASE_DELAY_MICROSECONDS = 2000000;
-    private const int THROTTLE_DELAY_MICROSECONDS = 60000000;
     private const array THROTTLE_STATUS_CODES = [429, 500, 503];
     private const string PROMPT = <<<'PROMPT'
         Eres un extractor de información nutricional. En las imágenes aparece la etiqueta de un producto de alimentación de supermercado.
@@ -146,11 +146,13 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
                     ],
                 )->toArray();
             } catch (ExceptionInterface $e) {
+                $this->abortOnThrottle(exception: $e);
+
                 if ($attempt >= self::MAX_ATTEMPTS) {
                     return null;
                 }
 
-                $this->sleepBeforeRetry(exception: $e, attempt: $attempt);
+                usleep(self::RETRY_BASE_DELAY_MICROSECONDS * $attempt);
             }
         }
 
@@ -202,50 +204,17 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
         ];
     }
 
-    private function sleepBeforeRetry(ExceptionInterface $exception, int $attempt): void
+    private function abortOnThrottle(ExceptionInterface $exception): void
     {
-        $throttleDelay = $this->resolveThrottleDelay(exception: $exception);
-        if (null !== $throttleDelay) {
-            usleep($throttleDelay);
-
+        if (!$exception instanceof HttpExceptionInterface) {
             return;
         }
 
-        usleep(self::RETRY_BASE_DELAY_MICROSECONDS * $attempt);
-    }
-
-    private function resolveThrottleDelay(ExceptionInterface $exception): ?int
-    {
-        if (!$exception instanceof HttpExceptionInterface) {
-            return null;
+        $statusCode = $exception->getResponse()->getStatusCode();
+        if (!in_array($statusCode, self::THROTTLE_STATUS_CODES, true)) {
+            return;
         }
 
-        $response = $exception->getResponse();
-        if (!in_array($response->getStatusCode(), self::THROTTLE_STATUS_CODES, true)) {
-            return null;
-        }
-
-        return $this->retryAfterMicroseconds(response: $response) ?? self::THROTTLE_DELAY_MICROSECONDS;
-    }
-
-    private function retryAfterMicroseconds(ResponseInterface $response): ?int
-    {
-        $retryAfter = $response->getHeaders(throw: false)['retry-after'][0] ?? null;
-        if (null === $retryAfter) {
-            return null;
-        }
-
-        if (is_numeric($retryAfter)) {
-            return max(0, (int) $retryAfter) * 1000000;
-        }
-
-        $timestamp = strtotime($retryAfter);
-        if (false === $timestamp) {
-            return null;
-        }
-
-        $seconds = $timestamp - time();
-
-        return $seconds > 0 ? $seconds * 1000000 : null;
+        throw MercadonaThrottledException::forStatus(service: self::SERVICE, statusCode: $statusCode);
     }
 }

@@ -127,6 +127,7 @@ services:
       - .env.local
     volumes:
       - ./volumes/worker_logs:/var/log/worker
+      - ./volumes/mercadona:/var/www/html/var/mercadona
     depends_on:
       - db
     logging:

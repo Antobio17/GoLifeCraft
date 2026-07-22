@@ -290,9 +290,27 @@ el `php` que sirve la web). El servicio está bajo el profile `tools`, así que 
 arranca** con `docker compose up`; se ejecuta a demanda.
 
 La nutrición se extrae con **Gemini** (visión). Un producto solo se guarda si se
-extraen **y validan** identidad y nutrición; el resto se descarta con motivo. La
-carga es **reanudable**: los productos ya importados se saltan sin volver a llamar
-a Gemini.
+extraen **y validan** identidad y nutrición; el resto se descarta con motivo.
+
+La carga es **incremental y reanudable**. En vez de recorrer todo el catálogo de
+golpe (lo que hacía que Mercadona banease la IP por la ráfaga de peticiones), cada
+ejecución del comando:
+
+1. La primera vez, hace **una sola** llamada al árbol de categorías y guarda la
+   lista de subcategorías pendientes en `var/mercadona/queue.json`.
+2. Explora **una** subcategoría (1 petición) solo cuando el buffer de productos
+   pendientes se vacía, y encola sus productos.
+3. Importa hasta `--limit` productos (por defecto **1**) y termina.
+
+El estado (subcategorías y productos pendientes, y los ya vistos) vive en
+`var/mercadona/queue.json`, montado en el host como `volumes/mercadona/` — por eso
+ese volumen es **imprescindible**: es lo que evita volver a recorrer el catálogo en
+cada ejecución. Si Mercadona o Gemini responden con throttle (`403/429/503`), el
+comando **corta limpio** (exit 1) sin perder el sitio; la siguiente ejecución
+reanuda por donde iba.
+
+Por eso se ejecuta **con un cron cada minuto** (≈ el límite de ~1 req/min de Gemini)
+en vez de un único proceso largo: 1 producto por minuto, sin ráfagas.
 
 #### 1. Configurar la API key de Gemini (una vez)
 
@@ -315,30 +333,56 @@ cd $SERVER_PROJECT_PATH
 #### 2. Preparar el servidor
 
 ```bash
-docker compose -f docker-compose.prod.yml pull worker      # última imagen del CI
-mkdir -p volumes/worker_logs && chmod 777 volumes/worker_logs   # log escribible por el worker
+docker compose -f docker-compose.prod.yml pull worker            # última imagen del CI
+mkdir -p volumes/worker_logs volumes/mercadona                   # logs + estado de la cola
+sudo chown 33:33 volumes/worker_logs volumes/mercadona           # propiedad del worker
+chmod 755 volumes/worker_logs volumes/mercadona                  # solo el worker escribe
 ```
 
-#### 3. Prueba en pequeño
+> El worker corre como `www-data`, que dentro del contenedor es el **uid 33**; en un
+> bind mount el uid se mapea por número, así que `chown 33:33` en el host convierte
+> al worker en owner y con `755` escribe él solo (nada de `777` world-writable).
+> `volumes/mercadona` se monta en el servicio `worker` de `docker-compose.prod.yml`
+> y guarda `queue.json`.
+
+#### 3. Carga inicial (crear el `queue.json`)
+
+No hay un paso de "descubrimiento" aparte: **la primera ejecución del comando crea
+el JSON** sola. Lánzala una vez a mano (con la IP ya sin bloquear) para inicializar
+la cola y comprobar que todo va:
 
 ```bash
-docker compose -f docker-compose.prod.yml run --rm worker \
-  php bin/console app:catalog:sync-mercadona --category 11 --limit 10 --delay 6000
+docker compose --env-file .env.local -f docker-compose.prod.yml run --rm worker \
+  php bin/console app:catalog:sync-mercadona --limit 1
 ```
 
-#### 4. Carga completa en segundo plano, con log a fichero
-
-El free tier permite ~1.500/día, así que se pacea con `--delay 60000` (60 s entre
-extracciones): el catálogo entero (~4.300 productos) tarda ~3-4 días corriendo sin
-parar. Se lanza **desacoplado** (`-d`, sobrevive a cerrar la sesión SSH) y con la
-salida redirigida a un fichero del host:
+Hace 1 llamada al árbol de categorías, explora la primera subcategoría e importa 1
+producto. Verifica que se ha creado el estado:
 
 ```bash
-docker compose -f docker-compose.prod.yml run -d --rm --name golifecraft_mercadona_sync worker \
-  sh -c 'php bin/console app:catalog:sync-mercadona --delay 60000 >> /var/log/worker/mercadona-sync.log 2>&1'
+head volumes/mercadona/queue.json
+# "initialized": true y una lista en "subcategoriesPending"
 ```
 
-**Seguir el progreso** (el fichero está en el host):
+> Para acotar el descubrimiento a una sola categoría de nivel superior al
+> inicializar: añade `--category <id>`. Para **reiniciar** la cola y redescubrir
+> desde cero: `--refresh`.
+
+#### 4. Cron cada minuto (a mano en el host)
+
+Se configura en el **crontab del host**, no en la imagen: así lo activas y
+desactivas sin desplegar. Como `deploy`, `crontab -e` y añade:
+
+```cron
+* * * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/mercadona-sync.lock docker compose --env-file .env.local -f docker-compose.prod.yml run --rm worker sh -c 'php bin/console app:catalog:sync-mercadona --limit 1 >> /var/log/worker/mercadona-sync.log 2>&1'
+```
+
+- `flock -n` evita que dos ejecuciones se solapen si alguna pasa de 60 s: esa tick
+  simplemente se salta.
+- **Sin `--delay`**: con `--limit 1` el ritmo lo marca el cron (1/min), no el delay.
+- El volumen `volumes/mercadona` da continuidad entre los `--rm`.
+
+**Seguir el progreso:**
 
 ```bash
 tail -f volumes/worker_logs/mercadona-sync.log
@@ -346,20 +390,18 @@ tail -f volumes/worker_logs/mercadona-sync.log
 # Cuántos productos de Mercadona llevas guardados:
 docker exec golifecraft_mysql sh -lc \
   'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SELECT COUNT(*) FROM global_article WHERE source=\"mercadona\"" master'
+
+# Cuánto queda en la cola:
+python3 -c 'import json;d=json.load(open("volumes/mercadona/queue.json"));print("productos pendientes:",len(d["productsPending"]),"| subcategorías pendientes:",len(d["subcategoriesPending"]))'
 ```
 
-**Si se corta** (reinicio, caída, host apagado): **relanza el mismo comando**. Al
-ser reanudable, salta lo ya importado sin gastar cuota y continúa donde iba.
+**Parar** la carga: quita (o comenta) la línea del `crontab -e`. Nada que desplegar.
 
-**Parar** la carga en marcha:
-
-```bash
-docker stop golifecraft_mercadona_sync
-```
-
-Opciones del comando: `--category` (acotar a una categoría), `--limit`
-(máximo de productos, `0` = todos), `--delay` (ms entre extracciones),
-`--force` (reimportar también los ya presentes).
+Opciones del comando: `--limit` (productos por ejecución, def 1), `--scan`
+(subcategorías a explorar por ejecución cuando el buffer está vacío, def 1),
+`--delay` (ms entre importaciones, solo relevante con `--limit > 1`), `--category`
+(acotar el descubrimiento al inicializar), `--refresh` (reiniciar la cola y
+redescubrir), `--force` (reimportar también los ya presentes).
 
 **OpenFoodFacts** (fuente comunitaria, se distingue por `source` en `global_article`):
 

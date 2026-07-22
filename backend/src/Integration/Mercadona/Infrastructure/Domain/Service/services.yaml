@@ -30,3 +30,8 @@ services:
     class: Integration\Mercadona\Infrastructure\Domain\Service\Doctrine\DbalImportedProductRegistry
     arguments:
       $connection: '@doctrine.dbal.master_connection'
+
+  Integration\Mercadona\Domain\Service\MercadonaImportQueue:
+    class: Integration\Mercadona\Infrastructure\Domain\Service\File\FileMercadonaImportQueue
+    arguments:
+      $filePath: '%kernel.project_dir%/var/mercadona/queue.json'

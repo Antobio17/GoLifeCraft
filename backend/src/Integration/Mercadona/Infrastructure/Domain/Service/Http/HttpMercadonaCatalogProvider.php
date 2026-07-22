@@ -2,18 +2,18 @@
 
 namespace Integration\Mercadona\Infrastructure\Domain\Service\Http;
 
+use Integration\Mercadona\Domain\Exception\MercadonaThrottledException;
 use Integration\Mercadona\Domain\Model\MercadonaProduct;
 use Integration\Mercadona\Domain\Service\MercadonaCatalogProvider;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final readonly class HttpMercadonaCatalogProvider implements MercadonaCatalogProvider
 {
-    private const int MAX_ATTEMPTS = 4;
+    private const string SERVICE = 'Mercadona';
+    private const int MAX_ATTEMPTS = 2;
     private const int RETRY_BASE_DELAY_MICROSECONDS = 1500000;
-    private const int THROTTLE_DELAY_MICROSECONDS = 30000000;
     private const array THROTTLE_STATUS_CODES = [403, 429, 503];
 
     public function __construct(
@@ -25,17 +25,20 @@ final readonly class HttpMercadonaCatalogProvider implements MercadonaCatalogPro
     ) {
     }
 
-    public function listProductIds(?int $categoryId = null): array
+    public function listSubcategoryIds(?int $categoryId = null): array
     {
         $tree = $this->request(path: '/api/categories/');
-        $subcategoryIds = $this->collectSubcategoryIds(tree: $tree, onlyTopCategoryId: $categoryId);
+
+        return $this->collectSubcategoryIds(tree: $tree, onlyTopCategoryId: $categoryId);
+    }
+
+    public function listProductIdsInSubcategory(int $subcategoryId): array
+    {
+        $detail = $this->request(path: '/api/categories/'.$subcategoryId.'/');
 
         $ids = [];
-        foreach ($subcategoryIds as $subcategoryId) {
-            $detail = $this->request(path: '/api/categories/'.$subcategoryId.'/');
-            foreach ($this->productIds(detail: $detail) as $productId) {
-                $ids[$productId] = true;
-            }
+        foreach ($this->productIds(detail: $detail) as $productId) {
+            $ids[$productId] = true;
         }
 
         return array_map(static fn (int|string $id): int => (int) $id, array_keys($ids));
@@ -124,63 +127,32 @@ final readonly class HttpMercadonaCatalogProvider implements MercadonaCatalogPro
                     ],
                 )->toArray();
             } catch (ExceptionInterface $e) {
+                $this->abortOnThrottle(exception: $e);
+
                 $lastException = $e;
 
                 if ($attempt >= self::MAX_ATTEMPTS) {
                     break;
                 }
 
-                $this->sleepBeforeRetry(exception: $e, attempt: $attempt);
+                usleep(self::RETRY_BASE_DELAY_MICROSECONDS * $attempt);
             }
         }
 
         throw $lastException;
     }
 
-    private function sleepBeforeRetry(ExceptionInterface $exception, int $attempt): void
+    private function abortOnThrottle(ExceptionInterface $exception): void
     {
-        $throttleDelay = $this->resolveThrottleDelay(exception: $exception);
-        if (null !== $throttleDelay) {
-            usleep($throttleDelay);
-
+        if (!$exception instanceof HttpExceptionInterface) {
             return;
         }
 
-        usleep(self::RETRY_BASE_DELAY_MICROSECONDS * $attempt);
-    }
-
-    private function resolveThrottleDelay(ExceptionInterface $exception): ?int
-    {
-        if (!$exception instanceof HttpExceptionInterface) {
-            return null;
+        $statusCode = $exception->getResponse()->getStatusCode();
+        if (!in_array($statusCode, self::THROTTLE_STATUS_CODES, true)) {
+            return;
         }
 
-        $response = $exception->getResponse();
-        if (!in_array($response->getStatusCode(), self::THROTTLE_STATUS_CODES, true)) {
-            return null;
-        }
-
-        return $this->retryAfterMicroseconds(response: $response) ?? self::THROTTLE_DELAY_MICROSECONDS;
-    }
-
-    private function retryAfterMicroseconds(ResponseInterface $response): ?int
-    {
-        $retryAfter = $response->getHeaders(throw: false)['retry-after'][0] ?? null;
-        if (null === $retryAfter) {
-            return null;
-        }
-
-        if (is_numeric($retryAfter)) {
-            return max(0, (int) $retryAfter) * 1000000;
-        }
-
-        $timestamp = strtotime($retryAfter);
-        if (false === $timestamp) {
-            return null;
-        }
-
-        $seconds = $timestamp - time();
-
-        return $seconds > 0 ? $seconds * 1000000 : null;
+        throw MercadonaThrottledException::forStatus(service: self::SERVICE, statusCode: $statusCode);
     }
 }
