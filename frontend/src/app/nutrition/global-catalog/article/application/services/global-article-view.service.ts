@@ -5,6 +5,7 @@ import { GlobalArticleSource } from "../../domain/models/global-article-source.m
 export interface GlobalArticleCardView {
   id: string;
   emoji: string;
+  imageUrl: string | null;
   name: string;
   brand: string | null;
   source: string | null;
@@ -21,6 +22,12 @@ const SOURCE_LABELS: Record<string, string> = {
   [GlobalArticleSource.OpenFoodFacts]: "Open Food Facts",
 };
 
+const MERCADONA_IMAGE_HOST = "prod-mercadona.imgix.net";
+const MERCADONA_THUMBNAIL_SIZE = 160;
+const OPENFOODFACTS_IMAGE_HOST = "images.openfoodfacts.org";
+const OPENFOODFACTS_THUMBNAIL_SIZE = 200;
+const OPENFOODFACTS_SIZED_IMAGE = /\.(\d+)\.(\d+)\.jpg$/;
+
 @Injectable()
 export class GlobalArticleViewService {
   toCard(globalArticle: GlobalArticle): GlobalArticleCardView {
@@ -29,6 +36,7 @@ export class GlobalArticleViewService {
     return {
       id: globalArticle.id,
       emoji: FALLBACK_EMOJI,
+      imageUrl: this.thumbnailUrl(attributes.imageUrl),
       name: attributes.name,
       brand: attributes.brand,
       source: this.sourceLabel(attributes.source),
@@ -37,6 +45,24 @@ export class GlobalArticleViewService {
       fat: this.integer(attributes.fat),
       carbs: this.integer(attributes.carbs),
     };
+  }
+
+  private thumbnailUrl(imageUrl: string | null): string | null {
+    if (!imageUrl) return null;
+
+    if (imageUrl.includes(MERCADONA_IMAGE_HOST)) {
+      const path = imageUrl.split("?")[0];
+      return `${path}?fit=crop&w=${MERCADONA_THUMBNAIL_SIZE}&h=${MERCADONA_THUMBNAIL_SIZE}`;
+    }
+
+    if (imageUrl.includes(OPENFOODFACTS_IMAGE_HOST)) {
+      return imageUrl.replace(
+        OPENFOODFACTS_SIZED_IMAGE,
+        `.$1.${OPENFOODFACTS_THUMBNAIL_SIZE}.jpg`,
+      );
+    }
+
+    return imageUrl;
   }
 
   sourceLabel(source: string | null): string | null {

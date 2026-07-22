@@ -9,7 +9,20 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
   imports: [NgTemplateOutlet, IconComponent],
   template: `
     <ng-template #content>
-      <span class="ds-pcard__emoji">{{ emoji }}</span>
+      <span class="ds-pcard__emoji">
+        @if (imageUrl && !imageFailed) {
+          <img
+            class="ds-pcard__image"
+            [src]="imageUrl"
+            [alt]="name"
+            loading="lazy"
+            decoding="async"
+            (error)="imageFailed = true"
+          />
+        } @else {
+          {{ emoji }}
+        }
+      </span>
       <span class="ds-pcard__body">
         <span class="ds-pcard__head">
           <span class="ds-pcard__name">{{ name }}</span>
@@ -139,6 +152,13 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         align-items: center;
         justify-content: center;
         font-size: 26px;
+        overflow: hidden;
+      }
+      .ds-pcard__image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
       }
       .ds-pcard__body {
         flex: 1 1 auto;
@@ -201,6 +221,22 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 export class ProductCardComponent {
   @Input() emoji = "";
   @Input() name = "";
+
+  @Input()
+  set imageUrl(value: string | null) {
+    if (value === this.currentImageUrl) return;
+
+    this.currentImageUrl = value;
+    this.imageFailed = false;
+  }
+
+  get imageUrl(): string | null {
+    return this.currentImageUrl;
+  }
+
+  private currentImageUrl: string | null = null;
+  imageFailed = false;
+
   @Input() price: string | null = null;
   @Input() brand: string | null = null;
   @Input() store: string | null = null;
