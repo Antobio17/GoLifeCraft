@@ -28,12 +28,22 @@ export class DiaryEntryComponent {
   @Output() quantityChange = new EventEmitter<number>();
   @Output() remove = new EventEmitter<void>();
 
-  onQtyInput(event: Event): void {
-    const parsed = Number.parseFloat(
-      (event.target as HTMLInputElement).value.replace(",", "."),
-    );
-    if (!Number.isFinite(parsed)) return;
+  onQtyCommit(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const parsed = Number.parseFloat(input.value.replace(",", "."));
+
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      input.value = String(this.quantity);
+
+      return;
+    }
+
+    if (parsed === this.quantity) return;
 
     this.quantityChange.emit(parsed);
+  }
+
+  onQtyEnter(event: Event): void {
+    (event.target as HTMLInputElement).blur();
   }
 }

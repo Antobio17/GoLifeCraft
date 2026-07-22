@@ -25,7 +25,8 @@
           inputmode="decimal"
           [value]="quantity"
           [attr.aria-label]="quantityAriaLabel"
-          (input)="onQtyInput($event)"
+          (change)="onQtyCommit($event)"
+          (keydown.enter)="onQtyEnter($event)"
         />
         <span class="diary-entry__qty-unit">{{ unit }}</span>
       </div>
