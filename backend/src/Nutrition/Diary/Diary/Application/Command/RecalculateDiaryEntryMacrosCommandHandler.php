@@ -2,13 +2,12 @@
 
 namespace Nutrition\Diary\Diary\Application\Command;
 
-use Nutrition\Diary\Diary\Domain\Exception\UpdateDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository;
 use Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
-final readonly class UpdateDiaryEntryQuantityCommandHandler
+final readonly class RecalculateDiaryEntryMacrosCommandHandler
 {
     public function __construct(
         private DiaryEntryRepository $diaryEntryRepository,
@@ -18,23 +17,26 @@ final readonly class UpdateDiaryEntryQuantityCommandHandler
     ) {
     }
 
-    public function __invoke(UpdateDiaryEntryQuantityCommand $command): void
+    public function __invoke(RecalculateDiaryEntryMacrosCommand $command): void
     {
         $diaryEntry = $this->diaryEntryRepository->findById(id: $command->diaryEntryId);
         if (null === $diaryEntry) {
-            throw UpdateDiaryEntryException::diaryEntryNotFound(diaryEntryId: $command->diaryEntryId);
+            return;
         }
 
         $snapshot = $this->snapshotCalculator->calculate(
             kind: $diaryEntry->kind,
             refId: $diaryEntry->refId,
-            quantity: $command->quantity,
+            quantity: $diaryEntry->quantity,
         );
 
-        $diaryEntry->updateQuantity(
-            quantity: $command->quantity,
+        if ($diaryEntry->matchesSnapshot(snapshot: $snapshot)) {
+            return;
+        }
+
+        $diaryEntry->applySnapshot(
             snapshot: $snapshot,
-            updatedByUserId: $command->updatedByUserId,
+            updatedByUserId: $diaryEntry->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 

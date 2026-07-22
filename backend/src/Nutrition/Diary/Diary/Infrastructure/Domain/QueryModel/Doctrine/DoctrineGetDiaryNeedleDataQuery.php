@@ -10,23 +10,17 @@ use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryMealView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\GetDiaryResult;
 use Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryNeedleDataQuery;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
-use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
-use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
-use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 
 final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
 {
     public function __construct(
         private Connection $connection,
-        private DoctrineRecipeNutritionGraphProvider $graphProvider,
-        private RecipeNutritionCalculator $calculator,
     ) {
     }
 
     public function findDiaryDay(string $date): GetDiaryResult
     {
         $rows = $this->fetchEntries(date: $date);
-        $graph = $this->graphProvider->load();
         $goals = $this->resolveGoals(date: $date);
 
         $meals = [];
@@ -37,11 +31,11 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
             $mealTotals = MacroBreakdown::zero();
 
             foreach (array_filter($rows, static fn ($row): bool => $row['meal'] === $mealKey) as $row) {
-                $macros = $this->calculator->ingredientContribution(
-                    graph: $graph,
-                    kind: $row['kind'],
-                    refId: $row['ref_id'],
-                    quantity: (float) $row['quantity'],
+                $macros = new MacroBreakdown(
+                    calories: (float) $row['snapshot_calories'],
+                    protein: (float) $row['snapshot_protein'],
+                    fat: (float) $row['snapshot_fat'],
+                    carbs: (float) $row['snapshot_carbs'],
                 );
 
                 $mealTotals = $mealTotals->add(other: $macros);
@@ -50,8 +44,8 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
                     id: $row['id'],
                     kind: $row['kind'],
                     refId: $row['ref_id'],
-                    name: $this->resolveName(graph: $graph, kind: $row['kind'], refId: $row['ref_id']),
-                    emoji: $this->resolveEmoji(graph: $graph, kind: $row['kind'], refId: $row['ref_id']),
+                    name: $row['snapshot_name'],
+                    emoji: $row['snapshot_emoji'],
                     quantity: (float) $row['quantity'],
                     unit: DiaryEntry::KIND_PRODUCT === $row['kind'] ? 'g' : 'rac.',
                     macros: $macros->rounded(),
@@ -155,28 +149,12 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
     private function fetchEntries(string $date): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity')
+            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs')
             ->from(table: 'diary_entry', alias: 'e')
             ->where('e.entry_date = :date')
             ->setParameter(key: 'date', value: $date)
             ->orderBy('e.created_at', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
-    }
-
-    private function resolveName(RecipeNutritionGraph $graph, string $kind, string $refId): string
-    {
-        $name = DiaryEntry::KIND_PRODUCT === $kind
-            ? $graph->articleName(articleId: $refId)
-            : $graph->recipeName(recipeId: $refId);
-
-        return $name ?? '(eliminado)';
-    }
-
-    private function resolveEmoji(RecipeNutritionGraph $graph, string $kind, string $refId): string
-    {
-        return DiaryEntry::KIND_PRODUCT === $kind
-            ? $graph->articleEmoji(articleId: $refId)
-            : $graph->recipeEmoji(recipeId: $refId);
     }
 }

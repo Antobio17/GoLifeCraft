@@ -6,15 +6,11 @@ use Doctrine\DBAL\Connection;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryCalendarDay;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\GetDiaryCalendarResult;
 use Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryCalendarNeedleDataQuery;
-use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
-use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 
 final readonly class DoctrineGetDiaryCalendarNeedleDataQuery implements GetDiaryCalendarNeedleDataQuery
 {
     public function __construct(
         private Connection $connection,
-        private DoctrineRecipeNutritionGraphProvider $graphProvider,
-        private RecipeNutritionCalculator $calculator,
     ) {
     }
 
@@ -36,7 +32,6 @@ final readonly class DoctrineGetDiaryCalendarNeedleDataQuery implements GetDiary
             );
         }
 
-        $graph = $this->graphProvider->load();
         $snapshots = $this->fetchGoalSnapshots(firstDay: $firstDay, lastDay: $lastDay);
         $currentGoalCalories = $this->currentGoalCalories();
         $today = $this->today();
@@ -46,14 +41,8 @@ final readonly class DoctrineGetDiaryCalendarNeedleDataQuery implements GetDiary
 
         foreach ($rows as $row) {
             $date = $row['entry_date'];
-            $macros = $this->calculator->ingredientContribution(
-                graph: $graph,
-                kind: $row['kind'],
-                refId: $row['ref_id'],
-                quantity: (float) $row['quantity'],
-            );
 
-            $consumedByDate[$date] = ($consumedByDate[$date] ?? 0.0) + $macros->calories;
+            $consumedByDate[$date] = ($consumedByDate[$date] ?? 0.0) + (float) $row['snapshot_calories'];
             $countByDate[$date] = ($countByDate[$date] ?? 0) + 1;
         }
 
@@ -128,7 +117,7 @@ final readonly class DoctrineGetDiaryCalendarNeedleDataQuery implements GetDiary
     private function fetchEntries(string $firstDay, string $lastDay): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('e.entry_date', 'e.kind', 'e.ref_id', 'e.quantity')
+            ->select('e.entry_date', 'e.snapshot_calories')
             ->from(table: 'diary_entry', alias: 'e')
             ->where('e.entry_date BETWEEN :first AND :last')
             ->setParameter(key: 'first', value: $firstDay)

@@ -2,39 +2,46 @@
 
 namespace Nutrition\Diary\Diary\Application\Command;
 
-use Nutrition\Diary\Diary\Domain\Exception\UpdateDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository;
-use Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator;
+use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
-final readonly class UpdateDiaryEntryQuantityCommandHandler
+final readonly class ApplyDiaryEntrySnapshotCommandHandler
 {
     public function __construct(
         private DiaryEntryRepository $diaryEntryRepository,
-        private DiaryEntrySnapshotCalculator $snapshotCalculator,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
     }
 
-    public function __invoke(UpdateDiaryEntryQuantityCommand $command): void
+    public function __invoke(ApplyDiaryEntrySnapshotCommand $command): void
     {
         $diaryEntry = $this->diaryEntryRepository->findById(id: $command->diaryEntryId);
         if (null === $diaryEntry) {
-            throw UpdateDiaryEntryException::diaryEntryNotFound(diaryEntryId: $command->diaryEntryId);
+            return;
         }
 
-        $snapshot = $this->snapshotCalculator->calculate(
-            kind: $diaryEntry->kind,
-            refId: $diaryEntry->refId,
-            quantity: $command->quantity,
+        $snapshot = new DiaryEntrySnapshot(
+            name: $command->name,
+            emoji: $command->emoji,
+            macros: new MacroBreakdown(
+                calories: $command->calories,
+                protein: $command->protein,
+                fat: $command->fat,
+                carbs: $command->carbs,
+            ),
         );
 
-        $diaryEntry->updateQuantity(
-            quantity: $command->quantity,
+        if ($diaryEntry->matchesSnapshot(snapshot: $snapshot)) {
+            return;
+        }
+
+        $diaryEntry->applySnapshot(
             snapshot: $snapshot,
-            updatedByUserId: $command->updatedByUserId,
+            updatedByUserId: $diaryEntry->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 

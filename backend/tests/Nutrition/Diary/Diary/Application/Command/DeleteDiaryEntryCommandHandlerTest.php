@@ -9,6 +9,7 @@ use Nutrition\Diary\Diary\Application\Command\DeleteDiaryEntryCommandHandler;
 use Nutrition\Diary\Diary\Domain\Exception\DeleteDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
+use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -26,6 +27,7 @@ final class DeleteDiaryEntryCommandHandlerTest extends TestCase
 
         $createHandler = new CreateDiaryEntryCommandHandler(
             diaryEntryRepository: $this->repository,
+            snapshotCalculator: new InMemoryDiaryEntrySnapshotCalculator(),
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );

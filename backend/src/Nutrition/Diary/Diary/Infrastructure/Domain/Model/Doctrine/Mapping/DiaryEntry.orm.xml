@@ -8,6 +8,12 @@
     <field name="kind" type="string" column="kind" length="16"/>
     <field name="refId" type="string" column="ref_id" length="36"/>
     <field name="quantity" type="float" column="quantity"/>
+    <field name="nameSnapshot" type="string" column="snapshot_name" length="255"/>
+    <field name="emojiSnapshot" type="string" column="snapshot_emoji" length="16"/>
+    <field name="caloriesSnapshot" type="float" column="snapshot_calories"/>
+    <field name="proteinSnapshot" type="float" column="snapshot_protein"/>
+    <field name="fatSnapshot" type="float" column="snapshot_fat"/>
+    <field name="carbsSnapshot" type="float" column="snapshot_carbs"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

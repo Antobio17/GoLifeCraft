@@ -25,6 +25,47 @@ final class RecipeNutritionCalculator
     }
 
     /**
+     * @return array<int, string>
+     */
+    public function recipesContaining(RecipeNutritionGraph $graph, string $refId): array
+    {
+        $containing = [];
+
+        foreach ($graph->recipeIds() as $recipeId) {
+            if ($this->recipeContains(graph: $graph, recipeId: $recipeId, targetRefId: $refId, stack: [])) {
+                $containing[] = $recipeId;
+            }
+        }
+
+        return $containing;
+    }
+
+    /**
+     * @param array<int, string> $stack
+     */
+    private function recipeContains(RecipeNutritionGraph $graph, string $recipeId, string $targetRefId, array $stack): bool
+    {
+        if (!$graph->hasRecipe(recipeId: $recipeId) || in_array(needle: $recipeId, haystack: $stack, strict: true)) {
+            return false;
+        }
+
+        $nextStack = array_merge($stack, [$recipeId]);
+
+        foreach ($graph->recipeIngredients(recipeId: $recipeId) as $ingredient) {
+            if ($ingredient['refId'] === $targetRefId) {
+                return true;
+            }
+
+            if (RecipeIngredient::KIND_PRODUCT !== $ingredient['kind']
+                && $this->recipeContains(graph: $graph, recipeId: $ingredient['refId'], targetRefId: $targetRefId, stack: $nextStack)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param array<int, string> $stack
      */
     private function recipeTotals(RecipeNutritionGraph $graph, string $recipeId, array $stack): MacroBreakdown

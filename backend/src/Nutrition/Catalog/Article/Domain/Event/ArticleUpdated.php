@@ -10,6 +10,12 @@ final readonly class ArticleUpdated extends DomainEvent
         string $aggregateId,
         \DateTime $occurredOn,
         public string $name,
+        public ?string $emoji,
+        public float $referenceAmount,
+        public ?float $calories,
+        public ?float $protein,
+        public ?float $fat,
+        public ?float $carbs,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

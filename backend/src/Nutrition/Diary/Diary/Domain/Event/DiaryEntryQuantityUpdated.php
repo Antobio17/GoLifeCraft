@@ -10,6 +10,12 @@ final readonly class DiaryEntryQuantityUpdated extends DomainEvent
         string $aggregateId,
         \DateTime $occurredOn,
         public float $quantity,
+        public string $name,
+        public string $emoji,
+        public float $calories,
+        public float $protein,
+        public float $fat,
+        public float $carbs,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

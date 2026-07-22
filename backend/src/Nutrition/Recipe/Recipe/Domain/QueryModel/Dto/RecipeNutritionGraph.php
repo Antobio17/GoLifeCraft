@@ -26,6 +26,14 @@ final readonly class RecipeNutritionGraph
         return isset($this->recipes[$recipeId]);
     }
 
+    /**
+     * @return array<int, string>
+     */
+    public function recipeIds(): array
+    {
+        return array_keys($this->recipes);
+    }
+
     public function recipeServings(string $recipeId): int
     {
         return max(1, $this->recipes[$recipeId]['servings'] ?? 1);

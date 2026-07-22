@@ -1,0 +1,10 @@
+services:
+  Nutrition\Diary\Diary\Infrastructure\Application\Console\BackfillDiaryMacrosCommand:
+    class: Nutrition\Diary\Diary\Infrastructure\Application\Console\BackfillDiaryMacrosCommand
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
+    tags:
+      - { name: 'console.command' }

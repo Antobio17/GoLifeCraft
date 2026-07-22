@@ -3,6 +3,7 @@ services:
     class: Nutrition\Diary\Diary\Application\Command\CreateDiaryEntryCommandHandler
     arguments:
       $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -12,6 +13,7 @@ services:
     class: Nutrition\Diary\Diary\Application\Command\UpdateDiaryEntryQuantityCommandHandler
     arguments:
       $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -21,6 +23,25 @@ services:
     class: Nutrition\Diary\Diary\Application\Command\DeleteDiaryEntryCommandHandler
     arguments:
       $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\ApplyDiaryEntrySnapshotCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\ApplyDiaryEntrySnapshotCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\RecalculateDiaryEntryMacrosCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\RecalculateDiaryEntryMacrosCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

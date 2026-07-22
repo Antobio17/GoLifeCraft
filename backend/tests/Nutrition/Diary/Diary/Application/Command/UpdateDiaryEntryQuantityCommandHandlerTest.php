@@ -8,7 +8,10 @@ use Nutrition\Diary\Diary\Application\Command\UpdateDiaryEntryQuantityCommand;
 use Nutrition\Diary\Diary\Application\Command\UpdateDiaryEntryQuantityCommandHandler;
 use Nutrition\Diary\Diary\Domain\Exception\UpdateDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
+use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
+use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -16,6 +19,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class UpdateDiaryEntryQuantityCommandHandlerTest extends TestCase
 {
     private InMemoryDiaryEntryRepository $repository;
+    private InMemoryDiaryEntrySnapshotCalculator $snapshotCalculator;
     private UpdateDiaryEntryQuantityCommandHandler $handler;
 
     protected function setUp(): void
@@ -23,9 +27,11 @@ final class UpdateDiaryEntryQuantityCommandHandlerTest extends TestCase
         $dateTimeGenerator = new DateTimeGenerator();
         $domainEventCollectorService = new DomainEventCollectorService();
         $this->repository = new InMemoryDiaryEntryRepository();
+        $this->snapshotCalculator = new InMemoryDiaryEntrySnapshotCalculator();
 
         $createHandler = new CreateDiaryEntryCommandHandler(
             diaryEntryRepository: $this->repository,
+            snapshotCalculator: $this->snapshotCalculator,
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -40,20 +46,32 @@ final class UpdateDiaryEntryQuantityCommandHandlerTest extends TestCase
 
         $this->handler = new UpdateDiaryEntryQuantityCommandHandler(
             diaryEntryRepository: $this->repository,
+            snapshotCalculator: $this->snapshotCalculator,
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
     }
 
-    public function testItUpdatesQuantity(): void
+    public function testItUpdatesQuantityAndSnapshot(): void
     {
+        $this->snapshotCalculator->setSnapshot(refId: 'article-1', snapshot: new DiaryEntrySnapshot(
+            name: 'Yogur',
+            emoji: '🥛',
+            macros: new MacroBreakdown(calories: 99.0, protein: 3.0, fat: 1.0, carbs: 15.0),
+        ));
+
         ($this->handler)(new UpdateDiaryEntryQuantityCommand(
             diaryEntryId: 'diary-entry-1',
             quantity: 55.0,
             updatedByUserId: 'god-user-id',
         ));
 
-        $this->assertSame(expected: 55.0, actual: $this->repository->findById(id: 'diary-entry-1')->quantity);
+        $entry = $this->repository->findById(id: 'diary-entry-1');
+
+        $this->assertSame(expected: 55.0, actual: $entry->quantity);
+        $this->assertSame(expected: 'Yogur', actual: $entry->nameSnapshot);
+        $this->assertSame(expected: 99.0, actual: $entry->caloriesSnapshot);
+        $this->assertSame(expected: 15.0, actual: $entry->carbsSnapshot);
     }
 
     public function testItThrowsWhenQuantityIsNotPositive(): void

@@ -74,6 +74,11 @@ class Article extends GenericAggregate
         ?string $categoryId,
         ?string $supermarketId,
         ?string $nutritionFactsId,
+        float $referenceAmount,
+        ?float $calories,
+        ?float $protein,
+        ?float $fat,
+        ?float $carbs,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -94,6 +99,12 @@ class Article extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $name,
+            emoji: $emoji,
+            referenceAmount: $referenceAmount,
+            calories: $calories,
+            protein: $protein,
+            fat: $fat,
+            carbs: $carbs,
         ));
     }
 

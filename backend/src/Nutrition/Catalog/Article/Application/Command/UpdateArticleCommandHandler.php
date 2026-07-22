@@ -54,6 +54,11 @@ final readonly class UpdateArticleCommandHandler
             categoryId: $command->categoryId,
             supermarketId: $command->supermarketId,
             nutritionFactsId: $nutritionFacts->id,
+            referenceAmount: $nutritionFacts->referenceAmount,
+            calories: $nutritionFacts->calories,
+            protein: $nutritionFacts->protein,
+            fat: $nutritionFacts->fat,
+            carbs: $nutritionFacts->carbs,
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

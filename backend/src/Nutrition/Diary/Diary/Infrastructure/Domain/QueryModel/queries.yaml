@@ -3,12 +3,20 @@ services:
     class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDiaryNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
-      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
-      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
 
   Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryCalendarNeedleDataQuery:
     class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDiaryCalendarNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
-      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+
+  Nutrition\Diary\Diary\Domain\QueryModel\FindArticleDiaryReactionNeedleDataQuery:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineFindArticleDiaryReactionNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Diary\Diary\Domain\QueryModel\FindImpactedDiaryEntriesNeedleDataQuery:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineFindImpactedDiaryEntriesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'
+      $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\Service\DiaryWriterRecipeNutritionGraphProvider'
       $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'

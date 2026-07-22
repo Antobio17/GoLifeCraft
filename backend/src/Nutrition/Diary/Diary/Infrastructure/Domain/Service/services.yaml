@@ -1,0 +1,11 @@
+services:
+  Nutrition\Diary\Diary\Infrastructure\Domain\Service\DiaryWriterRecipeNutritionGraphProvider:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'
+
+  Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\Service\RecipeGraphDiaryEntrySnapshotCalculator
+    arguments:
+      $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\Service\DiaryWriterRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'

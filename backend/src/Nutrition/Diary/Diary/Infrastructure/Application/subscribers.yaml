@@ -1,0 +1,27 @@
+services:
+  Nutrition\Diary\Diary\Application\Subscriber\PropagateArticleSnapshotToDiary:
+    class: Nutrition\Diary\Diary\Application\Subscriber\PropagateArticleSnapshotToDiary
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $needle: '@Nutrition\Diary\Diary\Domain\QueryModel\FindArticleDiaryReactionNeedleDataQuery'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.article.updated' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.article.deleted' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.mcp.event.1.model.written' }
+
+  Nutrition\Diary\Diary\Application\Subscriber\RecalculateDiaryMacrosOnRecipeChanged:
+    class: Nutrition\Diary\Diary\Application\Subscriber\RecalculateDiaryMacrosOnRecipeChanged
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $impactedEntries: '@Nutrition\Diary\Diary\Domain\QueryModel\FindImpactedDiaryEntriesNeedleDataQuery'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.recipe.updated' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.recipe.deleted' }
+
+  Nutrition\Diary\Diary\Application\Subscriber\RecalculateDiaryMacrosOnModelWritten:
+    class: Nutrition\Diary\Diary\Application\Subscriber\RecalculateDiaryMacrosOnModelWritten
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $impactedEntries: '@Nutrition\Diary\Diary\Domain\QueryModel\FindImpactedDiaryEntriesNeedleDataQuery'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.mcp.event.1.model.written' }
