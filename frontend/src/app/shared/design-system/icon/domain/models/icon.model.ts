@@ -65,6 +65,8 @@ export const DS_ICONS = {
     '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>',
   download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
   cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/>',
+  chefHat:
+    '<path d="M7 14a4.5 4.5 0 1 1 1.6-8.4 4 4 0 0 1 6.8 0A4.5 4.5 0 1 1 17 14z"/><path d="M7 14v5.2a.8.8 0 0 0 .8.8h8.4a.8.8 0 0 0 .8-.8V14"/><path d="M9.8 17.4h4.4"/>',
 } as const;
 
 export type DsIconName = keyof typeof DS_ICONS;
