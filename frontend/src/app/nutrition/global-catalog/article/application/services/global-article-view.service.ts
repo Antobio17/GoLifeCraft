@@ -19,7 +19,7 @@ const FALLBACK_EMOJI = "🛒";
 
 const SOURCE_LABELS: Record<string, string> = {
   [GlobalArticleSource.Mercadona]: "Mercadona",
-  [GlobalArticleSource.OpenFoodFacts]: "Open Food Facts",
+  [GlobalArticleSource.OpenFoodFacts]: "OpenFood",
 };
 
 const MERCADONA_IMAGE_HOST = "prod-mercadona.imgix.net";
