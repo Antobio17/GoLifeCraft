@@ -61,6 +61,14 @@ import {
   `,
   styles: [
     `
+      :host {
+        --ds-sheet-height: min(90dvh, 860px);
+        --ds-sheet-height-tall: min(94dvh, 920px);
+        --ds-sheet-height-compact: min(82dvh, 760px);
+        --ds-sheet-max-gap: 16px;
+        --ds-sheet-max-gap-desktop: 32px;
+      }
+
       .ds-sheet__overlay {
         position: fixed;
         inset: 0;
@@ -76,8 +84,9 @@ import {
         flex-direction: column;
         width: 100%;
         max-width: 480px;
-        max-height: 82vh;
-        min-height: min(52vh, 440px);
+        height: var(--ds-sheet-height);
+        max-height: calc(100dvh - var(--ds-sheet-max-gap));
+        min-height: min(76dvh, 620px);
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border);
         border-radius: 22px 22px 0 0;
@@ -85,11 +94,13 @@ import {
         animation: ds-sheet-up 0.24s cubic-bezier(0.4, 0.2, 0.2, 1);
       }
       .ds-sheet--tall {
-        min-height: min(82vh, 640px);
+        height: var(--ds-sheet-height-tall);
+        min-height: min(86dvh, 720px);
       }
       .ds-sheet--compact {
-        min-height: 0;
-        max-height: 62vh;
+        height: var(--ds-sheet-height-compact);
+        min-height: min(68dvh, 560px);
+        max-height: calc(100dvh - 24px);
       }
       .ds-sheet__grip {
         width: 40px;
@@ -155,11 +166,14 @@ import {
         }
         .ds-sheet {
           border-radius: 22px;
-          max-height: 78vh;
+          max-height: calc(100dvh - var(--ds-sheet-max-gap-desktop));
           animation-name: ds-sheet-pop;
         }
+        .ds-sheet--tall {
+          max-height: calc(100dvh - 24px);
+        }
         .ds-sheet--compact {
-          max-height: 62vh;
+          max-height: calc(100dvh - 40px);
         }
         .ds-sheet__grip {
           display: none;
