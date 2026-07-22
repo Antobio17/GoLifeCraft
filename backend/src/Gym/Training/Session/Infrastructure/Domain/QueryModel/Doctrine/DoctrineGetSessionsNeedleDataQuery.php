@@ -126,7 +126,7 @@ final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNe
         ];
 
         if (null === $orderBy) {
-            $qb->orderBy(sort: 's.created_at', order: 'DESC');
+            $qb->orderBy(sort: 's.name', order: 'ASC');
 
             return;
         }
@@ -140,7 +140,7 @@ final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNe
         }
 
         if (!isset($allowedFields[$field])) {
-            $qb->orderBy(sort: 's.created_at', order: 'DESC');
+            $qb->orderBy(sort: 's.name', order: 'ASC');
 
             return;
         }

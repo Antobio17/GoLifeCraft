@@ -85,7 +85,8 @@ export class DiaryPickerService {
         name: entry.name,
         emoji: entry.emoji,
         detail: entry.detail,
-      }));
+      }))
+      .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }
 
   recipeChoices(query: string): DiaryChoice[] {
@@ -101,6 +102,7 @@ export class DiaryPickerService {
         name: entry.name,
         emoji: entry.emoji,
         detail: entry.detail,
-      }));
+      }))
+      .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }
 }

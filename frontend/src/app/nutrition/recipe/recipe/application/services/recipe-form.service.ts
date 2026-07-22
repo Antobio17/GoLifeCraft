@@ -110,7 +110,8 @@ export class RecipeFormService {
         name: entry.name,
         emoji: entry.emoji,
         detail: `${Math.round(entry.perUnit.calories * 100)} kcal / 100${entry.unit}`,
-      }));
+      }))
+      .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }
 
   recipeChoices(query: string, excludeId: string): PickableIngredient[] {
@@ -127,7 +128,8 @@ export class RecipeFormService {
         name: entry.name,
         emoji: entry.emoji,
         detail: `${Math.round(entry.perServing.calories)} kcal / ración`,
-      }));
+      }))
+      .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }
 
   createIngredient(kind: "product" | "recipe", refId: string): FormIngredient {

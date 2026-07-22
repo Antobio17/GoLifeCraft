@@ -33,9 +33,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             filterStore: $filterStore,
         );
 
-        if (null !== $orderBy) {
-            $this->applyOrdering(qb: $qb, orderBy: $orderBy);
-        }
+        $this->applyOrdering(qb: $qb, orderBy: $orderBy);
 
         $result = $qb->setFirstResult(firstResult: ($pageNumber - 1) * $pageSize)
             ->setMaxResults(maxResults: $pageSize)
@@ -170,8 +168,21 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         }
     }
 
-    private function applyOrdering(QueryBuilder $qb, string $orderBy): void
+    private function applyOrdering(QueryBuilder $qb, ?string $orderBy): void
     {
+        $allowedFields = [
+            'name' => 't.name',
+            'price' => 't.price',
+            'createdAt' => 't.created_at',
+            'updatedAt' => 't.updated_at',
+        ];
+
+        if (null === $orderBy) {
+            $qb->orderBy(sort: 't.name', order: 'ASC');
+
+            return;
+        }
+
         $direction = 'ASC';
         $field = $orderBy;
 
@@ -180,14 +191,9 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             $field = substr(string: $orderBy, offset: 1);
         }
 
-        $allowedFields = [
-            'name' => 't.name',
-            'price' => 't.price',
-            'createdAt' => 't.created_at',
-            'updatedAt' => 't.updated_at',
-        ];
-
         if (!isset($allowedFields[$field])) {
+            $qb->orderBy(sort: 't.name', order: 'ASC');
+
             return;
         }
 

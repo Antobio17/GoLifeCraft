@@ -142,7 +142,7 @@ final readonly class DoctrineGetRecipesNeedleDataQuery implements GetRecipesNeed
         ];
 
         if (null === $orderBy) {
-            $qb->orderBy(sort: 'r.created_at', order: 'DESC');
+            $qb->orderBy(sort: 'r.name', order: 'ASC');
 
             return;
         }
@@ -156,7 +156,7 @@ final readonly class DoctrineGetRecipesNeedleDataQuery implements GetRecipesNeed
         }
 
         if (!isset($allowedFields[$field])) {
-            $qb->orderBy(sort: 'r.created_at', order: 'DESC');
+            $qb->orderBy(sort: 'r.name', order: 'ASC');
 
             return;
         }
