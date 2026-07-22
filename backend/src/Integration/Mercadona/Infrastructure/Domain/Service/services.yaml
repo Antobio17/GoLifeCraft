@@ -5,7 +5,7 @@ parameters:
   env(MERCADONA_USER_AGENT): 'GoLifeCraft/1.0 (catalog sync; antoniojr997@gmail.com)'
   env(MERCADONA_GEMINI_BASE_URL): 'https://generativelanguage.googleapis.com'
   env(MERCADONA_GEMINI_KEY): ''
-  env(MERCADONA_GEMINI_MODEL): 'gemini-flash-latest'
+  env(MERCADONA_GEMINI_MODEL): 'gemini-flash-lite-latest'
 
 services:
   Integration\Mercadona\Domain\Service\MercadonaCatalogProvider:
