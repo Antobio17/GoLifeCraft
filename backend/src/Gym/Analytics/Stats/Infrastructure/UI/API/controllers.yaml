@@ -5,3 +5,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetExerciseStatsController:
+    class: Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetExerciseStatsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

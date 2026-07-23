@@ -1,0 +1,114 @@
+<ds-page-wrapper [gap]="'14px'">
+  <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getExercise.back' | t"
+    [eyebrow]="'getExercise.eyebrow' | t"
+    [title]="exercise()?.attributes?.name ?? ''"
+    [wrapTitle]="true"
+    (leadingClick)="goBack()"
+  >
+    <ds-icon-button
+      slot="actions"
+      icon="pencil"
+      color="var(--ds-text-meta)"
+      [ariaLabel]="'getExercise.edit' | t"
+      (clicked)="onEdit()"
+    />
+  </ds-screen-header>
+
+  @if (loading()) {
+    <ds-skeleton height="120px" />
+    <ds-skeleton height="180px" />
+  } @else {
+    <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'18px'">
+      <ds-stack [gap]="'16px'">
+        <ds-stack [gap]="'8px'">
+          <ds-text variant="label">{{ "getExercise.muscles" | t }}</ds-text>
+          <ds-stack direction="row" [wrap]="true" [gap]="'7px'">
+            @for (muscle of muscles(); track muscle) {
+              <ds-chip tone="brand">{{ muscle }}</ds-chip>
+            }
+          </ds-stack>
+        </ds-stack>
+
+        <ds-stack [gap]="'8px'">
+          <ds-text variant="label">{{ "getExercise.recordType" | t }}</ds-text>
+          <ds-card [padding]="'12px 14px'">
+            <ds-heading [level]="3" size="sm">{{ modeLabel() }}</ds-heading>
+          </ds-card>
+        </ds-stack>
+
+        <ds-grid [columns]="3" [gap]="'8px'">
+          <ds-metric-card
+            [value]="timesDone()"
+            [label]="'getExercise.stat.sessions' | t"
+          />
+          <ds-metric-card
+            [value]="bestE1rm()"
+            [label]="'getExercise.stat.bestE1rm' | t"
+          />
+          <ds-metric-card
+            [value]="lastLabel()"
+            [label]="'getExercise.stat.lastTime' | t"
+          />
+        </ds-grid>
+      </ds-stack>
+
+      <ds-stack [gap]="'12px'">
+        <ds-text variant="label">{{ "getExercise.progression" | t }}</ds-text>
+
+        @if (hasData()) {
+          <ds-segmented-toggle
+            [options]="metricOptions()"
+            [ngModel]="metric()"
+            (ngModelChange)="onMetricChange($event)"
+          />
+
+          <ds-progression-card
+            [metricLabel]="metricName()"
+            [value]="currentLabel()"
+            [delta]="deltaLabel()"
+            [trend]="deltaTrend()"
+            [prLabel]="prLabel()"
+            [points]="chartPoints()"
+            [pointLabels]="chartLabels()"
+            [firstLabel]="firstDateLabel()"
+            [lastLabel]="lastDateLabel()"
+          />
+
+          <ds-stack [gap]="'8px'">
+            <ds-text variant="label">{{ "getExercise.sessions" | t }}</ds-text>
+            <ds-stack [gap]="'7px'">
+              @for (row of sessionRows(); track $index) {
+                <ds-card [padding]="'10px 12px'">
+                  <ds-stack direction="row" align="center" [gap]="'10px'">
+                    <ds-stack [gap]="'2px'" [grow]="true">
+                      <ds-stack direction="row" align="center" [gap]="'7px'">
+                        <ds-text variant="strong">{{ row.dateLabel }}</ds-text>
+                        @if (row.isPr) {
+                          <ds-chip tone="accent" [uppercase]="true">
+                            {{ "getExercise.pr" | t }}
+                          </ds-chip>
+                        }
+                      </ds-stack>
+                      <ds-text variant="meta">{{ row.setsText }}</ds-text>
+                    </ds-stack>
+                    <ds-heading [level]="3" size="sm">{{
+                      row.valueLabel
+                    }}</ds-heading>
+                  </ds-stack>
+                </ds-card>
+              }
+            </ds-stack>
+          </ds-stack>
+        } @else {
+          <ds-empty-state
+            icon="chart"
+            [title]="'getExercise.empty.title' | t"
+            [text]="'getExercise.empty.text' | t"
+          />
+        }
+      </ds-stack>
+    </ds-grid>
+  }
+</ds-page-wrapper>

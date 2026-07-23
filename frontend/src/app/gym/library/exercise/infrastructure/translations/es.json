@@ -37,6 +37,39 @@
       "deleting": "Borrando…"
     }
   },
+  "getExercise": {
+    "back": "Volver",
+    "edit": "Editar",
+    "eyebrow": "Ejercicio",
+    "muscles": "Músculos",
+    "recordType": "Tipo de registro",
+    "progression": "Progresión",
+    "sessions": "Sesiones",
+    "pr": "PR",
+    "mode": {
+      "bilateral": "Bilateral · un registro para ambos lados",
+      "unilateral": "Unilateral · se ejecuta por lado"
+    },
+    "metric": {
+      "e1rm": "1RM est.",
+      "max": "Peso máx.",
+      "vol": "Volumen"
+    },
+    "metricName": {
+      "e1rm": "1RM estimado",
+      "max": "Peso máximo",
+      "vol": "Volumen total"
+    },
+    "stat": {
+      "sessions": "Sesiones",
+      "bestE1rm": "Mejor 1RM",
+      "lastTime": "Última vez"
+    },
+    "empty": {
+      "title": "Aún sin datos",
+      "text": "Registra este ejercicio en una sesión para ver aquí tu progresión."
+    }
+  },
   "createExercise": {
     "title": "Nuevo ejercicio",
     "description": "Crea un ejercicio en tu biblioteca",
@@ -63,7 +96,8 @@
     "breadcrumb": {
       "list": "Ejercicios",
       "create": "Nuevo ejercicio",
-      "edit": "Editar ejercicio"
+      "edit": "Editar ejercicio",
+      "detail": "Ejercicio"
     },
     "create": {
       "success": "Ejercicio creado"

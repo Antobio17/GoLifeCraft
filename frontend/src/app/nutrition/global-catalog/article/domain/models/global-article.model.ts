@@ -6,6 +6,7 @@ export interface GlobalArticleAttributes {
   imageUrl: string | null;
   quantity: string | null;
   stores: string | null;
+  price: number | null;
   source: string;
   referenceAmount: number;
   calories: number | null;

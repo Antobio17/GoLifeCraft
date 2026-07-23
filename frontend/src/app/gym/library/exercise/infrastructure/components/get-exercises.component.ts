@@ -22,6 +22,7 @@ import { ChipComponent } from "@shared/design-system/chip/infrastructure/compone
 import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -72,6 +73,7 @@ type LibraryView = "list" | "grouped";
     ButtonComponent,
     IconButtonComponent,
     IconBadgeComponent,
+    PressableComponent,
     EmptyStateComponent,
     SkeletonComponent,
     InfiniteScrollComponent,
@@ -230,6 +232,10 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
 
   onCreate(): void {
     this.router.navigate(["/gym/exercises", "create"]);
+  }
+
+  onOpen(id: string): void {
+    this.router.navigate(["/gym/exercises", id]);
   }
 
   onEdit(id: string): void {

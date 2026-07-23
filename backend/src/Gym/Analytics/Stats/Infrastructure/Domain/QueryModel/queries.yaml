@@ -3,3 +3,8 @@ services:
     class: Gym\Analytics\Stats\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetGymStatsNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gym\Analytics\Stats\Domain\QueryModel\GetExerciseStatsNeedleDataQuery:
+    class: Gym\Analytics\Stats\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetExerciseStatsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

@@ -38,7 +38,12 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         @if (eyebrow) {
           <span class="ds-screen-head__eyebrow">{{ eyebrow }}</span>
         }
-        <h1 class="ds-screen-head__title">{{ title }}</h1>
+        <h1
+          class="ds-screen-head__title"
+          [class.ds-screen-head__title--wrap]="wrapTitle"
+        >
+          {{ title }}
+        </h1>
         @if (subtitle) {
           <p class="ds-screen-head__subtitle">{{ subtitle }}</p>
         }
@@ -101,6 +106,15 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      .ds-screen-head__title--wrap {
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+      }
       .ds-screen-head__subtitle {
         margin: 2px 0 0;
         font-size: var(--ds-text-md);
@@ -124,6 +138,7 @@ export class ScreenHeaderComponent {
   @Input() leadingLabel = "";
   @Input() eyebrow: string | null = null;
   @Input() title = "";
+  @Input() wrapTitle = false;
   @Input() subtitle: string | null = null;
   @Output() leadingClick = new EventEmitter<void>();
 }

@@ -62,12 +62,11 @@
             [emoji]="card.emoji"
             [imageUrl]="card.imageUrl"
             [name]="card.name"
+            [priceBelow]="card.price"
             [brand]="card.brand"
             [store]="card.source"
             [added]="isAdded(card.id)"
             [pending]="isPending(card.id)"
-            [actionLabel]="'getGlobalArticles.add' | t"
-            [addedLabel]="'getGlobalArticles.added' | t"
             [badges]="[
               {
                 text: card.kcal + ' ' + ('getGlobalArticles.macro.kcal' | t),

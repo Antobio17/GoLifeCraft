@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetExercisesProviders } from "../providers/get-exercises.providers";
 import { GetExerciseProviders } from "../providers/get-exercise.providers";
+import { GetExerciseStatsProviders } from "../providers/get-exercise-stats.providers";
 import { CreateExerciseProviders } from "../providers/create-exercise.providers";
 import { UpdateExerciseProviders } from "../providers/update-exercise.providers";
 import { DeleteExerciseProviders } from "../providers/delete-exercise.providers";
@@ -12,6 +13,7 @@ export const EXERCISE_ROUTES: Routes = [
     providers: [
       ...GetExercisesProviders.getProviders(),
       ...GetExerciseProviders.getProviders(),
+      ...GetExerciseStatsProviders.getProviders(),
       ...CreateExerciseProviders.getProviders(),
       ...UpdateExerciseProviders.getProviders(),
       ...DeleteExerciseProviders.getProviders(),
@@ -40,6 +42,14 @@ export const EXERCISE_ROUTES: Routes = [
         loadComponent: () =>
           import("../components/exercise-editor.component").then(
             (m) => m.ExerciseEditorComponent,
+          ),
+      },
+      {
+        path: ":id",
+        data: { breadcrumb: "exercise.breadcrumb.detail" },
+        loadComponent: () =>
+          import("../components/get-exercise.component").then(
+            (m) => m.GetExerciseComponent,
           ),
       },
     ],

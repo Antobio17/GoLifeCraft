@@ -30,6 +30,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
             <span class="ds-pcard__price">{{ price }}</span>
           }
         </span>
+        @if (priceBelow) {
+          <span class="ds-pcard__price-below">{{ priceBelow }}</span>
+        }
         @if (brand || store) {
           <span class="ds-pcard__meta">
             @if (brand) {
@@ -183,6 +186,13 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         color: var(--ds-primary);
         white-space: nowrap;
       }
+      .ds-pcard__price-below {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 800;
+        color: var(--ds-primary);
+        margin-top: 2px;
+      }
       .ds-pcard__meta {
         display: block;
         font-size: 11px;
@@ -238,6 +248,7 @@ export class ProductCardComponent {
   imageFailed = false;
 
   @Input() price: string | null = null;
+  @Input() priceBelow: string | null = null;
   @Input() brand: string | null = null;
   @Input() store: string | null = null;
   @Input() badges: ProductBadge[] = [];

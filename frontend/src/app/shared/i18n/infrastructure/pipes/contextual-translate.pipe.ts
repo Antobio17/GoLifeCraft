@@ -25,6 +25,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     listTable: "shared/design-system/list-table",
     navbar: "layouts/layout/navbar/navbar",
     getExercises: "gym/library/exercise",
+    getExercise: "gym/library/exercise",
     createExercise: "gym/library/exercise",
     updateExercise: "gym/library/exercise",
     exercise: "gym/library/exercise",

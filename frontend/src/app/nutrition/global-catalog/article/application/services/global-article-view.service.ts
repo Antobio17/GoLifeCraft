@@ -7,6 +7,7 @@ export interface GlobalArticleCardView {
   emoji: string;
   imageUrl: string | null;
   name: string;
+  price: string | null;
   brand: string | null;
   source: string | null;
   kcal: string | null;
@@ -38,6 +39,7 @@ export class GlobalArticleViewService {
       emoji: FALLBACK_EMOJI,
       imageUrl: this.thumbnailUrl(attributes.imageUrl),
       name: attributes.name,
+      price: this.price(attributes.price),
       brand: attributes.brand,
       source: this.sourceLabel(attributes.source),
       kcal: this.integer(attributes.calories),
@@ -63,6 +65,15 @@ export class GlobalArticleViewService {
     }
 
     return imageUrl;
+  }
+
+  private price(value: number | null): string | null {
+    if (value === null || value === undefined) return null;
+
+    return `${new Intl.NumberFormat("es-ES", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value)} €`;
   }
 
   sourceLabel(source: string | null): string | null {

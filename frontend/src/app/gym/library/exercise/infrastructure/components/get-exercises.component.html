@@ -98,10 +98,16 @@
   <ds-card [padding]="'11px 12px'">
     <ds-stack direction="row" align="center" [gap]="'11px'">
       <ds-icon-badge icon="dumbbell" tone="brand" [size]="34" [iconSize]="17" />
-      <ds-stack [gap]="'1px'" [grow]="true">
-        <ds-heading [level]="3" size="sm">{{ row.name }}</ds-heading>
-        <ds-text variant="meta">{{ row.muscleText }}</ds-text>
-      </ds-stack>
+      <ds-pressable
+        [grow]="true"
+        [ariaLabel]="row.name"
+        (press)="onOpen(row.id)"
+      >
+        <ds-stack [gap]="'1px'" [grow]="true">
+          <ds-heading [level]="3" size="sm">{{ row.name }}</ds-heading>
+          <ds-text variant="meta">{{ row.muscleText }}</ds-text>
+        </ds-stack>
+      </ds-pressable>
       <ds-icon-button
         icon="pencil"
         color="var(--ds-text-meta)"
