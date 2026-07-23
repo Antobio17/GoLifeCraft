@@ -10,7 +10,8 @@
     },
     "badge": {
       "product": "ARTÍCULO",
-      "recipe": "RECETA"
+      "recipe": "RECETA",
+      "quick": "LIBRE"
     },
     "meals": {
       "breakfast": "Desayuno",
@@ -30,11 +31,13 @@
       "recipes": "Recetas",
       "search": "Buscar artículo o receta…",
       "close": "Cerrar",
-      "empty": "Sin resultados"
+      "empty": "Sin resultados",
+      "quick": "Libre"
     },
     "toast": {
       "added": "Añadido al diario",
-      "removed": "Eliminado del diario"
+      "removed": "Eliminado del diario",
+      "quickUpdated": "Registro actualizado"
     },
     "calendar": {
       "open": "Abrir calendario",
@@ -79,6 +82,18 @@
     },
     "empty": "Sin alimentos registrados",
     "emptyAction": "Sin alimentos, añade uno desde el botón +",
-    "error": "No hemos podido cargar el diario de este día"
+    "error": "No hemos podido cargar el diario de este día",
+    "quick": {
+      "hint": "Registra algo puntual sin crear un artículo ni una receta. Solo nombre y calorías; los macros son opcionales.",
+      "iconLabel": "ICONO",
+      "nameLabel": "NOMBRE",
+      "namePlaceholder": "p. ej. Café con leche, menú del día…",
+      "caloriesLabel": "CALORÍAS",
+      "macrosLabel": "MACROS · OPCIONAL (g)",
+      "submit": "Añadir al diario",
+      "save": "Guardar cambios",
+      "edit": "Editar registro libre",
+      "editTitle": "Editar registro"
+    }
   }
 }

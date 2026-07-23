@@ -25,11 +25,13 @@ final readonly class UpdateDiaryEntryQuantityCommandHandler
             throw UpdateDiaryEntryException::diaryEntryNotFound(diaryEntryId: $command->diaryEntryId);
         }
 
-        $snapshot = $this->snapshotCalculator->calculate(
-            kind: $diaryEntry->kind,
-            refId: $diaryEntry->refId,
-            quantity: $command->quantity,
-        );
+        $snapshot = $diaryEntry->isQuick()
+            ? $diaryEntry->quickSnapshot(quantity: $command->quantity)
+            : $this->snapshotCalculator->calculate(
+                kind: $diaryEntry->kind,
+                refId: $diaryEntry->refId ?? '',
+                quantity: $command->quantity,
+            );
 
         $diaryEntry->updateQuantity(
             quantity: $command->quantity,

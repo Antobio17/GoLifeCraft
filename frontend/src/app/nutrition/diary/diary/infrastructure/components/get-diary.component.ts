@@ -29,6 +29,9 @@ import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastru
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
+import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
+import { EmojiChoiceGridComponent } from "@shared/design-system/emoji-choice-grid/infrastructure/components/emoji-choice-grid.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
@@ -58,7 +61,16 @@ import {
 import { CreateDiaryEntryService } from "@nutrition/diary/diary/application/services/create-diary-entry.service";
 import { UpdateDiaryEntryService } from "@nutrition/diary/diary/application/services/update-diary-entry.service";
 import { DeleteDiaryEntryService } from "@nutrition/diary/diary/application/services/delete-diary-entry.service";
-import { DiaryDay } from "@nutrition/diary/diary/domain/models/diary.model";
+import {
+  DiaryDay,
+  DiaryEntryView,
+} from "@nutrition/diary/diary/domain/models/diary.model";
+import { CreateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/create-quick-diary-entry.service";
+import { UpdateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/update-quick-diary-entry.service";
+import {
+  QuickDiaryEntryForm,
+  QuickDiaryEntryFormService,
+} from "@nutrition/diary/diary/application/services/quick-diary-entry-form.service";
 import { UpdateDiaryGoalService } from "@nutrition/diary/goal/application/services/update-diary-goal.service";
 import { SetDiaryGoalDayService } from "@nutrition/diary/goal/application/services/set-diary-goal-day.service";
 import {
@@ -66,7 +78,7 @@ import {
   DiaryGoalFormService,
 } from "@nutrition/diary/goal/application/services/diary-goal-form.service";
 
-type PickerTab = "product" | "recipe";
+type PickerTab = "product" | "recipe" | "quick";
 
 @Component({
   selector: "app-get-diary",
@@ -92,6 +104,9 @@ type PickerTab = "product" | "recipe";
     SegmentedToggleComponent,
     NutrientInputComponent,
     NumberInputComponent,
+    TextInputComponent,
+    AmountInputComponent,
+    EmojiChoiceGridComponent,
     NoteComponent,
     IconComponent,
     ChipComponent,
@@ -109,6 +124,9 @@ export class GetDiaryComponent implements OnInit {
   private createDiaryEntryService = inject(CreateDiaryEntryService);
   private updateDiaryEntryService = inject(UpdateDiaryEntryService);
   private deleteDiaryEntryService = inject(DeleteDiaryEntryService);
+  private createQuickDiaryEntryService = inject(CreateQuickDiaryEntryService);
+  private updateQuickDiaryEntryService = inject(UpdateQuickDiaryEntryService);
+  protected quickForms = inject(QuickDiaryEntryFormService);
   private updateDiaryGoalService = inject(UpdateDiaryGoalService);
   private setDiaryGoalDayService = inject(SetDiaryGoalDayService);
   protected goalForm = inject(DiaryGoalFormService);
@@ -140,10 +158,24 @@ export class GetDiaryComponent implements OnInit {
   attributes = computed(() => this.day()?.attributes ?? null);
   canGoNext = computed(() => !this.view.isToday(this.date()));
 
+  quickForm = signal<QuickDiaryEntryForm>(this.quickForms.empty());
+  quickEditingId = signal<string | null>(null);
+  quickQuantity = signal(1);
+  quickSaving = signal(false);
+
+  quickEditing = computed(() => this.quickEditingId() !== null);
+  quickValid = computed(() => this.quickForms.isValid(this.quickForm()));
+  quickSubmitLabel = computed(() =>
+    this.quickEditing() ? "getDiary.quick.save" : "getDiary.quick.submit",
+  );
+  pickerTitle = computed(() =>
+    this.quickEditing() ? "getDiary.quick.editTitle" : "getDiary.picker.title",
+  );
+
   pickerChoices = computed<DiaryChoice[]>(() =>
-    this.pickerTab() === "product"
-      ? this.picker.productChoices(this.pickerQuery())
-      : this.picker.recipeChoices(this.pickerQuery()),
+    this.pickerTab() === "recipe"
+      ? this.picker.recipeChoices(this.pickerQuery())
+      : this.picker.productChoices(this.pickerQuery()),
   );
 
   pickerMealLabel = computed(() =>
@@ -247,6 +279,7 @@ export class GetDiaryComponent implements OnInit {
         this.pickerTabs.set([
           { value: "product", label: this.t("getDiary.picker.products") },
           { value: "recipe", label: this.t("getDiary.picker.recipes") },
+          { value: "quick", label: this.t("getDiary.picker.quick") },
         ]);
         this.calendarLegend.set(
           this.calendarView.legend({
@@ -266,9 +299,10 @@ export class GetDiaryComponent implements OnInit {
   }
 
   badgeLabel(kind: string): string {
-    return this.t(
-      kind === "recipe" ? "getDiary.badge.recipe" : "getDiary.badge.product",
-    );
+    if (kind === "recipe") return this.t("getDiary.badge.recipe");
+    if (kind === "quick") return this.t("getDiary.badge.quick");
+
+    return this.t("getDiary.badge.product");
   }
 
   mealLabel(key: string): string {
@@ -338,11 +372,69 @@ export class GetDiaryComponent implements OnInit {
     this.pickerMeal.set(mealKey);
     this.pickerTab.set("product");
     this.pickerQuery.set("");
+    this.resetQuickForm();
+    this.pickerOpen.set(true);
+  }
+
+  openQuickEditor(mealKey: string, entry: DiaryEntryView): void {
+    if (!this.canWrite || entry.kind !== "quick") return;
+
+    this.pickerMeal.set(mealKey);
+    this.pickerTab.set("quick");
+    this.quickForm.set(this.quickForms.fromEntry(entry));
+    this.quickEditingId.set(entry.id);
+    this.quickQuantity.set(entry.quantity);
     this.pickerOpen.set(true);
   }
 
   closePicker(): void {
     this.pickerOpen.set(false);
+    this.resetQuickForm();
+  }
+
+  onQuickField(field: keyof QuickDiaryEntryForm, value: string): void {
+    this.quickForm.update((form) => ({ ...form, [field]: value }));
+  }
+
+  submitQuick(): void {
+    if (!this.quickValid() || this.quickSaving()) return;
+
+    const payload = this.quickForms.toPayload(
+      this.quickForm(),
+      this.quickQuantity(),
+    );
+    const editingId = this.quickEditingId();
+    const request$ = editingId
+      ? this.updateQuickDiaryEntryService.updateQuickDiaryEntry(
+          editingId,
+          payload,
+        )
+      : this.createQuickDiaryEntryService.createQuickDiaryEntry({
+          ...payload,
+          entryDate: this.date(),
+          meal: this.pickerMeal(),
+        });
+
+    this.quickSaving.set(true);
+
+    request$.subscribe({
+      next: () => {
+        this.quickSaving.set(false);
+        this.toast(
+          editingId ? "getDiary.toast.quickUpdated" : "getDiary.toast.added",
+        );
+        this.closePicker();
+        this.load(this.date());
+      },
+      error: () => this.quickSaving.set(false),
+    });
+  }
+
+  private resetQuickForm(): void {
+    this.quickForm.set(this.quickForms.empty());
+    this.quickEditingId.set(null);
+    this.quickQuantity.set(1);
+    this.quickSaving.set(false);
   }
 
   onPickerTab(tab: string): void {

@@ -401,7 +401,39 @@ Opciones del comando: `--limit` (productos por ejecución, def 1), `--scan`
 (subcategorías a explorar por ejecución cuando el buffer está vacío, def 1),
 `--delay` (ms entre importaciones, solo relevante con `--limit > 1`), `--category`
 (acotar el descubrimiento al inicializar), `--refresh` (reiniciar la cola y
-redescubrir), `--force` (reimportar también los ya presentes).
+redescubrir), `--force` (volver a extraer la nutrición también de los ya presentes,
+en vez de limitarse a refrescarles el precio).
+
+#### 5. Precios
+
+`app:catalog:sync-mercadona` guarda los precios de cada producto (`price`,
+`bulk_price`, `reference_price`, `reference_format`, `previous_price`) y, cuando el
+producto **ya estaba importado**, en vez de saltárselo aprovecha la petición que ya
+ha hecho para **refrescarle el precio** (contador `Repriced`): no vuelve a llamar a
+Gemini ni toca la nutrición. Así, cada vuelta al catálogo mantiene los precios al día.
+
+Todo pasa por `UpsertGlobalArticleCommand`: si no se le manda nutrición, conserva la
+que ya tuviera el artículo; si no se le manda precio, conserva el que ya tuviera.
+
+Los productos importados **antes** de que existieran esas columnas se quedaron sin
+precio. Para completarlos sin esperar a que el sync dé la vuelta entera:
+
+```bash
+docker compose --env-file .env.local -f docker-compose.prod.yml run --rm worker \
+  php bin/console app:catalog:backfill-mercadona-prices --limit 5
+```
+
+Recorre el catálogo con **su propio cursor** (`volumes/mercadona/price-queue.json`,
+independiente de `queue.json`), así que puede convivir con el cron del sync. Despacha
+`UpsertGlobalArticleCommand` sin nutrición, de modo que solo actualiza precios y
+metadatos; nunca llama a Gemini ni pisa las macros, por eso admite un `--limit`
+más alto. Igual que el sync, corta limpio ante un throttle y reanuda en la siguiente
+ejecución.
+
+Opciones: `--limit` (productos a comprobar por ejecución, def 5), `--scan`,
+`--delay` (ms entre peticiones, def 500), `--category`, `--refresh` (reiniciar el
+cursor) y `--force` (sobrescribir también los que ya tienen precio; útil para
+refrescar precios ya guardados).
 
 **OpenFoodFacts** (fuente comunitaria, se distingue por `source` en `global_article`):
 

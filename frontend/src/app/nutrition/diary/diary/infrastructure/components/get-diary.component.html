@@ -119,6 +119,8 @@
               <ds-diary-entry
                 [emoji]="entry.emoji"
                 [name]="entry.name"
+                [openable]="canWrite && entry.kind === 'quick'"
+                [openLabel]="'getDiary.quick.edit' | t"
                 [badge]="badgeLabel(entry.kind)"
                 [badgeTone]="view.entryBadgeTone(entry.kind)"
                 [kcalLabel]="
@@ -134,6 +136,7 @@
                 [removeLabel]="'getDiary.remove' | t"
                 (quantityChange)="onQuantityChange(entry.id, $event)"
                 (remove)="onRemove(entry.id)"
+                (opened)="openQuickEditor(meal.key, entry)"
               />
             }
           </ds-stack>
@@ -151,7 +154,7 @@
   <ds-modal-sheet
     [open]="pickerOpen()"
     [compact]="true"
-    [title]="'getDiary.picker.title' | t"
+    [title]="pickerTitle() | t"
     [closeLabel]="'getDiary.picker.close' | t"
     (closed)="closePicker()"
   >
@@ -160,48 +163,141 @@
         >{{ "getDiary.picker.subtitle" | t }} · {{ pickerMealLabel() }}</ds-text
       >
 
-      <ds-segmented-toggle
-        [options]="pickerTabs()"
-        [ngModel]="pickerTab()"
-        [ngModelOptions]="{ standalone: true }"
-        (ngModelChange)="onPickerTab($event)"
-      />
+      @if (!quickEditing()) {
+        <ds-segmented-toggle
+          [options]="pickerTabs()"
+          [ngModel]="pickerTab()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onPickerTab($event)"
+        />
+      }
 
-      <ds-search-input
-        [placeholder]="'getDiary.picker.search' | t"
-        [clearLabel]="'getDiary.picker.close' | t"
-        [debounce]="120"
-        (searched)="onPickerSearch($event)"
-      />
+      @if (pickerTab() === "quick") {
+        <ds-note icon="info">{{ "getDiary.quick.hint" | t }}</ds-note>
 
-      @if (pickerChoices().length === 0) {
-        <ds-text variant="muted">{{ "getDiary.picker.empty" | t }}</ds-text>
-      } @else {
         <ds-stack [gap]="'8px'">
-          @for (choice of pickerChoices(); track choice.refId) {
-            <ds-card [padding]="'10px'">
-              <ds-stack direction="row" align="center" [gap]="'12px'">
-                <ds-emoji-tile
-                  [emoji]="choice.emoji"
-                  [size]="36"
-                  [radius]="10"
-                />
-                <ds-stack [gap]="'2px'" [grow]="true">
-                  <ds-text variant="strong" [truncate]="true">{{
-                    choice.name
-                  }}</ds-text>
-                  <ds-text variant="meta">{{ choice.detail }}</ds-text>
-                </ds-stack>
-                <ds-icon-button
-                  icon="plus"
-                  variant="soft"
-                  [ariaLabel]="'getDiary.add' | t"
-                  (clicked)="onPick(choice)"
-                />
-              </ds-stack>
-            </ds-card>
-          }
+          <ds-text variant="label">{{
+            "getDiary.quick.iconLabel" | t
+          }}</ds-text>
+          <ds-emoji-choice-grid
+            [emojis]="quickForms.emojis"
+            [ariaLabel]="'getDiary.quick.iconLabel' | t"
+            [ngModel]="quickForm().emoji"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onQuickField('emoji', $event)"
+          />
         </ds-stack>
+
+        <ds-stack [gap]="'8px'">
+          <ds-text variant="label">{{
+            "getDiary.quick.nameLabel" | t
+          }}</ds-text>
+          <ds-text-input
+            [emojiPrefix]="quickForm().emoji"
+            [strong]="true"
+            [placeholder]="'getDiary.quick.namePlaceholder' | t"
+            [ariaLabel]="'getDiary.quick.nameLabel' | t"
+            [ngModel]="quickForm().name"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onQuickField('name', $event)"
+          />
+        </ds-stack>
+
+        <ds-stack [gap]="'8px'">
+          <ds-text variant="label">{{
+            "getDiary.quick.caloriesLabel" | t
+          }}</ds-text>
+          <ds-amount-input
+            emoji="🔥"
+            [large]="true"
+            inputmode="numeric"
+            [unit]="'getDiary.kcal' | t"
+            [ariaLabel]="'getDiary.quick.caloriesLabel' | t"
+            [ngModel]="quickForm().calories"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onQuickField('calories', $event)"
+          />
+        </ds-stack>
+
+        <ds-stack [gap]="'8px'">
+          <ds-text variant="label">{{
+            "getDiary.quick.macrosLabel" | t
+          }}</ds-text>
+          <ds-stack direction="row" [gap]="'8px'">
+            <ds-amount-input
+              layout="stacked"
+              [grow]="true"
+              [label]="'getDiary.goal.protein' | t"
+              [ngModel]="quickForm().protein"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onQuickField('protein', $event)"
+            />
+            <ds-amount-input
+              layout="stacked"
+              [grow]="true"
+              [label]="'getDiary.goal.fat' | t"
+              [ngModel]="quickForm().fat"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onQuickField('fat', $event)"
+            />
+            <ds-amount-input
+              layout="stacked"
+              [grow]="true"
+              [label]="'getDiary.goal.carbs' | t"
+              [ngModel]="quickForm().carbs"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onQuickField('carbs', $event)"
+            />
+          </ds-stack>
+        </ds-stack>
+
+        <ds-button
+          variant="primary"
+          icon="plus"
+          [fullWidth]="true"
+          [disabled]="!quickValid()"
+          [loading]="quickSaving()"
+          (clicked)="submitQuick()"
+        >
+          {{ quickSubmitLabel() | t }}
+        </ds-button>
+      } @else {
+        <ds-search-input
+          [placeholder]="'getDiary.picker.search' | t"
+          [clearLabel]="'getDiary.picker.close' | t"
+          [debounce]="120"
+          (searched)="onPickerSearch($event)"
+        />
+
+        @if (pickerChoices().length === 0) {
+          <ds-text variant="muted">{{ "getDiary.picker.empty" | t }}</ds-text>
+        } @else {
+          <ds-stack [gap]="'8px'">
+            @for (choice of pickerChoices(); track choice.refId) {
+              <ds-card [padding]="'10px'">
+                <ds-stack direction="row" align="center" [gap]="'12px'">
+                  <ds-emoji-tile
+                    [emoji]="choice.emoji"
+                    [size]="36"
+                    [radius]="10"
+                  />
+                  <ds-stack [gap]="'2px'" [grow]="true">
+                    <ds-text variant="strong" [truncate]="true">{{
+                      choice.name
+                    }}</ds-text>
+                    <ds-text variant="meta">{{ choice.detail }}</ds-text>
+                  </ds-stack>
+                  <ds-icon-button
+                    icon="plus"
+                    variant="soft"
+                    [ariaLabel]="'getDiary.add' | t"
+                    (clicked)="onPick(choice)"
+                  />
+                </ds-stack>
+              </ds-card>
+            }
+          </ds-stack>
+        }
       }
     </ds-stack>
   </ds-modal-sheet>

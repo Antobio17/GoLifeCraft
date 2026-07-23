@@ -12,15 +12,24 @@ export interface DiaryGoals {
   carbs: number;
 }
 
+export type DiaryEntryKind = "product" | "recipe" | "quick";
+
+export interface DiaryQuickEntryView {
+  name: string;
+  emoji: string;
+  perUnit: DiaryMacros;
+}
+
 export interface DiaryEntryView {
   id: string;
-  kind: "product" | "recipe";
-  refId: string;
+  kind: DiaryEntryKind;
+  refId: string | null;
   name: string;
   emoji: string;
   quantity: number;
   unit: string;
   macros: DiaryMacros;
+  quick: DiaryQuickEntryView | null;
 }
 
 export interface DiaryMealView {

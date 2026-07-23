@@ -7,6 +7,7 @@ use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryEntryView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryGoals;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryMealView;
+use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryQuickEntryView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\GetDiaryResult;
 use Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryNeedleDataQuery;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
@@ -47,8 +48,9 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
                     name: $row['snapshot_name'],
                     emoji: $row['snapshot_emoji'],
                     quantity: (float) $row['quantity'],
-                    unit: DiaryEntry::KIND_PRODUCT === $row['kind'] ? 'g' : 'rac.',
+                    unit: $this->unitFor(kind: $row['kind']),
                     macros: $macros->rounded(),
+                    quick: $this->quickView(row: $row),
                 );
             }
 
@@ -78,6 +80,36 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
             remainingCalories: max(0, $goalCalories - $consumed),
             percent: $percent,
             meals: $meals,
+        );
+    }
+
+    private function unitFor(string $kind): string
+    {
+        if (DiaryEntry::KIND_PRODUCT === $kind) {
+            return 'g';
+        }
+
+        return DiaryEntry::KIND_QUICK === $kind ? 'ud' : 'rac.';
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function quickView(array $row): ?DiaryQuickEntryView
+    {
+        if (DiaryEntry::KIND_QUICK !== $row['kind']) {
+            return null;
+        }
+
+        return new DiaryQuickEntryView(
+            name: $row['quick_name'],
+            emoji: $row['quick_emoji'],
+            perUnit: new MacroBreakdown(
+                calories: (float) $row['quick_calories'],
+                protein: (float) $row['quick_protein'],
+                fat: (float) $row['quick_fat'],
+                carbs: (float) $row['quick_carbs'],
+            ),
         );
     }
 
@@ -149,7 +181,7 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
     private function fetchEntries(string $date): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs')
+            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
             ->from(table: 'diary_entry', alias: 'e')
             ->where('e.entry_date = :date')
             ->setParameter(key: 'date', value: $date)

@@ -6,7 +6,7 @@
     <field name="entryDate" type="string" column="entry_date" length="10"/>
     <field name="meal" type="string" column="meal" length="16"/>
     <field name="kind" type="string" column="kind" length="16"/>
-    <field name="refId" type="string" column="ref_id" length="36"/>
+    <field name="refId" type="string" column="ref_id" length="36" nullable="true"/>
     <field name="quantity" type="float" column="quantity"/>
     <field name="nameSnapshot" type="string" column="snapshot_name" length="255"/>
     <field name="emojiSnapshot" type="string" column="snapshot_emoji" length="16"/>
@@ -14,6 +14,12 @@
     <field name="proteinSnapshot" type="float" column="snapshot_protein"/>
     <field name="fatSnapshot" type="float" column="snapshot_fat"/>
     <field name="carbsSnapshot" type="float" column="snapshot_carbs"/>
+    <field name="quickName" type="string" column="quick_name" length="255"/>
+    <field name="quickEmoji" type="string" column="quick_emoji" length="16"/>
+    <field name="quickCalories" type="float" column="quick_calories"/>
+    <field name="quickProtein" type="float" column="quick_protein"/>
+    <field name="quickFat" type="float" column="quick_fat"/>
+    <field name="quickCarbs" type="float" column="quick_carbs"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

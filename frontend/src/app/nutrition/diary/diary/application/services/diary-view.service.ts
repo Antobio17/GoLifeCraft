@@ -88,8 +88,10 @@ export class DiaryViewService {
     return `${this.format(entry.quantity)} ${entry.unit}`;
   }
 
-  entryBadgeTone(kind: string): "brand" | "neutral" {
-    return kind === "recipe" ? "brand" : "neutral";
+  entryBadgeTone(kind: string): "brand" | "neutral" | "accent" {
+    if (kind === "recipe") return "brand";
+
+    return kind === "quick" ? "accent" : "neutral";
   }
 
   private macroGoal(

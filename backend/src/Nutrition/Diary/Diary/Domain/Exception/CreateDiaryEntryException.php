@@ -33,6 +33,24 @@ final class CreateDiaryEntryException extends BaseException
         );
     }
 
+    public static function quickNameIsRequired(): self
+    {
+        return new static(
+            title: 'The free entry needs a name.',
+            keyTranslation: 'diary.entry.quick.name.required',
+            details: []
+        );
+    }
+
+    public static function quickCaloriesMustBePositive(): self
+    {
+        return new static(
+            title: 'The free entry calories must be greater than zero.',
+            keyTranslation: 'diary.entry.quick.calories.must.be.positive',
+            details: []
+        );
+    }
+
     public static function quantityMustBePositive(): self
     {
         return new static(

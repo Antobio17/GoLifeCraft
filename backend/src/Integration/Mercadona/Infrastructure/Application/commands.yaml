@@ -9,3 +9,13 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'console.command' }
+
+  Integration\Mercadona\Infrastructure\Application\Console\BackfillMercadonaPricesCommand:
+    class: Integration\Mercadona\Infrastructure\Application\Console\BackfillMercadonaPricesCommand
+    arguments:
+      $catalogProvider: '@Integration\Mercadona\Domain\Service\MercadonaCatalogProvider'
+      $missingPriceRegistry: '@Integration\Mercadona\Domain\Service\MissingPriceRegistry'
+      $priceQueue: '@integration.mercadona.price_queue'
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'console.command' }

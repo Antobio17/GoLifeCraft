@@ -10,7 +10,8 @@
     },
     "badge": {
       "product": "ARTICLE",
-      "recipe": "RECIPE"
+      "recipe": "RECIPE",
+      "quick": "FREE"
     },
     "meals": {
       "breakfast": "Breakfast",
@@ -30,11 +31,13 @@
       "recipes": "Recipes",
       "search": "Search article or recipe…",
       "close": "Close",
-      "empty": "No results"
+      "empty": "No results",
+      "quick": "Free"
     },
     "toast": {
       "added": "Added to the diary",
-      "removed": "Removed from the diary"
+      "removed": "Removed from the diary",
+      "quickUpdated": "Entry updated"
     },
     "calendar": {
       "open": "Open calendar",
@@ -79,6 +82,18 @@
     },
     "empty": "No food logged",
     "emptyAction": "No food yet, add one with the + button",
-    "error": "We couldn't load this day's diary"
+    "error": "We couldn't load this day's diary",
+    "quick": {
+      "hint": "Log a one-off food without creating an article or a recipe. Only name and calories; macros are optional.",
+      "iconLabel": "ICON",
+      "nameLabel": "NAME",
+      "namePlaceholder": "e.g. Coffee with milk, set menu…",
+      "caloriesLabel": "CALORIES",
+      "macrosLabel": "MACROS · OPTIONAL (g)",
+      "submit": "Add to diary",
+      "save": "Save changes",
+      "edit": "Edit free entry",
+      "editTitle": "Edit entry"
+    }
   }
 }

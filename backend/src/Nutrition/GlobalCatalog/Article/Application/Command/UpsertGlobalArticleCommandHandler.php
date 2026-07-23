@@ -2,6 +2,7 @@
 
 namespace Nutrition\GlobalCatalog\Article\Application\Command;
 
+use Nutrition\GlobalCatalog\Article\Domain\Exception\UpsertGlobalArticleException;
 use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticle;
 use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleRepository;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -18,6 +19,10 @@ final readonly class UpsertGlobalArticleCommandHandler
     {
         $globalArticle = $this->globalArticleRepository->findByBarcode(barcode: $command->barcode);
 
+        if (null === $globalArticle && null === $command->nutrition) {
+            throw UpsertGlobalArticleException::nutritionRequired(barcode: $command->barcode);
+        }
+
         if (null === $globalArticle) {
             $globalArticle = GlobalArticle::create(
                 id: $this->globalArticleRepository->nextId(),
@@ -28,16 +33,9 @@ final readonly class UpsertGlobalArticleCommandHandler
                 imageUrl: $command->imageUrl,
                 quantity: $command->quantity,
                 stores: $command->stores,
+                pricing: $command->pricing,
                 source: $command->source,
-                referenceAmount: $command->referenceAmount,
-                calories: $command->calories,
-                protein: $command->protein,
-                carbs: $command->carbs,
-                sugars: $command->sugars,
-                fat: $command->fat,
-                saturatedFat: $command->saturatedFat,
-                fiber: $command->fiber,
-                salt: $command->salt,
+                nutrition: $command->nutrition,
                 dateTimeGenerator: $this->dateTimeGenerator,
             );
 
@@ -53,15 +51,8 @@ final readonly class UpsertGlobalArticleCommandHandler
             imageUrl: $command->imageUrl,
             quantity: $command->quantity,
             stores: $command->stores,
-            referenceAmount: $command->referenceAmount,
-            calories: $command->calories,
-            protein: $command->protein,
-            carbs: $command->carbs,
-            sugars: $command->sugars,
-            fat: $command->fat,
-            saturatedFat: $command->saturatedFat,
-            fiber: $command->fiber,
-            salt: $command->salt,
+            pricing: $command->pricing->isEmpty() ? $globalArticle->pricing() : $command->pricing,
+            nutrition: $command->nutrition ?? $globalArticle->nutrition(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 

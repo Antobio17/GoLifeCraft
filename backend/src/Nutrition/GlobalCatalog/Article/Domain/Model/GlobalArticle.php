@@ -16,6 +16,11 @@ class GlobalArticle extends GenericAggregate
     public ?string $imageUrl = null;
     public ?string $quantity = null;
     public ?string $stores = null;
+    public ?float $price = null;
+    public ?float $bulkPrice = null;
+    public ?float $referencePrice = null;
+    public ?string $referenceFormat = null;
+    public ?float $previousPrice = null;
     public string $source;
     public float $referenceAmount;
     public ?float $calories = null;
@@ -36,16 +41,9 @@ class GlobalArticle extends GenericAggregate
         ?string $imageUrl,
         ?string $quantity,
         ?string $stores,
+        GlobalArticlePricing $pricing,
         string $source,
-        float $referenceAmount,
-        ?float $calories,
-        ?float $protein,
-        ?float $carbs,
-        ?float $sugars,
-        ?float $fat,
-        ?float $saturatedFat,
-        ?float $fiber,
-        ?float $salt,
+        GlobalArticleNutrition $nutrition,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
         $globalArticle = new self();
@@ -60,15 +58,8 @@ class GlobalArticle extends GenericAggregate
             imageUrl: $imageUrl,
             quantity: $quantity,
             stores: $stores,
-            referenceAmount: $referenceAmount,
-            calories: $calories,
-            protein: $protein,
-            carbs: $carbs,
-            sugars: $sugars,
-            fat: $fat,
-            saturatedFat: $saturatedFat,
-            fiber: $fiber,
-            salt: $salt,
+            pricing: $pricing,
+            nutrition: $nutrition,
             dateTimeGenerator: $dateTimeGenerator,
         );
 
@@ -82,15 +73,8 @@ class GlobalArticle extends GenericAggregate
         ?string $imageUrl,
         ?string $quantity,
         ?string $stores,
-        float $referenceAmount,
-        ?float $calories,
-        ?float $protein,
-        ?float $carbs,
-        ?float $sugars,
-        ?float $fat,
-        ?float $saturatedFat,
-        ?float $fiber,
-        ?float $salt,
+        GlobalArticlePricing $pricing,
+        GlobalArticleNutrition $nutrition,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
         $this->name = $name;
@@ -99,15 +83,56 @@ class GlobalArticle extends GenericAggregate
         $this->imageUrl = $imageUrl;
         $this->quantity = $quantity;
         $this->stores = $stores;
-        $this->referenceAmount = $referenceAmount;
-        $this->calories = $calories;
-        $this->protein = $protein;
-        $this->carbs = $carbs;
-        $this->sugars = $sugars;
-        $this->fat = $fat;
-        $this->saturatedFat = $saturatedFat;
-        $this->fiber = $fiber;
-        $this->salt = $salt;
+        $this->writePricing(pricing: $pricing);
+        $this->writeNutrition(nutrition: $nutrition);
         $this->stampUpdate(userId: self::SYSTEM_USER_ID, now: $dateTimeGenerator->now());
+    }
+
+    public function pricing(): GlobalArticlePricing
+    {
+        return new GlobalArticlePricing(
+            price: $this->price,
+            bulkPrice: $this->bulkPrice,
+            referencePrice: $this->referencePrice,
+            referenceFormat: $this->referenceFormat,
+            previousPrice: $this->previousPrice,
+        );
+    }
+
+    public function nutrition(): GlobalArticleNutrition
+    {
+        return new GlobalArticleNutrition(
+            referenceAmount: $this->referenceAmount,
+            calories: $this->calories,
+            protein: $this->protein,
+            carbs: $this->carbs,
+            sugars: $this->sugars,
+            fat: $this->fat,
+            saturatedFat: $this->saturatedFat,
+            fiber: $this->fiber,
+            salt: $this->salt,
+        );
+    }
+
+    private function writePricing(GlobalArticlePricing $pricing): void
+    {
+        $this->price = $pricing->price;
+        $this->bulkPrice = $pricing->bulkPrice;
+        $this->referencePrice = $pricing->referencePrice;
+        $this->referenceFormat = $pricing->referenceFormat;
+        $this->previousPrice = $pricing->previousPrice;
+    }
+
+    private function writeNutrition(GlobalArticleNutrition $nutrition): void
+    {
+        $this->referenceAmount = $nutrition->referenceAmount;
+        $this->calories = $nutrition->calories;
+        $this->protein = $nutrition->protein;
+        $this->carbs = $nutrition->carbs;
+        $this->sugars = $nutrition->sugars;
+        $this->fat = $nutrition->fat;
+        $this->saturatedFat = $nutrition->saturatedFat;
+        $this->fiber = $nutrition->fiber;
+        $this->salt = $nutrition->salt;
     }
 }

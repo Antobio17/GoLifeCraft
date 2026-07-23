@@ -20,6 +20,20 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\CreateQuickDiaryEntryController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\CreateQuickDiaryEntryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateQuickDiaryEntryController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateQuickDiaryEntryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryController:
     class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryController
     arguments:

@@ -52,7 +52,7 @@ final readonly class ImportGlobalArticleCommandHandler
             name: $globalArticle->name,
             recipeUnit: 'gram',
             servingSize: null,
-            price: null,
+            price: $globalArticle->price,
             brand: $globalArticle->brand,
             emoji: null,
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),

@@ -17,6 +17,7 @@ final readonly class MercadonaProduct
         public ?string $categoryName,
         public ?string $imageUrl,
         public ?string $quantity,
+        public MercadonaPrice $price,
         public array $labelImageUrls,
     ) {
     }
@@ -39,6 +40,7 @@ final readonly class MercadonaProduct
             categoryName: self::deepestCategoryName(categories: $data['categories'] ?? null),
             imageUrl: self::frontalImageUrl(photos: $photos),
             quantity: self::quantity(priceInstructions: $data['price_instructions'] ?? null),
+            price: MercadonaPrice::fromPriceInstructions(priceInstructions: $data['price_instructions'] ?? null),
             labelImageUrls: self::labelImageUrls(photos: $photos),
         );
     }

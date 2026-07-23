@@ -5,6 +5,8 @@ namespace Integration\OpenFoodFacts\Infrastructure\Application\Console;
 use Integration\OpenFoodFacts\Domain\Model\OpenFoodFactsProduct;
 use Integration\OpenFoodFacts\Domain\Service\OpenFoodFactsCatalogProvider;
 use Nutrition\GlobalCatalog\Article\Application\Command\UpsertGlobalArticleCommand;
+use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleNutrition;
+use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticlePricing;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -89,16 +91,19 @@ final class SyncOpenFoodFactsCatalogCommand extends Command
                 imageUrl: $product->imageUrl,
                 quantity: $product->quantity,
                 stores: $product->stores,
+                pricing: GlobalArticlePricing::empty(),
                 source: self::SOURCE,
-                referenceAmount: $product->referenceAmount,
-                calories: $product->calories,
-                protein: $product->protein,
-                carbs: $product->carbs,
-                sugars: $product->sugars,
-                fat: $product->fat,
-                saturatedFat: $product->saturatedFat,
-                fiber: $product->fiber,
-                salt: $product->salt,
+                nutrition: new GlobalArticleNutrition(
+                    referenceAmount: $product->referenceAmount,
+                    calories: $product->calories,
+                    protein: $product->protein,
+                    carbs: $product->carbs,
+                    sugars: $product->sugars,
+                    fat: $product->fat,
+                    saturatedFat: $product->saturatedFat,
+                    fiber: $product->fiber,
+                    salt: $product->salt,
+                ),
             ));
 
             $envelope->last(stampFqcn: HandledStamp::class);

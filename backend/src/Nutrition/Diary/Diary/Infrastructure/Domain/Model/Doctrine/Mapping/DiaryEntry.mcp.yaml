@@ -23,19 +23,20 @@ fields:
   kind:
     writable: true
     required: true
-    enum: [product, recipe]
+    enum: [product, recipe, quick]
     description: >-
-      Whether this entry references a catalog article ("product", quantity in grams)
-      or a recipe ("recipe", quantity in servings).
+      Whether this entry references a catalog article ("product", quantity in grams),
+      a recipe ("recipe", quantity in servings) or nothing at all ("quick", a free
+      entry typed by hand, quantity in units). Use "quick" for one-off foods that are
+      not worth creating an article or a recipe for.
     filterable: true
   refId:
     writable: true
-    required: true
-    min: 36
+    required: false
     max: 36
     description: >-
       The id of the referenced entity: an Article id when kind is "product",
-      or a Recipe id when kind is "recipe".
+      or a Recipe id when kind is "recipe". Leave it null when kind is "quick".
     filterable: true
   quantity:
     writable: true
@@ -43,7 +44,46 @@ fields:
     type: float
     min: 0
     description: >-
-      Grams of the article when kind is "product", or number of servings of the
-      recipe when kind is "recipe".
+      Grams of the article when kind is "product", number of servings of the
+      recipe when kind is "recipe", or number of units when kind is "quick".
+  quickName:
+    writable: true
+    required: false
+    max: 255
+    description: >-
+      Name of the free entry, only when kind is "quick" (for example "Menú del día").
+  quickEmoji:
+    writable: true
+    required: false
+    max: 16
+    description: >-
+      Emoji shown for the free entry, only when kind is "quick". Pick one that fits
+      the food; defaults to a pencil when empty.
+  quickCalories:
+    writable: true
+    required: false
+    type: float
+    min: 0
+    description: >-
+      Calories of ONE unit of the free entry, only when kind is "quick". The totals
+      stored in the diary are this value multiplied by "quantity".
+  quickProtein:
+    writable: true
+    required: false
+    type: float
+    min: 0
+    description: Grams of protein per unit of the free entry, only when kind is "quick". Optional.
+  quickFat:
+    writable: true
+    required: false
+    type: float
+    min: 0
+    description: Grams of fat per unit of the free entry, only when kind is "quick". Optional.
+  quickCarbs:
+    writable: true
+    required: false
+    type: float
+    min: 0
+    description: Grams of carbs per unit of the free entry, only when kind is "quick". Optional.
 
 relations: {}

@@ -72,6 +72,10 @@ final class BackfillDiaryMacrosCommand extends Command
         $updated = 0;
 
         foreach ($entries as $entry) {
+            if (DiaryEntry::KIND_QUICK === $entry['kind']) {
+                continue;
+            }
+
             $isProduct = DiaryEntry::KIND_PRODUCT === $entry['kind'];
             $macros = $this->calculator->ingredientContribution(
                 graph: $graph,

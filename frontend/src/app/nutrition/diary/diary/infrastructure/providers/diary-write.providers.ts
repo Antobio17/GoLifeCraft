@@ -8,12 +8,40 @@ import { HttpDeleteDiaryEntryAdapter } from "@nutrition/diary/diary/infrastructu
 import { CreateDiaryEntryService } from "@nutrition/diary/diary/application/services/create-diary-entry.service";
 import { UpdateDiaryEntryService } from "@nutrition/diary/diary/application/services/update-diary-entry.service";
 import { DeleteDiaryEntryService } from "@nutrition/diary/diary/application/services/delete-diary-entry.service";
+import { CreateQuickDiaryEntryPort } from "@nutrition/diary/diary/domain/ports/create-quick-diary-entry.port";
+import { UpdateQuickDiaryEntryPort } from "@nutrition/diary/diary/domain/ports/update-quick-diary-entry.port";
+import { HttpCreateQuickDiaryEntryAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-create-quick-diary-entry.adapter";
+import { HttpUpdateQuickDiaryEntryAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-update-quick-diary-entry.adapter";
+import { CreateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/create-quick-diary-entry.service";
+import { UpdateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/update-quick-diary-entry.service";
+import { QuickDiaryEntryFormService } from "@nutrition/diary/diary/application/services/quick-diary-entry-form.service";
 import { DiaryPickerService } from "@nutrition/diary/diary/application/services/diary-picker.service";
 
 export class DiaryWriteProviders {
   static getProviders(): Provider[] {
     return [
       DiaryPickerService,
+      QuickDiaryEntryFormService,
+      {
+        provide: CreateQuickDiaryEntryPort,
+        useClass: HttpCreateQuickDiaryEntryAdapter,
+      },
+      {
+        provide: CreateQuickDiaryEntryService,
+        useFactory: (port: CreateQuickDiaryEntryPort) =>
+          new CreateQuickDiaryEntryService(port),
+        deps: [CreateQuickDiaryEntryPort],
+      },
+      {
+        provide: UpdateQuickDiaryEntryPort,
+        useClass: HttpUpdateQuickDiaryEntryAdapter,
+      },
+      {
+        provide: UpdateQuickDiaryEntryService,
+        useFactory: (port: UpdateQuickDiaryEntryPort) =>
+          new UpdateQuickDiaryEntryService(port),
+        deps: [UpdateQuickDiaryEntryPort],
+      },
       { provide: CreateDiaryEntryPort, useClass: HttpCreateDiaryEntryAdapter },
       {
         provide: CreateDiaryEntryService,

@@ -6,32 +6,56 @@
   [removeLabel]="removeLabel"
   (remove)="remove.emit()"
 >
-  <div class="diary-entry__row" [class.diary-entry__row--slid]="swipe.slid">
-    <ds-emoji-tile [emoji]="emoji" [size]="38" [radius]="10" />
+  <ds-stack
+    class="diary-entry__row"
+    direction="row"
+    align="center"
+    gap="11px"
+    [class.diary-entry__row--slid]="swipe.slid"
+  >
+    @if (openable) {
+      <ds-pressable
+        [grow]="true"
+        [ariaLabel]="openLabel"
+        (press)="opened.emit()"
+      >
+        <ds-emoji-tile [emoji]="emoji" [size]="38" [radius]="10" />
 
-    <div class="diary-entry__body">
-      <span class="diary-entry__name">{{ name }}</span>
-      <div class="diary-entry__meta">
-        <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
-        <span class="diary-entry__kcal">{{ kcalLabel }}</span>
-      </div>
-    </div>
+        <ds-stack gap="4px" [grow]="true">
+          <ds-text variant="strong" class="diary-entry__name">{{
+            name
+          }}</ds-text>
+          <ds-stack direction="row" align="center" gap="7px">
+            <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
+            <ds-text variant="meta" [inline]="true" class="diary-entry__kcal">{{
+              kcalLabel
+            }}</ds-text>
+          </ds-stack>
+        </ds-stack>
+      </ds-pressable>
+    } @else {
+      <ds-emoji-tile [emoji]="emoji" [size]="38" [radius]="10" />
+
+      <ds-stack gap="4px" [grow]="true">
+        <ds-text variant="strong" class="diary-entry__name">{{ name }}</ds-text>
+        <ds-stack direction="row" align="center" gap="7px">
+          <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
+          <ds-text variant="meta" [inline]="true" class="diary-entry__kcal">{{
+            kcalLabel
+          }}</ds-text>
+        </ds-stack>
+      </ds-stack>
+    }
 
     @if (canWrite) {
-      <div class="diary-entry__qty-box">
-        <input
-          class="diary-entry__qty-input"
-          type="text"
-          inputmode="decimal"
-          [value]="quantity"
-          [attr.aria-label]="quantityAriaLabel"
-          (change)="onQtyCommit($event)"
-          (keydown.enter)="onQtyEnter($event)"
-        />
-        <span class="diary-entry__qty-unit">{{ unit }}</span>
-      </div>
+      <ds-inline-quantity
+        [quantity]="quantity"
+        [unit]="unit"
+        [ariaLabel]="quantityAriaLabel"
+        (quantityChange)="quantityChange.emit($event)"
+      />
     } @else {
-      <span class="diary-entry__qty">{{ quantityLabel }}</span>
+      <ds-text class="diary-entry__qty">{{ quantityLabel }}</ds-text>
     }
-  </div>
+  </ds-stack>
 </ds-swipe-to-delete>

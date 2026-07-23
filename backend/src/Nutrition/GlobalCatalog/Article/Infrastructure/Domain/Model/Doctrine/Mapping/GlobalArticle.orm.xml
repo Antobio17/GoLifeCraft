@@ -10,6 +10,11 @@
     <field name="imageUrl" type="string" column="image_url" length="1024" nullable="true"/>
     <field name="quantity" type="string" column="quantity" length="120" nullable="true"/>
     <field name="stores" type="string" column="stores" length="255" nullable="true"/>
+    <field name="price" type="float" column="price" nullable="true"/>
+    <field name="bulkPrice" type="float" column="bulk_price" nullable="true"/>
+    <field name="referencePrice" type="float" column="reference_price" nullable="true"/>
+    <field name="referenceFormat" type="string" column="reference_format" length="20" nullable="true"/>
+    <field name="previousPrice" type="float" column="previous_price" nullable="true"/>
     <field name="source" type="string" column="source" length="60"/>
     <field name="referenceAmount" type="float" column="reference_amount"/>
     <field name="calories" type="float" column="calories" nullable="true"/>

@@ -2,13 +2,25 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { EmojiTileComponent } from "../../../emoji-tile/infrastructure/components/emoji-tile.component";
 import { ChipComponent } from "../../../chip/infrastructure/components/chip.component";
 import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
+import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
+import { TextComponent } from "../../../text/infrastructure/components/text.component";
+import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
+import { InlineQuantityComponent } from "../../../inline-quantity/infrastructure/components/inline-quantity.component";
 
 type ChipTone = "neutral" | "brand" | "accent" | "warning";
 
 @Component({
   selector: "ds-diary-entry",
   standalone: true,
-  imports: [EmojiTileComponent, ChipComponent, SwipeToDeleteComponent],
+  imports: [
+    EmojiTileComponent,
+    ChipComponent,
+    SwipeToDeleteComponent,
+    StackComponent,
+    TextComponent,
+    PressableComponent,
+    InlineQuantityComponent,
+  ],
   templateUrl: "./diary-entry.component.html",
   styleUrls: ["./diary-entry.component.css"],
 })
@@ -24,26 +36,10 @@ export class DiaryEntryComponent {
   @Input() canWrite = false;
   @Input() quantityAriaLabel = "";
   @Input() removeLabel = "";
+  @Input() openable = false;
+  @Input() openLabel = "";
 
   @Output() quantityChange = new EventEmitter<number>();
   @Output() remove = new EventEmitter<void>();
-
-  onQtyCommit(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const parsed = Number.parseFloat(input.value.replace(",", "."));
-
-    if (!Number.isFinite(parsed) || parsed <= 0) {
-      input.value = String(this.quantity);
-
-      return;
-    }
-
-    if (parsed === this.quantity) return;
-
-    this.quantityChange.emit(parsed);
-  }
-
-  onQtyEnter(event: Event): void {
-    (event.target as HTMLInputElement).blur();
-  }
+  @Output() opened = new EventEmitter<void>();
 }

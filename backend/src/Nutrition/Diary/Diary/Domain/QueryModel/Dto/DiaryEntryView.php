@@ -9,12 +9,13 @@ final readonly class DiaryEntryView
     public function __construct(
         public string $id,
         public string $kind,
-        public string $refId,
+        public ?string $refId,
         public string $name,
         public string $emoji,
         public float $quantity,
         public string $unit,
         public MacroBreakdown $macros,
+        public ?DiaryQuickEntryView $quick = null,
     ) {
     }
 }

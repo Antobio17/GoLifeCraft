@@ -11,6 +11,7 @@ use Integration\Mercadona\Domain\Service\MercadonaCatalogProvider;
 use Integration\Mercadona\Domain\Service\MercadonaImportQueue;
 use Integration\Mercadona\Domain\Service\MercadonaNutritionExtractor;
 use Nutrition\GlobalCatalog\Article\Application\Command\UpsertGlobalArticleCommand;
+use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleNutrition;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,7 +27,7 @@ final class SyncMercadonaCatalogCommand extends Command
     private const int RESULT_UPSERTED = 1;
     private const int RESULT_SKIPPED = 2;
     private const int RESULT_FAILED = 3;
-    private const int RESULT_EXISTING = 4;
+    private const int RESULT_REPRICED = 4;
 
     private bool $showDetails = false;
 
@@ -113,7 +114,7 @@ final class SyncMercadonaCatalogCommand extends Command
     private function importPending(int $limit, int $delayMilliseconds, bool $force, OutputInterface $output): void
     {
         $upserted = 0;
-        $existing = 0;
+        $repriced = 0;
         $skipped = 0;
         $failed = 0;
 
@@ -132,13 +133,13 @@ final class SyncMercadonaCatalogCommand extends Command
 
             match ($result) {
                 self::RESULT_UPSERTED => ++$upserted,
-                self::RESULT_EXISTING => ++$existing,
+                self::RESULT_REPRICED => ++$repriced,
                 self::RESULT_SKIPPED => ++$skipped,
                 default => ++$failed,
             };
         }
 
-        $output->writeln(messages: sprintf('<comment>Run done. Upserted: %d, Existing: %d, Skipped: %d, Failed: %d</comment>', $upserted, $existing, $skipped, $failed));
+        $output->writeln(messages: sprintf('<comment>Run done. Upserted: %d, Repriced: %d, Skipped: %d, Failed: %d</comment>', $upserted, $repriced, $skipped, $failed));
     }
 
     private function reportPending(OutputInterface $output): void
@@ -163,7 +164,7 @@ final class SyncMercadonaCatalogCommand extends Command
         }
 
         if (!$force && $this->importedRegistry->isImported(barcode: $product->barcode)) {
-            return self::RESULT_EXISTING;
+            return $this->refreshPricing(product: $product, output: $output);
         }
 
         $extraction = $this->nutritionExtractor->extract(imageUrls: $product->labelImageUrls);
@@ -211,15 +212,7 @@ final class SyncMercadonaCatalogCommand extends Command
     private function upsert(MercadonaProduct $product, MercadonaNutrition $nutrition, OutputInterface $output): int
     {
         try {
-            $envelope = $this->messageBus->dispatch(message: new UpsertGlobalArticleCommand(
-                barcode: $product->barcode,
-                name: $product->name,
-                brand: $product->brand,
-                categoryName: $product->categoryName,
-                imageUrl: $product->imageUrl,
-                quantity: $product->quantity,
-                stores: self::STORE,
-                source: self::SOURCE,
+            $this->dispatchUpsert(product: $product, nutrition: new GlobalArticleNutrition(
                 referenceAmount: $nutrition->referenceAmount,
                 calories: $nutrition->calories,
                 protein: $nutrition->protein,
@@ -231,8 +224,6 @@ final class SyncMercadonaCatalogCommand extends Command
                 salt: $nutrition->salt,
             ));
 
-            $envelope->last(stampFqcn: HandledStamp::class);
-
             $output->writeln(messages: sprintf('<info>Imported %s (%s).</info>', $product->barcode, $product->name));
 
             return self::RESULT_UPSERTED;
@@ -241,5 +232,47 @@ final class SyncMercadonaCatalogCommand extends Command
 
             return self::RESULT_FAILED;
         }
+    }
+
+    private function refreshPricing(MercadonaProduct $product, OutputInterface $output): int
+    {
+        try {
+            $this->dispatchUpsert(product: $product, nutrition: null);
+
+            $output->writeln(messages: sprintf('<info>Repriced %s (%s): %s.</info>', $product->barcode, $product->name, $this->formatPrice(price: $product->price->unitPrice)));
+
+            return self::RESULT_REPRICED;
+        } catch (ExceptionInterface $e) {
+            $output->writeln(messages: sprintf('<error>Repricing %s (%s) failed: %s</error>', $product->barcode, $product->name, $e->getMessage()));
+
+            return self::RESULT_FAILED;
+        }
+    }
+
+    private function dispatchUpsert(MercadonaProduct $product, ?GlobalArticleNutrition $nutrition): void
+    {
+        $envelope = $this->messageBus->dispatch(message: new UpsertGlobalArticleCommand(
+            barcode: $product->barcode,
+            name: $product->name,
+            brand: $product->brand,
+            categoryName: $product->categoryName,
+            imageUrl: $product->imageUrl,
+            quantity: $product->quantity,
+            stores: self::STORE,
+            pricing: MercadonaPricingMapper::toGlobalArticlePricing(price: $product->price),
+            source: self::SOURCE,
+            nutrition: $nutrition,
+        ));
+
+        $envelope->last(stampFqcn: HandledStamp::class);
+    }
+
+    private function formatPrice(?float $price): string
+    {
+        if (null === $price) {
+            return 'no price';
+        }
+
+        return number_format($price, 2, ',', '').' €';
     }
 }

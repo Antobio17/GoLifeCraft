@@ -10,6 +10,8 @@ use Nutrition\Catalog\Article\Infrastructure\Domain\Model\InMemory\InMemoryArtic
 use Nutrition\Catalog\Category\Infrastructure\Domain\Model\InMemory\InMemoryCategoryRepository;
 use Nutrition\Catalog\Supermarket\Infrastructure\Domain\Model\InMemory\InMemorySupermarketRepository;
 use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticle;
+use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleNutrition;
+use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticlePricing;
 use Nutrition\GlobalCatalog\Article\Infrastructure\Domain\Model\InMemory\InMemoryGlobalArticleRepository;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -52,6 +54,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
         $this->assertNotNull($article);
         $this->assertSame('Leche entera', $article->name);
         $this->assertSame('Hacendado', $article->brand);
+        $this->assertSame(1.25, $article->price);
         $this->assertNotNull($article->categoryId);
         $this->assertNotNull($article->supermarketId);
         $this->assertNotNull($article->nutritionFactsId);
@@ -87,16 +90,19 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
             imageUrl: null,
             quantity: '1 L',
             stores: 'Mercadona',
+            pricing: new GlobalArticlePricing(price: 1.25, bulkPrice: 1.25, referencePrice: 1.25, referenceFormat: 'L', previousPrice: 1.15),
             source: 'openfoodfacts',
-            referenceAmount: 100.0,
-            calories: 64.0,
-            protein: 3.1,
-            carbs: 4.7,
-            sugars: 4.7,
-            fat: 3.6,
-            saturatedFat: 2.3,
-            fiber: 0.0,
-            salt: 0.13,
+            nutrition: new GlobalArticleNutrition(
+                referenceAmount: 100.0,
+                calories: 64.0,
+                protein: 3.1,
+                carbs: 4.7,
+                sugars: 4.7,
+                fat: 3.6,
+                saturatedFat: 2.3,
+                fiber: 0.0,
+                salt: 0.13,
+            ),
             dateTimeGenerator: new DateTimeGenerator(),
         );
         $this->globalArticleRepository->save(globalArticle: $globalArticle);

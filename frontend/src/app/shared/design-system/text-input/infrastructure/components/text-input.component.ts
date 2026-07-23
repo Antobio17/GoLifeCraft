@@ -10,8 +10,13 @@ type TextInputVariant = "default" | "outlined";
   standalone: true,
   imports: [IconComponent],
   template: `
-    @if (leadingIcon || passwordToggle) {
+    @if (leadingIcon || passwordToggle || emojiPrefix) {
       <span class="ds-text-input__control" [class.is-invalid]="isInvalid">
+        @if (emojiPrefix) {
+          <span class="ds-text-input__emoji" aria-hidden="true">{{
+            emojiPrefix
+          }}</span>
+        }
         @if (leadingIcon) {
           <ds-icon
             class="ds-text-input__lead"
@@ -21,6 +26,7 @@ type TextInputVariant = "default" | "outlined";
         }
         <input
           class="ds-text-input__bare"
+          [class.ds-text-input__bare--strong]="strong"
           [type]="effectiveType"
           [value]="value"
           [placeholder]="placeholder"
@@ -127,6 +133,14 @@ type TextInputVariant = "default" | "outlined";
         border-color: var(--ds-danger);
         box-shadow: none;
       }
+      .ds-text-input__emoji {
+        flex: none;
+        font-size: 22px;
+        line-height: 1;
+      }
+      .ds-text-input__bare--strong {
+        font-weight: var(--ds-weight-semibold);
+      }
       .ds-text-input__lead {
         color: var(--ds-text-meta);
         flex: none;
@@ -172,6 +186,8 @@ export class TextInputComponent implements ControlValueAccessor {
   @Input() ariaLabel = "";
   @Input() inputmode = "";
   @Input() leadingIcon?: DsIconName;
+  @Input() emojiPrefix = "";
+  @Input() strong = false;
   @Input() passwordToggle = false;
   @Input() togglePasswordLabel = "";
 

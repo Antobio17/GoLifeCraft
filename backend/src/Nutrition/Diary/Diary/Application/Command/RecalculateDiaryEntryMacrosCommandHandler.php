@@ -24,11 +24,13 @@ final readonly class RecalculateDiaryEntryMacrosCommandHandler
             return;
         }
 
-        $snapshot = $this->snapshotCalculator->calculate(
-            kind: $diaryEntry->kind,
-            refId: $diaryEntry->refId,
-            quantity: $diaryEntry->quantity,
-        );
+        $snapshot = $diaryEntry->isQuick()
+            ? $diaryEntry->quickSnapshot(quantity: $diaryEntry->quantity)
+            : $this->snapshotCalculator->calculate(
+                kind: $diaryEntry->kind,
+                refId: $diaryEntry->refId ?? '',
+                quantity: $diaryEntry->quantity,
+            );
 
         if ($diaryEntry->matchesSnapshot(snapshot: $snapshot)) {
             return;
