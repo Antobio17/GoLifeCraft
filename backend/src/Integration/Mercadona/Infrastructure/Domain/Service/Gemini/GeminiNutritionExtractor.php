@@ -14,16 +14,18 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
 {
     private const string SERVICE = 'Gemini';
     private const float REFERENCE_AMOUNT = 100.0;
+    private const float ETHANOL_DENSITY = 0.789;
     private const int MAX_ATTEMPTS = 2;
     private const int RETRY_BASE_DELAY_MICROSECONDS = 2000000;
     private const array THROTTLE_STATUS_CODES = [429, 500, 503];
     private const string PROMPT = <<<'PROMPT'
         Eres un extractor de información nutricional. En las imágenes aparece la etiqueta de un producto de alimentación de supermercado.
         Localiza la tabla de "Información nutricional" y devuelve los valores POR 100 g o POR 100 ml (nunca por ración).
-        Devuelve únicamente los campos: found, calories (kcal), protein, carbs, sugars, fat, saturatedFat, fiber, salt (todos en gramos por 100, salvo calories en kcal, con punto decimal).
+        Devuelve únicamente los campos: found, calories (kcal), protein, carbs, sugars, fat, saturatedFat, fiber, salt (todos en gramos por 100, salvo calories en kcal, con punto decimal) y alcoholVolume.
         Reglas:
         - found = true solo si localizas la tabla y es legible por 100 g/ml. Si no hay tabla, es ilegible, o solo aparece por ración, found = false.
         - Si un campo concreto no aparece en la etiqueta, ponlo a null. No inventes ni estimes ningún valor.
+        - alcoholVolume es el grado alcohólico en % vol que aparece en la etiqueta (por ejemplo "12,5% vol" → 12.5). Si el producto no lleva alcohol o no aparece el grado, ponlo a null.
         PROMPT;
 
     public function __construct(
@@ -238,12 +240,23 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
             saturatedFat: $this->toFloat(value: $data['saturatedFat'] ?? null),
             fiber: $this->toFloat(value: $data['fiber'] ?? null),
             salt: $this->toFloat(value: $data['salt'] ?? null),
+            alcohol: $this->toAlcoholGrams(value: $data['alcoholVolume'] ?? null),
         );
     }
 
     private function toFloat(mixed $value): ?float
     {
         return is_numeric($value) ? (float) $value : null;
+    }
+
+    private function toAlcoholGrams(mixed $value): ?float
+    {
+        $alcoholVolume = $this->toFloat(value: $value);
+        if (null === $alcoholVolume) {
+            return null;
+        }
+
+        return $alcoholVolume * self::ETHANOL_DENSITY;
     }
 
     private function schema(): array
@@ -262,6 +275,7 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
                 'saturatedFat' => $nullableNumber,
                 'fiber' => $nullableNumber,
                 'salt' => $nullableNumber,
+                'alcoholVolume' => $nullableNumber,
             ],
             'required' => ['found'],
         ];

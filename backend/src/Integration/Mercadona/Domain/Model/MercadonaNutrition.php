@@ -7,6 +7,7 @@ final readonly class MercadonaNutrition
     private const float MAX_MACRO = 100.0;
     private const float MAX_CALORIES = 920.0;
     private const float MAX_MASS_SUM = 105.0;
+    private const float ALCOHOL_CALORIES_PER_GRAM = 7.0;
 
     public function __construct(
         public float $referenceAmount,
@@ -18,6 +19,7 @@ final readonly class MercadonaNutrition
         public ?float $saturatedFat,
         public ?float $fiber,
         public ?float $salt,
+        public ?float $alcohol = null,
     ) {
     }
 
@@ -39,7 +41,7 @@ final readonly class MercadonaNutrition
             return false;
         }
 
-        foreach ([$this->protein, $this->carbs, $this->fat, $this->sugars, $this->saturatedFat, $this->fiber, $this->salt] as $macro) {
+        foreach ([$this->protein, $this->carbs, $this->fat, $this->sugars, $this->saturatedFat, $this->fiber, $this->salt, $this->alcohol] as $macro) {
             if (null !== $macro && ($macro < 0.0 || $macro > self::MAX_MACRO)) {
                 return false;
             }
@@ -57,7 +59,8 @@ final readonly class MercadonaNutrition
         $computed = 4.0 * (float) $this->protein
             + 4.0 * (float) $this->carbs
             + 9.0 * (float) $this->fat
-            + 2.0 * ($this->fiber ?? 0.0);
+            + 2.0 * ($this->fiber ?? 0.0)
+            + self::ALCOHOL_CALORIES_PER_GRAM * ($this->alcohol ?? 0.0);
 
         $tolerance = max(40.0, 0.30 * (float) $this->calories);
 
