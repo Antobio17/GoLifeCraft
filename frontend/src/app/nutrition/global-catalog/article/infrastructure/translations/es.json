@@ -9,6 +9,7 @@
     "added": "Añadido",
     "searchPlaceholder": "Buscar producto o marca…",
     "searchClear": "Limpiar búsqueda",
+    "filterSource": "Filtrar por origen",
     "nutritionCaption": "Valores por 100 g",
     "noResults": "Sin resultados para",
     "source": {

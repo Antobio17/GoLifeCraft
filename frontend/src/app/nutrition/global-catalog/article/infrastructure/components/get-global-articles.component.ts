@@ -24,10 +24,8 @@ import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
-import {
-  SegmentedOption,
-  SegmentedToggleComponent,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
+import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -49,7 +47,7 @@ import {
     TextComponent,
     ProductCardComponent,
     InfiniteScrollComponent,
-    SegmentedToggleComponent,
+    SelectComponent,
   ],
 })
 export class GetGlobalArticlesComponent extends AbstractListPageComponent<GlobalArticle> {
@@ -64,7 +62,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
   protected readonly storageKey = "pageSize_globalArticles";
 
   searchQuery = signal("");
-  sourceFilter = signal<string>(GlobalArticleSource.All);
+  sourceFilter = signal<string>(GlobalArticleSource.Mercadona);
   reloading = signal(false);
   loadingMore = signal(false);
   importedIds = signal<Set<string>>(new Set());
@@ -76,11 +74,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
 
   hasMore = computed(() => this.items().length < this.totalItems());
 
-  sourceOptions = computed<SegmentedOption[]>(() => [
-    {
-      value: GlobalArticleSource.All,
-      label: this.t("getGlobalArticles.source.all"),
-    },
+  sourceOptions = computed<SelectOption[]>(() => [
     {
       value: GlobalArticleSource.Mercadona,
       label: this.view.sourceLabel(GlobalArticleSource.Mercadona) ?? "",
@@ -88,6 +82,10 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
     {
       value: GlobalArticleSource.OpenFoodFacts,
       label: this.view.sourceLabel(GlobalArticleSource.OpenFoodFacts) ?? "",
+    },
+    {
+      value: GlobalArticleSource.All,
+      label: this.t("getGlobalArticles.source.all"),
     },
   ]);
 

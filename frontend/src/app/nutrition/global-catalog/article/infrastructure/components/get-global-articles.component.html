@@ -21,7 +21,8 @@
       (searched)="onSearch($event)"
     />
 
-    <ds-segmented-toggle
+    <ds-select
+      [ariaLabel]="'getGlobalArticles.filterSource' | t"
       [options]="sourceOptions()"
       [ngModel]="sourceFilter()"
       [ngModelOptions]="{ standalone: true }"
