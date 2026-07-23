@@ -11,12 +11,10 @@ export interface QuickDiaryEntryForm {
   carbs: string;
 }
 
-const DEFAULT_EMOJI = "✏️";
-
 @Injectable()
 export class QuickDiaryEntryFormService {
   readonly emojis = [
-    DEFAULT_EMOJI,
+    "✏️",
     "🍽️",
     "🥪",
     "🥤",
@@ -30,10 +28,14 @@ export class QuickDiaryEntryFormService {
     "🍜",
   ];
 
+  defaultEmoji(): string {
+    return this.emojis[0];
+  }
+
   empty(): QuickDiaryEntryForm {
     return {
       name: "",
-      emoji: DEFAULT_EMOJI,
+      emoji: this.defaultEmoji(),
       calories: "",
       protein: "",
       fat: "",
@@ -46,7 +48,7 @@ export class QuickDiaryEntryFormService {
 
     return {
       name: entry.quick.name,
-      emoji: entry.quick.emoji || DEFAULT_EMOJI,
+      emoji: entry.quick.emoji || this.defaultEmoji(),
       calories: this.text(entry.quick.perUnit.calories),
       protein: this.text(entry.quick.perUnit.protein),
       fat: this.text(entry.quick.perUnit.fat),
@@ -73,7 +75,7 @@ export class QuickDiaryEntryFormService {
     return {
       quantity,
       name: form.name.trim(),
-      emoji: form.emoji || DEFAULT_EMOJI,
+      emoji: form.emoji || this.defaultEmoji(),
       calories: this.number(form.calories),
       protein: this.number(form.protein),
       fat: this.number(form.fat),

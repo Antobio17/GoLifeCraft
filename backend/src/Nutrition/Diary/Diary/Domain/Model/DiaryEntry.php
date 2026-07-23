@@ -19,8 +19,6 @@ class DiaryEntry extends GenericAggregate
     public const KIND_RECIPE = 'recipe';
     public const KIND_QUICK = 'quick';
 
-    public const QUICK_DEFAULT_EMOJI = '✏️';
-
     public const MEAL_BREAKFAST = 'breakfast';
     public const MEAL_LUNCH = 'lunch';
     public const MEAL_DINNER = 'dinner';
@@ -366,7 +364,7 @@ class DiaryEntry extends GenericAggregate
     {
         return new DiaryEntrySnapshot(
             name: $definition->name,
-            emoji: '' !== $definition->emoji ? $definition->emoji : self::QUICK_DEFAULT_EMOJI,
+            emoji: $definition->emoji,
             macros: $definition->perUnit->scale(factor: $quantity),
         );
     }

@@ -43,15 +43,6 @@ final class CreateQuickDiaryEntryCommandHandlerTest extends TestCase
         $this->assertSame(expected: 12.0, actual: $entry->proteinSnapshot);
     }
 
-    public function testItFallsBackToDefaultEmojiWhenEmpty(): void
-    {
-        ($this->handler)($this->command(emoji: ''));
-
-        $entry = $this->repository->findById(id: 'diary-entry-1');
-
-        $this->assertSame(expected: DiaryEntry::QUICK_DEFAULT_EMOJI, actual: $entry->emojiSnapshot);
-    }
-
     public function testItThrowsWhenNameIsBlank(): void
     {
         $this->expectException(exception: CreateDiaryEntryException::class);
