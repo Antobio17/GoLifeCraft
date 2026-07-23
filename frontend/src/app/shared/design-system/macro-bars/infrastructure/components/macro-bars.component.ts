@@ -83,6 +83,9 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
       .ds-macro__label {
         font-size: 10px;
         color: var(--ds-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .ds-macro__value {
         font-size: 11.5px;

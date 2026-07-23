@@ -30,9 +30,9 @@
     "note": "Calories are computed by summing each article (per 100 g) and each sub-recipe (per serving), all the way down to the catalog root articles.",
     "macro": {
       "kcal": "kcal",
-      "protein": "Prot",
+      "protein": "Protein",
       "fat": "Fat",
-      "carbs": "Carb"
+      "carbs": "Carbs"
     },
     "notFound": {
       "title": "Recipe not found",
@@ -90,9 +90,9 @@
     "kcalTotal": "kcal total",
     "perServing": "Per serving",
     "macro": {
-      "protein": "P",
-      "fat": "F",
-      "carbs": "C",
+      "protein": "Protein",
+      "fat": "Fat",
+      "carbs": "Carbs",
       "kcal": "kcal"
     },
     "subRecipe": "Sub",

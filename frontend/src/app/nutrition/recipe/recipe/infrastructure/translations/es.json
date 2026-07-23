@@ -30,9 +30,9 @@
     "note": "Las calorías se calculan sumando cada artículo (por 100 g) y cada subreceta (por ración), hasta llegar a los artículos raíz del catálogo.",
     "macro": {
       "kcal": "kcal",
-      "protein": "Prot",
-      "fat": "Gras",
-      "carbs": "Hidr"
+      "protein": "Proteínas",
+      "fat": "Grasas",
+      "carbs": "Hidratos"
     },
     "notFound": {
       "title": "Receta no encontrada",
@@ -90,9 +90,9 @@
     "kcalTotal": "kcal total",
     "perServing": "Por ración",
     "macro": {
-      "protein": "P",
-      "fat": "G",
-      "carbs": "H",
+      "protein": "Proteínas",
+      "fat": "Grasas",
+      "carbs": "Hidratos",
       "kcal": "kcal"
     },
     "subRecipe": "Sub",
