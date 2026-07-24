@@ -42,6 +42,7 @@ final class UpdateExerciseCommandHandlerTest extends TestCase
             description: null,
             type: Exercise::TYPE_BILATERAL,
             muscleGroups: ['Pecho'],
+            icon: 'benchFlat',
             createdByUserId: 'god-user-id',
         ));
 
@@ -61,12 +62,14 @@ final class UpdateExerciseCommandHandlerTest extends TestCase
             description: 'Empuje en banco inclinado a 30°.',
             type: Exercise::TYPE_BILATERAL,
             muscleGroups: ['Pecho', 'Hombro'],
+            icon: 'benchIncline',
             updatedByUserId: 'god-user-id',
         ));
 
         $updated = $this->repository->findById(id: '1');
         $this->assertEquals(expected: 'Press inclinado', actual: $updated->name);
         $this->assertEquals(expected: ['Pecho', 'Hombro'], actual: $updated->muscleGroups);
+        $this->assertEquals(expected: 'benchIncline', actual: $updated->icon);
     }
 
     public function testItThrowsExceptionWhenExerciseNotFound(): void
@@ -79,6 +82,7 @@ final class UpdateExerciseCommandHandlerTest extends TestCase
             description: null,
             type: Exercise::TYPE_BILATERAL,
             muscleGroups: ['Pecho'],
+            icon: null,
             updatedByUserId: 'god-user-id',
         ));
     }

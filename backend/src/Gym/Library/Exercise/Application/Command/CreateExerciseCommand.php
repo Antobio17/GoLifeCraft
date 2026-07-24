@@ -11,6 +11,7 @@ final readonly class CreateExerciseCommand implements Command
         public ?string $description,
         public string $type,
         public array $muscleGroups,
+        public ?string $icon,
         public string $createdByUserId,
     ) {
     }

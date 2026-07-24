@@ -33,6 +33,8 @@ import { HeadingComponent } from "@shared/design-system/heading/infrastructure/c
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { MetricCardComponent } from "@shared/design-system/metric-card/infrastructure/components/metric-card.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import {
@@ -66,6 +68,7 @@ interface SessionRow {
     ChipComponent,
     MetricCardComponent,
     IconButtonComponent,
+    IconBadgeComponent,
     EmptyStateComponent,
     SkeletonComponent,
     ProgressionCardComponent,
@@ -102,6 +105,10 @@ export class GetExerciseComponent implements OnInit {
 
   muscles = computed<string[]>(
     () => this.exercise()?.attributes.muscleGroups ?? [],
+  );
+
+  icon = computed<DsIconName>(
+    () => (this.exercise()?.attributes.icon as DsIconName) ?? "dumbbell",
   );
 
   modeLabel = computed<string>(() => {

@@ -22,21 +22,24 @@
   } @else {
     <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'18px'">
       <ds-stack [gap]="'16px'">
-        <ds-stack [gap]="'8px'">
-          <ds-text variant="label">{{ "getExercise.muscles" | t }}</ds-text>
-          <ds-stack direction="row" [wrap]="true" [gap]="'7px'">
-            @for (muscle of muscles(); track muscle) {
-              <ds-chip tone="brand">{{ muscle }}</ds-chip>
-            }
+        <ds-card [padding]="'14px 16px'">
+          <ds-stack direction="row" align="center" [gap]="'14px'">
+            <ds-icon-badge
+              [icon]="icon()"
+              tone="brand"
+              [size]="60"
+              [iconSize]="30"
+            />
+            <ds-stack [gap]="'8px'" [grow]="true">
+              <ds-stack direction="row" [wrap]="true" [gap]="'6px'">
+                @for (muscle of muscles(); track muscle) {
+                  <ds-chip tone="brand">{{ muscle }}</ds-chip>
+                }
+              </ds-stack>
+              <ds-text variant="meta">{{ modeLabel() }}</ds-text>
+            </ds-stack>
           </ds-stack>
-        </ds-stack>
-
-        <ds-stack [gap]="'8px'">
-          <ds-text variant="label">{{ "getExercise.recordType" | t }}</ds-text>
-          <ds-card [padding]="'12px 14px'">
-            <ds-heading [level]="3" size="sm">{{ modeLabel() }}</ds-heading>
-          </ds-card>
-        </ds-stack>
+        </ds-card>
 
         <ds-grid [columns]="3" [gap]="'8px'">
           <ds-metric-card

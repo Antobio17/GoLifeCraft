@@ -24,6 +24,7 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
@@ -40,6 +41,7 @@ interface ExerciseRow {
   id: string;
   name: string;
   muscleText: string;
+  icon: DsIconName;
   exercise: Exercise;
 }
 
@@ -215,6 +217,7 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
       id: exercise.id,
       name: exercise.attributes.name,
       muscleText: this.muscleText(exercise),
+      icon: (exercise.attributes.icon as DsIconName) ?? "dumbbell",
       exercise,
     };
   }

@@ -78,7 +78,13 @@
       "name": "Name",
       "namePlaceholder": "E.g. Incline press",
       "type": "Record type",
-      "muscleGroups": "Muscles"
+      "muscleGroups": "Muscles",
+      "icon": "Icon",
+      "iconSheetTitle": "Pick an icon",
+      "iconClose": "Close",
+      "iconTrigger": "Choose icon",
+      "iconSearch": "Search icon…",
+      "iconEmpty": "No results."
     },
     "mode": {
       "bilateralHint": "A single weight and reps record for both sides at once.",

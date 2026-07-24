@@ -39,6 +39,7 @@ final readonly class UpdateExerciseCommandHandler
             description: $command->description,
             type: $command->type,
             muscleGroups: $command->muscleGroups,
+            icon: $command->icon,
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

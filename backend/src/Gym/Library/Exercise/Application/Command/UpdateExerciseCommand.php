@@ -12,6 +12,7 @@ final readonly class UpdateExerciseCommand implements Command
         public ?string $description,
         public string $type,
         public array $muscleGroups,
+        public ?string $icon,
         public string $updatedByUserId,
     ) {
     }

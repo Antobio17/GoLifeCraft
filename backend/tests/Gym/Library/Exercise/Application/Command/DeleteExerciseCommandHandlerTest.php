@@ -40,6 +40,7 @@ final class DeleteExerciseCommandHandlerTest extends TestCase
             description: null,
             type: Exercise::TYPE_BILATERAL,
             muscleGroups: ['Pecho'],
+            icon: null,
             createdByUserId: 'god-user-id',
         ));
 

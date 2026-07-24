@@ -31,6 +31,7 @@ final readonly class CreateExerciseCommandHandler
             description: $command->description,
             type: $command->type,
             muscleGroups: $command->muscleGroups,
+            icon: $command->icon,
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

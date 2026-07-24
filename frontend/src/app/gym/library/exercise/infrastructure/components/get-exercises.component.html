@@ -97,7 +97,12 @@
 <ng-template #exerciseRow let-row>
   <ds-card [padding]="'11px 12px'">
     <ds-stack direction="row" align="center" [gap]="'11px'">
-      <ds-icon-badge icon="dumbbell" tone="brand" [size]="34" [iconSize]="17" />
+      <ds-icon-badge
+        [icon]="row.icon"
+        tone="brand"
+        [size]="34"
+        [iconSize]="17"
+      />
       <ds-pressable
         [grow]="true"
         [ariaLabel]="row.name"

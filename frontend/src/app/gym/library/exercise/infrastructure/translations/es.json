@@ -78,7 +78,13 @@
       "name": "Nombre",
       "namePlaceholder": "Ej: Press inclinado",
       "type": "Tipo de registro",
-      "muscleGroups": "Músculos"
+      "muscleGroups": "Músculos",
+      "icon": "Icono",
+      "iconSheetTitle": "Elige un icono",
+      "iconClose": "Cerrar",
+      "iconTrigger": "Elegir icono",
+      "iconSearch": "Buscar icono…",
+      "iconEmpty": "Sin resultados."
     },
     "mode": {
       "bilateralHint": "Un solo registro de peso y reps para ambos lados a la vez.",

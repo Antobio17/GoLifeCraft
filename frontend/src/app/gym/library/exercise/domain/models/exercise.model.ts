@@ -3,6 +3,7 @@ export interface ExerciseAttributes {
   description: string | null;
   type: string;
   muscleGroups: string[];
+  icon?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }

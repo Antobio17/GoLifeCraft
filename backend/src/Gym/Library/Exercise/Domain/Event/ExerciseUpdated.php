@@ -13,6 +13,7 @@ final readonly class ExerciseUpdated extends DomainEvent
         public ?string $description,
         public string $type,
         public array $muscleGroups,
+        public ?string $icon,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

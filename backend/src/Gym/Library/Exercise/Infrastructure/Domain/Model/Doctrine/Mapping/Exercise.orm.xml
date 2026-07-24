@@ -7,6 +7,7 @@
     <field name="description" type="text" column="description" nullable="true"/>
     <field name="type" type="string" column="type" length="20"/>
     <field name="muscleGroups" type="json" column="muscle_groups"/>
+    <field name="icon" type="string" column="icon" length="40" nullable="true"/>
     <field name="deleted" type="boolean" column="deleted"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>

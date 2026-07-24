@@ -39,6 +39,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
             description: 'Empuje horizontal con barra.',
             type: Exercise::TYPE_BILATERAL,
             muscleGroups: ['Pecho', 'Tríceps'],
+            icon: 'benchIncline',
             createdByUserId: 'god-user-id',
         ));
 
@@ -47,6 +48,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'Press banca', actual: $created->name);
         $this->assertEquals(expected: Exercise::TYPE_BILATERAL, actual: $created->type);
         $this->assertEquals(expected: ['Pecho', 'Tríceps'], actual: $created->muscleGroups);
+        $this->assertEquals(expected: 'benchIncline', actual: $created->icon);
         $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());
     }
 
@@ -61,6 +63,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
             description: null,
             type: Exercise::TYPE_BILATERAL,
             muscleGroups: ['Pecho'],
+            icon: null,
             createdByUserId: 'god-user-id',
         ));
     }
@@ -74,6 +77,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
             description: null,
             type: 'invalid-type',
             muscleGroups: ['Bíceps'],
+            icon: null,
             createdByUserId: 'god-user-id',
         ));
     }
@@ -87,6 +91,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
             description: null,
             type: Exercise::TYPE_BILATERAL,
             muscleGroups: [],
+            icon: null,
             createdByUserId: 'god-user-id',
         ));
     }

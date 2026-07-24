@@ -33,6 +33,7 @@ final class UpdateExerciseController
                 description: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'description'),
                 type: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'type'),
                 muscleGroups: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'muscleGroups'),
+                icon: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'icon'),
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 

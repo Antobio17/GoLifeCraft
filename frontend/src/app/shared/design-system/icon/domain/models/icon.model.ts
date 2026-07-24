@@ -68,6 +68,60 @@ export const DS_ICONS = {
   cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/>',
   chefHat:
     '<path d="M7 14a4.5 4.5 0 1 1 1.6-8.4 4 4 0 0 1 6.8 0A4.5 4.5 0 1 1 17 14z"/><path d="M7 14v5.2a.8.8 0 0 0 .8.8h8.4a.8.8 0 0 0 .8-.8V14"/><path d="M9.8 17.4h4.4"/>',
+  barbell:
+    '<path d="M2 12h20"/><path d="M6.5 8v8"/><path d="M9.5 9.5v5"/><path d="M14.5 9.5v5"/><path d="M17.5 8v8"/>',
+  ezBar:
+    '<path d="M3 10.5v3"/><path d="M5.5 9v6"/><path d="M18.5 9v6"/><path d="M21 10.5v3"/><path d="M5.5 12h2.8l1.3-2.4h4.8l1.3 2.4h2.8"/>',
+  kettlebell:
+    '<path d="M9 8V7a3 3 0 0 1 6 0v1"/><path d="M9.2 8.2C7.2 9.4 5.8 11.5 5.8 14a6.2 6.2 0 0 0 12.4 0c0-2.5-1.4-4.6-3.4-5.8"/>',
+  weightPlate:
+    '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.6"/>',
+  benchFlat:
+    '<rect x="3" y="8.5" width="18" height="3.5" rx="1.2"/><path d="M6 12v7"/><path d="M18 12v7"/><path d="M4.5 19h3"/><path d="M16.5 19h3"/>',
+  benchIncline:
+    '<path d="M4 17h7"/><path d="M8 17l8-8"/><path d="M6 17v2.6"/><path d="M10 17v2.6"/><path d="M12.5 13.5l3.5 3.5"/><path d="M16 17v2.6"/>',
+  squatRack:
+    '<path d="M5 3v18"/><path d="M19 3v18"/><path d="M5 9h14"/><path d="M7 7v4"/><path d="M17 7v4"/><path d="M3 21h4"/><path d="M17 21h4"/>',
+  pullUpBar:
+    '<path d="M4 4v15"/><path d="M20 4v15"/><path d="M4 6h16"/><path d="M9 6v3.5"/><path d="M15 6v3.5"/>',
+  dipBars:
+    '<path d="M4 8v11"/><path d="M20 8v11"/><path d="M2 8h8"/><path d="M14 8h8"/>',
+  machine:
+    '<rect x="7" y="3" width="10" height="18" rx="1.5"/><path d="M9.5 7h5"/><path d="M9.5 10h5"/><path d="M9.5 13h5"/><path d="M7 17H4v2.5"/>',
+  cablePulley:
+    '<path d="M5 3v17"/><rect x="3.4" y="12" width="3.2" height="8" rx=".6"/><circle cx="10.5" cy="5.5" r="1.6"/><path d="M10.5 7.1v6"/><path d="M8.7 13.1h3.6"/>',
+  cableRope:
+    '<circle cx="12" cy="4.5" r="1.5"/><path d="M12 6v3.4"/><path d="M12 9.4c-.3 2.3-2.2 3.4-2.6 5.7"/><path d="M12 9.4c.3 2.3 2.2 3.4 2.6 5.7"/><path d="M8.9 16.7l.5 2.6"/><path d="M15.1 16.7l-.5 2.6"/>',
+  latPulldown:
+    '<circle cx="12" cy="3" r="1.2"/><path d="M12 4.2v2"/><path d="M6 6.5h12"/><path d="M7.5 6.5l-1.2 2.2"/><path d="M16.5 6.5l1.2 2.2"/><path d="M9 15h6"/><path d="M8 19h8"/><path d="M10 15v4"/><path d="M14 15v4"/>',
+  seatedRow:
+    '<rect x="3" y="4" width="2.6" height="15" rx=".6"/><path d="M5.6 8h8"/><path d="M13.6 6.5v3"/><path d="M15 15h5"/><path d="M20 9v6"/>',
+  legPress:
+    '<path d="M4 19h6"/><path d="M6 19v-6"/><path d="M6 13l8-8"/><path d="M11 8l4 4"/><path d="M4 19v2"/><path d="M9 19v2"/>',
+  legMachine:
+    '<rect x="4" y="9.5" width="7" height="4" rx="1"/><path d="M11 15l5 3"/><circle cx="16.5" cy="18.5" r="1.6"/><path d="M5 13.5v5"/><path d="M10 13.5v5"/>',
+  bicep:
+    '<path d="M5 19v-3a3 3 0 0 1 3-3h3a3 3 0 0 0 3-3V6a2 2 0 0 1 4 0"/><path d="M8 13a5 5 0 0 1 3 2.5"/>',
+  chest:
+    '<path d="M4 8c2.4-1.8 5-2.6 8-2.6s5.6.8 8 2.6"/><path d="M5.5 8v3.5a2.5 2.5 0 0 0 2.5 2.5h1.5a2 2 0 0 0 2-2"/><path d="M18.5 8v3.5a2.5 2.5 0 0 1-2.5 2.5h-1.5a2 2 0 0 1-2-2"/>',
+  back: '<path d="M6 6c2 1 4 1.4 6 1.4S16 7 18 6"/><path d="M12 7.4v10"/><path d="M8.5 9l-2 8"/><path d="M15.5 9l2 8"/><path d="M8.5 9h7"/>',
+  shoulder:
+    '<path d="M4 11a5 5 0 0 1 10 0"/><path d="M4 11v1.5a4 4 0 0 0 4 4"/><path d="M14 11l2.5 8"/><path d="M9 6V4"/>',
+  abs: '<path d="M7 6a5 5 0 0 1 10 0v9a5 5 0 0 1-10 0z"/><path d="M12 5v15"/><path d="M8 9.5h8"/><path d="M8 12.5h8"/><path d="M8 15.5h8"/>',
+  glute:
+    '<path d="M12 5c-2.8 0-4.8 2.2-4.8 5.2 0 3 1.8 5.6 4.8 5.6"/><path d="M12 5c2.8 0 4.8 2.2 4.8 5.2 0 3-1.8 5.6-4.8 5.6"/><path d="M12 5v10.8"/><path d="M8.5 20c0-1.7 1.3-2.8 3.5-2.8s3.5 1.1 3.5 2.8"/>',
+  leg: '<path d="M9.5 3c-.6 2.4 0 4.4 1.3 6.3 1.1 1.7 1.6 3.2 1.3 5.2-.2 1.4-.3 2.8.3 4.3.3 1 1 1.6 2 1.6s1.7-.7 1.7-1.8c0-1.4-.6-2.4-.6-3.9 0-1.8.9-3.1.9-5 0-2-.7-3.6-2-5.1-1-1.2-1.4-2.4-1.2-3.9"/><path d="M10.8 20.4h4.6"/>',
+  treadmill:
+    '<path d="M3 19h13"/><path d="M3 19l1.5-5h9l1.5 5"/><path d="M13.5 14l3.5-7"/><path d="M15.5 7h4v2.5h-4z"/><path d="M4 19v2"/><path d="M15 19v2"/>',
+  stationaryBike:
+    '<circle cx="7" cy="16.5" r="3.5"/><path d="M7 16.5l3-8"/><path d="M8 8.5h4"/><path d="M10 8.5v4"/><circle cx="10" cy="16.5" r="1.2"/><path d="M13 12l2-1.5"/>',
+  rowingMachine:
+    '<path d="M3 17h16"/><path d="M4 17l2-3"/><rect x="6" y="11.5" width="3.5" height="2.2" rx=".5"/><path d="M9.5 12.5l6-2.5"/><path d="M15.5 10l3 1.2"/>',
+  jumpRope:
+    '<path d="M6.5 4l-.5 3"/><path d="M17.5 4l.5 3"/><path d="M6 7c-.3 8 2 12 6 12s6.3-4 6-12"/>',
+  stopwatch:
+    '<circle cx="12" cy="13" r="8"/><path d="M12 13V8"/><path d="M10 2h4"/><path d="M18.6 6.4l1.4-1.4"/>',
+  mat: '<rect x="4" y="8" width="13" height="8" rx="2"/><path d="M17 8a4 4 0 0 1 0 8"/><path d="M20 8a4 4 0 0 1 0 8"/>',
 } as const;
 
 export type DsIconName = keyof typeof DS_ICONS;

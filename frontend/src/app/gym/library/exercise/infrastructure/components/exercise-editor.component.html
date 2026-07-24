@@ -8,13 +8,26 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <ds-stack [gap]="'22px'">
-      <ds-field [label]="'createExercise.field.name' | t">
-        <ds-text-input
-          variant="outlined"
-          formControlName="name"
-          [placeholder]="'createExercise.field.namePlaceholder' | t"
-        />
-      </ds-field>
+      <ds-stack direction="row" align="end" [gap]="'12px'">
+        <ds-field [label]="'createExercise.field.icon' | t">
+          <ds-icon-picker
+            formControlName="icon"
+            [groups]="iconGroups"
+            [sheetTitle]="'createExercise.field.iconSheetTitle' | t"
+            [closeLabel]="'createExercise.field.iconClose' | t"
+            [triggerLabel]="'createExercise.field.iconTrigger' | t"
+            [searchPlaceholder]="'createExercise.field.iconSearch' | t"
+            [emptyLabel]="'createExercise.field.iconEmpty' | t"
+          />
+        </ds-field>
+        <ds-field [grow]="true" [label]="'createExercise.field.name' | t">
+          <ds-text-input
+            variant="outlined"
+            formControlName="name"
+            [placeholder]="'createExercise.field.namePlaceholder' | t"
+          />
+        </ds-field>
+      </ds-stack>
 
       <ds-field
         [label]="'createExercise.field.muscleGroups' | t"

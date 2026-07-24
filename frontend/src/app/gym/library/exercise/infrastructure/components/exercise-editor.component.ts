@@ -18,12 +18,14 @@ import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { IconPickerComponent } from "@shared/design-system/icon-picker/infrastructure/components/icon-picker.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { CreateExerciseService } from "../../application/services/create-exercise.service";
 import { UpdateExerciseService } from "../../application/services/update-exercise.service";
 import { GetExerciseService } from "../../application/services/get-exercise.service";
 import { MuscleCatalogService } from "../../application/services/muscle-catalog.service";
+import { ExerciseIconCatalogService } from "../../application/services/exercise-icon-catalog.service";
 import { GetExerciseResponse } from "../../domain/models/get-exercise-response.model";
 import { ExerciseType } from "../../domain/models/exercise-type.model";
 
@@ -41,6 +43,7 @@ import { ExerciseType } from "../../domain/models/exercise-type.model";
     StackComponent,
     TextInputComponent,
     ButtonComponent,
+    IconPickerComponent,
   ],
 })
 export class ExerciseEditorComponent implements OnInit {
@@ -50,12 +53,14 @@ export class ExerciseEditorComponent implements OnInit {
   private updateExerciseService = inject(UpdateExerciseService);
   private getExerciseService = inject(GetExerciseService);
   private muscleCatalog = inject(MuscleCatalogService);
+  private iconCatalog = inject(ExerciseIconCatalogService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   private readonly MODULE_PATH = "gym/library/exercise";
   readonly muscleGroups = this.muscleCatalog.regions();
+  readonly iconGroups = this.iconCatalog.groups();
   readonly typeOptions = [
     { value: ExerciseType.Bilateral, label: "Bilateral" },
     { value: ExerciseType.Unilateral, label: "Unilateral" },
@@ -71,6 +76,7 @@ export class ExerciseEditorComponent implements OnInit {
       name: ["", [Validators.required, Validators.minLength(2)]],
       type: [ExerciseType.Bilateral, [Validators.required]],
       muscleGroups: [[] as string[], [this.atLeastOneMuscle]],
+      icon: [null as string | null],
     });
   }
 
@@ -113,6 +119,7 @@ export class ExerciseEditorComponent implements OnInit {
               name: response.data.attributes.name,
               type: response.data.attributes.type,
               muscleGroups: response.data.attributes.muscleGroups ?? [],
+              icon: response.data.attributes.icon ?? null,
             });
             this.loading.set(false);
           },
@@ -150,6 +157,7 @@ export class ExerciseEditorComponent implements OnInit {
       name: this.form.value.name ?? "",
       type: this.form.value.type ?? ExerciseType.Bilateral,
       muscleGroups: this.form.value.muscleGroups ?? [],
+      icon: this.form.value.icon ?? null,
     };
 
     const request$ = this.isEdit

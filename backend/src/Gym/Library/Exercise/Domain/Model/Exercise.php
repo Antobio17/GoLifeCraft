@@ -24,6 +24,7 @@ class Exercise extends GenericAggregate
     public ?string $description = null;
     public string $type;
     public array $muscleGroups = [];
+    public ?string $icon = null;
     public bool $deleted = false;
 
     public static function create(
@@ -32,6 +33,7 @@ class Exercise extends GenericAggregate
         ?string $description,
         string $type,
         array $muscleGroups,
+        ?string $icon,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
@@ -51,6 +53,7 @@ class Exercise extends GenericAggregate
         $exercise->description = $description;
         $exercise->type = $type;
         $exercise->muscleGroups = array_values(array: $muscleGroups);
+        $exercise->icon = $icon;
         $exercise->deleted = false;
         $exercise->stampCreation(userId: $createdByUserId, now: $now);
 
@@ -61,6 +64,7 @@ class Exercise extends GenericAggregate
             description: $exercise->description,
             type: $type,
             muscleGroups: $exercise->muscleGroups,
+            icon: $exercise->icon,
             createdAt: $exercise->createdAt,
             updatedAt: $exercise->updatedAt,
             createdByUserId: $exercise->createdByUserId,
@@ -75,6 +79,7 @@ class Exercise extends GenericAggregate
         ?string $description,
         string $type,
         array $muscleGroups,
+        ?string $icon,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -92,6 +97,7 @@ class Exercise extends GenericAggregate
         $this->description = $description;
         $this->type = $type;
         $this->muscleGroups = array_values(array: $muscleGroups);
+        $this->icon = $icon;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new ExerciseUpdated(
@@ -101,6 +107,7 @@ class Exercise extends GenericAggregate
             description: $this->description,
             type: $type,
             muscleGroups: $this->muscleGroups,
+            icon: $this->icon,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -130,6 +137,7 @@ class Exercise extends GenericAggregate
             description: $this->description,
             type: $this->type,
             muscleGroups: $this->muscleGroups,
+            icon: $this->icon,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,

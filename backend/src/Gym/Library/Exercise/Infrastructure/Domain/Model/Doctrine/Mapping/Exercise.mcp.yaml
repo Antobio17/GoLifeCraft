@@ -23,6 +23,11 @@ fields:
     writable: true
     type: array
     filterable: true
+  icon:
+    writable: true
+    filterable: true
+    enum: [dumbbell, barbell, ezBar, kettlebell, weightPlate, benchFlat, benchIncline, squatRack, pullUpBar, dipBars, machine, cablePulley, cableRope, latPulldown, seatedRow, legPress, legMachine, bicep, chest, back, shoulder, abs, glute, leg, treadmill, stationaryBike, rowingMachine, jumpRope, stopwatch, mat]
+    description: "Line-icon key shown for the exercise. Auto-assign the most representative one from the equipment/movement or target muscle (e.g. barbell/benchIncline for a barbell press, latPulldown for a pulldown, cableRope for a triceps rope pushdown, legMachine for leg curl/extension, squatRack for a squat, glute for hip thrust, bicep for a curl, shoulder for a lateral raise). Null falls back to dumbbell."
   deleted:
     writable: false
     type: boolean
