@@ -11,6 +11,7 @@ final readonly class RecipeIngredientData
         public string $refId,
         public float $quantity,
         public int $position,
+        public ?string $unit = null,
     ) {
     }
 
@@ -20,6 +21,7 @@ final readonly class RecipeIngredientData
             kind: self::normalizeKind(kind: (string) ($rawIngredient['kind'] ?? RecipeIngredient::KIND_PRODUCT)),
             refId: (string) ($rawIngredient['refId'] ?? ''),
             quantity: (float) ($rawIngredient['quantity'] ?? $rawIngredient['qty'] ?? 0),
+            unit: self::normalizeUnit(unit: $rawIngredient['unit'] ?? null),
             position: (int) ($rawIngredient['position'] ?? $position),
         );
     }
@@ -43,5 +45,12 @@ final readonly class RecipeIngredientData
         return RecipeIngredient::KIND_RECIPE === $kind
             ? RecipeIngredient::KIND_RECIPE
             : RecipeIngredient::KIND_PRODUCT;
+    }
+
+    private static function normalizeUnit(mixed $unit): ?string
+    {
+        $unit = trim(string: (string) ($unit ?? ''));
+
+        return '' === $unit ? null : $unit;
     }
 }

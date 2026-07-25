@@ -31,6 +31,7 @@ final readonly class UpdateDiaryEntryQuantityCommandHandler
                 kind: $diaryEntry->kind,
                 refId: $diaryEntry->refId ?? '',
                 quantity: $command->quantity,
+                unit: $diaryEntry->unit,
             );
 
         $diaryEntry->updateQuantity(

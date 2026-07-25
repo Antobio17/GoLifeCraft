@@ -1,5 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { DiaryMacroGoal } from "@shared/design-system/diary-summary/infrastructure/components/diary-summary.component";
+import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import {
   DiaryDayAttributes,
   DiaryEntryView,
@@ -9,6 +10,8 @@ import {
 
 @Injectable()
 export class DiaryViewService {
+  private unitCatalog = inject(UnitCatalogService);
+
   todayIso(): string {
     return this.toIso(new Date());
   }
@@ -84,8 +87,12 @@ export class DiaryViewService {
     return `${foods} · ${this.integer(meal.totals.calories)} kcal`;
   }
 
+  entryUnitLabel(entry: DiaryEntryView): string {
+    return this.unitCatalog.label(entry.unit);
+  }
+
   entryQuantityLabel(entry: DiaryEntryView): string {
-    return `${this.format(entry.quantity)} ${entry.unit}`;
+    return `${this.format(entry.quantity)} ${this.entryUnitLabel(entry)}`;
   }
 
   entryBadgeTone(kind: string): "brand" | "neutral" | "accent" {

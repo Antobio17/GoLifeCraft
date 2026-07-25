@@ -449,13 +449,19 @@ export class GetDiaryComponent implements OnInit {
   onPick(choice: DiaryChoice): void {
     this.closePicker();
 
+    const defaults =
+      choice.kind === "product"
+        ? this.picker.productDefaults(choice.refId)
+        : this.picker.recipeDefaults();
+
     this.createDiaryEntryService
       .createDiaryEntry({
         entryDate: this.date(),
         meal: this.pickerMeal(),
         kind: choice.kind,
         refId: choice.refId,
-        quantity: choice.kind === "product" ? 100 : 1,
+        quantity: defaults.quantity,
+        unit: choice.kind === "product" ? defaults.unit : null,
       })
       .subscribe({
         next: () => {

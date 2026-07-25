@@ -5,6 +5,16 @@
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255"/>
     <field name="recipeUnit" type="string" column="recipe_unit" length="30"/>
+    <field name="baseUnit" type="string" column="base_unit" length="8">
+      <options>
+        <option name="default">g</option>
+      </options>
+    </field>
+    <field name="diaryUnit" type="string" column="diary_unit" length="30">
+      <options>
+        <option name="default">g</option>
+      </options>
+    </field>
     <field name="servingSize" type="float" column="serving_size" nullable="true"/>
     <field name="price" type="float" column="price" nullable="true"/>
     <field name="brand" type="string" column="brand" length="120" nullable="true"/>

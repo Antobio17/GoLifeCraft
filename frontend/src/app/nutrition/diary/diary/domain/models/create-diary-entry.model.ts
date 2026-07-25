@@ -4,4 +4,5 @@ export interface CreateDiaryEntryRequest {
   kind: "product" | "recipe";
   refId: string;
   quantity: number;
+  unit: string | null;
 }

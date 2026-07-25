@@ -37,6 +37,7 @@ final class DeleteDiaryEntryCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_RECIPE,
             refId: 'recipe-1',
             quantity: 1.0,
+            unit: null,
             createdByUserId: 'god-user-id',
         ));
 

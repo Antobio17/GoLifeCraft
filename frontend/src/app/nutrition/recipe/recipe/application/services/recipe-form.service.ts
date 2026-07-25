@@ -1,5 +1,6 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, inject, signal } from "@angular/core";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
+import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import { RecipeListItem, RecipeMacros } from "../../domain/models/recipe.model";
 
 export interface FormIngredient {
@@ -23,7 +24,9 @@ export interface PickableIngredient {
 interface ProductEntry {
   name: string;
   emoji: string;
-  unit: string;
+  baseUnit: string;
+  recipeUnit: string;
+  factors: Record<string, number>;
   servingQuantity: number;
   perUnit: RecipeMacros;
 }
@@ -37,14 +40,12 @@ interface RecipeEntry {
 const FALLBACK_PRODUCT_EMOJI = "🍽️";
 const FALLBACK_RECIPE_EMOJI = "🍲";
 const DEFAULT_PRODUCT_QUANTITY = 100;
-const UNIT_SUFFIX: Record<string, string> = {
-  gram: "g",
-  milliliter: "ml",
-  unit: "ud",
-};
+const DEFAULT_BASE_UNIT = "g";
+const RECIPE_UNIT = "ration";
 
 @Injectable()
 export class RecipeFormService {
+  private unitCatalog = inject(UnitCatalogService);
   private products = signal(new Map<string, ProductEntry>());
   private recipes = signal(new Map<string, RecipeEntry>());
   private counter = 0;
@@ -71,10 +72,20 @@ export class RecipeFormService {
           ? servingSize
           : DEFAULT_PRODUCT_QUANTITY;
 
+      const baseUnit = article.attributes.baseUnit || DEFAULT_BASE_UNIT;
+      const factors: Record<string, number> = {};
+      (article.attributes.equivalences ?? []).forEach((equivalence) => {
+        if ("" !== equivalence.unit && equivalence.quantity > 0) {
+          factors[equivalence.unit] = equivalence.quantity;
+        }
+      });
+
       products.set(article.id, {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
-        unit: UNIT_SUFFIX[article.attributes.recipeUnit] ?? "g",
+        baseUnit,
+        recipeUnit: article.attributes.recipeUnit || baseUnit,
+        factors,
         servingQuantity,
         perUnit,
       });
@@ -109,7 +120,7 @@ export class RecipeFormService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
-        detail: `${Math.round(entry.perUnit.calories * 100)} kcal / 100${entry.unit}`,
+        detail: `${Math.round(entry.perUnit.calories * 100)} kcal / 100${entry.baseUnit}`,
       }))
       .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }
@@ -145,20 +156,38 @@ export class RecipeFormService {
         name: entry?.name ?? "Receta",
         emoji: entry?.emoji ?? FALLBACK_RECIPE_EMOJI,
         quantity: 1,
-        unit: "ración",
+        unit: RECIPE_UNIT,
       };
     }
 
     const entry = this.products().get(refId);
+    const unit = entry?.recipeUnit ?? DEFAULT_BASE_UNIT;
+    const isBase = !entry || unit === entry.baseUnit;
+
     return {
       key,
       kind,
       refId,
       name: entry?.name ?? "Artículo",
       emoji: entry?.emoji ?? FALLBACK_PRODUCT_EMOJI,
-      quantity: entry?.servingQuantity ?? DEFAULT_PRODUCT_QUANTITY,
-      unit: entry?.unit ?? "g",
+      quantity: isBase
+        ? (entry?.servingQuantity ?? DEFAULT_PRODUCT_QUANTITY)
+        : 1,
+      unit,
     };
+  }
+
+  unitLabel(ingredient: FormIngredient): string {
+    if (ingredient.kind === "recipe") {
+      return ingredient.unit;
+    }
+
+    const entry = this.products().get(ingredient.refId);
+    if (entry && ingredient.unit === entry.baseUnit) {
+      return entry.baseUnit;
+    }
+
+    return this.unitCatalog.label(ingredient.unit);
   }
 
   ingredientCalories(ingredient: FormIngredient): number {
@@ -205,7 +234,12 @@ export class RecipeFormService {
     const entry = this.products().get(ingredient.refId);
     if (!entry) return { calories: 0, protein: 0, fat: 0, carbs: 0 };
 
-    return this.scale(entry.perUnit, quantity);
+    const factor =
+      ingredient.unit === entry.baseUnit
+        ? 1
+        : (entry.factors[ingredient.unit] ?? 1);
+
+    return this.scale(entry.perUnit, quantity * factor);
   }
 
   private scale(macros: RecipeMacros, factor: number): RecipeMacros {

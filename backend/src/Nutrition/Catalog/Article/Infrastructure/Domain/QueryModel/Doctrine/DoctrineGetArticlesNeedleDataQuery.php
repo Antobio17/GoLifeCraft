@@ -41,13 +41,19 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             ->fetchAllAssociative();
 
         $utc = new \DateTimeZone(timezone: 'UTC');
+        $equivalencesByArticle = $this->findEquivalences(
+            articleIds: array_map(callback: static fn (array $row): string => $row['id'], array: $result),
+        );
 
-        return array_map(callback: function ($row) use ($utc): GetArticlesResult {
+        return array_map(callback: function ($row) use ($utc, $equivalencesByArticle): GetArticlesResult {
             $article = new GetArticlesResult(
                 id: $row['id'],
                 aggregateName: 'Article',
                 name: $row['name'],
                 recipeUnit: $row['recipe_unit'],
+                baseUnit: $row['base_unit'],
+                diaryUnit: $row['diary_unit'],
+                equivalences: $equivalencesByArticle[$row['id']] ?? [],
                 servingSize: null !== $row['serving_size'] ? (float) $row['serving_size'] : null,
                 price: null !== $row['price'] ? (float) $row['price'] : null,
                 brand: $row['brand'],
@@ -101,6 +107,8 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
                 't.id',
                 't.name',
                 't.recipe_unit',
+                't.base_unit',
+                't.diary_unit',
                 't.serving_size',
                 't.price',
                 't.brand',
@@ -198,6 +206,42 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         }
 
         $qb->orderBy(sort: $allowedFields[$field], order: $direction);
+    }
+
+    /**
+     * @param array<int, string> $articleIds
+     *
+     * @return array<string, array<int, array{unit: string, quantity: float}>>
+     */
+    private function findEquivalences(array $articleIds): array
+    {
+        if ([] === $articleIds) {
+            return [];
+        }
+
+        $rows = $this->connection->createQueryBuilder()
+            ->select('e.article_id', 'e.unit', 'e.quantity')
+            ->from(table: 'article_equivalence', alias: 'e')
+            ->where('e.article_id IN (:articleIds)')
+            ->orderBy('e.position', 'ASC')
+            ->setParameter(
+                key: 'articleIds',
+                value: $articleIds,
+                type: \Doctrine\DBAL\ArrayParameterType::STRING,
+            )
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $grouped = [];
+
+        foreach ($rows as $row) {
+            $grouped[$row['article_id']][] = [
+                'unit' => (string) $row['unit'],
+                'quantity' => (float) $row['quantity'],
+            ];
+        }
+
+        return $grouped;
     }
 
     /**

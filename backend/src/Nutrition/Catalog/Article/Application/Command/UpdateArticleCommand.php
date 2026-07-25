@@ -6,10 +6,15 @@ use Shared\Shared\Shared\Application\Command\Command;
 
 final readonly class UpdateArticleCommand implements Command
 {
+    /**
+     * @param ArticleEquivalenceData[] $equivalences
+     */
     public function __construct(
         public string $articleId,
         public string $name,
         public string $recipeUnit,
+        public string $baseUnit,
+        public string $diaryUnit,
         public ?float $servingSize,
         public ?float $price,
         public ?string $brand,
@@ -17,6 +22,7 @@ final readonly class UpdateArticleCommand implements Command
         public ?string $categoryId,
         public ?string $supermarketId,
         public ArticleNutritionData $nutrition,
+        public array $equivalences,
         public string $updatedByUserId,
     ) {
     }

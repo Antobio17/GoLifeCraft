@@ -128,7 +128,7 @@
                   ' ' +
                   ('getDiary.kcal' | t)
                 "
-                [unit]="entry.unit"
+                [unit]="view.entryUnitLabel(entry)"
                 [quantity]="entry.quantity"
                 [quantityLabel]="view.entryQuantityLabel(entry)"
                 [canWrite]="canWrite"

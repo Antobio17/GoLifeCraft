@@ -15,6 +15,7 @@ final readonly class CreateArticleCommandHandler
         private ArticleRepository $articleRepository,
         private CreateArticleNeedleDataQuery $needleDataQuery,
         private ArticleNutritionFactsAssembler $nutritionFactsAssembler,
+        private ArticleEquivalenceAssembler $equivalenceAssembler,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -33,10 +34,14 @@ final readonly class CreateArticleCommandHandler
         );
         $this->articleRepository->saveNutritionFacts(nutritionFacts: $nutritionFacts);
 
+        $articleId = $this->articleRepository->nextId();
+
         $article = Article::create(
-            id: $this->articleRepository->nextId(),
+            id: $articleId,
             name: $command->name,
             recipeUnit: $command->recipeUnit,
+            baseUnit: $command->baseUnit,
+            diaryUnit: $command->diaryUnit,
             servingSize: $command->servingSize,
             price: $command->price,
             brand: $command->brand,
@@ -44,6 +49,11 @@ final readonly class CreateArticleCommandHandler
             categoryId: $command->categoryId,
             supermarketId: $command->supermarketId,
             nutritionFactsId: $nutritionFacts->id,
+            equivalences: $this->equivalenceAssembler->assemble(
+                articleId: $articleId,
+                equivalences: $command->equivalences,
+                userId: $command->createdByUserId,
+            ),
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

@@ -247,7 +247,10 @@ export class GetShoppingListComponent implements OnInit {
     const article = this.articles().find((entry) => entry.id === articleId);
     if (!article) return;
 
-    const optimistic = this.view.optimisticItem(article, `pending-${articleId}`);
+    const optimistic = this.view.optimisticItem(
+      article,
+      `pending-${articleId}`,
+    );
     this.attributes.update((current) =>
       current ? this.view.addItem(current, optimistic) : current,
     );

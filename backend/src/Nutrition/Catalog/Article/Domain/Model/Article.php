@@ -10,8 +10,13 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class Article extends GenericAggregate
 {
+    public const BASE_UNIT_GRAM = 'g';
+    public const BASE_UNIT_MILLILITER = 'ml';
+
     public string $name;
     public string $recipeUnit;
+    public string $baseUnit = self::BASE_UNIT_GRAM;
+    public string $diaryUnit = self::BASE_UNIT_GRAM;
     public ?float $servingSize = null;
     public ?float $price = null;
     public ?string $brand = null;
@@ -21,10 +26,18 @@ class Article extends GenericAggregate
     public ?string $nutritionFactsId = null;
     public ?string $barcode = null;
 
+    /** @var ArticleEquivalence[] */
+    public array $equivalences = [];
+
+    /**
+     * @param ArticleEquivalence[] $equivalences
+     */
     public static function create(
         string $id,
         string $name,
         string $recipeUnit,
+        string $baseUnit,
+        string $diaryUnit,
         ?float $servingSize,
         ?float $price,
         ?string $brand,
@@ -32,6 +45,7 @@ class Article extends GenericAggregate
         ?string $categoryId,
         ?string $supermarketId,
         ?string $nutritionFactsId,
+        array $equivalences,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
@@ -41,6 +55,8 @@ class Article extends GenericAggregate
         $article->id = $id;
         $article->name = $name;
         $article->recipeUnit = $recipeUnit;
+        $article->baseUnit = $baseUnit;
+        $article->diaryUnit = $diaryUnit;
         $article->servingSize = $servingSize;
         $article->price = $price;
         $article->brand = $brand;
@@ -48,12 +64,17 @@ class Article extends GenericAggregate
         $article->categoryId = $categoryId;
         $article->supermarketId = $supermarketId;
         $article->nutritionFactsId = $nutritionFactsId;
+        $article->equivalences = $equivalences;
         $article->stampCreation(userId: $createdByUserId, now: $now);
 
         $article->record(event: new ArticleCreated(
             aggregateId: $id,
             occurredOn: $now,
             name: $name,
+            baseUnit: $baseUnit,
+            recipeUnit: $recipeUnit,
+            diaryUnit: $diaryUnit,
+            equivalences: self::snapshotEquivalences(equivalences: $equivalences),
         ));
 
         return $article;
@@ -64,9 +85,14 @@ class Article extends GenericAggregate
         $this->barcode = $barcode;
     }
 
+    /**
+     * @param ArticleEquivalence[] $equivalences
+     */
     public function update(
         string $name,
         string $recipeUnit,
+        string $baseUnit,
+        string $diaryUnit,
         ?float $servingSize,
         ?float $price,
         ?string $brand,
@@ -74,6 +100,7 @@ class Article extends GenericAggregate
         ?string $categoryId,
         ?string $supermarketId,
         ?string $nutritionFactsId,
+        array $equivalences,
         float $referenceAmount,
         ?float $calories,
         ?float $protein,
@@ -86,6 +113,8 @@ class Article extends GenericAggregate
 
         $this->name = $name;
         $this->recipeUnit = $recipeUnit;
+        $this->baseUnit = $baseUnit;
+        $this->diaryUnit = $diaryUnit;
         $this->servingSize = $servingSize;
         $this->price = $price;
         $this->brand = $brand;
@@ -93,6 +122,7 @@ class Article extends GenericAggregate
         $this->categoryId = $categoryId;
         $this->supermarketId = $supermarketId;
         $this->nutritionFactsId = $nutritionFactsId;
+        $this->equivalences = $equivalences;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new ArticleUpdated(
@@ -100,6 +130,10 @@ class Article extends GenericAggregate
             occurredOn: $now,
             name: $name,
             emoji: $emoji,
+            baseUnit: $baseUnit,
+            recipeUnit: $recipeUnit,
+            diaryUnit: $diaryUnit,
+            equivalences: self::snapshotEquivalences(equivalences: $equivalences),
             referenceAmount: $referenceAmount,
             calories: $calories,
             protein: $protein,
@@ -119,5 +153,22 @@ class Article extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
         ));
+    }
+
+    /**
+     * @param ArticleEquivalence[] $equivalences
+     *
+     * @return array<int, array{unit: string, quantity: float, position: int}>
+     */
+    private static function snapshotEquivalences(array $equivalences): array
+    {
+        return array_map(
+            callback: static fn (ArticleEquivalence $equivalence): array => [
+                'unit' => $equivalence->unit,
+                'quantity' => $equivalence->quantity,
+                'position' => $equivalence->position,
+            ],
+            array: $equivalences,
+        );
     }
 }

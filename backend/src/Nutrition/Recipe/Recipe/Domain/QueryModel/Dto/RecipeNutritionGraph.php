@@ -5,13 +5,15 @@ namespace Nutrition\Recipe\Recipe\Domain\QueryModel\Dto;
 final readonly class RecipeNutritionGraph
 {
     /**
-     * @param array<string, MacroBreakdown>                                                                                                                  $articleMacrosPerUnit
-     * @param array<string, array{name: string, emoji: string}>                                                                                              $articles
-     * @param array<string, array{servings: int, name: string, emoji: string, ingredients: array<int, array{kind: string, refId: string, quantity: float}>}> $recipes
+     * @param array<string, MacroBreakdown>                                                                                                                                 $articleMacrosPerUnit
+     * @param array<string, array{name: string, emoji: string, baseUnit: string}>                                                                                           $articles
+     * @param array<string, array<string, float>>                                                                                                                           $articleUnitFactors
+     * @param array<string, array{servings: int, name: string, emoji: string, ingredients: array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>}> $recipes
      */
     public function __construct(
         private array $articleMacrosPerUnit,
         private array $articles,
+        private array $articleUnitFactors,
         private array $recipes,
     ) {
     }
@@ -19,6 +21,19 @@ final readonly class RecipeNutritionGraph
     public function articleMacrosPerUnit(string $articleId): ?MacroBreakdown
     {
         return $this->articleMacrosPerUnit[$articleId] ?? null;
+    }
+
+    /**
+     * How many base units (g/ml) one unit of the given alias represents. Base unit or unknown
+     * alias resolve to 1.0, so quantities already expressed in the base unit are unchanged.
+     */
+    public function articleUnitFactor(string $articleId, ?string $unit): float
+    {
+        if (null === $unit || '' === $unit) {
+            return 1.0;
+        }
+
+        return $this->articleUnitFactors[$articleId][$unit] ?? 1.0;
     }
 
     public function hasRecipe(string $recipeId): bool
@@ -40,7 +55,7 @@ final readonly class RecipeNutritionGraph
     }
 
     /**
-     * @return array<int, array{kind: string, refId: string, quantity: float}>
+     * @return array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>
      */
     public function recipeIngredients(string $recipeId): array
     {
@@ -55,6 +70,11 @@ final readonly class RecipeNutritionGraph
     public function articleEmoji(string $articleId): string
     {
         return $this->articles[$articleId]['emoji'] ?? '🍽️';
+    }
+
+    public function articleBaseUnit(string $articleId): string
+    {
+        return $this->articles[$articleId]['baseUnit'] ?? 'g';
     }
 
     public function recipeName(string $recipeId): ?string

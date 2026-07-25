@@ -98,6 +98,8 @@
     "subRecipe": "Sub",
     "removeIngredient": "Remove ingredient",
     "quantity": "Quantity",
+    "unit": "Unit",
+    "rationUnit": "srv",
     "noIngredients": "No ingredients yet",
     "addIngredient": "Add ingredient",
     "deleteRecipe": "Delete recipe",

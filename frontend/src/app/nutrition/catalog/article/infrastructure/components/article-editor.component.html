@@ -123,6 +123,22 @@
           </ds-nutrition-editor>
         </ds-stack>
 
+        <ds-equivalence-editor
+          formControlName="units"
+          [unitCatalog]="unitOptions"
+          [title]="'articleEditor.units.heading' | t"
+          [baseLabel]="'articleEditor.units.baseLabel' | t"
+          [baseHint]="'articleEditor.units.baseHint' | t"
+          [equivalencesLabel]="'articleEditor.units.equivalences' | t"
+          [addLabel]="'articleEditor.units.add' | t"
+          [hint]="'articleEditor.units.hint' | t"
+          [recipeLabel]="'articleEditor.units.recipeUnit' | t"
+          [diaryLabel]="'articleEditor.units.diaryUnit' | t"
+          [removeLabel]="'articleEditor.units.remove' | t"
+          [quantityLabel]="'articleEditor.units.quantity' | t"
+          [unitPlaceholder]="'articleEditor.units.unitPlaceholder' | t"
+        />
+
         <ds-button
           type="submit"
           [fullWidth]="true"

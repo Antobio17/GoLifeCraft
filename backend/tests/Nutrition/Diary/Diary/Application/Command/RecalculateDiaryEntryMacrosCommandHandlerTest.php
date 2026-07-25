@@ -40,6 +40,7 @@ final class RecalculateDiaryEntryMacrosCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_PRODUCT,
             refId: 'article-1',
             quantity: 200.0,
+            unit: null,
             snapshot: new DiaryEntrySnapshot(name: 'Nombre viejo', emoji: '🍽️', macros: MacroBreakdown::zero()),
             createdByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),

@@ -66,7 +66,7 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
     private function ingredients(string $recipeId, RecipeNutritionGraph $graph): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('ri.id', 'ri.kind', 'ri.ref_id', 'ri.quantity', 'ri.position')
+            ->select('ri.id', 'ri.kind', 'ri.ref_id', 'ri.quantity', 'ri.unit', 'ri.position')
             ->from(table: 'recipe_ingredient', alias: 'ri')
             ->where('ri.recipe_id = :recipeId')
             ->setParameter(key: 'recipeId', value: $recipeId)
@@ -79,6 +79,7 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
         return array_map(callback: static function ($row) use ($graph, $calculator): RecipeIngredientView {
             $isSubRecipe = RecipeIngredient::KIND_RECIPE === $row['kind'];
             $quantity = (float) $row['quantity'];
+            $unit = null !== $row['unit'] ? (string) $row['unit'] : null;
 
             return new RecipeIngredientView(
                 id: $row['id'],
@@ -87,13 +88,14 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
                 name: ($isSubRecipe ? $graph->recipeName(recipeId: $row['ref_id']) : $graph->articleName(articleId: $row['ref_id'])) ?? 'Desconocido',
                 emoji: $isSubRecipe ? $graph->recipeEmoji(recipeId: $row['ref_id']) : $graph->articleEmoji(articleId: $row['ref_id']),
                 quantity: $quantity,
-                unit: $isSubRecipe ? 'ración' : 'g',
+                unit: $isSubRecipe ? 'ración' : ($unit ?? $graph->articleBaseUnit(articleId: $row['ref_id'])),
                 position: (int) $row['position'],
                 macros: $calculator->ingredientContribution(
                     graph: $graph,
                     kind: $row['kind'],
                     refId: $row['ref_id'],
                     quantity: $quantity,
+                    unit: $isSubRecipe ? null : $unit,
                 )->rounded(),
             );
         }, array: $rows);

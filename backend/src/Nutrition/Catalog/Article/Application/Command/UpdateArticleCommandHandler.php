@@ -14,6 +14,7 @@ final readonly class UpdateArticleCommandHandler
         private ArticleRepository $articleRepository,
         private UpdateArticleNeedleDataQuery $needleDataQuery,
         private ArticleNutritionFactsAssembler $nutritionFactsAssembler,
+        private ArticleEquivalenceAssembler $equivalenceAssembler,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -47,6 +48,8 @@ final readonly class UpdateArticleCommandHandler
         $article->update(
             name: $command->name,
             recipeUnit: $command->recipeUnit,
+            baseUnit: $command->baseUnit,
+            diaryUnit: $command->diaryUnit,
             servingSize: $command->servingSize,
             price: $command->price,
             brand: $command->brand,
@@ -54,6 +57,11 @@ final readonly class UpdateArticleCommandHandler
             categoryId: $command->categoryId,
             supermarketId: $command->supermarketId,
             nutritionFactsId: $nutritionFacts->id,
+            equivalences: $this->equivalenceAssembler->assemble(
+                articleId: $article->id,
+                equivalences: $command->equivalences,
+                userId: $command->updatedByUserId,
+            ),
             referenceAmount: $nutritionFacts->referenceAmount,
             calories: $nutritionFacts->calories,
             protein: $nutritionFacts->protein,

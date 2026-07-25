@@ -4,6 +4,7 @@ namespace Nutrition\Catalog\Article\Infrastructure\Domain\Model\Doctrine;
 
 use Doctrine\ORM\EntityRepository;
 use Nutrition\Catalog\Article\Domain\Model\Article;
+use Nutrition\Catalog\Article\Domain\Model\ArticleEquivalence;
 use Nutrition\Catalog\Article\Domain\Model\ArticleRepository;
 use Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts;
 use Ramsey\Uuid\Uuid;
@@ -27,12 +28,21 @@ final class DoctrineArticleRepository extends EntityRepository implements Articl
 
     public function save(Article $article): void
     {
-        $this->getEntityManager()->persist(object: $article);
+        $entityManager = $this->getEntityManager();
+
+        $this->removeEquivalences(articleId: $article->id);
+        $entityManager->persist(object: $article);
+
+        foreach ($article->equivalences as $equivalence) {
+            $entityManager->persist(object: $equivalence);
+        }
     }
 
     public function delete(Article $article): void
     {
         $entityManager = $this->getEntityManager();
+
+        $this->removeEquivalences(articleId: $article->id);
         $entityManager->remove(object: $article);
 
         if (null === $article->nutritionFactsId) {
@@ -43,6 +53,16 @@ final class DoctrineArticleRepository extends EntityRepository implements Articl
         if (null !== $nutritionFacts) {
             $entityManager->remove(object: $nutritionFacts);
         }
+    }
+
+    private function removeEquivalences(string $articleId): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete(delete: ArticleEquivalence::class, alias: 'equivalence')
+            ->where('equivalence.articleId = :articleId')
+            ->setParameter(key: 'articleId', value: $articleId)
+            ->getQuery()
+            ->execute();
     }
 
     public function findNutritionFactsById(string $nutritionFactsId): ?NutritionFacts

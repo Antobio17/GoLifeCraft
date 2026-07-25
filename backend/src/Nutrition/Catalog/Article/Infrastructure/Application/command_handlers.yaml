@@ -4,12 +4,18 @@ services:
     arguments:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
 
+  Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceAssembler:
+    class: Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
   Nutrition\Catalog\Article\Application\Command\CreateArticleCommandHandler:
     class: Nutrition\Catalog\Article\Application\Command\CreateArticleCommandHandler
     arguments:
       $articleRepository: '@Nutrition\Catalog\Article\Domain\Model\ArticleRepository'
       $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\CreateArticleNeedleDataQuery'
       $nutritionFactsAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler'
+      $equivalenceAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceAssembler'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -21,6 +27,7 @@ services:
       $articleRepository: '@Nutrition\Catalog\Article\Domain\Model\ArticleRepository'
       $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\UpdateArticleNeedleDataQuery'
       $nutritionFactsAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler'
+      $equivalenceAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceAssembler'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

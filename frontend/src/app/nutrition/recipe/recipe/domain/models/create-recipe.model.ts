@@ -2,6 +2,7 @@ export interface RecipeIngredientRequest {
   kind: "product" | "recipe";
   refId: string;
   quantity: number;
+  unit: string | null;
   position: number;
 }
 

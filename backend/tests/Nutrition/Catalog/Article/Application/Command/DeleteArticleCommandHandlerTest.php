@@ -33,7 +33,9 @@ final class DeleteArticleCommandHandlerTest extends TestCase
         $article = Article::create(
             id: 'article-1',
             name: 'Leche entera 1 L',
-            recipeUnit: 'gram',
+            recipeUnit: 'g',
+            baseUnit: 'g',
+            diaryUnit: 'g',
             servingSize: null,
             price: null,
             brand: null,
@@ -41,6 +43,7 @@ final class DeleteArticleCommandHandlerTest extends TestCase
             categoryId: null,
             supermarketId: null,
             nutritionFactsId: null,
+            equivalences: [],
             createdByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

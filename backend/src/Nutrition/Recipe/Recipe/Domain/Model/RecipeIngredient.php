@@ -15,6 +15,7 @@ class RecipeIngredient extends GenericAggregate
     public string $kind;
     public string $refId;
     public float $quantity;
+    public ?string $unit = null;
     public int $position;
 
     public static function create(
@@ -22,6 +23,7 @@ class RecipeIngredient extends GenericAggregate
         string $kind,
         string $refId,
         float $quantity,
+        ?string $unit,
         int $position,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -34,6 +36,7 @@ class RecipeIngredient extends GenericAggregate
         $ingredient->kind = $kind;
         $ingredient->refId = $refId;
         $ingredient->quantity = $quantity;
+        $ingredient->unit = $unit;
         $ingredient->position = $position;
         $ingredient->stampCreation(userId: $createdByUserId, now: $now);
 

@@ -9,10 +9,28 @@ fields:
     unique: true
     filterable: true
     sortable: true
+  baseUnit:
+    writable: true
+    enum: [g, ml]
+    description: >-
+      The base unit the nutrition facts are expressed per 100 of: "g" for solids,
+      "ml" for liquids. All equivalences convert their alias into this base unit.
+    filterable: true
+    sortable: true
   recipeUnit:
     writable: true
-    required: true
-    enum: [gram, milliliter, unit]
+    max: 30
+    description: >-
+      Default unit key used when the article is added to a recipe. Either the base
+      unit ("g"/"ml") or the name of one of the article's equivalence aliases.
+    filterable: true
+    sortable: true
+  diaryUnit:
+    writable: true
+    max: 30
+    description: >-
+      Default unit key used when the article is logged in the diary. Either the base
+      unit ("g"/"ml") or the name of one of the article's equivalence aliases.
     filterable: true
     sortable: true
   servingSize:

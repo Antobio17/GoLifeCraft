@@ -19,9 +19,9 @@ final class RecipeNutritionCalculator
             ->scale(factor: 1 / $graph->recipeServings(recipeId: $recipeId));
     }
 
-    public function ingredientContribution(RecipeNutritionGraph $graph, string $kind, string $refId, float $quantity): MacroBreakdown
+    public function ingredientContribution(RecipeNutritionGraph $graph, string $kind, string $refId, float $quantity, ?string $unit = null): MacroBreakdown
     {
-        return $this->contribution(graph: $graph, kind: $kind, refId: $refId, quantity: $quantity, stack: []);
+        return $this->contribution(graph: $graph, kind: $kind, refId: $refId, quantity: $quantity, unit: $unit, stack: []);
     }
 
     /**
@@ -83,6 +83,7 @@ final class RecipeNutritionCalculator
                 kind: $ingredient['kind'],
                 refId: $ingredient['refId'],
                 quantity: $ingredient['quantity'],
+                unit: $ingredient['unit'] ?? null,
                 stack: $nextStack,
             ));
         }
@@ -93,12 +94,13 @@ final class RecipeNutritionCalculator
     /**
      * @param array<int, string> $stack
      */
-    private function contribution(RecipeNutritionGraph $graph, string $kind, string $refId, float $quantity, array $stack): MacroBreakdown
+    private function contribution(RecipeNutritionGraph $graph, string $kind, string $refId, float $quantity, ?string $unit, array $stack): MacroBreakdown
     {
         if (RecipeIngredient::KIND_PRODUCT === $kind) {
             $perUnit = $graph->articleMacrosPerUnit(articleId: $refId);
+            $baseQuantity = $quantity * $graph->articleUnitFactor(articleId: $refId, unit: $unit);
 
-            return null === $perUnit ? MacroBreakdown::zero() : $perUnit->scale(factor: $quantity);
+            return null === $perUnit ? MacroBreakdown::zero() : $perUnit->scale(factor: $baseQuantity);
         }
 
         if (!$graph->hasRecipe(recipeId: $refId)) {

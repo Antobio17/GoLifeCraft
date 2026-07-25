@@ -30,6 +30,7 @@ final readonly class RecalculateDiaryEntryMacrosCommandHandler
                 kind: $diaryEntry->kind,
                 refId: $diaryEntry->refId ?? '',
                 quantity: $diaryEntry->quantity,
+                unit: $diaryEntry->unit,
             );
 
         if ($diaryEntry->matchesSnapshot(snapshot: $snapshot)) {

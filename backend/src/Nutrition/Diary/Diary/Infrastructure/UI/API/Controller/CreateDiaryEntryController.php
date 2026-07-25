@@ -33,6 +33,7 @@ final class CreateDiaryEntryController
                 kind: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'kind'),
                 refId: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'refId'),
                 quantity: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'quantity'),
+                unit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'unit'),
                 createdByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 

@@ -120,12 +120,11 @@
                       {{ "recipeEditor.macro.kcal" | t }}
                     </ds-text>
                   </ds-stack>
-                  <ds-field [width]="'104px'">
+                  <ds-field [width]="'78px'">
                     <ds-number-input
                       variant="boxed"
                       [precision]="1"
                       [min]="0"
-                      [unit]="ingredient.unit"
                       [ngModel]="ingredient.quantity"
                       [ngModelOptions]="{ standalone: true }"
                       (ngModelChange)="
@@ -134,6 +133,9 @@
                       [ariaLabel]="'recipeEditor.quantity' | t"
                     />
                   </ds-field>
+                  <ds-text variant="meta">{{
+                    ingredientUnitLabel(ingredient)
+                  }}</ds-text>
                   <ds-icon-button
                     icon="close"
                     variant="danger"

@@ -6,11 +6,17 @@ use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryAggregateResult;
 
 final class GetArticlesResult extends QueryAggregateResult
 {
+    /**
+     * @param array<int, array{unit: string, quantity: float}> $equivalences
+     */
     public function __construct(
         string $id,
         string $aggregateName,
         public readonly string $name,
         public readonly string $recipeUnit,
+        public readonly string $baseUnit,
+        public readonly string $diaryUnit,
+        public readonly array $equivalences,
         public readonly ?float $servingSize,
         public readonly ?float $price,
         public readonly ?string $brand,

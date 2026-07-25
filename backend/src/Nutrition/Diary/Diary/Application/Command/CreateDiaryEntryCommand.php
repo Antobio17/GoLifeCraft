@@ -12,6 +12,7 @@ final readonly class CreateDiaryEntryCommand implements Command
         public string $kind,
         public string $refId,
         public float $quantity,
+        public ?string $unit,
         public string $createdByUserId,
     ) {
     }

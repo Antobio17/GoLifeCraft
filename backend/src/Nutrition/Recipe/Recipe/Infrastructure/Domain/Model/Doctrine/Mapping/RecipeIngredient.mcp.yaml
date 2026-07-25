@@ -30,8 +30,16 @@ fields:
     type: float
     min: 0
     description: >-
-      Grams of the article when kind is "product", or number of servings of the
+      Amount in the ingredient's "unit" when kind is "product", or number of servings of the
       sub-recipe when kind is "recipe".
+  unit:
+    writable: true
+    required: false
+    max: 30
+    description: >-
+      Only for kind "product": the unit the quantity is expressed in. Either the article's
+      base unit ("g"/"ml") or one of its equivalence aliases (for example "unidad"). Leave
+      null to use the base unit. Ignored for kind "recipe".
   position:
     writable: true
     required: true

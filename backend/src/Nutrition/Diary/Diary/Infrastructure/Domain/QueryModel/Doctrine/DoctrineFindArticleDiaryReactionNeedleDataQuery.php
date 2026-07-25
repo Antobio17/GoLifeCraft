@@ -18,7 +18,7 @@ final readonly class DoctrineFindArticleDiaryReactionNeedleDataQuery implements 
     public function todayProductEntries(string $articleId): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('e.id', 'e.quantity')
+            ->select('e.id', 'e.quantity', 'e.unit')
             ->from(table: 'diary_entry', alias: 'e')
             ->where('e.entry_date = :date')
             ->andWhere('e.kind = :kind')
@@ -32,7 +32,27 @@ final readonly class DoctrineFindArticleDiaryReactionNeedleDataQuery implements 
         return array_map(static fn (array $row): array => [
             'id' => $row['id'],
             'quantity' => (float) $row['quantity'],
+            'unit' => null !== $row['unit'] ? (string) $row['unit'] : null,
         ], $rows);
+    }
+
+    public function articleEquivalenceFactors(string $articleId): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('e.unit', 'e.quantity')
+            ->from(table: 'article_equivalence', alias: 'e')
+            ->where('e.article_id = :articleId')
+            ->setParameter(key: 'articleId', value: $articleId)
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $factors = [];
+
+        foreach ($rows as $row) {
+            $factors[(string) $row['unit']] = (float) $row['quantity'];
+        }
+
+        return $factors;
     }
 
     public function articleNutrition(string $articleId): ?array

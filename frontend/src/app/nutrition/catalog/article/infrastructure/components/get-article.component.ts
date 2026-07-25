@@ -25,6 +25,7 @@ import { ProductHeroComponent } from "@shared/design-system/product-hero/infrast
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
 import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { EquivalenceSummaryComponent } from "@shared/design-system/equivalence-summary/infrastructure/components/equivalence-summary.component";
 
 type NutritionMode = "serving" | "per100";
 
@@ -47,6 +48,7 @@ type NutritionMode = "serving" | "per100";
     MacroBarsComponent,
     NutritionFactsComponent,
     SegmentedToggleComponent,
+    EquivalenceSummaryComponent,
   ],
 })
 export class GetArticleComponent implements OnInit {

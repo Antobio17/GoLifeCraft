@@ -57,6 +57,13 @@
       "protein": "Protein",
       "fiber": "Fibre",
       "salt": "Salt"
+    },
+    "units": {
+      "heading": "UNITS & EQUIVALENCES",
+      "base": "base",
+      "recipe": "IN RECIPE",
+      "diary": "IN DIARY",
+      "equivalences": "EQUIVALENCES"
     }
   },
   "article": {
@@ -74,6 +81,9 @@
     },
     "delete": {
       "success": "Item deleted successfully"
+    },
+    "equivalence": {
+      "incomplete": "Complete or remove equivalences without a unit or amount."
     }
   },
   "articleEditor": {
@@ -122,6 +132,19 @@
       "carbs": "Carbohydrate",
       "sugars": "of which sugars",
       "salt": "Salt"
+    },
+    "units": {
+      "heading": "UNITS & EQUIVALENCES",
+      "baseLabel": "Base unit",
+      "baseHint": "Nutrition per 100 · base of every calculation",
+      "equivalences": "EQUIVALENCES",
+      "add": "Add equivalence",
+      "hint": "E.g. 1 unit = 60 g. The alias is the unit; the equivalence converts it to the base to compute kcal.",
+      "recipeUnit": "UNIT IN RECIPE",
+      "diaryUnit": "UNIT IN DIARY",
+      "remove": "Remove equivalence",
+      "quantity": "Quantity",
+      "unitPlaceholder": "Select…"
     }
   }
 }

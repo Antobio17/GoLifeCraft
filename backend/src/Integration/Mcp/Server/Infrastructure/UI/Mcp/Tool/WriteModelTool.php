@@ -17,7 +17,7 @@ final class WriteModelTool extends McpMessengerTool
         string $alias,
         #[Schema(
             type: 'object',
-            description: 'A single record as a field-to-value map (e.g. {"name": "Rice", "recipeUnit": "gram"}). Include writable relation names as nested objects. Not an array of records.',
+            description: 'A single record as a field-to-value map (e.g. {"name": "Rice", "recipeUnit": "g"}). Include writable relation names as nested objects. Not an array of records.',
             additionalProperties: true,
         )]
         array $data,

@@ -19,14 +19,14 @@ final readonly class RecipeGraphDiaryEntrySnapshotCalculator implements DiaryEnt
     ) {
     }
 
-    public function calculate(string $kind, string $refId, float $quantity): DiaryEntrySnapshot
+    public function calculate(string $kind, string $refId, float $quantity, ?string $unit = null): DiaryEntrySnapshot
     {
         $graph = $this->graphProvider->load();
 
         return new DiaryEntrySnapshot(
             name: $this->resolveName(graph: $graph, kind: $kind, refId: $refId),
             emoji: $this->resolveEmoji(graph: $graph, kind: $kind, refId: $refId),
-            macros: $this->calculator->ingredientContribution(graph: $graph, kind: $kind, refId: $refId, quantity: $quantity),
+            macros: $this->calculator->ingredientContribution(graph: $graph, kind: $kind, refId: $refId, quantity: $quantity, unit: $unit),
         );
     }
 

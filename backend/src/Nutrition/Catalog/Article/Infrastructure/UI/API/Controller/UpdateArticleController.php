@@ -2,9 +2,11 @@
 
 namespace Nutrition\Catalog\Article\Infrastructure\UI\API\Controller;
 
+use Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceData;
 use Nutrition\Catalog\Article\Application\Command\ArticleNutritionData;
 use Nutrition\Catalog\Article\Application\Command\UpdateArticleCommand;
 use Nutrition\Catalog\Article\Domain\Exception\UpdateArticleException;
+use Nutrition\Catalog\Article\Domain\Model\Article;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
@@ -27,11 +29,15 @@ final class UpdateArticleController
 
     public function __invoke(Request $request): JsonResponse
     {
+        $baseUnit = RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'baseUnit') ?? Article::BASE_UNIT_GRAM;
+
         try {
             $this->handle(message: new UpdateArticleCommand(
                 articleId: $request->attributes->get(key: 'articleId'),
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
-                recipeUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'recipeUnit') ?? 'gram',
+                recipeUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'recipeUnit') ?? $baseUnit,
+                baseUnit: $baseUnit,
+                diaryUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'diaryUnit') ?? $baseUnit,
                 servingSize: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'servingSize', required: false),
                 price: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'price', required: false),
                 brand: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'brand'),
@@ -40,6 +46,9 @@ final class UpdateArticleController
                 supermarketId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'supermarketId'),
                 nutrition: ArticleNutritionData::fromArray(
                     rawNutrition: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'nutrition', required: false) ?? [],
+                ),
+                equivalences: ArticleEquivalenceData::listFromArray(
+                    rawEquivalences: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'equivalences', required: false) ?? [],
                 ),
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));

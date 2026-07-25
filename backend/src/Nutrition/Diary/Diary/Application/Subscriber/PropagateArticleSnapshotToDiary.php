@@ -102,9 +102,12 @@ final readonly class PropagateArticleSnapshotToDiary implements DomainEventSubsc
     private function propagate(string $articleId, string $name, string $emoji, float $referenceAmount, MacroBreakdown $raw): void
     {
         $perUnit = $referenceAmount > 0 ? $raw->scale(factor: 1 / $referenceAmount) : MacroBreakdown::zero();
+        $factors = $this->needle->articleEquivalenceFactors(articleId: $articleId);
 
         foreach ($this->needle->todayProductEntries(articleId: $articleId) as $entry) {
-            $macros = $perUnit->scale(factor: $entry['quantity']);
+            $unit = $entry['unit'] ?? null;
+            $factor = empty($unit) ? 1.0 : ($factors[$unit] ?? 1.0);
+            $macros = $perUnit->scale(factor: $entry['quantity'] * $factor);
 
             $this->messageBus->dispatch(new ApplyDiaryEntrySnapshotCommand(
                 diaryEntryId: $entry['id'],

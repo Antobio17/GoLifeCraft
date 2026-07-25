@@ -1,0 +1,36 @@
+label: Article unit equivalence
+
+fields:
+  articleId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      The id of the Article this equivalence belongs to.
+    filterable: true
+  unit:
+    writable: true
+    required: true
+    min: 1
+    max: 30
+    description: >-
+      Name of the natural unit alias (for example "unidad", "loncha", "vaso", "lata").
+      One of these aliases equals "quantity" of the article's base unit.
+    filterable: true
+  quantity:
+    writable: true
+    required: true
+    type: float
+    min: 0
+    description: >-
+      How many base units (grams or millilitres, per the article's baseUnit) one unit of
+      the alias represents. Example: for "1 unidad = 60 g" set unit "unidad" and quantity 60.
+  position:
+    writable: true
+    required: true
+    type: int
+    min: 1
+    sortable: true
+
+relations: {}

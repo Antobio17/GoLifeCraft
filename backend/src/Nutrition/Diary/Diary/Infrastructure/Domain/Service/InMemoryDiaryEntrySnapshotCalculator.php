@@ -16,7 +16,7 @@ final class InMemoryDiaryEntrySnapshotCalculator implements DiaryEntrySnapshotCa
         $this->snapshotByRefId[$refId] = $snapshot;
     }
 
-    public function calculate(string $kind, string $refId, float $quantity): DiaryEntrySnapshot
+    public function calculate(string $kind, string $refId, float $quantity, ?string $unit = null): DiaryEntrySnapshot
     {
         return $this->snapshotByRefId[$refId] ?? new DiaryEntrySnapshot(name: '', emoji: '', macros: MacroBreakdown::zero());
     }

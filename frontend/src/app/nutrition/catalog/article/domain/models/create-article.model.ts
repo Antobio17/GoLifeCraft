@@ -10,9 +10,16 @@ export interface ArticleNutritionRequest {
   salt: number | null;
 }
 
+export interface ArticleEquivalenceRequest {
+  unit: string;
+  quantity: number;
+}
+
 export interface CreateArticleRequest {
   name: string;
   recipeUnit: string;
+  baseUnit: string;
+  diaryUnit: string;
   servingSize: number | null;
   price: number | null;
   brand: string | null;
@@ -20,4 +27,5 @@ export interface CreateArticleRequest {
   categoryId: string | null;
   supermarketId: string | null;
   nutrition: ArticleNutritionRequest;
+  equivalences: ArticleEquivalenceRequest[];
 }

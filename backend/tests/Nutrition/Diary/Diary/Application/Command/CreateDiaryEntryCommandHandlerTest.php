@@ -46,6 +46,7 @@ final class CreateDiaryEntryCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_PRODUCT,
             refId: 'article-1',
             quantity: 120.0,
+            unit: null,
             createdByUserId: 'god-user-id',
         ));
 
@@ -70,6 +71,7 @@ final class CreateDiaryEntryCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_PRODUCT,
             refId: 'article-1',
             quantity: 120.0,
+            unit: null,
             createdByUserId: 'god-user-id',
         ));
     }
@@ -84,6 +86,7 @@ final class CreateDiaryEntryCommandHandlerTest extends TestCase
             kind: 'ingredient',
             refId: 'article-1',
             quantity: 120.0,
+            unit: null,
             createdByUserId: 'god-user-id',
         ));
     }
@@ -98,6 +101,7 @@ final class CreateDiaryEntryCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_PRODUCT,
             refId: 'article-1',
             quantity: 0.0,
+            unit: null,
             createdByUserId: 'god-user-id',
         ));
     }
@@ -112,6 +116,7 @@ final class CreateDiaryEntryCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_PRODUCT,
             refId: 'article-1',
             quantity: 120.0,
+            unit: null,
             createdByUserId: 'god-user-id',
         ));
     }

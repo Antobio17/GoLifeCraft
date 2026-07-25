@@ -48,7 +48,7 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
                     name: $row['snapshot_name'],
                     emoji: $row['snapshot_emoji'],
                     quantity: (float) $row['quantity'],
-                    unit: $this->unitFor(kind: $row['kind']),
+                    unit: $this->unitFor(kind: $row['kind'], storedUnit: $row['unit'] ?? null),
                     macros: $macros->rounded(),
                     quick: $this->quickView(row: $row),
                 );
@@ -83,10 +83,10 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
         );
     }
 
-    private function unitFor(string $kind): string
+    private function unitFor(string $kind, ?string $storedUnit): string
     {
         if (DiaryEntry::KIND_PRODUCT === $kind) {
-            return 'g';
+            return null !== $storedUnit && '' !== $storedUnit ? $storedUnit : 'g';
         }
 
         return DiaryEntry::KIND_QUICK === $kind ? 'ud' : 'rac.';
@@ -181,7 +181,7 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
     private function fetchEntries(string $date): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
+            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.unit', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
             ->from(table: 'diary_entry', alias: 'e')
             ->where('e.entry_date = :date')
             ->setParameter(key: 'date', value: $date)

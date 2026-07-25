@@ -8,6 +8,7 @@
     <field name="kind" type="string" column="kind" length="16"/>
     <field name="refId" type="string" column="ref_id" length="36" nullable="true"/>
     <field name="quantity" type="float" column="quantity"/>
+    <field name="unit" type="string" column="unit" length="30" nullable="true"/>
     <field name="nameSnapshot" type="string" column="snapshot_name" length="255"/>
     <field name="emojiSnapshot" type="string" column="snapshot_emoji" length="16"/>
     <field name="caloriesSnapshot" type="float" column="snapshot_calories"/>

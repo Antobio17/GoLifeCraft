@@ -1,8 +1,10 @@
 import { Component, OnInit, inject, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
+  ValidationErrors,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
@@ -19,6 +21,8 @@ import { PriceInputComponent } from "@shared/design-system/price-input/infrastru
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
 import { NutritionEditorComponent } from "@shared/design-system/nutrition-editor/infrastructure/components/nutrition-editor.component";
+import { EquivalenceEditorComponent } from "@shared/design-system/equivalence-editor/infrastructure/components/equivalence-editor.component";
+import { EquivalenceEditorValue } from "@shared/design-system/equivalence-editor/domain/models/equivalence-editor.model";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -28,6 +32,7 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
 import { GetSupermarketsService } from "@nutrition/catalog/supermarket/application/services/get-supermarkets.service";
 import { EmojiCatalogService } from "../../application/services/emoji-catalog.service";
+import { UnitCatalogService } from "../../application/services/unit-catalog.service";
 import { CreateArticleService } from "../../application/services/create-article.service";
 import { UpdateArticleService } from "../../application/services/update-article.service";
 import { DeleteArticleService } from "../../application/services/delete-article.service";
@@ -40,11 +45,34 @@ import {
 
 const FALLBACK_EMOJI = "🍽️";
 const REFERENCE_AMOUNT = 100;
-const UNIT_SUFFIX: Record<string, string> = {
-  gram: "g",
-  milliliter: "ml",
-  unit: "ud",
-};
+const DEFAULT_BASE_UNIT = "g";
+
+function defaultUnitsValue(): EquivalenceEditorValue {
+  return {
+    baseUnit: DEFAULT_BASE_UNIT,
+    recipeUnit: DEFAULT_BASE_UNIT,
+    diaryUnit: DEFAULT_BASE_UNIT,
+    equivalences: [],
+  };
+}
+
+function equivalencesValidator(
+  control: AbstractControl,
+): ValidationErrors | null {
+  const value = control.value as EquivalenceEditorValue | null;
+  if (!value) {
+    return null;
+  }
+
+  const hasIncompleteLine = value.equivalences.some(
+    (line) =>
+      "" === (line.unit ?? "").trim() ||
+      null === line.quantity ||
+      line.quantity <= 0,
+  );
+
+  return hasIncompleteLine ? { incompleteEquivalence: true } : null;
+}
 
 @Component({
   selector: "app-article-editor",
@@ -63,6 +91,7 @@ const UNIT_SUFFIX: Record<string, string> = {
     NumberInputComponent,
     NutrientInputComponent,
     NutritionEditorComponent,
+    EquivalenceEditorComponent,
     ButtonComponent,
     ConfirmActionModalComponent,
     StackComponent,
@@ -79,6 +108,7 @@ export class ArticleEditorComponent implements OnInit {
   private getCategoriesService = inject(GetCategoriesService);
   private getSupermarketsService = inject(GetSupermarketsService);
   private emojiCatalog = inject(EmojiCatalogService);
+  private unitCatalogService = inject(UnitCatalogService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -86,6 +116,7 @@ export class ArticleEditorComponent implements OnInit {
   private readonly MODULE_PATH = "nutrition/catalog/article";
   readonly emojiGroups = this.emojiCatalog.groups();
   readonly fallbackEmoji = FALLBACK_EMOJI;
+  readonly unitOptions = this.unitCatalogService.options();
 
   categoryOptions = signal<{ value: string; label: string }[]>([]);
   supermarketOptions = signal<{ value: string; label: string }[]>([]);
@@ -98,7 +129,6 @@ export class ArticleEditorComponent implements OnInit {
   articleName = signal("");
 
   private id = "";
-  private recipeUnit = "gram";
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -109,6 +139,7 @@ export class ArticleEditorComponent implements OnInit {
       servingSize: [null as number | null],
       categoryId: [null as string | null],
       supermarketId: [null as string | null],
+      units: [defaultUnitsValue(), equivalencesValidator],
       calories: [""],
       protein: [""],
       fat: [""],
@@ -124,7 +155,11 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   get servingUnitSuffix(): string {
-    return UNIT_SUFFIX[this.recipeUnit] ?? "g";
+    const units = this.form.get("units")?.value as
+      | EquivalenceEditorValue
+      | undefined;
+
+    return units?.baseUnit ?? DEFAULT_BASE_UNIT;
   }
 
   get title(): string {
@@ -178,6 +213,13 @@ export class ArticleEditorComponent implements OnInit {
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      if (this.form.get("units")?.hasError("incompleteEquivalence")) {
+        this.floatingToastService.showToast({
+          status: 400,
+          keyTranslation: "article.equivalence.incomplete",
+          details: [],
+        });
+      }
       return;
     }
 
@@ -259,9 +301,9 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   private patchForm(article: Article): void {
-    this.recipeUnit = article.attributes.recipeUnit ?? "gram";
     this.articleName.set(article.attributes.name);
     const nutrition = article.relationships?.nutritionFacts?.data.attributes;
+    const baseUnit = article.attributes.baseUnit ?? DEFAULT_BASE_UNIT;
 
     this.form.patchValue({
       name: article.attributes.name,
@@ -271,6 +313,15 @@ export class ArticleEditorComponent implements OnInit {
       servingSize: article.attributes.servingSize ?? null,
       categoryId: article.relationships?.category?.data.id ?? null,
       supermarketId: article.relationships?.supermarket?.data.id ?? null,
+      units: {
+        baseUnit,
+        recipeUnit: article.attributes.recipeUnit ?? baseUnit,
+        diaryUnit: article.attributes.diaryUnit ?? baseUnit,
+        equivalences: (article.attributes.equivalences ?? []).map((item) => ({
+          unit: item.unit,
+          quantity: item.quantity,
+        })),
+      },
       calories: this.formatNumber(nutrition?.calories ?? null),
       protein: this.formatNumber(nutrition?.protein ?? null),
       fat: this.formatNumber(nutrition?.fat ?? null),
@@ -296,9 +347,23 @@ export class ArticleEditorComponent implements OnInit {
       salt: this.parseDecimal(value.salt),
     };
 
+    const units = (value.units ??
+      defaultUnitsValue()) as EquivalenceEditorValue;
+    const equivalences = units.equivalences
+      .map((line) => ({
+        unit: (line.unit ?? "").trim(),
+        quantity: this.parseDecimal(line.quantity),
+      }))
+      .filter(
+        (line): line is { unit: string; quantity: number } =>
+          "" !== line.unit && null !== line.quantity && line.quantity > 0,
+      );
+
     return {
       name: (value.name ?? "").trim(),
-      recipeUnit: this.recipeUnit,
+      recipeUnit: units.recipeUnit,
+      baseUnit: units.baseUnit,
+      diaryUnit: units.diaryUnit,
       servingSize: this.parseDecimal(value.servingSize),
       price: this.parseDecimal(value.price),
       brand: this.emptyToNull(value.brand),
@@ -306,6 +371,7 @@ export class ArticleEditorComponent implements OnInit {
       categoryId: value.categoryId ?? null,
       supermarketId: value.supermarketId ?? null,
       nutrition,
+      equivalences,
     };
   }
 

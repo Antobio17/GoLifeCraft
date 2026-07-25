@@ -25,6 +25,7 @@ final readonly class RecipeIngredientAssembler
                 kind: $ingredientData->kind,
                 refId: $ingredientData->refId,
                 quantity: $ingredientData->quantity,
+                unit: $ingredientData->unit,
                 position: $ingredientData->position,
                 createdByUserId: $userId,
                 dateTimeGenerator: $this->dateTimeGenerator,

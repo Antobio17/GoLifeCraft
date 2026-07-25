@@ -231,6 +231,16 @@ export class RecipeEditorComponent implements OnInit {
     return this.format(this.recipeForm.ingredientCalories(ingredient));
   }
 
+  isProduct(ingredient: FormIngredient): boolean {
+    return "product" === ingredient.kind;
+  }
+
+  ingredientUnitLabel(ingredient: FormIngredient): string {
+    return this.isProduct(ingredient)
+      ? this.recipeForm.unitLabel(ingredient)
+      : this.t("recipeEditor.rationUnit");
+  }
+
   formatMacro(value: number): string {
     return this.format(value);
   }
@@ -397,6 +407,7 @@ export class RecipeEditorComponent implements OnInit {
         kind: ingredient.kind,
         refId: ingredient.refId,
         quantity: Number(ingredient.quantity) || 0,
+        unit: this.isProduct(ingredient) ? ingredient.unit : null,
         position: index + 1,
       })),
     };

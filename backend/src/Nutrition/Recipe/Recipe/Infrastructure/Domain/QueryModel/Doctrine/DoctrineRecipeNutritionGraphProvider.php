@@ -21,6 +21,7 @@ final class DoctrineRecipeNutritionGraphProvider
             $articles[$row['id']] = [
                 'name' => $row['name'],
                 'emoji' => $row['emoji'] ?? '🍽️',
+                'baseUnit' => $row['base_unit'] ?? 'g',
             ];
 
             $reference = (float) ($row['reference_amount'] ?? 0);
@@ -37,8 +38,29 @@ final class DoctrineRecipeNutritionGraphProvider
         return new RecipeNutritionGraph(
             articleMacrosPerUnit: $articleMacrosPerUnit,
             articles: $articles,
+            articleUnitFactors: $this->loadArticleUnitFactors(),
             recipes: $this->loadRecipes(),
         );
+    }
+
+    /**
+     * @return array<string, array<string, float>>
+     */
+    private function loadArticleUnitFactors(): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('e.article_id', 'e.unit', 'e.quantity')
+            ->from(table: 'article_equivalence', alias: 'e')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $factors = [];
+
+        foreach ($rows as $row) {
+            $factors[$row['article_id']][$row['unit']] = (float) $row['quantity'];
+        }
+
+        return $factors;
     }
 
     /**
@@ -51,6 +73,7 @@ final class DoctrineRecipeNutritionGraphProvider
                 'a.id',
                 'a.name',
                 'a.emoji',
+                'a.base_unit',
                 'nf.reference_amount',
                 'nf.calories',
                 'nf.protein',
@@ -88,6 +111,7 @@ final class DoctrineRecipeNutritionGraphProvider
                 'kind' => $row['kind'],
                 'refId' => $row['ref_id'],
                 'quantity' => (float) $row['quantity'],
+                'unit' => null !== $row['unit'] ? (string) $row['unit'] : null,
             ];
         }
 
@@ -112,7 +136,7 @@ final class DoctrineRecipeNutritionGraphProvider
     private function fetchIngredients(): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('ri.recipe_id', 'ri.kind', 'ri.ref_id', 'ri.quantity', 'ri.position')
+            ->select('ri.recipe_id', 'ri.kind', 'ri.ref_id', 'ri.quantity', 'ri.unit', 'ri.position')
             ->from(table: 'recipe_ingredient', alias: 'ri')
             ->orderBy('ri.position', 'ASC')
             ->executeQuery()

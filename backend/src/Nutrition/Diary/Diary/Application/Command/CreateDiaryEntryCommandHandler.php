@@ -24,6 +24,7 @@ final readonly class CreateDiaryEntryCommandHandler
             kind: $command->kind,
             refId: $command->refId,
             quantity: $command->quantity,
+            unit: $command->unit,
         );
 
         $diaryEntry = DiaryEntry::create(
@@ -33,6 +34,7 @@ final readonly class CreateDiaryEntryCommandHandler
             kind: $command->kind,
             refId: $command->refId,
             quantity: $command->quantity,
+            unit: $command->unit,
             snapshot: $snapshot,
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,

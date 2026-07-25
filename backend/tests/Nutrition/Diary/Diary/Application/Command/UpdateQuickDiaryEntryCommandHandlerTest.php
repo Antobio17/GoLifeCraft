@@ -97,6 +97,7 @@ final class UpdateQuickDiaryEntryCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_PRODUCT,
             refId: 'article-1',
             quantity: 100.0,
+            unit: null,
             createdByUserId: 'god-user-id',
         ));
 

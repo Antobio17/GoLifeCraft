@@ -50,7 +50,9 @@ final readonly class ImportGlobalArticleCommandHandler
         $article = Article::create(
             id: $this->articleRepository->nextId(),
             name: $globalArticle->name,
-            recipeUnit: 'gram',
+            recipeUnit: Article::BASE_UNIT_GRAM,
+            baseUnit: Article::BASE_UNIT_GRAM,
+            diaryUnit: Article::BASE_UNIT_GRAM,
             servingSize: null,
             price: $globalArticle->price,
             brand: $globalArticle->brand,
@@ -58,6 +60,7 @@ final readonly class ImportGlobalArticleCommandHandler
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
             nutritionFactsId: $nutritionFacts->id,
+            equivalences: [],
             createdByUserId: $command->importedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

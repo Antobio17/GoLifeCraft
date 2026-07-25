@@ -50,6 +50,7 @@ class DiaryEntry extends GenericAggregate
     public string $kind;
     public ?string $refId = null;
     public float $quantity;
+    public ?string $unit = null;
     public string $nameSnapshot = '';
     public string $emojiSnapshot = '';
     public float $caloriesSnapshot = 0.0;
@@ -70,6 +71,7 @@ class DiaryEntry extends GenericAggregate
         string $kind,
         string $refId,
         float $quantity,
+        ?string $unit,
         DiaryEntrySnapshot $snapshot,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -99,6 +101,7 @@ class DiaryEntry extends GenericAggregate
         $entry->kind = $kind;
         $entry->refId = $refId;
         $entry->quantity = $quantity;
+        $entry->unit = $unit;
         $entry->writeSnapshot(snapshot: $snapshot);
         $entry->stampCreation(userId: $createdByUserId, now: $now);
 

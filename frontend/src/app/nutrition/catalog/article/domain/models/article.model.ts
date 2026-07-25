@@ -1,6 +1,14 @@
+export interface ArticleEquivalence {
+  unit: string;
+  quantity: number;
+}
+
 export interface ArticleAttributes {
   name: string;
   recipeUnit: string;
+  baseUnit: string;
+  diaryUnit: string;
+  equivalences: ArticleEquivalence[];
   servingSize: number | null;
   price: number | null;
   brand: string | null;

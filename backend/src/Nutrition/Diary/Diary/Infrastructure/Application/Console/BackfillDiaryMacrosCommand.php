@@ -57,7 +57,7 @@ final class BackfillDiaryMacrosCommand extends Command
         $this->switcher->switch(tenantId: $dbname);
 
         $entries = $this->writerTenantConnection->createQueryBuilder()
-            ->select('e.id', 'e.kind', 'e.ref_id', 'e.quantity')
+            ->select('e.id', 'e.kind', 'e.ref_id', 'e.quantity', 'e.unit')
             ->from(table: 'diary_entry', alias: 'e')
             ->executeQuery()
             ->fetchAllAssociative();
@@ -82,6 +82,7 @@ final class BackfillDiaryMacrosCommand extends Command
                 kind: $entry['kind'],
                 refId: $entry['ref_id'],
                 quantity: (float) $entry['quantity'],
+                unit: $isProduct && null !== $entry['unit'] ? (string) $entry['unit'] : null,
             );
             $name = $isProduct ? $graph->articleName(articleId: $entry['ref_id']) : $graph->recipeName(recipeId: $entry['ref_id']);
             $emoji = $isProduct ? $graph->articleEmoji(articleId: $entry['ref_id']) : $graph->recipeEmoji(recipeId: $entry['ref_id']);

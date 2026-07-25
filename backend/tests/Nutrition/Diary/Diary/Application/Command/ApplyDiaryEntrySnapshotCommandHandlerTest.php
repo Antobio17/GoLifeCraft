@@ -36,6 +36,7 @@ final class ApplyDiaryEntrySnapshotCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_PRODUCT,
             refId: 'article-1',
             quantity: 100.0,
+            unit: null,
             snapshot: new DiaryEntrySnapshot(name: 'Nombre viejo', emoji: '🍫', macros: new MacroBreakdown(calories: 100.0, protein: 1.0, fat: 5.0, carbs: 10.0)),
             createdByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),

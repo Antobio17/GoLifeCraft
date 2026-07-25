@@ -41,6 +41,7 @@ final class UpdateDiaryEntryQuantityCommandHandlerTest extends TestCase
             kind: DiaryEntry::KIND_PRODUCT,
             refId: 'article-1',
             quantity: 30.0,
+            unit: null,
             createdByUserId: 'god-user-id',
         ));
 

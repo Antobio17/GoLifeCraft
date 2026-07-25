@@ -132,6 +132,17 @@
     } @else {
       <ds-text variant="muted">{{ "getArticle.noNutrition" | t }}</ds-text>
     }
+
+    <ds-equivalence-summary
+      [title]="'getArticle.units.heading' | t"
+      [baseBadge]="('getArticle.units.base' | t) + ' ' + d.units.baseUnit"
+      [recipeLabel]="'getArticle.units.recipe' | t"
+      [recipeUnit]="d.units.recipeUnit"
+      [diaryLabel]="'getArticle.units.diary' | t"
+      [diaryUnit]="d.units.diaryUnit"
+      [equivalencesLabel]="'getArticle.units.equivalences' | t"
+      [lines]="d.units.lines"
+    />
   }
 </ds-page-wrapper>
 

@@ -23,6 +23,8 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
                 't.id',
                 't.name',
                 't.recipe_unit',
+                't.base_unit',
+                't.diary_unit',
                 't.serving_size',
                 't.price',
                 't.brand',
@@ -66,6 +68,9 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
             aggregateName: 'Article',
             name: $result['name'],
             recipeUnit: $result['recipe_unit'],
+            baseUnit: $result['base_unit'],
+            diaryUnit: $result['diary_unit'],
+            equivalences: $this->findEquivalences(articleId: $result['id']),
             servingSize: null !== $result['serving_size'] ? (float) $result['serving_size'] : null,
             price: null !== $result['price'] ? (float) $result['price'] : null,
             brand: $result['brand'],
@@ -82,6 +87,29 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
         $article->relationships = $this->buildRelationships(row: $result);
 
         return $article;
+    }
+
+    /**
+     * @return array<int, array{unit: string, quantity: float}>
+     */
+    private function findEquivalences(string $articleId): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('e.unit', 'e.quantity')
+            ->from(table: 'article_equivalence', alias: 'e')
+            ->where('e.article_id = :articleId')
+            ->orderBy('e.position', 'ASC')
+            ->setParameter(key: 'articleId', value: $articleId)
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        return array_map(
+            callback: static fn (array $row): array => [
+                'unit' => (string) $row['unit'],
+                'quantity' => (float) $row['quantity'],
+            ],
+            array: $rows,
+        );
     }
 
     /**

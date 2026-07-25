@@ -14,7 +14,17 @@ interface ProductEntry {
   name: string;
   emoji: string;
   detail: string;
+  baseUnit: string;
+  diaryUnit: string;
 }
+
+export interface DiaryEntryDefaults {
+  unit: string;
+  quantity: number;
+}
+
+const DEFAULT_BASE_UNIT = "g";
+const DEFAULT_BASE_QUANTITY = 100;
 
 interface RecipeEntry {
   name: string;
@@ -24,6 +34,7 @@ interface RecipeEntry {
 
 const FALLBACK_PRODUCT_EMOJI = "🍽️";
 const FALLBACK_RECIPE_EMOJI = "🍲";
+const DEFAULT_RECIPE_QUANTITY = 1;
 
 @Injectable()
 export class DiaryPickerService {
@@ -42,12 +53,16 @@ export class DiaryPickerService {
           : 0;
       const brand = article.attributes.brand;
 
+      const baseUnit = article.attributes.baseUnit || DEFAULT_BASE_UNIT;
+
       map.set(article.id, {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
         detail: brand
-          ? `${kcalPer100} kcal / 100 g · ${brand}`
-          : `${kcalPer100} kcal / 100 g`,
+          ? `${kcalPer100} kcal / 100 ${baseUnit} · ${brand}`
+          : `${kcalPer100} kcal / 100 ${baseUnit}`,
+        baseUnit,
+        diaryUnit: article.attributes.diaryUnit || baseUnit,
       });
     });
 
@@ -70,6 +85,24 @@ export class DiaryPickerService {
 
   hasRecipes(): boolean {
     return this.recipes().size > 0;
+  }
+
+  productDefaults(refId: string): DiaryEntryDefaults {
+    const entry = this.products().get(refId);
+    if (!entry) {
+      return { unit: DEFAULT_BASE_UNIT, quantity: DEFAULT_BASE_QUANTITY };
+    }
+
+    const isBase = entry.diaryUnit === entry.baseUnit;
+
+    return {
+      unit: entry.diaryUnit,
+      quantity: isBase ? DEFAULT_BASE_QUANTITY : DEFAULT_RECIPE_QUANTITY,
+    };
+  }
+
+  recipeDefaults(): DiaryEntryDefaults {
+    return { unit: "", quantity: DEFAULT_RECIPE_QUANTITY };
   }
 
   productChoices(query: string): DiaryChoice[] {

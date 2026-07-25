@@ -1,8 +1,9 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import {
   Article,
   ArticleNutritionFacts,
 } from "../../domain/models/article.model";
+import { UnitCatalogService } from "./unit-catalog.service";
 
 export interface ArticleCardView {
   id: string;
@@ -28,6 +29,13 @@ export interface ArticleMacroSet {
   saltG: string | null;
 }
 
+export interface ArticleUnitsView {
+  baseUnit: string;
+  recipeUnit: string;
+  diaryUnit: string;
+  lines: { label: string; detail: string }[];
+}
+
 export interface ArticleDetailView {
   emoji: string;
   name: string;
@@ -41,11 +49,13 @@ export interface ArticleDetailView {
   per100Label: string;
   per100: ArticleMacroSet;
   serving: ArticleMacroSet | null;
+  units: ArticleUnitsView;
 }
 
 const FALLBACK_EMOJI = "🍽️";
+const DEFAULT_BASE_UNIT = "g";
 
-const UNIT_SUFFIX: Record<string, string> = {
+const LEGACY_UNIT_SUFFIX: Record<string, string> = {
   gram: "g",
   milliliter: "ml",
   unit: "ud",
@@ -53,6 +63,8 @@ const UNIT_SUFFIX: Record<string, string> = {
 
 @Injectable()
 export class ArticleViewService {
+  private unitCatalog = inject(UnitCatalogService);
+
   emoji(article: Article): string {
     return article.attributes.emoji || FALLBACK_EMOJI;
   }
@@ -74,7 +86,14 @@ export class ArticleViewService {
   }
 
   unitSuffix(article: Article): string {
-    return UNIT_SUFFIX[article.attributes.recipeUnit] ?? "";
+    const baseUnit = article.attributes.baseUnit;
+    if (baseUnit) {
+      return baseUnit;
+    }
+
+    return (
+      LEGACY_UNIT_SUFFIX[article.attributes.recipeUnit] ?? DEFAULT_BASE_UNIT
+    );
   }
 
   servingSize(article: Article): number | null {
@@ -138,6 +157,25 @@ export class ArticleViewService {
       per100Label: `100 ${suffix}`.trim(),
       per100: this.scale(nutrition, 100),
       serving: hasServing ? this.scale(nutrition, servingSize) : null,
+      units: this.units(article, suffix),
+    };
+  }
+
+  private units(article: Article, baseUnit: string): ArticleUnitsView {
+    const equivalences = article.attributes.equivalences ?? [];
+
+    return {
+      baseUnit,
+      recipeUnit: this.unitCatalog.label(
+        article.attributes.recipeUnit ?? baseUnit,
+      ),
+      diaryUnit: this.unitCatalog.label(
+        article.attributes.diaryUnit ?? baseUnit,
+      ),
+      lines: equivalences.map((item) => ({
+        label: `1 ${this.unitCatalog.label(item.unit)}`,
+        detail: `= ${this.number(item.quantity)} ${baseUnit}`,
+      })),
     };
   }
 

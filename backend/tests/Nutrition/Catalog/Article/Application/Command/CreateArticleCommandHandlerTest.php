@@ -2,6 +2,8 @@
 
 namespace App\Tests\Nutrition\Catalog\Article\Application\Command;
 
+use Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceAssembler;
+use Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceData;
 use Nutrition\Catalog\Article\Application\Command\ArticleNutritionData;
 use Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler;
 use Nutrition\Catalog\Article\Application\Command\CreateArticleCommand;
@@ -30,6 +32,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             articleRepository: $this->articleRepository,
             needleDataQuery: $this->needleDataQuery,
             nutritionFactsAssembler: new ArticleNutritionFactsAssembler(dateTimeGenerator: $dateTimeGenerator),
+            equivalenceAssembler: new ArticleEquivalenceAssembler(dateTimeGenerator: $dateTimeGenerator),
             domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -39,7 +42,9 @@ final class CreateArticleCommandHandlerTest extends TestCase
     {
         ($this->handler)(new CreateArticleCommand(
             name: 'Leche entera 1 L',
-            recipeUnit: 'gram',
+            recipeUnit: 'ml',
+            baseUnit: 'ml',
+            diaryUnit: 'vaso',
             servingSize: 30.0,
             price: 1.15,
             brand: 'Hacendado',
@@ -57,12 +62,15 @@ final class CreateArticleCommandHandlerTest extends TestCase
                 fiber: null,
                 salt: 0.1,
             ),
+            equivalences: [],
             createdByUserId: 'god-user-id',
         ));
 
         $article = $this->articleRepository->findById(id: 'article-1');
         $this->assertNotNull(actual: $article);
         $this->assertEquals(expected: 'Leche entera 1 L', actual: $article->name);
+        $this->assertEquals(expected: 'ml', actual: $article->baseUnit);
+        $this->assertEquals(expected: 'vaso', actual: $article->diaryUnit);
         $this->assertEquals(expected: 30.0, actual: $article->servingSize);
         $this->assertEquals(expected: 1.15, actual: $article->price);
         $this->assertEquals(expected: '🥛', actual: $article->emoji);
@@ -76,11 +84,43 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());
     }
 
+    public function testItCreatesAnArticleWithEquivalences(): void
+    {
+        ($this->handler)(new CreateArticleCommand(
+            name: 'Huevos M',
+            recipeUnit: 'unidad',
+            baseUnit: 'g',
+            diaryUnit: 'unidad',
+            servingSize: null,
+            price: null,
+            brand: null,
+            emoji: '🥚',
+            categoryId: null,
+            supermarketId: null,
+            nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
+            equivalences: [
+                new ArticleEquivalenceData(unit: 'unidad', quantity: 60.0, position: 1),
+                new ArticleEquivalenceData(unit: 'docena', quantity: 720.0, position: 2),
+            ],
+            createdByUserId: 'god-user-id',
+        ));
+
+        $article = $this->articleRepository->findById(id: 'article-1');
+        $this->assertNotNull(actual: $article);
+        $this->assertCount(expectedCount: 2, haystack: $article->equivalences);
+        $this->assertEquals(expected: 'unidad', actual: $article->equivalences[0]->unit);
+        $this->assertEquals(expected: 60.0, actual: $article->equivalences[0]->quantity);
+        $this->assertEquals(expected: $article->id, actual: $article->equivalences[0]->articleId);
+        $this->assertEquals(expected: 'docena', actual: $article->equivalences[1]->unit);
+    }
+
     public function testItCreatesAnArticleWithoutRelations(): void
     {
         ($this->handler)(new CreateArticleCommand(
             name: 'Producto suelto',
-            recipeUnit: 'gram',
+            recipeUnit: 'g',
+            baseUnit: 'g',
+            diaryUnit: 'g',
             servingSize: null,
             price: null,
             brand: null,
@@ -88,6 +128,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             categoryId: null,
             supermarketId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
+            equivalences: [],
             createdByUserId: 'god-user-id',
         ));
 
@@ -95,6 +136,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->assertNotNull(actual: $article);
         $this->assertNull(actual: $article->categoryId);
         $this->assertNull(actual: $article->supermarketId);
+        $this->assertSame(expected: [], actual: $article->equivalences);
         $this->assertNotNull(actual: $article->nutritionFactsId);
     }
 
@@ -106,7 +148,9 @@ final class CreateArticleCommandHandlerTest extends TestCase
 
         ($this->handler)(new CreateArticleCommand(
             name: 'Leche entera 1 L',
-            recipeUnit: 'gram',
+            recipeUnit: 'g',
+            baseUnit: 'g',
+            diaryUnit: 'g',
             servingSize: null,
             price: null,
             brand: null,
@@ -114,6 +158,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             categoryId: null,
             supermarketId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
+            equivalences: [],
             createdByUserId: 'god-user-id',
         ));
     }

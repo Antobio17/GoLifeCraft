@@ -7,6 +7,7 @@
     <field name="kind" type="string" column="kind" length="16"/>
     <field name="refId" type="string" column="ref_id" length="36"/>
     <field name="quantity" type="float" column="quantity"/>
+    <field name="unit" type="string" column="unit" length="30" nullable="true"/>
     <field name="position" type="integer" column="position"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>

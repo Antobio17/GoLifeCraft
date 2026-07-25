@@ -5,11 +5,19 @@ namespace Nutrition\Diary\Diary\Domain\QueryModel;
 interface FindArticleDiaryReactionNeedleDataQuery
 {
     /**
-     * Today's product diary entries referencing the given article, with their quantity.
+     * Today's product diary entries referencing the given article, with their quantity and unit.
      *
-     * @return array<int, array{id: string, quantity: float}>
+     * @return array<int, array{id: string, quantity: float, unit: ?string}>
      */
     public function todayProductEntries(string $articleId): array;
+
+    /**
+     * The article's equivalence factors keyed by unit alias (1 alias = factor base units). Base
+     * unit and unknown aliases are absent, so callers resolve them to a factor of 1.
+     *
+     * @return array<string, float>
+     */
+    public function articleEquivalenceFactors(string $articleId): array;
 
     /**
      * The article's reference amount and macros (committed values), used to fill the unchanged
