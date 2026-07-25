@@ -15,6 +15,7 @@
 
   <div
     class="swipe__surface"
+    [class.swipe__surface--slid]="slid"
     [style.transform]="transform"
     [style.transition]="transition"
     (pointerdown)="onPointerDown($event)"

@@ -101,50 +101,51 @@
         @if (hasIngredients) {
           <ds-stack [gap]="'8px'">
             @for (ingredient of ingredients(); track ingredient.key) {
-              <ds-card [padding]="'9px 11px'">
-                <ds-stack direction="row" align="center" [gap]="'10px'">
-                  <ds-emoji-tile [emoji]="ingredient.emoji" [size]="36" />
-                  <ds-stack [gap]="'2px'" [grow]="true">
-                    <ds-stack direction="row" align="center" [gap]="'6px'">
-                      <ds-text variant="strong" [truncate]="true">{{
-                        ingredient.name
-                      }}</ds-text>
-                      @if (ingredient.kind === "recipe") {
-                        <ds-chip tone="brand">{{
-                          "recipeEditor.subRecipe" | t
-                        }}</ds-chip>
-                      }
+              <ds-swipe-to-delete
+                #swipe
+                [reveal]="66"
+                [radius]="16"
+                [removeLabel]="'recipeEditor.removeIngredient' | t"
+                (remove)="onRemoveIngredient(ingredient.key)"
+              >
+                <ds-card [padding]="'9px 11px'">
+                  <ds-stack direction="row" align="center" [gap]="'10px'">
+                    <ds-emoji-tile [emoji]="ingredient.emoji" [size]="36" />
+                    <ds-stack [gap]="'2px'" [grow]="true">
+                      <ds-stack direction="row" align="center" [gap]="'6px'">
+                        <ds-text variant="strong" [truncate]="true">{{
+                          ingredient.name
+                        }}</ds-text>
+                        @if (ingredient.kind === "recipe") {
+                          <ds-chip tone="brand">{{
+                            "recipeEditor.subRecipe" | t
+                          }}</ds-chip>
+                        }
+                      </ds-stack>
+                      <ds-text variant="meta">
+                        {{ ingredientCalories(ingredient) }}
+                        {{ "recipeEditor.macro.kcal" | t }}
+                      </ds-text>
                     </ds-stack>
-                    <ds-text variant="meta">
-                      {{ ingredientCalories(ingredient) }}
-                      {{ "recipeEditor.macro.kcal" | t }}
-                    </ds-text>
+                    <ds-field [width]="'78px'">
+                      <ds-number-input
+                        variant="boxed"
+                        [precision]="1"
+                        [min]="0"
+                        [ngModel]="ingredient.quantity"
+                        [ngModelOptions]="{ standalone: true }"
+                        (ngModelChange)="
+                          onIngredientQuantity(ingredient.key, $event)
+                        "
+                        [ariaLabel]="'recipeEditor.quantity' | t"
+                      />
+                    </ds-field>
+                    <ds-text variant="meta">{{
+                      ingredientUnitLabel(ingredient)
+                    }}</ds-text>
                   </ds-stack>
-                  <ds-field [width]="'78px'">
-                    <ds-number-input
-                      variant="boxed"
-                      [precision]="1"
-                      [min]="0"
-                      [ngModel]="ingredient.quantity"
-                      [ngModelOptions]="{ standalone: true }"
-                      (ngModelChange)="
-                        onIngredientQuantity(ingredient.key, $event)
-                      "
-                      [ariaLabel]="'recipeEditor.quantity' | t"
-                    />
-                  </ds-field>
-                  <ds-text variant="meta">{{
-                    ingredientUnitLabel(ingredient)
-                  }}</ds-text>
-                  <ds-icon-button
-                    icon="close"
-                    variant="danger"
-                    [iconSize]="15"
-                    [ariaLabel]="'recipeEditor.removeIngredient' | t"
-                    (clicked)="onRemoveIngredient(ingredient.key)"
-                  />
-                </ds-stack>
-              </ds-card>
+                </ds-card>
+              </ds-swipe-to-delete>
             }
           </ds-stack>
         } @else {

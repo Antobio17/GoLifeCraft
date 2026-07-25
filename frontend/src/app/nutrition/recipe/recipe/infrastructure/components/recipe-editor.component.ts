@@ -29,6 +29,7 @@ import { NumberInputComponent } from "@shared/design-system/number-input/infrast
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import {
   SegmentedToggleComponent,
@@ -85,6 +86,7 @@ type PickerTab = "product" | "recipe";
     IconButtonComponent,
     AddTileComponent,
     EmojiTileComponent,
+    SwipeToDeleteComponent,
     EmptyStateComponent,
     SegmentedToggleComponent,
     ModalSheetComponent,

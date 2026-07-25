@@ -31,6 +31,11 @@ type CardVariant = "plain" | "brand" | "inset";
         gap: var(--card-gap, 12px);
         padding: var(--card-pad, 16px);
         border-radius: var(--ds-radius-3xl);
+        border-top-right-radius: var(--ds-card-tr-radius, var(--ds-radius-3xl));
+        border-bottom-right-radius: var(
+          --ds-card-br-radius,
+          var(--ds-radius-3xl)
+        );
         background: var(--card-bg, var(--ds-surface));
         border: 1px solid var(--card-border, var(--ds-border-hairline));
         box-shadow: var(--ds-shadow-card);
