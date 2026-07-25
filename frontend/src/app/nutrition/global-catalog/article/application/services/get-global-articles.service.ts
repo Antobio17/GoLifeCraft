@@ -10,12 +10,14 @@ export class GetGlobalArticlesService {
     pageSize: number = 100,
     filterName?: string,
     filterSource?: string,
+    filterCategory?: string,
   ): Observable<GetGlobalArticlesResponse> {
     return this.getGlobalArticlesPort.getGlobalArticles(
       page,
       pageSize,
       filterName,
       filterSource,
+      filterCategory,
     );
   }
 }

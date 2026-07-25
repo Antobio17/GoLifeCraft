@@ -6,6 +6,9 @@ import { HttpImportGlobalArticleAdapter } from "@nutrition/global-catalog/articl
 import { GetGlobalArticlesService } from "@nutrition/global-catalog/article/application/services/get-global-articles.service";
 import { ImportGlobalArticleService } from "@nutrition/global-catalog/article/application/services/import-global-article.service";
 import { GlobalArticleViewService } from "@nutrition/global-catalog/article/application/services/global-article-view.service";
+import { GetGlobalArticleFacetsPort } from "@nutrition/global-catalog/article/domain/ports/get-global-article-facets.port";
+import { HttpGetGlobalArticleFacetsAdapter } from "@nutrition/global-catalog/article/infrastructure/adapters/http-get-global-article-facets.adapter";
+import { GetGlobalArticleFacetsService } from "@nutrition/global-catalog/article/application/services/get-global-article-facets.service";
 
 export class GetGlobalArticlesProviders {
   static getProviders(): Provider[] {
@@ -24,6 +27,16 @@ export class GetGlobalArticlesProviders {
         useFactory: (port: GetGlobalArticlesPort) =>
           new GetGlobalArticlesService(port),
         deps: [GetGlobalArticlesPort],
+      },
+      {
+        provide: GetGlobalArticleFacetsPort,
+        useClass: HttpGetGlobalArticleFacetsAdapter,
+      },
+      {
+        provide: GetGlobalArticleFacetsService,
+        useFactory: (port: GetGlobalArticleFacetsPort) =>
+          new GetGlobalArticleFacetsService(port),
+        deps: [GetGlobalArticleFacetsPort],
       },
       {
         provide: ImportGlobalArticleService,

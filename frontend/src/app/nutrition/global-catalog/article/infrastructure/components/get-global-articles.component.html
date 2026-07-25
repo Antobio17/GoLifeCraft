@@ -21,13 +21,25 @@
       (searched)="onSearch($event)"
     />
 
-    <ds-select
-      [ariaLabel]="'getGlobalArticles.filterSource' | t"
-      [options]="sourceOptions()"
-      [ngModel]="sourceFilter()"
-      [ngModelOptions]="{ standalone: true }"
-      (ngModelChange)="onSourceChange($event)"
-    />
+    <ds-stack direction="row" [gap]="'7px'">
+      <ds-select
+        [fluid]="true"
+        [ariaLabel]="'getGlobalArticles.filterSource' | t"
+        [options]="sourceOptions()"
+        [ngModel]="sourceFilter()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onSourceChange($event)"
+      />
+      <ds-select
+        [fluid]="true"
+        [ariaLabel]="'getGlobalArticles.filterCategory' | t"
+        [placeholder]="'getGlobalArticles.category.all' | t"
+        [options]="categories()"
+        [ngModel]="categoryFilter()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onCategoryChange($event)"
+      />
+    </ds-stack>
 
     <ds-text variant="label">
       {{ "getGlobalArticles.nutritionCaption" | t }}
@@ -43,6 +55,10 @@
       @if (searchQuery()) {
         <ds-text variant="muted">
           {{ "getGlobalArticles.noResults" | t }} “{{ searchQuery() }}”
+        </ds-text>
+      } @else if (categoryFilter()) {
+        <ds-text variant="muted">
+          {{ "getGlobalArticles.category.noResults" | t }}
         </ds-text>
       } @else if (sourceFilter()) {
         <ds-text variant="muted">

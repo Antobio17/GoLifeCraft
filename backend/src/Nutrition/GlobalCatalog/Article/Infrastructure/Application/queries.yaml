@@ -3,3 +3,8 @@ services:
     class: Nutrition\GlobalCatalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetGlobalArticlesNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.master_connection'
+
+  Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticleFacetsNeedleDataQuery:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetGlobalArticleFacetsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'

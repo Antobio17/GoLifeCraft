@@ -7,5 +7,6 @@ export abstract class GetGlobalArticlesPort {
     pageSize?: number,
     filterName?: string,
     filterSource?: string,
+    filterCategory?: string,
   ): Observable<GetGlobalArticlesResponse>;
 }

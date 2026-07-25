@@ -15,6 +15,7 @@ export class HttpGetGlobalArticlesAdapter extends GetGlobalArticlesPort {
     pageSize: number = 100,
     filterName?: string,
     filterSource?: string,
+    filterCategory?: string,
   ): Observable<GetGlobalArticlesResponse> {
     let params = new HttpParams()
       .set("page[number]", page.toString())
@@ -26,6 +27,10 @@ export class HttpGetGlobalArticlesAdapter extends GetGlobalArticlesPort {
 
     if (filterSource) {
       params = params.set("filter[source]", filterSource);
+    }
+
+    if (filterCategory) {
+      params = params.set("filter[category]", filterCategory);
     }
 
     return this.http.get<GetGlobalArticlesResponse>(this.apiUrl, { params });

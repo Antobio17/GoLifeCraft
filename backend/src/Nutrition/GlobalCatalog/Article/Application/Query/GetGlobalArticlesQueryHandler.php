@@ -21,11 +21,13 @@ final readonly class GetGlobalArticlesQueryHandler
                 pageNumber: $query->pageNumber,
                 filterName: $query->filterName,
                 filterSource: $query->filterSource,
+                filterCategory: $query->filterCategory,
                 orderBy: $query->orderBy,
             ),
             total: $this->needleDataQuery->totalGlobalArticles(
                 filterName: $query->filterName,
                 filterSource: $query->filterSource,
+                filterCategory: $query->filterCategory,
             ),
             pageNumber: $query->pageNumber,
             pageSize: $query->pageSize,

@@ -94,7 +94,7 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   protected readonly storageKey = "pageSize_exercises";
 
   searchQuery = signal("");
-  view = signal<LibraryView>("list");
+  view = signal<LibraryView>("grouped");
 
   reloading = signal(false);
   loadingMore = signal(false);
@@ -104,8 +104,8 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   isDeleting = signal(false);
 
   viewOptions = computed<SegmentedOption[]>(() => [
-    { value: "list", label: this.t("getExercises.view.list") },
     { value: "grouped", label: this.t("getExercises.view.grouped") },
+    { value: "list", label: this.t("getExercises.view.list") },
   ]);
 
   headerSubtitle = computed(() => {
@@ -141,7 +141,7 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
 
   protected configureList(): void {
     this.currentPage.set(1);
-    this.pageSize.set(GetExercisesComponent.LIST_PAGE_SIZE);
+    this.pageSize.set(GetExercisesComponent.GROUPED_PAGE_SIZE);
   }
 
   protected fetch(

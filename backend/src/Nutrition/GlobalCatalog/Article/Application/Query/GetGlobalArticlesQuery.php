@@ -11,6 +11,7 @@ final readonly class GetGlobalArticlesQuery implements Query
         public int $pageSize,
         public ?string $filterName = null,
         public ?string $filterSource = null,
+        public ?string $filterCategory = null,
         public ?string $orderBy = null,
     ) {
     }

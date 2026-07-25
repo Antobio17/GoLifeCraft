@@ -10,6 +10,7 @@ import {
   GlobalArticleViewService,
 } from "@nutrition/global-catalog/article/application/services/global-article-view.service";
 import { GetGlobalArticlesService } from "@nutrition/global-catalog/article/application/services/get-global-articles.service";
+import { GetGlobalArticleFacetsService } from "@nutrition/global-catalog/article/application/services/get-global-article-facets.service";
 import { ImportGlobalArticleService } from "@nutrition/global-catalog/article/application/services/import-global-article.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
@@ -19,6 +20,7 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
@@ -42,6 +44,7 @@ import {
     NoteComponent,
     SearchInputComponent,
     GridComponent,
+    StackComponent,
     EmptyStateComponent,
     SkeletonComponent,
     TextComponent,
@@ -52,6 +55,7 @@ import {
 })
 export class GetGlobalArticlesComponent extends AbstractListPageComponent<GlobalArticle> {
   private getGlobalArticlesService = inject(GetGlobalArticlesService);
+  private getGlobalArticleFacetsService = inject(GetGlobalArticleFacetsService);
   private importGlobalArticleService = inject(ImportGlobalArticleService);
   private floatingToastService = inject(FloatingToastService);
   private authSession = inject(AuthSessionService);
@@ -63,6 +67,8 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
 
   searchQuery = signal("");
   sourceFilter = signal<string>(GlobalArticleSource.Mercadona);
+  categoryFilter = signal("");
+  categories = signal<string[]>([]);
   reloading = signal(false);
   loadingMore = signal(false);
   importedIds = signal<Set<string>>(new Set());
@@ -97,6 +103,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
   protected configureList(): void {
     this.currentPage.set(1);
     this.pageSize.set(20);
+    this.loadCategories();
   }
 
   protected fetch(
@@ -108,6 +115,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
       pageSize,
       this.searchQuery().trim() || undefined,
       this.sourceFilter() || undefined,
+      this.categoryFilter() || undefined,
     );
   }
 
@@ -147,7 +155,23 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
     if (source === this.sourceFilter()) return;
 
     this.sourceFilter.set(source);
+    this.categoryFilter.set("");
+    this.loadCategories();
     this.reloadFirstPage();
+  }
+
+  onCategoryChange(category: string): void {
+    if (category === this.categoryFilter()) return;
+
+    this.categoryFilter.set(category);
+    this.reloadFirstPage();
+  }
+
+  private loadCategories(): void {
+    this.getGlobalArticleFacetsService
+      .getGlobalArticleFacets(this.sourceFilter() || undefined)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((facets) => this.categories.set(facets.categories));
   }
 
   private reloadFirstPage(): void {

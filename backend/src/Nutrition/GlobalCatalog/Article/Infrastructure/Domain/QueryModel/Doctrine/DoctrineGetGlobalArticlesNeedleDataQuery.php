@@ -18,9 +18,10 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
         int $pageNumber,
         ?string $filterName = null,
         ?string $filterSource = null,
+        ?string $filterCategory = null,
         ?string $orderBy = null,
     ): array {
-        $qb = $this->getBaseQuery(filterName: $filterName, filterSource: $filterSource)
+        $qb = $this->getBaseQuery(filterName: $filterName, filterSource: $filterSource, filterCategory: $filterCategory)
             ->select(
                 't.id',
                 't.barcode',
@@ -85,15 +86,19 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
     public function totalGlobalArticles(
         ?string $filterName = null,
         ?string $filterSource = null,
+        ?string $filterCategory = null,
     ): int {
-        return (int) $this->getBaseQuery(filterName: $filterName, filterSource: $filterSource)
+        return (int) $this->getBaseQuery(filterName: $filterName, filterSource: $filterSource, filterCategory: $filterCategory)
             ->select('COUNT(*)')
             ->executeQuery()
             ->fetchOne();
     }
 
-    private function getBaseQuery(?string $filterName = null, ?string $filterSource = null): QueryBuilder
-    {
+    private function getBaseQuery(
+        ?string $filterName = null,
+        ?string $filterSource = null,
+        ?string $filterCategory = null,
+    ): QueryBuilder {
         $qb = $this->connection->createQueryBuilder()
             ->from(table: 'global_article', alias: 't');
 
@@ -105,6 +110,11 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
         if (null !== $filterSource) {
             $qb->andWhere('t.source = :source')
                 ->setParameter(key: 'source', value: $filterSource);
+        }
+
+        if (null !== $filterCategory) {
+            $qb->andWhere('t.category_name = :category')
+                ->setParameter(key: 'category', value: $filterCategory);
         }
 
         return $qb;

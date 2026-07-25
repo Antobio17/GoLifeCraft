@@ -5,3 +5,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\GetGlobalArticleFacetsController:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\GetGlobalArticleFacetsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

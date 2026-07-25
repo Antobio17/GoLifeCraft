@@ -7,5 +7,12 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
+  Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleFacetsQueryHandler:
+    class: Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleFacetsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticleFacetsNeedleDataQuery'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesDataTransform:
     class: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\DataTransform\ApiGetGlobalArticlesDataTransform

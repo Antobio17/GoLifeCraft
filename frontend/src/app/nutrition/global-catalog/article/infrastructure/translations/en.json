@@ -10,11 +10,16 @@
     "searchPlaceholder": "Search product or brand…",
     "searchClear": "Clear search",
     "filterSource": "Filter by source",
+    "filterCategory": "Filter by category",
     "nutritionCaption": "Values per 100 g",
     "noResults": "No results for",
     "source": {
       "all": "All",
       "noResults": "No products from this source"
+    },
+    "category": {
+      "all": "All categories",
+      "noResults": "No products in this category"
     },
     "macro": {
       "kcal": "kcal",

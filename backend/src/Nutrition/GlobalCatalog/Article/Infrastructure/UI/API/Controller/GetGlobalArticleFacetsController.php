@@ -2,7 +2,8 @@
 
 namespace Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller;
 
-use Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesQuery;
+use Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleFacetsQuery;
+use Nutrition\GlobalCatalog\Article\Domain\QueryModel\Dto\GetGlobalArticleFacetsResult;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +12,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class GetGlobalArticlesController
+final class GetGlobalArticleFacetsController
 {
     use HandleTrait;
 
@@ -24,16 +25,16 @@ final class GetGlobalArticlesController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            return JsonResponseBuilder::buildCollectionResponse(
-                queryCollectionResult: $this->handle(message: new GetGlobalArticlesQuery(
-                    pageNumber: RequestExtractor::getPageNumber(request: $request),
-                    pageSize: RequestExtractor::getPageSize(request: $request),
-                    filterName: RequestExtractor::getFilterParam(request: $request, filterName: 'name'),
-                    filterSource: RequestExtractor::getFilterParam(request: $request, filterName: 'source'),
-                    filterCategory: RequestExtractor::getFilterParam(request: $request, filterName: 'category'),
-                    orderBy: RequestExtractor::getOrderByParam(request: $request),
-                )),
-            );
+            /** @var GetGlobalArticleFacetsResult $result */
+            $result = $this->handle(message: new GetGlobalArticleFacetsQuery(
+                filterSource: RequestExtractor::getFilterParam(request: $request, filterName: 'source'),
+            ));
+
+            return new JsonResponse(data: [
+                'data' => [
+                    'categories' => $result->categories,
+                ],
+            ]);
         } catch (HandlerFailedException $e) {
             return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
                 exception: $e,
