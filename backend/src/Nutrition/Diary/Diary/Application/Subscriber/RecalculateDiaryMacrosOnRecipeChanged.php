@@ -24,7 +24,7 @@ final readonly class RecalculateDiaryMacrosOnRecipeChanged implements DomainEven
             return;
         }
 
-        foreach ($this->impactedEntries->findTodayImpactedEntryIds(changedRefId: $event->aggregateId) as $entryId) {
+        foreach ($this->impactedEntries->findUpcomingImpactedEntryIds(changedRefId: $event->aggregateId) as $entryId) {
             $this->messageBus->dispatch(new RecalculateDiaryEntryMacrosCommand(diaryEntryId: $entryId));
         }
     }

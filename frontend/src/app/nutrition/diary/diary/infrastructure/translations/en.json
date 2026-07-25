@@ -6,7 +6,8 @@
     "quantity": "Quantity",
     "remove": "Remove",
     "summary": {
-      "total": "DAILY TOTAL"
+      "total": "DAILY TOTAL",
+      "planned": "PLANNED TOTAL"
     },
     "badge": {
       "product": "ARTICLE",
@@ -42,7 +43,7 @@
     "calendar": {
       "open": "Open calendar",
       "title": "Calendar",
-      "subtitle": "Tap a day to open its diary",
+      "subtitle": "Tap a day to open it; future days can be planned",
       "close": "Close",
       "previous": "Previous month",
       "next": "Next month",
@@ -50,11 +51,14 @@
         "green": "Goal met",
         "orange": "Close to goal",
         "red": "Off goal",
-        "rest": "No records"
+        "rest": "No records",
+        "planned": "Planned",
+        "unplanned": "Not planned"
       },
       "toast": {
         "today": "Today's diary",
-        "viewing": "Viewing"
+        "viewing": "Viewing",
+        "planning": "Planning"
       }
     },
     "goal": {
@@ -78,7 +82,8 @@
       "toast": {
         "saved": "Goal updated",
         "savedDay": "Day goal updated"
-      }
+      },
+      "upcomingScope": "Changing the goal affects today and any future day you have planned. Past days keep their own."
     },
     "empty": "No food logged",
     "emptyAction": "No food yet, add one with the + button",

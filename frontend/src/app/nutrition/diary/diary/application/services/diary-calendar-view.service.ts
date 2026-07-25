@@ -53,12 +53,15 @@ export class DiaryCalendarViewService {
     return "red";
   }
 
-  legend(labels: Record<DiaryCalendarStatus, string>): CalendarLegendItem[] {
+  legend(
+    labels: Record<DiaryCalendarStatus | "planned", string>,
+  ): CalendarLegendItem[] {
     return [
       { status: "green", label: labels.green },
       { status: "orange", label: labels.orange },
       { status: "red", label: labels.red },
       { status: "rest", label: labels.rest },
+      { status: "future", label: labels.planned },
     ];
   }
 
@@ -84,16 +87,17 @@ export class DiaryCalendarViewService {
     for (let day = 1; day <= daysInMonth; day++) {
       const date = this.toIso(year, monthNumber, day);
       const isFuture = date > todayIso;
-      const status = this.resolveStatus(statusByDate[date], isFuture);
+      const status = statusByDate[date];
 
       cells.push({
         key: `d${date}`,
         day,
         date,
-        status,
+        status: this.resolveStatus(status, isFuture),
         isToday: date === todayIso,
         isSelected: date === selectedDate,
-        disabled: isFuture,
+        planned: isFuture && status !== undefined,
+        disabled: false,
       });
     }
 
@@ -104,9 +108,9 @@ export class DiaryCalendarViewService {
     status: DiaryCalendarStatus | undefined,
     isFuture: boolean,
   ): CalendarDayStatus {
-    if (isFuture) return "future";
+    if (status) return status;
 
-    return status ?? "rest";
+    return isFuture ? "future" : "rest";
   }
 
   private indexByDate(
@@ -126,6 +130,7 @@ export class DiaryCalendarViewService {
       status: "rest",
       isToday: false,
       isSelected: false,
+      planned: false,
       disabled: true,
     };
   }

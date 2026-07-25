@@ -5,11 +5,12 @@ namespace Nutrition\Diary\Diary\Domain\QueryModel;
 interface FindArticleDiaryReactionNeedleDataQuery
 {
     /**
-     * Today's product diary entries referencing the given article, with their quantity and unit.
+     * Product diary entries from today onwards referencing the given article, with their quantity
+     * and unit. Past days keep the snapshot they were closed with.
      *
      * @return array<int, array{id: string, quantity: float, unit: ?string}>
      */
-    public function todayProductEntries(string $articleId): array;
+    public function upcomingProductEntries(string $articleId): array;
 
     /**
      * The article's equivalence factors keyed by unit alias (1 alias = factor base units). Base

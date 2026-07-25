@@ -3,3 +3,8 @@ services:
     class: Nutrition\Diary\Goal\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDiaryGoalNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Diary\Goal\Domain\QueryModel\FindUpcomingDiaryGoalDaysNeedleDataQuery:
+    class: Nutrition\Diary\Goal\Infrastructure\Domain\QueryModel\Doctrine\DoctrineFindUpcomingDiaryGoalDaysNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'

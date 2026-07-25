@@ -65,7 +65,6 @@
         [iconSize]="16"
         [stroke]="2.4"
         [radius]="'10px'"
-        [disabled]="!canGoNext()"
         [ariaLabel]="'getDiary.nav.next' | t"
         (clicked)="nextDay()"
       />
@@ -78,12 +77,14 @@
     <ds-skeleton height="120px" />
   } @else if (attributes(); as diary) {
     <ds-diary-summary
-      [eyebrow]="'getDiary.summary.total' | t"
-      [countLabel]="view.countLabel(diary.entryCount)"
+      [eyebrow]="summaryEyebrowKey() | t"
+      [countLabel]="view.countLabel(diary.entryCount, planningDay())"
       [percent]="diary.percent"
       [consumed]="view.integer(diary.consumedCalories)"
       [goal]="view.integer(diary.goalCalories)"
-      [footnote]="view.remainingFootnote(diary.remainingCalories)"
+      [footnote]="
+        view.remainingFootnote(diary.remainingCalories, planningDay())
+      "
       [macros]="view.goalMacros(diary)"
     />
 
@@ -312,8 +313,10 @@
     <ds-stack [gap]="'18px'">
       <ds-text variant="meta">{{ goalSubtitle() }}</ds-text>
 
-      @if (editingPastDay()) {
+      @if (pastDay()) {
         <ds-note icon="info">{{ "getDiary.goal.dayScope" | t }}</ds-note>
+      } @else {
+        <ds-note icon="info">{{ "getDiary.goal.upcomingScope" | t }}</ds-note>
       }
 
       <ds-stack [gap]="'8px'">

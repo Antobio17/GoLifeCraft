@@ -34,13 +34,13 @@ final readonly class RecalculateDiaryMacrosOnModelWritten implements DomainEvent
         }
 
         if (self::ALIAS_RECIPE === $event->entityAlias) {
-            $this->dispatchForEntryIds(entryIds: $this->impactedEntries->findTodayImpactedEntryIds(changedRefId: $event->aggregateId));
+            $this->dispatchForEntryIds(entryIds: $this->impactedEntries->findUpcomingImpactedEntryIds(changedRefId: $event->aggregateId));
 
             return;
         }
 
         if (self::ALIAS_RECIPE_INGREDIENT === $event->entityAlias && isset($event->entitySnapshot['recipeId'])) {
-            $this->dispatchForEntryIds(entryIds: $this->impactedEntries->findTodayImpactedEntryIds(changedRefId: (string) $event->entitySnapshot['recipeId']));
+            $this->dispatchForEntryIds(entryIds: $this->impactedEntries->findUpcomingImpactedEntryIds(changedRefId: (string) $event->entitySnapshot['recipeId']));
         }
     }
 

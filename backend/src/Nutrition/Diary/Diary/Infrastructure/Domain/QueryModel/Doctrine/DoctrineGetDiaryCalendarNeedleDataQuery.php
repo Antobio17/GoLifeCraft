@@ -34,7 +34,6 @@ final readonly class DoctrineGetDiaryCalendarNeedleDataQuery implements GetDiary
 
         $snapshots = $this->fetchGoalSnapshots(firstDay: $firstDay, lastDay: $lastDay);
         $currentGoalCalories = $this->currentGoalCalories();
-        $today = $this->today();
 
         $consumedByDate = [];
         $countByDate = [];
@@ -48,12 +47,7 @@ final readonly class DoctrineGetDiaryCalendarNeedleDataQuery implements GetDiary
 
         $days = [];
         foreach ($consumedByDate as $date => $consumed) {
-            $goalCalories = $this->goalCaloriesFor(
-                date: $date,
-                today: $today,
-                snapshots: $snapshots,
-                currentGoalCalories: $currentGoalCalories,
-            );
+            $goalCalories = $snapshots[$date] ?? $currentGoalCalories;
             $ratio = $goalCalories > 0 ? $consumed / $goalCalories : 0.0;
 
             $days[] = new DiaryCalendarDay(
@@ -97,18 +91,6 @@ final readonly class DoctrineGetDiaryCalendarNeedleDataQuery implements GetDiary
         }
 
         return DiaryCalendarDay::STATUS_RED;
-    }
-
-    /**
-     * @param array<string, float> $snapshots
-     */
-    private function goalCaloriesFor(string $date, string $today, array $snapshots, float $currentGoalCalories): float
-    {
-        if ($date < $today && isset($snapshots[$date])) {
-            return $snapshots[$date];
-        }
-
-        return $currentGoalCalories;
     }
 
     /**
@@ -162,11 +144,5 @@ final readonly class DoctrineGetDiaryCalendarNeedleDataQuery implements GetDiary
         }
 
         return 2100.0;
-    }
-
-    private function today(): string
-    {
-        return (new \DateTime(datetime: 'now', timezone: new \DateTimeZone(timezone: 'Europe/Madrid')))
-            ->format(format: 'Y-m-d');
     }
 }

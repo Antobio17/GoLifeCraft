@@ -52,6 +52,10 @@ class DiaryGoal extends GenericAggregate
             protein: $protein,
             fat: $fat,
             carbs: $carbs,
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $createdByUserId,
+            updatedByUserId: $createdByUserId,
         ));
 
         return $goal;
@@ -85,6 +89,10 @@ class DiaryGoal extends GenericAggregate
             protein: $protein,
             fat: $fat,
             carbs: $carbs,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
         ));
     }
 

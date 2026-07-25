@@ -19,12 +19,12 @@ final readonly class DoctrineFindImpactedDiaryEntriesNeedleDataQuery implements 
     ) {
     }
 
-    public function findTodayImpactedEntryIds(string $changedRefId): array
+    public function findUpcomingImpactedEntryIds(string $changedRefId): array
     {
         return $this->entryIdsImpactedByRefs(baseRefIds: [$changedRefId]);
     }
 
-    public function findTodayImpactedEntryIdsForNutritionFacts(string $nutritionFactsId): array
+    public function findUpcomingImpactedEntryIdsForNutritionFacts(string $nutritionFactsId): array
     {
         $articleIds = $this->connection->createQueryBuilder()
             ->select('a.id')
@@ -59,7 +59,7 @@ final readonly class DoctrineFindImpactedDiaryEntriesNeedleDataQuery implements 
         return $this->connection->createQueryBuilder()
             ->select('e.id')
             ->from(table: 'diary_entry', alias: 'e')
-            ->where('e.entry_date = :date')
+            ->where('e.entry_date >= :date')
             ->andWhere('e.ref_id IN (:refIds)')
             ->setParameter(key: 'date', value: $this->today())
             ->setParameter(key: 'refIds', value: $impactedRefIds, type: ArrayParameterType::STRING)

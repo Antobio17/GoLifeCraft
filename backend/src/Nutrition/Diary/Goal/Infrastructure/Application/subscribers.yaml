@@ -5,3 +5,11 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.diary_entry.created' }
+
+  Nutrition\Diary\Goal\Application\Subscriber\SyncDiaryGoalDaysOnDiaryGoalConfigured:
+    class: Nutrition\Diary\Goal\Application\Subscriber\SyncDiaryGoalDaysOnDiaryGoalConfigured
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $upcomingGoalDays: '@Nutrition\Diary\Goal\Domain\QueryModel\FindUpcomingDiaryGoalDaysNeedleDataQuery'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.diary_goal.configured' }

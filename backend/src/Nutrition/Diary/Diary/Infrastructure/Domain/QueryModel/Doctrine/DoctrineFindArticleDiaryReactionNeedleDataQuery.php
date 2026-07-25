@@ -15,12 +15,12 @@ final readonly class DoctrineFindArticleDiaryReactionNeedleDataQuery implements 
     ) {
     }
 
-    public function todayProductEntries(string $articleId): array
+    public function upcomingProductEntries(string $articleId): array
     {
         $rows = $this->connection->createQueryBuilder()
             ->select('e.id', 'e.quantity', 'e.unit')
             ->from(table: 'diary_entry', alias: 'e')
-            ->where('e.entry_date = :date')
+            ->where('e.entry_date >= :date')
             ->andWhere('e.kind = :kind')
             ->andWhere('e.ref_id = :articleId')
             ->setParameter(key: 'date', value: $this->today())

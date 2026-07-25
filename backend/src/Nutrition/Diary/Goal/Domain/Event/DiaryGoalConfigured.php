@@ -13,6 +13,10 @@ final readonly class DiaryGoalConfigured extends DomainEvent
         public float $protein,
         public float $fat,
         public float $carbs,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

@@ -156,7 +156,11 @@ export class GetDiaryComponent implements OnInit {
   pickerTabs = signal<SegmentedOption[]>([]);
 
   attributes = computed(() => this.day()?.attributes ?? null);
-  canGoNext = computed(() => !this.view.isToday(this.date()));
+  planningDay = computed(() => this.view.isFuture(this.date()));
+  pastDay = computed(() => this.view.isPast(this.date()));
+  summaryEyebrowKey = computed(() =>
+    this.planningDay() ? "getDiary.summary.planned" : "getDiary.summary.total",
+  );
 
   quickForm = signal<QuickDiaryEntryForm>(this.quickForms.empty());
   quickEditingId = signal<string | null>(null);
@@ -214,7 +218,14 @@ export class GetDiaryComponent implements OnInit {
     const status = this.dayStatus();
     if (!status) return "";
 
-    return this.t(`getDiary.calendar.legend.${status}`);
+    if (!this.planningDay())
+      return this.t(`getDiary.calendar.legend.${status}`);
+
+    return this.t(
+      status === "rest"
+        ? "getDiary.calendar.legend.unplanned"
+        : "getDiary.calendar.legend.planned",
+    );
   });
 
   goalSheetOpen = signal(false);
@@ -232,12 +243,11 @@ export class GetDiaryComponent implements OnInit {
     carbsPct: 0,
   });
 
-  editingPastDay = computed(() => !this.view.isToday(this.date()));
   goalTitleKey = computed(() =>
-    this.editingPastDay() ? "getDiary.goal.titleDay" : "getDiary.goal.title",
+    this.pastDay() ? "getDiary.goal.titleDay" : "getDiary.goal.title",
   );
   goalSubtitle = computed(() =>
-    this.editingPastDay()
+    this.pastDay()
       ? this.view.dateLine(this.date())
       : this.t("getDiary.goal.subtitle"),
   );
@@ -287,6 +297,7 @@ export class GetDiaryComponent implements OnInit {
             orange: this.t("getDiary.calendar.legend.orange"),
             red: this.t("getDiary.calendar.legend.red"),
             rest: this.t("getDiary.calendar.legend.rest"),
+            planned: this.t("getDiary.calendar.legend.planned"),
           }),
         );
         this.loadChoices();
@@ -314,8 +325,6 @@ export class GetDiaryComponent implements OnInit {
   }
 
   nextDay(): void {
-    if (!this.canGoNext()) return;
-
     this.load(this.view.addDays(this.date(), 1));
   }
 
@@ -351,12 +360,16 @@ export class GetDiaryComponent implements OnInit {
 
   onCalendarDay(date: string): void {
     this.calendarOpen.set(false);
-    this.toast(
-      this.view.isToday(date)
-        ? "getDiary.calendar.toast.today"
-        : "getDiary.calendar.toast.viewing",
-    );
+    this.toast(this.calendarDayToastKey(date));
     this.load(date);
+  }
+
+  private calendarDayToastKey(date: string): string {
+    if (this.view.isToday(date)) return "getDiary.calendar.toast.today";
+
+    if (this.view.isFuture(date)) return "getDiary.calendar.toast.planning";
+
+    return "getDiary.calendar.toast.viewing";
   }
 
   private loadCalendar(): void {
@@ -529,7 +542,7 @@ export class GetDiaryComponent implements OnInit {
     if (!this.goalValid() || this.goalSaving()) return;
 
     const config = this.goalForm.toConfig(this.goal());
-    const request$ = this.editingPastDay()
+    const request$ = this.pastDay()
       ? this.setDiaryGoalDayService.setDiaryGoalDay(this.date(), config)
       : this.updateDiaryGoalService.updateDiaryGoal(config);
 
@@ -540,7 +553,7 @@ export class GetDiaryComponent implements OnInit {
         this.goalSaving.set(false);
         this.goalSheetOpen.set(false);
         this.toast(
-          this.editingPastDay()
+          this.pastDay()
             ? "getDiary.goal.toast.savedDay"
             : "getDiary.goal.toast.saved",
         );

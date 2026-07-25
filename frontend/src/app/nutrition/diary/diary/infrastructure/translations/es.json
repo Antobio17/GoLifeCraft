@@ -6,7 +6,8 @@
     "quantity": "Cantidad",
     "remove": "Eliminar",
     "summary": {
-      "total": "TOTAL DEL DÍA"
+      "total": "TOTAL DEL DÍA",
+      "planned": "TOTAL PLANIFICADO"
     },
     "badge": {
       "product": "ARTÍCULO",
@@ -42,7 +43,7 @@
     "calendar": {
       "open": "Abrir calendario",
       "title": "Calendario",
-      "subtitle": "Toca un día para abrir su diario",
+      "subtitle": "Toca un día para abrirlo; los futuros los puedes planificar",
       "close": "Cerrar",
       "previous": "Mes anterior",
       "next": "Mes siguiente",
@@ -50,11 +51,14 @@
         "green": "Objetivo cumplido",
         "orange": "Cerca del objetivo",
         "red": "Fuera de objetivo",
-        "rest": "Sin registros"
+        "rest": "Sin registros",
+        "planned": "Planificado",
+        "unplanned": "Sin planificar"
       },
       "toast": {
         "today": "Diario de hoy",
-        "viewing": "Viendo"
+        "viewing": "Viendo",
+        "planning": "Planificando"
       }
     },
     "goal": {
@@ -78,7 +82,8 @@
       "toast": {
         "saved": "Objetivo actualizado",
         "savedDay": "Objetivo del día actualizado"
-      }
+      },
+      "upcomingScope": "Cambiar el objetivo afecta al día de hoy y a los días futuros que hayas planificado. Los días pasados conservan el suyo."
     },
     "empty": "Sin alimentos registrados",
     "emptyAction": "Sin alimentos, añade uno desde el botón +",

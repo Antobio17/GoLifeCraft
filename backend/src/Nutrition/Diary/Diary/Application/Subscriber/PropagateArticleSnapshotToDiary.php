@@ -104,7 +104,7 @@ final readonly class PropagateArticleSnapshotToDiary implements DomainEventSubsc
         $perUnit = $referenceAmount > 0 ? $raw->scale(factor: 1 / $referenceAmount) : MacroBreakdown::zero();
         $factors = $this->needle->articleEquivalenceFactors(articleId: $articleId);
 
-        foreach ($this->needle->todayProductEntries(articleId: $articleId) as $entry) {
+        foreach ($this->needle->upcomingProductEntries(articleId: $articleId) as $entry) {
             $unit = $entry['unit'] ?? null;
             $factor = empty($unit) ? 1.0 : ($factors[$unit] ?? 1.0);
             $macros = $perUnit->scale(factor: $entry['quantity'] * $factor);

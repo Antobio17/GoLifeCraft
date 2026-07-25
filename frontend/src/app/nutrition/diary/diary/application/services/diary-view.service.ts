@@ -26,6 +26,14 @@ export class DiaryViewService {
     return iso === this.todayIso();
   }
 
+  isFuture(iso: string): boolean {
+    return iso > this.todayIso();
+  }
+
+  isPast(iso: string): boolean {
+    return iso < this.todayIso();
+  }
+
   dateLine(iso: string): string {
     const date = this.parse(iso);
     const weekday = new Intl.DateTimeFormat("es-ES", {
@@ -71,11 +79,15 @@ export class DiaryViewService {
     ];
   }
 
-  countLabel(count: number): string {
+  countLabel(count: number, planning = false): string {
+    if (planning) return `${count} ${count === 1 ? "plato" : "platos"}`;
+
     return `${count} ${count === 1 ? "registro" : "registros"}`;
   }
 
-  remainingFootnote(remaining: number): string {
+  remainingFootnote(remaining: number, planning = false): string {
+    if (planning) return `kcal · faltan ${this.integer(remaining)}`;
+
     return `kcal · quedan ${this.integer(remaining)}`;
   }
 

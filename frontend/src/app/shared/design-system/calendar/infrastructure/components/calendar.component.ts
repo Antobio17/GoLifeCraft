@@ -9,6 +9,7 @@ export interface CalendarCell {
   status: CalendarDayStatus;
   isToday: boolean;
   isSelected: boolean;
+  planned: boolean;
   disabled: boolean;
 }
 
@@ -82,6 +83,8 @@ export interface CalendarLegendItem {
               [class.ds-cal__cell--orange]="cell.status === 'orange'"
               [class.ds-cal__cell--red]="cell.status === 'red'"
               [class.ds-cal__cell--rest]="cell.status === 'rest'"
+              [class.ds-cal__cell--future]="cell.status === 'future'"
+              [class.ds-cal__cell--planned]="cell.planned"
               [class.ds-cal__cell--today]="cell.isToday"
               [class.ds-cal__cell--selected]="cell.isSelected"
               [disabled]="cell.disabled"
@@ -103,6 +106,7 @@ export interface CalendarLegendItem {
                 [class.ds-cal__swatch--orange]="item.status === 'orange'"
                 [class.ds-cal__swatch--red]="item.status === 'red'"
                 [class.ds-cal__swatch--rest]="item.status === 'rest'"
+                [class.ds-cal__swatch--future]="item.status === 'future'"
               ></span>
               <span class="ds-cal__legend-label">{{ item.label }}</span>
             </span>
@@ -221,6 +225,15 @@ export interface CalendarLegendItem {
         background: var(--ds-cal-red);
         color: #fff;
       }
+      .ds-cal__cell--future {
+        border-style: dashed;
+        border-color: var(--ds-border);
+        color: var(--ds-text-muted);
+      }
+      .ds-cal__cell--planned {
+        border-style: dashed;
+        border-color: rgba(255, 255, 255, 0.75);
+      }
       .ds-cal__cell--today {
         font-weight: var(--ds-weight-bold);
         border-color: var(--ds-primary);
@@ -261,6 +274,10 @@ export interface CalendarLegendItem {
       }
       .ds-cal__swatch--red {
         background: var(--ds-cal-red);
+      }
+      .ds-cal__swatch--future {
+        background: transparent;
+        border: 1.5px dashed var(--ds-border);
       }
       .ds-cal__legend-label {
         font-size: 11.5px;
