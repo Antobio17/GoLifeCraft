@@ -26,11 +26,21 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#F6F2E9" />
+    <meta name="theme-color" content="#f6f2e9" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="GoLifeCraft" />
+    <script>
+      (function () {
+        var theme =
+          localStorage.getItem("app-theme") === "dark" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute("content", theme === "dark" ? "#0e100d" : "#f6f2e9");
+      })();
+    </script>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -50,6 +60,13 @@
       html {
         -webkit-text-size-adjust: 100%;
         text-size-adjust: 100%;
+        color-scheme: light;
+        background-color: #f6f2e9;
+      }
+
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        background-color: #0e100d;
       }
 
       * {

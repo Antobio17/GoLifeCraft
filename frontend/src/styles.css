@@ -22,7 +22,7 @@ body.ds-scroll-locked {
 }
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
   --scrollbar-size: 10px;
   --scrollbar-thumb: rgba(27, 26, 21, 0.22);
@@ -31,6 +31,8 @@ body.ds-scroll-locked {
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
+
   --scrollbar-thumb: rgba(243, 246, 236, 0.18);
   --scrollbar-thumb-hover: rgba(243, 246, 236, 0.32);
 }

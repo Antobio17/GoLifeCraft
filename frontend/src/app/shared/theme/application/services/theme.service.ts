@@ -2,6 +2,8 @@ import { computed, signal } from "@angular/core";
 import {
   DEFAULT_THEME,
   Theme,
+  THEME_COLOR_DARK,
+  THEME_COLOR_LIGHT,
   THEME_STORAGE_KEY,
 } from "../../domain/models/theme.model";
 import { UpdateThemePort } from "../../domain/ports/update-theme.port";
@@ -27,21 +29,27 @@ export class ThemeService {
 
   private apply(theme: Theme): void {
     this.theme.set(theme);
+    this.paint(theme);
+  }
+
+  private paint(theme: Theme): void {
     document.documentElement.setAttribute("data-theme", theme);
 
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute(
-        "content",
-        theme === "dark" ? "#0e100d" : "#f6f2e9",
-      );
+    if (!metaThemeColor) {
+      return;
     }
+
+    metaThemeColor.setAttribute(
+      "content",
+      theme === "dark" ? THEME_COLOR_DARK : THEME_COLOR_LIGHT,
+    );
   }
 
   private loadInitialTheme(): Theme {
     const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
     const initial = stored ?? DEFAULT_THEME;
-    document.documentElement.setAttribute("data-theme", initial);
+    this.paint(initial);
     return initial;
   }
 }
