@@ -8,7 +8,6 @@ import {
   FormsModule,
 } from "@angular/forms";
 import { forkJoin } from "rxjs";
-import { delay, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -273,11 +272,6 @@ export class RecipeEditorComponent implements OnInit {
     );
     this.ingredients.update((list) => [...list, ingredient]);
     this.pickerOpen.set(false);
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation: "recipe.ingredient.added",
-      details: [],
-    });
   }
 
   onSubmit(): void {
@@ -302,24 +296,13 @@ export class RecipeEditorComponent implements OnInit {
       ? this.updateRecipeService.updateRecipe(this.id, payload)
       : this.createRecipeService.createRecipe(payload);
 
-    request$
-      .pipe(
-        tap(() => {
-          this.saving.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: this.isEdit
-              ? "recipe.update.success"
-              : "recipe.create.success",
-            details: [],
-          });
-        }),
-        delay(900),
-      )
-      .subscribe({
-        next: () => this.router.navigate(["/recipes"]),
-        error: () => this.saving.set(false),
-      });
+    request$.subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.router.navigate(["/recipes"]);
+      },
+      error: () => this.saving.set(false),
+    });
   }
 
   cancel(): void {
@@ -337,29 +320,17 @@ export class RecipeEditorComponent implements OnInit {
   onConfirmDelete(): void {
     this.deleting.set(true);
 
-    this.deleteRecipeService
-      .deleteRecipe(this.id)
-      .pipe(
-        tap(() => {
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "recipe.delete.success",
-            details: [],
-          });
-        }),
-        delay(600),
-      )
-      .subscribe({
-        next: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-          this.router.navigate(["/recipes"]);
-        },
-        error: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-        },
-      });
+    this.deleteRecipeService.deleteRecipe(this.id).subscribe({
+      next: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.router.navigate(["/recipes"]);
+      },
+      error: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+      },
+    });
   }
 
   t(key: string): string {

@@ -35,11 +35,6 @@
       "empty": "Sin resultados",
       "quick": "Libre"
     },
-    "toast": {
-      "added": "Añadido al diario",
-      "removed": "Eliminado del diario",
-      "quickUpdated": "Registro actualizado"
-    },
     "calendar": {
       "open": "Abrir calendario",
       "title": "Calendario",
@@ -54,11 +49,6 @@
         "rest": "Sin registros",
         "planned": "Planificado",
         "unplanned": "Sin planificar"
-      },
-      "toast": {
-        "today": "Diario de hoy",
-        "viewing": "Viendo",
-        "planning": "Planificando"
       }
     },
     "goal": {
@@ -79,10 +69,6 @@
       "hintFormula": "Los gramos se calculan sobre tu objetivo calórico (4 kcal/g proteínas e hidratos, 9 kcal/g grasas).",
       "save": "Guardar objetivo",
       "saveInvalid": "Los porcentajes deben sumar 100%",
-      "toast": {
-        "saved": "Objetivo actualizado",
-        "savedDay": "Objetivo del día actualizado"
-      },
       "upcomingScope": "Cambiar el objetivo afecta al día de hoy y a los días futuros que hayas planificado. Los días pasados conservan el suyo."
     },
     "empty": "Sin alimentos registrados",

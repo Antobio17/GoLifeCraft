@@ -114,27 +114,6 @@
       "create": "Nueva sesión",
       "edit": "Editar sesión",
       "detail": "Sesión"
-    },
-    "create": {
-      "success": "Sesión creada"
-    },
-    "update": {
-      "success": "Sesión actualizada"
-    },
-    "delete": {
-      "success": "Sesión borrada"
-    },
-    "exercise": {
-      "added": "Ejercicio añadido"
-    },
-    "start": {
-      "toast": "¡A entrenar!"
-    },
-    "finish": {
-      "toast": "¡Entreno completado!"
-    },
-    "stop": {
-      "toast": "Sesión detenida"
     }
   }
 }

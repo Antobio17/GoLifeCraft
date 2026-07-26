@@ -5,7 +5,10 @@ import { catchError, map } from "rxjs/operators";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { SessionRefreshService } from "@shared/auth/application/services/session-refresh.service";
 
-export const authGuard = (): boolean | UrlTree | Observable<boolean | UrlTree> => {
+export const authGuard = ():
+  | boolean
+  | UrlTree
+  | Observable<boolean | UrlTree> => {
   const authSessionService = inject(AuthSessionService);
   const router = inject(Router);
 

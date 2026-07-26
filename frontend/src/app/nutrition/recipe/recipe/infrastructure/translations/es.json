@@ -52,17 +52,7 @@
       "create": "Nueva receta",
       "edit": "Editar receta"
     },
-    "create": {
-      "success": "Receta creada correctamente"
-    },
-    "update": {
-      "success": "Receta actualizada correctamente"
-    },
-    "delete": {
-      "success": "Receta borrada correctamente"
-    },
     "ingredient": {
-      "added": "Ingrediente añadido",
       "required": "Añade al menos un ingrediente"
     }
   },

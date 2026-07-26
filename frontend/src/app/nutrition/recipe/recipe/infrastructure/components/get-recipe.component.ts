@@ -1,8 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { delay, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -54,7 +52,6 @@ export class GetRecipeComponent implements OnInit {
   private getRecipeService = inject(GetRecipeService);
   private deleteRecipeService = inject(DeleteRecipeService);
   private authSession = inject(AuthSessionService);
-  private floatingToastService = inject(FloatingToastService);
   protected view = inject(RecipeViewService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -115,28 +112,16 @@ export class GetRecipeComponent implements OnInit {
   onConfirmDelete(): void {
     this.deleting.set(true);
 
-    this.deleteRecipeService
-      .deleteRecipe(this.id)
-      .pipe(
-        tap(() => {
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "recipe.delete.success",
-            details: [],
-          });
-        }),
-        delay(600),
-      )
-      .subscribe({
-        next: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-          this.router.navigate(["/recipes"]);
-        },
-        error: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-        },
-      });
+    this.deleteRecipeService.deleteRecipe(this.id).subscribe({
+      next: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.router.navigate(["/recipes"]);
+      },
+      error: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+      },
+    });
   }
 }

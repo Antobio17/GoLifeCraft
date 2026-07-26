@@ -190,7 +190,6 @@
       "confirmPassword": "Confirm password"
     },
     "update": {
-      "success": "Profile updated successfully",
       "error": "Error updating profile"
     },
     "timezone": {
@@ -282,8 +281,6 @@
     },
     "note": "Turn on the switch to grant access to the app. Only administrators can see this screen.",
     "toast": {
-      "granted": "Access granted. The user's workspace is being prepared.",
-      "revoked": "Access revoked.",
       "error": "The access change could not be saved."
     }
   },

@@ -1,8 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { delay } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -76,7 +74,6 @@ import { AgendaCalendarDay } from "@agenda/agenda/agenda/domain/models/agenda-ca
 })
 export class GetAgendaComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private floatingToastService = inject(FloatingToastService);
   private authSession = inject(AuthSessionService);
   private getAgendaDayService = inject(GetAgendaDayService);
   private getAgendaCalendarService = inject(GetAgendaCalendarService);
@@ -278,13 +275,10 @@ export class GetAgendaComponent implements OnInit {
 
     this.saving.set(true);
 
-    request$.pipe(delay(400)).subscribe({
+    request$.subscribe({
       next: () => {
         this.saving.set(false);
         this.sheetOpen.set(false);
-        this.toast(
-          editingId ? "getAgenda.toast.updated" : "getAgenda.toast.created",
-        );
         this.selectDate(payload.entryDate);
       },
       error: () => this.saving.set(false),
@@ -319,10 +313,7 @@ export class GetAgendaComponent implements OnInit {
     if (!this.canWrite) return;
 
     this.deleteAgendaEntryService.deleteAgendaEntry(entry.id).subscribe({
-      next: () => {
-        this.toast("getAgenda.toast.removed");
-        this.reload();
-      },
+      next: () => this.reload(),
     });
   }
 
@@ -357,13 +348,5 @@ export class GetAgendaComponent implements OnInit {
         next: (response) =>
           this.calendarDays.set(response.data.attributes.days),
       });
-  }
-
-  private toast(keyTranslation: string): void {
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation,
-      details: [],
-    });
   }
 }

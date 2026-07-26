@@ -2,7 +2,6 @@ import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
-import { delay } from "rxjs/operators";
 import { RegisterService } from "@authorization/register/register/application/services/register.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -82,7 +81,6 @@ export class RegisterComponent {
         email: this.email,
         password: this.password,
       })
-      .pipe(delay(600))
       .subscribe({
         next: () => {
           this.loading = false;

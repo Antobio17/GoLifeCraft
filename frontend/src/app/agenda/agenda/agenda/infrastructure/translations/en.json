@@ -54,11 +54,6 @@
       "notesPlaceholder": "Details, address, what to bring…",
       "hint": "Time and notes are optional. Leave the time empty for a task you can do at any moment of the day.",
       "save": "Save to the agenda"
-    },
-    "toast": {
-      "created": "Added to the agenda",
-      "updated": "Entry updated",
-      "removed": "Removed from the agenda"
     }
   }
 }

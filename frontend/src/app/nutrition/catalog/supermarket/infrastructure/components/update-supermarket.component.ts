@@ -7,7 +7,6 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { delay, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
@@ -16,7 +15,6 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
 import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
 import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { GetSupermarketService } from "../../application/services/get-supermarket.service";
 import { UpdateSupermarketService } from "../../application/services/update-supermarket.service";
 import { GetSupermarketResponse } from "../../domain/models/get-supermarket-response.model";
@@ -40,7 +38,6 @@ export class UpdateSupermarketComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private getSupermarketService = inject(GetSupermarketService);
   private updateSupermarketService = inject(UpdateSupermarketService);
-  private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -86,19 +83,11 @@ export class UpdateSupermarketComponent implements OnInit {
 
     this.updateSupermarketService
       .updateSupermarket(this.id, { name: this.form.value.name ?? "" })
-      .pipe(
-        tap(() => {
-          this.saving.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "supermarket.update.success",
-            details: [],
-          });
-        }),
-        delay(900),
-      )
       .subscribe({
-        next: () => this.router.navigate(["/supermarkets"]),
+        next: () => {
+          this.saving.set(false);
+          this.router.navigate(["/supermarkets"]);
+        },
         error: () => this.saving.set(false),
       });
   }

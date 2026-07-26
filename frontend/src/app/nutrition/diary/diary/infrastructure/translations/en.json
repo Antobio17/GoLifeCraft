@@ -35,11 +35,6 @@
       "empty": "No results",
       "quick": "Free"
     },
-    "toast": {
-      "added": "Added to the diary",
-      "removed": "Removed from the diary",
-      "quickUpdated": "Entry updated"
-    },
     "calendar": {
       "open": "Open calendar",
       "title": "Calendar",
@@ -54,11 +49,6 @@
         "rest": "No records",
         "planned": "Planned",
         "unplanned": "Not planned"
-      },
-      "toast": {
-        "today": "Today's diary",
-        "viewing": "Viewing",
-        "planning": "Planning"
       }
     },
     "goal": {
@@ -79,10 +69,6 @@
       "hintFormula": "Grams are computed from your calorie goal (4 kcal/g protein and carbs, 9 kcal/g fat).",
       "save": "Save goal",
       "saveInvalid": "Percentages must add up to 100%",
-      "toast": {
-        "saved": "Goal updated",
-        "savedDay": "Day goal updated"
-      },
       "upcomingScope": "Changing the goal affects today and any future day you have planned. Past days keep their own."
     },
     "empty": "No food logged",

@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { delay } from "rxjs/operators";
 import { VerifyEmailService } from "@authorization/verify-email/verify-email/application/services/verify-email.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { AuthCardComponent } from "@shared/design-system/auth-card/infrastructure/components/auth-card.component";
@@ -38,17 +37,14 @@ export class VerifyEmailComponent implements OnInit {
       return;
     }
 
-    this.verifyEmailService
-      .verify(token)
-      .pipe(delay(600))
-      .subscribe({
-        next: () => {
-          this.status = "success";
-        },
-        error: () => {
-          this.status = "error";
-        },
-      });
+    this.verifyEmailService.verify(token).subscribe({
+      next: () => {
+        this.status = "success";
+      },
+      error: () => {
+        this.status = "error";
+      },
+    });
   }
 
   onBackToLogin(): void {

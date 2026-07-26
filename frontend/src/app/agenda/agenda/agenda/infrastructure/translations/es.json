@@ -54,11 +54,6 @@
       "notesPlaceholder": "Detalles, dirección, qué llevar…",
       "hint": "La hora y las notas son opcionales. Deja la hora vacía para una tarea que puedes hacer en cualquier momento del día.",
       "save": "Guardar en la agenda"
-    },
-    "toast": {
-      "created": "Añadido a la agenda",
-      "updated": "Anotación actualizada",
-      "removed": "Eliminado de la agenda"
     }
   }
 }

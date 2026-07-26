@@ -32,9 +32,7 @@
       "text": "Aún no hay productos disponibles para importar"
     },
     "toast": {
-      "imported": "Producto añadido a tu catálogo",
       "importedAll": "Productos añadidos a tu catálogo",
-      "alreadyImported": "Este producto ya estaba en tu catálogo",
       "error": "No se pudo añadir el producto"
     }
   }

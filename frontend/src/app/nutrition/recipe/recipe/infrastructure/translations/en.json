@@ -52,17 +52,7 @@
       "create": "New recipe",
       "edit": "Edit recipe"
     },
-    "create": {
-      "success": "Recipe created successfully"
-    },
-    "update": {
-      "success": "Recipe updated successfully"
-    },
-    "delete": {
-      "success": "Recipe deleted successfully"
-    },
     "ingredient": {
-      "added": "Ingredient added",
       "required": "Add at least one ingredient"
     }
   },

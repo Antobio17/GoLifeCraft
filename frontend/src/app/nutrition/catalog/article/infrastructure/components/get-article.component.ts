@@ -1,7 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { delay, tap } from "rxjs/operators";
 import {
   ArticleDetailView,
   ArticleMacroSet,
@@ -10,7 +9,6 @@ import {
 import { GetArticleService } from "@nutrition/catalog/article/application/services/get-article.service";
 import { DeleteArticleService } from "@nutrition/catalog/article/application/services/delete-article.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -57,7 +55,6 @@ export class GetArticleComponent implements OnInit {
   private getArticleService = inject(GetArticleService);
   private deleteArticleService = inject(DeleteArticleService);
   private authSession = inject(AuthSessionService);
-  private floatingToastService = inject(FloatingToastService);
   protected view = inject(ArticleViewService);
 
   loading = signal(true);
@@ -123,28 +120,16 @@ export class GetArticleComponent implements OnInit {
   onConfirmDelete(): void {
     this.deleting.set(true);
 
-    this.deleteArticleService
-      .deleteArticle(this.id)
-      .pipe(
-        tap(() => {
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "article.delete.success",
-            details: [],
-          });
-        }),
-        delay(600),
-      )
-      .subscribe({
-        next: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-          this.router.navigate(["/catalog"]);
-        },
-        error: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-        },
-      });
+    this.deleteArticleService.deleteArticle(this.id).subscribe({
+      next: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.router.navigate(["/catalog"]);
+      },
+      error: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+      },
+    });
   }
 }

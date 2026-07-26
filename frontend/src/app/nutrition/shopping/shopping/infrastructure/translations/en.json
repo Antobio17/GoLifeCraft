@@ -45,11 +45,6 @@
       "cancel": "Cancel",
       "confirm": "Remove bought",
       "clearing": "Removing…"
-    },
-    "toast": {
-      "added": "Added to your list",
-      "removed": "Item removed",
-      "cleared": "Bought items removed"
     }
   }
 }

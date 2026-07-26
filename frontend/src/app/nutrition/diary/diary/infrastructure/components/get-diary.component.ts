@@ -8,9 +8,8 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { Subject, debounceTime, delay, groupBy, mergeMap } from "rxjs";
+import { Subject, debounceTime, groupBy, mergeMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -115,7 +114,6 @@ type PickerTab = "product" | "recipe" | "quick";
 })
 export class GetDiaryComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private floatingToastService = inject(FloatingToastService);
   private authSession = inject(AuthSessionService);
   private getDiaryService = inject(GetDiaryService);
   private getDiaryCalendarService = inject(GetDiaryCalendarService);
@@ -360,16 +358,7 @@ export class GetDiaryComponent implements OnInit {
 
   onCalendarDay(date: string): void {
     this.calendarOpen.set(false);
-    this.toast(this.calendarDayToastKey(date));
     this.load(date);
-  }
-
-  private calendarDayToastKey(date: string): string {
-    if (this.view.isToday(date)) return "getDiary.calendar.toast.today";
-
-    if (this.view.isFuture(date)) return "getDiary.calendar.toast.planning";
-
-    return "getDiary.calendar.toast.viewing";
   }
 
   private loadCalendar(): void {
@@ -433,9 +422,6 @@ export class GetDiaryComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.quickSaving.set(false);
-        this.toast(
-          editingId ? "getDiary.toast.quickUpdated" : "getDiary.toast.added",
-        );
         this.closePicker();
         this.load(this.date());
       },
@@ -477,10 +463,7 @@ export class GetDiaryComponent implements OnInit {
         unit: choice.kind === "product" ? defaults.unit : null,
       })
       .subscribe({
-        next: () => {
-          this.toast("getDiary.toast.added");
-          this.load(this.date());
-        },
+        next: () => this.load(this.date()),
       });
   }
 
@@ -492,10 +475,7 @@ export class GetDiaryComponent implements OnInit {
 
   onRemove(entryId: string): void {
     this.deleteDiaryEntryService.deleteDiaryEntry(entryId).subscribe({
-      next: () => {
-        this.toast("getDiary.toast.removed");
-        this.load(this.date());
-      },
+      next: () => this.load(this.date()),
     });
   }
 
@@ -548,15 +528,10 @@ export class GetDiaryComponent implements OnInit {
 
     this.goalSaving.set(true);
 
-    request$.pipe(delay(600)).subscribe({
+    request$.subscribe({
       next: () => {
         this.goalSaving.set(false);
         this.goalSheetOpen.set(false);
-        this.toast(
-          this.pastDay()
-            ? "getDiary.goal.toast.savedDay"
-            : "getDiary.goal.toast.saved",
-        );
         this.load(this.date());
       },
       error: () => this.goalSaving.set(false),
@@ -586,14 +561,6 @@ export class GetDiaryComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
-    });
-  }
-
-  private toast(keyTranslation: string): void {
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation,
-      details: [],
     });
   }
 }

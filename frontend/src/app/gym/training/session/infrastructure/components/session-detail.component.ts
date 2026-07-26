@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subject, Subscription } from "rxjs";
-import { debounceTime, delay } from "rxjs/operators";
+import { debounceTime } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -40,7 +40,6 @@ import {
   MenuItem,
 } from "@shared/design-system/menu/infrastructure/components/menu.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { GetSessionService } from "../../application/services/get-session.service";
 import { UpdateSessionService } from "../../application/services/update-session.service";
 import { DeleteSessionService } from "../../application/services/delete-session.service";
@@ -92,7 +91,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private deleteSessionService = inject(DeleteSessionService);
   private sessionDraft = inject(SessionDraftService);
   private getExercisesService = inject(GetExercisesService);
-  private floatingToastService = inject(FloatingToastService);
   protected activeWorkout = inject(ActiveWorkoutService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -449,21 +447,13 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
     this.finishing.set(true);
 
-    this.activeWorkout
-      .finish(this.toActive())
-      .pipe(delay(400))
-      .subscribe({
-        next: () => {
-          this.finishing.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "session.finish.toast",
-            details: [],
-          });
-          this.router.navigate(["/gym/history"]);
-        },
-        error: () => this.finishing.set(false),
-      });
+    this.activeWorkout.finish(this.toActive()).subscribe({
+      next: () => {
+        this.finishing.set(false);
+        this.router.navigate(["/gym/history"]);
+      },
+      error: () => this.finishing.set(false),
+    });
   }
 
   onPauseWorkout(): void {
@@ -478,11 +468,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.activeWorkout.discard().subscribe({
       next: () => {
         this.showStopModal.set(false);
-        this.floatingToastService.showToast({
-          status: 200,
-          keyTranslation: "session.stop.toast",
-          details: [],
-        });
         this.loadSession();
       },
       error: () => this.showStopModal.set(false),
@@ -525,11 +510,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       next: () => {
         this.isDeleting.set(false);
         this.showDeleteModal.set(false);
-        this.floatingToastService.showToast({
-          status: 200,
-          keyTranslation: "session.delete.success",
-          details: [],
-        });
         this.router.navigate(["/gym/sessions"]);
       },
       error: () => {

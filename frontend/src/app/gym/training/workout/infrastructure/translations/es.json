@@ -44,8 +44,7 @@
         "body": "Se descartará el cronómetro sin guardar el entreno.",
         "warning": "Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
-        "confirm": "Parar sesión",
-        "toast": "Sesión detenida"
+        "confirm": "Parar sesión"
       }
     }
   }

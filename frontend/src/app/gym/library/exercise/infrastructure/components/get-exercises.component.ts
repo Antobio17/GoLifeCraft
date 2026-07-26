@@ -7,7 +7,6 @@ import { GetExercisesService } from "@gym/library/exercise/application/services/
 import { DeleteExerciseService } from "@gym/library/exercise/application/services/delete-exercise.service";
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { Exercise } from "../../domain/models/exercise.model";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -88,7 +87,6 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   private getExercisesService = inject(GetExercisesService);
   private deleteExerciseService = inject(DeleteExerciseService);
   private muscleCatalog = inject(MuscleCatalogService);
-  private floatingToastService = inject(FloatingToastService);
 
   protected readonly modulePath = "gym/library/exercise";
   protected readonly storageKey = "pageSize_exercises";
@@ -261,11 +259,6 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
           this.isDeleting.set(false);
           this.showDeleteModal.set(false);
           this.exerciseToDelete.set(null);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "exercise.delete.success",
-            details: [],
-          });
           this.load();
         },
         error: () => {

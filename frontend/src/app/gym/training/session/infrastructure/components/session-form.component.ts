@@ -6,7 +6,6 @@ import {
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { delay, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -16,7 +15,6 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { CreateSessionService } from "../../application/services/create-session.service";
 import { UpdateSessionService } from "../../application/services/update-session.service";
 import { GetSessionService } from "../../application/services/get-session.service";
@@ -46,7 +44,6 @@ export class SessionFormComponent implements OnInit {
   private updateSessionService = inject(UpdateSessionService);
   private getSessionService = inject(GetSessionService);
   private sessionDraft = inject(SessionDraftService);
-  private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -130,24 +127,13 @@ export class SessionFormComponent implements OnInit {
       ? this.updateSessionService.updateSession(this.id, payload)
       : this.createSessionService.createSession(payload);
 
-    request$
-      .pipe(
-        tap(() => {
-          this.saving.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: this.isEdit
-              ? "session.update.success"
-              : "session.create.success",
-            details: [],
-          });
-        }),
-        delay(900),
-      )
-      .subscribe({
-        next: () => this.navigateAway(),
-        error: () => this.saving.set(false),
-      });
+    request$.subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.navigateAway();
+      },
+      error: () => this.saving.set(false),
+    });
   }
 
   private navigateAway(): void {

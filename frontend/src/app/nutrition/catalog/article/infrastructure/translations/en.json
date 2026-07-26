@@ -73,15 +73,6 @@
       "create": "New item",
       "edit": "Edit item"
     },
-    "create": {
-      "success": "Item created successfully"
-    },
-    "update": {
-      "success": "Item updated successfully"
-    },
-    "delete": {
-      "success": "Item deleted successfully"
-    },
     "equivalence": {
       "incomplete": "Complete or remove equivalences without a unit or amount."
     }

@@ -1,6 +1,5 @@
 import { Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { TabItemComponent } from "@shared/design-system/tab-item/infrastructure/components/tab-item.component";
 import { SideDrawerService } from "@layouts/layout/side-drawer/application/services/side-drawer.service";
@@ -18,20 +17,11 @@ import { SideDrawerService } from "@layouts/layout/side-drawer/application/servi
   ],
 })
 export class BottomNavComponent {
-  private floatingToastService = inject(FloatingToastService);
   private sideDrawerService = inject(SideDrawerService);
 
   isDrawerOpen = this.sideDrawerService.isOpen;
 
   toggleDrawer(): void {
     this.sideDrawerService.toggle();
-  }
-
-  comingSoon(): void {
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation: "navbar.comingSoon",
-      details: [],
-    });
   }
 }

@@ -118,16 +118,7 @@ export class UsersComponent implements OnInit {
     this.setUserAccessService
       .setUserAccess({ userId: row.id, isActive: nextActive })
       .subscribe({
-        next: () => {
-          this.patchRow(row.id, { saving: false });
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: nextActive
-              ? "users.toast.granted"
-              : "users.toast.revoked",
-            details: [],
-          });
-        },
+        next: () => this.patchRow(row.id, { saving: false }),
         error: () => {
           this.patchRow(row.id, { active: !nextActive, saving: false });
           this.floatingToastService.showToast({

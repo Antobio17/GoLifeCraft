@@ -47,12 +47,6 @@
       "list": "Supermarkets",
       "create": "New Supermarket",
       "edit": "Edit Supermarket"
-    },
-    "create": {
-      "success": "Record created successfully"
-    },
-    "update": {
-      "success": "Record updated successfully"
     }
   }
 }

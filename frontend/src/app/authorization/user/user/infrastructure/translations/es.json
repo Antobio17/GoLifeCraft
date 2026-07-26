@@ -190,7 +190,6 @@
       "confirmPassword": "Confirmar contraseña"
     },
     "update": {
-      "success": "Perfil actualizado correctamente",
       "error": "Error al actualizar el perfil"
     },
     "timezone": {
@@ -282,8 +281,6 @@
     },
     "note": "Activa el interruptor para conceder acceso a la app. Solo los administradores ven esta pantalla.",
     "toast": {
-      "granted": "Acceso concedido. Se está preparando el espacio del usuario.",
-      "revoked": "Acceso retirado.",
       "error": "No se pudo guardar el cambio de acceso."
     }
   },

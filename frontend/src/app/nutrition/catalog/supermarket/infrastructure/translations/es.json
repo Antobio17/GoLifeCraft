@@ -47,12 +47,6 @@
       "list": "Supermercados",
       "create": "Nuevo Supermercado",
       "edit": "Editar Supermercado"
-    },
-    "create": {
-      "success": "Registro creado correctamente"
-    },
-    "update": {
-      "success": "Registro actualizado correctamente"
     }
   }
 }

@@ -47,12 +47,6 @@
       "list": "Categories",
       "create": "New Category",
       "edit": "Edit Category"
-    },
-    "create": {
-      "success": "Record created successfully"
-    },
-    "update": {
-      "success": "Record updated successfully"
     }
   }
 }

@@ -2,7 +2,6 @@ import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { forkJoin } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -65,7 +64,6 @@ type FilterKind = "store" | "cat" | "brand";
 })
 export class GetShoppingListComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private floatingToastService = inject(FloatingToastService);
   private authSession = inject(AuthSessionService);
   private getShoppingListService = inject(GetShoppingListService);
   private addShoppingListItemService = inject(AddShoppingListItemService);
@@ -294,10 +292,7 @@ export class GetShoppingListComponent implements OnInit {
     this.deleteShoppingListItemService
       .deleteShoppingListItem(item.id)
       .subscribe({
-        next: () => {
-          this.toast("getShopping.toast.removed");
-          this.load(true);
-        },
+        next: () => this.load(true),
       });
   }
 
@@ -328,7 +323,6 @@ export class GetShoppingListComponent implements OnInit {
       next: () => {
         this.clearing.set(false);
         this.clearModalOpen.set(false);
-        this.toast("getShopping.toast.cleared");
         this.load(true);
       },
       error: () => this.clearing.set(false),
@@ -375,14 +369,6 @@ export class GetShoppingListComponent implements OnInit {
   private loadArticles(): void {
     this.getArticlesService.getArticles(1, 300).subscribe({
       next: (response) => this.articles.set(response.data),
-    });
-  }
-
-  private toast(keyTranslation: string): void {
-    this.floatingToastService.showToast({
-      status: 200,
-      keyTranslation,
-      details: [],
     });
   }
 }

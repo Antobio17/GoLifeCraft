@@ -8,7 +8,6 @@ import {
   ReactiveFormsModule,
   ValidationErrors,
 } from "@angular/forms";
-import { delay, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -164,24 +163,13 @@ export class ExerciseEditorComponent implements OnInit {
       ? this.updateExerciseService.updateExercise(this.id, payload)
       : this.createExerciseService.createExercise(payload);
 
-    request$
-      .pipe(
-        tap(() => {
-          this.saving.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: this.isEdit
-              ? "exercise.update.success"
-              : "exercise.create.success",
-            details: [],
-          });
-        }),
-        delay(900),
-      )
-      .subscribe({
-        next: () => this.router.navigate(["/gym/exercises"]),
-        error: () => this.saving.set(false),
-      });
+    request$.subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.router.navigate(["/gym/exercises"]);
+      },
+      error: () => this.saving.set(false),
+    });
   }
 
   cancel(): void {

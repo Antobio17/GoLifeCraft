@@ -105,15 +105,6 @@
       "edit": "Edit exercise",
       "detail": "Exercise"
     },
-    "create": {
-      "success": "Exercise created"
-    },
-    "update": {
-      "success": "Exercise updated"
-    },
-    "delete": {
-      "success": "Exercise deleted"
-    },
     "validation": {
       "muscleGroups": "Select at least one muscle"
     }

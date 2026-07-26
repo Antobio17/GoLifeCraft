@@ -2,7 +2,6 @@ import { Component, computed, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Observable } from "rxjs";
-import { delay } from "rxjs/operators";
 import { GlobalArticle } from "../../domain/models/global-article.model";
 import { GlobalArticleSource } from "../../domain/models/global-article-source.model";
 import {
@@ -199,30 +198,15 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
 
     this.markPending(id);
 
-    this.importGlobalArticleService
-      .importGlobalArticle(id)
-      .pipe(delay(400))
-      .subscribe({
-        next: () => {
-          this.markImported(id);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "getGlobalArticles.toast.imported",
-            details: [],
-          });
-        },
-        error: (error) => this.handleImportError(id, error),
-      });
+    this.importGlobalArticleService.importGlobalArticle(id).subscribe({
+      next: () => this.markImported(id),
+      error: (error) => this.handleImportError(id, error),
+    });
   }
 
   private handleImportError(id: string, error: { status?: number }): void {
     if (409 === error.status) {
       this.markImported(id);
-      this.floatingToastService.showToast({
-        status: 200,
-        keyTranslation: "getGlobalArticles.toast.alreadyImported",
-        details: [],
-      });
       return;
     }
 

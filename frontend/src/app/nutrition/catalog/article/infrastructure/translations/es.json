@@ -73,15 +73,6 @@
       "create": "Nuevo artículo",
       "edit": "Editar artículo"
     },
-    "create": {
-      "success": "Artículo creado correctamente"
-    },
-    "update": {
-      "success": "Artículo actualizado correctamente"
-    },
-    "delete": {
-      "success": "Artículo borrado correctamente"
-    },
     "equivalence": {
       "incomplete": "Completa o elimina las equivalencias sin unidad o cantidad."
     }

@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { delay } from "rxjs/operators";
 import { ResetPasswordService } from "@authorization/reset-password/reset-password/application/services/reset-password.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -88,7 +87,6 @@ export class ResetPasswordComponent implements OnInit {
     this.loading = true;
     this.resetPasswordService
       .resetPassword(this.token, this.password)
-      .pipe(delay(600))
       .subscribe({
         next: () => {
           this.loading = false;

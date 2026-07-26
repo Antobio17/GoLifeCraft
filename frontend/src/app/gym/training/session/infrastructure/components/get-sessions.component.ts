@@ -3,7 +3,6 @@ import { Observable } from "rxjs";
 import { GetSessionsService } from "@gym/training/session/application/services/get-sessions.service";
 import { DeleteSessionService } from "@gym/training/session/application/services/delete-session.service";
 import { Session } from "../../domain/models/session.model";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -54,7 +53,6 @@ interface SessionRow {
 export class GetSessionsComponent extends AbstractListPageComponent<Session> {
   private getSessionsService = inject(GetSessionsService);
   private deleteSessionService = inject(DeleteSessionService);
-  private floatingToastService = inject(FloatingToastService);
 
   protected readonly modulePath = "gym/training/session";
   protected readonly storageKey = "pageSize_sessions";
@@ -141,11 +139,6 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
           this.isDeleting.set(false);
           this.showDeleteModal.set(false);
           this.sessionToDelete.set(null);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "session.delete.success",
-            details: [],
-          });
           this.load();
         },
         error: () => {

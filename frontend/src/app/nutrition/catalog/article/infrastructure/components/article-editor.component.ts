@@ -9,7 +9,6 @@ import {
   ReactiveFormsModule,
 } from "@angular/forms";
 import { forkJoin } from "rxjs";
-import { delay, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -230,24 +229,13 @@ export class ArticleEditorComponent implements OnInit {
       ? this.updateArticleService.updateArticle(this.id, payload)
       : this.createArticleService.createArticle(payload);
 
-    request$
-      .pipe(
-        tap(() => {
-          this.saving.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: this.isEdit
-              ? "article.update.success"
-              : "article.create.success",
-            details: [],
-          });
-        }),
-        delay(900),
-      )
-      .subscribe({
-        next: () => this.router.navigate(["/catalog"]),
-        error: () => this.saving.set(false),
-      });
+    request$.subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.router.navigate(["/catalog"]);
+      },
+      error: () => this.saving.set(false),
+    });
   }
 
   cancel(): void {
@@ -265,29 +253,17 @@ export class ArticleEditorComponent implements OnInit {
   onConfirmDelete(): void {
     this.deleting.set(true);
 
-    this.deleteArticleService
-      .deleteArticle(this.id)
-      .pipe(
-        tap(() => {
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "article.delete.success",
-            details: [],
-          });
-        }),
-        delay(600),
-      )
-      .subscribe({
-        next: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-          this.router.navigate(["/catalog"]);
-        },
-        error: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-        },
-      });
+    this.deleteArticleService.deleteArticle(this.id).subscribe({
+      next: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.router.navigate(["/catalog"]);
+      },
+      error: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+      },
+    });
   }
 
   private loadArticle(): void {

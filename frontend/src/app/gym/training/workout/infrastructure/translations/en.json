@@ -44,8 +44,7 @@
         "body": "The timer will be discarded without saving the workout.",
         "warning": "This action cannot be undone.",
         "cancel": "Cancel",
-        "confirm": "Stop session",
-        "toast": "Session stopped"
+        "confirm": "Stop session"
       }
     }
   }

@@ -114,27 +114,6 @@
       "create": "New session",
       "edit": "Edit session",
       "detail": "Session"
-    },
-    "create": {
-      "success": "Session created"
-    },
-    "update": {
-      "success": "Session updated"
-    },
-    "delete": {
-      "success": "Session deleted"
-    },
-    "exercise": {
-      "added": "Exercise added"
-    },
-    "start": {
-      "toast": "Let's train!"
-    },
-    "finish": {
-      "toast": "Workout completed!"
-    },
-    "stop": {
-      "toast": "Session stopped"
     }
   }
 }

@@ -9,7 +9,6 @@ import {
   AbstractControl,
   ValidationErrors,
 } from "@angular/forms";
-import { delay, tap } from "rxjs/operators";
 import { GetMyProfileService } from "../../application/services/get-my-profile.service";
 import { UpdateMyProfileService } from "../../application/services/update-my-profile.service";
 import { ChangeMyPasswordService } from "../../application/services/change-my-password.service";
@@ -208,19 +207,11 @@ export class MyProfileComponent implements OnInit {
 
     this.updateMyProfileService
       .updateMyProfile(this.profileForm.value)
-      .pipe(
-        tap(() => {
-          this.saving.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "profile.update.success",
-            details: [],
-          });
-        }),
-        delay(800),
-      )
       .subscribe({
-        next: () => window.location.reload(),
+        next: () => {
+          this.saving.set(false);
+          window.location.reload();
+        },
         error: () => {
           this.saving.set(false);
           this.floatingToastService.showToast({
