@@ -22,6 +22,7 @@ import { GetGymStatsService } from "@gym/analytics/stats/application/services/ge
 import { GymStats } from "@gym/analytics/stats/domain/models/gym-stats.model";
 import { GymAnalyticsComponent } from "@gym/analytics/stats/infrastructure/components/gym-analytics.component";
 import { GetDiaryService } from "@nutrition/diary/diary/application/services/get-diary.service";
+import { AgendaSummaryComponent } from "@agenda/agenda/agenda/infrastructure/components/agenda-summary.component";
 
 interface DailySummary {
   consumedKcal: number;
@@ -47,6 +48,7 @@ interface DailySummary {
     StackComponent,
     GridComponent,
     GymAnalyticsComponent,
+    AgendaSummaryComponent,
   ],
 })
 export class DashboardComponent implements OnInit {
@@ -133,6 +135,10 @@ export class DashboardComponent implements OnInit {
 
   goToGym(): void {
     this.router.navigate(["/gym"]);
+  }
+
+  goToAgenda(): void {
+    this.router.navigate(["/agenda"]);
   }
 
   goToCatalog(): void {

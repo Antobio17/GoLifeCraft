@@ -1,6 +1,6 @@
 <ds-swipe-to-delete
   #swipe
-  [disabled]="!canWrite"
+  [disabled]="!canWrite || !removable"
   [reveal]="66"
   [radius]="16"
   [removeLabel]="removeLabel"
@@ -14,19 +14,21 @@
     [class.agenda-item--done]="done"
     [class.agenda-item--slid]="swipe.slid"
   >
-    <ds-pressable
-      class="agenda-item__check"
-      [class.is-checked]="done"
-      [disabled]="!canWrite"
-      [ariaLabel]="toggleLabel"
-      justify="center"
-      [gap]="'0'"
-      (press)="toggled.emit()"
-    >
-      @if (done) {
-        <ds-icon name="check" [size]="14" [stroke]="3.2" />
-      }
-    </ds-pressable>
+    @if (checkable) {
+      <ds-pressable
+        class="agenda-item__check"
+        [class.is-checked]="done"
+        [disabled]="!canWrite"
+        [ariaLabel]="toggleLabel"
+        justify="center"
+        [gap]="'0'"
+        (press)="toggled.emit()"
+      >
+        @if (done) {
+          <ds-icon name="check" [size]="14" [stroke]="3.2" />
+        }
+      </ds-pressable>
+    }
 
     <ds-pressable
       class="agenda-item__body"

@@ -16,6 +16,20 @@
       "fat": "Grasas",
       "carbs": "Hidratos"
     },
+    "agenda": {
+      "title": "Tu agenda de hoy",
+      "seeAll": "Ver todo",
+      "empty": "No tienes nada anotado para hoy.",
+      "allDone": "Todo hecho por hoy",
+      "pendingOne": "1 pendiente para hoy",
+      "pendingMany": "{{count}} pendientes para hoy",
+      "more": "+{{count}} más para hoy",
+      "open": "Abrir en la agenda",
+      "kind": {
+        "task": "Tarea",
+        "appointment": "Cita"
+      }
+    },
     "gym": {
       "title": "Tu semana en el gimnasio",
       "seeAll": "Ver más",

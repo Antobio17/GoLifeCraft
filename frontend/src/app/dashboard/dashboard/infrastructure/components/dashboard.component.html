@@ -40,6 +40,8 @@
     />
   </ds-stack>
 
+  <app-agenda-summary slot="agenda" (seeAll)="goToAgenda()" />
+
   <app-gym-analytics
     slot="gym"
     [stats]="gymStats()"

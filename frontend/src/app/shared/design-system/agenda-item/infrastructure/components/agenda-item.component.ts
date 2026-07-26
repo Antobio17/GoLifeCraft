@@ -28,6 +28,8 @@ export class AgendaItemComponent {
   @Input() notes = "";
   @Input() done = false;
   @Input() canWrite = false;
+  @Input() removable = true;
+  @Input() checkable = true;
   @Input() toggleLabel = "";
   @Input() editLabel = "";
   @Input() removeLabel = "";

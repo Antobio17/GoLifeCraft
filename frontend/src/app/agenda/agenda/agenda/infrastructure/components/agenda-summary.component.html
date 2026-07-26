@@ -1,0 +1,51 @@
+<ds-stack [gap]="'10px'">
+  <ds-section-header
+    [title]="'dashboard.agenda.title' | t"
+    [actionLabel]="'dashboard.agenda.seeAll' | t"
+    (action)="seeAll.emit()"
+  />
+
+  @if (loading()) {
+    <ds-stack [gap]="'8px'">
+      <ds-skeleton height="66px" />
+      <ds-skeleton height="66px" />
+    </ds-stack>
+  } @else if (!hasEntries()) {
+    <ds-text variant="muted">{{ "dashboard.agenda.empty" | t }}</ds-text>
+  } @else {
+    <ds-text variant="meta">
+      @if (pendingCount() === 0) {
+        {{ "dashboard.agenda.allDone" | t }}
+      } @else if (pendingCount() === 1) {
+        {{ "dashboard.agenda.pendingOne" | t }}
+      } @else {
+        {{ "dashboard.agenda.pendingMany" | t: { count: pendingCount() } }}
+      }
+    </ds-text>
+
+    <ds-stack [gap]="'8px'">
+      @for (entry of visibleEntries(); track entry.id) {
+        <ds-agenda-item
+          [title]="entry.title"
+          [kindLabel]="
+            entryKindLabel(entry, 'dashboard.agenda.kind.' + entry.kind | t)
+          "
+          [appointment]="entry.kind === 'appointment'"
+          [timeLabel]="entry.time ?? ''"
+          [done]="entry.done"
+          [canWrite]="canWrite"
+          [removable]="false"
+          [checkable]="false"
+          [editLabel]="'dashboard.agenda.open' | t"
+          (opened)="seeAll.emit()"
+        />
+      }
+
+      @if (hiddenCount() > 0) {
+        <ds-text variant="meta">{{
+          "dashboard.agenda.more" | t: { count: hiddenCount() }
+        }}</ds-text>
+      }
+    </ds-stack>
+  }
+</ds-stack>

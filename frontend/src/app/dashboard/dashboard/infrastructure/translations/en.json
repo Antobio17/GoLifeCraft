@@ -16,6 +16,20 @@
       "fat": "Fat",
       "carbs": "Carbs"
     },
+    "agenda": {
+      "title": "Your agenda today",
+      "seeAll": "See all",
+      "empty": "Nothing planned for today.",
+      "allDone": "All done for today",
+      "pendingOne": "1 pending today",
+      "pendingMany": "{{count}} pending today",
+      "more": "+{{count}} more today",
+      "open": "Open in the agenda",
+      "kind": {
+        "task": "Task",
+        "appointment": "Appointment"
+      }
+    },
     "gym": {
       "title": "Your week at the gym",
       "seeAll": "See more",
