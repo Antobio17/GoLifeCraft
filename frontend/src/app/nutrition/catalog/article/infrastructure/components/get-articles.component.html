@@ -27,11 +27,22 @@
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-grid [minColumn]="'300px'">
-      @for (i of [1, 2, 3, 4]; track i) {
-        <ds-skeleton height="78px" />
-      }
-    </ds-grid>
+    <ds-skeleton-filters [search]="true" [selects]="3" [caption]="true" />
+    <ds-skeleton-list
+      [count]="6"
+      [columns]="null"
+      minColumn="300px"
+      [gap]="'12px'"
+      radius="16px"
+      padding="10px"
+      [alignTop]="true"
+      [tile]="56"
+      [tileRadius]="12"
+      titleWidth="54%"
+      headTrailing="42px"
+      metaWidth="48%"
+      [chips]="4"
+    />
   } @else {
     <ds-search-input
       [placeholder]="'getArticles.searchPlaceholder' | t"
@@ -66,11 +77,21 @@
     <ds-text variant="label">{{ "getArticles.nutritionCaption" | t }}</ds-text>
 
     @if (reloading()) {
-      <ds-grid [minColumn]="'300px'">
-        @for (i of [1, 2, 3, 4]; track i) {
-          <ds-skeleton height="78px" />
-        }
-      </ds-grid>
+      <ds-skeleton-list
+        [count]="6"
+        [columns]="null"
+        minColumn="300px"
+        [gap]="'12px'"
+        radius="16px"
+        padding="10px"
+        [alignTop]="true"
+        [tile]="56"
+        [tileRadius]="12"
+        titleWidth="54%"
+        headTrailing="42px"
+        metaWidth="48%"
+        [chips]="4"
+      />
     } @else if (items().length === 0) {
       @if (searchQuery()) {
         <ds-text variant="muted">
@@ -122,11 +143,21 @@
       </ds-grid>
 
       @if (loadingMore()) {
-        <ds-grid [minColumn]="'300px'">
-          @for (i of [1, 2]; track i) {
-            <ds-skeleton height="78px" />
-          }
-        </ds-grid>
+        <ds-skeleton-list
+          [count]="2"
+          [columns]="null"
+          minColumn="300px"
+          [gap]="'12px'"
+          radius="16px"
+          padding="10px"
+          [alignTop]="true"
+          [tile]="56"
+          [tileRadius]="12"
+          titleWidth="54%"
+          headTrailing="42px"
+          metaWidth="48%"
+          [chips]="4"
+        />
       }
 
       <ds-infinite-scroll

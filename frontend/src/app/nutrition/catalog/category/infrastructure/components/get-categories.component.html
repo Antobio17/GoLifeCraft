@@ -1,6 +1,11 @@
 <ds-page-wrapper>
   @if (loading()) {
-    <ds-skeleton-page-header [showAction]="true"></ds-skeleton-page-header>
+    <ds-skeleton-page-header
+      [showIcon]="false"
+      [showTag]="false"
+      [subtitleLines]="1"
+      [showAction]="true"
+    ></ds-skeleton-page-header>
   }
 
   @if (!loading()) {

@@ -15,7 +15,8 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { RecipeCardComponent } from "@shared/design-system/recipe-card/infrastructure/components/recipe-card.component";
 import {
@@ -35,7 +36,8 @@ import {
     SearchInputComponent,
     GridComponent,
     EmptyStateComponent,
-    SkeletonComponent,
+    SkeletonListComponent,
+    SkeletonFiltersComponent,
     TextComponent,
     RecipeCardComponent,
   ],

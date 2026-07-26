@@ -20,9 +20,33 @@
   </ds-stack>
 
   @if (loading()) {
-    <ds-skeleton height="120px" />
-    <ds-skeleton height="72px" />
-    <ds-skeleton height="72px" />
+    <ds-skeleton-summary
+      tone="primary"
+      [ring]="false"
+      [mainAside]="true"
+      macros="none"
+      [progress]="true"
+    />
+
+    @for (items of skeletonGroups; track $index) {
+      <ds-stack [gap]="'8px'">
+        <ds-skeleton-section-header titleWidth="118px" />
+        <ds-skeleton-list
+          [count]="items"
+          [gap]="'8px'"
+          radius="16px"
+          padding="9px 11px"
+          [check]="canWrite"
+          [tile]="44"
+          [tileRadius]="12"
+          titleWidth="62%"
+          metaWidth="44%"
+          trailing="stack"
+          pillWidth="80px"
+          pillHeight="29px"
+        />
+      </ds-stack>
+    }
   } @else if (attributes(); as list) {
     @if (list.itemCount > 0) {
       @if (showTabs()) {

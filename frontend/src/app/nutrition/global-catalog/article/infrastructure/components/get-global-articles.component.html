@@ -7,11 +7,23 @@
   />
 
   @if (loading()) {
-    <ds-grid [minColumn]="'320px'">
-      @for (i of [1, 2, 3, 4]; track i) {
-        <ds-skeleton height="78px" />
-      }
-    </ds-grid>
+    <ds-skeleton height="52px" radius="var(--ds-radius-2xl)" />
+    <ds-skeleton-filters [search]="true" [selects]="2" [caption]="true" />
+    <ds-skeleton-list
+      [count]="6"
+      [columns]="null"
+      minColumn="320px"
+      [gap]="'12px'"
+      radius="16px"
+      padding="10px"
+      [alignTop]="true"
+      [tile]="56"
+      [tileRadius]="12"
+      titleWidth="52%"
+      metaWidth="46%"
+      [chips]="4"
+      trailing="button"
+    />
   } @else {
     <ds-note icon="download">{{ "getGlobalArticles.info" | t }}</ds-note>
 
@@ -46,11 +58,21 @@
     </ds-text>
 
     @if (reloading()) {
-      <ds-grid [minColumn]="'320px'">
-        @for (i of [1, 2, 3, 4]; track i) {
-          <ds-skeleton height="78px" />
-        }
-      </ds-grid>
+      <ds-skeleton-list
+        [count]="6"
+        [columns]="null"
+        minColumn="320px"
+        [gap]="'12px'"
+        radius="16px"
+        padding="10px"
+        [alignTop]="true"
+        [tile]="56"
+        [tileRadius]="12"
+        titleWidth="52%"
+        metaWidth="46%"
+        [chips]="4"
+        trailing="button"
+      />
     } @else if (items().length === 0) {
       @if (searchQuery()) {
         <ds-text variant="muted">
@@ -113,11 +135,21 @@
       </ds-grid>
 
       @if (loadingMore()) {
-        <ds-grid [minColumn]="'320px'">
-          @for (i of [1, 2]; track i) {
-            <ds-skeleton height="78px" />
-          }
-        </ds-grid>
+        <ds-skeleton-list
+          [count]="2"
+          [columns]="null"
+          minColumn="320px"
+          [gap]="'12px'"
+          radius="16px"
+          padding="10px"
+          [alignTop]="true"
+          [tile]="56"
+          [tileRadius]="12"
+          titleWidth="52%"
+          metaWidth="46%"
+          [chips]="4"
+          trailing="button"
+        />
       }
 
       <ds-infinite-scroll

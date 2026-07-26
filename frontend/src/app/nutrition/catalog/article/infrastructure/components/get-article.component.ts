@@ -14,6 +14,11 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
+import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
+import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
+import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -37,6 +42,11 @@ type NutritionMode = "serving" | "per100";
     ScreenHeaderComponent,
     ConfirmActionModalComponent,
     SkeletonComponent,
+    SkeletonLineComponent,
+    SkeletonScreenHeaderComponent,
+    SkeletonHeroComponent,
+    SkeletonMacroBarsComponent,
+    SkeletonRowsComponent,
     EmptyStateComponent,
     TextComponent,
     StackComponent,

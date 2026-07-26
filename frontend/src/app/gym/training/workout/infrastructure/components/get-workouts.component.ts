@@ -18,7 +18,7 @@ import { ChipComponent } from "@shared/design-system/chip/infrastructure/compone
 import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
 import { MetaItemComponent } from "@shared/design-system/meta-item/infrastructure/components/meta-item.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -51,7 +51,7 @@ interface WorkoutRow {
     ProgressBarComponent,
     MetaItemComponent,
     EmptyStateComponent,
-    SkeletonComponent,
+    SkeletonListComponent,
   ],
 })
 export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {

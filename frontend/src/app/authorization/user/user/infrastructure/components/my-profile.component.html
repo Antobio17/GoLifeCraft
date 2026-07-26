@@ -9,10 +9,35 @@
     ></ds-screen-header>
 
     @if (loading()) {
-      <ds-stack [gap]="'16px'">
-        <ds-skeleton height="84px"></ds-skeleton>
-        <ds-skeleton height="240px"></ds-skeleton>
-        <ds-skeleton height="200px"></ds-skeleton>
+      <ds-stack [gap]="'24px'">
+        <ds-skeleton-list-item
+          tone="brand"
+          padding="15px 16px"
+          radius="var(--ds-radius-3xl)"
+          [tile]="54"
+          [tileRadius]="27"
+          titleWidth="58%"
+          metaWidth="72%"
+          [chips]="2"
+        />
+
+        <ds-stack [gap]="'14px'">
+          <ds-skeleton-line width="128px" height="12px" />
+          <ds-skeleton-fields [rows]="[2, 1, 1]" [gap]="'14px'" />
+          <ds-skeleton height="44px" radius="var(--ds-radius-2xl)" />
+        </ds-stack>
+
+        <ds-stack [gap]="'12px'">
+          <ds-skeleton-line width="112px" height="12px" />
+          <ds-skeleton height="62px" radius="var(--ds-radius-3xl)" />
+        </ds-stack>
+
+        <ds-stack [gap]="'12px'">
+          <ds-skeleton-line width="96px" height="12px" />
+          <ds-skeleton height="268px" radius="var(--ds-radius-3xl)" />
+        </ds-stack>
+
+        <ds-skeleton height="44px" radius="var(--ds-radius-2xl)" />
       </ds-stack>
     } @else {
       <ds-stack [gap]="'24px'">

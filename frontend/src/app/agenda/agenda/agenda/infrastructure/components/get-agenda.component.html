@@ -68,9 +68,17 @@
   </ds-stack>
 
   @if (loading()) {
-    <ds-skeleton height="66px" />
-    <ds-skeleton height="66px" />
-    <ds-skeleton height="66px" />
+    <ds-skeleton-list
+      [count]="4"
+      [gap]="'8px'"
+      radius="var(--ds-radius-3xl)"
+      padding="11px 12px"
+      [check]="canWrite"
+      [checkSize]="24"
+      titleWidth="62%"
+      [meta]="false"
+      [chips]="2"
+    />
   } @else if (hasEntries()) {
     <ds-stack [gap]="'8px'">
       @for (entry of entries(); track entry.id) {

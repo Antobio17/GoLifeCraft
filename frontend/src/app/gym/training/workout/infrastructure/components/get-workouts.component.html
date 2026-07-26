@@ -9,11 +9,21 @@
   />
 
   @if (loading()) {
-    <ds-grid [minColumn]="'260px'" [gap]="'9px'" [tabletColumns]="2">
-      @for (i of [1, 2, 3]; track i) {
-        <ds-skeleton />
-      }
-    </ds-grid>
+    <ds-skeleton-list
+      [count]="4"
+      [columns]="null"
+      minColumn="260px"
+      [tabletColumns]="2"
+      [gap]="'9px'"
+      radius="var(--ds-radius-3xl)"
+      padding="13px"
+      [alignTop]="true"
+      titleWidth="56%"
+      metaWidth="46%"
+      headTrailing="64px"
+      [progress]="true"
+      [footItems]="2"
+    />
   } @else if (items().length === 0) {
     <ds-empty-state
       icon="history"

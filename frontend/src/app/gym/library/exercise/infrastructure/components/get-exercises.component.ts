@@ -25,7 +25,8 @@ import { PressableComponent } from "@shared/design-system/pressable/infrastructu
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
   SegmentedToggleComponent,
@@ -76,7 +77,8 @@ type LibraryView = "list" | "grouped";
     IconBadgeComponent,
     PressableComponent,
     EmptyStateComponent,
-    SkeletonComponent,
+    SkeletonListComponent,
+    SkeletonFiltersComponent,
     InfiniteScrollComponent,
   ],
 })

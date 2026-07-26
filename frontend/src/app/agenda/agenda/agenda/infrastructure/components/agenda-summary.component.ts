@@ -10,7 +10,8 @@ import { AuthSessionService } from "@shared/auth/application/services/auth-sessi
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { AgendaItemComponent } from "@shared/design-system/agenda-item/infrastructure/components/agenda-item.component";
 import { GetAgendaDayService } from "@agenda/agenda/agenda/application/services/get-agenda-day.service";
@@ -30,7 +31,8 @@ const VISIBLE_ENTRIES = 3;
     ContextualTranslatePipe,
     StackComponent,
     TextComponent,
-    SkeletonComponent,
+    SkeletonLineComponent,
+    SkeletonListComponent,
     SectionHeaderComponent,
     AgendaItemComponent,
   ],

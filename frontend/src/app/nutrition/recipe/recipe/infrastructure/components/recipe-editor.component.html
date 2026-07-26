@@ -1,8 +1,28 @@
 <ds-page-wrapper [maxWidth]="'640px'" [gap]="'16px'">
   @if (loading()) {
-    <ds-skeleton height="64px" />
-    <ds-skeleton height="120px" />
-    <ds-skeleton height="200px" />
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="54%"
+    />
+    <ds-skeleton-fields [rows]="[2, 1]" [gap]="'16px'" />
+    <ds-skeleton height="66px" radius="var(--ds-radius-3xl)" />
+    <ds-skeleton-section-header titleWidth="122px" [action]="true" />
+    <ds-skeleton-macro-bars />
+    <ds-skeleton-list
+      [count]="3"
+      [gap]="'8px'"
+      radius="16px"
+      padding="9px 11px"
+      [tile]="36"
+      [tileRadius]="10"
+      titleWidth="54%"
+      metaWidth="36%"
+      trailing="pill"
+      pillWidth="78px"
+      pillHeight="36px"
+    />
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-stack [gap]="'16px'">

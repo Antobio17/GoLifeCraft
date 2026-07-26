@@ -11,11 +11,22 @@
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-grid [minColumn]="'320px'">
-      @for (i of [1, 2, 3, 4]; track i) {
-        <ds-skeleton height="82px" />
-      }
-    </ds-grid>
+    <ds-skeleton-filters [search]="true" [caption]="true" />
+    <ds-skeleton-list
+      [count]="6"
+      [columns]="null"
+      minColumn="320px"
+      [gap]="'12px'"
+      radius="16px"
+      padding="11px"
+      [alignTop]="true"
+      [tile]="58"
+      [tileRadius]="14"
+      titleWidth="52%"
+      headTrailing="52px"
+      metaWidth="42%"
+      [chips]="3"
+    />
   } @else if (items().length === 0) {
     <ds-empty-state
       icon="leaf"

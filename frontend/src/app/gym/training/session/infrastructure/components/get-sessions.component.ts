@@ -16,7 +16,7 @@ import { ChipComponent } from "@shared/design-system/chip/infrastructure/compone
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -47,7 +47,7 @@ interface SessionRow {
     ButtonComponent,
     IconButtonComponent,
     EmptyStateComponent,
-    SkeletonComponent,
+    SkeletonListComponent,
   ],
 })
 export class GetSessionsComponent extends AbstractListPageComponent<Session> {

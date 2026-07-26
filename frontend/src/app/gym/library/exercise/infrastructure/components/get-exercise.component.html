@@ -17,8 +17,40 @@
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-skeleton height="120px" />
-    <ds-skeleton height="180px" />
+    <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'18px'">
+      <ds-stack [gap]="'16px'">
+        <ds-skeleton-list-item
+          padding="14px 16px"
+          [tile]="60"
+          [tileRadius]="16"
+          titleWidth="72%"
+          metaWidth="46%"
+        />
+        <ds-skeleton-metrics [count]="3" [gap]="'8px'" />
+      </ds-stack>
+
+      <ds-stack [gap]="'12px'">
+        <ds-skeleton-line width="128px" height="12px" />
+        <ds-skeleton height="40px" radius="var(--ds-radius-2xl)" />
+        <ds-skeleton-panel
+          content="spark"
+          chartHeight="132px"
+          [figure]="true"
+        />
+        <ds-skeleton-line width="96px" height="12px" />
+        <ds-skeleton-list
+          [count]="3"
+          [gap]="'7px'"
+          radius="16px"
+          padding="10px 12px"
+          titleWidth="46%"
+          metaWidth="62%"
+          trailing="pill"
+          pillWidth="52px"
+          pillHeight="16px"
+        />
+      </ds-stack>
+    </ds-grid>
   } @else {
     <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'18px'">
       <ds-stack [gap]="'16px'">

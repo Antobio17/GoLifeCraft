@@ -6,10 +6,12 @@
   />
 
   @if (loading()) {
-    <ds-stack [gap]="'12px'">
-      <ds-skeleton height="66px" />
-      <ds-skeleton height="150px" />
-    </ds-stack>
+    <ds-skeleton-metrics [count]="3" [gap]="'8px'" padding="11px 12px" />
+    <ds-skeleton-panel [figure]="true" content="bars" chartHeight="108px" />
+    <ds-grid [minColumn]="'240px'" [gap]="'10px'">
+      <ds-skeleton-panel [brand]="true" content="spark" chartHeight="54px" />
+      <ds-skeleton-panel content="meters" [meters]="4" />
+    </ds-grid>
   } @else if (!hasData) {
     <ds-text variant="muted">{{ "dashboard.gym.empty" | t }}</ds-text>
   } @else {

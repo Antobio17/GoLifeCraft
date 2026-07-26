@@ -37,6 +37,11 @@ import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastruct
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list-item.component";
+import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
+import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import {
   ProgressionCardComponent,
   ProgressionTrend,
@@ -71,6 +76,11 @@ interface SessionRow {
     IconBadgeComponent,
     EmptyStateComponent,
     SkeletonComponent,
+    SkeletonLineComponent,
+    SkeletonListComponent,
+    SkeletonListItemComponent,
+    SkeletonMetricsComponent,
+    SkeletonPanelComponent,
     ProgressionCardComponent,
   ],
 })

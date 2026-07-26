@@ -1,0 +1,39 @@
+<div class="skpan" [class.skpan--brand]="brand">
+  <div class="skpan__head">
+    <div class="skpan__heading">
+      <span class="ds-sk skpan__title"></span>
+      @if (subtitle) {
+        <span class="ds-sk skpan__subtitle"></span>
+      }
+    </div>
+    @if (figure) {
+      <span class="ds-sk skpan__figure"></span>
+    }
+  </div>
+
+  @switch (content) {
+    @case ("bars") {
+      <div class="skpan__chart" [style.height]="chartHeight">
+        @for (bar of barArray; track bar) {
+          <span class="ds-sk skpan__bar"></span>
+        }
+      </div>
+    }
+    @case ("meters") {
+      <div class="skpan__meters">
+        @for (meter of meterArray; track meter) {
+          <div class="skpan__meter">
+            <div class="skpan__meter-head">
+              <span class="ds-sk skpan__meter-label"></span>
+              <span class="ds-sk skpan__meter-value"></span>
+            </div>
+            <span class="ds-sk skpan__meter-track"></span>
+          </div>
+        }
+      </div>
+    }
+    @case ("spark") {
+      <span class="ds-sk skpan__spark" [style.height]="chartHeight"></span>
+    }
+  }
+</div>

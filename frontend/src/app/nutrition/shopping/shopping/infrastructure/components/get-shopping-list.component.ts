@@ -9,7 +9,9 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
+import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
@@ -49,7 +51,9 @@ type FilterKind = "store" | "cat" | "brand";
     TextComponent,
     HeadingComponent,
     ButtonComponent,
-    SkeletonComponent,
+    SkeletonSummaryComponent,
+    SkeletonSectionHeaderComponent,
+    SkeletonListComponent,
     EmptyStateComponent,
     ModalSheetComponent,
     SearchInputComponent,
@@ -75,6 +79,8 @@ export class GetShoppingListComponent implements OnInit {
   private readonly MODULE_PATH = "nutrition/shopping/shopping";
 
   canWrite = this.authSession.isGod();
+
+  readonly skeletonGroups = [3, 2];
 
   loading = signal(true);
   attributes = signal<ShoppingListAttributes | null>(null);

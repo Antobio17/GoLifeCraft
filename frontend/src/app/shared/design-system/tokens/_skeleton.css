@@ -1,0 +1,37 @@
+/* ============================================================
+   DESIGN SYSTEM — SKELETON
+   Utilidad global compartida por todos los ds-skeleton-*.
+   Un único shimmer para toda la app: misma duración, misma
+   dirección y mismo degradado en cualquier pantalla.
+   ============================================================ */
+
+@keyframes ds-sk-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.ds-sk {
+  display: block;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  border-radius: var(--ds-radius-sm);
+  background: linear-gradient(
+    100deg,
+    var(--ds-skeleton-base) 30%,
+    var(--ds-skeleton-highlight) 50%,
+    var(--ds-skeleton-base) 70%
+  );
+  background-size: 200% 100%;
+  animation: ds-sk-shimmer var(--ds-sk-duration, 1.5s) ease-in-out infinite;
+  animation-delay: var(--ds-sk-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-sk {
+    animation: none;
+  }
+}

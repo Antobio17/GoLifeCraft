@@ -43,18 +43,16 @@
         @if (brand) {
           <ds-text variant="meta" [inline]="true">{{ brand }} ·</ds-text>
         }
-        <ds-text [inline]="true" class="shopping-item__store">{{ store }}</ds-text>
+        <ds-text [inline]="true" class="shopping-item__store">{{
+          store
+        }}</ds-text>
       </ds-stack>
     </ds-stack>
 
     <ds-stack class="shopping-item__trailing" align="end" [gap]="'6px'">
       <ds-text class="shopping-item__price">{{ priceLabel }}</ds-text>
       @if (canWrite) {
-        <ds-stack
-          class="shopping-item__stepper"
-          direction="row"
-          align="center"
-        >
+        <ds-stack class="shopping-item__stepper" direction="row" align="center">
           <button
             type="button"
             class="shopping-item__step"

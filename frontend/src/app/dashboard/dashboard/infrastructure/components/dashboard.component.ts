@@ -16,6 +16,7 @@ import { DashboardLayoutComponent } from "@shared/design-system/dashboard-layout
 import { GreetingHeaderComponent } from "@shared/design-system/greeting-header/infrastructure/components/greeting-header.component";
 import { DailySummaryComponent } from "@shared/design-system/daily-summary/infrastructure/components/daily-summary.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { GetGymStatsService } from "@gym/analytics/stats/application/services/get-gym-stats.service";
@@ -45,6 +46,7 @@ interface DailySummary {
     GreetingHeaderComponent,
     DailySummaryComponent,
     SectionHeaderComponent,
+    SkeletonSummaryComponent,
     StackComponent,
     GridComponent,
     GymAnalyticsComponent,
@@ -62,6 +64,7 @@ export class DashboardComponent implements OnInit {
 
   readonly gymStats = signal<GymStats | null>(null);
   readonly gymStatsLoading = signal(true);
+  readonly summaryLoading = signal(true);
 
   readonly name = computed(() => {
     const session = this.authSessionService.session();
@@ -113,8 +116,10 @@ export class DashboardComponent implements OnInit {
             fatG: attributes.totals.fat,
             carbsG: attributes.totals.carbs,
           });
+
+          this.summaryLoading.set(false);
         },
-        error: () => {},
+        error: () => this.summaryLoading.set(false),
       });
 
     this.getGymStatsService

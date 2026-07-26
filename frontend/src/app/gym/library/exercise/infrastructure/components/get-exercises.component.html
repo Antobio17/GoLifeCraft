@@ -12,11 +12,22 @@
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
-      @for (i of [1, 2, 3, 4]; track i) {
-        <ds-skeleton height="66px" />
-      }
-    </ds-grid>
+    <ds-skeleton-filters [search]="true" [segments]="2" />
+    <ds-skeleton-list
+      [count]="6"
+      [columns]="null"
+      minColumn="280px"
+      [tabletColumns]="2"
+      [gap]="'12px'"
+      radius="16px"
+      padding="11px 12px"
+      [tile]="34"
+      [tileRadius]="10"
+      titleWidth="56%"
+      metaWidth="40%"
+      trailing="actions"
+      [actions]="2"
+    />
   } @else {
     <ds-search-input
       [placeholder]="'getExercises.searchPlaceholder' | t"
@@ -31,11 +42,21 @@
     />
 
     @if (reloading()) {
-      <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
-        @for (i of [1, 2, 3, 4]; track i) {
-          <ds-skeleton height="66px" />
-        }
-      </ds-grid>
+      <ds-skeleton-list
+        [count]="6"
+        [columns]="null"
+        minColumn="280px"
+        [tabletColumns]="2"
+        [gap]="'12px'"
+        radius="16px"
+        padding="11px 12px"
+        [tile]="34"
+        [tileRadius]="10"
+        titleWidth="56%"
+        metaWidth="40%"
+        trailing="actions"
+        [actions]="2"
+      />
     } @else if (items().length === 0) {
       @if (searchQuery()) {
         <ds-text variant="muted">
@@ -59,11 +80,21 @@
       </ds-grid>
 
       @if (loadingMore()) {
-        <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
-          @for (i of [1, 2]; track i) {
-            <ds-skeleton height="66px" />
-          }
-        </ds-grid>
+        <ds-skeleton-list
+          [count]="2"
+          [columns]="null"
+          minColumn="280px"
+          [tabletColumns]="2"
+          [gap]="'12px'"
+          radius="16px"
+          padding="11px 12px"
+          [tile]="34"
+          [tileRadius]="10"
+          titleWidth="56%"
+          metaWidth="40%"
+          trailing="actions"
+          [actions]="2"
+        />
       }
 
       <ds-infinite-scroll

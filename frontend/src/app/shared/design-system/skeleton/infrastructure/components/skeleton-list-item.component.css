@@ -1,0 +1,183 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.skli {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--skli-radius, 16px);
+  padding: var(--skli-padding, 10px 11px);
+}
+
+.skli--brand {
+  --ds-skeleton-base: color-mix(
+    in srgb,
+    var(--ds-on-surface-brand) 14%,
+    transparent
+  );
+  --ds-skeleton-highlight: color-mix(
+    in srgb,
+    var(--ds-on-surface-brand) 25%,
+    transparent
+  );
+  background: var(--ds-surface-brand);
+  border-color: color-mix(in srgb, var(--ds-on-surface-brand) 8%, transparent);
+}
+
+.skli--flat {
+  background: transparent;
+  border-color: transparent;
+  padding: 0;
+}
+
+.skli__row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.skli__row--top {
+  align-items: flex-start;
+}
+
+.skli__check {
+  width: var(--skli-check, 26px);
+  height: var(--skli-check, 26px);
+  border-radius: var(--ds-radius-lg);
+}
+
+.skli__tile {
+  width: var(--skli-tile, 44px);
+  height: var(--skli-tile, 44px);
+  border-radius: var(--skli-tile-radius, 12px);
+}
+
+.skli__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skli__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.skli__title {
+  width: var(--skli-title, 58%);
+  height: var(--skli-title-h, 13px);
+  border-radius: var(--ds-radius-sm);
+}
+
+.skli__head-trailing {
+  width: var(--skli-head-trailing, 48px);
+  height: 16px;
+  border-radius: var(--ds-radius-sm);
+}
+
+.skli__meta {
+  width: var(--skli-meta, 38%);
+  height: 10px;
+  border-radius: var(--ds-radius-sm);
+}
+
+.skli__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.skli__chip {
+  width: 46px;
+  height: 18px;
+  border-radius: 7px;
+}
+
+.skli__chips .skli__chip:nth-child(1) {
+  width: 54px;
+}
+.skli__chips .skli__chip:nth-child(2) {
+  width: 42px;
+}
+.skli__chips .skli__chip:nth-child(3) {
+  width: 46px;
+}
+.skli__chips .skli__chip:nth-child(4) {
+  width: 40px;
+}
+
+.skli__pill {
+  width: var(--skli-pill-w, 78px);
+  height: var(--skli-pill-h, 30px);
+  border-radius: var(--ds-radius-lg);
+}
+
+.skli__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.skli__price {
+  width: 46px;
+  height: 13px;
+  border-radius: var(--ds-radius-sm);
+}
+
+.skli__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skli__action {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ds-radius-lg);
+}
+
+.skli__button {
+  width: 84px;
+  height: 32px;
+  border-radius: 11px;
+}
+
+.skli__progress {
+  width: 100%;
+  height: 8px;
+  border-radius: var(--ds-radius-pill);
+}
+
+.skli__foot {
+  display: flex;
+  gap: 14px;
+}
+
+.skli__foot-item {
+  width: 74px;
+  height: 11px;
+  border-radius: var(--ds-radius-sm);
+}
+
+.skli__foot .skli__foot-item:nth-child(2) {
+  width: 92px;
+}
+
+.skli__foot-button {
+  width: 100%;
+  height: 34px;
+  border-radius: var(--ds-radius-xl);
+}

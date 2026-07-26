@@ -1,0 +1,67 @@
+<div
+  class="sksum"
+  [class.sksum--primary]="tone === 'primary'"
+  [class.sksum--compact]="compact"
+>
+  @if (head) {
+    <div class="sksum__head">
+      <span class="ds-sk sksum__eyebrow"></span>
+      <span class="ds-sk sksum__count"></span>
+    </div>
+  }
+
+  <div class="sksum__main">
+    @if (ring) {
+      <span class="ds-sk sksum__ring"></span>
+    }
+
+    <div class="sksum__value">
+      <span class="ds-sk sksum__value-main"></span>
+      <span class="ds-sk sksum__value-foot"></span>
+    </div>
+
+    @if (mainAside) {
+      <span class="ds-sk sksum__aside"></span>
+    }
+
+    @if (stats > 0) {
+      <div class="sksum__stats">
+        @for (stat of statArray; track stat) {
+          <div class="sksum__stat">
+            <span class="ds-sk sksum__stat-value"></span>
+            <span class="ds-sk sksum__stat-label"></span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (macros === "bars") {
+    <div class="sksum__bars">
+      @for (macro of macroArray; track macro) {
+        <div class="sksum__bar">
+          <div class="sksum__bar-head">
+            <span class="ds-sk sksum__bar-label"></span>
+            <span class="ds-sk sksum__bar-value"></span>
+          </div>
+          <span class="ds-sk sksum__bar-track"></span>
+        </div>
+      }
+    </div>
+  }
+
+  @if (macros === "tiles") {
+    <div class="sksum__tiles">
+      @for (macro of macroArray; track macro) {
+        <div class="sksum__tile">
+          <span class="ds-sk sksum__tile-label"></span>
+          <span class="ds-sk sksum__tile-value"></span>
+        </div>
+      }
+    </div>
+  }
+
+  @if (progress) {
+    <span class="ds-sk sksum__progress"></span>
+  }
+</div>

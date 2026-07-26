@@ -1,9 +1,33 @@
 <ds-page-wrapper [maxWidth]="'640px'" [gap]="'13px'">
   @if (loading()) {
-    <ds-skeleton height="40px" />
-    <ds-skeleton height="118px" />
-    <ds-skeleton height="90px" />
-    <ds-skeleton height="220px" />
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="56%"
+      [actions]="canWrite ? 2 : 0"
+    />
+    <ds-skeleton-hero />
+    <ds-skeleton-line
+      width="118px"
+      height="26px"
+      radius="var(--ds-radius-pill)"
+    />
+    <ds-skeleton-macro-bars />
+    <ds-skeleton-section-header titleWidth="118px" [action]="true" />
+    <ds-skeleton-list
+      [count]="4"
+      [gap]="'8px'"
+      radius="16px"
+      padding="10px"
+      [tile]="44"
+      [tileRadius]="12"
+      titleWidth="56%"
+      metaWidth="40%"
+      trailing="stack"
+      pillWidth="38px"
+      pillHeight="11px"
+    />
   } @else if (attributes(); as recipe) {
     <ds-screen-header
       [leading]="'back'"

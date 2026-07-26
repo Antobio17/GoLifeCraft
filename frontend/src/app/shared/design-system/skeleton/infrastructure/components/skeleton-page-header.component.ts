@@ -7,6 +7,8 @@ import { Component, Input } from "@angular/core";
 })
 export class SkeletonPageHeaderComponent {
   @Input() showIcon: boolean = true;
+  @Input() showTag: boolean = true;
+  @Input() subtitleLines: number = 2;
   @Input() showEyebrow: boolean = false;
   @Input() showStats: boolean = false;
   @Input() showAction: boolean = true;

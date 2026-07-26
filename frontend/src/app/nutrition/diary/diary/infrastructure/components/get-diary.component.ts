@@ -23,7 +23,9 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { PlaceholderNoteComponent } from "@shared/design-system/placeholder-note/infrastructure/components/placeholder-note.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
+import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
@@ -97,7 +99,9 @@ type PickerTab = "product" | "recipe" | "quick";
     PlaceholderNoteComponent,
     CardComponent,
     StackComponent,
-    SkeletonComponent,
+    SkeletonSummaryComponent,
+    SkeletonSectionHeaderComponent,
+    SkeletonListComponent,
     ModalSheetComponent,
     SearchInputComponent,
     SegmentedToggleComponent,
@@ -142,6 +146,8 @@ export class GetDiaryComponent implements OnInit {
   }>();
 
   canWrite = this.authSession.isGod();
+
+  readonly skeletonMeals = [2, 2, 1, 1];
 
   loading = signal(true);
   day = signal<DiaryDay | null>(null);

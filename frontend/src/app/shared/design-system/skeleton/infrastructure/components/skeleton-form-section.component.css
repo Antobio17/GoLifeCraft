@@ -1,24 +1,3 @@
-@keyframes skf-shimmer {
-  0% {
-    background-position: -700px 0;
-  }
-  100% {
-    background-position: 700px 0;
-  }
-}
-
-.skf-bar {
-  background: linear-gradient(
-    90deg,
-    var(--ds-skeleton-base) 25%,
-    var(--ds-skeleton-highlight) 50%,
-    var(--ds-skeleton-base) 75%
-  );
-  background-size: 700px 100%;
-  animation: skf-shimmer 1.5s ease-in-out infinite;
-  border-radius: 6px;
-}
-
 .skf-card {
   background: var(--ds-surface-raised);
   border-radius: 16px;

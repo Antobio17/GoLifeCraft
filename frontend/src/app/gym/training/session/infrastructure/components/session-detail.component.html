@@ -1,6 +1,30 @@
 <ds-page-wrapper [maxWidth]="'680px'" [gap]="'12px'">
   @if (loading()) {
-    <ds-skeleton height="120px" />
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="54%"
+      [actions]="2"
+      actionWidth="86px"
+    />
+    <ds-skeleton-line
+      width="104px"
+      height="26px"
+      radius="var(--ds-radius-pill)"
+    />
+    <ds-skeleton-list
+      [count]="3"
+      [gap]="'9px'"
+      radius="var(--ds-radius-3xl)"
+      padding="11px"
+      titleWidth="52%"
+      metaWidth="34%"
+      headTrailing="72px"
+      trailing="actions"
+      [actions]="1"
+      [footItems]="2"
+    />
   } @else {
     <ds-screen-header
       [leading]="'back'"

@@ -72,9 +72,31 @@
   </ds-stack>
 
   @if (loading()) {
-    <ds-skeleton height="190px" />
-    <ds-skeleton height="120px" />
-    <ds-skeleton height="120px" />
+    <ds-skeleton-summary macros="bars" />
+
+    @for (entries of skeletonMeals; track $index) {
+      <ds-stack [gap]="'10px'">
+        <ds-skeleton-section-header
+          titleWidth="104px"
+          [subtitle]="true"
+          [action]="canWrite"
+          actionWidth="74px"
+        />
+        <ds-skeleton-list
+          [count]="entries"
+          [gap]="'8px'"
+          radius="14px"
+          padding="10px 11px"
+          [tile]="38"
+          [tileRadius]="10"
+          titleWidth="66%"
+          [meta]="false"
+          [chips]="2"
+          trailing="pill"
+          pillWidth="86px"
+        />
+      </ds-stack>
+    }
   } @else if (attributes(); as diary) {
     <ds-diary-summary
       [eyebrow]="summaryEyebrowKey() | t"

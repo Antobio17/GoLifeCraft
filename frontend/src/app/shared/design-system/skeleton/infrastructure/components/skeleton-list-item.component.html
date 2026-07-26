@@ -1,0 +1,74 @@
+<div
+  class="skli"
+  [class.skli--flat]="!surface"
+  [class.skli--brand]="tone === 'brand'"
+>
+  <div class="skli__row" [class.skli__row--top]="alignTop">
+    @if (check) {
+      <span class="ds-sk skli__check"></span>
+    }
+
+    @if (tile > 0) {
+      <span class="ds-sk skli__tile"></span>
+    }
+
+    <div class="skli__body">
+      <div class="skli__head">
+        <span class="ds-sk skli__title"></span>
+        @if (headTrailing) {
+          <span class="ds-sk skli__head-trailing"></span>
+        }
+      </div>
+
+      @if (meta) {
+        <span class="ds-sk skli__meta"></span>
+      }
+
+      @if (chips > 0) {
+        <div class="skli__chips">
+          @for (chip of chipArray; track chip) {
+            <span class="ds-sk skli__chip"></span>
+          }
+        </div>
+      }
+    </div>
+
+    @switch (trailing) {
+      @case ("pill") {
+        <span class="ds-sk skli__pill"></span>
+      }
+      @case ("stack") {
+        <div class="skli__stack">
+          <span class="ds-sk skli__price"></span>
+          <span class="ds-sk skli__pill"></span>
+        </div>
+      }
+      @case ("actions") {
+        <div class="skli__actions">
+          @for (action of actionArray; track action) {
+            <span class="ds-sk skli__action"></span>
+          }
+        </div>
+      }
+      @case ("button") {
+        <span class="ds-sk skli__button"></span>
+      }
+    }
+  </div>
+
+  @if (progress) {
+    <span class="ds-sk skli__progress"></span>
+  }
+
+  @if (footButton) {
+    <span class="ds-sk skli__foot-button"></span>
+  }
+
+  @if (footItems > 0) {
+    <div class="skli__foot">
+      @for (item of footArray; track item) {
+        <span class="ds-sk skli__foot-item"></span>
+      }
+    </div>
+  }
+</div>

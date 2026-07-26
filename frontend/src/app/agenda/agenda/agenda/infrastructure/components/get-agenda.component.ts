@@ -10,7 +10,7 @@ import { HeadingComponent } from "@shared/design-system/heading/infrastructure/c
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
@@ -60,7 +60,7 @@ import { AgendaCalendarDay } from "@agenda/agenda/agenda/domain/models/agenda-ca
     ButtonComponent,
     IconButtonComponent,
     CardComponent,
-    SkeletonComponent,
+    SkeletonListComponent,
     EmptyStateComponent,
     ModalSheetComponent,
     NoteComponent,

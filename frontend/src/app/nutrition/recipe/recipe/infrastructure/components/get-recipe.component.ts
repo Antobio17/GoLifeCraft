@@ -16,7 +16,12 @@ import { HeadingComponent } from "@shared/design-system/heading/infrastructure/c
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
+import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
+import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
+import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { GetRecipeService } from "@nutrition/recipe/recipe/application/services/get-recipe.service";
@@ -42,7 +47,12 @@ import { RecipeDetail } from "@nutrition/recipe/recipe/domain/models/recipe.mode
     IconButtonComponent,
     EmojiTileComponent,
     NoteComponent,
-    SkeletonComponent,
+    SkeletonLineComponent,
+    SkeletonScreenHeaderComponent,
+    SkeletonHeroComponent,
+    SkeletonMacroBarsComponent,
+    SkeletonSectionHeaderComponent,
+    SkeletonListComponent,
     EmptyStateComponent,
     ConfirmActionModalComponent,
   ],

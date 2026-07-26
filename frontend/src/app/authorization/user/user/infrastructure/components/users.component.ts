@@ -13,6 +13,9 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { MetricCardComponent } from "@shared/design-system/metric-card/infrastructure/components/metric-card.component";
 import { UserAccessRowComponent } from "@shared/design-system/user-access-row/infrastructure/components/user-access-row.component";
@@ -43,6 +46,9 @@ interface UserRowViewModel {
     StackComponent,
     TextComponent,
     SkeletonComponent,
+    SkeletonLineComponent,
+    SkeletonListComponent,
+    SkeletonMetricsComponent,
     EmptyStateComponent,
     MetricCardComponent,
     UserAccessRowComponent,

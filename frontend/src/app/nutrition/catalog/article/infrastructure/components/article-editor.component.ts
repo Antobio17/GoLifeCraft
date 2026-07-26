@@ -26,6 +26,7 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
@@ -95,6 +96,7 @@ function equivalencesValidator(
     ConfirmActionModalComponent,
     StackComponent,
     SkeletonComponent,
+    SkeletonFieldsComponent,
   ],
 })
 export class ArticleEditorComponent implements OnInit {

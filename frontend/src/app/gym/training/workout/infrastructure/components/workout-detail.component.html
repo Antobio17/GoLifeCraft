@@ -1,6 +1,28 @@
 <ds-page-wrapper [maxWidth]="'680px'" [gap]="'12px'">
   @if (loading()) {
-    <ds-skeleton height="120px" />
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="52%"
+    />
+    <ds-skeleton-summary
+      [head]="false"
+      [ring]="false"
+      [compact]="true"
+      [stats]="2"
+      macros="none"
+    />
+    <ds-skeleton-list
+      [count]="3"
+      [gap]="'9px'"
+      radius="var(--ds-radius-3xl)"
+      padding="12px"
+      titleWidth="48%"
+      metaWidth="30%"
+      headTrailing="58px"
+      [footItems]="2"
+    />
   } @else if (vm(); as detail) {
     <ds-screen-header
       [leading]="'back'"

@@ -13,7 +13,9 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
+import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { WorkoutSummaryComponent } from "@shared/design-system/workout-summary/infrastructure/components/workout-summary.component";
 import { WorkoutExerciseComponent } from "@shared/design-system/workout-exercise/infrastructure/components/workout-exercise.component";
 import { GetWorkoutService } from "../../application/services/get-workout.service";
@@ -30,7 +32,9 @@ import {
     PageWrapperComponent,
     ScreenHeaderComponent,
     StackComponent,
-    SkeletonComponent,
+    SkeletonScreenHeaderComponent,
+    SkeletonSummaryComponent,
+    SkeletonListComponent,
     WorkoutSummaryComponent,
     WorkoutExerciseComponent,
   ],

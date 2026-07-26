@@ -6,10 +6,16 @@
   />
 
   @if (loading()) {
-    <ds-stack [gap]="'8px'">
-      <ds-skeleton height="66px" />
-      <ds-skeleton height="66px" />
-    </ds-stack>
+    <ds-skeleton-line width="184px" height="11px" />
+    <ds-skeleton-list
+      [count]="3"
+      [gap]="'8px'"
+      radius="var(--ds-radius-3xl)"
+      padding="11px 12px"
+      titleWidth="64%"
+      [meta]="false"
+      [chips]="2"
+    />
   } @else if (!hasEntries()) {
     <ds-text variant="muted">{{ "dashboard.agenda.empty" | t }}</ds-text>
   } @else {

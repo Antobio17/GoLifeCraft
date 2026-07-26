@@ -38,6 +38,11 @@ import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastru
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
+import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
+import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
+import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { ChoiceChipOption } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import { EmojiCatalogService } from "@nutrition/catalog/article/application/services/emoji-catalog.service";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
@@ -92,6 +97,11 @@ type PickerTab = "product" | "recipe";
     SearchInputComponent,
     ConfirmActionModalComponent,
     SkeletonComponent,
+    SkeletonScreenHeaderComponent,
+    SkeletonFieldsComponent,
+    SkeletonSectionHeaderComponent,
+    SkeletonMacroBarsComponent,
+    SkeletonListComponent,
   ],
 })
 export class RecipeEditorComponent implements OnInit {

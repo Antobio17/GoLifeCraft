@@ -7,7 +7,8 @@ import {
   BarDatum,
 } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
 import { LineChartComponent } from "@shared/design-system/line-chart/infrastructure/components/line-chart.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
+import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
@@ -43,7 +44,8 @@ const REGION_COLORS = [
     TextComponent,
     BarChartComponent,
     LineChartComponent,
-    SkeletonComponent,
+    SkeletonMetricsComponent,
+    SkeletonPanelComponent,
     StackComponent,
     GridComponent,
     SectionHeaderComponent,

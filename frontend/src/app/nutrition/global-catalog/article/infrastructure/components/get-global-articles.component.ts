@@ -22,6 +22,8 @@ import { GridComponent } from "@shared/design-system/grid/infrastructure/compone
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
@@ -46,6 +48,8 @@ import {
     StackComponent,
     EmptyStateComponent,
     SkeletonComponent,
+    SkeletonListComponent,
+    SkeletonFiltersComponent,
     TextComponent,
     ProductCardComponent,
     InfiniteScrollComponent,

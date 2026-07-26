@@ -1,9 +1,29 @@
 <ds-page-wrapper [gap]="'14px'">
   @if (loading()) {
-    <ds-skeleton height="40px" />
-    <ds-skeleton height="118px" />
-    <ds-skeleton height="120px" />
-    <ds-skeleton height="200px" />
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="58%"
+      [actions]="canWrite ? 2 : 0"
+    />
+    <ds-skeleton-hero />
+    <ds-stack direction="row" [gap]="'6px'">
+      <ds-skeleton-line
+        width="76px"
+        height="26px"
+        radius="var(--ds-radius-pill)"
+      />
+      <ds-skeleton-line
+        width="94px"
+        height="26px"
+        radius="var(--ds-radius-pill)"
+      />
+    </ds-stack>
+    <ds-skeleton height="40px" radius="var(--ds-radius-2xl)" />
+    <ds-skeleton-line width="148px" height="12px" />
+    <ds-skeleton-macro-bars />
+    <ds-skeleton-rows [rows]="7" />
   } @else if (notFound() || detail() === null) {
     <ds-screen-header
       [leading]="'back'"

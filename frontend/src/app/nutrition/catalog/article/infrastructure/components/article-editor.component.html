@@ -8,9 +8,9 @@
   />
 
   @if (loading()) {
-    <ds-skeleton height="88px" />
-    <ds-skeleton height="120px" />
-    <ds-skeleton height="180px" />
+    <ds-skeleton-fields [rows]="[2, 2, 1, 1, 1]" [gap]="'20px'" />
+    <ds-skeleton height="212px" radius="var(--ds-radius-3xl)" />
+    <ds-skeleton height="168px" radius="var(--ds-radius-3xl)" />
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-stack [gap]="'20px'">

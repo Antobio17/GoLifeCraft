@@ -32,6 +32,9 @@ import { FieldComponent } from "@shared/design-system/field/infrastructure/compo
 import { ReadonlyStripComponent } from "@shared/design-system/readonly-strip/infrastructure/components/readonly-strip.component";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list-item.component";
+import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
 import { ProfileCardComponent } from "@shared/design-system/profile-card/infrastructure/components/profile-card.component";
 import { PreferenceToggleComponent } from "@shared/design-system/preference-toggle/infrastructure/components/preference-toggle.component";
 import { PasswordStrengthComponent } from "@shared/design-system/password-strength/infrastructure/components/password-strength.component";
@@ -93,6 +96,9 @@ function passwordMatchValidator(
     ReadonlyStripComponent,
     IconBadgeComponent,
     SkeletonComponent,
+    SkeletonLineComponent,
+    SkeletonListItemComponent,
+    SkeletonFieldsComponent,
     ProfileCardComponent,
     PreferenceToggleComponent,
     PasswordStrengthComponent,

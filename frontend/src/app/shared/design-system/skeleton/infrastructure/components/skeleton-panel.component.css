@@ -1,0 +1,139 @@
+:host {
+  display: block;
+}
+
+.skpan {
+  box-sizing: border-box;
+  height: 100%;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skpan--brand {
+  --ds-skeleton-base: color-mix(
+    in srgb,
+    var(--ds-on-surface-brand) 13%,
+    transparent
+  );
+  --ds-skeleton-highlight: color-mix(
+    in srgb,
+    var(--ds-on-surface-brand) 24%,
+    transparent
+  );
+  background: var(--ds-surface-brand);
+  border-color: transparent;
+}
+
+:host-context([data-theme="dark"]) .skpan--brand {
+  border-color: var(--ds-border-hairline);
+}
+
+.skpan__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.skpan__heading {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skpan__title {
+  width: 116px;
+  height: 11px;
+}
+
+.skpan__subtitle {
+  width: 148px;
+  height: 9px;
+}
+
+.skpan__figure {
+  width: 74px;
+  height: 16px;
+  border-radius: var(--ds-radius-md);
+}
+
+.skpan__chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.skpan__bar {
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: var(--ds-radius-sm) var(--ds-radius-sm) 3px 3px;
+  height: 45%;
+}
+
+.skpan__chart .skpan__bar:nth-child(1) {
+  height: 42%;
+}
+.skpan__chart .skpan__bar:nth-child(2) {
+  height: 66%;
+}
+.skpan__chart .skpan__bar:nth-child(3) {
+  height: 34%;
+}
+.skpan__chart .skpan__bar:nth-child(4) {
+  height: 88%;
+}
+.skpan__chart .skpan__bar:nth-child(5) {
+  height: 55%;
+}
+.skpan__chart .skpan__bar:nth-child(6) {
+  height: 72%;
+}
+.skpan__chart .skpan__bar:nth-child(7) {
+  height: 40%;
+}
+
+.skpan__meters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skpan__meter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skpan__meter-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.skpan__meter-label {
+  width: 78px;
+  height: 9px;
+}
+
+.skpan__meter-value {
+  width: 34px;
+  height: 9px;
+}
+
+.skpan__meter-track {
+  width: 100%;
+  height: 6px;
+  border-radius: var(--ds-radius-pill);
+}
+
+.skpan__spark {
+  width: 100%;
+  border-radius: var(--ds-radius-lg);
+}

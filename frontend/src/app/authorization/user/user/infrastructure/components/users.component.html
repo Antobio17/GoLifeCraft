@@ -13,11 +13,28 @@
     </ds-screen-header>
 
     @if (loading()) {
-      <ds-stack [gap]="'14px'">
-        <ds-skeleton height="72px"></ds-skeleton>
-        <ds-skeleton height="76px"></ds-skeleton>
-        <ds-skeleton height="76px"></ds-skeleton>
-        <ds-skeleton height="76px"></ds-skeleton>
+      <ds-stack [gap]="'22px'">
+        <ds-skeleton-metrics [count]="3" [gap]="'10px'" [feature]="true" />
+
+        <ds-stack [gap]="'10px'">
+          <ds-skeleton-line width="142px" height="12px" />
+          <ds-skeleton-list
+            [count]="4"
+            [gap]="'10px'"
+            radius="var(--ds-radius-3xl)"
+            padding="13px 14px"
+            [tile]="44"
+            [tileRadius]="22"
+            titleWidth="52%"
+            metaWidth="68%"
+            [chips]="1"
+            trailing="pill"
+            pillWidth="62px"
+            pillHeight="28px"
+          />
+        </ds-stack>
+
+        <ds-skeleton height="64px" radius="var(--ds-radius-3xl)" />
       </ds-stack>
     } @else {
       <ds-stack [gap]="'22px'">
