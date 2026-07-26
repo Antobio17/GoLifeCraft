@@ -1,0 +1,64 @@
+{
+  "getAgenda": {
+    "eyebrow": "Tu planificación",
+    "title": "Agenda",
+    "add": "Añadir",
+    "breadcrumb": {
+      "list": "Agenda"
+    },
+    "day": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "tomorrow": "Mañana"
+    },
+    "count": {
+      "empty": "Sin nada anotado",
+      "allDone": "Todo hecho",
+      "one": "1 pendiente",
+      "many": "pendientes"
+    },
+    "nav": {
+      "previous": "Día anterior",
+      "next": "Día siguiente"
+    },
+    "calendar": {
+      "previous": "Mes anterior",
+      "next": "Mes siguiente"
+    },
+    "kind": {
+      "task": "Tarea",
+      "appointment": "Cita"
+    },
+    "entry": {
+      "toggle": "Marcar como hecho",
+      "edit": "Editar anotación",
+      "remove": "Borrar"
+    },
+    "empty": {
+      "title": "Nada anotado este día",
+      "text": "No hay citas ni tareas para este día.",
+      "textAction": "Añade una cita o una tarea que tengas que hacer."
+    },
+    "sheet": {
+      "newTitle": "Nueva anotación",
+      "editTitle": "Editar anotación",
+      "subtitle": "Una cita o algo que tienes que hacer",
+      "close": "Cerrar",
+      "titleLabel": "TÍTULO",
+      "titlePlaceholder": "¿Qué tienes que hacer?",
+      "taskTypes": "TIPO DE TAREA",
+      "appointmentTypes": "TIPO DE CITA",
+      "dateLabel": "FECHA",
+      "timeLabel": "HORA",
+      "notesLabel": "NOTAS",
+      "notesPlaceholder": "Detalles, dirección, qué llevar…",
+      "hint": "La hora y las notas son opcionales. Deja la hora vacía para una tarea que puedes hacer en cualquier momento del día.",
+      "save": "Guardar en la agenda"
+    },
+    "toast": {
+      "created": "Añadido a la agenda",
+      "updated": "Anotación actualizada",
+      "removed": "Eliminado de la agenda"
+    }
+  }
+}

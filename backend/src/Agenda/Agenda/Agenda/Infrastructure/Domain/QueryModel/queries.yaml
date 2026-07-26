@@ -1,0 +1,10 @@
+services:
+  Agenda\Agenda\Agenda\Domain\QueryModel\GetAgendaDayNeedleDataQuery:
+    class: Agenda\Agenda\Agenda\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetAgendaDayNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Agenda\Agenda\Agenda\Domain\QueryModel\GetAgendaCalendarNeedleDataQuery:
+    class: Agenda\Agenda\Agenda\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetAgendaCalendarNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

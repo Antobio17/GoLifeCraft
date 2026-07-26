@@ -1,0 +1,36 @@
+services:
+  Agenda\Agenda\Agenda\Application\Command\CreateAgendaEntryCommandHandler:
+    class: Agenda\Agenda\Agenda\Application\Command\CreateAgendaEntryCommandHandler
+    arguments:
+      $agendaEntryRepository: '@Agenda\Agenda\Agenda\Domain\Model\AgendaEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Agenda\Agenda\Agenda\Application\Command\UpdateAgendaEntryCommandHandler:
+    class: Agenda\Agenda\Agenda\Application\Command\UpdateAgendaEntryCommandHandler
+    arguments:
+      $agendaEntryRepository: '@Agenda\Agenda\Agenda\Domain\Model\AgendaEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Agenda\Agenda\Agenda\Application\Command\ChangeAgendaEntryStatusCommandHandler:
+    class: Agenda\Agenda\Agenda\Application\Command\ChangeAgendaEntryStatusCommandHandler
+    arguments:
+      $agendaEntryRepository: '@Agenda\Agenda\Agenda\Domain\Model\AgendaEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Agenda\Agenda\Agenda\Application\Command\DeleteAgendaEntryCommandHandler:
+    class: Agenda\Agenda\Agenda\Application\Command\DeleteAgendaEntryCommandHandler
+    arguments:
+      $agendaEntryRepository: '@Agenda\Agenda\Agenda\Domain\Model\AgendaEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

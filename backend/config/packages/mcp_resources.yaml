@@ -54,6 +54,12 @@ parameters:
             read_roles: [ROLE_GOD, ROLE_USER]
             write_roles: []
 
+        agenda_entry:
+            class: 'Agenda\Agenda\Agenda\Domain\Model\AgendaEntry'
+            sidecar: '%kernel.project_dir%/src/Agenda/Agenda/Agenda/Infrastructure/Domain/Model/Doctrine/Mapping/AgendaEntry.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+
         exercise:
             class: 'Gym\Library\Exercise\Domain\Model\Exercise'
             sidecar: '%kernel.project_dir%/src/Gym/Library/Exercise/Infrastructure/Domain/Model/Doctrine/Mapping/Exercise.mcp.yaml'

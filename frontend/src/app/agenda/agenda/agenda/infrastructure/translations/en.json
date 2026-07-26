@@ -1,0 +1,64 @@
+{
+  "getAgenda": {
+    "eyebrow": "Your planning",
+    "title": "Agenda",
+    "add": "Add",
+    "breadcrumb": {
+      "list": "Agenda"
+    },
+    "day": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow"
+    },
+    "count": {
+      "empty": "Nothing planned",
+      "allDone": "All done",
+      "one": "1 pending",
+      "many": "pending"
+    },
+    "nav": {
+      "previous": "Previous day",
+      "next": "Next day"
+    },
+    "calendar": {
+      "previous": "Previous month",
+      "next": "Next month"
+    },
+    "kind": {
+      "task": "Task",
+      "appointment": "Appointment"
+    },
+    "entry": {
+      "toggle": "Mark as done",
+      "edit": "Edit entry",
+      "remove": "Delete"
+    },
+    "empty": {
+      "title": "Nothing planned for this day",
+      "text": "There are no appointments or tasks for this day.",
+      "textAction": "Add an appointment or a task you have to do."
+    },
+    "sheet": {
+      "newTitle": "New entry",
+      "editTitle": "Edit entry",
+      "subtitle": "An appointment or something you have to do",
+      "close": "Close",
+      "titleLabel": "TITLE",
+      "titlePlaceholder": "What do you have to do?",
+      "taskTypes": "TASK TYPE",
+      "appointmentTypes": "APPOINTMENT TYPE",
+      "dateLabel": "DATE",
+      "timeLabel": "TIME",
+      "notesLabel": "NOTES",
+      "notesPlaceholder": "Details, address, what to bring…",
+      "hint": "Time and notes are optional. Leave the time empty for a task you can do at any moment of the day.",
+      "save": "Save to the agenda"
+    },
+    "toast": {
+      "created": "Added to the agenda",
+      "updated": "Entry updated",
+      "removed": "Removed from the agenda"
+    }
+  }
+}

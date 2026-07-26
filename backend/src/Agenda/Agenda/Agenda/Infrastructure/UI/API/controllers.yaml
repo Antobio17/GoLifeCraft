@@ -1,0 +1,42 @@
+services:
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaDayController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaDayController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaCalendarController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaCalendarController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\CreateAgendaEntryController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\CreateAgendaEntryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\UpdateAgendaEntryController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\UpdateAgendaEntryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\ChangeAgendaEntryStatusController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\ChangeAgendaEntryStatusController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\DeleteAgendaEntryController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\DeleteAgendaEntryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

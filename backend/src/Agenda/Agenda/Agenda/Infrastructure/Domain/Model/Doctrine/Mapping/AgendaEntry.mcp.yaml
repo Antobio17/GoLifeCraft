@@ -1,0 +1,59 @@
+label: Agenda entry
+
+fields:
+  entryDate:
+    writable: true
+    required: true
+    min: 10
+    max: 10
+    regex: '^\d{4}-\d{2}-\d{2}$'
+    description: >-
+      The day the appointment or task is planned for, as an ISO date "YYYY-MM-DD".
+      Use the user's local date; default to today when not specified.
+    filterable: true
+    sortable: true
+  time:
+    writable: true
+    required: false
+    max: 5
+    regex: '^([01]\d|2[0-3]):[0-5]\d$'
+    description: >-
+      Time of the day in 24h "HH:MM" format. Leave it empty for something that can be
+      done at any moment of the day.
+    sortable: true
+  title:
+    writable: true
+    required: true
+    max: 255
+    description: What has to be done or attended, for example "Revisión con el nutricionista".
+    filterable: true
+  kind:
+    writable: true
+    required: true
+    enum: [task, appointment]
+    description: >-
+      Use "appointment" when someone else is expected at a given time (doctor, physio,
+      training with a coach) and "task" for something the user has to do.
+    filterable: true
+  category:
+    writable: true
+    required: false
+    max: 30
+    description: >-
+      Optional category, it must belong to the chosen kind. For kind "appointment":
+      nutritionist, physio, dentist, doctor, training, bloodTest, personal, other.
+      For kind "task": groceries, cooking, health, exercise, errand, home, personal, other.
+    filterable: true
+  notes:
+    writable: true
+    required: false
+    max: 1000
+    description: Free details such as the address, what to bring or what to ask.
+  done:
+    writable: true
+    required: false
+    type: bool
+    description: Whether the task or appointment is already done. New entries start as false.
+    filterable: true
+
+relations: {}

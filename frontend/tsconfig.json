@@ -4,6 +4,7 @@
     "baseUrl": "./src",
     "paths": {
       "@app/*": ["app/*"],
+      "@agenda/*": ["app/agenda/*"],
       "@authorization/*": ["app/authorization/*"],
       "@gym/*": ["app/gym/*"],
       "@layouts/*": ["app/layouts/*"],

@@ -1,0 +1,18 @@
+.agenda-calendar-card {
+  --ds-radius-3xl: 22px;
+}
+
+.agenda-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.agenda-field--date {
+  flex: 1.5 1 0;
+}
+
+@media (max-width: 359px) {
+  .agenda-datetime.agenda-datetime {
+    flex-direction: column;
+  }
+}

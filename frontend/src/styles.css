@@ -15,9 +15,28 @@ body.ds-scroll-locked {
   overscroll-behavior: contain;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0px);
+  background-color: var(--ds-bg);
+  z-index: 2147483647;
+  pointer-events: none;
+}
+
 @media (max-width: 767px) {
   :root {
     zoom: var(--ds-app-scale, 1);
+  }
+
+  body::before {
+    height: max(
+      calc(env(safe-area-inset-top, 0px) / var(--ds-app-scale, 1)),
+      6px
+    );
   }
 }
 

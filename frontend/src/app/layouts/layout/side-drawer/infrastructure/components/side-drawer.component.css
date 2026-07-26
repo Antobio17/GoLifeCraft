@@ -9,6 +9,7 @@
   --drawer-bg: var(--ds-paper-100);
   --drawer-border: transparent;
   --drawer-scrim: rgba(27, 26, 21, 0.42);
+  --drawer-shadow: none;
   --drawer-active-bg: var(--ds-forest-500);
   --drawer-active-fg: var(--ds-paper-100);
   --drawer-active-icon: var(--ds-lime-500);
@@ -64,10 +65,14 @@
   padding: 0 0 calc(env(safe-area-inset-bottom) + 14px);
   background: var(--drawer-bg);
   border-right: 1px solid var(--drawer-border);
-  box-shadow: 8px 0 40px -8px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--drawer-shadow);
   transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
+}
+
+.drawer-root.is-open {
+  --drawer-shadow: 8px 0 40px -8px rgba(0, 0, 0, 0.4);
 }
 
 .drawer-root.is-open .drawer {

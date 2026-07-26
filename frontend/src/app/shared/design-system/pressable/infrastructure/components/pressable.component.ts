@@ -1,5 +1,13 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
+type PressableJustify = "start" | "center" | "between";
+
+const PRESSABLE_JUSTIFY: Record<PressableJustify, string> = {
+  start: "flex-start",
+  center: "center",
+  between: "space-between",
+};
+
 @Component({
   selector: "ds-pressable",
   standalone: true,
@@ -26,8 +34,10 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       .ds-pressable__button {
         display: flex;
         align-items: center;
+        justify-content: var(--ds-pressable-justify, flex-start);
         gap: var(--ds-pressable-gap, 11px);
         width: 100%;
+        height: 100%;
         min-width: 0;
         appearance: none;
         border: none;
@@ -47,6 +57,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
   host: {
     "[attr.grow]": "grow ? '' : null",
     "[style.--ds-pressable-gap]": "gap",
+    "[style.--ds-pressable-justify]": "justifyValue",
   },
 })
 export class PressableComponent {
@@ -54,6 +65,11 @@ export class PressableComponent {
   @Input() disabled = false;
   @Input() grow = false;
   @Input() gap = "11px";
+  @Input() justify: PressableJustify = "start";
+
+  get justifyValue(): string {
+    return PRESSABLE_JUSTIFY[this.justify];
+  }
 
   @Output() press = new EventEmitter<void>();
 }

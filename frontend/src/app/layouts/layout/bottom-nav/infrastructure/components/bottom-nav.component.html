@@ -14,6 +14,16 @@
   />
 
   <ds-tab-item
+    routerLink="/agenda"
+    routerLinkActive
+    #agendaActive="routerLinkActive"
+    icon="agenda"
+    [label]="'navbar.agenda' | t"
+    [active]="agendaActive.isActive && !isDrawerOpen()"
+    [attr.aria-label]="'navbar.agenda' | t"
+  />
+
+  <ds-tab-item
     routerLink="/diary"
     routerLinkActive
     #diaryActive="routerLinkActive"
@@ -21,16 +31,6 @@
     [label]="'navbar.diary' | t"
     [active]="diaryActive.isActive && !isDrawerOpen()"
     [attr.aria-label]="'navbar.diary' | t"
-  />
-
-  <ds-tab-item
-    routerLink="/catalog"
-    routerLinkActive
-    #catalogActive="routerLinkActive"
-    icon="leaf"
-    [label]="'navbar.catalog' | t"
-    [active]="catalogActive.isActive && !isDrawerOpen()"
-    [attr.aria-label]="'navbar.catalog' | t"
   />
 
   <ds-tab-item

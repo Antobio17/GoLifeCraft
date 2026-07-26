@@ -1,0 +1,6 @@
+services:
+  Agenda\Agenda\Agenda\Domain\Model\AgendaEntryRepository:
+    class: Agenda\Agenda\Agenda\Infrastructure\Domain\Model\Doctrine\DoctrineAgendaEntryRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Agenda\Agenda\Agenda\Domain\Model\AgendaEntry

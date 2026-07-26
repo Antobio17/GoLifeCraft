@@ -1,0 +1,71 @@
+<ds-swipe-to-delete
+  #swipe
+  [disabled]="!canWrite"
+  [reveal]="66"
+  [radius]="16"
+  [removeLabel]="removeLabel"
+  (remove)="removed.emit()"
+>
+  <ds-stack
+    class="agenda-item"
+    direction="row"
+    align="center"
+    [gap]="'11px'"
+    [class.agenda-item--done]="done"
+    [class.agenda-item--slid]="swipe.slid"
+  >
+    <ds-pressable
+      class="agenda-item__check"
+      [class.is-checked]="done"
+      [disabled]="!canWrite"
+      [ariaLabel]="toggleLabel"
+      justify="center"
+      [gap]="'0'"
+      (press)="toggled.emit()"
+    >
+      @if (done) {
+        <ds-icon name="check" [size]="14" [stroke]="3.2" />
+      }
+    </ds-pressable>
+
+    <ds-pressable
+      class="agenda-item__body"
+      [grow]="true"
+      [disabled]="!canWrite"
+      [ariaLabel]="canWrite ? editLabel : ''"
+      (press)="opened.emit()"
+    >
+      <ds-stack [gap]="'4px'" [grow]="true">
+        <ds-text class="agenda-item__title" variant="strong">{{
+          title
+        }}</ds-text>
+
+        <ds-stack direction="row" align="center" [wrap]="true" [gap]="'7px'">
+          <ds-chip
+            class="agenda-item__kind"
+            [tone]="appointment ? 'brand' : 'neutral'"
+            >{{ kindLabel }}</ds-chip
+          >
+
+          @if (timeLabel) {
+            <ds-stack
+              class="agenda-item__time"
+              direction="row"
+              align="center"
+              [gap]="'4px'"
+            >
+              <ds-icon name="clock" [size]="12" [stroke]="2.2" />
+              <ds-text [inline]="true">{{ timeLabel }}</ds-text>
+            </ds-stack>
+          }
+        </ds-stack>
+
+        @if (notes) {
+          <ds-text class="agenda-item__notes" variant="meta">{{
+            notes
+          }}</ds-text>
+        }
+      </ds-stack>
+    </ds-pressable>
+  </ds-stack>
+</ds-swipe-to-delete>

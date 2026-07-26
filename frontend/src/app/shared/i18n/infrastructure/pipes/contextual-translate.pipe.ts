@@ -41,6 +41,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     article: "nutrition/catalog/article",
     getGlobalArticles: "nutrition/global-catalog/article",
     getDiary: "nutrition/diary/diary",
+    getAgenda: "agenda/agenda/agenda",
     getShopping: "nutrition/shopping/shopping",
     getRecipes: "nutrition/recipe/recipe",
     getRecipe: "nutrition/recipe/recipe",

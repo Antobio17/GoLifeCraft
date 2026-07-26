@@ -1,6 +1,14 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-export type CalendarDayStatus = "green" | "orange" | "red" | "rest" | "future";
+export type CalendarDayStatus =
+  | "green"
+  | "orange"
+  | "red"
+  | "rest"
+  | "future"
+  | "plain";
+
+export type CalendarDayMark = "none" | "pending" | "done";
 
 export interface CalendarCell {
   key: string;
@@ -11,6 +19,7 @@ export interface CalendarCell {
   isSelected: boolean;
   planned: boolean;
   disabled: boolean;
+  mark?: CalendarDayMark;
 }
 
 export interface CalendarLegendItem {
@@ -84,6 +93,7 @@ export interface CalendarLegendItem {
               [class.ds-cal__cell--red]="cell.status === 'red'"
               [class.ds-cal__cell--rest]="cell.status === 'rest'"
               [class.ds-cal__cell--future]="cell.status === 'future'"
+              [class.ds-cal__cell--plain]="cell.status === 'plain'"
               [class.ds-cal__cell--planned]="cell.planned"
               [class.ds-cal__cell--today]="cell.isToday"
               [class.ds-cal__cell--selected]="cell.isSelected"
@@ -91,6 +101,13 @@ export interface CalendarLegendItem {
               (click)="daySelected.emit(cell.date)"
             >
               {{ cell.day }}
+              @if (cell.mark && cell.mark !== "none") {
+                <span
+                  class="ds-cal__mark"
+                  [class.ds-cal__mark--done]="cell.mark === 'done'"
+                  aria-hidden="true"
+                ></span>
+              }
             </button>
           }
         }
@@ -186,6 +203,7 @@ export interface CalendarLegendItem {
       }
       .ds-cal__cell {
         appearance: none;
+        position: relative;
         border: 2px solid transparent;
         aspect-ratio: 1;
         width: 100%;
@@ -233,6 +251,30 @@ export interface CalendarLegendItem {
       .ds-cal__cell--planned {
         border-style: dashed;
         border-color: rgba(255, 255, 255, 0.75);
+      }
+      .ds-cal__cell--plain.ds-cal__cell--selected {
+        background: var(--ds-primary);
+        color: var(--ds-on-primary);
+        border-color: transparent;
+        font-weight: var(--ds-weight-extrabold);
+      }
+      .ds-cal__mark {
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 5px;
+        height: 5px;
+        border-radius: var(--ds-radius-pill);
+        background: var(--ds-primary);
+      }
+      .ds-cal__mark--done {
+        background: var(--ds-text-disabled);
+      }
+      .ds-cal__cell--selected .ds-cal__mark,
+      .ds-cal__cell--selected .ds-cal__mark--done {
+        background: currentColor;
+        opacity: 0.85;
       }
       .ds-cal__cell--today {
         font-weight: var(--ds-weight-bold);

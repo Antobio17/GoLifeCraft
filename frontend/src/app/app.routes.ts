@@ -58,6 +58,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "agenda",
+        data: { breadcrumb: "getAgenda.breadcrumb.list" },
+        loadChildren: () =>
+          import("./agenda/agenda/agenda/infrastructure/routes/agenda.routes").then(
+            (m) => m.AGENDA_ROUTES,
+          ),
+      },
+      {
         path: "supermarkets",
         data: { breadcrumb: "supermarket.breadcrumb.list" },
         loadChildren: () =>

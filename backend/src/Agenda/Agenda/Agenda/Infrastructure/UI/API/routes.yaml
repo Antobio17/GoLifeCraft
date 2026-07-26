@@ -1,0 +1,35 @@
+get_agenda_calendar:
+  path: /api/v1/agenda/calendar
+  methods: [GET]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaCalendarController
+
+get_agenda_day:
+  path: /api/v1/agenda
+  methods: [GET]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaDayController
+
+create_agenda_entry:
+  path: /api/v1/agenda
+  methods: [POST]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\CreateAgendaEntryController
+
+change_agenda_entry_status:
+  path: /api/v1/agenda/{agendaEntryId}/status
+  methods: [PUT]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\ChangeAgendaEntryStatusController
+  requirements:
+    agendaEntryId: '[0-9a-fA-F-]{36}'
+
+update_agenda_entry:
+  path: /api/v1/agenda/{agendaEntryId}
+  methods: [PUT]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\UpdateAgendaEntryController
+  requirements:
+    agendaEntryId: '[0-9a-fA-F-]{36}'
+
+delete_agenda_entry:
+  path: /api/v1/agenda/{agendaEntryId}
+  methods: [DELETE]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\DeleteAgendaEntryController
+  requirements:
+    agendaEntryId: '[0-9a-fA-F-]{36}'
