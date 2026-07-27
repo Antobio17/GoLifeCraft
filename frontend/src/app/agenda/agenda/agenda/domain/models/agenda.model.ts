@@ -28,3 +28,22 @@ export interface AgendaDay {
 export interface GetAgendaDayResponse {
   data: AgendaDay;
 }
+
+export interface AgendaUpcomingAttributes {
+  fromDate: string;
+  toDate: string;
+  entries: AgendaEntryView[];
+  entryCount: number;
+  pendingCount: number;
+  doneCount: number;
+}
+
+export interface AgendaUpcoming {
+  id: string;
+  type: string;
+  attributes: AgendaUpcomingAttributes;
+}
+
+export interface GetAgendaUpcomingResponse {
+  data: AgendaUpcoming;
+}

@@ -6,6 +6,13 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaUpcomingController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaUpcomingController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaCalendarController:
     class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaCalendarController
     arguments:

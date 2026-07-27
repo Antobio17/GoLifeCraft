@@ -17,14 +17,18 @@
       "carbs": "Carbs"
     },
     "agenda": {
-      "title": "Your agenda today",
+      "title": "Your next 7 days",
       "seeAll": "See all",
-      "empty": "Nothing planned for today.",
-      "allDone": "All done for today",
-      "pendingOne": "1 pending today",
-      "pendingMany": "{{count}} pending today",
-      "more": "+{{count}} more today",
+      "empty": "Nothing planned for the next 7 days.",
+      "allDone": "All done · next 7 days",
+      "pendingOne": "1 pending · next 7 days",
+      "pendingMany": "{{count}} pending · next 7 days",
+      "more": "+{{count}} more these days",
       "open": "Open in the agenda",
+      "day": {
+        "today": "Today",
+        "tomorrow": "Tomorrow"
+      },
       "kind": {
         "task": "Task",
         "appointment": "Appointment"

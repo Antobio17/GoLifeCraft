@@ -36,6 +36,35 @@ export class AgendaViewService {
     };
   }
 
+  whenLabel(
+    entry: AgendaEntryView,
+    todayLabel: string,
+    tomorrowLabel: string,
+  ): string {
+    const day = this.relativeDayLabel(
+      entry.entryDate,
+      todayLabel,
+      tomorrowLabel,
+    );
+
+    if (!entry.time) return day;
+
+    return `${day} · ${entry.time}`;
+  }
+
+  private relativeDayLabel(
+    iso: string,
+    todayLabel: string,
+    tomorrowLabel: string,
+  ): string {
+    const relation = this.relation(iso);
+
+    if (relation === "today") return todayLabel;
+    if (relation === "tomorrow") return tomorrowLabel;
+
+    return this.dayShort(iso);
+  }
+
   private sortEntries(entries: AgendaEntryView[]): AgendaEntryView[] {
     return [...entries].sort((left, right) => {
       if (left.done !== right.done) return left.done ? 1 : -1;

@@ -4,6 +4,11 @@ services:
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
 
+  Agenda\Agenda\Agenda\Domain\QueryModel\GetAgendaUpcomingNeedleDataQuery:
+    class: Agenda\Agenda\Agenda\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetAgendaUpcomingNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
   Agenda\Agenda\Agenda\Domain\QueryModel\GetAgendaCalendarNeedleDataQuery:
     class: Agenda\Agenda\Agenda\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetAgendaCalendarNeedleDataQuery
     arguments:

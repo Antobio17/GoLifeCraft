@@ -17,14 +17,18 @@
       "carbs": "Hidratos"
     },
     "agenda": {
-      "title": "Tu agenda de hoy",
+      "title": "Tus próximos 7 días",
       "seeAll": "Ver todo",
-      "empty": "No tienes nada anotado para hoy.",
-      "allDone": "Todo hecho por hoy",
-      "pendingOne": "1 pendiente para hoy",
-      "pendingMany": "{{count}} pendientes para hoy",
-      "more": "+{{count}} más para hoy",
+      "empty": "No tienes nada anotado para los próximos 7 días.",
+      "allDone": "Todo hecho · próximos 7 días",
+      "pendingOne": "1 pendiente · próximos 7 días",
+      "pendingMany": "{{count}} pendientes · próximos 7 días",
+      "more": "+{{count}} más estos días",
       "open": "Abrir en la agenda",
+      "day": {
+        "today": "Hoy",
+        "tomorrow": "Mañana"
+      },
       "kind": {
         "task": "Tarea",
         "appointment": "Cita"
