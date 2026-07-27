@@ -10,6 +10,17 @@ services:
   Agenda\Agenda\Agenda\Application\Query\GetAgendaDayDataTransform:
     class: Agenda\Agenda\Agenda\Infrastructure\UI\API\DataTransform\ApiGetAgendaDayDataTransform
 
+  Agenda\Agenda\Agenda\Application\Query\GetAgendaUpcomingQueryHandler:
+    class: Agenda\Agenda\Agenda\Application\Query\GetAgendaUpcomingQueryHandler
+    arguments:
+      $needleDataQuery: '@Agenda\Agenda\Agenda\Domain\QueryModel\GetAgendaUpcomingNeedleDataQuery'
+      $dataTransform: '@Agenda\Agenda\Agenda\Application\Query\GetAgendaUpcomingDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Agenda\Agenda\Agenda\Application\Query\GetAgendaUpcomingDataTransform:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\DataTransform\ApiGetAgendaUpcomingDataTransform
+
   Agenda\Agenda\Agenda\Application\Query\GetAgendaCalendarQueryHandler:
     class: Agenda\Agenda\Agenda\Application\Query\GetAgendaCalendarQueryHandler
     arguments:

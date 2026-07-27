@@ -3,6 +3,11 @@ get_agenda_calendar:
   methods: [GET]
   controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaCalendarController
 
+get_agenda_upcoming:
+  path: /api/v1/agenda/upcoming
+  methods: [GET]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaUpcomingController
+
 get_agenda_day:
   path: /api/v1/agenda
   methods: [GET]

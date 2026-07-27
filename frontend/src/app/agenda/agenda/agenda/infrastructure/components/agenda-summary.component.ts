@@ -14,15 +14,16 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { AgendaItemComponent } from "@shared/design-system/agenda-item/infrastructure/components/agenda-item.component";
-import { GetAgendaDayService } from "@agenda/agenda/agenda/application/services/get-agenda-day.service";
+import { GetAgendaUpcomingService } from "@agenda/agenda/agenda/application/services/get-agenda-upcoming.service";
 import { AgendaViewService } from "@agenda/agenda/agenda/application/services/agenda-view.service";
 import { AgendaCategoryCatalogService } from "@agenda/agenda/agenda/application/services/agenda-category-catalog.service";
 import {
-  AgendaDayAttributes,
   AgendaEntryView,
+  AgendaUpcomingAttributes,
 } from "@agenda/agenda/agenda/domain/models/agenda.model";
 
-const VISIBLE_ENTRIES = 3;
+const UPCOMING_DAYS = 7;
+const VISIBLE_ENTRIES = 4;
 
 @Component({
   selector: "app-agenda-summary",
@@ -39,7 +40,7 @@ const VISIBLE_ENTRIES = 3;
 })
 export class AgendaSummaryComponent implements OnInit {
   private authSession = inject(AuthSessionService);
-  private getAgendaDayService = inject(GetAgendaDayService);
+  private getAgendaUpcomingService = inject(GetAgendaUpcomingService);
   private view = inject(AgendaViewService);
   private categoryCatalog = inject(AgendaCategoryCatalogService);
 
@@ -48,24 +49,26 @@ export class AgendaSummaryComponent implements OnInit {
   canWrite = this.authSession.isGod();
 
   loading = signal(true);
-  day = signal<AgendaDayAttributes | null>(null);
+  upcoming = signal<AgendaUpcomingAttributes | null>(null);
 
-  entries = computed(() => this.day()?.entries ?? []);
+  entries = computed(() => this.upcoming()?.entries ?? []);
   hasEntries = computed(() => this.entries().length > 0);
   visibleEntries = computed(() => this.entries().slice(0, VISIBLE_ENTRIES));
   hiddenCount = computed(() =>
     Math.max(0, this.entries().length - VISIBLE_ENTRIES),
   );
-  pendingCount = computed(() => this.day()?.pendingCount ?? 0);
+  pendingCount = computed(() => this.upcoming()?.pendingCount ?? 0);
 
   ngOnInit(): void {
-    this.getAgendaDayService.getAgendaDay(this.view.todayIso()).subscribe({
-      next: (response) => {
-        this.day.set(response.data.attributes);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false),
-    });
+    this.getAgendaUpcomingService
+      .getAgendaUpcoming(this.view.todayIso(), UPCOMING_DAYS)
+      .subscribe({
+        next: (response) => {
+          this.upcoming.set(response.data.attributes);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
   }
 
   entryKindLabel(entry: AgendaEntryView, fallback: string): string {
@@ -74,5 +77,13 @@ export class AgendaSummaryComponent implements OnInit {
       entry.category,
       fallback,
     );
+  }
+
+  entryWhenLabel(
+    entry: AgendaEntryView,
+    todayLabel: string,
+    tomorrowLabel: string,
+  ): string {
+    return this.view.whenLabel(entry, todayLabel, tomorrowLabel);
   }
 }

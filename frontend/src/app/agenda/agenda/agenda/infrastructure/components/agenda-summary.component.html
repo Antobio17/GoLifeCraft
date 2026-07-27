@@ -8,7 +8,7 @@
   @if (loading()) {
     <ds-skeleton-line width="184px" height="11px" />
     <ds-skeleton-list
-      [count]="3"
+      [count]="4"
       [gap]="'8px'"
       radius="var(--ds-radius-3xl)"
       padding="11px 12px"
@@ -37,7 +37,13 @@
             entryKindLabel(entry, 'dashboard.agenda.kind.' + entry.kind | t)
           "
           [appointment]="entry.kind === 'appointment'"
-          [timeLabel]="entry.time ?? ''"
+          [timeLabel]="
+            entryWhenLabel(
+              entry,
+              'dashboard.agenda.day.today' | t,
+              'dashboard.agenda.day.tomorrow' | t
+            )
+          "
           [done]="entry.done"
           [canWrite]="canWrite"
           [removable]="false"
