@@ -10,6 +10,7 @@
     <field name="category" type="string" column="category" length="30"/>
     <field name="notes" type="text" column="notes"/>
     <field name="done" type="boolean" column="done"/>
+    <field name="seriesId" type="string" column="series_id" length="36" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
@@ -17,6 +18,7 @@
     <indexes>
       <index name="idx_agenda_entry_entry_date" columns="entry_date"/>
       <index name="idx_agenda_entry_done" columns="done"/>
+      <index name="idx_agenda_entry_series_id" columns="series_id"/>
     </indexes>
   </entity>
 </doctrine-mapping>

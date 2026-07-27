@@ -6,6 +6,7 @@ use Agenda\Agenda\Agenda\Domain\Event\AgendaEntryCreated;
 use Agenda\Agenda\Agenda\Domain\Event\AgendaEntryDeleted;
 use Agenda\Agenda\Agenda\Domain\Event\AgendaEntryStatusChanged;
 use Agenda\Agenda\Agenda\Domain\Event\AgendaEntryUpdated;
+use Agenda\Agenda\Agenda\Domain\Exception\AgendaEntrySeriesException;
 use Agenda\Agenda\Agenda\Domain\Exception\CreateAgendaEntryException;
 use Agenda\Agenda\Agenda\Domain\Exception\UpdateAgendaEntryException;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
@@ -48,6 +49,7 @@ class AgendaEntry extends GenericAggregate
 
     public const TITLE_MAX_LENGTH = 255;
     public const NOTES_MAX_LENGTH = 1000;
+    public const SERIES_MAX_DAYS = 366;
 
     public string $entryDate;
     public ?string $time = null;
@@ -56,6 +58,7 @@ class AgendaEntry extends GenericAggregate
     public string $category = '';
     public string $notes = '';
     public bool $done = false;
+    public ?string $seriesId = null;
 
     public static function create(
         string $id,
@@ -65,6 +68,7 @@ class AgendaEntry extends GenericAggregate
         string $kind,
         string $category,
         string $notes,
+        ?string $seriesId,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
@@ -101,6 +105,7 @@ class AgendaEntry extends GenericAggregate
             notes: $notes,
         );
         $entry->done = false;
+        $entry->seriesId = $seriesId;
         $entry->stampCreation(userId: $createdByUserId, now: $now);
 
         $entry->record(event: new AgendaEntryCreated(
@@ -113,6 +118,7 @@ class AgendaEntry extends GenericAggregate
             category: $entry->category,
             notes: $entry->notes,
             done: $entry->done,
+            seriesId: $entry->seriesId,
             createdAt: $entry->createdAt,
             updatedAt: $entry->updatedAt,
             createdByUserId: $entry->createdByUserId,
@@ -174,6 +180,7 @@ class AgendaEntry extends GenericAggregate
             category: $this->category,
             notes: $this->notes,
             done: $this->done,
+            seriesId: $this->seriesId,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -201,6 +208,7 @@ class AgendaEntry extends GenericAggregate
             category: $this->category,
             notes: $this->notes,
             done: $this->done,
+            seriesId: $this->seriesId,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -225,6 +233,7 @@ class AgendaEntry extends GenericAggregate
             category: $this->category,
             notes: $this->notes,
             done: $this->done,
+            seriesId: $this->seriesId,
             deletedByUserId: $deletedByUserId,
         ));
     }
@@ -235,6 +244,46 @@ class AgendaEntry extends GenericAggregate
     public static function categoriesFor(string $kind): array
     {
         return self::KIND_APPOINTMENT === $kind ? self::APPOINTMENT_CATEGORIES : self::TASK_CATEGORIES;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function seriesDates(string $entryDate, string $endDate): array
+    {
+        if (!self::hasValidDate(entryDate: $entryDate)) {
+            throw AgendaEntrySeriesException::invalidDate(date: $entryDate);
+        }
+
+        if (!self::hasValidDate(entryDate: $endDate)) {
+            throw AgendaEntrySeriesException::invalidDate(date: $endDate);
+        }
+
+        if ($endDate < $entryDate) {
+            throw AgendaEntrySeriesException::endDateBeforeStartDate(
+                entryDate: $entryDate,
+                endDate: $endDate,
+            );
+        }
+
+        $dates = [];
+        $cursor = new \DateTimeImmutable(datetime: $entryDate);
+        $last = new \DateTimeImmutable(datetime: $endDate);
+
+        while ($cursor <= $last) {
+            if (self::SERIES_MAX_DAYS === count(value: $dates)) {
+                throw AgendaEntrySeriesException::rangeTooLong(
+                    entryDate: $entryDate,
+                    endDate: $endDate,
+                    maxDays: self::SERIES_MAX_DAYS,
+                );
+            }
+
+            $dates[] = $cursor->format(format: 'Y-m-d');
+            $cursor = $cursor->modify(modifier: '+1 day');
+        }
+
+        return $dates;
     }
 
     private function write(

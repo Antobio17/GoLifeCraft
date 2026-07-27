@@ -31,3 +31,14 @@ services:
 
   Agenda\Agenda\Agenda\Application\Query\GetAgendaCalendarDataTransform:
     class: Agenda\Agenda\Agenda\Infrastructure\UI\API\DataTransform\ApiGetAgendaCalendarDataTransform
+
+  Agenda\Agenda\Agenda\Application\Query\GetAgendaEntrySeriesQueryHandler:
+    class: Agenda\Agenda\Agenda\Application\Query\GetAgendaEntrySeriesQueryHandler
+    arguments:
+      $needleDataQuery: '@Agenda\Agenda\Agenda\Domain\QueryModel\GetAgendaEntrySeriesNeedleDataQuery'
+      $dataTransform: '@Agenda\Agenda\Agenda\Application\Query\GetAgendaEntrySeriesDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Agenda\Agenda\Agenda\Application\Query\GetAgendaEntrySeriesDataTransform:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\DataTransform\ApiGetAgendaEntrySeriesDataTransform

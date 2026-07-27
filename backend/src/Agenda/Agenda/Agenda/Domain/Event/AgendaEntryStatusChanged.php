@@ -16,6 +16,7 @@ final readonly class AgendaEntryStatusChanged extends DomainEvent
         public string $category,
         public string $notes,
         public bool $done,
+        public ?string $seriesId,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

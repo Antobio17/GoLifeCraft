@@ -8,3 +8,12 @@ export interface AgendaEntryPayload {
   category: string;
   notes: string;
 }
+
+export interface AgendaEntrySeriesPayload {
+  entryDate: string;
+  endDate: string;
+  title: string;
+  kind: AgendaEntryKind;
+  category: string;
+  notes: string;
+}

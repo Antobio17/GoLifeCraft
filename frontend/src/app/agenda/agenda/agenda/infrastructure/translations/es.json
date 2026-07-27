@@ -48,11 +48,20 @@
       "titlePlaceholder": "¿Qué tienes que hacer?",
       "taskTypes": "TIPO DE TAREA",
       "appointmentTypes": "TIPO DE CITA",
+      "dateModeLabel": "CUÁNDO",
+      "dateMode": {
+        "single": "Un día",
+        "range": "Varios días"
+      },
       "dateLabel": "FECHA",
+      "startDateLabel": "DESDE",
+      "endDateLabel": "HASTA",
       "timeLabel": "HORA",
       "notesLabel": "NOTAS",
       "notesPlaceholder": "Detalles, dirección, qué llevar…",
       "hint": "La hora y las notas son opcionales. Deja la hora vacía para una tarea que puedes hacer en cualquier momento del día.",
+      "rangeHint": "Se creará una anotación por cada día del rango, sin hora concreta, y podrás marcarlas de forma independiente.",
+      "rangeEditHint": "Esta anotación abarca varios días y se edita completa. Si estiras el rango se añaden días nuevos, y si lo acortas se borran los que queden fuera aunque estuvieran hechos.",
       "save": "Guardar en la agenda"
     }
   }

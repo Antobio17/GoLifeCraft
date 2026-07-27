@@ -48,11 +48,20 @@
       "titlePlaceholder": "What do you have to do?",
       "taskTypes": "TASK TYPE",
       "appointmentTypes": "APPOINTMENT TYPE",
+      "dateModeLabel": "WHEN",
+      "dateMode": {
+        "single": "One day",
+        "range": "Several days"
+      },
       "dateLabel": "DATE",
+      "startDateLabel": "FROM",
+      "endDateLabel": "TO",
       "timeLabel": "TIME",
       "notesLabel": "NOTES",
       "notesPlaceholder": "Details, address, what to bring…",
       "hint": "Time and notes are optional. Leave the time empty for a task you can do at any moment of the day.",
+      "rangeHint": "One entry will be created for each day of the range, with no specific time, and you will be able to tick them independently.",
+      "rangeEditHint": "This entry spans several days and is edited as a whole. Growing the range adds new days, and shrinking it deletes the ones left outside even if they were already done.",
       "save": "Save to the agenda"
     }
   }

@@ -11,6 +11,10 @@
   flex: 1.5 1 0;
 }
 
+.agenda-datetime--range .agenda-field--date {
+  flex: 1 1 0;
+}
+
 @media (max-width: 359px) {
   .agenda-datetime.agenda-datetime {
     flex-direction: column;

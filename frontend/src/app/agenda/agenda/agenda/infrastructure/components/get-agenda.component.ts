@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { Observable } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -29,9 +30,13 @@ import {
 import { GetAgendaDayService } from "@agenda/agenda/agenda/application/services/get-agenda-day.service";
 import { GetAgendaCalendarService } from "@agenda/agenda/agenda/application/services/get-agenda-calendar.service";
 import { CreateAgendaEntryService } from "@agenda/agenda/agenda/application/services/create-agenda-entry.service";
+import { CreateAgendaEntrySeriesService } from "@agenda/agenda/agenda/application/services/create-agenda-entry-series.service";
 import { UpdateAgendaEntryService } from "@agenda/agenda/agenda/application/services/update-agenda-entry.service";
+import { UpdateAgendaEntrySeriesService } from "@agenda/agenda/agenda/application/services/update-agenda-entry-series.service";
+import { GetAgendaSeriesService } from "@agenda/agenda/agenda/application/services/get-agenda-series.service";
 import { ChangeAgendaEntryStatusService } from "@agenda/agenda/agenda/application/services/change-agenda-entry-status.service";
 import { DeleteAgendaEntryService } from "@agenda/agenda/agenda/application/services/delete-agenda-entry.service";
+import { DeleteAgendaEntrySeriesService } from "@agenda/agenda/agenda/application/services/delete-agenda-entry-series.service";
 import { AgendaViewService } from "@agenda/agenda/agenda/application/services/agenda-view.service";
 import { AgendaCalendarViewService } from "@agenda/agenda/agenda/application/services/agenda-calendar-view.service";
 import { AgendaCategoryCatalogService } from "@agenda/agenda/agenda/application/services/agenda-category-catalog.service";
@@ -41,6 +46,7 @@ import {
 } from "@agenda/agenda/agenda/application/services/agenda-entry-form.service";
 import {
   AgendaDayAttributes,
+  AgendaEntryDateMode,
   AgendaEntryKind,
   AgendaEntryView,
 } from "@agenda/agenda/agenda/domain/models/agenda.model";
@@ -78,11 +84,21 @@ export class GetAgendaComponent implements OnInit {
   private getAgendaDayService = inject(GetAgendaDayService);
   private getAgendaCalendarService = inject(GetAgendaCalendarService);
   private createAgendaEntryService = inject(CreateAgendaEntryService);
+  private createAgendaEntrySeriesService = inject(
+    CreateAgendaEntrySeriesService,
+  );
   private updateAgendaEntryService = inject(UpdateAgendaEntryService);
+  private updateAgendaEntrySeriesService = inject(
+    UpdateAgendaEntrySeriesService,
+  );
+  private getAgendaSeriesService = inject(GetAgendaSeriesService);
   private changeAgendaEntryStatusService = inject(
     ChangeAgendaEntryStatusService,
   );
   private deleteAgendaEntryService = inject(DeleteAgendaEntryService);
+  private deleteAgendaEntrySeriesService = inject(
+    DeleteAgendaEntrySeriesService,
+  );
   protected view = inject(AgendaViewService);
   protected calendarView = inject(AgendaCalendarViewService);
   protected categoryCatalog = inject(AgendaCategoryCatalogService);
@@ -101,7 +117,9 @@ export class GetAgendaComponent implements OnInit {
 
   sheetOpen = signal(false);
   saving = signal(false);
+  loadingSeries = signal(false);
   editingId = signal<string | null>(null);
+  editingSeriesId = signal<string | null>(null);
   form = signal<AgendaEntryForm>(this.entryForm.empty(this.view.todayIso()));
 
   translationsReady = signal(false);
@@ -162,15 +180,43 @@ export class GetAgendaComponent implements OnInit {
       { value: "appointment", label: this.t("getAgenda.kind.appointment") },
     ];
   });
+  dateModeOptions = computed<ChoiceChipOption[]>(() => {
+    this.translationsReady();
+
+    return [
+      { value: "single", label: this.t("getAgenda.sheet.dateMode.single") },
+      { value: "range", label: this.t("getAgenda.sheet.dateMode.range") },
+    ];
+  });
   categoryOptions = computed<ChoiceChipOption[]>(() =>
     this.categoryCatalog.options(this.form().kind),
   );
+  isRange = computed(() => this.entryForm.isRange(this.form()));
+  isEditingRange = computed(() => this.editingSeriesId() !== null);
+  startDateLabel = computed(() =>
+    this.isRange()
+      ? "getAgenda.sheet.startDateLabel"
+      : "getAgenda.sheet.dateLabel",
+  );
+  sheetHint = computed(() => {
+    if (this.isEditingRange()) return "getAgenda.sheet.rangeEditHint";
+
+    return this.isRange()
+      ? "getAgenda.sheet.rangeHint"
+      : "getAgenda.sheet.hint";
+  });
   categoryLabel = computed(() =>
     this.form().kind === "appointment"
       ? "getAgenda.sheet.appointmentTypes"
       : "getAgenda.sheet.taskTypes",
   );
-  formValid = computed(() => this.entryForm.isValid(this.form()));
+  formValid = computed(() => {
+    if (!this.entryForm.isValid(this.form())) return false;
+
+    if (!this.isEditingRange()) return true;
+
+    return this.entryForm.hasSeveralDays(this.form());
+  });
 
   ngOnInit(): void {
     this.translationService
@@ -230,6 +276,7 @@ export class GetAgendaComponent implements OnInit {
     if (!this.canWrite) return;
 
     this.editingId.set(null);
+    this.editingSeriesId.set(null);
     this.form.set(this.entryForm.empty(this.date()));
     this.sheetOpen.set(true);
   }
@@ -238,18 +285,34 @@ export class GetAgendaComponent implements OnInit {
     if (!this.canWrite) return;
 
     this.editingId.set(entry.id);
-    this.form.set(this.entryForm.fromEntry(entry));
+    this.editingSeriesId.set(entry.seriesId);
     this.sheetOpen.set(true);
+
+    if (!entry.seriesId) {
+      this.form.set(this.entryForm.fromEntry(entry));
+
+      return;
+    }
+
+    this.form.set(this.entryForm.fromSeriesEntry(entry));
+    this.loadSeriesIntoForm(entry.seriesId);
   }
 
   closeSheet(): void {
     this.sheetOpen.set(false);
     this.saving.set(false);
+    this.loadingSeries.set(false);
   }
 
   onKind(kind: string): void {
     this.form.update((form) =>
       this.entryForm.withKind(form, kind as AgendaEntryKind),
+    );
+  }
+
+  onDateMode(dateMode: string): void {
+    this.form.update((form) =>
+      this.entryForm.withDateMode(form, dateMode as AgendaEntryDateMode),
     );
   }
 
@@ -261,17 +324,14 @@ export class GetAgendaComponent implements OnInit {
   }
 
   onField(field: keyof AgendaEntryForm, value: string): void {
-    this.form.update((form) => ({ ...form, [field]: value }));
+    this.form.update((form) => this.entryForm.withField(form, field, value));
   }
 
   save(): void {
     if (!this.formValid() || this.saving()) return;
 
-    const payload = this.entryForm.toPayload(this.form());
-    const editingId = this.editingId();
-    const request$ = editingId
-      ? this.updateAgendaEntryService.updateAgendaEntry(editingId, payload)
-      : this.createAgendaEntryService.createAgendaEntry(payload);
+    const form = this.form();
+    const request$ = this.buildSaveRequest(form);
 
     this.saving.set(true);
 
@@ -279,7 +339,7 @@ export class GetAgendaComponent implements OnInit {
       next: () => {
         this.saving.set(false);
         this.sheetOpen.set(false);
-        this.selectDate(payload.entryDate);
+        this.selectDate(form.entryDate);
       },
       error: () => this.saving.set(false),
     });
@@ -312,9 +372,57 @@ export class GetAgendaComponent implements OnInit {
   removeEntry(entry: AgendaEntryView): void {
     if (!this.canWrite) return;
 
-    this.deleteAgendaEntryService.deleteAgendaEntry(entry.id).subscribe({
+    const request$ = entry.seriesId
+      ? this.deleteAgendaEntrySeriesService.deleteAgendaEntrySeries(
+          entry.seriesId,
+        )
+      : this.deleteAgendaEntryService.deleteAgendaEntry(entry.id);
+
+    request$.subscribe({
       next: () => this.reload(),
     });
+  }
+
+  private loadSeriesIntoForm(seriesId: string): void {
+    this.loadingSeries.set(true);
+
+    this.getAgendaSeriesService.getAgendaSeries(seriesId).subscribe({
+      next: (response) => {
+        this.loadingSeries.set(false);
+        this.form.set(this.entryForm.fromSeries(response.data.attributes));
+      },
+      error: () => this.loadingSeries.set(false),
+    });
+  }
+
+  private buildSaveRequest(form: AgendaEntryForm): Observable<void> {
+    const seriesId = this.editingSeriesId();
+
+    if (seriesId) {
+      return this.updateAgendaEntrySeriesService.updateAgendaEntrySeries(
+        seriesId,
+        this.entryForm.toSeriesPayload(form),
+      );
+    }
+
+    const editingId = this.editingId();
+
+    if (editingId) {
+      return this.updateAgendaEntryService.updateAgendaEntry(
+        editingId,
+        this.entryForm.toPayload(form),
+      );
+    }
+
+    if (this.entryForm.isRange(form)) {
+      return this.createAgendaEntrySeriesService.createAgendaEntrySeries(
+        this.entryForm.toSeriesPayload(form),
+      );
+    }
+
+    return this.createAgendaEntryService.createAgendaEntry(
+      this.entryForm.toPayload(form),
+    );
   }
 
   private selectDate(date: string): void {

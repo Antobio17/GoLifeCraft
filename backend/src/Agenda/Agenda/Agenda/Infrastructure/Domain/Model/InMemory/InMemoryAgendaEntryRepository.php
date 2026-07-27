@@ -10,9 +10,11 @@ final class InMemoryAgendaEntryRepository implements AgendaEntryRepository
     /** @var array<int, AgendaEntry> */
     private array $entries = [];
 
+    private int $generatedIds = 0;
+
     public function nextId(): string
     {
-        return 'agenda-entry-'.(count(value: $this->entries) + 1);
+        return 'agenda-entry-'.(++$this->generatedIds);
     }
 
     public function findById(string $id): ?AgendaEntry
@@ -24,6 +26,19 @@ final class InMemoryAgendaEntryRepository implements AgendaEntryRepository
         }
 
         return null;
+    }
+
+    public function findBySeriesId(string $seriesId): array
+    {
+        $found = [];
+
+        foreach ($this->entries as $entry) {
+            if ($entry->seriesId === $seriesId) {
+                $found[] = $entry;
+            }
+        }
+
+        return $found;
     }
 
     public function save(AgendaEntry $agendaEntry): void

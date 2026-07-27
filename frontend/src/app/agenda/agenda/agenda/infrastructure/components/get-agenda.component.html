@@ -152,32 +152,67 @@
         />
       </ds-stack>
 
-      <ds-stack class="agenda-datetime" direction="row" [gap]="'12px'">
-        <ds-stack class="agenda-field agenda-field--date" [gap]="'8px'">
+      @if (!editingId()) {
+        <ds-stack [gap]="'8px'">
           <ds-text variant="label">{{
-            "getAgenda.sheet.dateLabel" | t
+            "getAgenda.sheet.dateModeLabel" | t
           }}</ds-text>
+          <ds-choice-chips
+            [options]="dateModeOptions()"
+            [ngModel]="form().dateMode"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onDateMode($event)"
+          />
+        </ds-stack>
+      }
+
+      <ds-stack
+        class="agenda-datetime"
+        [class.agenda-datetime--range]="isRange()"
+        direction="row"
+        [gap]="'12px'"
+      >
+        <ds-stack class="agenda-field agenda-field--date" [gap]="'8px'">
+          <ds-text variant="label">{{ startDateLabel() | t }}</ds-text>
           <ds-date-input
             type="date"
-            [ariaLabel]="'getAgenda.sheet.dateLabel' | t"
+            [ariaLabel]="startDateLabel() | t"
             [ngModel]="form().entryDate"
             [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="onField('entryDate', $event)"
           />
         </ds-stack>
 
-        <ds-stack class="agenda-field" [gap]="'8px'">
-          <ds-text variant="label">{{
-            "getAgenda.sheet.timeLabel" | t
-          }}</ds-text>
-          <ds-date-input
-            type="time"
-            [ariaLabel]="'getAgenda.sheet.timeLabel' | t"
-            [ngModel]="form().time"
-            [ngModelOptions]="{ standalone: true }"
-            (ngModelChange)="onField('time', $event)"
-          />
-        </ds-stack>
+        @if (isRange()) {
+          <ds-stack class="agenda-field agenda-field--date" [gap]="'8px'">
+            <ds-text variant="label">{{
+              "getAgenda.sheet.endDateLabel" | t
+            }}</ds-text>
+            <ds-date-input
+              type="date"
+              [min]="form().entryDate"
+              [ariaLabel]="'getAgenda.sheet.endDateLabel' | t"
+              [ngModel]="form().endDate"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onField('endDate', $event)"
+            />
+          </ds-stack>
+        }
+
+        @if (!isRange()) {
+          <ds-stack class="agenda-field" [gap]="'8px'">
+            <ds-text variant="label">{{
+              "getAgenda.sheet.timeLabel" | t
+            }}</ds-text>
+            <ds-date-input
+              type="time"
+              [ariaLabel]="'getAgenda.sheet.timeLabel' | t"
+              [ngModel]="form().time"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onField('time', $event)"
+            />
+          </ds-stack>
+        }
       </ds-stack>
 
       <ds-stack [gap]="'8px'">
@@ -195,12 +230,12 @@
         />
       </ds-stack>
 
-      <ds-note icon="info">{{ "getAgenda.sheet.hint" | t }}</ds-note>
+      <ds-note icon="info">{{ sheetHint() | t }}</ds-note>
 
       <ds-button
         variant="primary"
         [fullWidth]="true"
-        [disabled]="!formValid()"
+        [disabled]="!formValid() || loadingSeries()"
         [loading]="saving()"
         (clicked)="save()"
       >

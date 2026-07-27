@@ -1,5 +1,7 @@
 export type AgendaEntryKind = "task" | "appointment";
 
+export type AgendaEntryDateMode = "single" | "range";
+
 export interface AgendaEntryView {
   id: string;
   entryDate: string;
@@ -9,6 +11,7 @@ export interface AgendaEntryView {
   category: string;
   notes: string;
   done: boolean;
+  seriesId: string | null;
 }
 
 export interface AgendaDayAttributes {

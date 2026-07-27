@@ -18,6 +18,32 @@ create_agenda_entry:
   methods: [POST]
   controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\CreateAgendaEntryController
 
+create_agenda_entry_series:
+  path: /api/v1/agenda/series
+  methods: [POST]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\CreateAgendaEntrySeriesController
+
+get_agenda_entry_series:
+  path: /api/v1/agenda/series/{seriesId}
+  methods: [GET]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaEntrySeriesController
+  requirements:
+    seriesId: '[0-9a-fA-F-]{36}'
+
+update_agenda_entry_series:
+  path: /api/v1/agenda/series/{seriesId}
+  methods: [PUT]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\UpdateAgendaEntrySeriesController
+  requirements:
+    seriesId: '[0-9a-fA-F-]{36}'
+
+delete_agenda_entry_series:
+  path: /api/v1/agenda/series/{seriesId}
+  methods: [DELETE]
+  controller: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\DeleteAgendaEntrySeriesController
+  requirements:
+    seriesId: '[0-9a-fA-F-]{36}'
+
 change_agenda_entry_status:
   path: /api/v1/agenda/{agendaEntryId}/status
   methods: [PUT]

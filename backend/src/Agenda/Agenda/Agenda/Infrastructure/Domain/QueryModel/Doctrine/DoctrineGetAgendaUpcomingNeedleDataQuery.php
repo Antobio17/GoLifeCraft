@@ -30,6 +30,7 @@ final readonly class DoctrineGetAgendaUpcomingNeedleDataQuery implements GetAgen
                 'e.category',
                 'e.notes',
                 'e.done',
+                'e.series_id',
             )
             ->from(table: 'agenda_entry', alias: 'e')
             ->where('e.entry_date BETWEEN :from AND :to')
@@ -58,6 +59,7 @@ final readonly class DoctrineGetAgendaUpcomingNeedleDataQuery implements GetAgen
                 category: (string) $row['category'],
                 notes: (string) $row['notes'],
                 done: $done,
+                seriesId: $row['series_id'],
             );
         }
 

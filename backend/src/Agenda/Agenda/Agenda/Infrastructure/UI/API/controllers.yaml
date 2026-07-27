@@ -27,6 +27,34 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\CreateAgendaEntrySeriesController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\CreateAgendaEntrySeriesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaEntrySeriesController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\GetAgendaEntrySeriesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\UpdateAgendaEntrySeriesController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\UpdateAgendaEntrySeriesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\DeleteAgendaEntrySeriesController:
+    class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\DeleteAgendaEntrySeriesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\UpdateAgendaEntryController:
     class: Agenda\Agenda\Agenda\Infrastructure\UI\API\Controller\UpdateAgendaEntryController
     arguments:

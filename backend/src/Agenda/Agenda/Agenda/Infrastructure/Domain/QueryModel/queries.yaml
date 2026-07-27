@@ -13,3 +13,8 @@ services:
     class: Agenda\Agenda\Agenda\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetAgendaCalendarNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Agenda\Agenda\Agenda\Domain\QueryModel\GetAgendaEntrySeriesNeedleDataQuery:
+    class: Agenda\Agenda\Agenda\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetAgendaEntrySeriesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

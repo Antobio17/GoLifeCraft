@@ -55,5 +55,14 @@ fields:
     type: bool
     description: Whether the task or appointment is already done. New entries start as false.
     filterable: true
+  seriesId:
+    writable: false
+    required: false
+    max: 36
+    description: >-
+      Identifier shared by every entry created from the same date range. It is empty for
+      single-day entries and it is assigned by the app, never by the client. Entries of a
+      series are independent: each one has its own "done".
+    filterable: true
 
 relations: {}

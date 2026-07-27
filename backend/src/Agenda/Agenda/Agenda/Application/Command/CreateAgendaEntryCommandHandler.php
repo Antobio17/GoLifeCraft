@@ -26,6 +26,7 @@ final readonly class CreateAgendaEntryCommandHandler
             kind: $command->kind,
             category: $command->category,
             notes: $command->notes,
+            seriesId: null,
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

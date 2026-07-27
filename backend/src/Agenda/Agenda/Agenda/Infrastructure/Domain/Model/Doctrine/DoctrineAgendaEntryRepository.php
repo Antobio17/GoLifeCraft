@@ -25,6 +25,18 @@ final class DoctrineAgendaEntryRepository extends EntityRepository implements Ag
             ->getOneOrNullResult();
     }
 
+    public function findBySeriesId(string $seriesId): array
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('agendaEntry')
+            ->from(from: AgendaEntry::class, alias: 'agendaEntry')
+            ->where('agendaEntry.seriesId = :seriesId')
+            ->setParameter(key: 'seriesId', value: $seriesId)
+            ->orderBy('agendaEntry.entryDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function save(AgendaEntry $agendaEntry): void
     {
         $this->getEntityManager()->persist(object: $agendaEntry);

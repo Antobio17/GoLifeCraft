@@ -8,6 +8,33 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
+  Agenda\Agenda\Agenda\Application\Command\CreateAgendaEntrySeriesCommandHandler:
+    class: Agenda\Agenda\Agenda\Application\Command\CreateAgendaEntrySeriesCommandHandler
+    arguments:
+      $agendaEntryRepository: '@Agenda\Agenda\Agenda\Domain\Model\AgendaEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Agenda\Agenda\Agenda\Application\Command\UpdateAgendaEntrySeriesCommandHandler:
+    class: Agenda\Agenda\Agenda\Application\Command\UpdateAgendaEntrySeriesCommandHandler
+    arguments:
+      $agendaEntryRepository: '@Agenda\Agenda\Agenda\Domain\Model\AgendaEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Agenda\Agenda\Agenda\Application\Command\DeleteAgendaEntrySeriesCommandHandler:
+    class: Agenda\Agenda\Agenda\Application\Command\DeleteAgendaEntrySeriesCommandHandler
+    arguments:
+      $agendaEntryRepository: '@Agenda\Agenda\Agenda\Domain\Model\AgendaEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Agenda\Agenda\Agenda\Application\Command\UpdateAgendaEntryCommandHandler:
     class: Agenda\Agenda\Agenda\Application\Command\UpdateAgendaEntryCommandHandler
     arguments:

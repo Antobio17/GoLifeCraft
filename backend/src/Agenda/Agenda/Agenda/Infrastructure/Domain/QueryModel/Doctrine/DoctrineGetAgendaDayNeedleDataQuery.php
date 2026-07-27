@@ -26,6 +26,7 @@ final readonly class DoctrineGetAgendaDayNeedleDataQuery implements GetAgendaDay
                 'e.category',
                 'e.notes',
                 'e.done',
+                'e.series_id',
             )
             ->from(table: 'agenda_entry', alias: 'e')
             ->where('e.entry_date = :date')
@@ -52,6 +53,7 @@ final readonly class DoctrineGetAgendaDayNeedleDataQuery implements GetAgendaDay
                 category: (string) $row['category'],
                 notes: (string) $row['notes'],
                 done: $done,
+                seriesId: $row['series_id'],
             );
         }
 
