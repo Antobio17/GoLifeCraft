@@ -19,6 +19,29 @@ GoLifeCraft/
 
 ---
 
+## Convención de commits
+
+- **Siempre en inglés**, tanto el asunto como el cuerpo. Da igual en qué idioma se haya trabajado o conversado.
+- **Siempre [Conventional Commits](https://www.conventionalcommits.org/)**: `type(scope): subject`.
+
+```
+feat(agenda): create and manage agenda entries over a date range
+fix(diary): keep the goal of past days when the configuration changes
+refactor(gym): move the session nutrition calc into a domain service
+```
+
+| Regla | Detalle |
+|---|---|
+| `type` | `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `chore`, `build`, `style` |
+| `scope` | El módulo o bounded context tocado, en minúscula: `agenda`, `diary`, `recipe`, `shopping`, `gym`, `catalog`, `auth`, `mcp`, `ui`, `ds`… |
+| `subject` | Imperativo, en minúscula y sin punto final. Describe **qué** cambia. |
+| Cuerpo | Opcional pero recomendado en cambios grandes. Explica el **por qué** y las decisiones de diseño tomadas, no repite el diff. Si se descartaron alternativas, dejarlas escritas ahí. |
+| `!` o `BREAKING CHANGE:` | Obligatorio cuando cambia un contrato de API o el esquema de base de datos de forma incompatible. |
+
+> No hacer commit ni push salvo que se pida explícitamente.
+
+---
+
 # BACKEND (Symfony)
 
 ## Stack
