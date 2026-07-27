@@ -1,0 +1,46 @@
+<div class="skex" [class.skex--readonly]="variant === 'readonly'">
+  <div class="skex__head">
+    <span class="ds-sk skex__index"></span>
+
+    <div class="skex__title">
+      <span class="ds-sk skex__name"></span>
+      <span class="ds-sk skex__muscle"></span>
+    </div>
+
+    @if (badge) {
+      <span class="ds-sk skex__badge"></span>
+    }
+
+    @if (action) {
+      <span class="ds-sk skex__action"></span>
+    }
+  </div>
+
+  @if (note) {
+    <span class="ds-sk skex__note"></span>
+  }
+
+  <div class="skex__set-header">
+    <span class="ds-sk skex__set-label skex__set-label--num"></span>
+    <span class="ds-sk skex__set-label"></span>
+    <span class="ds-sk skex__set-label"></span>
+    @if (doneCol) {
+      <span class="skex__set-spacer"></span>
+    }
+  </div>
+
+  @for (set of setArray; track set; let i = $index) {
+    <div class="skex__set" [style.--ds-sk-delay]="delayFor(i)">
+      <span class="ds-sk skex__set-num"></span>
+      <span class="ds-sk skex__set-field"></span>
+      <span class="ds-sk skex__set-field"></span>
+      @if (doneCol) {
+        <span class="ds-sk skex__set-done"></span>
+      }
+    </div>
+  }
+
+  @if (addTile) {
+    <span class="ds-sk skex__add"></span>
+  }
+</div>

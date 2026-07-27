@@ -13,21 +13,32 @@
 
   @if (loading()) {
     <ds-skeleton-filters [search]="true" [segments]="2" />
-    <ds-skeleton-list
-      [count]="6"
-      [columns]="null"
-      minColumn="280px"
-      [tabletColumns]="2"
-      [gap]="'12px'"
-      radius="16px"
-      padding="11px 12px"
-      [tile]="34"
-      [tileRadius]="10"
-      titleWidth="56%"
-      metaWidth="40%"
-      trailing="actions"
-      [actions]="2"
-    />
+    <ds-stack [gap]="'18px'">
+      @for (items of skeletonGroups; track $index) {
+        <ds-stack [gap]="'10px'">
+          <ds-skeleton-section-header
+            titleWidth="96px"
+            [count]="true"
+            [divider]="true"
+          />
+          <ds-skeleton-list
+            [count]="items"
+            [columns]="null"
+            minColumn="280px"
+            [tabletColumns]="2"
+            [gap]="'12px'"
+            radius="16px"
+            padding="11px 12px"
+            [tile]="34"
+            [tileRadius]="10"
+            titleWidth="56%"
+            metaWidth="40%"
+            trailing="actions"
+            [actions]="2"
+          />
+        </ds-stack>
+      }
+    </ds-stack>
   } @else {
     <ds-search-input
       [placeholder]="'getExercises.searchPlaceholder' | t"
@@ -42,21 +53,50 @@
     />
 
     @if (reloading()) {
-      <ds-skeleton-list
-        [count]="6"
-        [columns]="null"
-        minColumn="280px"
-        [tabletColumns]="2"
-        [gap]="'12px'"
-        radius="16px"
-        padding="11px 12px"
-        [tile]="34"
-        [tileRadius]="10"
-        titleWidth="56%"
-        metaWidth="40%"
-        trailing="actions"
-        [actions]="2"
-      />
+      @if (view() === "grouped") {
+        <ds-stack [gap]="'18px'">
+          @for (items of skeletonGroups; track $index) {
+            <ds-stack [gap]="'10px'">
+              <ds-skeleton-section-header
+                titleWidth="96px"
+                [count]="true"
+                [divider]="true"
+              />
+              <ds-skeleton-list
+                [count]="items"
+                [columns]="null"
+                minColumn="280px"
+                [tabletColumns]="2"
+                [gap]="'12px'"
+                radius="16px"
+                padding="11px 12px"
+                [tile]="34"
+                [tileRadius]="10"
+                titleWidth="56%"
+                metaWidth="40%"
+                trailing="actions"
+                [actions]="2"
+              />
+            </ds-stack>
+          }
+        </ds-stack>
+      } @else {
+        <ds-skeleton-list
+          [count]="6"
+          [columns]="null"
+          minColumn="280px"
+          [tabletColumns]="2"
+          [gap]="'12px'"
+          radius="16px"
+          padding="11px 12px"
+          [tile]="34"
+          [tileRadius]="10"
+          titleWidth="56%"
+          metaWidth="40%"
+          trailing="actions"
+          [actions]="2"
+        />
+      }
     } @else if (items().length === 0) {
       @if (searchQuery()) {
         <ds-text variant="muted">

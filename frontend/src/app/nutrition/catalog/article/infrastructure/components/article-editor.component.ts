@@ -25,7 +25,7 @@ import { EquivalenceEditorValue } from "@shared/design-system/equivalence-editor
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
@@ -95,7 +95,7 @@ function equivalencesValidator(
     ButtonComponent,
     ConfirmActionModalComponent,
     StackComponent,
-    SkeletonComponent,
+    SkeletonRowsComponent,
     SkeletonFieldsComponent,
   ],
 })

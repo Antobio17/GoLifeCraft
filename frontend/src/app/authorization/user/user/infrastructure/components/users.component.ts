@@ -12,7 +12,7 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonNoteComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-note.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
@@ -45,7 +45,7 @@ interface UserRowViewModel {
     ScreenHeaderComponent,
     StackComponent,
     TextComponent,
-    SkeletonComponent,
+    SkeletonNoteComponent,
     SkeletonLineComponent,
     SkeletonListComponent,
     SkeletonMetricsComponent,

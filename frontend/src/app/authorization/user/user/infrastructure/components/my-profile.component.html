@@ -29,12 +29,31 @@
 
         <ds-stack [gap]="'12px'">
           <ds-skeleton-line width="112px" height="12px" />
-          <ds-skeleton height="62px" radius="var(--ds-radius-3xl)" />
+          <ds-skeleton-list-item
+            padding="13px 14px"
+            radius="var(--ds-radius-2xl)"
+            [tile]="20"
+            [tileRadius]="6"
+            titleWidth="42%"
+            metaWidth="56%"
+            trailing="pill"
+            pillWidth="46px"
+            pillHeight="26px"
+          />
         </ds-stack>
 
         <ds-stack [gap]="'12px'">
           <ds-skeleton-line width="96px" height="12px" />
-          <ds-skeleton height="268px" radius="var(--ds-radius-3xl)" />
+          <ds-skeleton-list-item
+            padding="16px"
+            radius="var(--ds-radius-3xl)"
+            [tile]="36"
+            [tileRadius]="12"
+            titleWidth="46%"
+            metaWidth="64%"
+          />
+          <ds-skeleton-fields [rows]="[1, 1, 1]" [gap]="'14px'" />
+          <ds-skeleton height="44px" radius="var(--ds-radius-2xl)" />
         </ds-stack>
 
         <ds-skeleton height="44px" radius="var(--ds-radius-2xl)" />

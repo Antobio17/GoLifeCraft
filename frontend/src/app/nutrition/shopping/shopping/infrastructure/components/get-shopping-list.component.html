@@ -20,6 +20,7 @@
   </ds-stack>
 
   @if (loading()) {
+    <ds-skeleton-chips [count]="3" height="32px" />
     <ds-skeleton-summary
       tone="primary"
       [ring]="false"
@@ -30,7 +31,11 @@
 
     @for (items of skeletonGroups; track $index) {
       <ds-stack [gap]="'8px'">
-        <ds-skeleton-section-header titleWidth="118px" />
+        <ds-skeleton-section-header
+          titleWidth="96px"
+          [count]="true"
+          [divider]="true"
+        />
         <ds-skeleton-list
           [count]="items"
           [gap]="'8px'"

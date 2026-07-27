@@ -13,16 +13,17 @@
       [stats]="2"
       macros="none"
     />
-    <ds-skeleton-list
-      [count]="3"
-      [gap]="'9px'"
-      radius="var(--ds-radius-3xl)"
-      padding="12px"
-      titleWidth="48%"
-      metaWidth="30%"
-      headTrailing="58px"
-      [footItems]="2"
-    />
+    <ds-stack [gap]="'9px'">
+      @for (sets of skeletonExercises; track $index) {
+        <ds-skeleton-exercise
+          variant="readonly"
+          badge="46px"
+          nameWidth="48%"
+          [sets]="sets"
+          [doneCol]="true"
+        />
+      }
+    </ds-stack>
   } @else if (vm(); as detail) {
     <ds-screen-header
       [leading]="'back'"

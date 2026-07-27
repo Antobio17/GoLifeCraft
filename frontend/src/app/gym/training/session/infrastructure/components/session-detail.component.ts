@@ -33,9 +33,10 @@ import { SetHeaderComponent } from "@shared/design-system/set-header/infrastruct
 import { SetRowComponent } from "@shared/design-system/set-row/infrastructure/components/set-row.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
-import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonExerciseComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-exercise.component";
 import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
 import {
   MenuComponent,
@@ -81,9 +82,10 @@ import {
     SetRowComponent,
     AddTileComponent,
     EmptyStateComponent,
-    SkeletonLineComponent,
+    SkeletonChipsComponent,
     SkeletonScreenHeaderComponent,
-    SkeletonListComponent,
+    SkeletonComponent,
+    SkeletonExerciseComponent,
     TextareaComponent,
     MenuComponent,
   ],
@@ -104,6 +106,8 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private readonly MODULE_PATH = "gym/training/session";
 
   id = "";
+  readonly skeletonExercises = [3, 4, 3];
+
   loading = signal(true);
   saving = signal(false);
 

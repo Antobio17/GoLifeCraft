@@ -9,8 +9,20 @@
 
   @if (loading()) {
     <ds-skeleton-fields [rows]="[2, 2, 1, 1, 1]" [gap]="'20px'" />
-    <ds-skeleton height="212px" radius="var(--ds-radius-3xl)" />
-    <ds-skeleton height="168px" radius="var(--ds-radius-3xl)" />
+    <ds-skeleton-rows
+      [card]="true"
+      [header]="true"
+      [badge]="true"
+      [rows]="7"
+      valueWidth="74px"
+    />
+    <ds-skeleton-rows
+      [card]="true"
+      [header]="true"
+      [rows]="3"
+      labelWidth="38%"
+      valueWidth="108px"
+    />
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-stack [gap]="'20px'">

@@ -8,23 +8,19 @@
       [actions]="2"
       actionWidth="86px"
     />
-    <ds-skeleton-line
-      width="104px"
-      height="26px"
-      radius="var(--ds-radius-pill)"
-    />
-    <ds-skeleton-list
-      [count]="3"
-      [gap]="'9px'"
-      radius="var(--ds-radius-3xl)"
-      padding="11px"
-      titleWidth="52%"
-      metaWidth="34%"
-      headTrailing="72px"
-      trailing="actions"
-      [actions]="1"
-      [footItems]="2"
-    />
+    <ds-skeleton-chips [count]="1" height="26px" [gap]="'6px'" />
+    <ds-stack [gap]="'9px'">
+      @for (sets of skeletonExercises; track $index) {
+        <ds-skeleton-exercise
+          badge="72px"
+          [action]="true"
+          [note]="true"
+          [sets]="sets"
+          [addTile]="true"
+        />
+      }
+    </ds-stack>
+    <ds-skeleton height="46px" radius="14px" />
   } @else {
     <ds-screen-header
       [leading]="'back'"

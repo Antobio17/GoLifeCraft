@@ -11,6 +11,15 @@ import { Component, Input } from "@angular/core";
           <span class="ds-sk sksec__subtitle"></span>
         }
       </div>
+
+      @if (count) {
+        <span class="ds-sk sksec__count"></span>
+      }
+
+      @if (divider) {
+        <span class="sksec__divider"></span>
+      }
+
       @if (action) {
         <span class="ds-sk sksec__action"></span>
       }
@@ -25,7 +34,7 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: 10px;
       }
       .sksec__text {
         min-width: 0;
@@ -40,6 +49,17 @@ import { Component, Input } from "@angular/core";
       .sksec__subtitle {
         width: 96px;
         height: 10px;
+      }
+      .sksec__count {
+        flex: 0 0 auto;
+        width: 26px;
+        height: 20px;
+        border-radius: var(--ds-radius-pill);
+      }
+      .sksec__divider {
+        flex: 1 1 auto;
+        height: 1px;
+        background: var(--ds-border);
       }
       .sksec__action {
         flex: 0 0 auto;
@@ -57,6 +77,8 @@ import { Component, Input } from "@angular/core";
 export class SkeletonSectionHeaderComponent {
   @Input() titleWidth = "132px";
   @Input() subtitle = false;
+  @Input() count = false;
+  @Input() divider = false;
   @Input() action = false;
   @Input() actionWidth = "68px";
 }

@@ -15,7 +15,7 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
-import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonExerciseComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-exercise.component";
 import { WorkoutSummaryComponent } from "@shared/design-system/workout-summary/infrastructure/components/workout-summary.component";
 import { WorkoutExerciseComponent } from "@shared/design-system/workout-exercise/infrastructure/components/workout-exercise.component";
 import { GetWorkoutService } from "../../application/services/get-workout.service";
@@ -34,7 +34,7 @@ import {
     StackComponent,
     SkeletonScreenHeaderComponent,
     SkeletonSummaryComponent,
-    SkeletonListComponent,
+    SkeletonExerciseComponent,
     WorkoutSummaryComponent,
     WorkoutExerciseComponent,
   ],
@@ -47,6 +47,8 @@ export class WorkoutDetailComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "gym/training/workout";
+
+  readonly skeletonExercises = [4, 3, 3];
 
   loading = signal(true);
   workout = signal<WorkoutDetailAttributes | null>(null);

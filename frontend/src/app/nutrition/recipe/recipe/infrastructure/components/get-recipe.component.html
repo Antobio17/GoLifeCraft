@@ -8,11 +8,7 @@
       [actions]="canWrite ? 2 : 0"
     />
     <ds-skeleton-hero />
-    <ds-skeleton-line
-      width="118px"
-      height="26px"
-      radius="var(--ds-radius-pill)"
-    />
+    <ds-skeleton-chips [count]="1" height="26px" [gap]="'6px'" />
     <ds-skeleton-macro-bars />
     <ds-skeleton-section-header titleWidth="118px" [action]="true" />
     <ds-skeleton-list

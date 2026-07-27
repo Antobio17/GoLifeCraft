@@ -7,7 +7,7 @@
   />
 
   @if (loading()) {
-    <ds-skeleton height="52px" radius="var(--ds-radius-2xl)" />
+    <ds-skeleton-note [lines]="2" />
     <ds-skeleton-filters [search]="true" [selects]="2" [caption]="true" />
     <ds-skeleton-list
       [count]="6"

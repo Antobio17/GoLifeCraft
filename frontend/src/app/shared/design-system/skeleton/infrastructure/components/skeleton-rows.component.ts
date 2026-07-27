@@ -5,6 +5,15 @@ import { Component, Input } from "@angular/core";
   standalone: true,
   template: `
     <div class="skrow" [class.skrow--card]="card">
+      @if (header) {
+        <div class="skrow__header">
+          <span class="ds-sk skrow__header-title"></span>
+          @if (badge) {
+            <span class="ds-sk skrow__header-badge"></span>
+          }
+        </div>
+      }
+
       @for (row of rowArray; track row; let i = $index; let last = $last) {
         <div
           class="skrow__row"
@@ -30,15 +39,33 @@ import { Component, Input } from "@angular/core";
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-3xl);
-        padding: 4px 14px;
+        border-radius: 18px;
+        overflow: hidden;
+        --skrow-pad: 12px 16px;
+      }
+      .skrow__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 13px 16px;
+        border-bottom: 1px solid var(--ds-border);
+      }
+      .skrow__header-title {
+        width: 132px;
+        height: 10px;
+      }
+      .skrow__header-badge {
+        width: 76px;
+        height: 20px;
+        border-radius: var(--ds-radius-pill);
       }
       .skrow__row {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        padding: 11px 0;
+        padding: var(--skrow-pad, 11px 0);
         border-bottom: 1px solid var(--ds-border);
       }
       .skrow__row--last {
@@ -49,7 +76,7 @@ import { Component, Input } from "@angular/core";
         height: 11px;
       }
       .skrow__value {
-        width: 46px;
+        width: var(--skrow-value, 46px);
         height: 11px;
       }
       .skrow__row:nth-child(even) .skrow__label {
@@ -62,13 +89,17 @@ import { Component, Input } from "@angular/core";
   ],
   host: {
     "[style.--skrow-label]": "labelWidth",
+    "[style.--skrow-value]": "valueWidth",
   },
 })
 export class SkeletonRowsComponent {
   @Input() rows = 6;
   @Input() divider = true;
   @Input() card = false;
+  @Input() header = false;
+  @Input() badge = false;
   @Input() labelWidth = "42%";
+  @Input() valueWidth = "46px";
 
   get rowArray(): number[] {
     return Array.from({ length: this.rows }, (_, index) => index);

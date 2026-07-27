@@ -1,0 +1,143 @@
+:host {
+  display: block;
+}
+
+.skex {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border-hairline);
+  border-radius: var(--ds-radius-3xl);
+  box-shadow: var(--ds-shadow-card);
+  padding: var(--skex-padding, 11px);
+}
+
+.skex__head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.skex__index {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+
+.skex--readonly .skex__index {
+  border-radius: 9px;
+}
+
+.skex__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skex__name {
+  width: var(--skex-name, 54%);
+  height: 13px;
+  border-radius: var(--ds-radius-sm);
+}
+
+.skex__muscle {
+  width: 34%;
+  height: 10px;
+}
+
+.skex__badge {
+  flex: 0 0 auto;
+  width: var(--skex-badge, 64px);
+  height: 22px;
+  border-radius: 8px;
+}
+
+.skex__action {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ds-radius-lg);
+}
+
+.skex__note {
+  width: 100%;
+  height: var(--skex-note, 46px);
+  border-radius: var(--ds-radius-xl);
+}
+
+.skex__set-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px;
+}
+
+.skex__set-label {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 54px;
+  height: 8px;
+  margin: 0 auto;
+}
+
+.skex__set-label--num {
+  flex: 0 0 auto;
+  width: 26px;
+  margin: 0;
+}
+
+.skex__set-spacer {
+  flex: 0 0 auto;
+  width: 30px;
+}
+
+.skex__set {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ds-bg);
+  border-radius: 8px;
+  padding: var(--skex-set-padding, 5px 6px);
+}
+
+.skex__set-num {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 12px;
+  margin: 0 8px;
+}
+
+.skex__set-field {
+  flex: 1 1 0;
+  min-width: 0;
+  height: var(--skex-set-field, 30px);
+  border-radius: 8px;
+}
+
+.skex__set-done {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+
+.skex--readonly .skex__set {
+  padding: 8px 6px;
+}
+
+.skex--readonly .skex__set-field {
+  height: 12px;
+  max-width: 56px;
+  margin: 0 auto;
+  border-radius: var(--ds-radius-sm);
+}
+
+.skex__add {
+  width: 108px;
+  height: 13px;
+  margin: 5px auto;
+}

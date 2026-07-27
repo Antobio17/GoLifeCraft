@@ -16,7 +16,7 @@ import { HeadingComponent } from "@shared/design-system/heading/infrastructure/c
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
-import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
 import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
@@ -47,7 +47,7 @@ import { RecipeDetail } from "@nutrition/recipe/recipe/domain/models/recipe.mode
     IconButtonComponent,
     EmojiTileComponent,
     NoteComponent,
-    SkeletonLineComponent,
+    SkeletonChipsComponent,
     SkeletonScreenHeaderComponent,
     SkeletonHeroComponent,
     SkeletonMacroBarsComponent,

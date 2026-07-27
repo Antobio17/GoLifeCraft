@@ -26,6 +26,7 @@ import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastruct
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
@@ -78,6 +79,7 @@ type LibraryView = "list" | "grouped";
     PressableComponent,
     EmptyStateComponent,
     SkeletonListComponent,
+    SkeletonSectionHeaderComponent,
     SkeletonFiltersComponent,
     InfiniteScrollComponent,
   ],
@@ -94,6 +96,8 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   protected readonly storageKey = "pageSize_exercises";
 
   searchQuery = signal("");
+  readonly skeletonGroups = [4, 2, 3];
+
   view = signal<LibraryView>("grouped");
 
   reloading = signal(false);
