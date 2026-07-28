@@ -1,4 +1,11 @@
-import { Component, Input } from "@angular/core";
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  ViewChild,
+} from "@angular/core";
 
 const WIDTH = 300;
 const HEIGHT = 100;
@@ -20,45 +27,63 @@ interface Marker {
   selector: "ds-line-chart",
   standalone: true,
   template: `
-    <div class="ds-line-wrap">
-      <svg
-        class="ds-line"
-        [attr.viewBox]="viewBox"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path [attr.d]="areaPath" class="ds-line__area" />
-        <polyline [attr.points]="linePoints" class="ds-line__stroke" />
-        @if (labels.length === 0) {
-          <circle
-            [attr.cx]="last.x"
-            [attr.cy]="last.y"
-            r="4"
-            class="ds-line__dot"
-          />
-        }
-      </svg>
-
-      @if (labels.length > 0) {
-        <div class="ds-line__markers">
-          @for (marker of markers; track $index) {
-            <span
-              class="ds-line__marker"
-              [style.left.%]="marker.left"
-              [style.top.%]="marker.top"
-            >
-              <span class="ds-line__value">{{ marker.label }}</span>
-              <span class="ds-line__point"></span>
-            </span>
+    <div #scroller class="ds-line-scroll" [class.is-scrollable]="scrollable">
+      <div class="ds-line-wrap" [style.min-width.px]="minWidth">
+        <svg
+          class="ds-line"
+          [attr.viewBox]="viewBox"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path [attr.d]="areaPath" class="ds-line__area" />
+          <polyline [attr.points]="linePoints" class="ds-line__stroke" />
+          @if (labels.length === 0) {
+            <circle
+              [attr.cx]="last.x"
+              [attr.cy]="last.y"
+              r="4"
+              class="ds-line__dot"
+            />
           }
-        </div>
-      }
+        </svg>
+
+        @if (labels.length > 0) {
+          <div class="ds-line__markers">
+            @for (marker of markers; track $index) {
+              <span
+                class="ds-line__marker"
+                [style.left.%]="marker.left"
+                [style.top.%]="marker.top"
+              >
+                <span class="ds-line__value">{{ marker.label }}</span>
+                <span class="ds-line__point"></span>
+              </span>
+            }
+          </div>
+        }
+      </div>
     </div>
   `,
   styles: [
     `
       :host {
         display: block;
+      }
+      .ds-line-scroll {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      .ds-line-scroll.is-scrollable {
+        box-sizing: border-box;
+        padding: 12px 14px 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+      }
+      .ds-line-scroll.is-scrollable::-webkit-scrollbar {
+        display: none;
       }
       .ds-line-wrap {
         position: relative;
@@ -123,11 +148,38 @@ interface Marker {
     `,
   ],
 })
-export class LineChartComponent {
+export class LineChartComponent implements OnChanges, AfterViewChecked {
   @Input() points: number[] = [];
   @Input() labels: string[] = [];
+  @Input() scrollable = false;
+  @Input() pointSpacing = 44;
+
+  @ViewChild("scroller") scroller?: ElementRef<HTMLElement>;
 
   readonly viewBox = `0 0 ${WIDTH} ${HEIGHT}`;
+
+  private pendingScroll = false;
+
+  get minWidth(): number | null {
+    if (!this.scrollable) {
+      return null;
+    }
+    return this.points.length * this.pointSpacing;
+  }
+
+  ngOnChanges(): void {
+    this.pendingScroll = this.scrollable;
+  }
+
+  ngAfterViewChecked(): void {
+    if (!this.pendingScroll || !this.scroller) {
+      return;
+    }
+
+    this.pendingScroll = false;
+    const element = this.scroller.nativeElement;
+    element.scrollLeft = element.scrollWidth;
+  }
 
   private get coords(): Point[] {
     const values = this.points;

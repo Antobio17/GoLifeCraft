@@ -20,3 +20,14 @@ services:
 
   Gym\Analytics\Stats\Application\Query\GetExerciseStatsDataTransform:
     class: Gym\Analytics\Stats\Infrastructure\UI\API\DataTransform\ApiGetExerciseStatsDataTransform
+
+  Gym\Analytics\Stats\Application\Query\GetSessionStatsQueryHandler:
+    class: Gym\Analytics\Stats\Application\Query\GetSessionStatsQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Analytics\Stats\Domain\QueryModel\GetSessionStatsNeedleDataQuery'
+      $dataTransform: '@Gym\Analytics\Stats\Application\Query\GetSessionStatsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Analytics\Stats\Application\Query\GetSessionStatsDataTransform:
+    class: Gym\Analytics\Stats\Infrastructure\UI\API\DataTransform\ApiGetSessionStatsDataTransform

@@ -57,7 +57,6 @@
     "edit": "Editar sesión",
     "delete": "Borrar sesión",
     "start": "Empezar entrenamiento",
-    "startShort": "Empezar",
     "finish": "Finalizar entrenamiento",
     "active": {
       "running": "Sesión activa",
@@ -74,6 +73,27 @@
       "warning": "El progreso de este entreno no se guardará.",
       "cancel": "Seguir entrenando",
       "confirm": "Sí, parar"
+    },
+    "progress": {
+      "title": "Progresión",
+      "rangeLabel": "Periodo",
+      "empty": "No hay entrenos en este periodo",
+      "range": {
+        "oneMonth": "Último mes",
+        "threeMonths": "Últimos 3 meses",
+        "sixMonths": "Últimos 6 meses",
+        "all": "Todo el histórico"
+      },
+      "metric": {
+        "volume": "Volumen",
+        "reps": "Repeticiones",
+        "duration": "Duración"
+      },
+      "metricName": {
+        "volume": "Volumen",
+        "reps": "Repeticiones",
+        "duration": "Duración"
+      }
     },
     "empty": {
       "title": "Aún no hay ejercicios",

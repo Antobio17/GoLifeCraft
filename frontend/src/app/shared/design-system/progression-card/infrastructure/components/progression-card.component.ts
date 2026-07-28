@@ -33,8 +33,10 @@ export type ProgressionTrend = "up" | "down" | "neutral";
       @if (points.length > 1) {
         <ds-line-chart
           class="ds-progression__chart"
+          [class.is-scrollable]="scrollable"
           [points]="points"
           [labels]="pointLabels"
+          [scrollable]="scrollable"
         />
         <div class="ds-progression__axis">
           <span>{{ firstLabel }}</span>
@@ -114,6 +116,10 @@ export type ProgressionTrend = "up" | "down" | "neutral";
         height: 96px;
         margin-top: 20px;
       }
+      .ds-progression__chart.is-scrollable {
+        height: 108px;
+        margin-top: 8px;
+      }
       .ds-progression__axis {
         display: flex;
         justify-content: space-between;
@@ -134,6 +140,7 @@ export class ProgressionCardComponent {
   @Input() prLabel = "";
   @Input() points: number[] = [];
   @Input() pointLabels: string[] = [];
+  @Input() scrollable = false;
   @Input() firstLabel = "";
   @Input() lastLabel = "";
 }

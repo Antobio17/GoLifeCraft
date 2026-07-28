@@ -11,6 +11,8 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { NgTemplateOutlet } from "@angular/common";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
@@ -37,16 +39,33 @@ import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastru
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonExerciseComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-exercise.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
 import {
   MenuComponent,
   MenuItem,
 } from "@shared/design-system/menu/infrastructure/components/menu.component";
+import {
+  SegmentedToggleComponent,
+  SegmentedOption,
+} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
+import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
+import {
+  ProgressionCardComponent,
+  ProgressionTrend,
+} from "@shared/design-system/progression-card/infrastructure/components/progression-card.component";
+import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { GetSessionService } from "../../application/services/get-session.service";
+import { GetSessionStatsService } from "../../application/services/get-session-stats.service";
 import { UpdateSessionService } from "../../application/services/update-session.service";
 import { DeleteSessionService } from "../../application/services/delete-session.service";
 import { SessionDraftService } from "../../application/services/session-draft.service";
+import { SessionProgressService } from "../../application/services/session-progress.service";
+import { SessionProgressMetric } from "../../domain/models/session-progress-metric.model";
+import { SessionProgressRange } from "../../domain/models/session-progress-range.model";
+import { SessionWorkoutStats } from "../../domain/models/session-stats.model";
 import { GetExercisesService } from "@gym/library/exercise/application/services/get-exercises.service";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
@@ -62,6 +81,8 @@ import {
   templateUrl: "./session-detail.component.html",
   styleUrls: ["./session-detail.component.css"],
   imports: [
+    FormsModule,
+    NgTemplateOutlet,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
@@ -86,16 +107,23 @@ import {
     SkeletonScreenHeaderComponent,
     SkeletonComponent,
     SkeletonExerciseComponent,
+    SkeletonLineComponent,
     TextareaComponent,
     MenuComponent,
+    SegmentedToggleComponent,
+    SelectComponent,
+    ProgressionCardComponent,
+    SkeletonPanelComponent,
   ],
 })
 export class SessionDetailComponent implements OnInit, OnDestroy {
   private translationService = inject(TranslationService);
   private getSessionService = inject(GetSessionService);
+  private getSessionStatsService = inject(GetSessionStatsService);
   private updateSessionService = inject(UpdateSessionService);
   private deleteSessionService = inject(DeleteSessionService);
   private sessionDraft = inject(SessionDraftService);
+  private sessionProgress = inject(SessionProgressService);
   private getExercisesService = inject(GetExercisesService);
   protected activeWorkout = inject(ActiveWorkoutService);
   private router = inject(Router);
@@ -122,6 +150,113 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       modeLabel: this.modeLabel(exercise.type),
     })),
   );
+
+  statsLoading = signal(true);
+  workouts = signal<SessionWorkoutStats[]>([]);
+  metric = signal<SessionProgressMetric>(SessionProgressMetric.Volume);
+  range = signal<SessionProgressRange>(SessionProgressRange.ThreeMonths);
+
+  metricOptions = computed<SegmentedOption[]>(() => [
+    {
+      value: SessionProgressMetric.Volume,
+      label: this.t("getSession.progress.metric.volume"),
+    },
+    {
+      value: SessionProgressMetric.Reps,
+      label: this.t("getSession.progress.metric.reps"),
+    },
+    {
+      value: SessionProgressMetric.Duration,
+      label: this.t("getSession.progress.metric.duration"),
+    },
+  ]);
+
+  rangeOptions = computed<SelectOption[]>(() => [
+    {
+      value: SessionProgressRange.OneMonth,
+      label: this.t("getSession.progress.range.oneMonth"),
+    },
+    {
+      value: SessionProgressRange.ThreeMonths,
+      label: this.t("getSession.progress.range.threeMonths"),
+    },
+    {
+      value: SessionProgressRange.SixMonths,
+      label: this.t("getSession.progress.range.sixMonths"),
+    },
+    {
+      value: SessionProgressRange.All,
+      label: this.t("getSession.progress.range.all"),
+    },
+  ]);
+
+  hasProgress = computed<boolean>(() => this.workouts().length > 0);
+
+  private visibleWorkouts = computed<SessionWorkoutStats[]>(() =>
+    this.sessionProgress.visibleWorkouts(this.workouts(), this.range()),
+  );
+
+  private visibleValues = computed<number[]>(() =>
+    this.sessionProgress.valuesOf(this.visibleWorkouts(), this.metric()),
+  );
+
+  hasProgressPoints = computed<boolean>(
+    () => this.visibleWorkouts().length > 0,
+  );
+
+  progressPoints = computed<number[]>(() => this.visibleValues());
+
+  progressLabels = computed<string[]>(() =>
+    this.visibleValues().map((value) =>
+      this.sessionProgress.formatPoint(value, this.metric()),
+    ),
+  );
+
+  progressMetricName = computed<string>(() =>
+    this.t(`getSession.progress.metricName.${this.metric()}`),
+  );
+
+  progressValue = computed<string>(() => {
+    const values = this.visibleValues();
+    return this.sessionProgress.formatValue(
+      values.length ? values[values.length - 1] : 0,
+      this.metric(),
+    );
+  });
+
+  private progressDelta = computed<number | null>(() =>
+    this.sessionProgress.deltaPercent(this.visibleValues()),
+  );
+
+  progressDeltaLabel = computed<string | null>(() => {
+    const delta = this.progressDelta();
+    if (delta === null) {
+      return null;
+    }
+    return `${delta > 0 ? "+" : ""}${delta}%`;
+  });
+
+  progressTrend = computed<ProgressionTrend>(() => {
+    const delta = this.progressDelta();
+    if (delta === null || delta === 0) {
+      return "neutral";
+    }
+    return delta > 0 ? "up" : "down";
+  });
+
+  progressFirstDate = computed<string>(() => {
+    const workouts = this.visibleWorkouts();
+    return workouts.length
+      ? this.sessionProgress.formatDate(workouts[0].date)
+      : "";
+  });
+
+  progressLastDate = computed<string>(() => {
+    const workouts = this.visibleWorkouts();
+    return workouts.length
+      ? this.sessionProgress.formatDate(workouts[workouts.length - 1].date)
+      : "";
+  });
 
   pickerOpen = signal(false);
   library = signal<Exercise[]>([]);
@@ -220,6 +355,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
         this.loadSession();
+        this.loadStats();
         this.loadLibrary();
       });
   }
@@ -297,6 +433,21 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.onStartWorkout();
   }
 
+  private loadStats(): void {
+    this.statsLoading.set(true);
+
+    this.getSessionStatsService
+      .getSessionStats(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (stats) => {
+          this.workouts.set(stats.workouts);
+          this.statsLoading.set(false);
+        },
+        error: () => this.statsLoading.set(false),
+      });
+  }
+
   private loadLibrary(): void {
     this.getExercisesService
       .getExercises(1, 200)
@@ -345,6 +496,14 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   private t(key: string): string {
     return this.translationService.translate(key, this.MODULE_PATH);
+  }
+
+  onMetricChange(metric: SessionProgressMetric): void {
+    this.metric.set(metric);
+  }
+
+  onRangeChange(range: SessionProgressRange): void {
+    this.range.set(range);
   }
 
   openPicker(): void {

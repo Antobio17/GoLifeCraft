@@ -4,11 +4,11 @@
       [leading]="true"
       [eyebrow]="true"
       [subtitle]="false"
-      titleWidth="54%"
+      titleWidth="62%"
       [actions]="2"
-      actionWidth="86px"
     />
     <ds-skeleton-chips [count]="1" height="26px" [gap]="'6px'" />
+    <ng-container [ngTemplateOutlet]="progressSkeleton" />
     <ds-stack [gap]="'9px'">
       @for (sets of skeletonExercises; track $index) {
         <ds-skeleton-exercise
@@ -30,16 +30,14 @@
       (leadingClick)="goBack()"
     >
       @if (!isActiveHere) {
-        <ds-button
+        <ds-icon-button
           slot="actions"
-          variant="primary"
-          size="sm"
-          icon="dumbbell"
+          icon="play"
+          variant="solid"
           [disabled]="exercises().length === 0"
+          [ariaLabel]="'getSession.start' | t"
           (clicked)="onStartWorkout()"
-        >
-          {{ "getSession.startShort" | t }}
-        </ds-button>
+        />
       }
       <ds-menu
         slot="actions"
@@ -92,6 +90,57 @@
         (pauseToggle)="onPauseWorkout()"
         (stopped)="onRequestStop()"
       />
+    }
+
+    @if (!isActiveHere) {
+      @if (statsLoading()) {
+        <ng-container [ngTemplateOutlet]="progressSkeleton" />
+      } @else if (hasProgress()) {
+        <ds-stack [gap]="'10px'">
+          <ds-stack
+            direction="row"
+            align="center"
+            justify="between"
+            [gap]="'10px'"
+          >
+            <ds-text variant="label">
+              {{ "getSession.progress.title" | t }}
+            </ds-text>
+            <ds-select
+              variant="bare"
+              [options]="rangeOptions()"
+              [ariaLabel]="'getSession.progress.rangeLabel' | t"
+              [ngModel]="range()"
+              (ngModelChange)="onRangeChange($event)"
+            />
+          </ds-stack>
+
+          <ds-segmented-toggle
+            [options]="metricOptions()"
+            [ngModel]="metric()"
+            (ngModelChange)="onMetricChange($event)"
+          />
+
+          @if (hasProgressPoints()) {
+            <ds-progression-card
+              [metricLabel]="progressMetricName()"
+              [value]="progressValue()"
+              [delta]="progressDeltaLabel()"
+              [trend]="progressTrend()"
+              [prLabel]="progressLastDate()"
+              [points]="progressPoints()"
+              [pointLabels]="progressLabels()"
+              [firstLabel]="progressFirstDate()"
+              [lastLabel]="progressLastDate()"
+              [scrollable]="true"
+            />
+          } @else {
+            <ds-text variant="muted">
+              {{ "getSession.progress.empty" | t }}
+            </ds-text>
+          }
+        </ds-stack>
+      }
     }
 
     @if (exercises().length === 0) {
@@ -220,6 +269,22 @@
     }
   </ds-stack>
 </ds-modal-sheet>
+
+<ng-template #progressSkeleton>
+  <ds-stack [gap]="'10px'">
+    <ds-stack direction="row" align="center" justify="between" [gap]="'10px'">
+      <ds-skeleton-line width="96px" height="12px" />
+      <ds-skeleton-line width="116px" height="12px" />
+    </ds-stack>
+    <ds-skeleton height="40px" radius="var(--ds-radius-2xl)" />
+    <ds-skeleton-panel
+      [brand]="true"
+      [figure]="true"
+      content="spark"
+      chartHeight="108px"
+    />
+  </ds-stack>
+</ng-template>
 
 <ds-confirm-action-modal
   [show]="showDeleteModal()"

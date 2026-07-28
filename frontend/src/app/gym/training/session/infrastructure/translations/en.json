@@ -57,7 +57,6 @@
     "edit": "Edit session",
     "delete": "Delete session",
     "start": "Start workout",
-    "startShort": "Start",
     "finish": "Finish workout",
     "active": {
       "running": "Active session",
@@ -74,6 +73,27 @@
       "warning": "This workout's progress will not be saved.",
       "cancel": "Keep training",
       "confirm": "Yes, stop"
+    },
+    "progress": {
+      "title": "Progression",
+      "rangeLabel": "Period",
+      "empty": "No workouts in this period",
+      "range": {
+        "oneMonth": "Last month",
+        "threeMonths": "Last 3 months",
+        "sixMonths": "Last 6 months",
+        "all": "All history"
+      },
+      "metric": {
+        "volume": "Volume",
+        "reps": "Reps",
+        "duration": "Duration"
+      },
+      "metricName": {
+        "volume": "Volume",
+        "reps": "Reps",
+        "duration": "Duration"
+      }
     },
     "empty": {
       "title": "No exercises yet",

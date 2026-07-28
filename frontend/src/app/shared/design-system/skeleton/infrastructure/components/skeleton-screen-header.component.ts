@@ -53,15 +53,18 @@ import { Component, Input } from "@angular/core";
       }
       .skhead__eyebrow {
         width: 84px;
+        max-width: 100%;
         height: 9px;
       }
       .skhead__title {
         width: var(--skhead-title, 62%);
+        max-width: 100%;
         height: 22px;
         border-radius: var(--ds-radius-md);
       }
       .skhead__subtitle {
         width: var(--skhead-subtitle, 44%);
+        max-width: 100%;
         height: 11px;
       }
       .skhead__actions {

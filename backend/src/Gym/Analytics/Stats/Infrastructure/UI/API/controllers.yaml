@@ -12,3 +12,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetSessionStatsController:
+    class: Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetSessionStatsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
