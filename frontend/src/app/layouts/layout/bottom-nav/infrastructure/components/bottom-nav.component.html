@@ -3,57 +3,27 @@
   aria-label="Principal"
   [class.tabbar--drawer-open]="isDrawerOpen()"
 >
-  <ds-tab-item
-    routerLink="/dashboard"
-    routerLinkActive
-    #homeActive="routerLinkActive"
-    icon="home"
-    [label]="'navbar.home' | t"
-    [active]="homeActive.isActive && !isDrawerOpen()"
-    [attr.aria-label]="'navbar.home' | t"
-  />
+  <ds-scroll-row
+    #track
+    class="tabbar__track"
+    (transitionend)="scrollActiveIntoView()"
+  >
+    @for (item of items; track item.route) {
+      <ds-tab-item
+        [routerLink]="item.route"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: item.exact }"
+        #itemActive="routerLinkActive"
+        [icon]="item.icon"
+        [label]="item.labelKey | t"
+        [active]="itemActive.isActive && !isDrawerOpen()"
+        [attr.aria-label]="item.labelKey | t"
+      />
+    }
+  </ds-scroll-row>
 
   <ds-tab-item
-    routerLink="/agenda"
-    routerLinkActive
-    #agendaActive="routerLinkActive"
-    icon="agenda"
-    [label]="'navbar.agenda' | t"
-    [active]="agendaActive.isActive && !isDrawerOpen()"
-    [attr.aria-label]="'navbar.agenda' | t"
-  />
-
-  <ds-tab-item
-    routerLink="/diary"
-    routerLinkActive
-    #diaryActive="routerLinkActive"
-    icon="diary"
-    [label]="'navbar.diary' | t"
-    [active]="diaryActive.isActive && !isDrawerOpen()"
-    [attr.aria-label]="'navbar.diary' | t"
-  />
-
-  <ds-tab-item
-    routerLink="/recipes"
-    routerLinkActive
-    #recipesActive="routerLinkActive"
-    icon="chefHat"
-    [label]="'navbar.recipes' | t"
-    [active]="recipesActive.isActive && !isDrawerOpen()"
-    [attr.aria-label]="'navbar.recipes' | t"
-  />
-
-  <ds-tab-item
-    routerLink="/gym"
-    routerLinkActive
-    #gymActive="routerLinkActive"
-    icon="dumbbell"
-    [label]="'navbar.gym' | t"
-    [active]="gymActive.isActive && !isDrawerOpen()"
-    [attr.aria-label]="'navbar.gym' | t"
-  />
-
-  <ds-tab-item
+    class="tabbar__pinned"
     icon="menu"
     [label]="'navbar.menu' | t"
     [active]="isDrawerOpen()"

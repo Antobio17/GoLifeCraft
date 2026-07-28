@@ -36,13 +36,27 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         display: flex;
         align-items: center;
         justify-content: center;
+        flex: 0 0 auto;
       }
       .tab__label {
-        display: none;
+        max-width: 0;
+        overflow: hidden;
+        opacity: 0;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+        transition: all 0.3s cubic-bezier(0.6, 0.05, 0.28, 0.98);
       }
       .tab--active {
         color: var(--ds-text);
         background: var(--ds-surface-inset);
+        padding: 9px 11px;
+      }
+      .tab--active .tab__label {
+        max-width: 160px;
+        opacity: 1;
+        padding-left: 7px;
       }
     `,
   ],
