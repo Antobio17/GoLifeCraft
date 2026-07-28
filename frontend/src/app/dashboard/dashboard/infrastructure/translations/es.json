@@ -9,12 +9,7 @@
     "summary": {
       "title": "Resumen de hoy",
       "more": "Ver más",
-      "kcal": "kcal consumidas"
-    },
-    "macros": {
-      "protein": "Proteínas",
-      "fat": "Grasas",
-      "carbs": "Hidratos"
+      "total": "TOTAL DEL DÍA"
     },
     "agenda": {
       "title": "Tus próximos 7 días",

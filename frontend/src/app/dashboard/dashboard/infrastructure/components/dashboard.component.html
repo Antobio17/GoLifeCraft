@@ -16,30 +16,17 @@
       (action)="goToDiary()"
     />
     @if (summaryLoading()) {
-      <ds-skeleton-summary [head]="false" macros="tiles" />
-    } @else {
-      <ds-daily-summary
-        [progressPercent]="progressPercent"
-        [consumedKcal]="summary().consumedKcal | number: '1.0-0' : 'es'"
-        [targetKcal]="summary().targetKcal | number: '1.0-0' : 'es'"
-        [kcalLabel]="'dashboard.summary.kcal' | t"
-        [macros]="[
-          {
-            label: 'dashboard.macros.protein' | t,
-            value: summary().proteinG + ' g',
-            tone: 'protein',
-          },
-          {
-            label: 'dashboard.macros.fat' | t,
-            value: summary().fatG + ' g',
-            tone: 'fat',
-          },
-          {
-            label: 'dashboard.macros.carbs' | t,
-            value: summary().carbsG + ' g',
-            tone: 'carbs',
-          },
-        ]"
+      <ds-skeleton-summary macros="bars" />
+    } @else if (summary(); as diary) {
+      <ds-diary-summary
+        [eyebrow]="'dashboard.summary.total' | t"
+        [countLabel]="view.countLabel(diary.entryCount)"
+        [percent]="diary.percent"
+        [consumed]="view.integer(diary.consumedCalories)"
+        [goal]="view.integer(diary.goalCalories)"
+        [footnote]="view.caloriesFootnote(diary)"
+        [over]="view.exceedsCalories(diary)"
+        [macros]="view.goalMacros(diary)"
       />
     }
   </ds-stack>

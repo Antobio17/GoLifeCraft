@@ -85,10 +85,20 @@ export class DiaryViewService {
     return `${count} ${count === 1 ? "registro" : "registros"}`;
   }
 
-  remainingFootnote(remaining: number, planning = false): string {
-    if (planning) return `kcal · faltan ${this.integer(remaining)}`;
+  caloriesFootnote(attributes: DiaryDayAttributes, planning = false): string {
+    const excess = this.excessCalories(attributes);
 
-    return `kcal · quedan ${this.integer(remaining)}`;
+    if (excess > 0 && planning)
+      return `kcal · te pasas ${this.integer(excess)}`;
+    if (excess > 0) return `kcal · te has pasado ${this.integer(excess)}`;
+    if (planning)
+      return `kcal · faltan ${this.integer(attributes.remainingCalories)}`;
+
+    return `kcal · quedan ${this.integer(attributes.remainingCalories)}`;
+  }
+
+  exceedsCalories(attributes: DiaryDayAttributes): boolean {
+    return this.excessCalories(attributes) > 0;
   }
 
   mealMeta(meal: DiaryMealView): string {
@@ -119,13 +129,40 @@ export class DiaryViewService {
     goal: DiaryGoals[keyof DiaryGoals],
     tone: "protein" | "fat" | "carbs",
   ): DiaryMacroGoal {
+    const excess = this.excess(value, goal);
+
     return {
       label,
       valueLabel: this.grams(value),
       goalLabel: this.grams(goal),
-      percent: goal > 0 ? Math.min(100, Math.round((value / goal) * 100)) : 0,
+      percent: this.reachedPercent(value, goal),
+      overPercent: this.excessPercent(value, goal),
+      overLabel: excess > 0 ? `+${this.grams(excess)}` : "",
       tone,
     };
+  }
+
+  private reachedPercent(value: number, goal: number): number {
+    if (goal <= 0) return 0;
+    if (value <= goal) return Math.round((value / goal) * 100);
+
+    return Math.round((goal / value) * 100);
+  }
+
+  private excessPercent(value: number, goal: number): number {
+    if (this.excess(value, goal) === 0) return 0;
+
+    return 100 - this.reachedPercent(value, goal);
+  }
+
+  private excess(value: number, goal: number): number {
+    if (goal <= 0) return 0;
+
+    return Math.max(0, value - goal);
+  }
+
+  private excessCalories(attributes: DiaryDayAttributes): number {
+    return this.excess(attributes.consumedCalories, attributes.goalCalories);
   }
 
   private parse(iso: string): Date {

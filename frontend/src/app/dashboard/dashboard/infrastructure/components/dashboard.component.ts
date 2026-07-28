@@ -7,14 +7,14 @@ import {
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatePipe, DecimalPipe } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
 import { DashboardLayoutComponent } from "@shared/design-system/dashboard-layout/infrastructure/components/dashboard-layout.component";
 import { GreetingHeaderComponent } from "@shared/design-system/greeting-header/infrastructure/components/greeting-header.component";
-import { DailySummaryComponent } from "@shared/design-system/daily-summary/infrastructure/components/daily-summary.component";
+import { DiarySummaryComponent } from "@shared/design-system/diary-summary/infrastructure/components/diary-summary.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -23,15 +23,9 @@ import { GetGymStatsService } from "@gym/analytics/stats/application/services/ge
 import { GymStats } from "@gym/analytics/stats/domain/models/gym-stats.model";
 import { GymAnalyticsComponent } from "@gym/analytics/stats/infrastructure/components/gym-analytics.component";
 import { GetDiaryService } from "@nutrition/diary/diary/application/services/get-diary.service";
+import { DiaryViewService } from "@nutrition/diary/diary/application/services/diary-view.service";
+import { DiaryDayAttributes } from "@nutrition/diary/diary/domain/models/diary.model";
 import { AgendaSummaryComponent } from "@agenda/agenda/agenda/infrastructure/components/agenda-summary.component";
-
-interface DailySummary {
-  consumedKcal: number;
-  targetKcal: number;
-  proteinG: number;
-  fatG: number;
-  carbsG: number;
-}
 
 @Component({
   selector: "app-dashboard",
@@ -39,12 +33,11 @@ interface DailySummary {
   templateUrl: "./dashboard.component.html",
   imports: [
     DatePipe,
-    DecimalPipe,
     ContextualTranslatePipe,
     ActionTileComponent,
     DashboardLayoutComponent,
     GreetingHeaderComponent,
-    DailySummaryComponent,
+    DiarySummaryComponent,
     SectionHeaderComponent,
     SkeletonSummaryComponent,
     StackComponent,
@@ -54,6 +47,8 @@ interface DailySummary {
   ],
 })
 export class DashboardComponent implements OnInit {
+  protected view = inject(DiaryViewService);
+
   private authSessionService = inject(AuthSessionService);
   private getDiaryService = inject(GetDiaryService);
   private getGymStatsService = inject(GetGymStatsService);
@@ -82,24 +77,7 @@ export class DashboardComponent implements OnInit {
     return value ? value.charAt(0).toUpperCase() : "?";
   });
 
-  readonly summary = signal<DailySummary>({
-    consumedKcal: 0,
-    targetKcal: 0,
-    proteinG: 0,
-    fatG: 0,
-    carbsG: 0,
-  });
-
-  get progressPercent(): number {
-    const summary = this.summary();
-
-    if (summary.targetKcal <= 0) return 0;
-
-    return Math.min(
-      100,
-      Math.round((summary.consumedKcal / summary.targetKcal) * 100),
-    );
-  }
+  readonly summary = signal<DiaryDayAttributes | null>(null);
 
   ngOnInit(): void {
     this.getDiaryService
@@ -107,16 +85,7 @@ export class DashboardComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          const attributes = response.data.attributes;
-
-          this.summary.set({
-            consumedKcal: attributes.consumedCalories,
-            targetKcal: attributes.goalCalories,
-            proteinG: attributes.totals.protein,
-            fatG: attributes.totals.fat,
-            carbsG: attributes.totals.carbs,
-          });
-
+          this.summary.set(response.data.attributes);
           this.summaryLoading.set(false);
         },
         error: () => this.summaryLoading.set(false),

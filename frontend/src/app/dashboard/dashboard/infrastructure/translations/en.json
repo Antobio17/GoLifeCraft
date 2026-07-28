@@ -9,12 +9,7 @@
     "summary": {
       "title": "Today's summary",
       "more": "See more",
-      "kcal": "kcal consumed"
-    },
-    "macros": {
-      "protein": "Protein",
-      "fat": "Fat",
-      "carbs": "Carbs"
+      "total": "DAY TOTAL"
     },
     "agenda": {
       "title": "Your next 7 days",

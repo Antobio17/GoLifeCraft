@@ -8,6 +8,8 @@ export interface DiaryMacroGoal {
   valueLabel: string;
   goalLabel: string;
   percent: number;
+  overPercent: number;
+  overLabel: string;
   tone: DiaryMacroTone;
 }
 
@@ -23,7 +25,11 @@ export interface DiaryMacroGoal {
       </div>
 
       <div class="daysum__main">
-        <ds-progress-ring class="daysum__ring" [value]="percent">
+        <ds-progress-ring
+          class="daysum__ring"
+          [class.daysum__ring--over]="over"
+          [value]="percent"
+        >
           <span class="daysum__ring-value">{{ percent }}%</span>
         </ds-progress-ring>
         <div class="daysum__kcal">
@@ -31,7 +37,9 @@ export interface DiaryMacroGoal {
             {{ consumed }}
             <span class="daysum__kcal-goal">/ {{ goal }}</span>
           </p>
-          <p class="daysum__kcal-foot">{{ footnote }}</p>
+          <p class="daysum__kcal-foot" [class.daysum__kcal-foot--over]="over">
+            {{ footnote }}
+          </p>
         </div>
       </div>
 
@@ -42,10 +50,11 @@ export interface DiaryMacroGoal {
               <span class="macro__label">{{ macro.label }}</span>
               <span class="macro__value"
                 >{{ macro.valueLabel
-                }}<span class="macro__goal">
-                  / {{ macro.goalLabel }}</span
-                ></span
-              >
+                }}<span class="macro__goal"> / {{ macro.goalLabel }}</span>
+                @if (macro.overLabel) {
+                  <span class="macro__over-label">{{ macro.overLabel }}</span>
+                }
+              </span>
             </div>
             <span class="macro__track">
               <span
@@ -53,8 +62,15 @@ export interface DiaryMacroGoal {
                 [class.macro__fill--protein]="macro.tone === 'protein'"
                 [class.macro__fill--fat]="macro.tone === 'fat'"
                 [class.macro__fill--carbs]="macro.tone === 'carbs'"
+                [class.macro__fill--capped]="macro.overPercent > 0"
                 [style.width.%]="macro.percent"
               ></span>
+              @if (macro.overPercent > 0) {
+                <span
+                  class="macro__over"
+                  [style.width.%]="macro.overPercent"
+                ></span>
+              }
             </span>
           </div>
         }
@@ -107,6 +123,9 @@ export interface DiaryMacroGoal {
           transparent
         );
       }
+      .daysum__ring--over {
+        --ds-ring-fill: var(--ds-danger);
+      }
       .daysum__ring-value {
         font-size: 14px;
         color: var(--ds-on-surface-brand);
@@ -130,6 +149,10 @@ export interface DiaryMacroGoal {
         margin: 3px 0 0;
         font-size: 11.5px;
         color: color-mix(in srgb, var(--ds-on-surface-brand) 65%, transparent);
+      }
+      .daysum__kcal-foot--over {
+        color: var(--ds-danger);
+        font-weight: 600;
       }
       .daysum__macros {
         display: flex;
@@ -161,8 +184,13 @@ export interface DiaryMacroGoal {
         font-weight: 600;
         color: color-mix(in srgb, var(--ds-on-surface-brand) 50%, transparent);
       }
+      .macro__over-label {
+        margin-left: 3px;
+        font-weight: 700;
+        color: var(--ds-danger);
+      }
       .macro__track {
-        display: block;
+        display: flex;
         height: 6px;
         border-radius: 999px;
         background: color-mix(
@@ -176,6 +204,17 @@ export interface DiaryMacroGoal {
         display: block;
         height: 100%;
         border-radius: 999px;
+        transition: width 0.4s cubic-bezier(0.6, 0.05, 0.28, 0.98);
+      }
+      .macro__fill--capped {
+        border-radius: 999px 0 0 999px;
+      }
+      .macro__over {
+        display: block;
+        height: 100%;
+        border-radius: 0 999px 999px 0;
+        background: var(--ds-danger);
+        border-left: 2px solid var(--ds-surface-brand);
         transition: width 0.4s cubic-bezier(0.6, 0.05, 0.28, 0.98);
       }
       .macro__fill--protein {
@@ -210,5 +249,6 @@ export class DiarySummaryComponent {
   @Input() consumed: string | number = "";
   @Input() goal: string | number = "";
   @Input() footnote = "";
+  @Input() over = false;
   @Input() macros: DiaryMacroGoal[] = [];
 }

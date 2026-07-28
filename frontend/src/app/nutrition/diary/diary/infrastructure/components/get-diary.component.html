@@ -104,9 +104,8 @@
       [percent]="diary.percent"
       [consumed]="view.integer(diary.consumedCalories)"
       [goal]="view.integer(diary.goalCalories)"
-      [footnote]="
-        view.remainingFootnote(diary.remainingCalories, planningDay())
-      "
+      [footnote]="view.caloriesFootnote(diary, planningDay())"
+      [over]="view.exceedsCalories(diary)"
       [macros]="view.goalMacros(diary)"
     />
 
