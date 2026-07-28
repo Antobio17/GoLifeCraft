@@ -70,6 +70,9 @@ export const DS_ICONS = {
   cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/>',
   chefHat:
     '<path d="M7 14a4.5 4.5 0 1 1 1.6-8.4 4 4 0 0 1 6.8 0A4.5 4.5 0 1 1 17 14z"/><path d="M7 14v5.2a.8.8 0 0 0 .8.8h8.4a.8.8 0 0 0 .8-.8V14"/><path d="M9.8 17.4h4.4"/>',
+  copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  menuboard:
+    '<path d="M6 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3M8 12v9M18 3c-1.4 0-2.5 1.8-2.5 4.5S16.6 12 18 12m0 0V3m0 9v9"/>',
   barbell:
     '<path d="M2 12h20"/><path d="M6.5 8v8"/><path d="M9.5 9.5v5"/><path d="M14.5 9.5v5"/><path d="M17.5 8v8"/>',
   ezBar:

@@ -1,0 +1,33 @@
+services:
+  Nutrition\Menu\Menu\Application\Query\GetMenusQueryHandler:
+    class: Nutrition\Menu\Menu\Application\Query\GetMenusQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Menu\Menu\Domain\QueryModel\GetMenusNeedleDataQuery'
+      $dataTransform: '@Nutrition\Menu\Menu\Application\Query\GetMenusDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Query\GetMenusDataTransform:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\DataTransform\ApiGetMenusDataTransform
+
+  Nutrition\Menu\Menu\Application\Query\GetMenuQueryHandler:
+    class: Nutrition\Menu\Menu\Application\Query\GetMenuQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Menu\Menu\Domain\QueryModel\GetMenuNeedleDataQuery'
+      $dataTransform: '@Nutrition\Menu\Menu\Application\Query\GetMenuDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Query\GetMenuDataTransform:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\DataTransform\ApiGetMenuDataTransform
+
+  Nutrition\Menu\Menu\Application\Query\GetMenuShoppingNeedsQueryHandler:
+    class: Nutrition\Menu\Menu\Application\Query\GetMenuShoppingNeedsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Menu\Menu\Domain\QueryModel\GetMenuShoppingNeedsNeedleDataQuery'
+      $dataTransform: '@Nutrition\Menu\Menu\Application\Query\GetMenuShoppingNeedsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Query\GetMenuShoppingNeedsDataTransform:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\DataTransform\ApiGetMenuShoppingNeedsDataTransform

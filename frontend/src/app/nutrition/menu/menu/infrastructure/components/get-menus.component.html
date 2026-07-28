@@ -1,0 +1,143 @@
+<ds-page-wrapper [gap]="'12px'">
+  <ds-screen-header
+    [title]="'getMenus.title' | t"
+    [subtitle]="headerSubtitle()"
+  >
+    @if (canWrite) {
+      <ds-button
+        slot="actions"
+        size="md"
+        icon="plus"
+        (clicked)="openTypeSheet()"
+      >
+        {{ "getMenus.create" | t }}
+      </ds-button>
+    }
+  </ds-screen-header>
+
+  @if (loading()) {
+    <ds-skeleton-filters [search]="true" [caption]="true" />
+    <ds-skeleton-list
+      [count]="4"
+      [columns]="null"
+      minColumn="320px"
+      [gap]="'9px'"
+      radius="16px"
+      padding="12px"
+      [alignTop]="true"
+      [tile]="52"
+      [tileRadius]="14"
+      titleWidth="52%"
+      headTrailing="52px"
+      metaWidth="42%"
+      [chips]="3"
+    />
+  } @else if (isEmpty()) {
+    <ds-empty-state
+      icon="menuboard"
+      [title]="'getMenus.empty.title' | t"
+      [text]="'getMenus.empty.text' | t"
+    />
+  } @else {
+    <ds-search-input
+      [placeholder]="'getMenus.searchPlaceholder' | t"
+      [clearLabel]="'getMenus.searchClear' | t"
+      (searched)="onSearch($event)"
+    />
+
+    <ds-note icon="info">{{ "getMenus.hint" | t }}</ds-note>
+
+    @if (!hasResults()) {
+      <ds-text variant="muted">
+        {{ "getMenus.noResults" | t }} “{{ searchQuery() }}”
+      </ds-text>
+    } @else {
+      @for (group of groups(); track group.key) {
+        <ds-section-header
+          [title]="group.label"
+          [staticLabel]="group.countLabel"
+        />
+
+        <ds-grid [minColumn]="'320px'">
+          @for (card of group.cards; track card.id) {
+            <ds-menu-card
+              [emoji]="card.emoji"
+              [name]="card.name"
+              [meta]="card.meta"
+              [kcal]="card.kcal"
+              [kcalCaption]="card.kcalCaption"
+              [protein]="card.protein"
+              [fat]="card.fat"
+              [carbs]="card.carbs"
+              [proteinLabel]="'getMenus.card.protein' | t"
+              [fatLabel]="'getMenus.card.fat' | t"
+              [carbsLabel]="'getMenus.card.carbs' | t"
+              [loadLabel]="card.loadLabel"
+              [loadIcon]="card.isWeek ? 'calendar' : 'download'"
+              [shopLabel]="'getMenus.card.shop' | t"
+              [removeLabel]="'getMenus.card.delete' | t"
+              [canWrite]="canWrite"
+              (activated)="onOpen(card)"
+              (loaded)="onLoad(card)"
+              (shopped)="onShop(card.id)"
+              (removed)="askDelete(card.id)"
+            />
+          }
+        </ds-grid>
+      }
+    }
+  }
+
+  <ds-modal-sheet
+    [open]="typeSheetOpen()"
+    [compact]="true"
+    [title]="'getMenus.newType.title' | t"
+    [closeLabel]="'getMenus.newType.close' | t"
+    (closed)="closeTypeSheet()"
+  >
+    <ds-stack [gap]="'10px'">
+      <ds-text variant="meta">{{ "getMenus.newType.subtitle" | t }}</ds-text>
+
+      <ds-choice-row
+        emoji="🍽️"
+        [title]="'getMenus.newType.singleTitle' | t"
+        [description]="'getMenus.newType.singleText' | t"
+        (activated)="onCreate('single')"
+      />
+
+      <ds-choice-row
+        emoji="🗓️"
+        [title]="'getMenus.newType.weekTitle' | t"
+        [description]="'getMenus.newType.weekText' | t"
+        (activated)="onCreate('week')"
+      />
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <app-menu-load-sheet
+    [menuId]="loadSheetMenuId()"
+    (closed)="closeLoadSheet()"
+  />
+
+  <app-menu-apply-week-sheet
+    [menuId]="applyWeekMenuId()"
+    (closed)="closeApplyWeekSheet()"
+  />
+
+  <app-menu-shopping-sheet
+    [menuId]="shoppingMenuId()"
+    (closed)="closeShoppingSheet()"
+  />
+
+  <ds-confirm-action-modal
+    [show]="menuToDelete() !== null"
+    [title]="'getMenus.delete.title' | t"
+    [body]="'getMenus.delete.message' | t"
+    [itemName]="deleteMessage()"
+    [isDeleting]="deleting()"
+    [cancelLabel]="'getMenus.delete.cancel' | t"
+    [confirmLabel]="'getMenus.delete.confirm' | t"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  />
+</ds-page-wrapper>

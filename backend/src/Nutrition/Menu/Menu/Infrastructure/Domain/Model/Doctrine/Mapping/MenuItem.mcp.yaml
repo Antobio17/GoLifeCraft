@@ -1,0 +1,54 @@
+label: Menu item
+
+fields:
+  menuId:
+    writable: true
+    required: true
+    max: 36
+    filterable: true
+    description: Id of the menu this item belongs to.
+  dayKey:
+    writable: true
+    max: 3
+    enum: [mon, tue, wed, thu, fri, sat, sun]
+    filterable: true
+    description: >-
+      Week day the item is planned for. Required for items of weekly menus and
+      always empty for single day menus.
+  meal:
+    writable: true
+    required: true
+    enum: [breakfast, lunch, dinner, snack]
+    filterable: true
+  kind:
+    writable: true
+    required: true
+    enum: [product, recipe]
+    filterable: true
+    description: '"product" points to an article of the catalog, "recipe" to a recipe.'
+  refId:
+    writable: true
+    required: true
+    max: 36
+    filterable: true
+    description: Id of the referenced article or recipe, matching the kind.
+  quantity:
+    writable: true
+    required: true
+    type: float
+    min: 0.01
+    description: Amount of the article in the given unit, or number of recipe servings.
+  unit:
+    writable: true
+    max: 30
+    description: >-
+      Unit alias for product items (base unit or one of its equivalences).
+      Left empty for recipe items, whose quantity is always in servings.
+  position:
+    writable: true
+    required: true
+    type: int
+    min: 1
+    sortable: true
+
+relations: {}

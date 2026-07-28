@@ -1,0 +1,207 @@
+{
+  "getMenus": {
+    "title": "Menús",
+    "subtitle": "plantillas para tu diario",
+    "create": "Nuevo",
+    "breadcrumb": {
+      "list": "Menús"
+    },
+    "count": {
+      "one": "1 menú guardado",
+      "many": "{{count}} menús guardados"
+    },
+    "hint": "Prepara un menú de un día con recetas y artículos, cárgalo en el diario para los días que quieras y genera la lista de la compra con lo que te falte.",
+    "searchPlaceholder": "Buscar menú o semana…",
+    "searchClear": "Limpiar búsqueda",
+    "noResults": "Sin resultados para",
+    "groups": {
+      "week": "Menús semanales",
+      "single": "Menús de un día",
+      "weekCount": {
+        "one": "1 semana",
+        "many": "{{count}} semanas"
+      },
+      "singleCount": {
+        "one": "1 menú",
+        "many": "{{count}} menús"
+      }
+    },
+    "card": {
+      "kcal": "kcal",
+      "kcalPerDay": "kcal/día",
+      "days": {
+        "one": "1 día",
+        "many": "{{count}} días"
+      },
+      "items": {
+        "zero": "Sin alimentos",
+        "one": "1 alimento",
+        "many": "{{count}} alimentos"
+      },
+      "load": "Cargar",
+      "apply": "Aplicar",
+      "shop": "Añadir a la compra",
+      "delete": "Borrar menú",
+      "protein": "Proteínas",
+      "fat": "Grasas",
+      "carbs": "Hidratos"
+    },
+    "empty": {
+      "title": "Aún no hay menús",
+      "text": "Crea menús diarios con tus recetas y artículos para cargarlos en el diario en un toque."
+    },
+    "newType": {
+      "title": "Nuevo menú",
+      "subtitle": "¿Un solo día o una semana entera?",
+      "close": "Cerrar",
+      "singleTitle": "Menú de un día",
+      "singleText": "Un día suelto que cargas en las fechas que quieras.",
+      "weekTitle": "Menú semanal",
+      "weekText": "Configura los días que quieras y aplícalos a la semana siguiente."
+    },
+    "delete": {
+      "title": "¿Borrar menú?",
+      "message": "Se eliminará este menú.",
+      "confirm": "Borrar",
+      "cancel": "Cancelar"
+    }
+  },
+  "getMenu": {
+    "back": "Volver a menús",
+    "duplicate": "Duplicar menú",
+    "delete": "Borrar menú",
+    "copySuffix": "(copia)",
+    "namePlaceholder": "Nombre del menú",
+    "notePlaceholder": "Nota (opcional)",
+    "nameLabel": "Nombre del menú",
+    "noteLabel": "Nota del menú",
+    "emojiTitle": "Icono del menú",
+    "emojiTrigger": "Elegir icono",
+    "emojiSearch": "Buscar icono…",
+    "emojiEmpty": "Sin resultados",
+    "close": "Cerrar",
+    "type": {
+      "single": "MENÚ DE UN DÍA",
+      "week": "MENÚ SEMANAL"
+    },
+    "week": {
+      "title": "DÍAS DE LA SEMANA",
+      "activeDays": {
+        "one": "1 día activo",
+        "many": "{{count}} días activos"
+      },
+      "kcalPerDay": "~{{kcal}} kcal/día",
+      "hint": "Toca un día para editarlo. Los días en gris no se incluyen — tócalos para activarlos.",
+      "apply": "Aplicar semana completa"
+    },
+    "totals": {
+      "day": "total del día",
+      "protein": "Prot",
+      "fat": "Gras",
+      "carbs": "Hidr"
+    },
+    "meals": {
+      "breakfast": "Desayuno",
+      "lunch": "Comida",
+      "dinner": "Cena",
+      "snack": "Snacks"
+    },
+    "meal": {
+      "empty": "Sin alimentos · toca para añadir",
+      "meta": "{{kcal}} kcal · {{count}}",
+      "add": "Añadir"
+    },
+    "items": {
+      "one": "1 alimento",
+      "many": "{{count}} alimentos",
+      "zero": "Sin alimentos"
+    },
+    "badge": {
+      "product": "ARTÍCULO",
+      "recipe": "RECETA"
+    },
+    "kcal": "kcal",
+    "quantity": "Cantidad",
+    "unit": "Unidad",
+    "remove": "Eliminar",
+    "servings": {
+      "one": "ración",
+      "many": "raciones"
+    },
+    "actions": {
+      "load": "Cargar en el diario",
+      "applyDay": "Aplicar día",
+      "shop": "Comprar",
+      "save": "Guardar menú"
+    },
+    "picker": {
+      "title": "Añadir a {{meal}}",
+      "subtitle": "Recetas y artículos del catálogo",
+      "products": "Artículos",
+      "recipes": "Recetas",
+      "searchProducts": "Buscar artículo o marca…",
+      "searchRecipes": "Buscar receta…",
+      "empty": "Sin resultados",
+      "recipesEmpty": "Aún no has creado recetas.",
+      "add": "Añadir"
+    },
+    "load": {
+      "title": "Cargar en el diario",
+      "kcalPerDay": "{{kcal}} kcal / día",
+      "subtitleDay": "Elige el día",
+      "day": "DÍA",
+      "hintDay": "Se planificará este menú en el día elegido. Podrás editarlo en el diario. Un día ya planificado se sustituye.",
+      "confirmDay": "Cargar en el diario"
+    },
+    "applyWeek": {
+      "title": "Aplicar a la semana",
+      "subtitle": "Semana del {{from}} al {{to}}",
+      "hint": "Se planificarán los días activos en el diario de la próxima semana",
+      "confirm": "Aplicar {{days}}",
+      "empty": "—",
+      "days": {
+        "one": "1 día",
+        "many": "{{count}} días"
+      }
+    },
+    "shopping": {
+      "title": "Lista de la compra",
+      "subtitle": "Marca lo que necesitas comprar",
+      "source": "De {{menu}} · artículos del catálogo",
+      "inList": "ya en la lista",
+      "empty": "Este menú no usa artículos del catálogo.",
+      "confirm": "Añadir {{items}}",
+      "confirmEmpty": "Marca artículos",
+      "items": {
+        "one": "1 artículo",
+        "many": "{{count}} artículos"
+      }
+    },
+    "days": {
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb",
+      "sun": "Dom"
+    },
+    "daysFull": {
+      "mon": "Lunes",
+      "tue": "Martes",
+      "wed": "Miércoles",
+      "thu": "Jueves",
+      "fri": "Viernes",
+      "sat": "Sábado",
+      "sun": "Domingo"
+    },
+    "breadcrumb": {
+      "detail": "Menú",
+      "create": "Nuevo menú"
+    },
+    "error": "No se ha podido cargar el menú.",
+    "draft": {
+      "hint": "Este menú aún no está guardado. Añade lo que quieras y pulsa Guardar menú para crearlo."
+    }
+  }
+}

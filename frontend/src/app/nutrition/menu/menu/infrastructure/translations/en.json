@@ -1,0 +1,207 @@
+{
+  "getMenus": {
+    "title": "Menus",
+    "subtitle": "templates for your diary",
+    "create": "New",
+    "breadcrumb": {
+      "list": "Menus"
+    },
+    "count": {
+      "one": "1 saved menu",
+      "many": "{{count}} saved menus"
+    },
+    "hint": "Build a one day menu with recipes and articles, load it into the diary for the days you want and turn what you are missing into a shopping list.",
+    "searchPlaceholder": "Search menu or week…",
+    "searchClear": "Clear search",
+    "noResults": "No results for",
+    "groups": {
+      "week": "Weekly menus",
+      "single": "Single day menus",
+      "weekCount": {
+        "one": "1 week",
+        "many": "{{count}} weeks"
+      },
+      "singleCount": {
+        "one": "1 menu",
+        "many": "{{count}} menus"
+      }
+    },
+    "card": {
+      "kcal": "kcal",
+      "kcalPerDay": "kcal/day",
+      "days": {
+        "one": "1 day",
+        "many": "{{count}} days"
+      },
+      "items": {
+        "zero": "No food yet",
+        "one": "1 item",
+        "many": "{{count}} items"
+      },
+      "load": "Load",
+      "apply": "Apply",
+      "shop": "Add to shopping list",
+      "delete": "Delete menu",
+      "protein": "Protein",
+      "fat": "Fat",
+      "carbs": "Carbs"
+    },
+    "empty": {
+      "title": "No menus yet",
+      "text": "Create daily menus with your recipes and articles to load them into the diary in one tap."
+    },
+    "newType": {
+      "title": "New menu",
+      "subtitle": "A single day or a whole week?",
+      "close": "Close",
+      "singleTitle": "Single day menu",
+      "singleText": "One day you can load on any dates you want.",
+      "weekTitle": "Weekly menu",
+      "weekText": "Set up the days you want and apply them to next week."
+    },
+    "delete": {
+      "title": "Delete menu?",
+      "message": "This menu will be removed.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  },
+  "getMenu": {
+    "back": "Back to menus",
+    "duplicate": "Duplicate menu",
+    "delete": "Delete menu",
+    "copySuffix": "(copy)",
+    "namePlaceholder": "Menu name",
+    "notePlaceholder": "Note (optional)",
+    "nameLabel": "Menu name",
+    "noteLabel": "Menu note",
+    "emojiTitle": "Menu icon",
+    "emojiTrigger": "Pick icon",
+    "emojiSearch": "Search icon…",
+    "emojiEmpty": "No results",
+    "close": "Close",
+    "type": {
+      "single": "SINGLE DAY MENU",
+      "week": "WEEKLY MENU"
+    },
+    "week": {
+      "title": "WEEK DAYS",
+      "activeDays": {
+        "one": "1 active day",
+        "many": "{{count}} active days"
+      },
+      "kcalPerDay": "~{{kcal}} kcal/day",
+      "hint": "Tap a day to edit it. Greyed days are not included — tap them to turn them on.",
+      "apply": "Apply the whole week"
+    },
+    "totals": {
+      "day": "day total",
+      "protein": "Prot",
+      "fat": "Fat",
+      "carbs": "Carb"
+    },
+    "meals": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "snack": "Snacks"
+    },
+    "meal": {
+      "empty": "No food · tap to add",
+      "meta": "{{kcal}} kcal · {{count}}",
+      "add": "Add"
+    },
+    "items": {
+      "one": "1 item",
+      "many": "{{count}} items",
+      "zero": "No food"
+    },
+    "badge": {
+      "product": "ARTICLE",
+      "recipe": "RECIPE"
+    },
+    "kcal": "kcal",
+    "quantity": "Quantity",
+    "unit": "Unit",
+    "remove": "Remove",
+    "servings": {
+      "one": "serving",
+      "many": "servings"
+    },
+    "actions": {
+      "load": "Load into the diary",
+      "applyDay": "Apply day",
+      "shop": "Shop",
+      "save": "Save menu"
+    },
+    "picker": {
+      "title": "Add to {{meal}}",
+      "subtitle": "Recipes and catalog articles",
+      "products": "Articles",
+      "recipes": "Recipes",
+      "searchProducts": "Search article or brand…",
+      "searchRecipes": "Search recipe…",
+      "empty": "No results",
+      "recipesEmpty": "You have not created recipes yet.",
+      "add": "Add"
+    },
+    "load": {
+      "title": "Load into the diary",
+      "kcalPerDay": "{{kcal}} kcal / day",
+      "subtitleDay": "Pick the day",
+      "day": "DAY",
+      "hintDay": "This menu will be planned on the chosen day. You can edit it in the diary. An already planned day is replaced.",
+      "confirmDay": "Load into the diary"
+    },
+    "applyWeek": {
+      "title": "Apply to the week",
+      "subtitle": "Week from {{from}} to {{to}}",
+      "hint": "Active days will be planned in next week's diary",
+      "confirm": "Apply {{days}}",
+      "empty": "—",
+      "days": {
+        "one": "1 day",
+        "many": "{{count}} days"
+      }
+    },
+    "shopping": {
+      "title": "Shopping list",
+      "subtitle": "Check what you need to buy",
+      "source": "From {{menu}} · catalog articles",
+      "inList": "already in the list",
+      "empty": "This menu does not use catalog articles.",
+      "confirm": "Add {{items}}",
+      "confirmEmpty": "Check articles",
+      "items": {
+        "one": "1 article",
+        "many": "{{count}} articles"
+      }
+    },
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "daysFull": {
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday",
+      "sun": "Sunday"
+    },
+    "breadcrumb": {
+      "detail": "Menu",
+      "create": "New menu"
+    },
+    "error": "The menu could not be loaded.",
+    "draft": {
+      "hint": "This menu is not saved yet. Add what you want and press Save menu to create it."
+    }
+  }
+}

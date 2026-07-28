@@ -1,0 +1,63 @@
+services:
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\CreateMenuController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\CreateMenuController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\DeleteMenuController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\DeleteMenuController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\DuplicateMenuController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\DuplicateMenuController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\LoadMenuIntoDiaryController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\LoadMenuIntoDiaryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ApplyWeekMenuController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ApplyWeekMenuController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenusController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenusController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenuController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenuController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenuShoppingNeedsController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenuShoppingNeedsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

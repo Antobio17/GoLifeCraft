@@ -46,6 +46,13 @@
         (click)="close()"
       />
       <ds-nav-item
+        routerLink="/menus"
+        routerLinkActive="is-active"
+        icon="menuboard"
+        [label]="'navbar.menus' | t"
+        (click)="close()"
+      />
+      <ds-nav-item
         routerLink="/agenda"
         routerLinkActive="is-active"
         icon="agenda"

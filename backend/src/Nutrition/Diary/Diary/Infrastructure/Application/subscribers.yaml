@@ -9,6 +9,15 @@ services:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.article.deleted' }
       - { name: 'domain_event_subscriber', event: 'golifecraft.mcp.event.1.model.written' }
 
+  Nutrition\Diary\Diary\Application\Subscriber\PlanDiaryEntriesOnMenuLoaded:
+    class: Nutrition\Diary\Diary\Application\Subscriber\PlanDiaryEntriesOnMenuLoaded
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $entriesByDate: '@Nutrition\Diary\Diary\Domain\QueryModel\FindDiaryEntriesByDateNeedleDataQuery'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.menu.loaded' }
+
   Nutrition\Diary\Diary\Application\Subscriber\RecalculateDiaryMacrosOnRecipeChanged:
     class: Nutrition\Diary\Diary\Application\Subscriber\RecalculateDiaryMacrosOnRecipeChanged
     arguments:

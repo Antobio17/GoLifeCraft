@@ -1,0 +1,38 @@
+label: Menu
+
+fields:
+  name:
+    writable: true
+    required: true
+    min: 1
+    max: 255
+    filterable: true
+    sortable: true
+  emoji:
+    writable: true
+    required: true
+    max: 16
+    description: >-
+      A single emoji that represents the menu. Weekly menus use 🗓️; single day menus pick
+      one that matches the food they contain: high protein 🍗, light 🥗, stew 🍲, wrap 🥙,
+      bowl 🍱, veggie 🥦, breakfast 🍳. If nothing fits, use 🍽️.
+  note:
+    writable: true
+    max: 255
+    description: Short free note about the menu, for example when to use it.
+  type:
+    writable: true
+    required: true
+    enum: [single, week]
+    filterable: true
+    description: >-
+      "single" is a one day menu that can be loaded on any date range;
+      "week" spreads its items across the days listed in weekDays.
+  weekDays:
+    max: 40
+    description: >-
+      Read only. Comma separated week day keys the weekly menu plans (mon,tue,wed,thu,fri,sat,sun);
+      it is derived from the days that hold menu items, so emptying a day drops it from the plan.
+      Always empty for single day menus.
+
+relations: {}

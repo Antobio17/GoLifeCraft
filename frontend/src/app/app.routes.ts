@@ -58,6 +58,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "menus",
+        data: { breadcrumb: "getMenus.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/menu/menu/infrastructure/routes/menu.routes").then(
+            (m) => m.MENU_ROUTES,
+          ),
+      },
+      {
         path: "agenda",
         data: { breadcrumb: "getAgenda.breadcrumb.list" },
         loadChildren: () =>

@@ -1,0 +1,429 @@
+<ds-page-wrapper [maxWidth]="'640px'" [gap]="'14px'">
+  @if (loading()) {
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="54%"
+      [actions]="canWrite ? 2 : 0"
+      actionWidth="36px"
+    />
+
+    @if (canWrite) {
+      <ds-skeleton height="46px" radius="var(--ds-radius-2xl)" />
+    }
+
+    @if (skeletonWeek()) {
+      <ds-stack [gap]="'8px'">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'10px'"
+        >
+          <ds-skeleton-line width="128px" height="10px" />
+          <ds-skeleton-line width="150px" height="10px" />
+        </ds-stack>
+        <ds-skeleton-chips
+          [count]="7"
+          [equal]="true"
+          height="46px"
+          [gap]="'5px'"
+          radius="12px"
+        />
+        <ds-skeleton-line width="82%" height="10px" />
+        @if (canWrite) {
+          <ds-skeleton height="46px" radius="var(--ds-radius-2xl)" />
+        }
+      </ds-stack>
+    }
+
+    <ds-skeleton-macro-bars />
+
+    @for (entries of skeletonMeals; track $index) {
+      <ds-stack [gap]="'10px'">
+        <ds-skeleton-section-header
+          titleWidth="104px"
+          [subtitle]="true"
+          [action]="canWrite"
+          actionWidth="74px"
+        />
+        <ds-skeleton-list
+          [count]="entries"
+          [gap]="'7px'"
+          radius="13px"
+          padding="9px 11px"
+          [tile]="38"
+          [tileRadius]="11"
+          titleWidth="58%"
+          [meta]="false"
+          [chips]="2"
+          trailing="pill"
+          pillWidth="46px"
+        />
+      </ds-stack>
+    }
+
+    @if (canWrite) {
+      <ds-stack direction="row" [gap]="'9px'">
+        <ds-stack [grow]="true">
+          <ds-skeleton height="46px" radius="var(--ds-radius-2xl)" />
+        </ds-stack>
+        <ds-stack [grow]="true">
+          <ds-skeleton height="46px" radius="var(--ds-radius-2xl)" />
+        </ds-stack>
+      </ds-stack>
+    }
+  } @else if (detail(); as menu) {
+    <ds-stack direction="row" justify="between" align="center" [gap]="'10px'">
+      <ds-icon-button
+        icon="chevronLeft"
+        variant="soft"
+        [size]="36"
+        [iconSize]="18"
+        [stroke]="2.2"
+        [radius]="'11px'"
+        [ariaLabel]="'getMenu.back' | t"
+        (clicked)="goBack()"
+      />
+
+      @if (canWrite && !isDraft()) {
+        <ds-stack direction="row" align="center" [gap]="'9px'">
+          <ds-icon-button
+            icon="copy"
+            variant="soft"
+            [size]="36"
+            [iconSize]="16"
+            [stroke]="2"
+            [radius]="'11px'"
+            [ariaLabel]="'getMenu.duplicate' | t"
+            (clicked)="onDuplicate()"
+          />
+          <ds-icon-button
+            icon="trash"
+            variant="soft"
+            [size]="36"
+            [iconSize]="17"
+            [stroke]="2"
+            [radius]="'11px'"
+            [color]="'var(--ds-danger)'"
+            [ariaLabel]="'getMenu.delete' | t"
+            (clicked)="askDelete()"
+          />
+        </ds-stack>
+      }
+    </ds-stack>
+
+    <ds-stack direction="row" align="center" [gap]="'12px'">
+      <ds-emoji-tile [emoji]="menu.emoji" [size]="60" [radius]="16" />
+      <ds-stack [gap]="'3px'" [grow]="true">
+        <ds-text variant="label">{{ typeLabel() }}</ds-text>
+        @if (canWrite) {
+          <ds-text-input
+            [strong]="true"
+            [ariaLabel]="'getMenu.nameLabel' | t"
+            [placeholder]="'getMenu.namePlaceholder' | t"
+            [ngModel]="name()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onName($event)"
+          />
+        } @else {
+          <ds-heading [level]="2" size="lg" [truncate]="true">{{
+            menu.name
+          }}</ds-heading>
+        }
+      </ds-stack>
+    </ds-stack>
+
+    @if (canWrite) {
+      <ds-text-input
+        variant="outlined"
+        [ariaLabel]="'getMenu.noteLabel' | t"
+        [placeholder]="'getMenu.notePlaceholder' | t"
+        [ngModel]="note()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onNote($event)"
+      />
+    } @else if (menu.note) {
+      <ds-text variant="meta">{{ menu.note }}</ds-text>
+    }
+
+    @if (isDraft()) {
+      <ds-note icon="info">{{ "getMenu.draft.hint" | t }}</ds-note>
+    }
+
+    @if (isWeek()) {
+      <ds-stack [gap]="'8px'">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'10px'"
+        >
+          <ds-text variant="label">{{ "getMenu.week.title" | t }}</ds-text>
+          <ds-text variant="meta">{{ activeDaysLabel() }}</ds-text>
+        </ds-stack>
+
+        <ds-week-day-tabs [days]="dayTabs()" (selected)="onSelectDay($event)" />
+
+        <ds-text variant="meta">{{ "getMenu.week.hint" | t }}</ds-text>
+
+        @if (canWrite && !isDraft()) {
+          <ds-button
+            variant="secondary"
+            icon="calendar"
+            [fullWidth]="true"
+            (clicked)="onApplyWeek()"
+          >
+            {{ "getMenu.week.apply" | t }}
+          </ds-button>
+        }
+      </ds-stack>
+    }
+
+    <ds-macro-panel
+      [kcal]="totalsKcal()"
+      [caption]="panelCaption()"
+      [bars]="macroBars()"
+    />
+
+    @for (meal of currentDay()?.meals ?? []; track meal.key) {
+      <ds-stack [gap]="'10px'">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'10px'"
+        >
+          <ds-stack [gap]="'1px'" [grow]="true">
+            <ds-heading [level]="3" size="sm">{{
+              mealLabel(meal.key)
+            }}</ds-heading>
+            <ds-text variant="meta">{{
+              mealMeta(meal.totals.calories, meal.itemCount)
+            }}</ds-text>
+          </ds-stack>
+          @if (canWrite) {
+            <ds-button
+              variant="outline"
+              size="sm"
+              icon="plus"
+              (clicked)="openPicker(meal.key)"
+            >
+              {{ "getMenu.meal.add" | t }}
+            </ds-button>
+          }
+        </ds-stack>
+
+        @if (meal.items.length === 0) {
+          <ds-placeholder-note [message]="'getMenu.meal.empty' | t" />
+        } @else {
+          <ds-stack [gap]="'7px'">
+            @for (item of meal.items; track item.id) {
+              <ds-swipe-to-delete
+                [disabled]="!canWrite"
+                [reveal]="66"
+                [radius]="13"
+                [removeLabel]="'getMenu.remove' | t"
+                (remove)="onRemoveItem(item)"
+              >
+                <ds-card [padding]="'9px 11px'">
+                  <ds-stack direction="row" align="center" [gap]="'10px'">
+                    <ds-stack align="center" [gap]="'5px'">
+                      <ds-emoji-tile
+                        [emoji]="item.emoji"
+                        [size]="38"
+                        [radius]="11"
+                      />
+                      <ds-chip
+                        [tone]="item.kind === 'recipe' ? 'brand' : 'neutral'"
+                        >{{ itemBadge(item) }}</ds-chip
+                      >
+                    </ds-stack>
+
+                    <ds-stack [gap]="'6px'" [grow]="true">
+                      <ds-text variant="strong" [truncate]="true">{{
+                        item.name
+                      }}</ds-text>
+
+                      @if (canWrite) {
+                        <ds-stack direction="row" align="center" [gap]="'6px'">
+                          <ds-field [width]="'74px'">
+                            <ds-number-input
+                              variant="boxed"
+                              [precision]="1"
+                              [min]="0"
+                              [ariaLabel]="'getMenu.quantity' | t"
+                              [ngModel]="item.quantity"
+                              [ngModelOptions]="{ standalone: true }"
+                              (ngModelChange)="onQuantity(item, $event)"
+                            />
+                          </ds-field>
+                          @if (item.kind === "product") {
+                            <ds-select
+                              [fluid]="true"
+                              [options]="itemUnitOptions(item)"
+                              [ariaLabel]="'getMenu.unit' | t"
+                              [ngModel]="item.unit ?? item.baseUnit"
+                              [ngModelOptions]="{ standalone: true }"
+                              (ngModelChange)="onUnit(item, $event)"
+                            />
+                          } @else {
+                            <ds-text variant="meta">{{
+                              itemUnitLabel(item)
+                            }}</ds-text>
+                          }
+                        </ds-stack>
+                      } @else {
+                        <ds-text variant="meta">
+                          {{
+                            view.itemQuantityLabel(item, itemUnitLabel(item))
+                          }}
+                        </ds-text>
+                      }
+                    </ds-stack>
+
+                    <ds-stack align="end" [gap]="'1px'">
+                      <ds-text variant="strong">{{
+                        view.integer(item.macros.calories)
+                      }}</ds-text>
+                      <ds-text variant="meta">{{ "getMenu.kcal" | t }}</ds-text>
+                    </ds-stack>
+                  </ds-stack>
+                </ds-card>
+              </ds-swipe-to-delete>
+            }
+          </ds-stack>
+        }
+      </ds-stack>
+    }
+
+    @if (canWrite && isDraft()) {
+      <ds-button
+        variant="primary"
+        icon="check"
+        [fullWidth]="true"
+        [disabled]="!draftSavable()"
+        [loading]="saving()"
+        (clicked)="saveDraft()"
+      >
+        {{ "getMenu.actions.save" | t }}
+      </ds-button>
+    } @else if (canWrite) {
+      <ds-stack direction="row" [gap]="'9px'">
+        <ds-stack [grow]="true">
+          <ds-button
+            variant="primary"
+            icon="download"
+            [fullWidth]="true"
+            [disabled]="currentDayEmpty()"
+            (clicked)="onPrimaryAction()"
+          >
+            {{ primaryLabel() }}
+          </ds-button>
+        </ds-stack>
+        <ds-stack [grow]="true">
+          <ds-button
+            variant="outline"
+            icon="cart"
+            [fullWidth]="true"
+            (clicked)="onShop()"
+          >
+            {{ "getMenu.actions.shop" | t }}
+          </ds-button>
+        </ds-stack>
+      </ds-stack>
+    }
+  } @else {
+    <ds-placeholder-note [message]="'getMenu.error' | t" />
+  }
+
+  <ds-modal-sheet
+    [open]="pickerOpen()"
+    [compact]="true"
+    [title]="pickerTitle()"
+    [closeLabel]="'getMenu.close' | t"
+    (closed)="closePicker()"
+  >
+    <ds-stack [gap]="'14px'">
+      <ds-text variant="meta">{{ "getMenu.picker.subtitle" | t }}</ds-text>
+
+      <ds-segmented-toggle
+        [options]="pickerTabs()"
+        [ngModel]="pickerTab()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onPickerTab($event)"
+      />
+
+      <ds-search-input
+        [placeholder]="pickerSearchPlaceholder()"
+        [clearLabel]="'getMenu.close' | t"
+        [debounce]="120"
+        (searched)="onPickerSearch($event)"
+      />
+
+      @if (pickerChoices().length === 0) {
+        <ds-text variant="muted">{{
+          (pickerTab() === "recipe" && !picker.hasRecipes()
+            ? "getMenu.picker.recipesEmpty"
+            : "getMenu.picker.empty"
+          ) | t
+        }}</ds-text>
+      } @else {
+        <ds-stack [gap]="'8px'">
+          @for (choice of pickerChoices(); track choice.refId) {
+            <ds-card [padding]="'10px'">
+              <ds-stack direction="row" align="center" [gap]="'12px'">
+                <ds-emoji-tile
+                  [emoji]="choice.emoji"
+                  [size]="36"
+                  [radius]="10"
+                />
+                <ds-stack [gap]="'2px'" [grow]="true">
+                  <ds-text variant="strong" [truncate]="true">{{
+                    choice.name
+                  }}</ds-text>
+                  <ds-text variant="meta">{{ choice.detail }}</ds-text>
+                </ds-stack>
+                <ds-icon-button
+                  icon="plus"
+                  variant="soft"
+                  [ariaLabel]="'getMenu.picker.add' | t"
+                  (clicked)="onPick(choice)"
+                />
+              </ds-stack>
+            </ds-card>
+          }
+        </ds-stack>
+      }
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <app-menu-load-sheet
+    [menuId]="loadSheetMenuId()"
+    [dayKey]="selectedDayKey()"
+    (closed)="closeLoadSheet()"
+  />
+
+  <app-menu-apply-week-sheet
+    [menuId]="applyWeekMenuId()"
+    (closed)="closeApplyWeekSheet()"
+  />
+
+  <app-menu-shopping-sheet
+    [menuId]="shoppingMenuId()"
+    (closed)="closeShoppingSheet()"
+  />
+
+  <ds-confirm-action-modal
+    [show]="deleteAsked()"
+    [title]="'getMenus.delete.title' | t"
+    [body]="'getMenus.delete.message' | t"
+    [itemName]="name()"
+    [isDeleting]="deleting()"
+    [cancelLabel]="'getMenus.delete.cancel' | t"
+    [confirmLabel]="'getMenus.delete.confirm' | t"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  />
+</ds-page-wrapper>

@@ -54,6 +54,18 @@ parameters:
             read_roles: [ROLE_GOD, ROLE_USER]
             write_roles: []
 
+        menu:
+            class: 'Nutrition\Menu\Menu\Domain\Model\Menu'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Menu/Menu/Infrastructure/Domain/Model/Doctrine/Mapping/Menu.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+
+        menu_item:
+            class: 'Nutrition\Menu\Menu\Domain\Model\MenuItem'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Menu/Menu/Infrastructure/Domain/Model/Doctrine/Mapping/MenuItem.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+
         agenda_entry:
             class: 'Agenda\Agenda\Agenda\Domain\Model\AgendaEntry'
             sidecar: '%kernel.project_dir%/src/Agenda/Agenda/Agenda/Infrastructure/Domain/Model/Doctrine/Mapping/AgendaEntry.mcp.yaml'

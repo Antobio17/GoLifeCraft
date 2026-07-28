@@ -1,0 +1,63 @@
+services:
+  Nutrition\Menu\Menu\Application\Command\MenuItemAssembler:
+    class: Nutrition\Menu\Menu\Application\Command\MenuItemAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Nutrition\Menu\Menu\Application\Command\CreateMenuCommandHandler:
+    class: Nutrition\Menu\Menu\Application\Command\CreateMenuCommandHandler
+    arguments:
+      $menuRepository: '@Nutrition\Menu\Menu\Domain\Model\MenuRepository'
+      $menuItemAssembler: '@Nutrition\Menu\Menu\Application\Command\MenuItemAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Command\UpdateMenuCommandHandler:
+    class: Nutrition\Menu\Menu\Application\Command\UpdateMenuCommandHandler
+    arguments:
+      $menuRepository: '@Nutrition\Menu\Menu\Domain\Model\MenuRepository'
+      $menuItemAssembler: '@Nutrition\Menu\Menu\Application\Command\MenuItemAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Command\DeleteMenuCommandHandler:
+    class: Nutrition\Menu\Menu\Application\Command\DeleteMenuCommandHandler
+    arguments:
+      $menuRepository: '@Nutrition\Menu\Menu\Domain\Model\MenuRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Command\DuplicateMenuCommandHandler:
+    class: Nutrition\Menu\Menu\Application\Command\DuplicateMenuCommandHandler
+    arguments:
+      $menuRepository: '@Nutrition\Menu\Menu\Domain\Model\MenuRepository'
+      $needleDataQuery: '@Nutrition\Menu\Menu\Domain\QueryModel\DuplicateMenuNeedleDataQuery'
+      $menuItemAssembler: '@Nutrition\Menu\Menu\Application\Command\MenuItemAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Command\LoadMenuIntoDiaryCommandHandler:
+    class: Nutrition\Menu\Menu\Application\Command\LoadMenuIntoDiaryCommandHandler
+    arguments:
+      $menuRepository: '@Nutrition\Menu\Menu\Domain\Model\MenuRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Command\ApplyWeekMenuCommandHandler:
+    class: Nutrition\Menu\Menu\Application\Command\ApplyWeekMenuCommandHandler
+    arguments:
+      $menuRepository: '@Nutrition\Menu\Menu\Domain\Model\MenuRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

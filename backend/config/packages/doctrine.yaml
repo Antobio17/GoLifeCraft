@@ -147,3 +147,9 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Agenda/Agenda/Agenda/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Agenda\Agenda\Agenda\Domain\Model'
                         alias: agenda_entry
+                    Menu:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Menu/Menu/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Menu\Menu\Domain\Model'
+                        alias: menu

@@ -1,0 +1,6 @@
+services:
+  Nutrition\Menu\Menu\Domain\Model\MenuRepository:
+    class: Nutrition\Menu\Menu\Infrastructure\Domain\Model\Doctrine\DoctrineMenuRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Menu\Menu\Domain\Model\Menu

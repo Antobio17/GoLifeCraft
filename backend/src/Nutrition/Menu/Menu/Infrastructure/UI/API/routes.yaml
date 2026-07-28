@@ -1,0 +1,58 @@
+create_menu:
+  path: /api/v1/nutrition/menu
+  methods: [POST]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\CreateMenuController
+
+get_menus:
+  path: /api/v1/nutrition/menus
+  methods: [GET]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenusController
+
+get_menu:
+  path: /api/v1/nutrition/menu/{menuId}
+  methods: [GET]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenuController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+
+update_menu:
+  path: /api/v1/nutrition/menu/{menuId}
+  methods: [PUT]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+
+delete_menu:
+  path: /api/v1/nutrition/menu/{menuId}
+  methods: [DELETE]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\DeleteMenuController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+
+duplicate_menu:
+  path: /api/v1/nutrition/menu/{menuId}/duplicate
+  methods: [POST]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\DuplicateMenuController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+
+load_menu_into_diary:
+  path: /api/v1/nutrition/menu/{menuId}/load
+  methods: [POST]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\LoadMenuIntoDiaryController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+
+apply_week_menu:
+  path: /api/v1/nutrition/menu/{menuId}/apply-week
+  methods: [POST]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ApplyWeekMenuController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+
+get_menu_shopping_needs:
+  path: /api/v1/nutrition/menu/{menuId}/shopping-needs
+  methods: [GET]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenuShoppingNeedsController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'

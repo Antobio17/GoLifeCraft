@@ -1,0 +1,38 @@
+services:
+  Nutrition\Menu\Menu\Domain\Service\MenuArticleNeedsCalculator:
+    class: Nutrition\Menu\Menu\Domain\Service\MenuArticleNeedsCalculator
+
+  Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader:
+    class: Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Menu\Menu\Domain\QueryModel\GetMenusNeedleDataQuery:
+    class: Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetMenusNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $itemRowLoader: '@Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader'
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
+
+  Nutrition\Menu\Menu\Domain\QueryModel\GetMenuNeedleDataQuery:
+    class: Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetMenuNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $itemRowLoader: '@Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader'
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
+
+  Nutrition\Menu\Menu\Domain\QueryModel\GetMenuShoppingNeedsNeedleDataQuery:
+    class: Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetMenuShoppingNeedsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $itemRowLoader: '@Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader'
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $needsCalculator: '@Nutrition\Menu\Menu\Domain\Service\MenuArticleNeedsCalculator'
+
+  Nutrition\Menu\Menu\Domain\QueryModel\DuplicateMenuNeedleDataQuery:
+    class: Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineDuplicateMenuNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $itemRowLoader: '@Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader'
