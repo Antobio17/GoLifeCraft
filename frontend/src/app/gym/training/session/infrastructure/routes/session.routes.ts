@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetSessionsProviders } from "../providers/get-sessions.providers";
 import { GetSessionProviders } from "../providers/get-session.providers";
+import { GetSessionStatsProviders } from "../providers/get-session-stats.providers";
 import { CreateSessionProviders } from "../providers/create-session.providers";
 import { UpdateSessionProviders } from "../providers/update-session.providers";
 import { DeleteSessionProviders } from "../providers/delete-session.providers";
@@ -13,6 +14,7 @@ export const SESSION_ROUTES: Routes = [
     providers: [
       ...GetSessionsProviders.getProviders(),
       ...GetSessionProviders.getProviders(),
+      ...GetSessionStatsProviders.getProviders(),
       ...CreateSessionProviders.getProviders(),
       ...UpdateSessionProviders.getProviders(),
       ...DeleteSessionProviders.getProviders(),

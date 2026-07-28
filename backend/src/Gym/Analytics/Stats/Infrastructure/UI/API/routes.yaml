@@ -7,3 +7,8 @@ get_exercise_stats:
   path: /api/v1/gym/exercise/{exerciseId}/stats
   methods: [GET]
   controller: Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetExerciseStatsController
+
+get_session_stats:
+  path: /api/v1/gym/session/{sessionId}/stats
+  methods: [GET]
+  controller: Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetSessionStatsController
