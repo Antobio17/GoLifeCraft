@@ -47,7 +47,7 @@ import {
   ProgressionTrend,
 } from "@shared/design-system/progression-card/infrastructure/components/progression-card.component";
 
-type MetricKey = "e1rm" | "max" | "vol";
+type MetricKey = "max" | "e1rm" | "vol";
 
 interface SessionRow {
   dateLabel: string;
@@ -105,11 +105,11 @@ export class GetExerciseComponent implements OnInit {
   loading = signal(true);
   exercise = signal<Exercise | null>(null);
   sessions = signal<ExerciseStatsSession[]>([]);
-  metric = signal<MetricKey>("e1rm");
+  metric = signal<MetricKey>("max");
 
   metricOptions = computed<SegmentedOption[]>(() => [
-    { value: "e1rm", label: this.t("getExercise.metric.e1rm") },
     { value: "max", label: this.t("getExercise.metric.max") },
+    { value: "e1rm", label: this.t("getExercise.metric.e1rm") },
     { value: "vol", label: this.t("getExercise.metric.vol") },
   ]);
 
