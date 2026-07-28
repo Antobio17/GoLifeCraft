@@ -20,8 +20,7 @@
     },
     "empty": {
       "title": "Tu lista está vacía",
-      "text": "Añade artículos ya existentes en tu catálogo para armar la compra.",
-      "action": "Añadir artículos"
+      "text": "Añade artículos ya existentes en tu catálogo para armar la compra."
     },
     "filters": {
       "all": "Todos",

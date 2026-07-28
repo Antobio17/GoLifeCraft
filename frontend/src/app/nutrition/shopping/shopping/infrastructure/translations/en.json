@@ -20,8 +20,7 @@
     },
     "empty": {
       "title": "Your list is empty",
-      "text": "Add items already in your catalog to build your shopping list.",
-      "action": "Add items"
+      "text": "Add items already in your catalog to build your shopping list."
     },
     "filters": {
       "all": "All",

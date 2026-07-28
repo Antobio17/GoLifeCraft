@@ -119,13 +119,7 @@
         icon="cart"
         [title]="'getShopping.empty.title' | t"
         [text]="'getShopping.empty.text' | t"
-      >
-        @if (canWrite) {
-          <ds-button variant="primary" icon="plus" (clicked)="openSheet()">
-            {{ "getShopping.empty.action" | t }}
-          </ds-button>
-        }
-      </ds-empty-state>
+      />
     }
   } @else {
     <ds-empty-state icon="alertCircle" [title]="'getShopping.error' | t" />
