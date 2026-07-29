@@ -1,6 +1,7 @@
 import { Injectable, signal } from "@angular/core";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { RecipeListItem } from "@nutrition/recipe/recipe/domain/models/recipe.model";
+import { DiaryMacros } from "../../domain/models/diary.model";
 
 export interface DiaryChoice {
   kind: "product" | "recipe";
@@ -8,12 +9,14 @@ export interface DiaryChoice {
   name: string;
   emoji: string;
   detail: string;
+  macros: DiaryMacros;
 }
 
 interface ProductEntry {
   name: string;
   emoji: string;
   detail: string;
+  macros: DiaryMacros;
   baseUnit: string;
   diaryUnit: string;
 }
@@ -30,6 +33,7 @@ interface RecipeEntry {
   name: string;
   emoji: string;
   detail: string;
+  macros: DiaryMacros;
 }
 
 const FALLBACK_PRODUCT_EMOJI = "🍽️";
@@ -47,10 +51,15 @@ export class DiaryPickerService {
     articles.forEach((article) => {
       const facts = article.relationships?.nutritionFacts?.data.attributes;
       const reference = facts?.referenceAmount ?? 0;
-      const kcalPer100 =
+      const macros: DiaryMacros =
         facts && reference > 0
-          ? Math.round(((facts.calories ?? 0) / reference) * 100)
-          : 0;
+          ? {
+              calories: ((facts.calories ?? 0) / reference) * 100,
+              protein: ((facts.protein ?? 0) / reference) * 100,
+              fat: ((facts.fat ?? 0) / reference) * 100,
+              carbs: ((facts.carbs ?? 0) / reference) * 100,
+            }
+          : { calories: 0, protein: 0, fat: 0, carbs: 0 };
       const brand = article.attributes.brand;
 
       const baseUnit = article.attributes.baseUnit || DEFAULT_BASE_UNIT;
@@ -59,8 +68,9 @@ export class DiaryPickerService {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
         detail: brand
-          ? `${kcalPer100} kcal / 100 ${baseUnit} · ${brand}`
-          : `${kcalPer100} kcal / 100 ${baseUnit}`,
+          ? `por 100 ${baseUnit} · ${brand}`
+          : `por 100 ${baseUnit}`,
+        macros,
         baseUnit,
         diaryUnit: article.attributes.diaryUnit || baseUnit,
       });
@@ -76,7 +86,8 @@ export class DiaryPickerService {
       map.set(recipe.id, {
         name: recipe.attributes.name,
         emoji: recipe.attributes.emoji || FALLBACK_RECIPE_EMOJI,
-        detail: `${Math.round(recipe.attributes.perServing.calories)} kcal / ración · ${recipe.attributes.category}`,
+        detail: `por ración · ${recipe.attributes.category}`,
+        macros: recipe.attributes.perServing,
       });
     });
 
@@ -118,6 +129,7 @@ export class DiaryPickerService {
         name: entry.name,
         emoji: entry.emoji,
         detail: entry.detail,
+        macros: entry.macros,
       }))
       .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }
@@ -135,6 +147,7 @@ export class DiaryPickerService {
         name: entry.name,
         emoji: entry.emoji,
         detail: entry.detail,
+        macros: entry.macros,
       }))
       .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }

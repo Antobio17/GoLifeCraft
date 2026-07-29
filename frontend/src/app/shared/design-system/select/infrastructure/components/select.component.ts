@@ -21,6 +21,7 @@ type SelectVariant = "pill" | "bare";
       [class.ds-select--pill]="variant === 'pill'"
       [class.ds-select--bare]="variant === 'bare'"
       [class.ds-select--fluid]="fluid"
+      [class.ds-select--lead]="!!leadingIcon"
       [class.is-active]="variant === 'pill' && value !== ''"
     >
       @if (leadingIcon) {
@@ -115,10 +116,12 @@ type SelectVariant = "pill" | "bare";
         padding: 8px 12px;
       }
       .ds-select--bare .ds-select__native {
-        padding-left: 22px;
         padding-right: 18px;
         font-size: var(--ds-text-sm);
         font-weight: 600;
+      }
+      .ds-select--bare.ds-select--lead .ds-select__native {
+        padding-left: 22px;
       }
     `,
   ],

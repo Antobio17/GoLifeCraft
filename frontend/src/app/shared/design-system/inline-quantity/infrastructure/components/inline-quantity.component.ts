@@ -32,10 +32,10 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         gap: 4px;
         background: var(--ds-surface-inset);
         border-radius: 10px;
-        padding: 4px 8px;
+        padding: 4px 7px;
       }
       .ds-inline-qty__input {
-        width: 42px;
+        width: 32px;
         text-align: right;
         background: transparent;
         border: none;

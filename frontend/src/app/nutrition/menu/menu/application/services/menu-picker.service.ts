@@ -11,6 +11,7 @@ export interface MenuChoice {
   name: string;
   emoji: string;
   detail: string;
+  macros: MenuMacros;
 }
 
 export interface MenuItemDefaults {
@@ -44,6 +45,7 @@ export interface MenuEntryView {
 
 const NO_MACROS: MenuMacros = { calories: 0, protein: 0, fat: 0, carbs: 0 };
 const RECIPE_BASE_UNIT = "serving";
+const REFERENCE_QUANTITY = 100;
 const MISSING_NAME = "(eliminado)";
 
 const FALLBACK_PRODUCT_EMOJI = "🍽️";
@@ -65,10 +67,6 @@ export class MenuPickerService {
     articles.forEach((article) => {
       const facts = article.relationships?.nutritionFacts?.data.attributes;
       const reference = facts?.referenceAmount ?? 0;
-      const kcalPer100 =
-        facts && reference > 0
-          ? Math.round(((facts.calories ?? 0) / reference) * 100)
-          : 0;
       const baseUnit = article.attributes.baseUnit || DEFAULT_BASE_UNIT;
       const brand = article.attributes.brand;
       const equivalences = article.attributes.equivalences ?? [];
@@ -81,8 +79,8 @@ export class MenuPickerService {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
         detail: brand
-          ? `${kcalPer100} kcal / 100 ${baseUnit} · ${brand}`
-          : `${kcalPer100} kcal / 100 ${baseUnit}`,
+          ? `por 100 ${baseUnit} · ${brand}`
+          : `por 100 ${baseUnit}`,
         baseUnit,
         menuUnit: article.attributes.diaryUnit || baseUnit,
         units: [
@@ -112,7 +110,7 @@ export class MenuPickerService {
       map.set(recipe.id, {
         name: recipe.attributes.name,
         emoji: recipe.attributes.emoji || FALLBACK_RECIPE_EMOJI,
-        detail: `${Math.round(recipe.attributes.perServing.calories)} kcal · ${recipe.attributes.category}`,
+        detail: `por ración · ${recipe.attributes.category}`,
         perServing: recipe.attributes.perServing,
       });
     });
@@ -125,11 +123,18 @@ export class MenuPickerService {
   }
 
   productChoices(query: string): MenuChoice[] {
-    return this.choices(this.products(), "product", query);
+    return this.choices(this.products(), "product", query, (entry) =>
+      this.scale(entry.macrosPerBaseUnit, REFERENCE_QUANTITY),
+    );
   }
 
   recipeChoices(query: string): MenuChoice[] {
-    return this.choices(this.recipes(), "recipe", query);
+    return this.choices(
+      this.recipes(),
+      "recipe",
+      query,
+      (entry) => entry.perServing,
+    );
   }
 
   defaults(kind: MenuItemKind, refId: string): MenuItemDefaults {
@@ -214,10 +219,11 @@ export class MenuPickerService {
     };
   }
 
-  private choices(
-    entries: Map<string, { name: string; emoji: string; detail: string }>,
+  private choices<T extends { name: string; emoji: string; detail: string }>(
+    entries: Map<string, T>,
     kind: MenuItemKind,
     query: string,
+    macros: (entry: T) => MenuMacros,
   ): MenuChoice[] {
     const needle = query.trim().toLowerCase();
 
@@ -231,6 +237,7 @@ export class MenuPickerService {
         name: entry.name,
         emoji: entry.emoji,
         detail: entry.detail,
+        macros: macros(entry),
       }))
       .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }

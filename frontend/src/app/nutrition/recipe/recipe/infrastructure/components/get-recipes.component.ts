@@ -3,6 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { Observable } from "rxjs";
 import { RecipeListItem } from "../../domain/models/recipe.model";
 import {
+  MacroShortLabels,
   RecipeCardView,
   RecipeViewService,
 } from "@nutrition/recipe/recipe/application/services/recipe-view.service";
@@ -67,8 +68,16 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
     });
   });
 
+  macroLabels = computed<MacroShortLabels>(() => ({
+    protein: this.t("getRecipes.macro.proteinShort"),
+    fat: this.t("getRecipes.macro.fatShort"),
+    carbs: this.t("getRecipes.macro.carbsShort"),
+  }));
+
   cards = computed<RecipeCardView[]>(() =>
-    this.filteredRecipes().map((recipe) => this.view.toCard(recipe)),
+    this.filteredRecipes().map((recipe) =>
+      this.view.toCard(recipe, this.macroLabels()),
+    ),
   );
 
   headerSubtitle = computed(() => {

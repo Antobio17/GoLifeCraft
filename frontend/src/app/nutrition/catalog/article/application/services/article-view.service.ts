@@ -119,6 +119,12 @@ export class ArticleViewService {
     return this.number(Math.round(value));
   }
 
+  decimal(value: number | null): string | null {
+    if (value === null || value === undefined) return null;
+
+    return this.number(value);
+  }
+
   toCard(article: Article): ArticleCardView {
     const nutrition = this.nutrition(article);
 
@@ -130,9 +136,9 @@ export class ArticleViewService {
       brand: this.brand(article),
       store: this.store(article),
       kcal: nutrition ? this.integer(nutrition.calories) : null,
-      protein: nutrition ? this.integer(nutrition.protein) : null,
-      fat: nutrition ? this.integer(nutrition.fat) : null,
-      carbs: nutrition ? this.integer(nutrition.carbs) : null,
+      protein: nutrition ? this.decimal(nutrition.protein) : null,
+      fat: nutrition ? this.decimal(nutrition.fat) : null,
+      carbs: nutrition ? this.decimal(nutrition.carbs) : null,
     };
   }
 

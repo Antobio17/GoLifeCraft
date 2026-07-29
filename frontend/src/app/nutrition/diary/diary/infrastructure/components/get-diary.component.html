@@ -150,6 +150,7 @@
                   ' ' +
                   ('getDiary.kcal' | t)
                 "
+                [macros]="entryMacros(entry)"
                 [unit]="view.entryUnitLabel(entry)"
                 [quantity]="entry.quantity"
                 [quantityLabel]="view.entryQuantityLabel(entry)"
@@ -303,11 +304,15 @@
                     [size]="36"
                     [radius]="10"
                   />
-                  <ds-stack [gap]="'2px'" [grow]="true">
+                  <ds-stack [gap]="'4px'" [grow]="true">
                     <ds-text variant="strong" [truncate]="true">{{
                       choice.name
                     }}</ds-text>
                     <ds-text variant="meta">{{ choice.detail }}</ds-text>
+                    <ds-macro-badges
+                      [kcal]="choiceKcal(choice)"
+                      [macros]="choiceMacros(choice)"
+                    />
                   </ds-stack>
                   <ds-icon-button
                     icon="plus"

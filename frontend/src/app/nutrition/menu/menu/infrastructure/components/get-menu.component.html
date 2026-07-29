@@ -263,6 +263,7 @@
                           </ds-field>
                           @if (item.kind === "product") {
                             <ds-select
+                              variant="bare"
                               [fluid]="true"
                               [options]="itemUnitOptions(item)"
                               [ariaLabel]="'getMenu.unit' | t"
@@ -283,13 +284,11 @@
                           }}
                         </ds-text>
                       }
-                    </ds-stack>
 
-                    <ds-stack align="end" [gap]="'1px'">
-                      <ds-text variant="strong">{{
-                        view.integer(item.macros.calories)
-                      }}</ds-text>
-                      <ds-text variant="meta">{{ "getMenu.kcal" | t }}</ds-text>
+                      <ds-macro-badges
+                        [kcal]="itemKcal(item)"
+                        [macros]="itemMacros(item)"
+                      />
                     </ds-stack>
                   </ds-stack>
                 </ds-card>
@@ -381,11 +380,15 @@
                   [size]="36"
                   [radius]="10"
                 />
-                <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-stack [gap]="'4px'" [grow]="true">
                   <ds-text variant="strong" [truncate]="true">{{
                     choice.name
                   }}</ds-text>
                   <ds-text variant="meta">{{ choice.detail }}</ds-text>
+                  <ds-macro-badges
+                    [kcal]="choiceKcal(choice)"
+                    [macros]="choiceMacros(choice)"
+                  />
                 </ds-stack>
                 <ds-icon-button
                   icon="plus"

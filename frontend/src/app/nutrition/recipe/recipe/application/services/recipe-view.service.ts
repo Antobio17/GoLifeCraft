@@ -1,10 +1,17 @@
 import { Injectable } from "@angular/core";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import {
   RecipeDetail,
   RecipeIngredientView,
   RecipeListItem,
   RecipeMacros,
 } from "../../domain/models/recipe.model";
+
+export interface MacroShortLabels {
+  protein: string;
+  fat: string;
+  carbs: string;
+}
 
 export interface RecipeCardView {
   id: string;
@@ -13,9 +20,7 @@ export interface RecipeCardView {
   category: string;
   meta: string;
   kcal: string;
-  protein: string;
-  fat: string;
-  carbs: string;
+  macros: MacroBadge[];
   hasSubRecipe: boolean;
 }
 
@@ -47,7 +52,7 @@ export class RecipeViewService {
     return `${count} ${count === 1 ? "ingrediente" : "ingredientes"}`;
   }
 
-  toCard(recipe: RecipeListItem): RecipeCardView {
+  toCard(recipe: RecipeListItem, labels: MacroShortLabels): RecipeCardView {
     const a = recipe.attributes;
 
     return {
@@ -57,15 +62,24 @@ export class RecipeViewService {
       category: a.category,
       meta: `${a.category} · ${this.servingsLabel(a.servings)} · ${this.ingredientsLabel(a.ingredientCount)}`,
       kcal: this.integer(a.perServing.calories),
-      protein: this.grams(a.perServing.protein),
-      fat: this.grams(a.perServing.fat),
-      carbs: this.grams(a.perServing.carbs),
+      macros: this.macroItems(a.perServing, labels),
       hasSubRecipe: a.hasSubRecipe,
     };
   }
 
   ingredientQuantityLabel(ingredient: RecipeIngredientView): string {
     return `${this.decimal(ingredient.quantity)} ${ingredient.unit}`;
+  }
+
+  macroItems(macros: RecipeMacros, labels: MacroShortLabels): MacroBadge[] {
+    return [
+      {
+        label: labels.protein,
+        value: this.grams(macros.protein),
+      },
+      { label: labels.fat, value: this.grams(macros.fat) },
+      { label: labels.carbs, value: this.grams(macros.carbs) },
+    ];
   }
 
   perServingMacros(recipe: RecipeDetail): RecipeMacros {

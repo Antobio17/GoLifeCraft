@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { MacroGoal } from "@shared/design-system/macro-panel/domain/models/macro-goal.model";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { WeekDayTab } from "@shared/design-system/week-day-tabs/domain/models/week-day-tab.model";
 import { DiaryGoalConfig } from "@nutrition/diary/goal/domain/models/diary-goal.model";
 import {
@@ -153,6 +154,17 @@ export class MenuViewService {
     if (!goal || goal <= 0) return 0;
 
     return Math.max(0, goal - value);
+  }
+
+  itemMacros(macros: MenuMacros, labels: MacroLabels): MacroBadge[] {
+    return [
+      {
+        label: labels.protein,
+        value: this.grams(macros.protein),
+      },
+      { label: labels.fat, value: this.grams(macros.fat) },
+      { label: labels.carbs, value: this.grams(macros.carbs) },
+    ];
   }
 
   itemQuantityLabel(item: MenuItemView, unitLabel: string): string {

@@ -44,6 +44,8 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { MacroPanelComponent } from "@shared/design-system/macro-panel/infrastructure/components/macro-panel.component";
+import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { WeekDayTabsComponent } from "@shared/design-system/week-day-tabs/infrastructure/components/week-day-tabs.component";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { DiaryGoalConfig } from "@nutrition/diary/goal/domain/models/diary-goal.model";
@@ -54,7 +56,10 @@ import { GetMenuService } from "@nutrition/menu/menu/application/services/get-me
 import { UpdateMenuService } from "@nutrition/menu/menu/application/services/update-menu.service";
 import { DeleteMenuService } from "@nutrition/menu/menu/application/services/delete-menu.service";
 import { DuplicateMenuService } from "@nutrition/menu/menu/application/services/duplicate-menu.service";
-import { MenuViewService } from "@nutrition/menu/menu/application/services/menu-view.service";
+import {
+  MacroLabels,
+  MenuViewService,
+} from "@nutrition/menu/menu/application/services/menu-view.service";
 import { MenuEditorService } from "@nutrition/menu/menu/application/services/menu-editor.service";
 import {
   MenuDraft,
@@ -115,6 +120,7 @@ type PickerTab = "product" | "recipe";
     SkeletonComponent,
     ConfirmActionModalComponent,
     MacroPanelComponent,
+    MacroBadgesComponent,
     WeekDayTabsComponent,
     MenuLoadSheetComponent,
     MenuApplyWeekSheetComponent,
@@ -275,6 +281,12 @@ export class GetMenuComponent implements OnInit {
     }),
   );
 
+  macroLabels = computed<MacroLabels>(() => ({
+    protein: this.t("getMenu.macro.protein"),
+    fat: this.t("getMenu.macro.fat"),
+    carbs: this.t("getMenu.macro.carbs"),
+  }));
+
   currentDayEmpty = computed(() => (this.currentDay()?.itemCount ?? 0) === 0);
 
   primaryLabel = computed(() =>
@@ -374,6 +386,22 @@ export class GetMenuComponent implements OnInit {
     return this.t(
       item.kind === "recipe" ? "getMenu.badge.recipe" : "getMenu.badge.product",
     );
+  }
+
+  choiceKcal(choice: MenuChoice): string {
+    return `${this.view.integer(choice.macros.calories)} ${this.t("getMenu.kcal")}`;
+  }
+
+  choiceMacros(choice: MenuChoice): MacroBadge[] {
+    return this.view.itemMacros(choice.macros, this.macroLabels());
+  }
+
+  itemKcal(item: MenuItemView): string {
+    return `${this.view.integer(item.macros.calories)} ${this.t("getMenu.kcal")}`;
+  }
+
+  itemMacros(item: MenuItemView): MacroBadge[] {
+    return this.view.itemMacros(item.macros, this.macroLabels());
   }
 
   itemUnitLabel(item: MenuItemView): string {

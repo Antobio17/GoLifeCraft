@@ -9,6 +9,11 @@
       "total": "TOTAL DEL DÍA",
       "planned": "TOTAL PLANIFICADO"
     },
+    "macro": {
+      "protein": "P",
+      "fat": "G",
+      "carbs": "H"
+    },
     "badge": {
       "product": "ARTÍCULO",
       "recipe": "RECETA",

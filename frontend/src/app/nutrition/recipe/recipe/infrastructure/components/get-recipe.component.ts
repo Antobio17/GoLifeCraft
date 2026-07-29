@@ -26,8 +26,16 @@ import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastru
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { GetRecipeService } from "@nutrition/recipe/recipe/application/services/get-recipe.service";
 import { DeleteRecipeService } from "@nutrition/recipe/recipe/application/services/delete-recipe.service";
-import { RecipeViewService } from "@nutrition/recipe/recipe/application/services/recipe-view.service";
-import { RecipeDetail } from "@nutrition/recipe/recipe/domain/models/recipe.model";
+import {
+  MacroShortLabels,
+  RecipeViewService,
+} from "@nutrition/recipe/recipe/application/services/recipe-view.service";
+import {
+  RecipeDetail,
+  RecipeIngredientView,
+} from "@nutrition/recipe/recipe/domain/models/recipe.model";
+import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 
 @Component({
   selector: "app-get-recipe",
@@ -38,6 +46,7 @@ import { RecipeDetail } from "@nutrition/recipe/recipe/domain/models/recipe.mode
     ScreenHeaderComponent,
     ProductHeroComponent,
     MacroBarsComponent,
+    MacroBadgesComponent,
     SectionHeaderComponent,
     CardComponent,
     StackComponent,
@@ -97,6 +106,20 @@ export class GetRecipeComponent implements OnInit {
 
   t(key: string): string {
     return this.translationService.translate(key, this.MODULE_PATH);
+  }
+
+  macroLabels = computed<MacroShortLabels>(() => ({
+    protein: this.t("getRecipe.macro.proteinShort"),
+    fat: this.t("getRecipe.macro.fatShort"),
+    carbs: this.t("getRecipe.macro.carbsShort"),
+  }));
+
+  ingredientKcal(ingredient: RecipeIngredientView): string {
+    return `${this.view.integer(ingredient.macros.calories)} ${this.t("getRecipe.macro.kcal")}`;
+  }
+
+  ingredientMacros(ingredient: RecipeIngredientView): MacroBadge[] {
+    return this.view.macroItems(ingredient.macros, this.macroLabels());
   }
 
   totalLabel(calories: number): string {

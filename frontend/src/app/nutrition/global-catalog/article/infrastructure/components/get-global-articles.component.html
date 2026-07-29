@@ -106,27 +106,23 @@
             [store]="card.source"
             [added]="isAdded(card.id)"
             [pending]="isPending(card.id)"
-            [badges]="[
+            [kcal]="
+              card.kcal
+                ? card.kcal + ' ' + ('getGlobalArticles.macro.kcal' | t)
+                : ''
+            "
+            [macros]="[
               {
-                text: card.kcal + ' ' + ('getGlobalArticles.macro.kcal' | t),
-                kcal: true,
-                hidden: !card.kcal,
+                label: 'getGlobalArticles.macro.proteinShort' | t,
+                value: card.protein || '',
               },
               {
-                text:
-                  ('getGlobalArticles.macro.proteinShort' | t) +
-                  ' ' +
-                  card.protein,
-                hidden: !card.protein,
+                label: 'getGlobalArticles.macro.fatShort' | t,
+                value: card.fat || '',
               },
               {
-                text: ('getGlobalArticles.macro.fatShort' | t) + ' ' + card.fat,
-                hidden: !card.fat,
-              },
-              {
-                text:
-                  ('getGlobalArticles.macro.carbsShort' | t) + ' ' + card.carbs,
-                hidden: !card.carbs,
+                label: 'getGlobalArticles.macro.carbsShort' | t,
+                value: card.carbs || '',
               },
             ]"
             (action)="onImport(card.id)"

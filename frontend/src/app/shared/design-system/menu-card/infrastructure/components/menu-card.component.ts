@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
+import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
+import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
 
 @Component({
   selector: "ds-menu-card",
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, MacroBadgesComponent],
   template: `
     <div class="ds-mcard">
       <button type="button" class="ds-mcard__main" (click)="activated.emit()">
@@ -20,11 +22,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         </span>
       </button>
 
-      <div class="ds-mcard__chips">
-        <span class="ds-mcard__chip">{{ proteinLabel }} {{ protein }}</span>
-        <span class="ds-mcard__chip">{{ fatLabel }} {{ fat }}</span>
-        <span class="ds-mcard__chip">{{ carbsLabel }} {{ carbs }}</span>
-      </div>
+      <ds-macro-badges [macros]="macros" />
 
       @if (canWrite) {
         <div class="ds-mcard__actions">
@@ -141,18 +139,6 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text-meta);
       }
-      .ds-mcard__chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-      }
-      .ds-mcard__chip {
-        background: var(--ds-surface-inset);
-        border-radius: 7px;
-        padding: 3px 7px;
-        font-size: 10.5px;
-        font-weight: var(--ds-weight-semibold);
-      }
       .ds-mcard__actions {
         display: flex;
         gap: 7px;
@@ -204,12 +190,7 @@ export class MenuCardComponent {
   @Input() meta = "";
   @Input() kcal = "";
   @Input() kcalCaption = "";
-  @Input() protein = "";
-  @Input() fat = "";
-  @Input() carbs = "";
-  @Input() proteinLabel = "";
-  @Input() fatLabel = "";
-  @Input() carbsLabel = "";
+  @Input() macros: MacroBadge[] = [];
   @Input() loadLabel = "";
   @Input() loadIcon: DsIconName = "download";
   @Input() shopLabel = "";

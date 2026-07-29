@@ -32,7 +32,10 @@
       "kcal": "kcal",
       "protein": "Protein",
       "fat": "Fat",
-      "carbs": "Carbs"
+      "carbs": "Carbs",
+      "proteinShort": "P",
+      "fatShort": "F",
+      "carbsShort": "C"
     },
     "notFound": {
       "title": "Recipe not found",
@@ -83,7 +86,10 @@
       "protein": "Protein",
       "fat": "Fat",
       "carbs": "Carbs",
-      "kcal": "kcal"
+      "kcal": "kcal",
+      "proteinShort": "P",
+      "fatShort": "F",
+      "carbsShort": "C"
     },
     "subRecipe": "Sub",
     "removeIngredient": "Remove ingredient",

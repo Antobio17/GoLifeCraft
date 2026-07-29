@@ -97,24 +97,36 @@
         <ds-card [padding]="'10px'">
           <ds-stack direction="row" align="center" [gap]="'11px'">
             <ds-emoji-tile [emoji]="ingredient.emoji" />
-            <ds-stack [gap]="'2px'" [grow]="true">
-              <ds-stack direction="row" align="center" [gap]="'6px'">
-                <ds-text variant="strong">{{ ingredient.name }}</ds-text>
-                @if (ingredient.kind === "recipe") {
-                  <ds-chip tone="brand">{{
-                    "getRecipe.subRecipe" | t
-                  }}</ds-chip>
-                }
+            <ds-stack [gap]="'6px'" [grow]="true">
+              <ds-stack
+                direction="row"
+                align="center"
+                justify="between"
+                [gap]="'8px'"
+              >
+                <ds-stack
+                  direction="row"
+                  align="center"
+                  [gap]="'6px'"
+                  [grow]="true"
+                >
+                  <ds-text variant="strong" [truncate]="true">{{
+                    ingredient.name
+                  }}</ds-text>
+                  @if (ingredient.kind === "recipe") {
+                    <ds-chip tone="brand">{{
+                      "getRecipe.subRecipe" | t
+                    }}</ds-chip>
+                  }
+                </ds-stack>
+                <ds-text variant="meta">
+                  {{ view.ingredientQuantityLabel(ingredient) }}
+                </ds-text>
               </ds-stack>
-              <ds-text variant="meta">
-                {{ view.ingredientQuantityLabel(ingredient) }}
-              </ds-text>
-            </ds-stack>
-            <ds-stack align="end" [gap]="'0'">
-              <ds-heading [level]="3" size="sm">
-                {{ view.integer(ingredient.macros.calories) }}
-              </ds-heading>
-              <ds-text variant="meta">{{ "getRecipe.macro.kcal" | t }}</ds-text>
+              <ds-macro-badges
+                [kcal]="ingredientKcal(ingredient)"
+                [macros]="ingredientMacros(ingredient)"
+              />
             </ds-stack>
           </ds-stack>
         </ds-card>

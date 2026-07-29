@@ -26,13 +26,6 @@ ds-text.diary-entry__name {
   -webkit-box-orient: vertical;
 }
 
-ds-text.diary-entry__kcal {
-  font-size: 10.5px;
-  font-weight: 700;
-  color: var(--ds-text-meta);
-  white-space: nowrap;
-}
-
 ds-text.diary-entry__qty {
   flex: 0 0 auto;
   align-self: center;

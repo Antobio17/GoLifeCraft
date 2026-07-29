@@ -117,24 +117,21 @@
             [price]="card.price"
             [brand]="card.brand"
             [store]="card.store"
-            [badges]="[
+            [kcal]="
+              card.kcal ? card.kcal + ' ' + ('getArticles.macro.kcal' | t) : ''
+            "
+            [macros]="[
               {
-                text: card.kcal + ' ' + ('getArticles.macro.kcal' | t),
-                kcal: true,
-                hidden: !card.kcal,
+                label: 'getArticles.macro.proteinShort' | t,
+                value: card.protein || '',
               },
               {
-                text:
-                  ('getArticles.macro.proteinShort' | t) + ' ' + card.protein,
-                hidden: !card.protein,
+                label: 'getArticles.macro.fatShort' | t,
+                value: card.fat || '',
               },
               {
-                text: ('getArticles.macro.fatShort' | t) + ' ' + card.fat,
-                hidden: !card.fat,
-              },
-              {
-                text: ('getArticles.macro.carbsShort' | t) + ' ' + card.carbs,
-                hidden: !card.carbs,
+                label: 'getArticles.macro.carbsShort' | t,
+                value: card.carbs || '',
               },
             ]"
             (activated)="onSelect(card.id)"

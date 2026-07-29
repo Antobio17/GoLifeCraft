@@ -17,6 +17,7 @@ import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrast
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { ChoiceRowComponent } from "@shared/design-system/choice-row/infrastructure/components/choice-row.component";
 import { MenuCardComponent } from "@shared/design-system/menu-card/infrastructure/components/menu-card.component";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import {
   AbstractListPageComponent,
@@ -40,9 +41,7 @@ interface MenuCardView {
   meta: string;
   kcal: string;
   kcalCaption: string;
-  protein: string;
-  fat: string;
-  carbs: string;
+  macros: MacroBadge[];
   loadLabel: string;
   isWeek: boolean;
 }
@@ -266,9 +265,11 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
       kcalCaption: this.t(
         isWeek ? "getMenus.card.kcalPerDay" : "getMenus.card.kcal",
       ),
-      protein: this.view.grams(attributes.perDay.protein),
-      fat: this.view.grams(attributes.perDay.fat),
-      carbs: this.view.grams(attributes.perDay.carbs),
+      macros: this.view.itemMacros(attributes.perDay, {
+        protein: this.t("getMenus.card.protein"),
+        fat: this.t("getMenus.card.fat"),
+        carbs: this.t("getMenus.card.carbs"),
+      }),
       loadLabel: this.t(isWeek ? "getMenus.card.apply" : "getMenus.card.load"),
     };
   }

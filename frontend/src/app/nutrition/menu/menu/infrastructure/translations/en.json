@@ -121,6 +121,11 @@
       "product": "ARTICLE",
       "recipe": "RECIPE"
     },
+    "macro": {
+      "protein": "P",
+      "fat": "F",
+      "carbs": "C"
+    },
     "kcal": "kcal",
     "quantity": "Quantity",
     "unit": "Unit",

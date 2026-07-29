@@ -6,6 +6,8 @@ import { StackComponent } from "../../../stack/infrastructure/components/stack.c
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
 import { InlineQuantityComponent } from "../../../inline-quantity/infrastructure/components/inline-quantity.component";
+import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
+import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
 
 type ChipTone = "neutral" | "brand" | "accent" | "warning";
 
@@ -20,6 +22,7 @@ type ChipTone = "neutral" | "brand" | "accent" | "warning";
     TextComponent,
     PressableComponent,
     InlineQuantityComponent,
+    MacroBadgesComponent,
   ],
   templateUrl: "./diary-entry.component.html",
   styleUrls: ["./diary-entry.component.css"],
@@ -30,6 +33,7 @@ export class DiaryEntryComponent {
   @Input() badge = "";
   @Input() badgeTone: ChipTone = "neutral";
   @Input() kcalLabel = "";
+  @Input() macros: MacroBadge[] = [];
   @Input() unit = "";
   @Input() quantity = 0;
   @Input() quantityLabel = "";

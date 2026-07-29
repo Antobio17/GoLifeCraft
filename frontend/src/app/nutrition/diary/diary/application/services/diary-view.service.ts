@@ -1,12 +1,20 @@
 import { Injectable, inject } from "@angular/core";
 import { MacroGoal } from "@shared/design-system/macro-panel/domain/models/macro-goal.model";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import {
   DiaryDayAttributes,
   DiaryEntryView,
   DiaryGoals,
+  DiaryMacros,
   DiaryMealView,
 } from "../../domain/models/diary.model";
+
+export interface MacroShortLabels {
+  protein: string;
+  fat: string;
+  carbs: string;
+}
 
 @Injectable()
 export class DiaryViewService {
@@ -115,6 +123,14 @@ export class DiaryViewService {
 
   entryQuantityLabel(entry: DiaryEntryView): string {
     return `${this.format(entry.quantity)} ${this.entryUnitLabel(entry)}`;
+  }
+
+  macroItems(macros: DiaryMacros, labels: MacroShortLabels): MacroBadge[] {
+    return [
+      { label: labels.protein, value: this.grams(macros.protein) },
+      { label: labels.fat, value: this.grams(macros.fat) },
+      { label: labels.carbs, value: this.grams(macros.carbs) },
+    ];
   }
 
   entryBadgeTone(kind: string): "brand" | "neutral" | "accent" {

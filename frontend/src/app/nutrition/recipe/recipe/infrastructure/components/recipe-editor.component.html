@@ -138,8 +138,11 @@
               >
                 <ds-card [padding]="'9px 11px'">
                   <ds-stack direction="row" align="center" [gap]="'10px'">
-                    <ds-emoji-tile [emoji]="ingredient.emoji" [size]="36" />
-                    <ds-stack [gap]="'2px'" [grow]="true">
+                    <ds-stack align="center" [gap]="'5px'">
+                      <ds-emoji-tile [emoji]="ingredient.emoji" [size]="36" />
+                      <ds-macro-badges [kcal]="ingredientKcal(ingredient)" />
+                    </ds-stack>
+                    <ds-stack [gap]="'4px'" [grow]="true">
                       <ds-stack direction="row" align="center" [gap]="'6px'">
                         <ds-text variant="strong" [truncate]="true">{{
                           ingredient.name
@@ -150,12 +153,11 @@
                           }}</ds-chip>
                         }
                       </ds-stack>
-                      <ds-text variant="meta">
-                        {{ ingredientCalories(ingredient) }}
-                        {{ "recipeEditor.macro.kcal" | t }}
-                      </ds-text>
+                      <ds-macro-badges
+                        [macros]="ingredientMacros(ingredient)"
+                      />
                     </ds-stack>
-                    <ds-field [width]="'78px'">
+                    <ds-field [width]="'64px'">
                       <ds-number-input
                         variant="boxed"
                         [precision]="1"
@@ -243,9 +245,13 @@
             <ds-card [padding]="'10px'">
               <ds-stack direction="row" align="center" [gap]="'11px'">
                 <ds-emoji-tile [emoji]="choice.emoji" [size]="34" />
-                <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-stack [gap]="'4px'" [grow]="true">
                   <ds-text variant="strong">{{ choice.name }}</ds-text>
                   <ds-text variant="meta">{{ choice.detail }}</ds-text>
+                  <ds-macro-badges
+                    [kcal]="choiceKcal(choice)"
+                    [macros]="choiceMacros(choice)"
+                  />
                 </ds-stack>
                 <ds-icon-button
                   icon="plus"

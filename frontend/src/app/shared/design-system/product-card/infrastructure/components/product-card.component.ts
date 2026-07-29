@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
-import { ProductBadge } from "../../domain/models/product-badge.model";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
+import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
+import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
 
 @Component({
   selector: "ds-product-card",
   standalone: true,
-  imports: [NgTemplateOutlet, IconComponent],
+  imports: [NgTemplateOutlet, IconComponent, MacroBadgesComponent],
   template: `
     <ng-template #content>
       <span class="ds-pcard__emoji">
@@ -46,16 +47,12 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
             }
           </span>
         }
-        @if (visibleBadges.length > 0) {
-          <span class="ds-pcard__badges">
-            @for (badge of visibleBadges; track badge.text) {
-              <span
-                class="ds-pcard__badge"
-                [class.ds-pcard__badge--kcal]="badge.kcal"
-                >{{ badge.text }}</span
-              >
-            }
-          </span>
+        @if (hasBadges) {
+          <ds-macro-badges
+            class="ds-pcard__badges"
+            [kcal]="kcal"
+            [macros]="macros"
+          />
         }
       </span>
     </ng-template>
@@ -207,23 +204,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         font-weight: 700;
       }
       .ds-pcard__badges {
-        display: flex;
-        gap: 5px;
         margin-top: 8px;
-        flex-wrap: wrap;
-      }
-      .ds-pcard__badge {
-        background: var(--ds-surface-inset);
-        border-radius: 7px;
-        padding: 3px 6px;
-        font-size: 10.5px;
-        font-weight: 600;
-        color: var(--ds-text-muted);
-      }
-      .ds-pcard__badge--kcal {
-        background: var(--ds-accent);
-        color: var(--ds-on-accent);
-        font-weight: 800;
       }
     `,
   ],
@@ -251,7 +232,8 @@ export class ProductCardComponent {
   @Input() priceBelow: string | null = null;
   @Input() brand: string | null = null;
   @Input() store: string | null = null;
-  @Input() badges: ProductBadge[] = [];
+  @Input() kcal = "";
+  @Input() macros: MacroBadge[] = [];
   @Input() actionable = false;
   @Input() added = false;
   @Input() pending = false;
@@ -261,8 +243,8 @@ export class ProductCardComponent {
   @Output() activated = new EventEmitter<void>();
   @Output() action = new EventEmitter<void>();
 
-  get visibleBadges(): ProductBadge[] {
-    return this.badges.filter((badge) => !badge.hidden);
+  get hasBadges(): boolean {
+    return !!this.kcal || this.macros.some((macro) => !!macro.value);
   }
 
   get actionCaption(): string {

@@ -57,6 +57,12 @@ import {
   PickableIngredient,
   RecipeFormService,
 } from "@nutrition/recipe/recipe/application/services/recipe-form.service";
+import {
+  MacroShortLabels,
+  RecipeViewService,
+} from "@nutrition/recipe/recipe/application/services/recipe-view.service";
+import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { RecipeDetail } from "@nutrition/recipe/recipe/domain/models/recipe.model";
 import { CreateRecipeRequest } from "@nutrition/recipe/recipe/domain/models/create-recipe.model";
 
@@ -86,6 +92,7 @@ type PickerTab = "product" | "recipe";
     TextComponent,
     SectionHeaderComponent,
     MacroBarsComponent,
+    MacroBadgesComponent,
     NumberInputComponent,
     IconButtonComponent,
     AddTileComponent,
@@ -110,6 +117,7 @@ export class RecipeEditorComponent implements OnInit {
   private emojiCatalog = inject(EmojiCatalogService);
   private categoryService = inject(RecipeCategoryService);
   private recipeForm = inject(RecipeFormService);
+  private view = inject(RecipeViewService);
   private getArticlesService = inject(GetArticlesService);
   private getRecipesService = inject(GetRecipesService);
   private getRecipeService = inject(GetRecipeService);
@@ -154,6 +162,12 @@ export class RecipeEditorComponent implements OnInit {
       ? this.recipeForm.productChoices(this.pickerQuery())
       : this.recipeForm.recipeChoices(this.pickerQuery(), this.id),
   );
+
+  macroLabels = computed<MacroShortLabels>(() => ({
+    protein: this.t("recipeEditor.macro.proteinShort"),
+    fat: this.t("recipeEditor.macro.fatShort"),
+    carbs: this.t("recipeEditor.macro.carbsShort"),
+  }));
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -242,6 +256,17 @@ export class RecipeEditorComponent implements OnInit {
     return this.format(this.recipeForm.ingredientCalories(ingredient));
   }
 
+  ingredientKcal(ingredient: FormIngredient): string {
+    return `${this.ingredientCalories(ingredient)} ${this.t("recipeEditor.macro.kcal")}`;
+  }
+
+  ingredientMacros(ingredient: FormIngredient): MacroBadge[] {
+    return this.view.macroItems(
+      this.recipeForm.ingredientMacros(ingredient),
+      this.macroLabels(),
+    );
+  }
+
   isProduct(ingredient: FormIngredient): boolean {
     return "product" === ingredient.kind;
   }
@@ -273,6 +298,14 @@ export class RecipeEditorComponent implements OnInit {
 
   onPickerSearch(query: string): void {
     this.pickerQuery.set(query);
+  }
+
+  choiceKcal(choice: PickableIngredient): string {
+    return `${this.format(choice.macros.calories)} ${this.t("recipeEditor.macro.kcal")}`;
+  }
+
+  choiceMacros(choice: PickableIngredient): MacroBadge[] {
+    return this.view.macroItems(choice.macros, this.macroLabels());
   }
 
   onPickIngredient(choice: PickableIngredient): void {

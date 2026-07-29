@@ -32,7 +32,10 @@
       "kcal": "kcal",
       "protein": "Proteínas",
       "fat": "Grasas",
-      "carbs": "Hidratos"
+      "carbs": "Hidratos",
+      "proteinShort": "P",
+      "fatShort": "G",
+      "carbsShort": "H"
     },
     "notFound": {
       "title": "Receta no encontrada",
@@ -83,7 +86,10 @@
       "protein": "Proteínas",
       "fat": "Grasas",
       "carbs": "Hidratos",
-      "kcal": "kcal"
+      "kcal": "kcal",
+      "proteinShort": "P",
+      "fatShort": "G",
+      "carbsShort": "H"
     },
     "subRecipe": "Sub",
     "removeIngredient": "Quitar ingrediente",

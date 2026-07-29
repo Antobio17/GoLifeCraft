@@ -121,6 +121,11 @@
       "product": "ARTÍCULO",
       "recipe": "RECETA"
     },
+    "macro": {
+      "protein": "P",
+      "fat": "G",
+      "carbs": "H"
+    },
     "kcal": "kcal",
     "quantity": "Cantidad",
     "unit": "Unidad",

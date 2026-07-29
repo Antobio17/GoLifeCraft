@@ -15,6 +15,7 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { DiarySummaryComponent } from "@shared/design-system/diary-summary/infrastructure/components/diary-summary.component";
 import { DiaryEntryComponent } from "@shared/design-system/diary-entry/infrastructure/components/diary-entry.component";
+import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
@@ -49,7 +50,11 @@ import { GetArticlesService } from "@nutrition/catalog/article/application/servi
 import { GetRecipesService } from "@nutrition/recipe/recipe/application/services/get-recipes.service";
 import { GetDiaryService } from "@nutrition/diary/diary/application/services/get-diary.service";
 import { GetDiaryCalendarService } from "@nutrition/diary/diary/application/services/get-diary-calendar.service";
-import { DiaryViewService } from "@nutrition/diary/diary/application/services/diary-view.service";
+import {
+  DiaryViewService,
+  MacroShortLabels,
+} from "@nutrition/diary/diary/application/services/diary-view.service";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { DiaryCalendarViewService } from "@nutrition/diary/diary/application/services/diary-calendar-view.service";
 import {
   DiaryCalendarDay,
@@ -91,6 +96,7 @@ type PickerTab = "product" | "recipe" | "quick";
     PageWrapperComponent,
     DiarySummaryComponent,
     DiaryEntryComponent,
+    MacroBadgesComponent,
     EmojiTileComponent,
     TextComponent,
     HeadingComponent,
@@ -311,6 +317,24 @@ export class GetDiaryComponent implements OnInit {
 
   t(key: string): string {
     return this.translationService.translate(key, this.MODULE_PATH);
+  }
+
+  macroLabels = computed<MacroShortLabels>(() => ({
+    protein: this.t("getDiary.macro.protein"),
+    fat: this.t("getDiary.macro.fat"),
+    carbs: this.t("getDiary.macro.carbs"),
+  }));
+
+  choiceKcal(choice: DiaryChoice): string {
+    return `${this.view.integer(choice.macros.calories)} ${this.t("getDiary.kcal")}`;
+  }
+
+  choiceMacros(choice: DiaryChoice): MacroBadge[] {
+    return this.view.macroItems(choice.macros, this.macroLabels());
+  }
+
+  entryMacros(entry: DiaryEntryView): MacroBadge[] {
+    return this.view.macroItems(entry.macros, this.macroLabels());
   }
 
   badgeLabel(kind: string): string {

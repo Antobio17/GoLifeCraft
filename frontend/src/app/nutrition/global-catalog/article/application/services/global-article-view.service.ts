@@ -43,9 +43,9 @@ export class GlobalArticleViewService {
       brand: attributes.brand,
       source: this.sourceLabel(attributes.source),
       kcal: this.integer(attributes.calories),
-      protein: this.integer(attributes.protein),
-      fat: this.integer(attributes.fat),
-      carbs: this.integer(attributes.carbs),
+      protein: this.decimal(attributes.protein),
+      fat: this.decimal(attributes.fat),
+      carbs: this.decimal(attributes.carbs),
     };
   }
 
@@ -85,12 +85,18 @@ export class GlobalArticleViewService {
   private integer(value: number | null): string | null {
     if (value === null || value === undefined) return null;
 
-    return this.number(Math.round(value));
+    return this.number(Math.round(value), 0);
   }
 
-  private number(value: number): string {
+  private decimal(value: number | null): string | null {
+    if (value === null || value === undefined) return null;
+
+    return this.number(value, 1);
+  }
+
+  private number(value: number, decimals: number): string {
     return new Intl.NumberFormat("es-ES", {
-      maximumFractionDigits: 0,
+      maximumFractionDigits: decimals,
     }).format(value);
   }
 }

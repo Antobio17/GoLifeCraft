@@ -21,29 +21,27 @@
       >
         <ds-emoji-tile [emoji]="emoji" [size]="38" [radius]="10" />
 
-        <ds-stack gap="4px" [grow]="true">
+        <ds-stack gap="5px" [grow]="true">
           <ds-text variant="strong" class="diary-entry__name">{{
             name
           }}</ds-text>
-          <ds-stack direction="row" align="center" gap="7px">
+          <ds-stack direction="row" align="center" gap="6px" [wrap]="true">
             <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
-            <ds-text variant="meta" [inline]="true" class="diary-entry__kcal">{{
-              kcalLabel
-            }}</ds-text>
+            <ds-macro-badges [kcal]="kcalLabel" />
           </ds-stack>
+          <ds-macro-badges [macros]="macros" />
         </ds-stack>
       </ds-pressable>
     } @else {
       <ds-emoji-tile [emoji]="emoji" [size]="38" [radius]="10" />
 
-      <ds-stack gap="4px" [grow]="true">
+      <ds-stack gap="5px" [grow]="true">
         <ds-text variant="strong" class="diary-entry__name">{{ name }}</ds-text>
-        <ds-stack direction="row" align="center" gap="7px">
+        <ds-stack direction="row" align="center" gap="6px" [wrap]="true">
           <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
-          <ds-text variant="meta" [inline]="true" class="diary-entry__kcal">{{
-            kcalLabel
-          }}</ds-text>
+          <ds-macro-badges [kcal]="kcalLabel" />
         </ds-stack>
+        <ds-macro-badges [macros]="macros" />
       </ds-stack>
     }
 

@@ -19,6 +19,7 @@ export interface PickableIngredient {
   name: string;
   emoji: string;
   detail: string;
+  macros: RecipeMacros;
 }
 
 interface ProductEntry {
@@ -120,7 +121,8 @@ export class RecipeFormService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
-        detail: `${Math.round(entry.perUnit.calories * 100)} kcal / 100${entry.baseUnit}`,
+        detail: `por 100 ${entry.baseUnit}`,
+        macros: this.scale(entry.perUnit, DEFAULT_PRODUCT_QUANTITY),
       }))
       .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }
@@ -138,7 +140,8 @@ export class RecipeFormService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
-        detail: `${Math.round(entry.perServing.calories)} kcal / ración`,
+        detail: "por ración",
+        macros: entry.perServing,
       }))
       .sort((left, right) => left.name.localeCompare(right.name, "es"));
   }
@@ -192,6 +195,10 @@ export class RecipeFormService {
 
   ingredientCalories(ingredient: FormIngredient): number {
     return this.contribution(ingredient).calories;
+  }
+
+  ingredientMacros(ingredient: FormIngredient): RecipeMacros {
+    return this.contribution(ingredient);
   }
 
   totals(ingredients: FormIngredient[]): RecipeMacros {
