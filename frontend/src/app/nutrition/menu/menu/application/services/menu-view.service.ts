@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { MacroPanelBar } from "@shared/design-system/macro-panel/domain/models/macro-panel-bar.model";
+import { MacroGoal } from "@shared/design-system/macro-panel/domain/models/macro-goal.model";
 import { WeekDayTab } from "@shared/design-system/week-day-tabs/domain/models/week-day-tab.model";
+import { DiaryGoalConfig } from "@nutrition/diary/goal/domain/models/diary-goal.model";
 import {
   MenuDayView,
   MenuDetailAttributes,
@@ -24,8 +25,6 @@ const WEEK_DAY_KEYS: MenuWeekDayKey[] = [
   "sat",
   "sun",
 ];
-
-const MACRO_REFERENCE_GRAMS = 200;
 
 @Injectable()
 export class MenuViewService {
@@ -125,35 +124,64 @@ export class MenuViewService {
     );
   }
 
-  macroBars(macros: MenuMacros, labels: MacroLabels): MacroPanelBar[] {
+  goalMacros(
+    macros: MenuMacros,
+    goal: DiaryGoalConfig | null,
+    labels: MacroLabels,
+  ): MacroGoal[] {
     return [
-      {
-        label: labels.protein,
-        value: this.grams(macros.protein),
-        percent: this.macroPercent(macros.protein),
-        tone: "protein",
-      },
-      {
-        label: labels.fat,
-        value: this.grams(macros.fat),
-        percent: this.macroPercent(macros.fat),
-        tone: "fat",
-      },
-      {
-        label: labels.carbs,
-        value: this.grams(macros.carbs),
-        percent: this.macroPercent(macros.carbs),
-        tone: "carbs",
-      },
+      this.macroGoal(labels.protein, macros.protein, goal?.protein, "protein"),
+      this.macroGoal(labels.fat, macros.fat, goal?.fat, "fat"),
+      this.macroGoal(labels.carbs, macros.carbs, goal?.carbs, "carbs"),
     ];
+  }
+
+  reachedPercent(value: number, goal: number | undefined): number {
+    if (!goal || goal <= 0) return 0;
+    if (value <= goal) return Math.round((value / goal) * 100);
+
+    return Math.round((goal / value) * 100);
+  }
+
+  excess(value: number, goal: number | undefined): number {
+    if (!goal || goal <= 0) return 0;
+
+    return Math.max(0, value - goal);
+  }
+
+  remaining(value: number, goal: number | undefined): number {
+    if (!goal || goal <= 0) return 0;
+
+    return Math.max(0, goal - value);
   }
 
   itemQuantityLabel(item: MenuItemView, unitLabel: string): string {
     return `${this.format(item.quantity)} ${unitLabel}`;
   }
 
-  private macroPercent(value: number): number {
-    return Math.min(100, Math.round((value / MACRO_REFERENCE_GRAMS) * 100));
+  private macroGoal(
+    label: string,
+    value: number,
+    goal: number | undefined,
+    tone: "protein" | "fat" | "carbs",
+  ): MacroGoal {
+    const excess = this.excess(value, goal);
+
+    return {
+      label,
+      valueLabel: goal ? this.format(value) : this.grams(value),
+      goalLabel: goal ? this.grams(goal) : "",
+      percent: this.reachedPercent(value, goal),
+      overPercent: this.excessPercent(value, goal),
+      overLabel: excess > 0 ? `+${this.grams(excess)}` : "",
+      tone,
+    };
+  }
+
+  private excessPercent(value: number, goal: number | undefined): number {
+    if (this.excess(value, goal) === 0) return 0;
+
+    return 100 - this.reachedPercent(value, goal);
   }
 
   private format(value: number): string {

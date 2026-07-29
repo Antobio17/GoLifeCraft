@@ -95,10 +95,11 @@
       "apply": "Aplicar semana completa"
     },
     "totals": {
-      "day": "total del día",
-      "protein": "Prot",
-      "fat": "Gras",
-      "carbs": "Hidr"
+      "protein": "Proteínas",
+      "fat": "Grasas",
+      "carbs": "Hidratos",
+      "remaining": "kcal · quedan {{kcal}}",
+      "exceeded": "kcal · te pasas {{kcal}}"
     },
     "meals": {
       "breakfast": "Desayuno",

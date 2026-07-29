@@ -46,6 +46,8 @@ import { ConfirmActionModalComponent } from "@shared/design-system/confirm-actio
 import { MacroPanelComponent } from "@shared/design-system/macro-panel/infrastructure/components/macro-panel.component";
 import { WeekDayTabsComponent } from "@shared/design-system/week-day-tabs/infrastructure/components/week-day-tabs.component";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
+import { DiaryGoalConfig } from "@nutrition/diary/goal/domain/models/diary-goal.model";
+import { GetDiaryGoalService } from "@nutrition/diary/goal/application/services/get-diary-goal.service";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
 import { GetRecipesService } from "@nutrition/recipe/recipe/application/services/get-recipes.service";
 import { GetMenuService } from "@nutrition/menu/menu/application/services/get-menu.service";
@@ -67,6 +69,7 @@ import {
 import {
   MenuDetailAttributes,
   MenuItemView,
+  MenuMacros,
   MenuMealKey,
   MenuType,
   MenuWeekDayKey,
@@ -131,6 +134,7 @@ export class GetMenuComponent implements OnInit {
   private duplicateMenuService = inject(DuplicateMenuService);
   private getArticlesService = inject(GetArticlesService);
   private getRecipesService = inject(GetRecipesService);
+  private getDiaryGoalService = inject(GetDiaryGoalService);
   private editor = inject(MenuEditorService);
   private drafts = inject(MenuDraftService);
   private destroyRef = inject(DestroyRef);
@@ -148,6 +152,7 @@ export class GetMenuComponent implements OnInit {
   canWrite = this.authSession.isGod();
 
   loading = signal(true);
+  goal = signal<DiaryGoalConfig | null>(null);
   draft = signal<MenuDraft | null>(null);
   loadedDetail = signal<MenuDetailAttributes | null>(null);
   saving = signal(false);
@@ -205,13 +210,6 @@ export class GetMenuComponent implements OnInit {
     return this.view.findDay(detail, this.selectedDayKey());
   });
 
-  currentDayLabel = computed(() => {
-    const dayKey = this.selectedDayKey();
-    if (!dayKey) return "";
-
-    return this.t(`getMenu.daysFull.${dayKey}`);
-  });
-
   activeDaysLabel = computed(() => {
     const detail = this.detail();
     if (!detail) return "";
@@ -228,32 +226,54 @@ export class GetMenuComponent implements OnInit {
     return `${days} · ${kcal}`;
   });
 
-  totalsCaption = computed(() =>
-    this.isWeek() ? this.currentDayLabel() : this.t("getMenu.totals.day"),
+  private dayTotals = computed<MenuMacros>(
+    () =>
+      this.currentDay()?.totals ?? {
+        calories: 0,
+        protein: 0,
+        fat: 0,
+        carbs: 0,
+      },
   );
 
-  panelCaption = computed(
-    () => `${this.t("getMenu.kcal")} · ${this.totalsCaption()}`,
+  totalsKcal = computed(() => this.view.integer(this.dayTotals().calories));
+
+  goalKcal = computed(() => {
+    const goal = this.goal();
+
+    return goal ? this.view.integer(goal.calories) : "";
+  });
+
+  exceedsCalories = computed(
+    () =>
+      this.view.excess(this.dayTotals().calories, this.goal()?.calories) > 0,
   );
 
-  totalsKcal = computed(() =>
-    this.view.integer(this.currentDay()?.totals.calories ?? 0),
-  );
+  caloriesFootnote = computed(() => {
+    const goal = this.goal();
+    if (!goal) return this.t("getMenu.kcal");
 
-  macroBars = computed(() => {
-    const totals = this.currentDay()?.totals ?? {
-      calories: 0,
-      protein: 0,
-      fat: 0,
-      carbs: 0,
-    };
+    const calories = this.dayTotals().calories;
+    const excess = this.view.excess(calories, goal.calories);
 
-    return this.view.macroBars(totals, {
+    if (excess > 0) {
+      return this.translate("getMenu.totals.exceeded", {
+        kcal: this.view.integer(excess),
+      });
+    }
+
+    return this.translate("getMenu.totals.remaining", {
+      kcal: this.view.integer(this.view.remaining(calories, goal.calories)),
+    });
+  });
+
+  goalMacros = computed(() =>
+    this.view.goalMacros(this.dayTotals(), this.goal(), {
       protein: this.t("getMenu.totals.protein"),
       fat: this.t("getMenu.totals.fat"),
       carbs: this.t("getMenu.totals.carbs"),
-    });
-  });
+    }),
+  );
 
   currentDayEmpty = computed(() => (this.currentDay()?.itemCount ?? 0) === 0);
 
@@ -316,6 +336,7 @@ export class GetMenuComponent implements OnInit {
           { value: "recipe", label: this.t("getMenu.picker.recipes") },
         ]);
         this.loadChoices();
+        this.loadGoal();
 
         if (draftType) {
           this.startDraft(draftType);
@@ -637,6 +658,12 @@ export class GetMenuComponent implements OnInit {
     });
     this.getRecipesService.getRecipes(1, 200).subscribe({
       next: (response) => this.picker.setRecipes(response.data),
+    });
+  }
+
+  private loadGoal(): void {
+    this.getDiaryGoalService.getDiaryGoal().subscribe({
+      next: (response) => this.goal.set(response.data.attributes),
     });
   }
 

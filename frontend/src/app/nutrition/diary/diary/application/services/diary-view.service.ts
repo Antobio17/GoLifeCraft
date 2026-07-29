@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { DiaryMacroGoal } from "@shared/design-system/diary-summary/infrastructure/components/diary-summary.component";
+import { MacroGoal } from "@shared/design-system/macro-panel/domain/models/macro-goal.model";
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import {
   DiaryDayAttributes,
@@ -69,7 +69,7 @@ export class DiaryViewService {
     return `${this.format(value)} g`;
   }
 
-  goalMacros(attributes: DiaryDayAttributes): DiaryMacroGoal[] {
+  goalMacros(attributes: DiaryDayAttributes): MacroGoal[] {
     const { totals, goals } = attributes;
 
     return [
@@ -128,7 +128,7 @@ export class DiaryViewService {
     value: number,
     goal: DiaryGoals[keyof DiaryGoals],
     tone: "protein" | "fat" | "carbs",
-  ): DiaryMacroGoal {
+  ): MacroGoal {
     const excess = this.excess(value, goal);
 
     return {

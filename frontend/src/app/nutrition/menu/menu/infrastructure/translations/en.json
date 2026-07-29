@@ -95,10 +95,11 @@
       "apply": "Apply the whole week"
     },
     "totals": {
-      "day": "day total",
-      "protein": "Prot",
+      "protein": "Protein",
       "fat": "Fat",
-      "carbs": "Carb"
+      "carbs": "Carbs",
+      "remaining": "kcal · {{kcal}} left",
+      "exceeded": "kcal · {{kcal}} over"
     },
     "meals": {
       "breakfast": "Breakfast",

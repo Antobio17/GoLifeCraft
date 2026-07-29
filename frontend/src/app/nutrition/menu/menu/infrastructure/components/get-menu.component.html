@@ -183,8 +183,10 @@
 
     <ds-macro-panel
       [kcal]="totalsKcal()"
-      [caption]="panelCaption()"
-      [bars]="macroBars()"
+      [kcalGoal]="goalKcal()"
+      [caption]="caloriesFootnote()"
+      [over]="exceedsCalories()"
+      [macros]="goalMacros()"
     />
 
     @for (meal of currentDay()?.meals ?? []; track meal.key) {

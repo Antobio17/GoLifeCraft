@@ -3,6 +3,7 @@ import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards
 import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/providers/get-articles.providers";
 import { GetRecipesProviders } from "@nutrition/recipe/recipe/infrastructure/providers/get-recipes.providers";
 import { ShoppingWriteProviders } from "@nutrition/shopping/shopping/infrastructure/providers/shopping-write.providers";
+import { GetDiaryGoalProviders } from "@nutrition/diary/goal/infrastructure/providers/get-diary-goal.providers";
 import { MenuPickerService } from "../../application/services/menu-picker.service";
 import { GetMenusProviders } from "../providers/get-menus.providers";
 import { GetMenuProviders } from "../providers/get-menu.providers";
@@ -18,6 +19,7 @@ export const MENU_ROUTES: Routes = [
       ...GetArticlesProviders.getProviders(),
       ...GetRecipesProviders.getProviders(),
       ...ShoppingWriteProviders.getProviders(),
+      ...GetDiaryGoalProviders.getProviders(),
       MenuPickerService,
     ],
     children: [

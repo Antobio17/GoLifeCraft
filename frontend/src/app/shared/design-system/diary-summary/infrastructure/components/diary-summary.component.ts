@@ -1,17 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { ProgressRingComponent } from "../../../progress-ring/infrastructure/components/progress-ring.component";
-
-export type DiaryMacroTone = "protein" | "fat" | "carbs";
-
-export interface DiaryMacroGoal {
-  label: string;
-  valueLabel: string;
-  goalLabel: string;
-  percent: number;
-  overPercent: number;
-  overLabel: string;
-  tone: DiaryMacroTone;
-}
+import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
 
 @Component({
   selector: "ds-diary-summary",
@@ -35,7 +24,9 @@ export interface DiaryMacroGoal {
         <div class="daysum__kcal">
           <p class="daysum__kcal-value">
             {{ consumed }}
-            <span class="daysum__kcal-goal">/ {{ goal }}</span>
+            @if (goal) {
+              <span class="daysum__kcal-goal">/ {{ goal }}</span>
+            }
           </p>
           <p class="daysum__kcal-foot" [class.daysum__kcal-foot--over]="over">
             {{ footnote }}
@@ -49,8 +40,10 @@ export interface DiaryMacroGoal {
             <div class="macro__top">
               <span class="macro__label">{{ macro.label }}</span>
               <span class="macro__value"
-                >{{ macro.valueLabel
-                }}<span class="macro__goal"> / {{ macro.goalLabel }}</span>
+                >{{ macro.valueLabel }}
+                @if (macro.goalLabel) {
+                  <span class="macro__goal"> / {{ macro.goalLabel }}</span>
+                }
                 @if (macro.overLabel) {
                   <span class="macro__over-label">{{ macro.overLabel }}</span>
                 }
@@ -250,5 +243,5 @@ export class DiarySummaryComponent {
   @Input() goal: string | number = "";
   @Input() footnote = "";
   @Input() over = false;
-  @Input() macros: DiaryMacroGoal[] = [];
+  @Input() macros: MacroGoal[] = [];
 }
