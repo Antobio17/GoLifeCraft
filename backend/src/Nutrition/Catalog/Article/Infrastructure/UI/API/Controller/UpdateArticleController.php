@@ -38,7 +38,7 @@ final class UpdateArticleController
                 recipeUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'recipeUnit') ?? $baseUnit,
                 baseUnit: $baseUnit,
                 diaryUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'diaryUnit') ?? $baseUnit,
-                servingSize: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'servingSize', required: false),
+                packUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'packUnit'),
                 price: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'price', required: false),
                 brand: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'brand'),
                 emoji: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'emoji'),

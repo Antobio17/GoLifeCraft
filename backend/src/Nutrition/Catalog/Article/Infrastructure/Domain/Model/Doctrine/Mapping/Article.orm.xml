@@ -15,7 +15,7 @@
         <option name="default">g</option>
       </options>
     </field>
-    <field name="servingSize" type="float" column="serving_size" nullable="true"/>
+    <field name="packUnit" type="string" column="pack_unit" length="30" nullable="true"/>
     <field name="price" type="float" column="price" nullable="true"/>
     <field name="brand" type="string" column="brand" length="120" nullable="true"/>
     <field name="emoji" type="string" column="emoji" length="16" nullable="true"/>

@@ -45,7 +45,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'ml',
             baseUnit: 'ml',
             diaryUnit: 'vaso',
-            servingSize: 30.0,
+            packUnit: 'brik',
             price: 1.15,
             brand: 'Hacendado',
             emoji: '🥛',
@@ -62,7 +62,10 @@ final class CreateArticleCommandHandlerTest extends TestCase
                 fiber: null,
                 salt: 0.1,
             ),
-            equivalences: [],
+            equivalences: [
+                new ArticleEquivalenceData(unit: 'vaso', quantity: 200.0, position: 1),
+                new ArticleEquivalenceData(unit: 'brik', quantity: 1000.0, position: 2),
+            ],
             createdByUserId: 'god-user-id',
         ));
 
@@ -71,7 +74,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'Leche entera 1 L', actual: $article->name);
         $this->assertEquals(expected: 'ml', actual: $article->baseUnit);
         $this->assertEquals(expected: 'vaso', actual: $article->diaryUnit);
-        $this->assertEquals(expected: 30.0, actual: $article->servingSize);
+        $this->assertEquals(expected: 'brik', actual: $article->packUnit);
         $this->assertEquals(expected: 1.15, actual: $article->price);
         $this->assertEquals(expected: '🥛', actual: $article->emoji);
         $this->assertEquals(expected: 'category-1', actual: $article->categoryId);
@@ -91,7 +94,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'unidad',
             baseUnit: 'g',
             diaryUnit: 'unidad',
-            servingSize: null,
+            packUnit: null,
             price: null,
             brand: null,
             emoji: '🥚',
@@ -121,7 +124,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'g',
-            servingSize: null,
+            packUnit: null,
             price: null,
             brand: null,
             emoji: null,
@@ -140,6 +143,29 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->assertNotNull(actual: $article->nutritionFactsId);
     }
 
+    public function testItThrowsExceptionWhenThePackUnitIsNotAnEquivalence(): void
+    {
+        $this->expectException(exception: CreateArticleException::class);
+
+        ($this->handler)(new CreateArticleCommand(
+            name: 'Macarrones',
+            recipeUnit: 'g',
+            baseUnit: 'g',
+            diaryUnit: 'g',
+            packUnit: 'paquete',
+            price: null,
+            brand: null,
+            emoji: null,
+            categoryId: null,
+            supermarketId: null,
+            nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
+            equivalences: [
+                new ArticleEquivalenceData(unit: 'racion', quantity: 80.0, position: 1),
+            ],
+            createdByUserId: 'god-user-id',
+        ));
+    }
+
     public function testItThrowsExceptionWhenArticleNameAlreadyExists(): void
     {
         $this->needleDataQuery->addExistingName(name: 'Leche entera 1 L');
@@ -151,7 +177,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'g',
-            servingSize: null,
+            packUnit: null,
             price: null,
             brand: null,
             emoji: null,

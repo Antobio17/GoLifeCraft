@@ -23,4 +23,13 @@ final class UpdateArticleException extends BaseException
             details: ['articleId' => $articleId]
         );
     }
+
+    public static function packUnitIsNotAnEquivalence(?string $packUnit): self
+    {
+        return new static(
+            title: 'The purchase pack unit must match one of the article equivalences.',
+            keyTranslation: 'article.pack.unit.is.not.an.equivalence',
+            details: ['packUnit' => $packUnit]
+        );
+    }
 }

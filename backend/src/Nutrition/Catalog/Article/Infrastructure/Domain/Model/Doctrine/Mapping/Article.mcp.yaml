@@ -33,15 +33,16 @@ fields:
       unit ("g"/"ml") or the name of one of the article's equivalence aliases.
     filterable: true
     sortable: true
-  servingSize:
+  packUnit:
     writable: true
-    type: float
-    min: 0
+    max: 30
     filterable: true
     sortable: true
     description: >-
-      Weight in grams (or amount in the article's recipe unit) of a single serving/portion.
-      Used to show per-serving nutrition and as the default quantity when the article is added to a recipe.
+      Name of the equivalence alias that represents the pack bought at the supermarket
+      (for example "paquete" when a pack of pasta holds 500 g). It must match the unit of one
+      of the article's equivalences, whose quantity is then how much the pack holds in base units.
+      Leave it empty when the article is not bought in a fixed pack.
   price:
     writable: true
     type: float

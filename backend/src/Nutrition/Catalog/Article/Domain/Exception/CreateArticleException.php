@@ -14,4 +14,13 @@ final class CreateArticleException extends BaseException
             details: ['name' => $name]
         );
     }
+
+    public static function packUnitIsNotAnEquivalence(?string $packUnit): self
+    {
+        return new static(
+            title: 'The purchase pack unit must match one of the article equivalences.',
+            keyTranslation: 'article.pack.unit.is.not.an.equivalence',
+            details: ['packUnit' => $packUnit]
+        );
+    }
 }

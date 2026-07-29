@@ -17,7 +17,7 @@ final class GetArticleResult extends QueryAggregateResult
         public readonly string $baseUnit,
         public readonly string $diaryUnit,
         public readonly array $equivalences,
-        public readonly ?float $servingSize,
+        public readonly ?string $packUnit,
         public readonly ?float $price,
         public readonly ?string $brand,
         public readonly ?string $emoji,

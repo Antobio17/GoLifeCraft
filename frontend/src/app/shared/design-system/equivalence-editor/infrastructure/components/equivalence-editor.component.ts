@@ -4,10 +4,11 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { SelectComponent } from "../../../select/infrastructure/components/select.component";
 import { SegmentedToggleComponent } from "../../../segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { NumberInputComponent } from "../../../number-input/infrastructure/components/number-input.component";
-import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
+import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { AddTileComponent } from "../../../add-tile/infrastructure/components/add-tile.component";
 import { SelectOption } from "../../../select/domain/models/select-option.model";
 import {
@@ -22,10 +23,11 @@ const BASE_UNITS = ["g", "ml"];
   standalone: true,
   imports: [
     FormsModule,
+    IconComponent,
     SelectComponent,
     SegmentedToggleComponent,
     NumberInputComponent,
-    IconButtonComponent,
+    SwipeToDeleteComponent,
     AddTileComponent,
   ],
   template: `
@@ -49,38 +51,49 @@ const BASE_UNITS = ["g", "ml"];
         <span class="ds-eq__section">{{ equivalencesLabel }}</span>
 
         @for (line of value.equivalences; track $index) {
-          <div class="ds-eq__row">
-            <span class="ds-eq__one">1</span>
-            <ds-select
-              variant="bare"
-              [fluid]="true"
-              [options]="unitOptions"
-              [placeholder]="unitPlaceholder"
-              [ngModel]="line.unit"
-              [ngModelOptions]="{ standalone: true }"
-              (ngModelChange)="onLineUnit($index, $event)"
-            />
-            <span class="ds-eq__eq">=</span>
-            <div class="ds-eq__qty">
-              <ds-number-input
-                variant="boxed"
-                [precision]="1"
-                [min]="0"
-                [ngModel]="line.quantity"
+          <ds-swipe-to-delete
+            [radius]="12"
+            [removeLabel]="removeLabel"
+            (remove)="onRemove($index)"
+          >
+            <div class="ds-eq__row">
+              <span class="ds-eq__one">1</span>
+              <ds-select
+                variant="bare"
+                [fluid]="true"
+                [options]="unitOptions"
+                [placeholder]="unitPlaceholder"
+                [ngModel]="line.unit"
                 [ngModelOptions]="{ standalone: true }"
-                (ngModelChange)="onLineQuantity($index, $event)"
-                [ariaLabel]="quantityLabel"
+                (ngModelChange)="onLineUnit($index, $event)"
               />
+              <span class="ds-eq__eq">=</span>
+              <div class="ds-eq__qty">
+                <ds-number-input
+                  variant="boxed"
+                  [precision]="1"
+                  [min]="0"
+                  [ngModel]="line.quantity"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="onLineQuantity($index, $event)"
+                  [ariaLabel]="quantityLabel"
+                />
+              </div>
+              <span class="ds-eq__unit">{{ value.baseUnit }}</span>
+              <button
+                type="button"
+                class="ds-eq__pack"
+                [class.ds-eq__pack--on]="isPack(line)"
+                [attr.aria-pressed]="isPack(line)"
+                [attr.aria-label]="packLabel"
+                [title]="packLabel"
+                (click)="onPack($index)"
+              >
+                <ds-icon name="package" [size]="12" />
+                <span class="ds-eq__pack-text">{{ packLabel }}</span>
+              </button>
             </div>
-            <span class="ds-eq__unit">{{ value.baseUnit }}</span>
-            <ds-icon-button
-              icon="trash"
-              variant="danger"
-              [iconSize]="15"
-              [ariaLabel]="removeLabel"
-              (clicked)="onRemove($index)"
-            />
-          </div>
+          </ds-swipe-to-delete>
         }
 
         <ds-add-tile
@@ -91,6 +104,16 @@ const BASE_UNITS = ["g", "ml"];
         />
 
         <p class="ds-eq__help">{{ hint }}</p>
+
+        @if (packSummary) {
+          <div class="ds-eq__pack-card">
+            <ds-icon name="package" [size]="18" />
+            <div class="ds-eq__pack-copy">
+              <span class="ds-eq__pack-title">{{ packCardLabel }}</span>
+              <span class="ds-eq__pack-summary">{{ packSummary }}</span>
+            </div>
+          </div>
+        }
       </div>
 
       <div class="ds-eq__defaults">
@@ -182,6 +205,8 @@ const BASE_UNITS = ["g", "ml"];
         display: flex;
         align-items: center;
         gap: 7px;
+        padding: 3px 2px;
+        background: var(--ds-surface);
       }
       .ds-eq__one {
         font-size: 13px;
@@ -197,7 +222,7 @@ const BASE_UNITS = ["g", "ml"];
       }
       .ds-eq__qty {
         flex: 0 0 auto;
-        width: 84px;
+        width: 58px;
       }
       .ds-eq__unit {
         font-size: 12px;
@@ -211,6 +236,63 @@ const BASE_UNITS = ["g", "ml"];
         font-size: 10.5px;
         color: var(--ds-text-meta);
         line-height: 1.45;
+      }
+      .ds-eq__pack {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 7px 8px;
+        border: 1px solid var(--ds-border-input);
+        border-radius: var(--ds-radius-md);
+        background: var(--ds-surface-inset);
+        color: var(--ds-text-meta);
+        font-family: inherit;
+        font-size: 10.5px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+      }
+      .ds-eq__pack--on {
+        background: var(--ds-primary);
+        border-color: var(--ds-primary);
+        color: var(--ds-on-primary);
+      }
+      .ds-eq__pack-text {
+        white-space: nowrap;
+      }
+      .ds-eq__pack-card {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 3px;
+        padding: 11px 13px;
+        border: 1px solid var(--ds-primary-soft-border);
+        border-radius: var(--ds-radius-lg);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
+      }
+      .ds-eq__pack-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        min-width: 0;
+      }
+      .ds-eq__pack-title {
+        font-size: 9.5px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .ds-eq__pack-summary {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--ds-text);
+      }
+      @media (max-width: 400px) {
+        .ds-eq__pack-text {
+          display: none;
+        }
       }
       .ds-eq__defaults {
         display: flex;
@@ -252,12 +334,15 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
   @Input() removeLabel = "";
   @Input() quantityLabel = "";
   @Input() unitPlaceholder = "";
+  @Input() packLabel = "";
+  @Input() packCardLabel = "";
   @Input() unitCatalog: SelectOption[] = [];
 
   value: EquivalenceEditorValue = {
     baseUnit: "g",
     recipeUnit: "g",
     diaryUnit: "g",
+    packUnit: null,
     equivalences: [],
   };
 
@@ -296,6 +381,19 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
     return options;
   }
 
+  get packSummary(): string | null {
+    const line = this.value.equivalences.find((item) => this.isPack(item));
+    if (undefined === line || null === line.quantity) {
+      return null;
+    }
+
+    return `1 ${this.labelOf(line.unit)} = ${line.quantity} ${this.value.baseUnit}`;
+  }
+
+  isPack(line: EquivalenceLine): boolean {
+    return "" !== line.unit && line.unit === this.value.packUnit;
+  }
+
   private labelOf(key: string): string {
     return (
       this.unitCatalog.find((option) => option.value === key)?.label ?? key
@@ -325,9 +423,26 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
   }
 
   onLineUnit(index: number, unit: string): void {
+    const previousUnit = this.value.equivalences[index]?.unit;
+    const packUnit =
+      this.value.packUnit === previousUnit ? unit : this.value.packUnit;
+
     this.emit({
       ...this.value,
+      packUnit,
       equivalences: this.mapLine(index, (line) => ({ ...line, unit })),
+    });
+  }
+
+  onPack(index: number): void {
+    const line = this.value.equivalences[index];
+    if (undefined === line || "" === line.unit) {
+      return;
+    }
+
+    this.emit({
+      ...this.value,
+      packUnit: this.isPack(line) ? null : line.unit,
     });
   }
 
@@ -356,8 +471,16 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
       this.value.diaryUnit === removedUnit
         ? this.value.baseUnit
         : this.value.diaryUnit;
+    const packUnit =
+      this.value.packUnit === removedUnit ? null : this.value.packUnit;
 
-    this.emit({ ...this.value, equivalences, recipeUnit, diaryUnit });
+    this.emit({
+      ...this.value,
+      equivalences,
+      recipeUnit,
+      diaryUnit,
+      packUnit,
+    });
   }
 
   onRecipeUnit(recipeUnit: string): void {
@@ -392,6 +515,7 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
       baseUnit,
       recipeUnit: value?.recipeUnit ?? baseUnit,
       diaryUnit: value?.diaryUnit ?? baseUnit,
+      packUnit: value?.packUnit ?? null,
       equivalences: (value?.equivalences ?? []).map((line) => ({
         unit: line.unit ?? "",
         quantity: line.quantity ?? null,

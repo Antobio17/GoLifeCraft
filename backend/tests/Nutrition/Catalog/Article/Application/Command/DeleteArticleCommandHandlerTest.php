@@ -36,7 +36,7 @@ final class DeleteArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'g',
-            servingSize: null,
+            packUnit: null,
             price: null,
             brand: null,
             emoji: null,

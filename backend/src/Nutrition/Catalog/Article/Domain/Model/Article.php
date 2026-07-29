@@ -6,6 +6,8 @@ use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Catalog\Article\Domain\Event\ArticleCreated;
 use Nutrition\Catalog\Article\Domain\Event\ArticleDeleted;
 use Nutrition\Catalog\Article\Domain\Event\ArticleUpdated;
+use Nutrition\Catalog\Article\Domain\Exception\CreateArticleException;
+use Nutrition\Catalog\Article\Domain\Exception\UpdateArticleException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class Article extends GenericAggregate
@@ -17,7 +19,7 @@ class Article extends GenericAggregate
     public string $recipeUnit;
     public string $baseUnit = self::BASE_UNIT_GRAM;
     public string $diaryUnit = self::BASE_UNIT_GRAM;
-    public ?float $servingSize = null;
+    public ?string $packUnit = null;
     public ?float $price = null;
     public ?string $brand = null;
     public ?string $emoji = null;
@@ -38,7 +40,7 @@ class Article extends GenericAggregate
         string $recipeUnit,
         string $baseUnit,
         string $diaryUnit,
-        ?float $servingSize,
+        ?string $packUnit,
         ?float $price,
         ?string $brand,
         ?string $emoji,
@@ -49,6 +51,10 @@ class Article extends GenericAggregate
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
+        if (!self::isPackUnitAvailable(packUnit: $packUnit, equivalences: $equivalences)) {
+            throw CreateArticleException::packUnitIsNotAnEquivalence(packUnit: $packUnit);
+        }
+
         $now = $dateTimeGenerator->now();
 
         $article = new self();
@@ -57,7 +63,7 @@ class Article extends GenericAggregate
         $article->recipeUnit = $recipeUnit;
         $article->baseUnit = $baseUnit;
         $article->diaryUnit = $diaryUnit;
-        $article->servingSize = $servingSize;
+        $article->packUnit = $packUnit;
         $article->price = $price;
         $article->brand = $brand;
         $article->emoji = $emoji;
@@ -74,6 +80,7 @@ class Article extends GenericAggregate
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
+            packUnit: $packUnit,
             equivalences: self::snapshotEquivalences(equivalences: $equivalences),
         ));
 
@@ -93,7 +100,7 @@ class Article extends GenericAggregate
         string $recipeUnit,
         string $baseUnit,
         string $diaryUnit,
-        ?float $servingSize,
+        ?string $packUnit,
         ?float $price,
         ?string $brand,
         ?string $emoji,
@@ -109,13 +116,17 @@ class Article extends GenericAggregate
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
+        if (!self::isPackUnitAvailable(packUnit: $packUnit, equivalences: $equivalences)) {
+            throw UpdateArticleException::packUnitIsNotAnEquivalence(packUnit: $packUnit);
+        }
+
         $now = $dateTimeGenerator->now();
 
         $this->name = $name;
         $this->recipeUnit = $recipeUnit;
         $this->baseUnit = $baseUnit;
         $this->diaryUnit = $diaryUnit;
-        $this->servingSize = $servingSize;
+        $this->packUnit = $packUnit;
         $this->price = $price;
         $this->brand = $brand;
         $this->emoji = $emoji;
@@ -133,6 +144,7 @@ class Article extends GenericAggregate
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
+            packUnit: $packUnit,
             equivalences: self::snapshotEquivalences(equivalences: $equivalences),
             referenceAmount: $referenceAmount,
             calories: $calories,
@@ -153,6 +165,24 @@ class Article extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
         ));
+    }
+
+    /**
+     * @param ArticleEquivalence[] $equivalences
+     */
+    private static function isPackUnitAvailable(?string $packUnit, array $equivalences): bool
+    {
+        if (null === $packUnit) {
+            return true;
+        }
+
+        foreach ($equivalences as $equivalence) {
+            if ($equivalence->unit === $packUnit && $equivalence->quantity > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -81,19 +81,6 @@
         </ds-field>
 
         <ds-stack [gap]="'10px'">
-          <ds-field
-            [label]="'articleEditor.field.servingSize' | t"
-            [hint]="'articleEditor.field.servingSizeHint' | t"
-          >
-            <ds-number-input
-              variant="boxed"
-              formControlName="servingSize"
-              [unit]="servingUnitSuffix"
-              [min]="0"
-              [precision]="0"
-            />
-          </ds-field>
-
           <ds-nutrition-editor
             [title]="'articleEditor.nutrition.heading' | t"
             [badge]="'articleEditor.nutrition.reference' | t"
@@ -149,6 +136,8 @@
           [removeLabel]="'articleEditor.units.remove' | t"
           [quantityLabel]="'articleEditor.units.quantity' | t"
           [unitPlaceholder]="'articleEditor.units.unitPlaceholder' | t"
+          [packLabel]="'articleEditor.units.pack' | t"
+          [packCardLabel]="'articleEditor.units.packCard' | t"
         />
 
         <ds-button

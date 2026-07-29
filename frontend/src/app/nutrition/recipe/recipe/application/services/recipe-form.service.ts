@@ -28,7 +28,6 @@ interface ProductEntry {
   baseUnit: string;
   recipeUnit: string;
   factors: Record<string, number>;
-  servingQuantity: number;
   perUnit: RecipeMacros;
 }
 
@@ -67,12 +66,6 @@ export class RecipeFormService {
             }
           : { calories: 0, protein: 0, fat: 0, carbs: 0 };
 
-      const servingSize = article.attributes.servingSize;
-      const servingQuantity =
-        null !== servingSize && undefined !== servingSize && servingSize > 0
-          ? servingSize
-          : DEFAULT_PRODUCT_QUANTITY;
-
       const baseUnit = article.attributes.baseUnit || DEFAULT_BASE_UNIT;
       const factors: Record<string, number> = {};
       (article.attributes.equivalences ?? []).forEach((equivalence) => {
@@ -87,7 +80,6 @@ export class RecipeFormService {
         baseUnit,
         recipeUnit: article.attributes.recipeUnit || baseUnit,
         factors,
-        servingQuantity,
         perUnit,
       });
     });
@@ -173,9 +165,7 @@ export class RecipeFormService {
       refId,
       name: entry?.name ?? "Artículo",
       emoji: entry?.emoji ?? FALLBACK_PRODUCT_EMOJI,
-      quantity: isBase
-        ? (entry?.servingQuantity ?? DEFAULT_PRODUCT_QUANTITY)
-        : 1,
+      quantity: isBase ? DEFAULT_PRODUCT_QUANTITY : 1,
       unit,
     };
   }

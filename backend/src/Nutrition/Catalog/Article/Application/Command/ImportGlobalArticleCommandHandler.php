@@ -53,7 +53,7 @@ final readonly class ImportGlobalArticleCommandHandler
             recipeUnit: Article::BASE_UNIT_GRAM,
             baseUnit: Article::BASE_UNIT_GRAM,
             diaryUnit: Article::BASE_UNIT_GRAM,
-            servingSize: null,
+            packUnit: null,
             price: $globalArticle->price,
             brand: $globalArticle->brand,
             emoji: null,

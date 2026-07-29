@@ -17,7 +17,6 @@ import { TextInputComponent } from "@shared/design-system/text-input/infrastruct
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
 import { SelectChipsComponent } from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
 import { PriceInputComponent } from "@shared/design-system/price-input/infrastructure/components/price-input.component";
-import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
 import { NutritionEditorComponent } from "@shared/design-system/nutrition-editor/infrastructure/components/nutrition-editor.component";
 import { EquivalenceEditorComponent } from "@shared/design-system/equivalence-editor/infrastructure/components/equivalence-editor.component";
@@ -52,6 +51,7 @@ function defaultUnitsValue(): EquivalenceEditorValue {
     baseUnit: DEFAULT_BASE_UNIT,
     recipeUnit: DEFAULT_BASE_UNIT,
     diaryUnit: DEFAULT_BASE_UNIT,
+    packUnit: null,
     equivalences: [],
   };
 }
@@ -88,7 +88,6 @@ function equivalencesValidator(
     EmojiPickerComponent,
     SelectChipsComponent,
     PriceInputComponent,
-    NumberInputComponent,
     NutrientInputComponent,
     NutritionEditorComponent,
     EquivalenceEditorComponent,
@@ -137,7 +136,6 @@ export class ArticleEditorComponent implements OnInit {
       emoji: [""],
       brand: [""],
       price: [""],
-      servingSize: [null as number | null],
       categoryId: [null as string | null],
       supermarketId: [null as string | null],
       units: [defaultUnitsValue(), equivalencesValidator],
@@ -153,14 +151,6 @@ export class ArticleEditorComponent implements OnInit {
 
   get isEdit(): boolean {
     return "" !== this.id;
-  }
-
-  get servingUnitSuffix(): string {
-    const units = this.form.get("units")?.value as
-      | EquivalenceEditorValue
-      | undefined;
-
-    return units?.baseUnit ?? DEFAULT_BASE_UNIT;
   }
 
   get title(): string {
@@ -288,13 +278,13 @@ export class ArticleEditorComponent implements OnInit {
       emoji: article.attributes.emoji ?? "",
       brand: article.attributes.brand ?? "",
       price: this.formatNumber(article.attributes.price),
-      servingSize: article.attributes.servingSize ?? null,
       categoryId: article.relationships?.category?.data.id ?? null,
       supermarketId: article.relationships?.supermarket?.data.id ?? null,
       units: {
         baseUnit,
         recipeUnit: article.attributes.recipeUnit ?? baseUnit,
         diaryUnit: article.attributes.diaryUnit ?? baseUnit,
+        packUnit: article.attributes.packUnit ?? null,
         equivalences: (article.attributes.equivalences ?? []).map((item) => ({
           unit: item.unit,
           quantity: item.quantity,
@@ -342,7 +332,9 @@ export class ArticleEditorComponent implements OnInit {
       recipeUnit: units.recipeUnit,
       baseUnit: units.baseUnit,
       diaryUnit: units.diaryUnit,
-      servingSize: this.parseDecimal(value.servingSize),
+      packUnit: equivalences.some((line) => line.unit === units.packUnit)
+        ? units.packUnit
+        : null,
       price: this.parseDecimal(value.price),
       brand: this.emptyToNull(value.brand),
       emoji: this.emptyToNull(value.emoji),

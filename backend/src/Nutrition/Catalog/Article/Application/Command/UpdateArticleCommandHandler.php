@@ -50,7 +50,7 @@ final readonly class UpdateArticleCommandHandler
             recipeUnit: $command->recipeUnit,
             baseUnit: $command->baseUnit,
             diaryUnit: $command->diaryUnit,
-            servingSize: $command->servingSize,
+            packUnit: $command->packUnit,
             price: $command->price,
             brand: $command->brand,
             emoji: $command->emoji,

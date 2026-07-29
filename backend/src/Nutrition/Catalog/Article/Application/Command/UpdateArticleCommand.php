@@ -15,7 +15,7 @@ final readonly class UpdateArticleCommand implements Command
         public string $recipeUnit,
         public string $baseUnit,
         public string $diaryUnit,
-        public ?float $servingSize,
+        public ?string $packUnit,
         public ?float $price,
         public ?string $brand,
         public ?string $emoji,

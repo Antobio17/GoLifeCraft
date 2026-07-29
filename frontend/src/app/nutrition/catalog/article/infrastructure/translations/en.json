@@ -32,12 +32,14 @@
     "per": "Values per",
     "noNutrition": "No nutrition information",
     "tab": {
-      "serving": "Per serving",
-      "per100": "Per 100 g"
+      "per100": "Per 100 g",
+      "pack": "Per pack"
     },
-    "noServing": {
-      "title": "Serving not set",
-      "text": "Edit the article to set the grams per serving"
+    "purchase": {
+      "heading": "PURCHASE",
+      "pack": "PACK",
+      "cost": "REAL COST",
+      "empty": "Mark an equivalence as Pack when editing the article to know how much the pack you buy holds and its real cost."
     },
     "notFound": {
       "title": "Product not found",
@@ -107,9 +109,7 @@
       "brandPlaceholder": "e.g. Store brand",
       "price": "Price",
       "category": "Category",
-      "store": "Store",
-      "servingSize": "Serving",
-      "servingSizeHint": "Grams per serving. Default quantity when adding to a recipe."
+      "store": "Store"
     },
     "nutrition": {
       "title": "Nutrition per 100 g",
@@ -130,7 +130,9 @@
       "baseHint": "Nutrition per 100 · base of every calculation",
       "equivalences": "EQUIVALENCES",
       "add": "Add equivalence",
-      "hint": "E.g. 1 unit = 60 g. The alias is the unit; the equivalence converts it to the base to compute kcal.",
+      "hint": "E.g. 1 unit = 60 g. Swipe a row to the left to delete it. Mark a row as Pack to define how much the pack you buy holds (base of the real cost and the stock).",
+      "pack": "Pack",
+      "packCard": "Purchase pack",
       "recipeUnit": "UNIT IN RECIPE",
       "diaryUnit": "UNIT IN DIARY",
       "remove": "Remove equivalence",

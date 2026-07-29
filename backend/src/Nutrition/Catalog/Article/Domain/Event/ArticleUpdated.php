@@ -17,6 +17,7 @@ final readonly class ArticleUpdated extends DomainEvent
         public string $baseUnit,
         public string $recipeUnit,
         public string $diaryUnit,
+        public ?string $packUnit,
         public array $equivalences,
         public float $referenceAmount,
         public ?float $calories,

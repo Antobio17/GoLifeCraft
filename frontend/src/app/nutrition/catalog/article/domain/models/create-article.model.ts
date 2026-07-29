@@ -20,7 +20,7 @@ export interface CreateArticleRequest {
   recipeUnit: string;
   baseUnit: string;
   diaryUnit: string;
-  servingSize: number | null;
+  packUnit: string | null;
   price: number | null;
   brand: string | null;
   emoji: string | null;

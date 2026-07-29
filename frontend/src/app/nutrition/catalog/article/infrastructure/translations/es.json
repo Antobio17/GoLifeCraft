@@ -32,12 +32,14 @@
     "per": "Valores por",
     "noNutrition": "Sin información nutricional",
     "tab": {
-      "serving": "Por ración",
-      "per100": "Por 100 g"
+      "per100": "Por 100 g",
+      "pack": "Por envase"
     },
-    "noServing": {
-      "title": "Ración sin definir",
-      "text": "Edita el artículo para indicar los gramos por ración"
+    "purchase": {
+      "heading": "COMPRA",
+      "pack": "ENVASE",
+      "cost": "COSTE REAL",
+      "empty": "Marca una equivalencia como Envase al editar el artículo para saber cuánto trae el paquete que compras y su coste real."
     },
     "notFound": {
       "title": "Producto no encontrado",
@@ -107,9 +109,7 @@
       "brandPlaceholder": "Ej: Hacendado",
       "price": "Precio",
       "category": "Categoría",
-      "store": "Súper",
-      "servingSize": "Ración",
-      "servingSizeHint": "Gramos por ración. Cantidad por defecto al añadir a una receta."
+      "store": "Súper"
     },
     "nutrition": {
       "title": "Nutrición por 100 g",
@@ -130,7 +130,9 @@
       "baseHint": "Nutrición por 100 · base de todo el cálculo",
       "equivalences": "EQUIVALENCIAS",
       "add": "Añadir equivalencia",
-      "hint": "Ej: 1 unidad = 60 g. El alias es la unidad; la equivalencia lo convierte a la base para calcular kcal.",
+      "hint": "Ej: 1 unidad = 60 g. Desliza una fila a la izquierda para borrarla. Marca una fila como Envase para definir cuánto trae el paquete que compras (base del coste real y del stock).",
+      "pack": "Envase",
+      "packCard": "Envase de compra",
       "recipeUnit": "UNIDAD EN RECETA",
       "diaryUnit": "UNIDAD EN DIARIO",
       "remove": "Quitar equivalencia",

@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import {
   Article,
+  ArticleEquivalence,
   ArticleNutritionFacts,
 } from "../../domain/models/article.model";
 import { UnitCatalogService } from "./unit-catalog.service";
@@ -36,6 +37,13 @@ export interface ArticleUnitsView {
   lines: { label: string; detail: string }[];
 }
 
+export interface ArticlePurchaseView {
+  hasPack: boolean;
+  packLabel: string;
+  pricePerPack: string | null;
+  costPer100: string | null;
+}
+
 export interface ArticleDetailView {
   emoji: string;
   name: string;
@@ -44,12 +52,13 @@ export interface ArticleDetailView {
   store: string | null;
   category: string | null;
   hasNutrition: boolean;
-  hasServing: boolean;
-  servingLabel: string;
+  hasPack: boolean;
+  packLabel: string;
   per100Label: string;
   per100: ArticleMacroSet;
-  serving: ArticleMacroSet | null;
+  pack: ArticleMacroSet | null;
   units: ArticleUnitsView;
+  purchase: ArticlePurchaseView;
 }
 
 const FALLBACK_EMOJI = "🍽️";
@@ -96,8 +105,15 @@ export class ArticleViewService {
     );
   }
 
-  servingSize(article: Article): number | null {
-    return article.attributes.servingSize ?? null;
+  packEquivalence(article: Article): ArticleEquivalence | null {
+    const packUnit = article.attributes.packUnit;
+    if (!packUnit) return null;
+
+    return (
+      (article.attributes.equivalences ?? []).find(
+        (item) => item.unit === packUnit && item.quantity > 0,
+      ) ?? null
+    );
   }
 
   price(article: Article): string | null {
@@ -145,8 +161,7 @@ export class ArticleViewService {
   toDetail(article: Article): ArticleDetailView {
     const nutrition = this.nutrition(article);
     const suffix = this.unitSuffix(article) || "g";
-    const servingSize = this.servingSize(article);
-    const hasServing = null !== servingSize && servingSize > 0;
+    const pack = this.packEquivalence(article);
 
     return {
       emoji: this.emoji(article),
@@ -156,15 +171,39 @@ export class ArticleViewService {
       store: this.store(article),
       category: this.category(article),
       hasNutrition: null !== nutrition,
-      hasServing,
-      servingLabel: hasServing
-        ? `${this.number(servingSize)} ${suffix}`.trim()
-        : "",
+      hasPack: null !== pack,
+      packLabel: null !== pack ? this.packAmountLabel(pack, suffix) : "",
       per100Label: `100 ${suffix}`.trim(),
       per100: this.scale(nutrition, 100),
-      serving: hasServing ? this.scale(nutrition, servingSize) : null,
+      pack: null !== pack ? this.scale(nutrition, pack.quantity) : null,
       units: this.units(article, suffix),
+      purchase: this.purchase(article, pack, suffix),
     };
+  }
+
+  private purchase(
+    article: Article,
+    pack: ArticleEquivalence | null,
+    baseUnit: string,
+  ): ArticlePurchaseView {
+    const price = article.attributes.price ?? null;
+
+    return {
+      hasPack: null !== pack,
+      packLabel:
+        null !== pack
+          ? `1 ${this.unitCatalog.label(pack.unit)} = ${this.packAmountLabel(pack, baseUnit)}`
+          : "",
+      pricePerPack: null !== price ? `${this.number(price, 2)} €` : null,
+      costPer100:
+        null !== pack && null !== price && pack.quantity > 0
+          ? `${this.number((price / pack.quantity) * 100, 2)} € / 100 ${baseUnit}`
+          : null,
+    };
+  }
+
+  private packAmountLabel(pack: ArticleEquivalence, baseUnit: string): string {
+    return `${this.number(pack.quantity)} ${baseUnit}`.trim();
   }
 
   private units(article: Article, baseUnit: string): ArticleUnitsView {

@@ -30,8 +30,9 @@ import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastruct
 import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
 import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { EquivalenceSummaryComponent } from "@shared/design-system/equivalence-summary/infrastructure/components/equivalence-summary.component";
+import { PurchaseSummaryComponent } from "@shared/design-system/purchase-summary/infrastructure/components/purchase-summary.component";
 
-type NutritionMode = "serving" | "per100";
+type NutritionMode = "pack" | "per100";
 
 @Component({
   selector: "app-get-article",
@@ -59,6 +60,7 @@ type NutritionMode = "serving" | "per100";
     NutritionFactsComponent,
     SegmentedToggleComponent,
     EquivalenceSummaryComponent,
+    PurchaseSummaryComponent,
   ],
 })
 export class GetArticleComponent implements OnInit {
@@ -75,12 +77,12 @@ export class GetArticleComponent implements OnInit {
   showDeleteModal = signal(false);
   deleting = signal(false);
   canWrite = this.authSession.isGod();
-  mode = signal<NutritionMode>("serving");
+  mode = signal<NutritionMode>("per100");
   activeMacros = computed<ArticleMacroSet | null>(() => {
     const detail = this.detail();
     if (null === detail) return null;
 
-    return "serving" === this.mode() ? detail.serving : detail.per100;
+    return "pack" === this.mode() ? detail.pack : detail.per100;
   });
   private id = "";
 
@@ -99,7 +101,6 @@ export class GetArticleComponent implements OnInit {
       next: (response) => {
         const detail = this.view.toDetail(response.data);
         this.detail.set(detail);
-        this.mode.set(detail.hasServing ? "serving" : "per100");
         this.loading.set(false);
       },
       error: () => {

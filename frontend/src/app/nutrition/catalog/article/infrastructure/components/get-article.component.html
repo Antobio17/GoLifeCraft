@@ -21,6 +21,14 @@
       labelWidth="36%"
       valueWidth="82px"
     />
+    <ds-skeleton-rows
+      [card]="true"
+      [header]="true"
+      [badge]="true"
+      [rows]="1"
+      labelWidth="36%"
+      valueWidth="82px"
+    />
   } @else if (notFound() || detail() === null) {
     <ds-screen-header
       [leading]="'back'"
@@ -79,19 +87,21 @@
     }
 
     @if (d.hasNutrition) {
-      <ds-segmented-toggle
-        [options]="[
-          { value: 'serving', label: 'getArticle.tab.serving' | t },
-          { value: 'per100', label: 'getArticle.tab.per100' | t },
-        ]"
-        [ngModel]="mode()"
-        (ngModelChange)="setMode($event)"
-      />
+      @if (d.hasPack) {
+        <ds-segmented-toggle
+          [options]="[
+            { value: 'per100', label: 'getArticle.tab.per100' | t },
+            { value: 'pack', label: 'getArticle.tab.pack' | t },
+          ]"
+          [ngModel]="mode()"
+          (ngModelChange)="setMode($event)"
+        />
+      }
 
       @if (activeMacros(); as m) {
         <ds-text variant="label">
           {{ "getArticle.per" | t }}
-          {{ "serving" === mode() ? d.servingLabel : d.per100Label }}
+          {{ "pack" === mode() ? d.packLabel : d.per100Label }}
         </ds-text>
 
         <ds-macro-bars
@@ -139,12 +149,6 @@
             { label: 'getArticle.table.salt' | t, value: m.saltG ?? '—' },
           ]"
         />
-      } @else {
-        <ds-empty-state
-          icon="info"
-          [title]="'getArticle.noServing.title' | t"
-          [text]="'getArticle.noServing.text' | t"
-        />
       }
     } @else {
       <ds-text variant="muted">{{ "getArticle.noNutrition" | t }}</ds-text>
@@ -159,6 +163,17 @@
       [diaryUnit]="d.units.diaryUnit"
       [equivalencesLabel]="'getArticle.units.equivalences' | t"
       [lines]="d.units.lines"
+    />
+
+    <ds-purchase-summary
+      [title]="'getArticle.purchase.heading' | t"
+      [priceBadge]="d.purchase.pricePerPack"
+      [hasPack]="d.purchase.hasPack"
+      [packLabel]="'getArticle.purchase.pack' | t"
+      [packValue]="d.purchase.packLabel"
+      [costLabel]="'getArticle.purchase.cost' | t"
+      [costValue]="d.purchase.costPer100"
+      [emptyText]="'getArticle.purchase.empty' | t"
     />
   }
 </ds-page-wrapper>

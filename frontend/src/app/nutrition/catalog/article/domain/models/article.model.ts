@@ -9,7 +9,7 @@ export interface ArticleAttributes {
   baseUnit: string;
   diaryUnit: string;
   equivalences: ArticleEquivalence[];
-  servingSize: number | null;
+  packUnit: string | null;
   price: number | null;
   brand: string | null;
   emoji: string | null;
