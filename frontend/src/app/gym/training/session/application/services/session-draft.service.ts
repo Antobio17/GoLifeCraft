@@ -6,6 +6,7 @@ import {
   ExerciseSetView,
 } from "../../domain/models/session-detail.model";
 import { CreateSessionRequest } from "../../domain/models/session-request.model";
+import { SessionExerciseDiff } from "../../domain/models/session-exercise-diff.model";
 
 @Injectable({ providedIn: "root" })
 export class SessionDraftService {
@@ -115,6 +116,19 @@ export class SessionDraftService {
     );
   }
 
+  exerciseDiff(
+    template: SessionExerciseView[],
+    current: SessionExerciseView[],
+  ): SessionExerciseDiff {
+    const templateIds = this.exerciseIdsOf(template);
+    const currentIds = this.exerciseIdsOf(current);
+
+    return {
+      added: currentIds.filter((id) => !templateIds.includes(id)).length,
+      removed: templateIds.filter((id) => !currentIds.includes(id)).length,
+    };
+  }
+
   toRequest(
     name: string,
     estimatedDurationMinutes: number,
@@ -173,6 +187,12 @@ export class SessionDraftService {
             ),
           },
     );
+  }
+
+  private exerciseIdsOf(list: SessionExerciseView[]): string[] {
+    return list
+      .map((exercise) => exercise.exerciseId)
+      .filter((exerciseId): exerciseId is string => exerciseId !== null);
   }
 
   private uid(prefix: string): string {

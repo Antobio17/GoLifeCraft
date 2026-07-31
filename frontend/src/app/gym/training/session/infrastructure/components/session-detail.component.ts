@@ -21,6 +21,9 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { ChoiceModalComponent } from "@shared/design-system/choice-modal/infrastructure/components/choice-modal.component";
+import { ChoiceModalOption } from "@shared/design-system/choice-modal/domain/models/choice-modal-option.model";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
@@ -75,6 +78,7 @@ import {
   ActiveExercise,
   ActiveWorkoutService,
 } from "@gym/training/workout/application/services/active-workout.service";
+import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-sync-mode.model";
 
 @Component({
   selector: "app-session-detail",
@@ -89,6 +93,7 @@ import {
     ModalSheetComponent,
     SearchInputComponent,
     ConfirmActionModalComponent,
+    ChoiceModalComponent,
     StackComponent,
     CardComponent,
     HeadingComponent,
@@ -286,7 +291,44 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   isDeleting = signal(false);
 
   showStopModal = signal(false);
+  showFinishModal = signal(false);
   finishing = signal(false);
+
+  templateExercises = signal<SessionExerciseView[]>([]);
+
+  private exerciseDiff = computed(() =>
+    this.sessionDraft.exerciseDiff(this.templateExercises(), this.exercises()),
+  );
+
+  hasTemplateChanges = computed(
+    () => this.exerciseDiff().added > 0 || this.exerciseDiff().removed > 0,
+  );
+
+  finishModalNote = computed(() => {
+    if (!this.hasTemplateChanges()) {
+      return "";
+    }
+
+    return this.t("getSession.finishModal.changes", {
+      added: this.exerciseDiff().added,
+      removed: this.exerciseDiff().removed,
+    });
+  });
+
+  finishOptions = computed<ChoiceModalOption[]>(() => {
+    if (!this.hasTemplateChanges()) {
+      return [
+        this.syncOption("update", TemplateSyncMode.Exercises, "save"),
+        this.syncOption("none", TemplateSyncMode.None, "lock"),
+      ];
+    }
+
+    return [
+      this.syncOption("exercises", TemplateSyncMode.Exercises, "dumbbell"),
+      this.syncOption("sets", TemplateSyncMode.Sets, "weightPlate"),
+      this.syncOption("none", TemplateSyncMode.None, "lock"),
+    ];
+  });
 
   readonly sessScrolled = signal(false);
   private readonly STICKY_TOP = 8;
@@ -400,6 +442,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   private finalizeLoad(templateExercises: SessionExerciseView[]): void {
+    this.templateExercises.set(this.sessionDraft.clone(templateExercises));
     this.seedExercises(templateExercises);
     this.loading.set(false);
     this.maybeAutoStart();
@@ -494,8 +537,21 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.onDelete();
   }
 
-  private t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  private t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
+  }
+
+  private syncOption(
+    key: string,
+    value: TemplateSyncMode,
+    icon: DsIconName,
+  ): ChoiceModalOption {
+    return {
+      value,
+      icon,
+      title: this.t(`getSession.finishModal.options.${key}.title`),
+      description: this.t(`getSession.finishModal.options.${key}.description`),
+    };
   }
 
   onMetricChange(metric: SessionProgressMetric): void {
@@ -612,15 +668,30 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.showFinishModal.set(true);
+  }
+
+  onFinishModeChosen(templateSyncMode: string): void {
+    if (this.finishing()) {
+      return;
+    }
+
     this.finishing.set(true);
 
-    this.activeWorkout.finish(this.toActive()).subscribe({
-      next: () => {
-        this.finishing.set(false);
-        this.router.navigate(["/gym/history"]);
-      },
-      error: () => this.finishing.set(false),
-    });
+    this.activeWorkout
+      .finish(this.toActive(), templateSyncMode as TemplateSyncMode)
+      .subscribe({
+        next: () => {
+          this.finishing.set(false);
+          this.showFinishModal.set(false);
+          this.router.navigate(["/gym/history"]);
+        },
+        error: () => this.finishing.set(false),
+      });
+  }
+
+  onCancelFinish(): void {
+    this.showFinishModal.set(false);
   }
 
   onPauseWorkout(): void {

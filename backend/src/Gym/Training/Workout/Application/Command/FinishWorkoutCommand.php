@@ -13,6 +13,7 @@ final readonly class FinishWorkoutCommand implements Command
         public string $workoutId,
         public array $exercises,
         public int $durationSeconds,
+        public string $templateSyncMode,
         public string $finishedByUserId,
     ) {
     }

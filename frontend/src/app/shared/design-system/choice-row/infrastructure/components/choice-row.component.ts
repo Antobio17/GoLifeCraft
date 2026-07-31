@@ -1,11 +1,23 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-choice-row",
   standalone: true,
+  imports: [IconBadgeComponent],
   template: `
-    <button type="button" class="ds-choicerow" (click)="activated.emit()">
-      <span class="ds-choicerow__emoji">{{ emoji }}</span>
+    <button
+      type="button"
+      class="ds-choicerow"
+      [disabled]="disabled"
+      (click)="activated.emit()"
+    >
+      @if (icon) {
+        <ds-icon-badge [icon]="icon" tone="brand" [size]="46" [iconSize]="21" />
+      } @else {
+        <span class="ds-choicerow__emoji">{{ emoji }}</span>
+      }
       <span class="ds-choicerow__text">
         <span class="ds-choicerow__title">{{ title }}</span>
         <span class="ds-choicerow__description">{{ description }}</span>
@@ -46,8 +58,12 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         color: inherit;
         transition: border-color var(--ds-transition-fast);
       }
-      .ds-choicerow:hover {
+      .ds-choicerow:hover:not(:disabled) {
         border-color: var(--ds-border-strong);
+      }
+      .ds-choicerow:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
       .ds-choicerow__emoji {
         flex: 0 0 auto;
@@ -86,8 +102,10 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 })
 export class ChoiceRowComponent {
   @Input() emoji = "";
+  @Input() icon?: DsIconName;
   @Input() title = "";
   @Input() description = "";
+  @Input() disabled = false;
 
   @Output() activated = new EventEmitter<void>();
 }

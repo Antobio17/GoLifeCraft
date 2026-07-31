@@ -74,6 +74,30 @@
       "cancel": "Keep training",
       "confirm": "Yes, stop"
     },
+    "finishModal": {
+      "title": "What do we do with the template?",
+      "body": "The workout is saved to your history either way. Choose what gets copied to the base session.",
+      "changes": "Today you added {{added}} exercise(s) and removed {{removed}} compared to the template.",
+      "cancel": "Keep training",
+      "options": {
+        "exercises": {
+          "title": "Update exercises",
+          "description": "The template becomes today's workout: exercises, weights and reps."
+        },
+        "sets": {
+          "title": "Weights and reps only",
+          "description": "Keeps the template exercises and updates their sets with today's."
+        },
+        "update": {
+          "title": "Update the template",
+          "description": "Save today's weights and reps into the base session."
+        },
+        "none": {
+          "title": "Leave the template alone",
+          "description": "The workout stays in your history only; the base session does not change."
+        }
+      }
+    },
     "progress": {
       "title": "Progression",
       "rangeLabel": "Period",

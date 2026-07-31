@@ -23,4 +23,13 @@ final class FinishWorkoutException extends BaseException
             details: ['workoutId' => $workoutId]
         );
     }
+
+    public static function invalidTemplateSyncMode(string $templateSyncMode): self
+    {
+        return new static(
+            title: 'The template sync mode is not supported.',
+            keyTranslation: 'workout.invalid.template.sync.mode',
+            details: ['templateSyncMode' => $templateSyncMode]
+        );
+    }
 }

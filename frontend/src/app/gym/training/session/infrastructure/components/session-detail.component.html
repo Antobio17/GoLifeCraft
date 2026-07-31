@@ -313,3 +313,15 @@
   (confirmed)="onConfirmStop()"
   (cancelled)="onCancelStop()"
 />
+
+<ds-choice-modal
+  [show]="showFinishModal()"
+  [title]="'getSession.finishModal.title' | t"
+  [body]="'getSession.finishModal.body' | t"
+  [note]="finishModalNote()"
+  [options]="finishOptions()"
+  [cancelLabel]="'getSession.finishModal.cancel' | t"
+  [busy]="finishing()"
+  (chosen)="onFinishModeChosen($event)"
+  (cancelled)="onCancelFinish()"
+/>

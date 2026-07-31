@@ -31,6 +31,7 @@ final readonly class FinishWorkoutCommandHandler
                 userId: $command->finishedByUserId,
             ),
             durationSeconds: $command->durationSeconds,
+            templateSyncMode: $command->templateSyncMode,
             finishedByUserId: $command->finishedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

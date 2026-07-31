@@ -9,6 +9,7 @@ use Gym\Training\Workout\Application\Command\StartWorkoutCommandHandler;
 use Gym\Training\Workout\Application\Command\WorkoutExerciseAssembler;
 use Gym\Training\Workout\Application\Command\WorkoutExerciseData;
 use Gym\Training\Workout\Application\Command\WorkoutSetData;
+use Gym\Training\Workout\Domain\Event\WorkoutFinished;
 use Gym\Training\Workout\Domain\Exception\FinishWorkoutException;
 use Gym\Training\Workout\Domain\Model\Workout;
 use Gym\Training\Workout\Infrastructure\Domain\Model\InMemory\InMemoryWorkoutRepository;
@@ -64,6 +65,7 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
                 ),
             ],
             durationSeconds: 3600,
+            templateSyncMode: WorkoutFinished::TEMPLATE_SYNC_EXERCISES,
             finishedByUserId: 'god-user-id',
         ));
 
@@ -82,6 +84,7 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
             workoutId: 'missing-workout-id',
             exercises: [],
             durationSeconds: 100,
+            templateSyncMode: WorkoutFinished::TEMPLATE_SYNC_EXERCISES,
             finishedByUserId: 'god-user-id',
         ));
     }
@@ -94,6 +97,7 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
             workoutId: $workoutId,
             exercises: [],
             durationSeconds: 3600,
+            templateSyncMode: WorkoutFinished::TEMPLATE_SYNC_EXERCISES,
             finishedByUserId: 'god-user-id',
         );
 
@@ -101,6 +105,21 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
 
         $this->expectException(exception: FinishWorkoutException::class);
         ($this->handler)($finishCommand);
+    }
+
+    public function testItThrowsExceptionWhenTemplateSyncModeIsNotSupported(): void
+    {
+        $workoutId = $this->startActiveWorkout();
+
+        $this->expectException(exception: FinishWorkoutException::class);
+
+        ($this->handler)(new FinishWorkoutCommand(
+            workoutId: $workoutId,
+            exercises: [],
+            durationSeconds: 3600,
+            templateSyncMode: 'whatever',
+            finishedByUserId: 'god-user-id',
+        ));
     }
 
     private function startActiveWorkout(): string

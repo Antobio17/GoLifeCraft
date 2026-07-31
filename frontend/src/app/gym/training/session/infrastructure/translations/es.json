@@ -74,6 +74,30 @@
       "cancel": "Seguir entrenando",
       "confirm": "Sí, parar"
     },
+    "finishModal": {
+      "title": "¿Qué hacemos con la plantilla?",
+      "body": "El entreno se guarda en el histórico igualmente. Elige qué se copia a la sesión base.",
+      "changes": "Hoy has añadido {{added}} ejercicio(s) y quitado {{removed}} respecto a la plantilla.",
+      "cancel": "Seguir entrenando",
+      "options": {
+        "exercises": {
+          "title": "Actualizar ejercicios",
+          "description": "La plantilla pasa a ser el entreno de hoy: ejercicios, pesos y repeticiones."
+        },
+        "sets": {
+          "title": "Solo pesos y repeticiones",
+          "description": "Mantiene los ejercicios de la plantilla y actualiza sus series con las de hoy."
+        },
+        "update": {
+          "title": "Actualizar la plantilla",
+          "description": "Guarda los pesos y las repeticiones de hoy en la sesión base."
+        },
+        "none": {
+          "title": "No tocar la plantilla",
+          "description": "El entreno queda solo en el histórico y la sesión base no cambia."
+        }
+      }
+    },
     "progress": {
       "title": "Progresión",
       "rangeLabel": "Periodo",

@@ -1,5 +1,6 @@
 import { Observable } from "rxjs";
 import {
+  FinishWorkoutRequest,
   StartWorkoutRequest,
   WorkoutProgressRequest,
 } from "../models/workout-request.model";
@@ -15,7 +16,7 @@ export abstract class WorkoutSessionPort {
 
   abstract finish(
     workoutId: string,
-    request: WorkoutProgressRequest,
+    request: FinishWorkoutRequest,
   ): Observable<void>;
 
   abstract discard(workoutId: string): Observable<void>;

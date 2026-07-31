@@ -12,6 +12,7 @@ final readonly class SyncSessionExercisesCommand implements Command
     public function __construct(
         public string $sessionId,
         public array $exercises,
+        public string $mode,
         public string $updatedByUserId,
     ) {
     }

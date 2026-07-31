@@ -18,13 +18,57 @@ final class DoctrineSessionRepository extends EntityRepository implements Sessio
 
     public function findById(string $id): ?Session
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $session = $this->getEntityManager()->createQueryBuilder()
             ->select('session')
             ->from(from: Session::class, alias: 'session')
             ->where('session.id = :id')
             ->setParameter(key: 'id', value: $id)
             ->getQuery()
             ->getOneOrNullResult();
+
+        if (null === $session) {
+            return null;
+        }
+
+        $session->exercises = $this->findExercises(sessionId: $session->id);
+
+        return $session;
+    }
+
+    /**
+     * @return SessionExercise[]
+     */
+    private function findExercises(string $sessionId): array
+    {
+        $sessionExercises = $this->getEntityManager()->createQueryBuilder()
+            ->select('sessionExercise')
+            ->from(from: SessionExercise::class, alias: 'sessionExercise')
+            ->where('sessionExercise.sessionId = :sessionId')
+            ->setParameter(key: 'sessionId', value: $sessionId)
+            ->orderBy('sessionExercise.position', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($sessionExercises as $sessionExercise) {
+            $sessionExercise->sets = $this->findSets(sessionExerciseId: $sessionExercise->id);
+        }
+
+        return $sessionExercises;
+    }
+
+    /**
+     * @return ExerciseSet[]
+     */
+    private function findSets(string $sessionExerciseId): array
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('exerciseSet')
+            ->from(from: ExerciseSet::class, alias: 'exerciseSet')
+            ->where('exerciseSet.sessionExerciseId = :sessionExerciseId')
+            ->setParameter(key: 'sessionExerciseId', value: $sessionExerciseId)
+            ->orderBy('exerciseSet.position', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function save(Session $session): void

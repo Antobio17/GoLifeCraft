@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable, map } from "rxjs";
 import { WorkoutSessionPort } from "../../domain/ports/workout-session.port";
 import {
+  FinishWorkoutRequest,
   StartWorkoutRequest,
   WorkoutProgressRequest,
 } from "../../domain/models/workout-request.model";
@@ -28,7 +29,7 @@ export class HttpWorkoutSessionAdapter extends WorkoutSessionPort {
     return this.http.put<void>(this.apiUrl + "/" + workoutId, request);
   }
 
-  finish(workoutId: string, request: WorkoutProgressRequest): Observable<void> {
+  finish(workoutId: string, request: FinishWorkoutRequest): Observable<void> {
     return this.http.put<void>(
       this.apiUrl + "/" + workoutId + "/finish",
       request,

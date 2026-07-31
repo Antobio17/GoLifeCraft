@@ -4,6 +4,7 @@ namespace Gym\Training\Workout\Infrastructure\UI\API\Controller;
 
 use Gym\Training\Workout\Application\Command\FinishWorkoutCommand;
 use Gym\Training\Workout\Application\Command\WorkoutExerciseData;
+use Gym\Training\Workout\Domain\Event\WorkoutFinished;
 use Gym\Training\Workout\Domain\Exception\FinishWorkoutException;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
@@ -34,6 +35,8 @@ final class FinishWorkoutController
                     rawExercises: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'exercises'),
                 ),
                 durationSeconds: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'durationSeconds'),
+                templateSyncMode: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'templateSyncMode')
+                    ?? WorkoutFinished::TEMPLATE_SYNC_EXERCISES,
                 finishedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 

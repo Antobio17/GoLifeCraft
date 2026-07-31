@@ -6,6 +6,10 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class WorkoutFinished extends DomainEvent
 {
+    public const string TEMPLATE_SYNC_EXERCISES = 'exercises';
+    public const string TEMPLATE_SYNC_SETS = 'sets';
+    public const string TEMPLATE_SYNC_NONE = 'none';
+
     /**
      * @param array<int, array{exerciseId: string, exerciseName: string, type: string, muscleGroups: string[], position: int, note: string|null, sets: array<int, array{position: int, reps: int, weight: float|null}>}> $exercises
      */
@@ -15,6 +19,7 @@ final readonly class WorkoutFinished extends DomainEvent
         public int $durationSeconds,
         public ?string $sessionId,
         public string $finishedByUserId,
+        public string $templateSyncMode,
         public array $exercises,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);

@@ -9,6 +9,7 @@ use Gym\Training\Session\Application\Command\SessionExerciseAssembler;
 use Gym\Training\Session\Application\Command\SessionExerciseData;
 use Gym\Training\Session\Application\Command\SyncSessionExercisesCommand;
 use Gym\Training\Session\Application\Command\SyncSessionExercisesCommandHandler;
+use Gym\Training\Session\Domain\Model\Session;
 use Gym\Training\Session\Infrastructure\Domain\Model\InMemory\InMemorySessionRepository;
 use Gym\Training\Session\Infrastructure\Domain\QueryModel\InMemory\InMemoryCreateSessionNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
@@ -44,6 +45,12 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
                     note: null,
                     sets: [new ExerciseSetData(position: 1, reps: 10, weight: 40.0)],
                 ),
+                new SessionExerciseData(
+                    exerciseId: 'exercise-3',
+                    position: 2,
+                    note: 'Sin rebote',
+                    sets: [new ExerciseSetData(position: 1, reps: 8, weight: 60.0)],
+                ),
             ],
             createdByUserId: 'god-user-id',
         ));
@@ -71,6 +78,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
                     ],
                 ),
             ],
+            mode: Session::SYNC_MODE_EXERCISES,
             updatedByUserId: 'god-user-id',
         ));
 
@@ -83,11 +91,73 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
         $this->assertCount(expectedCount: 2, haystack: $session->exercises[0]->sets);
     }
 
+    public function testItOnlySyncsSetsWhenModeIsSets(): void
+    {
+        ($this->handler)(new SyncSessionExercisesCommand(
+            sessionId: 'session-1',
+            exercises: [
+                new SessionExerciseData(
+                    exerciseId: 'exercise-1',
+                    position: 1,
+                    note: 'Comentario del entreno',
+                    sets: [
+                        new ExerciseSetData(position: 1, reps: 12, weight: 45.0),
+                        new ExerciseSetData(position: 2, reps: 10, weight: 47.5),
+                    ],
+                ),
+                new SessionExerciseData(
+                    exerciseId: 'exercise-2',
+                    position: 2,
+                    note: null,
+                    sets: [new ExerciseSetData(position: 1, reps: 15, weight: 12.5)],
+                ),
+            ],
+            mode: Session::SYNC_MODE_SETS,
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $this->assertCount(expectedCount: 2, haystack: $session->exercises);
+        $this->assertEquals(expected: 'exercise-1', actual: $session->exercises[0]->exerciseId);
+        $this->assertNull(actual: $session->exercises[0]->note);
+        $this->assertCount(expectedCount: 2, haystack: $session->exercises[0]->sets);
+        $this->assertEquals(expected: 12, actual: $session->exercises[0]->sets[0]->reps);
+        $this->assertEquals(expected: 45.0, actual: $session->exercises[0]->sets[0]->weight);
+        $this->assertEquals(expected: 'exercise-3', actual: $session->exercises[1]->exerciseId);
+        $this->assertEquals(expected: 'Sin rebote', actual: $session->exercises[1]->note);
+        $this->assertCount(expectedCount: 1, haystack: $session->exercises[1]->sets);
+        $this->assertEquals(expected: 8, actual: $session->exercises[1]->sets[0]->reps);
+    }
+
+    public function testItKeepsAnEmptyTemplateUntouchedWhenModeIsSets(): void
+    {
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $session->exercises = [];
+        $this->sessionRepository->save(session: $session);
+
+        ($this->handler)(new SyncSessionExercisesCommand(
+            sessionId: 'session-1',
+            exercises: [
+                new SessionExerciseData(
+                    exerciseId: 'exercise-1',
+                    position: 1,
+                    note: null,
+                    sets: [new ExerciseSetData(position: 1, reps: 12, weight: 45.0)],
+                ),
+            ],
+            mode: Session::SYNC_MODE_SETS,
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $this->assertSame(expected: [], actual: $this->sessionRepository->findById(id: 'session-1')->exercises);
+    }
+
     public function testItDoesNothingWhenSessionNotFound(): void
     {
         ($this->handler)(new SyncSessionExercisesCommand(
             sessionId: 'missing-id',
             exercises: [],
+            mode: Session::SYNC_MODE_EXERCISES,
             updatedByUserId: 'god-user-id',
         ));
 

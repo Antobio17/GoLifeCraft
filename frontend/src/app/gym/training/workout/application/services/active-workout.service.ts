@@ -7,6 +7,7 @@ import {
   WorkoutExerciseRequest,
   WorkoutProgressRequest,
 } from "../../domain/models/workout-request.model";
+import { TemplateSyncMode } from "../../domain/models/template-sync-mode.model";
 import { uuidV4 } from "@shared/uuid/uuid";
 
 export interface ActiveExerciseSet {
@@ -151,7 +152,10 @@ export class ActiveWorkoutService implements OnDestroy {
     this.queueProgress(exercises);
   }
 
-  finish(exercises: ActiveExercise[]): Observable<void> {
+  finish(
+    exercises: ActiveExercise[],
+    templateSyncMode: TemplateSyncMode,
+  ): Observable<void> {
     const workoutId = this.workoutId();
     if (!workoutId) {
       throw new Error("No active workout to finish.");
@@ -160,7 +164,10 @@ export class ActiveWorkoutService implements OnDestroy {
     this.stopTicker();
 
     return this.port
-      .finish(workoutId, this.buildProgress(exercises))
+      .finish(workoutId, {
+        ...this.buildProgress(exercises),
+        templateSyncMode,
+      })
       .pipe(tap(() => this.reset()));
   }
 

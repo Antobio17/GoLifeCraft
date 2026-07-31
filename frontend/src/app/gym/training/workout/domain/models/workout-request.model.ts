@@ -1,3 +1,5 @@
+import { TemplateSyncMode } from "./template-sync-mode.model";
+
 export interface WorkoutSetRequest {
   position: number;
   reps: number;
@@ -25,4 +27,8 @@ export interface StartWorkoutRequest {
 export interface WorkoutProgressRequest {
   exercises: WorkoutExerciseRequest[];
   durationSeconds: number;
+}
+
+export interface FinishWorkoutRequest extends WorkoutProgressRequest {
+  templateSyncMode: TemplateSyncMode;
 }

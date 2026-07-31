@@ -12,6 +12,9 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class Session extends GenericAggregate
 {
+    public const string SYNC_MODE_EXERCISES = 'exercises';
+    public const string SYNC_MODE_SETS = 'sets';
+
     public string $name;
     public int $estimatedDurationMinutes;
 
@@ -99,6 +102,38 @@ class Session extends GenericAggregate
         ));
     }
 
+    /**
+     * @param SessionExercise[] $exercises
+     */
+    public function syncExerciseSets(
+        array $exercises,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->exercises = array_map(
+            callback: fn (SessionExercise $templateExercise): SessionExercise => $this->replayExercise(
+                templateExercise: $templateExercise,
+                performedExercise: self::findByExerciseId(
+                    exercises: $exercises,
+                    exerciseId: $templateExercise->exerciseId,
+                ),
+                updatedByUserId: $updatedByUserId,
+                dateTimeGenerator: $dateTimeGenerator,
+            ),
+            array: $this->exercises,
+        );
+
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new SessionUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+        ));
+    }
+
     public function delete(
         string $deletedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -110,6 +145,51 @@ class Session extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
         ));
+    }
+
+    private function replayExercise(
+        SessionExercise $templateExercise,
+        ?SessionExercise $performedExercise,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): SessionExercise {
+        $sessionExercise = SessionExercise::create(
+            sessionId: $this->id,
+            exerciseId: $templateExercise->exerciseId,
+            position: $templateExercise->position,
+            note: $templateExercise->note,
+            createdByUserId: $updatedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+
+        $sets = null === $performedExercise ? $templateExercise->sets : $performedExercise->sets;
+
+        foreach (array_values($sets) as $index => $set) {
+            $sessionExercise->addSet(exerciseSet: ExerciseSet::create(
+                sessionExerciseId: $sessionExercise->id,
+                position: $index + 1,
+                reps: $set->reps,
+                weight: $set->weight,
+                createdByUserId: $updatedByUserId,
+                dateTimeGenerator: $dateTimeGenerator,
+            ));
+        }
+
+        return $sessionExercise;
+    }
+
+    /**
+     * @param SessionExercise[] $exercises
+     */
+    private static function findByExerciseId(array $exercises, string $exerciseId): ?SessionExercise
+    {
+        foreach ($exercises as $exercise) {
+            if ($exercise->exerciseId === $exerciseId) {
+                return $exercise;
+            }
+        }
+
+        return null;
     }
 
     private static function hasValidDuration(int $estimatedDurationMinutes): bool

@@ -1,0 +1,40 @@
+<ds-modal-sheet
+  [open]="show"
+  [compact]="true"
+  [title]="title"
+  [closeLabel]="cancelLabel"
+  (closed)="onDismiss()"
+>
+  <ds-stack [gap]="'14px'">
+    @if (body) {
+      <ds-text variant="meta">{{ body }}</ds-text>
+    }
+
+    @if (note) {
+      <ds-note icon="info">{{ note }}</ds-note>
+    }
+
+    <ds-stack [gap]="'10px'">
+      @for (option of options; track option.value) {
+        <ds-choice-row
+          [icon]="option.icon"
+          [emoji]="option.emoji ?? ''"
+          [title]="option.title"
+          [description]="option.description"
+          [disabled]="busy"
+          (activated)="chosen.emit(option.value)"
+        />
+      }
+    </ds-stack>
+
+    <ds-button
+      variant="ghost"
+      size="md"
+      [fullWidth]="true"
+      [disabled]="busy"
+      (clicked)="cancelled.emit()"
+    >
+      {{ cancelLabel }}
+    </ds-button>
+  </ds-stack>
+</ds-modal-sheet>

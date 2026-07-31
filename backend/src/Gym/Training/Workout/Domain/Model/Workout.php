@@ -14,6 +14,12 @@ class Workout extends GenericAggregate
     public const string STATUS_IN_PROGRESS = 'in_progress';
     public const string STATUS_COMPLETED = 'completed';
 
+    public const array TEMPLATE_SYNC_MODES = [
+        WorkoutFinished::TEMPLATE_SYNC_EXERCISES,
+        WorkoutFinished::TEMPLATE_SYNC_SETS,
+        WorkoutFinished::TEMPLATE_SYNC_NONE,
+    ];
+
     public ?string $sessionId = null;
     public string $sessionName;
     public string $status;
@@ -81,11 +87,16 @@ class Workout extends GenericAggregate
     public function finish(
         array $exercises,
         int $durationSeconds,
+        string $templateSyncMode,
         string $finishedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
         if (self::STATUS_COMPLETED === $this->status) {
             throw FinishWorkoutException::workoutAlreadyFinished(workoutId: $this->id);
+        }
+
+        if (!in_array($templateSyncMode, self::TEMPLATE_SYNC_MODES, true)) {
+            throw FinishWorkoutException::invalidTemplateSyncMode(templateSyncMode: $templateSyncMode);
         }
 
         $now = $dateTimeGenerator->now();
@@ -102,6 +113,7 @@ class Workout extends GenericAggregate
             durationSeconds: $this->durationSeconds,
             sessionId: $this->sessionId,
             finishedByUserId: $finishedByUserId,
+            templateSyncMode: $templateSyncMode,
             exercises: $this->exercisesSnapshot(),
         ));
     }
