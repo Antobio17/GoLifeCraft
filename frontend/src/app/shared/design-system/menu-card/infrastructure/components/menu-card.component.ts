@@ -44,15 +44,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
           >
             <ds-icon name="cart" [size]="17" [stroke]="2.1" />
           </button>
-          <button
-            type="button"
-            class="ds-mcard__action ds-mcard__action--danger"
-            [attr.aria-label]="removeLabel"
-            [attr.title]="removeLabel"
-            (click)="removed.emit()"
-          >
-            <ds-icon name="trash" [size]="16" [stroke]="2" />
-          </button>
         </div>
       }
     </div>
@@ -178,9 +169,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         color: var(--ds-text);
         border-radius: 11px;
       }
-      .ds-mcard__action--danger {
-        color: var(--ds-danger);
-      }
     `,
   ],
 })
@@ -194,11 +182,9 @@ export class MenuCardComponent {
   @Input() loadLabel = "";
   @Input() loadIcon: DsIconName = "download";
   @Input() shopLabel = "";
-  @Input() removeLabel = "";
   @Input() canWrite = false;
 
   @Output() activated = new EventEmitter<void>();
   @Output() loaded = new EventEmitter<void>();
   @Output() shopped = new EventEmitter<void>();
-  @Output() removed = new EventEmitter<void>();
 }

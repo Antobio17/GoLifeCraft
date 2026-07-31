@@ -70,12 +70,10 @@
               [loadLabel]="card.loadLabel"
               [loadIcon]="card.isWeek ? 'calendar' : 'download'"
               [shopLabel]="'getMenus.card.shop' | t"
-              [removeLabel]="'getMenus.card.delete' | t"
               [canWrite]="canWrite"
               (activated)="onOpen(card)"
               (loaded)="onLoad(card)"
               (shopped)="onShop(card.id)"
-              (removed)="askDelete(card.id)"
             />
           }
         </ds-grid>
@@ -122,17 +120,5 @@
   <app-menu-shopping-sheet
     [menuId]="shoppingMenuId()"
     (closed)="closeShoppingSheet()"
-  />
-
-  <ds-confirm-action-modal
-    [show]="menuToDelete() !== null"
-    [title]="'getMenus.delete.title' | t"
-    [body]="'getMenus.delete.message' | t"
-    [itemName]="deleteMessage()"
-    [isDeleting]="deleting()"
-    [cancelLabel]="'getMenus.delete.cancel' | t"
-    [confirmLabel]="'getMenus.delete.confirm' | t"
-    (confirmed)="confirmDelete()"
-    (cancelled)="cancelDelete()"
   />
 </ds-page-wrapper>

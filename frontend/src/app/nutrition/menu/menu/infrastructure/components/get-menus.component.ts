@@ -18,13 +18,11 @@ import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastru
 import { ChoiceRowComponent } from "@shared/design-system/choice-row/infrastructure/components/choice-row.component";
 import { MenuCardComponent } from "@shared/design-system/menu-card/infrastructure/components/menu-card.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 import { GetMenusService } from "@nutrition/menu/menu/application/services/get-menus.service";
-import { DeleteMenuService } from "@nutrition/menu/menu/application/services/delete-menu.service";
 import { MenuViewService } from "@nutrition/menu/menu/application/services/menu-view.service";
 import {
   MenuListItem,
@@ -76,7 +74,6 @@ const WEEK_EMOJI = "🗓️";
     ModalSheetComponent,
     ChoiceRowComponent,
     MenuCardComponent,
-    ConfirmActionModalComponent,
     MenuLoadSheetComponent,
     MenuApplyWeekSheetComponent,
     MenuShoppingSheetComponent,
@@ -84,7 +81,6 @@ const WEEK_EMOJI = "🗓️";
 })
 export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   private getMenusService = inject(GetMenusService);
-  private deleteMenuService = inject(DeleteMenuService);
   private authSession = inject(AuthSessionService);
   protected view = inject(MenuViewService);
 
@@ -99,8 +95,6 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   loadSheetMenuId = signal<string | null>(null);
   applyWeekMenuId = signal<string | null>(null);
   shoppingMenuId = signal<string | null>(null);
-  menuToDelete = signal<MenuListItem | null>(null);
-  deleting = signal(false);
 
   headerSubtitle = computed(() => {
     const total = this.items().length;
@@ -162,8 +156,6 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   hasResults = computed(() => this.filteredMenus().length > 0);
   isEmpty = computed(() => this.items().length === 0);
 
-  deleteMessage = computed(() => this.menuToDelete()?.attributes.name ?? "");
-
   protected configureList(): void {
     this.pageSize.set(100);
   }
@@ -222,31 +214,6 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
 
   closeShoppingSheet(): void {
     this.shoppingMenuId.set(null);
-  }
-
-  askDelete(menuId: string): void {
-    const menu = this.items().find((item) => item.id === menuId) ?? null;
-    this.menuToDelete.set(menu);
-  }
-
-  cancelDelete(): void {
-    this.menuToDelete.set(null);
-  }
-
-  confirmDelete(): void {
-    const menu = this.menuToDelete();
-    if (!menu || this.deleting()) return;
-
-    this.deleting.set(true);
-
-    this.deleteMenuService.deleteMenu(menu.id).subscribe({
-      next: () => {
-        this.deleting.set(false);
-        this.menuToDelete.set(null);
-        this.load();
-      },
-      error: () => this.deleting.set(false),
-    });
   }
 
   private toCard(menu: MenuListItem): MenuCardView {
