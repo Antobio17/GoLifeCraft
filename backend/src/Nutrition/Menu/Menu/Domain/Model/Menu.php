@@ -29,7 +29,7 @@ class Menu extends GenericAggregate
     public string $emoji;
     public string $note;
     public string $type;
-    public string $weekDays;
+    public string $weekDays = '';
 
     /** @var MenuItem[] */
     public array $items = [];
@@ -61,7 +61,7 @@ class Menu extends GenericAggregate
         $menu->type = $type;
         $menu->items = $items;
         $menu->guardItems(items: $items);
-        $menu->weekDays = $menu->packWeekDays(items: $items);
+        $menu->weekDays = $menu->packWeekDays();
         $menu->stampCreation(userId: $createdByUserId, now: $now);
 
         $menu->record(event: new MenuCreated(
@@ -100,7 +100,7 @@ class Menu extends GenericAggregate
         $this->note = $note;
         $this->items = $items;
         $this->guardItems(items: $items, updating: true);
-        $this->weekDays = $this->packWeekDays(items: $items);
+        $this->weekDays = $this->packWeekDays();
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new MenuUpdated(
@@ -214,7 +214,10 @@ class Menu extends GenericAggregate
             return [];
         }
 
-        return MenuWeekDay::sort(dayKeys: array_filter(array: explode(separator: ',', string: $this->weekDays)));
+        return MenuWeekDay::sort(dayKeys: array_map(
+            callback: static fn (MenuItem $item): string => (string) $item->dayKey,
+            array: $this->items,
+        ));
     }
 
     /**
@@ -360,21 +363,10 @@ class Menu extends GenericAggregate
 
     /**
      * A weekly menu plans exactly the days that hold food: emptying a day drops it from the plan.
-     *
-     * @param MenuItem[] $items
      */
-    private function packWeekDays(array $items): string
+    private function packWeekDays(): string
     {
-        if (!$this->isWeek()) {
-            return '';
-        }
-
-        $dayKeys = array_map(
-            callback: static fn (MenuItem $item): string => (string) $item->dayKey,
-            array: $items,
-        );
-
-        return implode(separator: ',', array: MenuWeekDay::sort(dayKeys: $dayKeys));
+        return implode(separator: ',', array: $this->enabledWeekDays());
     }
 
     private static function parseDate(string $date): ?\DateTimeImmutable
