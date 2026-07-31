@@ -1,121 +1,52 @@
-@if (show) {
-  <div
-    class="cdm-overlay"
-    tabindex="-1"
-    (click)="cancelled.emit()"
-    (keydown.escape)="cancelled.emit()"
-  >
-    <div
-      class="cdm-content"
-      tabindex="-1"
-      (click)="$event.stopPropagation()"
-      (keydown)="$event.stopPropagation()"
-    >
-      <div class="cdm-header">
-        <div
-          class="cdm-header-icon"
-          [class.cdm-header-icon--success]="iconVariant === 'success'"
-        >
-          @if (iconVariant === "success") {
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <use href="assets/icons/golifecraft/sprite.svg#i-check"></use>
-            </svg>
-          } @else {
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <use href="assets/icons/golifecraft/sprite.svg#i-trash"></use>
-            </svg>
-          }
-        </div>
-        <h2>{{ title | t }}</h2>
-        <button
-          class="cdm-close"
-          type="button"
-          (click)="cancelled.emit()"
-          [disabled]="isDeleting"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <use href="assets/icons/golifecraft/sprite.svg#i-x"></use>
-          </svg>
-        </button>
-      </div>
-
-      <div class="cdm-body">
-        <p class="cdm-body-text">
-          @if (itemName) {
-            {{ body | t }}<strong> {{ itemName }}</strong
-            >?
-          } @else {
-            {{ body | t }}
-          }
-        </p>
-        @if (warningText) {
-          <p class="cdm-warning">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <use href="assets/icons/golifecraft/sprite.svg#i-alert"></use>
-            </svg>
-            {{ warningText | t }}
-          </p>
+<ds-modal-sheet
+  [open]="show"
+  [auto]="true"
+  [title]="title | t"
+  [closeLabel]="cancelLabel | t"
+  (closed)="onDismiss()"
+>
+  <ds-stack gap="16px">
+    <ds-stack direction="row" gap="12px" align="start">
+      <ds-icon-badge
+        [icon]="badgeIcon"
+        [tone]="iconVariant"
+        [size]="42"
+        [iconSize]="19"
+      />
+      <ds-text>
+        @if (itemName) {
+          {{ body | t }}
+          <ds-text [inline]="true" variant="strong">{{ itemName }}</ds-text
+          >?
+        } @else {
+          {{ body | t }}
         }
-      </div>
+      </ds-text>
+    </ds-stack>
 
-      <div class="cdm-footer">
-        <ds-button
-          variant="ghost"
-          size="md"
-          [disabled]="isDeleting"
-          (clicked)="cancelled.emit()"
-        >
-          {{ cancelLabel | t }}
-        </ds-button>
-        <ds-button
-          [variant]="confirmVariant"
-          size="md"
-          [loading]="isDeleting"
-          (clicked)="confirmed.emit()"
-        >
-          {{ isDeleting ? (deletingLabel | t) : (confirmLabel | t) }}
-        </ds-button>
-      </div>
-    </div>
-  </div>
-}
+    @if (warningText) {
+      <ds-note icon="alertCircle" tone="danger">{{ warningText | t }}</ds-note>
+    }
+
+    <ds-stack gap="10px">
+      <ds-button
+        [variant]="confirmVariant"
+        size="md"
+        [fullWidth]="true"
+        [loading]="isDeleting"
+        (clicked)="confirmed.emit()"
+      >
+        {{ isDeleting ? (deletingLabel | t) : (confirmLabel | t) }}
+      </ds-button>
+      <ds-button
+        variant="ghost"
+        size="md"
+        [fullWidth]="true"
+        [disabled]="isDeleting"
+        (clicked)="cancelled.emit()"
+      >
+        {{ cancelLabel | t }}
+      </ds-button>
+    </ds-stack>
+  </ds-stack>
+</ds-modal-sheet>

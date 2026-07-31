@@ -1,11 +1,13 @@
 import { DOCUMENT } from "@angular/common";
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   Output,
   Renderer2,
+  ViewChild,
   inject,
 } from "@angular/core";
 
@@ -15,6 +17,7 @@ import {
   template: `
     @if (open) {
       <div
+        #overlay
         class="ds-sheet__overlay"
         tabindex="-1"
         (click)="closed.emit()"
@@ -24,6 +27,7 @@ import {
           class="ds-sheet"
           [class.ds-sheet--tall]="tall"
           [class.ds-sheet--compact]="compact"
+          [class.ds-sheet--auto]="auto"
           role="dialog"
           aria-modal="true"
           tabindex="-1"
@@ -62,6 +66,10 @@ import {
   styles: [
     `
       :host {
+        display: contents;
+      }
+
+      .ds-sheet__overlay {
         --ds-sheet-viewport: 100dvh;
         --ds-sheet-height: min(calc(var(--ds-sheet-viewport) * 0.9), 860px);
         --ds-sheet-height-tall: min(
@@ -74,15 +82,7 @@ import {
         );
         --ds-sheet-max-gap: 16px;
         --ds-sheet-max-gap-desktop: 32px;
-      }
 
-      @media (max-width: 767px) {
-        :host {
-          --ds-sheet-viewport: calc(100dvh / var(--ds-app-scale, 1));
-        }
-      }
-
-      .ds-sheet__overlay {
         position: fixed;
         inset: 0;
         z-index: 1000;
@@ -91,6 +91,11 @@ import {
         display: flex;
         align-items: flex-end;
         justify-content: center;
+      }
+      @media (max-width: 767px) {
+        .ds-sheet__overlay {
+          --ds-sheet-viewport: calc(100dvh / var(--ds-app-scale, 1));
+        }
       }
       .ds-sheet {
         display: flex;
@@ -114,6 +119,10 @@ import {
         height: var(--ds-sheet-height-compact);
         min-height: min(calc(var(--ds-sheet-viewport) * 0.68), 560px);
         max-height: calc(var(--ds-sheet-viewport) - 24px);
+      }
+      .ds-sheet--auto {
+        height: auto;
+        min-height: 0;
       }
       .ds-sheet__grip {
         width: 40px;
@@ -219,6 +228,19 @@ export class ModalSheetComponent implements OnDestroy {
   private document = inject(DOCUMENT);
 
   private isOpen = false;
+  private overlayNode: HTMLElement | null = null;
+
+  @ViewChild("overlay")
+  set overlay(reference: ElementRef<HTMLElement> | undefined) {
+    this.detachOverlay();
+
+    if (!reference) {
+      return;
+    }
+
+    this.overlayNode = reference.nativeElement;
+    this.renderer.appendChild(this.document.body, this.overlayNode);
+  }
 
   @Input()
   set open(value: boolean) {
@@ -232,12 +254,23 @@ export class ModalSheetComponent implements OnDestroy {
 
   @Input() tall = false;
   @Input() compact = false;
+  @Input() auto = false;
   @Input() title = "";
   @Input() closeLabel = "Close";
   @Output() closed = new EventEmitter<void>();
 
   ngOnDestroy(): void {
     this.toggleScrollLock(false);
+    this.detachOverlay();
+  }
+
+  private detachOverlay(): void {
+    if (!this.overlayNode) {
+      return;
+    }
+
+    this.overlayNode.remove();
+    this.overlayNode = null;
   }
 
   private toggleScrollLock(locked: boolean): void {

@@ -2,7 +2,7 @@ import { Component, Input } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 
-type IconBadgeTone = "neutral" | "brand";
+type IconBadgeTone = "neutral" | "brand" | "danger" | "success";
 
 @Component({
   selector: "ds-icon-badge",
@@ -30,6 +30,14 @@ type IconBadgeTone = "neutral" | "brand";
       :host([tone="brand"]) .ds-icon-badge {
         --badge-bg: var(--ds-primary-soft);
         --badge-color: var(--ds-primary-soft-text);
+      }
+      :host([tone="danger"]) .ds-icon-badge {
+        --badge-bg: var(--ds-danger-soft);
+        --badge-color: var(--ds-danger);
+      }
+      :host([tone="success"]) .ds-icon-badge {
+        --badge-bg: var(--ds-success-soft);
+        --badge-color: var(--ds-success);
       }
     `,
   ],
