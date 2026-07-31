@@ -15,6 +15,7 @@ final class ModelPermissionCheckerTest extends TestCase
 
         self::assertTrue($checker->canRead(role: 'ROLE_GOD', descriptor: $descriptor));
         self::assertTrue($checker->canWrite(role: 'ROLE_GOD', descriptor: $descriptor));
+        self::assertTrue($checker->canDelete(role: 'ROLE_GOD', descriptor: $descriptor));
     }
 
     public function testItDeniesUnknownRoles(): void
@@ -24,5 +25,6 @@ final class ModelPermissionCheckerTest extends TestCase
 
         self::assertFalse($checker->canRead(role: 'ROLE_USER', descriptor: $descriptor));
         self::assertFalse($checker->canWrite(role: 'ROLE_USER', descriptor: $descriptor));
+        self::assertFalse($checker->canDelete(role: 'ROLE_USER', descriptor: $descriptor));
     }
 }

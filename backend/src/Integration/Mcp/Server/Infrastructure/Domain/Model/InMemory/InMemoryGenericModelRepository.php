@@ -24,6 +24,14 @@ final class InMemoryGenericModelRepository implements GenericModelRepository
         return $this->saved[$id] ?? null;
     }
 
+    public function findBy(string $class, string $field, string $value): array
+    {
+        return array_values(array_filter(
+            $this->saved,
+            static fn (object $entity): bool => $entity instanceof $class && ($entity->{$field} ?? null) === $value,
+        ));
+    }
+
     public function reference(string $class, string $id): object
     {
         $entity = (new \ReflectionClass($class))->newInstanceWithoutConstructor();
@@ -41,6 +49,13 @@ final class InMemoryGenericModelRepository implements GenericModelRepository
 
         $this->versions[$entity->id] = $newVersion;
         $this->saved[$entity->id] = $entity;
+    }
+
+    public function deleteAll(array $entities): void
+    {
+        foreach ($entities as $entity) {
+            unset($this->saved[$entity->id], $this->versions[$entity->id]);
+        }
     }
 
     private function setVersion(object $entity, int $version): void

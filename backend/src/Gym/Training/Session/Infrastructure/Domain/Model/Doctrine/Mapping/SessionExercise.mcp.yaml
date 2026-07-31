@@ -21,3 +21,6 @@ fields:
     sortable: true
 
 relations: {}
+
+cascade_delete:
+  - { resource: exercise_set, foreign_field: sessionExerciseId }

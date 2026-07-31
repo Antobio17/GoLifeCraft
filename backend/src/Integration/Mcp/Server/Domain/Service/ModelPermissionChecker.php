@@ -15,4 +15,9 @@ final class ModelPermissionChecker
     {
         return in_array(needle: $role, haystack: $descriptor->writeRoles, strict: true);
     }
+
+    public function canDelete(string $role, ModelDescriptor $descriptor): bool
+    {
+        return in_array(needle: $role, haystack: $descriptor->deleteRoles, strict: true);
+    }
 }

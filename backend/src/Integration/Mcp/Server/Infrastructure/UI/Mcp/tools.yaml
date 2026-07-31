@@ -22,3 +22,11 @@ services:
       $requestStack: '@request_stack'
     tags:
       - { name: 'mcp.tool' }
+
+  Integration\Mcp\Server\Infrastructure\UI\Mcp\Tool\DeleteModelTool:
+    class: Integration\Mcp\Server\Infrastructure\UI\Mcp\Tool\DeleteModelTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

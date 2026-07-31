@@ -3,6 +3,7 @@
 namespace App\Tests\Integration\Mcp\Server\Support;
 
 use Integration\Mcp\Server\Domain\Exception\ModelNotExposedException;
+use Integration\Mcp\Server\Domain\QueryModel\Dto\CascadeDeleteDescriptor;
 use Integration\Mcp\Server\Domain\QueryModel\Dto\FieldDescriptor;
 use Integration\Mcp\Server\Domain\QueryModel\Dto\ModelDescriptor;
 use Integration\Mcp\Server\Domain\Service\ModelMetadataProvider;
@@ -23,25 +24,48 @@ final class FakeModelMetadata implements ModelMetadataProvider
             relations: [],
             readRoles: ['ROLE_GOD'],
             writeRoles: ['ROLE_GOD'],
+            deleteRoles: ['ROLE_GOD'],
+            cascadeDeletes: [new CascadeDeleteDescriptor(resource: 'fake_child', foreignField: 'parentId')],
+        );
+    }
+
+    public static function childDescriptor(): ModelDescriptor
+    {
+        return new ModelDescriptor(
+            alias: 'fake_child',
+            class: FakeChildModel::class,
+            label: 'Fake child',
+            fields: [
+                new FieldDescriptor(name: 'parentId', type: 'string', writable: true, required: true, filterable: true, sortable: false, unique: false, max: 36),
+                new FieldDescriptor(name: 'label', type: 'string', writable: true, required: true, filterable: false, sortable: false, unique: false, max: 255),
+            ],
+            relations: [],
+            readRoles: ['ROLE_GOD'],
+            writeRoles: ['ROLE_GOD'],
+            deleteRoles: ['ROLE_GOD'],
         );
     }
 
     public function aliases(): array
     {
-        return ['fake_model'];
+        return ['fake_model', 'fake_child'];
     }
 
     public function has(string $alias): bool
     {
-        return 'fake_model' === $alias;
+        return in_array($alias, $this->aliases(), true);
     }
 
     public function describe(string $alias): ModelDescriptor
     {
-        if ('fake_model' !== $alias) {
-            throw ModelNotExposedException::alias(alias: $alias);
+        if ('fake_model' === $alias) {
+            return self::descriptor();
         }
 
-        return self::descriptor();
+        if ('fake_child' === $alias) {
+            return self::childDescriptor();
+        }
+
+        throw ModelNotExposedException::alias(alias: $alias);
     }
 }

@@ -5,8 +5,9 @@ namespace Integration\Mcp\Server\Domain\QueryModel\Dto;
 final readonly class ModelDescriptor
 {
     /**
-     * @param FieldDescriptor[]    $fields
-     * @param RelationDescriptor[] $relations
+     * @param FieldDescriptor[]         $fields
+     * @param RelationDescriptor[]      $relations
+     * @param CascadeDeleteDescriptor[] $cascadeDeletes
      */
     public function __construct(
         public string $alias,
@@ -16,6 +17,8 @@ final readonly class ModelDescriptor
         public array $relations,
         public array $readRoles,
         public array $writeRoles,
+        public array $deleteRoles = [],
+        public array $cascadeDeletes = [],
     ) {
     }
 
@@ -41,12 +44,17 @@ final readonly class ModelDescriptor
         return null;
     }
 
-    public function toArray(bool $writable): array
+    public function toArray(bool $writable, bool $deletable = false): array
     {
         return [
             'alias' => $this->alias,
             'label' => $this->label,
             'writable' => $writable,
+            'deletable' => $deletable,
+            'deleteCascadesTo' => array_map(
+                static fn (CascadeDeleteDescriptor $cascade) => $cascade->resource,
+                $this->cascadeDeletes,
+            ),
             'fields' => array_map(static fn (FieldDescriptor $field) => $field->toArray(), $this->fields),
             'relations' => array_map(static fn (RelationDescriptor $relation) => $relation->toArray(), $this->relations),
         ];

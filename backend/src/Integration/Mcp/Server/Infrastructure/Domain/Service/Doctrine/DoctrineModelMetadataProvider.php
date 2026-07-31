@@ -4,6 +4,7 @@ namespace Integration\Mcp\Server\Infrastructure\Domain\Service\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Integration\Mcp\Server\Domain\Exception\ModelNotExposedException;
+use Integration\Mcp\Server\Domain\QueryModel\Dto\CascadeDeleteDescriptor;
 use Integration\Mcp\Server\Domain\QueryModel\Dto\FieldDescriptor;
 use Integration\Mcp\Server\Domain\QueryModel\Dto\ModelDescriptor;
 use Integration\Mcp\Server\Domain\QueryModel\Dto\RelationDescriptor;
@@ -60,7 +61,27 @@ final readonly class DoctrineModelMetadataProvider implements ModelMetadataProvi
             relations: $this->buildRelations(sidecar: $sidecar),
             readRoles: $resource['read_roles'] ?? [],
             writeRoles: $resource['write_roles'] ?? [],
+            deleteRoles: $resource['delete_roles'] ?? [],
+            cascadeDeletes: $this->buildCascadeDeletes(sidecar: $sidecar),
         );
+    }
+
+    /**
+     * @return CascadeDeleteDescriptor[]
+     */
+    private function buildCascadeDeletes(array $sidecar): array
+    {
+        $cascadeDeletes = [];
+
+        foreach ($sidecar['cascade_delete'] ?? [] as $rules) {
+            $cascadeDeletes[] = new CascadeDeleteDescriptor(
+                resource: $rules['resource'],
+                foreignField: $rules['foreign_field'] ?? null,
+                localField: $rules['local_field'] ?? null,
+            );
+        }
+
+        return $cascadeDeletes;
     }
 
     /**

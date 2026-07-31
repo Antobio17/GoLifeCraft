@@ -82,3 +82,7 @@ fields:
     filterable: true
 
 relations: {}
+
+cascade_delete:
+  - { resource: article_equivalence, foreign_field: articleId }
+  - { resource: nutrition_facts, local_field: nutritionFactsId }

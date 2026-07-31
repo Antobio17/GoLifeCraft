@@ -23,6 +23,11 @@ final readonly class DoctrineGenericModelRepository implements GenericModelRepos
         return $this->entityManager->find(className: $class, id: $id);
     }
 
+    public function findBy(string $class, string $field, string $value): array
+    {
+        return $this->entityManager->getRepository(className: $class)->findBy([$field => $value]);
+    }
+
     public function reference(string $class, string $id): object
     {
         return $this->entityManager->getReference(entityName: $class, id: $id);
@@ -31,6 +36,15 @@ final readonly class DoctrineGenericModelRepository implements GenericModelRepos
     public function save(object $entity): void
     {
         $this->entityManager->persist(object: $entity);
+        $this->entityManager->flush();
+    }
+
+    public function deleteAll(array $entities): void
+    {
+        foreach ($entities as $entity) {
+            $this->entityManager->remove(object: $entity);
+        }
+
         $this->entityManager->flush();
     }
 }

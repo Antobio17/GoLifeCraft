@@ -31,6 +31,7 @@ final readonly class DescribeModelsQueryHandler
 
             $models[] = $descriptor->toArray(
                 writable: $this->permissionChecker->canWrite(role: $query->role, descriptor: $descriptor),
+                deletable: $this->permissionChecker->canDelete(role: $query->role, descriptor: $descriptor),
             );
         }
 
