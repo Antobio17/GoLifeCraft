@@ -41,8 +41,10 @@ fields:
   unit:
     writable: true
     max: 30
+    enum: [g, ml, unit, slice, bread_slice, glass, serving, piece, can, jar, bag, carton, container, tablespoon, pack, handful]
     description: >-
-      Unit alias for product items (base unit or one of its equivalences).
+      Canonical unit key for product items (base unit or one of the article's equivalence
+      alias keys). Keys are always stored in English; the UI translates them.
       Left empty for recipe items, whose quantity is always in servings.
   position:
     writable: true

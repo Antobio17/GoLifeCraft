@@ -14,9 +14,11 @@ fields:
     required: true
     min: 1
     max: 30
+    enum: [unit, slice, bread_slice, glass, serving, piece, can, jar, bag, carton, container, tablespoon, pack, handful]
     description: >-
-      Name of the natural unit alias (for example "unidad", "loncha", "vaso", "lata").
-      One of these aliases equals "quantity" of the article's base unit.
+      Canonical key of the natural unit alias (for example "unit", "slice", "glass", "can").
+      One of these aliases equals "quantity" of the article's base unit. Keys are always
+      stored in English; the UI translates them for display.
     filterable: true
   quantity:
     writable: true

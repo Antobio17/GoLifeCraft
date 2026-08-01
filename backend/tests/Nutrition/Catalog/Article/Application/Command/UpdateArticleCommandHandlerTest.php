@@ -48,7 +48,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'ml',
             baseUnit: 'ml',
             diaryUnit: 'ml',
-            packUnit: 'paquete',
+            packUnit: 'pack',
             price: 1.05,
             brand: 'Central Lechera',
             emoji: '🥛',
@@ -66,7 +66,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
                 salt: 0.1,
             ),
             equivalences: [
-                new ArticleEquivalenceData(unit: 'paquete', quantity: 1000.0, position: 1),
+                new ArticleEquivalenceData(unit: 'pack', quantity: 1000.0, position: 1),
             ],
             updatedByUserId: 'god-user-id',
         ));
@@ -74,7 +74,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
         $article = $this->articleRepository->findById(id: 'article-1');
         $this->assertEquals(expected: 'Leche semidesnatada 1 L', actual: $article->name);
         $this->assertEquals(expected: 'ml', actual: $article->baseUnit);
-        $this->assertEquals(expected: 'paquete', actual: $article->packUnit);
+        $this->assertEquals(expected: 'pack', actual: $article->packUnit);
         $this->assertEquals(expected: 1.05, actual: $article->price);
         $this->assertEquals(expected: 'category-2', actual: $article->categoryId);
         $this->assertNull(actual: $article->supermarketId);
@@ -85,15 +85,15 @@ final class UpdateArticleCommandHandlerTest extends TestCase
     public function testItReplacesEquivalencesOnUpdate(): void
     {
         $this->givenArticle(id: 'article-1', name: 'Huevos M', equivalences: [
-            new ArticleEquivalenceData(unit: 'unidad', quantity: 55.0, position: 1),
+            new ArticleEquivalenceData(unit: 'unit', quantity: 55.0, position: 1),
         ]);
 
         ($this->handler)(new UpdateArticleCommand(
             articleId: 'article-1',
             name: 'Huevos M',
-            recipeUnit: 'unidad',
+            recipeUnit: 'unit',
             baseUnit: 'g',
-            diaryUnit: 'unidad',
+            diaryUnit: 'unit',
             packUnit: null,
             price: null,
             brand: null,
@@ -102,8 +102,8 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             supermarketId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [
-                new ArticleEquivalenceData(unit: 'unidad', quantity: 60.0, position: 1),
-                new ArticleEquivalenceData(unit: 'docena', quantity: 720.0, position: 2),
+                new ArticleEquivalenceData(unit: 'unit', quantity: 60.0, position: 1),
+                new ArticleEquivalenceData(unit: 'pack', quantity: 720.0, position: 2),
             ],
             updatedByUserId: 'god-user-id',
         ));
@@ -111,7 +111,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
         $article = $this->articleRepository->findById(id: 'article-1');
         $this->assertCount(expectedCount: 2, haystack: $article->equivalences);
         $this->assertEquals(expected: 60.0, actual: $article->equivalences[0]->quantity);
-        $this->assertEquals(expected: 'docena', actual: $article->equivalences[1]->unit);
+        $this->assertEquals(expected: 'pack', actual: $article->equivalences[1]->unit);
     }
 
     public function testItThrowsWhenArticleNotFound(): void
@@ -148,7 +148,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'g',
-            packUnit: 'paquete',
+            packUnit: 'pack',
             price: null,
             brand: null,
             emoji: null,
@@ -156,7 +156,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             supermarketId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [
-                new ArticleEquivalenceData(unit: 'racion', quantity: 80.0, position: 1),
+                new ArticleEquivalenceData(unit: 'serving', quantity: 80.0, position: 1),
             ],
             updatedByUserId: 'god-user-id',
         ));

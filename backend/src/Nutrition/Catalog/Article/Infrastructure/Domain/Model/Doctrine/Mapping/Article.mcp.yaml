@@ -20,27 +20,32 @@ fields:
   recipeUnit:
     writable: true
     max: 30
+    enum: [g, ml, unit, slice, bread_slice, glass, serving, piece, can, jar, bag, carton, container, tablespoon, pack, handful]
     description: >-
       Default unit key used when the article is added to a recipe. Either the base
-      unit ("g"/"ml") or the name of one of the article's equivalence aliases.
+      unit ("g"/"ml") or one of the canonical alias keys, which must also exist as an
+      equivalence of the article. Keys are always stored in English; the UI translates them.
     filterable: true
     sortable: true
   diaryUnit:
     writable: true
     max: 30
+    enum: [g, ml, unit, slice, bread_slice, glass, serving, piece, can, jar, bag, carton, container, tablespoon, pack, handful]
     description: >-
       Default unit key used when the article is logged in the diary. Either the base
-      unit ("g"/"ml") or the name of one of the article's equivalence aliases.
+      unit ("g"/"ml") or one of the canonical alias keys, which must also exist as an
+      equivalence of the article. Keys are always stored in English; the UI translates them.
     filterable: true
     sortable: true
   packUnit:
     writable: true
     max: 30
+    enum: [unit, slice, bread_slice, glass, serving, piece, can, jar, bag, carton, container, tablespoon, pack, handful]
     filterable: true
     sortable: true
     description: >-
-      Name of the equivalence alias that represents the pack bought at the supermarket
-      (for example "paquete" when a pack of pasta holds 500 g). It must match the unit of one
+      Canonical alias key of the equivalence that represents the pack bought at the supermarket
+      (for example "pack" when a pack of pasta holds 500 g). It must match the unit of one
       of the article's equivalences, whose quantity is then how much the pack holds in base units.
       Leave it empty when the article is not bought in a fixed pack.
   price:

@@ -1,0 +1,8 @@
+services:
+  Nutrition\Catalog\Article\Infrastructure\Application\Console\NormalizeArticleUnitsCommand:
+    class: Nutrition\Catalog\Article\Infrastructure\Application\Console\NormalizeArticleUnitsCommand
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
+    tags:
+      - { name: 'console.command' }

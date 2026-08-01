@@ -50,10 +50,12 @@ fields:
     writable: true
     required: false
     max: 30
+    enum: [g, ml, unit, slice, bread_slice, glass, serving, piece, can, jar, bag, carton, container, tablespoon, pack, handful]
     description: >-
       Only for kind "product": the unit the quantity is expressed in. Either the article's
-      base unit ("g"/"ml") or one of its equivalence aliases (for example "vaso"). Leave null
-      to use the base unit. Ignored for kinds "recipe" and "quick".
+      base unit ("g"/"ml") or one of its canonical equivalence alias keys (for example "glass").
+      Keys are always stored in English; the UI translates them. Leave null to use the base
+      unit. Ignored for kinds "recipe" and "quick".
   quickName:
     writable: true
     required: false
