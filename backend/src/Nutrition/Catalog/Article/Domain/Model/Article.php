@@ -14,6 +14,7 @@ class Article extends GenericAggregate
 {
     public const BASE_UNIT_GRAM = 'g';
     public const BASE_UNIT_MILLILITER = 'ml';
+    public const BASE_UNITS = [self::BASE_UNIT_GRAM, self::BASE_UNIT_MILLILITER];
 
     public string $name;
     public string $recipeUnit;
@@ -51,6 +52,20 @@ class Article extends GenericAggregate
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
+        if (!in_array($baseUnit, self::BASE_UNITS, true)) {
+            throw CreateArticleException::baseUnitIsNotSupported(baseUnit: $baseUnit);
+        }
+
+        $unsupportedUnit = self::findUnsupportedUnit(
+            recipeUnit: $recipeUnit,
+            diaryUnit: $diaryUnit,
+            equivalences: $equivalences,
+        );
+
+        if (null !== $unsupportedUnit) {
+            throw CreateArticleException::unitIsNotSupported(unit: $unsupportedUnit);
+        }
+
         if (!self::isPackUnitAvailable(packUnit: $packUnit, equivalences: $equivalences)) {
             throw CreateArticleException::packUnitIsNotAnEquivalence(packUnit: $packUnit);
         }
@@ -116,6 +131,20 @@ class Article extends GenericAggregate
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
+        if (!in_array($baseUnit, self::BASE_UNITS, true)) {
+            throw UpdateArticleException::baseUnitIsNotSupported(baseUnit: $baseUnit);
+        }
+
+        $unsupportedUnit = self::findUnsupportedUnit(
+            recipeUnit: $recipeUnit,
+            diaryUnit: $diaryUnit,
+            equivalences: $equivalences,
+        );
+
+        if (null !== $unsupportedUnit) {
+            throw UpdateArticleException::unitIsNotSupported(unit: $unsupportedUnit);
+        }
+
         if (!self::isPackUnitAvailable(packUnit: $packUnit, equivalences: $equivalences)) {
             throw UpdateArticleException::packUnitIsNotAnEquivalence(packUnit: $packUnit);
         }
@@ -165,6 +194,34 @@ class Article extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
         ));
+    }
+
+    public static function isMeasurementUnit(string $unit): bool
+    {
+        return in_array($unit, self::BASE_UNITS, true) || ArticleUnit::isAlias(unit: $unit);
+    }
+
+    /**
+     * @param ArticleEquivalence[] $equivalences
+     */
+    private static function findUnsupportedUnit(
+        string $recipeUnit,
+        string $diaryUnit,
+        array $equivalences,
+    ): ?string {
+        foreach ([$recipeUnit, $diaryUnit] as $unit) {
+            if (!self::isMeasurementUnit(unit: $unit)) {
+                return $unit;
+            }
+        }
+
+        foreach ($equivalences as $equivalence) {
+            if (!ArticleUnit::isAlias(unit: $equivalence->unit)) {
+                return $equivalence->unit;
+            }
+        }
+
+        return null;
     }
 
     /**

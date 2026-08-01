@@ -17,9 +17,11 @@ const UNIT_LABELS: Record<string, UnitLabel> = {
   piece: { es: "pieza", en: "piece" },
   can: { es: "lata", en: "can" },
   jar: { es: "bote", en: "jar" },
-  sachet: { es: "sobre", en: "sachet" },
+  bag: { es: "bolsa", en: "bag" },
+  carton: { es: "cartón", en: "carton" },
+  container: { es: "envase", en: "container" },
   tablespoon: { es: "cucharada", en: "tablespoon" },
-  teaspoon: { es: "cucharadita", en: "teaspoon" },
+  pack: { es: "paquete", en: "pack" },
   handful: { es: "puñado", en: "handful" },
 };
 
