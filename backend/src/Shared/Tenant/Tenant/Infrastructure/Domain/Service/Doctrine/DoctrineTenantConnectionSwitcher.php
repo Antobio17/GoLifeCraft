@@ -47,7 +47,7 @@ final readonly class DoctrineTenantConnectionSwitcher implements TenantConnectio
         string $username,
         string $password,
     ): void {
-        $connectionParams = [
+        $connectionParams = array_merge($connection->getParams(), [
             'driver' => 'pdo_mysql',
             'dbname' => $dbname,
             'user' => $username,
@@ -55,7 +55,8 @@ final readonly class DoctrineTenantConnectionSwitcher implements TenantConnectio
             'host' => $ip,
             'port' => $port,
             'charset' => 'utf8mb4',
-        ];
+            'defaultTableOptions' => TenantTableOptions::DEFAULTS,
+        ]);
 
         if ($connection->isConnected()) {
             $connection->close();

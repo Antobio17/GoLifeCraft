@@ -7,3 +7,11 @@ services:
       $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
     tags:
       - { name: 'console.command' }
+
+  Shared\Tenant\Tenant\Infrastructure\Application\Console\FixDatabaseCollationCommand:
+    class: Shared\Tenant\Tenant\Infrastructure\Application\Console\FixDatabaseCollationCommand
+    arguments:
+      $masterConnection: '@doctrine.dbal.master_connection'
+      $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
+    tags:
+      - { name: 'console.command' }

@@ -102,6 +102,9 @@ jobs:
             docker exec golifecraft_php sh -lc 'php bin/console doctrine:schema:update --dump-sql --force'
             docker exec golifecraft_php sh -lc 'php bin/console app:tenant:schema-update --dump-sql --force'
 
+            echo "==> Normalizing database collation (master and tenants)..."
+            docker exec golifecraft_php sh -lc 'php bin/console app:db:fix-collation --force'
+
             echo "==> Cleaning up old images..."
             docker image prune -f
 

@@ -43,8 +43,10 @@ final readonly class DoctrineTenantProvisioner implements TenantProvisioner
 
         try {
             $serverConnection->executeStatement(sql: sprintf(
-                'CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
+                'CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET %s COLLATE %s',
                 $tenantId,
+                TenantTableOptions::CHARSET,
+                TenantTableOptions::COLLATION,
             ));
         } finally {
             $serverConnection->close();
@@ -60,7 +62,8 @@ final readonly class DoctrineTenantProvisioner implements TenantProvisioner
             'dbname' => $tenantId,
             'user' => $this->serverUsername,
             'password' => $this->serverPassword,
-            'charset' => 'utf8mb4',
+            'charset' => TenantTableOptions::CHARSET,
+            'defaultTableOptions' => TenantTableOptions::DEFAULTS,
         ]);
 
         try {
