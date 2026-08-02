@@ -1,5 +1,5 @@
-import { Component, OnInit, inject } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit, inject, input } from "@angular/core";
+import { Router } from "@angular/router";
 import { VerifyEmailService } from "@authorization/verify-email/verify-email/application/services/verify-email.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { AuthCardComponent } from "@shared/design-system/auth-card/infrastructure/components/auth-card.component";
@@ -25,12 +25,13 @@ type VerificationStatus = "verifying" | "success" | "error";
 export class VerifyEmailComponent implements OnInit {
   private verifyEmailService = inject(VerifyEmailService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
+
+  readonly token = input<string>("");
 
   status: VerificationStatus = "verifying";
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get("token") ?? "";
+    const token = this.token();
 
     if (!token) {
       this.status = "error";

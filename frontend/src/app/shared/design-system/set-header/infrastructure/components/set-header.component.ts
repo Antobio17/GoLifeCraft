@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-set-header",
-  standalone: true,
   template: `
     <div class="ds-seth">
       <span class="ds-seth__num">{{ numLabel }}</span>

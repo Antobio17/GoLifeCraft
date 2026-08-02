@@ -7,9 +7,10 @@ import {
   ViewChild,
   computed,
   inject,
+  input,
   signal,
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { NgTemplateOutlet } from "@angular/common";
@@ -138,7 +139,8 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   private readonly MODULE_PATH = "gym/training/session";
 
-  id = "";
+  readonly id = input.required<string>();
+  readonly start = input<string | undefined>(undefined);
   readonly skeletonExercises = [3, 4, 3];
 
   loading = signal(true);
@@ -386,20 +388,34 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private persist$ = new Subject<void>();
   private sub?: Subscription;
 
-  ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get("id") ?? "";
+  constructor() {
+    toObservable(this.id)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.resetSessionState();
+        this.loadSession();
+        this.loadStats();
+      });
+  }
 
+  ngOnInit(): void {
     this.sub = this.persist$
       .pipe(debounceTime(500))
       .subscribe(() => this.persist());
 
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
-      .then(() => {
-        this.loadSession();
-        this.loadStats();
-        this.loadLibrary();
-      });
+      .then(() => this.loadLibrary());
+  }
+
+  private resetSessionState(): void {
+    this.loading.set(true);
+    this.statsLoading.set(true);
+    this.name.set("");
+    this.estimatedDurationMinutes.set(0);
+    this.exercises.set([]);
+    this.templateExercises.set([]);
+    this.workouts.set([]);
   }
 
   private toActive(): ActiveExercise[] {
@@ -423,7 +439,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   private loadSession(): void {
     this.getSessionService
-      .getSession(this.id)
+      .getSession(this.id())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: GetSessionResponse) => {
@@ -459,7 +475,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   private maybeAutoStart(): void {
-    if (this.route.snapshot.queryParamMap.get("start") !== "1") {
+    if (this.start() !== "1") {
       return;
     }
 
@@ -480,7 +496,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.statsLoading.set(true);
 
     this.getSessionStatsService
-      .getSessionStats(this.id)
+      .getSessionStats(this.id())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (stats) => {
@@ -517,17 +533,15 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  get menuItems(): MenuItem[] {
-    return [
-      { value: "edit", label: this.t("getSession.edit"), icon: "pencil" },
-      {
-        value: "delete",
-        label: this.t("getSession.delete"),
-        icon: "trash",
-        danger: true,
-      },
-    ];
-  }
+  menuItems = computed<MenuItem[]>(() => [
+    { value: "edit", label: this.t("getSession.edit"), icon: "pencil" },
+    {
+      value: "delete",
+      label: this.t("getSession.delete"),
+      icon: "trash",
+      danger: true,
+    },
+  ]);
 
   onMenuAction(value: string): void {
     if (value === "edit") {
@@ -632,7 +646,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   get isActiveHere(): boolean {
-    return this.activeWorkout.isActiveFor(this.id);
+    return this.activeWorkout.isActiveFor(this.id());
   }
 
   get doneCount(): number {
@@ -658,9 +672,11 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.activeWorkout.start(this.id, this.name(), this.toActive()).subscribe({
-      next: () => {},
-    });
+    this.activeWorkout
+      .start(this.id(), this.name(), this.toActive())
+      .subscribe({
+        next: () => {},
+      });
   }
 
   onFinishWorkout(): void {
@@ -728,14 +744,14 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       this.exercises(),
     );
 
-    this.updateSessionService.updateSession(this.id, payload).subscribe({
+    this.updateSessionService.updateSession(this.id(), payload).subscribe({
       next: () => this.saving.set(false),
       error: () => this.saving.set(false),
     });
   }
 
   onEdit(): void {
-    this.router.navigate(["/gym/sessions", this.id, "edit"]);
+    this.router.navigate(["/gym/sessions", this.id(), "edit"]);
   }
 
   onDelete(): void {
@@ -744,7 +760,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
 
   onConfirmDelete(): void {
     this.isDeleting.set(true);
-    this.deleteSessionService.deleteSession(this.id).subscribe({
+    this.deleteSessionService.deleteSession(this.id()).subscribe({
       next: () => {
         this.isDeleting.set(false);
         this.showDeleteModal.set(false);

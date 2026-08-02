@@ -4,7 +4,6 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
 
 @Component({
   selector: "ds-diary-summary",
-  standalone: true,
   imports: [ProgressRingComponent],
   template: `
     <div class="daysum">

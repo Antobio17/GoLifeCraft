@@ -20,7 +20,6 @@ const BASE_UNITS = ["g", "ml"];
 
 @Component({
   selector: "ds-equivalence-editor",
-  standalone: true,
   imports: [
     FormsModule,
     IconComponent,
@@ -31,7 +30,11 @@ const BASE_UNITS = ["g", "ml"];
     AddTileComponent,
   ],
   template: `
-    <section class="ds-eq">
+    <section
+      class="ds-eq"
+      [class.ds-eq--disabled]="disabled"
+      [attr.aria-disabled]="disabled"
+    >
       <header class="ds-eq__head">{{ title }}</header>
 
       <div class="ds-eq__base">
@@ -53,6 +56,7 @@ const BASE_UNITS = ["g", "ml"];
         @for (line of value.equivalences; track $index) {
           <ds-swipe-to-delete
             [radius]="12"
+            [disabled]="disabled"
             [removeLabel]="removeLabel"
             (remove)="onRemove($index)"
           >
@@ -83,6 +87,7 @@ const BASE_UNITS = ["g", "ml"];
               <button
                 type="button"
                 class="ds-eq__pack"
+                [disabled]="disabled"
                 [class.ds-eq__pack--on]="isPack(line)"
                 [attr.aria-pressed]="isPack(line)"
                 [attr.aria-label]="packLabel"
@@ -96,12 +101,14 @@ const BASE_UNITS = ["g", "ml"];
           </ds-swipe-to-delete>
         }
 
-        <ds-add-tile
-          variant="dashed"
-          icon="plus"
-          [label]="addLabel"
-          (clicked)="onAdd()"
-        />
+        @if (!disabled) {
+          <ds-add-tile
+            variant="dashed"
+            icon="plus"
+            [label]="addLabel"
+            (clicked)="onAdd()"
+          />
+        }
 
         <p class="ds-eq__help">{{ hint }}</p>
 
@@ -152,6 +159,14 @@ const BASE_UNITS = ["g", "ml"];
         border-radius: var(--ds-radius-xl);
         background: var(--ds-surface);
         overflow: hidden;
+      }
+      .ds-eq--disabled {
+        opacity: 0.6;
+      }
+      .ds-eq--disabled .ds-eq__base,
+      .ds-eq--disabled .ds-eq__lines,
+      .ds-eq--disabled .ds-eq__defaults {
+        pointer-events: none;
       }
       .ds-eq__head {
         padding: 13px 16px;
@@ -346,6 +361,8 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
     equivalences: [],
   };
 
+  disabled = false;
+
   private onChange: (value: EquivalenceEditorValue) => void = () => {};
   private onTouched: () => void = () => {};
 
@@ -410,6 +427,10 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   onBaseUnit(baseUnit: string): void {
@@ -492,6 +513,10 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
   }
 
   private emit(value: EquivalenceEditorValue): void {
+    if (this.disabled) {
+      return;
+    }
+
     this.value = value;
     this.onChange(value);
     this.onTouched();

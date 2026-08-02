@@ -6,7 +6,6 @@ type AddTileVariant = "inline" | "dashed";
 
 @Component({
   selector: "ds-add-tile",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <button

@@ -12,7 +12,7 @@
       <ds-skeleton-panel [brand]="true" content="spark" chartHeight="54px" />
       <ds-skeleton-panel content="meters" [meters]="4" />
     </ds-grid>
-  } @else if (!hasData) {
+  } @else if (!hasData()) {
     <ds-text variant="muted">{{ "dashboard.gym.empty" | t }}</ds-text>
   } @else {
     <ds-stack direction="row" [gap]="'8px'">
@@ -21,7 +21,7 @@
         [label]="'dashboard.gym.sessions' | t"
       />
       <ds-stat-tile
-        [value]="totalVolumeText"
+        [value]="totalVolumeText()"
         unit="kg"
         [label]="'dashboard.gym.volume' | t"
       />
@@ -34,10 +34,10 @@
     <ds-panel
       [title]="'dashboard.gym.volumeChart.title' | t"
       [subtitle]="'dashboard.gym.volumeChart.subtitle' | t"
-      [figure]="totalVolumeText + ' kg'"
+      [figure]="totalVolumeText() + ' kg'"
     >
       <ds-bar-chart
-        [bars]="volumeBars"
+        [bars]="volumeBars()"
         [showValues]="false"
         chartHeight="108px"
       />
@@ -49,15 +49,15 @@
         [title]="'dashboard.gym.progression.title' | t"
         [subtitle]="'dashboard.gym.progression.subtitle' | t"
       >
-        @if (progressionDelta) {
+        @if (progressionDelta(); as delta) {
           <ds-trend-badge
             slot="aside"
-            [positive]="progressionDelta.positive"
-            [label]="progressionDelta.label"
+            [positive]="delta.positive"
+            [label]="delta.label"
           />
         }
-        @if (hasProgression) {
-          <ds-line-chart class="panel__spark" [points]="progressionPoints" />
+        @if (hasProgression()) {
+          <ds-line-chart class="panel__spark" [points]="progressionPoints()" />
         } @else {
           <ds-text variant="meta" [inherit]="true">
             {{ "dashboard.gym.progression.empty" | t }}
@@ -70,11 +70,11 @@
         [subtitle]="'dashboard.gym.muscles.subtitle' | t"
       >
         <ds-stack class="muscles" [gap]="'12px'">
-          @for (region of regionShares; track region.region) {
+          @for (region of regionShares(); track region.region) {
             <ds-meter
               [label]="region.region"
               [percent]="region.percent"
-              [color]="regionColor(region.index)"
+              [color]="region.color"
             />
           }
         </ds-stack>

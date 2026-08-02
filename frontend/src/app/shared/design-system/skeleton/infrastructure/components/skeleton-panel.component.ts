@@ -4,7 +4,6 @@ export type SkeletonPanelContent = "none" | "bars" | "meters" | "spark";
 
 @Component({
   selector: "ds-skeleton-panel",
-  standalone: true,
   templateUrl: "./skeleton-panel.component.html",
   styleUrls: ["./skeleton-panel.component.css"],
 })

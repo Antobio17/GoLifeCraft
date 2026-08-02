@@ -3,7 +3,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 
 @Component({
   selector: "ds-floating-workout-banner",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <div class="workout-banner" [class.workout-banner--paused]="paused">

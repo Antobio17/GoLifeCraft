@@ -13,7 +13,6 @@ import {
 
 @Component({
   selector: "ds-modal-sheet",
-  standalone: true,
   template: `
     @if (open) {
       <div

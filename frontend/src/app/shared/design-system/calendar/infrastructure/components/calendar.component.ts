@@ -29,7 +29,6 @@ export interface CalendarLegendItem {
 
 @Component({
   selector: "ds-calendar",
-  standalone: true,
   template: `
     <div class="ds-cal">
       <div class="ds-cal__nav">

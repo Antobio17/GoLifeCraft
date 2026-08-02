@@ -46,7 +46,7 @@ export class AgendaSummaryComponent implements OnInit {
 
   readonly seeAll = output<void>();
 
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   upcoming = signal<AgendaUpcomingAttributes | null>(null);

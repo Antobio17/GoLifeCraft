@@ -8,7 +8,6 @@ import { ChipComponent } from "../../../chip/infrastructure/components/chip.comp
 
 @Component({
   selector: "ds-shopping-item",
-  standalone: true,
   imports: [
     EmojiTileComponent,
     IconComponent,

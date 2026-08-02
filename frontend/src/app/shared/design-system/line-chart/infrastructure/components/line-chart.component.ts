@@ -25,7 +25,6 @@ interface Marker {
 
 @Component({
   selector: "ds-line-chart",
-  standalone: true,
   template: `
     <div #scroller class="ds-line-scroll" [class.is-scrollable]="scrollable">
       <div class="ds-line-wrap" [style.min-width.px]="minWidth">

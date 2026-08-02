@@ -6,7 +6,6 @@ type ToastType = "success" | "info" | "warning" | "error";
 
 @Component({
   selector: "ds-toast",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <div class="toast" [class]="'toast--' + type">

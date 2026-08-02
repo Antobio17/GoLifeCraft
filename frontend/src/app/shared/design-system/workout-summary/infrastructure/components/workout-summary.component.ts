@@ -8,7 +8,6 @@ export interface WorkoutSummaryStat {
 
 @Component({
   selector: "ds-workout-summary",
-  standalone: true,
   template: `
     <div class="ds-wksum">
       <div class="ds-wksum__main">

@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-avatar",
-  standalone: true,
   template: `<span class="ds-avatar">{{ initial }}</span>`,
   styles: [
     `

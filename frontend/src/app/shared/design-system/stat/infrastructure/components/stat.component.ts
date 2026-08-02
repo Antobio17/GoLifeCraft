@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-stat",
-  standalone: true,
   template: `
     <span class="ds-stat__value">
       {{ value }}

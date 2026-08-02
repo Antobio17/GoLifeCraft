@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { Observable } from "rxjs";
 import { SkeletonPageHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-page-header.component";
 import { GetSupermarketsService } from "@nutrition/catalog/supermarket/application/services/get-supermarkets.service";
@@ -42,39 +42,36 @@ export class GetSupermarketsComponent extends AbstractListPageComponent<Supermar
   protected readonly storageKey = "pageSize_supermarkets";
 
   filterName = "";
-  filterFields: FilterField[] = [];
-  columns: ListColumn<Supermarket>[] = [];
-  actions: ListAction<Supermarket>[] = [];
 
-  protected configureList(): void {
-    this.filterFields = [
-      {
-        key: "name",
-        label: this.t("getSupermarkets.filter.name"),
-        type: "text",
-        placeholder: this.t("getSupermarkets.filter.namePlaceholder"),
-      },
-    ];
+  filterFields = computed<FilterField[]>(() => [
+    {
+      key: "name",
+      label: this.t("getSupermarkets.filter.name"),
+      type: "text",
+      placeholder: this.t("getSupermarkets.filter.namePlaceholder"),
+    },
+  ]);
 
-    this.columns = [
-      {
-        key: "name",
-        label: this.t("getSupermarkets.table.name"),
-        value: (item) => item.attributes.name,
-        width: "1fr",
-        minWidth: "200px",
-        cardPrimary: true,
-      },
-    ];
+  columns = computed<ListColumn<Supermarket>[]>(() => [
+    {
+      key: "name",
+      label: this.t("getSupermarkets.table.name"),
+      value: (item) => item.attributes.name,
+      width: "1fr",
+      minWidth: "200px",
+      cardPrimary: true,
+    },
+  ]);
 
-    this.actions = [
-      {
-        key: "edit",
-        label: this.t("getSupermarkets.actions.edit"),
-        icon: "edit",
-      },
-    ];
-  }
+  actions = computed<ListAction<Supermarket>[]>(() => [
+    {
+      key: "edit",
+      label: this.t("getSupermarkets.actions.edit"),
+      icon: "edit",
+    },
+  ]);
+
+  protected configureList(): void {}
 
   protected fetch(
     page: number,

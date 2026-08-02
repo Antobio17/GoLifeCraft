@@ -8,7 +8,6 @@ export interface ChoiceChipOption {
 
 @Component({
   selector: "ds-choice-chips",
-  standalone: true,
   template: `
     <div
       class="ds-choice-chips"

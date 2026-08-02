@@ -4,7 +4,6 @@ type StrengthLevel = 0 | 1 | 2 | 3;
 
 @Component({
   selector: "ds-password-strength",
-  standalone: true,
   template: `
     @if (password) {
       <div class="ps">

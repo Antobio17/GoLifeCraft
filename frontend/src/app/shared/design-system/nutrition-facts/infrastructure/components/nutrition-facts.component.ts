@@ -3,7 +3,6 @@ import { NutritionRow } from "../../domain/models/nutrition-row.model";
 
 @Component({
   selector: "ds-nutrition-facts",
-  standalone: true,
   template: `
     <div class="ds-ntable">
       @for (row of visibleRows; track $index; let last = $last) {

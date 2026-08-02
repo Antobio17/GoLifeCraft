@@ -12,7 +12,6 @@ import {
 
 @Component({
   selector: "ds-infinite-scroll",
-  standalone: true,
   template: ``,
   styles: [
     `

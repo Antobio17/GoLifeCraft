@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
   selector: "ds-preference-toggle",
-  standalone: true,
   template: `
     <button
       type="button"

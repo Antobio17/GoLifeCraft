@@ -1,8 +1,7 @@
-import { Component, Input } from "@angular/core";
+import { Component, computed, input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-macro-bars",
-  standalone: true,
   template: `
     <div class="skmac">
       <div class="skmac__kcal">
@@ -10,7 +9,7 @@ import { Component, Input } from "@angular/core";
         <span class="ds-sk skmac__kcal-unit"></span>
       </div>
       <div class="skmac__bars">
-        @for (macro of macroArray; track macro; let i = $index) {
+        @for (macro of macroArray(); track macro; let i = $index) {
           <div class="skmac__bar" [style.--ds-sk-delay]="delayFor(i)">
             <span class="ds-sk skmac__line"></span>
             <span class="ds-sk skmac__label"></span>
@@ -77,11 +76,11 @@ import { Component, Input } from "@angular/core";
   ],
 })
 export class SkeletonMacroBarsComponent {
-  @Input() macros = 3;
+  readonly macros = input(3);
 
-  get macroArray(): number[] {
-    return Array.from({ length: this.macros }, (_, index) => index);
-  }
+  readonly macroArray = computed<number[]>(() =>
+    Array.from({ length: this.macros() }, (_, index) => index),
+  );
 
   delayFor(index: number): string {
     return `${index * 0.08}s`;

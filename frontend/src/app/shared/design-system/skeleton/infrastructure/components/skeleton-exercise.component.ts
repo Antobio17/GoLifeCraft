@@ -4,7 +4,6 @@ export type SkeletonExerciseVariant = "editable" | "readonly";
 
 @Component({
   selector: "ds-skeleton-exercise",
-  standalone: true,
   templateUrl: "./skeleton-exercise.component.html",
   styleUrls: ["./skeleton-exercise.component.css"],
   host: {

@@ -32,7 +32,6 @@ const MODULE_PATH = "nutrition/menu/menu";
 
 @Component({
   selector: "app-menu-shopping-sheet",
-  standalone: true,
   imports: [
     ContextualTranslatePipe,
     ModalSheetComponent,

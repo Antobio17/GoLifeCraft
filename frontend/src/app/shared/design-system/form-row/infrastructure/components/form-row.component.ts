@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 
 @Component({
   selector: "ds-form-row",
-  standalone: true,
   template: `<ng-content></ng-content>`,
   styles: [
     `

@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-brand-logo",
-  standalone: true,
   templateUrl: "./brand-logo.component.html",
   styleUrls: ["./brand-logo.component.css"],
   imports: [],

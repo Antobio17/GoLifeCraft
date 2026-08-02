@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-trend-badge",
-  standalone: true,
   template: `
     <span class="ds-trend" [class.ds-trend--down]="!positive">
       <span class="ds-trend__arrow">{{ positive ? "↗" : "↘" }}</span>

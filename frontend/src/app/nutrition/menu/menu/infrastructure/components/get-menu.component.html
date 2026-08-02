@@ -5,11 +5,11 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="54%"
-      [actions]="canWrite ? 2 : 0"
+      [actions]="canWrite() ? 2 : 0"
       actionWidth="36px"
     />
 
-    @if (canWrite) {
+    @if (canWrite()) {
       <ds-skeleton height="46px" radius="var(--ds-radius-2xl)" />
     }
 
@@ -32,7 +32,7 @@
           radius="12px"
         />
         <ds-skeleton-line width="82%" height="10px" />
-        @if (canWrite) {
+        @if (canWrite()) {
           <ds-skeleton height="46px" radius="var(--ds-radius-2xl)" />
         }
       </ds-stack>
@@ -45,7 +45,7 @@
         <ds-skeleton-section-header
           titleWidth="104px"
           [subtitle]="true"
-          [action]="canWrite"
+          [action]="canWrite()"
           actionWidth="74px"
         />
         <ds-skeleton-list
@@ -64,7 +64,7 @@
       </ds-stack>
     }
 
-    @if (canWrite) {
+    @if (canWrite()) {
       <ds-stack direction="row" [gap]="'9px'">
         <ds-stack [grow]="true">
           <ds-skeleton height="46px" radius="var(--ds-radius-2xl)" />
@@ -87,7 +87,7 @@
         (clicked)="goBack()"
       />
 
-      @if (canWrite && !isDraft()) {
+      @if (canWrite() && !isDraft()) {
         <ds-stack direction="row" align="center" [gap]="'9px'">
           <ds-icon-button
             icon="copy"
@@ -118,7 +118,7 @@
       <ds-emoji-tile [emoji]="menu.emoji" [size]="60" [radius]="16" />
       <ds-stack [gap]="'3px'" [grow]="true">
         <ds-text variant="label">{{ typeLabel() }}</ds-text>
-        @if (canWrite) {
+        @if (canWrite()) {
           <ds-text-input
             [strong]="true"
             [ariaLabel]="'getMenu.nameLabel' | t"
@@ -135,7 +135,7 @@
       </ds-stack>
     </ds-stack>
 
-    @if (canWrite) {
+    @if (canWrite()) {
       <ds-text-input
         variant="outlined"
         [ariaLabel]="'getMenu.noteLabel' | t"
@@ -168,7 +168,7 @@
 
         <ds-text variant="meta">{{ "getMenu.week.hint" | t }}</ds-text>
 
-        @if (canWrite && !isDraft()) {
+        @if (canWrite() && !isDraft()) {
           <ds-button
             variant="secondary"
             icon="calendar"
@@ -189,7 +189,7 @@
       [macros]="goalMacros()"
     />
 
-    @for (meal of currentDay()?.meals ?? []; track meal.key) {
+    @for (meal of mealRows(); track meal.key) {
       <ds-stack [gap]="'10px'">
         <ds-stack
           direction="row"
@@ -198,14 +198,10 @@
           [gap]="'10px'"
         >
           <ds-stack [gap]="'1px'" [grow]="true">
-            <ds-heading [level]="3" size="sm">{{
-              mealLabel(meal.key)
-            }}</ds-heading>
-            <ds-text variant="meta">{{
-              mealMeta(meal.totals.calories, meal.itemCount)
-            }}</ds-text>
+            <ds-heading [level]="3" size="sm">{{ meal.label }}</ds-heading>
+            <ds-text variant="meta">{{ meal.meta }}</ds-text>
           </ds-stack>
-          @if (canWrite) {
+          @if (canWrite()) {
             <ds-button
               variant="outline"
               size="sm"
@@ -221,34 +217,36 @@
           <ds-placeholder-note [message]="'getMenu.meal.empty' | t" />
         } @else {
           <ds-stack [gap]="'7px'">
-            @for (item of meal.items; track view.itemKey(item)) {
+            @for (row of meal.items; track row.trackKey) {
               <ds-swipe-to-delete
-                [disabled]="!canWrite"
+                [disabled]="!canWrite()"
                 [reveal]="66"
                 [radius]="13"
                 [removeLabel]="'getMenu.remove' | t"
-                (remove)="onRemoveItem(item)"
+                (remove)="onRemoveItem(row.item)"
               >
                 <ds-card [padding]="'9px 11px'">
                   <ds-stack direction="row" align="center" [gap]="'10px'">
                     <ds-stack align="center" [gap]="'5px'">
                       <ds-emoji-tile
-                        [emoji]="item.emoji"
+                        [emoji]="row.item.emoji"
                         [size]="38"
                         [radius]="11"
                       />
                       <ds-chip
-                        [tone]="item.kind === 'recipe' ? 'brand' : 'neutral'"
-                        >{{ itemBadge(item) }}</ds-chip
+                        [tone]="
+                          row.item.kind === 'recipe' ? 'brand' : 'neutral'
+                        "
+                        >{{ row.badge }}</ds-chip
                       >
                     </ds-stack>
 
                     <ds-stack [gap]="'6px'" [grow]="true">
                       <ds-text variant="strong" [truncate]="true">{{
-                        item.name
+                        row.item.name
                       }}</ds-text>
 
-                      @if (canWrite) {
+                      @if (canWrite()) {
                         <ds-stack direction="row" align="center" [gap]="'6px'">
                           <ds-field [width]="'74px'">
                             <ds-number-input
@@ -256,38 +254,36 @@
                               [precision]="1"
                               [min]="0"
                               [ariaLabel]="'getMenu.quantity' | t"
-                              [ngModel]="item.quantity"
+                              [ngModel]="row.item.quantity"
                               [ngModelOptions]="{ standalone: true }"
-                              (ngModelChange)="onQuantity(item, $event)"
+                              (ngModelChange)="onQuantity(row.item, $event)"
                             />
                           </ds-field>
-                          @if (item.kind === "product") {
+                          @if (row.item.kind === "product") {
                             <ds-select
                               variant="bare"
                               [fluid]="true"
-                              [options]="itemUnitOptions(item)"
+                              [options]="row.unitOptions"
                               [ariaLabel]="'getMenu.unit' | t"
-                              [ngModel]="item.unit ?? item.baseUnit"
+                              [ngModel]="row.item.unit ?? row.item.baseUnit"
                               [ngModelOptions]="{ standalone: true }"
-                              (ngModelChange)="onUnit(item, $event)"
+                              (ngModelChange)="onUnit(row.item, $event)"
                             />
                           } @else {
                             <ds-text variant="meta">{{
-                              itemUnitLabel(item)
+                              row.unitLabel
                             }}</ds-text>
                           }
                         </ds-stack>
                       } @else {
-                        <ds-text variant="meta">
-                          {{
-                            view.itemQuantityLabel(item, itemUnitLabel(item))
-                          }}
-                        </ds-text>
+                        <ds-text variant="meta">{{
+                          row.quantityLabel
+                        }}</ds-text>
                       }
 
                       <ds-macro-badges
-                        [kcal]="itemKcal(item)"
-                        [macros]="itemMacros(item)"
+                        [kcal]="row.kcal"
+                        [macros]="row.macros"
                       />
                     </ds-stack>
                   </ds-stack>
@@ -299,7 +295,7 @@
       </ds-stack>
     }
 
-    @if (canWrite && isDraft()) {
+    @if (canWrite() && isDraft()) {
       <ds-button
         variant="primary"
         icon="check"
@@ -310,7 +306,7 @@
       >
         {{ "getMenu.actions.save" | t }}
       </ds-button>
-    } @else if (canWrite) {
+    } @else if (canWrite()) {
       <ds-stack direction="row" [gap]="'9px'">
         <ds-stack [grow]="true">
           <ds-button
@@ -372,29 +368,26 @@
         }}</ds-text>
       } @else {
         <ds-stack [gap]="'8px'">
-          @for (choice of pickerChoices(); track choice.refId) {
+          @for (row of pickerRows(); track row.choice.refId) {
             <ds-card [padding]="'10px'">
               <ds-stack direction="row" align="center" [gap]="'12px'">
                 <ds-emoji-tile
-                  [emoji]="choice.emoji"
+                  [emoji]="row.choice.emoji"
                   [size]="36"
                   [radius]="10"
                 />
                 <ds-stack [gap]="'4px'" [grow]="true">
                   <ds-text variant="strong" [truncate]="true">{{
-                    choice.name
+                    row.choice.name
                   }}</ds-text>
-                  <ds-text variant="meta">{{ choice.detail }}</ds-text>
-                  <ds-macro-badges
-                    [kcal]="choiceKcal(choice)"
-                    [macros]="choiceMacros(choice)"
-                  />
+                  <ds-text variant="meta">{{ row.choice.detail }}</ds-text>
+                  <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
                 </ds-stack>
                 <ds-icon-button
                   icon="plus"
                   variant="soft"
                   [ariaLabel]="'getMenu.picker.add' | t"
-                  (clicked)="onPick(choice)"
+                  (clicked)="onPick(row.choice)"
                 />
               </ds-stack>
             </ds-card>

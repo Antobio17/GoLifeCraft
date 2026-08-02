@@ -13,7 +13,6 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 @Component({
   selector: "ds-search-input",
-  standalone: true,
   template: `
     <div class="ds-search" [class.is-focused]="isFocused">
       <svg

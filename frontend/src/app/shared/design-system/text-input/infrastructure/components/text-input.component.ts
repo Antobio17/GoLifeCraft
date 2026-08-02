@@ -7,7 +7,6 @@ type TextInputVariant = "default" | "outlined";
 
 @Component({
   selector: "ds-text-input",
-  standalone: true,
   imports: [IconComponent],
   template: `
     @if (leadingIcon || passwordToggle || emojiPrefix) {

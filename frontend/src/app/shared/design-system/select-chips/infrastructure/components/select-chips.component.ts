@@ -8,7 +8,6 @@ export interface SelectChipOption {
 
 @Component({
   selector: "ds-select-chips",
-  standalone: true,
   template: `
     <div class="ds-select-chips" role="group">
       @for (option of options; track option.value) {

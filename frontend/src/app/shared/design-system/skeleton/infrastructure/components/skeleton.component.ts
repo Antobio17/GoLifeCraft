@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton",
-  standalone: true,
   template: `<span class="ds-sk"></span>`,
   styles: [
     `

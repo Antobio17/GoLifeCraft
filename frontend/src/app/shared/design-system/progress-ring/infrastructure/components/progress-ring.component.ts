@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-progress-ring",
-  standalone: true,
   templateUrl: "./progress-ring.component.html",
   styleUrls: ["./progress-ring.component.css"],
 })

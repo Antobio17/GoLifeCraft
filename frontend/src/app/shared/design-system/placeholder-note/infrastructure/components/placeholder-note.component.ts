@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-placeholder-note",
-  standalone: true,
   template: `<div class="ds-placeholder">{{ message }}</div>`,
   styles: [
     `

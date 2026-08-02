@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-section-header",
-  standalone: true,
   template: `
     <div class="sksec">
       <div class="sksec__text">

@@ -42,7 +42,7 @@
       <ds-menu
         slot="actions"
         [triggerLabel]="'getSession.actions' | t"
-        [items]="menuItems"
+        [items]="menuItems()"
         (selected)="onMenuAction($event)"
       />
     </ds-screen-header>

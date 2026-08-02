@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit, inject, input, signal } from "@angular/core";
+import { Router } from "@angular/router";
 import {
   FormBuilder,
   FormGroup,
@@ -39,7 +39,6 @@ export class UpdateSupermarketComponent implements OnInit {
   private getSupermarketService = inject(GetSupermarketService);
   private updateSupermarketService = inject(UpdateSupermarketService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   private readonly MODULE_PATH = "nutrition/catalog/supermarket";
   readonly ICONS = FORM_SECTION_ICONS;
@@ -47,7 +46,7 @@ export class UpdateSupermarketComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
-  private id = "";
+  readonly id = input.required<string>();
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -56,12 +55,10 @@ export class UpdateSupermarketComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get("id") ?? "";
-
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
-        this.getSupermarketService.getSupermarket(this.id).subscribe({
+        this.getSupermarketService.getSupermarket(this.id()).subscribe({
           next: (response: GetSupermarketResponse) => {
             this.form.patchValue({ name: response.data.attributes.name });
             this.loading.set(false);
@@ -82,7 +79,7 @@ export class UpdateSupermarketComponent implements OnInit {
     this.saving.set(true);
 
     this.updateSupermarketService
-      .updateSupermarket(this.id, { name: this.form.value.name ?? "" })
+      .updateSupermarket(this.id(), { name: this.form.value.name ?? "" })
       .subscribe({
         next: () => {
           this.saving.set(false);

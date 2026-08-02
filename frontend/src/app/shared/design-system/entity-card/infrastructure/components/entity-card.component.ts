@@ -3,7 +3,6 @@ import { NgTemplateOutlet } from "@angular/common";
 
 @Component({
   selector: "ds-entity-card",
-  standalone: true,
   imports: [NgTemplateOutlet],
   template: `
     <ng-template #body>

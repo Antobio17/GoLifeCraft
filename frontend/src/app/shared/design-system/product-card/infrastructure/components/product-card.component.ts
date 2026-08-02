@@ -6,7 +6,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
 
 @Component({
   selector: "ds-product-card",
-  standalone: true,
   imports: [NgTemplateOutlet, IconComponent, MacroBadgesComponent],
   template: `
     <ng-template #content>

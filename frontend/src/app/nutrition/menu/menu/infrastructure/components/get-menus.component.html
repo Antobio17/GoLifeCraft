@@ -3,7 +3,7 @@
     [title]="'getMenus.title' | t"
     [subtitle]="headerSubtitle()"
   >
-    @if (canWrite) {
+    @if (canWrite()) {
       <ds-button
         slot="actions"
         size="md"
@@ -70,7 +70,7 @@
               [loadLabel]="card.loadLabel"
               [loadIcon]="card.isWeek ? 'calendar' : 'download'"
               [shopLabel]="'getMenus.card.shop' | t"
-              [canWrite]="canWrite"
+              [canWrite]="canWrite()"
               (activated)="onOpen(card)"
               (loaded)="onLoad(card)"
               (shopped)="onShop(card.id)"

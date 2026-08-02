@@ -8,7 +8,6 @@ import { IconGroup } from "../../domain/models/icon-group.model";
 
 @Component({
   selector: "ds-icon-picker",
-  standalone: true,
   imports: [SearchInputComponent, ModalSheetComponent, IconComponent],
   template: `
     <button

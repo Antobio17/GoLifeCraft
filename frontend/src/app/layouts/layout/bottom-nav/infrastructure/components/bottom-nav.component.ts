@@ -15,7 +15,6 @@ import { BottomNavItemsService } from "../../application/services/bottom-nav-ite
 
 @Component({
   selector: "app-bottom-nav",
-  standalone: true,
   templateUrl: "./bottom-nav.component.html",
   styleUrls: ["./bottom-nav.component.css"],
   imports: [

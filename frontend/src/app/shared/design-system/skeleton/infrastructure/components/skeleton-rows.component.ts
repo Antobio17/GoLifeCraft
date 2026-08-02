@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-rows",
-  standalone: true,
   template: `
     <div class="skrow" [class.skrow--card]="card">
       @if (header) {

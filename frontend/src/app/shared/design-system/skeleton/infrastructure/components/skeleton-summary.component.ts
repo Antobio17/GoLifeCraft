@@ -1,10 +1,9 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, computed, input } from "@angular/core";
 
 export type SkeletonSummaryMacros = "none" | "bars" | "tiles";
 
 @Component({
   selector: "ds-skeleton-summary",
-  standalone: true,
   templateUrl: "./skeleton-summary.component.html",
   styleUrls: ["./skeleton-summary.component.css"],
   host: {
@@ -19,13 +18,11 @@ export class SkeletonSummaryComponent {
   @Input() macros: SkeletonSummaryMacros = "bars";
   @Input() progress = false;
   @Input() compact = false;
-  @Input() stats = 0;
+  readonly stats = input(0);
 
-  get macroArray(): number[] {
-    return [0, 1, 2];
-  }
+  readonly macroArray: number[] = [0, 1, 2];
 
-  get statArray(): number[] {
-    return Array.from({ length: this.stats }, (_, index) => index);
-  }
+  readonly statArray = computed<number[]>(() =>
+    Array.from({ length: this.stats() }, (_, index) => index),
+  );
 }

@@ -80,7 +80,7 @@ export class GetShoppingListComponent implements OnInit {
 
   private readonly MODULE_PATH = "nutrition/shopping/shopping";
 
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
 
   readonly skeletonGroups = [3, 2];
 

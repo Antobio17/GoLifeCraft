@@ -1,8 +1,4 @@
-import {
-  provideZoneChangeDetection,
-  importProvidersFrom,
-  LOCALE_ID,
-} from "@angular/core";
+import { provideZoneChangeDetection, LOCALE_ID } from "@angular/core";
 import { registerLocaleData } from "@angular/common";
 import localeEs from "@angular/common/locales/es";
 registerLocaleData(localeEs);
@@ -10,8 +6,11 @@ import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { authTokenInterceptor } from "./app/shared/auth/infrastructure/interceptors/auth-token.interceptor";
 import { httpErrorInterceptor } from "./app/shared/auth/infrastructure/interceptors/http-error.interceptor";
 import { bootstrapApplication } from "@angular/platform-browser";
-import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import { provideRouter, withInMemoryScrolling } from "@angular/router";
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withInMemoryScrolling,
+} from "@angular/router";
 import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/components/main.component";
 import { APP_ROUTES } from "./app/app.routes";
 import { GlobalProviders } from "@shared/providers/main.provider";
@@ -22,9 +21,9 @@ import { provideAnimationsAsync } from "@angular/platform-browser/animations/asy
 bootstrapApplication(MainLayoutComponent, {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    importProvidersFrom(ReactiveFormsModule, FormsModule),
     provideRouter(
       APP_ROUTES,
+      withComponentInputBinding(),
       withInMemoryScrolling({
         anchorScrolling: "enabled",
         scrollPositionRestoration: "enabled",

@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-panel",
-  standalone: true,
   template: `
     <article class="ds-panel" [class.ds-panel--brand]="brand">
       <div class="ds-panel__head">

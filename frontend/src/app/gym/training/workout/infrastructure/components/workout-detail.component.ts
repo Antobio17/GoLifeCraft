@@ -1,13 +1,8 @@
-import {
-  Component,
-  DestroyRef,
-  OnInit,
-  computed,
-  inject,
-  signal,
-} from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, computed, inject, input, signal } from "@angular/core";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
+import { Router } from "@angular/router";
+import { of } from "rxjs";
+import { catchError, switchMap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -39,14 +34,14 @@ import {
     WorkoutExerciseComponent,
   ],
 })
-export class WorkoutDetailComponent implements OnInit {
+export class WorkoutDetailComponent {
   private translationService = inject(TranslationService);
   private getWorkoutService = inject(GetWorkoutService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "gym/training/workout";
+
+  readonly id = input.required<string>();
 
   readonly skeletonExercises = [4, 3, 3];
 
@@ -75,22 +70,22 @@ export class WorkoutDetailComponent implements OnInit {
     };
   });
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get("id") ?? "";
+  constructor() {
+    this.translationService.loadModuleTranslations(this.MODULE_PATH);
 
-    this.translationService
-      .loadModuleTranslations(this.MODULE_PATH)
-      .then(() => {
-        this.getWorkoutService
-          .getWorkout(id)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe({
-            next: (response) => {
-              this.workout.set(response.data.attributes);
-              this.loading.set(false);
-            },
-            error: () => this.loading.set(false),
-          });
+    toObservable(this.id)
+      .pipe(
+        switchMap((id) => {
+          this.loading.set(true);
+          return this.getWorkoutService
+            .getWorkout(id)
+            .pipe(catchError(() => of(null)));
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe((response) => {
+        this.workout.set(response?.data.attributes ?? null);
+        this.loading.set(false);
       });
   }
 

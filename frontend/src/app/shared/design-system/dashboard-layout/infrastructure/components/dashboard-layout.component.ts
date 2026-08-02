@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 
 @Component({
   selector: "ds-dashboard-layout",
-  standalone: true,
   template: `
     <div class="dash">
       <ng-content select="[slot='header']"></ng-content>

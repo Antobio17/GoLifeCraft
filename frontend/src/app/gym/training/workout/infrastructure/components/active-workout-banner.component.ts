@@ -9,7 +9,6 @@ import { ActiveWorkoutService } from "@gym/training/workout/application/services
 
 @Component({
   selector: "app-active-workout-banner",
-  standalone: true,
   templateUrl: "./active-workout-banner.component.html",
   styleUrls: ["./active-workout-banner.component.css"],
   imports: [

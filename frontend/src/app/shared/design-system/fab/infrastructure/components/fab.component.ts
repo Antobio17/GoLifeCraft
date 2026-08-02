@@ -4,7 +4,6 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-fab",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <button

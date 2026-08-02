@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-readonly-strip",
-  standalone: true,
   template: `
     <div class="rs">
       <div class="rs__main">

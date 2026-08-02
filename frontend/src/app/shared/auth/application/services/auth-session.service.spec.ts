@@ -54,13 +54,17 @@ describe("AuthSessionService", () => {
   });
 
   describe("isAuthenticated", () => {
-    it("should delegate to port.isValid and return true", () => {
-      mockPort.isValid.and.returnValue(true);
+    it("should return false when there is no session", () => {
+      expect(service.isAuthenticated()).toBeFalse();
+    });
+
+    it("should return true when the session token has not expired", () => {
+      service.saveSession(mockSession);
       expect(service.isAuthenticated()).toBeTrue();
     });
 
-    it("should delegate to port.isValid and return false", () => {
-      mockPort.isValid.and.returnValue(false);
+    it("should return false when the session token has expired", () => {
+      service.saveSession({ ...mockSession, expiresAt: 1 });
       expect(service.isAuthenticated()).toBeFalse();
     });
   });

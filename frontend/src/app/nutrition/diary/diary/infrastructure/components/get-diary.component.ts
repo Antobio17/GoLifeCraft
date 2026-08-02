@@ -151,7 +151,7 @@ export class GetDiaryComponent implements OnInit {
     quantity: number;
   }>();
 
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
 
   readonly skeletonMeals = [2, 2, 1, 1];
 
@@ -163,7 +163,11 @@ export class GetDiaryComponent implements OnInit {
   pickerMeal = signal("");
   pickerTab = signal<PickerTab>("product");
   pickerQuery = signal("");
-  pickerTabs = signal<SegmentedOption[]>([]);
+  pickerTabs = computed<SegmentedOption[]>(() => [
+    { value: "product", label: this.t("getDiary.picker.products") },
+    { value: "recipe", label: this.t("getDiary.picker.recipes") },
+    { value: "quick", label: this.t("getDiary.picker.quick") },
+  ]);
 
   attributes = computed(() => this.day()?.attributes ?? null);
   planningDay = computed(() => this.view.isFuture(this.date()));
@@ -192,8 +196,34 @@ export class GetDiaryComponent implements OnInit {
       : this.picker.productChoices(this.pickerQuery()),
   );
 
+  pickerRows = computed(() =>
+    this.pickerChoices().map((choice) => ({
+      choice,
+      kcal: this.choiceKcal(choice),
+      macros: this.choiceMacros(choice),
+    })),
+  );
+
   pickerMealLabel = computed(() =>
     this.pickerMeal() ? this.mealLabel(this.pickerMeal()) : "",
+  );
+
+  mealRows = computed(() =>
+    (this.attributes()?.meals ?? []).map((meal) => ({
+      key: meal.key,
+      label: this.mealLabel(meal.key),
+      meta: this.view.mealMeta(meal),
+      entries: meal.entries.map((entry) => ({
+        entry,
+        badge: this.badgeLabel(entry.kind),
+        badgeTone: this.view.entryBadgeTone(entry.kind),
+        kcalLabel: `${this.view.integer(entry.macros.calories)} ${this.t("getDiary.kcal")}`,
+        macros: this.entryMacros(entry),
+        unit: this.view.entryUnitLabel(entry),
+        quantityLabel: this.view.entryQuantityLabel(entry),
+        openable: this.canWrite() && "quick" === entry.kind,
+      })),
+    })),
   );
 
   calendarOpen = signal(false);
@@ -212,7 +242,15 @@ export class GetDiaryComponent implements OnInit {
       this.view.todayIso(),
     ),
   );
-  calendarLegend = signal<CalendarLegendItem[]>([]);
+  calendarLegend = computed<CalendarLegendItem[]>(() =>
+    this.calendarView.legend({
+      green: this.t("getDiary.calendar.legend.green"),
+      orange: this.t("getDiary.calendar.legend.orange"),
+      red: this.t("getDiary.calendar.legend.red"),
+      rest: this.t("getDiary.calendar.legend.rest"),
+      planned: this.t("getDiary.calendar.legend.planned"),
+    }),
+  );
 
   dayStatus = computed<DiaryCalendarStatus | null>(() => {
     const diary = this.attributes();
@@ -296,20 +334,6 @@ export class GetDiaryComponent implements OnInit {
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
-        this.pickerTabs.set([
-          { value: "product", label: this.t("getDiary.picker.products") },
-          { value: "recipe", label: this.t("getDiary.picker.recipes") },
-          { value: "quick", label: this.t("getDiary.picker.quick") },
-        ]);
-        this.calendarLegend.set(
-          this.calendarView.legend({
-            green: this.t("getDiary.calendar.legend.green"),
-            orange: this.t("getDiary.calendar.legend.orange"),
-            red: this.t("getDiary.calendar.legend.red"),
-            rest: this.t("getDiary.calendar.legend.rest"),
-            planned: this.t("getDiary.calendar.legend.planned"),
-          }),
-        );
         this.loadChoices();
         this.load(this.date());
       });
@@ -409,7 +433,7 @@ export class GetDiaryComponent implements OnInit {
   }
 
   openQuickEditor(mealKey: string, entry: DiaryEntryView): void {
-    if (!this.canWrite || entry.kind !== "quick") return;
+    if (!this.canWrite() || entry.kind !== "quick") return;
 
     this.pickerMeal.set(mealKey);
     this.pickerTab.set("quick");

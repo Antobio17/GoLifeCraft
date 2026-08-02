@@ -87,7 +87,7 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   protected readonly modulePath = "nutrition/menu/menu";
   protected readonly storageKey = "pageSize_menus";
 
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
 
   searchQuery = signal("");
   typeSheetOpen = signal(false);

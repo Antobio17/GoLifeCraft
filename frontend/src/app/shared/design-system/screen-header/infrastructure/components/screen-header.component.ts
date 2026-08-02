@@ -4,7 +4,6 @@ export type ScreenHeaderLeading = "back" | "close" | null;
 
 @Component({
   selector: "ds-screen-header",
-  standalone: true,
   template: `
     <header class="ds-screen-head">
       @if (leading) {

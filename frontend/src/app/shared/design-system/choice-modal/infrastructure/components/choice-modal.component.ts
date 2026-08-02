@@ -9,7 +9,6 @@ import { ChoiceModalOption } from "../../domain/models/choice-modal-option.model
 
 @Component({
   selector: "ds-choice-modal",
-  standalone: true,
   templateUrl: "./choice-modal.component.html",
   imports: [
     ButtonComponent,

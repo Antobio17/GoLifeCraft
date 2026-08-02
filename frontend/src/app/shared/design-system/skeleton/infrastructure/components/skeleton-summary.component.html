@@ -24,9 +24,9 @@
       <span class="ds-sk sksum__aside"></span>
     }
 
-    @if (stats > 0) {
+    @if (stats() > 0) {
       <div class="sksum__stats">
-        @for (stat of statArray; track stat) {
+        @for (stat of statArray(); track stat) {
           <div class="sksum__stat">
             <span class="ds-sk sksum__stat-value"></span>
             <span class="ds-sk sksum__stat-label"></span>

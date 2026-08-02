@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit, inject, input, signal } from "@angular/core";
+import { Router } from "@angular/router";
 import {
   FormBuilder,
   FormGroup,
@@ -45,7 +45,6 @@ export class SessionFormComponent implements OnInit {
   private getSessionService = inject(GetSessionService);
   private sessionDraft = inject(SessionDraftService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   private readonly MODULE_PATH = "gym/training/session";
   readonly estOptions = [
@@ -57,7 +56,7 @@ export class SessionFormComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
-  private id = "";
+  readonly id = input<string>("");
   private existingExercises: SessionExerciseView[] = [];
 
   constructor() {
@@ -68,7 +67,7 @@ export class SessionFormComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.id;
+    return !!this.id();
   }
 
   get title(): string {
@@ -80,8 +79,6 @@ export class SessionFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get("id") ?? "";
-
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
@@ -90,7 +87,7 @@ export class SessionFormComponent implements OnInit {
           return;
         }
 
-        this.getSessionService.getSession(this.id).subscribe({
+        this.getSessionService.getSession(this.id()).subscribe({
           next: (response: GetSessionResponse) => {
             const attributes = response.data.attributes;
             this.existingExercises = attributes.exercises;
@@ -124,7 +121,7 @@ export class SessionFormComponent implements OnInit {
     );
 
     const request$ = this.isEdit
-      ? this.updateSessionService.updateSession(this.id, payload)
+      ? this.updateSessionService.updateSession(this.id(), payload)
       : this.createSessionService.createSession(payload);
 
     request$.subscribe({
@@ -138,7 +135,7 @@ export class SessionFormComponent implements OnInit {
 
   private navigateAway(): void {
     if (this.isEdit) {
-      this.router.navigate(["/gym/sessions", this.id]);
+      this.router.navigate(["/gym/sessions", this.id()]);
       return;
     }
     this.router.navigate(["/gym/sessions"]);

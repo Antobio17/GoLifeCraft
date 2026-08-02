@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-fields",
-  standalone: true,
   template: `
     <div class="skfld">
       @for (row of rows; track $index; let r = $index) {

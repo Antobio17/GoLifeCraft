@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-hero",
-  standalone: true,
   template: `
     <div class="skhero" [style.height]="height">
       <span class="ds-sk skhero__shape"></span>

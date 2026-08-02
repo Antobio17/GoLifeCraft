@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
   selector: "ds-user-access-row",
-  standalone: true,
   template: `
     <div class="ds-uar" [class.ds-uar--inactive]="!active">
       <div class="ds-uar__avatar">{{ initial }}</div>

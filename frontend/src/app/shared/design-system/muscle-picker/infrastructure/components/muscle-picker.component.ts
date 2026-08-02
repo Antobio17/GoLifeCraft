@@ -8,7 +8,6 @@ export interface MuscleRegion {
 
 @Component({
   selector: "ds-muscle-picker",
-  standalone: true,
   template: `
     <div class="ds-muscle-picker">
       @for (group of groups; track group.region) {

@@ -6,7 +6,6 @@ type StackJustify = "start" | "center" | "end" | "between";
 
 @Component({
   selector: "ds-stack",
-  standalone: true,
   template: `<ng-content></ng-content>`,
   styles: [
     `

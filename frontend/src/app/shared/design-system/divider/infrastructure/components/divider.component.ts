@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-divider",
-  standalone: true,
   template: ``,
   styles: [
     `

@@ -31,7 +31,6 @@ const MODULE_PATH = "nutrition/menu/menu";
 
 @Component({
   selector: "app-menu-load-sheet",
-  standalone: true,
   imports: [
     FormsModule,
     ContextualTranslatePipe,

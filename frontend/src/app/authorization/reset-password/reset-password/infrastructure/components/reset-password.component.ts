@@ -1,6 +1,6 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { ResetPasswordService } from "@authorization/reset-password/reset-password/application/services/reset-password.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -33,17 +33,14 @@ export class ResetPasswordComponent implements OnInit {
   private resetPasswordService = inject(ResetPasswordService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
-  token = "";
+  readonly token = input<string>("");
   password = "";
   confirmPassword = "";
   loading = false;
 
   ngOnInit(): void {
-    this.token = this.route.snapshot.queryParamMap.get("token") ?? "";
-
-    if (!this.token) {
+    if (!this.token()) {
       this.floatingToastService.showToast({
         status: 400,
         keyTranslation: "resetPassword.error.invalidLink",
@@ -75,7 +72,7 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    if (!this.token) {
+    if (!this.token()) {
       this.floatingToastService.showToast({
         status: 400,
         keyTranslation: "resetPassword.error.invalidLink",
@@ -86,7 +83,7 @@ export class ResetPasswordComponent implements OnInit {
 
     this.loading = true;
     this.resetPasswordService
-      .resetPassword(this.token, this.password)
+      .resetPassword(this.token(), this.password)
       .subscribe({
         next: () => {
           this.loading = false;

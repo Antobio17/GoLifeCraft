@@ -4,11 +4,12 @@ import {
   OnInit,
   computed,
   inject,
+  input,
   signal,
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { Subject, debounceTime, switchMap } from "rxjs";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
@@ -128,7 +129,6 @@ type PickerTab = "product" | "recipe";
   ],
 })
 export class GetMenuComponent implements OnInit {
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private translationService = inject(TranslationService);
   private authSession = inject(AuthSessionService);
@@ -151,11 +151,14 @@ export class GetMenuComponent implements OnInit {
   private readonly TEXT_DEBOUNCE = 600;
   private readonly QUANTITY_DEBOUNCE = 500;
 
-  private menuId = "";
+  readonly id = input<string>("");
+  readonly draftRoute = input<boolean>(false);
+  readonly type = input<MenuType | undefined>(undefined);
+
   private textChanges = new Subject<UpdateMenuRequest>();
   private quantityChanges = new Subject<UpdateMenuRequest>();
 
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   goal = signal<DiaryGoalConfig | null>(null);
@@ -170,7 +173,10 @@ export class GetMenuComponent implements OnInit {
   pickerMeal = signal<MenuMealKey | null>(null);
   pickerTab = signal<PickerTab>("product");
   pickerQuery = signal("");
-  pickerTabs = signal<SegmentedOption[]>([]);
+  pickerTabs = computed<SegmentedOption[]>(() => [
+    { value: "product", label: this.t("getMenu.picker.products") },
+    { value: "recipe", label: this.t("getMenu.picker.recipes") },
+  ]);
 
   loadSheetMenuId = signal<string | null>(null);
   applyWeekMenuId = signal<string | null>(null);
@@ -215,6 +221,35 @@ export class GetMenuComponent implements OnInit {
 
     return this.view.findDay(detail, this.selectedDayKey());
   });
+
+  mealRows = computed(() =>
+    (this.currentDay()?.meals ?? []).map((meal) => ({
+      key: meal.key,
+      label: this.mealLabel(meal.key),
+      meta: this.mealMeta(meal.totals.calories, meal.itemCount),
+      items: meal.items.map((item) => ({
+        item,
+        trackKey: this.view.itemKey(item),
+        badge: this.itemBadge(item),
+        kcal: this.itemKcal(item),
+        macros: this.itemMacros(item),
+        unitLabel: this.itemUnitLabel(item),
+        unitOptions: this.itemUnitOptions(item),
+        quantityLabel: this.view.itemQuantityLabel(
+          item,
+          this.itemUnitLabel(item),
+        ),
+      })),
+    })),
+  );
+
+  pickerRows = computed(() =>
+    this.pickerChoices().map((choice) => ({
+      choice,
+      kcal: this.choiceKcal(choice),
+      macros: this.choiceMacros(choice),
+    })),
+  );
 
   activeDaysLabel = computed(() => {
     const detail = this.detail();
@@ -313,18 +348,28 @@ export class GetMenuComponent implements OnInit {
     ),
   );
 
-  ngOnInit(): void {
-    this.menuId = this.route.snapshot.paramMap.get("id") ?? "";
-    const draftType = this.route.snapshot.data["draft"]
-      ? ((this.route.snapshot.queryParamMap.get("type") ??
-          "single") as MenuType)
-      : null;
+  constructor() {
+    toObservable(this.id)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.startFromRoute());
+  }
 
+  private startFromRoute(): void {
+    if (this.draftRoute()) {
+      this.startDraft(this.type() ?? "single");
+
+      return;
+    }
+
+    this.load();
+  }
+
+  ngOnInit(): void {
     this.textChanges
       .pipe(
         debounceTime(this.TEXT_DEBOUNCE),
         switchMap((request) =>
-          this.updateMenuService.updateMenu(this.menuId, request),
+          this.updateMenuService.updateMenu(this.id(), request),
         ),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -334,7 +379,7 @@ export class GetMenuComponent implements OnInit {
       .pipe(
         debounceTime(this.QUANTITY_DEBOUNCE),
         switchMap((request) =>
-          this.updateMenuService.updateMenu(this.menuId, request),
+          this.updateMenuService.updateMenu(this.id(), request),
         ),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -343,20 +388,8 @@ export class GetMenuComponent implements OnInit {
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
-        this.pickerTabs.set([
-          { value: "product", label: this.t("getMenu.picker.products") },
-          { value: "recipe", label: this.t("getMenu.picker.recipes") },
-        ]);
         this.loadChoices();
         this.loadGoal();
-
-        if (draftType) {
-          this.startDraft(draftType);
-
-          return;
-        }
-
-        this.load();
       });
   }
 
@@ -423,7 +456,7 @@ export class GetMenuComponent implements OnInit {
   }
 
   onName(value: string): void {
-    if (!this.canWrite) return;
+    if (!this.canWrite()) return;
 
     this.name.set(value);
 
@@ -441,7 +474,7 @@ export class GetMenuComponent implements OnInit {
   }
 
   onNote(value: string): void {
-    if (!this.canWrite) return;
+    if (!this.canWrite()) return;
 
     this.note.set(value);
 
@@ -588,15 +621,15 @@ export class GetMenuComponent implements OnInit {
   }
 
   onPrimaryAction(): void {
-    this.loadSheetMenuId.set(this.menuId);
+    this.loadSheetMenuId.set(this.id());
   }
 
   onApplyWeek(): void {
-    this.applyWeekMenuId.set(this.menuId);
+    this.applyWeekMenuId.set(this.id());
   }
 
   onShop(): void {
-    this.shoppingMenuId.set(this.menuId);
+    this.shoppingMenuId.set(this.id());
   }
 
   closeLoadSheet(): void {
@@ -613,7 +646,7 @@ export class GetMenuComponent implements OnInit {
 
   onDuplicate(): void {
     this.duplicateMenuService
-      .duplicateMenu(this.menuId, { copySuffix: this.t("getMenu.copySuffix") })
+      .duplicateMenu(this.id(), { copySuffix: this.t("getMenu.copySuffix") })
       .subscribe({ next: () => this.router.navigate(["/menus"]) });
   }
 
@@ -630,7 +663,7 @@ export class GetMenuComponent implements OnInit {
 
     this.deleting.set(true);
 
-    this.deleteMenuService.deleteMenu(this.menuId).subscribe({
+    this.deleteMenuService.deleteMenu(this.id()).subscribe({
       next: () => this.router.navigate(["/menus"]),
       error: () => this.deleting.set(false),
     });
@@ -680,7 +713,7 @@ export class GetMenuComponent implements OnInit {
   }
 
   private save(request: UpdateMenuRequest): void {
-    this.updateMenuService.updateMenu(this.menuId, request).subscribe({
+    this.updateMenuService.updateMenu(this.id(), request).subscribe({
       next: () => this.load(true),
     });
   }
@@ -703,7 +736,7 @@ export class GetMenuComponent implements OnInit {
   private load(silent = false): void {
     if (!silent) this.loading.set(true);
 
-    this.getMenuService.getMenu(this.menuId).subscribe({
+    this.getMenuService.getMenu(this.id()).subscribe({
       next: (response) => {
         const attributes = response.data.attributes;
 

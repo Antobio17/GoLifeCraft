@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-purchase-summary",
-  standalone: true,
   template: `
     <section class="ds-pus">
       <header class="ds-pus__head">

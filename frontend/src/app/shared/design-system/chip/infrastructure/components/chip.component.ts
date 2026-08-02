@@ -4,7 +4,6 @@ type ChipTone = "neutral" | "brand" | "brand-solid" | "accent" | "warning";
 
 @Component({
   selector: "ds-chip",
-  standalone: true,
   template: `<span class="ds-chip"><ng-content></ng-content></span>`,
   styles: [
     `

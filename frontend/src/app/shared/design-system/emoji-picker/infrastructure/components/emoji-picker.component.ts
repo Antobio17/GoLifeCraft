@@ -6,7 +6,6 @@ import { EmojiGroup } from "../../domain/models/emoji-group.model";
 
 @Component({
   selector: "ds-emoji-picker",
-  standalone: true,
   imports: [SearchInputComponent, ModalSheetComponent],
   template: `
     <button

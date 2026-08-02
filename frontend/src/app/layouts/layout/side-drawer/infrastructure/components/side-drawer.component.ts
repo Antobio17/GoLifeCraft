@@ -1,12 +1,14 @@
 import {
   Component,
+  DestroyRef,
   HostListener,
   computed,
   effect,
   inject,
-  signal,
 } from "@angular/core";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { ScrollLockService } from "@shared/design-system/scroll-lock/application/services/scroll-lock.service";
+import { ViewportService } from "@shared/viewport/application/services/viewport.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ThemeService } from "@shared/theme/application/services/theme.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -19,7 +21,6 @@ import { SideDrawerService } from "../../application/services/side-drawer.servic
 
 @Component({
   selector: "app-side-drawer",
-  standalone: true,
   imports: [
     RouterLink,
     RouterLinkActive,
@@ -38,9 +39,11 @@ export class SideDrawerComponent {
   private themeService = inject(ThemeService);
   private authSessionService = inject(AuthSessionService);
   private router = inject(Router);
+  private viewport = inject(ViewportService);
+  private scrollLock = inject(ScrollLockService);
+  private destroyRef = inject(DestroyRef);
 
-  private readonly dockedQuery = window.matchMedia("(min-width: 768px)");
-  private readonly isDocked = signal(this.dockedQuery.matches);
+  private readonly isDocked = this.viewport.matches("(min-width: 768px)");
 
   readonly isOpen = this.drawer.isOpen;
   readonly isDark = this.themeService.isDark;
@@ -65,13 +68,18 @@ export class SideDrawerComponent {
   });
 
   constructor() {
-    this.dockedQuery.addEventListener("change", (event) =>
-      this.isDocked.set(event.matches),
-    );
+    this.destroyRef.onDestroy(() => this.scrollLock.release(this));
 
     effect(() => {
       const lockScroll = this.isOpen() && !this.isDocked();
-      document.body.style.overflow = lockScroll ? "hidden" : "";
+
+      if (lockScroll) {
+        this.scrollLock.lock(this);
+
+        return;
+      }
+
+      this.scrollLock.release(this);
     });
   }
 

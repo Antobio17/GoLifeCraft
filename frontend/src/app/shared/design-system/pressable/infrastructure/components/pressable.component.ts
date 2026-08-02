@@ -10,7 +10,6 @@ const PRESSABLE_JUSTIFY: Record<PressableJustify, string> = {
 
 @Component({
   selector: "ds-pressable",
-  standalone: true,
   template: `
     <button
       type="button"

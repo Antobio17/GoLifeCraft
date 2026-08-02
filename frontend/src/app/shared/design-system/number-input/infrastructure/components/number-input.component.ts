@@ -4,7 +4,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 
 @Component({
   selector: "ds-number-input",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <div

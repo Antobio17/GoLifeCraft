@@ -14,7 +14,6 @@ export interface WorkoutExerciseSet {
 
 @Component({
   selector: "ds-workout-exercise",
-  standalone: true,
   imports: [
     CardComponent,
     StackComponent,

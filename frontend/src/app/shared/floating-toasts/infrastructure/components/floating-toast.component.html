@@ -1,4 +1,4 @@
-@for (toast of toasts; track toast.id) {
+@for (toast of toasts(); track toast.id) {
   <ds-toast
     [@toastSlide]
     [type]="toast.type"

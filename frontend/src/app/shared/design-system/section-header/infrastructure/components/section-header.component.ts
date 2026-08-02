@@ -4,7 +4,6 @@ type SectionHeaderSize = "sm" | "md";
 
 @Component({
   selector: "ds-section-header",
-  standalone: true,
   template: `
     <div class="ds-shead">
       <h2 class="ds-shead__title" [class.ds-shead__title--md]="size === 'md'">

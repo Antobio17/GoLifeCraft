@@ -5,7 +5,6 @@ import { RoleOption } from "../../domain/models/role-option.model";
 
 @Component({
   selector: "ds-role-picker",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <div class="ds-roles">

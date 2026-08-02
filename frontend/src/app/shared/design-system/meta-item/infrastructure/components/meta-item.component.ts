@@ -4,7 +4,6 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-meta-item",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <span class="ds-meta-item">

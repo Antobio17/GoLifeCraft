@@ -48,7 +48,7 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
   private authSession = inject(AuthSessionService);
   protected view = inject(RecipeViewService);
 
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
 
   protected readonly modulePath = "nutrition/recipe/recipe";
   protected readonly storageKey = "pageSize_recipes";

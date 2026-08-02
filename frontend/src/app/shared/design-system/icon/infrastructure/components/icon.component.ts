@@ -4,7 +4,6 @@ import { DS_ICONS, DsIconName } from "../../domain/models/icon.model";
 
 @Component({
   selector: "ds-icon",
-  standalone: true,
   template: `<span
     class="ds-icon"
     [style.width.px]="size"

@@ -11,7 +11,6 @@ export interface StoreTab {
 
 @Component({
   selector: "ds-store-tabs",
-  standalone: true,
   templateUrl: "./store-tabs.component.html",
   styleUrls: ["./store-tabs.component.css"],
   imports: [StackComponent, TextComponent, ChipComponent],

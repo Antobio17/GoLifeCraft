@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit, inject, input, signal } from "@angular/core";
+import { Router } from "@angular/router";
 import {
   AbstractControl,
   FormBuilder,
@@ -111,7 +111,6 @@ export class ArticleEditorComponent implements OnInit {
   private unitCatalogService = inject(UnitCatalogService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   private readonly MODULE_PATH = "nutrition/catalog/article";
   readonly emojiGroups = this.emojiCatalog.groups();
@@ -128,7 +127,7 @@ export class ArticleEditorComponent implements OnInit {
   deleting = signal(false);
   articleName = signal("");
 
-  private id = "";
+  readonly id = input<string>("");
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -150,7 +149,7 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return "" !== this.id;
+    return "" !== this.id();
   }
 
   get title(): string {
@@ -166,8 +165,6 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get("id") ?? "";
-
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
@@ -218,7 +215,7 @@ export class ArticleEditorComponent implements OnInit {
 
     const payload = this.buildPayload();
     const request$ = this.isEdit
-      ? this.updateArticleService.updateArticle(this.id, payload)
+      ? this.updateArticleService.updateArticle(this.id(), payload)
       : this.createArticleService.createArticle(payload);
 
     request$.subscribe({
@@ -231,7 +228,7 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(this.isEdit ? ["/catalog", this.id] : ["/catalog"]);
+    this.router.navigate(this.isEdit ? ["/catalog", this.id()] : ["/catalog"]);
   }
 
   onDelete(): void {
@@ -245,7 +242,7 @@ export class ArticleEditorComponent implements OnInit {
   onConfirmDelete(): void {
     this.deleting.set(true);
 
-    this.deleteArticleService.deleteArticle(this.id).subscribe({
+    this.deleteArticleService.deleteArticle(this.id()).subscribe({
       next: () => {
         this.deleting.set(false);
         this.showDeleteModal.set(false);
@@ -259,7 +256,7 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   private loadArticle(): void {
-    this.getArticleService.getArticle(this.id).subscribe({
+    this.getArticleService.getArticle(this.id()).subscribe({
       next: (response) => {
         this.patchForm(response.data);
         this.loading.set(false);

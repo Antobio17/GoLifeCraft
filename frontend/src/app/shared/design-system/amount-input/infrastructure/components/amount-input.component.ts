@@ -5,7 +5,6 @@ type AmountInputLayout = "row" | "stacked";
 
 @Component({
   selector: "ds-amount-input",
-  standalone: true,
   template: `
     <label
       class="ds-amount"

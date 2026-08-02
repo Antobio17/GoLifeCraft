@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { Observable } from "rxjs";
 import { SkeletonPageHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-page-header.component";
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
@@ -42,39 +42,36 @@ export class GetCategoriesComponent extends AbstractListPageComponent<Category> 
   protected readonly storageKey = "pageSize_categories";
 
   filterName = "";
-  filterFields: FilterField[] = [];
-  columns: ListColumn<Category>[] = [];
-  actions: ListAction<Category>[] = [];
 
-  protected configureList(): void {
-    this.filterFields = [
-      {
-        key: "name",
-        label: this.t("getCategories.filter.name"),
-        type: "text",
-        placeholder: this.t("getCategories.filter.namePlaceholder"),
-      },
-    ];
+  filterFields = computed<FilterField[]>(() => [
+    {
+      key: "name",
+      label: this.t("getCategories.filter.name"),
+      type: "text",
+      placeholder: this.t("getCategories.filter.namePlaceholder"),
+    },
+  ]);
 
-    this.columns = [
-      {
-        key: "name",
-        label: this.t("getCategories.table.name"),
-        value: (item) => item.attributes.name,
-        width: "1fr",
-        minWidth: "200px",
-        cardPrimary: true,
-      },
-    ];
+  columns = computed<ListColumn<Category>[]>(() => [
+    {
+      key: "name",
+      label: this.t("getCategories.table.name"),
+      value: (item) => item.attributes.name,
+      width: "1fr",
+      minWidth: "200px",
+      cardPrimary: true,
+    },
+  ]);
 
-    this.actions = [
-      {
-        key: "edit",
-        label: this.t("getCategories.actions.edit"),
-        icon: "edit",
-      },
-    ];
-  }
+  actions = computed<ListAction<Category>[]>(() => [
+    {
+      key: "edit",
+      label: this.t("getCategories.actions.edit"),
+      icon: "edit",
+    },
+  ]);
+
+  protected configureList(): void {}
 
   protected fetch(
     page: number,

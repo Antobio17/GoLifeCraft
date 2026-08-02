@@ -9,7 +9,6 @@ export interface BarDatum {
 
 @Component({
   selector: "ds-bar-chart",
-  standalone: true,
   template: `
     <div class="ds-bars" [style.height]="chartHeight">
       @for (bar of bars; track bar.id) {

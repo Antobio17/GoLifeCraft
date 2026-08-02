@@ -1,6 +1,9 @@
-import { Component, OnInit, computed, inject, signal } from "@angular/core";
+import { Component, computed, inject, input, signal } from "@angular/core";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
+import { of } from "rxjs";
+import { catchError, switchMap } from "rxjs/operators";
 import {
   ArticleDetailView,
   ArticleMacroSet,
@@ -63,8 +66,7 @@ type NutritionMode = "pack" | "per100";
     PurchaseSummaryComponent,
   ],
 })
-export class GetArticleComponent implements OnInit {
-  private route = inject(ActivatedRoute);
+export class GetArticleComponent {
   private router = inject(Router);
   private getArticleService = inject(GetArticleService);
   private deleteArticleService = inject(DeleteArticleService);
@@ -76,7 +78,7 @@ export class GetArticleComponent implements OnInit {
   detail = signal<ArticleDetailView | null>(null);
   showDeleteModal = signal(false);
   deleting = signal(false);
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
   mode = signal<NutritionMode>("per100");
   activeMacros = computed<ArticleMacroSet | null>(() => {
     const detail = this.detail();
@@ -84,30 +86,25 @@ export class GetArticleComponent implements OnInit {
 
     return "pack" === this.mode() ? detail.pack : detail.per100;
   });
-  private id = "";
+  readonly id = input.required<string>();
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get("id");
-
-    if (!id) {
-      this.notFound.set(true);
-      this.loading.set(false);
-      return;
-    }
-
-    this.id = id;
-
-    this.getArticleService.getArticle(id).subscribe({
-      next: (response) => {
-        const detail = this.view.toDetail(response.data);
-        this.detail.set(detail);
+  constructor() {
+    toObservable(this.id)
+      .pipe(
+        switchMap((id) => {
+          this.loading.set(true);
+          this.notFound.set(false);
+          return this.getArticleService
+            .getArticle(id)
+            .pipe(catchError(() => of(null)));
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe((response) => {
+        this.detail.set(response ? this.view.toDetail(response.data) : null);
+        this.notFound.set(null === response);
         this.loading.set(false);
-      },
-      error: () => {
-        this.notFound.set(true);
-        this.loading.set(false);
-      },
-    });
+      });
   }
 
   goBack(): void {
@@ -119,7 +116,7 @@ export class GetArticleComponent implements OnInit {
   }
 
   onEdit(): void {
-    this.router.navigate(["/catalog", this.id, "edit"]);
+    this.router.navigate(["/catalog", this.id(), "edit"]);
   }
 
   onDelete(): void {
@@ -133,7 +130,7 @@ export class GetArticleComponent implements OnInit {
   onConfirmDelete(): void {
     this.deleting.set(true);
 
-    this.deleteArticleService.deleteArticle(this.id).subscribe({
+    this.deleteArticleService.deleteArticle(this.id()).subscribe({
       next: () => {
         this.deleting.set(false);
         this.showDeleteModal.set(false);

@@ -11,7 +11,6 @@ import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/pr
 
 @Component({
   selector: "app-main",
-  standalone: true,
   imports: [
     RouterOutlet,
     FloatingToastComponent,

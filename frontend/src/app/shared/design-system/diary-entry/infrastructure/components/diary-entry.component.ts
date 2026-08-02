@@ -13,7 +13,6 @@ type ChipTone = "neutral" | "brand" | "accent" | "warning";
 
 @Component({
   selector: "ds-diary-entry",
-  standalone: true,
   imports: [
     EmojiTileComponent,
     ChipComponent,

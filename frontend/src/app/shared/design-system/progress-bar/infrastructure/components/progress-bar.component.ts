@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-progress-bar",
-  standalone: true,
   template: `
     <div
       class="ds-pbar"

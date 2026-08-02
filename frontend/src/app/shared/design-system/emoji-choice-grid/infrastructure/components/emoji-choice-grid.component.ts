@@ -3,7 +3,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
   selector: "ds-emoji-choice-grid",
-  standalone: true,
   template: `
     <div
       class="ds-emoji-choice-grid"

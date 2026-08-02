@@ -1,15 +1,9 @@
-import {
-  Component,
-  DestroyRef,
-  OnInit,
-  computed,
-  inject,
-  signal,
-} from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, computed, inject, input, signal } from "@angular/core";
+import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import { forkJoin } from "rxjs";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { forkJoin, of } from "rxjs";
+import { catchError, switchMap } from "rxjs/operators";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { GetExerciseService } from "../../application/services/get-exercise.service";
@@ -84,7 +78,7 @@ interface SessionRow {
     ProgressionCardComponent,
   ],
 })
-export class GetExerciseComponent implements OnInit {
+export class GetExerciseComponent {
   private static readonly MODULE_PATH = "gym/library/exercise";
   private static readonly MAX_CHART_POINTS = 8;
 
@@ -92,15 +86,13 @@ export class GetExerciseComponent implements OnInit {
   private getExerciseService = inject(GetExerciseService);
   private getExerciseStatsService = inject(GetExerciseStatsService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
 
   private readonly dateFormatter = new Intl.DateTimeFormat("es", {
     day: "numeric",
     month: "short",
   });
 
-  private id = "";
+  readonly id = input.required<string>();
 
   loading = signal(true);
   exercise = signal<Exercise | null>(null);
@@ -227,21 +219,22 @@ export class GetExerciseComponent implements OnInit {
       .reverse();
   });
 
-  ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get("id") ?? "";
-
-    forkJoin({
-      exercise: this.getExerciseService.getExercise(this.id),
-      stats: this.getExerciseStatsService.getExerciseStats(this.id),
-    })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: ({ exercise, stats }) => {
-          this.exercise.set(exercise.data);
-          this.sessions.set(this.sortByDate(stats));
-          this.loading.set(false);
-        },
-        error: () => this.loading.set(false),
+  constructor() {
+    toObservable(this.id)
+      .pipe(
+        switchMap((id) => {
+          this.loading.set(true);
+          return forkJoin({
+            exercise: this.getExerciseService.getExercise(id),
+            stats: this.getExerciseStatsService.getExerciseStats(id),
+          }).pipe(catchError(() => of(null)));
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe((result) => {
+        this.exercise.set(result?.exercise.data ?? null);
+        this.sessions.set(result ? this.sortByDate(result.stats) : []);
+        this.loading.set(false);
       });
   }
 
@@ -250,7 +243,7 @@ export class GetExerciseComponent implements OnInit {
   }
 
   onEdit(): void {
-    this.router.navigate(["/gym/exercises", this.id, "edit"]);
+    this.router.navigate(["/gym/exercises", this.id(), "edit"]);
   }
 
   onMetricChange(metric: MetricKey): void {

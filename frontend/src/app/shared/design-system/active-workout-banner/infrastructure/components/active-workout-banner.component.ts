@@ -10,7 +10,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 
 @Component({
   selector: "ds-active-workout-banner",
-  standalone: true,
   imports: [IconComponent],
   templateUrl: "./active-workout-banner.component.html",
   styleUrls: ["./active-workout-banner.component.css"],

@@ -5,7 +5,6 @@ type DateInputType = "date" | "time";
 
 @Component({
   selector: "ds-date-input",
-  standalone: true,
   template: `
     <input
       class="ds-date-input"

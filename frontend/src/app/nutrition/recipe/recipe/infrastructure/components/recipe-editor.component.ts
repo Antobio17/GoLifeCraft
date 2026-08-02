@@ -1,5 +1,12 @@
-import { Component, OnInit, computed, inject, signal } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from "@angular/core";
+import { Router } from "@angular/router";
 import {
   FormBuilder,
   FormGroup,
@@ -126,7 +133,6 @@ export class RecipeEditorComponent implements OnInit {
   private deleteRecipeService = inject(DeleteRecipeService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   private readonly MODULE_PATH = "nutrition/recipe/recipe";
   readonly emojiGroups = this.emojiCatalog.groups();
@@ -143,14 +149,20 @@ export class RecipeEditorComponent implements OnInit {
 
   servings = signal(1);
   ingredients = signal<FormIngredient[]>([]);
-  categoryOptions = signal<ChoiceChipOption[]>([]);
-  pickerTabs = signal<SegmentedOption[]>([]);
+  readonly categoryOptions: ChoiceChipOption[] = this.categoryService
+    .categories()
+    .map((category) => ({ value: category, label: category }));
+
+  pickerTabs = computed<SegmentedOption[]>(() => [
+    { value: "product", label: this.t("recipeEditor.tabProducts") },
+    { value: "recipe", label: this.t("recipeEditor.tabRecipes") },
+  ]);
 
   pickerOpen = signal(false);
   pickerTab = signal<PickerTab>("product");
   pickerQuery = signal("");
 
-  private id = "";
+  readonly id = input<string>("");
 
   totals = computed(() => this.recipeForm.totals(this.ingredients()));
   perServing = computed(() =>
@@ -160,7 +172,7 @@ export class RecipeEditorComponent implements OnInit {
   pickerChoices = computed<PickableIngredient[]>(() =>
     this.pickerTab() === "product"
       ? this.recipeForm.productChoices(this.pickerQuery())
-      : this.recipeForm.recipeChoices(this.pickerQuery(), this.id),
+      : this.recipeForm.recipeChoices(this.pickerQuery(), this.id()),
   );
 
   macroLabels = computed<MacroShortLabels>(() => ({
@@ -178,7 +190,7 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return "" !== this.id;
+    return "" !== this.id();
   }
 
   get title(): string {
@@ -197,23 +209,27 @@ export class RecipeEditorComponent implements OnInit {
     return this.ingredients().length > 0;
   }
 
-  ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get("id") ?? "";
+  ingredientRows = computed(() =>
+    this.ingredients().map((ingredient) => ({
+      ingredient,
+      kcal: this.ingredientKcal(ingredient),
+      macros: this.ingredientMacros(ingredient),
+      unitLabel: this.ingredientUnitLabel(ingredient),
+    })),
+  );
 
+  pickerRows = computed(() =>
+    this.pickerChoices().map((choice) => ({
+      choice,
+      kcal: this.choiceKcal(choice),
+      macros: this.choiceMacros(choice),
+    })),
+  );
+
+  ngOnInit(): void {
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
-        this.categoryOptions.set(
-          this.categoryService
-            .categories()
-            .map((category) => ({ value: category, label: category })),
-        );
-
-        this.pickerTabs.set([
-          { value: "product", label: this.t("recipeEditor.tabProducts") },
-          { value: "recipe", label: this.t("recipeEditor.tabRecipes") },
-        ]);
-
         forkJoin({
           articles: this.getArticlesService.getArticles(1, 500),
           recipes: this.getRecipesService.getRecipes(1, 500),
@@ -336,7 +352,7 @@ export class RecipeEditorComponent implements OnInit {
 
     const payload = this.buildPayload();
     const request$ = this.isEdit
-      ? this.updateRecipeService.updateRecipe(this.id, payload)
+      ? this.updateRecipeService.updateRecipe(this.id(), payload)
       : this.createRecipeService.createRecipe(payload);
 
     request$.subscribe({
@@ -349,7 +365,7 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(this.isEdit ? ["/recipes", this.id] : ["/recipes"]);
+    this.router.navigate(this.isEdit ? ["/recipes", this.id()] : ["/recipes"]);
   }
 
   onDelete(): void {
@@ -363,7 +379,7 @@ export class RecipeEditorComponent implements OnInit {
   onConfirmDelete(): void {
     this.deleting.set(true);
 
-    this.deleteRecipeService.deleteRecipe(this.id).subscribe({
+    this.deleteRecipeService.deleteRecipe(this.id()).subscribe({
       next: () => {
         this.deleting.set(false);
         this.showDeleteModal.set(false);
@@ -381,7 +397,7 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   private loadRecipe(): void {
-    this.getRecipeService.getRecipe(this.id).subscribe({
+    this.getRecipeService.getRecipe(this.id()).subscribe({
       next: (response) => {
         this.patchForm(response.data);
         this.loading.set(false);

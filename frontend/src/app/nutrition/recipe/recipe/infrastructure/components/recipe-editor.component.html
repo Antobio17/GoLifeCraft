@@ -72,7 +72,7 @@
           <ds-choice-chips
             formControlName="category"
             [wrap]="true"
-            [options]="categoryOptions()"
+            [options]="categoryOptions"
           />
         </ds-field>
 
@@ -128,51 +128,50 @@
 
         @if (hasIngredients) {
           <ds-stack [gap]="'8px'">
-            @for (ingredient of ingredients(); track ingredient.key) {
+            @for (row of ingredientRows(); track row.ingredient.key) {
               <ds-swipe-to-delete
                 #swipe
                 [reveal]="66"
                 [radius]="16"
                 [removeLabel]="'recipeEditor.removeIngredient' | t"
-                (remove)="onRemoveIngredient(ingredient.key)"
+                (remove)="onRemoveIngredient(row.ingredient.key)"
               >
                 <ds-card [padding]="'9px 11px'">
                   <ds-stack direction="row" align="center" [gap]="'10px'">
                     <ds-stack align="center" [gap]="'5px'">
-                      <ds-emoji-tile [emoji]="ingredient.emoji" [size]="36" />
-                      <ds-macro-badges [kcal]="ingredientKcal(ingredient)" />
+                      <ds-emoji-tile
+                        [emoji]="row.ingredient.emoji"
+                        [size]="36"
+                      />
+                      <ds-macro-badges [kcal]="row.kcal" />
                     </ds-stack>
                     <ds-stack [gap]="'4px'" [grow]="true">
                       <ds-stack direction="row" align="center" [gap]="'6px'">
                         <ds-text variant="strong" [truncate]="true">{{
-                          ingredient.name
+                          row.ingredient.name
                         }}</ds-text>
-                        @if (ingredient.kind === "recipe") {
+                        @if (row.ingredient.kind === "recipe") {
                           <ds-chip tone="brand">{{
                             "recipeEditor.subRecipe" | t
                           }}</ds-chip>
                         }
                       </ds-stack>
-                      <ds-macro-badges
-                        [macros]="ingredientMacros(ingredient)"
-                      />
+                      <ds-macro-badges [macros]="row.macros" />
                     </ds-stack>
                     <ds-field [width]="'64px'">
                       <ds-number-input
                         variant="boxed"
                         [precision]="1"
                         [min]="0"
-                        [ngModel]="ingredient.quantity"
+                        [ngModel]="row.ingredient.quantity"
                         [ngModelOptions]="{ standalone: true }"
                         (ngModelChange)="
-                          onIngredientQuantity(ingredient.key, $event)
+                          onIngredientQuantity(row.ingredient.key, $event)
                         "
                         [ariaLabel]="'recipeEditor.quantity' | t"
                       />
                     </ds-field>
-                    <ds-text variant="meta">{{
-                      ingredientUnitLabel(ingredient)
-                    }}</ds-text>
+                    <ds-text variant="meta">{{ row.unitLabel }}</ds-text>
                   </ds-stack>
                 </ds-card>
               </ds-swipe-to-delete>
@@ -241,23 +240,20 @@
         <ds-text variant="muted">{{ "recipeEditor.pickerEmpty" | t }}</ds-text>
       } @else {
         <ds-stack [gap]="'8px'">
-          @for (choice of pickerChoices(); track choice.refId) {
+          @for (row of pickerRows(); track row.choice.refId) {
             <ds-card [padding]="'10px'">
               <ds-stack direction="row" align="center" [gap]="'11px'">
-                <ds-emoji-tile [emoji]="choice.emoji" [size]="34" />
+                <ds-emoji-tile [emoji]="row.choice.emoji" [size]="34" />
                 <ds-stack [gap]="'4px'" [grow]="true">
-                  <ds-text variant="strong">{{ choice.name }}</ds-text>
-                  <ds-text variant="meta">{{ choice.detail }}</ds-text>
-                  <ds-macro-badges
-                    [kcal]="choiceKcal(choice)"
-                    [macros]="choiceMacros(choice)"
-                  />
+                  <ds-text variant="strong">{{ row.choice.name }}</ds-text>
+                  <ds-text variant="meta">{{ row.choice.detail }}</ds-text>
+                  <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
                 </ds-stack>
                 <ds-icon-button
                   icon="plus"
                   variant="soft"
                   [ariaLabel]="'recipeEditor.addIngredient' | t"
-                  (clicked)="onPickIngredient(choice)"
+                  (clicked)="onPickIngredient(row.choice)"
                 />
               </ds-stack>
             </ds-card>

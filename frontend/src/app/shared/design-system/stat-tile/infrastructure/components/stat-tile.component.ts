@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-stat-tile",
-  standalone: true,
   template: `
     <div class="ds-stile">
       <span class="ds-stile__value"

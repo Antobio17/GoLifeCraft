@@ -3,7 +3,6 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
 
 @Component({
   selector: "ds-toggle-switch",
-  standalone: true,
   template: `
     <button
       type="button"

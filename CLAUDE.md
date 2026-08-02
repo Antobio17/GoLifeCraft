@@ -508,7 +508,7 @@ Bounded context que implementa el flujo OAuth 2.0 propio del MCP y la autenticac
 
 ## Stack
 
-- **Angular 18+** (Standalone components, signals opcionales)
+- **Angular 21** (standalone por defecto, señales para todo el estado de vista)
 - **RxJS** para flujos asíncronos
 - **Angular Reactive Forms**
 - Arquitectura **Hexagonal + DDD** en frontend
@@ -687,8 +687,16 @@ export class CreateCenterComponent {
 - **Usar siempre `inject()`** en lugar de constructor injection (componentes y servicios).
 - **No leer `localStorage` directamente en adaptadores.** El interceptor `auth-token.interceptor.ts` añade el token a todas las peticiones HTTP automáticamente.
 - **No usar `setTimeout` para diferir navegación.** Usar el operador `delay()` de RxJS en el pipeline del observable.
-- **Componentes standalone** (`imports: [...]` en el decorador, sin NgModule).
+- **Componentes standalone** (`imports: [...]` en el decorador, sin NgModule). **No declarar `standalone: true`**: es el valor por defecto desde Angular 19.
 - **Un provider por caso de uso**, registrado en el componente o ruta que lo necesite.
+- **Los parámetros de ruta se reciben con `input()`, nunca con `route.snapshot`.** `main.ts` arranca con `withComponentInputBinding()`, así que los `params`, los `queryParams` y el `data` de la ruta se enlazan a inputs del mismo nombre. `snapshot` es una foto del montaje: cuando Angular reutiliza el componente entre dos URLs de la misma configuración de ruta, `ngOnInit` no vuelve a ejecutarse y el valor se queda obsoleto. Para recargar al cambiar el parámetro: `toObservable(this.id).pipe(switchMap(...), takeUntilDestroyed())` en el constructor.
+- **Todo lo que la vista lee debe ser una señal.** Un campo plano o un `get` que devuelve un objeto nuevo se re-evalúa en cada ciclo y rompe con `OnPush`; un `computed()` que no lee ninguna señal se evalúa una vez y se cachea para siempre. En particular:
+  - Los textos traducidos van en `computed(() => this.t(...))`; `TranslationService` es reactivo y se re-evalúan solos al cambiar de idioma. **Nunca empujarlos con `.set()` dentro del `.then()` de `loadModuleTranslations`.**
+  - Dentro de un `@for`, precalcular la lista de vistas en un `computed` (`exerciseRows`, `mealRows`, `pickerRows`) en vez de llamar a un método por fila en el binding.
+- **`effect()` sólo para sincronizar con el exterior** (DOM, logging, analytics). Para propagar estado dentro de la app, `computed()`.
+- **Nada de `window.location.reload()`** como gestión de estado: actualizar la señal correspondiente.
+- **Los `ControlValueAccessor` implementan los cuatro métodos**, `setDisabledState` incluido, y el estado deshabilitado tiene que bloquear de verdad las mutaciones.
+- **Los efectos sobre el DOM se registran y se deshacen.** Bloquear el scroll con `ScrollLockService`, consultar breakpoints con `ViewportService`; los listeners manuales se limpian en `inject(DestroyRef).onDestroy(...)`.
 
 ## Sistema de roles
 
@@ -706,6 +714,7 @@ Solo existen dos roles (ver `User::ROLE_HERARCHY` en backend y `USER_ROLES` en `
 - [ ] Service en `application/services/`
 - [ ] HTTP Adapter en `infrastructure/adapters/`
 - [ ] Component standalone en `infrastructure/components/` — template **solo con `<ds-*>`** + control flow de Angular (cero etiquetas HTML nativas)
+- [ ] Estado de vista en señales: parámetros de ruta con `input()`, derivados con `computed()`, cero `route.snapshot`
 - [ ] Provider en `infrastructure/providers/`
 - [ ] Registrar provider en el componente/ruta correspondiente
 - [ ] Rutas lazy en `infrastructure/routes/{module}.routes.ts` y enganchadas en `app.routes.ts`

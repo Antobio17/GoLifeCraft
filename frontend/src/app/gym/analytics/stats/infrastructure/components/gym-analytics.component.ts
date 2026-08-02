@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from "@angular/core";
+import { Component, computed, inject, input, output } from "@angular/core";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
@@ -21,7 +21,7 @@ import { GymStats } from "../../domain/models/gym-stats.model";
 interface RegionShare {
   region: string;
   percent: number;
-  index: number;
+  color: string;
 }
 
 interface ProgressionDelta {
@@ -66,52 +66,53 @@ export class GymAnalyticsComponent {
     maximumFractionDigits: 0,
   });
 
-  get hasData(): boolean {
+  readonly hasData = computed<boolean>(() => {
     const stats = this.stats();
-    return !!stats && (stats.totalSessions > 0 || stats.totalSets > 0);
-  }
 
-  get totalVolumeText(): string {
-    return this.formatter
+    return !!stats && (stats.totalSessions > 0 || stats.totalSets > 0);
+  });
+
+  readonly totalVolumeText = computed<string>(() =>
+    this.formatter
       .formatToParts(this.stats()?.totalVolumeKg ?? 0)
       .map((part) => (part.type === "group" ? "\u202f" : part.value))
-      .join("");
-  }
+      .join(""),
+  );
 
-  get volumeBars(): BarDatum[] {
-    return (this.stats()?.sessionVolumes ?? []).map((session) => ({
+  readonly volumeBars = computed<BarDatum[]>(() =>
+    (this.stats()?.sessionVolumes ?? []).map((session) => ({
       id: session.id,
       label: session.name,
       value: session.volumeKg,
       display: this.formatter.format(session.volumeKg),
-    }));
-  }
+    })),
+  );
 
-  get progressionPoints(): number[] {
-    return (this.stats()?.volumeProgression ?? []).map(
-      (point) => point.volumeKg,
-    );
-  }
+  readonly progressionPoints = computed<number[]>(() =>
+    (this.stats()?.volumeProgression ?? []).map((point) => point.volumeKg),
+  );
 
-  get hasProgression(): boolean {
-    return this.progressionPoints.length >= 2;
-  }
+  readonly hasProgression = computed<boolean>(
+    () => this.progressionPoints().length >= 2,
+  );
 
-  get progressionDelta(): ProgressionDelta | null {
-    const values = this.progressionPoints;
+  readonly progressionDelta = computed<ProgressionDelta | null>(() => {
+    const values = this.progressionPoints();
+
     if (values.length < 2) {
       return null;
     }
 
     const first = values[0] || 1;
     const delta = ((values[values.length - 1] - values[0]) / first) * 100;
+
     return {
       label: `${delta >= 0 ? "+" : ""}${delta.toFixed(0)}%`,
       positive: delta >= 0,
     };
-  }
+  });
 
-  get regionShares(): RegionShare[] {
+  readonly regionShares = computed<RegionShare[]>(() => {
     const distribution = this.stats()?.muscleDistribution ?? [];
     const order = this.muscleCatalog.regionNames();
     const totals = new Map<string, number>(order.map((region) => [region, 0]));
@@ -128,11 +129,7 @@ export class GymAnalyticsComponent {
       region,
       percent:
         total === 0 ? 0 : Math.round(((totals.get(region) ?? 0) / total) * 100),
-      index,
+      color: REGION_COLORS[index] ?? REGION_COLORS[0],
     }));
-  }
-
-  regionColor(index: number): string {
-    return REGION_COLORS[index] ?? REGION_COLORS[0];
-  }
+  });
 }

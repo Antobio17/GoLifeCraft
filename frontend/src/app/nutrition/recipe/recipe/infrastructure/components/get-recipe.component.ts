@@ -1,5 +1,8 @@
-import { Component, OnInit, computed, inject, signal } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, computed, inject, input, signal } from "@angular/core";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
+import { Router } from "@angular/router";
+import { of } from "rxjs";
+import { catchError, switchMap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -64,41 +67,43 @@ import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/mac
     ConfirmActionModalComponent,
   ],
 })
-export class GetRecipeComponent implements OnInit {
+export class GetRecipeComponent {
   private translationService = inject(TranslationService);
   private getRecipeService = inject(GetRecipeService);
   private deleteRecipeService = inject(DeleteRecipeService);
   private authSession = inject(AuthSessionService);
   protected view = inject(RecipeViewService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   private readonly MODULE_PATH = "nutrition/recipe/recipe";
 
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   recipe = signal<RecipeDetail | null>(null);
   showDeleteModal = signal(false);
   deleting = signal(false);
 
-  private id = "";
+  readonly id = input.required<string>();
 
   attributes = computed(() => this.recipe()?.attributes ?? null);
 
-  ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get("id") ?? "";
+  constructor() {
+    this.translationService.loadModuleTranslations(this.MODULE_PATH);
 
-    this.translationService
-      .loadModuleTranslations(this.MODULE_PATH)
-      .then(() => {
-        this.getRecipeService.getRecipe(this.id).subscribe({
-          next: (response) => {
-            this.recipe.set(response.data);
-            this.loading.set(false);
-          },
-          error: () => this.loading.set(false),
-        });
+    toObservable(this.id)
+      .pipe(
+        switchMap((id) => {
+          this.loading.set(true);
+          return this.getRecipeService
+            .getRecipe(id)
+            .pipe(catchError(() => of(null)));
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe((response) => {
+        this.recipe.set(response?.data ?? null);
+        this.loading.set(false);
       });
   }
 
@@ -111,6 +116,15 @@ export class GetRecipeComponent implements OnInit {
     fat: this.t("getRecipe.macro.fatShort"),
     carbs: this.t("getRecipe.macro.carbsShort"),
   }));
+
+  ingredientRows = computed(() =>
+    (this.attributes()?.ingredients ?? []).map((ingredient) => ({
+      ingredient,
+      quantityLabel: this.view.ingredientQuantityLabel(ingredient),
+      kcal: this.ingredientKcal(ingredient),
+      macros: this.ingredientMacros(ingredient),
+    })),
+  );
 
   ingredientKcal(ingredient: RecipeIngredientView): string {
     return `${this.view.integer(ingredient.macros.calories)} ${this.t("getRecipe.macro.kcal")}`;
@@ -129,7 +143,7 @@ export class GetRecipeComponent implements OnInit {
   }
 
   onEdit(): void {
-    this.router.navigate(["/recipes", this.id, "edit"]);
+    this.router.navigate(["/recipes", this.id(), "edit"]);
   }
 
   onDelete(): void {
@@ -143,7 +157,7 @@ export class GetRecipeComponent implements OnInit {
   onConfirmDelete(): void {
     this.deleting.set(true);
 
-    this.deleteRecipeService.deleteRecipe(this.id).subscribe({
+    this.deleteRecipeService.deleteRecipe(this.id()).subscribe({
       next: () => {
         this.deleting.set(false);
         this.showDeleteModal.set(false);

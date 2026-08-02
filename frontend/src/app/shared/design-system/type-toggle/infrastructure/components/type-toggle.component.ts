@@ -8,7 +8,6 @@ export interface TypeToggleOption {
 
 @Component({
   selector: "ds-type-toggle",
-  standalone: true,
   template: `
     <div class="ds-type-toggle" role="radiogroup">
       @for (option of options; track option.value) {

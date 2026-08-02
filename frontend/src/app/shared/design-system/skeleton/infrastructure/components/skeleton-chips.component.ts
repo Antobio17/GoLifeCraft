@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-chips",
-  standalone: true,
   template: `
     <div
       class="skchip"

@@ -33,7 +33,7 @@
         [ariaLabel]="'getDiary.calendar.open' | t"
         (clicked)="openCalendar()"
       />
-      @if (canWrite) {
+      @if (canWrite()) {
         <ds-icon-button
           icon="settings"
           variant="soft"
@@ -79,7 +79,7 @@
         <ds-skeleton-section-header
           titleWidth="104px"
           [subtitle]="true"
-          [action]="canWrite"
+          [action]="canWrite()"
           actionWidth="74px"
         />
         <ds-skeleton-list
@@ -109,7 +109,7 @@
       [macros]="view.goalMacros(diary)"
     />
 
-    @for (meal of diary.meals; track meal.key) {
+    @for (meal of mealRows(); track meal.key) {
       <ds-stack [gap]="'10px'">
         <ds-stack
           direction="row"
@@ -119,11 +119,11 @@
         >
           <ds-stack [gap]="'1px'" [grow]="true">
             <ds-heading [level]="3" size="sm" [truncate]="true">{{
-              mealLabel(meal.key)
+              meal.label
             }}</ds-heading>
-            <ds-text variant="meta">{{ view.mealMeta(meal) }}</ds-text>
+            <ds-text variant="meta">{{ meal.meta }}</ds-text>
           </ds-stack>
-          @if (canWrite) {
+          @if (canWrite()) {
             <ds-button
               variant="outline"
               size="sm"
@@ -137,33 +137,29 @@
 
         @if (meal.entries.length > 0) {
           <ds-stack [gap]="'8px'">
-            @for (entry of meal.entries; track entry.id) {
+            @for (row of meal.entries; track row.entry.id) {
               <ds-diary-entry
-                [emoji]="entry.emoji"
-                [name]="entry.name"
-                [openable]="canWrite && entry.kind === 'quick'"
+                [emoji]="row.entry.emoji"
+                [name]="row.entry.name"
+                [openable]="row.openable"
                 [openLabel]="'getDiary.quick.edit' | t"
-                [badge]="badgeLabel(entry.kind)"
-                [badgeTone]="view.entryBadgeTone(entry.kind)"
-                [kcalLabel]="
-                  view.integer(entry.macros.calories) +
-                  ' ' +
-                  ('getDiary.kcal' | t)
-                "
-                [macros]="entryMacros(entry)"
-                [unit]="view.entryUnitLabel(entry)"
-                [quantity]="entry.quantity"
-                [quantityLabel]="view.entryQuantityLabel(entry)"
-                [canWrite]="canWrite"
+                [badge]="row.badge"
+                [badgeTone]="row.badgeTone"
+                [kcalLabel]="row.kcalLabel"
+                [macros]="row.macros"
+                [unit]="row.unit"
+                [quantity]="row.entry.quantity"
+                [quantityLabel]="row.quantityLabel"
+                [canWrite]="canWrite()"
                 [quantityAriaLabel]="'getDiary.quantity' | t"
                 [removeLabel]="'getDiary.remove' | t"
-                (quantityChange)="onQuantityChange(entry.id, $event)"
-                (remove)="onRemove(entry.id)"
-                (opened)="openQuickEditor(meal.key, entry)"
+                (quantityChange)="onQuantityChange(row.entry.id, $event)"
+                (remove)="onRemove(row.entry.id)"
+                (opened)="openQuickEditor(meal.key, row.entry)"
               />
             }
           </ds-stack>
-        } @else if (canWrite) {
+        } @else if (canWrite()) {
           <ds-placeholder-note [message]="'getDiary.emptyAction' | t" />
         } @else {
           <ds-placeholder-note [message]="'getDiary.empty' | t" />
@@ -296,29 +292,26 @@
           <ds-text variant="muted">{{ "getDiary.picker.empty" | t }}</ds-text>
         } @else {
           <ds-stack [gap]="'8px'">
-            @for (choice of pickerChoices(); track choice.refId) {
+            @for (row of pickerRows(); track row.choice.refId) {
               <ds-card [padding]="'10px'">
                 <ds-stack direction="row" align="center" [gap]="'12px'">
                   <ds-emoji-tile
-                    [emoji]="choice.emoji"
+                    [emoji]="row.choice.emoji"
                     [size]="36"
                     [radius]="10"
                   />
                   <ds-stack [gap]="'4px'" [grow]="true">
                     <ds-text variant="strong" [truncate]="true">{{
-                      choice.name
+                      row.choice.name
                     }}</ds-text>
-                    <ds-text variant="meta">{{ choice.detail }}</ds-text>
-                    <ds-macro-badges
-                      [kcal]="choiceKcal(choice)"
-                      [macros]="choiceMacros(choice)"
-                    />
+                    <ds-text variant="meta">{{ row.choice.detail }}</ds-text>
+                    <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
                   </ds-stack>
                   <ds-icon-button
                     icon="plus"
                     variant="soft"
                     [ariaLabel]="'getDiary.add' | t"
-                    (clicked)="onPick(choice)"
+                    (clicked)="onPick(row.choice)"
                   />
                 </ds-stack>
               </ds-card>

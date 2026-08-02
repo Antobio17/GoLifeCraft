@@ -106,7 +106,7 @@ export class GetAgendaComponent implements OnInit {
 
   private readonly MODULE_PATH = "agenda/agenda/agenda";
 
-  canWrite = this.authSession.isGod();
+  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   day = signal<AgendaDayAttributes | null>(null);
@@ -273,7 +273,7 @@ export class GetAgendaComponent implements OnInit {
   }
 
   openNewSheet(): void {
-    if (!this.canWrite) return;
+    if (!this.canWrite()) return;
 
     this.editingId.set(null);
     this.editingSeriesId.set(null);
@@ -282,7 +282,7 @@ export class GetAgendaComponent implements OnInit {
   }
 
   openEditSheet(entry: AgendaEntryView): void {
-    if (!this.canWrite) return;
+    if (!this.canWrite()) return;
 
     this.editingId.set(entry.id);
     this.editingSeriesId.set(entry.seriesId);
@@ -346,7 +346,7 @@ export class GetAgendaComponent implements OnInit {
   }
 
   toggleEntry(entry: AgendaEntryView): void {
-    if (!this.canWrite) return;
+    if (!this.canWrite()) return;
 
     const previousDay = this.day();
     const previousCalendarDays = this.calendarDays();
@@ -370,7 +370,7 @@ export class GetAgendaComponent implements OnInit {
   }
 
   removeEntry(entry: AgendaEntryView): void {
-    if (!this.canWrite) return;
+    if (!this.canWrite()) return;
 
     const request$ = entry.seriesId
       ? this.deleteAgendaEntrySeriesService.deleteAgendaEntrySeries(

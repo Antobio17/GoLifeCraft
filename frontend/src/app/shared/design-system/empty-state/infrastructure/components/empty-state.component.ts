@@ -4,7 +4,6 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-empty-state",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <div class="ds-empty">

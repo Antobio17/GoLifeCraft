@@ -36,7 +36,6 @@ const MODULE_PATH = "nutrition/menu/menu";
 
 @Component({
   selector: "app-menu-apply-week-sheet",
-  standalone: true,
   imports: [
     ContextualTranslatePipe,
     ModalSheetComponent,

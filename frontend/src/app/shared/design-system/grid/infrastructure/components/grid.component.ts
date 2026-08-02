@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-grid",
-  standalone: true,
   template: `<ng-content></ng-content>`,
   styles: [
     `

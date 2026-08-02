@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
   selector: "ds-textarea",
-  standalone: true,
   template: `
     <textarea
       class="ds-textarea"

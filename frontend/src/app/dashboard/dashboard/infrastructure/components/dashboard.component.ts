@@ -29,7 +29,6 @@ import { AgendaSummaryComponent } from "@agenda/agenda/agenda/infrastructure/com
 
 @Component({
   selector: "app-dashboard",
-  standalone: true,
   templateUrl: "./dashboard.component.html",
   imports: [
     DatePipe,

@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-product-hero",
-  standalone: true,
   template: `
     <div class="ds-product-hero">
       <span class="ds-product-hero__emoji">{{ emoji }}</span>

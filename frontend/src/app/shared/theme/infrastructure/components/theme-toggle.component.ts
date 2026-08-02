@@ -4,7 +4,6 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 
 @Component({
   selector: "app-theme-toggle",
-  standalone: true,
   templateUrl: "./theme-toggle.component.html",
   imports: [IconButtonComponent],
 })

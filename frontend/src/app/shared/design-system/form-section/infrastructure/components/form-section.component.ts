@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit, computed, input, signal } from "@angular/core";
 import {
   FormSectionConfig,
   FormSectionIcon,
@@ -10,32 +10,32 @@ import {
   styleUrls: ["./form-section.component.css"],
 })
 export class FormSectionComponent implements OnInit {
-  @Input() config?: FormSectionConfig;
-  @Input() title?: string;
-  @Input() icon?: FormSectionIcon;
-  @Input() iconName?: string;
-  @Input() collapsible?: boolean;
-  @Input() collapsed?: boolean;
+  readonly config = input<FormSectionConfig | undefined>(undefined);
+  readonly title = input<string | undefined>(undefined);
+  readonly icon = input<FormSectionIcon | undefined>(undefined);
+  readonly iconName = input<string | undefined>(undefined);
+  readonly collapsible = input<boolean | undefined>(undefined);
+  readonly collapsed = input<boolean | undefined>(undefined);
 
-  isCollapsed = false;
+  readonly isCollapsed = signal(false);
 
-  get sectionConfig(): FormSectionConfig {
-    return {
-      title: this.title || this.config?.title || "",
-      icon: this.icon || this.config?.icon,
-      iconName: this.iconName || this.config?.iconName,
-      collapsible: this.collapsible ?? this.config?.collapsible ?? false,
-      collapsed: this.collapsed ?? this.config?.collapsed ?? false,
-    };
-  }
+  readonly sectionConfig = computed<FormSectionConfig>(() => ({
+    title: this.title() || this.config()?.title || "",
+    icon: this.icon() || this.config()?.icon,
+    iconName: this.iconName() || this.config()?.iconName,
+    collapsible: this.collapsible() ?? this.config()?.collapsible ?? false,
+    collapsed: this.collapsed() ?? this.config()?.collapsed ?? false,
+  }));
 
   ngOnInit(): void {
-    this.isCollapsed = this.sectionConfig.collapsed ?? false;
+    this.isCollapsed.set(this.sectionConfig().collapsed ?? false);
   }
 
   toggleCollapse(): void {
-    if (this.sectionConfig.collapsible) {
-      this.isCollapsed = !this.isCollapsed;
+    if (!this.sectionConfig().collapsible) {
+      return;
     }
+
+    this.isCollapsed.update((value) => !value);
   }
 }

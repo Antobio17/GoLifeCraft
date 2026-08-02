@@ -12,7 +12,6 @@ export interface MenuItem {
 
 @Component({
   selector: "ds-menu",
-  standalone: true,
   imports: [IconComponent, IconButtonComponent],
   template: `
     <div class="ds-menu">

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
   selector: "ds-inline-quantity",
-  standalone: true,
   template: `
     <span class="ds-inline-qty">
       <input

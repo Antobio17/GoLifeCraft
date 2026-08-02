@@ -3,6 +3,6 @@
   leadingIcon="language"
   ariaLabel="Seleccionar idioma"
   [options]="languageOptions"
-  [ngModel]="selectedLanguage"
+  [ngModel]="selectedLanguage()"
   (ngModelChange)="changeLanguage($event)"
 />

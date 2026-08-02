@@ -3,7 +3,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 
 @Component({
   selector: "ds-check-row",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <button

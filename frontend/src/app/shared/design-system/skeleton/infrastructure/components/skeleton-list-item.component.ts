@@ -9,7 +9,6 @@ export type SkeletonListItemTrailing =
 
 @Component({
   selector: "ds-skeleton-list-item",
-  standalone: true,
   templateUrl: "./skeleton-list-item.component.html",
   styleUrls: ["./skeleton-list-item.component.css"],
   host: {

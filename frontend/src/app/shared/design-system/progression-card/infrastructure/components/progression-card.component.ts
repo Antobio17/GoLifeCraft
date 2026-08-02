@@ -5,7 +5,6 @@ export type ProgressionTrend = "up" | "down" | "neutral";
 
 @Component({
   selector: "ds-progression-card",
-  standalone: true,
   imports: [LineChartComponent],
   template: `
     <div class="ds-progression">

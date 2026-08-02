@@ -5,7 +5,6 @@ import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrast
 
 @Component({
   selector: "ds-shopping-summary",
-  standalone: true,
   templateUrl: "./shopping-summary.component.html",
   styleUrls: ["./shopping-summary.component.css"],
   imports: [StackComponent, TextComponent, ProgressBarComponent],

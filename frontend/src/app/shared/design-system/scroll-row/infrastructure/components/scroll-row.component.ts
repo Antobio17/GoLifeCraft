@@ -9,7 +9,6 @@ import {
 
 @Component({
   selector: "ds-scroll-row",
-  standalone: true,
   template: `<ng-content />`,
   host: {
     "[class.is-fade-start]": "!atStart()",

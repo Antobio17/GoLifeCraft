@@ -7,7 +7,6 @@ import {
 
 @Component({
   selector: "ds-skeleton-list",
-  standalone: true,
   imports: [GridComponent, SkeletonListItemComponent],
   template: `
     <ds-grid

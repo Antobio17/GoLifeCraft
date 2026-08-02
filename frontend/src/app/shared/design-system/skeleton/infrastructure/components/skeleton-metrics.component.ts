@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-metrics",
-  standalone: true,
   template: `
     <div class="skmet">
       @for (metric of metricArray; track metric; let i = $index) {

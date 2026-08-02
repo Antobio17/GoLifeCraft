@@ -3,7 +3,6 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
 
 @Component({
   selector: "ds-macro-bars",
-  standalone: true,
   template: `
     <div class="ds-macro">
       <div class="ds-macro__kcal">

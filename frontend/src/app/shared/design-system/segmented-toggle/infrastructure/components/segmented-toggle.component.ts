@@ -8,7 +8,6 @@ export interface SegmentedOption {
 
 @Component({
   selector: "ds-segmented-toggle",
-  standalone: true,
   template: `
     <div
       class="ds-segmented"

@@ -11,7 +11,6 @@ export interface SummaryMacro {
 
 @Component({
   selector: "ds-daily-summary",
-  standalone: true,
   imports: [ProgressRingComponent],
   templateUrl: "./daily-summary.component.html",
   styleUrls: ["./daily-summary.component.css"],

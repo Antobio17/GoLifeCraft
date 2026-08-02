@@ -33,7 +33,7 @@ export const MENU_ROUTES: Routes = [
       {
         path: "new",
         canActivate: [blockReadOnlyUserGuard],
-        data: { breadcrumb: "menu.breadcrumb.create", draft: true },
+        data: { breadcrumb: "menu.breadcrumb.create", draftRoute: true },
         loadComponent: () =>
           import("../components/get-menu.component").then(
             (m) => m.GetMenuComponent,

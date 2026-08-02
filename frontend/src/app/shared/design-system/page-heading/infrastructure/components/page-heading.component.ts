@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-page-heading",
-  standalone: true,
   template: `
     <header class="ds-page-heading">
       <div class="ds-page-heading__tile">

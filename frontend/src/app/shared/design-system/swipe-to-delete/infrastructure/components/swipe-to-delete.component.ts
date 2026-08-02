@@ -3,7 +3,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 
 @Component({
   selector: "ds-swipe-to-delete",
-  standalone: true,
   imports: [IconComponent],
   templateUrl: "./swipe-to-delete.component.html",
   styleUrls: ["./swipe-to-delete.component.css"],

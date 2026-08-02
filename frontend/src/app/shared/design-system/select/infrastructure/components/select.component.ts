@@ -8,7 +8,6 @@ type SelectVariant = "pill" | "bare";
 
 @Component({
   selector: "ds-select",
-  standalone: true,
   imports: [IconComponent],
   host: {
     "[style.display]": "fluid ? 'flex' : null",

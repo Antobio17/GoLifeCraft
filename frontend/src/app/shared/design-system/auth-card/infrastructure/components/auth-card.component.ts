@@ -4,7 +4,6 @@ import { AuthTab } from "../../domain/models/auth-tab.model";
 
 @Component({
   selector: "ds-auth-card",
-  standalone: true,
   imports: [BrandLogoComponent],
   templateUrl: "./auth-card.component.html",
   styleUrls: ["./auth-card.component.css"],

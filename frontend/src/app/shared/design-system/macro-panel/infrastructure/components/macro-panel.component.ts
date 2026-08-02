@@ -3,7 +3,6 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
 
 @Component({
   selector: "ds-macro-panel",
-  standalone: true,
   template: `
     <div class="ds-mpanel">
       <div class="ds-mpanel__energy">

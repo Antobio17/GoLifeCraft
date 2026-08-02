@@ -3,7 +3,6 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
 
 @Component({
   selector: "ds-equivalence-summary",
-  standalone: true,
   template: `
     <section class="ds-eqs">
       <header class="ds-eqs__head">

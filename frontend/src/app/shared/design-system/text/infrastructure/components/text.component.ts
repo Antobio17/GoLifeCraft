@@ -13,7 +13,6 @@ type TextAlign = "start" | "center" | "end";
 
 @Component({
   selector: "ds-text",
-  standalone: true,
   template: `<ng-content></ng-content>`,
   styles: [
     `

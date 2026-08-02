@@ -8,7 +8,6 @@ import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/
 
 @Component({
   selector: "ds-agenda-item",
-  standalone: true,
   imports: [
     IconComponent,
     StackComponent,

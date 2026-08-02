@@ -26,7 +26,7 @@
   }
 
   <ds-list-filters
-    [fields]="filterFields"
+    [fields]="filterFields()"
     [loading]="loading()"
     (filtersApplied)="onFiltersApplied($event)"
     (filtersCleared)="onFiltersCleared()"
@@ -34,8 +34,8 @@
 
   <ds-list-table
     [items]="items()"
-    [columns]="columns"
-    [actions]="actions"
+    [columns]="columns()"
+    [actions]="actions()"
     [loading]="loading()"
     [emptyTitle]="'getCategories.table.emptyTitle' | t"
     [emptyMessage]="'getCategories.table.emptyMessage' | t"

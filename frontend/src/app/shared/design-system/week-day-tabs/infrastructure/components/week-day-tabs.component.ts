@@ -3,7 +3,6 @@ import { WeekDayTab } from "../../domain/models/week-day-tab.model";
 
 @Component({
   selector: "ds-week-day-tabs",
-  standalone: true,
   template: `
     <div class="ds-wdays" role="tablist">
       @for (day of days; track day.key) {

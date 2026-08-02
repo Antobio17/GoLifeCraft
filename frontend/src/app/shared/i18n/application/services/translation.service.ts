@@ -1,3 +1,4 @@
+import { signal } from "@angular/core";
 import { TranslationPort } from "../../domain/ports/translation.port";
 import {
   SupportedLanguages,
@@ -5,36 +6,34 @@ import {
 } from "../../domain/models/translation.model";
 
 export class TranslationService {
-  private currentLanguage: SupportedLanguages = SupportedLanguages.ES;
-  private translations: Map<string, TranslationMap> = new Map();
-  private inFlightRequests: Map<string, Promise<void>> = new Map();
+  private readonly currentLanguage = signal<SupportedLanguages>(
+    SupportedLanguages.ES,
+  );
+  private readonly translations = signal<Map<string, TranslationMap>>(
+    new Map(),
+  );
+  private readonly inFlightRequests: Map<string, Promise<void>> = new Map();
 
   constructor(private translationPort: TranslationPort) {
-    const savedLanguage = localStorage.getItem(
-      "app-language",
-    ) as SupportedLanguages;
-    if (
-      !savedLanguage ||
-      !Object.values(SupportedLanguages).includes(savedLanguage)
-    ) {
-      this.currentLanguage = SupportedLanguages.ES;
-      localStorage.setItem("app-language", SupportedLanguages.ES);
-      return;
-    }
-
-    this.currentLanguage = savedLanguage;
+    this.currentLanguage.set(this.restoreLanguage());
   }
 
   getCurrentLanguage(): SupportedLanguages {
-    return this.currentLanguage;
+    return this.currentLanguage();
   }
 
   setLanguage(language: SupportedLanguages): void {
-    this.currentLanguage = language;
+    const reloadableModulePaths = this.loadedModulePaths();
+
+    this.currentLanguage.set(language);
     localStorage.setItem("app-language", language);
 
-    this.translations.clear();
+    this.translations.set(new Map());
     this.inFlightRequests.clear();
+
+    reloadableModulePaths.forEach((modulePath) =>
+      this.loadModuleTranslations(modulePath),
+    );
   }
 
   setLanguageFromLocale(locale: string): void {
@@ -47,9 +46,9 @@ export class TranslationService {
   }
 
   loadModuleTranslations(modulePath: string): Promise<void> {
-    const cacheKey = `${modulePath}_${this.currentLanguage}`;
+    const cacheKey = this.cacheKey(modulePath);
 
-    if (this.translations.has(cacheKey)) {
+    if (this.translations().has(cacheKey)) {
       return Promise.resolve();
     }
 
@@ -59,10 +58,10 @@ export class TranslationService {
 
     const promise = new Promise<void>((resolve) => {
       this.translationPort
-        .loadTranslations(modulePath, this.currentLanguage)
+        .loadTranslations(modulePath, this.currentLanguage())
         .subscribe({
           next: (translationMap: TranslationMap) => {
-            this.translations.set(cacheKey, translationMap);
+            this.cacheTranslations(cacheKey, translationMap);
             this.inFlightRequests.delete(cacheKey);
             resolve();
           },
@@ -82,13 +81,14 @@ export class TranslationService {
     modulePath: string,
     params?: Record<string, unknown>,
   ): string {
-    const cacheKey = `${modulePath}_${this.currentLanguage}`;
-    const translationMap = this.translations.get(cacheKey);
+    const cacheKey = this.cacheKey(modulePath);
+    const translationMap = this.translations().get(cacheKey);
+
+    if (!translationMap && this.inFlightRequests.has(cacheKey)) {
+      return "";
+    }
 
     if (!translationMap) {
-      if (this.inFlightRequests.has(cacheKey)) {
-        return "";
-      }
       return key;
     }
 
@@ -108,8 +108,42 @@ export class TranslationService {
   }
 
   isModuleLoaded(modulePath: string): boolean {
-    const cacheKey = `${modulePath}_${this.currentLanguage}`;
-    return this.translations.has(cacheKey);
+    return this.translations().has(this.cacheKey(modulePath));
+  }
+
+  private restoreLanguage(): SupportedLanguages {
+    const savedLanguage = localStorage.getItem(
+      "app-language",
+    ) as SupportedLanguages;
+
+    if (
+      savedLanguage &&
+      Object.values(SupportedLanguages).includes(savedLanguage)
+    ) {
+      return savedLanguage;
+    }
+
+    localStorage.setItem("app-language", SupportedLanguages.ES);
+    return SupportedLanguages.ES;
+  }
+
+  private cacheKey(modulePath: string): string {
+    return `${modulePath}::${this.currentLanguage()}`;
+  }
+
+  private loadedModulePaths(): string[] {
+    return [...this.translations().keys()].map((cacheKey) =>
+      cacheKey.slice(0, cacheKey.lastIndexOf("::")),
+    );
+  }
+
+  private cacheTranslations(
+    cacheKey: string,
+    translationMap: TranslationMap,
+  ): void {
+    const nextTranslations = new Map(this.translations());
+    nextTranslations.set(cacheKey, translationMap);
+    this.translations.set(nextTranslations);
   }
 
   private getNestedTranslation(

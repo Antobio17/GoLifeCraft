@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-profile-card",
-  standalone: true,
   template: `
     <div class="pc">
       <span class="pc__avatar">{{ initial }}</span>

@@ -6,7 +6,6 @@ type IconBadgeTone = "neutral" | "brand" | "danger" | "success";
 
 @Component({
   selector: "ds-icon-badge",
-  standalone: true,
   imports: [IconComponent],
   template: `<span class="ds-icon-badge">
     <ds-icon [name]="icon" [size]="iconSize" [stroke]="2" />

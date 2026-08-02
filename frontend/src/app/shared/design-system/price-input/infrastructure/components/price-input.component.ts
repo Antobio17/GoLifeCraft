@@ -3,7 +3,6 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
 
 @Component({
   selector: "ds-price-input",
-  standalone: true,
   template: `
     <div class="ds-price">
       <input

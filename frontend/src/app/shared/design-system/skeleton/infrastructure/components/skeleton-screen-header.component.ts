@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-screen-header",
-  standalone: true,
   template: `
     <div class="skhead">
       @if (leading) {

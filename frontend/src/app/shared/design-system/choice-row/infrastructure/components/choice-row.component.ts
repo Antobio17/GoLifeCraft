@@ -4,7 +4,6 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
 
 @Component({
   selector: "ds-choice-row",
-  standalone: true,
   imports: [IconBadgeComponent],
   template: `
     <button

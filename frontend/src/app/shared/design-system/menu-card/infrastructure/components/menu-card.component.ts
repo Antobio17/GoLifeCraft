@@ -6,7 +6,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
 
 @Component({
   selector: "ds-menu-card",
-  standalone: true,
   imports: [IconComponent, MacroBadgesComponent],
   template: `
     <div class="ds-mcard">

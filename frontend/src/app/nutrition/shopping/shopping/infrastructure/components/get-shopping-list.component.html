@@ -7,7 +7,7 @@
       <ds-text variant="meta">{{ "getShopping.subtitle" | t }}</ds-text>
     </ds-stack>
 
-    @if (canWrite) {
+    @if (canWrite()) {
       <ds-button
         variant="primary"
         size="sm"
@@ -41,7 +41,7 @@
           [gap]="'8px'"
           radius="16px"
           padding="9px 11px"
-          [check]="canWrite"
+          [check]="canWrite()"
           [tile]="44"
           [tileRadius]="12"
           titleWidth="62%"
@@ -89,7 +89,7 @@
                 [priceLabel]="view.lineLabel(item)"
                 [quantity]="item.quantity"
                 [checked]="item.checked"
-                [canWrite]="canWrite"
+                [canWrite]="canWrite()"
                 [toggleAriaLabel]="'getShopping.toggle' | t"
                 [incrementLabel]="'getShopping.increment' | t"
                 [decrementLabel]="'getShopping.decrement' | t"
@@ -103,7 +103,7 @@
           </ds-stack>
         }
 
-        @if (canWrite && hasChecked()) {
+        @if (canWrite() && hasChecked()) {
           <ds-button
             variant="outline"
             [fullWidth]="true"

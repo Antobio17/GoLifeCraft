@@ -3,7 +3,6 @@ import { MacroBadge } from "../../domain/models/macro-badge.model";
 
 @Component({
   selector: "ds-macro-badges",
-  standalone: true,
   template: `
     <span class="ds-mbadges">
       @if (kcal) {

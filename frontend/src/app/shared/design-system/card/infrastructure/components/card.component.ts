@@ -4,7 +4,6 @@ type CardVariant = "plain" | "brand" | "inset";
 
 @Component({
   selector: "ds-card",
-  standalone: true,
   template: `
     <div
       class="ds-card"

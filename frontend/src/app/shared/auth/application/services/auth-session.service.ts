@@ -26,7 +26,11 @@ export class AuthSessionService {
   }
 
   isAuthenticated(): boolean {
-    return this.port.isValid();
+    const session = this._session();
+
+    if (!session) return false;
+
+    return new Date(session.expiresAt * 1000) > new Date();
   }
 
   getCurrentUser(): AuthUser | null {

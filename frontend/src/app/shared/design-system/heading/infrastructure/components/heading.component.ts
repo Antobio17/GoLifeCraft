@@ -5,7 +5,6 @@ type HeadingSize = "sm" | "md" | "lg" | "xl";
 
 @Component({
   selector: "ds-heading",
-  standalone: true,
   imports: [NgTemplateOutlet],
   template: `
     <ng-template #content><ng-content></ng-content></ng-template>

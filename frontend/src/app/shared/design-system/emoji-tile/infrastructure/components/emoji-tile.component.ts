@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-emoji-tile",
-  standalone: true,
   template: `<span class="ds-emoji-tile">{{ emoji }}</span>`,
   styles: [
     `

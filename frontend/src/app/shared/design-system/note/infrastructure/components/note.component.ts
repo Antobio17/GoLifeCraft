@@ -6,7 +6,6 @@ type NoteTone = "info" | "danger";
 
 @Component({
   selector: "ds-note",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <div class="ds-note">

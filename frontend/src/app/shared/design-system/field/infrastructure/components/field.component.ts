@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-field",
-  standalone: true,
   template: `
     <div class="ds-field">
       @if (label) {

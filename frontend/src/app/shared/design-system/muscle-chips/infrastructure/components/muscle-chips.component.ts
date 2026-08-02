@@ -3,7 +3,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
   selector: "ds-muscle-chips",
-  standalone: true,
   template: `
     <div class="ds-muscle-chips" role="group">
       @for (muscle of options; track muscle) {

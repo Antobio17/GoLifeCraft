@@ -4,7 +4,6 @@ export type MetricCardVariant = "plain" | "feature";
 
 @Component({
   selector: "ds-metric-card",
-  standalone: true,
   template: `
     <div class="ds-metric" [class.ds-metric--feature]="variant === 'feature'">
       <div class="ds-metric__value">{{ value }}</div>

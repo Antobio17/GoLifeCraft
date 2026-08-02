@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-meter",
-  standalone: true,
   template: `
     <div class="ds-meter">
       <div class="ds-meter__row">

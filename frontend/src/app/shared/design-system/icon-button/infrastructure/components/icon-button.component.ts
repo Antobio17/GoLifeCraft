@@ -12,7 +12,6 @@ type IconButtonVariant =
 
 @Component({
   selector: "ds-icon-button",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <button

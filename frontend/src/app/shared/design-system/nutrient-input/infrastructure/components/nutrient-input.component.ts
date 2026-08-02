@@ -7,7 +7,6 @@ type NutrientVariant = "default" | "energy" | "sub";
 
 @Component({
   selector: "ds-nutrient-input",
-  standalone: true,
   imports: [IconComponent],
   template: `
     <label

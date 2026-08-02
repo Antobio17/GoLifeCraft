@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit, inject, input, signal } from "@angular/core";
+import { Router } from "@angular/router";
 import {
   AbstractControl,
   FormBuilder,
@@ -55,7 +55,6 @@ export class ExerciseEditorComponent implements OnInit {
   private iconCatalog = inject(ExerciseIconCatalogService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   private readonly MODULE_PATH = "gym/library/exercise";
   readonly muscleGroups = this.muscleCatalog.regions();
@@ -68,7 +67,7 @@ export class ExerciseEditorComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
-  private id = "";
+  readonly id = input<string>("");
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -80,7 +79,7 @@ export class ExerciseEditorComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.id;
+    return !!this.id();
   }
 
   get title(): string {
@@ -102,8 +101,6 @@ export class ExerciseEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get("id") ?? "";
-
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
@@ -112,7 +109,7 @@ export class ExerciseEditorComponent implements OnInit {
           return;
         }
 
-        this.getExerciseService.getExercise(this.id).subscribe({
+        this.getExerciseService.getExercise(this.id()).subscribe({
           next: (response: GetExerciseResponse) => {
             this.form.patchValue({
               name: response.data.attributes.name,
@@ -160,7 +157,7 @@ export class ExerciseEditorComponent implements OnInit {
     };
 
     const request$ = this.isEdit
-      ? this.updateExerciseService.updateExercise(this.id, payload)
+      ? this.updateExerciseService.updateExercise(this.id(), payload)
       : this.createExerciseService.createExercise(payload);
 
     request$.subscribe({

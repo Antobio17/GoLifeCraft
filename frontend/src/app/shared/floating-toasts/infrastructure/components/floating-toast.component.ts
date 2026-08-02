@@ -1,6 +1,5 @@
-import { Component, DestroyRef, effect, inject } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { trigger, style, animate, transition } from "@angular/animations";
-import { Subscription, timer } from "rxjs";
 import { FloatingToastService } from "../../application/services/floating-toast.service";
 import {
   FloatingToastMessage,
@@ -49,21 +48,16 @@ const TOAST_ICONS: Record<FloatingToastType, DsIconName> = {
 })
 export class FloatingToastComponent {
   private floatingToastService = inject(FloatingToastService);
-  private destroyRef = inject(DestroyRef);
 
-  toasts: FloatingToastView[] = [];
-  private counter = 0;
-  private timerSubscription?: Subscription;
+  readonly toasts = computed<FloatingToastView[]>(() => {
+    const message = this.floatingToastService.getToast()();
 
-  constructor() {
-    this.destroyRef.onDestroy(() => this.timerSubscription?.unsubscribe());
+    if (!message) {
+      return [];
+    }
 
-    effect(() => {
-      const message = this.floatingToastService.getToast()();
-      if (!message) return;
-      this.show(message);
-    });
-  }
+    return [this.toView(message)];
+  });
 
   asParams(
     details: Record<string, unknown> | unknown[],
@@ -73,33 +67,18 @@ export class FloatingToastComponent {
   }
 
   dismiss(): void {
-    this.timerSubscription?.unsubscribe();
-    this.toasts = [];
+    this.floatingToastService.dismiss();
   }
 
-  private show(message: FloatingToastMessage): void {
-    const type = this.resolveType(message);
-    const durationMs = type === "success" ? 1200 : 2000;
+  private toView(message: FloatingToastMessage): FloatingToastView {
+    const type = this.floatingToastService.typeOf(message);
 
-    this.toasts = [
-      {
-        ...message,
-        id: ++this.counter,
-        type,
-        icon: TOAST_ICONS[type],
-        durationMs,
-      },
-    ];
-
-    this.timerSubscription?.unsubscribe();
-    this.timerSubscription = timer(durationMs).subscribe(() => {
-      this.toasts = [];
-    });
-  }
-
-  private resolveType(message: FloatingToastMessage): FloatingToastType {
-    if (message.type) return message.type;
-    if (message.status >= 200 && message.status < 300) return "success";
-    return "error";
+    return {
+      ...message,
+      id: this.floatingToastService.getSequence()(),
+      type,
+      icon: TOAST_ICONS[type],
+      durationMs: this.floatingToastService.durationOf(message),
+    };
   }
 }

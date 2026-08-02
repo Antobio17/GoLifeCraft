@@ -5,7 +5,7 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="56%"
-      [actions]="canWrite ? 2 : 0"
+      [actions]="canWrite() ? 2 : 0"
     />
     <ds-skeleton-hero />
     <ds-skeleton-chips [count]="1" height="26px" [gap]="'6px'" />
@@ -32,7 +32,7 @@
       [title]="recipe.name"
       (leadingClick)="back()"
     >
-      @if (canWrite) {
+      @if (canWrite()) {
         <ds-stack slot="actions" direction="row" [gap]="'9px'">
           <ds-icon-button
             icon="pencil"
@@ -93,10 +93,10 @@
     />
 
     <ds-stack [gap]="'8px'">
-      @for (ingredient of recipe.ingredients; track ingredient.id) {
+      @for (row of ingredientRows(); track row.ingredient.id) {
         <ds-card [padding]="'10px'">
           <ds-stack direction="row" align="center" [gap]="'11px'">
-            <ds-emoji-tile [emoji]="ingredient.emoji" />
+            <ds-emoji-tile [emoji]="row.ingredient.emoji" />
             <ds-stack [gap]="'6px'" [grow]="true">
               <ds-stack
                 direction="row"
@@ -111,22 +111,17 @@
                   [grow]="true"
                 >
                   <ds-text variant="strong" [truncate]="true">{{
-                    ingredient.name
+                    row.ingredient.name
                   }}</ds-text>
-                  @if (ingredient.kind === "recipe") {
+                  @if (row.ingredient.kind === "recipe") {
                     <ds-chip tone="brand">{{
                       "getRecipe.subRecipe" | t
                     }}</ds-chip>
                   }
                 </ds-stack>
-                <ds-text variant="meta">
-                  {{ view.ingredientQuantityLabel(ingredient) }}
-                </ds-text>
+                <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
               </ds-stack>
-              <ds-macro-badges
-                [kcal]="ingredientKcal(ingredient)"
-                [macros]="ingredientMacros(ingredient)"
-              />
+              <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
             </ds-stack>
           </ds-stack>
         </ds-card>

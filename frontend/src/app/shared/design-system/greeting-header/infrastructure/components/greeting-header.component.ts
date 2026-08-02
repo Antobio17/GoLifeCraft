@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
   selector: "ds-greeting-header",
-  standalone: true,
   template: `
     <header class="dash__head">
       <div>

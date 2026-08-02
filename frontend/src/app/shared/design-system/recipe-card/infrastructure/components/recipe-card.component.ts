@@ -4,7 +4,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
 
 @Component({
   selector: "ds-recipe-card",
-  standalone: true,
   imports: [MacroBadgesComponent],
   template: `
     <button type="button" class="ds-rcard" (click)="activated.emit()">

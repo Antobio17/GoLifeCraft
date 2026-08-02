@@ -3,7 +3,7 @@
     [title]="'getRecipes.heading' | t"
     [subtitle]="headerSubtitle()"
   >
-    @if (canWrite) {
+    @if (canWrite()) {
       <ds-button slot="actions" size="md" icon="plus" (clicked)="onCreate()">
         {{ "getRecipes.create" | t }}
       </ds-button>

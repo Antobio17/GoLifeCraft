@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-nutrition-editor",
-  standalone: true,
   template: `
     <div class="ds-nedit">
       <div class="ds-nedit__head">

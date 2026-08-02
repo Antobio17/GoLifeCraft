@@ -1,20 +1,22 @@
+@let section = sectionConfig();
+
 <div
   class="form-section"
   [class.form-section--headerless]="
-    !sectionConfig.title && !sectionConfig.icon && !sectionConfig.iconName
+    !section.title && !section.icon && !section.iconName
   "
 >
-  @if (sectionConfig.title || sectionConfig.icon || sectionConfig.iconName) {
+  @if (section.title || section.icon || section.iconName) {
     <div
       class="section-header"
-      [class.collapsible]="sectionConfig.collapsible"
-      [attr.role]="sectionConfig.collapsible ? 'button' : null"
-      [attr.tabindex]="sectionConfig.collapsible ? 0 : null"
+      [class.collapsible]="section.collapsible"
+      [attr.role]="section.collapsible ? 'button' : null"
+      [attr.tabindex]="section.collapsible ? 0 : null"
       (click)="toggleCollapse()"
       (keydown.enter)="toggleCollapse()"
     >
       <h4 class="section-title">
-        @if (sectionConfig.iconName) {
+        @if (section.iconName) {
           <svg
             width="18"
             height="18"
@@ -28,34 +30,33 @@
           >
             <use
               [attr.href]="
-                'assets/icons/golifecraft/sprite.svg#i-' +
-                sectionConfig.iconName
+                'assets/icons/golifecraft/sprite.svg#i-' + section.iconName
               "
             ></use>
           </svg>
-        } @else if (sectionConfig.icon) {
+        } @else if (section.icon; as icon) {
           <svg
-            [attr.width]="sectionConfig.icon.width"
-            [attr.height]="sectionConfig.icon.height"
-            [attr.viewBox]="sectionConfig.icon.viewBox"
+            [attr.width]="icon.width"
+            [attr.height]="icon.height"
+            [attr.viewBox]="icon.viewBox"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            @for (path of sectionConfig.icon.paths; track path) {
+            @for (path of icon.paths; track path) {
               <path [attr.d]="path" />
             }
           </svg>
         }
-        {{ sectionConfig.title }}
+        {{ section.title }}
       </h4>
 
-      @if (sectionConfig.collapsible) {
+      @if (section.collapsible) {
         <svg
           class="collapse-icon"
-          [class.collapsed]="isCollapsed"
+          [class.collapsed]="isCollapsed()"
           width="20"
           height="20"
           viewBox="0 0 24 24"
@@ -72,7 +73,7 @@
     </div>
   }
 
-  <div class="section-content" [class.collapsed]="isCollapsed">
+  <div class="section-content" [class.collapsed]="isCollapsed()">
     <ng-content></ng-content>
   </div>
 </div>

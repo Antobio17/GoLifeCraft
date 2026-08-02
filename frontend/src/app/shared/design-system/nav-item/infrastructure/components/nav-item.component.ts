@@ -5,7 +5,6 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-nav-item",
-  standalone: true,
   imports: [IconComponent, ChipComponent],
   template: `
     <span class="item">

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslationService } from "../../application/services/translation.service";
 import { SupportedLanguages } from "../../domain/models/translation.model";
@@ -7,11 +7,10 @@ import { SelectOption } from "@shared/design-system/select/domain/models/select-
 
 @Component({
   selector: "app-language-selector",
-  standalone: true,
   templateUrl: "./language-selector.component.html",
   imports: [FormsModule, SelectComponent],
 })
-export class LanguageSelectorComponent implements OnInit {
+export class LanguageSelectorComponent {
   private translationService = inject(TranslationService);
 
   readonly languages = [
@@ -24,15 +23,11 @@ export class LanguageSelectorComponent implements OnInit {
     label: `${language.flag} ${language.label}`,
   }));
 
-  selectedLanguage: SupportedLanguages = SupportedLanguages.ES;
-
-  ngOnInit(): void {
-    this.selectedLanguage = this.translationService.getCurrentLanguage();
-  }
+  readonly selectedLanguage = computed(() =>
+    this.translationService.getCurrentLanguage(),
+  );
 
   changeLanguage(language: string): void {
-    this.selectedLanguage = language as SupportedLanguages;
-    this.translationService.setLanguage(this.selectedLanguage);
-    window.location.reload();
+    this.translationService.setLanguage(language as SupportedLanguages);
   }
 }

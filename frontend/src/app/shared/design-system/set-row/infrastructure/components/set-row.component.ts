@@ -6,7 +6,6 @@ import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/
 
 @Component({
   selector: "ds-set-row",
-  standalone: true,
   imports: [
     FormsModule,
     IconComponent,
