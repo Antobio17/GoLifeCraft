@@ -1,0 +1,8 @@
+services:
+  Nutrition\GlobalCatalog\Article\Infrastructure\UI\Mcp\Tool\QueryGlobalArticlesTool:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\UI\Mcp\Tool\QueryGlobalArticlesTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

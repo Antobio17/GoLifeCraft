@@ -46,6 +46,10 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
                 't.saturated_fat',
                 't.fiber',
                 't.salt',
+                't.created_at',
+                't.updated_at',
+                't.created_by_user_id',
+                't.updated_by_user_id',
             );
 
         $this->applyOrdering(qb: $qb, orderBy: $orderBy);
@@ -54,6 +58,8 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
             ->setMaxResults(maxResults: $pageSize)
             ->executeQuery()
             ->fetchAllAssociative();
+
+        $utc = new \DateTimeZone(timezone: 'UTC');
 
         return array_map(callback: static fn (array $row): GetGlobalArticlesResult => new GetGlobalArticlesResult(
             id: $row['id'],
@@ -80,6 +86,10 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
             saturatedFat: null !== $row['saturated_fat'] ? (float) $row['saturated_fat'] : null,
             fiber: null !== $row['fiber'] ? (float) $row['fiber'] : null,
             salt: null !== $row['salt'] ? (float) $row['salt'] : null,
+            createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
+            updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
+            createdByUserId: $row['created_by_user_id'],
+            updatedByUserId: $row['updated_by_user_id'],
         ), array: $rows);
     }
 

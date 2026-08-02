@@ -20,10 +20,16 @@ abstract class McpMessengerTool
         $this->messageBus = $messageBus;
     }
 
-    protected function dispatch(\Closure $messageFactory): array
+    protected function dispatch(\Closure $messageFactory, ?\Closure $resultMapper = null): array
     {
         try {
-            return $this->handle(message: $messageFactory()) ?? McpToolResult::success();
+            $result = $this->handle(message: $messageFactory());
+
+            if (null !== $resultMapper) {
+                return $resultMapper($result);
+            }
+
+            return $result ?? McpToolResult::success();
         } catch (BaseException $exception) {
             return McpToolResult::error(exception: $exception);
         } catch (HandlerFailedException $exception) {

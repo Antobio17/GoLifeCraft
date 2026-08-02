@@ -31,6 +31,10 @@ final class GetGlobalArticlesResult extends QueryAggregateResult
         public readonly ?float $saturatedFat,
         public readonly ?float $fiber,
         public readonly ?float $salt,
+        public readonly \DateTime $createdAt,
+        public readonly \DateTime $updatedAt,
+        public readonly string $createdByUserId,
+        public readonly string $updatedByUserId,
     ) {
         parent::__construct(id: $id, aggregateName: $aggregateName);
     }
