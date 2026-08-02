@@ -2,10 +2,7 @@ import { Component, computed, inject, input, output } from "@angular/core";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import {
-  BarChartComponent,
-  BarDatum,
-} from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
+import { ActivityHeatmapComponent } from "@shared/design-system/activity-heatmap/infrastructure/components/activity-heatmap.component";
 import { LineChartComponent } from "@shared/design-system/line-chart/infrastructure/components/line-chart.component";
 import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
@@ -16,6 +13,10 @@ import { StatTileComponent } from "@shared/design-system/stat-tile/infrastructur
 import { PanelComponent } from "@shared/design-system/panel/infrastructure/components/panel.component";
 import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
 import { MeterComponent } from "@shared/design-system/meter/infrastructure/components/meter.component";
+import {
+  GymActivityView,
+  GymActivityViewService,
+} from "../../application/services/gym-activity-view.service";
 import { GymStats } from "../../domain/models/gym-stats.model";
 
 interface RegionShare {
@@ -28,6 +29,8 @@ interface ProgressionDelta {
   label: string;
   positive: boolean;
 }
+
+const ACTIVITY_WEEKS = 27;
 
 const REGION_COLORS = [
   "var(--gym-muscle-1)",
@@ -42,7 +45,7 @@ const REGION_COLORS = [
   imports: [
     ContextualTranslatePipe,
     TextComponent,
-    BarChartComponent,
+    ActivityHeatmapComponent,
     LineChartComponent,
     SkeletonMetricsComponent,
     SkeletonPanelComponent,
@@ -62,6 +65,7 @@ export class GymAnalyticsComponent {
   readonly seeAll = output<void>();
 
   private muscleCatalog = inject(MuscleCatalogService);
+  private activityView = inject(GymActivityViewService);
   private readonly formatter = new Intl.NumberFormat("es", {
     maximumFractionDigits: 0,
   });
@@ -79,13 +83,8 @@ export class GymAnalyticsComponent {
       .join(""),
   );
 
-  readonly volumeBars = computed<BarDatum[]>(() =>
-    (this.stats()?.sessionVolumes ?? []).map((session) => ({
-      id: session.id,
-      label: session.name,
-      value: session.volumeKg,
-      display: this.formatter.format(session.volumeKg),
-    })),
+  readonly activity = computed<GymActivityView>(() =>
+    this.activityView.build(this.stats()?.trainingDays ?? [], ACTIVITY_WEEKS),
   );
 
   readonly progressionPoints = computed<number[]>(() =>

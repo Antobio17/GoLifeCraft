@@ -36,9 +36,15 @@
       "sessions": "Sesiones",
       "volume": "Volumen",
       "exercises": "Ejercicios",
-      "volumeChart": {
-        "title": "Volumen de entrenamiento",
-        "subtitle": "kg levantados · últimos 7 días"
+      "activity": {
+        "title": "Actividad",
+        "subtitle": "días entrenados · últimos 6 meses",
+        "figure": "{{days}} días",
+        "tooltip": "{{date}} · {{workouts}} entrenos · {{volume}} kg",
+        "tooltipOne": "{{date}} · 1 entreno · {{volume}} kg",
+        "tooltipEmpty": "{{date}} · sin entreno",
+        "less": "menos",
+        "more": "más"
       },
       "progression": {
         "title": "Progresión",

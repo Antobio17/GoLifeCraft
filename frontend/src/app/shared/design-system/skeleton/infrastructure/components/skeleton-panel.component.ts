@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-export type SkeletonPanelContent = "none" | "bars" | "meters" | "spark";
+export type SkeletonPanelContent = "none" | "heatmap" | "meters" | "spark";
 
 @Component({
   selector: "ds-skeleton-panel",
@@ -11,13 +11,13 @@ export class SkeletonPanelComponent {
   @Input() brand = false;
   @Input() subtitle = true;
   @Input() figure = false;
-  @Input() content: SkeletonPanelContent = "bars";
+  @Input() content: SkeletonPanelContent = "heatmap";
   @Input() chartHeight = "108px";
-  @Input() bars = 7;
+  @Input() heatmapCells = 112;
   @Input() meters = 4;
 
-  get barArray(): number[] {
-    return Array.from({ length: this.bars }, (_, index) => index);
+  get heatmapArray(): number[] {
+    return Array.from({ length: this.heatmapCells }, (_, index) => index);
   }
 
   get meterArray(): number[] {

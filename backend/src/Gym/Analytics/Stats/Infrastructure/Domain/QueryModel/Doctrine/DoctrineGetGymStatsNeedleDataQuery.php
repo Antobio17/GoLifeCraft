@@ -8,7 +8,7 @@ use Gym\Analytics\Stats\Domain\QueryModel\GetGymStatsNeedleDataQuery;
 
 final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNeedleDataQuery
 {
-    private const int SESSION_VOLUMES_LIMIT = 7;
+    private const int ACTIVITY_DAYS = 371;
     private const string COMPLETED_STATUS = 'completed';
 
     public function __construct(private Connection $connection)
@@ -37,7 +37,7 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
             totalSets: (int) ($setAggregates['total_sets'] ?? 0),
             totalVolumeKg: (float) ($setAggregates['total_volume'] ?? 0),
             totalPlannedMinutes: $this->totalTrainedMinutes(),
-            sessionVolumes: $this->sessionVolumes(),
+            trainingDays: $this->trainingDays(),
             muscleDistribution: $this->muscleDistribution(),
             volumeProgression: $this->volumeProgression(),
         );
@@ -77,36 +77,68 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
     }
 
     /**
-     * @return array<int, array{id: string, name: string, exerciseCount: int, volumeKg: float}>
+     * @return array<int, array{date: string, workouts: int, volumeKg: float, minutes: int}>
      */
-    private function sessionVolumes(): array
+    private function trainingDays(): array
     {
+        $from = (new \DateTimeImmutable(datetime: 'today'))
+            ->modify(modifier: '-'.(self::ACTIVITY_DAYS - 1).' days')
+            ->format(format: 'Y-m-d 00:00:00');
+
         $rows = $this->connection->createQueryBuilder()
             ->select(
-                'tw.session_id AS id',
-                'tw.session_name AS name',
-                'COUNT(DISTINCT we.id) AS exercise_count',
-                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS volume',
+                'DATE(tw.finished_at) AS day',
+                'COUNT(*) AS workouts',
+                'COALESCE(SUM(tw.duration_seconds), 0) AS seconds',
             )
             ->from(table: 'training_workout', alias: 'tw')
-            ->leftJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')
-            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
             ->where('tw.status = :status')
+            ->andWhere('tw.finished_at >= :from')
             ->setParameter('status', self::COMPLETED_STATUS)
-            ->groupBy('tw.session_id')
-            ->addGroupBy('tw.session_name')
-            ->orderBy(sort: 'volume', order: 'DESC')
-            ->addOrderBy(sort: 'tw.session_name', order: 'ASC')
-            ->setMaxResults(maxResults: self::SESSION_VOLUMES_LIMIT)
+            ->setParameter('from', $from)
+            ->groupBy('day')
+            ->orderBy(sort: 'day', order: 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
 
+        $volumeByDay = $this->volumeByDay(from: $from);
+
         return array_map(callback: static fn (array $row): array => [
-            'id' => $row['id'],
-            'name' => $row['name'],
-            'exerciseCount' => (int) $row['exercise_count'],
-            'volumeKg' => (float) $row['volume'],
+            'date' => (string) $row['day'],
+            'workouts' => (int) $row['workouts'],
+            'volumeKg' => (float) ($volumeByDay[(string) $row['day']] ?? 0),
+            'minutes' => intdiv((int) $row['seconds'], 60),
         ], array: $rows);
+    }
+
+    /**
+     * @return array<string, float>
+     */
+    private function volumeByDay(string $from): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select(
+                'DATE(tw.finished_at) AS day',
+                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS volume',
+            )
+            ->from(table: 'training_workout', alias: 'tw')
+            ->innerJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')
+            ->innerJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
+            ->where('tw.status = :status')
+            ->andWhere('tw.finished_at >= :from')
+            ->setParameter('status', self::COMPLETED_STATUS)
+            ->setParameter('from', $from)
+            ->groupBy('day')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $volumes = [];
+
+        foreach ($rows as $row) {
+            $volumes[(string) $row['day']] = (float) $row['volume'];
+        }
+
+        return $volumes;
     }
 
     /**

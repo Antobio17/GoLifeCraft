@@ -1,8 +1,8 @@
-export interface SessionVolume {
-  id: string;
-  name: string;
-  exerciseCount: number;
+export interface TrainingDay {
+  date: string;
+  workouts: number;
   volumeKg: number;
+  minutes: number;
 }
 
 export interface MuscleDistribution {
@@ -21,7 +21,7 @@ export interface GymStats {
   totalSets: number;
   totalVolumeKg: number;
   totalPlannedMinutes: number;
-  sessionVolumes: SessionVolume[];
+  trainingDays: TrainingDay[];
   muscleDistribution: MuscleDistribution[];
   volumeProgression: VolumePoint[];
 }

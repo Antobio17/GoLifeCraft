@@ -11,14 +11,25 @@
   --gym-muscle-3: #7fc4ff;
 }
 
-ds-bar-chart {
-  margin-top: 15px;
-  --ds-bar-rest: var(--ds-forest-200);
-  --ds-bar-top: var(--ds-accent);
+.panel__heatmap {
+  margin-top: 14px;
+  --ds-heat-level-0: var(--ds-forest-50);
+  --ds-heat-level-1: var(--ds-forest-200);
+  --ds-heat-level-2: var(--ds-forest-300);
+  --ds-heat-level-3: var(--ds-forest-400);
+  --ds-heat-level-4: var(--ds-forest-600);
+  --ds-heat-today: var(--ds-forest-900);
+  --ds-heat-today-strong: var(--ds-forest-50);
 }
 
-:host-context([data-theme="dark"]) ds-bar-chart {
-  --ds-bar-rest: color-mix(in srgb, var(--ds-accent) 34%, transparent);
+:host-context([data-theme="dark"]) .panel__heatmap {
+  --ds-heat-level-0: rgba(255, 255, 255, 0.06);
+  --ds-heat-level-1: color-mix(in srgb, var(--ds-accent) 22%, transparent);
+  --ds-heat-level-2: color-mix(in srgb, var(--ds-accent) 45%, transparent);
+  --ds-heat-level-3: color-mix(in srgb, var(--ds-accent) 70%, transparent);
+  --ds-heat-level-4: var(--ds-accent);
+  --ds-heat-today: rgba(255, 255, 255, 0.9);
+  --ds-heat-today-strong: rgba(0, 0, 0, 0.75);
 }
 
 .panel__spark {

@@ -7,7 +7,7 @@
 
   @if (loading()) {
     <ds-skeleton-metrics [count]="3" [gap]="'8px'" padding="11px 12px" />
-    <ds-skeleton-panel [figure]="true" content="bars" chartHeight="108px" />
+    <ds-skeleton-panel [figure]="true" content="heatmap" chartHeight="108px" />
     <ds-grid [minColumn]="'240px'" [gap]="'10px'">
       <ds-skeleton-panel [brand]="true" content="spark" chartHeight="54px" />
       <ds-skeleton-panel content="meters" [meters]="4" />
@@ -32,14 +32,19 @@
     </ds-stack>
 
     <ds-panel
-      [title]="'dashboard.gym.volumeChart.title' | t"
-      [subtitle]="'dashboard.gym.volumeChart.subtitle' | t"
-      [figure]="totalVolumeText() + ' kg'"
+      [title]="'dashboard.gym.activity.title' | t"
+      [subtitle]="'dashboard.gym.activity.subtitle' | t"
+      [figure]="
+        'dashboard.gym.activity.figure' | t: { days: activity().activeDays }
+      "
     >
-      <ds-bar-chart
-        [bars]="volumeBars()"
-        [showValues]="false"
-        chartHeight="108px"
+      <ds-activity-heatmap
+        class="panel__heatmap"
+        [weeks]="activity().weeks"
+        [months]="activity().months"
+        [weekdayLabels]="activity().weekdays"
+        [legendLess]="'dashboard.gym.activity.less' | t"
+        [legendMore]="'dashboard.gym.activity.more' | t"
       />
     </ds-panel>
 

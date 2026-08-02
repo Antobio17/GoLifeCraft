@@ -12,10 +12,10 @@
   </div>
 
   @switch (content) {
-    @case ("bars") {
-      <div class="skpan__chart" [style.height]="chartHeight">
-        @for (bar of barArray; track bar) {
-          <span class="ds-sk skpan__bar"></span>
+    @case ("heatmap") {
+      <div class="skpan__heat" [style.height]="chartHeight">
+        @for (cell of heatmapArray; track cell) {
+          <span class="ds-sk skpan__heat-cell"></span>
         }
       </div>
     }

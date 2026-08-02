@@ -31,7 +31,7 @@ export class HttpGetGymStatsAdapter extends GetGymStatsPort {
       totalSets: 0,
       totalVolumeKg: 0,
       totalPlannedMinutes: 0,
-      sessionVolumes: [],
+      trainingDays: [],
       muscleDistribution: [],
       volumeProgression: [],
     };
