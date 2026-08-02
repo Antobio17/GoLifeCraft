@@ -171,6 +171,10 @@ export class MenuViewService {
     return `${this.format(item.quantity)} ${unitLabel}`;
   }
 
+  itemKey(item: MenuItemView): string {
+    return `${item.dayKey ?? "single"}:${item.meal}:${item.position}`;
+  }
+
   private macroGoal(
     label: string,
     value: number,

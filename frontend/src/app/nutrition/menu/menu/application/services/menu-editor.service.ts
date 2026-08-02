@@ -57,12 +57,23 @@ export class MenuEditorService {
     return { ...this.toUpdateRequest(detail), items };
   }
 
-  withItemQuantity(
+  withItemQuantityApplied(
     detail: MenuDetailAttributes,
     itemId: string,
     quantity: number,
-  ): UpdateMenuRequest {
-    return this.withItemPatched(detail, itemId, { quantity });
+  ): MenuDetailAttributes {
+    return {
+      ...detail,
+      days: detail.days.map((day) => ({
+        ...day,
+        meals: day.meals.map((meal) => ({
+          ...meal,
+          items: meal.items.map((item) =>
+            item.id === itemId ? { ...item, quantity } : item,
+          ),
+        })),
+      })),
+    };
   }
 
   withItemUnit(

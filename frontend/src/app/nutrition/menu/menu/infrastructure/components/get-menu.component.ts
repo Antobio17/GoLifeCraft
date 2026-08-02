@@ -535,9 +535,14 @@ export class GetMenuComponent implements OnInit {
     const detail = this.loadedDetail();
     if (!detail) return;
 
-    this.quantityChanges.next(
-      this.editor.withItemQuantity(detail, item.id, quantity),
+    const patched = this.editor.withItemQuantityApplied(
+      detail,
+      item.id,
+      quantity,
     );
+
+    this.loadedDetail.set(patched);
+    this.quantityChanges.next(this.editor.toUpdateRequest(patched));
   }
 
   onUnit(item: MenuItemView, unit: string): void {

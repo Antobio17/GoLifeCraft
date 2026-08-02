@@ -221,7 +221,7 @@
           <ds-placeholder-note [message]="'getMenu.meal.empty' | t" />
         } @else {
           <ds-stack [gap]="'7px'">
-            @for (item of meal.items; track item.id) {
+            @for (item of meal.items; track view.itemKey(item)) {
               <ds-swipe-to-delete
                 [disabled]="!canWrite"
                 [reveal]="66"
