@@ -33,6 +33,21 @@
 
     <ds-stack class="shopping-item__body" [gap]="'2px'" [grow]="true">
       <ds-text variant="strong" class="shopping-item__name">{{ name }}</ds-text>
+
+      <ds-stack direction="row" align="center" [gap]="'6px'" [wrap]="true">
+        <ds-text [inline]="true" class="shopping-item__price">{{
+          priceLabel
+        }}</ds-text>
+        <ds-chip tone="brand" class="shopping-item__count">{{
+          quantity
+        }}</ds-chip>
+        @if (unitLabel) {
+          <ds-text variant="meta" [inline]="true" class="shopping-item__unit">{{
+            unitLabel
+          }}</ds-text>
+        }
+      </ds-stack>
+
       <ds-stack
         class="shopping-item__meta"
         direction="row"
@@ -47,35 +62,33 @@
           store
         }}</ds-text>
       </ds-stack>
-    </ds-stack>
 
-    <ds-stack class="shopping-item__trailing" align="end" [gap]="'6px'">
-      <ds-text class="shopping-item__price">{{ priceLabel }}</ds-text>
-      @if (canWrite) {
-        <ds-stack class="shopping-item__stepper" direction="row" align="center">
-          <button
-            type="button"
-            class="shopping-item__step"
-            [attr.aria-label]="decrementLabel"
-            (click)="decrement.emit()"
-          >
-            −
-          </button>
-          <ds-text [inline]="true" class="shopping-item__qty">{{
-            quantity
-          }}</ds-text>
-          <button
-            type="button"
-            class="shopping-item__step"
-            [attr.aria-label]="incrementLabel"
-            (click)="increment.emit()"
-          >
-            +
-          </button>
-        </ds-stack>
-      } @else {
-        <ds-chip class="shopping-item__qty-static">×{{ quantity }}</ds-chip>
+      @if (packLabel) {
+        <ds-text variant="meta" class="shopping-item__pack">{{
+          packLabel
+        }}</ds-text>
       }
     </ds-stack>
+
+    @if (canWrite) {
+      <ds-stack class="shopping-item__stepper" align="center">
+        <button
+          type="button"
+          class="shopping-item__step"
+          [attr.aria-label]="incrementLabel"
+          (click)="increment.emit()"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          class="shopping-item__step"
+          [attr.aria-label]="decrementLabel"
+          (click)="decrement.emit()"
+        >
+          −
+        </button>
+      </ds-stack>
+    }
   </ds-stack>
 </ds-swipe-to-delete>

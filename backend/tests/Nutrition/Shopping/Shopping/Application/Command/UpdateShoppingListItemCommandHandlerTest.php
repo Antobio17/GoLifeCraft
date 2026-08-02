@@ -32,6 +32,7 @@ final class UpdateShoppingListItemCommandHandlerTest extends TestCase
             id: 'item-1',
             articleId: 'article-1',
             quantity: 1,
+            baseQuantity: null,
             createdByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),
         );
@@ -68,6 +69,7 @@ final class UpdateShoppingListItemCommandHandlerTest extends TestCase
             id: 'item-1',
             articleId: 'article-1',
             quantity: 1,
+            baseQuantity: null,
             createdByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),
         );

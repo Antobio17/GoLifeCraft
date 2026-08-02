@@ -30,6 +30,7 @@ final class AddShoppingListItemController
             $this->handle(message: new AddShoppingListItemCommand(
                 articleId: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'articleId'),
                 quantity: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'quantity', required: false) ?? 1,
+                baseQuantity: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'baseQuantity', required: false),
                 createdByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 

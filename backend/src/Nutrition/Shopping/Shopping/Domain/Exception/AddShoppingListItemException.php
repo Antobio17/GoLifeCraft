@@ -15,15 +15,6 @@ final class AddShoppingListItemException extends BaseException
         );
     }
 
-    public static function articleAlreadyInList(string $articleId): self
-    {
-        return new static(
-            title: 'The article is already in the shopping list.',
-            keyTranslation: 'shopping.list.item.article.already.in.list',
-            details: ['articleId' => $articleId]
-        );
-    }
-
     public static function quantityMustBePositive(): self
     {
         return new static(

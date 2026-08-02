@@ -25,14 +25,27 @@ final readonly class AddShoppingListItemCommandHandler
             throw AddShoppingListItemException::articleNotFound(articleId: $command->articleId);
         }
 
-        if ($this->needleDataQuery->articleAlreadyInList(articleId: $command->articleId)) {
-            throw AddShoppingListItemException::articleAlreadyInList(articleId: $command->articleId);
+        $existing = $this->shoppingListItemRepository->findByArticleId(articleId: $command->articleId);
+
+        if (null !== $existing) {
+            $existing->increaseNeed(
+                quantity: $command->quantity,
+                baseQuantity: $command->baseQuantity,
+                updatedByUserId: $command->createdByUserId,
+                dateTimeGenerator: $this->dateTimeGenerator,
+            );
+
+            $this->shoppingListItemRepository->save(shoppingListItem: $existing);
+            $this->domainEventCollectorService->register(aggregate: $existing);
+
+            return;
         }
 
         $item = ShoppingListItem::create(
             id: $this->shoppingListItemRepository->nextId(),
             articleId: $command->articleId,
             quantity: $command->quantity,
+            baseQuantity: $command->baseQuantity,
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

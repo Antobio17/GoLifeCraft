@@ -25,6 +25,17 @@ final class DoctrineShoppingListItemRepository extends EntityRepository implemen
             ->getOneOrNullResult();
     }
 
+    public function findByArticleId(string $articleId): ?ShoppingListItem
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('shoppingListItem')
+            ->from(from: ShoppingListItem::class, alias: 'shoppingListItem')
+            ->where('shoppingListItem.articleId = :articleId')
+            ->setParameter(key: 'articleId', value: $articleId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function save(ShoppingListItem $shoppingListItem): void
     {
         $this->getEntityManager()->persist(object: $shoppingListItem);

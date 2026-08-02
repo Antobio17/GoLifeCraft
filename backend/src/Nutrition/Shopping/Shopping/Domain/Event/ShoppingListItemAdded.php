@@ -11,6 +11,7 @@ final readonly class ShoppingListItemAdded extends DomainEvent
         \DateTime $occurredOn,
         public string $articleId,
         public int $quantity,
+        public ?float $baseQuantity,
         public bool $checked,
         public string $createdByUserId,
     ) {

@@ -14,6 +14,10 @@ final readonly class ShoppingListItemView
         public string $category,
         public ?float $unitPrice,
         public int $quantity,
+        public ?string $packUnit,
+        public ?float $packSize,
+        public string $baseUnit,
+        public ?float $baseQuantity,
         public bool $checked,
         public float $lineTotal,
     ) {

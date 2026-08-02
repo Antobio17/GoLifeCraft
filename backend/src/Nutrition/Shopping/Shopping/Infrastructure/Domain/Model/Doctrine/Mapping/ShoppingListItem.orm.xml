@@ -5,6 +5,7 @@
     <field name="version" type="integer" version="true"/>
     <field name="articleId" type="string" column="article_id" length="36"/>
     <field name="quantity" type="integer" column="quantity"/>
+    <field name="baseQuantity" type="float" column="base_quantity" nullable="true"/>
     <field name="checked" type="boolean" column="checked"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>

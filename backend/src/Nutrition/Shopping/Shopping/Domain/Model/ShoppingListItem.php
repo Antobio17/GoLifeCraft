@@ -14,12 +14,14 @@ class ShoppingListItem extends GenericAggregate
 {
     public string $articleId;
     public int $quantity;
+    public ?float $baseQuantity = null;
     public bool $checked;
 
     public static function create(
         string $id,
         string $articleId,
         int $quantity,
+        ?float $baseQuantity,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
@@ -33,6 +35,7 @@ class ShoppingListItem extends GenericAggregate
         $item->id = $id;
         $item->articleId = $articleId;
         $item->quantity = $quantity;
+        $item->baseQuantity = $baseQuantity;
         $item->checked = false;
         $item->stampCreation(userId: $createdByUserId, now: $now);
 
@@ -41,11 +44,39 @@ class ShoppingListItem extends GenericAggregate
             occurredOn: $now,
             articleId: $articleId,
             quantity: $quantity,
+            baseQuantity: $baseQuantity,
             checked: false,
             createdByUserId: $createdByUserId,
         ));
 
         return $item;
+    }
+
+    public function increaseNeed(
+        int $quantity,
+        ?float $baseQuantity,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!self::hasValidQuantity(quantity: $quantity)) {
+            throw AddShoppingListItemException::quantityMustBePositive();
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->quantity += $quantity;
+        $this->baseQuantity = self::sumBaseQuantity(current: $this->baseQuantity, added: $baseQuantity);
+        $this->checked = false;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new ShoppingListItemUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            articleId: $this->articleId,
+            quantity: $this->quantity,
+            baseQuantity: $this->baseQuantity,
+            checked: $this->checked,
+        ));
     }
 
     public function update(
@@ -69,6 +100,7 @@ class ShoppingListItem extends GenericAggregate
             occurredOn: $now,
             articleId: $this->articleId,
             quantity: $quantity,
+            baseQuantity: $this->baseQuantity,
             checked: $checked,
         ));
     }
@@ -90,5 +122,14 @@ class ShoppingListItem extends GenericAggregate
     private static function hasValidQuantity(int $quantity): bool
     {
         return $quantity > 0;
+    }
+
+    private static function sumBaseQuantity(?float $current, ?float $added): ?float
+    {
+        if (null === $current && null === $added) {
+            return null;
+        }
+
+        return ($current ?? 0.0) + ($added ?? 0.0);
     }
 }

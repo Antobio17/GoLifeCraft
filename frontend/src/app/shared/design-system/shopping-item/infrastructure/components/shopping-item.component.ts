@@ -25,7 +25,9 @@ export class ShoppingItemComponent {
   @Input() brand: string | null = null;
   @Input() store: string | null = null;
   @Input() priceLabel = "";
+  @Input() packLabel: string | null = null;
   @Input() quantity = 0;
+  @Input() unitLabel: string | null = null;
   @Input() checked = false;
   @Input() canWrite = false;
   @Input() toggleAriaLabel = "";

@@ -9,6 +9,7 @@ final readonly class AddShoppingListItemCommand implements Command
     public function __construct(
         public string $articleId,
         public int $quantity,
+        public ?float $baseQuantity,
         public string $createdByUserId,
     ) {
     }

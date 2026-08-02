@@ -8,6 +8,8 @@ interface ShoppingListItemRepository
 
     public function findById(string $id): ?ShoppingListItem;
 
+    public function findByArticleId(string $articleId): ?ShoppingListItem;
+
     public function save(ShoppingListItem $shoppingListItem): void;
 
     public function delete(ShoppingListItem $shoppingListItem): void;

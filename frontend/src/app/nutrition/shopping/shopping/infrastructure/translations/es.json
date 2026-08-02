@@ -15,6 +15,11 @@
       "total": "Total estimado"
     },
     "bought": "{done} de {count} comprados",
+    "pack": {
+      "perPack": "{amount} por {unit}",
+      "need": "necesitas {amount}",
+      "leftover": "sobran {amount}"
+    },
     "tabs": {
       "all": "Todos"
     },

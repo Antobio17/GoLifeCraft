@@ -6,6 +6,9 @@ export interface MenuShoppingNeed {
   store: string | null;
   quantity: number;
   baseUnit: string;
+  packUnit: string | null;
+  packSize: number | null;
+  packs: number;
   inShoppingList: boolean;
 }
 

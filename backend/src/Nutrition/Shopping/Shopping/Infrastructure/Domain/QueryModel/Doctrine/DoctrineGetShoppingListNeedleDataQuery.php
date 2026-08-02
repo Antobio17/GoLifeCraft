@@ -3,6 +3,7 @@
 namespace Nutrition\Shopping\Shopping\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Nutrition\Catalog\Article\Domain\Model\ArticlePack;
 use Nutrition\Shopping\Shopping\Domain\QueryModel\Dto\GetShoppingListResult;
 use Nutrition\Shopping\Shopping\Domain\QueryModel\Dto\ShoppingListItemView;
 use Nutrition\Shopping\Shopping\Domain\QueryModel\GetShoppingListNeedleDataQuery;
@@ -39,6 +40,11 @@ final readonly class DoctrineGetShoppingListNeedleDataQuery implements GetShoppi
 
             $total += $lineTotal;
 
+            $pack = ArticlePack::fromEquivalence(
+                unit: $row['pack_unit'],
+                size: null !== $row['pack_size'] ? (float) $row['pack_size'] : null,
+            );
+
             $items[] = new ShoppingListItemView(
                 id: $row['id'],
                 articleId: $row['article_id'],
@@ -49,6 +55,10 @@ final readonly class DoctrineGetShoppingListNeedleDataQuery implements GetShoppi
                 category: $row['category'] ?? 'Otros',
                 unitPrice: $unitPrice,
                 quantity: $quantity,
+                packUnit: $pack->unit,
+                packSize: $pack->size,
+                baseUnit: $row['base_unit'] ?? 'g',
+                baseQuantity: null !== $row['base_quantity'] ? (float) $row['base_quantity'] : null,
                 checked: $checked,
                 lineTotal: $lineTotal,
             );
@@ -77,16 +87,21 @@ final readonly class DoctrineGetShoppingListNeedleDataQuery implements GetShoppi
                 'sli.id',
                 'sli.article_id',
                 'sli.quantity',
+                'sli.base_quantity',
                 'sli.checked',
                 'a.name',
                 'a.emoji',
                 'a.brand',
                 'a.price',
+                'a.base_unit',
+                'a.pack_unit',
+                'ae.quantity AS pack_size',
                 's.name AS store',
                 'c.name AS category',
             )
             ->from(table: 'shopping_list_item', alias: 'sli')
             ->leftJoin(fromAlias: 'sli', join: 'article', alias: 'a', condition: 'sli.article_id = a.id')
+            ->leftJoin(fromAlias: 'a', join: 'article_equivalence', alias: 'ae', condition: 'ae.article_id = a.id AND ae.unit = a.pack_unit')
             ->leftJoin(fromAlias: 'a', join: 'supermarket', alias: 's', condition: 'a.supermarket_id = s.id')
             ->leftJoin(fromAlias: 'a', join: 'category', alias: 'c', condition: 'a.category_id = c.id')
             ->orderBy('sli.created_at', 'ASC')

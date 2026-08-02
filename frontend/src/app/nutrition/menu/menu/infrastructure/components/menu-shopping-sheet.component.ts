@@ -17,16 +17,11 @@ import { CheckRowComponent } from "@shared/design-system/check-row/infrastructur
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { AddShoppingListItemService } from "@nutrition/shopping/shopping/application/services/add-shopping-list-item.service";
 import { GetMenuShoppingNeedsService } from "@nutrition/menu/menu/application/services/get-menu-shopping-needs.service";
-import { MenuViewService } from "@nutrition/menu/menu/application/services/menu-view.service";
+import {
+  MenuShoppingLabels,
+  MenuViewService,
+} from "@nutrition/menu/menu/application/services/menu-view.service";
 import { MenuShoppingNeed } from "@nutrition/menu/menu/domain/models/menu-shopping-needs.model";
-
-interface ShoppingNeedRow {
-  articleId: string;
-  name: string;
-  emoji: string;
-  meta: string;
-  checked: boolean;
-}
 
 const MODULE_PATH = "nutrition/menu/menu";
 
@@ -110,14 +105,19 @@ export class MenuShoppingSheetComponent {
 
   open = computed(() => this.currentMenuId() !== null);
 
-  rows = computed<ShoppingNeedRow[]>(() =>
-    this.needs().map((need) => ({
-      articleId: need.articleId,
-      name: need.name,
-      emoji: need.emoji,
-      meta: this.metaLabel(need),
-      checked: !this.unchecked().includes(need.articleId),
-    })),
+  shoppingLabels = computed<MenuShoppingLabels>(() => ({
+    need: this.t("getMenu.shopping.need"),
+    packs: this.t("getMenu.shopping.packs"),
+    leftover: this.t("getMenu.shopping.leftover"),
+    inList: this.t("getMenu.shopping.inList"),
+  }));
+
+  rows = computed(() =>
+    this.view.shoppingRows(
+      this.needs(),
+      this.unchecked(),
+      this.shoppingLabels(),
+    ),
   );
 
   checkedCount = computed(
@@ -171,7 +171,11 @@ export class MenuShoppingSheetComponent {
 
     forkJoin(
       checked.map((row) =>
-        this.addShoppingListItemService.addShoppingListItem(row.articleId),
+        this.addShoppingListItemService.addShoppingListItem(
+          row.articleId,
+          row.packs,
+          row.baseQuantity,
+        ),
       ),
     ).subscribe({
       next: () => {
@@ -181,16 +185,6 @@ export class MenuShoppingSheetComponent {
       },
       error: () => this.saving.set(false),
     });
-  }
-
-  private metaLabel(need: MenuShoppingNeed): string {
-    const quantity = `≈ ${this.view.integer(need.quantity)} ${need.baseUnit}`;
-    const store = need.store ?? need.brand;
-    const base = store ? `${store} · ${quantity}` : quantity;
-
-    if (!need.inShoppingList) return base;
-
-    return `${base} · ${this.t("getMenu.shopping.inList")}`;
   }
 
   private loadNeeds(menuId: string): void {

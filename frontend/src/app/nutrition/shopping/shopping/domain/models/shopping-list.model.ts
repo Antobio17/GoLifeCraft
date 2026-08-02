@@ -8,6 +8,10 @@ export interface ShoppingListItemView {
   category: string;
   unitPrice: number | null;
   quantity: number;
+  packUnit: string | null;
+  packSize: number | null;
+  baseUnit: string;
+  baseQuantity: number | null;
   checked: boolean;
   lineTotal: number;
 }

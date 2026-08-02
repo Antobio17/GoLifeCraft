@@ -1,8 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { MacroGoal } from "@shared/design-system/macro-panel/domain/models/macro-goal.model";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { WeekDayTab } from "@shared/design-system/week-day-tabs/domain/models/week-day-tab.model";
 import { DiaryGoalConfig } from "@nutrition/diary/goal/domain/models/diary-goal.model";
+import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
+import { MenuShoppingNeed } from "../../domain/models/menu-shopping-needs.model";
 import {
   MenuDayView,
   MenuDetailAttributes,
@@ -17,6 +19,23 @@ export interface MacroLabels {
   carbs: string;
 }
 
+export interface MenuShoppingLabels {
+  need: string;
+  packs: string;
+  leftover: string;
+  inList: string;
+}
+
+export interface MenuShoppingRow {
+  articleId: string;
+  name: string;
+  emoji: string;
+  meta: string;
+  packs: number;
+  baseQuantity: number;
+  checked: boolean;
+}
+
 const WEEK_DAY_KEYS: MenuWeekDayKey[] = [
   "mon",
   "tue",
@@ -29,8 +48,74 @@ const WEEK_DAY_KEYS: MenuWeekDayKey[] = [
 
 @Injectable()
 export class MenuViewService {
+  private unitCatalog = inject(UnitCatalogService);
+
   weekDayKeys(): MenuWeekDayKey[] {
     return [...WEEK_DAY_KEYS];
+  }
+
+  shoppingRows(
+    needs: MenuShoppingNeed[],
+    unchecked: string[],
+    labels: MenuShoppingLabels,
+  ): MenuShoppingRow[] {
+    return needs.map((need) => ({
+      articleId: need.articleId,
+      name: need.name,
+      emoji: need.emoji,
+      meta: this.shoppingMeta(need, labels),
+      packs: need.packs,
+      baseQuantity: need.quantity,
+      checked: !unchecked.includes(need.articleId),
+    }));
+  }
+
+  private shoppingMeta(
+    need: MenuShoppingNeed,
+    labels: MenuShoppingLabels,
+  ): string {
+    const source = need.store ?? need.brand;
+
+    return [
+      ...(source ? [source] : []),
+      labels.need.replace(
+        "{amount}",
+        this.unitCatalog.amountLabel(need.quantity, need.baseUnit),
+      ),
+      ...this.packParts(need, labels),
+      ...(need.inShoppingList ? [labels.inList] : []),
+    ].join(" · ");
+  }
+
+  private packParts(
+    need: MenuShoppingNeed,
+    labels: MenuShoppingLabels,
+  ): string[] {
+    if (!need.packUnit || !need.packSize) return [];
+
+    const parts = [
+      labels.packs
+        .replace("{count}", `${need.packs}`)
+        .replace(
+          "{unit}",
+          this.unitCatalog.pluralLabel(need.packUnit, need.packs),
+        )
+        .replace(
+          "{amount}",
+          this.unitCatalog.amountLabel(need.packSize, need.baseUnit),
+        ),
+    ];
+
+    const leftover = need.packs * need.packSize - need.quantity;
+    if (leftover <= 0) return parts;
+
+    return [
+      ...parts,
+      labels.leftover.replace(
+        "{amount}",
+        this.unitCatalog.amountLabel(leftover, need.baseUnit),
+      ),
+    ];
   }
 
   integer(value: number | null | undefined): string {

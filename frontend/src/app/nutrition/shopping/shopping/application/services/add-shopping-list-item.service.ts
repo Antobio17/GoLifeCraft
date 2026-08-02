@@ -4,10 +4,15 @@ import { AddShoppingListItemPort } from "@nutrition/shopping/shopping/domain/por
 export class AddShoppingListItemService {
   constructor(private addShoppingListItemPort: AddShoppingListItemPort) {}
 
-  addShoppingListItem(articleId: string, quantity = 1): Observable<void> {
+  addShoppingListItem(
+    articleId: string,
+    quantity = 1,
+    baseQuantity: number | null = null,
+  ): Observable<void> {
     return this.addShoppingListItemPort.addShoppingListItem({
       articleId,
       quantity,
+      baseQuantity,
     });
   }
 }

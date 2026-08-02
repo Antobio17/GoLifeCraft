@@ -26,6 +26,17 @@ final class InMemoryShoppingListItemRepository implements ShoppingListItemReposi
         return null;
     }
 
+    public function findByArticleId(string $articleId): ?ShoppingListItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->articleId === $articleId) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
     public function save(ShoppingListItem $shoppingListItem): void
     {
         foreach ($this->items as $key => $existing) {

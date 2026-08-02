@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { ArticleViewService } from "@nutrition/catalog/article/application/services/article-view.service";
+import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import {
   ShoppingListAttributes,
   ShoppingListItemView,
@@ -15,11 +16,31 @@ export interface ShoppingStoreTab {
   count: number;
 }
 
+export interface ShoppingPackLabels {
+  perPack: string;
+  need: string;
+  leftover: string;
+}
+
+export interface ShoppingItemRow {
+  id: string;
+  articleId: string;
+  emoji: string;
+  name: string;
+  brand: string | null;
+  store: string | null;
+  quantity: number;
+  checked: boolean;
+  priceLabel: string;
+  unitLabel: string | null;
+  packLabel: string | null;
+}
+
 export interface ShoppingCategoryGroup {
   category: string;
   label: string;
   countLabel: string;
-  items: ShoppingListItemView[];
+  items: ShoppingItemRow[];
 }
 
 export interface ShoppingSummary {
@@ -47,6 +68,7 @@ export interface ShoppingFacets {
 @Injectable()
 export class ShoppingListViewService {
   private articleView = inject(ArticleViewService);
+  private unitCatalog = inject(UnitCatalogService);
 
   resolveTab(attributes: ShoppingListAttributes, requested: string): string {
     if (requested !== ALL_STORES && attributes.stores.includes(requested)) {
@@ -88,6 +110,7 @@ export class ShoppingListViewService {
   groups(
     items: ShoppingListItemView[],
     countSuffix: string,
+    packLabels: ShoppingPackLabels,
   ): ShoppingCategoryGroup[] {
     const order: string[] = [];
     const buckets: Record<string, ShoppingListItemView[]> = {};
@@ -105,8 +128,95 @@ export class ShoppingListViewService {
       category,
       label: category.toUpperCase(),
       countLabel: `${buckets[category].length} ${countSuffix}`,
-      items: buckets[category],
+      items: buckets[category].map((item) => this.row(item, packLabels)),
     }));
+  }
+
+  row(
+    item: ShoppingListItemView,
+    packLabels: ShoppingPackLabels,
+  ): ShoppingItemRow {
+    return {
+      id: item.id,
+      articleId: item.articleId,
+      emoji: item.emoji,
+      name: item.name,
+      brand: item.brand,
+      store: item.store,
+      quantity: item.quantity,
+      checked: item.checked,
+      priceLabel: this.money(item.lineTotal),
+      unitLabel: this.unitLabel(item),
+      packLabel: this.packLabel(item, packLabels),
+    };
+  }
+
+  leftover(item: ShoppingListItemView): number {
+    if (!item.packSize || !item.baseQuantity) return 0;
+
+    return Math.max(0, item.quantity * item.packSize - item.baseQuantity);
+  }
+
+  private unitLabel(item: ShoppingListItemView): string | null {
+    if (!item.packUnit) return null;
+
+    return this.unitCatalog.pluralLabel(item.packUnit, item.quantity);
+  }
+
+  private packLabel(
+    item: ShoppingListItemView,
+    packLabels: ShoppingPackLabels,
+  ): string | null {
+    const parts = [
+      ...this.packSizeParts(item, packLabels),
+      ...this.needParts(item, packLabels),
+    ];
+
+    if (parts.length === 0) return null;
+
+    return parts.join(" · ");
+  }
+
+  private packSizeParts(
+    item: ShoppingListItemView,
+    packLabels: ShoppingPackLabels,
+  ): string[] {
+    if (!item.packUnit || !item.packSize) return [];
+
+    return [
+      packLabels.perPack
+        .replace("{amount}", this.amount(item.packSize, item.baseUnit))
+        .replace("{unit}", this.unitCatalog.label(item.packUnit)),
+    ];
+  }
+
+  private needParts(
+    item: ShoppingListItemView,
+    packLabels: ShoppingPackLabels,
+  ): string[] {
+    if (!item.baseQuantity) return [];
+
+    const parts = [
+      packLabels.need.replace(
+        "{amount}",
+        this.amount(item.baseQuantity, item.baseUnit),
+      ),
+    ];
+
+    const leftover = this.leftover(item);
+    if (leftover <= 0) return parts;
+
+    return [
+      ...parts,
+      packLabels.leftover.replace(
+        "{amount}",
+        this.amount(leftover, item.baseUnit),
+      ),
+    ];
+  }
+
+  private amount(value: number, baseUnit: string): string {
+    return this.unitCatalog.amountLabel(value, baseUnit);
   }
 
   summary(items: ShoppingListItemView[], boughtLabel: string): ShoppingSummary {
@@ -123,12 +233,9 @@ export class ShoppingListViewService {
     };
   }
 
-  lineLabel(item: ShoppingListItemView): string {
-    return this.money(item.lineTotal);
-  }
-
   optimisticItem(article: Article, id: string): ShoppingListItemView {
     const unitPrice = article.attributes.price ?? null;
+    const pack = this.articleView.packEquivalence(article);
 
     return {
       id,
@@ -140,6 +247,10 @@ export class ShoppingListViewService {
       category: this.articleView.category(article) ?? "Otros",
       unitPrice,
       quantity: 1,
+      packUnit: pack?.unit ?? null,
+      packSize: pack?.quantity ?? null,
+      baseUnit: this.articleView.unitSuffix(article),
+      baseQuantity: null,
       checked: false,
       lineTotal: unitPrice ?? 0,
     };

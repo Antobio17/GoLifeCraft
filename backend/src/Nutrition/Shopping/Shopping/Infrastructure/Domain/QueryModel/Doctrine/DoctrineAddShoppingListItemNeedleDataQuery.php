@@ -16,11 +16,6 @@ final readonly class DoctrineAddShoppingListItemNeedleDataQuery implements AddSh
         return $this->exists(table: 'article', column: 'id', value: $articleId);
     }
 
-    public function articleAlreadyInList(string $articleId): bool
-    {
-        return $this->exists(table: 'shopping_list_item', column: 'article_id', value: $articleId);
-    }
-
     private function exists(string $table, string $column, string $value): bool
     {
         $count = $this->connection->createQueryBuilder()

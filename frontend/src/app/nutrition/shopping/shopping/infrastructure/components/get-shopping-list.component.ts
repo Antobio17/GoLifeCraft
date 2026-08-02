@@ -34,6 +34,8 @@ import { DeleteShoppingListItemService } from "@nutrition/shopping/shopping/appl
 import {
   ALL_FILTER,
   ALL_STORES,
+  ShoppingItemRow,
+  ShoppingPackLabels,
   ShoppingListViewService,
 } from "@nutrition/shopping/shopping/application/services/shopping-list-view.service";
 import { ShoppingListAttributes } from "@nutrition/shopping/shopping/domain/models/shopping-list.model";
@@ -125,8 +127,18 @@ export class GetShoppingListComponent implements OnInit {
     return this.view.visibleItems(attributes, this.effectiveTab());
   });
 
+  packLabels = computed<ShoppingPackLabels>(() => ({
+    perPack: this.t("getShopping.pack.perPack"),
+    need: this.t("getShopping.pack.need"),
+    leftover: this.t("getShopping.pack.leftover"),
+  }));
+
   groups = computed(() =>
-    this.view.groups(this.visibleItems(), this.t("getShopping.items")),
+    this.view.groups(
+      this.visibleItems(),
+      this.t("getShopping.items"),
+      this.packLabels(),
+    ),
   );
 
   summary = computed(() =>
@@ -267,7 +279,7 @@ export class GetShoppingListComponent implements OnInit {
     });
   }
 
-  toggleChecked(item: ShoppingListItemView): void {
+  toggleChecked(item: ShoppingItemRow): void {
     const checked = !item.checked;
     this.patchItem(item.id, { checked });
 
@@ -276,7 +288,7 @@ export class GetShoppingListComponent implements OnInit {
       .subscribe();
   }
 
-  increment(item: ShoppingListItemView): void {
+  increment(item: ShoppingItemRow): void {
     const quantity = item.quantity + 1;
     this.patchItem(item.id, { quantity });
 
@@ -285,7 +297,7 @@ export class GetShoppingListComponent implements OnInit {
       .subscribe();
   }
 
-  decrement(item: ShoppingListItemView): void {
+  decrement(item: ShoppingItemRow): void {
     if (item.quantity <= 1) return;
 
     const quantity = item.quantity - 1;
@@ -296,7 +308,7 @@ export class GetShoppingListComponent implements OnInit {
       .subscribe();
   }
 
-  removeItem(item: ShoppingListItemView): void {
+  removeItem(item: ShoppingItemRow): void {
     this.deleteShoppingListItemService
       .deleteShoppingListItem(item.id)
       .subscribe({
