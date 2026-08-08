@@ -3,7 +3,6 @@ import { Observable } from "rxjs";
 import { GetSessionsService } from "@gym/training/session/application/services/get-sessions.service";
 import { DeleteSessionService } from "@gym/training/session/application/services/delete-session.service";
 import { Session } from "../../domain/models/session.model";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -54,9 +53,6 @@ interface SessionRow {
 export class GetSessionsComponent extends AbstractListPageComponent<Session> {
   private getSessionsService = inject(GetSessionsService);
   private deleteSessionService = inject(DeleteSessionService);
-  private authSession = inject(AuthSessionService);
-
-  canWrite = computed(() => this.authSession.isGod());
 
   protected readonly modulePath = "gym/training/session";
   protected readonly storageKey = "pageSize_sessions";
@@ -109,8 +105,6 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
   }
 
   onCreate(): void {
-    if (!this.canWrite()) return;
-
     this.router.navigate(["/gym/sessions", "create"]);
   }
 
@@ -130,9 +124,6 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
 
   onDelete(session: Session, event: Event): void {
     event.stopPropagation();
-
-    if (!this.canWrite()) return;
-
     this.sessionToDelete.set(session);
     this.showDeleteModal.set(true);
   }

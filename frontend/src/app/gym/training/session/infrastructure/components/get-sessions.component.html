@@ -21,17 +21,15 @@
       [attr.title]="'getSessions.library' | t"
       (clicked)="onLibrary()"
     />
-    @if (canWrite()) {
-      <ds-button
-        slot="actions"
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [attr.title]="'getSessions.new' | t"
-        (clicked)="onCreate()"
-      />
-    }
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [attr.title]="'getSessions.new' | t"
+      (clicked)="onCreate()"
+    />
   </ds-screen-header>
 
   <ds-text variant="label">{{ "getSessions.yourSessions" | t }}</ds-text>
@@ -50,7 +48,7 @@
       metaWidth="72%"
       [chips]="2"
       trailing="actions"
-      [actions]="canWrite() ? 1 : 0"
+      [actions]="1"
       [footButton]="true"
     />
   } @else if (items().length === 0) {
@@ -80,18 +78,16 @@
               </ds-heading>
               <ds-text variant="meta">{{ session.summary }}</ds-text>
             </ds-stack>
-            @if (canWrite()) {
-              <ds-icon-button
-                icon="trash"
-                variant="soft"
-                [size]="28"
-                [iconSize]="15"
-                radius="8px"
-                color="var(--ds-danger)"
-                [ariaLabel]="'getSessions.actions.delete' | t"
-                (clicked)="onDelete(session.session, $event)"
-              />
-            }
+            <ds-icon-button
+              icon="trash"
+              variant="soft"
+              [size]="28"
+              [iconSize]="15"
+              radius="8px"
+              color="var(--ds-danger)"
+              [ariaLabel]="'getSessions.actions.delete' | t"
+              (clicked)="onDelete(session.session, $event)"
+            />
           </ds-stack>
 
           @if (session.muscleGroups.length) {

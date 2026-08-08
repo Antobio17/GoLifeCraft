@@ -6,11 +6,9 @@
     [subtitle]="headerSubtitle()"
     (leadingClick)="goBack()"
   >
-    @if (canWrite()) {
-      <ds-button slot="actions" size="md" icon="plus" (clicked)="onCreate()">
-        {{ "getExercises.create" | t }}
-      </ds-button>
-    }
+    <ds-button slot="actions" size="md" icon="plus" (clicked)="onCreate()">
+      {{ "getExercises.create" | t }}
+    </ds-button>
   </ds-screen-header>
 
   @if (loading()) {
@@ -36,7 +34,7 @@
             titleWidth="56%"
             metaWidth="40%"
             trailing="actions"
-            [actions]="canWrite() ? 2 : 0"
+            [actions]="2"
           />
         </ds-stack>
       }
@@ -77,7 +75,7 @@
                 titleWidth="56%"
                 metaWidth="40%"
                 trailing="actions"
-                [actions]="canWrite() ? 2 : 0"
+                [actions]="2"
               />
             </ds-stack>
           }
@@ -96,7 +94,7 @@
           titleWidth="56%"
           metaWidth="40%"
           trailing="actions"
-          [actions]="canWrite() ? 2 : 0"
+          [actions]="2"
         />
       }
     } @else if (items().length === 0) {
@@ -135,7 +133,7 @@
           titleWidth="56%"
           metaWidth="40%"
           trailing="actions"
-          [actions]="canWrite() ? 2 : 0"
+          [actions]="2"
         />
       }
 
@@ -186,20 +184,18 @@
           <ds-text variant="meta">{{ row.muscleText }}</ds-text>
         </ds-stack>
       </ds-pressable>
-      @if (canWrite()) {
-        <ds-icon-button
-          icon="pencil"
-          color="var(--ds-text-meta)"
-          [ariaLabel]="'getExercises.actions.edit' | t"
-          (clicked)="onEdit(row.id)"
-        />
-        <ds-icon-button
-          icon="trash"
-          color="var(--ds-danger)"
-          [ariaLabel]="'getExercises.actions.delete' | t"
-          (clicked)="onDelete(row.exercise)"
-        />
-      }
+      <ds-icon-button
+        icon="pencil"
+        color="var(--ds-text-meta)"
+        [ariaLabel]="'getExercises.actions.edit' | t"
+        (clicked)="onEdit(row.id)"
+      />
+      <ds-icon-button
+        icon="trash"
+        color="var(--ds-danger)"
+        [ariaLabel]="'getExercises.actions.delete' | t"
+        (clicked)="onDelete(row.exercise)"
+      />
     </ds-stack>
   </ds-card>
 </ng-template>
