@@ -7,13 +7,15 @@
     [wrapTitle]="true"
     (leadingClick)="goBack()"
   >
-    <ds-icon-button
-      slot="actions"
-      icon="pencil"
-      color="var(--ds-text-meta)"
-      [ariaLabel]="'getExercise.edit' | t"
-      (clicked)="onEdit()"
-    />
+    @if (canWrite()) {
+      <ds-icon-button
+        slot="actions"
+        icon="pencil"
+        color="var(--ds-text-meta)"
+        [ariaLabel]="'getExercise.edit' | t"
+        (clicked)="onEdit()"
+      />
+    }
   </ds-screen-header>
 
   @if (loading()) {

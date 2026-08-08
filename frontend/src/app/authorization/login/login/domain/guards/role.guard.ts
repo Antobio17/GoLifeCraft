@@ -10,7 +10,7 @@ export const blockReadOnlyUserGuard: CanActivateFn = (): boolean | UrlTree => {
     return true;
   }
 
-  return inject(Router).createUrlTree(["/cloud"]);
+  return inject(Router).createUrlTree(["/dashboard"]);
 };
 
 export const godOnlyGuard: CanActivateFn = (): boolean | UrlTree => {

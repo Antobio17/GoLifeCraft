@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { forkJoin, of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { GetExerciseService } from "../../application/services/get-exercise.service";
@@ -85,7 +86,10 @@ export class GetExerciseComponent {
   private translationService = inject(TranslationService);
   private getExerciseService = inject(GetExerciseService);
   private getExerciseStatsService = inject(GetExerciseStatsService);
+  private authSession = inject(AuthSessionService);
   private router = inject(Router);
+
+  canWrite = computed(() => this.authSession.isGod());
 
   private readonly dateFormatter = new Intl.DateTimeFormat("es", {
     day: "numeric",
@@ -243,6 +247,8 @@ export class GetExerciseComponent {
   }
 
   onEdit(): void {
+    if (!this.canWrite()) return;
+
     this.router.navigate(["/gym/exercises", this.id(), "edit"]);
   }
 

@@ -7,6 +7,7 @@ import { GetExercisesService } from "@gym/library/exercise/application/services/
 import { DeleteExerciseService } from "@gym/library/exercise/application/services/delete-exercise.service";
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { Exercise } from "../../domain/models/exercise.model";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -91,6 +92,9 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   private getExercisesService = inject(GetExercisesService);
   private deleteExerciseService = inject(DeleteExerciseService);
   private muscleCatalog = inject(MuscleCatalogService);
+  private authSession = inject(AuthSessionService);
+
+  canWrite = computed(() => this.authSession.isGod());
 
   protected readonly modulePath = "gym/library/exercise";
   protected readonly storageKey = "pageSize_exercises";
@@ -238,6 +242,8 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   }
 
   onCreate(): void {
+    if (!this.canWrite()) return;
+
     this.router.navigate(["/gym/exercises", "create"]);
   }
 
@@ -246,10 +252,14 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   }
 
   onEdit(id: string): void {
+    if (!this.canWrite()) return;
+
     this.router.navigate(["/gym/exercises", id, "edit"]);
   }
 
   onDelete(exercise: Exercise): void {
+    if (!this.canWrite()) return;
+
     this.exerciseToDelete.set(exercise);
     this.showDeleteModal.set(true);
   }
