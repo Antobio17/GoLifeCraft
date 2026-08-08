@@ -16,6 +16,7 @@ import { FormsModule } from "@angular/forms";
 import { NgTemplateOutlet } from "@angular/common";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -132,6 +133,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private sessionProgress = inject(SessionProgressService);
   private getExercisesService = inject(GetExercisesService);
   protected activeWorkout = inject(ActiveWorkoutService);
+  private authSession = inject(AuthSessionService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private ngZone = inject(NgZone);
@@ -142,6 +144,8 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   readonly id = input.required<string>();
   readonly start = input<string | undefined>(undefined);
   readonly skeletonExercises = [3, 4, 3];
+
+  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   saving = signal(false);
@@ -533,17 +537,23 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  menuItems = computed<MenuItem[]>(() => [
-    { value: "edit", label: this.t("getSession.edit"), icon: "pencil" },
-    {
-      value: "delete",
-      label: this.t("getSession.delete"),
-      icon: "trash",
-      danger: true,
-    },
-  ]);
+  menuItems = computed<MenuItem[]>(() => {
+    if (!this.canWrite()) return [];
+
+    return [
+      { value: "edit", label: this.t("getSession.edit"), icon: "pencil" },
+      {
+        value: "delete",
+        label: this.t("getSession.delete"),
+        icon: "trash",
+        danger: true,
+      },
+    ];
+  });
 
   onMenuAction(value: string): void {
+    if (!this.canWrite()) return;
+
     if (value === "edit") {
       this.onEdit();
       return;
