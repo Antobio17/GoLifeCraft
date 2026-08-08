@@ -5,7 +5,7 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="62%"
-      [actions]="canWrite() ? 2 : 1"
+      [actions]="2"
     />
     <ds-skeleton-chips [count]="1" height="26px" [gap]="'6px'" />
     <ng-container [ngTemplateOutlet]="progressSkeleton" />
@@ -39,14 +39,12 @@
           (clicked)="onStartWorkout()"
         />
       }
-      @if (canWrite()) {
-        <ds-menu
-          slot="actions"
-          [triggerLabel]="'getSession.actions' | t"
-          [items]="menuItems()"
-          (selected)="onMenuAction($event)"
-        />
-      }
+      <ds-menu
+        slot="actions"
+        [triggerLabel]="'getSession.actions' | t"
+        [items]="menuItems()"
+        (selected)="onMenuAction($event)"
+      />
     </ds-screen-header>
 
     <ds-stack direction="row" align="center" [gap]="'10px'">

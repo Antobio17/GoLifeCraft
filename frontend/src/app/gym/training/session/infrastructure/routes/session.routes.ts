@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetSessionsProviders } from "../providers/get-sessions.providers";
 import { GetSessionProviders } from "../providers/get-session.providers";
 import { GetSessionStatsProviders } from "../providers/get-session-stats.providers";
@@ -30,7 +29,6 @@ export const SESSION_ROUTES: Routes = [
       },
       {
         path: "create",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "session.breadcrumb.create" },
         loadComponent: () =>
           import("../components/session-form.component").then(
@@ -39,7 +37,6 @@ export const SESSION_ROUTES: Routes = [
       },
       {
         path: ":id/edit",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "session.breadcrumb.edit" },
         loadComponent: () =>
           import("../components/session-form.component").then(
