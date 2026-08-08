@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetExercisesProviders } from "../providers/get-exercises.providers";
 import { GetExerciseProviders } from "../providers/get-exercise.providers";
 import { GetExerciseStatsProviders } from "../providers/get-exercise-stats.providers";
@@ -28,7 +27,6 @@ export const EXERCISE_ROUTES: Routes = [
       },
       {
         path: "create",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "exercise.breadcrumb.create" },
         loadComponent: () =>
           import("../components/exercise-editor.component").then(
@@ -37,7 +35,6 @@ export const EXERCISE_ROUTES: Routes = [
       },
       {
         path: ":id/edit",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "exercise.breadcrumb.edit" },
         loadComponent: () =>
           import("../components/exercise-editor.component").then(
