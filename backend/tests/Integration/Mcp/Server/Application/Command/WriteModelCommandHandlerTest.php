@@ -90,6 +90,46 @@ final class WriteModelCommandHandlerTest extends TestCase
         self::assertSame('Barrita XL', $events[0]->entitySnapshot['name']);
     }
 
+    public function testItHydratesDateTimeAndNumericFieldsFromStrings(): void
+    {
+        ($this->handler)(new WriteModelCommand(
+            entityAlias: 'fake_model',
+            data: [
+                'name' => 'Barrita proteica',
+                'status' => 'published',
+                'calories' => '240',
+                'performedAt' => '2026-08-10T18:30:00+02:00',
+            ],
+            id: null,
+            userSessionId: 'user-1',
+            role: 'ROLE_GOD',
+        ));
+
+        $product = array_values($this->repository->saved)[0];
+        self::assertSame(240, $product->calories);
+        self::assertInstanceOf(\DateTime::class, $product->performedAt);
+        self::assertSame('2026-08-10T18:30:00+02:00', $product->performedAt->format(\DateTimeInterface::ATOM));
+
+        $events = $this->domainEventCollectorService->pullEvents();
+        self::assertSame('2026-08-10T18:30:00+02:00', $events[0]->entitySnapshot['performedAt']);
+    }
+
+    public function testItClearsANullableDateTimeField(): void
+    {
+        $product = $this->seedFakeModel(id: 'product-1');
+        $product->performedAt = new \DateTime('2026-08-01T10:00:00+02:00');
+
+        ($this->handler)(new WriteModelCommand(
+            entityAlias: 'fake_model',
+            data: ['performedAt' => null],
+            id: 'product-1',
+            userSessionId: 'user-2',
+            role: 'ROLE_GOD',
+        ));
+
+        self::assertNull($product->performedAt);
+    }
+
     public function testItFailsWhenRequiredFieldIsMissing(): void
     {
         $this->expectException(ModelValidationException::class);

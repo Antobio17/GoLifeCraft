@@ -2,23 +2,58 @@ label: Workout
 
 fields:
   sessionId:
+    writable: true
     min: 36
     max: 36
+    description: >-
+      Id of the training session (the template) the workout was performed from.
+      Null for a free workout that did not follow any session. Changing it does not
+      touch the session itself.
     filterable: true
   sessionName:
+    writable: true
+    required: true
+    min: 2
+    max: 255
+    description: >-
+      Snapshot of the session name at the moment the workout was performed. Editing it
+      only renames this entry of the history, never the session template.
     filterable: true
     sortable: true
   status:
+    writable: true
+    required: true
     enum: [in_progress, completed]
+    description: >-
+      "completed" for a workout already part of the history. "in_progress" is the workout
+      the user is doing right now in the app; there should never be more than one, so use
+      "completed" when logging a past workout.
     filterable: true
   startedAt:
+    writable: true
+    required: true
     type: datetime
+    description: >-
+      When the workout started, as an ISO 8601 datetime ("2026-08-10T18:30:00+02:00").
+      This is the date the history is ordered and grouped by.
     sortable: true
   finishedAt:
+    writable: true
     type: datetime
+    description: >-
+      When the workout finished, as an ISO 8601 datetime. Null while it is still in
+      progress. Keep it consistent with "startedAt" and "durationSeconds".
     sortable: true
   durationSeconds:
+    writable: true
     type: int
+    min: 0
+    description: >-
+      How long the workout took, in seconds. It is stored on its own, so correcting the
+      duration does not require touching "startedAt" or "finishedAt".
     sortable: true
 
 relations: {}
+
+cascade_delete:
+  - { resource: workout_exercise, foreign_field: workoutId }

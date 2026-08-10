@@ -53,6 +53,39 @@ final class ModelValidatorTest extends TestCase
         );
     }
 
+    public function testItAcceptsIsoDateTimes(): void
+    {
+        $this->validator->validate(
+            descriptor: FakeModelMetadata::descriptor(),
+            data: ['name' => 'Barrita', 'status' => 'draft', 'performedAt' => '2026-08-10T18:30:00+02:00'],
+            isCreate: true,
+        );
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testItRejectsUnparseableDateTimes(): void
+    {
+        $this->expectException(ModelValidationException::class);
+
+        $this->validator->validate(
+            descriptor: FakeModelMetadata::descriptor(),
+            data: ['name' => 'Barrita', 'status' => 'draft', 'performedAt' => 'ayer por la tarde'],
+            isCreate: true,
+        );
+    }
+
+    public function testItSkipsSizeChecksOnNonScalarValues(): void
+    {
+        $this->validator->validate(
+            descriptor: FakeModelMetadata::descriptor(),
+            data: ['name' => 'Barrita', 'status' => 'draft', 'tags' => ['chest', 'triceps']],
+            isCreate: true,
+        );
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testItRejectsDuplicatedUniqueValues(): void
     {
         $this->writeModelNeedleDataQuery->add(class: FakeModel::class, field: 'name', value: 'Barrita', id: 'other-id');

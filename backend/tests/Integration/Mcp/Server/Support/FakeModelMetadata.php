@@ -20,6 +20,8 @@ final class FakeModelMetadata implements ModelMetadataProvider
                 new FieldDescriptor(name: 'name', type: 'string', writable: true, required: true, filterable: true, sortable: true, unique: true, min: 3, max: 255),
                 new FieldDescriptor(name: 'status', type: 'string', writable: true, required: true, filterable: true, sortable: false, unique: false, enum: ['draft', 'published']),
                 new FieldDescriptor(name: 'calories', type: 'int', writable: true, required: false, filterable: true, sortable: false, unique: false, min: 0),
+                new FieldDescriptor(name: 'performedAt', type: 'datetime', writable: true, required: false, filterable: false, sortable: true, unique: false),
+                new FieldDescriptor(name: 'tags', type: 'array', writable: true, required: false, filterable: false, sortable: false, unique: false, max: 30),
             ],
             relations: [],
             readRoles: ['ROLE_GOD'],

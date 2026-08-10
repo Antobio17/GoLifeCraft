@@ -71,6 +71,14 @@ final readonly class ModelValidator
 
     private function validateValue(FieldDescriptor $field, mixed $value): ?string
     {
+        if ('datetime' === $field->type) {
+            return $this->validateDateTime(value: $value);
+        }
+
+        if (!is_scalar($value)) {
+            return null;
+        }
+
         if (null !== $field->enum && !in_array($value, $field->enum, true)) {
             return sprintf("value '%s' is not in enum [%s]", $value, implode(', ', $field->enum));
         }
@@ -87,6 +95,25 @@ final readonly class ModelValidator
 
         if (null !== $field->regex && 1 !== preg_match('/'.str_replace('/', '\/', $field->regex).'/', (string) $value)) {
             return 'does not match the required pattern';
+        }
+
+        return null;
+    }
+
+    private function validateDateTime(mixed $value): ?string
+    {
+        if ($value instanceof \DateTimeInterface) {
+            return null;
+        }
+
+        if (!is_string($value) || '' === trim($value)) {
+            return 'is not a valid ISO 8601 date';
+        }
+
+        try {
+            new \DateTime($value);
+        } catch (\Exception) {
+            return 'is not a valid ISO 8601 date';
         }
 
         return null;

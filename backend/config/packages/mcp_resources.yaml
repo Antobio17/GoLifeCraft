@@ -116,19 +116,19 @@ parameters:
             class: 'Gym\Training\Workout\Domain\Model\Workout'
             sidecar: '%kernel.project_dir%/src/Gym/Training/Workout/Infrastructure/Domain/Model/Doctrine/Mapping/Workout.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
-            write_roles: []
-            delete_roles: []
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
 
         workout_exercise:
             class: 'Gym\Training\Workout\Domain\Model\WorkoutExercise'
             sidecar: '%kernel.project_dir%/src/Gym/Training/Workout/Infrastructure/Domain/Model/Doctrine/Mapping/WorkoutExercise.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
-            write_roles: []
-            delete_roles: []
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
 
         workout_set:
             class: 'Gym\Training\Workout\Domain\Model\WorkoutSet'
             sidecar: '%kernel.project_dir%/src/Gym/Training/Workout/Infrastructure/Domain/Model/Doctrine/Mapping/WorkoutSet.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
-            write_roles: []
-            delete_roles: []
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]

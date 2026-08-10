@@ -9,4 +9,6 @@ class FakeModel extends GenericAggregate
     public string $name;
     public string $status;
     public ?int $calories = null;
+    public ?\DateTime $performedAt = null;
+    public array $tags = [];
 }
