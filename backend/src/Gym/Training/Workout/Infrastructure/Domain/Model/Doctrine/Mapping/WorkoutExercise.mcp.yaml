@@ -2,23 +2,49 @@ label: Workout exercise
 
 fields:
   workoutId:
-    min: 36
-    max: 36
-    filterable: true
-  exerciseId:
+    writable: true
     required: true
     min: 36
     max: 36
+    description: Id of the workout this exercise belongs to.
+    filterable: true
+  exerciseId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: Id of the library exercise that was performed.
     filterable: true
   exerciseName:
-    description: Snapshot of the exercise name at the moment the workout was performed. Frozen for history; editing the library exercise does not change it.
+    writable: true
+    required: true
+    min: 2
+    max: 255
+    description: >-
+      Snapshot of the exercise name at the moment the workout was performed. It is frozen
+      history: renaming the library exercise does not change it, and fixing it here does
+      not rename the library exercise either.
   type:
-    description: Snapshot of the exercise laterality (bilateral/unilateral) at the moment the workout was performed.
+    writable: true
+    required: true
+    enum: [unilateral, bilateral]
+    description: Snapshot of the exercise laterality at the moment the workout was performed.
   muscleGroups:
-    type: object
+    writable: true
+    type: array
     description: Snapshot of the exercise muscle groups at the moment the workout was performed.
   position:
+    writable: true
+    required: true
     type: int
+    min: 1
+    description: Order of the exercise inside the workout, starting at 1.
     sortable: true
+  note:
+    writable: true
+    description: Free note the user wrote for this exercise during the workout.
 
 relations: {}
+
+cascade_delete:
+  - { resource: workout_set, foreign_field: workoutExerciseId }

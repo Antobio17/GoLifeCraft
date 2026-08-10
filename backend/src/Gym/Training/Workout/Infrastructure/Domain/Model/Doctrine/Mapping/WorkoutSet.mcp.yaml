@@ -2,17 +2,35 @@ label: Workout set
 
 fields:
   workoutExerciseId:
+    writable: true
+    required: true
     min: 36
     max: 36
+    description: Id of the workout exercise this set belongs to.
     filterable: true
   position:
+    writable: true
+    required: true
     type: int
+    min: 1
+    description: Order of the set inside the exercise, starting at 1.
     sortable: true
   reps:
+    writable: true
+    required: true
     type: int
+    min: 0
+    description: Repetitions actually performed in the set.
   weight:
+    writable: true
     type: float
+    min: 0
+    description: Weight lifted in the set, in kilograms. Null for bodyweight exercises.
   done:
+    writable: true
     type: bool
+    description: >-
+      Whether the set was actually completed. Sets left as false in a finished workout are
+      the ones the user skipped.
 
 relations: {}

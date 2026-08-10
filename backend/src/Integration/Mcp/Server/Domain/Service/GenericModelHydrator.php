@@ -4,6 +4,7 @@ namespace Integration\Mcp\Server\Domain\Service;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Integration\Mcp\Server\Domain\Model\GenericModelRepository;
+use Integration\Mcp\Server\Domain\QueryModel\Dto\FieldDescriptor;
 use Integration\Mcp\Server\Domain\QueryModel\Dto\ModelDescriptor;
 
 final readonly class GenericModelHydrator
@@ -48,8 +49,24 @@ final readonly class GenericModelHydrator
                 continue;
             }
 
-            $entity->{$field->name} = $data[$field->name];
+            $entity->{$field->name} = $this->coerce(field: $field, value: $data[$field->name]);
         }
+    }
+
+    private function coerce(FieldDescriptor $field, mixed $value): mixed
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        return match ($field->type) {
+            'datetime' => $value instanceof \DateTime ? $value : new \DateTime((string) $value),
+            'int' => (int) $value,
+            'float' => (float) $value,
+            'bool', 'boolean' => filter_var($value, FILTER_VALIDATE_BOOL),
+            'string', 'uuid' => is_scalar($value) ? (string) $value : $value,
+            default => $value,
+        };
     }
 
     private function writeRelations(GenericAggregate $entity, ModelDescriptor $descriptor, array $data): void
