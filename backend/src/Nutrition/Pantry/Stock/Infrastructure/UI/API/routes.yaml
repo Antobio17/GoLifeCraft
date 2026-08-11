@@ -1,0 +1,4 @@
+update_article_stock:
+  path: /api/v1/nutrition/pantry/stock/{articleId}
+  methods: [PUT]
+  controller: Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\UpdateArticleStockController

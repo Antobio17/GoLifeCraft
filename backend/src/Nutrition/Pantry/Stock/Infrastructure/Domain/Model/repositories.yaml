@@ -1,0 +1,6 @@
+services:
+  Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository:
+    class: Nutrition\Pantry\Stock\Infrastructure\Domain\Model\Doctrine\DoctrineArticleStockRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Pantry\Stock\Domain\Model\ArticleStock

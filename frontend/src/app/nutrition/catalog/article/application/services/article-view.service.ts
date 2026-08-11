@@ -4,6 +4,7 @@ import {
   ArticleEquivalence,
   ArticleNutritionFacts,
 } from "../../domain/models/article.model";
+import { ArticleStockContext } from "../../domain/models/article-stock-context.model";
 import { UnitCatalogService } from "./unit-catalog.service";
 
 export interface ArticleCardView {
@@ -50,6 +51,7 @@ export interface ArticleDetailView {
   price: string | null;
   brand: string | null;
   store: string | null;
+  aisle: string | null;
   category: string | null;
   hasNutrition: boolean;
   hasPack: boolean;
@@ -59,6 +61,8 @@ export interface ArticleDetailView {
   pack: ArticleMacroSet | null;
   units: ArticleUnitsView;
   purchase: ArticlePurchaseView;
+  stockContext: ArticleStockContext;
+  stock: number;
 }
 
 const FALLBACK_EMOJI = "🍽️";
@@ -84,6 +88,10 @@ export class ArticleViewService {
 
   store(article: Article): string | null {
     return article.relationships?.supermarket?.data.attributes.name ?? null;
+  }
+
+  aisle(article: Article): string | null {
+    return article.relationships?.aisle?.data.attributes.name ?? null;
   }
 
   category(article: Article): string | null {
@@ -169,6 +177,7 @@ export class ArticleViewService {
       price: this.price(article),
       brand: this.brand(article),
       store: this.store(article),
+      aisle: this.aisle(article),
       category: this.category(article),
       hasNutrition: null !== nutrition,
       hasPack: null !== pack,
@@ -178,6 +187,22 @@ export class ArticleViewService {
       pack: null !== pack ? this.scale(nutrition, pack.quantity) : null,
       units: this.units(article, suffix),
       purchase: this.purchase(article, pack, suffix),
+      stockContext: this.stockContext(article, pack, suffix),
+      stock: article.attributes.stock ?? 0,
+    };
+  }
+
+  private stockContext(
+    article: Article,
+    pack: ArticleEquivalence | null,
+    baseUnit: string,
+  ): ArticleStockContext {
+    return {
+      hasPack: null !== pack,
+      packSize: pack?.quantity ?? 0,
+      packUnit: pack?.unit ?? baseUnit,
+      baseUnit,
+      pricePerPack: article.attributes.price ?? null,
     };
   }
 

@@ -5,6 +5,7 @@ import { GetArticleProviders } from "../providers/get-article.providers";
 import { CreateArticleProviders } from "../providers/create-article.providers";
 import { UpdateArticleProviders } from "../providers/update-article.providers";
 import { DeleteArticleProviders } from "../providers/delete-article.providers";
+import { UpdateArticleStockProviders } from "@nutrition/pantry/stock/infrastructure/providers/update-article-stock.providers";
 import { GetCategoriesProviders } from "@nutrition/catalog/category/infrastructure/providers/get-categories.providers";
 import { GetSupermarketsProviders } from "@nutrition/catalog/supermarket/infrastructure/providers/get-supermarkets.providers";
 import { UpdateSupermarketAislesProviders } from "@nutrition/catalog/supermarket/infrastructure/providers/update-supermarket-aisles.providers";
@@ -19,6 +20,7 @@ export const ARTICLE_ROUTES: Routes = [
       ...CreateArticleProviders.getProviders(),
       ...UpdateArticleProviders.getProviders(),
       ...DeleteArticleProviders.getProviders(),
+      ...UpdateArticleStockProviders.getProviders(),
       ...GetCategoriesProviders.getProviders(),
       ...GetSupermarketsProviders.getProviders(),
       ...UpdateSupermarketAislesProviders.getProviders(),

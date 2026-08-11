@@ -13,21 +13,6 @@
   border: 1px solid var(--ds-border);
   border-radius: 14px;
   padding: 10px 12px;
-  cursor: grab;
-  transition:
-    box-shadow 0.15s ease,
-    opacity 0.15s ease;
-}
-
-.aisle-list__row.is-dragging {
-  box-shadow: var(--ds-shadow-lg);
-  opacity: 0.92;
-}
-
-.aisle-list__grip {
-  flex: 0 0 auto;
-  color: var(--ds-text-meta);
-  pointer-events: none;
 }
 
 .aisle-list__position {

@@ -202,6 +202,7 @@ class Article extends GenericAggregate
         $this->record(event: new ArticleDeleted(
             aggregateId: $this->id,
             occurredOn: $now,
+            deletedByUserId: $deletedByUserId,
         ));
     }
 

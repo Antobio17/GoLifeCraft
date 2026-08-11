@@ -10,6 +10,7 @@ export interface ArticleAttributes {
   diaryUnit: string;
   equivalences: ArticleEquivalence[];
   packUnit: string | null;
+  stock?: number;
   price: number | null;
   brand: string | null;
   emoji: string | null;
@@ -41,6 +42,7 @@ export interface ArticleRelationshipRef<TAttributes> {
 export interface ArticleRelationships {
   category?: ArticleRelationshipRef<{ name: string }>;
   supermarket?: ArticleRelationshipRef<{ name: string }>;
+  aisle?: ArticleRelationshipRef<{ name: string; position: number }>;
   nutritionFacts?: ArticleRelationshipRef<ArticleNutritionFacts>;
 }
 

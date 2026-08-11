@@ -75,13 +75,18 @@
 
     <ds-product-hero [emoji]="d.emoji" [price]="d.price" />
 
-    @if (d.brand || d.store) {
+    @if (d.brand || d.store || d.aisle) {
       <ds-stack direction="row" [wrap]="true" [gap]="'6px'">
         @if (d.brand) {
           <ds-chip>{{ d.brand }}</ds-chip>
         }
         @if (d.store) {
           <ds-chip tone="warning">{{ d.store }}</ds-chip>
+        }
+        @if (d.aisle) {
+          <ds-chip tone="brand"
+            >{{ "getArticle.aisle" | t }} · {{ d.aisle }}</ds-chip
+          >
         }
       </ds-stack>
     }
@@ -174,9 +179,74 @@
       [costLabel]="'getArticle.purchase.cost' | t"
       [costValue]="d.purchase.costPer100"
       [emptyText]="'getArticle.purchase.empty' | t"
-    />
+    >
+      @if (stock(); as s) {
+        @if (s.hasPack) {
+          <ds-stock-control
+            [stockLabel]="'getArticle.stock.heading' | t"
+            [mainText]="s.packsText"
+            [subText]="s.baseText"
+            [valueLabel]="'getArticle.stock.value' | t"
+            [valueText]="s.valueText"
+            [stepLabel]="'getArticle.stock.step' | t"
+            [clearLabel]="'getArticle.stock.clear' | t"
+            [editLabel]="'getArticle.stock.edit' | t"
+            [disabled]="savingStock()"
+            [readonly]="!canWrite()"
+            (incremented)="onIncrementStock()"
+            (decremented)="onDecrementStock()"
+            (cleared)="onClearStock()"
+            (editRequested)="onOpenStockEditor()"
+          />
+        }
+      }
+    </ds-purchase-summary>
   }
 </ds-page-wrapper>
+
+<ds-modal-sheet
+  [open]="showStockEditor()"
+  [auto]="true"
+  [title]="'getArticle.stock.editor.title' | t"
+  [closeLabel]="'getArticle.stock.editor.close' | t"
+  (closed)="onCloseStockEditor()"
+>
+  <ds-stack [gap]="'12px'">
+    <ds-text variant="muted">{{ "getArticle.stock.editor.hint" | t }}</ds-text>
+
+    <ds-segmented-toggle
+      [options]="stockModeOptions()"
+      [ngModel]="stockDraftMode()"
+      [ngModelOptions]="{ standalone: true }"
+      (ngModelChange)="onStockDraftModeChange($event)"
+    />
+
+    <ds-amount-input
+      [large]="true"
+      inputmode="decimal"
+      [unit]="stockModeUnitLabel()"
+      [ariaLabel]="'getArticle.stock.editor.amount' | t"
+      [ngModel]="stockDraft()"
+      [ngModelOptions]="{ standalone: true }"
+      (ngModelChange)="onStockDraftChange($event)"
+    />
+
+    @if (stockDraftPreview(); as preview) {
+      <ds-text variant="label">{{ preview }}</ds-text>
+    }
+
+    <ds-button
+      variant="primary"
+      icon="check"
+      [fullWidth]="true"
+      [disabled]="stockDraftBase() === null"
+      [loading]="savingStock()"
+      (clicked)="onConfirmStockEditor()"
+    >
+      {{ "getArticle.stock.editor.confirm" | t }}
+    </ds-button>
+  </ds-stack>
+</ds-modal-sheet>
 
 <ds-confirm-action-modal
   [show]="showDeleteModal()"

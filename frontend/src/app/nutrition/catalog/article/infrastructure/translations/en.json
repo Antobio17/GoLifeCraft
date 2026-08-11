@@ -27,6 +27,7 @@
   },
   "getArticle": {
     "back": "Back",
+    "aisle": "Aisle",
     "edit": "Edit",
     "delete": "Delete item",
     "per": "Values per",
@@ -36,7 +37,7 @@
       "pack": "Per pack"
     },
     "purchase": {
-      "heading": "PURCHASE",
+      "heading": "PURCHASE AND STOCK",
       "pack": "PACK",
       "cost": "REAL COST",
       "empty": "Mark an equivalence as Pack when editing the article to know how much the pack you buy holds and its real cost."
@@ -66,6 +67,20 @@
       "recipe": "IN RECIPE",
       "diary": "IN DIARY",
       "equivalences": "EQUIVALENCES"
+    },
+    "stock": {
+      "heading": "CURRENT STOCK",
+      "value": "VALUE",
+      "step": "1 pack",
+      "clear": "Empty stock",
+      "edit": "Set the exact stock",
+      "editor": {
+        "title": "Adjust stock",
+        "close": "Close",
+        "hint": "Set how much you have left at home. Use the base unit for a pack you already opened.",
+        "amount": "Stock amount",
+        "confirm": "Save stock"
+      }
     }
   },
   "article": {

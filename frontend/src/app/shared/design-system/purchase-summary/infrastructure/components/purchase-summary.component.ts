@@ -27,6 +27,10 @@ import { Component, Input } from "@angular/core";
       } @else {
         <p class="ds-pus__empty">{{ emptyText }}</p>
       }
+
+      <div class="ds-pus__extra">
+        <ng-content></ng-content>
+      </div>
     </section>
   `,
   styles: [
@@ -88,6 +92,9 @@ import { Component, Input } from "@angular/core";
       }
       .ds-pus__cell-value--accent {
         color: var(--ds-primary);
+      }
+      .ds-pus__extra:has(*) {
+        border-top: 1px solid var(--ds-border);
       }
       .ds-pus__empty {
         margin: 0;

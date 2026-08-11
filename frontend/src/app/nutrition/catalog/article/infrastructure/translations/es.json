@@ -27,6 +27,7 @@
   },
   "getArticle": {
     "back": "Volver",
+    "aisle": "Pasillo",
     "edit": "Editar",
     "delete": "Borrar artículo",
     "per": "Valores por",
@@ -36,7 +37,7 @@
       "pack": "Por envase"
     },
     "purchase": {
-      "heading": "COMPRA",
+      "heading": "COMPRA Y STOCK",
       "pack": "ENVASE",
       "cost": "COSTE REAL",
       "empty": "Marca una equivalencia como Envase al editar el artículo para saber cuánto trae el paquete que compras y su coste real."
@@ -66,6 +67,20 @@
       "recipe": "EN RECETA",
       "diary": "EN DIARIO",
       "equivalences": "EQUIVALENCIAS"
+    },
+    "stock": {
+      "heading": "STOCK ACTUAL",
+      "value": "VALOR",
+      "step": "1 envase",
+      "clear": "Vaciar stock",
+      "edit": "Ajustar el stock exacto",
+      "editor": {
+        "title": "Ajustar stock",
+        "close": "Cerrar",
+        "hint": "Indica cuánto te queda en casa. Usa los gramos para un envase ya empezado.",
+        "amount": "Cantidad de stock",
+        "confirm": "Guardar stock"
+      }
     }
   },
   "article": {

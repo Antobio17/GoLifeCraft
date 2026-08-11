@@ -87,6 +87,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Nutrition/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Nutrition\Catalog\NutritionFacts\Domain\Model'
                         alias: nutrition_facts
+                    ArticleStock:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Pantry/Stock/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Pantry\Stock\Domain\Model'
+                        alias: article_stock
                     Supermarket:
                         is_bundle: false
                         type: xml

@@ -1,0 +1,19 @@
+services:
+  Nutrition\Pantry\Stock\Application\Command\UpdateArticleStockCommandHandler:
+    class: Nutrition\Pantry\Stock\Application\Command\UpdateArticleStockCommandHandler
+    arguments:
+      $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Stock\Application\Command\DeleteArticleStockCommandHandler:
+    class: Nutrition\Pantry\Stock\Application\Command\DeleteArticleStockCommandHandler
+    arguments:
+      $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

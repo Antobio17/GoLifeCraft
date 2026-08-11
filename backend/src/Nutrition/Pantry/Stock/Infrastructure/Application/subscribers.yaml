@@ -1,0 +1,7 @@
+services:
+  Nutrition\Pantry\Stock\Application\Subscriber\DeleteArticleStockOnArticleDeleted:
+    class: Nutrition\Pantry\Stock\Application\Subscriber\DeleteArticleStockOnArticleDeleted
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.article.deleted' }

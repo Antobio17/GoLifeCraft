@@ -3,6 +3,7 @@
 namespace Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleAisleResult;
 use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleCategoryResult;
 use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleNutritionFactsResult;
 use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleResult;
@@ -39,6 +40,8 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
                 't.updated_by_user_id',
                 'c.name AS category_name',
                 's.name AS supermarket_name',
+                'a.name AS aisle_name',
+                'a.position AS aisle_position',
                 'nf.reference_amount AS nf_reference_amount',
                 'nf.calories AS nf_calories',
                 'nf.protein AS nf_protein',
@@ -48,10 +51,13 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
                 'nf.saturated_fat AS nf_saturated_fat',
                 'nf.fiber AS nf_fiber',
                 'nf.salt AS nf_salt',
+                'st.quantity AS stock_quantity',
             )
             ->from(table: 'article', alias: 't')
+            ->leftJoin(fromAlias: 't', join: 'article_stock', alias: 'st', condition: 't.id = st.article_id')
             ->leftJoin(fromAlias: 't', join: 'category', alias: 'c', condition: 't.category_id = c.id')
             ->leftJoin(fromAlias: 't', join: 'supermarket', alias: 's', condition: 't.supermarket_id = s.id')
+            ->leftJoin(fromAlias: 't', join: 'supermarket_aisle', alias: 'a', condition: 't.aisle_id = a.id')
             ->leftJoin(fromAlias: 't', join: 'nutrition_facts', alias: 'nf', condition: 't.nutrition_facts_id = nf.id')
             ->where('t.id = :id')
             ->setParameter(key: 'id', value: $articleId)
@@ -73,6 +79,7 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
             diaryUnit: $result['diary_unit'],
             equivalences: $this->findEquivalences(articleId: $result['id']),
             packUnit: $result['pack_unit'],
+            stock: (float) ($result['stock_quantity'] ?? 0.0),
             price: null !== $result['price'] ? (float) $result['price'] : null,
             brand: $result['brand'],
             emoji: $result['emoji'],
@@ -138,6 +145,16 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
                 aggregateName: 'Supermarket',
                 relationshipName: 'supermarket',
                 name: $row['supermarket_name'],
+            );
+        }
+
+        if (null !== $row['aisle_id'] && null !== $row['aisle_name']) {
+            $relationships[] = new GetArticleAisleResult(
+                id: $row['aisle_id'],
+                aggregateName: 'SupermarketAisle',
+                relationshipName: 'aisle',
+                name: $row['aisle_name'],
+                position: (int) $row['aisle_position'],
             );
         }
 

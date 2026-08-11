@@ -11,6 +11,10 @@ import {
 } from "@nutrition/catalog/article/application/services/article-view.service";
 import { GetArticleService } from "@nutrition/catalog/article/application/services/get-article.service";
 import { DeleteArticleService } from "@nutrition/catalog/article/application/services/delete-article.service";
+import { UpdateArticleStockService } from "@nutrition/pantry/stock/application/services/update-article-stock.service";
+import { StockViewService } from "@nutrition/pantry/stock/application/services/stock-view.service";
+import { ArticleStockView } from "@nutrition/pantry/stock/domain/models/article-stock-view.model";
+import { StockUnitMode } from "@nutrition/pantry/stock/domain/models/stock-unit-mode.model";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -34,6 +38,11 @@ import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/i
 import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { EquivalenceSummaryComponent } from "@shared/design-system/equivalence-summary/infrastructure/components/equivalence-summary.component";
 import { PurchaseSummaryComponent } from "@shared/design-system/purchase-summary/infrastructure/components/purchase-summary.component";
+import { StockControlComponent } from "@shared/design-system/stock-control/infrastructure/components/stock-control.component";
+import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
+import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { SegmentedOption } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 
 type NutritionMode = "pack" | "per100";
 
@@ -64,12 +73,18 @@ type NutritionMode = "pack" | "per100";
     SegmentedToggleComponent,
     EquivalenceSummaryComponent,
     PurchaseSummaryComponent,
+    StockControlComponent,
+    ModalSheetComponent,
+    AmountInputComponent,
+    ButtonComponent,
   ],
 })
 export class GetArticleComponent {
   private router = inject(Router);
   private getArticleService = inject(GetArticleService);
   private deleteArticleService = inject(DeleteArticleService);
+  private updateArticleStockService = inject(UpdateArticleStockService);
+  private stockView = inject(StockViewService);
   private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
 
@@ -88,6 +103,51 @@ export class GetArticleComponent {
   });
   readonly id = input.required<string>();
 
+  stock = signal<ArticleStockView | null>(null);
+  savingStock = signal(false);
+  showStockEditor = signal(false);
+  stockDraft = signal("");
+  stockDraftMode = signal<StockUnitMode>(StockUnitMode.Pack);
+  stockModeOptions = computed<SegmentedOption[]>(() => {
+    const stock = this.stock();
+    if (null === stock) return [];
+
+    return [
+      { value: StockUnitMode.Pack, label: this.stockView.packLabel(stock) },
+      { value: StockUnitMode.Base, label: stock.baseUnit },
+    ];
+  });
+  stockModeUnitLabel = computed<string>(() => {
+    const stock = this.stock();
+    if (null === stock) return "";
+
+    return StockUnitMode.Pack === this.stockDraftMode()
+      ? this.stockView.packLabel(stock)
+      : stock.baseUnit;
+  });
+  stockDraftBase = computed<number | null>(() => {
+    const stock = this.stock();
+    if (null === stock) return null;
+
+    const parsed = Number(this.stockDraft().replace(",", ".").trim());
+    if (!Number.isFinite(parsed) || parsed < 0) return null;
+
+    return StockUnitMode.Pack === this.stockDraftMode()
+      ? parsed * stock.packSize
+      : parsed;
+  });
+  stockDraftPreview = computed<string | null>(() => {
+    const stock = this.stock();
+    const base = this.stockDraftBase();
+    if (null === stock || null === base) return null;
+
+    const preview = this.stockView.build(stock, base);
+
+    return StockUnitMode.Pack === this.stockDraftMode()
+      ? preview.baseText
+      : preview.packsText;
+  });
+
   constructor() {
     toObservable(this.id)
       .pipe(
@@ -101,7 +161,13 @@ export class GetArticleComponent {
         takeUntilDestroyed(),
       )
       .subscribe((response) => {
-        this.detail.set(response ? this.view.toDetail(response.data) : null);
+        const detail = response ? this.view.toDetail(response.data) : null;
+        this.detail.set(detail);
+        this.stock.set(
+          null === detail
+            ? null
+            : this.stockView.build(detail.stockContext, detail.stock),
+        );
         this.notFound.set(null === response);
         this.loading.set(false);
       });
@@ -117,6 +183,61 @@ export class GetArticleComponent {
 
   onEdit(): void {
     this.router.navigate(["/catalog", this.id(), "edit"]);
+  }
+
+  onIncrementStock(): void {
+    this.shiftStockByPacks(1);
+  }
+
+  onDecrementStock(): void {
+    this.shiftStockByPacks(-1);
+  }
+
+  onClearStock(): void {
+    this.saveStock(0);
+  }
+
+  onOpenStockEditor(): void {
+    const stock = this.stock();
+    if (null === stock) return;
+
+    this.stockDraftMode.set(StockUnitMode.Pack);
+    this.stockDraft.set(this.draftText(stock.packs));
+    this.showStockEditor.set(true);
+  }
+
+  onCloseStockEditor(): void {
+    this.showStockEditor.set(false);
+  }
+
+  onStockDraftChange(value: string): void {
+    this.stockDraft.set(value);
+  }
+
+  onStockDraftModeChange(mode: string): void {
+    const stock = this.stock();
+    const base = this.stockDraftBase();
+    if (null === stock) return;
+
+    const nextMode = mode as StockUnitMode;
+    this.stockDraftMode.set(nextMode);
+
+    if (null === base) return;
+
+    this.stockDraft.set(
+      this.draftText(
+        StockUnitMode.Pack === nextMode && stock.packSize > 0
+          ? base / stock.packSize
+          : base,
+      ),
+    );
+  }
+
+  onConfirmStockEditor(): void {
+    const base = this.stockDraftBase();
+    if (null === base) return;
+
+    this.saveStock(base);
   }
 
   onDelete(): void {
@@ -141,5 +262,34 @@ export class GetArticleComponent {
         this.showDeleteModal.set(false);
       },
     });
+  }
+
+  private shiftStockByPacks(packs: number): void {
+    const stock = this.stock();
+    if (null === stock) return;
+
+    this.saveStock(Math.max(0, stock.stock + packs * stock.packSize));
+  }
+
+  private saveStock(value: number): void {
+    const stock = this.stock();
+    if (null === stock || this.savingStock()) return;
+
+    this.savingStock.set(true);
+
+    this.updateArticleStockService
+      .updateArticleStock(this.id(), value)
+      .subscribe({
+        next: () => {
+          this.stock.set(this.stockView.build(stock, value));
+          this.savingStock.set(false);
+          this.showStockEditor.set(false);
+        },
+        error: () => this.savingStock.set(false),
+      });
+  }
+
+  private draftText(value: number): string {
+    return String(Math.round(value * 100) / 100);
   }
 }

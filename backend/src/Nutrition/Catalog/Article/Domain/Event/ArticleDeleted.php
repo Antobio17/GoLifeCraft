@@ -9,6 +9,7 @@ final readonly class ArticleDeleted extends DomainEvent
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
+        public string $deletedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

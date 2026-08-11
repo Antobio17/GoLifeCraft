@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
@@ -21,30 +21,6 @@ export class AisleListComponent {
 
   @Output() moved = new EventEmitter<AisleListMove>();
   @Output() removed = new EventEmitter<string>();
-
-  draggingIndex = signal<number | null>(null);
-
-  onDragStart(index: number): void {
-    if (this.disabled) return;
-
-    this.draggingIndex.set(index);
-  }
-
-  onDragOver(event: DragEvent, index: number): void {
-    if (this.disabled) return;
-
-    event.preventDefault();
-
-    const from = this.draggingIndex();
-    if (null === from || from === index) return;
-
-    this.draggingIndex.set(index);
-    this.moved.emit({ from, to: index });
-  }
-
-  onDragEnd(): void {
-    this.draggingIndex.set(null);
-  }
 
   onMoveUp(index: number): void {
     if (this.disabled || 0 === index) return;

@@ -8,20 +8,7 @@
         direction="row"
         align="center"
         [gap]="'10px'"
-        [class.is-dragging]="draggingIndex() === index"
-        [attr.draggable]="disabled ? null : true"
-        (dragstart)="onDragStart(index)"
-        (dragover)="onDragOver($event, index)"
-        (dragend)="onDragEnd()"
       >
-        <ds-icon
-          name="grip"
-          [size]="16"
-          [stroke]="2"
-          class="aisle-list__grip"
-          aria-hidden="true"
-        />
-
         <ds-text variant="meta" class="aisle-list__position">{{
           item.position
         }}</ds-text>
