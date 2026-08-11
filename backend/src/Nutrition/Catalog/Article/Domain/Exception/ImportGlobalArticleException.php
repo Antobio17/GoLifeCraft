@@ -14,13 +14,4 @@ final class ImportGlobalArticleException extends BaseException
             details: ['globalArticleId' => $globalArticleId]
         );
     }
-
-    public static function alreadyImported(string $barcode): self
-    {
-        return new static(
-            title: 'This global article is already in your catalog.',
-            keyTranslation: 'global.article.already.imported',
-            details: ['barcode' => $barcode]
-        );
-    }
 }

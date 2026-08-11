@@ -50,6 +50,7 @@ services:
       $categoryRepository: '@Nutrition\Catalog\Category\Domain\Model\CategoryRepository'
       $supermarketRepository: '@Nutrition\Catalog\Supermarket\Domain\Model\SupermarketRepository'
       $nutritionFactsAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler'
+      $equivalenceAssembler: '@Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceAssembler'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

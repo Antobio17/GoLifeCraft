@@ -4,9 +4,12 @@ namespace Nutrition\Catalog\Article\Application\Command;
 
 use Nutrition\Catalog\Article\Domain\Exception\ImportGlobalArticleException;
 use Nutrition\Catalog\Article\Domain\Model\Article;
+use Nutrition\Catalog\Article\Domain\Model\ArticlePackaging;
 use Nutrition\Catalog\Article\Domain\Model\ArticleRepository;
+use Nutrition\Catalog\Article\Domain\Model\ArticleUnit;
 use Nutrition\Catalog\Category\Domain\Model\Category;
 use Nutrition\Catalog\Category\Domain\Model\CategoryRepository;
+use Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts;
 use Nutrition\Catalog\Supermarket\Domain\Model\Supermarket;
 use Nutrition\Catalog\Supermarket\Domain\Model\SupermarketRepository;
 use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticle;
@@ -24,6 +27,7 @@ final readonly class ImportGlobalArticleCommandHandler
         private CategoryRepository $categoryRepository,
         private SupermarketRepository $supermarketRepository,
         private ArticleNutritionFactsAssembler $nutritionFactsAssembler,
+        private ArticleEquivalenceAssembler $equivalenceAssembler,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -36,31 +40,45 @@ final readonly class ImportGlobalArticleCommandHandler
             throw ImportGlobalArticleException::globalArticleNotFound(globalArticleId: $command->globalArticleId);
         }
 
-        if (null !== $this->articleRepository->findByBarcode(barcode: $globalArticle->barcode)) {
-            throw ImportGlobalArticleException::alreadyImported(barcode: $globalArticle->barcode);
+        $packaging = ArticlePackaging::fromQuantity(quantity: $globalArticle->quantity);
+        $article = $this->articleRepository->findByBarcode(barcode: $globalArticle->barcode);
+
+        if (null !== $article) {
+            $this->refresh(article: $article, globalArticle: $globalArticle, packaging: $packaging, command: $command);
+
+            return;
         }
 
-        $nutritionFacts = $this->nutritionFactsAssembler->assemble(
-            nutritionFacts: null,
-            nutrition: $this->buildNutritionData(globalArticle: $globalArticle),
+        $this->import(globalArticle: $globalArticle, packaging: $packaging, command: $command);
+    }
+
+    private function import(GlobalArticle $globalArticle, ArticlePackaging $packaging, ImportGlobalArticleCommand $command): void
+    {
+        $nutritionFacts = $this->resolveNutritionFacts(
+            existingNutritionFacts: null,
+            globalArticle: $globalArticle,
             userId: $command->importedByUserId,
         );
-        $this->articleRepository->saveNutritionFacts(nutritionFacts: $nutritionFacts);
+        $articleId = $this->articleRepository->nextId();
 
         $article = Article::create(
-            id: $this->articleRepository->nextId(),
+            id: $articleId,
             name: $globalArticle->name,
-            recipeUnit: Article::BASE_UNIT_GRAM,
-            baseUnit: Article::BASE_UNIT_GRAM,
-            diaryUnit: Article::BASE_UNIT_GRAM,
-            packUnit: null,
+            recipeUnit: $packaging->baseUnit,
+            baseUnit: $packaging->baseUnit,
+            diaryUnit: $packaging->diaryUnit(),
+            packUnit: $packaging->packUnit(),
             price: $globalArticle->price,
             brand: $globalArticle->brand,
             emoji: null,
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
             nutritionFactsId: $nutritionFacts->id,
-            equivalences: [],
+            equivalences: $this->equivalenceAssembler->assemble(
+                articleId: $articleId,
+                equivalences: $this->buildEquivalences(packaging: $packaging),
+                userId: $command->importedByUserId,
+            ),
             createdByUserId: $command->importedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -68,6 +86,86 @@ final readonly class ImportGlobalArticleCommandHandler
 
         $this->articleRepository->save(article: $article);
         $this->domainEventCollectorService->register(aggregate: $article);
+    }
+
+    private function refresh(Article $article, GlobalArticle $globalArticle, ArticlePackaging $packaging, ImportGlobalArticleCommand $command): void
+    {
+        $existingNutritionFacts = null !== $article->nutritionFactsId
+            ? $this->articleRepository->findNutritionFactsById(nutritionFactsId: $article->nutritionFactsId)
+            : null;
+        $nutritionFacts = $this->resolveNutritionFacts(
+            existingNutritionFacts: $existingNutritionFacts,
+            globalArticle: $globalArticle,
+            userId: $command->importedByUserId,
+        );
+
+        $article->update(
+            name: $article->name,
+            recipeUnit: $packaging->baseUnit,
+            baseUnit: $packaging->baseUnit,
+            diaryUnit: $packaging->diaryUnit(),
+            packUnit: $packaging->packUnit(),
+            price: $globalArticle->price,
+            brand: $globalArticle->brand,
+            emoji: $article->emoji,
+            categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
+            supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
+            nutritionFactsId: $nutritionFacts->id,
+            equivalences: $this->equivalenceAssembler->assemble(
+                articleId: $article->id,
+                equivalences: $this->buildEquivalences(packaging: $packaging),
+                userId: $command->importedByUserId,
+            ),
+            referenceAmount: $nutritionFacts->referenceAmount,
+            calories: $nutritionFacts->calories,
+            protein: $nutritionFacts->protein,
+            fat: $nutritionFacts->fat,
+            carbs: $nutritionFacts->carbs,
+            updatedByUserId: $command->importedByUserId,
+            dateTimeGenerator: $this->dateTimeGenerator,
+        );
+
+        $this->articleRepository->save(article: $article);
+        $this->domainEventCollectorService->register(aggregate: $article);
+    }
+
+    private function resolveNutritionFacts(?NutritionFacts $existingNutritionFacts, GlobalArticle $globalArticle, string $userId): NutritionFacts
+    {
+        $nutritionFacts = $this->nutritionFactsAssembler->assemble(
+            nutritionFacts: $existingNutritionFacts,
+            nutrition: $this->buildNutritionData(globalArticle: $globalArticle),
+            userId: $userId,
+        );
+        $this->articleRepository->saveNutritionFacts(nutritionFacts: $nutritionFacts);
+
+        return $nutritionFacts;
+    }
+
+    /**
+     * @return ArticleEquivalenceData[]
+     */
+    private function buildEquivalences(ArticlePackaging $packaging): array
+    {
+        $equivalences = [];
+
+        if (null !== $packaging->packSize) {
+            $equivalences[] = new ArticleEquivalenceData(
+                unit: ArticleUnit::PACK->value,
+                quantity: $packaging->packSize,
+                position: 1,
+            );
+        }
+
+        $unitSize = $packaging->unitSize();
+        if (null !== $unitSize) {
+            $equivalences[] = new ArticleEquivalenceData(
+                unit: ArticleUnit::UNIT->value,
+                quantity: $unitSize,
+                position: count($equivalences) + 1,
+            );
+        }
+
+        return $equivalences;
     }
 
     private function buildNutritionData(GlobalArticle $globalArticle): ArticleNutritionData

@@ -2,10 +2,13 @@
 
 namespace App\Tests\Nutrition\Catalog\Article\Application\Command;
 
+use Nutrition\Catalog\Article\Application\Command\ArticleEquivalenceAssembler;
 use Nutrition\Catalog\Article\Application\Command\ArticleNutritionFactsAssembler;
 use Nutrition\Catalog\Article\Application\Command\ImportGlobalArticleCommand;
 use Nutrition\Catalog\Article\Application\Command\ImportGlobalArticleCommandHandler;
 use Nutrition\Catalog\Article\Domain\Exception\ImportGlobalArticleException;
+use Nutrition\Catalog\Article\Domain\Model\Article;
+use Nutrition\Catalog\Article\Domain\Model\ArticleUnit;
 use Nutrition\Catalog\Article\Infrastructure\Domain\Model\InMemory\InMemoryArticleRepository;
 use Nutrition\Catalog\Category\Infrastructure\Domain\Model\InMemory\InMemoryCategoryRepository;
 use Nutrition\Catalog\Supermarket\Infrastructure\Domain\Model\InMemory\InMemorySupermarketRepository;
@@ -38,6 +41,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
             categoryRepository: $this->categoryRepository,
             supermarketRepository: $this->supermarketRepository,
             nutritionFactsAssembler: new ArticleNutritionFactsAssembler(dateTimeGenerator: $dateTimeGenerator),
+            equivalenceAssembler: new ArticleEquivalenceAssembler(dateTimeGenerator: $dateTimeGenerator),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -62,14 +66,95 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
         $this->assertNotNull($this->supermarketRepository->findByName(name: 'Mercadona'));
     }
 
-    public function testItThrowsWhenGlobalArticleAlreadyImported(): void
+    public function testItTakesTheUnitsFromTheGlobalArticleQuantity(): void
+    {
+        $globalArticle = $this->seedGlobalArticle();
+
+        ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
+
+        $article = $this->articleRepository->findByBarcode(barcode: '8410000000001');
+
+        $this->assertSame(Article::BASE_UNIT_MILLILITER, $article->baseUnit);
+        $this->assertSame(Article::BASE_UNIT_MILLILITER, $article->recipeUnit);
+        $this->assertSame(Article::BASE_UNIT_MILLILITER, $article->diaryUnit);
+        $this->assertSame(ArticleUnit::PACK->value, $article->packUnit);
+        $this->assertCount(1, $article->equivalences);
+        $this->assertSame(ArticleUnit::PACK->value, $article->equivalences[0]->unit);
+        $this->assertSame(1000.0, $article->equivalences[0]->quantity);
+    }
+
+    public function testItSplitsAMultipackQuantityIntoAUnitEquivalence(): void
+    {
+        $globalArticle = $this->seedGlobalArticle(quantity: '4 x 125 g', barcode: '8410000000002');
+
+        ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
+
+        $article = $this->articleRepository->findByBarcode(barcode: '8410000000002');
+
+        $this->assertSame(Article::BASE_UNIT_GRAM, $article->baseUnit);
+        $this->assertSame(ArticleUnit::UNIT->value, $article->diaryUnit);
+        $this->assertSame(ArticleUnit::PACK->value, $article->packUnit);
+        $this->assertCount(2, $article->equivalences);
+        $this->assertSame(500.0, $article->equivalences[0]->quantity);
+        $this->assertSame(ArticleUnit::UNIT->value, $article->equivalences[1]->unit);
+        $this->assertSame(125.0, $article->equivalences[1]->quantity);
+    }
+
+    public function testItFallsBackToGramsWhenTheQuantityIsNotMeasurable(): void
+    {
+        $globalArticle = $this->seedGlobalArticle(quantity: '6 ud', barcode: '8410000000003');
+
+        ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
+
+        $article = $this->articleRepository->findByBarcode(barcode: '8410000000003');
+
+        $this->assertSame(Article::BASE_UNIT_GRAM, $article->baseUnit);
+        $this->assertSame(Article::BASE_UNIT_GRAM, $article->diaryUnit);
+        $this->assertNull($article->packUnit);
+        $this->assertSame([], $article->equivalences);
+    }
+
+    public function testItRefreshesTheArticleWhenTheGlobalArticleIsImportedAgain(): void
+    {
+        $globalArticle = $this->seedGlobalArticle(quantity: '6 ud');
+        ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
+
+        $imported = $this->articleRepository->findByBarcode(barcode: '8410000000001');
+        $imported->name = 'Leche de la mañana';
+        $imported->emoji = '🥛';
+        $this->articleRepository->save(article: $imported);
+
+        $this->repriceGlobalArticle(globalArticle: $globalArticle, quantity: '6 x 200 ml', price: 1.45);
+
+        ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-2'));
+
+        $article = $this->articleRepository->findByBarcode(barcode: '8410000000001');
+
+        $this->assertSame($imported->id, $article->id);
+        $this->assertSame(Article::BASE_UNIT_MILLILITER, $article->baseUnit);
+        $this->assertSame(ArticleUnit::UNIT->value, $article->diaryUnit);
+        $this->assertSame(ArticleUnit::PACK->value, $article->packUnit);
+        $this->assertCount(2, $article->equivalences);
+        $this->assertSame(1200.0, $article->equivalences[0]->quantity);
+        $this->assertSame(200.0, $article->equivalences[1]->quantity);
+        $this->assertSame(1.45, $article->price);
+        $this->assertSame('Leche de la mañana', $article->name);
+        $this->assertSame('🥛', $article->emoji);
+    }
+
+    public function testItKeepsASingleNutritionFactsWhenReimporting(): void
     {
         $globalArticle = $this->seedGlobalArticle();
         ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
 
-        $this->expectException(ImportGlobalArticleException::class);
+        $nutritionFactsId = $this->articleRepository->findByBarcode(barcode: '8410000000001')->nutritionFactsId;
 
         ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
+
+        $article = $this->articleRepository->findByBarcode(barcode: '8410000000001');
+
+        $this->assertSame($nutritionFactsId, $article->nutritionFactsId);
+        $this->assertSame(64.0, $this->articleRepository->findNutritionFactsById(nutritionFactsId: $nutritionFactsId)->calories);
     }
 
     public function testItThrowsWhenGlobalArticleNotFound(): void
@@ -79,16 +164,32 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
         ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: 'missing', importedByUserId: 'user-1'));
     }
 
-    private function seedGlobalArticle(): GlobalArticle
+    private function repriceGlobalArticle(GlobalArticle $globalArticle, string $quantity, float $price): void
+    {
+        $globalArticle->apply(
+            name: $globalArticle->name,
+            brand: $globalArticle->brand,
+            categoryName: $globalArticle->categoryName,
+            imageUrl: $globalArticle->imageUrl,
+            quantity: $quantity,
+            stores: $globalArticle->stores,
+            pricing: new GlobalArticlePricing(price: $price, bulkPrice: $price, referencePrice: $price, referenceFormat: 'L', previousPrice: $globalArticle->price),
+            nutrition: $globalArticle->nutrition(),
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
+        $this->globalArticleRepository->save(globalArticle: $globalArticle);
+    }
+
+    private function seedGlobalArticle(string $quantity = '1 L', string $barcode = '8410000000001'): GlobalArticle
     {
         $globalArticle = GlobalArticle::create(
             id: $this->globalArticleRepository->nextId(),
-            barcode: '8410000000001',
+            barcode: $barcode,
             name: 'Leche entera',
             brand: 'Hacendado',
             categoryName: 'Lácteos',
             imageUrl: null,
-            quantity: '1 L',
+            quantity: $quantity,
             stores: 'Mercadona',
             pricing: new GlobalArticlePricing(price: 1.25, bulkPrice: 1.25, referencePrice: 1.25, referenceFormat: 'L', previousPrice: 1.15),
             source: 'openfoodfacts',
