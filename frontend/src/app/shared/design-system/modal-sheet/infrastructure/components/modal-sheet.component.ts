@@ -91,11 +91,6 @@ import {
         align-items: flex-end;
         justify-content: center;
       }
-      @media (max-width: 767px) {
-        .ds-sheet__overlay {
-          --ds-sheet-viewport: calc(100dvh / var(--ds-app-scale, 1));
-        }
-      }
       .ds-sheet {
         display: flex;
         flex-direction: column;
