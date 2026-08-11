@@ -1,0 +1,111 @@
+:host {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.diary-tree__clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.diary-tree {
+  background: var(--ds-surface-subtle);
+  border: 1px solid var(--ds-border);
+  border-radius: 14px;
+  padding: 9px;
+}
+
+.diary-tree__header {
+  padding: 0 2px 1px;
+  color: var(--ds-text-meta);
+}
+
+ds-text.diary-tree__title {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--ds-text-meta);
+  text-transform: uppercase;
+}
+
+.diary-tree__reset {
+  background: var(--ds-primary-soft);
+  border-radius: 11px;
+  padding: 8px 10px;
+  color: var(--ds-primary);
+}
+
+ds-text.diary-tree__reset-text {
+  flex: 1 1 auto;
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: var(--ds-text-muted);
+}
+
+.diary-tree__row {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: 11px;
+  padding: 7px 8px;
+}
+
+.diary-tree__row--recipe {
+  background: var(--ds-primary-soft);
+}
+
+.diary-tree__row--expanded {
+  border-color: var(--ds-primary);
+}
+
+.diary-tree__row--in {
+  animation: diary-tree-row-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.diary-tree__row--out {
+  animation: diary-tree-row-in 0.14s cubic-bezier(0.4, 0, 1, 1) reverse;
+}
+
+@keyframes diary-tree-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diary-tree__row--in,
+  .diary-tree__row--out {
+    animation-duration: 0.01ms;
+  }
+}
+
+.diary-tree__body {
+  min-width: 0;
+}
+
+ds-text.diary-tree__name {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ds-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+ds-text.diary-tree__qty {
+  flex: 0 0 auto;
+  align-self: center;
+  background: var(--ds-surface-inset);
+  border-radius: 9px;
+  padding: 4px 7px;
+  font-family: var(--ds-font-display);
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--ds-text);
+  white-space: nowrap;
+}

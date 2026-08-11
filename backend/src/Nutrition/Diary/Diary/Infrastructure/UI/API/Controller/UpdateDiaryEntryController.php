@@ -31,6 +31,7 @@ final class UpdateDiaryEntryController
                 diaryEntryId: $request->attributes->get(key: 'diaryEntryId'),
                 quantity: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'quantity'),
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
+                unit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'unit'),
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_NO_CONTENT);

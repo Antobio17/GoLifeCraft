@@ -12,6 +12,7 @@ use Nutrition\Diary\Diary\Domain\Exception\UpdateDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
+use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntryTreeBuilder;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -88,6 +89,7 @@ final class UpdateQuickDiaryEntryCommandHandlerTest extends TestCase
         $createHandler = new CreateDiaryEntryCommandHandler(
             diaryEntryRepository: $this->repository,
             snapshotCalculator: new InMemoryDiaryEntrySnapshotCalculator(),
+            treeBuilder: new InMemoryDiaryEntryTreeBuilder(),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: new DateTimeGenerator(),
         );

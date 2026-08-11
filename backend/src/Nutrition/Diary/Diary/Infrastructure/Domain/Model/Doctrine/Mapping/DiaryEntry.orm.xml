@@ -21,6 +21,7 @@
     <field name="quickProtein" type="float" column="quick_protein"/>
     <field name="quickFat" type="float" column="quick_fat"/>
     <field name="quickCarbs" type="float" column="quick_carbs"/>
+    <field name="customized" type="boolean" column="customized" options="{&quot;default&quot;: false}"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

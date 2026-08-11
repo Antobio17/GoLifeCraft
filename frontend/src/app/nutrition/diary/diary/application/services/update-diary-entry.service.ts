@@ -4,7 +4,15 @@ import { UpdateDiaryEntryPort } from "../../domain/ports/update-diary-entry.port
 export class UpdateDiaryEntryService {
   constructor(private updateDiaryEntryPort: UpdateDiaryEntryPort) {}
 
-  updateDiaryEntryQuantity(id: string, quantity: number): Observable<void> {
-    return this.updateDiaryEntryPort.updateDiaryEntryQuantity(id, quantity);
+  updateDiaryEntryQuantity(
+    id: string,
+    quantity: number,
+    unit?: string,
+  ): Observable<void> {
+    return this.updateDiaryEntryPort.updateDiaryEntryQuantity(
+      id,
+      quantity,
+      unit,
+    );
   }
 }

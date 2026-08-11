@@ -50,4 +50,22 @@ final class UpdateDiaryEntryException extends BaseException
             details: []
         );
     }
+
+    public static function notARecipeEntry(string $diaryEntryId): self
+    {
+        return new static(
+            title: 'Only recipe entries have a breakdown.',
+            keyTranslation: 'diary.entry.not.recipe',
+            details: ['diaryEntryId' => $diaryEntryId]
+        );
+    }
+
+    public static function treeNodeNotFound(string $diaryEntryId, string $nodeId): self
+    {
+        return new static(
+            title: 'Breakdown item not found.',
+            keyTranslation: 'diary.entry.tree.node.not.found',
+            details: ['diaryEntryId' => $diaryEntryId, 'nodeId' => $nodeId]
+        );
+    }
 }

@@ -11,6 +11,7 @@ use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
+use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntryTreeBuilder;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -20,6 +21,7 @@ final class UpdateDiaryEntryQuantityCommandHandlerTest extends TestCase
 {
     private InMemoryDiaryEntryRepository $repository;
     private InMemoryDiaryEntrySnapshotCalculator $snapshotCalculator;
+    private InMemoryDiaryEntryTreeBuilder $treeBuilder;
     private UpdateDiaryEntryQuantityCommandHandler $handler;
 
     protected function setUp(): void
@@ -28,10 +30,12 @@ final class UpdateDiaryEntryQuantityCommandHandlerTest extends TestCase
         $domainEventCollectorService = new DomainEventCollectorService();
         $this->repository = new InMemoryDiaryEntryRepository();
         $this->snapshotCalculator = new InMemoryDiaryEntrySnapshotCalculator();
+        $this->treeBuilder = new InMemoryDiaryEntryTreeBuilder();
 
         $createHandler = new CreateDiaryEntryCommandHandler(
             diaryEntryRepository: $this->repository,
             snapshotCalculator: $this->snapshotCalculator,
+            treeBuilder: $this->treeBuilder,
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -48,6 +52,7 @@ final class UpdateDiaryEntryQuantityCommandHandlerTest extends TestCase
         $this->handler = new UpdateDiaryEntryQuantityCommandHandler(
             diaryEntryRepository: $this->repository,
             snapshotCalculator: $this->snapshotCalculator,
+            treeBuilder: $this->treeBuilder,
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );

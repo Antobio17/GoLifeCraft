@@ -9,3 +9,13 @@ services:
     arguments:
       $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\Service\DiaryWriterRecipeNutritionGraphProvider'
       $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
+
+  Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator:
+    class: Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator
+
+  Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\Service\RecipeGraphDiaryEntryTreeBuilder
+    arguments:
+      $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\Service\DiaryWriterRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'

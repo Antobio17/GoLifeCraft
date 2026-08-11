@@ -16,6 +16,13 @@ import { CreateQuickDiaryEntryService } from "@nutrition/diary/diary/application
 import { UpdateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/update-quick-diary-entry.service";
 import { QuickDiaryEntryFormService } from "@nutrition/diary/diary/application/services/quick-diary-entry-form.service";
 import { DiaryPickerService } from "@nutrition/diary/diary/application/services/diary-picker.service";
+import { UpdateDiaryEntryNodePort } from "@nutrition/diary/diary/domain/ports/update-diary-entry-node.port";
+import { ResetDiaryEntryTreePort } from "@nutrition/diary/diary/domain/ports/reset-diary-entry-tree.port";
+import { HttpUpdateDiaryEntryNodeAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-update-diary-entry-node.adapter";
+import { HttpResetDiaryEntryTreeAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-reset-diary-entry-tree.adapter";
+import { UpdateDiaryEntryNodeService } from "@nutrition/diary/diary/application/services/update-diary-entry-node.service";
+import { ResetDiaryEntryTreeService } from "@nutrition/diary/diary/application/services/reset-diary-entry-tree.service";
+import { DiaryTreeViewService } from "@nutrition/diary/diary/application/services/diary-tree-view.service";
 
 export class DiaryWriteProviders {
   static getProviders(): Provider[] {
@@ -55,6 +62,27 @@ export class DiaryWriteProviders {
         useFactory: (port: UpdateDiaryEntryPort) =>
           new UpdateDiaryEntryService(port),
         deps: [UpdateDiaryEntryPort],
+      },
+      DiaryTreeViewService,
+      {
+        provide: UpdateDiaryEntryNodePort,
+        useClass: HttpUpdateDiaryEntryNodeAdapter,
+      },
+      {
+        provide: UpdateDiaryEntryNodeService,
+        useFactory: (port: UpdateDiaryEntryNodePort) =>
+          new UpdateDiaryEntryNodeService(port),
+        deps: [UpdateDiaryEntryNodePort],
+      },
+      {
+        provide: ResetDiaryEntryTreePort,
+        useClass: HttpResetDiaryEntryTreeAdapter,
+      },
+      {
+        provide: ResetDiaryEntryTreeService,
+        useFactory: (port: ResetDiaryEntryTreePort) =>
+          new ResetDiaryEntryTreeService(port),
+        deps: [ResetDiaryEntryTreePort],
       },
       { provide: DeleteDiaryEntryPort, useClass: HttpDeleteDiaryEntryAdapter },
       {

@@ -66,7 +66,15 @@ import {
 } from "@nutrition/diary/diary/application/services/diary-picker.service";
 import { CreateDiaryEntryService } from "@nutrition/diary/diary/application/services/create-diary-entry.service";
 import { UpdateDiaryEntryService } from "@nutrition/diary/diary/application/services/update-diary-entry.service";
+import { UpdateDiaryEntryNodeService } from "@nutrition/diary/diary/application/services/update-diary-entry-node.service";
+import { ResetDiaryEntryTreeService } from "@nutrition/diary/diary/application/services/reset-diary-entry-tree.service";
+import { DiaryTreeViewService } from "@nutrition/diary/diary/application/services/diary-tree-view.service";
 import { DeleteDiaryEntryService } from "@nutrition/diary/diary/application/services/delete-diary-entry.service";
+import { DiaryTreeComponent } from "@shared/design-system/diary-tree/infrastructure/components/diary-tree.component";
+import {
+  DiaryTreeQuantityChange,
+  DiaryTreeUnitChange,
+} from "@shared/design-system/diary-tree/domain/models/diary-tree-change.model";
 import {
   DiaryDay,
   DiaryEntryView,
@@ -120,6 +128,7 @@ type PickerTab = "product" | "recipe" | "quick";
     IconComponent,
     ChipComponent,
     CalendarComponent,
+    DiaryTreeComponent,
   ],
 })
 export class GetDiaryComponent implements OnInit {
@@ -131,7 +140,10 @@ export class GetDiaryComponent implements OnInit {
   private getRecipesService = inject(GetRecipesService);
   private createDiaryEntryService = inject(CreateDiaryEntryService);
   private updateDiaryEntryService = inject(UpdateDiaryEntryService);
+  private updateDiaryEntryNodeService = inject(UpdateDiaryEntryNodeService);
+  private resetDiaryEntryTreeService = inject(ResetDiaryEntryTreeService);
   private deleteDiaryEntryService = inject(DeleteDiaryEntryService);
+  private treeView = inject(DiaryTreeViewService);
   private createQuickDiaryEntryService = inject(CreateQuickDiaryEntryService);
   private updateQuickDiaryEntryService = inject(UpdateQuickDiaryEntryService);
   protected quickForms = inject(QuickDiaryEntryFormService);
@@ -148,6 +160,12 @@ export class GetDiaryComponent implements OnInit {
 
   private quantityChanges = new Subject<{
     entryId: string;
+    quantity: number;
+  }>();
+
+  private nodeQuantityChanges = new Subject<{
+    entryId: string;
+    path: string;
     quantity: number;
   }>();
 
@@ -208,6 +226,15 @@ export class GetDiaryComponent implements OnInit {
     this.pickerMeal() ? this.mealLabel(this.pickerMeal()) : "",
   );
 
+  expandedEntries = signal<ReadonlySet<string>>(new Set());
+  collapsedNodes = signal<ReadonlySet<string>>(new Set());
+
+  treeLabels = computed(() => ({
+    ...this.macroLabels(),
+    kcal: this.t("getDiary.kcal"),
+    servings: this.t("getDiary.tree.servings"),
+  }));
+
   mealRows = computed(() =>
     (this.attributes()?.meals ?? []).map((meal) => ({
       key: meal.key,
@@ -220,8 +247,23 @@ export class GetDiaryComponent implements OnInit {
         kcalLabel: `${this.view.integer(entry.macros.calories)} ${this.t("getDiary.kcal")}`,
         macros: this.entryMacros(entry),
         unit: this.view.entryUnitLabel(entry),
+        unitValue: entry.unit,
+        unitOptions:
+          "product" === entry.kind && entry.refId
+            ? this.picker.unitOptions(entry.refId)
+            : [],
         quantityLabel: this.view.entryQuantityLabel(entry),
         openable: this.canWrite() && "quick" === entry.kind,
+        expandable: entry.tree.length > 0,
+        expanded: this.expandedEntries().has(entry.id),
+        treeRows: this.expandedEntries().has(entry.id)
+          ? this.treeView.rows(
+              entry.tree,
+              this.collapsedNodes(),
+              this.treeLabels(),
+            )
+          : [],
+        showReset: this.canWrite() && entry.customized,
       })),
     })),
   );
@@ -324,6 +366,21 @@ export class GetDiaryComponent implements OnInit {
         mergeMap((change) =>
           this.updateDiaryEntryService.updateDiaryEntryQuantity(
             change.entryId,
+            change.quantity,
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({ next: () => this.load(this.date(), true) });
+
+    this.nodeQuantityChanges
+      .pipe(
+        groupBy((change) => `${change.entryId}:${change.path}`),
+        mergeMap((group) => group.pipe(debounceTime(this.QUANTITY_DEBOUNCE))),
+        mergeMap((change) =>
+          this.updateDiaryEntryNodeService.updateDiaryEntryNode(
+            change.entryId,
+            change.path,
             change.quantity,
           ),
         ),
@@ -525,6 +582,58 @@ export class GetDiaryComponent implements OnInit {
     if (!quantity || quantity <= 0) return;
 
     this.quantityChanges.next({ entryId, quantity });
+  }
+
+  onEntryUnitChange(entry: DiaryEntryView, unit: string): void {
+    this.updateDiaryEntryService
+      .updateDiaryEntryQuantity(entry.id, entry.quantity, unit)
+      .subscribe({ next: () => this.load(this.date(), true) });
+  }
+
+  onNodeQuantityChange(entryId: string, change: DiaryTreeQuantityChange): void {
+    if (!change.quantity || change.quantity <= 0) return;
+
+    this.nodeQuantityChanges.next({
+      entryId,
+      path: change.path,
+      quantity: change.quantity,
+    });
+  }
+
+  onNodeUnitChange(entryId: string, change: DiaryTreeUnitChange): void {
+    this.updateDiaryEntryNodeService
+      .updateDiaryEntryNode(entryId, change.path, change.quantity, change.unit)
+      .subscribe({ next: () => this.load(this.date(), true) });
+  }
+
+  onResetTree(entryId: string): void {
+    this.resetDiaryEntryTreeService.resetDiaryEntryTree(entryId).subscribe({
+      next: () => this.load(this.date(), true),
+    });
+  }
+
+  toggleEntryTree(entryId: string): void {
+    this.expandedEntries.update((expanded) => this.toggled(expanded, entryId));
+  }
+
+  toggleTreeNode(path: string): void {
+    this.collapsedNodes.update((collapsed) => this.toggled(collapsed, path));
+  }
+
+  private toggled(
+    source: ReadonlySet<string>,
+    key: string,
+  ): ReadonlySet<string> {
+    const next = new Set(source);
+    if (next.has(key)) {
+      next.delete(key);
+
+      return next;
+    }
+
+    next.add(key);
+
+    return next;
   }
 
   onRemove(entryId: string): void {

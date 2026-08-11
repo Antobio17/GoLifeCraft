@@ -9,6 +9,10 @@
   padding: 10px 11px;
 }
 
+.diary-entry__row--expanded {
+  border-color: var(--ds-primary);
+}
+
 .diary-entry__row--slid {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;

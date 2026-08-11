@@ -129,6 +129,9 @@ export const DS_ICONS = {
   stopwatch:
     '<circle cx="12" cy="13" r="8"/><path d="M12 13V8"/><path d="M10 2h4"/><path d="M18.6 6.4l1.4-1.4"/>',
   mat: '<rect x="4" y="8" width="13" height="8" rx="2"/><path d="M17 8a4 4 0 0 1 0 8"/><path d="M20 8a4 4 0 0 1 0 8"/>',
+  breakdown:
+    '<path d="M6 3v6a3 3 0 0 0 3 3h6"/><path d="M6 9v9a3 3 0 0 0 3 3h6"/>',
+  restore: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
 } as const;
 
 export type DsIconName = keyof typeof DS_ICONS;

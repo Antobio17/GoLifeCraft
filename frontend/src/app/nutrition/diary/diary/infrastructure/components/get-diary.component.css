@@ -1,3 +1,31 @@
+.diary-tree--in {
+  animation: diary-tree-in 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.diary-tree--out {
+  animation: diary-tree-in 0.18s cubic-bezier(0.4, 0, 1, 1) reverse;
+}
+
+@keyframes diary-tree-in {
+  from {
+    grid-template-rows: 0fr;
+    margin-top: -7px;
+    opacity: 0;
+  }
+  to {
+    grid-template-rows: 1fr;
+    margin-top: 0;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diary-tree--in,
+  .diary-tree--out {
+    animation-duration: 0.01ms;
+  }
+}
+
 .goal-dot {
   flex: 0 0 auto;
 }

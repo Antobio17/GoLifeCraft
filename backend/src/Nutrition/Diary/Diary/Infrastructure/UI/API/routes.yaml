@@ -25,6 +25,21 @@ update_quick_diary_entry:
   requirements:
     diaryEntryId: '[0-9a-fA-F-]{36}'
 
+update_diary_entry_node:
+  path: /api/v1/nutrition/diary/{diaryEntryId}/nodes/{nodePath}
+  methods: [PUT]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryNodeController
+  requirements:
+    diaryEntryId: '[0-9a-fA-F-]{36}'
+    nodePath: '[0-9]+(\.[0-9]+)*'
+
+reset_diary_entry_tree:
+  path: /api/v1/nutrition/diary/{diaryEntryId}/tree/reset
+  methods: [POST]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\ResetDiaryEntryTreeController
+  requirements:
+    diaryEntryId: '[0-9a-fA-F-]{36}'
+
 update_diary_entry:
   path: /api/v1/nutrition/diary/{diaryEntryId}
   methods: [PUT]

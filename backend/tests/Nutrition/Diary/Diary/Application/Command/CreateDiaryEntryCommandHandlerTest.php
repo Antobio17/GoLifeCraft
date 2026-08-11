@@ -9,6 +9,7 @@ use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
+use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntryTreeBuilder;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -18,15 +19,18 @@ final class CreateDiaryEntryCommandHandlerTest extends TestCase
 {
     private InMemoryDiaryEntryRepository $repository;
     private InMemoryDiaryEntrySnapshotCalculator $snapshotCalculator;
+    private InMemoryDiaryEntryTreeBuilder $treeBuilder;
     private CreateDiaryEntryCommandHandler $handler;
 
     protected function setUp(): void
     {
         $this->repository = new InMemoryDiaryEntryRepository();
         $this->snapshotCalculator = new InMemoryDiaryEntrySnapshotCalculator();
+        $this->treeBuilder = new InMemoryDiaryEntryTreeBuilder();
         $this->handler = new CreateDiaryEntryCommandHandler(
             diaryEntryRepository: $this->repository,
             snapshotCalculator: $this->snapshotCalculator,
+            treeBuilder: $this->treeBuilder,
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: new DateTimeGenerator(),
         );

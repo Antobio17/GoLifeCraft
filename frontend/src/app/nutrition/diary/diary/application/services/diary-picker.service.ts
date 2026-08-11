@@ -1,5 +1,7 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, inject, signal } from "@angular/core";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
+import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
+import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { RecipeListItem } from "@nutrition/recipe/recipe/domain/models/recipe.model";
 import { DiaryMacros } from "../../domain/models/diary.model";
 
@@ -19,6 +21,7 @@ interface ProductEntry {
   macros: DiaryMacros;
   baseUnit: string;
   diaryUnit: string;
+  units: string[];
 }
 
 export interface DiaryEntryDefaults {
@@ -42,6 +45,8 @@ const DEFAULT_RECIPE_QUANTITY = 1;
 
 @Injectable()
 export class DiaryPickerService {
+  private unitCatalog = inject(UnitCatalogService);
+
   private products = signal(new Map<string, ProductEntry>());
   private recipes = signal(new Map<string, RecipeEntry>());
 
@@ -73,6 +78,12 @@ export class DiaryPickerService {
         macros,
         baseUnit,
         diaryUnit: article.attributes.diaryUnit || baseUnit,
+        units: [
+          baseUnit,
+          ...(article.attributes.equivalences ?? []).map(
+            (equivalence) => equivalence.unit,
+          ),
+        ],
       });
     });
 
@@ -110,6 +121,20 @@ export class DiaryPickerService {
       unit: entry.diaryUnit,
       quantity: isBase ? DEFAULT_BASE_QUANTITY : DEFAULT_RECIPE_QUANTITY,
     };
+  }
+
+  unitOptions(refId: string): SelectOption[] {
+    const units = this.products().get(refId)?.units ?? [];
+    if (units.length < 2) return [];
+
+    return units.map((unit) => ({
+      value: unit,
+      label: this.unitCatalog.label(unit),
+    }));
+  }
+
+  unitLabel(unit: string): string {
+    return this.unitCatalog.label(unit);
   }
 
   recipeDefaults(): DiaryEntryDefaults {

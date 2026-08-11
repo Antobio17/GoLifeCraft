@@ -90,6 +90,15 @@
       "save": "Save changes",
       "edit": "Edit free entry",
       "editTitle": "Edit entry"
-    }
+    },
+    "tree": {
+      "title": "Breakdown · final items",
+      "expand": "Show breakdown",
+      "collapse": "Hide breakdown",
+      "customized": "Adjusted by hand · only in this entry",
+      "reset": "Restore",
+      "servings": "srv."
+    },
+    "unit": "Unit"
   }
 }

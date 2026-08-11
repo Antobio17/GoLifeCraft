@@ -6,6 +6,9 @@ use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 
 final readonly class DiaryEntryView
 {
+    /**
+     * @param DiaryEntryNodeView[] $tree
+     */
     public function __construct(
         public string $id,
         public string $kind,
@@ -16,6 +19,8 @@ final readonly class DiaryEntryView
         public string $unit,
         public MacroBreakdown $macros,
         public ?DiaryQuickEntryView $quick = null,
+        public bool $customized = false,
+        public array $tree = [],
     ) {
     }
 }

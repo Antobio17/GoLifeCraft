@@ -90,6 +90,15 @@
       "save": "Guardar cambios",
       "edit": "Editar registro libre",
       "editTitle": "Editar registro"
-    }
+    },
+    "tree": {
+      "title": "Desglose · artículos finales",
+      "expand": "Ver desglose",
+      "collapse": "Ocultar desglose",
+      "customized": "Ajustado a mano · solo en este registro",
+      "reset": "Restablecer",
+      "servings": "rac."
+    },
+    "unit": "Unidad"
   }
 }

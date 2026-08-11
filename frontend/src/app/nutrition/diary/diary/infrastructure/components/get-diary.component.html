@@ -138,25 +138,59 @@
         @if (meal.entries.length > 0) {
           <ds-stack [gap]="'8px'">
             @for (row of meal.entries; track row.entry.id) {
-              <ds-diary-entry
-                [emoji]="row.entry.emoji"
-                [name]="row.entry.name"
-                [openable]="row.openable"
-                [openLabel]="'getDiary.quick.edit' | t"
-                [badge]="row.badge"
-                [badgeTone]="row.badgeTone"
-                [kcalLabel]="row.kcalLabel"
-                [macros]="row.macros"
-                [unit]="row.unit"
-                [quantity]="row.entry.quantity"
-                [quantityLabel]="row.quantityLabel"
-                [canWrite]="canWrite()"
-                [quantityAriaLabel]="'getDiary.quantity' | t"
-                [removeLabel]="'getDiary.remove' | t"
-                (quantityChange)="onQuantityChange(row.entry.id, $event)"
-                (remove)="onRemove(row.entry.id)"
-                (opened)="openQuickEditor(meal.key, row.entry)"
-              />
+              <ds-stack [gap]="'7px'">
+                <ds-diary-entry
+                  [emoji]="row.entry.emoji"
+                  [name]="row.entry.name"
+                  [openable]="row.openable"
+                  [openLabel]="'getDiary.quick.edit' | t"
+                  [badge]="row.badge"
+                  [badgeTone]="row.badgeTone"
+                  [kcalLabel]="row.kcalLabel"
+                  [macros]="row.macros"
+                  [unit]="row.unit"
+                  [unitValue]="row.unitValue"
+                  [unitOptions]="row.unitOptions"
+                  [quantity]="row.entry.quantity"
+                  [quantityLabel]="row.quantityLabel"
+                  [canWrite]="canWrite()"
+                  [quantityAriaLabel]="'getDiary.quantity' | t"
+                  [unitAriaLabel]="'getDiary.unit' | t"
+                  [removeLabel]="'getDiary.remove' | t"
+                  [expandable]="row.expandable"
+                  [expanded]="row.expanded"
+                  [expandLabel]="'getDiary.tree.expand' | t"
+                  [collapseLabel]="'getDiary.tree.collapse' | t"
+                  (quantityChange)="onQuantityChange(row.entry.id, $event)"
+                  (unitChange)="onEntryUnitChange(row.entry, $event)"
+                  (remove)="onRemove(row.entry.id)"
+                  (opened)="openQuickEditor(meal.key, row.entry)"
+                  (expandToggled)="toggleEntryTree(row.entry.id)"
+                />
+
+                @if (row.expanded) {
+                  <ds-diary-tree
+                    animate.enter="diary-tree--in"
+                    animate.leave="diary-tree--out"
+                    [rows]="row.treeRows"
+                    [title]="'getDiary.tree.title' | t"
+                    [canWrite]="canWrite()"
+                    [showReset]="row.showReset"
+                    [resetMessage]="'getDiary.tree.customized' | t"
+                    [resetLabel]="'getDiary.tree.reset' | t"
+                    [expandLabel]="'getDiary.tree.expand' | t"
+                    [collapseLabel]="'getDiary.tree.collapse' | t"
+                    [quantityAriaLabel]="'getDiary.quantity' | t"
+                    [unitAriaLabel]="'getDiary.unit' | t"
+                    (toggled)="toggleTreeNode($event)"
+                    (quantityChanged)="
+                      onNodeQuantityChange(row.entry.id, $event)
+                    "
+                    (unitChanged)="onNodeUnitChange(row.entry.id, $event)"
+                    (restored)="onResetTree(row.entry.id)"
+                  />
+                }
+              </ds-stack>
             }
           </ds-stack>
         } @else if (canWrite()) {

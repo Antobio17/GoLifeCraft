@@ -20,6 +20,18 @@ export interface DiaryQuickEntryView {
   perUnit: DiaryMacros;
 }
 
+export interface DiaryEntryNodeView {
+  path: string;
+  kind: "product" | "recipe";
+  refId: string;
+  name: string;
+  emoji: string;
+  quantity: number;
+  unit: string;
+  macros: DiaryMacros;
+  children: DiaryEntryNodeView[];
+}
+
 export interface DiaryEntryView {
   id: string;
   kind: DiaryEntryKind;
@@ -30,6 +42,8 @@ export interface DiaryEntryView {
   unit: string;
   macros: DiaryMacros;
   quick: DiaryQuickEntryView | null;
+  customized: boolean;
+  tree: DiaryEntryNodeView[];
 }
 
 export interface DiaryMealView {

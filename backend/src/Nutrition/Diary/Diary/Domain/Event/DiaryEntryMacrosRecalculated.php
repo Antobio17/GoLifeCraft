@@ -6,6 +6,9 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class DiaryEntryMacrosRecalculated extends DomainEvent
 {
+    /**
+     * @param array<int, array<string, mixed>> $tree
+     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
@@ -20,6 +23,8 @@ final readonly class DiaryEntryMacrosRecalculated extends DomainEvent
         public float $protein,
         public float $fat,
         public float $carbs,
+        public bool $customized = false,
+        public array $tree = [],
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

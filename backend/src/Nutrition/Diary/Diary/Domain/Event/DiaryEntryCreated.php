@@ -6,6 +6,9 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class DiaryEntryCreated extends DomainEvent
 {
+    /**
+     * @param array<int, array<string, mixed>> $tree
+     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
@@ -21,6 +24,7 @@ final readonly class DiaryEntryCreated extends DomainEvent
         public float $fat,
         public float $carbs,
         public string $createdByUserId,
+        public array $tree = [],
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

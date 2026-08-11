@@ -8,6 +8,7 @@ use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
+use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntryTreeBuilder;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -17,15 +18,18 @@ final class RecalculateDiaryEntryMacrosCommandHandlerTest extends TestCase
 {
     private InMemoryDiaryEntryRepository $repository;
     private InMemoryDiaryEntrySnapshotCalculator $calculator;
+    private InMemoryDiaryEntryTreeBuilder $treeBuilder;
     private RecalculateDiaryEntryMacrosCommandHandler $handler;
 
     protected function setUp(): void
     {
         $this->repository = new InMemoryDiaryEntryRepository();
         $this->calculator = new InMemoryDiaryEntrySnapshotCalculator();
+        $this->treeBuilder = new InMemoryDiaryEntryTreeBuilder();
         $this->handler = new RecalculateDiaryEntryMacrosCommandHandler(
             diaryEntryRepository: $this->repository,
             snapshotCalculator: $this->calculator,
+            treeBuilder: $this->treeBuilder,
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: new DateTimeGenerator(),
         );

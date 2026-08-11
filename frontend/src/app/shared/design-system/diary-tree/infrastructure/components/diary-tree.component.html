@@ -1,0 +1,96 @@
+<ds-stack class="diary-tree__clip">
+  <ds-stack class="diary-tree" gap="6px">
+    <ds-stack
+      class="diary-tree__header"
+      direction="row"
+      align="center"
+      gap="7px"
+    >
+      <ds-icon name="breakdown" [size]="13" [stroke]="2.2" />
+      <ds-text class="diary-tree__title">{{ title }}</ds-text>
+    </ds-stack>
+
+    @if (showReset) {
+      <ds-stack
+        class="diary-tree__reset"
+        direction="row"
+        align="center"
+        gap="8px"
+      >
+        <ds-icon name="restore" [size]="14" [stroke]="2.2" />
+        <ds-text class="diary-tree__reset-text">{{ resetMessage }}</ds-text>
+        <ds-button variant="link" size="sm" (clicked)="restored.emit()">{{
+          resetLabel
+        }}</ds-button>
+      </ds-stack>
+    }
+
+    @for (row of rows; track row.path) {
+      <ds-stack
+        class="diary-tree__row"
+        animate.enter="diary-tree__row--in"
+        animate.leave="diary-tree__row--out"
+        [class.diary-tree__row--recipe]="row.recipe"
+        [class.diary-tree__row--expanded]="row.expandable && row.expanded"
+        [style.margin-left]="indentOf(row)"
+        direction="row"
+        align="center"
+        gap="8px"
+      >
+        @if (row.expandable) {
+          <ds-pressable
+            [grow]="true"
+            gap="8px"
+            [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
+            (press)="toggled.emit(row.path)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="content"
+              [ngTemplateOutletContext]="{ $implicit: row }"
+            />
+          </ds-pressable>
+        } @else {
+          <ng-container
+            [ngTemplateOutlet]="content"
+            [ngTemplateOutletContext]="{ $implicit: row }"
+          />
+        }
+
+        @if (canWrite) {
+          <ds-inline-quantity
+            size="sm"
+            [quantity]="row.quantity"
+            [unit]="row.unit"
+            [unitLabel]="row.unitLabel"
+            [unitOptions]="row.unitOptions"
+            [ariaLabel]="quantityAriaLabel"
+            [unitAriaLabel]="unitAriaLabel"
+            (quantityChange)="
+              quantityChanged.emit({ path: row.path, quantity: $event })
+            "
+            (unitChange)="
+              unitChanged.emit({
+                path: row.path,
+                unit: $event,
+                quantity: row.quantity,
+              })
+            "
+          />
+        } @else {
+          <ds-text class="diary-tree__qty"
+            >{{ row.quantity }} {{ row.unitLabel }}</ds-text
+          >
+        }
+      </ds-stack>
+    }
+  </ds-stack>
+</ds-stack>
+
+<ng-template #content let-row>
+  <ds-emoji-tile [emoji]="row.emoji" [size]="30" [radius]="9" />
+
+  <ds-stack class="diary-tree__body" gap="3px" [grow]="true">
+    <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
+    <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
+  </ds-stack>
+</ng-template>

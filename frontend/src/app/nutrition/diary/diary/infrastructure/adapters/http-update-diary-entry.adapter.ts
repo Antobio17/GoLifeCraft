@@ -9,7 +9,14 @@ export class HttpUpdateDiaryEntryAdapter extends UpdateDiaryEntryPort {
 
   private readonly apiUrl = "/api/v1/nutrition/diary";
 
-  updateDiaryEntryQuantity(id: string, quantity: number): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, { quantity });
+  updateDiaryEntryQuantity(
+    id: string,
+    quantity: number,
+    unit?: string,
+  ): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, {
+      quantity,
+      unit: unit ?? null,
+    });
   }
 }

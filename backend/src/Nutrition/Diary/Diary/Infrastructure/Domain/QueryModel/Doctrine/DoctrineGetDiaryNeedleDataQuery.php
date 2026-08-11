@@ -2,20 +2,31 @@
 
 namespace Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Nutrition\Diary\Diary\Domain\Model\DiaryBreakdownItem;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
+use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
+use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryEntryNodeView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryEntryView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryGoals;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryMealView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryQuickEntryView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\GetDiaryResult;
 use Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryNeedleDataQuery;
+use Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
+use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 
-final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
+final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
 {
+    private ?RecipeNutritionGraph $graph = null;
+
     public function __construct(
-        private Connection $connection,
+        private readonly Connection $connection,
+        private readonly DoctrineRecipeNutritionGraphProvider $graphProvider,
+        private readonly DiaryBreakdownCalculator $breakdownCalculator,
     ) {
     }
 
@@ -23,6 +34,7 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
     {
         $rows = $this->fetchEntries(date: $date);
         $goals = $this->resolveGoals(date: $date);
+        $nodesByEntry = $this->fetchNodes(entryIds: array_column($rows, 'id'));
 
         $meals = [];
         $totals = MacroBreakdown::zero();
@@ -51,6 +63,8 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
                     unit: $this->unitFor(kind: $row['kind'], storedUnit: $row['unit'] ?? null),
                     macros: $macros->rounded(),
                     quick: $this->quickView(row: $row),
+                    customized: (bool) ($row['customized'] ?? false),
+                    tree: $this->treeFor(row: $row, nodes: $nodesByEntry[$row['id']] ?? []),
                 );
             }
 
@@ -83,6 +97,98 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
         );
     }
 
+    /**
+     * @param array<string, mixed>             $row
+     * @param array<int, array<string, mixed>> $nodes
+     *
+     * @return DiaryEntryNodeView[]
+     */
+    private function treeFor(array $row, array $nodes): array
+    {
+        if (DiaryEntry::KIND_RECIPE !== $row['kind'] || null === $row['ref_id']) {
+            return [];
+        }
+
+        $items = [] !== $nodes
+            ? $this->itemsFromNodes(nodes: $nodes)
+            : $this->breakdownCalculator->expand(
+                graph: $this->graph(),
+                recipeId: $row['ref_id'],
+                servings: (float) $row['quantity'],
+            );
+
+        return $this->nest(items: $items, parentPath: null);
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $nodes
+     *
+     * @return DiaryBreakdownItem[]
+     */
+    private function itemsFromNodes(array $nodes): array
+    {
+        return array_map(static fn (array $node): DiaryBreakdownItem => new DiaryBreakdownItem(
+            path: $node['path'],
+            parentPath: self::parentPathOf(path: $node['path']),
+            depth: (int) $node['depth'],
+            position: (int) $node['position'],
+            kind: $node['kind'],
+            refId: $node['ref_id'],
+            quantity: (float) $node['quantity'],
+            unit: $node['unit'],
+            name: $node['snapshot_name'],
+            emoji: $node['snapshot_emoji'],
+            macros: new MacroBreakdown(
+                calories: (float) $node['snapshot_calories'],
+                protein: (float) $node['snapshot_protein'],
+                fat: (float) $node['snapshot_fat'],
+                carbs: (float) $node['snapshot_carbs'],
+            ),
+        ), $nodes);
+    }
+
+    /**
+     * @param DiaryBreakdownItem[] $items
+     *
+     * @return DiaryEntryNodeView[]
+     */
+    private function nest(array $items, ?string $parentPath): array
+    {
+        $views = [];
+
+        foreach ($items as $item) {
+            if ($item->parentPath !== $parentPath) {
+                continue;
+            }
+
+            $views[] = new DiaryEntryNodeView(
+                path: $item->path,
+                kind: $item->kind,
+                refId: $item->refId,
+                name: $item->name,
+                emoji: $item->emoji,
+                quantity: round(num: $item->quantity, precision: 2),
+                unit: $item->isRecipe() ? 'rac.' : ($item->unit ?? 'g'),
+                macros: $item->macros->rounded(),
+                children: $this->nest(items: $items, parentPath: $item->path),
+            );
+        }
+
+        return $views;
+    }
+
+    private function graph(): RecipeNutritionGraph
+    {
+        return $this->graph ??= $this->graphProvider->load();
+    }
+
+    private static function parentPathOf(string $path): ?string
+    {
+        $separator = strrpos(haystack: $path, needle: DiaryEntryNode::PATH_SEPARATOR);
+
+        return false === $separator ? null : substr(string: $path, offset: 0, length: $separator);
+    }
+
     private function unitFor(string $kind, ?string $storedUnit): string
     {
         if (DiaryEntry::KIND_PRODUCT === $kind) {
@@ -92,9 +198,7 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
         return DiaryEntry::KIND_QUICK === $kind ? 'ud' : 'rac.';
     }
 
-    /**
-     * @param array<string, mixed> $row
-     */
+    /** @param array<string, mixed> $row */
     private function quickView(array $row): ?DiaryQuickEntryView
     {
         if (DiaryEntry::KIND_QUICK !== $row['kind']) {
@@ -147,9 +251,7 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
         return DiaryGoals::default();
     }
 
-    /**
-     * @param array<string, mixed> $row
-     */
+    /** @param array<string, mixed> $row */
     private function mapGoals(array $row): DiaryGoals
     {
         return new DiaryGoals(
@@ -160,18 +262,46 @@ final readonly class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDa
         );
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
+    /** @return array<int, array<string, mixed>> */
     private function fetchEntries(string $date): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.unit', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
+            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.unit', 'e.customized', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
             ->from(table: 'diary_entry', alias: 'e')
             ->where('e.entry_date = :date')
             ->setParameter(key: 'date', value: $date)
             ->orderBy('e.created_at', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
+    }
+
+    /**
+     * @param array<int, string> $entryIds
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    private function fetchNodes(array $entryIds): array
+    {
+        if ([] === $entryIds) {
+            return [];
+        }
+
+        $rows = $this->connection->createQueryBuilder()
+            ->select('n.diary_entry_id', 'n.path', 'n.depth', 'n.position', 'n.kind', 'n.ref_id', 'n.quantity', 'n.unit', 'n.snapshot_name', 'n.snapshot_emoji', 'n.snapshot_calories', 'n.snapshot_protein', 'n.snapshot_fat', 'n.snapshot_carbs')
+            ->from(table: 'diary_entry_node', alias: 'n')
+            ->where('n.diary_entry_id IN (:entryIds)')
+            ->setParameter(key: 'entryIds', value: $entryIds, type: ArrayParameterType::STRING)
+            ->orderBy('n.depth', 'ASC')
+            ->addOrderBy('n.path', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $byEntry = [];
+
+        foreach ($rows as $row) {
+            $byEntry[$row['diary_entry_id']][] = $row;
+        }
+
+        return $byEntry;
     }
 }

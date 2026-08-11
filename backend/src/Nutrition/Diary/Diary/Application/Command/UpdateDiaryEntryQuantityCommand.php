@@ -10,6 +10,7 @@ final readonly class UpdateDiaryEntryQuantityCommand implements Command
         public string $diaryEntryId,
         public float $quantity,
         public string $updatedByUserId,
+        public ?string $unit = null,
     ) {
     }
 

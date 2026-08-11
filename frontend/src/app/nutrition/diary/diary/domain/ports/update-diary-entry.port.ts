@@ -4,5 +4,6 @@ export abstract class UpdateDiaryEntryPort {
   abstract updateDiaryEntryQuantity(
     id: string,
     quantity: number,
+    unit?: string,
   ): Observable<void>;
 }

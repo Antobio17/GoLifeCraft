@@ -47,3 +47,17 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryNodeController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\UpdateDiaryEntryNodeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\ResetDiaryEntryTreeController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\ResetDiaryEntryTreeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

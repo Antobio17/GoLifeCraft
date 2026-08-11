@@ -4,6 +4,7 @@ services:
     arguments:
       $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
       $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
+      $treeBuilder: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -32,6 +33,7 @@ services:
     arguments:
       $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
       $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
+      $treeBuilder: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -59,6 +61,28 @@ services:
     class: Nutrition\Diary\Diary\Application\Command\RecalculateDiaryEntryMacrosCommandHandler
     arguments:
       $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
+      $treeBuilder: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\UpdateDiaryEntryNodeCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\UpdateDiaryEntryNodeCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $treeBuilder: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\ResetDiaryEntryTreeCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\ResetDiaryEntryTreeCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $treeBuilder: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder'
       $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'

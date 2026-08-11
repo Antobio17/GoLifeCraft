@@ -1,8 +1,15 @@
 services:
+  Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DiaryReaderRecipeNutritionGraphProvider:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
   Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryNeedleDataQuery:
     class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDiaryNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+      $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DiaryReaderRecipeNutritionGraphProvider'
+      $breakdownCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator'
 
   Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryCalendarNeedleDataQuery:
     class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDiaryCalendarNeedleDataQuery

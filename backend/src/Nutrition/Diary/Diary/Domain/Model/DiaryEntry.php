@@ -8,6 +8,7 @@ use Nutrition\Diary\Diary\Domain\Event\DiaryEntryDeleted;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryMacrosRecalculated;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryQuantityUpdated;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryQuickUpdated;
+use Nutrition\Diary\Diary\Domain\Event\DiaryEntryTreeAdjusted;
 use Nutrition\Diary\Diary\Domain\Exception\CreateDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Exception\UpdateDiaryEntryException;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
@@ -16,12 +17,17 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 class DiaryEntry extends GenericAggregate
 {
     public const KIND_PRODUCT = 'product';
+
     public const KIND_RECIPE = 'recipe';
+
     public const KIND_QUICK = 'quick';
 
     public const MEAL_BREAKFAST = 'breakfast';
+
     public const MEAL_LUNCH = 'lunch';
+
     public const MEAL_DINNER = 'dinner';
+
     public const MEAL_SNACK = 'snack';
 
     /** @var array<int, string> */
@@ -46,24 +52,47 @@ class DiaryEntry extends GenericAggregate
     ];
 
     public string $entryDate;
+
     public string $meal;
+
     public string $kind;
+
     public ?string $refId = null;
+
     public float $quantity;
+
     public ?string $unit = null;
+
     public string $nameSnapshot = '';
+
     public string $emojiSnapshot = '';
+
     public float $caloriesSnapshot = 0.0;
+
     public float $proteinSnapshot = 0.0;
+
     public float $fatSnapshot = 0.0;
+
     public float $carbsSnapshot = 0.0;
+
     public string $quickName = '';
+
     public string $quickEmoji = '';
+
     public float $quickCalories = 0.0;
+
     public float $quickProtein = 0.0;
+
     public float $quickFat = 0.0;
+
     public float $quickCarbs = 0.0;
 
+    public bool $customized = false;
+
+    /** @var DiaryEntryNode[] */
+    public array $nodes = [];
+
+    /** @param DiaryEntryNode[] $nodes */
     public static function create(
         string $id,
         string $entryDate,
@@ -75,6 +104,7 @@ class DiaryEntry extends GenericAggregate
         DiaryEntrySnapshot $snapshot,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
+        array $nodes = [],
     ): self {
         if (!self::hasValidDate(entryDate: $entryDate)) {
             throw CreateDiaryEntryException::invalidDate(entryDate: $entryDate);
@@ -102,6 +132,7 @@ class DiaryEntry extends GenericAggregate
         $entry->refId = $refId;
         $entry->quantity = $quantity;
         $entry->unit = $unit;
+        $entry->nodes = $nodes;
         $entry->writeSnapshot(snapshot: $snapshot);
         $entry->stampCreation(userId: $createdByUserId, now: $now);
 
@@ -113,6 +144,7 @@ class DiaryEntry extends GenericAggregate
             kind: $kind,
             refId: $refId,
             quantity: $quantity,
+            tree: $entry->treePayload(),
             name: $snapshot->name,
             emoji: $snapshot->emoji,
             calories: $snapshot->macros->calories,
@@ -269,6 +301,7 @@ class DiaryEntry extends GenericAggregate
         DiaryEntrySnapshot $snapshot,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
+        ?string $unit = null,
     ): void {
         if (!self::hasValidQuantity(quantity: $quantity)) {
             throw UpdateDiaryEntryException::quantityMustBePositive();
@@ -277,6 +310,7 @@ class DiaryEntry extends GenericAggregate
         $now = $dateTimeGenerator->now();
 
         $this->quantity = $quantity;
+        $this->unit = self::KIND_PRODUCT === $this->kind ? ($unit ?? $this->unit) : $this->unit;
         $this->writeSnapshot(snapshot: $snapshot);
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
@@ -284,13 +318,134 @@ class DiaryEntry extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             quantity: $quantity,
+            unit: $this->unit,
             name: $snapshot->name,
             emoji: $snapshot->emoji,
             calories: $snapshot->macros->calories,
             protein: $snapshot->macros->protein,
             fat: $snapshot->macros->fat,
             carbs: $snapshot->macros->carbs,
+            customized: $this->customized,
+            tree: $this->treePayload(),
         ));
+    }
+
+    public function isRecipe(): bool
+    {
+        return self::KIND_RECIPE === $this->kind;
+    }
+
+    public function hasTree(): bool
+    {
+        return [] !== $this->nodes;
+    }
+
+    /** @param DiaryEntryNode[] $nodes */
+    public function replaceTree(array $nodes, bool $customized): void
+    {
+        $this->nodes = array_values(array: $nodes);
+        $this->customized = $customized;
+    }
+
+    public function scaleTree(float $factor, string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        foreach ($this->nodes as $node) {
+            $node->scale(factor: $factor, updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        }
+    }
+
+    public function adjustNode(
+        string $nodeId,
+        float $quantity,
+        ?string $unit,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!self::hasValidQuantity(quantity: $quantity)) {
+            throw UpdateDiaryEntryException::quantityMustBePositive();
+        }
+
+        $node = $this->findNode(nodeId: $nodeId);
+        if (null === $node) {
+            throw UpdateDiaryEntryException::treeNodeNotFound(diaryEntryId: $this->id, nodeId: $nodeId);
+        }
+
+        $factor = $node->quantity > 0 ? $quantity / $node->quantity : 0.0;
+        $node->adjust(quantity: $quantity, unit: $unit, updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+
+        if ($node->isRecipe() && $factor > 0) {
+            $this->scaleDescendants(node: $node, factor: $factor, updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        }
+
+        $this->customized = true;
+    }
+
+    public function findNode(string $nodeId): ?DiaryEntryNode
+    {
+        foreach ($this->nodes as $node) {
+            if ($node->id === $nodeId) {
+                return $node;
+            }
+        }
+
+        return null;
+    }
+
+    public function treeMacros(): MacroBreakdown
+    {
+        return self::macrosOf(nodes: $this->nodes);
+    }
+
+    /** @param DiaryEntryNode[] $nodes */
+    public static function macrosOf(array $nodes): MacroBreakdown
+    {
+        $total = MacroBreakdown::zero();
+
+        foreach ($nodes as $node) {
+            if (null !== $node->parentNodeId) {
+                continue;
+            }
+
+            $total = $total->add(other: $node->macros());
+        }
+
+        return $total;
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public function treePayload(): array
+    {
+        return array_map(static fn (DiaryEntryNode $node): array => [
+            'id' => $node->id,
+            'path' => $node->path,
+            'parentNodeId' => $node->parentNodeId,
+            'kind' => $node->kind,
+            'refId' => $node->refId,
+            'quantity' => $node->quantity,
+            'unit' => $node->unit,
+            'position' => $node->position,
+            'name' => $node->nameSnapshot,
+            'emoji' => $node->emojiSnapshot,
+            'calories' => $node->caloriesSnapshot,
+            'protein' => $node->proteinSnapshot,
+            'fat' => $node->fatSnapshot,
+            'carbs' => $node->carbsSnapshot,
+        ], array_values(array: $this->nodes));
+    }
+
+    private function scaleDescendants(
+        DiaryEntryNode $node,
+        float $factor,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        foreach ($this->nodes as $candidate) {
+            if (!$candidate->isDescendantOf(other: $node)) {
+                continue;
+            }
+
+            $candidate->scale(factor: $factor, updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        }
     }
 
     public function applySnapshot(
@@ -317,6 +472,37 @@ class DiaryEntry extends GenericAggregate
             protein: $snapshot->macros->protein,
             fat: $snapshot->macros->fat,
             carbs: $snapshot->macros->carbs,
+            customized: $this->customized,
+            tree: $this->treePayload(),
+        ));
+    }
+
+    public function applyTreeSnapshot(
+        DiaryEntrySnapshot $snapshot,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->writeSnapshot(snapshot: $snapshot);
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new DiaryEntryTreeAdjusted(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            entryDate: $this->entryDate,
+            meal: $this->meal,
+            kind: $this->kind,
+            refId: $this->refId,
+            quantity: $this->quantity,
+            customized: $this->customized,
+            name: $snapshot->name,
+            emoji: $snapshot->emoji,
+            calories: $snapshot->macros->calories,
+            protein: $snapshot->macros->protein,
+            fat: $snapshot->macros->fat,
+            carbs: $snapshot->macros->carbs,
+            tree: $this->treePayload(),
         ));
     }
 
