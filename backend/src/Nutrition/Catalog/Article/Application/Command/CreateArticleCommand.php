@@ -20,6 +20,7 @@ final readonly class CreateArticleCommand implements Command
         public ?string $emoji,
         public ?string $categoryId,
         public ?string $supermarketId,
+        public ?string $aisleId,
         public ArticleNutritionData $nutrition,
         public array $equivalences,
         public string $createdByUserId,

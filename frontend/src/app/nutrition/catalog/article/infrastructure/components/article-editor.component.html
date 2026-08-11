@@ -80,6 +80,44 @@
           />
         </ds-field>
 
+        @if (hasSupermarket()) {
+          <ds-stack [gap]="'8px'">
+            <ds-stack
+              direction="row"
+              justify="between"
+              align="center"
+              [gap]="'8px'"
+            >
+              <ds-text variant="label">{{ aisleSectionLabel() }}</ds-text>
+
+              <ds-button
+                type="button"
+                variant="ghost"
+                size="sm"
+                icon="aisles"
+                (clicked)="openAisleSheet()"
+              >
+                {{ "aisles.manage" | t }}
+              </ds-button>
+            </ds-stack>
+
+            @if (hasAisles()) {
+              <ds-select-chips
+                formControlName="aisleId"
+                [options]="aisleOptions()"
+              />
+            } @else {
+              <ds-note icon="plus">{{
+                "articleEditor.field.aisleEmpty" | t
+              }}</ds-note>
+            }
+
+            <ds-text variant="meta">{{
+              "articleEditor.field.aisleHint" | t
+            }}</ds-text>
+          </ds-stack>
+        }
+
         <ds-stack [gap]="'10px'">
           <ds-nutrition-editor
             [title]="'articleEditor.nutrition.heading' | t"
@@ -177,4 +215,12 @@
   [deletingLabel]="'articleEditor.deleteModal.deleting' | t"
   (confirmed)="onConfirmDelete()"
   (cancelled)="onCancelDelete()"
+/>
+
+<app-manage-aisles
+  [open]="aisleSheetOpen()"
+  [supermarkets]="supermarkets()"
+  [supermarketId]="selectedSupermarketId()"
+  (saved)="onAislesSaved()"
+  (closed)="closeAisleSheet()"
 />

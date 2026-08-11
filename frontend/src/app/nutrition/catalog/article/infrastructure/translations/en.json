@@ -109,7 +109,11 @@
       "brandPlaceholder": "e.g. Store brand",
       "price": "Price",
       "category": "Category",
-      "store": "Store"
+      "store": "Store",
+      "aisle": "Aisle",
+      "aisleIn": "Aisle in {{store}}",
+      "aisleEmpty": "This store has no aisles yet. Create them to sort your route.",
+      "aisleHint": "Assigning an aisle makes the shopping list follow your route through the store. Leave it empty and the article is grouped by its category instead."
     },
     "nutrition": {
       "title": "Nutrition per 100 g",

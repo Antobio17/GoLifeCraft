@@ -1,4 +1,12 @@
-import { Component, OnInit, inject, input, signal } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import {
   AbstractControl,
@@ -24,12 +32,17 @@ import { EquivalenceEditorValue } from "@shared/design-system/equivalence-editor
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
 import { GetSupermarketsService } from "@nutrition/catalog/supermarket/application/services/get-supermarkets.service";
+import { AisleCatalogService } from "@nutrition/catalog/supermarket/application/services/aisle-catalog.service";
+import { Supermarket } from "@nutrition/catalog/supermarket/domain/models/supermarket.model";
+import { ManageAislesComponent } from "@nutrition/catalog/supermarket/infrastructure/components/manage-aisles.component";
 import { EmojiCatalogService } from "../../application/services/emoji-catalog.service";
 import { UnitCatalogService } from "../../application/services/unit-catalog.service";
 import { CreateArticleService } from "../../application/services/create-article.service";
@@ -94,8 +107,11 @@ function equivalencesValidator(
     ButtonComponent,
     ConfirmActionModalComponent,
     StackComponent,
+    TextComponent,
+    NoteComponent,
     SkeletonRowsComponent,
     SkeletonFieldsComponent,
+    ManageAislesComponent,
   ],
 })
 export class ArticleEditorComponent implements OnInit {
@@ -107,6 +123,7 @@ export class ArticleEditorComponent implements OnInit {
   private getArticleService = inject(GetArticleService);
   private getCategoriesService = inject(GetCategoriesService);
   private getSupermarketsService = inject(GetSupermarketsService);
+  private aisleCatalog = inject(AisleCatalogService);
   private emojiCatalog = inject(EmojiCatalogService);
   private unitCatalogService = inject(UnitCatalogService);
   private floatingToastService = inject(FloatingToastService);
@@ -118,7 +135,40 @@ export class ArticleEditorComponent implements OnInit {
   readonly unitOptions = this.unitCatalogService.options();
 
   categoryOptions = signal<{ value: string; label: string }[]>([]);
-  supermarketOptions = signal<{ value: string; label: string }[]>([]);
+  supermarkets = signal<Supermarket[]>([]);
+  selectedSupermarketId = signal<string | null>(null);
+
+  supermarketOptions = computed(() =>
+    this.supermarkets().map((supermarket) => ({
+      value: supermarket.id,
+      label: supermarket.attributes.name,
+    })),
+  );
+
+  selectedSupermarket = computed(() =>
+    this.aisleCatalog.findById(
+      this.supermarkets(),
+      this.selectedSupermarketId(),
+    ),
+  );
+
+  aisleOptions = computed(() =>
+    this.aisleCatalog
+      .aislesOf(this.selectedSupermarket())
+      .map((aisle) => ({ value: aisle.id, label: aisle.name })),
+  );
+
+  hasSupermarket = computed(() => null !== this.selectedSupermarketId());
+  hasAisles = computed(() => this.aisleOptions().length > 0);
+
+  aisleSectionLabel = computed(() => {
+    const supermarket = this.selectedSupermarket();
+    if (!supermarket) return this.t("articleEditor.field.aisle");
+
+    return this.t("articleEditor.field.aisleIn", {
+      store: supermarket.attributes.name,
+    });
+  });
 
   form: FormGroup;
   loading = signal(true);
@@ -126,6 +176,7 @@ export class ArticleEditorComponent implements OnInit {
   showDeleteModal = signal(false);
   deleting = signal(false);
   articleName = signal("");
+  aisleSheetOpen = signal(false);
 
   readonly id = input<string>("");
 
@@ -137,6 +188,7 @@ export class ArticleEditorComponent implements OnInit {
       price: [""],
       categoryId: [null as string | null],
       supermarketId: [null as string | null],
+      aisleId: [null as string | null],
       units: [defaultUnitsValue(), equivalencesValidator],
       calories: [""],
       protein: [""],
@@ -146,6 +198,12 @@ export class ArticleEditorComponent implements OnInit {
       sugars: [""],
       salt: [""],
     });
+
+    this.form.controls["supermarketId"].valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe((supermarketId) =>
+        this.onSupermarketChange(supermarketId as string | null),
+      );
   }
 
   get isEdit(): boolean {
@@ -179,12 +237,7 @@ export class ArticleEditorComponent implements OnInit {
                 label: item.attributes.name,
               })),
             );
-            this.supermarketOptions.set(
-              supermarkets.data.map((item) => ({
-                value: item.id,
-                label: item.attributes.name,
-              })),
-            );
+            this.supermarkets.set(supermarkets.data);
 
             if (!this.isEdit) {
               this.loading.set(false);
@@ -231,6 +284,23 @@ export class ArticleEditorComponent implements OnInit {
     this.router.navigate(this.isEdit ? ["/catalog", this.id()] : ["/catalog"]);
   }
 
+  openAisleSheet(): void {
+    this.aisleSheetOpen.set(true);
+  }
+
+  closeAisleSheet(): void {
+    this.aisleSheetOpen.set(false);
+  }
+
+  onAislesSaved(): void {
+    this.getSupermarketsService.getSupermarkets(1, 100).subscribe({
+      next: (response) => {
+        this.supermarkets.set(response.data);
+        this.dropUnknownAisle();
+      },
+    });
+  }
+
   onDelete(): void {
     this.showDeleteModal.set(true);
   }
@@ -255,6 +325,20 @@ export class ArticleEditorComponent implements OnInit {
     });
   }
 
+  private onSupermarketChange(supermarketId: string | null): void {
+    this.selectedSupermarketId.set(supermarketId);
+    this.dropUnknownAisle();
+  }
+
+  private dropUnknownAisle(): void {
+    const aisleId = this.form.get("aisleId")?.value as string | null;
+    if (!aisleId) return;
+
+    if (this.aisleOptions().some((option) => option.value === aisleId)) return;
+
+    this.form.patchValue({ aisleId: null });
+  }
+
   private loadArticle(): void {
     this.getArticleService.getArticle(this.id()).subscribe({
       next: (response) => {
@@ -277,6 +361,7 @@ export class ArticleEditorComponent implements OnInit {
       price: this.formatNumber(article.attributes.price),
       categoryId: article.relationships?.category?.data.id ?? null,
       supermarketId: article.relationships?.supermarket?.data.id ?? null,
+      aisleId: article.attributes.aisleId ?? null,
       units: {
         baseUnit,
         recipeUnit: article.attributes.recipeUnit ?? baseUnit,
@@ -337,13 +422,14 @@ export class ArticleEditorComponent implements OnInit {
       emoji: this.emptyToNull(value.emoji),
       categoryId: value.categoryId ?? null,
       supermarketId: value.supermarketId ?? null,
+      aisleId: value.supermarketId ? (value.aisleId ?? null) : null,
       nutrition,
       equivalences,
     };
   }
 
-  private t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  private t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   private parseDecimal(

@@ -49,6 +49,12 @@
       "cancel": "Cancel",
       "confirm": "Remove bought",
       "clearing": "Removing…"
+    },
+    "sort": {
+      "aisle": "By aisle",
+      "category": "By category",
+      "manage": "Manage aisles",
+      "withoutAisle": "no aisle"
     }
   }
 }

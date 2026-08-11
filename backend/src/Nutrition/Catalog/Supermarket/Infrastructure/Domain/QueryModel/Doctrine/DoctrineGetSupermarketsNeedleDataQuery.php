@@ -2,6 +2,7 @@
 
 namespace Nutrition\Catalog\Supermarket\Infrastructure\Domain\QueryModel\Doctrine;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\Catalog\Supermarket\Domain\QueryModel\Dto\GetSupermarketsResult;
@@ -31,12 +32,16 @@ final readonly class DoctrineGetSupermarketsNeedleDataQuery implements GetSuperm
             ->fetchAllAssociative();
 
         $utc = new \DateTimeZone(timezone: 'UTC');
+        $aislesBySupermarket = $this->fetchAisles(
+            supermarketIds: array_column(array: $result, column_key: 'id'),
+        );
 
-        return array_map(callback: function ($row) use ($utc): GetSupermarketsResult {
+        return array_map(callback: function ($row) use ($utc, $aislesBySupermarket): GetSupermarketsResult {
             return new GetSupermarketsResult(
                 id: $row['id'],
                 aggregateName: 'Supermarket',
                 name: $row['name'],
+                aisles: $aislesBySupermarket[$row['id']] ?? [],
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
                 createdByUserId: $row['created_by_user_id'],
@@ -58,6 +63,43 @@ final readonly class DoctrineGetSupermarketsNeedleDataQuery implements GetSuperm
         }
 
         return (int) $qb->executeQuery()->fetchOne();
+    }
+
+    /**
+     * @param string[] $supermarketIds
+     *
+     * @return array<string, array<int, array{id: string, name: string, position: int}>>
+     */
+    private function fetchAisles(array $supermarketIds): array
+    {
+        if ([] === $supermarketIds) {
+            return [];
+        }
+
+        $rows = $this->connection->createQueryBuilder()
+            ->select('a.id', 'a.supermarket_id', 'a.name', 'a.position')
+            ->from(table: 'supermarket_aisle', alias: 'a')
+            ->where('a.supermarket_id IN (:supermarketIds)')
+            ->setParameter(
+                key: 'supermarketIds',
+                value: $supermarketIds,
+                type: ArrayParameterType::STRING,
+            )
+            ->orderBy(sort: 'a.position', order: 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $aisles = [];
+
+        foreach ($rows as $row) {
+            $aisles[$row['supermarket_id']][] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'position' => (int) $row['position'],
+            ];
+        }
+
+        return $aisles;
     }
 
     private function getBaseQuery(?string $filterName = null): QueryBuilder

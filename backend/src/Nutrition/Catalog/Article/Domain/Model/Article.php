@@ -26,6 +26,7 @@ class Article extends GenericAggregate
     public ?string $emoji = null;
     public ?string $categoryId = null;
     public ?string $supermarketId = null;
+    public ?string $aisleId = null;
     public ?string $nutritionFactsId = null;
     public ?string $barcode = null;
 
@@ -47,6 +48,7 @@ class Article extends GenericAggregate
         ?string $emoji,
         ?string $categoryId,
         ?string $supermarketId,
+        ?string $aisleId,
         ?string $nutritionFactsId,
         array $equivalences,
         string $createdByUserId,
@@ -84,6 +86,7 @@ class Article extends GenericAggregate
         $article->emoji = $emoji;
         $article->categoryId = $categoryId;
         $article->supermarketId = $supermarketId;
+        $article->aisleId = self::resolveAisleId(supermarketId: $supermarketId, aisleId: $aisleId);
         $article->nutritionFactsId = $nutritionFactsId;
         $article->equivalences = $equivalences;
         $article->stampCreation(userId: $createdByUserId, now: $now);
@@ -97,6 +100,8 @@ class Article extends GenericAggregate
             diaryUnit: $diaryUnit,
             packUnit: $packUnit,
             equivalences: self::snapshotEquivalences(equivalences: $equivalences),
+            supermarketId: $article->supermarketId,
+            aisleId: $article->aisleId,
         ));
 
         return $article;
@@ -121,6 +126,7 @@ class Article extends GenericAggregate
         ?string $emoji,
         ?string $categoryId,
         ?string $supermarketId,
+        ?string $aisleId,
         ?string $nutritionFactsId,
         array $equivalences,
         float $referenceAmount,
@@ -161,6 +167,7 @@ class Article extends GenericAggregate
         $this->emoji = $emoji;
         $this->categoryId = $categoryId;
         $this->supermarketId = $supermarketId;
+        $this->aisleId = self::resolveAisleId(supermarketId: $supermarketId, aisleId: $aisleId);
         $this->nutritionFactsId = $nutritionFactsId;
         $this->equivalences = $equivalences;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
@@ -180,6 +187,8 @@ class Article extends GenericAggregate
             protein: $protein,
             fat: $fat,
             carbs: $carbs,
+            supermarketId: $this->supermarketId,
+            aisleId: $this->aisleId,
         ));
     }
 
@@ -199,6 +208,15 @@ class Article extends GenericAggregate
     public static function isMeasurementUnit(string $unit): bool
     {
         return in_array($unit, self::BASE_UNITS, true) || ArticleUnit::isAlias(unit: $unit);
+    }
+
+    private static function resolveAisleId(?string $supermarketId, ?string $aisleId): ?string
+    {
+        if (null === $supermarketId) {
+            return null;
+        }
+
+        return $aisleId;
     }
 
     /**

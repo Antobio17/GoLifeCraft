@@ -42,6 +42,7 @@ final class DeleteArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutritionFactsId: null,
             equivalences: [],
             createdByUserId: 'god-user-id',

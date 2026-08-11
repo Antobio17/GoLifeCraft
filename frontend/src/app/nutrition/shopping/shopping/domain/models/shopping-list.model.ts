@@ -6,6 +6,8 @@ export interface ShoppingListItemView {
   brand: string | null;
   store: string | null;
   category: string;
+  aisle: string | null;
+  aislePosition: number | null;
   unitPrice: number | null;
   quantity: number;
   packUnit: string | null;

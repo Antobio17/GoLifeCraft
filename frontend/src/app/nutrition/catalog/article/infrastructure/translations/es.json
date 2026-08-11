@@ -109,7 +109,11 @@
       "brandPlaceholder": "Ej: Hacendado",
       "price": "Precio",
       "category": "Categoría",
-      "store": "Súper"
+      "store": "Súper",
+      "aisle": "Pasillo",
+      "aisleIn": "Pasillo en {{store}}",
+      "aisleEmpty": "Este súper aún no tiene pasillos. Créalos para ordenar tu recorrido.",
+      "aisleHint": "Si asignas pasillo, la lista de la compra sigue tu recorrido por la tienda. Si lo dejas vacío, el artículo se agrupa por su categoría."
     },
     "nutrition": {
       "title": "Nutrición por 100 g",

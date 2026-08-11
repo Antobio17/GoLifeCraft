@@ -1,0 +1,16 @@
+services:
+  Nutrition\Catalog\Supermarket\Application\Command\SupermarketAisleAssembler:
+    class: Nutrition\Catalog\Supermarket\Application\Command\SupermarketAisleAssembler
+    arguments:
+      $supermarketRepository: '@Nutrition\Catalog\Supermarket\Domain\Model\SupermarketRepository'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Nutrition\Catalog\Supermarket\Application\Command\UpdateSupermarketAislesCommandHandler:
+    class: Nutrition\Catalog\Supermarket\Application\Command\UpdateSupermarketAislesCommandHandler
+    arguments:
+      $supermarketRepository: '@Nutrition\Catalog\Supermarket\Domain\Model\SupermarketRepository'
+      $aisleAssembler: '@Nutrition\Catalog\Supermarket\Application\Command\SupermarketAisleAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

@@ -26,6 +26,7 @@ export interface CreateArticleRequest {
   emoji: string | null;
   categoryId: string | null;
   supermarketId: string | null;
+  aisleId: string | null;
   nutrition: ArticleNutritionRequest;
   equivalences: ArticleEquivalenceRequest[];
 }

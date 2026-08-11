@@ -6,10 +6,14 @@ use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryAggregateResult;
 
 final class GetSupermarketsResult extends QueryAggregateResult
 {
+    /**
+     * @param array<int, array{id: string, name: string, position: int}> $aisles
+     */
     public function __construct(
         string $id,
         string $aggregateName,
         public readonly string $name,
+        public readonly array $aisles,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
         public readonly string $createdByUserId,

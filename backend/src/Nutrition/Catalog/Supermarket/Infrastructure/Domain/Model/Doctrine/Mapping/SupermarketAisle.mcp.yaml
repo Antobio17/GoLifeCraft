@@ -1,0 +1,32 @@
+label: Supermarket aisle
+
+fields:
+  supermarketId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      The id of the Supermarket this aisle belongs to.
+    filterable: true
+  name:
+    writable: true
+    required: true
+    min: 1
+    max: 120
+    description: >-
+      Display name of the aisle as the user walks the store (for example "Frutería",
+      "Lácteos y huevos", "Congelados"). Unique within the supermarket.
+    filterable: true
+    sortable: true
+  position:
+    writable: true
+    required: true
+    type: int
+    min: 1
+    description: >-
+      1-based order in which the aisle is walked through in the store. The shopping list
+      is grouped and sorted by this order so the route follows the real layout.
+    sortable: true
+
+relations: {}

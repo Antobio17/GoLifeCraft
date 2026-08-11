@@ -80,6 +80,16 @@ fields:
     min: 36
     max: 36
     filterable: true
+  aisleId:
+    writable: true
+    min: 36
+    max: 36
+    description: >-
+      Id of the supermarket_aisle the article is found in, which must belong to the article's
+      supermarketId. It drives the order of the shopping list: articles are grouped by aisle
+      following the store route. Leave it empty when the aisle is unknown; those articles are
+      grouped by category at the end of the list instead.
+    filterable: true
   nutritionFactsId:
     writable: true
     min: 36

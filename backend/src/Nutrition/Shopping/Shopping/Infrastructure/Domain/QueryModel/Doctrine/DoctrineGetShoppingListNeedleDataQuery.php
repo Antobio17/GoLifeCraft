@@ -53,6 +53,8 @@ final readonly class DoctrineGetShoppingListNeedleDataQuery implements GetShoppi
                 brand: $row['brand'],
                 store: $store,
                 category: $row['category'] ?? 'Otros',
+                aisle: $row['aisle'],
+                aislePosition: null !== $row['aisle_position'] ? (int) $row['aisle_position'] : null,
                 unitPrice: $unitPrice,
                 quantity: $quantity,
                 packUnit: $pack->unit,
@@ -98,12 +100,15 @@ final readonly class DoctrineGetShoppingListNeedleDataQuery implements GetShoppi
                 'ae.quantity AS pack_size',
                 's.name AS store',
                 'c.name AS category',
+                'sa.name AS aisle',
+                'sa.position AS aisle_position',
             )
             ->from(table: 'shopping_list_item', alias: 'sli')
             ->leftJoin(fromAlias: 'sli', join: 'article', alias: 'a', condition: 'sli.article_id = a.id')
             ->leftJoin(fromAlias: 'a', join: 'article_equivalence', alias: 'ae', condition: 'ae.article_id = a.id AND ae.unit = a.pack_unit')
             ->leftJoin(fromAlias: 'a', join: 'supermarket', alias: 's', condition: 'a.supermarket_id = s.id')
             ->leftJoin(fromAlias: 'a', join: 'category', alias: 'c', condition: 'a.category_id = c.id')
+            ->leftJoin(fromAlias: 'a', join: 'supermarket_aisle', alias: 'sa', condition: 'a.aisle_id = sa.id AND sa.supermarket_id = a.supermarket_id')
             ->orderBy('sli.created_at', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();

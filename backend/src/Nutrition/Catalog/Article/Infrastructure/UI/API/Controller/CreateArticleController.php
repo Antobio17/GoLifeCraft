@@ -43,6 +43,7 @@ final class CreateArticleController
                 emoji: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'emoji'),
                 categoryId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'categoryId'),
                 supermarketId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'supermarketId'),
+                aisleId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'aisleId'),
                 nutrition: ArticleNutritionData::fromArray(
                     rawNutrition: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'nutrition', required: false) ?? [],
                 ),

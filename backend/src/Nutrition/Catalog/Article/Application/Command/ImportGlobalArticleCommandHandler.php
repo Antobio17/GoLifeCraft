@@ -73,6 +73,7 @@ final readonly class ImportGlobalArticleCommandHandler
             emoji: null,
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
+            aisleId: null,
             nutritionFactsId: $nutritionFacts->id,
             equivalences: $this->equivalenceAssembler->assemble(
                 articleId: $articleId,
@@ -110,6 +111,7 @@ final readonly class ImportGlobalArticleCommandHandler
             emoji: $article->emoji,
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
+            aisleId: $article->aisleId,
             nutritionFactsId: $nutritionFacts->id,
             equivalences: $this->equivalenceAssembler->assemble(
                 articleId: $article->id,

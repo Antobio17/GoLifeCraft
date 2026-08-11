@@ -7,3 +7,10 @@ get_supermarket:
   path: /api/v1/nutrition/catalog/supermarket/{supermarketId}
   methods: [GET]
   controller: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller\GetSupermarketController
+
+update_supermarket_aisles:
+  path: /api/v1/nutrition/catalog/supermarket/{supermarketId}/aisles
+  methods: [PUT]
+  controller: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller\UpdateSupermarketAislesController
+  requirements:
+    supermarketId: '[0-9a-fA-F-]{36}'

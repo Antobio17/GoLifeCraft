@@ -48,5 +48,19 @@
       "create": "Nuevo Supermercado",
       "edit": "Editar Supermercado"
     }
+  },
+  "aisles": {
+    "title": "Pasillos y recorrido",
+    "subtitle": "Ordénalos según el recorrido que haces por la tienda",
+    "close": "Cerrar",
+    "empty": "Aún no hay pasillos para este súper. Añade el primero abajo.",
+    "noStores": "Todavía no hay supermercados en tu catálogo.",
+    "remove": "Quitar pasillo",
+    "moveUp": "Subir pasillo",
+    "moveDown": "Bajar pasillo",
+    "add": "Añadir",
+    "placeholder": "Nuevo pasillo (ej: Frutería)",
+    "manage": "Gestionar",
+    "none": "Sin pasillo"
   }
 }

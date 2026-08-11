@@ -16,6 +16,11 @@ final class InMemorySupermarketRepository implements SupermarketRepository
         return Uuid::uuid4()->toString();
     }
 
+    public function findById(string $id): ?Supermarket
+    {
+        return $this->supermarkets[$id] ?? null;
+    }
+
     public function findByName(string $name): ?Supermarket
     {
         foreach ($this->supermarkets as $supermarket) {

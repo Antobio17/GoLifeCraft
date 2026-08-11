@@ -56,6 +56,7 @@ final readonly class UpdateArticleCommandHandler
             emoji: $command->emoji,
             categoryId: $command->categoryId,
             supermarketId: $command->supermarketId,
+            aisleId: $command->aisleId,
             nutritionFactsId: $nutritionFacts->id,
             equivalences: $this->equivalenceAssembler->assemble(
                 articleId: $article->id,

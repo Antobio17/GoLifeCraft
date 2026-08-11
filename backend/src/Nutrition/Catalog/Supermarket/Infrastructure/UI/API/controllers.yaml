@@ -12,3 +12,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller\UpdateSupermarketAislesController:
+    class: Nutrition\Catalog\Supermarket\Infrastructure\UI\API\Controller\UpdateSupermarketAislesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

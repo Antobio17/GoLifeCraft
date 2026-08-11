@@ -6,6 +6,8 @@ import {
   ShoppingListAttributes,
   ShoppingListItemView,
 } from "@nutrition/shopping/shopping/domain/models/shopping-list.model";
+import { ShoppingGroupLabels } from "@nutrition/shopping/shopping/domain/models/shopping-group-labels.model";
+import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/shopping-sort-mode.model";
 
 export const ALL_STORES = "all";
 export const ALL_FILTER = "all";
@@ -40,6 +42,8 @@ export interface ShoppingCategoryGroup {
   category: string;
   label: string;
   countLabel: string;
+  badge: string | null;
+  tag: string | null;
   items: ShoppingItemRow[];
 }
 
@@ -109,8 +113,70 @@ export class ShoppingListViewService {
 
   groups(
     items: ShoppingListItemView[],
-    countSuffix: string,
+    labels: ShoppingGroupLabels,
     packLabels: ShoppingPackLabels,
+    sort: ShoppingSortMode = ShoppingSortMode.Category,
+  ): ShoppingCategoryGroup[] {
+    if (ShoppingSortMode.Category === sort) {
+      return this.categoryGroups(items, labels, packLabels, null);
+    }
+
+    return this.aisleGroups(items, labels, packLabels);
+  }
+
+  private aisleGroups(
+    items: ShoppingListItemView[],
+    labels: ShoppingGroupLabels,
+    packLabels: ShoppingPackLabels,
+  ): ShoppingCategoryGroup[] {
+    const withAisle = items.filter((item) => !!item.aisle);
+    const withoutAisle = items.filter((item) => !item.aisle);
+
+    const buckets = new Map<string, ShoppingListItemView[]>();
+    const positions = new Map<string, number>();
+
+    withAisle.forEach((item) => {
+      const aisle = item.aisle as string;
+      const position = item.aislePosition ?? Number.MAX_SAFE_INTEGER;
+
+      buckets.set(aisle, [...(buckets.get(aisle) ?? []), item]);
+      positions.set(
+        aisle,
+        Math.min(positions.get(aisle) ?? position, position),
+      );
+    });
+
+    const ordered = [...buckets.keys()].sort(
+      (left, right) =>
+        (positions.get(left) ?? 0) - (positions.get(right) ?? 0) ||
+        left.localeCompare(right, "es"),
+    );
+
+    return [
+      ...ordered.map((aisle, index) => ({
+        category: aisle,
+        label: aisle.toUpperCase(),
+        countLabel: `${(buckets.get(aisle) ?? []).length} ${labels.count}`,
+        badge: `${index + 1}`,
+        tag: null,
+        items: (buckets.get(aisle) ?? []).map((item) =>
+          this.row(item, packLabels),
+        ),
+      })),
+      ...this.categoryGroups(
+        withoutAisle,
+        labels,
+        packLabels,
+        labels.withoutAisle,
+      ),
+    ];
+  }
+
+  private categoryGroups(
+    items: ShoppingListItemView[],
+    labels: ShoppingGroupLabels,
+    packLabels: ShoppingPackLabels,
+    tag: string | null,
   ): ShoppingCategoryGroup[] {
     const order: string[] = [];
     const buckets: Record<string, ShoppingListItemView[]> = {};
@@ -127,7 +193,9 @@ export class ShoppingListViewService {
     return order.map((category) => ({
       category,
       label: category.toUpperCase(),
-      countLabel: `${buckets[category].length} ${countSuffix}`,
+      countLabel: `${buckets[category].length} ${labels.count}`,
+      badge: null,
+      tag,
       items: buckets[category].map((item) => this.row(item, packLabels)),
     }));
   }
@@ -245,6 +313,8 @@ export class ShoppingListViewService {
       brand: this.articleView.brand(article),
       store: this.articleView.store(article),
       category: this.articleView.category(article) ?? "Otros",
+      aisle: null,
+      aislePosition: null,
       unitPrice,
       quantity: 1,
       packUnit: pack?.unit ?? null,

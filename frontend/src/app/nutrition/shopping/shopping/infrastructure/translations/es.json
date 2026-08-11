@@ -49,6 +49,12 @@
       "cancel": "Cancelar",
       "confirm": "Quitar comprados",
       "clearing": "Quitando…"
+    },
+    "sort": {
+      "aisle": "Por pasillo",
+      "category": "Por categoría",
+      "manage": "Gestionar pasillos",
+      "withoutAisle": "sin pasillo"
     }
   }
 }

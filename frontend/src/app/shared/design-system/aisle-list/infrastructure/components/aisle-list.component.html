@@ -1,0 +1,66 @@
+@if (items.length === 0) {
+  <ds-text variant="muted" class="aisle-list__empty">{{ emptyText }}</ds-text>
+} @else {
+  <ds-stack [gap]="'8px'">
+    @for (item of items; track item.id; let index = $index) {
+      <ds-stack
+        class="aisle-list__row"
+        direction="row"
+        align="center"
+        [gap]="'10px'"
+        [class.is-dragging]="draggingIndex() === index"
+        [attr.draggable]="disabled ? null : true"
+        (dragstart)="onDragStart(index)"
+        (dragover)="onDragOver($event, index)"
+        (dragend)="onDragEnd()"
+      >
+        <ds-icon
+          name="grip"
+          [size]="16"
+          [stroke]="2"
+          class="aisle-list__grip"
+          aria-hidden="true"
+        />
+
+        <ds-text variant="meta" class="aisle-list__position">{{
+          item.position
+        }}</ds-text>
+
+        <ds-text variant="strong" class="aisle-list__name">{{
+          item.name
+        }}</ds-text>
+
+        @if (!disabled) {
+          <button
+            type="button"
+            class="aisle-list__action"
+            [disabled]="index === 0"
+            [attr.aria-label]="moveUpLabel"
+            (click)="onMoveUp(index)"
+          >
+            <ds-icon name="chevronUp" [size]="15" [stroke]="2.2" />
+          </button>
+
+          <button
+            type="button"
+            class="aisle-list__action"
+            [disabled]="index === items.length - 1"
+            [attr.aria-label]="moveDownLabel"
+            (click)="onMoveDown(index)"
+          >
+            <ds-icon name="chevronDown" [size]="15" [stroke]="2.2" />
+          </button>
+
+          <button
+            type="button"
+            class="aisle-list__action aisle-list__action--danger"
+            [attr.aria-label]="removeLabel"
+            (click)="removed.emit(item.id)"
+          >
+            <ds-icon name="trash" [size]="15" [stroke]="2.2" />
+          </button>
+        }
+      </ds-stack>
+    }
+  </ds-stack>
+}

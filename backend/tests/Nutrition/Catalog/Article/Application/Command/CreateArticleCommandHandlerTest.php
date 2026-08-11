@@ -51,6 +51,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             emoji: '🥛',
             categoryId: 'category-1',
             supermarketId: 'supermarket-1',
+            aisleId: null,
             nutrition: new ArticleNutritionData(
                 referenceAmount: 100.0,
                 calories: 64.0,
@@ -100,6 +101,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             emoji: '🥚',
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [
                 new ArticleEquivalenceData(unit: 'unit', quantity: 60.0, position: 1),
@@ -130,6 +132,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [],
             createdByUserId: 'god-user-id',
@@ -158,6 +161,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [
                 new ArticleEquivalenceData(unit: 'serving', quantity: 80.0, position: 1),
@@ -181,6 +185,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [
                 new ArticleEquivalenceData(unit: 'loncha', quantity: 20.0, position: 1),
@@ -204,6 +209,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [],
             createdByUserId: 'god-user-id',
@@ -225,6 +231,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [],
             createdByUserId: 'god-user-id',
@@ -248,6 +255,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [],
             createdByUserId: 'god-user-id',

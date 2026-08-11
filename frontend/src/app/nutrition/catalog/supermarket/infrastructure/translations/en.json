@@ -48,5 +48,19 @@
       "create": "New Supermarket",
       "edit": "Edit Supermarket"
     }
+  },
+  "aisles": {
+    "title": "Aisles and route",
+    "subtitle": "Sort them the way you walk through the store",
+    "close": "Close",
+    "empty": "This store has no aisles yet. Add the first one below.",
+    "noStores": "There are no supermarkets in your catalogue yet.",
+    "remove": "Remove aisle",
+    "moveUp": "Move aisle up",
+    "moveDown": "Move aisle down",
+    "add": "Add",
+    "placeholder": "New aisle (e.g. Produce)",
+    "manage": "Manage",
+    "none": "No aisle"
   }
 }

@@ -24,6 +24,8 @@ final readonly class ArticleUpdated extends DomainEvent
         public ?float $protein,
         public ?float $fat,
         public ?float $carbs,
+        public ?string $supermarketId,
+        public ?string $aisleId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

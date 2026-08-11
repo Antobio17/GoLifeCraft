@@ -1,0 +1,45 @@
+<ds-modal-sheet
+  [open]="isOpen()"
+  [compact]="true"
+  [title]="title()"
+  [closeLabel]="closeLabel()"
+  (closed)="onClose()"
+>
+  <ds-stack [gap]="'14px'">
+    <ds-text variant="meta">{{ subtitle() }}</ds-text>
+
+    @if (!hasStores()) {
+      <ds-text variant="muted">{{ noStoresText() }}</ds-text>
+    } @else {
+      <ds-store-tabs
+        [tabs]="storeTabs()"
+        [active]="activeStore()"
+        (selected)="onSelectStore($event)"
+      />
+
+      <ds-aisle-list
+        [items]="activeAisles()"
+        [emptyText]="emptyText()"
+        [removeLabel]="removeLabel()"
+        [moveUpLabel]="moveUpLabel()"
+        [moveDownLabel]="moveDownLabel()"
+        (moved)="onMove($event)"
+        (removed)="onRemove($event)"
+      />
+
+      <ds-stack direction="row" align="center" [gap]="'8px'">
+        <ds-stack [grow]="true">
+          <ds-text-input
+            variant="outlined"
+            [placeholder]="placeholder()"
+            [ngModel]="newAisleName()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onNameChange($event)"
+          />
+        </ds-stack>
+
+        <ds-button icon="plus" (clicked)="onAdd()">{{ addLabel() }}</ds-button>
+      </ds-stack>
+    }
+  </ds-stack>
+</ds-modal-sheet>

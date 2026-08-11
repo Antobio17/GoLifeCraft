@@ -54,6 +54,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             emoji: '🥛',
             categoryId: 'category-2',
             supermarketId: null,
+            aisleId: null,
             nutrition: new ArticleNutritionData(
                 referenceAmount: 100.0,
                 calories: 46.0,
@@ -100,6 +101,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             emoji: '🥚',
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [
                 new ArticleEquivalenceData(unit: 'unit', quantity: 60.0, position: 1),
@@ -130,6 +132,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [],
             updatedByUserId: 'god-user-id',
@@ -154,6 +157,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [
                 new ArticleEquivalenceData(unit: 'serving', quantity: 80.0, position: 1),
@@ -181,6 +185,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             emoji: null,
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
             equivalences: [],
             updatedByUserId: 'god-user-id',
@@ -206,6 +211,7 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             emoji: '🥛',
             categoryId: null,
             supermarketId: null,
+            aisleId: null,
             nutritionFactsId: null,
             equivalences: $assembler->assemble(articleId: $id, equivalences: $equivalences, userId: 'god-user-id'),
             createdByUserId: 'god-user-id',

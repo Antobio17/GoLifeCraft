@@ -54,6 +54,26 @@
     }
   } @else if (attributes(); as list) {
     @if (list.itemCount > 0) {
+      <ds-stack direction="row" align="center" [gap]="'8px'">
+        <ds-stack [grow]="true">
+          <ds-segmented-toggle
+            [options]="sortOptions()"
+            [ngModel]="sortMode()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onSort($event)"
+          />
+        </ds-stack>
+
+        @if (canWrite()) {
+          <ds-icon-button
+            icon="aisles"
+            variant="outlined"
+            [ariaLabel]="manageAislesLabel()"
+            (clicked)="openAisleSheet()"
+          />
+        }
+      </ds-stack>
+
       @if (showTabs()) {
         <ds-store-tabs
           [tabs]="storeTabs()"
@@ -75,8 +95,14 @@
         @for (group of groups(); track group.category) {
           <ds-stack [gap]="'8px'">
             <ds-stack direction="row" align="center" [gap]="'8px'">
+              @if (group.badge) {
+                <ds-chip tone="brand-solid">{{ group.badge }}</ds-chip>
+              }
               <ds-text variant="meta">{{ group.label }}</ds-text>
               <ds-text variant="meta">{{ group.countLabel }}</ds-text>
+              @if (group.tag) {
+                <ds-chip [uppercase]="true">{{ group.tag }}</ds-chip>
+              }
               <ds-divider [grow]="true" />
             </ds-stack>
 
@@ -215,5 +241,13 @@
     [deletingLabel]="'getShopping.clearModal.clearing' | t"
     (confirmed)="confirmClearChecked()"
     (cancelled)="cancelClearChecked()"
+  />
+
+  <app-manage-aisles
+    [open]="aisleSheetOpen()"
+    [supermarkets]="supermarkets()"
+    [supermarketId]="activeSupermarketId()"
+    (saved)="onAislesSaved()"
+    (closed)="closeAisleSheet()"
   />
 </ds-page-wrapper>

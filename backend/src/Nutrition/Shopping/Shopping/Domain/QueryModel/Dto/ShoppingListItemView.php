@@ -12,6 +12,8 @@ final readonly class ShoppingListItemView
         public ?string $brand,
         public ?string $store,
         public string $category,
+        public ?string $aisle,
+        public ?int $aislePosition,
         public ?float $unitPrice,
         public int $quantity,
         public ?string $packUnit,

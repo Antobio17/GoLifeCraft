@@ -684,6 +684,9 @@ export class CreateCenterComponent {
 - **Los templates HTML NO pueden usar etiquetas HTML nativas** (`<div>`, `<span>`, `<p>`, `<button>`, `<input>`, `<h1>`…). Solo se permiten **componentes del design system (`<ds-*>`)** y las construcciones estructurales de Angular (`@if`, `@for`, `@switch`, `<ng-container>`, `<ng-template>`, `<ng-content>`).
   - Si un elemento visual no existe todavía como `<ds-*>`, **se crea el componente en `shared/design-system/`** y se usa desde ahí; nunca se recurre a una etiqueta nativa como atajo.
   - Layout, tipografía y espaciado se resuelven con `<ds-stack>`, `<ds-grid>`, `<ds-page-wrapper>`, `<ds-text>`, `<ds-heading>`, etc. — no con `<div>` + CSS ad-hoc.
+- **Un solo `export` por fichero.** Cada interface, type, enum, clase o constante vive en su propio fichero, nombrado en kebab-case a partir de lo que exporta (`aisle-list-move.model.ts` → `AisleListMove`). Si un modelo necesita otro, se importa; no se agrupan "porque van juntos".
+  - **Nada de ficheros de constantes.** Un conjunto cerrado de valores es un `enum` en `domain/models/` (`ShoppingSortMode`, `TemplateSyncMode`, `ExerciseType`); la lógica asociada va en un servicio de `application/services/`.
+  - Los ficheros que hoy incumplen la regla (`article.model.ts`, `shopping-list.model.ts`, `shopping-list-view.service.ts`…) son deuda previa: **no añadir exports nuevos a ellos**, crear el fichero que toque.
 - **Usar siempre `inject()`** en lugar de constructor injection (componentes y servicios).
 - **No leer `localStorage` directamente en adaptadores.** El interceptor `auth-token.interceptor.ts` añade el token a todas las peticiones HTTP automáticamente.
 - **No usar `setTimeout` para diferir navegación.** Usar el operador `delay()` de RxJS en el pipeline del observable.
@@ -709,7 +712,7 @@ Solo existen dos roles (ver `User::ROLE_HERARCHY` en backend y `USER_ROLES` en `
 
 ## Checklist frontend — nuevo caso de uso
 
-- [ ] Interface/model en `domain/models/`
+- [ ] Interface/model en `domain/models/` — **un fichero por export**
 - [ ] Abstract class port en `domain/ports/`
 - [ ] Service en `application/services/`
 - [ ] HTTP Adapter en `infrastructure/adapters/`

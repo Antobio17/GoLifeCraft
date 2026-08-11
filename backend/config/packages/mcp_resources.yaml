@@ -28,6 +28,13 @@ parameters:
             write_roles: [ROLE_GOD, ROLE_USER]
             delete_roles: [ROLE_GOD, ROLE_USER]
 
+        supermarket_aisle:
+            class: 'Nutrition\Catalog\Supermarket\Domain\Model\SupermarketAisle'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/Supermarket/Infrastructure/Domain/Model/Doctrine/Mapping/SupermarketAisle.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
         category:
             class: 'Nutrition\Catalog\Category\Domain\Model\Category'
             sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/Category/Infrastructure/Domain/Model/Doctrine/Mapping/Category.mcp.yaml'

@@ -13,6 +13,7 @@ export interface ArticleAttributes {
   price: number | null;
   brand: string | null;
   emoji: string | null;
+  aisleId?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }

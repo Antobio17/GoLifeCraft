@@ -18,6 +18,8 @@ final readonly class ArticleCreated extends DomainEvent
         public string $diaryUnit,
         public ?string $packUnit,
         public array $equivalences,
+        public ?string $supermarketId,
+        public ?string $aisleId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

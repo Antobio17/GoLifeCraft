@@ -22,6 +22,7 @@ final class GetArticlesResult extends QueryAggregateResult
         public readonly ?string $brand,
         public readonly ?string $emoji,
         public readonly ?string $supermarketId,
+        public readonly ?string $aisleId,
         public readonly ?string $categoryId,
         public readonly ?string $nutritionFactsId,
         public readonly \DateTime $createdAt,

@@ -23,7 +23,13 @@ import { StoreTabsComponent } from "@shared/design-system/store-tabs/infrastruct
 import { ShoppingSummaryComponent } from "@shared/design-system/shopping-summary/infrastructure/components/shopping-summary.component";
 import { ShoppingItemComponent } from "@shared/design-system/shopping-item/infrastructure/components/shopping-item.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
+import { Supermarket } from "@nutrition/catalog/supermarket/domain/models/supermarket.model";
+import { GetSupermarketsService } from "@nutrition/catalog/supermarket/application/services/get-supermarkets.service";
+import { ManageAislesComponent } from "@nutrition/catalog/supermarket/infrastructure/components/manage-aisles.component";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
 import { ShoppingListItemView } from "@nutrition/shopping/shopping/domain/models/shopping-list.model";
@@ -38,6 +44,8 @@ import {
   ShoppingPackLabels,
   ShoppingListViewService,
 } from "@nutrition/shopping/shopping/application/services/shopping-list-view.service";
+import { ShoppingGroupLabels } from "@nutrition/shopping/shopping/domain/models/shopping-group-labels.model";
+import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/shopping-sort-mode.model";
 import { ShoppingListAttributes } from "@nutrition/shopping/shopping/domain/models/shopping-list.model";
 
 type FilterKind = "store" | "cat" | "brand";
@@ -68,6 +76,10 @@ type FilterKind = "store" | "cat" | "brand";
     ShoppingSummaryComponent,
     ShoppingItemComponent,
     ConfirmActionModalComponent,
+    SegmentedToggleComponent,
+    IconButtonComponent,
+    ChipComponent,
+    ManageAislesComponent,
   ],
 })
 export class GetShoppingListComponent implements OnInit {
@@ -78,6 +90,7 @@ export class GetShoppingListComponent implements OnInit {
   private updateShoppingListItemService = inject(UpdateShoppingListItemService);
   private deleteShoppingListItemService = inject(DeleteShoppingListItemService);
   private getArticlesService = inject(GetArticlesService);
+  private getSupermarketsService = inject(GetSupermarketsService);
   protected view = inject(ShoppingListViewService);
 
   private readonly MODULE_PATH = "nutrition/shopping/shopping";
@@ -89,6 +102,9 @@ export class GetShoppingListComponent implements OnInit {
   loading = signal(true);
   attributes = signal<ShoppingListAttributes | null>(null);
   activeTab = signal<string>(ALL_STORES);
+  sortMode = signal<ShoppingSortMode>(ShoppingSortMode.Aisle);
+  supermarkets = signal<Supermarket[]>([]);
+  aisleSheetOpen = signal(false);
 
   clearModalOpen = signal(false);
   clearing = signal(false);
@@ -133,11 +149,41 @@ export class GetShoppingListComponent implements OnInit {
     leftover: this.t("getShopping.pack.leftover"),
   }));
 
+  groupLabels = computed<ShoppingGroupLabels>(() => ({
+    count: this.t("getShopping.items"),
+    withoutAisle: this.t("getShopping.sort.withoutAisle"),
+  }));
+
+  sortOptions = computed(() => [
+    {
+      value: ShoppingSortMode.Aisle,
+      label: this.t("getShopping.sort.aisle"),
+    },
+    {
+      value: ShoppingSortMode.Category,
+      label: this.t("getShopping.sort.category"),
+    },
+  ]);
+
+  manageAislesLabel = computed(() => this.t("getShopping.sort.manage"));
+
+  activeSupermarketId = computed(() => {
+    const tab = this.effectiveTab();
+    if (ALL_STORES === tab) return null;
+
+    return (
+      this.supermarkets().find(
+        (supermarket) => supermarket.attributes.name === tab,
+      )?.id ?? null
+    );
+  });
+
   groups = computed(() =>
     this.view.groups(
       this.visibleItems(),
-      this.t("getShopping.items"),
+      this.groupLabels(),
       this.packLabels(),
+      this.sortMode(),
     ),
   );
 
@@ -203,6 +249,24 @@ export class GetShoppingListComponent implements OnInit {
       .then(() => this.load());
 
     this.loadArticles();
+    this.loadSupermarkets();
+  }
+
+  onSort(mode: string): void {
+    this.sortMode.set(mode as ShoppingSortMode);
+  }
+
+  openAisleSheet(): void {
+    this.aisleSheetOpen.set(true);
+  }
+
+  closeAisleSheet(): void {
+    this.aisleSheetOpen.set(false);
+  }
+
+  onAislesSaved(): void {
+    this.loadSupermarkets();
+    this.load(true);
   }
 
   t(key: string): string {
@@ -389,6 +453,12 @@ export class GetShoppingListComponent implements OnInit {
   private loadArticles(): void {
     this.getArticlesService.getArticles(1, 300).subscribe({
       next: (response) => this.articles.set(response.data),
+    });
+  }
+
+  private loadSupermarkets(): void {
+    this.getSupermarketsService.getSupermarkets(1, 100).subscribe({
+      next: (response) => this.supermarkets.set(response.data),
     });
   }
 }
