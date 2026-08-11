@@ -3,51 +3,92 @@
 } @else {
   <ds-stack [gap]="'8px'">
     @for (item of items; track item.id; let index = $index) {
-      <ds-stack
-        class="aisle-list__row"
-        direction="row"
-        align="center"
-        [gap]="'10px'"
+      <ds-swipe-to-delete
+        #swipe
+        [disabled]="disabled || editingId === item.id"
+        [reveal]="66"
+        [radius]="14"
+        [removeLabel]="removeLabel"
+        (remove)="removed.emit(item.id)"
       >
-        <ds-text variant="meta" class="aisle-list__position">{{
-          item.position
-        }}</ds-text>
+        <ds-stack
+          class="aisle-list__row"
+          [class.aisle-list__row--slid]="swipe.slid"
+          direction="row"
+          align="center"
+          [gap]="'10px'"
+        >
+          <ds-text variant="meta" class="aisle-list__position">{{
+            item.position
+          }}</ds-text>
 
-        <ds-text variant="strong" class="aisle-list__name">{{
-          item.name
-        }}</ds-text>
+          @if (editingId === item.id) {
+            <ds-stack [grow]="true">
+              <ds-text-input
+                variant="outlined"
+                [placeholder]="namePlaceholder"
+                [ariaLabel]="editLabel"
+                [ngModel]="draftName"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="onDraftChange($event)"
+              />
+            </ds-stack>
 
-        @if (!disabled) {
-          <button
-            type="button"
-            class="aisle-list__action"
-            [disabled]="index === 0"
-            [attr.aria-label]="moveUpLabel"
-            (click)="onMoveUp(index)"
-          >
-            <ds-icon name="chevronUp" [size]="15" [stroke]="2.2" />
-          </button>
+            <button
+              type="button"
+              class="aisle-list__action aisle-list__action--confirm"
+              [attr.aria-label]="saveLabel"
+              (click)="onConfirmEdit(item)"
+            >
+              <ds-icon name="check" [size]="15" [stroke]="2.2" />
+            </button>
 
-          <button
-            type="button"
-            class="aisle-list__action"
-            [disabled]="index === items.length - 1"
-            [attr.aria-label]="moveDownLabel"
-            (click)="onMoveDown(index)"
-          >
-            <ds-icon name="chevronDown" [size]="15" [stroke]="2.2" />
-          </button>
+            <button
+              type="button"
+              class="aisle-list__action"
+              [attr.aria-label]="cancelLabel"
+              (click)="onCancelEdit()"
+            >
+              <ds-icon name="close" [size]="15" [stroke]="2.2" />
+            </button>
+          } @else {
+            <ds-text variant="strong" class="aisle-list__name">{{
+              item.name
+            }}</ds-text>
 
-          <button
-            type="button"
-            class="aisle-list__action aisle-list__action--danger"
-            [attr.aria-label]="removeLabel"
-            (click)="removed.emit(item.id)"
-          >
-            <ds-icon name="trash" [size]="15" [stroke]="2.2" />
-          </button>
-        }
-      </ds-stack>
+            @if (!disabled) {
+              <button
+                type="button"
+                class="aisle-list__action"
+                [disabled]="index === 0"
+                [attr.aria-label]="moveUpLabel"
+                (click)="onMoveUp(index)"
+              >
+                <ds-icon name="chevronUp" [size]="15" [stroke]="2.2" />
+              </button>
+
+              <button
+                type="button"
+                class="aisle-list__action"
+                [disabled]="index === items.length - 1"
+                [attr.aria-label]="moveDownLabel"
+                (click)="onMoveDown(index)"
+              >
+                <ds-icon name="chevronDown" [size]="15" [stroke]="2.2" />
+              </button>
+
+              <button
+                type="button"
+                class="aisle-list__action"
+                [attr.aria-label]="editLabel"
+                (click)="onEdit(item)"
+              >
+                <ds-icon name="pencil" [size]="15" [stroke]="2.2" />
+              </button>
+            }
+          }
+        </ds-stack>
+      </ds-swipe-to-delete>
     }
   </ds-stack>
 }

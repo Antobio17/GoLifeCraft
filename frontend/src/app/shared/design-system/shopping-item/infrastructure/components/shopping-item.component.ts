@@ -30,6 +30,8 @@ export class ShoppingItemComponent {
   @Input() unitLabel: string | null = null;
   @Input() checked = false;
   @Input() canWrite = false;
+  @Input() swipeable = true;
+  @Input() dimChecked = true;
   @Input() toggleAriaLabel = "";
   @Input() incrementLabel = "";
   @Input() decrementLabel = "";

@@ -15,6 +15,11 @@
   padding: 10px 12px;
 }
 
+.aisle-list__row--slid {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .aisle-list__position {
   flex: 0 0 auto;
   width: 22px;
@@ -62,6 +67,7 @@
   cursor: not-allowed;
 }
 
-.aisle-list__action--danger:hover:not(:disabled) {
-  color: var(--ds-danger);
+.aisle-list__action--confirm {
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
 }

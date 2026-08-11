@@ -42,6 +42,24 @@
       "addAction": "Añadir",
       "addedAction": "Añadido"
     },
+    "diary": {
+      "title": "Generar desde el diario",
+      "subtitle": "Elige el rango de días y calculamos lo que necesitas comprar",
+      "from": "Desde",
+      "to": "Hasta",
+      "summary": "{{days}} días con registros · {{entries}} entradas del diario",
+      "empty": "No hay productos registrados en ese rango",
+      "stock": "tienes {amount}",
+      "missing": "faltan {amount}",
+      "covered": "cubierto con tu stock",
+      "inList": "ya en la lista",
+      "confirm": "Añadir {{items}}",
+      "confirmEmpty": "Selecciona artículos",
+      "items": {
+        "one": "1 artículo",
+        "many": "{{count}} artículos"
+      }
+    },
     "clearModal": {
       "title": "Quitar comprados",
       "body": "Se eliminarán todos los artículos marcados como comprados de esta lista.",

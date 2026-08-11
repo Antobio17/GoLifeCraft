@@ -40,6 +40,22 @@ export class AisleCatalogService {
     ]);
   }
 
+  rename(
+    aisles: SupermarketAisle[],
+    aisleId: string,
+    name: string,
+  ): SupermarketAisle[] | null {
+    const trimmed = name.trim();
+    if ("" === trimmed) return null;
+
+    const others = aisles.filter((aisle) => aisle.id !== aisleId);
+    if (this.contains(others, trimmed)) return null;
+
+    return aisles.map((aisle) =>
+      aisle.id === aisleId ? { ...aisle, name: trimmed } : aisle,
+    );
+  }
+
   remove(aisles: SupermarketAisle[], aisleId: string): SupermarketAisle[] {
     return this.reposition(aisles.filter((aisle) => aisle.id !== aisleId));
   }

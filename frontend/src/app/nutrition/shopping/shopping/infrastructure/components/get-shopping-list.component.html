@@ -8,14 +8,26 @@
     </ds-stack>
 
     @if (canWrite()) {
-      <ds-button
-        variant="primary"
-        size="sm"
-        icon="plus"
-        (clicked)="openSheet()"
-      >
-        {{ "getShopping.add" | t }}
-      </ds-button>
+      <ds-stack direction="row" align="center" [gap]="'6px'">
+        <ds-icon-button
+          icon="aisles"
+          variant="outlined"
+          [ariaLabel]="manageAislesLabel()"
+          (clicked)="openAisleSheet()"
+        />
+        <ds-icon-button
+          icon="diary"
+          variant="outlined"
+          [ariaLabel]="generateFromDiaryLabel()"
+          (clicked)="openDiarySheet()"
+        />
+        <ds-icon-button
+          icon="plus"
+          variant="solid"
+          [ariaLabel]="addLabel()"
+          (clicked)="openSheet()"
+        />
+      </ds-stack>
     }
   </ds-stack>
 
@@ -54,25 +66,12 @@
     }
   } @else if (attributes(); as list) {
     @if (list.itemCount > 0) {
-      <ds-stack direction="row" align="center" [gap]="'8px'">
-        <ds-stack [grow]="true">
-          <ds-segmented-toggle
-            [options]="sortOptions()"
-            [ngModel]="sortMode()"
-            [ngModelOptions]="{ standalone: true }"
-            (ngModelChange)="onSort($event)"
-          />
-        </ds-stack>
-
-        @if (canWrite()) {
-          <ds-icon-button
-            icon="aisles"
-            variant="outlined"
-            [ariaLabel]="manageAislesLabel()"
-            (clicked)="openAisleSheet()"
-          />
-        }
-      </ds-stack>
+      <ds-segmented-toggle
+        [options]="sortOptions()"
+        [ngModel]="sortMode()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onSort($event)"
+      />
 
       @if (showTabs()) {
         <ds-store-tabs
@@ -241,6 +240,12 @@
     [deletingLabel]="'getShopping.clearModal.clearing' | t"
     (confirmed)="confirmClearChecked()"
     (cancelled)="cancelClearChecked()"
+  />
+
+  <app-diary-shopping-sheet
+    [open]="diarySheetOpen()"
+    (added)="onDiaryNeedsAdded()"
+    (closed)="closeDiarySheet()"
   />
 
   <app-manage-aisles

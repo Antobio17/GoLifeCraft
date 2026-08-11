@@ -28,6 +28,7 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { StoreTabsComponent } from "@shared/design-system/store-tabs/infrastructure/components/store-tabs.component";
 import { AisleListComponent } from "@shared/design-system/aisle-list/infrastructure/components/aisle-list.component";
 import { AisleListMove } from "@shared/design-system/aisle-list/domain/models/aisle-list-move.model";
+import { AisleListRename } from "@shared/design-system/aisle-list/domain/models/aisle-list-rename.model";
 import { Supermarket } from "../../domain/models/supermarket.model";
 import { SupermarketAisle } from "../../domain/models/supermarket-aisle.model";
 import { AisleCatalogService } from "../../application/services/aisle-catalog.service";
@@ -119,6 +120,9 @@ export class ManageAislesComponent {
   emptyText = computed(() => this.t("aisles.empty"));
   noStoresText = computed(() => this.t("aisles.noStores"));
   removeLabel = computed(() => this.t("aisles.remove"));
+  editLabel = computed(() => this.t("aisles.edit"));
+  saveEditLabel = computed(() => this.t("aisles.saveEdit"));
+  cancelEditLabel = computed(() => this.t("aisles.cancelEdit"));
   moveUpLabel = computed(() => this.t("aisles.moveUp"));
   moveDownLabel = computed(() => this.t("aisles.moveDown"));
   addLabel = computed(() => this.t("aisles.add"));
@@ -171,6 +175,24 @@ export class ManageAislesComponent {
       store,
       this.aisleCatalog.remove(this.activeAisles(), aisleId),
     );
+  }
+
+  onRename(rename: AisleListRename): void {
+    const store = this.activeStore();
+    if (!store) return;
+
+    const next = this.aisleCatalog.rename(
+      this.activeAisles(),
+      rename.id,
+      rename.name,
+    );
+
+    if (!next) {
+      this.warnDuplicatedName(rename.name);
+      return;
+    }
+
+    this.applyAisles(store, next);
   }
 
   onMove(move: AisleListMove): void {

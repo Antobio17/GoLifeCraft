@@ -47,6 +47,7 @@ import {
 import { ShoppingGroupLabels } from "@nutrition/shopping/shopping/domain/models/shopping-group-labels.model";
 import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/shopping-sort-mode.model";
 import { ShoppingListAttributes } from "@nutrition/shopping/shopping/domain/models/shopping-list.model";
+import { DiaryShoppingSheetComponent } from "./diary-shopping-sheet.component";
 
 type FilterKind = "store" | "cat" | "brand";
 
@@ -80,6 +81,7 @@ type FilterKind = "store" | "cat" | "brand";
     IconButtonComponent,
     ChipComponent,
     ManageAislesComponent,
+    DiaryShoppingSheetComponent,
   ],
 })
 export class GetShoppingListComponent implements OnInit {
@@ -105,6 +107,7 @@ export class GetShoppingListComponent implements OnInit {
   sortMode = signal<ShoppingSortMode>(ShoppingSortMode.Aisle);
   supermarkets = signal<Supermarket[]>([]);
   aisleSheetOpen = signal(false);
+  diarySheetOpen = signal(false);
 
   clearModalOpen = signal(false);
   clearing = signal(false);
@@ -166,6 +169,10 @@ export class GetShoppingListComponent implements OnInit {
   ]);
 
   manageAislesLabel = computed(() => this.t("getShopping.sort.manage"));
+
+  addLabel = computed(() => this.t("getShopping.add"));
+
+  generateFromDiaryLabel = computed(() => this.t("getShopping.diary.title"));
 
   activeSupermarketId = computed(() => {
     const tab = this.effectiveTab();
@@ -262,6 +269,18 @@ export class GetShoppingListComponent implements OnInit {
 
   closeAisleSheet(): void {
     this.aisleSheetOpen.set(false);
+  }
+
+  openDiarySheet(): void {
+    this.diarySheetOpen.set(true);
+  }
+
+  closeDiarySheet(): void {
+    this.diarySheetOpen.set(false);
+  }
+
+  onDiaryNeedsAdded(): void {
+    this.load(true);
   }
 
   onAislesSaved(): void {

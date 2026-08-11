@@ -21,10 +21,15 @@
         [items]="activeAisles()"
         [emptyText]="emptyText()"
         [removeLabel]="removeLabel()"
+        [editLabel]="editLabel()"
+        [saveLabel]="saveEditLabel()"
+        [cancelLabel]="cancelEditLabel()"
+        [namePlaceholder]="placeholder()"
         [moveUpLabel]="moveUpLabel()"
         [moveDownLabel]="moveDownLabel()"
         (moved)="onMove($event)"
         (removed)="onRemove($event)"
+        (renamed)="onRename($event)"
       />
 
       <ds-stack direction="row" align="center" [gap]="'8px'">

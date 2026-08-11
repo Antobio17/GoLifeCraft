@@ -3,6 +3,11 @@ get_diary_calendar:
   methods: [GET]
   controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\GetDiaryCalendarController
 
+get_diary_shopping_needs:
+  path: /api/v1/nutrition/diary/shopping-needs
+  methods: [GET]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\GetDiaryShoppingNeedsController
+
 get_diary:
   path: /api/v1/nutrition/diary
   methods: [GET]

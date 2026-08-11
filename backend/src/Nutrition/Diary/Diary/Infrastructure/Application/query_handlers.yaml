@@ -20,3 +20,14 @@ services:
 
   Nutrition\Diary\Diary\Application\Query\GetDiaryCalendarDataTransform:
     class: Nutrition\Diary\Diary\Infrastructure\UI\API\DataTransform\ApiGetDiaryCalendarDataTransform
+
+  Nutrition\Diary\Diary\Application\Query\GetDiaryShoppingNeedsQueryHandler:
+    class: Nutrition\Diary\Diary\Application\Query\GetDiaryShoppingNeedsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryShoppingNeedsNeedleDataQuery'
+      $dataTransform: '@Nutrition\Diary\Diary\Application\Query\GetDiaryShoppingNeedsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Query\GetDiaryShoppingNeedsDataTransform:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\DataTransform\ApiGetDiaryShoppingNeedsDataTransform

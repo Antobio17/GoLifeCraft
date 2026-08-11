@@ -42,6 +42,24 @@
       "addAction": "Add",
       "addedAction": "Added"
     },
+    "diary": {
+      "title": "Generate from the diary",
+      "subtitle": "Pick a date range and we work out what you need to buy",
+      "from": "From",
+      "to": "To",
+      "summary": "{{days}} logged days · {{entries}} diary entries",
+      "empty": "No products logged in that range",
+      "stock": "you have {amount}",
+      "missing": "{amount} missing",
+      "covered": "covered by your stock",
+      "inList": "already in the list",
+      "confirm": "Add {{items}}",
+      "confirmEmpty": "Select items",
+      "items": {
+        "one": "1 item",
+        "many": "{{count}} items"
+      }
+    },
     "clearModal": {
       "title": "Remove bought",
       "body": "All items marked as bought will be removed from this list.",

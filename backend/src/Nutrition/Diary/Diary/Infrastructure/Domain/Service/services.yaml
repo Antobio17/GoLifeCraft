@@ -19,3 +19,6 @@ services:
       $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\Service\DiaryWriterRecipeNutritionGraphProvider'
       $calculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Nutrition\Diary\Diary\Domain\Service\DiaryArticleNeedsCalculator:
+    class: Nutrition\Diary\Diary\Domain\Service\DiaryArticleNeedsCalculator

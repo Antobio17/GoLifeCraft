@@ -1,6 +1,6 @@
 <ds-swipe-to-delete
   #swipe
-  [disabled]="!canWrite"
+  [disabled]="!canWrite || !swipeable"
   [reveal]="66"
   [radius]="16"
   [removeLabel]="removeLabel"
@@ -11,7 +11,7 @@
     direction="row"
     align="center"
     [gap]="'11px'"
-    [class.shopping-item--checked]="checked"
+    [class.shopping-item--checked]="checked && dimChecked"
     [class.shopping-item--slid]="swipe.slid"
   >
     @if (canWrite) {
