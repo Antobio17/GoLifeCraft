@@ -15,6 +15,12 @@ body.ds-scroll-locked {
   overscroll-behavior: contain;
 }
 
+@media (max-width: 767px) {
+  :root {
+    zoom: var(--ds-app-scale, 1);
+  }
+}
+
 :root {
   color-scheme: light;
 

@@ -12,6 +12,13 @@
   padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
 }
 
+@media (max-width: 767px) {
+  .auth {
+    min-height: calc(100vh / var(--ds-app-scale, 1));
+    min-height: calc(100dvh / var(--ds-app-scale, 1));
+  }
+}
+
 .auth__card {
   width: 100%;
   max-width: 380px;
