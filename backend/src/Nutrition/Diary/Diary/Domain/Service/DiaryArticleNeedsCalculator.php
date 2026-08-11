@@ -8,9 +8,6 @@ use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
 final class DiaryArticleNeedsCalculator
 {
     /**
-     * Expands diary items (recipes included) into the article quantities they consume,
-     * expressed in each article base unit.
-     *
      * @param array<int, array{kind: string, refId: string, quantity: float, unit: ?string}> $items
      *
      * @return array<string, float>

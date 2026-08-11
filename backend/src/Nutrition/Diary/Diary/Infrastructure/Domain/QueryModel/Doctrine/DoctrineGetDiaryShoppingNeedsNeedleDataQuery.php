@@ -147,31 +147,29 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
                 'a.brand',
                 'a.base_unit',
                 'a.pack_unit',
+                'a.diary_unit',
+                'a.recipe_unit',
                 'a.price',
-                'ae.quantity AS pack_size',
                 's.name AS store',
                 'st.quantity AS stock_quantity',
                 'MIN(sli.id) AS shopping_list_item_id',
             )
             ->from(table: 'article', alias: 'a')
             ->leftJoin('a', 'supermarket', 's', 's.id = a.supermarket_id')
-            ->leftJoin('a', 'article_equivalence', 'ae', 'ae.article_id = a.id AND ae.unit = a.pack_unit')
             ->leftJoin('a', 'article_stock', 'st', 'st.article_id = a.id')
             ->leftJoin('a', 'shopping_list_item', 'sli', 'sli.article_id = a.id')
             ->where('a.id IN (:articleIds)')
             ->setParameter(key: 'articleIds', value: array_keys($quantities), type: ArrayParameterType::STRING)
-            ->groupBy('a.id', 'a.name', 'a.emoji', 'a.brand', 'a.base_unit', 'a.pack_unit', 'a.price', 'ae.quantity', 's.name', 'st.quantity')
+            ->groupBy('a.id', 'a.name', 'a.emoji', 'a.brand', 'a.base_unit', 'a.pack_unit', 'a.diary_unit', 'a.recipe_unit', 'a.price', 's.name', 'st.quantity')
             ->orderBy(sort: 'a.name', order: 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
 
+        $equivalences = $this->fetchEquivalences(articleIds: array_keys($quantities));
         $needs = [];
 
         foreach ($rows as $row) {
-            $pack = ArticlePack::fromEquivalence(
-                unit: $row['pack_unit'],
-                size: null !== $row['pack_size'] ? (float) $row['pack_size'] : null,
-            );
+            $pack = $this->resolvePurchaseUnit(row: $row, equivalences: $equivalences[$row['id']] ?? []);
 
             $stock = null !== $row['stock_quantity'] ? (float) $row['stock_quantity'] : 0.0;
             $missing = max(0.0, $quantities[$row['id']] - $stock);
@@ -195,5 +193,49 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
         }
 
         return $needs;
+    }
+
+    /**
+     * @param array<int, string> $articleIds
+     *
+     * @return array<string, array<string, float>>
+     */
+    private function fetchEquivalences(array $articleIds): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('e.article_id', 'e.unit', 'e.quantity')
+            ->from(table: 'article_equivalence', alias: 'e')
+            ->where('e.article_id IN (:articleIds)')
+            ->setParameter(key: 'articleIds', value: $articleIds, type: ArrayParameterType::STRING)
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $equivalences = [];
+
+        foreach ($rows as $row) {
+            $equivalences[$row['article_id']][$row['unit']] = (float) $row['quantity'];
+        }
+
+        return $equivalences;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     * @param array<string, float> $equivalences
+     */
+    private function resolvePurchaseUnit(array $row, array $equivalences): ArticlePack
+    {
+        foreach ([$row['pack_unit'], $row['diary_unit'], $row['recipe_unit']] as $unit) {
+            if (null === $unit || !isset($equivalences[$unit])) {
+                continue;
+            }
+
+            $pack = ArticlePack::fromEquivalence(unit: $unit, size: $equivalences[$unit]);
+            if ($pack->isDefined()) {
+                return $pack;
+            }
+        }
+
+        return ArticlePack::fromEquivalence(unit: null, size: null);
     }
 }
