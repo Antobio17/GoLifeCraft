@@ -29,12 +29,13 @@ import { Component, Input } from "@angular/core";
         border: 1px solid var(--ds-border);
         border-radius: 14px;
         padding: 11px 12px;
+        container-type: inline-size;
       }
       .ds-stile__value {
         display: block;
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 21px;
+        font-size: clamp(13px, calc(100cqi / 4.8), 21px);
         line-height: 1;
         color: var(--ds-text);
       }
