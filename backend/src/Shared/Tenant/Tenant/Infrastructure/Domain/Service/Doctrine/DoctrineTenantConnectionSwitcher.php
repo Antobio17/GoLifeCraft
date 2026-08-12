@@ -4,6 +4,7 @@ namespace Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
+use Shared\Tenant\Tenant\Domain\Service\TenantContext;
 
 final readonly class DoctrineTenantConnectionSwitcher implements TenantConnectionSwitcher
 {
@@ -15,11 +16,14 @@ final readonly class DoctrineTenantConnectionSwitcher implements TenantConnectio
         private string $port,
         private string $serverUsername,
         private string $serverPassword,
+        private TenantContext $tenantContext,
     ) {
     }
 
     public function switch(string $tenantId): void
     {
+        $this->tenantContext->set(tenantId: $tenantId);
+
         $this->change(
             connection: $this->writerTenantConnection,
             ip: $this->writerHost,

@@ -35,6 +35,7 @@ when@prod:
                 level: warning
                 channels: ["!event", "!deprecation", "!csp"]
                 formatter: monolog.formatter.json
+                include_stacktraces: true
             csp:
                 type: stream
                 path: "php://stderr"

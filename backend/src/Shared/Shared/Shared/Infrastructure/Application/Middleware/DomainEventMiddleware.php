@@ -6,6 +6,7 @@ use Shared\Shared\DomainEventLog\Domain\Model\DomainEventLog;
 use Shared\Shared\DomainEventLog\Domain\Model\DomainEventLogRepository;
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
+use Shared\Tenant\Tenant\Domain\Service\TenantContext;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
@@ -17,6 +18,7 @@ final readonly class DomainEventMiddleware implements MiddlewareInterface
         private DomainEventCollectorService $domainEventCollector,
         private DomainEventLogRepository $domainEventLogRepository,
         private DateTimeGenerator $dateTimeGenerator,
+        private TenantContext $tenantContext,
         private array $subscribers,
     ) {
     }
@@ -44,6 +46,10 @@ final readonly class DomainEventMiddleware implements MiddlewareInterface
 
     private function logEvent(DomainEvent $event): void
     {
+        if (!$this->tenantContext->isResolved()) {
+            return;
+        }
+
         $domainEventLog = new DomainEventLog(
             id: $this->domainEventLogRepository->nextId(),
             eventName: $event->getName(),

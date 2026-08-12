@@ -37,8 +37,8 @@ final class DoctrineTransactionManager implements TransactionManager
         }
 
         $this->masterEntityManager->flush();
-        $this->masterEntityManager->commit();
         $this->tenantEntityManager->flush();
+        $this->masterEntityManager->commit();
         $this->tenantEntityManager->commit();
         $this->isTransactionActive = false;
     }
@@ -49,8 +49,17 @@ final class DoctrineTransactionManager implements TransactionManager
             return;
         }
 
-        $this->masterEntityManager->rollback();
-        $this->tenantEntityManager->rollback();
         $this->isTransactionActive = false;
+        $this->rollbackEntityManager(entityManager: $this->masterEntityManager);
+        $this->rollbackEntityManager(entityManager: $this->tenantEntityManager);
+    }
+
+    private function rollbackEntityManager(EntityManager $entityManager): void
+    {
+        if (!$entityManager->getConnection()->isTransactionActive()) {
+            return;
+        }
+
+        $entityManager->rollback();
     }
 }
