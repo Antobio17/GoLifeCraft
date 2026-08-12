@@ -34,6 +34,42 @@ jobs:
           source: docker-compose.prod.yml
           target: ${{ secrets.SERVER_PROJECT_PATH }}
 
+      # Docker creates a directory when a bind-mount source is missing, and then
+      # refuses to mount a file over it. Clear those out before copying, or the
+      # scp below would drop the config *inside* the stray directory.
+      - name: Clear stray bind-mount directories
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          script: |
+            cd ${{ secrets.SERVER_PROJECT_PATH }}
+            for path in \
+              infrastructure/docker/production/loki/loki-config.yaml \
+              infrastructure/docker/production/alloy/config.alloy; do
+              if [ -d "$path" ]; then
+                echo "==> Removing stray directory $path"
+                rmdir "$path" 2>/dev/null || rm -rf "$path"
+              fi
+            done
+
+      - name: Copy observability configs to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          source: |
+            infrastructure/docker/production/loki
+            infrastructure/docker/production/alloy
+            infrastructure/docker/production/grafana
+          target: ${{ secrets.SERVER_PROJECT_PATH }}
+
       - name: Copy database schema to server
         uses: appleboy/scp-action@v1
         with:
@@ -71,7 +107,7 @@ jobs:
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
             echo "==> Pulling latest images..."
-            docker compose --env-file .env.local -f docker-compose.prod.yml pull gateway nginx php
+            docker compose --env-file .env.local -f docker-compose.prod.yml pull gateway nginx php loki alloy grafana dockerproxy
 
             echo "==> Starting services..."
             docker compose --env-file .env.local -f docker-compose.prod.yml up -d --remove-orphans
