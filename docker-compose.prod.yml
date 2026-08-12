@@ -174,7 +174,7 @@ services:
           memory: 64M
 
   loki:
-    image: grafana/loki:latest
+    image: grafana/loki:3.7.6
     container_name: golifecraft_loki
     restart: always
     command: -config.file=/etc/loki/local-config.yaml
@@ -195,21 +195,68 @@ services:
           cpus: '0.10'
           memory: 128M
 
+  # Only this container touches the Docker socket. Alloy talks to it over TCP
+  # with just the read endpoints it needs, so a compromise of Alloy cannot
+  # create containers or reach the host.
+  dockerproxy:
+    image: tecnativa/docker-socket-proxy:v0.5.0
+    container_name: golifecraft_dockerproxy
+    restart: always
+    environment:
+      CONTAINERS: 1
+      NETWORKS: 1
+      EVENTS: 1
+      PING: 1
+      VERSION: 1
+      POST: 0
+      EXEC: 0
+      IMAGES: 0
+      VOLUMES: 0
+      SERVICES: 0
+      TASKS: 0
+      SECRETS: 0
+      CONFIGS: 0
+      NODES: 0
+      SWARM: 0
+      SYSTEM: 0
+      INFO: 0
+      AUTH: 0
+      BUILD: 0
+      COMMIT: 0
+      DISTRIBUTION: 0
+      PLUGINS: 0
+      SESSION: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 64M
+        reservations:
+          cpus: '0.10'
+          memory: 32M
+
   alloy:
-    image: grafana/alloy:latest
+    image: grafana/alloy:v1.18.1
     container_name: golifecraft_alloy
     restart: always
     command:
       - run
-      - --server.http.listen-addr=0.0.0.0:12345
+      - --server.http.listen-addr=127.0.0.1:12345
       - --storage.path=/var/lib/alloy/data
       - /etc/alloy/config.alloy
     volumes:
       - ./infrastructure/docker/production/alloy/config.alloy:/etc/alloy/config.alloy:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
       - alloy_data:/var/lib/alloy/data
     depends_on:
       - loki
+      - dockerproxy
     logging:
       driver: "json-file"
       options:
@@ -225,7 +272,7 @@ services:
           memory: 64M
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:13.1.3
     container_name: golifecraft_grafana
     restart: always
     environment:
@@ -235,6 +282,11 @@ services:
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
       GF_AUTH_ANONYMOUS_ENABLED: "false"
       GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SECURITY_COOKIE_SECURE: "true"
+      GF_SECURITY_COOKIE_SAMESITE: strict
+      GF_SECURITY_CONTENT_SECURITY_POLICY: "true"
+      GF_SECURITY_STRICT_TRANSPORT_SECURITY: "true"
+      GF_USERS_VIEWERS_CAN_EDIT: "false"
       GF_ANALYTICS_REPORTING_ENABLED: "false"
       GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
       GF_NEWS_NEWS_FEED_ENABLED: "false"

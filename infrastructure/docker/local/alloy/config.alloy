@@ -4,7 +4,7 @@ logging {
 }
 
 discovery.docker "golifecraft" {
-  host             = "unix:///var/run/docker.sock"
+  host             = "tcp://dockerproxy:2375"
   refresh_interval = "15s"
 
   filter {
@@ -29,7 +29,7 @@ discovery.relabel "golifecraft" {
 }
 
 loki.source.docker "golifecraft" {
-  host       = "unix:///var/run/docker.sock"
+  host       = "tcp://dockerproxy:2375"
   targets    = discovery.relabel.golifecraft.output
   forward_to = [loki.process.golifecraft.receiver]
 }
