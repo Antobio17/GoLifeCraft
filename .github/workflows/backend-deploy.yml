@@ -68,11 +68,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
           port: ${{ secrets.SERVER_SSH_PORT || 22 }}
-          source: |
-            infrastructure/docker/production/certbot
-            infrastructure/docker/production/loki
-            infrastructure/docker/production/alloy
-            infrastructure/docker/production/grafana
+          source: "infrastructure/docker/production/certbot,infrastructure/docker/production/loki,infrastructure/docker/production/alloy,infrastructure/docker/production/grafana"
           target: ${{ secrets.SERVER_PROJECT_PATH }}
 
       - name: Copy database schema to server
