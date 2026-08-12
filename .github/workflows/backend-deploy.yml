@@ -34,10 +34,12 @@ jobs:
           source: docker-compose.prod.yml
           target: ${{ secrets.SERVER_PROJECT_PATH }}
 
-      # Docker creates a directory when a bind-mount source is missing, and then
-      # refuses to mount a file over it. Clear those out before copying, or the
-      # scp below would drop the config *inside* the stray directory.
-      - name: Clear stray bind-mount directories
+      # Docker creates any missing bind-mount source as a root-owned directory,
+      # which then breaks both the mount and the scp below (the deploy user
+      # cannot delete or write into root-owned paths). Wipe the config tree and
+      # hand it back to the deploy user. Done inside a container because that
+      # is the only way to act as root here without sudo.
+      - name: Reset config tree ownership on server
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -46,16 +48,16 @@ jobs:
           passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
           port: ${{ secrets.SERVER_SSH_PORT || 22 }}
           script: |
+            set -e
             cd ${{ secrets.SERVER_PROJECT_PATH }}
-            for path in \
-              infrastructure/docker/production/certbot/entrypoint.sh \
-              infrastructure/docker/production/loki/loki-config.yaml \
-              infrastructure/docker/production/alloy/config.alloy; do
-              if [ -d "$path" ]; then
-                echo "==> Removing stray directory $path"
-                rmdir "$path" 2>/dev/null || rm -rf "$path"
-              fi
-            done
+            docker run --rm -v "$(pwd):/w" -w /w alpine:latest sh -c '
+              rm -rf infrastructure/docker/production/certbot \
+                     infrastructure/docker/production/loki \
+                     infrastructure/docker/production/alloy \
+                     infrastructure/docker/production/grafana
+              mkdir -p infrastructure/docker/production
+              chown -R '"$(id -u):$(id -g)"' infrastructure
+            '
 
       # Every path the compose file bind-mounts from ./infrastructure must be
       # copied here. Anything missing gets auto-created by Docker as a
