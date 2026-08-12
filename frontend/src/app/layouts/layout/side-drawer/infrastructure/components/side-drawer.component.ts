@@ -45,6 +45,8 @@ export class SideDrawerComponent {
 
   private readonly isDocked = this.viewport.matches("(min-width: 768px)");
 
+  readonly grafanaUrl = "/grafana/";
+
   readonly isOpen = this.drawer.isOpen;
   readonly isDark = this.themeService.isDark;
   readonly isGod = computed(() => this.authSessionService.isGod());

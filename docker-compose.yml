@@ -80,6 +80,77 @@ services:
           cpus: '0.10'
           memory: 128M
 
+  loki:
+    container_name: golifecraft_loki
+    image: grafana/loki:latest
+    restart: always
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./infrastructure/docker/local/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 384M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+
+  alloy:
+    container_name: golifecraft_alloy
+    image: grafana/alloy:latest
+    restart: always
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    volumes:
+      - ./infrastructure/docker/local/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - alloy_data:/var/lib/alloy/data
+    depends_on:
+      - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 192M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+
+  grafana:
+    container_name: golifecraft_grafana
+    image: grafana/grafana:latest
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: "${GRAFANA_ADMIN_USER:-admin}"
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:-golifecraft-local}"
+      GF_SERVER_ROOT_URL: http://localhost:3001/grafana/
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_NEWS_NEWS_FEED_ENABLED: "false"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./infrastructure/docker/local/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
   mailpit:
     container_name: golifecraft_mailpit
     image: axllent/mailpit:latest
@@ -120,6 +191,11 @@ services:
         reservations:
           cpus: '0.50'
           memory: 512M
+
+volumes:
+  loki_data:
+  alloy_data:
+  grafana_data:
 
 networks:
   default:

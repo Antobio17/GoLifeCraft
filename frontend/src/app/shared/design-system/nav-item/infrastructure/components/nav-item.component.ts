@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { ChipComponent } from "../../../chip/infrastructure/components/chip.component";
@@ -5,9 +6,9 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 @Component({
   selector: "ds-nav-item",
-  imports: [IconComponent, ChipComponent],
+  imports: [IconComponent, ChipComponent, NgTemplateOutlet],
   template: `
-    <span class="item">
+    <ng-template #content>
       <ds-icon
         class="item__icon"
         [name]="icon"
@@ -15,10 +16,28 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         [stroke]="2.1"
       />
       <span class="item__label">{{ label }}</span>
+      @if (href) {
+        <ds-icon
+          class="item__external"
+          name="externalLink"
+          [size]="14"
+          [stroke]="2.1"
+        />
+      }
       @if (badge) {
         <ds-chip class="item__badge" [uppercase]="true">{{ badge }}</ds-chip>
       }
-    </span>
+    </ng-template>
+
+    @if (href) {
+      <a class="item" [href]="href" target="_blank" rel="noopener noreferrer">
+        <ng-container [ngTemplateOutlet]="content" />
+      </a>
+    } @else {
+      <span class="item">
+        <ng-container [ngTemplateOutlet]="content" />
+      </span>
+    }
   `,
   styles: [
     `
@@ -41,8 +60,16 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
           background var(--ds-transition-base),
           color var(--ds-transition-base);
       }
+      a.item {
+        text-decoration: none;
+        color: inherit;
+      }
       .item__label {
         flex: 1 1 auto;
+      }
+      .item__external {
+        flex: none;
+        color: var(--ds-text-meta);
       }
       .item__icon {
         flex: none;
@@ -91,4 +118,5 @@ export class NavItemComponent {
   @Input() label = "";
   @Input() sub = false;
   @Input() badge = "";
+  @Input() href = "";
 }

@@ -1,0 +1,63 @@
+logging {
+  level  = "warn"
+  format = "logfmt"
+}
+
+discovery.docker "golifecraft" {
+  host             = "unix:///var/run/docker.sock"
+  refresh_interval = "15s"
+
+  filter {
+    name   = "name"
+    values = ["golifecraft"]
+  }
+}
+
+discovery.relabel "golifecraft" {
+  targets = discovery.docker.golifecraft.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_log_stream"]
+    target_label  = "stream"
+  }
+}
+
+loki.source.docker "golifecraft" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.golifecraft.output
+  forward_to = [loki.process.golifecraft.receiver]
+}
+
+loki.process "golifecraft" {
+  forward_to = [loki.write.default.receiver]
+
+  stage.match {
+    selector = "{container=\"golifecraft_php\"}"
+
+    stage.json {
+      expressions = {
+        level_name = "level_name",
+        channel    = "channel",
+      }
+    }
+
+    stage.labels {
+      values = {
+        level   = "level_name",
+        channel = "channel",
+      }
+    }
+  }
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

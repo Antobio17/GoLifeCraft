@@ -8,3 +8,6 @@ docs/sql/
 /backend/.env.local
 /backend/.env.*.local
 /backend/.env.prod
+
+# Datos de contenedores en runtime (uploads, claves DKIM, certificados…)
+/volumes/

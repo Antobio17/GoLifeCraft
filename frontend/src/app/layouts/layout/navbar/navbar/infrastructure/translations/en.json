@@ -5,6 +5,7 @@
     "authorizationDesc": "Team access management and roles.",
     "users": "Users",
     "usersDesc": "System user management",
+    "logs": "Logs",
     "logout": "Log out",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",

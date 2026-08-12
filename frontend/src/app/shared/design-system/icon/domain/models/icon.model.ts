@@ -67,6 +67,8 @@ export const DS_ICONS = {
     '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>',
   download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
   chart: '<path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/>',
+  externalLink:
+    '<path d="M14 4h6v6"/><path d="M20 4l-8 8"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/>',
   package:
     '<path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/>',

@@ -5,6 +5,7 @@
     "authorizationDesc": "Gestión de accesos del equipo y roles del sistema.",
     "users": "Usuarios",
     "usersDesc": "Gestión de usuarios del sistema",
+    "logs": "Logs",
     "logout": "Cerrar sesión",
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",

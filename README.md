@@ -309,8 +309,9 @@ cada ejecución. Si Mercadona o Gemini responden con throttle (`403/429/503`), e
 comando **corta limpio** (exit 1) sin perder el sitio; la siguiente ejecución
 reanuda por donde iba.
 
-Por eso se ejecuta **con un cron cada minuto** (≈ el límite de ~1 req/min de Gemini)
-en vez de un único proceso largo: 1 producto por minuto, sin ráfagas.
+Por eso se ejecuta **con un cron cada dos minutos** (por debajo del límite de ~1
+req/min de Gemini) en vez de un único proceso largo: 1 producto cada dos minutos,
+sin ráfagas.
 
 #### 1. Configurar la API key de Gemini (una vez)
 
@@ -368,18 +369,19 @@ head volumes/mercadona/queue.json
 > inicializar: añade `--category <id>`. Para **reiniciar** la cola y redescubrir
 > desde cero: `--refresh`.
 
-#### 4. Cron cada minuto (a mano en el host)
+#### 4. Cron cada dos minutos (a mano en el host)
 
 Se configura en el **crontab del host**, no en la imagen: así lo activas y
 desactivas sin desplegar. Como `deploy`, `crontab -e` y añade:
 
 ```cron
-* * * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/mercadona-sync.lock docker compose --env-file .env.local -f docker-compose.prod.yml run --rm worker sh -c 'php bin/console app:catalog:sync-mercadona --limit 1 >> /var/log/worker/mercadona-sync.log 2>&1'
+*/2 * * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/mercadona-sync.lock docker compose --env-file .env.local -f docker-compose.prod.yml run --rm worker sh -c 'php bin/console app:catalog:sync-mercadona --limit 1 >> /var/log/worker/mercadona-sync.log 2>&1'
 ```
 
-- `flock -n` evita que dos ejecuciones se solapen si alguna pasa de 60 s: esa tick
+- `flock -n` evita que dos ejecuciones se solapen si alguna pasa de 120 s: esa tick
   simplemente se salta.
-- **Sin `--delay`**: con `--limit 1` el ritmo lo marca el cron (1/min), no el delay.
+- **Sin `--delay`**: con `--limit 1` el ritmo lo marca el cron (1 cada 2 min), no el
+  delay.
 - El volumen `volumes/mercadona` da continuidad entre los `--rm`.
 
 **Seguir el progreso:**
