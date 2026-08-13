@@ -16,7 +16,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         [stroke]="2.1"
       />
       <span class="item__label">{{ label }}</span>
-      @if (href) {
+      @if (href && external) {
         <ds-icon
           class="item__external"
           name="externalLink"
@@ -30,7 +30,12 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
     </ng-template>
 
     @if (href) {
-      <a class="item" [href]="href" target="_blank" rel="noopener noreferrer">
+      <a
+        class="item"
+        [href]="href"
+        [attr.target]="external ? '_blank' : null"
+        [attr.rel]="external ? 'noopener noreferrer' : null"
+      >
         <ng-container [ngTemplateOutlet]="content" />
       </a>
     } @else {
@@ -119,4 +124,5 @@ export class NavItemComponent {
   @Input() sub = false;
   @Input() badge = "";
   @Input() href = "";
+  @Input() external = true;
 }
