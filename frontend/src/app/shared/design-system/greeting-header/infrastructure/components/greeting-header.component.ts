@@ -29,12 +29,12 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.75rem;
-        padding: 0.375rem 0 0;
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-1-5) 0 0;
       }
       .dash__date {
         margin: 0;
-        font-size: 0.71875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 600;
         color: var(--ds-text-muted);
         text-transform: capitalize;
@@ -47,7 +47,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         margin: 2px 0 0;
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 1.375rem;
+        font-size: var(--ds-text-2xl);
         line-height: 1.1;
         letter-spacing: -0.02em;
         color: var(--ds-text);
@@ -70,7 +70,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         color: var(--ds-accent);
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 1rem;
+        font-size: var(--ds-text-lg);
         transition: transform 0.15s ease;
       }
       .dash__avatar:hover {
@@ -89,10 +89,10 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
           display: none;
         }
         .dash__date {
-          font-size: 0.78125rem;
+          font-size: var(--ds-text-base);
         }
         .dash__greeting {
-          font-size: 1.875rem;
+          font-size: var(--ds-text-3xl);
         }
       }
     `,

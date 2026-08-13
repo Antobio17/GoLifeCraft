@@ -27,13 +27,13 @@ import { Component, Input } from "@angular/core";
         color: var(--ds-text);
       }
       .ds-stat__unit {
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-meta);
         margin-left: 2px;
       }
       .ds-stat__label {
-        font-size: var(--ds-text-xs);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-semibold);
         letter-spacing: 0.03em;
         text-transform: uppercase;

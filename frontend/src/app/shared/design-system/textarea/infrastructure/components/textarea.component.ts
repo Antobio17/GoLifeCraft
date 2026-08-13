@@ -26,13 +26,13 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         width: 100%;
         box-sizing: border-box;
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-md);
         background: var(--ds-surface);
         color: var(--ds-text);
         font: inherit;
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         line-height: 1.45;
-        padding: 0.6875rem 0.75rem;
+        padding: var(--ds-space-3);
         outline: none;
         transition:
           border-color var(--ds-transition-fast),
@@ -41,8 +41,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       .ds-textarea--compact {
         border-color: var(--ds-border);
         background: var(--ds-surface-inset);
-        font-size: 0.75rem;
-        padding: 0.5rem 0.625rem;
+        font-size: var(--ds-text-base);
+        padding: var(--ds-space-2);
       }
       .ds-textarea::placeholder {
         color: var(--ds-text-meta);

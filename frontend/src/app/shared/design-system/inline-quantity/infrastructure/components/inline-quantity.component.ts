@@ -43,14 +43,14 @@ type InlineQuantitySize = "md" | "sm";
       .ds-inline-qty {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
         background: var(--ds-surface-inset);
-        border-radius: 0.625rem;
-        padding: 0.25rem 0.4375rem;
+        border-radius: var(--ds-radius-md);
+        padding: var(--ds-space-1) var(--ds-space-1-5);
       }
       .ds-inline-qty--sm {
-        gap: 0.1875rem;
-        border-radius: 0.5625rem;
+        gap: var(--ds-space-1);
+        border-radius: var(--ds-radius-md);
       }
       .ds-inline-qty__input {
         width: 2rem;
@@ -60,7 +60,7 @@ type InlineQuantitySize = "md" | "sm";
         outline: none;
         padding: 0;
         font-family: var(--ds-font-display);
-        font-size: 0.8125rem;
+        font-size: var(--ds-text-md);
         font-weight: 800;
         color: var(--ds-text);
         -moz-appearance: textfield;
@@ -68,16 +68,16 @@ type InlineQuantitySize = "md" | "sm";
       }
       .ds-inline-qty--sm .ds-inline-qty__input {
         width: 1.875rem;
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
       }
       .ds-inline-qty__unit {
-        font-size: 0.65625rem;
+        font-size: var(--ds-text-xs);
         font-weight: 700;
         color: var(--ds-text-meta);
         white-space: nowrap;
       }
       .ds-inline-qty--sm .ds-inline-qty__unit {
-        font-size: 0.625rem;
+        font-size: var(--ds-text-xs);
       }
       .ds-inline-qty__select {
         appearance: none;
@@ -87,14 +87,14 @@ type InlineQuantitySize = "md" | "sm";
         padding: 0;
         max-width: 4.625rem;
         font-family: inherit;
-        font-size: 0.65625rem;
+        font-size: var(--ds-text-xs);
         font-weight: 700;
         color: var(--ds-text-meta);
         cursor: pointer;
       }
       .ds-inline-qty--sm .ds-inline-qty__select {
         max-width: 3.625rem;
-        font-size: 0.625rem;
+        font-size: var(--ds-text-xs);
       }
     `,
   ],

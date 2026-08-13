@@ -20,8 +20,8 @@ export type MetricCardVariant = "plain" | "feature";
       .ds-metric {
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
-        padding: 0.75rem 0.8125rem;
+        border-radius: var(--ds-radius-md);
+        padding: var(--ds-space-3);
         height: 100%;
         box-sizing: border-box;
       }
@@ -41,8 +41,8 @@ export type MetricCardVariant = "plain" | "feature";
         color: var(--ds-on-surface-brand);
       }
       .ds-metric__label {
-        margin-top: 0.3125rem;
-        font-size: var(--ds-text-sm);
+        margin-top: var(--ds-space-1);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
       }

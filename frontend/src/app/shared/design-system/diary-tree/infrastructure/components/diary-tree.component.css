@@ -11,8 +11,8 @@
 .diary-tree {
   background: var(--ds-surface-subtle);
   border: 1px solid var(--ds-border);
-  border-radius: 0.875rem;
-  padding: 0.5625rem;
+  border-radius: var(--ds-radius-lg);
+  padding: var(--ds-space-2);
 }
 
 .diary-tree__header {
@@ -21,7 +21,7 @@
 }
 
 ds-text.diary-tree__title {
-  font-size: 0.59375rem;
+  font-size: var(--ds-text-xs);
   font-weight: 800;
   letter-spacing: 0.06em;
   color: var(--ds-text-meta);
@@ -30,14 +30,14 @@ ds-text.diary-tree__title {
 
 .diary-tree__reset {
   background: var(--ds-primary-soft);
-  border-radius: 0.6875rem;
-  padding: 0.5rem 0.625rem;
+  border-radius: var(--ds-radius-lg);
+  padding: var(--ds-space-2);
   color: var(--ds-primary);
 }
 
 ds-text.diary-tree__reset-text {
   flex: 1 1 auto;
-  font-size: 0.65625rem;
+  font-size: var(--ds-text-xs);
   line-height: 1.35;
   color: var(--ds-text-muted);
 }
@@ -45,8 +45,8 @@ ds-text.diary-tree__reset-text {
 .diary-tree__row {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: 0.6875rem;
-  padding: 0.4375rem 0.5rem;
+  border-radius: var(--ds-radius-lg);
+  padding: var(--ds-space-1-5) var(--ds-space-2);
 }
 
 .diary-tree__row--recipe {
@@ -88,7 +88,7 @@ ds-text.diary-tree__reset-text {
 }
 
 ds-text.diary-tree__name {
-  font-size: 0.75rem;
+  font-size: var(--ds-text-base);
   font-weight: 700;
   line-height: 1.2;
   color: var(--ds-text);
@@ -101,10 +101,10 @@ ds-text.diary-tree__qty {
   flex: 0 0 auto;
   align-self: center;
   background: var(--ds-surface-inset);
-  border-radius: 0.5625rem;
-  padding: 0.25rem 0.4375rem;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-space-1) var(--ds-space-1-5);
   font-family: var(--ds-font-display);
-  font-size: 0.71875rem;
+  font-size: var(--ds-text-sm);
   font-weight: 800;
   color: var(--ds-text);
   white-space: nowrap;

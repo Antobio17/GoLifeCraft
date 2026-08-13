@@ -8,11 +8,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: var(--ds-space-3);
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: 1rem;
-  padding: 0.8125rem;
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-3);
   cursor: pointer;
   text-align: left;
   transition: transform var(--ds-transition-base);
@@ -32,7 +32,7 @@
 .tile__icon {
   width: 2.375rem;
   height: 2.375rem;
-  border-radius: 0.75rem;
+  border-radius: var(--ds-radius-lg);
   background: var(--ds-surface-inset);
   display: inline-flex;
   align-items: center;
@@ -54,18 +54,18 @@
 }
 
 .tile__badge {
-  font-size: 0.5625rem;
+  font-size: var(--ds-text-xs);
   font-weight: var(--ds-weight-extrabold);
   letter-spacing: 0.05em;
   color: var(--ds-text-muted);
   background: var(--ds-surface-inset);
-  border-radius: 62.4375rem;
-  padding: 0.1875rem 0.4375rem;
+  border-radius: var(--ds-radius-pill);
+  padding: var(--ds-space-1) var(--ds-space-1-5);
 }
 
 .tile__name {
   display: block;
-  font-size: 0.84375rem;
+  font-size: var(--ds-text-md);
   font-weight: var(--ds-weight-extrabold);
   letter-spacing: -0.01em;
   color: var(--ds-text);
@@ -73,7 +73,7 @@
 
 .tile__meta {
   display: block;
-  font-size: 0.65625rem;
+  font-size: var(--ds-text-xs);
   font-weight: var(--ds-weight-semibold);
   color: var(--ds-text-muted);
   margin-top: 1px;
@@ -93,6 +93,6 @@
 
 @media (min-width: 1000px) {
   .tile {
-    padding: 0.9375rem;
+    padding: var(--ds-space-4);
   }
 }

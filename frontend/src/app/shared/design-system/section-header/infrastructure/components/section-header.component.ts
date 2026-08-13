@@ -31,13 +31,13 @@ type SectionHeaderSize = "sm" | "md";
       .ds-shead__title {
         margin: 0;
         font-family: var(--ds-font-body);
-        font-size: 0.8125rem;
+        font-size: var(--ds-text-md);
         font-weight: 700;
         color: var(--ds-text);
       }
       .ds-shead__title--md {
         font-family: var(--ds-font-display);
-        font-size: 1.0625rem;
+        font-size: var(--ds-text-xl);
         font-weight: 800;
       }
       .ds-shead__action {
@@ -46,12 +46,12 @@ type SectionHeaderSize = "sm" | "md";
         padding: 0;
         cursor: pointer;
         font-family: var(--ds-font-body);
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 700;
         color: var(--ds-primary);
       }
       .ds-shead__label {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 700;
         color: var(--ds-text-meta);
       }

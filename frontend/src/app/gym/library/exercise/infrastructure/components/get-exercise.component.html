@@ -1,4 +1,4 @@
-<ds-page-wrapper [gap]="'0.875rem'">
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getExercise.back' | t"
@@ -17,21 +17,21 @@
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'1.125rem'">
-      <ds-stack [gap]="'1rem'">
+    <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'var(--ds-space-4)'">
+      <ds-stack [gap]="'var(--ds-space-4)'">
         <ds-skeleton-list-item
-          padding="0.875rem 1rem"
+          padding="var(--ds-space-3) var(--ds-space-4)"
           [tile]="60"
           [tileRadius]="16"
           titleWidth="72%"
           metaWidth="46%"
         />
-        <ds-skeleton-metrics [count]="3" [gap]="'0.5rem'" />
+        <ds-skeleton-metrics [count]="3" [gap]="'var(--ds-space-2)'" />
       </ds-stack>
 
-      <ds-stack [gap]="'0.75rem'">
+      <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-skeleton-line width="8rem" height="0.75rem" />
-        <ds-skeleton height="2.5rem" radius="var(--ds-radius-2xl)" />
+        <ds-skeleton height="2.5rem" radius="var(--ds-radius-lg)" />
         <ds-skeleton-panel
           [brand]="true"
           [figure]="true"
@@ -41,9 +41,9 @@
         <ds-skeleton-line width="6rem" height="0.75rem" />
         <ds-skeleton-list
           [count]="3"
-          [gap]="'0.4375rem'"
-          radius="1rem"
-          padding="0.625rem 0.75rem"
+          [gap]="'var(--ds-space-1-5)'"
+          radius="var(--ds-radius-xl)"
+          padding="var(--ds-space-2) var(--ds-space-3)"
           titleWidth="46%"
           metaWidth="62%"
           trailing="pill"
@@ -53,18 +53,22 @@
       </ds-stack>
     </ds-grid>
   } @else {
-    <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'1.125rem'">
-      <ds-stack [gap]="'1rem'">
-        <ds-card [padding]="'0.875rem 1rem'">
-          <ds-stack direction="row" align="center" [gap]="'0.875rem'">
+    <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'var(--ds-space-4)'">
+      <ds-stack [gap]="'var(--ds-space-4)'">
+        <ds-card [padding]="'var(--ds-space-3) var(--ds-space-4)'">
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
             <ds-icon-badge
               [icon]="icon()"
               tone="brand"
               [size]="60"
               [iconSize]="30"
             />
-            <ds-stack [gap]="'0.5rem'" [grow]="true">
-              <ds-stack direction="row" [wrap]="true" [gap]="'0.375rem'">
+            <ds-stack [gap]="'var(--ds-space-2)'" [grow]="true">
+              <ds-stack
+                direction="row"
+                [wrap]="true"
+                [gap]="'var(--ds-space-1-5)'"
+              >
                 @for (muscle of muscles(); track muscle) {
                   <ds-chip tone="brand">{{ muscle }}</ds-chip>
                 }
@@ -74,7 +78,7 @@
           </ds-stack>
         </ds-card>
 
-        <ds-grid [columns]="3" [gap]="'0.5rem'">
+        <ds-grid [columns]="3" [gap]="'var(--ds-space-2)'">
           <ds-metric-card
             [value]="timesDone()"
             [label]="'getExercise.stat.sessions' | t"
@@ -90,7 +94,7 @@
         </ds-grid>
       </ds-stack>
 
-      <ds-stack [gap]="'0.75rem'">
+      <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-text variant="label">{{ "getExercise.progression" | t }}</ds-text>
 
         @if (hasData()) {
@@ -112,17 +116,21 @@
             [lastLabel]="lastDateLabel()"
           />
 
-          <ds-stack [gap]="'0.5rem'">
+          <ds-stack [gap]="'var(--ds-space-2)'">
             <ds-text variant="label">{{ "getExercise.sessions" | t }}</ds-text>
-            <ds-stack [gap]="'0.4375rem'">
+            <ds-stack [gap]="'var(--ds-space-1-5)'">
               @for (row of sessionRows(); track $index) {
-                <ds-card [padding]="'0.625rem 0.75rem'">
-                  <ds-stack direction="row" align="center" [gap]="'0.625rem'">
+                <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
+                  <ds-stack
+                    direction="row"
+                    align="center"
+                    [gap]="'var(--ds-space-2)'"
+                  >
                     <ds-stack [gap]="'2px'" [grow]="true">
                       <ds-stack
                         direction="row"
                         align="center"
-                        [gap]="'0.4375rem'"
+                        [gap]="'var(--ds-space-1-5)'"
                       >
                         <ds-text variant="strong">{{ row.dateLabel }}</ds-text>
                         @if (row.isPr) {

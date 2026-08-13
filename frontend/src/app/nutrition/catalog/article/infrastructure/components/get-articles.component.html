@@ -1,4 +1,4 @@
-<ds-page-wrapper [gap]="'0.75rem'">
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
   <ds-screen-header
     [title]="'getArticles.heading' | t"
     [subtitle]="headerSubtitle()"
@@ -32,9 +32,9 @@
       [count]="6"
       [columns]="null"
       minColumn="18.75rem"
-      [gap]="'0.75rem'"
-      radius="1rem"
-      padding="0.625rem"
+      [gap]="'var(--ds-space-3)'"
+      radius="var(--ds-radius-xl)"
+      padding="var(--ds-space-2)"
       [alignTop]="true"
       [tile]="56"
       [tileRadius]="12"
@@ -50,7 +50,7 @@
       (searched)="onSearch($event)"
     />
 
-    <ds-stack direction="row" [gap]="'0.4375rem'">
+    <ds-stack direction="row" [gap]="'var(--ds-space-1-5)'">
       <ds-select
         [fluid]="true"
         [placeholder]="'getArticles.filter.category' | t"
@@ -81,9 +81,9 @@
         [count]="6"
         [columns]="null"
         minColumn="18.75rem"
-        [gap]="'0.75rem'"
-        radius="1rem"
-        padding="0.625rem"
+        [gap]="'var(--ds-space-3)'"
+        radius="var(--ds-radius-xl)"
+        padding="var(--ds-space-2)"
         [alignTop]="true"
         [tile]="56"
         [tileRadius]="12"
@@ -144,9 +144,9 @@
           [count]="2"
           [columns]="null"
           minColumn="18.75rem"
-          [gap]="'0.75rem'"
-          radius="1rem"
-          padding="0.625rem"
+          [gap]="'var(--ds-space-3)'"
+          radius="var(--ds-radius-xl)"
+          padding="var(--ds-space-2)"
           [alignTop]="true"
           [tile]="56"
           [tileRadius]="12"

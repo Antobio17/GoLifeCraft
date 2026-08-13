@@ -30,7 +30,7 @@ import { WeekDayTab } from "../../domain/models/week-day-tab.model";
       }
       .ds-wdays {
         display: flex;
-        gap: 0.3125rem;
+        gap: var(--ds-space-1);
       }
       .ds-wdays__tab {
         flex: 1 1 0;
@@ -38,14 +38,14 @@ import { WeekDayTab } from "../../domain/models/week-day-tab.model";
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
         appearance: none;
         border: 1px solid transparent;
         cursor: pointer;
-        border-radius: 0.75rem;
-        padding: 0.5rem 2px;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-2) 2px;
         font: inherit;
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 800;
         transition:
           background var(--ds-transition-fast),

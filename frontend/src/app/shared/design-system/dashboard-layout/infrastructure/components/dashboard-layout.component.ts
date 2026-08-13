@@ -31,13 +31,14 @@ import { Component } from "@angular/core";
       .dash {
         display: flex;
         flex-direction: column;
-        padding: calc(env(safe-area-inset-top) + 0.625rem) 1.375rem 0;
+        padding: calc(env(safe-area-inset-top) + var(--ds-space-2))
+          var(--ds-space-5) 0;
       }
       .dash__body {
         display: flex;
         flex-direction: column;
-        gap: 0.8125rem;
-        padding: 0.875rem 0 1.25rem;
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-3) 0 var(--ds-space-5);
       }
       .dash__main {
         display: contents;
@@ -60,11 +61,11 @@ import { Component } from "@angular/core";
       @media (min-width: 768px) {
         .dash {
           max-width: var(--ds-app-content-max);
-          padding: 1.875rem 2.5rem 0;
+          padding: var(--ds-space-8) 2.5rem 0;
         }
         .dash__body {
-          gap: 1.125rem;
-          padding: 1.375rem 0 2.25rem;
+          gap: var(--ds-space-4);
+          padding: var(--ds-space-5) 0 2.25rem;
         }
       }
       @media (min-width: 1000px) {
@@ -72,12 +73,12 @@ import { Component } from "@angular/core";
           display: grid;
           grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
           align-items: start;
-          column-gap: 1.5rem;
+          column-gap: var(--ds-space-6);
         }
         .dash__main {
           display: flex;
           flex-direction: column;
-          gap: 0.875rem;
+          gap: var(--ds-space-3);
         }
       }
     `,

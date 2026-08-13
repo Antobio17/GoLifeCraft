@@ -1,4 +1,4 @@
-<ds-stack [gap]="'0.625rem'">
+<ds-stack [gap]="'var(--ds-space-2)'">
   <ds-section-header
     [title]="'dashboard.agenda.title' | t"
     [actionLabel]="'dashboard.agenda.seeAll' | t"
@@ -9,9 +9,9 @@
     <ds-skeleton-line width="11.5rem" height="0.6875rem" />
     <ds-skeleton-list
       [count]="4"
-      [gap]="'0.5rem'"
-      radius="var(--ds-radius-3xl)"
-      padding="0.6875rem 0.75rem"
+      [gap]="'var(--ds-space-2)'"
+      radius="var(--ds-radius-xl)"
+      padding="var(--ds-space-3) var(--ds-space-3)"
       titleWidth="64%"
       [meta]="false"
       [chips]="2"
@@ -29,7 +29,7 @@
       }
     </ds-text>
 
-    <ds-stack [gap]="'0.5rem'">
+    <ds-stack [gap]="'var(--ds-space-2)'">
       @for (entry of visibleEntries(); track entry.id) {
         <ds-agenda-item
           [title]="entry.title"

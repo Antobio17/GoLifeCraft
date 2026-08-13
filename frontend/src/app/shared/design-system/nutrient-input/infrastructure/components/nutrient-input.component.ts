@@ -52,13 +52,14 @@ type NutrientVariant = "default" | "energy" | "sub";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.75rem;
-        padding: 0.75rem 1rem;
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-3) var(--ds-space-4);
         border-bottom: 1px solid var(--ds-border);
         cursor: text;
       }
       .ds-nrow--sub {
-        padding: 0.625rem 1rem 0.625rem 1.875rem;
+        padding: var(--ds-space-2) var(--ds-space-4) var(--ds-space-2)
+          var(--ds-space-8);
       }
       .ds-nrow--last {
         border-bottom: none;
@@ -69,18 +70,18 @@ type NutrientVariant = "default" | "energy" | "sub";
       .ds-nrow__name {
         display: flex;
         align-items: center;
-        gap: 0.5625rem;
-        font-size: 0.875rem;
+        gap: var(--ds-space-2);
+        font-size: var(--ds-text-md);
         font-weight: 700;
         color: var(--ds-text);
       }
       .ds-nrow--sub .ds-nrow__name {
-        font-size: 0.78125rem;
+        font-size: var(--ds-text-base);
         font-weight: 500;
         color: var(--ds-text-muted);
       }
       .ds-nrow--energy .ds-nrow__name {
-        font-size: 0.84375rem;
+        font-size: var(--ds-text-md);
         font-weight: 800;
       }
       .ds-nrow__icon {
@@ -90,15 +91,15 @@ type NutrientVariant = "default" | "energy" | "sub";
       .ds-nrow__field {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
       }
       .ds-nrow__unit {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
         font-weight: 600;
         color: var(--ds-text-meta);
       }
       .ds-nrow__unit--energy {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
         font-weight: 700;
         color: var(--ds-text-muted);
       }
@@ -109,9 +110,9 @@ type NutrientVariant = "default" | "energy" | "sub";
         background: transparent;
         border: none;
         border-bottom: 1.5px solid var(--ds-border-strong);
-        padding: 0.1875rem 2px;
+        padding: var(--ds-space-1) 2px;
         font: inherit;
-        font-size: 1rem;
+        font-size: var(--ds-text-lg);
         font-weight: 800;
         font-family: var(--ds-font-display, inherit);
         color: var(--ds-text);
@@ -121,7 +122,7 @@ type NutrientVariant = "default" | "energy" | "sub";
         border-bottom-color: var(--ds-primary);
       }
       .ds-nrow__input--sub {
-        font-size: 0.9375rem;
+        font-size: var(--ds-text-lg);
         font-weight: 700;
         color: var(--ds-text-muted);
       }
@@ -129,9 +130,9 @@ type NutrientVariant = "default" | "energy" | "sub";
         width: 4.625rem;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: 0.5625rem;
-        padding: 0.375rem 0.5625rem;
-        font-size: 0.9375rem;
+        border-radius: var(--ds-radius-md);
+        padding: var(--ds-space-1-5) var(--ds-space-2);
+        font-size: var(--ds-text-lg);
         color: var(--ds-primary);
       }
     `,

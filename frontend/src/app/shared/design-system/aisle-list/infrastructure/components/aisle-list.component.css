@@ -4,15 +4,15 @@
 
 .aisle-list__empty {
   text-align: center;
-  padding: 1.375rem 1rem;
+  padding: var(--ds-space-5) var(--ds-space-4);
   line-height: 1.45;
 }
 
 .aisle-list__row {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: 0.875rem;
-  padding: 0.625rem 0.75rem;
+  border-radius: var(--ds-radius-lg);
+  padding: var(--ds-space-2) var(--ds-space-3);
 }
 
 .aisle-list__row--slid {

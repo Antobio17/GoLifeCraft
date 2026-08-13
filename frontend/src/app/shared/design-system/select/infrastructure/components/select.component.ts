@@ -53,7 +53,7 @@ type SelectVariant = "pill" | "bare";
         position: relative;
         display: inline-flex;
         align-items: center;
-        gap: 0.4375rem;
+        gap: var(--ds-space-1-5);
       }
       .ds-select--fluid {
         flex: 1 1 0;
@@ -91,12 +91,12 @@ type SelectVariant = "pill" | "bare";
         border: 1px solid var(--ds-border-strong);
         background: var(--ds-surface);
         color: var(--ds-text);
-        border-radius: 1.25rem;
-        padding: 0.4375rem 0.75rem;
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-1-5) var(--ds-space-3);
       }
       .ds-select--pill .ds-select__native {
-        padding-right: 1.125rem;
-        font-size: 0.71875rem;
+        padding-right: var(--ds-space-4);
+        font-size: var(--ds-text-sm);
         font-weight: 600;
       }
       .ds-select--pill.is-active {
@@ -111,16 +111,16 @@ type SelectVariant = "pill" | "bare";
         border: 1px solid var(--ds-border-input);
         background: var(--ds-surface);
         color: var(--ds-text);
-        border-radius: var(--ds-radius-lg);
-        padding: 0.5rem 0.75rem;
+        border-radius: var(--ds-radius-md);
+        padding: var(--ds-space-2) var(--ds-space-3);
       }
       .ds-select--bare .ds-select__native {
-        padding-right: 1.125rem;
-        font-size: var(--ds-text-sm);
+        padding-right: var(--ds-space-4);
+        font-size: var(--ds-text-base);
         font-weight: 600;
       }
       .ds-select--bare.ds-select--lead .ds-select__native {
-        padding-left: 1.375rem;
+        padding-left: var(--ds-space-5);
       }
     `,
   ],

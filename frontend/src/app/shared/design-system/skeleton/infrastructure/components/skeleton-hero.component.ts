@@ -17,7 +17,7 @@ import { Component, Input } from "@angular/core";
       }
       .skhero {
         position: relative;
-        border-radius: 1.25rem;
+        border-radius: var(--ds-radius-xl);
         background: var(--ds-surface-inset);
         display: flex;
         align-items: center;
@@ -27,7 +27,7 @@ import { Component, Input } from "@angular/core";
       .skhero__shape {
         width: 3.625rem;
         height: 3.625rem;
-        border-radius: var(--ds-radius-3xl);
+        border-radius: var(--ds-radius-xl);
       }
       .skhero__badge {
         position: absolute;
@@ -35,7 +35,7 @@ import { Component, Input } from "@angular/core";
         right: 0.625rem;
         width: 4.25rem;
         height: 1.625rem;
-        border-radius: 0.5625rem;
+        border-radius: var(--ds-radius-md);
       }
     `,
   ],

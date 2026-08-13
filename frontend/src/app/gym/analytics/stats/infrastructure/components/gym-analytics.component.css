@@ -12,7 +12,7 @@
 }
 
 .panel__heatmap {
-  margin-top: 0.875rem;
+  margin-top: var(--ds-space-3);
   --ds-heat-level-0: var(--ds-forest-50);
   --ds-heat-level-1: var(--ds-forest-200);
   --ds-heat-level-2: var(--ds-forest-300);
@@ -39,9 +39,9 @@
   --line-dot-stroke: var(--ds-surface-brand);
   display: block;
   height: 5.625rem;
-  margin-top: 0.75rem;
+  margin-top: var(--ds-space-3);
 }
 
 .muscles {
-  margin-top: 0.875rem;
+  margin-top: var(--ds-space-3);
 }

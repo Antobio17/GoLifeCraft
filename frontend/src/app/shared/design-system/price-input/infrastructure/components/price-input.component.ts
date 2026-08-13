@@ -27,11 +27,11 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
       .ds-price {
         display: flex;
         align-items: center;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-xl);
-        padding: 0 0.8125rem;
+        border-radius: var(--ds-radius-lg);
+        padding: 0 var(--ds-space-3);
       }
       .ds-price:focus-within {
         border-color: var(--ds-border-focus);
@@ -42,9 +42,9 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
         min-width: 0;
         border: none;
         background: transparent;
-        padding: 0.6875rem 0;
+        padding: var(--ds-space-3) 0;
         font: inherit;
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
         outline: none;

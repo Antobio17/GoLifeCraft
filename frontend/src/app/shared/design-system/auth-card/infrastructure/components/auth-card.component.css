@@ -9,7 +9,8 @@
   flex-direction: column;
   justify-content: center;
   background: var(--ds-bg);
-  padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom));
+  padding: var(--ds-space-6) var(--ds-space-5)
+    calc(var(--ds-space-6) + env(safe-area-inset-bottom));
 }
 
 .auth__card {
@@ -35,8 +36,8 @@
 .auth__brand {
   display: flex;
   justify-content: center;
-  margin-top: 0.75rem;
-  margin-bottom: 1.5rem;
+  margin-top: var(--ds-space-3);
+  margin-bottom: var(--ds-space-6);
 }
 
 .auth__tabs {
@@ -44,20 +45,20 @@
   gap: 0;
   background: var(--ds-surface-inset);
   border: 1px solid var(--ds-border-hairline);
-  border-radius: 0.8125rem;
-  padding: 0.25rem;
-  margin-bottom: 1.25rem;
+  border-radius: var(--ds-radius-lg);
+  padding: var(--ds-space-1);
+  margin-bottom: var(--ds-space-5);
 }
 
 .auth__tab {
   flex: 1;
   border: none;
   background: transparent;
-  padding: 0.5625rem;
-  border-radius: 0.625rem;
+  padding: var(--ds-space-2);
+  border-radius: var(--ds-radius-md);
   font-family: var(--ds-font-body);
   font-weight: 600;
-  font-size: 0.8125rem;
+  font-size: var(--ds-text-md);
   color: var(--ds-text-muted);
   cursor: pointer;
   transition: all var(--ds-transition-base);
@@ -92,7 +93,7 @@
 
   .auth__brand {
     margin-top: 0;
-    margin-bottom: 1.875rem;
+    margin-bottom: var(--ds-space-8);
   }
 }
 
@@ -137,6 +138,6 @@
 
   .auth__form {
     grid-area: form;
-    margin-top: 1.125rem;
+    margin-top: var(--ds-space-4);
   }
 }

@@ -85,7 +85,7 @@ body.ds-scroll-locked {
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: var(--ds-space-6);
 }
 
 @media (max-width: 768px) {
@@ -110,7 +110,7 @@ body.ds-scroll-locked {
 .form-grid-2 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.75rem;
+  gap: var(--ds-space-6);
 }
 
 @media (min-width: 1024px) {
@@ -121,19 +121,19 @@ body.ds-scroll-locked {
 
 @media (max-width: 639px) {
   .form-grid-2 {
-    gap: 1rem;
+    gap: var(--ds-space-4);
   }
 }
 
 .section-stack {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: var(--ds-space-6);
 }
 
 @media (max-width: 1023px) {
   .section-stack {
-    gap: 1.25rem;
+    gap: var(--ds-space-5);
   }
 }
 
@@ -178,27 +178,27 @@ select:-webkit-autofill:focus {
 
 input:-webkit-autofill::first-line {
   font-family: var(--ds-font-body);
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-md);
 }
 
 @media (pointer: coarse) {
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
   select,
   textarea {
-    font-size: 1rem;
+    font-size: var(--ds-text-lg);
   }
 }
 
 .ds-field-block {
   display: flex;
   flex-direction: column;
-  gap: var(--ds-space-2, 0.5rem);
+  gap: var(--ds-space-2);
 }
 
 .ds-field-block__label {
-  font-size: var(--ds-text-label, 0.8125rem);
+  font-size: var(--ds-text-md);
   font-weight: 600;
-  color: var(--ds-text-label, #55524a);
+  color: var(--ds-text-muted);
 }
 
 .ds-field-block__required {

@@ -4,7 +4,7 @@
 
 .form-section {
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-2xl);
+  border-radius: var(--ds-radius-lg);
   background: var(--ds-surface-raised);
   box-shadow: var(--ds-shadow-card);
   display: flex;
@@ -18,14 +18,14 @@
 }
 
 .section-header {
-  padding: 1.125rem 1.5rem;
+  padding: var(--ds-space-4) var(--ds-space-6);
   border-bottom: 1px solid var(--ds-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 0;
   background: var(--ds-surface-raised);
-  border-radius: var(--ds-radius-2xl) var(--ds-radius-2xl) 0 0;
+  border-radius: var(--ds-radius-lg) var(--ds-radius-lg) 0 0;
 }
 
 .section-header.collapsible {
@@ -40,12 +40,12 @@
 
 .section-title {
   margin: 0;
-  font-size: var(--ds-text-base);
+  font-size: var(--ds-text-md);
   font-weight: var(--ds-weight-semibold);
   color: var(--ds-text);
   display: flex;
   align-items: center;
-  gap: var(--ds-space-3-5);
+  gap: var(--ds-space-3);
   letter-spacing: -0.3px;
   position: relative;
   z-index: 1;
@@ -73,7 +73,7 @@
 }
 
 .section-content {
-  padding: 1.5rem 1.5rem 0;
+  padding: var(--ds-space-6) var(--ds-space-6) 0;
   flex: 1;
 }
 
@@ -82,7 +82,7 @@
 }
 
 .form-section--headerless .section-content {
-  padding: 1.5rem;
+  padding: var(--ds-space-6);
 }
 
 .section-content.collapsed {
@@ -99,6 +99,6 @@
   }
 
   .section-title {
-    font-size: var(--ds-text-md);
+    font-size: var(--ds-text-lg);
   }
 }

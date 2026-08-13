@@ -33,10 +33,10 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
       .ds-macro {
         display: flex;
         align-items: center;
-        gap: 0.875rem;
+        gap: var(--ds-space-3);
         background: var(--ds-surface-inset);
-        border-radius: 1rem;
-        padding: 0.875rem 1rem;
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-3) var(--ds-space-4);
       }
       .ds-macro__kcal {
         display: flex;
@@ -46,19 +46,19 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
       .ds-macro__kcalValue {
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 1.75rem;
+        font-size: var(--ds-text-2xl);
         line-height: 1;
         color: var(--ds-primary);
       }
       .ds-macro__kcalUnit {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         color: var(--ds-text-muted);
         margin-top: 2px;
       }
       .ds-macro__bars {
         flex: 1 1 auto;
         display: flex;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
       }
       .ds-macro__bar {
         flex: 1 1 0;
@@ -67,8 +67,8 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
       }
       .ds-macro__line {
         height: 0.375rem;
-        border-radius: 0.25rem;
-        margin-bottom: 0.3125rem;
+        border-radius: var(--ds-radius-sm);
+        margin-bottom: var(--ds-space-1);
       }
       .ds-macro__line--protein {
         background: var(--ds-primary);
@@ -80,14 +80,14 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
         background: var(--ds-accent);
       }
       .ds-macro__label {
-        font-size: 0.625rem;
+        font-size: var(--ds-text-xs);
         color: var(--ds-text-muted);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .ds-macro__value {
-        font-size: 0.71875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 700;
         color: var(--ds-text);
       }

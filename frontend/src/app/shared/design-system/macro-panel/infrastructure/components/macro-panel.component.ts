@@ -58,12 +58,12 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
       .ds-mpanel {
         display: flex;
         flex-direction: column;
-        gap: 0.625rem;
+        gap: var(--ds-space-2);
         background: var(--ds-surface-brand);
         color: var(--ds-on-surface-brand);
         border: 1px solid transparent;
-        border-radius: 1rem;
-        padding: 0.75rem 0.875rem;
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-3);
       }
       :host-context([data-theme="dark"]) .ds-mpanel {
         border-color: var(--ds-border-hairline);
@@ -71,23 +71,23 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
       .ds-mpanel__energy {
         display: flex;
         align-items: baseline;
-        gap: 0.4375rem;
+        gap: var(--ds-space-1-5);
       }
       .ds-mpanel__kcal {
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 1.3125rem;
+        font-size: var(--ds-text-xl);
         line-height: 1;
         color: var(--ds-accent);
         white-space: nowrap;
       }
       .ds-mpanel__kcalGoal {
-        font-size: 0.71875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 600;
         color: color-mix(in srgb, var(--ds-on-surface-brand) 55%, transparent);
       }
       .ds-mpanel__caption {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -100,17 +100,17 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
       }
       .ds-mpanel__bars {
         display: flex;
-        gap: 0.5625rem;
+        gap: var(--ds-space-2);
       }
       .ds-mpanel__bar {
         flex: 1 1 0;
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
       }
       .ds-mpanel__label {
-        font-size: 0.625rem;
+        font-size: var(--ds-text-xs);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -159,7 +159,7 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         transition: width var(--ds-transition-base);
       }
       .ds-mpanel__value {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-bold);
         white-space: nowrap;
       }
@@ -175,16 +175,16 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
       }
       @media (min-width: 768px) {
         .ds-mpanel {
-          padding: 0.875rem 1rem;
+          padding: var(--ds-space-3) var(--ds-space-4);
         }
         .ds-mpanel__kcal {
-          font-size: 1.5625rem;
+          font-size: var(--ds-text-2xl);
         }
         .ds-mpanel__label {
-          font-size: 0.6875rem;
+          font-size: var(--ds-text-sm);
         }
         .ds-mpanel__value {
-          font-size: 0.75rem;
+          font-size: var(--ds-text-base);
         }
       }
     `,

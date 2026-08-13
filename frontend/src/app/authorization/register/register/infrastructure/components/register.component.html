@@ -8,8 +8,8 @@
   (tabSelected)="onTab($event)"
 >
   <form (ngSubmit)="onSubmit()">
-    <ds-stack [gap]="'0.8125rem'">
-      <ds-stack direction="row" gap="0.8125rem">
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-stack direction="row" gap="var(--ds-space-3)">
         <ds-field
           [label]="'register.name.label' | t"
           style="flex: 1; min-width: 0"

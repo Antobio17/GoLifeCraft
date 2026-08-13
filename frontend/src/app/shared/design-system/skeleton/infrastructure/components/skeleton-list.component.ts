@@ -53,13 +53,13 @@ import {
 })
 export class SkeletonListComponent {
   @Input() count = 4;
-  @Input() gap = "0.5rem";
+  @Input() gap = "var(--ds-space-2)";
   @Input() minColumn = "15rem";
   @Input() columns: number | null = 1;
   @Input() tabletColumns: number | null = null;
 
-  @Input() padding = "0.625rem 0.6875rem";
-  @Input() radius = "1rem";
+  @Input() padding = "var(--ds-space-2) var(--ds-space-3)";
+  @Input() radius = "var(--ds-radius-xl)";
   @Input() tone: "surface" | "brand" = "surface";
   @Input() alignTop = false;
   @Input() check = false;

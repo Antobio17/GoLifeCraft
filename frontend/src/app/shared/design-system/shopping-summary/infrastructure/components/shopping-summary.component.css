@@ -6,8 +6,8 @@
   background: var(--ds-primary);
   color: var(--ds-on-primary);
   border: 1px solid transparent;
-  border-radius: 1rem;
-  padding: 0.875rem 1rem;
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-3) var(--ds-space-4);
 }
 
 :host-context([data-theme="dark"]) .shopping-summary {
@@ -41,7 +41,7 @@
 .shopping-summary__bar {
   --ds-primary: var(--ds-accent);
   --ds-surface-inset: rgba(255, 255, 255, 0.18);
-  margin-top: 0.1875rem;
+  margin-top: var(--ds-space-1);
 }
 
 :host-context([data-theme="dark"]) .shopping-summary__bar {

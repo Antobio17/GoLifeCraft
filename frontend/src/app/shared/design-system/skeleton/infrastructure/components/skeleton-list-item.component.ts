@@ -27,8 +27,8 @@ export type SkeletonListItemTrailing =
   },
 })
 export class SkeletonListItemComponent {
-  @Input() padding = "0.625rem 0.6875rem";
-  @Input() radius = "1rem";
+  @Input() padding = "var(--ds-space-2) var(--ds-space-3)";
+  @Input() radius = "var(--ds-radius-xl)";
   @Input() surface = true;
   @Input() tone: "surface" | "brand" = "surface";
   @Input() alignTop = false;

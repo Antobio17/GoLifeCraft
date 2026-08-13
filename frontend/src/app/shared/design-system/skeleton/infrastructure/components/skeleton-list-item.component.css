@@ -6,13 +6,13 @@
 .skli {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: var(--ds-space-2);
   height: 100%;
   box-sizing: border-box;
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--skli-radius, 1rem);
-  padding: var(--skli-padding, 0.625rem 0.6875rem);
+  border-radius: var(--skli-radius, var(--ds-radius-xl));
+  padding: var(--skli-padding, var(--ds-space-2) var(--ds-space-3));
 }
 
 .skli--brand {
@@ -39,7 +39,7 @@
 .skli__row {
   display: flex;
   align-items: center;
-  gap: 0.6875rem;
+  gap: var(--ds-space-3);
   min-width: 0;
 }
 
@@ -50,13 +50,13 @@
 .skli__check {
   width: var(--skli-check, 1.625rem);
   height: var(--skli-check, 1.625rem);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-md);
 }
 
 .skli__tile {
   width: var(--skli-tile, 2.75rem);
   height: var(--skli-tile, 2.75rem);
-  border-radius: var(--skli-tile-radius, 0.75rem);
+  border-radius: var(--skli-tile-radius, var(--ds-radius-lg));
 }
 
 .skli__body {
@@ -64,14 +64,14 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: var(--ds-space-1-5);
 }
 
 .skli__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.625rem;
+  gap: var(--ds-space-2);
 }
 
 .skli__title {
@@ -95,14 +95,14 @@
 .skli__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3125rem;
+  gap: var(--ds-space-1);
   margin-top: 2px;
 }
 
 .skli__chip {
   width: 2.875rem;
   height: 1.125rem;
-  border-radius: 0.4375rem;
+  border-radius: var(--ds-radius-sm);
 }
 
 .skli__chips .skli__chip:nth-child(1) {
@@ -121,14 +121,14 @@
 .skli__pill {
   width: var(--skli-pill-w, 4.875rem);
   height: var(--skli-pill-h, 1.875rem);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-md);
 }
 
 .skli__stack {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.375rem;
+  gap: var(--ds-space-1-5);
 }
 
 .skli__price {
@@ -140,19 +140,19 @@
 .skli__actions {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: var(--ds-space-1-5);
 }
 
 .skli__action {
   width: 2rem;
   height: 2rem;
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-md);
 }
 
 .skli__button {
   width: 5.25rem;
   height: 2rem;
-  border-radius: 0.6875rem;
+  border-radius: var(--ds-radius-lg);
 }
 
 .skli__progress {
@@ -163,7 +163,7 @@
 
 .skli__foot {
   display: flex;
-  gap: 0.875rem;
+  gap: var(--ds-space-3);
 }
 
 .skli__foot-item {
@@ -179,5 +179,5 @@
 .skli__foot-button {
   width: 100%;
   height: 2.125rem;
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-lg);
 }

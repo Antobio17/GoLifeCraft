@@ -78,8 +78,8 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         background: var(--ds-surface-brand);
         color: var(--ds-on-surface-brand);
         border: 1px solid transparent;
-        border-radius: 1.375rem;
-        padding: 1.0625rem 1.125rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-4);
         box-shadow: var(--ds-shadow-card);
       }
       :host-context([data-theme="dark"]) .daysum {
@@ -91,20 +91,20 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         justify-content: space-between;
       }
       .daysum__eyebrow {
-        font-size: 0.65625rem;
+        font-size: var(--ds-text-xs);
         font-weight: 700;
         letter-spacing: 0.06em;
         color: var(--ds-accent);
       }
       .daysum__count {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         color: color-mix(in srgb, var(--ds-on-surface-brand) 60%, transparent);
       }
       .daysum__main {
         display: flex;
         align-items: center;
-        gap: 0.9375rem;
-        margin-top: 0.8125rem;
+        gap: var(--ds-space-4);
+        margin-top: var(--ds-space-3);
       }
       .daysum__ring {
         --ds-ring-fill: var(--ds-accent);
@@ -119,27 +119,27 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         --ds-ring-fill: var(--ds-danger);
       }
       .daysum__ring-value {
-        font-size: 0.875rem;
+        font-size: var(--ds-text-md);
         color: var(--ds-on-surface-brand);
       }
       .daysum__kcal-value {
         margin: 0;
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 1.5625rem;
+        font-size: var(--ds-text-2xl);
         line-height: 1;
       }
       :host-context([data-theme="dark"]) .daysum__kcal-value {
         font-weight: 700;
       }
       .daysum__kcal-goal {
-        font-size: 0.8125rem;
+        font-size: var(--ds-text-md);
         font-weight: 600;
         color: color-mix(in srgb, var(--ds-on-surface-brand) 55%, transparent);
       }
       .daysum__kcal-foot {
-        margin: 0.1875rem 0 0;
-        font-size: 0.71875rem;
+        margin: var(--ds-space-1) 0 0;
+        font-size: var(--ds-text-sm);
         color: color-mix(in srgb, var(--ds-on-surface-brand) 65%, transparent);
       }
       .daysum__kcal-foot--over {
@@ -149,13 +149,13 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
       .daysum__macros {
         display: flex;
         flex-direction: column;
-        gap: 0.5625rem;
-        margin-top: 1rem;
+        gap: var(--ds-space-2);
+        margin-top: var(--ds-space-4);
       }
       .macro {
         display: flex;
         flex-direction: column;
-        gap: 0.3125rem;
+        gap: var(--ds-space-1);
       }
       .macro__top {
         display: flex;
@@ -163,12 +163,12 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         justify-content: space-between;
       }
       .macro__label {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 600;
         color: color-mix(in srgb, var(--ds-on-surface-brand) 70%, transparent);
       }
       .macro__value {
-        font-size: 0.71875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 700;
         font-family: var(--ds-font-display);
       }
@@ -177,14 +177,14 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         color: color-mix(in srgb, var(--ds-on-surface-brand) 50%, transparent);
       }
       .macro__over-label {
-        margin-left: 0.1875rem;
+        margin-left: var(--ds-space-1);
         font-weight: 700;
         color: var(--ds-danger);
       }
       .macro__track {
         display: flex;
         height: 0.375rem;
-        border-radius: 62.4375rem;
+        border-radius: var(--ds-radius-pill);
         background: color-mix(
           in srgb,
           var(--ds-on-surface-brand) 13%,
@@ -195,16 +195,16 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
       .macro__fill {
         display: block;
         height: 100%;
-        border-radius: 62.4375rem;
+        border-radius: var(--ds-radius-pill);
         transition: width 0.4s cubic-bezier(0.6, 0.05, 0.28, 0.98);
       }
       .macro__fill--capped {
-        border-radius: 62.4375rem 0 0 62.4375rem;
+        border-radius: var(--ds-radius-pill) 0 0 var(--ds-radius-pill);
       }
       .macro__over {
         display: block;
         height: 100%;
-        border-radius: 0 62.4375rem 62.4375rem 0;
+        border-radius: 0 var(--ds-radius-pill) var(--ds-radius-pill) 0;
         background: var(--ds-danger);
         border-left: 2px solid var(--ds-surface-brand);
         transition: width 0.4s cubic-bezier(0.6, 0.05, 0.28, 0.98);
@@ -224,11 +224,11 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
       }
       @media (min-width: 768px) {
         .daysum {
-          padding: 1.375rem 1.5rem;
-          border-radius: 1.5rem;
+          padding: var(--ds-space-5) var(--ds-space-6);
+          border-radius: var(--ds-radius-lg);
         }
         .daysum__kcal-value {
-          font-size: 1.8125rem;
+          font-size: var(--ds-text-3xl);
         }
       }
     `,

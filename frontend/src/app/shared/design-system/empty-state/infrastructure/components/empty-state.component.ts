@@ -25,9 +25,9 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
+        gap: var(--ds-space-2);
         text-align: center;
-        padding: 2.5rem 1.5rem;
+        padding: 2.5rem var(--ds-space-6);
       }
       .ds-empty__icon {
         display: inline-flex;
@@ -35,7 +35,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         justify-content: center;
         width: 4rem;
         height: 4rem;
-        margin-bottom: 0.25rem;
+        margin-bottom: var(--ds-space-1);
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         color: var(--ds-text-meta);
@@ -43,19 +43,19 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .ds-empty__title {
         margin: 0;
         font-family: var(--ds-font-display);
-        font-size: var(--ds-text-lg);
+        font-size: var(--ds-text-xl);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
       }
       .ds-empty__text {
         margin: 0;
         max-width: 34ch;
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         color: var(--ds-text-muted);
         line-height: 1.5;
       }
       .ds-empty ::ng-deep > *:last-child {
-        margin-top: 0.5rem;
+        margin-top: var(--ds-space-2);
       }
     `,
   ],

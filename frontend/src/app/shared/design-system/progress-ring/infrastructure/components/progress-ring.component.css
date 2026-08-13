@@ -31,6 +31,6 @@
   background: var(--ds-ring-center, var(--ds-surface));
   font-family: var(--ds-font-display);
   font-weight: var(--ds-weight-bold);
-  font-size: 0.875rem;
+  font-size: var(--ds-text-md);
   line-height: 1;
 }

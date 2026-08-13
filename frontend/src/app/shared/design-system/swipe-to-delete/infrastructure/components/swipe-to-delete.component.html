@@ -1,11 +1,10 @@
-<div class="swipe" [style.border-radius.px]="radius">
+<div class="swipe" [style.border-radius]="radius">
   @if (!disabled) {
     <button
       type="button"
       class="swipe__delete"
+      [class.swipe__delete--revealed]="slid"
       [style.width.px]="reveal"
-      [style.border-top-right-radius.px]="radius + 3"
-      [style.border-bottom-right-radius.px]="radius + 3"
       [attr.aria-label]="removeLabel"
       (click)="onDelete()"
     >

@@ -40,17 +40,17 @@ type AddTileVariant = "inline" | "dashed";
         font-weight: 700;
       }
       .ds-add--inline {
-        gap: 0.3125rem;
+        gap: var(--ds-space-1);
         border: none;
-        padding: 0.3125rem;
-        font-size: 0.71875rem;
+        padding: var(--ds-space-1);
+        font-size: var(--ds-text-sm);
       }
       .ds-add--dashed {
-        gap: 0.4375rem;
+        gap: var(--ds-space-1-5);
         border: 1.5px dashed var(--ds-border-strong);
-        border-radius: 0.875rem;
-        padding: 0.6875rem;
-        font-size: 0.78125rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
+        font-size: var(--ds-text-base);
       }
     `,
   ],

@@ -1,4 +1,4 @@
-<ds-page-wrapper [gap]="'0.75rem'">
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getExercises.back' | t"
@@ -13,9 +13,9 @@
 
   @if (loading()) {
     <ds-skeleton-filters [search]="true" [segments]="2" />
-    <ds-stack [gap]="'1.125rem'">
+    <ds-stack [gap]="'var(--ds-space-4)'">
       @for (items of skeletonGroups; track $index) {
-        <ds-stack [gap]="'0.625rem'">
+        <ds-stack [gap]="'var(--ds-space-2)'">
           <ds-skeleton-section-header
             titleWidth="6rem"
             [count]="true"
@@ -26,9 +26,9 @@
             [columns]="null"
             minColumn="17.5rem"
             [tabletColumns]="2"
-            [gap]="'0.75rem'"
-            radius="1rem"
-            padding="0.6875rem 0.75rem"
+            [gap]="'var(--ds-space-3)'"
+            radius="var(--ds-radius-xl)"
+            padding="var(--ds-space-3) var(--ds-space-3)"
             [tile]="34"
             [tileRadius]="10"
             titleWidth="56%"
@@ -54,9 +54,9 @@
 
     @if (reloading()) {
       @if (view() === "grouped") {
-        <ds-stack [gap]="'1.125rem'">
+        <ds-stack [gap]="'var(--ds-space-4)'">
           @for (items of skeletonGroups; track $index) {
-            <ds-stack [gap]="'0.625rem'">
+            <ds-stack [gap]="'var(--ds-space-2)'">
               <ds-skeleton-section-header
                 titleWidth="6rem"
                 [count]="true"
@@ -67,9 +67,9 @@
                 [columns]="null"
                 minColumn="17.5rem"
                 [tabletColumns]="2"
-                [gap]="'0.75rem'"
-                radius="1rem"
-                padding="0.6875rem 0.75rem"
+                [gap]="'var(--ds-space-3)'"
+                radius="var(--ds-radius-xl)"
+                padding="var(--ds-space-3) var(--ds-space-3)"
                 [tile]="34"
                 [tileRadius]="10"
                 titleWidth="56%"
@@ -86,9 +86,9 @@
           [columns]="null"
           minColumn="17.5rem"
           [tabletColumns]="2"
-          [gap]="'0.75rem'"
-          radius="1rem"
-          padding="0.6875rem 0.75rem"
+          [gap]="'var(--ds-space-3)'"
+          radius="var(--ds-radius-xl)"
+          padding="var(--ds-space-3) var(--ds-space-3)"
           [tile]="34"
           [tileRadius]="10"
           titleWidth="56%"
@@ -125,9 +125,9 @@
           [columns]="null"
           minColumn="17.5rem"
           [tabletColumns]="2"
-          [gap]="'0.75rem'"
-          radius="1rem"
-          padding="0.6875rem 0.75rem"
+          [gap]="'var(--ds-space-3)'"
+          radius="var(--ds-radius-xl)"
+          padding="var(--ds-space-3) var(--ds-space-3)"
           [tile]="34"
           [tileRadius]="10"
           titleWidth="56%"
@@ -142,10 +142,14 @@
         (reached)="loadMore()"
       />
     } @else {
-      <ds-stack [gap]="'1.125rem'">
+      <ds-stack [gap]="'var(--ds-space-4)'">
         @for (group of groupedItems(); track group.muscle) {
-          <ds-stack [gap]="'0.625rem'">
-            <ds-stack direction="row" align="center" [gap]="'0.625rem'">
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-2)'"
+            >
               <ds-text variant="label">{{ group.muscle }}</ds-text>
               <ds-chip>{{ group.count }}</ds-chip>
               <ds-divider [grow]="true" />
@@ -166,8 +170,8 @@
 </ds-page-wrapper>
 
 <ng-template #exerciseRow let-row>
-  <ds-card [padding]="'0.6875rem 0.75rem'">
-    <ds-stack direction="row" align="center" [gap]="'0.6875rem'">
+  <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
+    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
       <ds-icon-badge
         [icon]="row.icon"
         tone="brand"

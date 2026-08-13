@@ -28,13 +28,13 @@ import { Component, Input } from "@angular/core";
       .ds-page-heading {
         display: flex;
         align-items: center;
-        gap: 0.875rem;
+        gap: var(--ds-space-3);
         flex-wrap: wrap;
       }
       .ds-page-heading__tile {
         width: 3.25rem;
         height: 3.25rem;
-        border-radius: 1rem;
+        border-radius: var(--ds-radius-xl);
         background: var(--ds-surface-brand);
         color: var(--ds-accent);
         display: flex;
@@ -53,7 +53,7 @@ import { Component, Input } from "@angular/core";
       .ds-page-heading__title-row {
         display: flex;
         align-items: center;
-        gap: 0.625rem;
+        gap: var(--ds-space-2);
       }
       .ds-page-heading__title {
         margin: 0;
@@ -65,16 +65,16 @@ import { Component, Input } from "@angular/core";
         line-height: 1.15;
       }
       .ds-page-heading__count {
-        font-size: var(--ds-text-xs);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-extrabold);
         color: var(--ds-on-accent);
         background: var(--ds-accent);
         border-radius: var(--ds-radius-pill);
-        padding: 2px 0.5625rem;
+        padding: 2px var(--ds-space-2);
       }
       .ds-page-heading__subtitle {
         margin: 0;
-        font-size: var(--ds-text-label);
+        font-size: var(--ds-text-md);
         color: var(--ds-text-muted);
       }
       .ds-page-heading__action {

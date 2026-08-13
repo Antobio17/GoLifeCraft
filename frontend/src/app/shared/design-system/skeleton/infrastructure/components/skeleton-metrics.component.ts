@@ -23,7 +23,7 @@ import { Component, Input } from "@angular/core";
       }
       .skmet {
         display: flex;
-        gap: var(--skmet-gap, 0.5rem);
+        gap: var(--skmet-gap, var(--ds-space-2));
       }
       .skmet__card {
         flex: 1 1 0;
@@ -31,11 +31,11 @@ import { Component, Input } from "@angular/core";
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        gap: 0.4375rem;
+        gap: var(--ds-space-1-5);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--skmet-radius, 0.875rem);
-        padding: var(--skmet-padding, 0.75rem 0.8125rem);
+        border-radius: var(--skmet-radius, var(--ds-radius-lg));
+        padding: var(--skmet-padding, var(--ds-space-3) var(--ds-space-3));
       }
       .skmet__card--feature {
         --ds-skeleton-base: color-mix(
@@ -70,9 +70,9 @@ import { Component, Input } from "@angular/core";
 })
 export class SkeletonMetricsComponent {
   @Input() count = 3;
-  @Input() gap = "0.5rem";
-  @Input() radius = "0.875rem";
-  @Input() padding = "0.75rem 0.8125rem";
+  @Input() gap = "var(--ds-space-2)";
+  @Input() radius = "var(--ds-radius-lg)";
+  @Input() padding = "var(--ds-space-3) var(--ds-space-3)";
   @Input() feature = false;
 
   get metricArray(): number[] {

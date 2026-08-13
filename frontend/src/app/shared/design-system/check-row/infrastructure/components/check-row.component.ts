@@ -33,15 +33,15 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-checkrow {
         display: flex;
         align-items: center;
-        gap: 0.6875rem;
+        gap: var(--ds-space-3);
         width: 100%;
         text-align: left;
         appearance: none;
         border: none;
         cursor: pointer;
         background: var(--ds-surface-inset);
-        border-radius: 0.875rem;
-        padding: 0.5625rem 0.6875rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-2) var(--ds-space-3);
         font: inherit;
         color: inherit;
         transition: opacity var(--ds-transition-fast);
@@ -56,7 +56,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         justify-content: center;
         width: 1.625rem;
         height: 1.625rem;
-        border-radius: 0.5rem;
+        border-radius: var(--ds-radius-md);
         background: var(--ds-surface);
         border: 1.5px solid var(--ds-border-strong);
         color: transparent;
@@ -76,9 +76,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         justify-content: center;
         width: 2.25rem;
         height: 2.25rem;
-        border-radius: 0.6875rem;
+        border-radius: var(--ds-radius-lg);
         background: var(--ds-surface);
-        font-size: 1.125rem;
+        font-size: var(--ds-text-xl);
       }
       .ds-checkrow__text {
         flex: 1 1 auto;
@@ -88,7 +88,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         gap: 2px;
       }
       .ds-checkrow__name {
-        font-size: 0.8125rem;
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-bold);
         line-height: 1.2;
         white-space: nowrap;
@@ -96,7 +96,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         text-overflow: ellipsis;
       }
       .ds-checkrow__meta {
-        font-size: 0.65625rem;
+        font-size: var(--ds-text-xs);
         color: var(--ds-text-muted);
       }
     `,

@@ -22,7 +22,7 @@ type TextAlign = "start" | "center" | "end";
         margin: 0;
         font-family: var(--ds-font-body);
         color: var(--ds-text-body);
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         line-height: var(--ds-leading-normal);
       }
       :host([inline]) {
@@ -33,7 +33,7 @@ type TextAlign = "start" | "center" | "end";
       }
       :host([variant="meta"]) {
         color: var(--ds-text-meta);
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
       }
       :host([variant="strong"]) {
         color: var(--ds-text);
@@ -41,7 +41,7 @@ type TextAlign = "start" | "center" | "end";
       }
       :host([variant="danger"]) {
         color: var(--ds-danger);
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
       }
       :host([variant="success"]) {
@@ -56,7 +56,7 @@ type TextAlign = "start" | "center" | "end";
       }
       :host([variant="label"]) {
         color: var(--ds-text-meta);
-        font-size: var(--ds-text-xs);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-bold);
         letter-spacing: 0.05em;
         text-transform: uppercase;

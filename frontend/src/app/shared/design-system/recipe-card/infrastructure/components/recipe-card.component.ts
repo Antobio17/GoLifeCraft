@@ -27,7 +27,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       }
       .ds-rcard {
         display: flex;
-        gap: 0.75rem;
+        gap: var(--ds-space-3);
         width: 100%;
         height: 100%;
         text-align: left;
@@ -37,8 +37,8 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         cursor: pointer;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: 1rem;
-        padding: 0.6875rem;
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-3);
         transition: border-color var(--ds-transition-fast);
       }
       .ds-rcard:hover {
@@ -47,13 +47,13 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       .ds-rcard__emoji {
         width: 3.625rem;
         height: 3.625rem;
-        border-radius: 0.875rem;
+        border-radius: var(--ds-radius-lg);
         background: var(--ds-surface-inset);
         flex: 0 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.75rem;
+        font-size: var(--ds-text-2xl);
       }
       .ds-rcard__body {
         flex: 1;
@@ -62,17 +62,17 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         flex-direction: column;
       }
       .ds-rcard__name {
-        font-size: 0.875rem;
+        font-size: var(--ds-text-md);
         font-weight: 700;
         line-height: 1.2;
       }
       .ds-rcard__meta {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         color: var(--ds-text-muted);
-        margin-top: 0.1875rem;
+        margin-top: var(--ds-space-1);
       }
       .ds-rcard__badges {
-        margin-top: 0.5rem;
+        margin-top: var(--ds-space-2);
       }
     `,
   ],

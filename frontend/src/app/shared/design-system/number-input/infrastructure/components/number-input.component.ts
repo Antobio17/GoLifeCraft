@@ -56,23 +56,23 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-num {
         display: flex;
         align-items: center;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
       }
       .ds-num--stepper {
         background: var(--ds-surface-inset);
         border-radius: var(--ds-radius-pill);
-        padding: 0.1875rem;
+        padding: var(--ds-space-1);
       }
       .ds-num__field {
         min-width: 0;
         width: 100%;
         box-sizing: border-box;
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-md);
         background: var(--ds-surface);
-        padding: 0.625rem 0.75rem;
+        padding: var(--ds-space-2) var(--ds-space-3);
         font: inherit;
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text);
         text-align: center;
@@ -87,7 +87,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-num--stepper .ds-num__field {
         border: none;
         background: transparent;
-        padding: 0.375rem 2px;
+        padding: var(--ds-space-1-5) 2px;
         width: 2.75rem;
       }
       .ds-num__field:focus {
@@ -124,12 +124,12 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         cursor: not-allowed;
       }
       .ds-num__unit {
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-meta);
       }
       .ds-num--boxed {
-        gap: 0.1875rem;
+        gap: var(--ds-space-1);
         background: transparent;
         border-radius: 0;
         padding: 0;
@@ -138,7 +138,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         width: 1.5rem;
         height: 1.75rem;
         border: 1px solid var(--ds-border);
-        border-radius: 0.4375rem;
+        border-radius: var(--ds-radius-sm);
         background: var(--ds-surface);
         color: var(--ds-primary);
         box-shadow: none;
@@ -152,10 +152,10 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         width: 0;
         min-width: 0;
         border: 1px solid var(--ds-border);
-        border-radius: 0.4375rem;
+        border-radius: var(--ds-radius-sm);
         background: var(--ds-surface);
-        padding: 0.375rem 2px;
-        font-size: 0.8125rem;
+        padding: var(--ds-space-1-5) 2px;
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-bold);
       }
       .ds-num--boxed .ds-num__field:focus {
@@ -163,7 +163,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         border-color: var(--ds-border-focus);
       }
       .ds-num--boxed .ds-num__unit {
-        margin-left: 0.1875rem;
+        margin-left: var(--ds-space-1);
       }
     `,
   ],

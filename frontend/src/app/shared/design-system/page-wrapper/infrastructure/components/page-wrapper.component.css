@@ -11,7 +11,7 @@
 
 .pw-container {
   margin: 0 auto;
-  padding: 1.5rem 2rem 3rem;
+  padding: var(--ds-space-6) var(--ds-space-8) 3rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,14 +20,14 @@
 :host ::ng-deep .pw-container > ds-list-filters + ds-list-table,
 :host ::ng-deep .pw-container > ds-list-table + ds-pagination,
 :host ::ng-deep .pw-container > ds-list-filters + ds-pagination {
-  margin-top: -1rem;
+  margin-top: calc(-1 * var(--ds-space-4));
 }
 
 /* Unified list card: groups filters + table + pagination behind one shell. */
 :host ::ng-deep .pw-container > .list-card {
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: 0.875rem;
+  border-radius: var(--ds-radius-lg);
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
 }
@@ -41,24 +41,24 @@
     overflow: visible;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--ds-space-4);
   }
 }
 
 @media (max-width: 1024px) {
   .pw-container {
-    padding: 1.25rem 1.25rem 2rem;
+    padding: var(--ds-space-5) var(--ds-space-5) var(--ds-space-8);
   }
 }
 
 @media (max-width: 768px) {
   .pw-container {
-    padding: 1rem 1rem 1.5rem;
+    padding: var(--ds-space-4) var(--ds-space-4) var(--ds-space-6);
   }
 }
 
 @media (max-width: 480px) {
   .pw-container {
-    padding: 0.875rem 1rem 1.25rem;
+    padding: var(--ds-space-3) var(--ds-space-4) var(--ds-space-5);
   }
 }

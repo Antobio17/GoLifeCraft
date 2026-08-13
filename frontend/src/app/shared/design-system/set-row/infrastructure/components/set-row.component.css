@@ -5,10 +5,10 @@
 .set-row {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: var(--ds-space-1-5);
   background: var(--ds-bg);
-  padding: 0.3125rem 0.375rem;
-  border-radius: 0.5rem;
+  padding: var(--ds-space-1) var(--ds-space-1-5);
+  border-radius: var(--ds-radius-md);
 }
 
 .set-row--slid {
@@ -26,7 +26,7 @@
   text-align: center;
   font-family: var(--ds-font-display);
   font-weight: 800;
-  font-size: 0.75rem;
+  font-size: var(--ds-text-base);
   color: var(--ds-primary);
 }
 
@@ -39,7 +39,7 @@
   flex: 0 0 auto;
   width: 1.875rem;
   height: 1.875rem;
-  border-radius: 0.5625rem;
+  border-radius: var(--ds-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;

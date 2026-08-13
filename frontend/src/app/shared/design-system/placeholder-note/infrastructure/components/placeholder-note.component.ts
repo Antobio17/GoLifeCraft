@@ -11,10 +11,10 @@ import { Component, Input } from "@angular/core";
       .ds-placeholder {
         text-align: center;
         color: var(--ds-text-muted);
-        font-size: 0.75rem;
-        padding: 0.9375rem 0.5rem;
+        font-size: var(--ds-text-base);
+        padding: var(--ds-space-4) var(--ds-space-2);
         border: 1.5px dashed var(--ds-border-strong);
-        border-radius: 0.875rem;
+        border-radius: var(--ds-radius-lg);
       }
     `,
   ],

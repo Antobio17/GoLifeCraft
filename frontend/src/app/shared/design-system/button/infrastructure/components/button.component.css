@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4375rem;
+  gap: var(--ds-space-1-5);
   font-family: var(--ds-font-body);
   font-weight: var(--ds-weight-semibold);
   letter-spacing: var(--ds-tracking-tight);
@@ -26,25 +26,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4375rem;
+  gap: var(--ds-space-1-5);
 }
 
 /* ---- Tamaños ---- */
 .ds-btn--lg {
-  padding: 0.625rem 1.375rem;
-  font-size: var(--ds-text-base);
-  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-2) var(--ds-space-5);
+  font-size: var(--ds-text-md);
+  border-radius: var(--ds-radius-lg);
 }
 
 .ds-btn--md {
   padding: var(--ds-btn-y) var(--ds-btn-x);
-  font-size: var(--ds-text-label);
-  border-radius: var(--ds-radius-lg);
+  font-size: var(--ds-text-md);
+  border-radius: var(--ds-radius-md);
 }
 
 .ds-btn--sm {
   padding: var(--ds-btn-sm-y) var(--ds-btn-sm-x);
-  font-size: 0.78125rem;
+  font-size: var(--ds-text-base);
   border-radius: var(--ds-radius-md);
 }
 
@@ -76,7 +76,7 @@
 .ds-btn--icon-lg {
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-lg);
 }
 
 /* ---- Variante: primary (CTA sólida de marca) ---- */
@@ -199,7 +199,7 @@
   color: var(--ds-primary);
   border-color: transparent;
   padding: 0;
-  font-size: var(--ds-text-sm);
+  font-size: var(--ds-text-base);
   font-weight: var(--ds-weight-semibold);
 }
 

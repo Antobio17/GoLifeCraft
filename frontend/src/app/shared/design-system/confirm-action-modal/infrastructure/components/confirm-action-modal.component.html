@@ -5,8 +5,8 @@
   [closeLabel]="cancelLabel | t"
   (closed)="onDismiss()"
 >
-  <ds-stack gap="1rem">
-    <ds-stack direction="row" gap="0.75rem" align="start">
+  <ds-stack gap="var(--ds-space-4)">
+    <ds-stack direction="row" gap="var(--ds-space-3)" align="start">
       <ds-icon-badge
         [icon]="badgeIcon"
         [tone]="iconVariant"
@@ -28,7 +28,7 @@
       <ds-note icon="alertCircle" tone="danger">{{ warningText | t }}</ds-note>
     }
 
-    <ds-stack gap="0.625rem">
+    <ds-stack gap="var(--ds-space-2)">
       <ds-button
         [variant]="confirmVariant"
         size="md"

@@ -22,7 +22,7 @@ type IconBadgeTone = "neutral" | "brand" | "danger" | "success";
         justify-content: center;
         width: var(--badge-size, 2.5rem);
         height: var(--badge-size, 2.5rem);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-lg);
         background: var(--badge-bg, var(--ds-surface-inset));
         color: var(--badge-color, var(--ds-text-body));
       }

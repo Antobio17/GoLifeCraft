@@ -12,7 +12,7 @@ type StackJustify = "start" | "center" | "end" | "between";
       :host {
         display: flex;
         flex-direction: var(--stack-dir, column);
-        gap: var(--stack-gap, 1rem);
+        gap: var(--stack-gap, var(--ds-space-4));
         align-items: var(--stack-align, stretch);
         justify-content: var(--stack-justify, flex-start);
         flex-wrap: var(--stack-wrap, nowrap);
@@ -35,7 +35,7 @@ type StackJustify = "start" | "center" | "end" | "between";
 })
 export class StackComponent {
   @Input() direction: StackDirection = "column";
-  @Input() gap = "1rem";
+  @Input() gap = "var(--ds-space-4)";
   @Input() align: StackAlign = "stretch";
   @Input() justify: StackJustify = "start";
   @Input() wrap = false;

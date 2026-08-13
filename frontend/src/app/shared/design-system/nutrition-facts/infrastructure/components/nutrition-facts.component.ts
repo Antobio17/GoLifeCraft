@@ -29,32 +29,32 @@ import { NutritionRow } from "../../domain/models/nutrition-row.model";
       .ds-ntable__row {
         display: flex;
         justify-content: space-between;
-        padding: 0.5625rem 0;
+        padding: var(--ds-space-2) 0;
         border-bottom: 1px solid var(--ds-border);
       }
       .ds-ntable__row--sub {
-        padding-left: 0.75rem;
+        padding-left: var(--ds-space-3);
       }
       .ds-ntable__row--last {
         border-bottom: none;
       }
       .ds-ntable__label {
-        font-size: 0.8125rem;
+        font-size: var(--ds-text-md);
         font-weight: 600;
         color: var(--ds-text);
       }
       .ds-ntable__row--sub .ds-ntable__label {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
         font-weight: 500;
         color: var(--ds-text-muted);
       }
       .ds-ntable__value {
-        font-size: 0.8125rem;
+        font-size: var(--ds-text-md);
         font-weight: 700;
         color: var(--ds-text);
       }
       .ds-ntable__row--sub .ds-ntable__value {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
         font-weight: 600;
         color: var(--ds-text-muted);
       }

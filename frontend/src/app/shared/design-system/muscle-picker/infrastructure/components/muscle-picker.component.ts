@@ -52,15 +52,15 @@ export interface MuscleRegion {
       .ds-muscle-picker {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--ds-space-4);
       }
       .ds-muscle-picker__group {
         display: flex;
         flex-direction: column;
-        gap: 0.5625rem;
+        gap: var(--ds-space-2);
       }
       .ds-muscle-picker__region {
-        font-size: var(--ds-text-xs);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-bold);
         letter-spacing: 0.05em;
         text-transform: uppercase;
@@ -69,21 +69,21 @@ export interface MuscleRegion {
       .ds-muscle-picker__chips {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: var(--ds-space-2);
       }
       .ds-muscle-chip {
         display: inline-flex;
         align-items: center;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
         appearance: none;
         cursor: pointer;
         border: 1px solid var(--ds-border-input);
         background: var(--ds-surface);
         color: var(--ds-text-muted);
         border-radius: var(--ds-radius-pill);
-        padding: 0.5rem 0.8125rem;
+        padding: var(--ds-space-2) var(--ds-space-3);
         font: inherit;
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         line-height: 1;
         user-select: none;

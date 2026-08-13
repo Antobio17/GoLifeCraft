@@ -86,7 +86,7 @@ import { EmojiGroup } from "../../domain/models/emoji-group.model";
         cursor: pointer;
         width: 4rem;
         height: 4rem;
-        border-radius: 1rem;
+        border-radius: var(--ds-radius-xl);
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border);
         display: flex;
@@ -99,7 +99,7 @@ import { EmojiGroup } from "../../domain/models/emoji-group.model";
         cursor: not-allowed;
       }
       .ds-emoji-trigger__preview {
-        font-size: 2.125rem;
+        font-size: var(--ds-text-3xl);
         line-height: 1;
       }
       .ds-emoji-trigger__badge {
@@ -108,7 +108,7 @@ import { EmojiGroup } from "../../domain/models/emoji-group.model";
         bottom: -0.3125rem;
         width: 1.5rem;
         height: 1.5rem;
-        border-radius: 0.5rem;
+        border-radius: var(--ds-radius-md);
         background: var(--ds-primary);
         color: var(--ds-on-primary);
         display: flex;
@@ -119,21 +119,21 @@ import { EmojiGroup } from "../../domain/models/emoji-group.model";
       .ds-emoji-sheet {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--ds-space-4);
       }
       .ds-emoji-sheet__empty {
         margin: 0;
-        padding: 0.5rem 2px;
-        font-size: var(--ds-text-sm);
+        padding: var(--ds-space-2) 2px;
+        font-size: var(--ds-text-base);
         color: var(--ds-text-meta);
       }
       .ds-emoji-sheet__group {
         display: flex;
         flex-direction: column;
-        gap: 0.5625rem;
+        gap: var(--ds-space-2);
       }
       .ds-emoji-sheet__region {
-        font-size: var(--ds-text-xs);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-bold);
         letter-spacing: 0.05em;
         text-transform: uppercase;
@@ -142,7 +142,7 @@ import { EmojiGroup } from "../../domain/models/emoji-group.model";
       .ds-emoji-sheet__grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(2.875rem, 1fr));
-        gap: 0.5625rem;
+        gap: var(--ds-space-2);
       }
       .ds-emoji-cell {
         display: inline-flex;
@@ -152,10 +152,10 @@ import { EmojiGroup } from "../../domain/models/emoji-group.model";
         cursor: pointer;
         border: 1px solid var(--ds-border);
         background: var(--ds-surface-subtle);
-        border-radius: 0.8125rem;
+        border-radius: var(--ds-radius-lg);
         height: 3.125rem;
         font: inherit;
-        font-size: 1.5625rem;
+        font-size: var(--ds-text-2xl);
         line-height: 1;
         user-select: none;
         transition: all 0.14s ease;

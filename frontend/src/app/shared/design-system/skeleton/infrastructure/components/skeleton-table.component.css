@@ -2,7 +2,7 @@
 .skt-desktop {
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: 0.875rem;
+  border-radius: var(--ds-radius-lg);
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
 }
@@ -25,14 +25,14 @@
 .skt-header-cell {
   display: flex;
   align-items: center;
-  padding: 0.625rem 1.25rem;
+  padding: var(--ds-space-2) var(--ds-space-5);
 }
 
 .skt-header-bar {
   height: 0.625rem;
   width: 60%;
   max-width: 6.875rem;
-  border-radius: 0.25rem;
+  border-radius: var(--ds-radius-sm);
 }
 
 .skt-header-bar-sm {
@@ -42,7 +42,7 @@
 
 .skt-right {
   justify-content: flex-end;
-  gap: 0.375rem;
+  gap: var(--ds-space-1-5);
 }
 
 .skt-row {
@@ -62,7 +62,7 @@
   align-items: center;
   min-width: 0;
   overflow: hidden;
-  padding: 0.875rem 1.25rem;
+  padding: var(--ds-space-3) var(--ds-space-5);
 }
 
 .skt-cell-bar {
@@ -73,7 +73,7 @@
 .skt-btn {
   width: 2rem;
   height: 2rem;
-  border-radius: 0.5rem;
+  border-radius: var(--ds-radius-md);
   flex-shrink: 0;
 }
 
@@ -117,12 +117,12 @@
 .skt-mobile {
   display: none;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: var(--ds-space-2);
 }
 
 .skt-card {
   background: var(--ds-surface-raised);
-  border-radius: 0.875rem;
+  border-radius: var(--ds-radius-lg);
   border: 1px solid var(--ds-border);
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
@@ -132,8 +132,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.875rem 0.875rem 0.625rem;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-3) var(--ds-space-3) var(--ds-space-2);
 }
 
 .skt-card-title {
@@ -144,33 +144,33 @@
 .skt-badge {
   height: 1.375rem;
   width: 4.875rem;
-  border-radius: 1.25rem;
+  border-radius: var(--ds-radius-xl);
 }
 
 .skt-card-details {
-  padding: 0.625rem 0.875rem 0.75rem;
+  padding: var(--ds-space-2) var(--ds-space-3) var(--ds-space-3);
   display: flex;
   flex-direction: column;
-  gap: 0.4375rem;
+  gap: var(--ds-space-1-5);
 }
 
 .skt-card-meta-row {
   display: flex;
   align-items: center;
-  gap: 0.3125rem;
+  gap: var(--ds-space-1);
 }
 
 .skt-card-label {
   height: 0.5625rem;
   width: 3rem;
   flex-shrink: 0;
-  border-radius: 0.25rem;
+  border-radius: var(--ds-radius-sm);
 }
 
 .skt-card-value {
   height: 0.6875rem;
   width: 4rem;
-  border-radius: 0.25rem;
+  border-radius: var(--ds-radius-sm);
 }
 
 .skt-card-value-sm {
@@ -179,22 +179,22 @@
 
 .skt-card-footer {
   display: flex;
-  gap: 0.5rem;
-  padding: 0.625rem 0.75rem 0.75rem;
+  gap: var(--ds-space-2);
+  padding: var(--ds-space-2) var(--ds-space-3) var(--ds-space-3);
   border-top: 1px solid var(--ds-border);
 }
 
 .skt-card-action {
   flex: 1;
   height: 2.25rem;
-  border-radius: 0.5rem;
+  border-radius: var(--ds-radius-md);
 }
 
 .skt-card-action-icon {
   width: 2.5rem;
   flex-shrink: 0;
   height: 2.25rem;
-  border-radius: 0.5rem;
+  border-radius: var(--ds-radius-md);
 }
 
 /* Staggered card delays */
@@ -216,20 +216,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1.25rem;
-  margin-top: 0.875rem;
+  padding: var(--ds-space-3) var(--ds-space-5);
+  margin-top: var(--ds-space-3);
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: 0.875rem;
+  border-radius: var(--ds-radius-lg);
   box-shadow: var(--ds-shadow-card);
-  gap: 1rem;
+  gap: var(--ds-space-4);
   flex-wrap: wrap;
 }
 
 .skt-pagination-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--ds-space-4);
   flex-wrap: wrap;
 }
 
@@ -241,33 +241,33 @@
 .skt-pagination-select {
   height: 1.625rem;
   width: 8.125rem;
-  border-radius: 0.4375rem;
+  border-radius: var(--ds-radius-sm);
 }
 
 .skt-pagination-controls {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: var(--ds-space-1-5);
 }
 
 .skt-pagination-btn {
   height: 1.875rem;
   width: 5.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--ds-radius-md);
 }
 
 .skt-pagination-pages {
   height: 1.625rem;
   width: 3.5rem;
-  border-radius: 0.4375rem;
+  border-radius: var(--ds-radius-sm);
 }
 
 @media (max-width: 768px) {
   .skt-pagination {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
-    padding: 0.875rem 1rem;
+    gap: var(--ds-space-3);
+    padding: var(--ds-space-3) var(--ds-space-4);
   }
 
   .skt-pagination-info {
@@ -277,7 +277,7 @@
   .skt-pagination-controls {
     justify-content: center;
     width: 100%;
-    gap: 0.5rem;
+    gap: var(--ds-space-2);
   }
 
   .skt-pagination-showing {
@@ -312,11 +312,11 @@
 /* ── Responsive ──────────────────────────── */
 @media (min-width: 769px) and (max-width: 1024px) {
   .skt-header-cell {
-    padding: 0.5625rem 0.875rem;
+    padding: var(--ds-space-2) var(--ds-space-3);
   }
 
   .skt-cell {
-    padding: 0.75rem 0.875rem;
+    padding: var(--ds-space-3);
   }
 }
 

@@ -25,7 +25,7 @@ import { Component, Input } from "@angular/core";
       }
       .skchip {
         display: flex;
-        gap: var(--skchip-gap, 0.4375rem);
+        gap: var(--skchip-gap, var(--ds-space-1-5));
         overflow: hidden;
       }
       .skchip--wrap {
@@ -51,7 +51,7 @@ import { Component, Input } from "@angular/core";
 export class SkeletonChipsComponent {
   @Input() count = 3;
   @Input() height = "2rem";
-  @Input() gap = "0.4375rem";
+  @Input() gap = "var(--ds-space-1-5)";
   @Input() wrap = false;
   @Input() equal = false;
   @Input() radius: string | null = null;

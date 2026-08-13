@@ -5,8 +5,8 @@
 .diary-entry__row {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: 0.875rem;
-  padding: 0.625rem 0.6875rem;
+  border-radius: var(--ds-radius-lg);
+  padding: var(--ds-space-2) var(--ds-space-3);
 }
 
 .diary-entry__row--expanded {
@@ -19,7 +19,7 @@
 }
 
 ds-text.diary-entry__name {
-  font-size: 0.8125rem;
+  font-size: var(--ds-text-md);
   font-weight: 700;
   line-height: 1.25;
   color: var(--ds-text);
@@ -34,10 +34,10 @@ ds-text.diary-entry__qty {
   flex: 0 0 auto;
   align-self: center;
   background: var(--ds-surface-inset);
-  border-radius: 0.625rem;
-  padding: 0.3125rem 0.5625rem;
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-space-1) var(--ds-space-2);
   font-family: var(--ds-font-display);
-  font-size: 0.78125rem;
+  font-size: var(--ds-text-base);
   font-weight: 800;
   color: var(--ds-text);
   white-space: nowrap;

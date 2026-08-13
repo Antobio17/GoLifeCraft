@@ -19,7 +19,7 @@ import {
       :host {
         display: flex;
         align-items: center;
-        gap: var(--ds-scroll-row-gap, 0.25rem);
+        gap: var(--ds-scroll-row-gap, var(--ds-space-1));
         min-width: 0;
         overflow-x: auto;
         overscroll-behavior-x: contain;

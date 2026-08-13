@@ -9,7 +9,7 @@
 @keyframes diary-tree-in {
   from {
     grid-template-rows: 0fr;
-    margin-top: -0.4375rem;
+    margin-top: calc(-1 * var(--ds-space-1-5));
     opacity: 0;
   }
   to {

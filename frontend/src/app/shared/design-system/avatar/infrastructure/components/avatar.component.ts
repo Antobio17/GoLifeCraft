@@ -20,7 +20,7 @@ import { Component, Input } from "@angular/core";
         color: var(--ds-avatar-fg, var(--ds-accent));
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: var(--ds-avatar-font, 0.9375rem);
+        font-size: var(--ds-avatar-font, var(--ds-text-lg));
       }
       :host-context([data-theme="dark"]) .ds-avatar {
         font-weight: 700;

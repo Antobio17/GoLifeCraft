@@ -7,8 +7,8 @@
   box-sizing: border-box;
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: 1rem;
-  padding: 0.5625rem 0.6875rem;
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-2) var(--ds-space-3);
   transition: background 0.2s ease;
 }
 
@@ -30,7 +30,7 @@
   flex: 0 0 auto;
   width: 1.625rem;
   height: 1.625rem;
-  border-radius: 0.5625rem;
+  border-radius: var(--ds-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -105,7 +105,7 @@
 .shopping-item__stepper {
   flex: 0 0 auto;
   background: var(--ds-surface-inset);
-  border-radius: 0.5625rem;
+  border-radius: var(--ds-radius-md);
   padding: 1px;
 }
 
@@ -119,9 +119,9 @@
   appearance: none;
   background: transparent;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--ds-radius-md);
   font-weight: 800;
-  font-size: 0.9375rem;
+  font-size: var(--ds-text-lg);
   line-height: 1;
   color: var(--ds-primary);
 }

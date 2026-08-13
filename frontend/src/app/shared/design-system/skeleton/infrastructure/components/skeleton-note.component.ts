@@ -31,10 +31,10 @@ import { Component, Input } from "@angular/core";
         box-sizing: border-box;
         display: flex;
         align-items: flex-start;
-        gap: 0.5625rem;
+        gap: var(--ds-space-2);
         background: var(--ds-primary-soft);
-        border-radius: 0.8125rem;
-        padding: 0.75rem 0.8125rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
       }
       .sknote__icon {
         flex: 0 0 auto;
@@ -47,7 +47,7 @@ import { Component, Input } from "@angular/core";
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
       }
       .sknote__line {
         width: 100%;

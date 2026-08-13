@@ -1,4 +1,4 @@
-<ds-page-wrapper [gap]="'0.75rem'">
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getWorkouts.back' | t"
@@ -14,9 +14,9 @@
       [columns]="null"
       minColumn="16.25rem"
       [tabletColumns]="2"
-      [gap]="'0.5625rem'"
-      radius="var(--ds-radius-3xl)"
-      padding="0.8125rem"
+      [gap]="'var(--ds-space-2)'"
+      radius="var(--ds-radius-xl)"
+      padding="var(--ds-space-3)"
       [alignTop]="true"
       titleWidth="56%"
       metaWidth="46%"
@@ -31,19 +31,23 @@
       [text]="'getWorkouts.empty.text' | t"
     />
   } @else {
-    <ds-grid [minColumn]="'16.25rem'" [gap]="'0.5625rem'" [tabletColumns]="2">
+    <ds-grid
+      [minColumn]="'16.25rem'"
+      [gap]="'var(--ds-space-2)'"
+      [tabletColumns]="2"
+    >
       @for (workout of rows(); track workout.id) {
         <ds-card
           [interactive]="true"
-          [padding]="'0.8125rem'"
-          [gap]="'0.6875rem'"
+          [padding]="'var(--ds-space-3)'"
+          [gap]="'var(--ds-space-3)'"
           (activated)="onOpen(workout.id)"
         >
           <ds-stack
             direction="row"
             align="start"
             justify="between"
-            [gap]="'0.5rem'"
+            [gap]="'var(--ds-space-2)'"
           >
             <ds-stack [gap]="'2px'">
               <ds-heading [level]="3" size="md">
@@ -55,7 +59,11 @@
             </ds-stack>
 
             <ds-chip tone="brand">
-              <ds-stack direction="row" align="center" [gap]="'0.3125rem'">
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-1)'"
+              >
                 <ds-icon name="check" [size]="12" [stroke]="3" />
                 {{ workout.ratioLabel }}
               </ds-stack>
@@ -64,7 +72,7 @@
 
           <ds-progress-bar [value]="workout.progressPercent" />
 
-          <ds-stack direction="row" [gap]="'0.875rem'" [wrap]="true">
+          <ds-stack direction="row" [gap]="'var(--ds-space-3)'" [wrap]="true">
             <ds-meta-item icon="clock">
               {{ workout.durationLabel }}
             </ds-meta-item>

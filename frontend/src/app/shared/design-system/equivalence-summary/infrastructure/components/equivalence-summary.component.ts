@@ -41,7 +41,7 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
       }
       .ds-eqs {
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-lg);
         background: var(--ds-surface);
         overflow: hidden;
       }
@@ -49,28 +49,28 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.625rem;
-        padding: 0.6875rem 0.875rem;
+        gap: var(--ds-space-2);
+        padding: var(--ds-space-3);
         border-bottom: 1px solid var(--ds-border);
       }
       .ds-eqs__title {
-        font-size: 0.65625rem;
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         letter-spacing: 0.06em;
         color: var(--ds-text);
       }
       .ds-eqs__badge {
-        font-size: 0.625rem;
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         color: var(--ds-text-muted);
         background: var(--ds-surface-inset);
         border-radius: var(--ds-radius-pill);
-        padding: 0.1875rem 0.5625rem;
+        padding: var(--ds-space-1) var(--ds-space-2);
       }
       .ds-eqs__defaults {
         display: flex;
-        gap: 0.5rem;
-        padding: 0.6875rem 0.875rem;
+        gap: var(--ds-space-2);
+        padding: var(--ds-space-3);
       }
       .ds-eqs__default {
         flex: 1;
@@ -79,42 +79,42 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
         gap: 2px;
       }
       .ds-eqs__default-label {
-        font-size: 0.59375rem;
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         letter-spacing: 0.04em;
         color: var(--ds-text-meta);
       }
       .ds-eqs__default-value {
-        font-size: 0.84375rem;
+        font-size: var(--ds-text-md);
         font-weight: 700;
         color: var(--ds-text);
       }
       .ds-eqs__lines {
-        padding: 2px 0.875rem 0.625rem;
+        padding: 2px var(--ds-space-3) var(--ds-space-2);
       }
       .ds-eqs__section {
         display: block;
-        font-size: 0.59375rem;
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         letter-spacing: 0.04em;
         color: var(--ds-text-meta);
-        margin-bottom: 0.25rem;
+        margin-bottom: var(--ds-space-1);
       }
       .ds-eqs__row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.5rem;
-        padding: 0.4375rem 0;
+        gap: var(--ds-space-2);
+        padding: var(--ds-space-1-5) 0;
         border-top: 1px solid var(--ds-border);
       }
       .ds-eqs__row-label {
-        font-size: 0.78125rem;
+        font-size: var(--ds-text-base);
         font-weight: 700;
         color: var(--ds-text);
       }
       .ds-eqs__row-detail {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
         font-weight: 700;
         color: var(--ds-text-muted);
       }

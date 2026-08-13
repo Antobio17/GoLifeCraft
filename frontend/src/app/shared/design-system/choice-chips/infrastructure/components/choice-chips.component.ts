@@ -33,24 +33,24 @@ export interface ChoiceChipOption {
     `
       .ds-choice-chips {
         display: flex;
-        gap: 0.625rem;
+        gap: var(--ds-space-2);
       }
       .ds-choice-chips--wrap {
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: var(--ds-space-2);
       }
       .ds-choice-chip {
         flex: 1 1 0;
         appearance: none;
         cursor: pointer;
         text-align: center;
-        padding: 0.625rem;
-        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-2);
+        border-radius: var(--ds-radius-lg);
         border: 1px solid var(--ds-border-input);
         background: var(--ds-surface);
         color: var(--ds-text);
         font: inherit;
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         transition:
           background 0.15s ease,
@@ -62,7 +62,7 @@ export interface ChoiceChipOption {
       }
       .ds-choice-chips--wrap .ds-choice-chip {
         flex: 0 0 auto;
-        padding: 0.5rem 0.875rem;
+        padding: var(--ds-space-2) var(--ds-space-3);
         border-radius: var(--ds-radius-pill);
       }
       .ds-choice-chip.is-selected {

@@ -27,26 +27,26 @@ import { Component, Input } from "@angular/core";
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: 0.875rem;
-        padding: 0.6875rem 0.75rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
       }
       .ds-stile__value {
         display: block;
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 1.3125rem;
+        font-size: var(--ds-text-xl);
         line-height: 1;
         color: var(--ds-text);
       }
       .ds-stile__unit {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         font-weight: 600;
         color: var(--ds-text-meta);
       }
       .ds-stile__label {
         display: block;
-        margin-top: 0.1875rem;
-        font-size: 0.625rem;
+        margin-top: var(--ds-space-1);
+        font-size: var(--ds-text-xs);
         font-weight: 600;
         color: var(--ds-text-muted);
       }

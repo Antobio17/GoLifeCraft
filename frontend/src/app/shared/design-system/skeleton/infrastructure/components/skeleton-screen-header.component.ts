@@ -35,20 +35,20 @@ import { Component, Input } from "@angular/core";
       .skhead {
         display: flex;
         align-items: center;
-        gap: 0.6875rem;
+        gap: var(--ds-space-3);
       }
       .skhead__lead {
         flex: 0 0 auto;
         width: 2.5rem;
         height: 2.5rem;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-lg);
       }
       .skhead__text {
         flex: 1 1 auto;
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.4375rem;
+        gap: var(--ds-space-1-5);
       }
       .skhead__eyebrow {
         width: 5.25rem;
@@ -70,12 +70,12 @@ import { Component, Input } from "@angular/core";
         flex: 0 0 auto;
         display: flex;
         align-items: center;
-        gap: 0.5625rem;
+        gap: var(--ds-space-2);
       }
       .skhead__action {
         width: var(--skhead-action, 2.5rem);
         height: 2.5rem;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-lg);
       }
     `,
   ],

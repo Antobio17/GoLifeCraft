@@ -27,16 +27,16 @@ import { Component, computed, input } from "@angular/core";
       .skmac {
         display: flex;
         align-items: center;
-        gap: 0.875rem;
+        gap: var(--ds-space-3);
         background: var(--ds-surface-inset);
-        border-radius: 1rem;
-        padding: 0.875rem 1rem;
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-3) var(--ds-space-4);
       }
       .skmac__kcal {
         flex: 0 0 auto;
         display: flex;
         flex-direction: column;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
       }
       .skmac__kcal-value {
         width: 3.875rem;
@@ -50,19 +50,19 @@ import { Component, computed, input } from "@angular/core";
       .skmac__bars {
         flex: 1 1 auto;
         display: flex;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
       }
       .skmac__bar {
         flex: 1 1 0;
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.3125rem;
+        gap: var(--ds-space-1);
       }
       .skmac__line {
         width: 100%;
         height: 0.375rem;
-        border-radius: 0.25rem;
+        border-radius: var(--ds-radius-sm);
       }
       .skmac__label {
         width: 72%;

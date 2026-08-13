@@ -33,13 +33,13 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.625rem;
+        gap: var(--ds-space-2);
       }
       .sksec__text {
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
       }
       .sksec__title {
         width: var(--sksec-title, 8.25rem);
@@ -64,7 +64,7 @@ import { Component, Input } from "@angular/core";
         flex: 0 0 auto;
         width: var(--sksec-action, 4.25rem);
         height: 1.625rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-md);
       }
     `,
   ],

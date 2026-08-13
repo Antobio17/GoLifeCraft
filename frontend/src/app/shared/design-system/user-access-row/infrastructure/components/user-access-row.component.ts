@@ -73,11 +73,11 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       .ds-uar {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: var(--ds-space-3);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-2xl);
-        padding: 0.75rem 0.875rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
         transition: opacity 0.15s ease;
       }
       .ds-uar--inactive {
@@ -87,7 +87,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         flex: 0 0 auto;
         width: 2.625rem;
         height: 2.625rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-md);
         background: var(--ds-surface-inset);
         color: var(--ds-primary);
         display: flex;
@@ -95,14 +95,14 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         justify-content: center;
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
-        font-size: var(--ds-text-lg);
+        font-size: var(--ds-text-xl);
       }
       .ds-uar__body {
         flex: 1 1 auto;
         min-width: 0;
       }
       .ds-uar__name {
-        font-size: var(--ds-text-md);
+        font-size: var(--ds-text-lg);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
         white-space: nowrap;
@@ -111,24 +111,24 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       }
       .ds-uar__email {
         margin-top: 1px;
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         color: var(--ds-text-muted);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .ds-uar__badges {
-        margin-top: 0.4375rem;
+        margin-top: var(--ds-space-1-5);
       }
       .ds-uar__badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.25rem;
-        font-size: var(--ds-text-xs);
+        gap: var(--ds-space-1);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.02em;
         border-radius: var(--ds-radius-sm);
-        padding: 0.1875rem 0.5rem;
+        padding: var(--ds-space-1) var(--ds-space-2);
       }
       .ds-uar__badge--ok {
         background: var(--ds-accent-soft);
@@ -143,7 +143,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.3125rem;
+        gap: var(--ds-space-1);
         appearance: none;
         border: none;
         background: none;
@@ -184,7 +184,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         transform: translateX(1.125rem);
       }
       .ds-uar__perm {
-        font-size: var(--ds-text-xs);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.05em;
         color: var(--ds-text-meta);

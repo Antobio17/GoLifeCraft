@@ -1,13 +1,13 @@
 @if (items.length === 0) {
   <ds-text variant="muted" class="aisle-list__empty">{{ emptyText }}</ds-text>
 } @else {
-  <ds-stack [gap]="'0.5rem'">
+  <ds-stack [gap]="'var(--ds-space-2)'">
     @for (item of items; track item.id; let index = $index) {
       <ds-swipe-to-delete
         #swipe
         [disabled]="disabled || editingId === item.id"
         [reveal]="66"
-        [radius]="14"
+        radius="var(--ds-radius-lg)"
         [removeLabel]="removeLabel"
         (remove)="removed.emit(item.id)"
       >
@@ -16,7 +16,7 @@
           [class.aisle-list__row--slid]="swipe.slid"
           direction="row"
           align="center"
-          [gap]="'0.625rem'"
+          [gap]="'var(--ds-space-2)'"
         >
           <ds-text variant="meta" class="aisle-list__position">{{
             item.position

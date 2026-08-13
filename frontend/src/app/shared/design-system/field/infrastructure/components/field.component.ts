@@ -48,13 +48,13 @@ import { Component, Input } from "@angular/core";
       .ds-field {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: var(--ds-space-2);
       }
       .ds-field__label {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: var(--ds-text-xs);
+        gap: var(--ds-space-2);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-bold);
         letter-spacing: 0.05em;
         text-transform: uppercase;
@@ -67,20 +67,20 @@ import { Component, Input } from "@angular/core";
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 2px 0.5rem;
+        padding: 2px var(--ds-space-2);
         border-radius: var(--ds-radius-pill);
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
-        font-size: 0.625rem;
+        font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0;
       }
       .ds-field__hint {
         display: flex;
         align-items: flex-start;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
         margin: 2px 0 0;
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         color: var(--ds-text-muted);
         line-height: 1.45;
       }
@@ -91,7 +91,7 @@ import { Component, Input } from "@angular/core";
       }
       .ds-field__error {
         margin: 2px 0 0;
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-danger);
       }

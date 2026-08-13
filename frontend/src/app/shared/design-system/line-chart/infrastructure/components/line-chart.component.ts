@@ -75,7 +75,7 @@ interface Marker {
       }
       .ds-line-scroll.is-scrollable {
         box-sizing: border-box;
-        padding: 0.75rem 0.875rem 0;
+        padding: var(--ds-space-3) var(--ds-space-3) 0;
         overflow-x: auto;
         overflow-y: hidden;
         overscroll-behavior-x: contain;
@@ -128,8 +128,8 @@ interface Marker {
       .ds-line__value {
         position: absolute;
         bottom: 100%;
-        margin-bottom: 0.25rem;
-        font-size: 0.53125rem;
+        margin-bottom: var(--ds-space-1);
+        font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold, 800);
         line-height: 1;
         white-space: nowrap;

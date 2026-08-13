@@ -190,7 +190,7 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return "" !== this.id();
+    return !!this.id();
   }
 
   get title(): string {

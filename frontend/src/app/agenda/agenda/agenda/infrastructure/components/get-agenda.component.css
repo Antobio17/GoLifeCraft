@@ -1,5 +1,5 @@
 .agenda-calendar-card {
-  --ds-radius-3xl: 1.375rem;
+  --ds-radius-xl: var(--ds-radius-2xl);
 }
 
 .agenda-field {

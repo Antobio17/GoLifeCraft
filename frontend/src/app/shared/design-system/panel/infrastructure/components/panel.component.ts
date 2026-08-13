@@ -27,8 +27,8 @@ import { Component, Input } from "@angular/core";
       .ds-panel {
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: 1.125rem;
-        padding: 0.875rem;
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-3);
         display: flex;
         flex-direction: column;
       }
@@ -45,20 +45,20 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: 0.75rem;
+        gap: var(--ds-space-3);
       }
       .ds-panel__heading {
         min-width: 0;
       }
       .ds-panel__title {
         margin: 0;
-        font-size: 0.78125rem;
+        font-size: var(--ds-text-base);
         font-weight: 700;
         color: inherit;
       }
       .ds-panel__subtitle {
         margin: 1px 0 0;
-        font-size: 0.65625rem;
+        font-size: var(--ds-text-xs);
         color: var(--ds-text-muted);
       }
       .ds-panel--brand .ds-panel__subtitle {
@@ -67,7 +67,7 @@ import { Component, Input } from "@angular/core";
       .ds-panel__figure {
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 1.0625rem;
+        font-size: var(--ds-text-xl);
         color: inherit;
         white-space: nowrap;
       }

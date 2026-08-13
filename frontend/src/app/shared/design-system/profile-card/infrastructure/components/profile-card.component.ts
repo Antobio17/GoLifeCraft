@@ -26,13 +26,13 @@ import { Component, Input } from "@angular/core";
       .pc {
         display: flex;
         align-items: center;
-        gap: 0.8125rem;
+        gap: var(--ds-space-3);
         background: var(--ds-surface-brand);
         color: var(--ds-on-surface-brand);
         border: 1px solid
           color-mix(in srgb, var(--ds-on-surface-brand) 8%, transparent);
-        border-radius: var(--ds-radius-3xl);
-        padding: 0.9375rem 1rem;
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-4);
       }
       .pc__avatar {
         flex: 0 0 auto;
@@ -46,7 +46,7 @@ import { Component, Input } from "@angular/core";
         color: var(--ds-on-accent);
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
-        font-size: 1.375rem;
+        font-size: var(--ds-text-2xl);
       }
       .pc__body {
         flex: 1 1 auto;
@@ -55,14 +55,14 @@ import { Component, Input } from "@angular/core";
       .pc__name {
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
-        font-size: 1.0625rem;
+        font-size: var(--ds-text-xl);
         letter-spacing: -0.01em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .pc__email {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
         opacity: 0.8;
         white-space: nowrap;
         overflow: hidden;
@@ -71,11 +71,11 @@ import { Component, Input } from "@angular/core";
       .pc__meta {
         display: flex;
         align-items: center;
-        gap: 0.4375rem;
-        margin-top: 0.4375rem;
+        gap: var(--ds-space-1-5);
+        margin-top: var(--ds-space-1-5);
       }
       .pc__role {
-        font-size: 0.59375rem;
+        font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.04em;
         text-transform: uppercase;
@@ -84,14 +84,14 @@ import { Component, Input } from "@angular/core";
           var(--ds-on-surface-brand) 14%,
           transparent
         );
-        border-radius: 0.4375rem;
-        padding: 0.1875rem 0.5rem;
+        border-radius: var(--ds-radius-sm);
+        padding: var(--ds-space-1) var(--ds-space-2);
       }
       .pc__status {
         display: inline-flex;
         align-items: center;
-        gap: 0.3125rem;
-        font-size: 0.65625rem;
+        gap: var(--ds-space-1);
+        font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-bold);
         opacity: 0.85;
       }

@@ -67,11 +67,11 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
       .ds-search {
         display: flex;
         align-items: center;
-        gap: 0.625rem;
+        gap: var(--ds-space-2);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-xl);
-        padding: 0.6875rem 0.875rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
         transition:
           border-color 0.15s ease,
           box-shadow 0.15s ease;
@@ -91,7 +91,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
         outline: none;
         background: transparent;
         font: inherit;
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         color: var(--ds-text);
       }
       .ds-search__input::placeholder {

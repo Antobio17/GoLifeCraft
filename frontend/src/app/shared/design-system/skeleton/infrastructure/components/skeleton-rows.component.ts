@@ -38,16 +38,16 @@ import { Component, Input } from "@angular/core";
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: 1.125rem;
+        border-radius: var(--ds-radius-xl);
         overflow: hidden;
-        --skrow-pad: 0.75rem 1rem;
+        --skrow-pad: var(--ds-space-3) var(--ds-space-4);
       }
       .skrow__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.75rem;
-        padding: 0.8125rem 1rem;
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-3) var(--ds-space-4);
         border-bottom: 1px solid var(--ds-border);
       }
       .skrow__header-title {
@@ -63,8 +63,8 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 1rem;
-        padding: var(--skrow-pad, 0.6875rem 0);
+        gap: var(--ds-space-4);
+        padding: var(--skrow-pad, var(--ds-space-3) 0);
         border-bottom: 1px solid var(--ds-border);
       }
       .skrow__row--last {

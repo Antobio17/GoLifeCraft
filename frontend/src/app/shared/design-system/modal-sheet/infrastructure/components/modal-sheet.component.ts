@@ -101,7 +101,7 @@ import {
         min-height: min(calc(var(--ds-sheet-viewport) * 0.76), 38.75rem);
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border);
-        border-radius: 1.375rem 1.375rem 0 0;
+        border-radius: var(--ds-radius-lg) var(--ds-radius-lg) 0 0;
         box-shadow: 0 -0.5rem 2.5rem rgba(0, 0, 0, 0.28);
         animation: ds-sheet-up 0.24s cubic-bezier(0.4, 0.2, 0.2, 1);
       }
@@ -123,13 +123,13 @@ import {
         height: 0.25rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-border-strong);
-        margin: 0.625rem auto 2px;
+        margin: var(--ds-space-2) auto 2px;
       }
       .ds-sheet__header {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.625rem 1.125rem 0.75rem;
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-2) var(--ds-space-4) var(--ds-space-3);
         border-bottom: 1px solid var(--ds-border);
       }
       .ds-sheet__title {
@@ -137,7 +137,7 @@ import {
         min-width: 0;
         margin: 0;
         font-family: var(--ds-font-display);
-        font-size: var(--ds-text-lg);
+        font-size: var(--ds-text-xl);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
         white-space: nowrap;
@@ -164,7 +164,7 @@ import {
       .ds-sheet__body {
         flex: 1 1 auto;
         min-width: 0;
-        padding: 1rem 1.125rem 1.375rem;
+        padding: var(--ds-space-4) var(--ds-space-4) var(--ds-space-5);
         overflow-x: hidden;
         overflow-y: auto;
       }
@@ -181,7 +181,7 @@ import {
           align-items: center;
         }
         .ds-sheet {
-          border-radius: 1.375rem;
+          border-radius: var(--ds-radius-lg);
           max-height: calc(
             var(--ds-sheet-viewport) - var(--ds-sheet-max-gap-desktop)
           );

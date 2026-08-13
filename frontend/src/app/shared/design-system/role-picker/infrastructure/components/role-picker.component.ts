@@ -39,18 +39,18 @@ import { RoleOption } from "../../domain/models/role-option.model";
       .ds-roles {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 0.75rem;
+        gap: var(--ds-space-3);
       }
       .ds-role {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        padding: 1rem 1.25rem;
+        gap: var(--ds-space-4);
+        padding: var(--ds-space-4) var(--ds-space-5);
         width: 100%;
         text-align: left;
         background: var(--ds-surface);
         border: 2px solid var(--ds-primary-soft-border);
-        border-radius: 0.75rem;
+        border-radius: var(--ds-radius-lg);
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
@@ -73,7 +73,7 @@ import { RoleOption } from "../../domain/models/role-option.model";
         align-items: center;
         justify-content: center;
         background: var(--ds-surface-subtle);
-        border-radius: 0.625rem;
+        border-radius: var(--ds-radius-md);
         color: var(--ds-text-muted);
         transition: all 0.3s ease;
       }
@@ -81,17 +81,17 @@ import { RoleOption } from "../../domain/models/role-option.model";
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
         min-width: 0;
       }
       .ds-role__name {
-        font-size: 0.9375rem;
+        font-size: var(--ds-text-lg);
         font-weight: 700;
         color: var(--ds-text-body);
         letter-spacing: 0.3px;
       }
       .ds-role__desc {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
         font-weight: 500;
         color: var(--ds-text-muted);
         line-height: 1.4;

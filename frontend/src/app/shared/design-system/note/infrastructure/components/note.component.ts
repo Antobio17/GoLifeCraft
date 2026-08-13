@@ -23,10 +23,10 @@ type NoteTone = "info" | "danger";
       .ds-note {
         display: flex;
         align-items: flex-start;
-        gap: 0.5625rem;
+        gap: var(--ds-space-2);
         background: var(--note-bg, var(--ds-primary-soft));
-        border-radius: 0.8125rem;
-        padding: 0.75rem 0.8125rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
       }
       .ds-note__icon {
         display: inline-flex;
@@ -35,7 +35,7 @@ type NoteTone = "info" | "danger";
         color: var(--note-accent, var(--ds-primary));
       }
       .ds-note__text {
-        font-size: 0.71875rem;
+        font-size: var(--ds-text-sm);
         color: var(--note-text, var(--ds-text-muted));
         line-height: 1.4;
       }

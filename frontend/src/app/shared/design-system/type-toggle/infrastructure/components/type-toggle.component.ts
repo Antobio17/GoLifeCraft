@@ -29,9 +29,9 @@ export interface TypeToggleOption {
     `
       .ds-type-toggle {
         display: inline-flex;
-        gap: 0.25rem;
-        padding: 0.25rem;
-        border-radius: var(--ds-radius-pill, 62.4375rem);
+        gap: var(--ds-space-1);
+        padding: var(--ds-space-1);
+        border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset, #efece3);
         border: 1px solid var(--ds-border, #d8d3c6);
       }
@@ -41,10 +41,10 @@ export interface TypeToggleOption {
         border: none;
         background: transparent;
         color: var(--ds-text-body, #55524a);
-        border-radius: var(--ds-radius-pill, 62.4375rem);
-        padding: 0.375rem 1.125rem;
+        border-radius: var(--ds-radius-pill);
+        padding: var(--ds-space-1-5) var(--ds-space-4);
         font: inherit;
-        font-size: var(--ds-text-base, 0.875rem);
+        font-size: var(--ds-text-md);
         font-weight: 600;
         transition:
           background 0.15s ease,

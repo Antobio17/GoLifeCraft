@@ -1,4 +1,4 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'1rem'">
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-4)'">
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -6,10 +6,10 @@
       [subtitle]="false"
       titleWidth="54%"
     />
-    <ds-skeleton-fields [rows]="[2, 1]" [gap]="'1rem'" />
+    <ds-skeleton-fields [rows]="[2, 1]" [gap]="'var(--ds-space-4)'" />
     <ds-skeleton-list-item
-      padding="0.6875rem 0.875rem"
-      radius="var(--ds-radius-3xl)"
+      padding="var(--ds-space-3) var(--ds-space-3)"
+      radius="var(--ds-radius-xl)"
       titleWidth="34%"
       metaWidth="58%"
       trailing="pill"
@@ -20,9 +20,9 @@
     <ds-skeleton-macro-bars />
     <ds-skeleton-list
       [count]="3"
-      [gap]="'0.5rem'"
-      radius="1rem"
-      padding="0.5625rem 0.6875rem"
+      [gap]="'var(--ds-space-2)'"
+      radius="var(--ds-radius-xl)"
+      padding="var(--ds-space-2) var(--ds-space-3)"
       [tile]="36"
       [tileRadius]="10"
       titleWidth="54%"
@@ -33,7 +33,7 @@
     />
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <ds-stack [gap]="'1rem'">
+      <ds-stack [gap]="'var(--ds-space-4)'">
         <ds-screen-header
           [leading]="'close'"
           [leadingLabel]="'recipeEditor.back' | t"
@@ -42,7 +42,7 @@
           (leadingClick)="cancel()"
         />
 
-        <ds-stack direction="row" align="end" [gap]="'0.75rem'">
+        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
           <ds-field [label]="'recipeEditor.icon' | t">
             <ds-emoji-picker
               formControlName="emoji"
@@ -76,8 +76,8 @@
           />
         </ds-field>
 
-        <ds-card [padding]="'0.6875rem 0.875rem'">
-          <ds-stack direction="row" align="center" [gap]="'0.75rem'">
+        <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
             <ds-stack [gap]="'2px'" [grow]="true">
               <ds-text variant="strong">{{
                 "recipeEditor.servings" | t
@@ -127,29 +127,32 @@
         />
 
         @if (hasIngredients) {
-          <ds-stack [gap]="'0.5rem'">
+          <ds-stack [gap]="'var(--ds-space-2)'">
             @for (row of ingredientRows(); track row.ingredient.key) {
               <ds-swipe-to-delete
                 #swipe
                 [reveal]="66"
-                [radius]="16"
                 [removeLabel]="'recipeEditor.removeIngredient' | t"
                 (remove)="onRemoveIngredient(row.ingredient.key)"
               >
-                <ds-card [padding]="'0.5625rem 0.6875rem'">
-                  <ds-stack direction="row" align="center" [gap]="'0.625rem'">
-                    <ds-stack align="center" [gap]="'0.3125rem'">
+                <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
+                  <ds-stack
+                    direction="row"
+                    align="center"
+                    [gap]="'var(--ds-space-2)'"
+                  >
+                    <ds-stack align="center" [gap]="'var(--ds-space-1)'">
                       <ds-emoji-tile
                         [emoji]="row.ingredient.emoji"
                         [size]="36"
                       />
                       <ds-macro-badges [kcal]="row.kcal" />
                     </ds-stack>
-                    <ds-stack [gap]="'0.25rem'" [grow]="true">
+                    <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
                       <ds-stack
                         direction="row"
                         align="center"
-                        [gap]="'0.375rem'"
+                        [gap]="'var(--ds-space-1-5)'"
                       >
                         <ds-text variant="strong" [truncate]="true">{{
                           row.ingredient.name
@@ -225,7 +228,7 @@
     [closeLabel]="'recipeEditor.close' | t"
     (closed)="closePicker()"
   >
-    <ds-stack [gap]="'0.75rem'">
+    <ds-stack [gap]="'var(--ds-space-3)'">
       <ds-segmented-toggle
         [options]="pickerTabs()"
         [ngModel]="pickerTab()"
@@ -243,12 +246,16 @@
       @if (pickerChoices().length === 0) {
         <ds-text variant="muted">{{ "recipeEditor.pickerEmpty" | t }}</ds-text>
       } @else {
-        <ds-stack [gap]="'0.5rem'">
+        <ds-stack [gap]="'var(--ds-space-2)'">
           @for (row of pickerRows(); track row.choice.refId) {
-            <ds-card [padding]="'0.625rem'">
-              <ds-stack direction="row" align="center" [gap]="'0.6875rem'">
+            <ds-card [padding]="'var(--ds-space-3)'">
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+              >
                 <ds-emoji-tile [emoji]="row.choice.emoji" [size]="34" />
-                <ds-stack [gap]="'0.25rem'" [grow]="true">
+                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
                   <ds-text variant="strong">{{ row.choice.name }}</ds-text>
                   <ds-text variant="meta">{{ row.choice.detail }}</ds-text>
                   <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />

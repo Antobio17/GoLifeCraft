@@ -40,7 +40,7 @@ import { Component, Input } from "@angular/core";
       }
       .ds-pus {
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-lg);
         background: var(--ds-surface);
         overflow: hidden;
       }
@@ -48,29 +48,29 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.625rem;
-        padding: 0.6875rem 0.875rem;
+        gap: var(--ds-space-2);
+        padding: var(--ds-space-3);
         border-bottom: 1px solid var(--ds-border);
       }
       .ds-pus__title {
-        font-size: 0.65625rem;
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         letter-spacing: 0.06em;
         color: var(--ds-text);
       }
       .ds-pus__badge {
-        font-size: 0.625rem;
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         color: var(--ds-text-muted);
         background: var(--ds-surface-inset);
         border-radius: var(--ds-radius-pill);
-        padding: 0.1875rem 0.5625rem;
+        padding: var(--ds-space-1) var(--ds-space-2);
         white-space: nowrap;
       }
       .ds-pus__cells {
         display: flex;
-        gap: 0.5rem;
-        padding: 0.6875rem 0.875rem;
+        gap: var(--ds-space-2);
+        padding: var(--ds-space-3);
       }
       .ds-pus__cell {
         flex: 1;
@@ -80,13 +80,13 @@ import { Component, Input } from "@angular/core";
         gap: 2px;
       }
       .ds-pus__cell-label {
-        font-size: 0.59375rem;
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         letter-spacing: 0.04em;
         color: var(--ds-text-meta);
       }
       .ds-pus__cell-value {
-        font-size: 0.8125rem;
+        font-size: var(--ds-text-md);
         font-weight: 700;
         color: var(--ds-text);
       }
@@ -98,8 +98,8 @@ import { Component, Input } from "@angular/core";
       }
       .ds-pus__empty {
         margin: 0;
-        padding: 0.6875rem 0.875rem;
-        font-size: 0.6875rem;
+        padding: var(--ds-space-3);
+        font-size: var(--ds-text-sm);
         line-height: 1.4;
         color: var(--ds-text-muted);
       }

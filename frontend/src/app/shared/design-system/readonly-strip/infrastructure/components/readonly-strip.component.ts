@@ -22,10 +22,10 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.625rem;
+        gap: var(--ds-space-2);
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-2xl);
-        padding: 0.6875rem 0.875rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
       }
       .rs__main {
         min-width: 0;
@@ -33,7 +33,7 @@ import { Component, Input } from "@angular/core";
         flex-direction: column;
       }
       .rs__label {
-        font-size: 0.625rem;
+        font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.06em;
         text-transform: uppercase;
@@ -42,7 +42,7 @@ import { Component, Input } from "@angular/core";
       .rs__value {
         margin-top: 2px;
         font-family: var(--ds-font-display);
-        font-size: 0.8125rem;
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
         white-space: nowrap;
@@ -51,7 +51,7 @@ import { Component, Input } from "@angular/core";
       }
       .rs__note {
         flex: 0 0 auto;
-        font-size: 0.59375rem;
+        font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text-muted);
       }

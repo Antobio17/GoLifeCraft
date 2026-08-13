@@ -1,4 +1,4 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'1.25rem'">
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-5)'">
   <ds-screen-header
     [leading]="'close'"
     [leadingLabel]="'articleEditor.back' | t"
@@ -8,7 +8,7 @@
   />
 
   @if (loading()) {
-    <ds-skeleton-fields [rows]="[2, 2, 1, 1, 1]" [gap]="'1.25rem'" />
+    <ds-skeleton-fields [rows]="[2, 2, 1, 1, 1]" [gap]="'var(--ds-space-5)'" />
     <ds-skeleton-rows
       [card]="true"
       [header]="true"
@@ -25,8 +25,8 @@
     />
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <ds-stack [gap]="'1.25rem'">
-        <ds-stack direction="row" align="end" [gap]="'0.75rem'">
+      <ds-stack [gap]="'var(--ds-space-5)'">
+        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
           <ds-field [label]="'articleEditor.field.icon' | t">
             <ds-emoji-picker
               formControlName="emoji"
@@ -52,7 +52,7 @@
           </ds-field>
         </ds-stack>
 
-        <ds-stack direction="row" align="end" [gap]="'0.75rem'">
+        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
           <ds-field [grow]="true" [label]="'articleEditor.field.brand' | t">
             <ds-text-input
               variant="outlined"
@@ -81,12 +81,12 @@
         </ds-field>
 
         @if (hasSupermarket()) {
-          <ds-stack [gap]="'0.5rem'">
+          <ds-stack [gap]="'var(--ds-space-2)'">
             <ds-stack
               direction="row"
               justify="between"
               align="center"
-              [gap]="'0.5rem'"
+              [gap]="'var(--ds-space-2)'"
             >
               <ds-text variant="label">{{ aisleSectionLabel() }}</ds-text>
 
@@ -118,7 +118,7 @@
           </ds-stack>
         }
 
-        <ds-stack [gap]="'0.625rem'">
+        <ds-stack [gap]="'var(--ds-space-2)'">
           <ds-nutrition-editor
             [title]="'articleEditor.nutrition.heading' | t"
             [badge]="'articleEditor.nutrition.reference' | t"

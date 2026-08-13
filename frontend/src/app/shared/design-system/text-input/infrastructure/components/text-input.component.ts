@@ -77,10 +77,10 @@ type TextInputVariant = "default" | "outlined";
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-xl);
-        padding: 0.75rem 0.8125rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
         font: inherit;
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         color: var(--ds-text);
         transition:
           border-color var(--ds-transition-fast),
@@ -114,11 +114,11 @@ type TextInputVariant = "default" | "outlined";
         position: relative;
         display: flex;
         align-items: center;
-        gap: 0.5625rem;
+        gap: var(--ds-space-2);
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-xl);
-        padding: 0.75rem 0.8125rem;
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-3);
         transition:
           border-color var(--ds-transition-fast),
           box-shadow var(--ds-transition-fast);
@@ -134,7 +134,7 @@ type TextInputVariant = "default" | "outlined";
       }
       .ds-text-input__emoji {
         flex: none;
-        font-size: 1.375rem;
+        font-size: var(--ds-text-2xl);
         line-height: 1;
       }
       .ds-text-input__bare--strong {
@@ -151,7 +151,7 @@ type TextInputVariant = "default" | "outlined";
         outline: none;
         background: transparent;
         font: inherit;
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         color: var(--ds-text);
       }
       .ds-text-input__bare::placeholder {

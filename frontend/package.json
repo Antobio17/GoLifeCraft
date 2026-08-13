@@ -7,7 +7,8 @@
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint && npm run lint:tokens",
+    "lint:tokens": "node tools/check-design-tokens.mjs"
   },
   "private": true,
   "dependencies": {

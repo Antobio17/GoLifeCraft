@@ -38,7 +38,7 @@ type IconButtonVariant =
         width: var(--icon-btn-size, 2.25rem);
         height: var(--icon-btn-size, 2.25rem);
         border: none;
-        border-radius: var(--icon-btn-radius, var(--ds-radius-lg));
+        border-radius: var(--icon-btn-radius, var(--ds-radius-md));
         background: transparent;
         color: var(--icon-btn-color, var(--ds-text-muted));
         cursor: pointer;

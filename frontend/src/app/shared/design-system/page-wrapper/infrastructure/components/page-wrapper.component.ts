@@ -7,5 +7,5 @@ import { Component, Input } from "@angular/core";
 })
 export class PageWrapperComponent {
   @Input() maxWidth = "87.5rem";
-  @Input() gap = "2rem";
+  @Input() gap = "var(--ds-space-8)";
 }

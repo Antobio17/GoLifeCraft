@@ -19,6 +19,16 @@
   color: #fff;
   border: none;
   cursor: pointer;
+  /* En reposo la superficie lo tapa entero, pero el antialiasing del recorte
+     redondeado deja asomar una franja de rojo en las esquinas. Se pinta sólo
+     cuando la fila está desplazada. */
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.swipe__delete--revealed,
+.swipe__delete:focus-visible {
+  opacity: 1;
 }
 
 .swipe__surface {

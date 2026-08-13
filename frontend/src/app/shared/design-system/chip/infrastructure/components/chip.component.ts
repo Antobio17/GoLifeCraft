@@ -13,11 +13,11 @@ type ChipTone = "neutral" | "brand" | "brand-solid" | "accent" | "warning";
       .ds-chip {
         display: inline-flex;
         align-items: center;
-        padding: var(--chip-pad, 0.1875rem 0.5rem);
-        border-radius: var(--chip-radius, 0.4375rem);
+        padding: var(--chip-pad, var(--ds-space-1) var(--ds-space-2));
+        border-radius: var(--chip-radius, var(--ds-radius-sm));
         background: var(--chip-bg, var(--ds-surface-inset));
         color: var(--chip-text, var(--ds-text-muted));
-        font-size: var(--chip-size, 0.625rem);
+        font-size: var(--chip-size, var(--ds-text-xs));
         font-weight: var(--chip-weight, var(--ds-weight-bold));
         line-height: 1.3;
         white-space: nowrap;

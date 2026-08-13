@@ -54,11 +54,11 @@ const MODULE_PATH = "nutrition/menu/menu";
       [closeLabel]="'getMenu.close' | t"
       (closed)="close()"
     >
-      <ds-stack [gap]="'0.875rem'">
+      <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-text variant="meta">{{ weekLabel() }}</ds-text>
 
-        <ds-card [padding]="'0.75rem 0.875rem'">
-          <ds-stack direction="row" align="center" [gap]="'0.75rem'">
+        <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
             <ds-emoji-tile [emoji]="emoji()" [size]="46" [radius]="13" />
             <ds-stack [gap]="'2px'" [grow]="true">
               <ds-text variant="strong" [truncate]="true">{{ name() }}</ds-text>
@@ -69,10 +69,17 @@ const MODULE_PATH = "nutrition/menu/menu";
           </ds-stack>
         </ds-card>
 
-        <ds-stack [gap]="'0.4375rem'">
+        <ds-stack [gap]="'var(--ds-space-1-5)'">
           @for (row of rows(); track row.dayKey) {
-            <ds-card variant="inset" [padding]="'0.625rem 0.75rem'">
-              <ds-stack direction="row" align="center" [gap]="'0.6875rem'">
+            <ds-card
+              variant="inset"
+              [padding]="'var(--ds-space-2) var(--ds-space-3)'"
+            >
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+              >
                 <ds-icon
                   class="applyweek__dot"
                   [class.applyweek__dot--off]="!row.active"

@@ -26,12 +26,12 @@ import { Component, Input } from "@angular/core";
       .ds-meter {
         display: flex;
         flex-direction: column;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
       }
       .ds-meter__row {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: var(--ds-space-2);
       }
       .ds-meter__dot {
         width: 0.5rem;
@@ -42,12 +42,12 @@ import { Component, Input } from "@angular/core";
       .ds-meter__label {
         flex: 1 1 auto;
         min-width: 0;
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-body);
       }
       .ds-meter__pct {
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text-meta);
       }

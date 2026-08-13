@@ -1,36 +1,36 @@
 .skf-card {
   background: var(--ds-surface-raised);
-  border-radius: 1rem;
+  border-radius: var(--ds-radius-xl);
   border: 1px solid var(--ds-border);
-  padding: 1.75rem;
+  padding: var(--ds-space-6);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--ds-space-6);
   box-shadow: var(--ds-shadow-xs);
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--ds-space-5);
 }
 
 .skf-row {
   display: grid;
-  gap: 1.5rem;
+  gap: var(--ds-space-6);
 }
 
 .skf-field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--ds-space-2);
 }
 
 .skf-label {
   height: 0.75rem;
   width: 6.875rem;
-  border-radius: 0.25rem;
+  border-radius: var(--ds-radius-sm);
 }
 
 .skf-input {
   height: 2.75rem;
   width: 100%;
-  border-radius: 0.625rem;
+  border-radius: var(--ds-radius-md);
 }
 
 .skf-row:nth-child(2) .skf-bar {
@@ -73,21 +73,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: var(--ds-space-3);
+  margin-bottom: var(--ds-space-4);
   text-align: center;
 }
 
 .skf-page-title {
   height: 1.75rem;
   width: 13.75rem;
-  border-radius: 0.5rem;
+  border-radius: var(--ds-radius-md);
 }
 
 .skf-page-description {
   height: 0.875rem;
   width: 18.75rem;
-  border-radius: 0.25rem;
+  border-radius: var(--ds-radius-sm);
   animation-delay: 0.06s;
 }
 
@@ -101,22 +101,22 @@
 .skf-card-header {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  padding-bottom: 1rem;
+  gap: var(--ds-space-2);
+  padding-bottom: var(--ds-space-4);
   border-bottom: 1px solid var(--ds-border);
 }
 
 .skf-card-icon {
   width: 1.125rem;
   height: 1.125rem;
-  border-radius: 0.3125rem;
+  border-radius: var(--ds-radius-sm);
   flex-shrink: 0;
 }
 
 .skf-card-title {
   height: 0.875rem;
   width: 8.125rem;
-  border-radius: 0.25rem;
+  border-radius: var(--ds-radius-sm);
 }
 
 @media (max-width: 768px) {
@@ -125,7 +125,7 @@
   }
 
   .skf-card {
-    padding: 1.25rem;
-    gap: 1.25rem;
+    padding: var(--ds-space-5);
+    gap: var(--ds-space-5);
   }
 }

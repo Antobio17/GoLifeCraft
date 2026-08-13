@@ -52,11 +52,11 @@ const MODULE_PATH = "nutrition/menu/menu";
       [closeLabel]="'getMenu.close' | t"
       (closed)="close()"
     >
-      <ds-stack [gap]="'0.875rem'">
+      <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-text variant="meta">{{ "getMenu.load.subtitleDay" | t }}</ds-text>
 
-        <ds-card [padding]="'0.75rem 0.875rem'">
-          <ds-stack direction="row" align="center" [gap]="'0.75rem'">
+        <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
             <ds-emoji-tile [emoji]="emoji()" [size]="46" [radius]="13" />
             <ds-stack [gap]="'2px'" [grow]="true">
               <ds-text variant="strong" [truncate]="true">{{

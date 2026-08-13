@@ -11,17 +11,17 @@
   --ds-font-display:
     "Bricolage Grotesque", "Hanken Grotesk", system-ui, sans-serif;
 
-  /* Escala de tamaños */
-  --ds-text-xs: 0.6875rem;
-  --ds-text-sm: 0.75rem;
-  --ds-text-label: 0.84375rem;
-  --ds-text-base: 0.875rem;
-  --ds-text-md: 0.9375rem;
-  --ds-text-lg: 1.0625rem;
-  --ds-text-xl: 1.25rem;
-  --ds-text-2xl: 1.5rem;
-  --ds-text-3xl: 1.75rem;
-  --ds-text-4xl: 2.25rem;
+  /* Escala de tamaños — 8 pasos. Única fuente de font-size.
+     Cualquier literal fuera de esta escala lo rechaza
+     tools/check-design-tokens.mjs. */
+  --ds-text-xs: 0.625rem; /* 10px */
+  --ds-text-sm: 0.6875rem; /* 11px */
+  --ds-text-base: 0.75rem; /* 12px */
+  --ds-text-md: 0.8125rem; /* 13px */
+  --ds-text-lg: 0.9375rem; /* 15px */
+  --ds-text-xl: 1.125rem; /* 18px */
+  --ds-text-2xl: 1.5rem; /* 24px */
+  --ds-text-3xl: 2rem; /* 32px */
 
   /* Pesos */
   --ds-weight-regular: 400;

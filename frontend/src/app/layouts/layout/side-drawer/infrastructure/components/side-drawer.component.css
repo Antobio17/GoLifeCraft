@@ -62,7 +62,7 @@
   width: min(18.75rem, 86%);
   display: flex;
   flex-direction: column;
-  padding: 0 0 calc(env(safe-area-inset-bottom) + 0.875rem);
+  padding: 0 0 calc(env(safe-area-inset-bottom) + var(--ds-space-3));
   background: var(--drawer-bg);
   border-right: 1px solid var(--drawer-border);
   box-shadow: var(--drawer-shadow);
@@ -86,7 +86,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: calc(env(safe-area-inset-top) + 1.375rem) 1.125rem 1rem;
+  padding: calc(env(safe-area-inset-top) + var(--ds-space-5)) var(--ds-space-4)
+    var(--ds-space-4);
 }
 
 /* ─── Nav ─── */
@@ -94,17 +95,17 @@
 .drawer__nav {
   flex: 1;
   overflow-y: auto;
-  padding: 0.25rem 0.75rem;
+  padding: var(--ds-space-1) var(--ds-space-3);
   display: flex;
   flex-direction: column;
-  gap: 0.1875rem;
+  gap: var(--ds-space-1);
 }
 
 /* ─── Account card (user + theme) ─── */
 
 .drawer__footer {
-  margin: 0.5rem 0.75rem 0;
-  padding-top: 0.75rem;
+  margin: var(--ds-space-2) var(--ds-space-3) 0;
+  padding-top: var(--ds-space-3);
   border-top: 1px solid var(--ds-border);
 }
 
@@ -112,7 +113,7 @@
   overflow: hidden;
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: 1rem;
+  border-radius: var(--ds-radius-xl);
 }
 
 /* ─── Theme switch ─── */
@@ -120,9 +121,9 @@
 .drawer__theme {
   display: flex;
   align-items: center;
-  gap: 0.6875rem;
+  gap: var(--ds-space-3);
   width: 100%;
-  padding: 0.75rem 0.8125rem;
+  padding: var(--ds-space-3);
   border: none;
   border-top: 1px solid var(--ds-border);
   background: transparent;
@@ -144,7 +145,7 @@
 
 .drawer__theme-label {
   flex: 1;
-  font-size: 0.84375rem;
+  font-size: var(--ds-text-md);
   font-weight: 600;
   color: var(--ds-text);
   text-align: left;
@@ -156,8 +157,8 @@
   align-items: center;
   width: 2.75rem;
   height: 1.625rem;
-  padding: 0.1875rem;
-  border-radius: 1.25rem;
+  padding: var(--ds-space-1);
+  border-radius: var(--ds-radius-xl);
   background: var(--drawer-switch-off);
   transition: background var(--ds-transition-base);
 }
@@ -188,8 +189,8 @@
 .drawer__user {
   display: flex;
   align-items: center;
-  gap: 0.6875rem;
-  padding: 0.75rem 0.8125rem;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-3);
   text-decoration: none;
 }
 
@@ -206,7 +207,7 @@
 }
 
 .drawer__user-name {
-  font-size: 0.84375rem;
+  font-size: var(--ds-text-md);
   font-weight: 700;
   color: var(--ds-text);
   overflow: hidden;
@@ -215,7 +216,7 @@
 }
 
 .drawer__user-email {
-  font-size: 0.6875rem;
+  font-size: var(--ds-text-sm);
   color: var(--ds-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -228,15 +229,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin: 0.6875rem 0.75rem 0;
-  padding: 0.6875rem;
+  gap: var(--ds-space-2);
+  margin: var(--ds-space-3) var(--ds-space-3) 0;
+  padding: var(--ds-space-3);
   border: 1px solid color-mix(in srgb, var(--ds-danger) 38%, transparent);
-  border-radius: 0.8125rem;
+  border-radius: var(--ds-radius-lg);
   background: transparent;
   color: var(--ds-danger);
   font-family: inherit;
-  font-size: 0.84375rem;
+  font-size: var(--ds-text-md);
   font-weight: 700;
   cursor: pointer;
   transition: background var(--ds-transition-base);
@@ -279,6 +280,6 @@
   }
 
   .drawer__header {
-    padding-top: 1.375rem;
+    padding-top: var(--ds-space-5);
   }
 }

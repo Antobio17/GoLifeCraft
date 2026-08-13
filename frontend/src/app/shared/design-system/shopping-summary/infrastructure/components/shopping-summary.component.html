@@ -1,5 +1,10 @@
-<ds-stack class="shopping-summary" [gap]="'0.6875rem'">
-  <ds-stack direction="row" justify="between" align="end" [gap]="'0.625rem'">
+<ds-stack class="shopping-summary" [gap]="'var(--ds-space-3)'">
+  <ds-stack
+    direction="row"
+    justify="between"
+    align="end"
+    [gap]="'var(--ds-space-2)'"
+  >
     <ds-stack [gap]="'2px'">
       <ds-text [inherit]="true" class="shopping-summary__eyebrow">{{
         eyebrow

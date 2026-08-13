@@ -34,9 +34,9 @@ export interface WorkoutSummaryStat {
       .ds-wksum {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.8125rem 0.9375rem;
-        border-radius: 1rem;
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-3) var(--ds-space-4);
+        border-radius: var(--ds-radius-xl);
         background: var(--ds-surface-brand);
         color: var(--ds-on-surface-brand);
       }
@@ -45,16 +45,16 @@ export interface WorkoutSummaryStat {
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
       }
       .ds-wksum__eyebrow {
-        font-size: 0.59375rem;
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         letter-spacing: 0.08em;
         color: var(--ds-accent);
       }
       .ds-wksum__date {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
         font-weight: 600;
         opacity: 0.85;
         text-transform: capitalize;
@@ -64,12 +64,12 @@ export interface WorkoutSummaryStat {
         text-align: center;
         display: flex;
         flex-direction: column;
-        gap: 0.1875rem;
+        gap: var(--ds-space-1);
       }
       .ds-wksum__value {
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 1.125rem;
+        font-size: var(--ds-text-xl);
         line-height: 1;
         font-variant-numeric: tabular-nums;
       }
@@ -77,7 +77,7 @@ export interface WorkoutSummaryStat {
         color: var(--ds-accent);
       }
       .ds-wksum__label {
-        font-size: 0.5625rem;
+        font-size: var(--ds-text-xs);
         font-weight: 600;
         opacity: 0.6;
       }

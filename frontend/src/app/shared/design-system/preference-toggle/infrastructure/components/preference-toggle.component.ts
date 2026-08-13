@@ -30,9 +30,9 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 0.6875rem;
-        padding: 0.8125rem 0.875rem;
-        border-radius: var(--ds-radius-2xl);
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-3);
+        border-radius: var(--ds-radius-lg);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
         cursor: pointer;
@@ -41,7 +41,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       }
       .pt__icon {
         flex: 0 0 auto;
-        font-size: 1rem;
+        font-size: var(--ds-text-lg);
         line-height: 1;
       }
       .pt__text {
@@ -51,12 +51,12 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         flex-direction: column;
       }
       .pt__title {
-        font-size: 0.84375rem;
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
       }
       .pt__sub {
-        font-size: 0.6875rem;
+        font-size: var(--ds-text-sm);
         color: var(--ds-text-muted);
       }
       .pt__track {

@@ -15,9 +15,9 @@ import { Component, Input } from "@angular/core";
         justify-content: center;
         width: var(--tile-size, 2.5rem);
         height: var(--tile-size, 2.5rem);
-        border-radius: var(--tile-radius, 0.6875rem);
+        border-radius: var(--tile-radius, var(--ds-radius-lg));
         background: var(--ds-surface-inset);
-        font-size: var(--tile-font, 1.25rem);
+        font-size: var(--tile-font, var(--ds-text-xl));
       }
     `,
   ],

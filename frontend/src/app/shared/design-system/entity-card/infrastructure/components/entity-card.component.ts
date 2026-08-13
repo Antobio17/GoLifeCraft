@@ -43,11 +43,11 @@ import { NgTemplateOutlet } from "@angular/common";
       .ds-entity-card {
         display: flex;
         align-items: flex-start;
-        gap: 0.75rem;
+        gap: var(--ds-space-3);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-3xl);
-        padding: 1rem 1.125rem;
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-4);
         box-shadow: var(--ds-shadow-card);
         transition:
           border-color 0.15s ease,
@@ -64,7 +64,7 @@ import { NgTemplateOutlet } from "@angular/common";
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
       }
       .ds-entity-card__hit {
         appearance: none;
@@ -79,7 +79,7 @@ import { NgTemplateOutlet } from "@angular/common";
       .ds-entity-card__title {
         margin: 0;
         font-family: var(--ds-font-display);
-        font-size: var(--ds-text-lg);
+        font-size: var(--ds-text-xl);
         font-weight: var(--ds-weight-bold);
         letter-spacing: -0.01em;
         color: var(--ds-text);
@@ -87,27 +87,27 @@ import { NgTemplateOutlet } from "@angular/common";
       }
       .ds-entity-card__meta {
         margin: 0;
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         color: var(--ds-text-muted);
       }
       .ds-entity-card__tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.375rem;
+        gap: var(--ds-space-1-5);
         margin-top: 2px;
       }
       .ds-entity-card__tag {
-        font-size: var(--ds-text-xs);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-primary-soft-text);
         background: var(--ds-primary-soft);
         border-radius: var(--ds-radius-pill);
-        padding: 0.25rem 0.625rem;
+        padding: var(--ds-space-1) var(--ds-space-2);
       }
       .ds-entity-card__actions {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
         flex: 0 0 auto;
       }
       .ds-entity-card__actions:empty {

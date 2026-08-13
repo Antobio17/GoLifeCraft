@@ -12,7 +12,9 @@ export class SwipeToDeleteComponent {
 
   @Input() disabled = false;
   @Input() reveal = 66;
-  @Input() radius = 14;
+  /** Debe casar con el radio de lo que se meta dentro, o el botón de borrado
+   *  que va detrás asoma por las esquinas. Por defecto, el de ds-card. */
+  @Input() radius = "var(--ds-radius-xl)";
   @Input() removeLabel = "";
 
   @Output() remove = new EventEmitter<void>();

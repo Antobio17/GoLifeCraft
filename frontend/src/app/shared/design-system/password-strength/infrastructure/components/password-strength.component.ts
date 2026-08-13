@@ -28,13 +28,13 @@ type StrengthLevel = 0 | 1 | 2 | 3;
       .ps {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: var(--ds-space-2);
         margin-top: 2px;
       }
       .ps__bars {
         flex: 1 1 auto;
         display: flex;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
       }
       .ps__bar {
         flex: 1 1 0;
@@ -45,7 +45,7 @@ type StrengthLevel = 0 | 1 | 2 | 3;
       }
       .ps__label {
         flex: 0 0 auto;
-        font-size: 0.65625rem;
+        font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
         white-space: nowrap;
       }

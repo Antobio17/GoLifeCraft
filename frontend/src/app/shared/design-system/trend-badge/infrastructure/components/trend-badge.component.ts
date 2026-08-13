@@ -17,16 +17,16 @@ import { Component, Input } from "@angular/core";
       .ds-trend {
         display: inline-flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: var(--ds-space-1);
         background: color-mix(in srgb, var(--ds-accent) 20%, transparent);
         color: var(--ds-accent);
-        border-radius: 62.4375rem;
-        padding: 0.25rem 0.5625rem;
-        font-size: 0.6875rem;
+        border-radius: var(--ds-radius-pill);
+        padding: var(--ds-space-1) var(--ds-space-2);
+        font-size: var(--ds-text-sm);
         font-weight: 800;
       }
       .ds-trend__arrow {
-        font-size: 0.75rem;
+        font-size: var(--ds-text-base);
       }
     `,
   ],

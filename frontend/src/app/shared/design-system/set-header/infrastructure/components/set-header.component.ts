@@ -19,9 +19,9 @@ import { Component, Input } from "@angular/core";
       }
       .ds-seth {
         display: flex;
-        gap: 0.375rem;
-        padding: 0 0.375rem;
-        font-size: 0.5625rem;
+        gap: var(--ds-space-1-5);
+        padding: 0 var(--ds-space-1-5);
+        font-size: var(--ds-text-xs);
         font-weight: 800;
         letter-spacing: 0.04em;
         text-transform: uppercase;

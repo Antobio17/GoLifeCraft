@@ -36,16 +36,16 @@ type DateInputType = "date" | "time";
         -webkit-appearance: none;
         appearance: none;
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-2xl);
+        border-radius: var(--ds-radius-lg);
         background: var(--ds-surface-inset);
         color: var(--ds-text);
         font: inherit;
         font-family: var(--ds-font-body);
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-bold);
         line-height: normal;
         text-align: left;
-        padding: 0.75rem 0.8125rem;
+        padding: var(--ds-space-3);
         margin: 0;
         overflow: hidden;
         outline: none;
@@ -80,7 +80,7 @@ type DateInputType = "date" | "time";
         cursor: pointer;
         opacity: 0.55;
         margin: 0;
-        padding: 0 0 0 0.25rem;
+        padding: 0 0 0 var(--ds-space-1);
         flex: 0 0 auto;
       }
       .ds-date-input::-webkit-calendar-picker-indicator:hover {
@@ -88,8 +88,8 @@ type DateInputType = "date" | "time";
       }
       @media (pointer: coarse) {
         .ds-date-input {
-          font-size: 1rem;
-          padding: 0.6875rem 0.625rem;
+          font-size: var(--ds-text-lg);
+          padding: var(--ds-space-3) var(--ds-space-2);
         }
       }
     `,

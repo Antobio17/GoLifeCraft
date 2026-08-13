@@ -2,7 +2,6 @@
   #swipe
   [disabled]="!canWrite || !removable"
   [reveal]="66"
-  [radius]="16"
   [removeLabel]="removeLabel"
   (remove)="removed.emit()"
 >
@@ -10,7 +9,7 @@
     class="agenda-item"
     direction="row"
     align="center"
-    [gap]="'0.6875rem'"
+    [gap]="'var(--ds-space-3)'"
     [class.agenda-item--done]="done"
     [class.agenda-item--slid]="swipe.slid"
   >
@@ -37,7 +36,7 @@
       [ariaLabel]="canWrite ? editLabel : ''"
       (press)="opened.emit()"
     >
-      <ds-stack [gap]="'0.25rem'" [grow]="true">
+      <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
         <ds-text class="agenda-item__title" variant="strong">{{
           title
         }}</ds-text>
@@ -46,7 +45,7 @@
           direction="row"
           align="center"
           [wrap]="true"
-          [gap]="'0.4375rem'"
+          [gap]="'var(--ds-space-1-5)'"
         >
           <ds-chip
             class="agenda-item__kind"
@@ -59,7 +58,7 @@
               class="agenda-item__time"
               direction="row"
               align="center"
-              [gap]="'0.25rem'"
+              [gap]="'var(--ds-space-1)'"
             >
               <ds-icon name="clock" [size]="12" [stroke]="2.2" />
               <ds-text [inline]="true">{{ timeLabel }}</ds-text>
