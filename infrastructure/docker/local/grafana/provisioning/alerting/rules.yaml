@@ -1,0 +1,143 @@
+apiVersion: 1
+
+# Todas las reglas se provisionan pausadas (isPaused: true). Quitar esa línea
+# las activa, pero antes hay que resolver lo anotado en cada una.
+
+groups:
+  - orgId: 1
+    name: golifecraft
+    folder: GoLifeCraft
+    interval: 1m
+    rules:
+      # PENDIENTE antes de despausar: Symfony registra los 404 como ERROR, así que
+      # cada bot que escanea el dominio dispara esta regla. Bajar el nivel con
+      # framework.exceptions.NotFoundHttpException.log_level: info y, aun así,
+      # subir el umbral de 0 a algo como 5: un único ERROR suelto no es una caída.
+      - uid: glc-app-errors
+        title: Errores de aplicación
+        condition: threshold
+        for: 2m
+        noDataState: OK
+        execErrState: Error
+        isPaused: true
+        labels:
+          severity: critical
+        annotations:
+          summary: La aplicación está registrando errores
+          description: "{{ $values.query }} entradas ERROR/CRITICAL/ALERT en los últimos 5 minutos."
+        data:
+          - refId: query
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: loki
+            model:
+              refId: query
+              datasource:
+                type: loki
+                uid: loki
+              queryType: instant
+              expr: 'sum(count_over_time({level=~"ERROR|CRITICAL|ALERT"}[5m]))'
+          - refId: threshold
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              refId: threshold
+              datasource:
+                type: __expr__
+                uid: __expr__
+              type: threshold
+              expression: query
+              conditions:
+                - evaluator:
+                    type: gt
+                    params:
+                      - 0
+
+      - uid: glc-php-silent
+        title: Sin logs de la aplicación
+        condition: threshold
+        for: 5m
+        noDataState: Alerting
+        execErrState: Error
+        isPaused: true
+        labels:
+          severity: critical
+        annotations:
+          summary: El contenedor PHP lleva 15 minutos sin escribir nada
+          description: Puede estar caído, reiniciándose o bloqueado. No hay error que registrar porque no hay nadie para registrarlo.
+        data:
+          - refId: query
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: loki
+            model:
+              refId: query
+              datasource:
+                type: loki
+                uid: loki
+              queryType: instant
+              expr: 'sum(count_over_time({container="golifecraft_php"}[15m]))'
+          - refId: threshold
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: __expr__
+            model:
+              refId: threshold
+              datasource:
+                type: __expr__
+                uid: __expr__
+              type: threshold
+              expression: query
+              conditions:
+                - evaluator:
+                    type: lt
+                    params:
+                      - 1
+
+      - uid: glc-nginx-5xx
+        title: Pico de errores 5xx
+        condition: threshold
+        for: 5m
+        noDataState: OK
+        execErrState: Error
+        isPaused: true
+        labels:
+          severity: warning
+        annotations:
+          summary: nginx está devolviendo 5xx
+          description: "{{ $values.query }} respuestas 5xx en los últimos 5 minutos."
+        data:
+          - refId: query
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: loki
+            model:
+              refId: query
+              datasource:
+                type: loki
+                uid: loki
+              queryType: instant
+              expr: 'sum(count_over_time({container=~"golifecraft_(nginx|gateway)"} |~ " 5[0-9][0-9] " [5m]))'
+          - refId: threshold
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              refId: threshold
+              datasource:
+                type: __expr__
+                uid: __expr__
+              type: threshold
+              expression: query
+              conditions:
+                - evaluator:
+                    type: gt
+                    params:
+                      - 5

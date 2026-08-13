@@ -178,6 +178,12 @@ services:
       GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
       GF_NEWS_NEWS_FEED_ENABLED: "false"
       GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SMTP_ENABLED: "true"
+      GF_SMTP_HOST: mailpit:1025
+      GF_SMTP_SKIP_VERIFY: "true"
+      GF_SMTP_FROM_ADDRESS: grafana@golifecraft.com
+      GF_SMTP_FROM_NAME: GoLifeCraft
+      GRAFANA_ALERT_EMAIL: "${GRAFANA_ALERT_EMAIL:-alerts@golifecraft.com}"
     volumes:
       - ./infrastructure/docker/local/grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
