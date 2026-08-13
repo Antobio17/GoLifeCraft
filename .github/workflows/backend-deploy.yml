@@ -115,6 +115,16 @@ jobs:
             echo "==> Starting services..."
             docker compose --env-file .env.local -f docker-compose.prod.yml up -d --remove-orphans
 
+            # The step above only recreates a container when its image or its
+            # compose definition changes, and these four take their config from
+            # bind mounts that the deploy wipes and rewrites. Two consequences:
+            # the running container still has the deleted directory mounted and
+            # cannot see the new files at all, and Grafana reads alerting and
+            # datasource provisioning only at boot. A restart re-resolves the
+            # mount and reloads the config; recreating them is not necessary.
+            echo "==> Reloading bind-mounted configs..."
+            docker compose --env-file .env.local -f docker-compose.prod.yml restart certbot loki alloy grafana
+
             echo "==> Waiting for database to be ready..."
             DATABASE_MASTER_PASSWORD=$(grep '^DATABASE_MASTER_PASSWORD=' .env.local | cut -d= -f2-)
             tries=0
