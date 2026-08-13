@@ -13,7 +13,7 @@
 
 @media (display-mode: standalone) {
   :host {
-    bottom: -1.875rem;
+    padding-bottom: var(--ds-space-2);
   }
 }
 

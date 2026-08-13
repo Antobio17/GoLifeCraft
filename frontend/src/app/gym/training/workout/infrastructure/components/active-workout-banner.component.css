@@ -12,7 +12,7 @@
 
 @media (display-mode: standalone) {
   :host {
-    bottom: calc(2.5rem + env(safe-area-inset-bottom));
+    bottom: 4.25rem;
   }
 }
 
