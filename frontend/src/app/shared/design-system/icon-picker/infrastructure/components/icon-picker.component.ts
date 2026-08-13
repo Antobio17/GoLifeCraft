@@ -90,9 +90,9 @@ import { IconGroup } from "../../domain/models/icon-group.model";
         position: relative;
         appearance: none;
         cursor: pointer;
-        width: 64px;
-        height: 64px;
-        border-radius: 16px;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 1rem;
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border);
         display: flex;
@@ -107,33 +107,33 @@ import { IconGroup } from "../../domain/models/icon-group.model";
       }
       .ds-icon-trigger__badge {
         position: absolute;
-        right: -5px;
-        bottom: -5px;
-        width: 24px;
-        height: 24px;
-        border-radius: 8px;
+        right: -0.3125rem;
+        bottom: -0.3125rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 0.5rem;
         background: var(--ds-primary);
         color: var(--ds-on-primary);
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 2px 0.375rem rgba(0, 0, 0, 0.22);
       }
       .ds-icon-sheet {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 1rem;
       }
       .ds-icon-sheet__empty {
         margin: 0;
-        padding: 8px 2px;
+        padding: 0.5rem 2px;
         font-size: var(--ds-text-sm);
         color: var(--ds-text-meta);
       }
       .ds-icon-sheet__group {
         display: flex;
         flex-direction: column;
-        gap: 9px;
+        gap: 0.5625rem;
       }
       .ds-icon-sheet__region {
         font-size: var(--ds-text-xs);
@@ -144,8 +144,8 @@ import { IconGroup } from "../../domain/models/icon-group.model";
       }
       .ds-icon-sheet__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
-        gap: 9px;
+        grid-template-columns: repeat(auto-fill, minmax(2.875rem, 1fr));
+        gap: 0.5625rem;
       }
       .ds-icon-cell {
         display: inline-flex;
@@ -155,8 +155,8 @@ import { IconGroup } from "../../domain/models/icon-group.model";
         cursor: pointer;
         border: 1px solid var(--ds-border);
         background: var(--ds-surface-subtle);
-        border-radius: 13px;
-        height: 50px;
+        border-radius: 0.8125rem;
+        height: 3.125rem;
         color: var(--ds-text-strong);
         transition: all 0.14s ease;
       }

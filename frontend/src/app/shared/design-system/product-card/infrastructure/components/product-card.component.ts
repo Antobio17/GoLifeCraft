@@ -90,7 +90,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       }
       .ds-pcard {
         display: flex;
-        gap: 11px;
+        gap: 0.6875rem;
         width: 100%;
         height: 100%;
         text-align: left;
@@ -99,8 +99,8 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         color: inherit;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: 16px;
-        padding: 10px;
+        border-radius: 1rem;
+        padding: 0.625rem;
         cursor: pointer;
         transition:
           border-color 0.15s ease,
@@ -119,16 +119,16 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         align-self: center;
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 0.3125rem;
         appearance: none;
         font: inherit;
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: 800;
         color: var(--ds-on-primary);
         background: var(--ds-primary);
         border: none;
-        border-radius: 11px;
-        padding: 8px 11px;
+        border-radius: 0.6875rem;
+        padding: 0.5rem 0.6875rem;
         cursor: pointer;
         transition:
           background 0.15s ease,
@@ -142,15 +142,15 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         color: var(--ds-text-muted);
       }
       .ds-pcard__emoji {
-        width: 56px;
-        height: 56px;
+        width: 3.5rem;
+        height: 3.5rem;
         flex: 0 0 auto;
-        border-radius: 12px;
+        border-radius: 0.75rem;
         background: var(--ds-surface-inset);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 26px;
+        font-size: 1.625rem;
         overflow: hidden;
       }
       .ds-pcard__image {
@@ -168,30 +168,30 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         display: flex;
         justify-content: space-between;
         align-items: baseline;
-        gap: 8px;
+        gap: 0.5rem;
       }
       .ds-pcard__name {
-        font-size: 13.5px;
+        font-size: 0.84375rem;
         font-weight: 700;
         line-height: 1.2;
         color: var(--ds-text);
       }
       .ds-pcard__price {
-        font-size: 13.5px;
+        font-size: 0.84375rem;
         font-weight: 800;
         color: var(--ds-primary);
         white-space: nowrap;
       }
       .ds-pcard__price-below {
         display: block;
-        font-size: 12.5px;
+        font-size: 0.78125rem;
         font-weight: 800;
         color: var(--ds-primary);
         margin-top: 2px;
       }
       .ds-pcard__meta {
         display: block;
-        font-size: 11px;
+        font-size: 0.6875rem;
         color: var(--ds-text-muted);
         margin-top: 2px;
         overflow: hidden;
@@ -203,7 +203,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         font-weight: 700;
       }
       .ds-pcard__badges {
-        margin-top: 8px;
+        margin-top: 0.5rem;
       }
     `,
   ],

@@ -77,12 +77,12 @@ export interface ActivityHeatmapMonth {
     `
       :host {
         display: block;
-        --ds-heat-cell: 12px;
-        --ds-heat-gap: 3px;
+        --ds-heat-cell: 0.75rem;
+        --ds-heat-gap: 0.1875rem;
       }
       .ds-heat {
         display: flex;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .ds-heat__rows {
         display: grid;
@@ -94,7 +94,7 @@ export interface ActivityHeatmapMonth {
       .ds-heat__weekday {
         display: flex;
         align-items: center;
-        font-size: 8.5px;
+        font-size: 0.53125rem;
         line-height: 1;
         color: var(--ds-text-meta);
       }
@@ -133,7 +133,7 @@ export interface ActivityHeatmapMonth {
       }
       .ds-heat__month {
         grid-row: 1;
-        font-size: 8.5px;
+        font-size: 0.53125rem;
         line-height: var(--ds-heat-cell);
         white-space: nowrap;
         color: var(--ds-text-meta);
@@ -141,7 +141,7 @@ export interface ActivityHeatmapMonth {
       .ds-heat__cell {
         width: var(--ds-heat-cell);
         height: var(--ds-heat-cell);
-        border-radius: 3px;
+        border-radius: 0.1875rem;
         background: var(--ds-heat-level-0, var(--ds-border));
       }
       .ds-heat__cell[data-level="1"] {
@@ -171,18 +171,18 @@ export interface ActivityHeatmapMonth {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 3px;
-        margin-top: 10px;
+        gap: 0.1875rem;
+        margin-top: 0.625rem;
       }
       .ds-heat__legend-text {
-        font-size: 8.5px;
+        font-size: 0.53125rem;
         color: var(--ds-text-meta);
       }
       .ds-heat__legend-text:first-child {
-        margin-right: 3px;
+        margin-right: 0.1875rem;
       }
       .ds-heat__legend-text:last-child {
-        margin-left: 3px;
+        margin-left: 0.1875rem;
       }
     `,
   ],

@@ -1,5 +1,5 @@
-<ds-page-wrapper [maxWidth]="'560px'" [gap]="'0'">
-  <ds-stack [gap]="'14px'">
+<ds-page-wrapper [maxWidth]="'35rem'" [gap]="'0'">
+  <ds-stack [gap]="'0.875rem'">
     <ds-screen-header
       leading="back"
       [leadingLabel]="'users.back' | t"
@@ -13,32 +13,32 @@
     </ds-screen-header>
 
     @if (loading()) {
-      <ds-stack [gap]="'22px'">
-        <ds-skeleton-metrics [count]="3" [gap]="'10px'" [feature]="true" />
+      <ds-stack [gap]="'1.375rem'">
+        <ds-skeleton-metrics [count]="3" [gap]="'0.625rem'" [feature]="true" />
 
-        <ds-stack [gap]="'10px'">
-          <ds-skeleton-line width="142px" height="12px" />
+        <ds-stack [gap]="'0.625rem'">
+          <ds-skeleton-line width="8.875rem" height="0.75rem" />
           <ds-skeleton-list
             [count]="4"
-            [gap]="'10px'"
+            [gap]="'0.625rem'"
             radius="var(--ds-radius-3xl)"
-            padding="13px 14px"
+            padding="0.8125rem 0.875rem"
             [tile]="44"
             [tileRadius]="22"
             titleWidth="52%"
             metaWidth="68%"
             [chips]="1"
             trailing="pill"
-            pillWidth="62px"
-            pillHeight="28px"
+            pillWidth="3.875rem"
+            pillHeight="1.75rem"
           />
         </ds-stack>
 
         <ds-skeleton-note [lines]="2" />
       </ds-stack>
     } @else {
-      <ds-stack [gap]="'22px'">
-        <ds-stack direction="row" [gap]="'10px'">
+      <ds-stack [gap]="'1.375rem'">
+        <ds-stack direction="row" [gap]="'0.625rem'">
           <ds-metric-card
             [value]="total()"
             [label]="'users.summary.requests' | t"
@@ -54,7 +54,7 @@
           ></ds-metric-card>
         </ds-stack>
 
-        <ds-stack [gap]="'10px'">
+        <ds-stack [gap]="'0.625rem'">
           <ds-text variant="label">{{ "users.section.requests" | t }}</ds-text>
 
           @if (rows().length === 0) {

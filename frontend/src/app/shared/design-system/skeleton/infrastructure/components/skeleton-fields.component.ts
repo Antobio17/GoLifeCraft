@@ -29,22 +29,22 @@ import { Component, Input } from "@angular/core";
       .skfld {
         display: flex;
         flex-direction: column;
-        gap: var(--skfld-gap, 16px);
+        gap: var(--skfld-gap, 1rem);
       }
       .skfld__row {
         display: grid;
-        gap: 12px;
+        gap: 0.75rem;
       }
       .skfld__field {
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 0.5rem;
       }
       .skfld__label {
-        width: 96px;
+        width: 6rem;
         max-width: 60%;
-        height: 11px;
+        height: 0.6875rem;
       }
       .skfld__control {
         width: 100%;
@@ -59,8 +59,8 @@ import { Component, Input } from "@angular/core";
 export class SkeletonFieldsComponent {
   @Input() rows: number[] = [1, 2, 1];
   @Input() labels = true;
-  @Input() controlHeight = "44px";
-  @Input() gap = "16px";
+  @Input() controlHeight = "2.75rem";
+  @Input() gap = "1rem";
 
   columnArray(columns: number): number[] {
     return Array.from({ length: columns }, (_, index) => index);

@@ -8,7 +8,7 @@ import { Component } from "@angular/core";
       :host {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 24px;
+        gap: 1.5rem;
       }
       @media (max-width: 768px) {
         :host {

@@ -14,7 +14,7 @@ import {
   DiaryTreeUnitChange,
 } from "../../domain/models/diary-tree-change.model";
 
-const INDENT_PER_LEVEL = 15;
+const INDENT_PER_LEVEL_REM = 0.9375;
 
 @Component({
   selector: "ds-diary-tree",
@@ -50,6 +50,6 @@ export class DiaryTreeComponent {
   @Output() restored = new EventEmitter<void>();
 
   indentOf(row: DiaryTreeRow): string {
-    return `${row.depth * INDENT_PER_LEVEL}px`;
+    return `${row.depth * INDENT_PER_LEVEL_REM}rem`;
   }
 }

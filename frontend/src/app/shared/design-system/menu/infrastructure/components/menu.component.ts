@@ -62,13 +62,13 @@ export interface MenuItem {
       }
       .ds-menu__panel {
         position: absolute;
-        top: calc(100% + 6px);
+        top: calc(100% + 0.375rem);
         right: 0;
         z-index: 31;
-        min-width: 168px;
+        min-width: 10.5rem;
         display: flex;
         flex-direction: column;
-        padding: 6px;
+        padding: 0.375rem;
         border-radius: var(--ds-radius-xl);
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border-hairline);
@@ -77,9 +77,9 @@ export interface MenuItem {
       .ds-menu__item {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 0.625rem;
         width: 100%;
-        padding: 9px 12px;
+        padding: 0.5625rem 0.75rem;
         border: none;
         border-radius: var(--ds-radius-md);
         background: transparent;

@@ -78,7 +78,7 @@ type TextInputVariant = "default" | "outlined";
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
         border-radius: var(--ds-radius-xl);
-        padding: 12px 13px;
+        padding: 0.75rem 0.8125rem;
         font: inherit;
         font-size: var(--ds-text-base);
         color: var(--ds-text);
@@ -114,18 +114,18 @@ type TextInputVariant = "default" | "outlined";
         position: relative;
         display: flex;
         align-items: center;
-        gap: 9px;
+        gap: 0.5625rem;
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border-input);
         border-radius: var(--ds-radius-xl);
-        padding: 12px 13px;
+        padding: 0.75rem 0.8125rem;
         transition:
           border-color var(--ds-transition-fast),
           box-shadow var(--ds-transition-fast);
       }
       .ds-text-input__control:focus-within {
         border-color: var(--ds-border-focus);
-        box-shadow: 0 0 0 3px var(--ds-primary-soft);
+        box-shadow: 0 0 0 0.1875rem var(--ds-primary-soft);
       }
       .ds-text-input__control.is-invalid,
       .ds-text-input__control.is-invalid:focus-within {
@@ -134,7 +134,7 @@ type TextInputVariant = "default" | "outlined";
       }
       .ds-text-input__emoji {
         flex: none;
-        font-size: 22px;
+        font-size: 1.375rem;
         line-height: 1;
       }
       .ds-text-input__bare--strong {

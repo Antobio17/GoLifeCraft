@@ -53,13 +53,13 @@ import {
 })
 export class SkeletonListComponent {
   @Input() count = 4;
-  @Input() gap = "8px";
-  @Input() minColumn = "240px";
+  @Input() gap = "0.5rem";
+  @Input() minColumn = "15rem";
   @Input() columns: number | null = 1;
   @Input() tabletColumns: number | null = null;
 
-  @Input() padding = "10px 11px";
-  @Input() radius = "16px";
+  @Input() padding = "0.625rem 0.6875rem";
+  @Input() radius = "1rem";
   @Input() tone: "surface" | "brand" = "surface";
   @Input() alignTop = false;
   @Input() check = false;
@@ -67,15 +67,15 @@ export class SkeletonListComponent {
   @Input() tile = 0;
   @Input() tileRadius = 12;
   @Input() titleWidth = "58%";
-  @Input() titleHeight = "13px";
+  @Input() titleHeight = "0.8125rem";
   @Input() headTrailing = "";
   @Input() meta = true;
   @Input() metaWidth = "38%";
   @Input() chips = 0;
   @Input() trailing: SkeletonListItemTrailing = "none";
   @Input() actions = 2;
-  @Input() pillWidth = "78px";
-  @Input() pillHeight = "30px";
+  @Input() pillWidth = "4.875rem";
+  @Input() pillHeight = "1.875rem";
   @Input() progress = false;
   @Input() footButton = false;
   @Input() footItems = 0;

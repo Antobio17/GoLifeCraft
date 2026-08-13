@@ -48,12 +48,12 @@ import { Component, Input } from "@angular/core";
       .ds-field {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 0.5rem;
       }
       .ds-field__label {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-bold);
         letter-spacing: 0.05em;
@@ -67,18 +67,18 @@ import { Component, Input } from "@angular/core";
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 2px 8px;
+        padding: 2px 0.5rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
-        font-size: 10px;
+        font-size: 0.625rem;
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0;
       }
       .ds-field__hint {
         display: flex;
         align-items: flex-start;
-        gap: 6px;
+        gap: 0.375rem;
         margin: 2px 0 0;
         font-size: var(--ds-text-sm);
         color: var(--ds-text-muted);

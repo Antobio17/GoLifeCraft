@@ -53,13 +53,13 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .item {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 0.75rem;
         width: 100%;
-        padding: 11px 13px;
-        border-radius: 13px;
+        padding: 0.6875rem 0.8125rem;
+        border-radius: 0.8125rem;
         color: var(--ds-text);
         font-family: inherit;
-        font-size: 14px;
+        font-size: 0.875rem;
         font-weight: 600;
         transition:
           background var(--ds-transition-base),
@@ -81,8 +81,8 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       }
       .item__badge {
         flex: none;
-        --chip-pad: 2px 7px;
-        --chip-radius: 999px;
+        --chip-pad: 2px 0.4375rem;
+        --chip-radius: 62.4375rem;
         --chip-bg: color-mix(in srgb, var(--ds-accent) 18%, transparent);
         --chip-text: var(--ds-accent-soft-text);
       }
@@ -95,8 +95,8 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         --chip-text: var(--drawer-active-fg, var(--ds-on-primary));
       }
       :host(.is-sub) .item {
-        padding-left: 27px;
-        font-size: 13.5px;
+        padding-left: 1.6875rem;
+        font-size: 0.84375rem;
       }
       :host(.is-sub) .item__icon {
         color: var(--ds-text-meta);

@@ -25,17 +25,17 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
         text-align: center;
-        padding: 40px 24px;
+        padding: 2.5rem 1.5rem;
       }
       .ds-empty__icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 64px;
-        height: 64px;
-        margin-bottom: 4px;
+        width: 4rem;
+        height: 4rem;
+        margin-bottom: 0.25rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         color: var(--ds-text-meta);
@@ -55,7 +55,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         line-height: 1.5;
       }
       .ds-empty ::ng-deep > *:last-child {
-        margin-top: 8px;
+        margin-top: 0.5rem;
       }
     `,
   ],

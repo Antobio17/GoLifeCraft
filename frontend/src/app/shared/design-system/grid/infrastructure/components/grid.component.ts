@@ -7,10 +7,10 @@ import { Component, Input } from "@angular/core";
     `
       :host {
         display: grid;
-        gap: var(--grid-gap, 12px);
+        gap: var(--grid-gap, 0.75rem);
         grid-template-columns: repeat(
           var(--grid-cols, auto-fill),
-          minmax(min(var(--grid-min, 240px), 100%), 1fr)
+          minmax(min(var(--grid-min, 15rem), 100%), 1fr)
         );
       }
 
@@ -33,8 +33,8 @@ import { Component, Input } from "@angular/core";
   },
 })
 export class GridComponent {
-  @Input() minColumn = "240px";
-  @Input() gap = "12px";
+  @Input() minColumn = "15rem";
+  @Input() gap = "0.75rem";
   @Input() columns: number | null = null;
   @Input() tabletColumns: number | null = null;
 }

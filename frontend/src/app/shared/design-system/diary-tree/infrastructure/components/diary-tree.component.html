@@ -1,10 +1,10 @@
 <ds-stack class="diary-tree__clip">
-  <ds-stack class="diary-tree" gap="6px">
+  <ds-stack class="diary-tree" gap="0.375rem">
     <ds-stack
       class="diary-tree__header"
       direction="row"
       align="center"
-      gap="7px"
+      gap="0.4375rem"
     >
       <ds-icon name="breakdown" [size]="13" [stroke]="2.2" />
       <ds-text class="diary-tree__title">{{ title }}</ds-text>
@@ -15,7 +15,7 @@
         class="diary-tree__reset"
         direction="row"
         align="center"
-        gap="8px"
+        gap="0.5rem"
       >
         <ds-icon name="restore" [size]="14" [stroke]="2.2" />
         <ds-text class="diary-tree__reset-text">{{ resetMessage }}</ds-text>
@@ -35,12 +35,12 @@
         [style.margin-left]="indentOf(row)"
         direction="row"
         align="center"
-        gap="8px"
+        gap="0.5rem"
       >
         @if (row.expandable) {
           <ds-pressable
             [grow]="true"
-            gap="8px"
+            gap="0.5rem"
             [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
             (press)="toggled.emit(row.path)"
           >
@@ -89,7 +89,7 @@
 <ng-template #content let-row>
   <ds-emoji-tile [emoji]="row.emoji" [size]="30" [radius]="9" />
 
-  <ds-stack class="diary-tree__body" gap="3px" [grow]="true">
+  <ds-stack class="diary-tree__body" gap="0.1875rem" [grow]="true">
     <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
     <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
   </ds-stack>

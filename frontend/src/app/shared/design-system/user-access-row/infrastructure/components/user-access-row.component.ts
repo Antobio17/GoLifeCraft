@@ -73,11 +73,11 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       .ds-uar {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 0.75rem;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-2xl);
-        padding: 12px 14px;
+        padding: 0.75rem 0.875rem;
         transition: opacity 0.15s ease;
       }
       .ds-uar--inactive {
@@ -85,8 +85,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       }
       .ds-uar__avatar {
         flex: 0 0 auto;
-        width: 42px;
-        height: 42px;
+        width: 2.625rem;
+        height: 2.625rem;
         border-radius: var(--ds-radius-lg);
         background: var(--ds-surface-inset);
         color: var(--ds-primary);
@@ -118,17 +118,17 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         text-overflow: ellipsis;
       }
       .ds-uar__badges {
-        margin-top: 7px;
+        margin-top: 0.4375rem;
       }
       .ds-uar__badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: 0.25rem;
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.02em;
         border-radius: var(--ds-radius-sm);
-        padding: 3px 8px;
+        padding: 0.1875rem 0.5rem;
       }
       .ds-uar__badge--ok {
         background: var(--ds-accent-soft);
@@ -143,7 +143,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 5px;
+        gap: 0.3125rem;
         appearance: none;
         border: none;
         background: none;
@@ -155,8 +155,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         opacity: 0.7;
       }
       .ds-uar__track {
-        width: 42px;
-        height: 24px;
+        width: 2.625rem;
+        height: 1.5rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border-strong);
@@ -173,15 +173,15 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       }
       .ds-uar__knob {
         display: block;
-        width: 18px;
-        height: 18px;
+        width: 1.125rem;
+        height: 1.125rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-raised);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 0.1875rem rgba(0, 0, 0, 0.2);
         transition: transform 0.18s ease;
       }
       .ds-uar__track.is-on .ds-uar__knob {
-        transform: translateX(18px);
+        transform: translateX(1.125rem);
       }
       .ds-uar__perm {
         font-size: var(--ds-text-xs);

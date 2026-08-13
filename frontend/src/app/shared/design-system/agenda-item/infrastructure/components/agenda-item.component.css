@@ -8,7 +8,7 @@
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-3xl);
-  padding: 11px 12px;
+  padding: 0.6875rem 0.75rem;
   transition: background var(--ds-transition-fast);
 }
 
@@ -24,8 +24,8 @@
 .agenda-item__check {
   flex: 0 0 auto;
   display: flex;
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: var(--ds-radius-md);
   background: var(--ds-surface-inset);
   border: 1.5px solid var(--ds-border-input);
@@ -41,7 +41,7 @@
 }
 
 .agenda-item__title {
-  --ds-text-base: 13.5px;
+  --ds-text-base: 0.84375rem;
   --ds-leading-normal: 1.3;
   letter-spacing: -0.01em;
   overflow-wrap: anywhere;
@@ -54,8 +54,8 @@
 
 .agenda-item__kind {
   --chip-radius: var(--ds-radius-pill);
-  --chip-pad: 2px 7px;
-  --chip-size: 9.5px;
+  --chip-pad: 2px 0.4375rem;
+  --chip-size: 0.59375rem;
   --chip-weight: var(--ds-weight-extrabold);
   letter-spacing: 0.04em;
 }
@@ -67,13 +67,13 @@
 
 .agenda-item__time ds-text {
   --ds-text-body: var(--ds-text-muted);
-  --ds-text-base: 11px;
+  --ds-text-base: 0.6875rem;
   font-weight: var(--ds-weight-bold);
   white-space: nowrap;
 }
 
 .agenda-item__notes {
-  --ds-text-sm: 11.5px;
+  --ds-text-sm: 0.71875rem;
   --ds-leading-normal: 1.4;
   color: var(--ds-text-muted);
   margin-top: 1px;

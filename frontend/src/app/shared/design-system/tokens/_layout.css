@@ -7,10 +7,10 @@
    ============================================================ */
 
 :root {
-  --ds-app-frame-width: 480px;
-  --ds-app-sidebar-width: 244px;
-  --ds-app-content-max: 1180px;
-  --ds-form-max-width: 960px;
+  --ds-app-frame-width: 30rem;
+  --ds-app-sidebar-width: 15.25rem;
+  --ds-app-content-max: 73.75rem;
+  --ds-form-max-width: 60rem;
   --ds-z-drawer: 100;
   --ds-z-modal: 200;
   --ds-z-toast: 300;

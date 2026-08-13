@@ -3,7 +3,7 @@
 }
 
 .pw-wrapper {
-  min-height: calc(100vh - 72px);
+  min-height: calc(100vh - 4.5rem);
   background: transparent;
   font-family: var(--ds-font-body);
   position: relative;
@@ -11,7 +11,7 @@
 
 .pw-container {
   margin: 0 auto;
-  padding: 24px 32px 48px;
+  padding: 1.5rem 2rem 3rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,14 +20,14 @@
 :host ::ng-deep .pw-container > ds-list-filters + ds-list-table,
 :host ::ng-deep .pw-container > ds-list-table + ds-pagination,
 :host ::ng-deep .pw-container > ds-list-filters + ds-pagination {
-  margin-top: -16px;
+  margin-top: -1rem;
 }
 
 /* Unified list card: groups filters + table + pagination behind one shell. */
 :host ::ng-deep .pw-container > .list-card {
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: 14px;
+  border-radius: 0.875rem;
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
 }
@@ -41,24 +41,24 @@
     overflow: visible;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1rem;
   }
 }
 
 @media (max-width: 1024px) {
   .pw-container {
-    padding: 20px 20px 32px;
+    padding: 1.25rem 1.25rem 2rem;
   }
 }
 
 @media (max-width: 768px) {
   .pw-container {
-    padding: 16px 16px 24px;
+    padding: 1rem 1rem 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .pw-container {
-    padding: 14px 16px 20px;
+    padding: 0.875rem 1rem 1.25rem;
   }
 }

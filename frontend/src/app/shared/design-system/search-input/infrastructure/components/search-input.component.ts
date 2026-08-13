@@ -67,11 +67,11 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
       .ds-search {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 0.625rem;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
         border-radius: var(--ds-radius-xl);
-        padding: 11px 14px;
+        padding: 0.6875rem 0.875rem;
         transition:
           border-color 0.15s ease,
           box-shadow 0.15s ease;

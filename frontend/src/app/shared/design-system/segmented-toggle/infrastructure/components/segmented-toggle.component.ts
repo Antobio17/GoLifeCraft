@@ -43,19 +43,19 @@ export interface SegmentedOption {
         grid-template-columns: repeat(var(--ds-seg-count, 2), 1fr);
         background: var(--ds-surface-inset);
         border-radius: var(--ds-radius-2xl);
-        padding: 4px;
+        padding: 0.25rem;
         isolation: isolate;
       }
       .ds-segmented__indicator {
         position: absolute;
         z-index: 0;
-        top: 4px;
-        bottom: 4px;
-        left: 4px;
-        width: calc((100% - 8px) / var(--ds-seg-count, 2));
+        top: 0.25rem;
+        bottom: 0.25rem;
+        left: 0.25rem;
+        width: calc((100% - 0.5rem) / var(--ds-seg-count, 2));
         border-radius: var(--ds-radius-lg);
         background: var(--ds-primary);
-        box-shadow: 0 2px 8px -2px var(--ds-primary);
+        box-shadow: 0 2px 0.5rem -2px var(--ds-primary);
         transition: transform 0.22s cubic-bezier(0.4, 0.2, 0.2, 1);
       }
       .ds-segmented__option {
@@ -66,7 +66,7 @@ export interface SegmentedOption {
         background: transparent;
         cursor: pointer;
         user-select: none;
-        padding: 9px;
+        padding: 0.5625rem;
         font: inherit;
         font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-semibold);

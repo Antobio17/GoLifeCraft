@@ -77,7 +77,7 @@ export class ListTableComponent<T = unknown> implements OnChanges {
         ? Math.max(count * 30 + Math.max(count - 1, 0) * 6 + 24, 90)
         : 0;
 
-    return `${colMins + gaps + padding + actionWidth}px`;
+    return `${(colMins + gaps + padding + actionWidth) / 16}rem`;
   }
 
   get primaryColumn(): ListColumn<T> | undefined {

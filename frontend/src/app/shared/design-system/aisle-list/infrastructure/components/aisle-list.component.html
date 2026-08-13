@@ -1,7 +1,7 @@
 @if (items.length === 0) {
   <ds-text variant="muted" class="aisle-list__empty">{{ emptyText }}</ds-text>
 } @else {
-  <ds-stack [gap]="'8px'">
+  <ds-stack [gap]="'0.5rem'">
     @for (item of items; track item.id; let index = $index) {
       <ds-swipe-to-delete
         #swipe
@@ -16,7 +16,7 @@
           [class.aisle-list__row--slid]="swipe.slid"
           direction="row"
           align="center"
-          [gap]="'10px'"
+          [gap]="'0.625rem'"
         >
           <ds-text variant="meta" class="aisle-list__position">{{
             item.position

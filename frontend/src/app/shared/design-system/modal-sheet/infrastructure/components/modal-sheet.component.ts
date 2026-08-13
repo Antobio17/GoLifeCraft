@@ -70,17 +70,17 @@ import {
 
       .ds-sheet__overlay {
         --ds-sheet-viewport: 100dvh;
-        --ds-sheet-height: min(calc(var(--ds-sheet-viewport) * 0.9), 860px);
+        --ds-sheet-height: min(calc(var(--ds-sheet-viewport) * 0.9), 53.75rem);
         --ds-sheet-height-tall: min(
           calc(var(--ds-sheet-viewport) * 0.94),
-          920px
+          57.5rem
         );
         --ds-sheet-height-compact: min(
           calc(var(--ds-sheet-viewport) * 0.82),
-          760px
+          47.5rem
         );
-        --ds-sheet-max-gap: 16px;
-        --ds-sheet-max-gap-desktop: 32px;
+        --ds-sheet-max-gap: 1rem;
+        --ds-sheet-max-gap-desktop: 2rem;
 
         position: fixed;
         inset: 0;
@@ -95,41 +95,41 @@ import {
         display: flex;
         flex-direction: column;
         width: 100%;
-        max-width: 480px;
+        max-width: 30rem;
         height: var(--ds-sheet-height);
         max-height: calc(var(--ds-sheet-viewport) - var(--ds-sheet-max-gap));
-        min-height: min(calc(var(--ds-sheet-viewport) * 0.76), 620px);
+        min-height: min(calc(var(--ds-sheet-viewport) * 0.76), 38.75rem);
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border);
-        border-radius: 22px 22px 0 0;
-        box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.28);
+        border-radius: 1.375rem 1.375rem 0 0;
+        box-shadow: 0 -0.5rem 2.5rem rgba(0, 0, 0, 0.28);
         animation: ds-sheet-up 0.24s cubic-bezier(0.4, 0.2, 0.2, 1);
       }
       .ds-sheet--tall {
         height: var(--ds-sheet-height-tall);
-        min-height: min(calc(var(--ds-sheet-viewport) * 0.86), 720px);
+        min-height: min(calc(var(--ds-sheet-viewport) * 0.86), 45rem);
       }
       .ds-sheet--compact {
         height: var(--ds-sheet-height-compact);
-        min-height: min(calc(var(--ds-sheet-viewport) * 0.68), 560px);
-        max-height: calc(var(--ds-sheet-viewport) - 24px);
+        min-height: min(calc(var(--ds-sheet-viewport) * 0.68), 35rem);
+        max-height: calc(var(--ds-sheet-viewport) - 1.5rem);
       }
       .ds-sheet--auto {
         height: auto;
         min-height: 0;
       }
       .ds-sheet__grip {
-        width: 40px;
-        height: 4px;
+        width: 2.5rem;
+        height: 0.25rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-border-strong);
-        margin: 10px auto 2px;
+        margin: 0.625rem auto 2px;
       }
       .ds-sheet__header {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 10px 18px 12px;
+        gap: 0.75rem;
+        padding: 0.625rem 1.125rem 0.75rem;
         border-bottom: 1px solid var(--ds-border);
       }
       .ds-sheet__title {
@@ -150,8 +150,8 @@ import {
         background: var(--ds-surface-subtle);
         color: var(--ds-text-muted);
         cursor: pointer;
-        width: 32px;
-        height: 32px;
+        width: 2rem;
+        height: 2rem;
         border-radius: var(--ds-radius-md);
         display: flex;
         align-items: center;
@@ -164,7 +164,7 @@ import {
       .ds-sheet__body {
         flex: 1 1 auto;
         min-width: 0;
-        padding: 16px 18px 22px;
+        padding: 1rem 1.125rem 1.375rem;
         overflow-x: hidden;
         overflow-y: auto;
       }
@@ -181,17 +181,17 @@ import {
           align-items: center;
         }
         .ds-sheet {
-          border-radius: 22px;
+          border-radius: 1.375rem;
           max-height: calc(
             var(--ds-sheet-viewport) - var(--ds-sheet-max-gap-desktop)
           );
           animation-name: ds-sheet-pop;
         }
         .ds-sheet--tall {
-          max-height: calc(var(--ds-sheet-viewport) - 24px);
+          max-height: calc(var(--ds-sheet-viewport) - 1.5rem);
         }
         .ds-sheet--compact {
-          max-height: calc(var(--ds-sheet-viewport) - 40px);
+          max-height: calc(var(--ds-sheet-viewport) - 2.5rem);
         }
         .ds-sheet__grip {
           display: none;
@@ -200,7 +200,7 @@ import {
       @keyframes ds-sheet-pop {
         from {
           opacity: 0;
-          transform: scale(0.94) translateY(12px);
+          transform: scale(0.94) translateY(0.75rem);
         }
         to {
           opacity: 1;

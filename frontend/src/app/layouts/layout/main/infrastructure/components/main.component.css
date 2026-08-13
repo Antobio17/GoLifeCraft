@@ -3,7 +3,7 @@
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
-  max-width: var(--ds-app-frame-width, 480px);
+  max-width: var(--ds-app-frame-width, 30rem);
   margin: 0 auto;
   background: var(--ds-bg);
 }
@@ -24,7 +24,7 @@
 }
 
 .app-frame--with-tabbar .app-frame__content {
-  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 768px) {

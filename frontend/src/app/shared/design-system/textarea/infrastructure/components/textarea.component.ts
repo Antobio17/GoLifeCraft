@@ -32,7 +32,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         font: inherit;
         font-size: var(--ds-text-base);
         line-height: 1.45;
-        padding: 11px 12px;
+        padding: 0.6875rem 0.75rem;
         outline: none;
         transition:
           border-color var(--ds-transition-fast),
@@ -41,8 +41,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       .ds-textarea--compact {
         border-color: var(--ds-border);
         background: var(--ds-surface-inset);
-        font-size: 12px;
-        padding: 8px 10px;
+        font-size: 0.75rem;
+        padding: 0.5rem 0.625rem;
       }
       .ds-textarea::placeholder {
         color: var(--ds-text-meta);

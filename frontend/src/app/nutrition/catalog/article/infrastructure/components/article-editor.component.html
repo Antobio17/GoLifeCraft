@@ -1,4 +1,4 @@
-<ds-page-wrapper [maxWidth]="'640px'" [gap]="'20px'">
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'1.25rem'">
   <ds-screen-header
     [leading]="'close'"
     [leadingLabel]="'articleEditor.back' | t"
@@ -8,25 +8,25 @@
   />
 
   @if (loading()) {
-    <ds-skeleton-fields [rows]="[2, 2, 1, 1, 1]" [gap]="'20px'" />
+    <ds-skeleton-fields [rows]="[2, 2, 1, 1, 1]" [gap]="'1.25rem'" />
     <ds-skeleton-rows
       [card]="true"
       [header]="true"
       [badge]="true"
       [rows]="7"
-      valueWidth="74px"
+      valueWidth="4.625rem"
     />
     <ds-skeleton-rows
       [card]="true"
       [header]="true"
       [rows]="3"
       labelWidth="38%"
-      valueWidth="108px"
+      valueWidth="6.75rem"
     />
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <ds-stack [gap]="'20px'">
-        <ds-stack direction="row" align="end" [gap]="'12px'">
+      <ds-stack [gap]="'1.25rem'">
+        <ds-stack direction="row" align="end" [gap]="'0.75rem'">
           <ds-field [label]="'articleEditor.field.icon' | t">
             <ds-emoji-picker
               formControlName="emoji"
@@ -52,7 +52,7 @@
           </ds-field>
         </ds-stack>
 
-        <ds-stack direction="row" align="end" [gap]="'12px'">
+        <ds-stack direction="row" align="end" [gap]="'0.75rem'">
           <ds-field [grow]="true" [label]="'articleEditor.field.brand' | t">
             <ds-text-input
               variant="outlined"
@@ -61,7 +61,7 @@
             />
           </ds-field>
 
-          <ds-field [width]="'128px'" [label]="'articleEditor.field.price' | t">
+          <ds-field [width]="'8rem'" [label]="'articleEditor.field.price' | t">
             <ds-price-input formControlName="price" />
           </ds-field>
         </ds-stack>
@@ -81,12 +81,12 @@
         </ds-field>
 
         @if (hasSupermarket()) {
-          <ds-stack [gap]="'8px'">
+          <ds-stack [gap]="'0.5rem'">
             <ds-stack
               direction="row"
               justify="between"
               align="center"
-              [gap]="'8px'"
+              [gap]="'0.5rem'"
             >
               <ds-text variant="label">{{ aisleSectionLabel() }}</ds-text>
 
@@ -118,7 +118,7 @@
           </ds-stack>
         }
 
-        <ds-stack [gap]="'10px'">
+        <ds-stack [gap]="'0.625rem'">
           <ds-nutrition-editor
             [title]="'articleEditor.nutrition.heading' | t"
             [badge]="'articleEditor.nutrition.reference' | t"

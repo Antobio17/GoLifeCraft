@@ -169,9 +169,9 @@ const BASE_UNITS = ["g", "ml"];
         pointer-events: none;
       }
       .ds-eq__head {
-        padding: 13px 16px;
+        padding: 0.8125rem 1rem;
         border-bottom: 1px solid var(--ds-border);
-        font-size: 11px;
+        font-size: 0.6875rem;
         font-weight: 800;
         letter-spacing: 0.07em;
         color: var(--ds-text);
@@ -180,8 +180,8 @@ const BASE_UNITS = ["g", "ml"];
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
-        padding: 13px 16px;
+        gap: 0.625rem;
+        padding: 0.8125rem 1rem;
         border-bottom: 1px solid var(--ds-border);
       }
       .ds-eq__base-copy {
@@ -191,27 +191,27 @@ const BASE_UNITS = ["g", "ml"];
         min-width: 0;
       }
       .ds-eq__base-label {
-        font-size: 13.5px;
+        font-size: 0.84375rem;
         font-weight: 700;
         color: var(--ds-text);
       }
       .ds-eq__base-hint {
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         color: var(--ds-text-muted);
       }
       .ds-eq__base ds-segmented-toggle {
         flex: 0 0 auto;
-        width: 96px;
+        width: 6rem;
       }
       .ds-eq__lines {
-        padding: 13px 16px;
+        padding: 0.8125rem 1rem;
         border-bottom: 1px solid var(--ds-border);
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 0.5rem;
       }
       .ds-eq__section {
-        font-size: 10px;
+        font-size: 0.625rem;
         font-weight: 800;
         letter-spacing: 0.06em;
         color: var(--ds-text-meta);
@@ -219,36 +219,36 @@ const BASE_UNITS = ["g", "ml"];
       .ds-eq__row {
         display: flex;
         align-items: center;
-        gap: 7px;
-        padding: 3px 2px;
+        gap: 0.4375rem;
+        padding: 0.1875rem 2px;
         background: var(--ds-surface);
       }
       .ds-eq__one {
-        font-size: 13px;
+        font-size: 0.8125rem;
         font-weight: 800;
         color: var(--ds-text-muted);
         flex: 0 0 auto;
       }
       .ds-eq__eq {
-        font-size: 14px;
+        font-size: 0.875rem;
         font-weight: 800;
         color: var(--ds-text-muted);
         flex: 0 0 auto;
       }
       .ds-eq__qty {
         flex: 0 0 auto;
-        width: 58px;
+        width: 3.625rem;
       }
       .ds-eq__unit {
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: 700;
         color: var(--ds-text-meta);
         flex: 0 0 auto;
-        min-width: 18px;
+        min-width: 1.125rem;
       }
       .ds-eq__help {
         margin: 1px 0 0;
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         color: var(--ds-text-meta);
         line-height: 1.45;
       }
@@ -256,14 +256,14 @@ const BASE_UNITS = ["g", "ml"];
         flex: 0 0 auto;
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        padding: 7px 8px;
+        gap: 0.25rem;
+        padding: 0.4375rem 0.5rem;
         border: 1px solid var(--ds-border-input);
         border-radius: var(--ds-radius-md);
         background: var(--ds-surface-inset);
         color: var(--ds-text-meta);
         font-family: inherit;
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         font-weight: 800;
         letter-spacing: 0.02em;
         cursor: pointer;
@@ -279,9 +279,9 @@ const BASE_UNITS = ["g", "ml"];
       .ds-eq__pack-card {
         display: flex;
         align-items: center;
-        gap: 9px;
-        margin-top: 3px;
-        padding: 11px 13px;
+        gap: 0.5625rem;
+        margin-top: 0.1875rem;
+        padding: 0.6875rem 0.8125rem;
         border: 1px solid var(--ds-primary-soft-border);
         border-radius: var(--ds-radius-lg);
         background: var(--ds-primary-soft);
@@ -294,13 +294,13 @@ const BASE_UNITS = ["g", "ml"];
         min-width: 0;
       }
       .ds-eq__pack-title {
-        font-size: 9.5px;
+        font-size: 0.59375rem;
         font-weight: 800;
         letter-spacing: 0.06em;
         text-transform: uppercase;
       }
       .ds-eq__pack-summary {
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: 700;
         color: var(--ds-text);
       }
@@ -311,18 +311,18 @@ const BASE_UNITS = ["g", "ml"];
       }
       .ds-eq__defaults {
         display: flex;
-        gap: 10px;
-        padding: 13px 16px;
+        gap: 0.625rem;
+        padding: 0.8125rem 1rem;
       }
       .ds-eq__default {
         flex: 1;
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .ds-eq__default-label {
-        font-size: 10px;
+        font-size: 0.625rem;
         font-weight: 800;
         letter-spacing: 0.05em;
         color: var(--ds-text-meta);

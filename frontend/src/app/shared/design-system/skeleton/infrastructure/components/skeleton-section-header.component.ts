@@ -33,26 +33,26 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
+        gap: 0.625rem;
       }
       .sksec__text {
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .sksec__title {
-        width: var(--sksec-title, 132px);
-        height: 13px;
+        width: var(--sksec-title, 8.25rem);
+        height: 0.8125rem;
       }
       .sksec__subtitle {
-        width: 96px;
-        height: 10px;
+        width: 6rem;
+        height: 0.625rem;
       }
       .sksec__count {
         flex: 0 0 auto;
-        width: 26px;
-        height: 20px;
+        width: 1.625rem;
+        height: 1.25rem;
         border-radius: var(--ds-radius-pill);
       }
       .sksec__divider {
@@ -62,8 +62,8 @@ import { Component, Input } from "@angular/core";
       }
       .sksec__action {
         flex: 0 0 auto;
-        width: var(--sksec-action, 68px);
-        height: 26px;
+        width: var(--sksec-action, 4.25rem);
+        height: 1.625rem;
         border-radius: var(--ds-radius-lg);
       }
     `,
@@ -74,10 +74,10 @@ import { Component, Input } from "@angular/core";
   },
 })
 export class SkeletonSectionHeaderComponent {
-  @Input() titleWidth = "132px";
+  @Input() titleWidth = "8.25rem";
   @Input() subtitle = false;
   @Input() count = false;
   @Input() divider = false;
   @Input() action = false;
-  @Input() actionWidth = "68px";
+  @Input() actionWidth = "4.25rem";
 }

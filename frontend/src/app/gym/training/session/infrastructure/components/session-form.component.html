@@ -1,4 +1,4 @@
-<ds-page-wrapper [maxWidth]="'640px'" [gap]="'22px'">
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'1.375rem'">
   <ds-screen-header
     [leading]="'close'"
     [leadingLabel]="'createSession.back' | t"
@@ -7,7 +7,7 @@
   />
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <ds-stack [gap]="'22px'">
+    <ds-stack [gap]="'1.375rem'">
       <ds-field [label]="'createSession.field.name' | t">
         <ds-text-input
           variant="outlined"

@@ -30,8 +30,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 11px;
-        padding: 13px 14px;
+        gap: 0.6875rem;
+        padding: 0.8125rem 0.875rem;
         border-radius: var(--ds-radius-2xl);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
@@ -41,7 +41,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       }
       .pt__icon {
         flex: 0 0 auto;
-        font-size: 16px;
+        font-size: 1rem;
         line-height: 1;
       }
       .pt__text {
@@ -51,18 +51,18 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         flex-direction: column;
       }
       .pt__title {
-        font-size: 13.5px;
+        font-size: 0.84375rem;
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
       }
       .pt__sub {
-        font-size: 11px;
+        font-size: 0.6875rem;
         color: var(--ds-text-muted);
       }
       .pt__track {
         flex: 0 0 auto;
-        width: 46px;
-        height: 26px;
+        width: 2.875rem;
+        height: 1.625rem;
         padding: 2px;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
@@ -77,15 +77,15 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       }
       .pt__knob {
         display: block;
-        width: 20px;
-        height: 20px;
+        width: 1.25rem;
+        height: 1.25rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-raised);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 0.1875rem rgba(0, 0, 0, 0.2);
         transition: transform var(--ds-transition-base);
       }
       .pt__track--on .pt__knob {
-        transform: translateX(20px);
+        transform: translateX(1.25rem);
       }
     `,
   ],

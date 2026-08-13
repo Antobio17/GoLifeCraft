@@ -1,6 +1,6 @@
 .skf-card {
   background: var(--ds-surface-raised);
-  border-radius: 16px;
+  border-radius: 1rem;
   border: 1px solid var(--ds-border);
   padding: 1.75rem;
   display: flex;
@@ -22,15 +22,15 @@
 }
 
 .skf-label {
-  height: 12px;
-  width: 110px;
-  border-radius: 4px;
+  height: 0.75rem;
+  width: 6.875rem;
+  border-radius: 0.25rem;
 }
 
 .skf-input {
-  height: 44px;
+  height: 2.75rem;
   width: 100%;
-  border-radius: 10px;
+  border-radius: 0.625rem;
 }
 
 .skf-row:nth-child(2) .skf-bar {
@@ -44,22 +44,22 @@
 }
 
 .skf-row:nth-child(1) .skf-field:nth-child(1) .skf-label {
-  width: 90px;
+  width: 5.625rem;
 }
 .skf-row:nth-child(1) .skf-field:nth-child(2) .skf-label {
-  width: 130px;
+  width: 8.125rem;
 }
 .skf-row:nth-child(2) .skf-field:nth-child(1) .skf-label {
-  width: 115px;
+  width: 7.1875rem;
 }
 .skf-row:nth-child(2) .skf-field:nth-child(2) .skf-label {
-  width: 80px;
+  width: 5rem;
 }
 .skf-row:nth-child(3) .skf-field:nth-child(1) .skf-label {
-  width: 100px;
+  width: 6.25rem;
 }
 .skf-row:nth-child(3) .skf-field:nth-child(2) .skf-label {
-  width: 125px;
+  width: 7.8125rem;
 }
 
 .skf-row:nth-child(2) .skf-field:nth-child(1) .skf-input {
@@ -73,21 +73,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
 .skf-page-title {
-  height: 28px;
-  width: 220px;
-  border-radius: 8px;
+  height: 1.75rem;
+  width: 13.75rem;
+  border-radius: 0.5rem;
 }
 
 .skf-page-description {
-  height: 14px;
-  width: 300px;
-  border-radius: 4px;
+  height: 0.875rem;
+  width: 18.75rem;
+  border-radius: 0.25rem;
   animation-delay: 0.06s;
 }
 
@@ -101,22 +101,22 @@
 .skf-card-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--ds-border);
 }
 
 .skf-card-icon {
-  width: 18px;
-  height: 18px;
-  border-radius: 5px;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 0.3125rem;
   flex-shrink: 0;
 }
 
 .skf-card-title {
-  height: 14px;
-  width: 130px;
-  border-radius: 4px;
+  height: 0.875rem;
+  width: 8.125rem;
+  border-radius: 0.25rem;
 }
 
 @media (max-width: 768px) {

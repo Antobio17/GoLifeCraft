@@ -30,7 +30,7 @@ import { WeekDayTab } from "../../domain/models/week-day-tab.model";
       }
       .ds-wdays {
         display: flex;
-        gap: 5px;
+        gap: 0.3125rem;
       }
       .ds-wdays__tab {
         flex: 1 1 0;
@@ -38,14 +38,14 @@ import { WeekDayTab } from "../../domain/models/week-day-tab.model";
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
+        gap: 0.25rem;
         appearance: none;
         border: 1px solid transparent;
         cursor: pointer;
-        border-radius: 12px;
-        padding: 8px 2px;
+        border-radius: 0.75rem;
+        padding: 0.5rem 2px;
         font: inherit;
-        font-size: 11px;
+        font-size: 0.6875rem;
         font-weight: 800;
         transition:
           background var(--ds-transition-fast),
@@ -73,8 +73,8 @@ import { WeekDayTab } from "../../domain/models/week-day-tab.model";
         color: var(--ds-primary);
       }
       .ds-wdays__dot {
-        width: 5px;
-        height: 5px;
+        width: 0.3125rem;
+        height: 0.3125rem;
         border-radius: 50%;
         background: transparent;
       }

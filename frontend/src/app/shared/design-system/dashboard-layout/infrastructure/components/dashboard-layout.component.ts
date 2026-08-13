@@ -31,13 +31,13 @@ import { Component } from "@angular/core";
       .dash {
         display: flex;
         flex-direction: column;
-        padding: calc(env(safe-area-inset-top) + 10px) 22px 0;
+        padding: calc(env(safe-area-inset-top) + 0.625rem) 1.375rem 0;
       }
       .dash__body {
         display: flex;
         flex-direction: column;
-        gap: 13px;
-        padding: 14px 0 20px;
+        gap: 0.8125rem;
+        padding: 0.875rem 0 1.25rem;
       }
       .dash__main {
         display: contents;
@@ -60,11 +60,11 @@ import { Component } from "@angular/core";
       @media (min-width: 768px) {
         .dash {
           max-width: var(--ds-app-content-max);
-          padding: 30px 40px 0;
+          padding: 1.875rem 2.5rem 0;
         }
         .dash__body {
-          gap: 18px;
-          padding: 22px 0 36px;
+          gap: 1.125rem;
+          padding: 1.375rem 0 2.25rem;
         }
       }
       @media (min-width: 1000px) {
@@ -72,12 +72,12 @@ import { Component } from "@angular/core";
           display: grid;
           grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
           align-items: start;
-          column-gap: 24px;
+          column-gap: 1.5rem;
         }
         .dash__main {
           display: flex;
           flex-direction: column;
-          gap: 14px;
+          gap: 0.875rem;
         }
       }
     `,

@@ -17,7 +17,7 @@ import { Component, Input } from "@angular/core";
       }
       .skhero {
         position: relative;
-        border-radius: 20px;
+        border-radius: 1.25rem;
         background: var(--ds-surface-inset);
         display: flex;
         align-items: center;
@@ -25,22 +25,22 @@ import { Component, Input } from "@angular/core";
         overflow: hidden;
       }
       .skhero__shape {
-        width: 58px;
-        height: 58px;
+        width: 3.625rem;
+        height: 3.625rem;
         border-radius: var(--ds-radius-3xl);
       }
       .skhero__badge {
         position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 68px;
-        height: 26px;
-        border-radius: 9px;
+        bottom: 0.625rem;
+        right: 0.625rem;
+        width: 4.25rem;
+        height: 1.625rem;
+        border-radius: 0.5625rem;
       }
     `,
   ],
 })
 export class SkeletonHeroComponent {
-  @Input() height = "118px";
+  @Input() height = "7.375rem";
   @Input() badge = true;
 }

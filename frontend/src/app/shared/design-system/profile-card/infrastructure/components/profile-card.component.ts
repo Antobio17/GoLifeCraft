@@ -26,18 +26,18 @@ import { Component, Input } from "@angular/core";
       .pc {
         display: flex;
         align-items: center;
-        gap: 13px;
+        gap: 0.8125rem;
         background: var(--ds-surface-brand);
         color: var(--ds-on-surface-brand);
         border: 1px solid
           color-mix(in srgb, var(--ds-on-surface-brand) 8%, transparent);
         border-radius: var(--ds-radius-3xl);
-        padding: 15px 16px;
+        padding: 0.9375rem 1rem;
       }
       .pc__avatar {
         flex: 0 0 auto;
-        width: 54px;
-        height: 54px;
+        width: 3.375rem;
+        height: 3.375rem;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -46,7 +46,7 @@ import { Component, Input } from "@angular/core";
         color: var(--ds-on-accent);
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
-        font-size: 22px;
+        font-size: 1.375rem;
       }
       .pc__body {
         flex: 1 1 auto;
@@ -55,14 +55,14 @@ import { Component, Input } from "@angular/core";
       .pc__name {
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
-        font-size: 17px;
+        font-size: 1.0625rem;
         letter-spacing: -0.01em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .pc__email {
-        font-size: 12px;
+        font-size: 0.75rem;
         opacity: 0.8;
         white-space: nowrap;
         overflow: hidden;
@@ -71,11 +71,11 @@ import { Component, Input } from "@angular/core";
       .pc__meta {
         display: flex;
         align-items: center;
-        gap: 7px;
-        margin-top: 7px;
+        gap: 0.4375rem;
+        margin-top: 0.4375rem;
       }
       .pc__role {
-        font-size: 9.5px;
+        font-size: 0.59375rem;
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.04em;
         text-transform: uppercase;
@@ -84,26 +84,26 @@ import { Component, Input } from "@angular/core";
           var(--ds-on-surface-brand) 14%,
           transparent
         );
-        border-radius: 7px;
-        padding: 3px 8px;
+        border-radius: 0.4375rem;
+        padding: 0.1875rem 0.5rem;
       }
       .pc__status {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        font-size: 10.5px;
+        gap: 0.3125rem;
+        font-size: 0.65625rem;
         font-weight: var(--ds-weight-bold);
         opacity: 0.85;
       }
       .pc__dot {
-        width: 7px;
-        height: 7px;
+        width: 0.4375rem;
+        height: 0.4375rem;
         border-radius: 50%;
         background: var(--ds-text-meta);
       }
       .pc__dot--on {
         background: var(--ds-accent);
-        box-shadow: 0 0 0 3px
+        box-shadow: 0 0 0 0.1875rem
           color-mix(in srgb, var(--ds-accent) 30%, transparent);
       }
     `,

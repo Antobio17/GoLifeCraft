@@ -46,30 +46,30 @@ type AmountInputLayout = "row" | "stacked";
       .ds-amount {
         display: flex;
         align-items: center;
-        gap: 11px;
+        gap: 0.6875rem;
         box-sizing: border-box;
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border);
-        border-radius: 14px;
-        padding: 11px 14px;
+        border-radius: 0.875rem;
+        padding: 0.6875rem 0.875rem;
         cursor: text;
       }
       .ds-amount--stacked {
         flex-direction: column;
         align-items: stretch;
-        gap: 5px;
-        padding: 9px 11px;
+        gap: 0.3125rem;
+        padding: 0.5625rem 0.6875rem;
       }
       .ds-amount:focus-within {
         border-color: var(--ds-border-focus);
       }
       .ds-amount__emoji {
         flex: 0 0 auto;
-        font-size: 20px;
+        font-size: 1.25rem;
         line-height: 1;
       }
       .ds-amount__label {
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         font-weight: 700;
         color: var(--ds-text-muted);
       }
@@ -84,19 +84,19 @@ type AmountInputLayout = "row" | "stacked";
         padding: 0;
         font: inherit;
         font-family: var(--ds-font-display, inherit);
-        font-size: 17px;
+        font-size: 1.0625rem;
         font-weight: 800;
         color: var(--ds-text);
       }
       .ds-amount--large .ds-amount__input {
-        font-size: 22px;
+        font-size: 1.375rem;
       }
       .ds-amount__input::placeholder {
         color: var(--ds-text-meta);
       }
       .ds-amount__unit {
         flex: 0 0 auto;
-        font-size: 13px;
+        font-size: 0.8125rem;
         font-weight: 700;
         color: var(--ds-text-muted);
       }

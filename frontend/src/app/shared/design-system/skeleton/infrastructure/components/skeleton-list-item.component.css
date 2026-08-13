@@ -6,13 +6,13 @@
 .skli {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
   height: 100%;
   box-sizing: border-box;
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--skli-radius, 16px);
-  padding: var(--skli-padding, 10px 11px);
+  border-radius: var(--skli-radius, 1rem);
+  padding: var(--skli-padding, 0.625rem 0.6875rem);
 }
 
 .skli--brand {
@@ -39,7 +39,7 @@
 .skli__row {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 0.6875rem;
   min-width: 0;
 }
 
@@ -48,15 +48,15 @@
 }
 
 .skli__check {
-  width: var(--skli-check, 26px);
-  height: var(--skli-check, 26px);
+  width: var(--skli-check, 1.625rem);
+  height: var(--skli-check, 1.625rem);
   border-radius: var(--ds-radius-lg);
 }
 
 .skli__tile {
-  width: var(--skli-tile, 44px);
-  height: var(--skli-tile, 44px);
-  border-radius: var(--skli-tile-radius, 12px);
+  width: var(--skli-tile, 2.75rem);
+  height: var(--skli-tile, 2.75rem);
+  border-radius: var(--skli-tile-radius, 0.75rem);
 }
 
 .skli__body {
@@ -64,63 +64,63 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .skli__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .skli__title {
   width: var(--skli-title, 58%);
-  height: var(--skli-title-h, 13px);
+  height: var(--skli-title-h, 0.8125rem);
   border-radius: var(--ds-radius-sm);
 }
 
 .skli__head-trailing {
-  width: var(--skli-head-trailing, 48px);
-  height: 16px;
+  width: var(--skli-head-trailing, 3rem);
+  height: 1rem;
   border-radius: var(--ds-radius-sm);
 }
 
 .skli__meta {
   width: var(--skli-meta, 38%);
-  height: 10px;
+  height: 0.625rem;
   border-radius: var(--ds-radius-sm);
 }
 
 .skli__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 0.3125rem;
   margin-top: 2px;
 }
 
 .skli__chip {
-  width: 46px;
-  height: 18px;
-  border-radius: 7px;
+  width: 2.875rem;
+  height: 1.125rem;
+  border-radius: 0.4375rem;
 }
 
 .skli__chips .skli__chip:nth-child(1) {
-  width: 54px;
+  width: 3.375rem;
 }
 .skli__chips .skli__chip:nth-child(2) {
-  width: 42px;
+  width: 2.625rem;
 }
 .skli__chips .skli__chip:nth-child(3) {
-  width: 46px;
+  width: 2.875rem;
 }
 .skli__chips .skli__chip:nth-child(4) {
-  width: 40px;
+  width: 2.5rem;
 }
 
 .skli__pill {
-  width: var(--skli-pill-w, 78px);
-  height: var(--skli-pill-h, 30px);
+  width: var(--skli-pill-w, 4.875rem);
+  height: var(--skli-pill-h, 1.875rem);
   border-radius: var(--ds-radius-lg);
 }
 
@@ -128,56 +128,56 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .skli__price {
-  width: 46px;
-  height: 13px;
+  width: 2.875rem;
+  height: 0.8125rem;
   border-radius: var(--ds-radius-sm);
 }
 
 .skli__actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .skli__action {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: var(--ds-radius-lg);
 }
 
 .skli__button {
-  width: 84px;
-  height: 32px;
-  border-radius: 11px;
+  width: 5.25rem;
+  height: 2rem;
+  border-radius: 0.6875rem;
 }
 
 .skli__progress {
   width: 100%;
-  height: 8px;
+  height: 0.5rem;
   border-radius: var(--ds-radius-pill);
 }
 
 .skli__foot {
   display: flex;
-  gap: 14px;
+  gap: 0.875rem;
 }
 
 .skli__foot-item {
-  width: 74px;
-  height: 11px;
+  width: 4.625rem;
+  height: 0.6875rem;
   border-radius: var(--ds-radius-sm);
 }
 
 .skli__foot .skli__foot-item:nth-child(2) {
-  width: 92px;
+  width: 5.75rem;
 }
 
 .skli__foot-button {
   width: 100%;
-  height: 34px;
+  height: 2.125rem;
   border-radius: var(--ds-radius-xl);
 }

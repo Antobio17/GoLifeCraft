@@ -33,10 +33,10 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
       .ds-macro {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 0.875rem;
         background: var(--ds-surface-inset);
-        border-radius: 16px;
-        padding: 14px 16px;
+        border-radius: 1rem;
+        padding: 0.875rem 1rem;
       }
       .ds-macro__kcal {
         display: flex;
@@ -46,19 +46,19 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
       .ds-macro__kcalValue {
         font-family: var(--ds-font-display);
         font-weight: 800;
-        font-size: 28px;
+        font-size: 1.75rem;
         line-height: 1;
         color: var(--ds-primary);
       }
       .ds-macro__kcalUnit {
-        font-size: 11px;
+        font-size: 0.6875rem;
         color: var(--ds-text-muted);
         margin-top: 2px;
       }
       .ds-macro__bars {
         flex: 1 1 auto;
         display: flex;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .ds-macro__bar {
         flex: 1 1 0;
@@ -66,9 +66,9 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
         flex-direction: column;
       }
       .ds-macro__line {
-        height: 6px;
-        border-radius: 4px;
-        margin-bottom: 5px;
+        height: 0.375rem;
+        border-radius: 0.25rem;
+        margin-bottom: 0.3125rem;
       }
       .ds-macro__line--protein {
         background: var(--ds-primary);
@@ -80,14 +80,14 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
         background: var(--ds-accent);
       }
       .ds-macro__label {
-        font-size: 10px;
+        font-size: 0.625rem;
         color: var(--ds-text-muted);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .ds-macro__value {
-        font-size: 11.5px;
+        font-size: 0.71875rem;
         font-weight: 700;
         color: var(--ds-text);
       }

@@ -9,12 +9,12 @@
   flex-direction: column;
   justify-content: center;
   background: var(--ds-bg);
-  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom));
 }
 
 .auth__card {
   width: 100%;
-  max-width: 380px;
+  max-width: 23.75rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@
 @keyframes auth-in {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(0.875rem);
   }
   to {
     opacity: 1;
@@ -35,8 +35,8 @@
 .auth__brand {
   display: flex;
   justify-content: center;
-  margin-top: 12px;
-  margin-bottom: 24px;
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .auth__tabs {
@@ -44,20 +44,20 @@
   gap: 0;
   background: var(--ds-surface-inset);
   border: 1px solid var(--ds-border-hairline);
-  border-radius: 13px;
-  padding: 4px;
-  margin-bottom: 20px;
+  border-radius: 0.8125rem;
+  padding: 0.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .auth__tab {
   flex: 1;
   border: none;
   background: transparent;
-  padding: 9px;
-  border-radius: 10px;
+  padding: 0.5625rem;
+  border-radius: 0.625rem;
   font-family: var(--ds-font-body);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--ds-text-muted);
   cursor: pointer;
   transition: all var(--ds-transition-base);
@@ -67,7 +67,7 @@
   background: var(--ds-surface-raised);
   color: var(--ds-text);
   font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
+  box-shadow: 0 1px 0.1875rem rgba(0, 0, 0, 0.09);
 }
 
 :host-context([data-theme="dark"]) .auth__tab--active {
@@ -83,29 +83,29 @@
 
 @media (min-width: 768px) {
   .auth {
-    padding: 40px;
+    padding: 2.5rem;
   }
 
   .auth__card {
-    max-width: 420px;
+    max-width: 26.25rem;
   }
 
   .auth__brand {
     margin-top: 0;
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem;
   }
 }
 
 @media (min-width: 900px) {
   .auth__card {
-    max-width: 780px;
+    max-width: 48.75rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "brand tabs"
       "brand form";
     align-items: center;
-    column-gap: 56px;
+    column-gap: 3.5rem;
   }
 
   .auth__card--without-tabs {
@@ -117,7 +117,7 @@
     align-self: center;
     justify-content: center;
     margin: 0;
-    padding-right: 56px;
+    padding-right: 3.5rem;
     border-right: 1px solid var(--ds-border-hairline);
     transform: scale(1.15);
   }
@@ -128,7 +128,7 @@
   }
 
   .auth__card--without-tabs .auth__brand {
-    padding-right: 56px;
+    padding-right: 3.5rem;
   }
 
   .auth__card--without-tabs .auth__form {
@@ -137,6 +137,6 @@
 
   .auth__form {
     grid-area: form;
-    margin-top: 18px;
+    margin-top: 1.125rem;
   }
 }

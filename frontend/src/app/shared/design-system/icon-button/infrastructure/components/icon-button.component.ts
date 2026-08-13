@@ -35,8 +35,8 @@ type IconButtonVariant =
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: var(--icon-btn-size, 36px);
-        height: var(--icon-btn-size, 36px);
+        width: var(--icon-btn-size, 2.25rem);
+        height: var(--icon-btn-size, 2.25rem);
         border: none;
         border-radius: var(--icon-btn-radius, var(--ds-radius-lg));
         background: transparent;

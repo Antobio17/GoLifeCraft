@@ -53,7 +53,7 @@ type SelectVariant = "pill" | "bare";
         position: relative;
         display: inline-flex;
         align-items: center;
-        gap: 7px;
+        gap: 0.4375rem;
       }
       .ds-select--fluid {
         flex: 1 1 0;
@@ -77,13 +77,13 @@ type SelectVariant = "pill" | "bare";
       }
       .ds-select__chevron {
         position: absolute;
-        right: 10px;
+        right: 0.625rem;
         pointer-events: none;
         color: var(--ds-text-meta);
       }
       .ds-select__lead {
         position: absolute;
-        left: 11px;
+        left: 0.6875rem;
         pointer-events: none;
         color: var(--ds-text-meta);
       }
@@ -91,12 +91,12 @@ type SelectVariant = "pill" | "bare";
         border: 1px solid var(--ds-border-strong);
         background: var(--ds-surface);
         color: var(--ds-text);
-        border-radius: 20px;
-        padding: 7px 12px;
+        border-radius: 1.25rem;
+        padding: 0.4375rem 0.75rem;
       }
       .ds-select--pill .ds-select__native {
-        padding-right: 18px;
-        font-size: 11.5px;
+        padding-right: 1.125rem;
+        font-size: 0.71875rem;
         font-weight: 600;
       }
       .ds-select--pill.is-active {
@@ -112,15 +112,15 @@ type SelectVariant = "pill" | "bare";
         background: var(--ds-surface);
         color: var(--ds-text);
         border-radius: var(--ds-radius-lg);
-        padding: 8px 12px;
+        padding: 0.5rem 0.75rem;
       }
       .ds-select--bare .ds-select__native {
-        padding-right: 18px;
+        padding-right: 1.125rem;
         font-size: var(--ds-text-sm);
         font-weight: 600;
       }
       .ds-select--bare.ds-select--lead .ds-select__native {
-        padding-left: 22px;
+        padding-left: 1.375rem;
       }
     `,
   ],

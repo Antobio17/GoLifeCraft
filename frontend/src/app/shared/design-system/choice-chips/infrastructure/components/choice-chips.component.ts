@@ -33,18 +33,18 @@ export interface ChoiceChipOption {
     `
       .ds-choice-chips {
         display: flex;
-        gap: 10px;
+        gap: 0.625rem;
       }
       .ds-choice-chips--wrap {
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 0.5rem;
       }
       .ds-choice-chip {
         flex: 1 1 0;
         appearance: none;
         cursor: pointer;
         text-align: center;
-        padding: 10px;
+        padding: 0.625rem;
         border-radius: var(--ds-radius-xl);
         border: 1px solid var(--ds-border-input);
         background: var(--ds-surface);
@@ -62,7 +62,7 @@ export interface ChoiceChipOption {
       }
       .ds-choice-chips--wrap .ds-choice-chip {
         flex: 0 0 auto;
-        padding: 8px 14px;
+        padding: 0.5rem 0.875rem;
         border-radius: var(--ds-radius-pill);
       }
       .ds-choice-chip.is-selected {

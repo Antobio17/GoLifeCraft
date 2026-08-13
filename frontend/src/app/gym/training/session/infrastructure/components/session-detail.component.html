@@ -1,4 +1,4 @@
-<ds-page-wrapper [maxWidth]="'680px'" [gap]="'12px'">
+<ds-page-wrapper [maxWidth]="'42.5rem'" [gap]="'0.75rem'">
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -7,12 +7,12 @@
       titleWidth="62%"
       [actions]="2"
     />
-    <ds-skeleton-chips [count]="1" height="26px" [gap]="'6px'" />
+    <ds-skeleton-chips [count]="1" height="1.625rem" [gap]="'0.375rem'" />
     <ng-container [ngTemplateOutlet]="progressSkeleton" />
-    <ds-stack [gap]="'9px'">
+    <ds-stack [gap]="'0.5625rem'">
       @for (sets of skeletonExercises; track $index) {
         <ds-skeleton-exercise
-          badge="72px"
+          badge="4.5rem"
           [action]="true"
           [note]="true"
           [sets]="sets"
@@ -20,7 +20,7 @@
         />
       }
     </ds-stack>
-    <ds-skeleton height="46px" radius="14px" />
+    <ds-skeleton height="2.875rem" radius="0.875rem" />
   } @else {
     <ds-screen-header
       [leading]="'back'"
@@ -47,9 +47,9 @@
       />
     </ds-screen-header>
 
-    <ds-stack direction="row" align="center" [gap]="'10px'">
+    <ds-stack direction="row" align="center" [gap]="'0.625rem'">
       <ds-chip>
-        <ds-stack direction="row" align="center" [gap]="'5px'">
+        <ds-stack direction="row" align="center" [gap]="'0.3125rem'">
           <ds-icon name="clock" [size]="13" />
           ~{{ estimatedDurationMinutes() }} min
         </ds-stack>
@@ -96,12 +96,12 @@
       @if (statsLoading()) {
         <ng-container [ngTemplateOutlet]="progressSkeleton" />
       } @else if (hasProgress()) {
-        <ds-stack [gap]="'10px'">
+        <ds-stack [gap]="'0.625rem'">
           <ds-stack
             direction="row"
             align="center"
             justify="between"
-            [gap]="'10px'"
+            [gap]="'0.625rem'"
           >
             <ds-text variant="label">
               {{ "getSession.progress.title" | t }}
@@ -154,10 +154,10 @@
         </ds-button>
       </ds-empty-state>
     } @else {
-      <ds-stack [gap]="'9px'">
+      <ds-stack [gap]="'0.5625rem'">
         @for (exercise of exerciseRows(); track exercise.id; let i = $index) {
-          <ds-card [gap]="'8px'" [padding]="'11px'">
-            <ds-stack direction="row" align="center" [gap]="'12px'">
+          <ds-card [gap]="'0.5rem'" [padding]="'0.6875rem'">
+            <ds-stack direction="row" align="center" [gap]="'0.75rem'">
               <ds-chip tone="brand">{{ i + 1 }}</ds-chip>
               <ds-stack [gap]="'2px'" [grow]="true">
                 <ds-heading [level]="3" size="sm">
@@ -237,7 +237,7 @@
   [closeLabel]="'getSession.picker.close' | t"
   (closed)="closePicker()"
 >
-  <ds-stack [gap]="'16px'">
+  <ds-stack [gap]="'1rem'">
     <ds-search-input
       [placeholder]="'getSession.picker.search' | t"
       [clearLabel]="'getSession.picker.clear' | t"
@@ -247,10 +247,10 @@
     @if (libraryRows().length === 0) {
       <ds-text variant="muted">{{ "getSession.picker.empty" | t }}</ds-text>
     } @else {
-      <ds-stack [gap]="'8px'">
+      <ds-stack [gap]="'0.5rem'">
         @for (row of libraryRows(); track row.id) {
-          <ds-card [padding]="'10px'">
-            <ds-stack direction="row" align="center" [gap]="'12px'">
+          <ds-card [padding]="'0.625rem'">
+            <ds-stack direction="row" align="center" [gap]="'0.75rem'">
               <ds-icon-badge icon="dumbbell" />
               <ds-stack [gap]="'2px'" [grow]="true">
                 <ds-text variant="strong">{{ row.name }}</ds-text>
@@ -271,17 +271,22 @@
 </ds-modal-sheet>
 
 <ng-template #progressSkeleton>
-  <ds-stack [gap]="'10px'">
-    <ds-stack direction="row" align="center" justify="between" [gap]="'10px'">
-      <ds-skeleton-line width="96px" height="12px" />
-      <ds-skeleton-line width="116px" height="12px" />
+  <ds-stack [gap]="'0.625rem'">
+    <ds-stack
+      direction="row"
+      align="center"
+      justify="between"
+      [gap]="'0.625rem'"
+    >
+      <ds-skeleton-line width="6rem" height="0.75rem" />
+      <ds-skeleton-line width="7.25rem" height="0.75rem" />
     </ds-stack>
-    <ds-skeleton height="40px" radius="var(--ds-radius-2xl)" />
+    <ds-skeleton height="2.5rem" radius="var(--ds-radius-2xl)" />
     <ds-skeleton-panel
       [brand]="true"
       [figure]="true"
       content="spark"
-      chartHeight="108px"
+      chartHeight="6.75rem"
     />
   </ds-stack>
 </ng-template>

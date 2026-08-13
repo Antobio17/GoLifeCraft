@@ -34,7 +34,7 @@ const PRESSABLE_JUSTIFY: Record<PressableJustify, string> = {
         display: flex;
         align-items: center;
         justify-content: var(--ds-pressable-justify, flex-start);
-        gap: var(--ds-pressable-gap, 11px);
+        gap: var(--ds-pressable-gap, 0.6875rem);
         width: 100%;
         height: 100%;
         min-width: 0;
@@ -63,7 +63,7 @@ export class PressableComponent {
   @Input() ariaLabel = "";
   @Input() disabled = false;
   @Input() grow = false;
-  @Input() gap = "11px";
+  @Input() gap = "0.6875rem";
   @Input() justify: PressableJustify = "start";
 
   get justifyValue(): string {

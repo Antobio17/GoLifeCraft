@@ -1,4 +1,4 @@
-<ds-page-wrapper [gap]="'12px'">
+<ds-page-wrapper [gap]="'0.75rem'">
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getExercises.back' | t"
@@ -13,22 +13,22 @@
 
   @if (loading()) {
     <ds-skeleton-filters [search]="true" [segments]="2" />
-    <ds-stack [gap]="'18px'">
+    <ds-stack [gap]="'1.125rem'">
       @for (items of skeletonGroups; track $index) {
-        <ds-stack [gap]="'10px'">
+        <ds-stack [gap]="'0.625rem'">
           <ds-skeleton-section-header
-            titleWidth="96px"
+            titleWidth="6rem"
             [count]="true"
             [divider]="true"
           />
           <ds-skeleton-list
             [count]="items"
             [columns]="null"
-            minColumn="280px"
+            minColumn="17.5rem"
             [tabletColumns]="2"
-            [gap]="'12px'"
-            radius="16px"
-            padding="11px 12px"
+            [gap]="'0.75rem'"
+            radius="1rem"
+            padding="0.6875rem 0.75rem"
             [tile]="34"
             [tileRadius]="10"
             titleWidth="56%"
@@ -54,22 +54,22 @@
 
     @if (reloading()) {
       @if (view() === "grouped") {
-        <ds-stack [gap]="'18px'">
+        <ds-stack [gap]="'1.125rem'">
           @for (items of skeletonGroups; track $index) {
-            <ds-stack [gap]="'10px'">
+            <ds-stack [gap]="'0.625rem'">
               <ds-skeleton-section-header
-                titleWidth="96px"
+                titleWidth="6rem"
                 [count]="true"
                 [divider]="true"
               />
               <ds-skeleton-list
                 [count]="items"
                 [columns]="null"
-                minColumn="280px"
+                minColumn="17.5rem"
                 [tabletColumns]="2"
-                [gap]="'12px'"
-                radius="16px"
-                padding="11px 12px"
+                [gap]="'0.75rem'"
+                radius="1rem"
+                padding="0.6875rem 0.75rem"
                 [tile]="34"
                 [tileRadius]="10"
                 titleWidth="56%"
@@ -84,11 +84,11 @@
         <ds-skeleton-list
           [count]="6"
           [columns]="null"
-          minColumn="280px"
+          minColumn="17.5rem"
           [tabletColumns]="2"
-          [gap]="'12px'"
-          radius="16px"
-          padding="11px 12px"
+          [gap]="'0.75rem'"
+          radius="1rem"
+          padding="0.6875rem 0.75rem"
           [tile]="34"
           [tileRadius]="10"
           titleWidth="56%"
@@ -110,7 +110,7 @@
         />
       }
     } @else if (view() === "list") {
-      <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
+      <ds-grid [minColumn]="'17.5rem'" [tabletColumns]="2">
         @for (row of rows(); track row.id) {
           <ng-container
             [ngTemplateOutlet]="exerciseRow"
@@ -123,11 +123,11 @@
         <ds-skeleton-list
           [count]="2"
           [columns]="null"
-          minColumn="280px"
+          minColumn="17.5rem"
           [tabletColumns]="2"
-          [gap]="'12px'"
-          radius="16px"
-          padding="11px 12px"
+          [gap]="'0.75rem'"
+          radius="1rem"
+          padding="0.6875rem 0.75rem"
           [tile]="34"
           [tileRadius]="10"
           titleWidth="56%"
@@ -142,15 +142,15 @@
         (reached)="loadMore()"
       />
     } @else {
-      <ds-stack [gap]="'18px'">
+      <ds-stack [gap]="'1.125rem'">
         @for (group of groupedItems(); track group.muscle) {
-          <ds-stack [gap]="'10px'">
-            <ds-stack direction="row" align="center" [gap]="'10px'">
+          <ds-stack [gap]="'0.625rem'">
+            <ds-stack direction="row" align="center" [gap]="'0.625rem'">
               <ds-text variant="label">{{ group.muscle }}</ds-text>
               <ds-chip>{{ group.count }}</ds-chip>
               <ds-divider [grow]="true" />
             </ds-stack>
-            <ds-grid [minColumn]="'280px'" [tabletColumns]="2">
+            <ds-grid [minColumn]="'17.5rem'" [tabletColumns]="2">
               @for (row of group.items; track row.id) {
                 <ng-container
                   [ngTemplateOutlet]="exerciseRow"
@@ -166,8 +166,8 @@
 </ds-page-wrapper>
 
 <ng-template #exerciseRow let-row>
-  <ds-card [padding]="'11px 12px'">
-    <ds-stack direction="row" align="center" [gap]="'11px'">
+  <ds-card [padding]="'0.6875rem 0.75rem'">
+    <ds-stack direction="row" align="center" [gap]="'0.6875rem'">
       <ds-icon-badge
         [icon]="row.icon"
         tone="brand"

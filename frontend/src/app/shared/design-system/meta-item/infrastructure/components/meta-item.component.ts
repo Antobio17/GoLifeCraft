@@ -19,8 +19,8 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .ds-meta-item {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        font-size: 11.5px;
+        gap: 0.3125rem;
+        font-size: 0.71875rem;
         font-weight: 600;
         color: var(--ds-text-muted);
       }

@@ -1,4 +1,4 @@
-<ds-stack [gap]="'10px'">
+<ds-stack [gap]="'0.625rem'">
   <ds-section-header
     [title]="'dashboard.agenda.title' | t"
     [actionLabel]="'dashboard.agenda.seeAll' | t"
@@ -6,12 +6,12 @@
   />
 
   @if (loading()) {
-    <ds-skeleton-line width="184px" height="11px" />
+    <ds-skeleton-line width="11.5rem" height="0.6875rem" />
     <ds-skeleton-list
       [count]="4"
-      [gap]="'8px'"
+      [gap]="'0.5rem'"
       radius="var(--ds-radius-3xl)"
-      padding="11px 12px"
+      padding="0.6875rem 0.75rem"
       titleWidth="64%"
       [meta]="false"
       [chips]="2"
@@ -29,7 +29,7 @@
       }
     </ds-text>
 
-    <ds-stack [gap]="'8px'">
+    <ds-stack [gap]="'0.5rem'">
       @for (entry of visibleEntries(); track entry.id) {
         <ds-agenda-item
           [title]="entry.title"

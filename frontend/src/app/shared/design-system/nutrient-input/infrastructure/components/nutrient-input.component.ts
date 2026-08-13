@@ -52,13 +52,13 @@ type NutrientVariant = "default" | "energy" | "sub";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        padding: 12px 16px;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
         border-bottom: 1px solid var(--ds-border);
         cursor: text;
       }
       .ds-nrow--sub {
-        padding: 10px 16px 10px 30px;
+        padding: 0.625rem 1rem 0.625rem 1.875rem;
       }
       .ds-nrow--last {
         border-bottom: none;
@@ -69,18 +69,18 @@ type NutrientVariant = "default" | "energy" | "sub";
       .ds-nrow__name {
         display: flex;
         align-items: center;
-        gap: 9px;
-        font-size: 14px;
+        gap: 0.5625rem;
+        font-size: 0.875rem;
         font-weight: 700;
         color: var(--ds-text);
       }
       .ds-nrow--sub .ds-nrow__name {
-        font-size: 12.5px;
+        font-size: 0.78125rem;
         font-weight: 500;
         color: var(--ds-text-muted);
       }
       .ds-nrow--energy .ds-nrow__name {
-        font-size: 13.5px;
+        font-size: 0.84375rem;
         font-weight: 800;
       }
       .ds-nrow__icon {
@@ -90,28 +90,28 @@ type NutrientVariant = "default" | "energy" | "sub";
       .ds-nrow__field {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 0.25rem;
       }
       .ds-nrow__unit {
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: 600;
         color: var(--ds-text-meta);
       }
       .ds-nrow__unit--energy {
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: 700;
         color: var(--ds-text-muted);
       }
       .ds-nrow__input {
-        width: 56px;
+        width: 3.5rem;
         box-sizing: border-box;
         text-align: right;
         background: transparent;
         border: none;
         border-bottom: 1.5px solid var(--ds-border-strong);
-        padding: 3px 2px;
+        padding: 0.1875rem 2px;
         font: inherit;
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: 800;
         font-family: var(--ds-font-display, inherit);
         color: var(--ds-text);
@@ -121,17 +121,17 @@ type NutrientVariant = "default" | "energy" | "sub";
         border-bottom-color: var(--ds-primary);
       }
       .ds-nrow__input--sub {
-        font-size: 15px;
+        font-size: 0.9375rem;
         font-weight: 700;
         color: var(--ds-text-muted);
       }
       .ds-nrow__input--energy {
-        width: 74px;
+        width: 4.625rem;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: 9px;
-        padding: 6px 9px;
-        font-size: 15px;
+        border-radius: 0.5625rem;
+        padding: 0.375rem 0.5625rem;
+        font-size: 0.9375rem;
         color: var(--ds-primary);
       }
     `,

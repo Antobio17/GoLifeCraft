@@ -33,7 +33,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
       .ds-emoji-choice-grid {
         display: grid;
         grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 8px;
+        gap: 0.5rem;
         max-width: 100%;
       }
       .ds-emoji-choice {
@@ -45,12 +45,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
         align-items: center;
         justify-content: center;
         aspect-ratio: 1;
-        border-radius: 12px;
+        border-radius: 0.75rem;
         border: 1px solid var(--ds-border-strong);
         background: var(--ds-surface);
         padding: 0;
         font: inherit;
-        font-size: 22px;
+        font-size: 1.375rem;
         line-height: 1;
         user-select: none;
         transition: transform 0.12s ease;

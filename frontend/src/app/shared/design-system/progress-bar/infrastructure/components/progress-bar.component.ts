@@ -19,7 +19,7 @@ import { Component, Input } from "@angular/core";
         display: block;
       }
       .ds-pbar {
-        height: 6px;
+        height: 0.375rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         overflow: hidden;

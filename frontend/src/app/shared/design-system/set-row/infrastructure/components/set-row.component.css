@@ -5,10 +5,10 @@
 .set-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
   background: var(--ds-bg);
-  padding: 5px 6px;
-  border-radius: 8px;
+  padding: 0.3125rem 0.375rem;
+  border-radius: 0.5rem;
 }
 
 .set-row--slid {
@@ -21,12 +21,12 @@
 }
 
 .set-row__num {
-  width: 34px;
+  width: 2.125rem;
   flex: 0 0 auto;
   text-align: center;
   font-family: var(--ds-font-display);
   font-weight: 800;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--ds-primary);
 }
 
@@ -37,9 +37,9 @@
 
 .set-check {
   flex: 0 0 auto;
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 0.5625rem;
   display: flex;
   align-items: center;
   justify-content: center;

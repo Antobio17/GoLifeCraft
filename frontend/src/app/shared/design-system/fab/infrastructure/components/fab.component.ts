@@ -23,7 +23,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
     `
       :host {
         position: sticky;
-        bottom: calc(72px + 12px + env(safe-area-inset-bottom));
+        bottom: calc(4.5rem + 0.75rem + env(safe-area-inset-bottom));
         display: flex;
         justify-content: flex-end;
         pointer-events: none;
@@ -31,14 +31,14 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       }
       @media (min-width: 768px) {
         :host {
-          bottom: 20px;
+          bottom: 1.25rem;
         }
       }
       .ds-fab {
         pointer-events: auto;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
         border: none;
         cursor: pointer;
         background: var(--ds-primary);
@@ -50,14 +50,14 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
           transform var(--ds-transition-fast);
       }
       .ds-fab:not(.ds-fab--extended) {
-        width: 52px;
-        height: 52px;
+        width: 3.25rem;
+        height: 3.25rem;
         justify-content: center;
       }
       .ds-fab--extended {
-        height: 48px;
-        padding: 0 18px;
-        border-radius: 15px;
+        height: 3rem;
+        padding: 0 1.125rem;
+        border-radius: 0.9375rem;
       }
       .ds-fab ds-icon {
         color: var(--ds-accent);

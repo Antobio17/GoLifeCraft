@@ -27,8 +27,8 @@ export type SkeletonListItemTrailing =
   },
 })
 export class SkeletonListItemComponent {
-  @Input() padding = "10px 11px";
-  @Input() radius = "16px";
+  @Input() padding = "0.625rem 0.6875rem";
+  @Input() radius = "1rem";
   @Input() surface = true;
   @Input() tone: "surface" | "brand" = "surface";
   @Input() alignTop = false;
@@ -40,7 +40,7 @@ export class SkeletonListItemComponent {
   @Input() tileRadius = 12;
 
   @Input() titleWidth = "58%";
-  @Input() titleHeight = "13px";
+  @Input() titleHeight = "0.8125rem";
   @Input() headTrailing = "";
 
   @Input() meta = true;
@@ -50,8 +50,8 @@ export class SkeletonListItemComponent {
 
   @Input() trailing: SkeletonListItemTrailing = "none";
   @Input() actions = 2;
-  @Input() pillWidth = "78px";
-  @Input() pillHeight = "30px";
+  @Input() pillWidth = "4.875rem";
+  @Input() pillHeight = "1.875rem";
 
   @Input() progress = false;
   @Input() footButton = false;

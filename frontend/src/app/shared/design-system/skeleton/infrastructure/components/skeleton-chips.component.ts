@@ -25,7 +25,7 @@ import { Component, Input } from "@angular/core";
       }
       .skchip {
         display: flex;
-        gap: var(--skchip-gap, 7px);
+        gap: var(--skchip-gap, 0.4375rem);
         overflow: hidden;
       }
       .skchip--wrap {
@@ -34,7 +34,7 @@ import { Component, Input } from "@angular/core";
       }
       .skchip__item {
         flex: 0 0 auto;
-        height: var(--skchip-h, 32px);
+        height: var(--skchip-h, 2rem);
         border-radius: var(--ds-radius-pill);
       }
       .skchip--equal .skchip__item {
@@ -50,12 +50,18 @@ import { Component, Input } from "@angular/core";
 })
 export class SkeletonChipsComponent {
   @Input() count = 3;
-  @Input() height = "32px";
-  @Input() gap = "7px";
+  @Input() height = "2rem";
+  @Input() gap = "0.4375rem";
   @Input() wrap = false;
   @Input() equal = false;
   @Input() radius: string | null = null;
-  @Input() widths: string[] = ["96px", "78px", "112px", "86px", "70px"];
+  @Input() widths: string[] = [
+    "6rem",
+    "4.875rem",
+    "7rem",
+    "5.375rem",
+    "4.375rem",
+  ];
 
   get chipArray(): number[] {
     return Array.from({ length: this.count }, (_, index) => index);

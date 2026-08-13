@@ -16,12 +16,12 @@ export type SkeletonExerciseVariant = "editable" | "readonly";
 })
 export class SkeletonExerciseComponent {
   @Input() variant: SkeletonExerciseVariant = "editable";
-  @Input() padding = "11px";
+  @Input() padding = "0.6875rem";
   @Input() nameWidth = "54%";
   @Input() badge = "";
   @Input() action = false;
   @Input() note = false;
-  @Input() noteHeight = "46px";
+  @Input() noteHeight = "2.875rem";
   @Input() sets = 3;
   @Input() doneCol = false;
   @Input() addTile = false;

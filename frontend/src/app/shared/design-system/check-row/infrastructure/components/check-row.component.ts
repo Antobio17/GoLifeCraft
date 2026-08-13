@@ -33,15 +33,15 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-checkrow {
         display: flex;
         align-items: center;
-        gap: 11px;
+        gap: 0.6875rem;
         width: 100%;
         text-align: left;
         appearance: none;
         border: none;
         cursor: pointer;
         background: var(--ds-surface-inset);
-        border-radius: 14px;
-        padding: 9px 11px;
+        border-radius: 0.875rem;
+        padding: 0.5625rem 0.6875rem;
         font: inherit;
         color: inherit;
         transition: opacity var(--ds-transition-fast);
@@ -54,9 +54,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 26px;
-        height: 26px;
-        border-radius: 8px;
+        width: 1.625rem;
+        height: 1.625rem;
+        border-radius: 0.5rem;
         background: var(--ds-surface);
         border: 1.5px solid var(--ds-border-strong);
         color: transparent;
@@ -74,11 +74,11 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 11px;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 0.6875rem;
         background: var(--ds-surface);
-        font-size: 18px;
+        font-size: 1.125rem;
       }
       .ds-checkrow__text {
         flex: 1 1 auto;
@@ -88,7 +88,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         gap: 2px;
       }
       .ds-checkrow__name {
-        font-size: 13px;
+        font-size: 0.8125rem;
         font-weight: var(--ds-weight-bold);
         line-height: 1.2;
         white-space: nowrap;
@@ -96,7 +96,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         text-overflow: ellipsis;
       }
       .ds-checkrow__meta {
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         color: var(--ds-text-muted);
       }
     `,

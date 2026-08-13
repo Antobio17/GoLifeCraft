@@ -39,18 +39,18 @@ import { RoleOption } from "../../domain/models/role-option.model";
       .ds-roles {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 0.75rem;
       }
       .ds-role {
         display: flex;
         align-items: center;
-        gap: 16px;
-        padding: 16px 20px;
+        gap: 1rem;
+        padding: 1rem 1.25rem;
         width: 100%;
         text-align: left;
         background: var(--ds-surface);
         border: 2px solid var(--ds-primary-soft-border);
-        border-radius: 12px;
+        border-radius: 0.75rem;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
@@ -60,20 +60,20 @@ import { RoleOption } from "../../domain/models/role-option.model";
         background: var(--ds-surface-hover);
         border-color: var(--ds-border-focus);
         box-shadow: var(--ds-shadow-sm);
-        transform: translateX(4px);
+        transform: translateX(0.25rem);
       }
       .ds-role:disabled {
         cursor: not-allowed;
       }
       .ds-role__icon {
         flex-shrink: 0;
-        width: 48px;
-        height: 48px;
+        width: 3rem;
+        height: 3rem;
         display: flex;
         align-items: center;
         justify-content: center;
         background: var(--ds-surface-subtle);
-        border-radius: 10px;
+        border-radius: 0.625rem;
         color: var(--ds-text-muted);
         transition: all 0.3s ease;
       }
@@ -81,25 +81,25 @@ import { RoleOption } from "../../domain/models/role-option.model";
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 0.25rem;
         min-width: 0;
       }
       .ds-role__name {
-        font-size: 15px;
+        font-size: 0.9375rem;
         font-weight: 700;
         color: var(--ds-text-body);
         letter-spacing: 0.3px;
       }
       .ds-role__desc {
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: 500;
         color: var(--ds-text-muted);
         line-height: 1.4;
       }
       .ds-role__check {
         flex-shrink: 0;
-        width: 28px;
-        height: 28px;
+        width: 1.75rem;
+        height: 1.75rem;
         display: flex;
         align-items: center;
         justify-content: center;

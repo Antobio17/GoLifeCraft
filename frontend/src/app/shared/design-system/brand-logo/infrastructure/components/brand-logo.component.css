@@ -3,7 +3,7 @@
   --brand-chip: var(--ds-forest-500);
   --brand-glyph: var(--ds-lime-500);
   --brand-life: var(--ds-forest-500);
-  --brand-chip-shadow: 0 12px 26px -12px rgba(39, 75, 55, 0.7);
+  --brand-chip-shadow: 0 0.75rem 1.625rem -0.75rem rgba(39, 75, 55, 0.7);
   display: inline-block;
 }
 
@@ -12,18 +12,18 @@
   --brand-chip: var(--ds-lime-500);
   --brand-glyph: #0e100d;
   --brand-life: var(--ds-lime-500);
-  --brand-chip-shadow: 0 10px 26px -8px rgba(201, 255, 60, 0.6);
+  --brand-chip-shadow: 0 0.625rem 1.625rem -0.5rem rgba(201, 255, 60, 0.6);
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 0.875rem;
 }
 
 .brand--stacked {
   flex-direction: column;
-  gap: 11px;
+  gap: 0.6875rem;
 }
 
 .brand__mark {
@@ -46,7 +46,7 @@
 .brand__text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .brand--stacked .brand__text {
@@ -72,7 +72,7 @@
 }
 
 .brand__tagline {
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   font-weight: 500;
   color: var(--ds-text-muted);
 }

@@ -19,7 +19,7 @@ import {
       :host {
         display: flex;
         align-items: center;
-        gap: var(--ds-scroll-row-gap, 4px);
+        gap: var(--ds-scroll-row-gap, 0.25rem);
         min-width: 0;
         overflow-x: auto;
         overscroll-behavior-x: contain;
@@ -30,13 +30,18 @@ import {
         display: none;
       }
       :host.is-fade-start {
-        mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 100%);
+        mask-image: linear-gradient(
+          90deg,
+          transparent 0,
+          #000 1.125rem,
+          #000 100%
+        );
       }
       :host.is-fade-end {
         mask-image: linear-gradient(
           90deg,
           #000 0,
-          #000 calc(100% - 18px),
+          #000 calc(100% - 1.125rem),
           transparent 100%
         );
       }
@@ -44,8 +49,8 @@ import {
         mask-image: linear-gradient(
           90deg,
           transparent 0,
-          #000 18px,
-          #000 calc(100% - 18px),
+          #000 1.125rem,
+          #000 calc(100% - 1.125rem),
           transparent 100%
         );
       }

@@ -8,8 +8,8 @@
    --ds-ring-center → fondo del círculo central (por defecto la superficie) */
 .ring {
   flex: none;
-  width: var(--ds-ring-size, 66px);
-  height: var(--ds-ring-size, 66px);
+  width: var(--ds-ring-size, 4.125rem);
+  height: var(--ds-ring-size, 4.125rem);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -31,6 +31,6 @@
   background: var(--ds-ring-center, var(--ds-surface));
   font-family: var(--ds-font-display);
   font-weight: var(--ds-weight-bold);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1;
 }

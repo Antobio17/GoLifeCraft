@@ -2,26 +2,26 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 }
 
 .form-label {
-  margin-bottom: 6px;
+  margin-bottom: 0.375rem;
   font-weight: var(--ds-weight-medium);
   color: var(--ds-text-muted);
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .required-indicator {
   color: var(--ds-danger);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .form-control {
-  padding: 10px 12px;
+  padding: 0.625rem 0.75rem;
   border: 1.5px solid var(--ds-border-input);
   border-radius: var(--ds-radius-lg);
   font-size: var(--ds-text-base);
@@ -70,7 +70,7 @@ input[type="date"].form-control,
 input[type="datetime-local"].form-control {
   -webkit-appearance: none;
   appearance: none;
-  padding: 10px 12px;
+  padding: 0.625rem 0.75rem;
 }
 
 input[type="number"].form-control {
@@ -91,12 +91,12 @@ input[type="number"].form-control::-webkit-inner-spin-button {
 }
 
 .input-wrapper.password-field .form-control {
-  padding-right: 46px;
+  padding-right: 2.875rem;
 }
 
 .input-leading {
   position: absolute;
-  left: 13px;
+  left: 0.8125rem;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -106,24 +106,24 @@ input[type="number"].form-control::-webkit-inner-spin-button {
 }
 
 .input-leading__prefix {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: var(--ds-weight-extrabold);
 }
 
 .input-wrapper.has-leading .form-control {
-  padding-left: 40px;
+  padding-left: 2.5rem;
 }
 
 .password-toggle {
   position: absolute;
-  right: 12px;
+  right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 1.875rem;
+  height: 1.875rem;
   background: none;
   border: none;
   border-radius: var(--ds-radius-md);
@@ -193,7 +193,7 @@ input[type="number"].form-control::-webkit-inner-spin-button {
 @keyframes ds-input-slide-down {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-0.5rem);
   }
   to {
     opacity: 1;
@@ -203,17 +203,17 @@ input[type="number"].form-control::-webkit-inner-spin-button {
 
 @media (max-width: 767px) {
   .form-label {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
 
   .form-control {
     font-size: var(--ds-text-label);
-    padding: 9px var(--ds-space-3);
+    padding: 0.5625rem var(--ds-space-3);
   }
 
   input[type="date"].form-control,
   input[type="datetime-local"].form-control {
-    padding: 10px 12px;
+    padding: 0.625rem 0.75rem;
   }
 
   .form-hint,

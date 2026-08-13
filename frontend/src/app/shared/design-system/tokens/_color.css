@@ -116,8 +116,8 @@
   --ds-warning-soft: var(--ds-amber-50);
 
   /* ---- Anillo de foco ---- */
-  --ds-focus-ring: 0 0 0 4px rgba(39, 75, 55, 0.16);
-  --ds-focus-ring-danger: 0 0 0 4px rgba(240, 96, 62, 0.14);
+  --ds-focus-ring: 0 0 0 0.25rem rgba(39, 75, 55, 0.16);
+  --ds-focus-ring-danger: 0 0 0 0.25rem rgba(240, 96, 62, 0.14);
 
   /* ---- Skeleton ---- */
   --ds-skeleton-base: var(--ds-paper-200);
@@ -190,8 +190,8 @@
   --ds-warning-soft: rgba(245, 158, 11, 0.14);
 
   /* ---- Foco ---- */
-  --ds-focus-ring: 0 0 0 4px rgba(201, 255, 60, 0.2);
-  --ds-focus-ring-danger: 0 0 0 4px rgba(255, 122, 77, 0.2);
+  --ds-focus-ring: 0 0 0 0.25rem rgba(201, 255, 60, 0.2);
+  --ds-focus-ring-danger: 0 0 0 0.25rem rgba(255, 122, 77, 0.2);
 
   /* ---- Skeleton ---- */
   --ds-skeleton-base: #1c211a;

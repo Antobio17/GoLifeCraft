@@ -58,12 +58,12 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       .ds-screen-head {
         display: flex;
         align-items: center;
-        gap: 11px;
+        gap: 0.6875rem;
       }
       .ds-screen-head__lead {
         flex: 0 0 auto;
-        width: 40px;
-        height: 40px;
+        width: 2.5rem;
+        height: 2.5rem;
         padding: 0;
         box-sizing: border-box;
         line-height: 0;
@@ -87,7 +87,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       }
       .ds-screen-head__eyebrow {
         display: block;
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.09em;
         text-transform: uppercase;
@@ -124,7 +124,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         flex: 0 0 auto;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
       }
       .ds-screen-head__actions:empty {
         display: none;

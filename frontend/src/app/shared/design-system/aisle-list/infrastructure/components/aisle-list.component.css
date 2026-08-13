@@ -4,15 +4,15 @@
 
 .aisle-list__empty {
   text-align: center;
-  padding: 22px 16px;
+  padding: 1.375rem 1rem;
   line-height: 1.45;
 }
 
 .aisle-list__row {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: 14px;
-  padding: 10px 12px;
+  border-radius: 0.875rem;
+  padding: 0.625rem 0.75rem;
 }
 
 .aisle-list__row--slid {
@@ -22,8 +22,8 @@
 
 .aisle-list__position {
   flex: 0 0 auto;
-  width: 22px;
-  height: 22px;
+  width: 1.375rem;
+  height: 1.375rem;
   border-radius: var(--ds-radius-pill);
   background: var(--ds-surface-inset);
   display: flex;
@@ -44,8 +44,8 @@
   appearance: none;
   border: none;
   flex: 0 0 auto;
-  width: 30px;
-  height: 30px;
+  width: 1.875rem;
+  height: 1.875rem;
   border-radius: var(--ds-radius-md);
   background: var(--ds-surface-inset);
   color: var(--ds-text-muted);

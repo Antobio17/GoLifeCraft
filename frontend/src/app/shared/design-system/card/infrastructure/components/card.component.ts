@@ -27,8 +27,8 @@ type CardVariant = "plain" | "brand" | "inset";
         flex-direction: column;
         justify-content: center;
         height: 100%;
-        gap: var(--card-gap, 12px);
-        padding: var(--card-pad, 16px);
+        gap: var(--card-gap, 0.75rem);
+        padding: var(--card-pad, 1rem);
         border-radius: var(--ds-radius-3xl);
         border-top-right-radius: var(--ds-card-tr-radius, var(--ds-radius-3xl));
         border-bottom-right-radius: var(
@@ -75,8 +75,8 @@ type CardVariant = "plain" | "brand" | "inset";
 })
 export class CardComponent {
   @Input() variant: CardVariant = "plain";
-  @Input() padding = "16px";
-  @Input() gap = "12px";
+  @Input() padding = "1rem";
+  @Input() gap = "0.75rem";
   @Input() interactive = false;
 
   @Output() activated = new EventEmitter<void>();

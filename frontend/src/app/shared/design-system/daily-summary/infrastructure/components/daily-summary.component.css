@@ -11,8 +11,8 @@
   background: var(--ds-surface-brand);
   color: var(--ds-on-surface-brand);
   border: 1px solid transparent;
-  border-radius: 22px;
-  padding: 17px 18px;
+  border-radius: 1.375rem;
+  padding: 1.0625rem 1.125rem;
   box-shadow: var(--ds-shadow-card);
 }
 
@@ -24,11 +24,11 @@
 .summary__main {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 0.9375rem;
 }
 
 .summary__ring {
-  --ds-ring-size: 66px;
+  --ds-ring-size: 4.125rem;
   --ds-ring-fill: var(--ds-accent);
   --ds-ring-center: var(--ds-surface-brand);
   --ds-ring-track: color-mix(
@@ -39,7 +39,7 @@
 }
 
 .summary__ring-value {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--ds-on-surface-brand);
 }
 
@@ -47,7 +47,7 @@
   margin: 0;
   font-family: var(--ds-font-display);
   font-weight: 800;
-  font-size: 25px;
+  font-size: 1.5625rem;
   line-height: 1;
 }
 
@@ -56,33 +56,33 @@
 }
 
 .summary__kcal-target {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: color-mix(in srgb, var(--ds-on-surface-brand) 55%, transparent);
 }
 
 .summary__kcal-label {
-  margin: 3px 0 0;
-  font-size: 11.5px;
+  margin: 0.1875rem 0 0;
+  font-size: 0.71875rem;
   color: color-mix(in srgb, var(--ds-on-surface-brand) 65%, transparent);
 }
 
 .summary__macros {
   display: flex;
-  gap: 7px;
-  margin-top: 15px;
+  gap: 0.4375rem;
+  margin-top: 0.9375rem;
 }
 
 .macro {
   flex: 1;
   background: var(--hero-chip-bg);
-  border-radius: 11px;
-  padding: 8px 9px;
+  border-radius: 0.6875rem;
+  padding: 0.5rem 0.5625rem;
 }
 
 .macro__label {
   display: block;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   color: color-mix(in srgb, var(--ds-on-surface-brand) 60%, transparent);
 }
@@ -91,7 +91,7 @@
   display: block;
   font-family: var(--ds-font-display);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-top: 1px;
 }
 
@@ -105,16 +105,16 @@
 
 @media (min-width: 768px) {
   .summary {
-    padding: 22px 24px;
-    border-radius: 24px;
+    padding: 1.375rem 1.5rem;
+    border-radius: 1.5rem;
   }
   .summary__ring {
-    --ds-ring-size: 84px;
+    --ds-ring-size: 5.25rem;
   }
   .summary__ring-value {
-    font-size: 17px;
+    font-size: 1.0625rem;
   }
   .summary__kcal-value {
-    font-size: 32px;
+    font-size: 2rem;
   }
 }

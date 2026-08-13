@@ -4,21 +4,21 @@
 
 .active-banner__sentinel {
   height: 0;
-  margin-bottom: -12px;
+  margin-bottom: -0.75rem;
   pointer-events: none;
 }
 
 .active-banner {
   position: sticky;
-  top: 8px;
+  top: 0.5rem;
   z-index: 20;
   display: flex;
   flex-direction: column;
   background: var(--ds-surface-brand);
   color: var(--ds-on-surface-brand);
-  border-radius: 18px;
-  padding: 14px 15px;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
+  border-radius: 1.125rem;
+  padding: 0.875rem 0.9375rem;
+  box-shadow: 0 0.75rem 1.625rem rgba(0, 0, 0, 0.2);
   will-change: padding, border-radius;
   transition:
     padding 0.34s cubic-bezier(0.16, 1, 0.3, 1),
@@ -27,20 +27,20 @@
 }
 
 .active-banner--collapsed {
-  padding: 9px 12px;
-  border-radius: 14px;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.32);
+  padding: 0.5625rem 0.75rem;
+  border-radius: 0.875rem;
+  box-shadow: 0 0.75rem 1.625rem rgba(0, 0, 0, 0.32);
 }
 
 .active-banner__row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .active-banner__pulse {
-  width: 9px;
-  height: 9px;
+  width: 0.5625rem;
+  height: 0.5625rem;
   border-radius: 50%;
   background: var(--ds-accent);
   flex: 0 0 auto;
@@ -73,7 +73,7 @@
 }
 
 .active-banner__state {
-  font-size: 9.5px;
+  font-size: 0.59375rem;
   font-weight: 800;
   letter-spacing: 0.09em;
   color: var(--ds-accent);
@@ -82,7 +82,7 @@
 .active-banner__time {
   font-family: var(--ds-font-display);
   font-weight: 800;
-  font-size: 32px;
+  font-size: 2rem;
   line-height: 1;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
@@ -90,7 +90,7 @@
 }
 
 .active-banner--collapsed .active-banner__time {
-  font-size: 19px;
+  font-size: 1.1875rem;
 }
 
 .active-banner__count {
@@ -102,14 +102,14 @@
   display: block;
   font-family: var(--ds-font-display);
   font-weight: 800;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1;
   color: var(--ds-accent);
 }
 
 .active-banner__count-label {
   display: block;
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 600;
   opacity: 0.6;
   margin-top: 2px;
@@ -118,7 +118,7 @@
 .active-banner__compact-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
   flex: 0 0 auto;
   max-width: 0;
   opacity: 0;
@@ -131,16 +131,16 @@
 }
 
 .active-banner--collapsed .active-banner__compact-actions {
-  max-width: 140px;
+  max-width: 8.75rem;
   opacity: 1;
   pointer-events: auto;
 }
 
 .active-banner__compact-btn {
-  width: 34px;
-  height: 34px;
+  width: 2.125rem;
+  height: 2.125rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 0.625rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,9 +171,9 @@
 .active-banner__actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 11px;
-  max-height: 130px;
+  gap: 0.5rem;
+  margin-top: 0.6875rem;
+  max-height: 8.125rem;
   opacity: 1;
   overflow: hidden;
   will-change: max-height, opacity, margin-top;
@@ -192,23 +192,23 @@
 
 .active-banner__actions-row {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .active-banner__finish {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5rem;
   border: none;
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
   cursor: pointer;
   background: var(--ds-accent);
   color: var(--ds-on-accent);
   font-family: var(--ds-font-body);
   font-weight: 800;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .active-banner__finish:disabled {
@@ -220,14 +220,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 0.4375rem;
   border: none;
-  border-radius: 12px;
-  padding: 11px;
+  border-radius: 0.75rem;
+  padding: 0.6875rem;
   cursor: pointer;
   font-family: var(--ds-font-body);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .active-banner__btn--soft {
@@ -238,7 +238,7 @@
 
 .active-banner__btn--stop {
   flex: 0 0 auto;
-  padding: 11px 16px;
+  padding: 0.6875rem 1rem;
   background: var(--ds-danger);
   color: #fff;
 }

@@ -44,15 +44,15 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
       .ds-choicerow {
         display: flex;
         align-items: center;
-        gap: 13px;
+        gap: 0.8125rem;
         width: 100%;
         text-align: left;
         appearance: none;
         cursor: pointer;
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border);
-        border-radius: 16px;
-        padding: 14px;
+        border-radius: 1rem;
+        padding: 0.875rem;
         font: inherit;
         color: inherit;
         transition: border-color var(--ds-transition-fast);
@@ -69,11 +69,11 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 46px;
-        height: 46px;
-        border-radius: 13px;
+        width: 2.875rem;
+        height: 2.875rem;
+        border-radius: 0.8125rem;
         background: var(--ds-primary-soft);
-        font-size: 24px;
+        font-size: 1.5rem;
       }
       .ds-choicerow__text {
         flex: 1 1 auto;
@@ -84,11 +84,11 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
       }
       .ds-choicerow__title {
         font-family: var(--ds-font-display);
-        font-size: 14.5px;
+        font-size: 0.90625rem;
         font-weight: 800;
       }
       .ds-choicerow__description {
-        font-size: 11.5px;
+        font-size: 0.71875rem;
         line-height: 1.4;
         color: var(--ds-text-muted);
       }

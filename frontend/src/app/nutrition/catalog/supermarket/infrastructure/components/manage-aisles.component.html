@@ -5,7 +5,7 @@
   [closeLabel]="closeLabel()"
   (closed)="onClose()"
 >
-  <ds-stack [gap]="'14px'">
+  <ds-stack [gap]="'0.875rem'">
     <ds-text variant="meta">{{ subtitle() }}</ds-text>
 
     @if (!hasStores()) {
@@ -32,7 +32,7 @@
         (renamed)="onRename($event)"
       />
 
-      <ds-stack direction="row" align="center" [gap]="'8px'">
+      <ds-stack direction="row" align="center" [gap]="'0.5rem'">
         <ds-stack [grow]="true">
           <ds-text-input
             variant="outlined"

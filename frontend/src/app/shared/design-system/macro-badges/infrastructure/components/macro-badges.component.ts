@@ -30,13 +30,13 @@ import { MacroBadge } from "../../domain/models/macro-badge.model";
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 5px;
+        gap: 0.3125rem;
       }
       .ds-mbadges__badge {
         background: var(--ds-surface-inset);
-        border-radius: 7px;
-        padding: 3px 6px;
-        font-size: 10.5px;
+        border-radius: 0.4375rem;
+        padding: 0.1875rem 0.375rem;
+        font-size: 0.65625rem;
         font-weight: 600;
         color: var(--ds-text-muted);
         white-space: nowrap;

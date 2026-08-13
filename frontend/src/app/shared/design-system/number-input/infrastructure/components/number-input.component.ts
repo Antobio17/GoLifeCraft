@@ -56,12 +56,12 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-num {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .ds-num--stepper {
         background: var(--ds-surface-inset);
         border-radius: var(--ds-radius-pill);
-        padding: 3px;
+        padding: 0.1875rem;
       }
       .ds-num__field {
         min-width: 0;
@@ -70,7 +70,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         border: 1px solid var(--ds-border-input);
         border-radius: var(--ds-radius-lg);
         background: var(--ds-surface);
-        padding: 10px 12px;
+        padding: 0.625rem 0.75rem;
         font: inherit;
         font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
@@ -87,8 +87,8 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-num--stepper .ds-num__field {
         border: none;
         background: transparent;
-        padding: 6px 2px;
-        width: 44px;
+        padding: 0.375rem 2px;
+        width: 2.75rem;
       }
       .ds-num__field:focus {
         outline: none;
@@ -103,8 +103,8 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         align-items: center;
         justify-content: center;
         flex: 0 0 auto;
-        width: 30px;
-        height: 30px;
+        width: 1.875rem;
+        height: 1.875rem;
         border: none;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface);
@@ -129,16 +129,16 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         color: var(--ds-text-meta);
       }
       .ds-num--boxed {
-        gap: 3px;
+        gap: 0.1875rem;
         background: transparent;
         border-radius: 0;
         padding: 0;
       }
       .ds-num--boxed .ds-num__step {
-        width: 24px;
-        height: 28px;
+        width: 1.5rem;
+        height: 1.75rem;
         border: 1px solid var(--ds-border);
-        border-radius: 7px;
+        border-radius: 0.4375rem;
         background: var(--ds-surface);
         color: var(--ds-primary);
         box-shadow: none;
@@ -152,10 +152,10 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         width: 0;
         min-width: 0;
         border: 1px solid var(--ds-border);
-        border-radius: 7px;
+        border-radius: 0.4375rem;
         background: var(--ds-surface);
-        padding: 6px 2px;
-        font-size: 13px;
+        padding: 0.375rem 2px;
+        font-size: 0.8125rem;
         font-weight: var(--ds-weight-bold);
       }
       .ds-num--boxed .ds-num__field:focus {
@@ -163,7 +163,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         border-color: var(--ds-border-focus);
       }
       .ds-num--boxed .ds-num__unit {
-        margin-left: 3px;
+        margin-left: 0.1875rem;
       }
     `,
   ],

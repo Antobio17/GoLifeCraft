@@ -5,7 +5,7 @@
   [closeLabel]="cancelLabel"
   (closed)="onDismiss()"
 >
-  <ds-stack [gap]="'14px'">
+  <ds-stack [gap]="'0.875rem'">
     @if (body) {
       <ds-text variant="meta">{{ body }}</ds-text>
     }
@@ -14,7 +14,7 @@
       <ds-note icon="info">{{ note }}</ds-note>
     }
 
-    <ds-stack [gap]="'10px'">
+    <ds-stack [gap]="'0.625rem'">
       @for (option of options; track option.value) {
         <ds-choice-row
           [icon]="option.icon"

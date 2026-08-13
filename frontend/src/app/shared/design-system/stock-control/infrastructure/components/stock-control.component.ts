@@ -72,13 +72,13 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
         display: block;
       }
       .ds-stk {
-        padding: 12px 14px;
+        padding: 0.75rem 0.875rem;
       }
       .ds-stk__top {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        gap: 10px;
+        gap: 0.625rem;
       }
       .ds-stk__amount {
         display: flex;
@@ -100,7 +100,7 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
         opacity: 0.6;
       }
       .ds-stk__label {
-        font-size: 9.5px;
+        font-size: 0.59375rem;
         font-weight: 800;
         letter-spacing: 0.04em;
         color: var(--ds-text-meta);
@@ -108,9 +108,9 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
       .ds-stk__main {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 0.375rem;
         font-family: var(--ds-font-display);
-        font-size: 22px;
+        font-size: 1.375rem;
         font-weight: 800;
         line-height: 1.05;
         color: var(--ds-text);
@@ -119,7 +119,7 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
         color: var(--ds-text-meta);
       }
       .ds-stk__sub {
-        font-size: 11px;
+        font-size: 0.6875rem;
         font-weight: 600;
         color: var(--ds-text-muted);
       }
@@ -132,27 +132,27 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
       }
       .ds-stk__value-amount {
         font-family: var(--ds-font-display);
-        font-size: 18px;
+        font-size: 1.125rem;
         font-weight: 800;
         color: var(--ds-accent);
       }
       .ds-stk__actions {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin-top: 12px;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
       }
       .ds-stk__step {
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
+        gap: 0.375rem;
         border: none;
-        border-radius: 11px;
-        padding: 11px;
+        border-radius: 0.6875rem;
+        padding: 0.6875rem;
         font: inherit;
-        font-size: 13px;
+        font-size: 0.8125rem;
         font-weight: 800;
         cursor: pointer;
       }
@@ -166,14 +166,14 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
       }
       .ds-stk__clear {
         flex: 0 0 auto;
-        width: 42px;
-        height: 42px;
+        width: 2.625rem;
+        height: 2.625rem;
         display: flex;
         align-items: center;
         justify-content: center;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-strong);
-        border-radius: 11px;
+        border-radius: 0.6875rem;
         color: var(--ds-text-muted);
         cursor: pointer;
       }

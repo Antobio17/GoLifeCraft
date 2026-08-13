@@ -36,31 +36,31 @@ import { Component, Input } from "@angular/core";
       .skfil {
         display: flex;
         flex-direction: column;
-        gap: var(--skfil-gap, 12px);
+        gap: var(--skfil-gap, 0.75rem);
       }
       .skfil__search {
         width: 100%;
-        height: 44px;
+        height: 2.75rem;
         border-radius: var(--ds-radius-xl);
       }
       .skfil__row {
         display: flex;
-        gap: 7px;
+        gap: 0.4375rem;
       }
       .skfil__select {
         flex: 1 1 0;
         min-width: 0;
-        height: 34px;
+        height: 2.125rem;
         border-radius: var(--ds-radius-lg);
       }
       .skfil__segmented {
         width: 100%;
-        height: 40px;
+        height: 2.5rem;
         border-radius: var(--ds-radius-2xl);
       }
       .skfil__caption {
-        width: 168px;
-        height: 11px;
+        width: 10.5rem;
+        height: 0.6875rem;
       }
     `,
   ],
@@ -73,7 +73,7 @@ export class SkeletonFiltersComponent {
   @Input() selects = 0;
   @Input() segments = 0;
   @Input() caption = false;
-  @Input() gap = "12px";
+  @Input() gap = "0.75rem";
 
   get selectArray(): number[] {
     return Array.from({ length: this.selects }, (_, index) => index);

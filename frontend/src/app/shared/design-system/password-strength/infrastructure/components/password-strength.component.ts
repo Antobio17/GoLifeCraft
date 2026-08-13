@@ -28,24 +28,24 @@ type StrengthLevel = 0 | 1 | 2 | 3;
       .ps {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
         margin-top: 2px;
       }
       .ps__bars {
         flex: 1 1 auto;
         display: flex;
-        gap: 4px;
+        gap: 0.25rem;
       }
       .ps__bar {
         flex: 1 1 0;
-        height: 4px;
+        height: 0.25rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         transition: background var(--ds-transition-base);
       }
       .ps__label {
         flex: 0 0 auto;
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         font-weight: var(--ds-weight-extrabold);
         white-space: nowrap;
       }

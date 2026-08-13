@@ -35,12 +35,12 @@ import { Component, Input } from "@angular/core";
       .skhead {
         display: flex;
         align-items: center;
-        gap: 11px;
+        gap: 0.6875rem;
       }
       .skhead__lead {
         flex: 0 0 auto;
-        width: 40px;
-        height: 40px;
+        width: 2.5rem;
+        height: 2.5rem;
         border-radius: var(--ds-radius-xl);
       }
       .skhead__text {
@@ -48,33 +48,33 @@ import { Component, Input } from "@angular/core";
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 7px;
+        gap: 0.4375rem;
       }
       .skhead__eyebrow {
-        width: 84px;
+        width: 5.25rem;
         max-width: 100%;
-        height: 9px;
+        height: 0.5625rem;
       }
       .skhead__title {
         width: var(--skhead-title, 62%);
         max-width: 100%;
-        height: 22px;
+        height: 1.375rem;
         border-radius: var(--ds-radius-md);
       }
       .skhead__subtitle {
         width: var(--skhead-subtitle, 44%);
         max-width: 100%;
-        height: 11px;
+        height: 0.6875rem;
       }
       .skhead__actions {
         flex: 0 0 auto;
         display: flex;
         align-items: center;
-        gap: 9px;
+        gap: 0.5625rem;
       }
       .skhead__action {
-        width: var(--skhead-action, 40px);
-        height: 40px;
+        width: var(--skhead-action, 2.5rem);
+        height: 2.5rem;
         border-radius: var(--ds-radius-xl);
       }
     `,
@@ -92,7 +92,7 @@ export class SkeletonScreenHeaderComponent {
   @Input() titleWidth = "62%";
   @Input() subtitleWidth = "44%";
   @Input() actions = 0;
-  @Input() actionWidth = "40px";
+  @Input() actionWidth = "2.5rem";
 
   get actionArray(): number[] {
     return Array.from({ length: this.actions }, (_, index) => index);

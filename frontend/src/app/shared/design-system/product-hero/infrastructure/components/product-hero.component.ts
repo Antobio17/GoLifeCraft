@@ -19,25 +19,25 @@ import { Component, Input } from "@angular/core";
       }
       .ds-product-hero {
         position: relative;
-        height: 118px;
-        border-radius: 20px;
+        height: 7.375rem;
+        border-radius: 1.25rem;
         background: var(--ds-surface-inset);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 52px;
+        font-size: 3.25rem;
       }
       .ds-product-hero__price {
         position: absolute;
-        bottom: 10px;
-        right: 10px;
+        bottom: 0.625rem;
+        right: 0.625rem;
         background: var(--ds-primary);
         color: var(--ds-on-primary);
-        border-radius: 9px;
-        padding: 5px 10px;
+        border-radius: 0.5625rem;
+        padding: 0.3125rem 0.625rem;
         font-family: var(--ds-font-display);
         font-weight: 700;
-        font-size: 14px;
+        font-size: 0.875rem;
       }
     `,
   ],

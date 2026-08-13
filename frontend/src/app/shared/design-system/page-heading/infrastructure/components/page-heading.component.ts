@@ -28,13 +28,13 @@ import { Component, Input } from "@angular/core";
       .ds-page-heading {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 0.875rem;
         flex-wrap: wrap;
       }
       .ds-page-heading__tile {
-        width: 52px;
-        height: 52px;
-        border-radius: 16px;
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: 1rem;
         background: var(--ds-surface-brand);
         color: var(--ds-accent);
         display: flex;
@@ -53,7 +53,7 @@ import { Component, Input } from "@angular/core";
       .ds-page-heading__title-row {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 0.625rem;
       }
       .ds-page-heading__title {
         margin: 0;
@@ -70,7 +70,7 @@ import { Component, Input } from "@angular/core";
         color: var(--ds-on-accent);
         background: var(--ds-accent);
         border-radius: var(--ds-radius-pill);
-        padding: 2px 9px;
+        padding: 2px 0.5625rem;
       }
       .ds-page-heading__subtitle {
         margin: 0;

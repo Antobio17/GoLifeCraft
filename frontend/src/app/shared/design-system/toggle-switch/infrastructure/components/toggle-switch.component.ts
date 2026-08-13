@@ -23,8 +23,8 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
         display: inline-flex;
       }
       .ds-toggle {
-        width: 46px;
-        height: 26px;
+        width: 2.875rem;
+        height: 1.625rem;
         flex: 0 0 auto;
         border: none;
         border-radius: var(--ds-radius-pill);
@@ -46,15 +46,15 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
       }
       .ds-toggle__knob {
         display: block;
-        width: 20px;
-        height: 20px;
+        width: 1.25rem;
+        height: 1.25rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-raised);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 0.1875rem rgba(0, 0, 0, 0.2);
         transition: transform var(--ds-transition-base);
       }
       .ds-toggle.is-on .ds-toggle__knob {
-        transform: translateX(20px);
+        transform: translateX(1.25rem);
       }
     `,
   ],

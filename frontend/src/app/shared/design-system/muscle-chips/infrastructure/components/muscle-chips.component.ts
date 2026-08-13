@@ -24,7 +24,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
       .ds-muscle-chips {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--ds-space-2, 8px);
+        gap: var(--ds-space-2, 0.5rem);
       }
       .ds-muscle-chip {
         appearance: none;
@@ -32,8 +32,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
         border: 1px solid var(--ds-border, #d8d3c6);
         background: var(--ds-surface, #fff);
         color: var(--ds-text, #20201b);
-        border-radius: var(--ds-radius-pill, 999px);
-        padding: 6px 14px;
+        border-radius: var(--ds-radius-pill, 62.4375rem);
+        padding: 0.375rem 0.875rem;
         font: inherit;
         font-size: var(--ds-text-base, 0.875rem);
         line-height: 1.2;

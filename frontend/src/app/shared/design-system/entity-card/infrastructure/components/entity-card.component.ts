@@ -43,11 +43,11 @@ import { NgTemplateOutlet } from "@angular/common";
       .ds-entity-card {
         display: flex;
         align-items: flex-start;
-        gap: 12px;
+        gap: 0.75rem;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-3xl);
-        padding: 16px 18px;
+        padding: 1rem 1.125rem;
         box-shadow: var(--ds-shadow-card);
         transition:
           border-color 0.15s ease,
@@ -64,7 +64,7 @@ import { NgTemplateOutlet } from "@angular/common";
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .ds-entity-card__hit {
         appearance: none;
@@ -93,7 +93,7 @@ import { NgTemplateOutlet } from "@angular/common";
       .ds-entity-card__tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 6px;
+        gap: 0.375rem;
         margin-top: 2px;
       }
       .ds-entity-card__tag {
@@ -102,12 +102,12 @@ import { NgTemplateOutlet } from "@angular/common";
         color: var(--ds-primary-soft-text);
         background: var(--ds-primary-soft);
         border-radius: var(--ds-radius-pill);
-        padding: 4px 10px;
+        padding: 0.25rem 0.625rem;
       }
       .ds-entity-card__actions {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 0.25rem;
         flex: 0 0 auto;
       }
       .ds-entity-card__actions:empty {

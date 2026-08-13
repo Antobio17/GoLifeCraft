@@ -10,7 +10,7 @@ import { Component, Input } from "@angular/core";
       }
       .ds-sk {
         width: 100%;
-        height: var(--skeleton-h, 96px);
+        height: var(--skeleton-h, 6rem);
         border-radius: var(--skeleton-r, var(--ds-radius-3xl));
       }
     `,
@@ -22,7 +22,7 @@ import { Component, Input } from "@angular/core";
   },
 })
 export class SkeletonComponent {
-  @Input() height = "96px";
+  @Input() height = "6rem";
   @Input() radius = "var(--ds-radius-3xl)";
   @Input() delay = "0s";
 }

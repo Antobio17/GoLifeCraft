@@ -31,15 +31,15 @@ import { Component, Input } from "@angular/core";
         box-sizing: border-box;
         display: flex;
         align-items: flex-start;
-        gap: 9px;
+        gap: 0.5625rem;
         background: var(--ds-primary-soft);
-        border-radius: 13px;
-        padding: 12px 13px;
+        border-radius: 0.8125rem;
+        padding: 0.75rem 0.8125rem;
       }
       .sknote__icon {
         flex: 0 0 auto;
-        width: 16px;
-        height: 16px;
+        width: 1rem;
+        height: 1rem;
         border-radius: var(--ds-radius-sm);
       }
       .sknote__text {
@@ -47,11 +47,11 @@ import { Component, Input } from "@angular/core";
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .sknote__line {
         width: 100%;
-        height: 9px;
+        height: 0.5625rem;
       }
       .sknote__text .sknote__line:last-child {
         width: 62%;

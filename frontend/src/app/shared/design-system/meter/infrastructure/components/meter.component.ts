@@ -26,16 +26,16 @@ import { Component, Input } from "@angular/core";
       .ds-meter {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .ds-meter__row {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
       }
       .ds-meter__dot {
-        width: 8px;
-        height: 8px;
+        width: 0.5rem;
+        height: 0.5rem;
         border-radius: var(--ds-radius-pill);
         background: var(--meter-color, var(--ds-primary));
       }
@@ -52,7 +52,7 @@ import { Component, Input } from "@angular/core";
         color: var(--ds-text-meta);
       }
       .ds-meter__track {
-        height: 8px;
+        height: 0.5rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         overflow: hidden;

@@ -27,50 +27,50 @@ import { Component, computed, input } from "@angular/core";
       .skmac {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 0.875rem;
         background: var(--ds-surface-inset);
-        border-radius: 16px;
-        padding: 14px 16px;
+        border-radius: 1rem;
+        padding: 0.875rem 1rem;
       }
       .skmac__kcal {
         flex: 0 0 auto;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .skmac__kcal-value {
-        width: 62px;
-        height: 24px;
+        width: 3.875rem;
+        height: 1.5rem;
         border-radius: var(--ds-radius-md);
       }
       .skmac__kcal-unit {
-        width: 44px;
-        height: 9px;
+        width: 2.75rem;
+        height: 0.5625rem;
       }
       .skmac__bars {
         flex: 1 1 auto;
         display: flex;
-        gap: 6px;
+        gap: 0.375rem;
       }
       .skmac__bar {
         flex: 1 1 0;
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 0.3125rem;
       }
       .skmac__line {
         width: 100%;
-        height: 6px;
-        border-radius: 4px;
+        height: 0.375rem;
+        border-radius: 0.25rem;
       }
       .skmac__label {
         width: 72%;
-        height: 9px;
+        height: 0.5625rem;
       }
       .skmac__value {
         width: 52%;
-        height: 11px;
+        height: 0.6875rem;
       }
     `,
   ],

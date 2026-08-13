@@ -24,7 +24,7 @@ type DateInputType = "date" | "time";
         display: block;
         width: 100%;
         min-width: 0;
-        --ds-date-input-min-height: 46px;
+        --ds-date-input-min-height: 2.875rem;
       }
       .ds-date-input {
         display: block;
@@ -45,7 +45,7 @@ type DateInputType = "date" | "time";
         font-weight: var(--ds-weight-bold);
         line-height: normal;
         text-align: left;
-        padding: 12px 13px;
+        padding: 0.75rem 0.8125rem;
         margin: 0;
         overflow: hidden;
         outline: none;
@@ -80,7 +80,7 @@ type DateInputType = "date" | "time";
         cursor: pointer;
         opacity: 0.55;
         margin: 0;
-        padding: 0 0 0 4px;
+        padding: 0 0 0 0.25rem;
         flex: 0 0 auto;
       }
       .ds-date-input::-webkit-calendar-picker-indicator:hover {
@@ -88,8 +88,8 @@ type DateInputType = "date" | "time";
       }
       @media (pointer: coarse) {
         .ds-date-input {
-          font-size: 16px;
-          padding: 11px 10px;
+          font-size: 1rem;
+          padding: 0.6875rem 0.625rem;
         }
       }
     `,

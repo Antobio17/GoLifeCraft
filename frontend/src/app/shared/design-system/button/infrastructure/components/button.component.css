@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 0.4375rem;
   font-family: var(--ds-font-body);
   font-weight: var(--ds-weight-semibold);
   letter-spacing: var(--ds-tracking-tight);
@@ -26,12 +26,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 0.4375rem;
 }
 
 /* ---- Tamaños ---- */
 .ds-btn--lg {
-  padding: 10px 22px;
+  padding: 0.625rem 1.375rem;
   font-size: var(--ds-text-base);
   border-radius: var(--ds-radius-xl);
 }
@@ -44,7 +44,7 @@
 
 .ds-btn--sm {
   padding: var(--ds-btn-sm-y) var(--ds-btn-sm-x);
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   border-radius: var(--ds-radius-md);
 }
 
@@ -61,21 +61,21 @@
 }
 
 .ds-btn--icon {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: var(--ds-radius-md);
 }
 
 .ds-btn--icon-sm {
-  width: 30px;
-  height: 30px;
+  width: 1.875rem;
+  height: 1.875rem;
   border-radius: var(--ds-radius-md);
   border-width: 1px;
 }
 
 .ds-btn--icon-lg {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: var(--ds-radius-xl);
 }
 
@@ -249,8 +249,8 @@
 /* ---- Solo icono en móvil ---- */
 @media (max-width: 767px) {
   .ds-btn--icon-only-mobile {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     padding: 0;
   }
 
@@ -266,8 +266,8 @@
 /* ---- Spinner ---- */
 .ds-btn__spinner {
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
   border-top-color: currentColor;
   border-radius: var(--ds-radius-pill);
@@ -276,8 +276,8 @@
 }
 
 .ds-btn--sm .ds-btn__spinner {
-  width: 14px;
-  height: 14px;
+  width: 0.875rem;
+  height: 0.875rem;
 }
 
 @keyframes ds-btn-spin {

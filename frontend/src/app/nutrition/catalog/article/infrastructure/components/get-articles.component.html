@@ -1,4 +1,4 @@
-<ds-page-wrapper [gap]="'12px'">
+<ds-page-wrapper [gap]="'0.75rem'">
   <ds-screen-header
     [title]="'getArticles.heading' | t"
     [subtitle]="headerSubtitle()"
@@ -31,15 +31,15 @@
     <ds-skeleton-list
       [count]="6"
       [columns]="null"
-      minColumn="300px"
-      [gap]="'12px'"
-      radius="16px"
-      padding="10px"
+      minColumn="18.75rem"
+      [gap]="'0.75rem'"
+      radius="1rem"
+      padding="0.625rem"
       [alignTop]="true"
       [tile]="56"
       [tileRadius]="12"
       titleWidth="54%"
-      headTrailing="42px"
+      headTrailing="2.625rem"
       metaWidth="48%"
       [chips]="4"
     />
@@ -50,7 +50,7 @@
       (searched)="onSearch($event)"
     />
 
-    <ds-stack direction="row" [gap]="'7px'">
+    <ds-stack direction="row" [gap]="'0.4375rem'">
       <ds-select
         [fluid]="true"
         [placeholder]="'getArticles.filter.category' | t"
@@ -80,15 +80,15 @@
       <ds-skeleton-list
         [count]="6"
         [columns]="null"
-        minColumn="300px"
-        [gap]="'12px'"
-        radius="16px"
-        padding="10px"
+        minColumn="18.75rem"
+        [gap]="'0.75rem'"
+        radius="1rem"
+        padding="0.625rem"
         [alignTop]="true"
         [tile]="56"
         [tileRadius]="12"
         titleWidth="54%"
-        headTrailing="42px"
+        headTrailing="2.625rem"
         metaWidth="48%"
         [chips]="4"
       />
@@ -109,7 +109,7 @@
         />
       }
     } @else {
-      <ds-grid [minColumn]="'300px'">
+      <ds-grid [minColumn]="'18.75rem'">
         @for (card of cards(); track card.id) {
           <ds-product-card
             [emoji]="card.emoji"
@@ -143,15 +143,15 @@
         <ds-skeleton-list
           [count]="2"
           [columns]="null"
-          minColumn="300px"
-          [gap]="'12px'"
-          radius="16px"
-          padding="10px"
+          minColumn="18.75rem"
+          [gap]="'0.75rem'"
+          radius="1rem"
+          padding="0.625rem"
           [alignTop]="true"
           [tile]="56"
           [tileRadius]="12"
           titleWidth="54%"
-          headTrailing="42px"
+          headTrailing="2.625rem"
           metaWidth="48%"
           [chips]="4"
         />

@@ -43,14 +43,14 @@ const MODULE_PATH = "nutrition/menu/menu";
       [closeLabel]="'getMenu.close' | t"
       (closed)="close()"
     >
-      <ds-stack [gap]="'12px'">
+      <ds-stack [gap]="'0.75rem'">
         <ds-text variant="meta">{{ "getMenu.shopping.subtitle" | t }}</ds-text>
         <ds-text variant="meta">{{ sourceLabel() }}</ds-text>
 
         @if (rows().length === 0) {
           <ds-text variant="muted">{{ "getMenu.shopping.empty" | t }}</ds-text>
         } @else {
-          <ds-stack [gap]="'7px'">
+          <ds-stack [gap]="'0.4375rem'">
             @for (row of rows(); track row.articleId) {
               <ds-check-row
                 [name]="row.name"

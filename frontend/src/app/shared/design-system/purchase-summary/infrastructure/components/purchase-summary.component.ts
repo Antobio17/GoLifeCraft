@@ -48,29 +48,29 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
-        padding: 11px 14px;
+        gap: 0.625rem;
+        padding: 0.6875rem 0.875rem;
         border-bottom: 1px solid var(--ds-border);
       }
       .ds-pus__title {
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         font-weight: 800;
         letter-spacing: 0.06em;
         color: var(--ds-text);
       }
       .ds-pus__badge {
-        font-size: 10px;
+        font-size: 0.625rem;
         font-weight: 800;
         color: var(--ds-text-muted);
         background: var(--ds-surface-inset);
         border-radius: var(--ds-radius-pill);
-        padding: 3px 9px;
+        padding: 0.1875rem 0.5625rem;
         white-space: nowrap;
       }
       .ds-pus__cells {
         display: flex;
-        gap: 8px;
-        padding: 11px 14px;
+        gap: 0.5rem;
+        padding: 0.6875rem 0.875rem;
       }
       .ds-pus__cell {
         flex: 1;
@@ -80,13 +80,13 @@ import { Component, Input } from "@angular/core";
         gap: 2px;
       }
       .ds-pus__cell-label {
-        font-size: 9.5px;
+        font-size: 0.59375rem;
         font-weight: 800;
         letter-spacing: 0.04em;
         color: var(--ds-text-meta);
       }
       .ds-pus__cell-value {
-        font-size: 13px;
+        font-size: 0.8125rem;
         font-weight: 700;
         color: var(--ds-text);
       }
@@ -98,8 +98,8 @@ import { Component, Input } from "@angular/core";
       }
       .ds-pus__empty {
         margin: 0;
-        padding: 11px 14px;
-        font-size: 11px;
+        padding: 0.6875rem 0.875rem;
+        font-size: 0.6875rem;
         line-height: 1.4;
         color: var(--ds-text-muted);
       }

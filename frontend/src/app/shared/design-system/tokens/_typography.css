@@ -5,21 +5,23 @@
    ============================================================ */
 
 :root {
+  --ds-root-font-size: 106.25%;
+
   --ds-font-body: "Hanken Grotesk", system-ui, sans-serif;
   --ds-font-display:
     "Bricolage Grotesque", "Hanken Grotesk", system-ui, sans-serif;
 
   /* Escala de tamaños */
-  --ds-text-xs: 11px;
-  --ds-text-sm: 12px;
-  --ds-text-label: 13.5px;
-  --ds-text-base: 14px;
-  --ds-text-md: 15px;
-  --ds-text-lg: 17px;
-  --ds-text-xl: 20px;
-  --ds-text-2xl: 24px;
-  --ds-text-3xl: 28px;
-  --ds-text-4xl: 36px;
+  --ds-text-xs: 0.6875rem;
+  --ds-text-sm: 0.75rem;
+  --ds-text-label: 0.84375rem;
+  --ds-text-base: 0.875rem;
+  --ds-text-md: 0.9375rem;
+  --ds-text-lg: 1.0625rem;
+  --ds-text-xl: 1.25rem;
+  --ds-text-2xl: 1.5rem;
+  --ds-text-3xl: 1.75rem;
+  --ds-text-4xl: 2.25rem;
 
   /* Pesos */
   --ds-weight-regular: 400;
@@ -36,6 +38,16 @@
 
   /* Tracking */
   --ds-tracking-tight: -0.01em;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --ds-root-font-size: 100%;
+  }
+}
+
+html {
+  font-size: var(--ds-root-font-size);
 }
 
 [data-theme="dark"] {

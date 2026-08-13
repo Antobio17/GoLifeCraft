@@ -10,7 +10,7 @@
     class="agenda-item"
     direction="row"
     align="center"
-    [gap]="'11px'"
+    [gap]="'0.6875rem'"
     [class.agenda-item--done]="done"
     [class.agenda-item--slid]="swipe.slid"
   >
@@ -37,12 +37,17 @@
       [ariaLabel]="canWrite ? editLabel : ''"
       (press)="opened.emit()"
     >
-      <ds-stack [gap]="'4px'" [grow]="true">
+      <ds-stack [gap]="'0.25rem'" [grow]="true">
         <ds-text class="agenda-item__title" variant="strong">{{
           title
         }}</ds-text>
 
-        <ds-stack direction="row" align="center" [wrap]="true" [gap]="'7px'">
+        <ds-stack
+          direction="row"
+          align="center"
+          [wrap]="true"
+          [gap]="'0.4375rem'"
+        >
           <ds-chip
             class="agenda-item__kind"
             [tone]="appointment ? 'brand' : 'neutral'"
@@ -54,7 +59,7 @@
               class="agenda-item__time"
               direction="row"
               align="center"
-              [gap]="'4px'"
+              [gap]="'0.25rem'"
             >
               <ds-icon name="clock" [size]="12" [stroke]="2.2" />
               <ds-text [inline]="true">{{ timeLabel }}</ds-text>

@@ -15,8 +15,8 @@
   );
   background: var(--ds-surface-brand);
   border: 1px solid transparent;
-  border-radius: 22px;
-  padding: 17px 18px;
+  border-radius: 1.375rem;
+  padding: 1.0625rem 1.125rem;
   box-shadow: var(--ds-shadow-card);
 }
 
@@ -28,8 +28,8 @@
     transparent
   );
   background: var(--ds-primary);
-  border-radius: 16px;
-  padding: 14px 16px;
+  border-radius: 1rem;
+  padding: 0.875rem 1rem;
   box-shadow: none;
 }
 
@@ -48,29 +48,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .sksum__eyebrow {
-  width: 92px;
-  height: 10px;
+  width: 5.75rem;
+  height: 0.625rem;
 }
 
 .sksum__count {
-  width: 60px;
-  height: 10px;
+  width: 3.75rem;
+  height: 0.625rem;
 }
 
 .sksum__main {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-top: var(--sksum-main-top, 13px);
+  gap: 0.9375rem;
+  margin-top: var(--sksum-main-top, 0.8125rem);
 }
 
 .sksum__ring {
-  width: 66px;
-  height: 66px;
+  width: 4.125rem;
+  height: 4.125rem;
   border-radius: 50%;
   position: relative;
   flex: 0 0 auto;
@@ -79,7 +79,7 @@
 .sksum__ring::after {
   content: "";
   position: absolute;
-  inset: 9px;
+  inset: 0.5625rem;
   border-radius: 50%;
   background: var(--ds-surface-brand);
 }
@@ -93,69 +93,69 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 0.4375rem;
 }
 
 .sksum__value-main {
-  width: 128px;
+  width: 8rem;
   max-width: 70%;
-  height: 24px;
+  height: 1.5rem;
   border-radius: var(--ds-radius-md);
 }
 
 .sksum__value-foot {
-  width: 96px;
+  width: 6rem;
   max-width: 55%;
-  height: 11px;
+  height: 0.6875rem;
 }
 
 .sksum__aside {
   flex: 0 0 auto;
-  width: 78px;
-  height: 12px;
+  width: 4.875rem;
+  height: 0.75rem;
   align-self: flex-end;
 }
 
 .sksum__bars {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  margin-top: 16px;
+  gap: 0.5625rem;
+  margin-top: 1rem;
 }
 
 .sksum__bar {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0.3125rem;
 }
 
 .sksum__bar-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .sksum__bar-label {
-  width: 62px;
-  height: 10px;
+  width: 3.875rem;
+  height: 0.625rem;
 }
 
 .sksum__bar-value {
-  width: 70px;
-  height: 10px;
+  width: 4.375rem;
+  height: 0.625rem;
 }
 
 .sksum__bar-track {
   width: 100%;
-  height: 6px;
+  height: 0.375rem;
   border-radius: var(--ds-radius-pill);
 }
 
 .sksum__tiles {
   display: flex;
-  gap: 7px;
-  margin-top: 15px;
+  gap: 0.4375rem;
+  margin-top: 0.9375rem;
 }
 
 .sksum__tile {
@@ -163,82 +163,82 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  border-radius: 11px;
-  padding: 9px;
+  gap: 0.375rem;
+  border-radius: 0.6875rem;
+  padding: 0.5625rem;
   background: color-mix(in srgb, var(--ds-on-surface-brand) 9%, transparent);
 }
 
 .sksum__tile-label {
   width: 70%;
-  height: 9px;
+  height: 0.5625rem;
 }
 
 .sksum__tile-value {
   width: 52%;
-  height: 13px;
+  height: 0.8125rem;
 }
 
 .sksum__progress {
   display: block;
   width: 100%;
-  height: 8px;
-  margin-top: 11px;
+  height: 0.5rem;
+  margin-top: 0.6875rem;
   border-radius: var(--ds-radius-pill);
 }
 
 @media (min-width: 768px) {
   .sksum {
-    padding: 22px 24px;
-    border-radius: 24px;
+    padding: 1.375rem 1.5rem;
+    border-radius: 1.5rem;
   }
 
   .sksum--primary {
-    padding: 16px 18px;
-    border-radius: 16px;
+    padding: 1rem 1.125rem;
+    border-radius: 1rem;
   }
 }
 
 .sksum--compact {
-  padding: 13px 15px;
-  border-radius: 16px;
+  padding: 0.8125rem 0.9375rem;
+  border-radius: 1rem;
   box-shadow: none;
 }
 
 .sksum--compact .sksum__value {
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .sksum--compact .sksum__value-main {
-  width: 76px;
-  height: 9px;
+  width: 4.75rem;
+  height: 0.5625rem;
 }
 
 .sksum--compact .sksum__value-foot {
-  width: 116px;
-  height: 12px;
+  width: 7.25rem;
+  height: 0.75rem;
 }
 
 .sksum__stats {
   flex: 0 0 auto;
   display: flex;
-  gap: 14px;
+  gap: 0.875rem;
 }
 
 .sksum__stat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 0.3125rem;
 }
 
 .sksum__stat-value {
-  width: 44px;
-  height: 16px;
+  width: 2.75rem;
+  height: 1rem;
   border-radius: var(--ds-radius-sm);
 }
 
 .sksum__stat-label {
-  width: 34px;
-  height: 8px;
+  width: 2.125rem;
+  height: 0.5rem;
 }

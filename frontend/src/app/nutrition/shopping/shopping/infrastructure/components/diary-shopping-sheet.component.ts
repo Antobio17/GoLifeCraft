@@ -52,10 +52,10 @@ const DEFAULT_RANGE_DAYS = 6;
       [closeLabel]="'getShopping.sheet.close' | t"
       (closed)="close()"
     >
-      <ds-stack [gap]="'12px'">
+      <ds-stack [gap]="'0.75rem'">
         <ds-text variant="meta">{{ "getShopping.diary.subtitle" | t }}</ds-text>
 
-        <ds-stack direction="row" [gap]="'10px'">
+        <ds-stack direction="row" [gap]="'0.625rem'">
           <ds-stack [grow]="true">
             <ds-field [label]="'getShopping.diary.from' | t">
               <ds-date-input
@@ -80,17 +80,17 @@ const DEFAULT_RANGE_DAYS = 6;
         @if (loading()) {
           <ds-skeleton-list
             [count]="3"
-            [gap]="'8px'"
-            radius="16px"
-            padding="9px 11px"
+            [gap]="'0.5rem'"
+            radius="1rem"
+            padding="0.5625rem 0.6875rem"
             [check]="true"
             [tile]="44"
             [tileRadius]="12"
             titleWidth="62%"
             metaWidth="44%"
             trailing="stack"
-            pillWidth="80px"
-            pillHeight="29px"
+            pillWidth="5rem"
+            pillHeight="1.8125rem"
           />
         } @else {
           <ds-text variant="meta">{{ summaryLabel() }}</ds-text>
@@ -100,7 +100,7 @@ const DEFAULT_RANGE_DAYS = 6;
               "getShopping.diary.empty" | t
             }}</ds-text>
           } @else {
-            <ds-stack [gap]="'8px'">
+            <ds-stack [gap]="'0.5rem'">
               @for (row of rows(); track row.articleId) {
                 <ds-shopping-item
                   [emoji]="row.emoji"

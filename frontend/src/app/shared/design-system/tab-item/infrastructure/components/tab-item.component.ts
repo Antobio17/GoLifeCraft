@@ -25,8 +25,8 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         align-items: center;
         justify-content: center;
         gap: 0;
-        padding: 9px 6px;
-        border-radius: 14px;
+        padding: 0.5625rem 0.375rem;
+        border-radius: 0.875rem;
         color: var(--ds-text-meta);
         text-decoration: none;
         transition: all 0.3s cubic-bezier(0.6, 0.05, 0.28, 0.98);
@@ -41,7 +41,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         max-width: 0;
         overflow: hidden;
         opacity: 0;
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: 700;
         line-height: 1;
         white-space: nowrap;
@@ -50,12 +50,12 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .tab--active {
         color: var(--ds-text);
         background: var(--ds-surface-inset);
-        padding: 9px 11px;
+        padding: 0.5625rem 0.6875rem;
       }
       .tab--active .tab__label {
-        max-width: 160px;
+        max-width: 10rem;
         opacity: 1;
-        padding-left: 7px;
+        padding-left: 0.4375rem;
       }
     `,
   ],

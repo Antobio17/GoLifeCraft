@@ -13,11 +13,11 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: center;
-        width: var(--tile-size, 40px);
-        height: var(--tile-size, 40px);
-        border-radius: var(--tile-radius, 11px);
+        width: var(--tile-size, 2.5rem);
+        height: var(--tile-size, 2.5rem);
+        border-radius: var(--tile-radius, 0.6875rem);
         background: var(--ds-surface-inset);
-        font-size: var(--tile-font, 20px);
+        font-size: var(--tile-font, 1.25rem);
       }
     `,
   ],

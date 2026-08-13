@@ -6,6 +6,6 @@ import { Component, Input } from "@angular/core";
   styleUrls: ["./page-wrapper.component.css"],
 })
 export class PageWrapperComponent {
-  @Input() maxWidth = "1400px";
-  @Input() gap = "32px";
+  @Input() maxWidth = "87.5rem";
+  @Input() gap = "2rem";
 }

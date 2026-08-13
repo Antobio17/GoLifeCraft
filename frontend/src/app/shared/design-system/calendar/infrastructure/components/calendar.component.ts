@@ -149,17 +149,17 @@ export interface CalendarLegendItem {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 8px;
+        gap: 0.5rem;
         min-width: 0;
-        margin-bottom: 14px;
+        margin-bottom: 0.875rem;
       }
       .ds-cal__navbtn {
         appearance: none;
         border: none;
         cursor: pointer;
-        width: 34px;
-        height: 34px;
-        border-radius: 11px;
+        width: 2.125rem;
+        height: 2.125rem;
+        border-radius: 0.6875rem;
         background: var(--ds-surface-subtle);
         color: var(--ds-text-muted);
         display: flex;
@@ -186,16 +186,16 @@ export interface CalendarLegendItem {
       .ds-cal__grid {
         display: grid;
         grid-template-columns: repeat(7, minmax(0, 1fr));
-        gap: 6px;
+        gap: 0.375rem;
         width: 100%;
         min-width: 0;
       }
       .ds-cal__weekdays {
-        margin-bottom: 6px;
+        margin-bottom: 0.375rem;
       }
       .ds-cal__weekday {
         text-align: center;
-        font-size: 10.5px;
+        font-size: 0.65625rem;
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text-disabled);
         letter-spacing: 0.04em;
@@ -207,11 +207,11 @@ export interface CalendarLegendItem {
         aspect-ratio: 1;
         width: 100%;
         min-width: 0;
-        border-radius: 12px;
+        border-radius: 0.75rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 13px;
+        font-size: 0.8125rem;
         font-weight: var(--ds-weight-semibold);
         background: transparent;
         color: var(--ds-text);
@@ -259,11 +259,11 @@ export interface CalendarLegendItem {
       }
       .ds-cal__mark {
         position: absolute;
-        bottom: 5px;
+        bottom: 0.3125rem;
         left: 50%;
         transform: translateX(-50%);
-        width: 5px;
-        height: 5px;
+        width: 0.3125rem;
+        height: 0.3125rem;
         border-radius: var(--ds-radius-pill);
         background: var(--ds-primary);
       }
@@ -290,20 +290,20 @@ export interface CalendarLegendItem {
       .ds-cal__legend {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 18px;
-        padding-top: 16px;
+        gap: 0.75rem;
+        margin-top: 1.125rem;
+        padding-top: 1rem;
         border-top: 1px solid var(--ds-border);
       }
       .ds-cal__legend-item {
         display: flex;
         align-items: center;
-        gap: 7px;
+        gap: 0.4375rem;
       }
       .ds-cal__swatch {
-        width: 11px;
-        height: 11px;
-        border-radius: 4px;
+        width: 0.6875rem;
+        height: 0.6875rem;
+        border-radius: 0.25rem;
         flex: 0 0 auto;
         background: var(--ds-surface-subtle);
       }
@@ -321,7 +321,7 @@ export interface CalendarLegendItem {
         border: 1.5px dashed var(--ds-border);
       }
       .ds-cal__legend-label {
-        font-size: 11.5px;
+        font-size: 0.71875rem;
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
         overflow-wrap: anywhere;

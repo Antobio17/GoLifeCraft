@@ -1,4 +1,4 @@
-<ds-page-wrapper [maxWidth]="'640px'" [gap]="'13px'">
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'0.8125rem'">
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -8,21 +8,21 @@
       [actions]="canWrite() ? 2 : 0"
     />
     <ds-skeleton-hero />
-    <ds-skeleton-chips [count]="1" height="26px" [gap]="'6px'" />
+    <ds-skeleton-chips [count]="1" height="1.625rem" [gap]="'0.375rem'" />
     <ds-skeleton-macro-bars />
-    <ds-skeleton-section-header titleWidth="118px" [action]="true" />
+    <ds-skeleton-section-header titleWidth="7.375rem" [action]="true" />
     <ds-skeleton-list
       [count]="4"
-      [gap]="'8px'"
-      radius="16px"
-      padding="10px"
+      [gap]="'0.5rem'"
+      radius="1rem"
+      padding="0.625rem"
       [tile]="44"
       [tileRadius]="12"
       titleWidth="56%"
       metaWidth="40%"
       trailing="stack"
-      pillWidth="38px"
-      pillHeight="11px"
+      pillWidth="2.375rem"
+      pillHeight="0.6875rem"
     />
   } @else if (attributes(); as recipe) {
     <ds-screen-header
@@ -33,13 +33,13 @@
       (leadingClick)="back()"
     >
       @if (canWrite()) {
-        <ds-stack slot="actions" direction="row" [gap]="'9px'">
+        <ds-stack slot="actions" direction="row" [gap]="'0.5625rem'">
           <ds-icon-button
             icon="pencil"
             variant="outlined"
             color="var(--ds-primary)"
             [iconSize]="17"
-            [radius]="'11px'"
+            [radius]="'0.6875rem'"
             [ariaLabel]="'getRecipe.edit' | t"
             (clicked)="onEdit()"
           />
@@ -48,7 +48,7 @@
             variant="outlined"
             color="var(--ds-warning)"
             [iconSize]="17"
-            [radius]="'11px'"
+            [radius]="'0.6875rem'"
             [ariaLabel]="'getRecipe.delete' | t"
             (clicked)="onDelete()"
           />
@@ -61,7 +61,7 @@
       [badge]="view.servingsLabel(recipe.servings)"
     />
 
-    <ds-stack direction="row" [wrap]="true" [gap]="'6px'">
+    <ds-stack direction="row" [wrap]="true" [gap]="'0.375rem'">
       <ds-chip>{{ view.ingredientsLabel(recipe.ingredients.length) }}</ds-chip>
     </ds-stack>
 
@@ -92,22 +92,22 @@
       [staticLabel]="totalLabel(recipe.total.calories)"
     />
 
-    <ds-stack [gap]="'8px'">
+    <ds-stack [gap]="'0.5rem'">
       @for (row of ingredientRows(); track row.ingredient.id) {
-        <ds-card [padding]="'10px'">
-          <ds-stack direction="row" align="center" [gap]="'11px'">
+        <ds-card [padding]="'0.625rem'">
+          <ds-stack direction="row" align="center" [gap]="'0.6875rem'">
             <ds-emoji-tile [emoji]="row.ingredient.emoji" />
-            <ds-stack [gap]="'6px'" [grow]="true">
+            <ds-stack [gap]="'0.375rem'" [grow]="true">
               <ds-stack
                 direction="row"
                 align="center"
                 justify="between"
-                [gap]="'8px'"
+                [gap]="'0.5rem'"
               >
                 <ds-stack
                   direction="row"
                   align="center"
-                  [gap]="'6px'"
+                  [gap]="'0.375rem'"
                   [grow]="true"
                 >
                   <ds-text variant="strong" [truncate]="true">{{

@@ -7,8 +7,8 @@
   box-sizing: border-box;
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: 16px;
-  padding: 9px 11px;
+  border-radius: 1rem;
+  padding: 0.5625rem 0.6875rem;
   transition: background 0.2s ease;
 }
 
@@ -28,9 +28,9 @@
 
 .shopping-item__check {
   flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
-  border-radius: 9px;
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 0.5625rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,7 +61,7 @@
 }
 
 .shopping-item__name {
-  --ds-text-base: 13.5px;
+  --ds-text-base: 0.84375rem;
   font-weight: 700;
   line-height: 1.25;
 }
@@ -77,27 +77,27 @@
 }
 
 .shopping-item__pack {
-  --ds-text-base: 11px;
+  --ds-text-base: 0.6875rem;
   line-height: 1.3;
 }
 
 .shopping-item__price {
   --ds-text-body: var(--ds-primary);
-  --ds-text-base: 13px;
+  --ds-text-base: 0.8125rem;
   font-weight: 800;
   white-space: nowrap;
 }
 
 .shopping-item__count {
-  --chip-radius: 8px;
-  --chip-pad: 1px 8px;
-  --chip-size: 13px;
+  --chip-radius: 0.5rem;
+  --chip-pad: 1px 0.5rem;
+  --chip-size: 0.8125rem;
   --chip-weight: var(--ds-weight-extrabold);
   font-family: var(--ds-font-display);
 }
 
 .shopping-item__unit {
-  --ds-text-base: 11.5px;
+  --ds-text-base: 0.71875rem;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -105,13 +105,13 @@
 .shopping-item__stepper {
   flex: 0 0 auto;
   background: var(--ds-surface-inset);
-  border-radius: 9px;
+  border-radius: 0.5625rem;
   padding: 1px;
 }
 
 .shopping-item__step {
-  width: 26px;
-  height: 19px;
+  width: 1.625rem;
+  height: 1.1875rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,9 +119,9 @@
   appearance: none;
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-weight: 800;
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1;
   color: var(--ds-primary);
 }

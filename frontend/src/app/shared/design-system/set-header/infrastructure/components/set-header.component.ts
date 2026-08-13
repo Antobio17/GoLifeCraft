@@ -19,16 +19,16 @@ import { Component, Input } from "@angular/core";
       }
       .ds-seth {
         display: flex;
-        gap: 6px;
-        padding: 0 6px;
-        font-size: 9px;
+        gap: 0.375rem;
+        padding: 0 0.375rem;
+        font-size: 0.5625rem;
         font-weight: 800;
         letter-spacing: 0.04em;
         text-transform: uppercase;
         color: var(--ds-text-meta);
       }
       .ds-seth__num {
-        width: 34px;
+        width: 2.125rem;
       }
       .ds-seth__col {
         flex: 1 1 0;
@@ -36,7 +36,7 @@ import { Component, Input } from "@angular/core";
         text-align: center;
       }
       .ds-seth__done {
-        width: 30px;
+        width: 1.875rem;
         flex: 0 0 auto;
       }
     `,

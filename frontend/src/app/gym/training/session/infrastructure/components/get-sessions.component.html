@@ -1,4 +1,4 @@
-<ds-page-wrapper [gap]="'12px'">
+<ds-page-wrapper [gap]="'0.75rem'">
   <ds-screen-header
     [title]="'getSessions.heading' | t"
     [subtitle]="headerSubtitle()"
@@ -38,11 +38,11 @@
     <ds-skeleton-list
       [count]="4"
       [columns]="null"
-      minColumn="260px"
+      minColumn="16.25rem"
       [tabletColumns]="2"
-      [gap]="'9px'"
+      [gap]="'0.5625rem'"
       radius="var(--ds-radius-3xl)"
-      padding="13px"
+      padding="0.8125rem"
       [alignTop]="true"
       titleWidth="58%"
       metaWidth="72%"
@@ -58,19 +58,19 @@
       [text]="'getSessions.table.emptyMessage' | t"
     />
   } @else {
-    <ds-grid [minColumn]="'260px'" [gap]="'9px'" [tabletColumns]="2">
+    <ds-grid [minColumn]="'16.25rem'" [gap]="'0.5625rem'" [tabletColumns]="2">
       @for (session of rows(); track session.id) {
         <ds-card
           [interactive]="true"
-          [padding]="'13px'"
-          [gap]="'9px'"
+          [padding]="'0.8125rem'"
+          [gap]="'0.5625rem'"
           (activated)="onOpen(session.id)"
         >
           <ds-stack
             direction="row"
             justify="between"
             align="start"
-            [gap]="'8px'"
+            [gap]="'0.5rem'"
           >
             <ds-stack [gap]="'1px'">
               <ds-heading [level]="3" size="md">
@@ -83,7 +83,7 @@
               variant="soft"
               [size]="28"
               [iconSize]="15"
-              radius="8px"
+              radius="0.5rem"
               color="var(--ds-danger)"
               [ariaLabel]="'getSessions.actions.delete' | t"
               (clicked)="onDelete(session.session, $event)"
@@ -91,7 +91,7 @@
           </ds-stack>
 
           @if (session.muscleGroups.length) {
-            <ds-stack direction="row" [wrap]="true" [gap]="'5px'">
+            <ds-stack direction="row" [wrap]="true" [gap]="'0.3125rem'">
               @for (tag of session.muscleGroups; track tag) {
                 <ds-chip tone="brand">{{ tag }}</ds-chip>
               }

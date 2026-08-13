@@ -9,7 +9,7 @@
 @keyframes diary-tree-in {
   from {
     grid-template-rows: 0fr;
-    margin-top: -7px;
+    margin-top: -0.4375rem;
     opacity: 0;
   }
   to {
@@ -44,7 +44,7 @@
 
 .goal-pct {
   flex: 0 0 auto;
-  width: 96px;
+  width: 6rem;
 }
 
 .day-status-dot {

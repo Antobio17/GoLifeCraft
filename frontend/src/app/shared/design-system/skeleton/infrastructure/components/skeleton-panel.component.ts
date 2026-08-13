@@ -12,7 +12,7 @@ export class SkeletonPanelComponent {
   @Input() subtitle = true;
   @Input() figure = false;
   @Input() content: SkeletonPanelContent = "heatmap";
-  @Input() chartHeight = "108px";
+  @Input() chartHeight = "6.75rem";
   @Input() heatmapCells = 112;
   @Input() meters = 4;
 
