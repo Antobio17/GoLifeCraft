@@ -1,0 +1,52 @@
+<ds-modal-sheet
+  [open]="open()"
+  [auto]="true"
+  [title]="'fileShare.title' | t"
+  [closeLabel]="'fileShare.close' | t"
+  (closed)="onDismiss()"
+>
+  <ds-stack gap="var(--ds-space-4)">
+    <ds-stack direction="row" gap="var(--ds-space-3)" align="start">
+      <ds-icon-badge
+        icon="download"
+        tone="success"
+        [size]="42"
+        [iconSize]="19"
+      />
+      <ds-text>
+        <ds-text [inline]="true" variant="strong">{{ fileName() }}</ds-text>
+      </ds-text>
+    </ds-stack>
+
+    @if (failureReason()) {
+      <ds-note icon="alertCircle" tone="danger">
+        {{ "fileShare.error" | t }} ({{ failureReason() }})
+      </ds-note>
+    } @else {
+      <ds-note icon="info">{{ "fileShare.hint" | t }}</ds-note>
+    }
+
+    <ds-stack gap="var(--ds-space-2)">
+      <ds-button
+        variant="primary"
+        size="md"
+        icon="externalLink"
+        [fullWidth]="true"
+        [loading]="busy()"
+        (clicked)="onShare()"
+      >
+        {{ "fileShare.share" | t }}
+      </ds-button>
+      <ds-button
+        variant="ghost"
+        size="md"
+        icon="download"
+        [fullWidth]="true"
+        [disabled]="busy()"
+        (clicked)="onDownload()"
+      >
+        {{ "fileShare.download" | t }}
+      </ds-button>
+    </ds-stack>
+  </ds-stack>
+</ds-modal-sheet>

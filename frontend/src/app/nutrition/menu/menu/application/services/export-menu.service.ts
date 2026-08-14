@@ -16,7 +16,11 @@ export class ExportMenuService {
       .exportMenu(menuId, this.translationService.getCurrentLanguage())
       .pipe(
         tap((document) =>
-          this.fileDownloadService.save(document.content, document.fileName),
+          this.fileDownloadService.save(
+            document.content,
+            document.fileName,
+            document.mimeType,
+          ),
         ),
       );
   }

@@ -1,0 +1,10 @@
+{
+  "fileShare": {
+    "title": "File ready",
+    "hint": "Share the document to send it over WhatsApp or save it to Files.",
+    "error": "iOS refused to share the document. Try downloading it instead.",
+    "share": "Share",
+    "download": "Download",
+    "close": "Close"
+  }
+}

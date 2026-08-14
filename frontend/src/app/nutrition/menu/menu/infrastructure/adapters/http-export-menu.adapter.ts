@@ -10,6 +10,7 @@ export class HttpExportMenuAdapter extends ExportMenuPort {
 
   private readonly apiUrl = "/api/v1/nutrition/menu";
   private readonly fallbackFileName = "menu.pdf";
+  private readonly mimeType = "application/pdf";
 
   exportMenu(menuId: string, language: string): Observable<MenuDocument> {
     return this.http
@@ -23,7 +24,10 @@ export class HttpExportMenuAdapter extends ExportMenuPort {
           fileName: this.readFileName(
             response.headers.get("content-disposition"),
           ),
-          content: response.body ?? new Blob(),
+          mimeType: this.mimeType,
+          content: new Blob([response.body ?? new Blob()], {
+            type: this.mimeType,
+          }),
         })),
       );
   }
@@ -31,6 +35,10 @@ export class HttpExportMenuAdapter extends ExportMenuPort {
   private readFileName(contentDisposition: string | null): string {
     const match = contentDisposition?.match(/filename="?([^";]+)"?/i);
 
-    return match ? match[1] : this.fallbackFileName;
+    if (!match) return this.fallbackFileName;
+
+    return match[1].toLowerCase().endsWith(".pdf")
+      ? match[1]
+      : `${match[1]}.pdf`;
   }
 }

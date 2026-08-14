@@ -69,6 +69,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     handler: "shared/argument-errors",
     token: "shared/argument-errors",
     floatingToast: "shared/floating-toasts",
+    fileShare: "shared/file-download",
   };
 
   transform(key: string, params?: Record<string, unknown>): string {
