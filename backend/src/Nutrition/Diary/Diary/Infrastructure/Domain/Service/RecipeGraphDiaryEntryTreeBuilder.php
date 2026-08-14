@@ -2,12 +2,12 @@
 
 namespace Nutrition\Diary\Diary\Infrastructure\Domain\Service;
 
-use Nutrition\Diary\Diary\Domain\Model\DiaryBreakdownItem;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
-use Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator;
 use Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeBreakdownItem;
+use Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -15,7 +15,7 @@ final readonly class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeB
 {
     public function __construct(
         private DoctrineRecipeNutritionGraphProvider $graphProvider,
-        private DiaryBreakdownCalculator $calculator,
+        private RecipeBreakdownCalculator $calculator,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
     }
@@ -41,6 +41,34 @@ final readonly class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeB
         return $nodes;
     }
 
+    public function fromPayload(string $diaryEntryId, array $tree, string $userId): array
+    {
+        return array_map(
+            fn (array $node): DiaryEntryNode => DiaryEntryNode::create(
+                diaryEntryId: $diaryEntryId,
+                parentPath: $node['parentPath'] ?? null,
+                kind: (string) $node['kind'],
+                refId: (string) $node['refId'],
+                quantity: (float) $node['quantity'],
+                unit: $node['unit'] ?? null,
+                position: (int) $node['position'],
+                snapshot: new DiaryEntrySnapshot(
+                    name: (string) $node['name'],
+                    emoji: (string) $node['emoji'],
+                    macros: new MacroBreakdown(
+                        calories: (float) $node['calories'],
+                        protein: (float) $node['protein'],
+                        fat: (float) $node['fat'],
+                        carbs: (float) $node['carbs'],
+                    ),
+                ),
+                createdByUserId: $userId,
+                dateTimeGenerator: $this->dateTimeGenerator,
+            ),
+            $tree,
+        );
+    }
+
     public function refresh(array $nodes): MacroBreakdown
     {
         if ([] === $nodes) {
@@ -49,7 +77,7 @@ final readonly class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeB
 
         $ordered = array_values($nodes);
         $items = array_map(
-            static fn (DiaryEntryNode $node): DiaryBreakdownItem => new DiaryBreakdownItem(
+            static fn (DiaryEntryNode $node): RecipeBreakdownItem => new RecipeBreakdownItem(
                 path: $node->path,
                 parentPath: self::parentPathOf(node: $node),
                 depth: $node->depth,
@@ -79,7 +107,7 @@ final readonly class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeB
     /**
      * @param array<string, DiaryEntryNode> $existing
      */
-    private function toNode(string $diaryEntryId, DiaryBreakdownItem $item, array $existing, string $userId): DiaryEntryNode
+    private function toNode(string $diaryEntryId, RecipeBreakdownItem $item, array $existing, string $userId): DiaryEntryNode
     {
         $snapshot = new DiaryEntrySnapshot(name: $item->name, emoji: $item->emoji, macros: $item->macros);
         $node = $existing[DiaryEntryNode::buildId(diaryEntryId: $diaryEntryId, path: $item->path)] ?? null;

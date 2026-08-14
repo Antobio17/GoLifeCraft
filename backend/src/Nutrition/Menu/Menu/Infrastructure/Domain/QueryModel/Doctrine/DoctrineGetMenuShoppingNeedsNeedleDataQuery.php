@@ -5,6 +5,7 @@ namespace Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Nutrition\Catalog\Article\Domain\Model\ArticlePack;
+use Nutrition\Menu\Menu\Domain\Model\MenuItemNode;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\GetMenuShoppingNeedsResult;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\MenuShoppingNeedView;
 use Nutrition\Menu\Menu\Domain\QueryModel\GetMenuShoppingNeedsNeedleDataQuery;
@@ -38,7 +39,7 @@ final readonly class DoctrineGetMenuShoppingNeedsNeedleDataQuery implements GetM
         $items = $this->itemRowLoader->loadByMenuIds(menuIds: [$menuId])[$menuId] ?? [];
         $quantities = $this->needsCalculator->accumulate(
             graph: $this->graphProvider->load(),
-            items: $items,
+            items: $this->buildItems(items: $items),
         );
 
         $needs = $this->buildNeeds(quantities: $quantities);
@@ -51,6 +52,46 @@ final readonly class DoctrineGetMenuShoppingNeedsNeedleDataQuery implements GetM
             needs: $needs,
             needCount: count(value: $needs),
         );
+    }
+
+    /**
+     * An item with its own breakdown buys exactly what that breakdown holds, not what the recipe says.
+     *
+     * @param array<int, array<string, mixed>> $items
+     *
+     * @return array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>
+     */
+    private function buildItems(array $items): array
+    {
+        $needed = [];
+
+        foreach ($items as $item) {
+            if ([] === $item['nodes']) {
+                $needed[] = [
+                    'kind' => $item['kind'],
+                    'refId' => $item['refId'],
+                    'quantity' => $item['quantity'],
+                    'unit' => $item['unit'],
+                ];
+
+                continue;
+            }
+
+            foreach ($item['nodes'] as $node) {
+                if (MenuItemNode::KIND_PRODUCT !== $node['kind']) {
+                    continue;
+                }
+
+                $needed[] = [
+                    'kind' => MenuItemNode::KIND_PRODUCT,
+                    'refId' => (string) $node['ref_id'],
+                    'quantity' => (float) $node['quantity'],
+                    'unit' => null !== $node['unit'] ? (string) $node['unit'] : null,
+                ];
+            }
+        }
+
+        return $needed;
     }
 
     /**

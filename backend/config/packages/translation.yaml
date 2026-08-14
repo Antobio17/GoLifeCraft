@@ -8,3 +8,4 @@ framework:
             - '%kernel.project_dir%/src/Shared/Email/Email/Infrastructure/UI/translations'
             - '%kernel.project_dir%/src/Authorization/User/PasswordResetToken/Infrastructure/UI/translations'
             - '%kernel.project_dir%/src/Authorization/User/EmailVerificationToken/Infrastructure/UI/translations'
+            - '%kernel.project_dir%/src/Nutrition/Menu/Menu/Infrastructure/UI/translations'

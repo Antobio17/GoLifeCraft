@@ -87,6 +87,34 @@ final class InMemoryDiaryEntryTreeBuilder implements DiaryEntryTreeBuilder
         return $nodes;
     }
 
+    public function fromPayload(string $diaryEntryId, array $tree, string $userId): array
+    {
+        return array_map(
+            fn (array $node): DiaryEntryNode => DiaryEntryNode::create(
+                diaryEntryId: $diaryEntryId,
+                parentPath: $node['parentPath'] ?? null,
+                kind: (string) $node['kind'],
+                refId: (string) $node['refId'],
+                quantity: (float) $node['quantity'],
+                unit: $node['unit'] ?? null,
+                position: (int) $node['position'],
+                snapshot: new DiaryEntrySnapshot(
+                    name: (string) $node['name'],
+                    emoji: (string) $node['emoji'],
+                    macros: new MacroBreakdown(
+                        calories: (float) $node['calories'],
+                        protein: (float) $node['protein'],
+                        fat: (float) $node['fat'],
+                        carbs: (float) $node['carbs'],
+                    ),
+                ),
+                createdByUserId: $userId,
+                dateTimeGenerator: $this->dateTimeGenerator,
+            ),
+            $tree,
+        );
+    }
+
     public function refresh(array $nodes): MacroBreakdown
     {
         foreach ($nodes as $node) {

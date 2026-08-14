@@ -2,6 +2,9 @@ services:
   Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator:
     class: Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator
 
+  Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator:
+    class: Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator
+
   Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider:
     class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider
     arguments:

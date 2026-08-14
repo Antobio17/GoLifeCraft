@@ -32,6 +32,7 @@ final readonly class UpdateMenuCommandHandler
                 menuId: $menu->id,
                 items: $command->items,
                 userId: $command->updatedByUserId,
+                existingItems: $menu->items,
             ),
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,

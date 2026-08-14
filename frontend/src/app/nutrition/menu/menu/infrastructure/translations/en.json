@@ -41,6 +41,7 @@
       "load": "Load",
       "apply": "Apply",
       "shop": "Add to shopping list",
+      "export": "Export to PDF",
       "protein": "Protein",
       "fat": "Fat",
       "carbs": "Carbs"
@@ -67,6 +68,7 @@
   },
   "getMenu": {
     "back": "Back to menus",
+    "export": "Export to PDF",
     "duplicate": "Duplicate menu",
     "delete": "Delete menu",
     "copySuffix": "(copy)",
@@ -210,6 +212,14 @@
     "error": "The menu could not be loaded.",
     "draft": {
       "hint": "This menu is not saved yet. Add what you want and press Save menu to create it."
+    },
+    "tree": {
+      "title": "Recipe ingredients",
+      "expand": "Show ingredients",
+      "collapse": "Hide ingredients",
+      "customized": "You adjusted this recipe inside the menu.",
+      "reset": "Restore recipe",
+      "servings": "srv."
     }
   }
 }

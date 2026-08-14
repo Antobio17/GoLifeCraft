@@ -16,3 +16,14 @@ services:
 
   Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesDataTransform:
     class: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\DataTransform\ApiGetGlobalArticlesDataTransform
+
+  Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleQueryHandler:
+    class: Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticleNeedleDataQuery'
+      $dataTransform: '@Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleDataTransform:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\DataTransform\ApiGetGlobalArticleDataTransform

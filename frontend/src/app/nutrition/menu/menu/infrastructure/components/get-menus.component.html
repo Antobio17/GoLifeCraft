@@ -42,6 +42,7 @@
     <ds-search-input
       [placeholder]="'getMenus.searchPlaceholder' | t"
       [clearLabel]="'getMenus.searchClear' | t"
+      [value]="searchQuery()"
       (searched)="onSearch($event)"
     />
 
@@ -70,10 +71,13 @@
               [loadLabel]="card.loadLabel"
               [loadIcon]="card.isWeek ? 'calendar' : 'download'"
               [shopLabel]="'getMenus.card.shop' | t"
+              [exportLabel]="'getMenus.card.export' | t"
+              [exporting]="exportingMenuId() === card.id"
               [canWrite]="canWrite()"
               (activated)="onOpen(card)"
               (loaded)="onLoad(card)"
               (shopped)="onShop(card.id)"
+              (exported)="onExport(card.id)"
             />
           }
         </ds-grid>

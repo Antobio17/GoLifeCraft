@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Nutrition\Menu\Menu\Domain\Model\MenuItemNode" table="menu_item_node">
+    <id name="id" type="string" column="id" primary="true" length="100"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="menuItemId" type="string" column="menu_item_id" length="36"/>
+    <field name="parentNodeId" type="string" column="parent_node_id" length="100" nullable="true"/>
+    <field name="path" type="string" column="path" length="60"/>
+    <field name="kind" type="string" column="kind" length="16"/>
+    <field name="refId" type="string" column="ref_id" length="36"/>
+    <field name="quantity" type="float" column="quantity"/>
+    <field name="unit" type="string" column="unit" length="30" nullable="true"/>
+    <field name="depth" type="integer" column="depth"/>
+    <field name="position" type="integer" column="position"/>
+    <field name="nameSnapshot" type="string" column="snapshot_name" length="255"/>
+    <field name="emojiSnapshot" type="string" column="snapshot_emoji" length="16"/>
+    <field name="caloriesSnapshot" type="float" column="snapshot_calories"/>
+    <field name="proteinSnapshot" type="float" column="snapshot_protein"/>
+    <field name="fatSnapshot" type="float" column="snapshot_fat"/>
+    <field name="carbsSnapshot" type="float" column="snapshot_carbs"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+    <indexes>
+      <index name="idx_menu_item_node_item_id" columns="menu_item_id"/>
+      <index name="idx_menu_item_node_parent_id" columns="parent_node_id"/>
+      <index name="idx_menu_item_node_ref_id" columns="ref_id"/>
+    </indexes>
+  </entity>
+</doctrine-mapping>

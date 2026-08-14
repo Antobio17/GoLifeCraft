@@ -61,3 +61,23 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Command\UpdateMenuItemNodeCommandHandler:
+    class: Nutrition\Menu\Menu\Application\Command\UpdateMenuItemNodeCommandHandler
+    arguments:
+      $menuRepository: '@Nutrition\Menu\Menu\Domain\Model\MenuRepository'
+      $treeBuilder: '@Nutrition\Menu\Menu\Domain\Service\MenuItemTreeBuilder'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Command\ResetMenuItemTreeCommandHandler:
+    class: Nutrition\Menu\Menu\Application\Command\ResetMenuItemTreeCommandHandler
+    arguments:
+      $menuRepository: '@Nutrition\Menu\Menu\Domain\Model\MenuRepository'
+      $treeBuilder: '@Nutrition\Menu\Menu\Domain\Service\MenuItemTreeBuilder'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

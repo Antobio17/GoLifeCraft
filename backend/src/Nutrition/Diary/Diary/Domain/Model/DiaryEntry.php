@@ -105,6 +105,7 @@ class DiaryEntry extends GenericAggregate
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
         array $nodes = [],
+        bool $customized = false,
     ): self {
         if (!self::hasValidDate(entryDate: $entryDate)) {
             throw CreateDiaryEntryException::invalidDate(entryDate: $entryDate);
@@ -133,6 +134,7 @@ class DiaryEntry extends GenericAggregate
         $entry->quantity = $quantity;
         $entry->unit = $unit;
         $entry->nodes = $nodes;
+        $entry->customized = $customized;
         $entry->writeSnapshot(snapshot: $snapshot);
         $entry->stampCreation(userId: $createdByUserId, now: $now);
 

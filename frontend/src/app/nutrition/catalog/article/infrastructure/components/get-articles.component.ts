@@ -62,6 +62,7 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
 
   protected readonly modulePath = "nutrition/catalog/article";
   protected readonly storageKey = "pageSize_articles";
+  protected override readonly appendsPages = true;
 
   searchQuery = signal("");
   selectedCategory = signal(ALL);
@@ -90,6 +91,22 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     this.currentPage.set(1);
     this.pageSize.set(20);
     this.loadFacets();
+  }
+
+  protected override captureFilters(): Record<string, string> {
+    return {
+      search: this.searchQuery(),
+      category: this.selectedCategory(),
+      brand: this.selectedBrand(),
+      store: this.selectedStore(),
+    };
+  }
+
+  protected override restoreFilters(filters: Record<string, string>): void {
+    this.searchQuery.set(filters["search"] ?? "");
+    this.selectedCategory.set(filters["category"] ?? ALL);
+    this.selectedBrand.set(filters["brand"] ?? ALL);
+    this.selectedStore.set(filters["store"] ?? ALL);
   }
 
   protected fetch(

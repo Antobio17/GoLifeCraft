@@ -6,6 +6,7 @@ import {
 } from "./menu.model";
 
 export interface MenuItemRequest {
+  id?: string | null;
   dayKey: MenuWeekDayKey | null;
   meal: MenuMealKey;
   kind: MenuItemKind;

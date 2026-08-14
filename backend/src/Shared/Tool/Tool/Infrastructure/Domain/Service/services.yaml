@@ -5,3 +5,20 @@ services:
   Shared\Tool\Tool\Domain\Service\ImageStorageService:
     class: Shared\Tool\Tool\Infrastructure\Domain\Service\Linux\LinuxImageStorageService
 
+  Shared\Tool\Tool\Domain\Service\EmojiImageResolver:
+    class: Shared\Tool\Tool\Infrastructure\Domain\Service\Twemoji\TwemojiImageResolver
+    arguments:
+      $assetDirectory: '%kernel.project_dir%/assets/emoji'
+
+  Shared\Tool\Tool\Infrastructure\UI\Twig\EmojiExtension:
+    class: Shared\Tool\Tool\Infrastructure\UI\Twig\EmojiExtension
+    arguments:
+      $emojiImageResolver: '@Shared\Tool\Tool\Domain\Service\EmojiImageResolver'
+    tags:
+      - { name: 'twig.extension' }
+
+  Shared\Tool\Tool\Infrastructure\UI\Twig\LocalizedNumberExtension:
+    class: Shared\Tool\Tool\Infrastructure\UI\Twig\LocalizedNumberExtension
+    tags:
+      - { name: 'twig.extension' }
+

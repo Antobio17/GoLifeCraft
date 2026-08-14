@@ -6,6 +6,7 @@ twig:
         '%kernel.project_dir%/src/Shared/Email/Email/Infrastructure/Domain/Service/SymfonyMailer/templates': Email
         '%kernel.project_dir%/src/Authorization/User/PasswordResetToken/Infrastructure/Domain/Service/Mailer/templates': PasswordResetToken
         '%kernel.project_dir%/src/Authorization/User/EmailVerificationToken/Infrastructure/Domain/Service/Mailer/templates': EmailVerificationToken
+        '%kernel.project_dir%/src/Nutrition/Menu/Menu/Infrastructure/Domain/Service/Dompdf/templates': MenuDocument
 
 when@test:
     twig:

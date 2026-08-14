@@ -11,6 +11,7 @@
     <field name="quantity" type="float" column="quantity"/>
     <field name="unit" type="string" column="unit" length="30" nullable="true"/>
     <field name="position" type="integer" column="position"/>
+    <field name="customized" type="boolean" column="customized"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

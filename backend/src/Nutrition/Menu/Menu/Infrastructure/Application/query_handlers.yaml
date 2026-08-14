@@ -31,3 +31,16 @@ services:
 
   Nutrition\Menu\Menu\Application\Query\GetMenuShoppingNeedsDataTransform:
     class: Nutrition\Menu\Menu\Infrastructure\UI\API\DataTransform\ApiGetMenuShoppingNeedsDataTransform
+
+  Nutrition\Menu\Menu\Application\Query\ExportMenuQueryHandler:
+    class: Nutrition\Menu\Menu\Application\Query\ExportMenuQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Menu\Menu\Domain\QueryModel\ExportMenuNeedleDataQuery'
+      $dataTransform: '@Nutrition\Menu\Menu\Application\Query\ExportMenuDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Menu\Menu\Application\Query\ExportMenuDataTransform:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\DataTransform\PdfExportMenuDataTransform
+    arguments:
+      $menuDocumentRenderer: '@Nutrition\Menu\Menu\Domain\Service\MenuDocumentRenderer'

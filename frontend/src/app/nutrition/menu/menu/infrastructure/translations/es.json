@@ -41,6 +41,7 @@
       "load": "Cargar",
       "apply": "Aplicar",
       "shop": "Añadir a la compra",
+      "export": "Exportar a PDF",
       "protein": "Proteínas",
       "fat": "Grasas",
       "carbs": "Hidratos"
@@ -67,6 +68,7 @@
   },
   "getMenu": {
     "back": "Volver a menús",
+    "export": "Exportar a PDF",
     "duplicate": "Duplicar menú",
     "delete": "Borrar menú",
     "copySuffix": "(copia)",
@@ -210,6 +212,14 @@
     "error": "No se ha podido cargar el menú.",
     "draft": {
       "hint": "Este menú aún no está guardado. Añade lo que quieras y pulsa Guardar menú para crearlo."
+    },
+    "tree": {
+      "title": "Ingredientes de la receta",
+      "expand": "Ver ingredientes",
+      "collapse": "Ocultar ingredientes",
+      "customized": "Has ajustado esta receta en el menú.",
+      "reset": "Restaurar receta",
+      "servings": "rac."
     }
   }
 }

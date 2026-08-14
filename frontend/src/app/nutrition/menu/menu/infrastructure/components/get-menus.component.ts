@@ -23,6 +23,7 @@ import {
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 import { GetMenusService } from "@nutrition/menu/menu/application/services/get-menus.service";
+import { ExportMenuService } from "@nutrition/menu/menu/application/services/export-menu.service";
 import { MenuViewService } from "@nutrition/menu/menu/application/services/menu-view.service";
 import {
   MenuListItem,
@@ -81,6 +82,7 @@ const WEEK_EMOJI = "🗓️";
 })
 export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   private getMenusService = inject(GetMenusService);
+  private exportMenuService = inject(ExportMenuService);
   private authSession = inject(AuthSessionService);
   protected view = inject(MenuViewService);
 
@@ -95,6 +97,7 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   loadSheetMenuId = signal<string | null>(null);
   applyWeekMenuId = signal<string | null>(null);
   shoppingMenuId = signal<string | null>(null);
+  exportingMenuId = signal<string | null>(null);
 
   headerSubtitle = computed(() => {
     const total = this.items().length;
@@ -160,6 +163,14 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
     this.pageSize.set(100);
   }
 
+  protected override captureFilters(): Record<string, string> {
+    return { search: this.searchQuery() };
+  }
+
+  protected override restoreFilters(filters: Record<string, string>): void {
+    this.searchQuery.set(filters["search"] ?? "");
+  }
+
   protected fetch(
     page: number,
     pageSize: number,
@@ -202,6 +213,17 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
 
   onShop(menuId: string): void {
     this.shoppingMenuId.set(menuId);
+  }
+
+  onExport(menuId: string): void {
+    if (this.exportingMenuId() !== null) return;
+
+    this.exportingMenuId.set(menuId);
+
+    this.exportMenuService.exportMenu(menuId).subscribe({
+      next: () => this.exportingMenuId.set(null),
+      error: () => this.exportingMenuId.set(null),
+    });
   }
 
   closeLoadSheet(): void {

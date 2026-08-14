@@ -47,6 +47,7 @@
     <ds-search-input
       [placeholder]="'getArticles.searchPlaceholder' | t"
       [clearLabel]="'getArticles.searchClear' | t"
+      [value]="searchQuery()"
       (searched)="onSearch($event)"
     />
 

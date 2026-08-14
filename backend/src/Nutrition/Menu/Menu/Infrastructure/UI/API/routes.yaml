@@ -15,6 +15,23 @@ get_menu:
   requirements:
     menuId: '[0-9a-fA-F-]{36}'
 
+update_menu_item_node:
+  path: /api/v1/nutrition/menu/{menuId}/items/{menuItemId}/nodes/{nodePath}
+  methods: [PUT]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuItemNodeController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+    menuItemId: '[0-9a-fA-F-]{36}'
+    nodePath: '[0-9]+(\.[0-9]+)*'
+
+reset_menu_item_tree:
+  path: /api/v1/nutrition/menu/{menuId}/items/{menuItemId}/tree/reset
+  methods: [POST]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ResetMenuItemTreeController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+    menuItemId: '[0-9a-fA-F-]{36}'
+
 update_menu:
   path: /api/v1/nutrition/menu/{menuId}
   methods: [PUT]
@@ -54,5 +71,12 @@ get_menu_shopping_needs:
   path: /api/v1/nutrition/menu/{menuId}/shopping-needs
   methods: [GET]
   controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\GetMenuShoppingNeedsController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+
+export_menu:
+  path: /api/v1/nutrition/menu/{menuId}/export
+  methods: [GET]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ExportMenuController
   requirements:
     menuId: '[0-9a-fA-F-]{36}'

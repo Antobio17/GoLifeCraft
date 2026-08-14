@@ -14,6 +14,13 @@ interface DiaryEntryTreeBuilder
      */
     public function materialize(string $diaryEntryId, string $recipeId, float $servings, array $existingNodes, string $userId): array;
 
+    /**
+     * @param array<int, array<string, mixed>> $tree
+     *
+     * @return DiaryEntryNode[]
+     */
+    public function fromPayload(string $diaryEntryId, array $tree, string $userId): array;
+
     /** @param DiaryEntryNode[] $nodes */
     public function refresh(array $nodes): MacroBreakdown;
 }

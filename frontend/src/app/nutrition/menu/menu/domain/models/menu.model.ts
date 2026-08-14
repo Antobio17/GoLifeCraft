@@ -1,3 +1,5 @@
+import { MenuItemNodeView } from "./menu-item-node.model";
+
 export type MenuType = "single" | "week";
 
 export type MenuItemKind = "product" | "recipe";
@@ -33,6 +35,8 @@ export interface MenuItemView {
   baseUnit: string;
   position: number;
   macros: MenuMacros;
+  customized: boolean;
+  tree: MenuItemNodeView[];
 }
 
 export interface MenuMealView {

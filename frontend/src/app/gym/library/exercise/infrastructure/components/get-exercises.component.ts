@@ -94,6 +94,7 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
 
   protected readonly modulePath = "gym/library/exercise";
   protected readonly storageKey = "pageSize_exercises";
+  protected override readonly appendsPages = true;
 
   searchQuery = signal("");
   readonly skeletonGroups = [4, 2, 3];
@@ -146,6 +147,15 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   protected configureList(): void {
     this.currentPage.set(1);
     this.pageSize.set(GetExercisesComponent.GROUPED_PAGE_SIZE);
+  }
+
+  protected override captureFilters(): Record<string, string> {
+    return { search: this.searchQuery(), view: this.view() };
+  }
+
+  protected override restoreFilters(filters: Record<string, string>): void {
+    this.searchQuery.set(filters["search"] ?? "");
+    this.view.set((filters["view"] as LibraryView) ?? "grouped");
   }
 
   protected fetch(

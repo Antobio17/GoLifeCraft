@@ -67,6 +67,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
 
   protected readonly modulePath = "nutrition/global-catalog/article";
   protected readonly storageKey = "pageSize_globalArticles";
+  protected override readonly appendsPages = true;
 
   searchQuery = signal("");
   sourceFilter = signal<string>(GlobalArticleSource.Mercadona);
@@ -107,6 +108,20 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
     this.currentPage.set(1);
     this.pageSize.set(20);
     this.loadCategories();
+  }
+
+  protected override captureFilters(): Record<string, string> {
+    return {
+      search: this.searchQuery(),
+      source: this.sourceFilter(),
+      category: this.categoryFilter(),
+    };
+  }
+
+  protected override restoreFilters(filters: Record<string, string>): void {
+    this.searchQuery.set(filters["search"] ?? "");
+    this.sourceFilter.set(filters["source"] ?? GlobalArticleSource.Mercadona);
+    this.categoryFilter.set(filters["category"] ?? "");
   }
 
   protected fetch(
@@ -195,6 +210,10 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
 
   back(): void {
     this.router.navigate(["/catalog"]);
+  }
+
+  openDetail(id: string): void {
+    this.router.navigate(["/global-catalog", id]);
   }
 
   onImport(id: string): void {

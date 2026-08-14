@@ -4,7 +4,6 @@ namespace Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
-use Nutrition\Diary\Diary\Domain\Model\DiaryBreakdownItem;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryEntryNodeView;
@@ -14,9 +13,10 @@ use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryMealView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryQuickEntryView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\GetDiaryResult;
 use Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryNeedleDataQuery;
-use Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeBreakdownItem;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
+use Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 
 final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
@@ -26,7 +26,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
     public function __construct(
         private readonly Connection $connection,
         private readonly DoctrineRecipeNutritionGraphProvider $graphProvider,
-        private readonly DiaryBreakdownCalculator $breakdownCalculator,
+        private readonly RecipeBreakdownCalculator $breakdownCalculator,
     ) {
     }
 
@@ -123,11 +123,11 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
     /**
      * @param array<int, array<string, mixed>> $nodes
      *
-     * @return DiaryBreakdownItem[]
+     * @return RecipeBreakdownItem[]
      */
     private function itemsFromNodes(array $nodes): array
     {
-        return array_map(static fn (array $node): DiaryBreakdownItem => new DiaryBreakdownItem(
+        return array_map(static fn (array $node): RecipeBreakdownItem => new RecipeBreakdownItem(
             path: $node['path'],
             parentPath: self::parentPathOf(path: $node['path']),
             depth: (int) $node['depth'],
@@ -148,7 +148,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
     }
 
     /**
-     * @param DiaryBreakdownItem[] $items
+     * @param RecipeBreakdownItem[] $items
      *
      * @return DiaryEntryNodeView[]
      */

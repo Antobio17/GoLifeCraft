@@ -11,9 +11,9 @@ use Nutrition\Menu\Menu\Domain\QueryModel\Dto\MenuDayView;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\MenuItemView;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\MenuMealView;
 use Nutrition\Menu\Menu\Domain\QueryModel\GetMenuNeedleDataQuery;
+use Nutrition\Menu\Menu\Domain\Service\MenuItemBreakdownResolver;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
-use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 
 final readonly class DoctrineGetMenuNeedleDataQuery implements GetMenuNeedleDataQuery
@@ -25,7 +25,7 @@ final readonly class DoctrineGetMenuNeedleDataQuery implements GetMenuNeedleData
         private Connection $connection,
         private DoctrineMenuItemRowLoader $itemRowLoader,
         private DoctrineRecipeNutritionGraphProvider $graphProvider,
-        private RecipeNutritionCalculator $calculator,
+        private MenuItemBreakdownResolver $breakdownResolver,
     ) {
     }
 
@@ -174,6 +174,8 @@ final readonly class DoctrineGetMenuNeedleDataQuery implements GetMenuNeedleData
             ? $graph->articleBaseUnit(articleId: $item['refId'])
             : self::RECIPE_BASE_UNIT;
 
+        $breakdown = $this->breakdownResolver->breakdownFor(graph: $graph, item: $item);
+
         return new MenuItemView(
             id: $item['id'],
             dayKey: $item['dayKey'],
@@ -186,13 +188,9 @@ final readonly class DoctrineGetMenuNeedleDataQuery implements GetMenuNeedleData
             unit: $item['unit'],
             baseUnit: $baseUnit,
             position: $item['position'],
-            macros: $this->calculator->ingredientContribution(
-                graph: $graph,
-                kind: $item['kind'],
-                refId: $item['refId'],
-                quantity: $item['quantity'],
-                unit: $item['unit'],
-            )->rounded(),
+            macros: $this->breakdownResolver->macrosFor(graph: $graph, item: $item, breakdown: $breakdown)->rounded(),
+            customized: (bool) ($item['customized'] ?? false),
+            tree: $this->breakdownResolver->nest(items: $breakdown, parentPath: null),
         );
     }
 }

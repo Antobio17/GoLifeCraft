@@ -9,7 +9,7 @@ services:
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
       $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DiaryReaderRecipeNutritionGraphProvider'
-      $breakdownCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryBreakdownCalculator'
+      $breakdownCalculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator'
 
   Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryCalendarNeedleDataQuery:
     class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetDiaryCalendarNeedleDataQuery

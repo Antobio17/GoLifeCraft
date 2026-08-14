@@ -5,7 +5,7 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="54%"
-      [actions]="canWrite() ? 2 : 0"
+      [actions]="canWrite() ? 3 : 1"
       actionWidth="2.25rem"
     />
 
@@ -92,29 +92,43 @@
         (clicked)="goBack()"
       />
 
-      @if (canWrite() && !isDraft()) {
+      @if (!isDraft()) {
         <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
           <ds-icon-button
-            icon="copy"
+            icon="download"
             variant="soft"
             [size]="36"
             [iconSize]="16"
             [stroke]="2"
             [radius]="'var(--ds-radius-lg)'"
-            [ariaLabel]="'getMenu.duplicate' | t"
-            (clicked)="onDuplicate()"
+            [disabled]="exporting()"
+            [ariaLabel]="'getMenu.export' | t"
+            (clicked)="onExport()"
           />
-          <ds-icon-button
-            icon="trash"
-            variant="soft"
-            [size]="36"
-            [iconSize]="17"
-            [stroke]="2"
-            [radius]="'var(--ds-radius-lg)'"
-            [color]="'var(--ds-danger)'"
-            [ariaLabel]="'getMenu.delete' | t"
-            (clicked)="askDelete()"
-          />
+
+          @if (canWrite()) {
+            <ds-icon-button
+              icon="copy"
+              variant="soft"
+              [size]="36"
+              [iconSize]="16"
+              [stroke]="2"
+              [radius]="'var(--ds-radius-lg)'"
+              [ariaLabel]="'getMenu.duplicate' | t"
+              (clicked)="onDuplicate()"
+            />
+            <ds-icon-button
+              icon="trash"
+              variant="soft"
+              [size]="36"
+              [iconSize]="17"
+              [stroke]="2"
+              [radius]="'var(--ds-radius-lg)'"
+              [color]="'var(--ds-danger)'"
+              [ariaLabel]="'getMenu.delete' | t"
+              (clicked)="askDelete()"
+            />
+          }
         </ds-stack>
       }
     </ds-stack>
@@ -222,85 +236,53 @@
           <ds-placeholder-note [message]="'getMenu.meal.empty' | t" />
         } @else {
           <ds-stack [gap]="'var(--ds-space-1-5)'">
-            @for (row of meal.items; track row.trackKey) {
-              <ds-swipe-to-delete
-                [disabled]="!canWrite()"
-                [reveal]="66"
-                [removeLabel]="'getMenu.remove' | t"
-                (remove)="onRemoveItem(row.item)"
-              >
-                <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
-                  <ds-stack
-                    direction="row"
-                    align="center"
-                    [gap]="'var(--ds-space-2)'"
-                  >
-                    <ds-stack align="center" [gap]="'var(--ds-space-1)'">
-                      <ds-emoji-tile
-                        [emoji]="row.item.emoji"
-                        [size]="38"
-                        [radius]="11"
-                      />
-                      <ds-chip
-                        [tone]="
-                          row.item.kind === 'recipe' ? 'brand' : 'neutral'
-                        "
-                        >{{ row.badge }}</ds-chip
-                      >
-                    </ds-stack>
+            @for (row of meal.items; track row.item.id) {
+              <ds-stack [gap]="'var(--ds-space-1-5)'">
+                <ds-diary-entry
+                  [emoji]="row.item.emoji"
+                  [name]="row.item.name"
+                  [badge]="row.badge"
+                  [badgeTone]="row.badgeTone"
+                  [kcalLabel]="row.kcal"
+                  [macros]="row.macros"
+                  [unit]="row.unitLabel"
+                  [unitValue]="row.unitValue"
+                  [unitOptions]="row.unitOptions"
+                  [quantity]="row.item.quantity"
+                  [quantityLabel]="row.quantityLabel"
+                  [canWrite]="canWrite()"
+                  [quantityAriaLabel]="'getMenu.quantity' | t"
+                  [unitAriaLabel]="'getMenu.unit' | t"
+                  [removeLabel]="'getMenu.remove' | t"
+                  [expandable]="row.expandable"
+                  [expanded]="row.expanded"
+                  [expandLabel]="'getMenu.tree.expand' | t"
+                  [collapseLabel]="'getMenu.tree.collapse' | t"
+                  (quantityChange)="onQuantity(row.item, $event)"
+                  (unitChange)="onUnit(row.item, $event)"
+                  (remove)="onRemoveItem(row.item)"
+                  (expandToggled)="toggleItemTree(row.item.id)"
+                />
 
-                    <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-                      <ds-text variant="strong" [truncate]="true">{{
-                        row.item.name
-                      }}</ds-text>
-
-                      @if (canWrite()) {
-                        <ds-stack
-                          direction="row"
-                          align="center"
-                          [gap]="'var(--ds-space-1-5)'"
-                        >
-                          <ds-field [width]="'4.625rem'">
-                            <ds-number-input
-                              variant="boxed"
-                              [precision]="1"
-                              [min]="0"
-                              [ariaLabel]="'getMenu.quantity' | t"
-                              [ngModel]="row.item.quantity"
-                              [ngModelOptions]="{ standalone: true }"
-                              (ngModelChange)="onQuantity(row.item, $event)"
-                            />
-                          </ds-field>
-                          @if (row.item.kind === "product") {
-                            <ds-select
-                              variant="bare"
-                              [fluid]="true"
-                              [options]="row.unitOptions"
-                              [ariaLabel]="'getMenu.unit' | t"
-                              [ngModel]="row.item.unit ?? row.item.baseUnit"
-                              [ngModelOptions]="{ standalone: true }"
-                              (ngModelChange)="onUnit(row.item, $event)"
-                            />
-                          } @else {
-                            <ds-text variant="meta">{{
-                              row.unitLabel
-                            }}</ds-text>
-                          }
-                        </ds-stack>
-                      } @else {
-                        <ds-text variant="meta">{{
-                          row.quantityLabel
-                        }}</ds-text>
-                      }
-
-                      <ds-macro-badges
-                        [kcal]="row.kcal"
-                        [macros]="row.macros"
-                      />
-                    </ds-stack>
-                  </ds-stack>
-                </ds-card>
-              </ds-swipe-to-delete>
+                @if (row.expanded) {
+                  <ds-diary-tree
+                    [rows]="row.treeRows"
+                    [title]="'getMenu.tree.title' | t"
+                    [canWrite]="canWrite()"
+                    [showReset]="row.showReset"
+                    [resetMessage]="'getMenu.tree.customized' | t"
+                    [resetLabel]="'getMenu.tree.reset' | t"
+                    [expandLabel]="'getMenu.tree.expand' | t"
+                    [collapseLabel]="'getMenu.tree.collapse' | t"
+                    [quantityAriaLabel]="'getMenu.quantity' | t"
+                    [unitAriaLabel]="'getMenu.unit' | t"
+                    (toggled)="toggleTreeNode($event)"
+                    (quantityChanged)="onNodeQuantityChange(row.item, $event)"
+                    (unitChanged)="onNodeUnitChange(row.item, $event)"
+                    (restored)="onResetTree(row.item)"
+                  />
+                }
+              </ds-stack>
             }
           </ds-stack>
         }

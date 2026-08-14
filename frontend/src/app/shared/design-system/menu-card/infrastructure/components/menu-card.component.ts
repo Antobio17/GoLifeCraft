@@ -23,8 +23,8 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
 
       <ds-macro-badges [macros]="macros" />
 
-      @if (canWrite) {
-        <div class="ds-mcard__actions">
+      <div class="ds-mcard__actions">
+        @if (canWrite) {
           <button type="button" class="ds-mcard__load" (click)="loaded.emit()">
             <ds-icon
               class="ds-mcard__loadIcon"
@@ -43,8 +43,22 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
           >
             <ds-icon name="cart" [size]="17" [stroke]="2.1" />
           </button>
-        </div>
-      }
+        }
+        <button
+          type="button"
+          class="ds-mcard__action"
+          [class.ds-mcard__action--wide]="!canWrite"
+          [disabled]="exporting"
+          [attr.aria-label]="exportLabel"
+          [attr.title]="exportLabel"
+          (click)="exported.emit()"
+        >
+          <ds-icon name="download" [size]="17" [stroke]="2.1" />
+          @if (!canWrite) {
+            {{ exportLabel }}
+          }
+        </button>
+      </div>
     </div>
   `,
   styles: [
@@ -168,6 +182,19 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         color: var(--ds-text);
         border-radius: var(--ds-radius-lg);
       }
+      .ds-mcard__action--wide {
+        flex: 1 1 auto;
+        gap: var(--ds-space-1);
+        width: auto;
+        padding: var(--ds-space-2);
+        font: inherit;
+        font-size: var(--ds-text-base);
+        font-weight: var(--ds-weight-bold);
+      }
+      .ds-mcard__action[disabled] {
+        opacity: 0.55;
+        cursor: default;
+      }
     `,
   ],
 })
@@ -181,9 +208,12 @@ export class MenuCardComponent {
   @Input() loadLabel = "";
   @Input() loadIcon: DsIconName = "download";
   @Input() shopLabel = "";
+  @Input() exportLabel = "";
+  @Input() exporting = false;
   @Input() canWrite = false;
 
   @Output() activated = new EventEmitter<void>();
   @Output() loaded = new EventEmitter<void>();
   @Output() shopped = new EventEmitter<void>();
+  @Output() exported = new EventEmitter<void>();
 }

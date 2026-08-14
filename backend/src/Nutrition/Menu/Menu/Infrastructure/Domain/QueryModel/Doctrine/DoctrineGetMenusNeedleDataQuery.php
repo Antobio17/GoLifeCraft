@@ -5,10 +5,12 @@ namespace Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\Menu\Menu\Domain\Model\Menu;
+use Nutrition\Menu\Menu\Domain\Model\MenuItemNode;
 use Nutrition\Menu\Menu\Domain\Model\MenuWeekDay;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\GetMenusResult;
 use Nutrition\Menu\Menu\Domain\QueryModel\GetMenusNeedleDataQuery;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
 use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 
@@ -64,13 +66,7 @@ final readonly class DoctrineGetMenusNeedleDataQuery implements GetMenusNeedleDa
 
             $total = MacroBreakdown::zero();
             foreach ($items as $item) {
-                $total = $total->add(other: $this->calculator->ingredientContribution(
-                    graph: $graph,
-                    kind: $item['kind'],
-                    refId: $item['refId'],
-                    quantity: $item['quantity'],
-                    unit: $item['unit'],
-                ));
+                $total = $total->add(other: $this->itemMacros(graph: $graph, item: $item));
             }
 
             return new GetMenusResult(
@@ -91,6 +87,41 @@ final readonly class DoctrineGetMenusNeedleDataQuery implements GetMenusNeedleDa
                 updatedByUserId: $row['updated_by_user_id'],
             );
         }, array: $rows);
+    }
+
+    /**
+     * A stored breakdown wins over the recipe: it is what the menu detail shows.
+     *
+     * @param array<string, mixed> $item
+     */
+    private function itemMacros(RecipeNutritionGraph $graph, array $item): MacroBreakdown
+    {
+        if ([] === $item['nodes']) {
+            return $this->calculator->ingredientContribution(
+                graph: $graph,
+                kind: $item['kind'],
+                refId: $item['refId'],
+                quantity: $item['quantity'],
+                unit: $item['unit'],
+            );
+        }
+
+        $total = MacroBreakdown::zero();
+
+        foreach ($item['nodes'] as $node) {
+            if (str_contains(haystack: (string) $node['path'], needle: MenuItemNode::PATH_SEPARATOR)) {
+                continue;
+            }
+
+            $total = $total->add(other: new MacroBreakdown(
+                calories: (float) $node['snapshot_calories'],
+                protein: (float) $node['snapshot_protein'],
+                fat: (float) $node['snapshot_fat'],
+                carbs: (float) $node['snapshot_carbs'],
+            ));
+        }
+
+        return $total;
     }
 
     /**

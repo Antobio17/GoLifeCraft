@@ -116,6 +116,7 @@ export class MenuEditorService {
 
   private toItemRequests(items: MenuItemView[]): MenuItemRequest[] {
     return items.map((item, index) => ({
+      id: item.id,
       dayKey: item.dayKey,
       meal: item.meal,
       kind: item.kind,

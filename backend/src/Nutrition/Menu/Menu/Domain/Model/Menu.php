@@ -5,6 +5,8 @@ namespace Nutrition\Menu\Menu\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Menu\Menu\Domain\Event\MenuCreated;
 use Nutrition\Menu\Menu\Domain\Event\MenuDeleted;
+use Nutrition\Menu\Menu\Domain\Event\MenuItemTreeAdjusted;
+use Nutrition\Menu\Menu\Domain\Event\MenuItemTreeReset;
 use Nutrition\Menu\Menu\Domain\Event\MenuLoadedIntoDiary;
 use Nutrition\Menu\Menu\Domain\Event\MenuUpdated;
 use Nutrition\Menu\Menu\Domain\Exception\CreateMenuException;
@@ -200,6 +202,123 @@ class Menu extends GenericAggregate
         );
     }
 
+    public function recipeItem(string $menuItemId): MenuItem
+    {
+        $item = $this->findItem(menuItemId: $menuItemId);
+
+        if (null === $item) {
+            throw UpdateMenuException::menuItemNotFound(menuId: $this->id, menuItemId: $menuItemId);
+        }
+
+        if (!$item->isRecipe()) {
+            throw UpdateMenuException::notARecipeItem(menuItemId: $menuItemId);
+        }
+
+        return $item;
+    }
+
+    public function adjustItemNode(
+        string $menuItemId,
+        string $nodePath,
+        float $quantity,
+        ?string $unit,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $this->recipeItem(menuItemId: $menuItemId)->adjustNode(
+            nodePath: $nodePath,
+            quantity: $quantity,
+            unit: $unit,
+            updatedByUserId: $updatedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+    }
+
+    public function applyItemTree(
+        string $menuItemId,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $item = $this->recipeItem(menuItemId: $menuItemId);
+        $now = $dateTimeGenerator->now();
+        $macros = $item->treeMacros();
+
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new MenuItemTreeAdjusted(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+            type: $this->type,
+            menuItemId: $item->id,
+            dayKey: $item->dayKey,
+            meal: $item->meal,
+            kind: $item->kind,
+            refId: $item->refId,
+            quantity: $item->quantity,
+            unit: $item->unit,
+            position: $item->position,
+            customized: $item->customized,
+            tree: $item->treePayload(),
+            calories: $macros->calories,
+            protein: $macros->protein,
+            fat: $macros->fat,
+            carbs: $macros->carbs,
+            updatedAt: $now,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    /** @param MenuItemNode[] $nodes */
+    public function resetItemTree(
+        string $menuItemId,
+        array $nodes,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $item = $this->recipeItem(menuItemId: $menuItemId);
+        $item->replaceTree(nodes: $nodes, customized: false);
+
+        $now = $dateTimeGenerator->now();
+        $macros = $item->treeMacros();
+
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new MenuItemTreeReset(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+            type: $this->type,
+            menuItemId: $item->id,
+            dayKey: $item->dayKey,
+            meal: $item->meal,
+            kind: $item->kind,
+            refId: $item->refId,
+            quantity: $item->quantity,
+            unit: $item->unit,
+            position: $item->position,
+            customized: $item->customized,
+            tree: $item->treePayload(),
+            calories: $macros->calories,
+            protein: $macros->protein,
+            fat: $macros->fat,
+            carbs: $macros->carbs,
+            updatedAt: $now,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function findItem(string $menuItemId): ?MenuItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->id === $menuItemId) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
     public function isWeek(): bool
     {
         return self::TYPE_WEEK === $this->type;
@@ -351,7 +470,7 @@ class Menu extends GenericAggregate
     /**
      * @param MenuItem[] $items
      *
-     * @return array<int, array{meal: string, kind: string, refId: string, quantity: float, unit: ?string}>
+     * @return array<int, array{meal: string, kind: string, refId: string, quantity: float, unit: ?string, tree: array<int, array<string, mixed>>}>
      */
     private function plannedItems(array $items): array
     {

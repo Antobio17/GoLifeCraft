@@ -10,7 +10,7 @@ import {
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Subject, debounceTime, switchMap } from "rxjs";
+import { Subject, debounceTime, groupBy, mergeMap, switchMap } from "rxjs";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -23,12 +23,7 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
-import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
-import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
-import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
-import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { PlaceholderNoteComponent } from "@shared/design-system/placeholder-note/infrastructure/components/placeholder-note.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import {
@@ -47,6 +42,12 @@ import { ConfirmActionModalComponent } from "@shared/design-system/confirm-actio
 import { MacroPanelComponent } from "@shared/design-system/macro-panel/infrastructure/components/macro-panel.component";
 import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
+import { DiaryEntryComponent } from "@shared/design-system/diary-entry/infrastructure/components/diary-entry.component";
+import { DiaryTreeComponent } from "@shared/design-system/diary-tree/infrastructure/components/diary-tree.component";
+import {
+  DiaryTreeQuantityChange,
+  DiaryTreeUnitChange,
+} from "@shared/design-system/diary-tree/domain/models/diary-tree-change.model";
 import { WeekDayTabsComponent } from "@shared/design-system/week-day-tabs/infrastructure/components/week-day-tabs.component";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { DiaryGoalConfig } from "@nutrition/diary/goal/domain/models/diary-goal.model";
@@ -57,6 +58,7 @@ import { GetMenuService } from "@nutrition/menu/menu/application/services/get-me
 import { UpdateMenuService } from "@nutrition/menu/menu/application/services/update-menu.service";
 import { DeleteMenuService } from "@nutrition/menu/menu/application/services/delete-menu.service";
 import { DuplicateMenuService } from "@nutrition/menu/menu/application/services/duplicate-menu.service";
+import { ExportMenuService } from "@nutrition/menu/menu/application/services/export-menu.service";
 import {
   MacroLabels,
   MenuViewService,
@@ -67,6 +69,9 @@ import {
   MenuDraftService,
 } from "@nutrition/menu/menu/application/services/menu-draft.service";
 import { CreateMenuService } from "@nutrition/menu/menu/application/services/create-menu.service";
+import { UpdateMenuItemNodeService } from "@nutrition/menu/menu/application/services/update-menu-item-node.service";
+import { ResetMenuItemTreeService } from "@nutrition/menu/menu/application/services/reset-menu-item-tree.service";
+import { MenuTreeViewService } from "@nutrition/menu/menu/application/services/menu-tree-view.service";
 import { GetMenusService } from "@nutrition/menu/menu/application/services/get-menus.service";
 import {
   MenuChoice,
@@ -102,12 +107,7 @@ type PickerTab = "product" | "recipe";
     IconButtonComponent,
     EmojiTileComponent,
     TextInputComponent,
-    NumberInputComponent,
-    SelectComponent,
-    FieldComponent,
-    ChipComponent,
     NoteComponent,
-    SwipeToDeleteComponent,
     PlaceholderNoteComponent,
     SearchInputComponent,
     SegmentedToggleComponent,
@@ -123,6 +123,8 @@ type PickerTab = "product" | "recipe";
     MacroPanelComponent,
     MacroBadgesComponent,
     WeekDayTabsComponent,
+    DiaryEntryComponent,
+    DiaryTreeComponent,
     MenuLoadSheetComponent,
     MenuApplyWeekSheetComponent,
     MenuShoppingSheetComponent,
@@ -138,6 +140,10 @@ export class GetMenuComponent implements OnInit {
   private updateMenuService = inject(UpdateMenuService);
   private deleteMenuService = inject(DeleteMenuService);
   private duplicateMenuService = inject(DuplicateMenuService);
+  private exportMenuService = inject(ExportMenuService);
+  private updateMenuItemNodeService = inject(UpdateMenuItemNodeService);
+  private resetMenuItemTreeService = inject(ResetMenuItemTreeService);
+  private treeView = inject(MenuTreeViewService);
   private getArticlesService = inject(GetArticlesService);
   private getRecipesService = inject(GetRecipesService);
   private getDiaryGoalService = inject(GetDiaryGoalService);
@@ -157,6 +163,11 @@ export class GetMenuComponent implements OnInit {
 
   private textChanges = new Subject<UpdateMenuRequest>();
   private quantityChanges = new Subject<UpdateMenuRequest>();
+  private nodeQuantityChanges = new Subject<{
+    menuItemId: string;
+    path: string;
+    quantity: number;
+  }>();
 
   canWrite = computed(() => this.authSession.isGod());
 
@@ -183,6 +194,7 @@ export class GetMenuComponent implements OnInit {
   shoppingMenuId = signal<string | null>(null);
   deleteAsked = signal(false);
   deleting = signal(false);
+  exporting = signal(false);
 
   readonly skeletonMeals = [2, 2, 1, 1];
 
@@ -222,6 +234,15 @@ export class GetMenuComponent implements OnInit {
     return this.view.findDay(detail, this.selectedDayKey());
   });
 
+  expandedItems = signal<ReadonlySet<string>>(new Set());
+  collapsedNodes = signal<ReadonlySet<string>>(new Set());
+
+  treeLabels = computed(() => ({
+    ...this.macroLabels(),
+    kcal: this.t("getMenu.kcal"),
+    servings: this.t("getMenu.tree.servings"),
+  }));
+
   mealRows = computed(() =>
     (this.currentDay()?.meals ?? []).map((meal) => ({
       key: meal.key,
@@ -229,16 +250,27 @@ export class GetMenuComponent implements OnInit {
       meta: this.mealMeta(meal.totals.calories, meal.itemCount),
       items: meal.items.map((item) => ({
         item,
-        trackKey: this.view.itemKey(item),
         badge: this.itemBadge(item),
+        badgeTone: this.itemBadgeTone(item),
         kcal: this.itemKcal(item),
         macros: this.itemMacros(item),
         unitLabel: this.itemUnitLabel(item),
-        unitOptions: this.itemUnitOptions(item),
+        unitValue: item.unit ?? item.baseUnit,
+        unitOptions: item.kind === "product" ? this.itemUnitOptions(item) : [],
         quantityLabel: this.view.itemQuantityLabel(
           item,
           this.itemUnitLabel(item),
         ),
+        expandable: item.tree.length > 0,
+        expanded: this.expandedItems().has(item.id),
+        treeRows: this.expandedItems().has(item.id)
+          ? this.treeView.rows(
+              item.tree,
+              this.collapsedNodes(),
+              this.treeLabels(),
+            )
+          : [],
+        showReset: this.canWrite() && item.customized,
       })),
     })),
   );
@@ -385,6 +417,22 @@ export class GetMenuComponent implements OnInit {
       )
       .subscribe({ next: () => this.load(true) });
 
+    this.nodeQuantityChanges
+      .pipe(
+        groupBy((change) => `${change.menuItemId}:${change.path}`),
+        mergeMap((group) => group.pipe(debounceTime(this.QUANTITY_DEBOUNCE))),
+        mergeMap((change) =>
+          this.updateMenuItemNodeService.updateMenuItemNode(
+            this.id(),
+            change.menuItemId,
+            change.path,
+            change.quantity,
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({ next: () => this.load(true) });
+
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
@@ -419,6 +467,10 @@ export class GetMenuComponent implements OnInit {
     return this.t(
       item.kind === "recipe" ? "getMenu.badge.recipe" : "getMenu.badge.product",
     );
+  }
+
+  itemBadgeTone(item: MenuItemView): "brand" | "neutral" {
+    return item.kind === "recipe" ? "brand" : "neutral";
   }
 
   choiceKcal(choice: MenuChoice): string {
@@ -592,6 +644,65 @@ export class GetMenuComponent implements OnInit {
     this.save(this.editor.withItemUnit(detail, item.id, unit));
   }
 
+  toggleItemTree(itemId: string): void {
+    this.expandedItems.update((expanded) => this.toggled(expanded, itemId));
+  }
+
+  toggleTreeNode(path: string): void {
+    this.collapsedNodes.update((collapsed) => this.toggled(collapsed, path));
+  }
+
+  onNodeQuantityChange(
+    item: MenuItemView,
+    change: DiaryTreeQuantityChange,
+  ): void {
+    if (this.isDraft() || !change.quantity || change.quantity <= 0) return;
+
+    this.nodeQuantityChanges.next({
+      menuItemId: item.id,
+      path: change.path,
+      quantity: change.quantity,
+    });
+  }
+
+  onNodeUnitChange(item: MenuItemView, change: DiaryTreeUnitChange): void {
+    if (this.isDraft()) return;
+
+    this.updateMenuItemNodeService
+      .updateMenuItemNode(
+        this.id(),
+        item.id,
+        change.path,
+        change.quantity,
+        change.unit,
+      )
+      .subscribe({ next: () => this.load(true) });
+  }
+
+  onResetTree(item: MenuItemView): void {
+    if (this.isDraft()) return;
+
+    this.resetMenuItemTreeService
+      .resetMenuItemTree(this.id(), item.id)
+      .subscribe({ next: () => this.load(true) });
+  }
+
+  private toggled(
+    source: ReadonlySet<string>,
+    key: string,
+  ): ReadonlySet<string> {
+    const next = new Set(source);
+    if (next.has(key)) {
+      next.delete(key);
+
+      return next;
+    }
+
+    next.add(key);
+
+    return next;
+  }
+
   onRemoveItem(item: MenuItemView): void {
     const draft = this.draft();
     if (draft) {
@@ -642,6 +753,17 @@ export class GetMenuComponent implements OnInit {
 
   closeShoppingSheet(): void {
     this.shoppingMenuId.set(null);
+  }
+
+  onExport(): void {
+    if (this.exporting()) return;
+
+    this.exporting.set(true);
+
+    this.exportMenuService.exportMenu(this.id()).subscribe({
+      next: () => this.exporting.set(false),
+      error: () => this.exporting.set(false),
+    });
   }
 
   onDuplicate(): void {

@@ -127,9 +127,9 @@ export class SearchInputComponent
   @Input() placeholder = "";
   @Input() clearLabel = "Clear";
   @Input() debounce = 300;
+  @Input() value = "";
   @Output() searched = new EventEmitter<string>();
 
-  value = "";
   disabled = false;
   isFocused = false;
 

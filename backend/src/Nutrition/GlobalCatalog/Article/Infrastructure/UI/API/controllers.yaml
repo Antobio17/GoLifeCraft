@@ -12,3 +12,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\GetGlobalArticleController:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\GetGlobalArticleController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

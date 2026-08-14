@@ -61,3 +61,24 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuItemNodeController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuItemNodeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ResetMenuItemTreeController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ResetMenuItemTreeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ExportMenuController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ExportMenuController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

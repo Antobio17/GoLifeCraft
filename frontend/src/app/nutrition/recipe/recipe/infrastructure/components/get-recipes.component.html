@@ -37,6 +37,7 @@
     <ds-search-input
       [placeholder]="'getRecipes.searchPlaceholder' | t"
       [clearLabel]="'getRecipes.searchClear' | t"
+      [value]="searchQuery()"
       (searched)="onSearch($event)"
     />
 

@@ -3,6 +3,8 @@
 namespace Nutrition\Menu\Menu\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
+use Nutrition\Menu\Menu\Domain\Exception\UpdateMenuException;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use Ramsey\Uuid\Uuid;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -38,6 +40,10 @@ class MenuItem extends GenericAggregate
     public float $quantity;
     public ?string $unit = null;
     public int $position;
+    public bool $customized = false;
+
+    /** @var MenuItemNode[] */
+    public array $nodes = [];
 
     public static function create(
         string $menuId,
@@ -69,7 +75,120 @@ class MenuItem extends GenericAggregate
     }
 
     /**
-     * @return array{meal: string, kind: string, refId: string, quantity: float, unit: ?string}
+     * Keeps the item identity — and therefore its breakdown — while the menu is rewritten.
+     */
+    public function reassign(
+        ?string $dayKey,
+        string $meal,
+        float $quantity,
+        ?string $unit,
+        int $position,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if ($this->isRecipe() && $this->hasTree() && $this->quantity > 0 && $quantity !== $this->quantity) {
+            $this->scaleTree(
+                factor: $quantity / $this->quantity,
+                updatedByUserId: $updatedByUserId,
+                dateTimeGenerator: $dateTimeGenerator,
+            );
+        }
+
+        $this->dayKey = $dayKey;
+        $this->meal = $meal;
+        $this->quantity = $quantity;
+        $this->unit = $unit;
+        $this->position = $position;
+        $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
+    }
+
+    public function isRecipe(): bool
+    {
+        return self::KIND_RECIPE === $this->kind;
+    }
+
+    public function hasTree(): bool
+    {
+        return [] !== $this->nodes;
+    }
+
+    /** @param MenuItemNode[] $nodes */
+    public function replaceTree(array $nodes, bool $customized): void
+    {
+        $this->nodes = array_values(array: $nodes);
+        $this->customized = $customized;
+    }
+
+    public function scaleTree(float $factor, string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        foreach ($this->nodes as $node) {
+            $node->scale(factor: $factor, updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        }
+    }
+
+    public function adjustNode(
+        string $nodePath,
+        float $quantity,
+        ?string $unit,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if ($quantity <= 0) {
+            throw UpdateMenuException::quantityMustBePositive();
+        }
+
+        $node = $this->findNode(nodePath: $nodePath);
+        if (null === $node) {
+            throw UpdateMenuException::treeNodeNotFound(menuItemId: $this->id, nodePath: $nodePath);
+        }
+
+        $factor = $node->quantity > 0 ? $quantity / $node->quantity : 0.0;
+        $node->adjust(quantity: $quantity, unit: $unit, updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+
+        if ($node->isRecipe() && $factor > 0) {
+            $this->scaleDescendants(node: $node, factor: $factor, updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        }
+
+        $this->customized = true;
+    }
+
+    public function findNode(string $nodePath): ?MenuItemNode
+    {
+        foreach ($this->nodes as $node) {
+            if ($node->path === $nodePath) {
+                return $node;
+            }
+        }
+
+        return null;
+    }
+
+    public function treeMacros(): MacroBreakdown
+    {
+        $total = MacroBreakdown::zero();
+
+        foreach ($this->nodes as $node) {
+            if (null !== $node->parentNodeId) {
+                continue;
+            }
+
+            $total = $total->add(other: $node->macros());
+        }
+
+        return $total;
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public function treePayload(): array
+    {
+        return array_map(
+            callback: static fn (MenuItemNode $node): array => $node->toPayload(),
+            array: array_values(array: $this->nodes),
+        );
+    }
+
+    /**
+     * @return array{meal: string, kind: string, refId: string, quantity: float, unit: ?string, tree: array<int, array<string, mixed>>}
      */
     public function toPlannedItem(): array
     {
@@ -79,6 +198,22 @@ class MenuItem extends GenericAggregate
             'refId' => $this->refId,
             'quantity' => $this->quantity,
             'unit' => $this->unit,
+            'tree' => $this->customized ? $this->treePayload() : [],
         ];
+    }
+
+    private function scaleDescendants(
+        MenuItemNode $node,
+        float $factor,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        foreach ($this->nodes as $candidate) {
+            if (!$candidate->isDescendantOf(other: $node)) {
+                continue;
+            }
+
+            $candidate->scale(factor: $factor, updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        }
     }
 }

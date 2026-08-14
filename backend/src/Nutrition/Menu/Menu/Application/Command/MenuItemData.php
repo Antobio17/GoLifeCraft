@@ -14,6 +14,7 @@ final readonly class MenuItemData
         public float $quantity,
         public int $position,
         public ?string $unit = null,
+        public ?string $id = null,
     ) {
     }
 
@@ -27,6 +28,7 @@ final readonly class MenuItemData
             quantity: (float) ($rawItem['quantity'] ?? $rawItem['qty'] ?? 0),
             position: (int) ($rawItem['position'] ?? $position),
             unit: self::normalizeNullableString(value: $rawItem['unit'] ?? null),
+            id: self::normalizeNullableString(value: $rawItem['id'] ?? null),
         );
     }
 

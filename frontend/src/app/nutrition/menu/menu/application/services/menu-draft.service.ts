@@ -223,6 +223,8 @@ export class MenuDraftService {
         item.quantity,
         item.unit,
       ),
+      customized: false,
+      tree: [],
     };
   }
 

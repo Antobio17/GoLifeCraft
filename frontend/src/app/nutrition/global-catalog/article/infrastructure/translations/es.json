@@ -35,5 +35,46 @@
       "importedAll": "Productos añadidos a tu catálogo",
       "error": "No se pudo añadir el producto"
     }
+  },
+  "getGlobalArticle": {
+    "breadcrumb": {
+      "detail": "Producto global"
+    },
+    "back": "Volver",
+    "import": "Añadir a mi catálogo",
+    "alreadyImported": "Ya está en tu catálogo",
+    "per": "Valores por",
+    "noNutrition": "Este producto no tiene información nutricional",
+    "macro": {
+      "kcal": "kcal",
+      "protein": "Proteínas",
+      "fat": "Grasas",
+      "carbs": "Hidratos"
+    },
+    "table": {
+      "fat": "Grasas",
+      "saturated": "de las cuales saturadas",
+      "carbs": "Hidratos de carbono",
+      "sugars": "de los cuales azúcares",
+      "protein": "Proteínas",
+      "fiber": "Fibra",
+      "salt": "Sal"
+    },
+    "details": {
+      "heading": "Datos del producto",
+      "price": "Precio",
+      "previousPrice": "Precio anterior",
+      "referencePrice": "Precio por unidad",
+      "bulkPrice": "Precio a granel",
+      "stores": "Disponible en",
+      "barcode": "Código de barras"
+    },
+    "notFound": {
+      "title": "Producto no encontrado",
+      "text": "El producto que buscas no existe en el catálogo global"
+    },
+    "toast": {
+      "error": "No se pudo añadir el producto"
+    }
   }
 }

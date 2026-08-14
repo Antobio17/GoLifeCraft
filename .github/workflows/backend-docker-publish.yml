@@ -8,6 +8,7 @@ on:
       - 'backend/src/**'
       - 'backend/config/**'
       - 'backend/public/**'
+      - 'backend/assets/**'
       - 'backend/composer.json'
       - 'backend/composer.lock'
       - 'infrastructure/docker/production/php/Dockerfile'

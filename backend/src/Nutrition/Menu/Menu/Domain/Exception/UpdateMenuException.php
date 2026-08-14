@@ -51,6 +51,33 @@ final class UpdateMenuException extends BaseException
         );
     }
 
+    public static function menuItemNotFound(string $menuId, string $menuItemId): self
+    {
+        return new static(
+            title: 'Menu item not found.',
+            keyTranslation: 'menu.item.not.found',
+            details: ['menuId' => $menuId, 'menuItemId' => $menuItemId]
+        );
+    }
+
+    public static function notARecipeItem(string $menuItemId): self
+    {
+        return new static(
+            title: 'Only recipe items own a breakdown.',
+            keyTranslation: 'menu.item.not.a.recipe',
+            details: ['menuItemId' => $menuItemId]
+        );
+    }
+
+    public static function treeNodeNotFound(string $menuItemId, string $nodePath): self
+    {
+        return new static(
+            title: 'The breakdown node does not exist.',
+            keyTranslation: 'menu.tree.node.not.found',
+            details: ['menuItemId' => $menuItemId, 'nodePath' => $nodePath]
+        );
+    }
+
     public static function invalidDayKey(string $dayKey): self
     {
         return new static(

@@ -43,6 +43,7 @@
     <ds-search-input
       [placeholder]="'getExercises.searchPlaceholder' | t"
       [clearLabel]="'getExercises.searchClear' | t"
+      [value]="searchQuery()"
       (searched)="onSearch($event)"
     />
 

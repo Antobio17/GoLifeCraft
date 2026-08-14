@@ -2,6 +2,12 @@ services:
   Nutrition\Menu\Menu\Domain\Service\MenuArticleNeedsCalculator:
     class: Nutrition\Menu\Menu\Domain\Service\MenuArticleNeedsCalculator
 
+  Nutrition\Menu\Menu\Domain\Service\MenuItemBreakdownResolver:
+    class: Nutrition\Menu\Menu\Domain\Service\MenuItemBreakdownResolver
+    arguments:
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
+      $breakdownCalculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator'
+
   Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader:
     class: Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader
     arguments:
@@ -21,7 +27,7 @@ services:
       $connection: '@doctrine.dbal.reader_tenant_connection'
       $itemRowLoader: '@Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader'
       $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
-      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
+      $breakdownResolver: '@Nutrition\Menu\Menu\Domain\Service\MenuItemBreakdownResolver'
 
   Nutrition\Menu\Menu\Domain\QueryModel\GetMenuShoppingNeedsNeedleDataQuery:
     class: Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetMenuShoppingNeedsNeedleDataQuery
@@ -36,3 +42,12 @@ services:
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
       $itemRowLoader: '@Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader'
+
+  Nutrition\Menu\Menu\Domain\QueryModel\ExportMenuNeedleDataQuery:
+    class: Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineExportMenuNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $itemRowLoader: '@Nutrition\Menu\Menu\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMenuItemRowLoader'
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $breakdownResolver: '@Nutrition\Menu\Menu\Domain\Service\MenuItemBreakdownResolver'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'

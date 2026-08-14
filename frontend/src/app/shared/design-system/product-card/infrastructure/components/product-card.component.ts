@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
+import { DsIconName } from "../../../icon/domain/models/icon.model";
 import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
 
@@ -56,25 +57,45 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       </span>
     </ng-template>
 
+    <ng-template #actionButton>
+      <button
+        type="button"
+        class="ds-pcard__action"
+        [class.ds-pcard__action--footer]="footerAction"
+        [class.ds-pcard__action--added]="added"
+        [disabled]="pending || added"
+        (click)="action.emit()"
+      >
+        <ds-icon
+          class="ds-pcard__actionIcon"
+          [name]="added ? 'check' : actionIcon"
+          [size]="footerAction ? 15 : 14"
+          [stroke]="2.4"
+        />
+        @if (actionCaption) {
+          <span>{{ actionCaption }}</span>
+        }
+      </button>
+    </ng-template>
+
     @if (actionable) {
-      <div class="ds-pcard ds-pcard--static">
-        <ng-container [ngTemplateOutlet]="content"></ng-container>
-        <button
-          type="button"
-          class="ds-pcard__action"
-          [class.ds-pcard__action--added]="added"
-          [disabled]="pending || added"
-          (click)="action.emit()"
-        >
-          @if (added) {
-            <ds-icon name="check" [size]="14" [stroke]="2.6" />
-          } @else {
-            <ds-icon name="download" [size]="14" [stroke]="2.6" />
-          }
-          @if (actionCaption) {
-            <span>{{ actionCaption }}</span>
-          }
-        </button>
+      <div
+        class="ds-pcard"
+        [class.ds-pcard--static]="!footerAction"
+        [class.ds-pcard--stacked]="footerAction"
+      >
+        @if (footerAction) {
+          <button
+            type="button"
+            class="ds-pcard__main"
+            (click)="activated.emit()"
+          >
+            <ng-container [ngTemplateOutlet]="content"></ng-container>
+          </button>
+        } @else {
+          <ng-container [ngTemplateOutlet]="content"></ng-container>
+        }
+        <ng-container [ngTemplateOutlet]="actionButton"></ng-container>
       </div>
     } @else {
       <button type="button" class="ds-pcard" (click)="activated.emit()">
@@ -114,6 +135,32 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         cursor: default;
         align-items: center;
       }
+      .ds-pcard--stacked {
+        flex-direction: column;
+        gap: var(--ds-space-2);
+        cursor: default;
+      }
+      .ds-pcard--stacked:hover {
+        border-color: var(--ds-border-strong);
+      }
+      .ds-pcard__main {
+        display: flex;
+        gap: var(--ds-space-3);
+        width: 100%;
+        text-align: left;
+        appearance: none;
+        border: none;
+        background: transparent;
+        padding: 0;
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      .ds-pcard--stacked .ds-pcard__meta {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+      }
       .ds-pcard__action {
         flex: 0 0 auto;
         align-self: center;
@@ -136,6 +183,25 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       }
       .ds-pcard__action:disabled {
         cursor: default;
+      }
+      .ds-pcard__action:disabled:not(.ds-pcard__action--added) {
+        opacity: 0.55;
+      }
+      .ds-pcard__action--footer {
+        width: 100%;
+        margin-top: auto;
+        align-self: stretch;
+        justify-content: center;
+        gap: var(--ds-space-1-5);
+        font-weight: 700;
+        color: var(--ds-text);
+        background: var(--ds-surface-inset);
+      }
+      .ds-pcard__action--footer:hover:not(:disabled) {
+        background: var(--ds-surface-hover);
+      }
+      .ds-pcard__action--footer .ds-pcard__actionIcon {
+        color: var(--ds-primary);
       }
       .ds-pcard__action--added {
         background: var(--ds-surface-inset);
@@ -234,8 +300,10 @@ export class ProductCardComponent {
   @Input() kcal = "";
   @Input() macros: MacroBadge[] = [];
   @Input() actionable = false;
+  @Input() footerAction = false;
   @Input() added = false;
   @Input() pending = false;
+  @Input() actionIcon: DsIconName = "download";
   @Input() actionLabel = "";
   @Input() addedLabel = "";
 

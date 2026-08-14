@@ -32,15 +32,7 @@ final readonly class CreateDiaryEntryCommandHandler
             unit: $command->unit,
         );
 
-        $nodes = DiaryEntry::KIND_RECIPE === $command->kind
-            ? $this->treeBuilder->materialize(
-                diaryEntryId: $id,
-                recipeId: $command->refId,
-                servings: $command->quantity,
-                existingNodes: [],
-                userId: $command->createdByUserId,
-            )
-            : [];
+        $nodes = $this->nodesFor(command: $command, diaryEntryId: $id);
 
         $diaryEntry = DiaryEntry::create(
             id: $id,
@@ -54,10 +46,39 @@ final readonly class CreateDiaryEntryCommandHandler
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
             nodes: $nodes,
+            customized: [] !== $command->tree,
         );
 
         $this->diaryEntryRepository->save(diaryEntry: $diaryEntry);
         $this->domainEventCollectorService->register(aggregate: $diaryEntry);
+    }
+
+    /**
+     * An entry planned from an adjusted menu is born with that same breakdown.
+     *
+     * @return DiaryEntryNode[]
+     */
+    private function nodesFor(CreateDiaryEntryCommand $command, string $diaryEntryId): array
+    {
+        if (DiaryEntry::KIND_RECIPE !== $command->kind) {
+            return [];
+        }
+
+        if ([] !== $command->tree) {
+            return $this->treeBuilder->fromPayload(
+                diaryEntryId: $diaryEntryId,
+                tree: $command->tree,
+                userId: $command->createdByUserId,
+            );
+        }
+
+        return $this->treeBuilder->materialize(
+            diaryEntryId: $diaryEntryId,
+            recipeId: $command->refId,
+            servings: $command->quantity,
+            existingNodes: [],
+            userId: $command->createdByUserId,
+        );
     }
 
     /** @param DiaryEntryNode[] $nodes */

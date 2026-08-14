@@ -30,6 +30,7 @@
     <ds-search-input
       [placeholder]="'getGlobalArticles.searchPlaceholder' | t"
       [clearLabel]="'getGlobalArticles.searchClear' | t"
+      [value]="searchQuery()"
       (searched)="onSearch($event)"
     />
 
@@ -98,6 +99,9 @@
         @for (card of cards(); track card.id) {
           <ds-product-card
             [actionable]="canImport"
+            [footerAction]="true"
+            [actionLabel]="'getGlobalArticles.add' | t"
+            [addedLabel]="'getGlobalArticles.added' | t"
             [emoji]="card.emoji"
             [imageUrl]="card.imageUrl"
             [name]="card.name"
@@ -125,6 +129,7 @@
                 value: card.carbs || '',
               },
             ]"
+            (activated)="openDetail(card.id)"
             (action)="onImport(card.id)"
           />
         }

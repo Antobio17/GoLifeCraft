@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+.detail__rows {
+  margin-top: var(--ds-space-2);
+}

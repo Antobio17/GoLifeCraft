@@ -6,6 +6,9 @@ use Shared\Shared\Shared\Application\Command\Command;
 
 final readonly class CreateDiaryEntryCommand implements Command
 {
+    /**
+     * @param array<int, array<string, mixed>> $tree breakdown the entry is born with, when it comes already adjusted
+     */
     public function __construct(
         public string $entryDate,
         public string $meal,
@@ -14,6 +17,7 @@ final readonly class CreateDiaryEntryCommand implements Command
         public float $quantity,
         public ?string $unit,
         public string $createdByUserId,
+        public array $tree = [],
     ) {
     }
 

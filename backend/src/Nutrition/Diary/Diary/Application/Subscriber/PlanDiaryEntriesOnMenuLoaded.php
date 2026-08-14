@@ -63,6 +63,7 @@ final readonly class PlanDiaryEntriesOnMenuLoaded implements DomainEventSubscrib
                 quantity: $item['quantity'],
                 unit: $item['unit'],
                 createdByUserId: $userId,
+                tree: $item['tree'] ?? [],
             ));
         }
     }

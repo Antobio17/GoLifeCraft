@@ -91,6 +91,14 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
     this.pageSize.set(100);
   }
 
+  protected override captureFilters(): Record<string, string> {
+    return { search: this.searchQuery() };
+  }
+
+  protected override restoreFilters(filters: Record<string, string>): void {
+    this.searchQuery.set(filters["search"] ?? "");
+  }
+
   protected fetch(
     page: number,
     pageSize: number,
