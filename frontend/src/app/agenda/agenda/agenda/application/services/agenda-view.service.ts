@@ -103,6 +103,12 @@ export class AgendaViewService {
     return `${date.getDate()} ${month}`;
   }
 
+  dateRangeLabel(fromIso: string, toIso: string): string {
+    if (fromIso === toIso) return this.dayShort(fromIso);
+
+    return `${this.dayShort(fromIso)} - ${this.dayShort(toIso)}`;
+  }
+
   dayLong(iso: string): string {
     const date = this.parse(iso);
     const weekday = new Intl.DateTimeFormat(this.locale(), {

@@ -38,8 +38,9 @@
           "
           [appointment]="entry.kind === 'appointment'"
           [timeLabel]="
+            entry.timeLabel ??
             entryWhenLabel(
-              entry,
+              entry.entry,
               'dashboard.agenda.day.today' | t,
               'dashboard.agenda.day.tomorrow' | t
             )
