@@ -165,20 +165,20 @@
                       </ds-stack>
                       <ds-macro-badges [macros]="row.macros" />
                     </ds-stack>
-                    <ds-field [width]="'4rem'">
-                      <ds-number-input
-                        variant="boxed"
-                        [precision]="1"
-                        [min]="0"
-                        [ngModel]="row.ingredient.quantity"
-                        [ngModelOptions]="{ standalone: true }"
-                        (ngModelChange)="
-                          onIngredientQuantity(row.ingredient.key, $event)
-                        "
-                        [ariaLabel]="'recipeEditor.quantity' | t"
-                      />
-                    </ds-field>
-                    <ds-text variant="meta">{{ row.unitLabel }}</ds-text>
+                    <ds-inline-quantity
+                      [quantity]="row.ingredient.quantity"
+                      [unit]="row.ingredient.unit"
+                      [unitLabel]="row.unitLabel"
+                      [unitOptions]="row.unitOptions"
+                      [ariaLabel]="'recipeEditor.quantity' | t"
+                      [unitAriaLabel]="'recipeEditor.unit' | t"
+                      (quantityChange)="
+                        onIngredientQuantity(row.ingredient.key, $event)
+                      "
+                      (unitChange)="
+                        onIngredientUnit(row.ingredient.key, $event)
+                      "
+                    />
                   </ds-stack>
                 </ds-card>
               </ds-swipe-to-delete>

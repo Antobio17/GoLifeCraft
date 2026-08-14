@@ -32,6 +32,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { InlineQuantityComponent } from "@shared/design-system/inline-quantity/infrastructure/components/inline-quantity.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
@@ -101,6 +102,7 @@ type PickerTab = "product" | "recipe";
     MacroBarsComponent,
     MacroBadgesComponent,
     NumberInputComponent,
+    InlineQuantityComponent,
     IconButtonComponent,
     AddTileComponent,
     EmojiTileComponent,
@@ -215,6 +217,7 @@ export class RecipeEditorComponent implements OnInit {
       kcal: this.ingredientKcal(ingredient),
       macros: this.ingredientMacros(ingredient),
       unitLabel: this.ingredientUnitLabel(ingredient),
+      unitOptions: this.recipeForm.unitOptions(ingredient),
     })),
   );
 
@@ -258,6 +261,14 @@ export class RecipeEditorComponent implements OnInit {
     this.ingredients.update((list) =>
       list.map((ingredient) =>
         ingredient.key === key ? { ...ingredient, quantity } : ingredient,
+      ),
+    );
+  }
+
+  onIngredientUnit(key: string, unit: string): void {
+    this.ingredients.update((list) =>
+      list.map((ingredient) =>
+        ingredient.key === key ? { ...ingredient, unit } : ingredient,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from "@angular/core";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
+import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { RecipeListItem, RecipeMacros } from "../../domain/models/recipe.model";
 
 export interface FormIngredient {
@@ -27,6 +28,7 @@ interface ProductEntry {
   emoji: string;
   baseUnit: string;
   recipeUnit: string;
+  units: string[];
   factors: Record<string, number>;
   perUnit: RecipeMacros;
 }
@@ -79,6 +81,7 @@ export class RecipeFormService {
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
         baseUnit,
         recipeUnit: article.attributes.recipeUnit || baseUnit,
+        units: [baseUnit, ...Object.keys(factors)],
         factors,
         perUnit,
       });
@@ -181,6 +184,22 @@ export class RecipeFormService {
     }
 
     return this.unitCatalog.label(ingredient.unit);
+  }
+
+  unitOptions(ingredient: FormIngredient): SelectOption[] {
+    if (ingredient.kind === "recipe") {
+      return [];
+    }
+
+    const entry = this.products().get(ingredient.refId);
+    if (!entry) {
+      return [];
+    }
+
+    return entry.units.map((unit) => ({
+      value: unit,
+      label: this.unitCatalog.label(unit),
+    }));
   }
 
   ingredientCalories(ingredient: FormIngredient): number {
