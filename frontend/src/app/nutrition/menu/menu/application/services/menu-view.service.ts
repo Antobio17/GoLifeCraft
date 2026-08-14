@@ -141,12 +141,39 @@ export class MenuViewService {
     return this.toIso(date);
   }
 
+  currentMondayIso(): string {
+    const today = new Date();
+    const weekday = today.getDay();
+    const offset = weekday === 0 ? -6 : 1 - weekday;
+
+    return this.addDays(this.toIso(today), offset);
+  }
+
   nextMondayIso(): string {
     const today = new Date();
     const weekday = today.getDay();
     const offset = (8 - (weekday === 0 ? 7 : weekday)) % 7 || 7;
 
     return this.addDays(this.toIso(today), offset);
+  }
+
+  weekOptions(count: number = 8): Array<{ value: string; label: string }> {
+    const options: Array<{ value: string; label: string }> = [];
+    const monday = this.currentMondayIso();
+
+    for (let i = 0; i < count; i++) {
+      const weekStart = this.addDays(monday, i * 7);
+      const weekEnd = this.addDays(weekStart, 6);
+      const fromLabel = this.dayShortLabel(weekStart);
+      const toLabel = this.dayShortLabel(weekEnd);
+
+      options.push({
+        value: weekStart,
+        label: `${fromLabel} - ${toLabel}`,
+      });
+    }
+
+    return options;
   }
 
   dayCountBetween(fromIso: string, toIso: string): number {

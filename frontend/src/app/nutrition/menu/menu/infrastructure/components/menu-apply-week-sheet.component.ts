@@ -7,6 +7,7 @@ import {
   inject,
   signal,
 } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
@@ -16,6 +17,7 @@ import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastruct
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { GetMenuService } from "@nutrition/menu/menu/application/services/get-menu.service";
 import { ApplyWeekMenuService } from "@nutrition/menu/menu/application/services/apply-week-menu.service";
 import { MenuViewService } from "@nutrition/menu/menu/application/services/menu-view.service";
@@ -37,6 +39,7 @@ const MODULE_PATH = "nutrition/menu/menu";
 @Component({
   selector: "app-menu-apply-week-sheet",
   imports: [
+    FormsModule,
     ContextualTranslatePipe,
     ModalSheetComponent,
     StackComponent,
@@ -45,6 +48,7 @@ const MODULE_PATH = "nutrition/menu/menu";
     TextComponent,
     IconComponent,
     ButtonComponent,
+    SelectComponent,
   ],
   template: `
     <ds-modal-sheet
@@ -55,7 +59,14 @@ const MODULE_PATH = "nutrition/menu/menu";
       (closed)="close()"
     >
       <ds-stack [gap]="'var(--ds-space-3)'">
-        <ds-text variant="meta">{{ weekLabel() }}</ds-text>
+        <ds-select
+          variant="bare"
+          [options]="weekOptions()"
+          [ngModel]="weekStart()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onWeekChange($event)"
+          [fluid]="true"
+        />
 
         <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
           <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
@@ -142,12 +153,14 @@ export class MenuApplyWeekSheetComponent {
   private currentMenuId = signal<string | null>(null);
 
   detail = signal<MenuDetailAttributes | null>(null);
-  weekStart = signal(this.view.nextMondayIso());
+  weekStart = signal(this.view.currentMondayIso());
   saving = signal(false);
 
   open = computed(() => this.currentMenuId() !== null);
   emoji = computed(() => this.detail()?.emoji ?? "🗓️");
   name = computed(() => this.detail()?.name ?? "");
+
+  weekOptions = computed(() => this.view.weekOptions());
 
   weekLabel = computed(() =>
     this.translationService.translate(
@@ -207,6 +220,10 @@ export class MenuApplyWeekSheetComponent {
     this.closed.emit();
   }
 
+  onWeekChange(weekStart: string): void {
+    this.weekStart.set(weekStart);
+  }
+
   confirm(): void {
     const menuId = this.currentMenuId();
     if (!menuId || this.saving() || this.activeCount() === 0) return;
@@ -226,7 +243,7 @@ export class MenuApplyWeekSheetComponent {
   }
 
   private loadMenu(menuId: string): void {
-    this.weekStart.set(this.view.nextMondayIso());
+    this.weekStart.set(this.view.currentMondayIso());
 
     this.getMenuService.getMenu(menuId).subscribe({
       next: (response) => this.detail.set(response.data.attributes),
