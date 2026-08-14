@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from "@angular/core";
 import { Router, NavigationEnd, RouterOutlet } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { FloatingToastComponent } from "@shared/floating-toasts/infrastructure/components/floating-toast.component";
-import { FileShareSheetComponent } from "@shared/file-download/infrastructure/components/file-share-sheet.component";
 import { BottomNavComponent } from "@layouts/layout/bottom-nav/infrastructure/components/bottom-nav.component";
 import { SideDrawerComponent } from "@layouts/layout/side-drawer/infrastructure/components/side-drawer.component";
 import { ActiveWorkoutBannerComponent } from "@gym/training/workout/infrastructure/components/active-workout-banner.component";
@@ -15,7 +14,6 @@ import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/pr
   imports: [
     RouterOutlet,
     FloatingToastComponent,
-    FileShareSheetComponent,
     BottomNavComponent,
     SideDrawerComponent,
     ActiveWorkoutBannerComponent,

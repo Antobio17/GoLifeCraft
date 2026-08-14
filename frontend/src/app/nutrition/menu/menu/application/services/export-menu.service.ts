@@ -1,4 +1,4 @@
-import { Observable, tap } from "rxjs";
+import { Observable, from, map, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { FileDownloadService } from "@shared/file-download/application/services/file-download.service";
 import { ExportMenuPort } from "@nutrition/menu/menu/domain/ports/export-menu.port";
@@ -14,14 +14,16 @@ export class ExportMenuService {
   exportMenu(menuId: string): Observable<MenuDocument> {
     return this.exportMenuPort
       .exportMenu(menuId, this.translationService.getCurrentLanguage())
-      .pipe(
-        tap((document) =>
-          this.fileDownloadService.save(
-            document.content,
-            document.fileName,
-            document.mimeType,
-          ),
-        ),
-      );
+      .pipe(switchMap((document) => this.save(document)));
+  }
+
+  private save(document: MenuDocument): Observable<MenuDocument> {
+    return from(
+      this.fileDownloadService.save(
+        document.content,
+        document.fileName,
+        document.mimeType,
+      ),
+    ).pipe(map(() => document));
   }
 }

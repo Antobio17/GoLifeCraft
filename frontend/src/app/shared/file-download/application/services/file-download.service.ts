@@ -3,24 +3,27 @@ import { Injectable, inject } from "@angular/core";
 import { timer } from "rxjs";
 import { DevicePlatformService } from "@shared/platform/application/services/device-platform.service";
 import { FileShareService } from "@shared/file-download/application/services/file-share.service";
-import { PendingFileShareService } from "@shared/file-download/application/services/pending-file-share.service";
+import { FileShareOutcome } from "@shared/file-download/domain/models/file-share-outcome.model";
 
 @Injectable({ providedIn: "root" })
 export class FileDownloadService {
   private readonly document = inject(DOCUMENT);
   private readonly devicePlatformService = inject(DevicePlatformService);
   private readonly fileShareService = inject(FileShareService);
-  private readonly pendingFileShareService = inject(PendingFileShareService);
 
   private readonly revokeDelayMs = 10000;
 
-  save(content: Blob, fileName: string, mimeType: string): void {
+  async save(content: Blob, fileName: string, mimeType: string): Promise<void> {
     const file = new File([content], fileName, { type: mimeType });
 
     if (!this.devicePlatformService.isIos()) return this.download(file);
     if (!this.fileShareService.isSupported()) return this.download(file);
 
-    this.pendingFileShareService.request(file);
+    const outcome = await this.fileShareService.share(file);
+
+    if (FileShareOutcome.FAILED !== outcome) return;
+
+    this.download(file);
   }
 
   download(file: File): void {

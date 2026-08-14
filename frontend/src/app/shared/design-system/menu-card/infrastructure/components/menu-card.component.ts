@@ -53,7 +53,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
           [attr.title]="exportLabel"
           (click)="exported.emit()"
         >
-          <ds-icon name="download" [size]="17" [stroke]="2.1" />
+          <ds-icon name="share" [size]="17" [stroke]="2.1" />
           @if (!canWrite) {
             {{ exportLabel }}
           }
