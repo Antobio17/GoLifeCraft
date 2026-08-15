@@ -2,7 +2,6 @@ import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { FloatingWorkoutBannerComponent } from "@shared/design-system/floating-workout-banner/infrastructure/components/floating-workout-banner.component";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ActiveWorkoutService } from "@gym/training/workout/application/services/active-workout.service";
@@ -11,11 +10,7 @@ import { ActiveWorkoutService } from "@gym/training/workout/application/services
   selector: "app-active-workout-banner",
   templateUrl: "./active-workout-banner.component.html",
   styleUrls: ["./active-workout-banner.component.css"],
-  imports: [
-    ContextualTranslatePipe,
-    ConfirmActionModalComponent,
-    FloatingWorkoutBannerComponent,
-  ],
+  imports: [ContextualTranslatePipe, FloatingWorkoutBannerComponent],
 })
 export class ActiveWorkoutBannerComponent implements OnInit {
   protected activeWorkout = inject(ActiveWorkoutService);
@@ -23,9 +18,6 @@ export class ActiveWorkoutBannerComponent implements OnInit {
   private router = inject(Router);
 
   private readonly currentPath = signal(this.pathOf(this.router.url));
-
-  showStopModal = signal(false);
-  stopping = signal(false);
 
   readonly visible = computed(() => {
     if (!this.activeWorkout.isActive()) {
@@ -64,27 +56,5 @@ export class ActiveWorkoutBannerComponent implements OnInit {
       return;
     }
     this.router.navigate(["/gym/sessions", sessionId]);
-  }
-
-  requestStop(): void {
-    this.showStopModal.set(true);
-  }
-
-  onConfirmStop(): void {
-    this.stopping.set(true);
-    this.activeWorkout.discard().subscribe({
-      next: () => {
-        this.stopping.set(false);
-        this.showStopModal.set(false);
-      },
-      error: () => {
-        this.stopping.set(false);
-        this.showStopModal.set(false);
-      },
-    });
-  }
-
-  onCancelStop(): void {
-    this.showStopModal.set(false);
   }
 }

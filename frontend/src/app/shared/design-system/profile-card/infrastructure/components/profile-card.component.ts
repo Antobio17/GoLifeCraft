@@ -27,10 +27,9 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         gap: var(--ds-space-3);
-        background: var(--ds-surface-brand);
-        color: var(--ds-on-surface-brand);
-        border: 1px solid
-          color-mix(in srgb, var(--ds-on-surface-brand) 8%, transparent);
+        background: var(--ds-surface-inset);
+        color: var(--ds-text);
+        border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-4);
       }
@@ -42,8 +41,8 @@ import { Component, Input } from "@angular/core";
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--ds-accent);
-        color: var(--ds-on-accent);
+        background: var(--ds-primary);
+        color: var(--ds-on-primary);
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
         font-size: var(--ds-text-2xl);
@@ -63,7 +62,7 @@ import { Component, Input } from "@angular/core";
       }
       .pc__email {
         font-size: var(--ds-text-base);
-        opacity: 0.8;
+        color: var(--ds-text-muted);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -79,11 +78,8 @@ import { Component, Input } from "@angular/core";
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.04em;
         text-transform: uppercase;
-        background: color-mix(
-          in srgb,
-          var(--ds-on-surface-brand) 14%,
-          transparent
-        );
+        color: var(--ds-primary-soft-text);
+        background: var(--ds-primary-soft);
         border-radius: var(--ds-radius-sm);
         padding: var(--ds-space-1) var(--ds-space-2);
       }
@@ -93,7 +89,7 @@ import { Component, Input } from "@angular/core";
         gap: var(--ds-space-1);
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-bold);
-        opacity: 0.85;
+        color: var(--ds-text-muted);
       }
       .pc__dot {
         width: 0.4375rem;
@@ -102,9 +98,9 @@ import { Component, Input } from "@angular/core";
         background: var(--ds-text-meta);
       }
       .pc__dot--on {
-        background: var(--ds-accent);
+        background: var(--ds-success);
         box-shadow: 0 0 0 0.1875rem
-          color-mix(in srgb, var(--ds-accent) 30%, transparent);
+          color-mix(in srgb, var(--ds-success) 26%, transparent);
       }
     `,
   ],

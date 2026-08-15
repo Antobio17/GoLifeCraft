@@ -5,6 +5,7 @@ namespace Nutrition\Menu\Menu\Infrastructure\Domain\Service\Dompdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\ExportMenuResult;
+use Nutrition\Menu\Menu\Domain\Service\DocumentTheme;
 use Nutrition\Menu\Menu\Domain\Service\MenuDocumentRenderer;
 use Twig\Environment;
 
@@ -28,11 +29,12 @@ final readonly class DompdfMenuDocumentRenderer implements MenuDocumentRenderer
     ) {
     }
 
-    public function render(ExportMenuResult $menu, string $locale): string
+    public function render(ExportMenuResult $menu, string $locale, DocumentTheme $theme): string
     {
         $html = $this->twig->render(name: self::TEMPLATE, context: [
             'menu' => $menu,
             'locale' => $locale,
+            'palette' => MenuDocumentPalette::forTheme(theme: $theme),
         ]);
 
         $dompdf = new Dompdf(options: $this->buildOptions());

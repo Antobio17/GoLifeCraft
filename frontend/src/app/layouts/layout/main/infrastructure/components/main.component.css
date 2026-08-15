@@ -24,7 +24,10 @@
 }
 
 .app-frame--with-tabbar .app-frame__content {
-  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(
+    var(--ds-app-bottom-nav-height) + var(--ds-space-8) +
+      env(safe-area-inset-bottom)
+  );
 }
 
 @media (min-width: 768px) {

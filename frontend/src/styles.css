@@ -20,16 +20,16 @@ body.ds-scroll-locked {
   color-scheme: light;
 
   --scrollbar-size: 0.625rem;
-  --scrollbar-thumb: rgba(27, 26, 21, 0.22);
-  --scrollbar-thumb-hover: rgba(27, 26, 21, 0.38);
+  --scrollbar-thumb: rgba(15, 21, 18, 0.2);
+  --scrollbar-thumb-hover: rgba(15, 21, 18, 0.34);
   --scrollbar-track: transparent;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --scrollbar-thumb: rgba(243, 246, 236, 0.18);
-  --scrollbar-thumb-hover: rgba(243, 246, 236, 0.32);
+  --scrollbar-thumb: rgba(242, 245, 243, 0.18);
+  --scrollbar-thumb-hover: rgba(242, 245, 243, 0.32);
 }
 
 * {
@@ -202,5 +202,5 @@ input:-webkit-autofill::first-line {
 }
 
 .ds-field-block__required {
-  color: var(--ds-danger, #c0492f);
+  color: var(--ds-danger);
 }

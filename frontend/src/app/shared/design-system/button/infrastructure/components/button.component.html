@@ -2,6 +2,10 @@
   [type]="type"
   [class]="buttonClasses"
   [disabled]="isDisabled"
+  [attr.aria-label]="ariaLabel || null"
+  [attr.title]="ariaLabel || null"
+  [attr.aria-haspopup]="haspopup || null"
+  [attr.aria-expanded]="expanded === null ? null : expanded"
   (click)="handleClick()"
 >
   <span class="ds-btn__content">

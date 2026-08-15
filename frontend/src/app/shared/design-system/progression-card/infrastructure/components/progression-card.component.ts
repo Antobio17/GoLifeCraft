@@ -50,8 +50,13 @@ export type ProgressionTrend = "up" | "down" | "neutral";
         display: block;
       }
       .ds-progression {
-        background: var(--ds-surface-brand);
-        color: var(--ds-on-surface-brand);
+        --ds-accent: var(--ds-accent-on-chart);
+        --ds-on-accent: var(--ds-on-accent-on-chart);
+        --ds-primary: var(--ds-accent-on-chart);
+        --ds-on-primary: var(--ds-on-accent-on-chart);
+        background: var(--ds-surface-chart);
+        color: var(--ds-on-surface-chart);
+        border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-4);
       }
@@ -88,8 +93,8 @@ export type ProgressionTrend = "up" | "down" | "neutral";
         display: inline-block;
         font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-extrabold);
-        color: color-mix(in srgb, var(--ds-on-surface-brand) 60%, transparent);
-        background: rgba(255, 255, 255, 0.12);
+        color: var(--ds-text-muted);
+        background: var(--ds-surface-inset);
         border-radius: var(--ds-radius-pill);
         padding: var(--ds-space-1) var(--ds-space-2);
       }
@@ -97,7 +102,7 @@ export type ProgressionTrend = "up" | "down" | "neutral";
         color: var(--ds-accent);
       }
       .ds-progression__delta.is-down {
-        color: var(--ds-coral-400, #ff9d84);
+        color: var(--ds-danger);
       }
       .ds-progression__pr {
         display: block;
@@ -110,7 +115,7 @@ export type ProgressionTrend = "up" | "down" | "neutral";
         --line-stroke: var(--ds-accent);
         --line-area: var(--ds-accent);
         --line-area-opacity: 0.16;
-        --line-dot-stroke: var(--ds-surface-brand);
+        --line-dot-stroke: var(--ds-surface-chart);
         display: block;
         height: 6rem;
         margin-top: var(--ds-space-5);

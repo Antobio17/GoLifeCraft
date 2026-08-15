@@ -1,18 +1,9 @@
 :host {
-  /* Light "Huerto": forest chip, lime glyph. */
-  --brand-chip: var(--ds-forest-500);
-  --brand-glyph: var(--ds-lime-500);
-  --brand-life: var(--ds-forest-500);
-  --brand-chip-shadow: 0 0.75rem 1.625rem -0.75rem rgba(39, 75, 55, 0.7);
+  --brand-chip: var(--ds-primary);
+  --brand-glyph: var(--ds-on-primary);
+  --brand-life: var(--ds-primary);
+  --brand-chip-shadow: var(--ds-elev-float);
   display: inline-block;
-}
-
-:host-context([data-theme="dark"]) {
-  /* Dark "Kinetic": lime chip, ink glyph. */
-  --brand-chip: var(--ds-lime-500);
-  --brand-glyph: #0e100d;
-  --brand-life: var(--ds-lime-500);
-  --brand-chip-shadow: 0 0.625rem 1.625rem -0.5rem rgba(201, 255, 60, 0.6);
 }
 
 .brand {

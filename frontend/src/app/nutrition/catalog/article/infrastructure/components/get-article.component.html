@@ -55,21 +55,19 @@
     >
       @if (canWrite()) {
         <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
-          <ds-icon-button
+          <ds-button
+            variant="secondary"
+            size="icon-lg"
             icon="pencil"
-            variant="outlined"
-            color="var(--ds-primary)"
-            [iconSize]="17"
-            [radius]="'var(--ds-radius-lg)'"
+            [iconSize]="19"
             [ariaLabel]="'getArticle.edit' | t"
             (clicked)="onEdit()"
           />
-          <ds-icon-button
+          <ds-button
+            variant="danger"
+            size="icon-lg"
             icon="trash"
-            variant="outlined"
-            color="var(--ds-warning)"
-            [iconSize]="17"
-            [radius]="'var(--ds-radius-lg)'"
+            [iconSize]="19"
             [ariaLabel]="'getArticle.delete' | t"
             (clicked)="onDelete()"
           />

@@ -7,10 +7,12 @@
     [wrapTitle]="true"
     (leadingClick)="goBack()"
   >
-    <ds-icon-button
+    <ds-button
       slot="actions"
+      variant="secondary"
+      size="icon-lg"
       icon="pencil"
-      color="var(--ds-text-meta)"
+      [iconSize]="19"
       [ariaLabel]="'getExercise.edit' | t"
       (clicked)="onEdit()"
     />

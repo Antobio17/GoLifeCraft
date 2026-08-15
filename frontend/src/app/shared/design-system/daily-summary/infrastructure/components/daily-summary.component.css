@@ -2,23 +2,15 @@
   display: block;
 }
 
+/* Tarjeta normal elevada: el color lo pone el dato (anillo y macros),
+   no un bloque de marca. */
 .summary {
-  --hero-chip-bg: color-mix(
-    in srgb,
-    var(--ds-on-surface-brand) 9%,
-    transparent
-  );
-  background: var(--ds-surface-brand);
-  color: var(--ds-on-surface-brand);
-  border: 1px solid transparent;
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-2xl);
   padding: var(--ds-space-4);
-  box-shadow: var(--ds-shadow-card);
-}
-
-:host-context([data-theme="dark"]) .summary {
-  --hero-chip-bg: #0e100d;
-  border-color: var(--ds-border-hairline);
+  box-shadow: var(--ds-elev);
 }
 
 .summary__main {
@@ -29,18 +21,14 @@
 
 .summary__ring {
   --ds-ring-size: 4.125rem;
-  --ds-ring-fill: var(--ds-accent);
-  --ds-ring-center: var(--ds-surface-brand);
-  --ds-ring-track: color-mix(
-    in srgb,
-    var(--ds-on-surface-brand) 16%,
-    transparent
-  );
+  --ds-ring-fill: var(--ds-primary);
+  --ds-ring-center: var(--ds-surface);
+  --ds-ring-track: var(--ds-surface-inset);
 }
 
 .summary__ring-value {
   font-size: var(--ds-text-md);
-  color: var(--ds-on-surface-brand);
+  color: var(--ds-text);
 }
 
 .summary__kcal-value {
@@ -58,13 +46,13 @@
 .summary__kcal-target {
   font-size: var(--ds-text-md);
   font-weight: 600;
-  color: color-mix(in srgb, var(--ds-on-surface-brand) 55%, transparent);
+  color: var(--ds-text-meta);
 }
 
 .summary__kcal-label {
   margin: var(--ds-space-1) 0 0;
   font-size: var(--ds-text-sm);
-  color: color-mix(in srgb, var(--ds-on-surface-brand) 65%, transparent);
+  color: var(--ds-text-muted);
 }
 
 .summary__macros {
@@ -75,7 +63,7 @@
 
 .macro {
   flex: 1;
-  background: var(--hero-chip-bg);
+  background: var(--ds-surface-inset);
   border-radius: var(--ds-radius-lg);
   padding: var(--ds-space-2);
 }
@@ -84,7 +72,7 @@
   display: block;
   font-size: var(--ds-text-xs);
   font-weight: 600;
-  color: color-mix(in srgb, var(--ds-on-surface-brand) 60%, transparent);
+  color: var(--ds-text-muted);
 }
 
 .macro__value {
@@ -96,11 +84,11 @@
 }
 
 .macro__value--protein {
-  color: var(--ds-accent);
+  color: var(--ds-primary);
 }
 
 .macro__value--fat {
-  color: var(--ds-coral-500);
+  color: var(--ds-text-muted);
 }
 
 @media (min-width: 768px) {

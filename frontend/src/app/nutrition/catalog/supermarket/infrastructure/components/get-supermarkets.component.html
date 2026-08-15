@@ -16,12 +16,12 @@
       <ds-button
         slot="actions"
         variant="primary"
-        size="lg"
+        size="icon-lg"
         icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getSupermarkets.new' | t"
         (clicked)="onCreate()"
-      >
-        {{ "getSupermarkets.new" | t }}
-      </ds-button>
+      />
     </ds-page-header>
   }
 

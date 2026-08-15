@@ -6,10 +6,12 @@
     [gap]="'var(--ds-space-3)'"
   >
     <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-      <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
-      <ds-heading [level]="2" size="xl" [truncate]="true">{{
-        "getDiary.title" | t
-      }}</ds-heading>
+      <ds-stack [gap]="'2px'">
+        <ds-heading [level]="2" size="xl" [truncate]="true">{{
+          "getDiary.title" | t
+        }}</ds-heading>
+        <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
+      </ds-stack>
       @if (dayStatus(); as status) {
         <ds-chip>
           <ds-stack
@@ -32,24 +34,20 @@
     </ds-stack>
 
     <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
-      <ds-icon-button
+      <ds-button
+        variant="secondary"
+        size="icon-lg"
         icon="calendar"
-        variant="soft"
-        [size]="32"
-        [iconSize]="17"
-        [stroke]="2.1"
-        [radius]="'var(--ds-radius-md)'"
+        [iconSize]="19"
         [ariaLabel]="'getDiary.calendar.open' | t"
         (clicked)="openCalendar()"
       />
       @if (canWrite()) {
-        <ds-icon-button
+        <ds-button
+          variant="secondary"
+          size="icon-lg"
           icon="settings"
-          variant="soft"
-          [size]="32"
-          [iconSize]="17"
-          [stroke]="2.1"
-          [radius]="'var(--ds-radius-md)'"
+          [iconSize]="19"
           [ariaLabel]="'getDiary.goal.open' | t"
           (clicked)="openGoalSheet()"
         />

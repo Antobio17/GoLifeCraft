@@ -6,7 +6,6 @@
       [subtitle]="false"
       titleWidth="54%"
       [actions]="canWrite() ? 3 : 1"
-      actionWidth="2.25rem"
     />
 
     @if (canWrite()) {
@@ -84,9 +83,9 @@
       <ds-icon-button
         icon="chevronLeft"
         variant="soft"
-        [size]="36"
-        [iconSize]="18"
-        [stroke]="2.2"
+        [size]="40"
+        [iconSize]="19"
+        [stroke]="2.4"
         [radius]="'var(--ds-radius-lg)'"
         [ariaLabel]="'getMenu.back' | t"
         (clicked)="goBack()"
@@ -94,37 +93,30 @@
 
       @if (!isDraft()) {
         <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
-          <ds-icon-button
+          <ds-button
+            variant="secondary"
+            size="icon-lg"
             icon="share"
-            variant="soft"
-            [size]="36"
-            [iconSize]="16"
-            [stroke]="2"
-            [radius]="'var(--ds-radius-lg)'"
+            [iconSize]="19"
             [disabled]="exporting()"
             [ariaLabel]="'getMenu.export' | t"
             (clicked)="onExport()"
           />
 
           @if (canWrite()) {
-            <ds-icon-button
+            <ds-button
+              variant="secondary"
+              size="icon-lg"
               icon="copy"
-              variant="soft"
-              [size]="36"
-              [iconSize]="16"
-              [stroke]="2"
-              [radius]="'var(--ds-radius-lg)'"
+              [iconSize]="19"
               [ariaLabel]="'getMenu.duplicate' | t"
               (clicked)="onDuplicate()"
             />
-            <ds-icon-button
+            <ds-button
+              variant="danger"
+              size="icon-lg"
               icon="trash"
-              variant="soft"
-              [size]="36"
-              [iconSize]="17"
-              [stroke]="2"
-              [radius]="'var(--ds-radius-lg)'"
-              [color]="'var(--ds-danger)'"
+              [iconSize]="19"
               [ariaLabel]="'getMenu.delete' | t"
               (clicked)="askDelete()"
             />

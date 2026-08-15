@@ -2,7 +2,10 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(4.25rem + env(safe-area-inset-bottom));
+  bottom: calc(
+    var(--ds-app-bottom-nav-height) + var(--ds-space-2) +
+      env(safe-area-inset-bottom)
+  );
   z-index: 39;
   display: flex;
   justify-content: center;
@@ -12,7 +15,7 @@
 
 @media (display-mode: standalone) {
   :host {
-    bottom: 4.25rem;
+    bottom: calc(var(--ds-app-bottom-nav-height) + var(--ds-space-2));
   }
 }
 
@@ -25,7 +28,6 @@
   }
 }
 
-ds-floating-workout-banner,
-ds-confirm-action-modal {
+ds-floating-workout-banner {
   pointer-events: auto;
 }

@@ -19,6 +19,7 @@
     filter var(--ds-transition-fast),
     background var(--ds-transition-fast),
     border-color var(--ds-transition-fast),
+    box-shadow var(--ds-transition-fast),
     color var(--ds-transition-fast);
 }
 
@@ -84,6 +85,7 @@
   background: var(--ds-primary);
   color: var(--ds-on-primary);
   border-color: transparent;
+  box-shadow: var(--ds-elev-cta);
 }
 
 .ds-btn--primary:hover:not(:disabled) {
@@ -93,13 +95,10 @@
 
 .ds-btn--primary:active:not(:disabled) {
   background: var(--ds-primary-active);
+  box-shadow: var(--ds-shadow-xs);
 }
 
 .ds-btn--primary ds-icon {
-  color: var(--ds-accent);
-}
-
-:host-context([data-theme="dark"]) .ds-btn--primary ds-icon {
   color: var(--ds-on-primary);
 }
 
@@ -217,7 +216,7 @@
   color: var(--ds-accent);
 }
 
-:host-context([data-theme="dark"]) .ds-btn--primary .ds-btn__trailing {
+.ds-btn--primary .ds-btn__trailing {
   color: var(--ds-on-primary);
 }
 
@@ -235,6 +234,7 @@
   background: var(--ds-surface-inset);
   color: var(--ds-text-disabled);
   border-color: var(--ds-border);
+  box-shadow: none;
 }
 
 .ds-btn--loading {

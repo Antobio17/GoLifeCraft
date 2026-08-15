@@ -16,18 +16,10 @@
 }
 
 .skli--brand {
-  --ds-skeleton-base: color-mix(
-    in srgb,
-    var(--ds-on-surface-brand) 14%,
-    transparent
-  );
-  --ds-skeleton-highlight: color-mix(
-    in srgb,
-    var(--ds-on-surface-brand) 25%,
-    transparent
-  );
-  background: var(--ds-surface-brand);
-  border-color: color-mix(in srgb, var(--ds-on-surface-brand) 8%, transparent);
+  --ds-skeleton-base: color-mix(in srgb, var(--ds-text) 10%, transparent);
+  --ds-skeleton-highlight: color-mix(in srgb, var(--ds-text) 18%, transparent);
+  background: var(--ds-surface-inset);
+  border-color: var(--ds-border);
 }
 
 .skli--flat {

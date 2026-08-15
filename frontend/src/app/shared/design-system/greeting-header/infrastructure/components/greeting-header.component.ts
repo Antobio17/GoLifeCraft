@@ -56,18 +56,19 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         font-weight: 700;
       }
       .dash__avatar {
+        box-sizing: border-box;
         flex: none;
         width: 2.625rem;
         height: 2.625rem;
-        border: none;
+        border: 1px solid var(--ds-primary-soft-border);
         padding: 0;
         cursor: pointer;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--ds-surface-brand);
-        color: var(--ds-accent);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
         font-family: var(--ds-font-display);
         font-weight: 800;
         font-size: var(--ds-text-lg);
@@ -80,8 +81,6 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         transform: scale(0.96);
       }
       :host-context([data-theme="dark"]) .dash__avatar {
-        background: var(--ds-accent);
-        color: var(--ds-on-accent);
         font-weight: 700;
       }
       @media (min-width: 768px) {

@@ -10,14 +10,16 @@ import { Component, Input } from "@angular/core";
         flex: none;
       }
       .ds-avatar {
+        box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: center;
         width: var(--ds-avatar-size, 2.5rem);
         height: var(--ds-avatar-size, 2.5rem);
         border-radius: 50%;
-        background: var(--ds-avatar-bg, var(--ds-surface-brand));
-        color: var(--ds-avatar-fg, var(--ds-accent));
+        border: 1px solid var(--ds-avatar-border, transparent);
+        background: var(--ds-avatar-bg, var(--ds-primary-soft));
+        color: var(--ds-avatar-fg, var(--ds-primary-soft-text));
         font-family: var(--ds-font-display);
         font-weight: 800;
         font-size: var(--ds-avatar-font, var(--ds-text-lg));

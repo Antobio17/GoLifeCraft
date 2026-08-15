@@ -14,11 +14,12 @@
   z-index: 20;
   display: flex;
   flex-direction: column;
-  background: var(--ds-surface-brand);
-  color: var(--ds-on-surface-brand);
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-xl);
   padding: var(--ds-space-3) var(--ds-space-4);
-  box-shadow: 0 0.75rem 1.625rem rgba(0, 0, 0, 0.2);
+  box-shadow: var(--ds-shadow-card);
   will-change: padding, border-radius;
   transition:
     padding 0.34s cubic-bezier(0.16, 1, 0.3, 1),
@@ -29,7 +30,7 @@
 .active-banner--collapsed {
   padding: var(--ds-space-2) var(--ds-space-3);
   border-radius: var(--ds-radius-lg);
-  box-shadow: 0 0.75rem 1.625rem rgba(0, 0, 0, 0.32);
+  box-shadow: var(--ds-shadow-card);
 }
 
 .active-banner__row {
@@ -42,7 +43,7 @@
   width: 0.5625rem;
   height: 0.5625rem;
   border-radius: 50%;
-  background: var(--ds-accent);
+  background: var(--ds-primary);
   flex: 0 0 auto;
   animation: workoutPulse 1.4s ease-in-out infinite;
 }
@@ -76,7 +77,7 @@
   font-size: var(--ds-text-xs);
   font-weight: 800;
   letter-spacing: 0.09em;
-  color: var(--ds-accent);
+  color: var(--ds-primary);
 }
 
 .active-banner__time {
@@ -104,14 +105,14 @@
   font-weight: 800;
   font-size: var(--ds-text-lg);
   line-height: 1;
-  color: var(--ds-accent);
+  color: var(--ds-primary);
 }
 
 .active-banner__count-label {
   display: block;
   font-size: var(--ds-text-xs);
   font-weight: 600;
-  opacity: 0.6;
+  color: var(--ds-text-muted);
   margin-top: 2px;
 }
 
@@ -149,18 +150,18 @@
 }
 
 .active-banner__compact-btn--soft {
-  background: rgba(255, 255, 255, 0.14);
-  color: var(--ds-on-surface-brand);
+  background: var(--ds-surface-inset);
+  color: var(--ds-text);
 }
 
 .active-banner__compact-btn--stop {
-  background: var(--ds-danger);
-  color: #fff;
+  background: var(--ds-danger-soft);
+  color: var(--ds-danger-soft-text);
 }
 
 .active-banner__compact-btn--finish {
-  background: var(--ds-accent);
-  color: var(--ds-on-accent);
+  background: var(--ds-primary-soft);
+  color: var(--ds-primary-soft-text);
 }
 
 .active-banner__compact-btn:disabled {
@@ -170,10 +171,10 @@
 
 .active-banner__actions {
   display: flex;
-  flex-direction: column;
+  align-items: stretch;
   gap: var(--ds-space-2);
   margin-top: var(--ds-space-3);
-  max-height: 8.125rem;
+  max-height: 3.5rem;
   opacity: 1;
   overflow: hidden;
   will-change: max-height, opacity, margin-top;
@@ -190,12 +191,8 @@
   pointer-events: none;
 }
 
-.active-banner__actions-row {
-  display: flex;
-  gap: var(--ds-space-2);
-}
-
 .active-banner__finish {
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -204,8 +201,8 @@
   border-radius: var(--ds-radius-lg);
   padding: var(--ds-space-3);
   cursor: pointer;
-  background: var(--ds-accent);
-  color: var(--ds-on-accent);
+  background: var(--ds-primary-soft);
+  color: var(--ds-primary-soft-text);
   font-family: var(--ds-font-body);
   font-weight: 800;
   font-size: var(--ds-text-md);
@@ -217,30 +214,26 @@
 }
 
 .active-banner__btn {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--ds-space-1-5);
   border: none;
   border-radius: var(--ds-radius-lg);
   padding: var(--ds-space-3);
   cursor: pointer;
-  font-family: var(--ds-font-body);
-  font-weight: 700;
-  font-size: var(--ds-text-md);
 }
 
 .active-banner__btn--soft {
-  flex: 1 1 auto;
-  background: rgba(255, 255, 255, 0.14);
-  color: var(--ds-on-surface-brand);
+  background: var(--ds-surface-inset);
+  color: var(--ds-text);
 }
 
 .active-banner__btn--stop {
-  flex: 0 0 auto;
-  padding: var(--ds-space-3) var(--ds-space-4);
-  background: var(--ds-danger);
-  color: #fff;
+  background: var(--ds-danger-soft);
+  color: var(--ds-danger-soft-text);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -3,17 +3,11 @@
 }
 
 .shopping-summary {
-  background: var(--ds-primary);
-  color: var(--ds-on-primary);
-  border: 1px solid transparent;
-  border-radius: var(--ds-radius-xl);
-  padding: var(--ds-space-3) var(--ds-space-4);
-}
-
-:host-context([data-theme="dark"]) .shopping-summary {
   background: var(--ds-surface-inset);
   color: var(--ds-text);
-  border-color: var(--ds-border);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-3) var(--ds-space-4);
 }
 
 .shopping-summary__eyebrow {
@@ -40,7 +34,7 @@
 
 .shopping-summary__bar {
   --ds-primary: var(--ds-accent);
-  --ds-surface-inset: rgba(255, 255, 255, 0.18);
+  --ds-surface-inset: color-mix(in srgb, var(--ds-text) 12%, transparent);
   margin-top: var(--ds-space-1);
 }
 

@@ -17,20 +17,15 @@
 .skpan--brand {
   --ds-skeleton-base: color-mix(
     in srgb,
-    var(--ds-on-surface-brand) 13%,
+    var(--ds-on-surface-chart) 13%,
     transparent
   );
   --ds-skeleton-highlight: color-mix(
     in srgb,
-    var(--ds-on-surface-brand) 24%,
+    var(--ds-on-surface-chart) 24%,
     transparent
   );
-  background: var(--ds-surface-brand);
-  border-color: transparent;
-}
-
-:host-context([data-theme="dark"]) .skpan--brand {
-  border-color: var(--ds-border-hairline);
+  background: var(--ds-surface-chart);
 }
 
 .skpan__head {

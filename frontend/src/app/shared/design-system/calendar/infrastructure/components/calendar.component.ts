@@ -137,9 +137,9 @@ export interface CalendarLegendItem {
         display: block;
         width: 100%;
         min-width: 0;
-        --ds-cal-green: #3e7c57;
-        --ds-cal-orange: #e0a83e;
-        --ds-cal-red: #c0553b;
+        --ds-cal-green: var(--ds-success);
+        --ds-cal-orange: var(--ds-warning);
+        --ds-cal-red: var(--ds-danger);
       }
       .ds-cal {
         width: 100%;

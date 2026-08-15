@@ -5,6 +5,7 @@ namespace Nutrition\Menu\Menu\Infrastructure\UI\API\Controller;
 use Nutrition\Menu\Menu\Application\Query\ExportMenuQuery;
 use Nutrition\Menu\Menu\Domain\Exception\ExportMenuException;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\MenuDocumentResult;
+use Nutrition\Menu\Menu\Domain\Service\DocumentTheme;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -34,6 +35,11 @@ final class ExportMenuController
             $document = $this->handle(message: new ExportMenuQuery(
                 menuId: $request->attributes->get(key: 'menuId'),
                 locale: $this->resolveLocale(request: $request),
+                theme: DocumentTheme::fromValue(theme: RequestExtractor::getStringQueryParam(
+                    request: $request,
+                    param: 'theme',
+                    default: DocumentTheme::LIGHT->value,
+                )),
             ));
 
             return new Response(

@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
 import { Observable, map } from "rxjs";
+import { Theme } from "@shared/theme/domain/models/theme.model";
 import { ExportMenuPort } from "@nutrition/menu/menu/domain/ports/export-menu.port";
 import { MenuDocument } from "@nutrition/menu/menu/domain/models/menu-document.model";
 
@@ -12,10 +13,14 @@ export class HttpExportMenuAdapter extends ExportMenuPort {
   private readonly fallbackFileName = "menu.pdf";
   private readonly mimeType = "application/pdf";
 
-  exportMenu(menuId: string, language: string): Observable<MenuDocument> {
+  exportMenu(
+    menuId: string,
+    language: string,
+    theme: Theme,
+  ): Observable<MenuDocument> {
     return this.http
       .get(`${this.apiUrl}/${menuId}/export`, {
-        params: new HttpParams().set("lang", language),
+        params: new HttpParams().set("lang", language).set("theme", theme),
         responseType: "blob",
         observe: "response",
       })

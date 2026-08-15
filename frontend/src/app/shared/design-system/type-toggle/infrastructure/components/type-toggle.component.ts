@@ -32,15 +32,15 @@ export interface TypeToggleOption {
         gap: var(--ds-space-1);
         padding: var(--ds-space-1);
         border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface-inset, #efece3);
-        border: 1px solid var(--ds-border, #d8d3c6);
+        background: var(--ds-surface-inset);
+        border: 1px solid var(--ds-border);
       }
       .ds-type-toggle__option {
         appearance: none;
         cursor: pointer;
         border: none;
         background: transparent;
-        color: var(--ds-text-body, #55524a);
+        color: var(--ds-text-body);
         border-radius: var(--ds-radius-pill);
         padding: var(--ds-space-1-5) var(--ds-space-4);
         font: inherit;
@@ -51,8 +51,8 @@ export interface TypeToggleOption {
           color 0.15s ease;
       }
       .ds-type-toggle__option.is-active {
-        background: var(--ds-primary, #2f6b4f);
-        color: var(--ds-on-primary, #fff);
+        background: var(--ds-primary);
+        color: var(--ds-on-primary);
       }
       .ds-type-toggle__option:disabled {
         opacity: 0.5;

@@ -39,10 +39,16 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-3);
-        transition: border-color var(--ds-transition-fast);
+        box-shadow: var(--ds-elev);
+        transition:
+          border-color var(--ds-transition-fast),
+          box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .ds-rcard:hover {
         border-color: var(--ds-border-strong);
+        box-shadow: var(--ds-elev-lg);
+        transform: translateY(-2px);
       }
       .ds-rcard__emoji {
         width: 3.625rem;

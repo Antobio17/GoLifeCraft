@@ -6,5 +6,5 @@ use Nutrition\Menu\Menu\Domain\QueryModel\Dto\ExportMenuResult;
 
 interface MenuDocumentRenderer
 {
-    public function render(ExportMenuResult $menu, string $locale): string;
+    public function render(ExportMenuResult $menu, string $locale, DocumentTheme $theme): string;
 }

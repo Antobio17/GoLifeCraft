@@ -23,7 +23,10 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
     `
       :host {
         position: sticky;
-        bottom: calc(4.5rem + 0.75rem + env(safe-area-inset-bottom));
+        bottom: calc(
+          var(--ds-app-bottom-nav-height) + var(--ds-space-3) +
+            env(safe-area-inset-bottom)
+        );
         display: flex;
         justify-content: flex-end;
         pointer-events: none;
@@ -60,9 +63,6 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         border-radius: var(--ds-radius-xl);
       }
       .ds-fab ds-icon {
-        color: var(--ds-accent);
-      }
-      :host-context([data-theme="dark"]) .ds-fab ds-icon {
         color: var(--ds-on-primary);
       }
       .ds-fab:hover {

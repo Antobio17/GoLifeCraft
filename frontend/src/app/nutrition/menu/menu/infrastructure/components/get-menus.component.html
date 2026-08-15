@@ -6,12 +6,13 @@
     @if (canWrite()) {
       <ds-button
         slot="actions"
-        size="md"
+        variant="primary"
+        size="icon-lg"
         icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getMenus.create' | t"
         (clicked)="openTypeSheet()"
-      >
-        {{ "getMenus.create" | t }}
-      </ds-button>
+      />
     }
   </ds-screen-header>
 

@@ -101,16 +101,16 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
 
   headerSubtitle = computed(() => {
     const total = this.items().length;
-    const count =
-      total === 1
-        ? this.t("getMenus.count.one")
-        : this.translationService.translate(
-            "getMenus.count.many",
-            this.modulePath,
-            { count: total },
-          );
 
-    return `${count} · ${this.t("getMenus.subtitle")}`;
+    if (total === 1) {
+      return this.t("getMenus.count.one");
+    }
+
+    return this.translationService.translate(
+      "getMenus.count.many",
+      this.modulePath,
+      { count: total },
+    );
   });
 
   filteredMenus = computed<MenuListItem[]>(() => {

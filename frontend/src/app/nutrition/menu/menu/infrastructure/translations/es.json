@@ -1,7 +1,6 @@
 {
   "getMenus": {
     "title": "Menús",
-    "subtitle": "plantillas para tu diario",
     "create": "Nuevo",
     "breadcrumb": {
       "list": "Menús"

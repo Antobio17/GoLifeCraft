@@ -5,6 +5,7 @@ namespace Nutrition\Menu\Menu\Infrastructure\UI\API\DataTransform;
 use Nutrition\Menu\Menu\Application\Query\ExportMenuDataTransform;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\ExportMenuResult;
 use Nutrition\Menu\Menu\Domain\QueryModel\Dto\MenuDocumentResult;
+use Nutrition\Menu\Menu\Domain\Service\DocumentTheme;
 use Nutrition\Menu\Menu\Domain\Service\MenuDocumentRenderer;
 use Shared\Shared\Shared\Application\Query\QueryResult;
 
@@ -17,12 +18,12 @@ final readonly class PdfExportMenuDataTransform implements ExportMenuDataTransfo
     ) {
     }
 
-    public function transform(ExportMenuResult $menu, string $locale): QueryResult
+    public function transform(ExportMenuResult $menu, string $locale, DocumentTheme $theme): QueryResult
     {
         return new MenuDocumentResult(
             fileName: $this->buildFileName(name: $menu->name),
             mimeType: 'application/pdf',
-            content: $this->menuDocumentRenderer->render(menu: $menu, locale: $locale),
+            content: $this->menuDocumentRenderer->render(menu: $menu, locale: $locale, theme: $theme),
         );
     }
 

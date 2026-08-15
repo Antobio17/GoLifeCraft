@@ -42,7 +42,12 @@ type CardVariant = "plain" | "brand" | "inset";
       :host([variant="brand"]) .ds-card {
         --card-bg: var(--ds-surface-brand);
         --card-border: transparent;
+        --ds-accent: var(--ds-accent-on-brand);
+        --ds-on-accent: var(--ds-on-accent-on-brand);
+        --ds-primary: var(--ds-accent-on-brand);
+        --ds-on-primary: var(--ds-on-accent-on-brand);
         color: var(--ds-on-surface-brand);
+        box-shadow: var(--ds-elev-float);
       }
       :host([variant="inset"]) .ds-card {
         --card-bg: var(--ds-surface-inset);
@@ -58,7 +63,8 @@ type CardVariant = "plain" | "brand" | "inset";
       }
       .ds-card--interactive:hover {
         border-color: var(--ds-primary-soft-border);
-        box-shadow: var(--ds-shadow-lg);
+        box-shadow: var(--ds-elev-lg);
+        transform: translateY(-2px);
       }
       .ds-card--interactive:focus-visible {
         outline: none;

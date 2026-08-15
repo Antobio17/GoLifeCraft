@@ -6,9 +6,15 @@
     [subtitle]="headerSubtitle()"
     (leadingClick)="goBack()"
   >
-    <ds-button slot="actions" size="md" icon="plus" (clicked)="onCreate()">
-      {{ "getExercises.create" | t }}
-    </ds-button>
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="'getExercises.create' | t"
+      (clicked)="onCreate()"
+    />
   </ds-screen-header>
 
   @if (loading()) {

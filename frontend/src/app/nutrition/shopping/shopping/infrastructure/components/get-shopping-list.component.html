@@ -14,21 +14,27 @@
 
     @if (canWrite()) {
       <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
-        <ds-icon-button
+        <ds-button
+          variant="secondary"
+          size="icon-lg"
           icon="aisles"
-          variant="outlined"
+          [iconSize]="19"
           [ariaLabel]="manageAislesLabel()"
           (clicked)="openAisleSheet()"
         />
-        <ds-icon-button
+        <ds-button
+          variant="secondary"
+          size="icon-lg"
           icon="diary"
-          variant="outlined"
+          [iconSize]="19"
           [ariaLabel]="generateFromDiaryLabel()"
           (clicked)="openDiarySheet()"
         />
-        <ds-icon-button
+        <ds-button
+          variant="primary"
+          size="icon-lg"
           icon="plus"
-          variant="solid"
+          [iconSize]="19"
           [ariaLabel]="addLabel()"
           (clicked)="openSheet()"
         />

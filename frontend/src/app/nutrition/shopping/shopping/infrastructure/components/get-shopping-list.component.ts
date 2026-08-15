@@ -24,7 +24,6 @@ import { ShoppingSummaryComponent } from "@shared/design-system/shopping-summary
 import { ShoppingItemComponent } from "@shared/design-system/shopping-item/infrastructure/components/shopping-item.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { Supermarket } from "@nutrition/catalog/supermarket/domain/models/supermarket.model";
@@ -78,7 +77,6 @@ type FilterKind = "store" | "cat" | "brand";
     ShoppingItemComponent,
     ConfirmActionModalComponent,
     SegmentedToggleComponent,
-    IconButtonComponent,
     ChipComponent,
     ManageAislesComponent,
     DiaryShoppingSheetComponent,

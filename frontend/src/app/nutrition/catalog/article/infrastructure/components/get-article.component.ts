@@ -31,7 +31,6 @@ import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastru
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { ProductHeroComponent } from "@shared/design-system/product-hero/infrastructure/components/product-hero.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
@@ -66,7 +65,6 @@ type NutritionMode = "pack" | "per100";
     TextComponent,
     StackComponent,
     ChipComponent,
-    IconButtonComponent,
     ProductHeroComponent,
     MacroBarsComponent,
     NutritionFactsComponent,

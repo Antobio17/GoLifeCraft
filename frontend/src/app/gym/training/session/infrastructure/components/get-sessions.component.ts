@@ -1,10 +1,8 @@
-import { Component, computed, inject, signal } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { Observable } from "rxjs";
 import { GetSessionsService } from "@gym/training/session/application/services/get-sessions.service";
-import { DeleteSessionService } from "@gym/training/session/application/services/delete-session.service";
 import { Session } from "../../domain/models/session.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -14,7 +12,6 @@ import { HeadingComponent } from "@shared/design-system/heading/infrastructure/c
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import {
@@ -27,7 +24,6 @@ interface SessionRow {
   name: string;
   summary: string;
   muscleGroups: string[];
-  session: Session;
 }
 
 @Component({
@@ -35,7 +31,6 @@ interface SessionRow {
   templateUrl: "./get-sessions.component.html",
   imports: [
     ContextualTranslatePipe,
-    ConfirmActionModalComponent,
     PageWrapperComponent,
     ScreenHeaderComponent,
     StackComponent,
@@ -45,14 +40,12 @@ interface SessionRow {
     TextComponent,
     ChipComponent,
     ButtonComponent,
-    IconButtonComponent,
     EmptyStateComponent,
     SkeletonListComponent,
   ],
 })
 export class GetSessionsComponent extends AbstractListPageComponent<Session> {
   private getSessionsService = inject(GetSessionsService);
-  private deleteSessionService = inject(DeleteSessionService);
 
   protected readonly modulePath = "gym/training/session";
   protected readonly storageKey = "pageSize_sessions";
@@ -70,17 +63,12 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
     return `${this.totalItems()} ${sessions} · ${this.exerciseCount()} ${exercises}`;
   });
 
-  showDeleteModal = signal(false);
-  sessionToDelete = signal<Session | null>(null);
-  isDeleting = signal(false);
-
   rows = computed<SessionRow[]>(() =>
     this.items().map((session) => ({
       id: session.id,
       name: session.attributes.name,
       summary: this.summaryText(session),
       muscleGroups: session.attributes.muscleGroups,
-      session,
     })),
   );
 
@@ -120,37 +108,5 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
     this.router.navigate(["/gym/sessions", id], {
       queryParams: { start: 1 },
     });
-  }
-
-  onDelete(session: Session, event: Event): void {
-    event.stopPropagation();
-    this.sessionToDelete.set(session);
-    this.showDeleteModal.set(true);
-  }
-
-  onConfirmDelete(): void {
-    if (!this.sessionToDelete()) return;
-
-    this.isDeleting.set(true);
-    this.deleteSessionService
-      .deleteSession(this.sessionToDelete()!.id)
-      .subscribe({
-        next: () => {
-          this.isDeleting.set(false);
-          this.showDeleteModal.set(false);
-          this.sessionToDelete.set(null);
-          this.load();
-        },
-        error: () => {
-          this.isDeleting.set(false);
-          this.showDeleteModal.set(false);
-          this.sessionToDelete.set(null);
-        },
-      });
-  }
-
-  onCancelDelete(): void {
-    this.showDeleteModal.set(false);
-    this.sessionToDelete.set(null);
   }
 }

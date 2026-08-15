@@ -9,7 +9,7 @@
       size="icon-lg"
       icon="history"
       [iconSize]="19"
-      [attr.title]="'getSessions.history' | t"
+      [ariaLabel]="'getSessions.history' | t"
       (clicked)="onHistory()"
     />
     <ds-button
@@ -18,7 +18,7 @@
       size="icon-lg"
       icon="bookmark"
       [iconSize]="19"
-      [attr.title]="'getSessions.library' | t"
+      [ariaLabel]="'getSessions.library' | t"
       (clicked)="onLibrary()"
     />
     <ds-button
@@ -27,7 +27,7 @@
       size="icon-lg"
       icon="plus"
       [iconSize]="19"
-      [attr.title]="'getSessions.new' | t"
+      [ariaLabel]="'getSessions.new' | t"
       (clicked)="onCreate()"
     />
   </ds-screen-header>
@@ -70,28 +70,11 @@
           [gap]="'var(--ds-space-2)'"
           (activated)="onOpen(session.id)"
         >
-          <ds-stack
-            direction="row"
-            justify="between"
-            align="start"
-            [gap]="'var(--ds-space-2)'"
-          >
-            <ds-stack [gap]="'1px'">
-              <ds-heading [level]="3" size="md">
-                {{ session.name }}
-              </ds-heading>
-              <ds-text variant="meta">{{ session.summary }}</ds-text>
-            </ds-stack>
-            <ds-icon-button
-              icon="trash"
-              variant="soft"
-              [size]="28"
-              [iconSize]="15"
-              radius="var(--ds-radius-md)"
-              color="var(--ds-danger)"
-              [ariaLabel]="'getSessions.actions.delete' | t"
-              (clicked)="onDelete(session.session, $event)"
-            />
+          <ds-stack [gap]="'1px'">
+            <ds-heading [level]="3" size="md">
+              {{ session.name }}
+            </ds-heading>
+            <ds-text variant="meta">{{ session.summary }}</ds-text>
           </ds-stack>
 
           @if (session.muscleGroups.length) {
@@ -117,17 +100,3 @@
     </ds-grid>
   }
 </ds-page-wrapper>
-
-<ds-confirm-action-modal
-  [show]="showDeleteModal()"
-  [title]="'getSessions.deleteModal.title' | t"
-  [body]="'getSessions.deleteModal.body' | t"
-  [itemName]="sessionToDelete()?.attributes?.name ?? ''"
-  [warningText]="'getSessions.deleteModal.warning' | t"
-  [isDeleting]="isDeleting()"
-  [cancelLabel]="'getSessions.deleteModal.cancel' | t"
-  [confirmLabel]="'getSessions.deleteModal.confirm' | t"
-  [deletingLabel]="'getSessions.deleteModal.deleting' | t"
-  (confirmed)="onConfirmDelete()"
-  (cancelled)="onCancelDelete()"
-/>

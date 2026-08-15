@@ -6,22 +6,21 @@
     @if (canCreate) {
       <ng-container slot="actions">
         <ds-button
-          variant="outline"
-          size="md"
+          variant="secondary"
+          size="icon-lg"
           icon="globe"
-          [iconOnlyMobile]="true"
+          [iconSize]="19"
+          [ariaLabel]="'getArticles.globalCatalog' | t"
           (clicked)="onImportCatalog()"
-        >
-          {{ "getArticles.globalCatalog" | t }}
-        </ds-button>
+        />
         <ds-button
-          size="md"
+          variant="primary"
+          size="icon-lg"
           icon="plus"
-          [iconOnlyMobile]="true"
+          [iconSize]="19"
+          [ariaLabel]="'getArticles.create' | t"
           (clicked)="onCreate()"
-        >
-          {{ "getArticles.create" | t }}
-        </ds-button>
+        />
       </ng-container>
     }
   </ds-screen-header>

@@ -34,10 +34,12 @@
       (leadingClick)="goBack()"
     >
       @if (!isActiveHere) {
-        <ds-icon-button
+        <ds-button
           slot="actions"
+          variant="primary"
+          size="icon-lg"
           icon="stopwatch"
-          variant="solid"
+          [iconSize]="19"
           [disabled]="exercises().length === 0"
           [ariaLabel]="'getSession.start' | t"
           (clicked)="onStartWorkout()"

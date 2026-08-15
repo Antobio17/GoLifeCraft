@@ -34,9 +34,9 @@ export interface SelectChipOption {
       .ds-select-chip {
         appearance: none;
         cursor: pointer;
-        border: 1px solid var(--ds-border, #d8d3c6);
-        background: var(--ds-surface, #fff);
-        color: var(--ds-text, #20201b);
+        border: 1px solid var(--ds-border);
+        background: var(--ds-surface);
+        color: var(--ds-text);
         border-radius: var(--ds-radius-pill);
         padding: var(--ds-space-1-5) var(--ds-space-3);
         font: inherit;
@@ -48,12 +48,12 @@ export interface SelectChipOption {
           color 0.15s ease;
       }
       .ds-select-chip:hover:not(:disabled):not(.is-selected) {
-        border-color: var(--ds-primary, #2f6b4f);
+        border-color: var(--ds-primary);
       }
       .ds-select-chip.is-selected {
-        background: var(--ds-primary, #2f6b4f);
-        border-color: var(--ds-primary, #2f6b4f);
-        color: var(--ds-on-primary, #fff);
+        background: var(--ds-primary);
+        border-color: var(--ds-primary);
+        color: var(--ds-on-primary);
         font-weight: var(--ds-weight-bold, 700);
       }
       .ds-select-chip:disabled {

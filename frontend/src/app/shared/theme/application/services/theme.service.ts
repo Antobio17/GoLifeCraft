@@ -13,6 +13,10 @@ export class ThemeService {
 
   readonly isDark = computed(() => this.theme() === "dark");
 
+  getCurrentTheme(): Theme {
+    return this.theme();
+  }
+
   constructor(private updateThemePort?: UpdateThemePort) {}
 
   toggle(): void {

@@ -1,25 +1,19 @@
 :host {
   display: block;
-  --gym-muscle-1: #2f6b4a;
-  --gym-muscle-2: #e0714a;
-  --gym-muscle-3: #3e7cb1;
-}
-
-:host-context([data-theme="dark"]) {
-  --gym-muscle-1: #c9ff3c;
-  --gym-muscle-2: #ff9f6b;
-  --gym-muscle-3: #7fc4ff;
+  --gym-muscle-1: var(--ds-data-1);
+  --gym-muscle-2: var(--ds-data-2);
+  --gym-muscle-3: var(--ds-data-3);
 }
 
 .panel__heatmap {
   margin-top: var(--ds-space-3);
-  --ds-heat-level-0: var(--ds-forest-50);
-  --ds-heat-level-1: var(--ds-forest-200);
-  --ds-heat-level-2: var(--ds-forest-300);
-  --ds-heat-level-3: var(--ds-forest-400);
-  --ds-heat-level-4: var(--ds-forest-600);
-  --ds-heat-today: var(--ds-forest-900);
-  --ds-heat-today-strong: var(--ds-forest-50);
+  --ds-heat-level-0: var(--ds-gray-100);
+  --ds-heat-level-1: var(--ds-green-200);
+  --ds-heat-level-2: var(--ds-green-400);
+  --ds-heat-level-3: var(--ds-green-600);
+  --ds-heat-level-4: var(--ds-green-800);
+  --ds-heat-today: var(--ds-green-900);
+  --ds-heat-today-strong: var(--ds-green-50);
 }
 
 :host-context([data-theme="dark"]) .panel__heatmap {
@@ -36,7 +30,7 @@
   --line-stroke: var(--ds-accent);
   --line-area: var(--ds-accent);
   --line-area-opacity: 0.16;
-  --line-dot-stroke: var(--ds-surface-brand);
+  --line-dot-stroke: var(--ds-surface-chart);
   display: block;
   height: 5.625rem;
   margin-top: var(--ds-space-3);

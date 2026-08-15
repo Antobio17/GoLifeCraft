@@ -33,13 +33,13 @@ import { Component, Input } from "@angular/core";
         flex-direction: column;
       }
       .ds-panel--brand {
-        background: var(--ds-surface-brand);
-        border-color: transparent;
-        color: var(--ds-on-surface-brand);
+        --ds-accent: var(--ds-accent-on-chart);
+        --ds-on-accent: var(--ds-on-accent-on-chart);
+        --ds-primary: var(--ds-accent-on-chart);
+        --ds-on-primary: var(--ds-on-accent-on-chart);
+        background: var(--ds-surface-chart);
+        color: var(--ds-on-surface-chart);
         overflow: hidden;
-      }
-      :host-context([data-theme="dark"]) .ds-panel--brand {
-        border-color: var(--ds-border-hairline);
       }
       .ds-panel__head {
         display: flex;

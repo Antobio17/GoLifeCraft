@@ -1,7 +1,6 @@
 {
   "getMenus": {
     "title": "Menus",
-    "subtitle": "templates for your diary",
     "create": "New",
     "breadcrumb": {
       "list": "Menus"

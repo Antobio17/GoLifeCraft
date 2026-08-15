@@ -26,7 +26,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { MetricCardComponent } from "@shared/design-system/metric-card/infrastructure/components/metric-card.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
@@ -66,7 +66,7 @@ interface SessionRow {
     HeadingComponent,
     ChipComponent,
     MetricCardComponent,
-    IconButtonComponent,
+    ButtonComponent,
     IconBadgeComponent,
     EmptyStateComponent,
     SkeletonComponent,

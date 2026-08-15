@@ -28,9 +28,11 @@ import { Component, computed, input } from "@angular/core";
         display: flex;
         align-items: center;
         gap: var(--ds-space-3);
-        background: var(--ds-surface-inset);
+        background: var(--ds-surface);
+        border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-3) var(--ds-space-4);
+        box-shadow: var(--ds-elev);
       }
       .skmac__kcal {
         flex: 0 0 auto;

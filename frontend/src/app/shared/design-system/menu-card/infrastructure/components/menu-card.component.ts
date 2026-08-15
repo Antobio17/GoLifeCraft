@@ -26,12 +26,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       <div class="ds-mcard__actions">
         @if (canWrite) {
           <button type="button" class="ds-mcard__load" (click)="loaded.emit()">
-            <ds-icon
-              class="ds-mcard__loadIcon"
-              [name]="loadIcon"
-              [size]="14"
-              [stroke]="2.4"
-            />
+            <ds-icon [name]="loadIcon" [size]="14" [stroke]="2.4" />
             {{ loadLabel }}
           </button>
           <button
@@ -75,10 +70,16 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-3);
-        transition: border-color var(--ds-transition-fast);
+        box-shadow: var(--ds-elev);
+        transition:
+          border-color var(--ds-transition-fast),
+          box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .ds-mcard:hover {
         border-color: var(--ds-border-strong);
+        box-shadow: var(--ds-elev-lg);
+        transform: translateY(-2px);
       }
       .ds-mcard__main {
         display: flex;
@@ -156,18 +157,15 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         justify-content: center;
         gap: var(--ds-space-1);
         appearance: none;
-        border: none;
         cursor: pointer;
-        background: var(--ds-primary);
-        color: var(--ds-on-primary);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
+        border: 1px solid var(--ds-primary-soft-border);
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-2);
         font: inherit;
         font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-bold);
-      }
-      .ds-mcard__loadIcon {
-        color: var(--ds-accent);
       }
       .ds-mcard__action {
         flex: 0 0 auto;

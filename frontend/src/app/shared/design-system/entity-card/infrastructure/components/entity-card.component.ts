@@ -51,10 +51,13 @@ import { NgTemplateOutlet } from "@angular/common";
         box-shadow: var(--ds-shadow-card);
         transition:
           border-color 0.15s ease,
-          transform 0.12s ease;
+          box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .ds-entity-card.is-clickable:hover {
         border-color: var(--ds-primary-soft-border);
+        box-shadow: var(--ds-elev-lg);
+        transform: translateY(-2px);
       }
       .ds-entity-card.is-clickable:active {
         transform: scale(0.995);

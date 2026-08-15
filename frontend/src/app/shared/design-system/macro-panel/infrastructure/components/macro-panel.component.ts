@@ -59,14 +59,12 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         display: flex;
         flex-direction: column;
         gap: var(--ds-space-2);
-        background: var(--ds-surface-brand);
-        color: var(--ds-on-surface-brand);
-        border: 1px solid transparent;
+        background: var(--ds-surface);
+        color: var(--ds-text);
+        border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-3);
-      }
-      :host-context([data-theme="dark"]) .ds-mpanel {
-        border-color: var(--ds-border-hairline);
+        box-shadow: var(--ds-elev);
       }
       .ds-mpanel__energy {
         display: flex;
@@ -78,13 +76,13 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         font-weight: 800;
         font-size: var(--ds-text-xl);
         line-height: 1;
-        color: var(--ds-accent);
+        color: var(--ds-primary);
         white-space: nowrap;
       }
       .ds-mpanel__kcalGoal {
         font-size: var(--ds-text-sm);
         font-weight: 600;
-        color: color-mix(in srgb, var(--ds-on-surface-brand) 55%, transparent);
+        color: var(--ds-text-meta);
       }
       .ds-mpanel__caption {
         font-size: var(--ds-text-sm);
@@ -92,7 +90,7 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: color-mix(in srgb, var(--ds-on-surface-brand) 70%, transparent);
+        color: var(--ds-text-muted);
       }
       .ds-mpanel__caption--over {
         color: var(--ds-danger);
@@ -114,17 +112,13 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: color-mix(in srgb, var(--ds-on-surface-brand) 70%, transparent);
+        color: var(--ds-text-muted);
       }
       .ds-mpanel__track {
         display: flex;
         height: 0.375rem;
         border-radius: var(--ds-radius-pill);
-        background: color-mix(
-          in srgb,
-          var(--ds-on-surface-brand) 16%,
-          transparent
-        );
+        background: var(--ds-surface-inset);
         overflow: hidden;
       }
       .ds-mpanel__fill {
@@ -138,24 +132,20 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         border-radius: var(--ds-radius-pill) 0 0 var(--ds-radius-pill);
       }
       .ds-mpanel__fill--protein {
-        background: var(--ds-accent);
+        background: var(--ds-data-1);
       }
       .ds-mpanel__fill--fat {
-        background: var(--ds-warning);
+        background: var(--ds-data-3);
       }
       .ds-mpanel__fill--carbs {
-        background: color-mix(
-          in srgb,
-          var(--ds-on-surface-brand) 85%,
-          transparent
-        );
+        background: var(--ds-data-2);
       }
       .ds-mpanel__over {
         display: block;
         height: 100%;
         border-radius: 0 var(--ds-radius-pill) var(--ds-radius-pill) 0;
         background: var(--ds-danger);
-        border-left: 2px solid var(--ds-surface-brand);
+        border-left: 2px solid var(--ds-surface);
         transition: width var(--ds-transition-base);
       }
       .ds-mpanel__value {
@@ -168,7 +158,7 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
       }
       .ds-mpanel__goal {
         font-weight: 600;
-        color: color-mix(in srgb, var(--ds-on-surface-brand) 55%, transparent);
+        color: var(--ds-text-meta);
       }
       .ds-mpanel__value--over .ds-mpanel__goal {
         color: color-mix(in srgb, var(--ds-danger) 70%, transparent);

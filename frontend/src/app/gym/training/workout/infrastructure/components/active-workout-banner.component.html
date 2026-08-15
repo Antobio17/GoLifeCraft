@@ -10,22 +10,6 @@
     [elapsedLabel]="activeWorkout.elapsedLabel()"
     [name]="activeWorkout.activeName()"
     [goLabel]="'workout.banner.goToSession' | t"
-    [stopAriaLabel]="'workout.banner.stop' | t"
     (go)="goToSession()"
-    (stop)="requestStop()"
   />
 }
-
-<ds-confirm-action-modal
-  [show]="showStopModal()"
-  [title]="'workout.banner.stopModal.title' | t"
-  [body]="'workout.banner.stopModal.body' | t"
-  [itemName]="activeWorkout.activeName()"
-  [warningText]="'workout.banner.stopModal.warning' | t"
-  [isDeleting]="stopping()"
-  [cancelLabel]="'workout.banner.stopModal.cancel' | t"
-  [confirmLabel]="'workout.banner.stopModal.confirm' | t"
-  [deletingLabel]="'workout.banner.stopModal.confirm' | t"
-  (confirmed)="onConfirmStop()"
-  (cancelled)="onCancelStop()"
-/>

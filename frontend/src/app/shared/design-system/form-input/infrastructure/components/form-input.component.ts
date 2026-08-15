@@ -242,8 +242,8 @@ export class FormInputComponent implements ControlValueAccessor, OnDestroy {
     const styles: Record<string, string> = {
       position: "fixed",
       transform: "translate(-50%, -100%)",
-      background: "#1f2937",
-      color: "#f9fafb",
+      background: "var(--ds-gray-800)",
+      color: "var(--ds-gray-50)",
       fontSize: "var(--ds-text-base)",
       fontWeight: "400",
       lineHeight: "1.5",

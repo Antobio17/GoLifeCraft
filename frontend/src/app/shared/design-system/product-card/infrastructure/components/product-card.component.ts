@@ -123,13 +123,18 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-2);
         cursor: pointer;
+        box-shadow: var(--ds-elev);
         transition:
           border-color 0.15s ease,
-          background 0.15s ease;
+          background 0.15s ease,
+          box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
       }
       button.ds-pcard:hover {
         border-color: var(--ds-border-strong);
         background: var(--ds-surface-hover);
+        box-shadow: var(--ds-elev-lg);
+        transform: translateY(-2px);
       }
       .ds-pcard--static {
         cursor: default;

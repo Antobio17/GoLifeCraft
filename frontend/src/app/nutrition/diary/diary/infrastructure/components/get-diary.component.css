@@ -53,13 +53,13 @@
 }
 
 .day-status-dot--green {
-  color: #3e7c57;
+  color: var(--ds-success);
 }
 
 .day-status-dot--orange {
-  color: #e0a83e;
+  color: var(--ds-warning);
 }
 
 .day-status-dot--red {
-  color: #c0553b;
+  color: var(--ds-danger);
 }

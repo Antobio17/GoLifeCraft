@@ -14,54 +14,43 @@
   border-radius: var(--ds-radius-xl);
   background: var(--ds-surface);
   border: 1px solid var(--ds-border-hairline);
-  box-shadow: 0 1.125rem 2.125rem -0.875rem rgba(27, 26, 21, 0.4);
+  box-shadow: var(--ds-elev-float);
   font-family: var(--ds-font-body);
   user-select: none;
 }
 
 :host-context([data-theme="dark"]) .toast {
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 1.125rem 2.125rem -0.875rem rgba(0, 0, 0, 0.7);
+  border-color: var(--ds-border);
 }
 
 .toast--success {
-  --toast-icon-bg: #eaf4d2;
-  --toast-icon-color: #2f6b1e;
+  --toast-icon-bg: var(--ds-success-soft);
+  --toast-icon-color: var(--ds-success);
 }
 
 .toast--info {
-  --toast-icon-bg: #e4ede7;
-  --toast-icon-color: #274b37;
+  --toast-icon-bg: var(--ds-primary-soft);
+  --toast-icon-color: var(--ds-primary-soft-text);
 }
 
 .toast--warning {
-  --toast-icon-bg: #fbebcb;
-  --toast-icon-color: #c0871a;
+  --toast-icon-bg: var(--ds-warning-soft);
+  --toast-icon-color: var(--ds-warning);
 }
 
 .toast--error {
-  --toast-icon-bg: #fbe0d8;
-  --toast-icon-color: #e0492a;
+  --toast-icon-bg: var(--ds-danger-soft);
+  --toast-icon-color: var(--ds-danger-soft-text);
 }
 
 :host-context([data-theme="dark"]) .toast--success {
-  --toast-icon-bg: rgba(201, 255, 60, 0.16);
-  --toast-icon-color: #c9ff3c;
+  --toast-icon-bg: rgba(143, 250, 152, 0.16);
+  --toast-icon-color: var(--ds-green-400);
 }
 
 :host-context([data-theme="dark"]) .toast--info {
-  --toast-icon-bg: rgba(243, 246, 236, 0.1);
-  --toast-icon-color: #f3f6ec;
-}
-
-:host-context([data-theme="dark"]) .toast--warning {
-  --toast-icon-bg: rgba(255, 194, 77, 0.16);
-  --toast-icon-color: #ffc24d;
-}
-
-:host-context([data-theme="dark"]) .toast--error {
-  --toast-icon-bg: rgba(255, 122, 77, 0.16);
-  --toast-icon-color: #ff7a4d;
+  --toast-icon-bg: rgba(238, 243, 230, 0.1);
+  --toast-icon-color: var(--ds-text);
 }
 
 .toast__icon {

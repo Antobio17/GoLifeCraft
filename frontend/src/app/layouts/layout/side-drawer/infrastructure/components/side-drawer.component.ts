@@ -17,6 +17,7 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { NavItemComponent } from "@shared/design-system/nav-item/infrastructure/components/nav-item.component";
 import { AvatarComponent } from "@shared/design-system/avatar/infrastructure/components/avatar.component";
+import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
 import { SideDrawerService } from "../../application/services/side-drawer.service";
 
 @Component({
@@ -30,6 +31,7 @@ import { SideDrawerService } from "../../application/services/side-drawer.servic
     IconButtonComponent,
     NavItemComponent,
     AvatarComponent,
+    DividerComponent,
   ],
   templateUrl: "./side-drawer.component.html",
   styleUrls: ["./side-drawer.component.css"],

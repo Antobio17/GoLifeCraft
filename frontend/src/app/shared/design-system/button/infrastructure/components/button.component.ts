@@ -24,6 +24,9 @@ export class ButtonComponent {
   @Input() icon?: DsIconName;
   @Input() trailingIcon?: DsIconName;
   @Input() iconSize?: number;
+  @Input() ariaLabel = "";
+  @Input() haspopup: string | null = null;
+  @Input() expanded: boolean | null = null;
 
   @Output() clicked = new EventEmitter<void>();
 

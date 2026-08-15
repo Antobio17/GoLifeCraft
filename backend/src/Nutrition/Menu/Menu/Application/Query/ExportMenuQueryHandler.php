@@ -21,6 +21,6 @@ final readonly class ExportMenuQueryHandler
             throw ExportMenuException::menuNotFound(menuId: $query->menuId);
         }
 
-        return $this->dataTransform->transform(menu: $menu, locale: $query->locale);
+        return $this->dataTransform->transform(menu: $menu, locale: $query->locale, theme: $query->theme);
     }
 }

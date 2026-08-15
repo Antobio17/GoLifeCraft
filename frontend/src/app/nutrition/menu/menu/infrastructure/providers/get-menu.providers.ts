@@ -1,6 +1,7 @@
 import { Provider } from "@angular/core";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { FileDownloadService } from "@shared/file-download/application/services/file-download.service";
+import { ThemeService } from "@shared/theme/application/services/theme.service";
 import { GetMenuPort } from "@nutrition/menu/menu/domain/ports/get-menu.port";
 import { GetMenuShoppingNeedsPort } from "@nutrition/menu/menu/domain/ports/get-menu-shopping-needs.port";
 import { ExportMenuPort } from "@nutrition/menu/menu/domain/ports/export-menu.port";
@@ -37,9 +38,20 @@ export class GetMenuProviders {
           port: ExportMenuPort,
           translationService: TranslationService,
           fileDownloadService: FileDownloadService,
+          themeService: ThemeService,
         ) =>
-          new ExportMenuService(port, translationService, fileDownloadService),
-        deps: [ExportMenuPort, TranslationService, FileDownloadService],
+          new ExportMenuService(
+            port,
+            translationService,
+            fileDownloadService,
+            themeService,
+          ),
+        deps: [
+          ExportMenuPort,
+          TranslationService,
+          FileDownloadService,
+          ThemeService,
+        ],
       },
     ];
   }

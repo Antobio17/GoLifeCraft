@@ -6,21 +6,21 @@
     [gap]="'var(--ds-space-2)'"
   >
     <ds-stack [gap]="'2px'" [grow]="true">
-      <ds-text variant="meta">{{ "getAgenda.eyebrow" | t }}</ds-text>
       <ds-heading [level]="2" size="xl" [truncate]="true">{{
         "getAgenda.title" | t
       }}</ds-heading>
+      <ds-text variant="meta">{{ "getAgenda.eyebrow" | t }}</ds-text>
     </ds-stack>
 
     @if (canWrite()) {
       <ds-button
         variant="primary"
-        size="sm"
+        size="icon-lg"
         icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getAgenda.add' | t"
         (clicked)="openNewSheet()"
-      >
-        {{ "getAgenda.add" | t }}
-      </ds-button>
+      />
     }
   </ds-stack>
 

@@ -61,21 +61,34 @@
     <style>
         @page { margin: 15mm 14mm 18mm; }
 
+        /* dompdf no pinta el fondo del body sobre los márgenes de @page:
+           el lienzo se cubre con una capa fija del tamaño del A4. */
+        .page-bg {
+            position: fixed;
+            top: -15mm;
+            left: -14mm;
+            width: 210mm;
+            height: 297mm;
+            z-index: -1;
+            background-color: {{ palette.page }};
+        }
+
         body {
             margin: 0;
+            background-color: {{ palette.page }};
             font-family: 'brand-body';
             font-size: 9.5pt;
             line-height: 1.45;
-            color: #1b1a15;
+            color: {{ palette.text }};
         }
 
         h1, h2, .eyebrow, .day-pill, .summary-kcal {
             font-family: 'brand-display';
         }
 
-        .lime-rule {
+        .brand-rule {
             height: 3pt;
-            background-color: #b4e839;
+            background-color: {{ palette.brand }};
             margin-bottom: 12pt;
         }
 
@@ -84,7 +97,7 @@
             font-weight: 700;
             letter-spacing: 1.6pt;
             text-transform: uppercase;
-            color: #7fa81f;
+            color: {{ palette.brand }};
             margin-bottom: 3pt;
         }
 
@@ -92,27 +105,28 @@
             font-size: 25pt;
             font-weight: 800;
             line-height: 1.1;
-            color: #274b37;
+            color: {{ palette.text }};
             margin: 0 0 5pt;
         }
 
-        .meta { font-size: 8.5pt; color: #6f6a5c; }
+        .meta { font-size: 8.5pt; color: {{ palette.textMuted }}; }
 
         .note {
             margin-top: 11pt;
             padding: 8pt 10pt;
-            background-color: #fbf9f3;
-            border-left: 2.5pt solid #b4e839;
+            background-color: {{ palette.surfaceInset }};
+            border-left: 2.5pt solid {{ palette.brand }};
             border-radius: 3pt;
             font-size: 9pt;
-            color: #4a463d;
+            color: {{ palette.textBody }};
         }
 
         .summary {
             width: 100%;
             border-collapse: separate;
             margin: 16pt 0 4pt;
-            background-color: #274b37;
+            background-color: {{ palette.surfaceInset }};
+            border: 0.8pt solid {{ palette.border }};
             border-radius: 12pt;
         }
         .summary td { padding: 13pt 14pt; vertical-align: middle; }
@@ -121,29 +135,29 @@
             font-size: 7.5pt;
             letter-spacing: 1.2pt;
             text-transform: uppercase;
-            color: #8fb47c;
+            color: {{ palette.textMeta }};
             margin-bottom: 2pt;
         }
         .summary-kcal {
             font-size: 26pt;
             font-weight: 800;
             line-height: 1;
-            color: #b4e839;
+            color: {{ palette.brand }};
         }
         .summary-kcal span { font-size: 11pt; font-weight: 700; }
-        .summary-sub { margin-top: 4pt; font-size: 8.5pt; color: #dce9d6; }
+        .summary-sub { margin-top: 4pt; font-size: 8.5pt; color: {{ palette.textMuted }}; }
 
         .macro { width: 100%; border-collapse: collapse; }
         .macro td { padding: 2.5pt 0; }
-        .macro-label { width: 52pt; font-size: 8.5pt; color: #dce9d6; }
+        .macro-label { width: 52pt; font-size: 8.5pt; color: {{ palette.textMuted }}; }
         .macro-track {
-            background-color: #234230;
+            background-color: {{ palette.barTrack }};
             border-radius: 3pt;
             height: 7pt;
         }
         .macro-fill {
             height: 7pt;
-            background-color: #8fb47c;
+            background-color: {{ palette.barFill }};
             border-radius: 3pt;
         }
         .macro-value {
@@ -151,21 +165,21 @@
             text-align: right;
             font-size: 8.5pt;
             font-weight: 700;
-            color: #ffffff;
+            color: {{ palette.text }};
         }
 
         .day { margin-top: 20pt; }
         .day-head { width: 100%; border-collapse: collapse; margin-bottom: 7pt; }
-        .day-head td { vertical-align: bottom; border-bottom: 1.2pt solid #274b37; padding-bottom: 4pt; }
+        .day-head td { vertical-align: bottom; border-bottom: 1.2pt solid {{ palette.border }}; padding-bottom: 4pt; }
         .day-pill {
             font-size: 12.5pt;
             font-weight: 800;
             letter-spacing: 0.4pt;
             text-transform: uppercase;
-            color: #274b37;
+            color: {{ palette.text }};
         }
-        .day-stats { text-align: right; font-size: 8pt; color: #6f6a5c; }
-        .day-stats b { color: #274b37; }
+        .day-stats { text-align: right; font-size: 8pt; color: {{ palette.textMuted }}; }
+        .day-stats b { color: {{ palette.text }}; }
 
         .meal { margin-top: 10pt; }
         .meal-head {
@@ -173,12 +187,12 @@
             font-weight: 700;
             letter-spacing: 1.4pt;
             text-transform: uppercase;
-            color: #9a958a;
-            border-bottom: 0.6pt solid #eae4d6;
+            color: {{ palette.textMeta }};
+            border-bottom: 0.6pt solid {{ palette.borderHairline }};
             padding-bottom: 3pt;
             margin-bottom: 5pt;
         }
-        .meal-head .meal-kcal { float: right; letter-spacing: 0; color: #6f6a5c; }
+        .meal-head .meal-kcal { float: right; letter-spacing: 0; color: {{ palette.textMuted }}; }
 
         .item-block { margin-bottom: 6pt; }
 
@@ -191,66 +205,67 @@
             display: inline-block;
             margin-left: 5pt;
             padding: 0.5pt 5pt;
-            background-color: #f6f2e9;
+            background-color: {{ palette.surfaceInset }};
             border-radius: 6pt;
             font-size: 8pt;
-            color: #4a463d;
+            color: {{ palette.textBody }};
         }
         .c-name .tag {
             display: inline-block;
             margin-left: 4pt;
             padding: 0.5pt 5pt;
-            background-color: #eef4ea;
+            background-color: {{ palette.brandSoft }};
+            border: 0.5pt solid {{ palette.brandSoftBorder }};
             border-radius: 6pt;
             font-size: 7pt;
             font-weight: 700;
             letter-spacing: 0.4pt;
             text-transform: uppercase;
-            color: #7fa81f;
+            color: {{ palette.brandSoftText }};
         }
         .c-kcal {
             width: 58pt;
             text-align: right;
             font-size: 9pt;
             font-weight: 700;
-            color: #274b37;
+            color: {{ palette.brand }};
         }
 
         .ingredients {
             margin: 3pt 0 0 20pt;
             padding: 5pt 0 3pt 9pt;
-            border-left: 1.5pt solid #dce9d6;
+            border-left: 1.5pt solid {{ palette.border }};
         }
         .ing-title {
             font-size: 7pt;
             font-weight: 700;
             letter-spacing: 1.1pt;
             text-transform: uppercase;
-            color: #8fb47c;
+            color: {{ palette.textMeta }};
             margin-bottom: 3pt;
         }
-        .ing-title .kcal-head { float: right; color: #b6b1a4; }
+        .ing-title .kcal-head { float: right; color: {{ palette.textMeta }}; }
         .ing { width: 100%; border-collapse: collapse; }
-        .ing td { padding: 0.8pt 0; font-size: 8.5pt; color: #4a463d; }
+        .ing td { padding: 0.8pt 0; font-size: 8.5pt; color: {{ palette.textBody }}; }
         .ing-mark { width: 16pt; }
-        .ing-qty { width: 78pt; text-align: right; color: #6f6a5c; }
-        .ing-kcal { width: 34pt; text-align: right; color: #9a958a; }
+        .ing-qty { width: 78pt; text-align: right; color: {{ palette.textMuted }}; }
+        .ing-kcal { width: 34pt; text-align: right; color: {{ palette.textMeta }}; }
 
         .glyph { vertical-align: middle; }
         .glyph-dot {
             display: inline-block;
-            background-color: #dce9d6;
+            background-color: {{ palette.surfaceInset }};
             border-radius: 50%;
         }
 
         .empty {
             margin-top: 24pt;
             padding: 16pt;
-            background-color: #fbf9f3;
+            background-color: {{ palette.surfaceInset }};
             border-radius: 8pt;
             text-align: center;
             font-size: 9.5pt;
-            color: #6f6a5c;
+            color: {{ palette.textMuted }};
         }
 
         .footer {
@@ -259,8 +274,8 @@
             left: 0;
             right: 0;
             font-size: 7.5pt;
-            color: #9a958a;
-            border-top: 0.6pt solid #eae4d6;
+            color: {{ palette.textMeta }};
+            border-top: 0.6pt solid {{ palette.borderHairline }};
             padding-top: 4pt;
         }
         .footer .page:after { content: counter(page); }
@@ -269,12 +284,14 @@
 </head>
 <body>
 
+<div class="page-bg"></div>
+
 <div class="footer">
     {{ menu.name }}
     <span class="right">{{ 'document.footer'|trans({}, 'menu_document', locale) }} · <span class="page"></span></span>
 </div>
 
-<div class="lime-rule"></div>
+<div class="brand-rule"></div>
 
 <div class="eyebrow">
     {{ ('document.eyebrow.' ~ (menu.type == 'week' ? 'week' : 'single'))|trans({}, 'menu_document', locale) }}

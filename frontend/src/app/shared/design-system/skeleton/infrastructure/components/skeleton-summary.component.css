@@ -2,7 +2,25 @@
   display: block;
 }
 
+/* Espeja la tarjeta real: superficie neutra elevada. */
 .sksum {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-2xl);
+  padding: var(--ds-space-4);
+  box-shadow: var(--ds-elev);
+}
+
+/* Espeja la tarjeta soft: superficie encajada con borde, sin elevación. */
+.sksum--soft {
+  --ds-skeleton-base: color-mix(in srgb, var(--ds-text) 10%, transparent);
+  --ds-skeleton-highlight: color-mix(in srgb, var(--ds-text) 16%, transparent);
+  background: var(--ds-surface-inset);
+  border-color: var(--ds-border);
+  box-shadow: none;
+}
+
+.sksum--brand {
   --ds-skeleton-base: color-mix(
     in srgb,
     var(--ds-on-surface-brand) 13%,
@@ -14,10 +32,7 @@
     transparent
   );
   background: var(--ds-surface-brand);
-  border: 1px solid transparent;
-  border-radius: var(--ds-radius-2xl);
-  padding: var(--ds-space-4);
-  box-shadow: var(--ds-shadow-card);
+  border-color: transparent;
 }
 
 .sksum--primary {
@@ -33,7 +48,7 @@
   box-shadow: none;
 }
 
-:host-context([data-theme="dark"]) .sksum {
+:host-context([data-theme="dark"]) .sksum--brand {
   border-color: var(--ds-border-hairline);
 }
 
@@ -81,6 +96,14 @@
   position: absolute;
   inset: 0.5625rem;
   border-radius: 50%;
+  background: var(--ds-surface);
+}
+
+.sksum--soft .sksum__ring::after {
+  background: var(--ds-surface-inset);
+}
+
+.sksum--brand .sksum__ring::after {
   background: var(--ds-surface-brand);
 }
 
@@ -166,6 +189,10 @@
   gap: var(--ds-space-1-5);
   border-radius: var(--ds-radius-lg);
   padding: var(--ds-space-2);
+  background: var(--ds-surface-inset);
+}
+
+.sksum--brand .sksum__tile {
   background: color-mix(in srgb, var(--ds-on-surface-brand) 9%, transparent);
 }
 

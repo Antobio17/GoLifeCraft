@@ -64,27 +64,27 @@
       <ds-icon name="check" [size]="17" [stroke]="3" />
       {{ finishLabel }}
     </button>
-    <div class="active-banner__actions-row">
-      <button
-        type="button"
-        class="active-banner__btn active-banner__btn--soft"
-        [attr.tabindex]="scrolled ? -1 : null"
-        [attr.aria-hidden]="scrolled ? 'true' : null"
-        (click)="pauseToggle.emit()"
-      >
-        <ds-icon [name]="paused ? 'play' : 'pause'" [size]="15" />
-        {{ paused ? resumeLabel : pauseLabel }}
-      </button>
-      <button
-        type="button"
-        class="active-banner__btn active-banner__btn--stop"
-        [attr.tabindex]="scrolled ? -1 : null"
-        [attr.aria-hidden]="scrolled ? 'true' : null"
-        (click)="stopped.emit()"
-      >
-        <ds-icon name="square" [size]="14" />
-        {{ stopLabel }}
-      </button>
-    </div>
+    <button
+      type="button"
+      class="active-banner__btn active-banner__btn--soft"
+      [attr.tabindex]="scrolled ? -1 : null"
+      [attr.aria-hidden]="scrolled ? 'true' : null"
+      [attr.aria-label]="pauseAriaLabel"
+      [attr.title]="paused ? resumeLabel : pauseLabel"
+      (click)="pauseToggle.emit()"
+    >
+      <ds-icon [name]="paused ? 'play' : 'pause'" [size]="17" />
+    </button>
+    <button
+      type="button"
+      class="active-banner__btn active-banner__btn--stop"
+      [attr.tabindex]="scrolled ? -1 : null"
+      [attr.aria-hidden]="scrolled ? 'true' : null"
+      [attr.aria-label]="stopAriaLabel"
+      [attr.title]="stopLabel"
+      (click)="stopped.emit()"
+    >
+      <ds-icon name="square" [size]="15" />
+    </button>
   </div>
 </div>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, signal } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
-import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
+import { ButtonComponent } from "../../../button/infrastructure/components/button.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 export interface MenuItem {
@@ -12,12 +12,14 @@ export interface MenuItem {
 
 @Component({
   selector: "ds-menu",
-  imports: [IconComponent, IconButtonComponent],
+  imports: [IconComponent, ButtonComponent],
   template: `
     <div class="ds-menu">
-      <ds-icon-button
+      <ds-button
+        variant="secondary"
+        size="icon-lg"
         [icon]="triggerIcon"
-        variant="soft"
+        [iconSize]="19"
         [ariaLabel]="triggerLabel"
         haspopup="menu"
         [expanded]="open()"

@@ -8,6 +8,9 @@
 
 :root {
   --ds-app-frame-width: 30rem;
+  /* Alto real de la tabbar más su separación del borde inferior:
+     lo que cualquier capa fija de abajo tiene que dejar libre. */
+  --ds-app-bottom-nav-height: 4.375rem;
   --ds-app-sidebar-width: 15.25rem;
   --ds-app-content-max: 73.75rem;
   --ds-form-max-width: 60rem;

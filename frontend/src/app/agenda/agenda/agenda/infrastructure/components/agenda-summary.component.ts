@@ -69,7 +69,9 @@ export class AgendaSummaryComponent implements OnInit {
   summaryEntries = signal<AgendaSummaryEntry[]>([]);
 
   hasEntries = computed(() => this.summaryEntries().length > 0);
-  visibleEntries = computed(() => this.summaryEntries().slice(0, VISIBLE_ENTRIES));
+  visibleEntries = computed(() =>
+    this.summaryEntries().slice(0, VISIBLE_ENTRIES),
+  );
   hiddenCount = computed(() =>
     Math.max(0, this.summaryEntries().length - VISIBLE_ENTRIES),
   );
@@ -139,12 +141,17 @@ export class AgendaSummaryComponent implements OnInit {
           catchError(() => of(null)),
         ),
       ),
-    ).pipe(map((seriesEntries) => this.groupSummaryEntries(entries, seriesEntries)));
+    ).pipe(
+      map((seriesEntries) => this.groupSummaryEntries(entries, seriesEntries)),
+    );
   }
 
   private groupSummaryEntries(
     entries: AgendaEntryView[],
-    seriesEntries: Array<{ seriesId: string; series: AgendaSeriesAttributes } | null>,
+    seriesEntries: Array<{
+      seriesId: string;
+      series: AgendaSeriesAttributes;
+    } | null>,
   ): AgendaSummaryEntry[] {
     const seriesById = new Map<string, AgendaSeriesAttributes>();
 
