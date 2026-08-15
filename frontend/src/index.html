@@ -19,22 +19,22 @@
     <link
       rel="shortcut icon"
       type="image/x-icon"
-      href="assets/img/favicon.ico"
+      href="assets/img/favicon-dark.ico"
     />
-    <link rel="apple-touch-icon" href="assets/img/icon-light.png" />
+    <link rel="apple-touch-icon" href="assets/img/icon-dark.png" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#000000" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="apple-mobile-web-app-title" content="GoLifeCraft" />
     <script>
       (function () {
         var theme =
-          localStorage.getItem("app-theme") === "dark" ? "dark" : "light";
+          localStorage.getItem("app-theme") === "light" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", theme);
         document
           .querySelector('meta[name="theme-color"]')
@@ -60,13 +60,13 @@
       html {
         -webkit-text-size-adjust: 100%;
         text-size-adjust: 100%;
-        color-scheme: light;
-        background-color: #ffffff;
-      }
-
-      html[data-theme="dark"] {
         color-scheme: dark;
         background-color: #000000;
+      }
+
+      html[data-theme="light"] {
+        color-scheme: light;
+        background-color: #ffffff;
       }
 
       * {

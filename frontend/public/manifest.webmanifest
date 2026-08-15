@@ -4,12 +4,12 @@
   "description": "GoLifeCraft",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#FFFFFF",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "assets/img/icon-light.png",
+      "src": "assets/img/icon-dark.png",
       "sizes": "any",
       "type": "image/png",
       "purpose": "any maskable"

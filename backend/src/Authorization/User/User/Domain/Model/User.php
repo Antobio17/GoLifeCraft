@@ -44,7 +44,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         public \DateTime $updatedAt,
         public readonly string $createdByUserId,
         public string $updatedByUserId,
-        public string $theme = self::THEME_LIGHT,
+        public string $theme = self::THEME_DARK,
         public array $roles = [],
         public bool $emailVerified = false,
     ) {
