@@ -7,6 +7,19 @@ on:
       - completed
     branches:
       - master
+  # The config below is bind-mounted, not baked into an image, so a change to it
+  # never triggers a build and would otherwise sit in the repo without reaching
+  # the server until the next unrelated backend deploy.
+  push:
+    branches:
+      - master
+    paths:
+      - 'docker-compose.prod.yml'
+      - 'infrastructure/docker/production/certbot/**'
+      - 'infrastructure/docker/production/loki/**'
+      - 'infrastructure/docker/production/alloy/**'
+      - 'infrastructure/docker/production/grafana/**'
+      - '.github/workflows/backend-deploy.yml'
   workflow_dispatch:
 
 env:
@@ -17,7 +30,7 @@ jobs:
   deploy:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout repository
@@ -50,6 +63,11 @@ jobs:
           script: |
             set -e
             cd ${{ secrets.SERVER_PROJECT_PATH }}
+            # A container that is restarting while its bind-mount source is gone
+            # makes Docker recreate that source as a root-owned directory, which
+            # then blocks the scp below. Stopping them first closes that window;
+            # the deploy starts them again with the fresh config mounted.
+            docker stop golifecraft_certbot golifecraft_loki golifecraft_alloy golifecraft_grafana >/dev/null 2>&1 || true
             docker run --rm -v "$(pwd):/w" -w /w alpine:latest sh -c '
               rm -rf infrastructure/docker/production/certbot \
                      infrastructure/docker/production/loki \
@@ -115,15 +133,27 @@ jobs:
             echo "==> Starting services..."
             docker compose --env-file .env.local -f docker-compose.prod.yml up -d --remove-orphans
 
-            # The step above only recreates a container when its image or its
-            # compose definition changes, and these four take their config from
-            # bind mounts that the deploy wipes and rewrites. Two consequences:
-            # the running container still has the deleted directory mounted and
-            # cannot see the new files at all, and Grafana reads alerting and
-            # datasource provisioning only at boot. A restart re-resolves the
-            # mount and reloads the config; recreating them is not necessary.
-            echo "==> Reloading bind-mounted configs..."
-            docker compose --env-file .env.local -f docker-compose.prod.yml restart certbot loki alloy grafana
+            # certbot, loki, alloy and grafana take their config from bind mounts
+            # that this deploy wipes and rewrites, and they read it only at boot.
+            # They used to be restarted here to re-resolve the mount; that is no
+            # longer needed because the deploy now stops them before the wipe, so
+            # the up -d above already started them with the new files.
+
+            # Grafana exits with code 1 on any invalid provisioning file and,
+            # with restart: always, spends forever in a restart loop that no
+            # other step notices. Fail the deploy instead of shipping a dead
+            # observability stack: a container still young after the wait is one
+            # that keeps dying and being restarted.
+            echo "==> Verifying Grafana came up..."
+            sleep 25
+            grafana_status=$(docker inspect -f '{{.State.Status}}' golifecraft_grafana 2>/dev/null || echo missing)
+            grafana_started=$(docker inspect -f '{{.State.StartedAt}}' golifecraft_grafana 2>/dev/null || echo "$(date -u +%FT%TZ)")
+            grafana_uptime=$(( $(date -u +%s) - $(date -u -d "$grafana_started" +%s) ))
+            if [ "$grafana_status" != "running" ] || [ "$grafana_uptime" -lt 15 ]; then
+              docker logs --tail 40 golifecraft_grafana 2>&1 || true
+              echo "::error::Grafana is not healthy (status=$grafana_status, uptime=${grafana_uptime}s)"
+              exit 1
+            fi
 
             echo "==> Waiting for database to be ready..."
             DATABASE_MASTER_PASSWORD=$(grep '^DATABASE_MASTER_PASSWORD=' .env.local | cut -d= -f2-)
@@ -158,6 +188,23 @@ jobs:
             docker image prune -f
 
             echo "==> Deploy completed successfully!"
+
+      # An explicitly stopped container is not resurrected by restart: always,
+      # so a deploy that dies between the stop above and the up -d would leave
+      # the observability stack and certbot down until someone noticed. Bring
+      # them back with whatever config is on disk; the job still fails.
+      - name: Restart stopped services after a failed deploy
+        if: failure()
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          script: |
+            cd ${{ secrets.SERVER_PROJECT_PATH }}
+            docker compose --env-file .env.local -f docker-compose.prod.yml up -d certbot loki alloy grafana || true
 
       - name: Deployment status
         if: failure()
