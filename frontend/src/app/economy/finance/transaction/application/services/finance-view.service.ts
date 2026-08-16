@@ -1,6 +1,5 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { SupportedLanguages } from "@shared/i18n/domain/models/translation.model";
 
 @Injectable()
 export class FinanceViewService {
@@ -115,10 +114,7 @@ export class FinanceViewService {
   }
 
   private locale(): string {
-    return SupportedLanguages.EN ===
-      this.translationService.getCurrentLanguage()
-      ? "en-GB"
-      : "es-ES";
+    return this.translationService.getLocale();
   }
 
   private parse(iso: string): Date {

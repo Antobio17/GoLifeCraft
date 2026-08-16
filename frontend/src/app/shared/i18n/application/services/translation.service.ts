@@ -5,6 +5,11 @@ import {
   TranslationMap,
 } from "../../domain/models/translation.model";
 
+const LOCALE_BY_LANGUAGE: Record<SupportedLanguages, string> = {
+  [SupportedLanguages.ES]: "es-ES",
+  [SupportedLanguages.EN]: "en-GB",
+};
+
 export class TranslationService {
   private readonly currentLanguage = signal<SupportedLanguages>(
     SupportedLanguages.ES,
@@ -20,6 +25,10 @@ export class TranslationService {
 
   getCurrentLanguage(): SupportedLanguages {
     return this.currentLanguage();
+  }
+
+  getLocale(): string {
+    return LOCALE_BY_LANGUAGE[this.currentLanguage()];
   }
 
   setLanguage(language: SupportedLanguages): void {
