@@ -6,6 +6,7 @@
       "@app/*": ["app/*"],
       "@agenda/*": ["app/agenda/*"],
       "@authorization/*": ["app/authorization/*"],
+      "@economy/*": ["app/economy/*"],
       "@gym/*": ["app/gym/*"],
       "@layouts/*": ["app/layouts/*"],
       "@nutrition/*": ["app/nutrition/*"],

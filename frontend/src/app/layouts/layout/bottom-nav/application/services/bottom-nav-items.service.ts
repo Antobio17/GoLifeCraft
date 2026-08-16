@@ -53,6 +53,12 @@ export class BottomNavItemsService {
         labelKey: "navbar.agenda",
         exact: false,
       },
+      {
+        route: "/economy",
+        icon: "wallet",
+        labelKey: "navbar.economy",
+        exact: false,
+      },
     ];
   }
 }

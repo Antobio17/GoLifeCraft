@@ -163,6 +163,20 @@
   --ds-data-2: var(--ds-green-400);
   --ds-data-3: var(--ds-green-200);
 
+  /* ---- Categorías de gasto: paleta categórica ----
+     Aquí el color identifica, no jerarquiza: cada categoría necesita
+     ser distinguible de las demás de un vistazo. Es la única familia
+     que rompe el monotono verde, y solo se usa en Economía. */
+  --ds-cat-groceries: #6e8b3d;
+  --ds-cat-restaurants: #c97b4a;
+  --ds-cat-gym: #4e7c59;
+  --ds-cat-transport: #5b7a9d;
+  --ds-cat-leisure: #b4874a;
+  --ds-cat-home: #8a7b5c;
+  --ds-cat-health: #b5544a;
+  --ds-cat-subscriptions: #7a6ba8;
+  --ds-cat-other: #9a958a;
+
   /* ---- Anillo de foco ---- */
   --ds-focus-ring: 0 0 0 0.25rem rgba(0, 134, 61, 0.22);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(201, 58, 40, 0.18);
@@ -242,6 +256,18 @@
   --ds-data-1: var(--ds-green-200);
   --ds-data-2: var(--ds-green-400);
   --ds-data-3: var(--ds-green-600);
+
+  /* ---- Categorías de gasto: mismos tonos, subidos de luminosidad
+     para que separen igual de bien sobre superficie oscura. ---- */
+  --ds-cat-groceries: #a3c46b;
+  --ds-cat-restaurants: #e5a173;
+  --ds-cat-gym: #7fb38c;
+  --ds-cat-transport: #8fb0d3;
+  --ds-cat-leisure: #dcb173;
+  --ds-cat-home: #bdae8d;
+  --ds-cat-health: #e58379;
+  --ds-cat-subscriptions: #ad9dd8;
+  --ds-cat-other: #c2bdb1;
 
   /* ---- Foco ---- */
   --ds-focus-ring: 0 0 0 0.25rem rgba(143, 250, 152, 0.28);

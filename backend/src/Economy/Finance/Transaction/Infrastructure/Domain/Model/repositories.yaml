@@ -1,0 +1,6 @@
+services:
+  Economy\Finance\Transaction\Domain\Model\FinanceTransactionRepository:
+    class: Economy\Finance\Transaction\Infrastructure\Domain\Model\Doctrine\DoctrineFinanceTransactionRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Economy\Finance\Transaction\Domain\Model\FinanceTransaction

@@ -1,0 +1,15 @@
+services:
+  Economy\Finance\Transaction\Domain\QueryModel\GetFinanceOverviewNeedleDataQuery:
+    class: Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceOverviewNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Transaction\Domain\QueryModel\GetFinanceTransactionsNeedleDataQuery:
+    class: Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceTransactionsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Transaction\Domain\QueryModel\GetFinanceCalendarNeedleDataQuery:
+    class: Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceCalendarNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

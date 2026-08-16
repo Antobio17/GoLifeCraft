@@ -1,0 +1,85 @@
+label: Finance transaction
+
+fields:
+  transactionDate:
+    writable: true
+    required: true
+    min: 10
+    max: 10
+    regex: '^\d{4}-\d{2}-\d{2}$'
+    description: >-
+      The day the money moved, as an ISO date "YYYY-MM-DD". Use the user's local date;
+      default to today when not specified.
+    filterable: true
+    sortable: true
+  kind:
+    writable: true
+    required: true
+    enum: [expense, income]
+    description: >-
+      Use "expense" for money going out and "income" for money coming in (salary,
+      refunds, freelance work).
+    filterable: true
+  amount:
+    writable: true
+    required: true
+    type: float
+    min: 0.01
+    max: 9999999.99
+    description: >-
+      Absolute amount in euros, always positive. The sign is derived from "kind",
+      never encode it here.
+    sortable: true
+  category:
+    writable: true
+    required: false
+    enum:
+      [
+        groceries,
+        restaurants,
+        gym,
+        transport,
+        leisure,
+        home,
+        health,
+        subscriptions,
+        other,
+      ]
+    description: >-
+      Spending category. It only applies to expenses; income is always stored as
+      "other". Defaults to "other" when not specified.
+    filterable: true
+  note:
+    writable: true
+    required: false
+    max: 255
+    description: >-
+      Short description of the movement, for example "Compra semanal" or "Nómina".
+    filterable: true
+  store:
+    writable: true
+    required: false
+    max: 120
+    description: >-
+      Where the money was spent or where the income came from, for example
+      "Mercadona" or "Freelance".
+    filterable: true
+  recurring:
+    writable: true
+    required: false
+    type: bool
+    description: >-
+      Whether the expense repeats every month. Recurring expenses show up as
+      subscriptions. Income is never recurring.
+    filterable: true
+  source:
+    writable: false
+    required: false
+    enum: [manual, ticket]
+    description: >-
+      How the movement got in: "manual" when the user wrote it down and "ticket" when
+      it was derived from a purchase ticket. It is assigned by the app, never by the
+      client.
+    filterable: true
+
+relations: {}

@@ -74,6 +74,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "economy",
+        data: { breadcrumb: "getEconomy.breadcrumb.list" },
+        loadChildren: () =>
+          import("./economy/finance/transaction/infrastructure/routes/economy.routes").then(
+            (m) => m.ECONOMY_ROUTES,
+          ),
+      },
+      {
         path: "supermarkets",
         data: { breadcrumb: "supermarket.breadcrumb.list" },
         loadChildren: () =>

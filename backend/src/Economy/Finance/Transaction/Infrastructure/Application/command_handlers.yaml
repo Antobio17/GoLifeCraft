@@ -1,0 +1,27 @@
+services:
+  Economy\Finance\Transaction\Application\Command\CreateFinanceTransactionCommandHandler:
+    class: Economy\Finance\Transaction\Application\Command\CreateFinanceTransactionCommandHandler
+    arguments:
+      $financeTransactionRepository: '@Economy\Finance\Transaction\Domain\Model\FinanceTransactionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Transaction\Application\Command\UpdateFinanceTransactionCommandHandler:
+    class: Economy\Finance\Transaction\Application\Command\UpdateFinanceTransactionCommandHandler
+    arguments:
+      $financeTransactionRepository: '@Economy\Finance\Transaction\Domain\Model\FinanceTransactionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Transaction\Application\Command\DeleteFinanceTransactionCommandHandler:
+    class: Economy\Finance\Transaction\Application\Command\DeleteFinanceTransactionCommandHandler
+    arguments:
+      $financeTransactionRepository: '@Economy\Finance\Transaction\Domain\Model\FinanceTransactionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

@@ -1,0 +1,24 @@
+import { FinanceCategoryTotal } from "./finance-category-total.model";
+import { FinanceMonthPoint } from "./finance-month-point.model";
+import { FinanceStoreTotal } from "./finance-store-total.model";
+import { FinanceSubscription } from "./finance-subscription.model";
+
+export interface FinanceOverviewAttributes {
+  month: string;
+  balance: number;
+  balanceDelta: number;
+  balanceDeltaPercentage: number;
+  income: number;
+  expense: number;
+  net: number;
+  transactionCount: number;
+  series: FinanceMonthPoint[];
+  byCategory: FinanceCategoryTotal[];
+  byStore: FinanceStoreTotal[];
+  subscriptions: FinanceSubscription[];
+  subscriptionsTotal: number;
+  expenseDeltaPercentage: number | null;
+  overspending: boolean;
+  averageExpense: number;
+  overspendingPercentage: number;
+}

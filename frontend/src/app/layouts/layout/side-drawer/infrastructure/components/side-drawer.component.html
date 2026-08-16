@@ -74,6 +74,13 @@
         (click)="close()"
       />
       <ds-nav-item
+        routerLink="/economy"
+        routerLinkActive="is-active"
+        icon="wallet"
+        [label]="'navbar.economy' | t"
+        (click)="close()"
+      />
+      <ds-nav-item
         routerLink="/catalog"
         routerLinkActive="is-active"
         [routerLinkActiveOptions]="{ exact: true }"
