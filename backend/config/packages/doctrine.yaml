@@ -153,6 +153,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Agenda/Agenda/Agenda/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Agenda\Agenda\Agenda\Domain\Model'
                         alias: agenda_entry
+                    FinanceTransaction:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Economy/Finance/Transaction/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Economy\Finance\Transaction\Domain\Model'
+                        alias: finance_transaction
                     Menu:
                         is_bundle: false
                         type: xml

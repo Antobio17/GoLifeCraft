@@ -1,0 +1,42 @@
+services:
+  Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceOverviewController:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceOverviewController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceTransactionsController:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceTransactionsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceCalendarController:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceCalendarController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Transaction\Infrastructure\UI\API\Controller\CreateFinanceTransactionController:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\CreateFinanceTransactionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Transaction\Infrastructure\UI\API\Controller\UpdateFinanceTransactionController:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\UpdateFinanceTransactionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Transaction\Infrastructure\UI\API\Controller\DeleteFinanceTransactionController:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\DeleteFinanceTransactionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

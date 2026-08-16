@@ -1,0 +1,33 @@
+services:
+  Economy\Finance\Transaction\Application\Query\GetFinanceOverviewQueryHandler:
+    class: Economy\Finance\Transaction\Application\Query\GetFinanceOverviewQueryHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Transaction\Domain\QueryModel\GetFinanceOverviewNeedleDataQuery'
+      $dataTransform: '@Economy\Finance\Transaction\Application\Query\GetFinanceOverviewDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Transaction\Application\Query\GetFinanceOverviewDataTransform:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\DataTransform\ApiGetFinanceOverviewDataTransform
+
+  Economy\Finance\Transaction\Application\Query\GetFinanceTransactionsQueryHandler:
+    class: Economy\Finance\Transaction\Application\Query\GetFinanceTransactionsQueryHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Transaction\Domain\QueryModel\GetFinanceTransactionsNeedleDataQuery'
+      $dataTransform: '@Economy\Finance\Transaction\Application\Query\GetFinanceTransactionsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Transaction\Application\Query\GetFinanceTransactionsDataTransform:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\DataTransform\ApiGetFinanceTransactionsDataTransform
+
+  Economy\Finance\Transaction\Application\Query\GetFinanceCalendarQueryHandler:
+    class: Economy\Finance\Transaction\Application\Query\GetFinanceCalendarQueryHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Transaction\Domain\QueryModel\GetFinanceCalendarNeedleDataQuery'
+      $dataTransform: '@Economy\Finance\Transaction\Application\Query\GetFinanceCalendarDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Transaction\Application\Query\GetFinanceCalendarDataTransform:
+    class: Economy\Finance\Transaction\Infrastructure\UI\API\DataTransform\ApiGetFinanceCalendarDataTransform

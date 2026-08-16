@@ -1,0 +1,72 @@
+{
+  "getEconomy.title": "Economía",
+  "getEconomy.eyebrow": "Tu dinero, con datos",
+  "getEconomy.add": "Movimiento",
+  "getEconomy.dayView": "Ver por día",
+
+  "getEconomy.balance.eyebrow": "SALDO EN CUENTA",
+  "getEconomy.balance.thisMonth": "este mes",
+
+  "getEconomy.month.previous": "Mes anterior",
+  "getEconomy.month.next": "Mes siguiente",
+
+  "getEconomy.summary.income": "Ingresos",
+  "getEconomy.summary.expense": "Gastos",
+  "getEconomy.summary.net": "Ahorro neto",
+
+  "getEconomy.evolution.title": "Evolución del gasto",
+  "getEconomy.evolution.subtitle": "últimos 6 meses",
+
+  "getEconomy.overspending.text": "Llevas {expense} gastados este mes, un {percentage}% por encima de tu media reciente ({average}).",
+
+  "getEconomy.categories.title": "Gasto por categoría",
+  "getEconomy.stores.title": "Gasto por tienda",
+
+  "getEconomy.subscriptions.title": "Suscripciones",
+  "getEconomy.subscriptions.next": "Próximo cargo",
+  "getEconomy.subscriptions.perMonth": "mes",
+  "getEconomy.subscriptions.one": "activa",
+  "getEconomy.subscriptions.many": "activas",
+
+  "getEconomy.movements.title": "Movimientos",
+  "getEconomy.movements.one": "movimiento",
+  "getEconomy.movements.many": "movimientos",
+  "getEconomy.movements.remove": "Borrar",
+
+  "getEconomy.empty.title": "Sin movimientos este mes",
+  "getEconomy.empty.text": "Añade un gasto o un ingreso para empezar a ver tus datos.",
+
+  "getEconomy.day.spent": "Gastado",
+  "getEconomy.day.earned": "Ingresado",
+  "getEconomy.day.clear": "Quitar",
+  "getEconomy.day.hint": "Toca un día del calendario para ver sus gastos.",
+  "getEconomy.day.emptyTitle": "Sin movimientos este día",
+  "getEconomy.day.emptyText": "No hay nada registrado en la fecha seleccionada.",
+
+  "getEconomy.kind.expense": "Gasto",
+  "getEconomy.kind.income": "Ingreso",
+
+  "getEconomy.tag.ticket": "TICKET",
+  "getEconomy.tag.recurring": "MENSUAL",
+
+  "getEconomy.sheet.expenseTitle": "Nuevo gasto",
+  "getEconomy.sheet.incomeTitle": "Nuevo ingreso",
+  "getEconomy.sheet.subtitle": "Anota un gasto o un ingreso",
+  "getEconomy.sheet.close": "Cerrar",
+  "getEconomy.sheet.amountLabel": "IMPORTE",
+  "getEconomy.sheet.categoryLabel": "CATEGORÍA",
+  "getEconomy.sheet.noteLabel": "DESCRIPCIÓN",
+  "getEconomy.sheet.notePlaceholder": "Ej: Compra semanal, cena…",
+  "getEconomy.sheet.conceptLabel": "CONCEPTO",
+  "getEconomy.sheet.conceptPlaceholder": "Ej: Nómina, reembolso…",
+  "getEconomy.sheet.dateLabel": "FECHA",
+  "getEconomy.sheet.storeLabel": "TIENDA / LUGAR (OPCIONAL)",
+  "getEconomy.sheet.originLabel": "ORIGEN (OPCIONAL)",
+  "getEconomy.sheet.storePlaceholder": "Ej: Mercadona, Nómina…",
+  "getEconomy.sheet.recurringLabel": "Gasto recurrente",
+  "getEconomy.sheet.recurringHint": "Aparecerá en Suscripciones cada mes",
+  "getEconomy.sheet.saveExpense": "Registrar gasto",
+  "getEconomy.sheet.saveIncome": "Registrar ingreso",
+
+  "getEconomy.breadcrumb.list": "Economía"
+}

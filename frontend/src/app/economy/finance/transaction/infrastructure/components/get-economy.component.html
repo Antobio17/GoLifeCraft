@@ -1,0 +1,433 @@
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+  <ds-stack
+    direction="row"
+    justify="between"
+    align="start"
+    [gap]="'var(--ds-space-2)'"
+  >
+    <ds-stack [gap]="'2px'" [grow]="true">
+      <ds-text variant="meta">{{ "getEconomy.eyebrow" | t }}</ds-text>
+      <ds-heading [level]="2" size="xl" [truncate]="true">{{
+        "getEconomy.title" | t
+      }}</ds-heading>
+    </ds-stack>
+
+    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+      <ds-icon-button
+        icon="calendar"
+        [variant]="dayMode() ? 'solid' : 'soft'"
+        [size]="38"
+        [iconSize]="18"
+        [stroke]="2.1"
+        [radius]="'var(--ds-radius-md)'"
+        [ariaLabel]="'getEconomy.dayView' | t"
+        (clicked)="toggleDayMode()"
+      />
+
+      @if (canWrite()) {
+        <ds-button
+          variant="primary"
+          size="sm"
+          icon="plus"
+          [iconSize]="15"
+          (clicked)="openNewSheet()"
+        >
+          {{ "getEconomy.add" | t }}
+        </ds-button>
+      }
+    </ds-stack>
+  </ds-stack>
+
+  @if (dayMode()) {
+    <ds-card [padding]="'var(--ds-space-4)'">
+      <ds-calendar
+        [monthLabel]="monthLabel()"
+        [weekdays]="calendarWeekdays()"
+        [cells]="calendarCells()"
+        [previousLabel]="'getEconomy.month.previous' | t"
+        [nextLabel]="'getEconomy.month.next' | t"
+        (previousMonth)="previousMonth()"
+        (nextMonth)="nextMonth()"
+        (daySelected)="onCalendarDay($event)"
+      />
+    </ds-card>
+
+    @if (selectedDate()) {
+      <ds-stack
+        direction="row"
+        justify="between"
+        align="center"
+        [gap]="'var(--ds-space-3)'"
+      >
+        <ds-stack [gap]="'2px'" [grow]="true">
+          <ds-heading [level]="3" size="md" [truncate]="true">{{
+            dayTitle()
+          }}</ds-heading>
+          <ds-text variant="meta">
+            {{ "getEconomy.day.spent" | t }} {{ dayExpenseLabel() }}
+            @if (dayHasIncome()) {
+              · {{ "getEconomy.day.earned" | t }} {{ dayIncomeLabel() }}
+            }
+          </ds-text>
+        </ds-stack>
+
+        <ds-button variant="link" (clicked)="clearDay()">{{
+          "getEconomy.day.clear" | t
+        }}</ds-button>
+      </ds-stack>
+
+      @if (dayMovementRows().length === 0) {
+        <ds-empty-state
+          icon="wallet"
+          [title]="'getEconomy.day.emptyTitle' | t"
+          [text]="'getEconomy.day.emptyText' | t"
+        />
+      }
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (row of dayMovementRows(); track row.transaction.id) {
+          <ds-swipe-to-delete
+            [disabled]="!canWrite()"
+            [removeLabel]="'getEconomy.movements.remove' | t"
+            (remove)="removeTransaction(row.transaction)"
+          >
+            <ds-pressable
+              [grow]="true"
+              [disabled]="!canWrite()"
+              [ariaLabel]="row.title"
+              (press)="openEditSheet(row.transaction)"
+            >
+              <ds-transaction-row
+                [emoji]="row.emoji"
+                [title]="row.title"
+                [subtitle]="row.subtitle"
+                [amountLabel]="row.amountLabel"
+                [income]="row.income"
+                [tags]="row.tags"
+              />
+            </ds-pressable>
+          </ds-swipe-to-delete>
+        }
+      </ds-stack>
+    }
+
+    @if (!selectedDate()) {
+      <ds-text variant="meta" align="center">{{
+        "getEconomy.day.hint" | t
+      }}</ds-text>
+    }
+  }
+
+  @if (!dayMode()) {
+    <ds-balance-card
+      [eyebrow]="'getEconomy.balance.eyebrow' | t"
+      [value]="balanceValue()"
+      unit=" €"
+      [caption]="balanceCaption()"
+      [trendLabel]="balanceTrendLabel()"
+      [positive]="balancePositive()"
+      [points]="balanceSeries()"
+    />
+
+    @if (overspending()) {
+      <ds-note icon="alertCircle" tone="warning">{{
+        overspendingText()
+      }}</ds-note>
+    }
+
+    <ds-stack
+      direction="row"
+      justify="between"
+      align="center"
+      [gap]="'var(--ds-space-2)'"
+    >
+      <ds-heading [level]="3" size="md" [truncate]="true">{{
+        monthLabel()
+      }}</ds-heading>
+
+      <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
+        <ds-icon-button
+          icon="chevronLeft"
+          variant="soft"
+          [size]="30"
+          [iconSize]="15"
+          [stroke]="2.4"
+          [radius]="'var(--ds-radius-md)'"
+          [ariaLabel]="'getEconomy.month.previous' | t"
+          (clicked)="previousMonth()"
+        />
+        <ds-icon-button
+          icon="chevronRight"
+          variant="soft"
+          [size]="30"
+          [iconSize]="15"
+          [stroke]="2.4"
+          [radius]="'var(--ds-radius-md)'"
+          [disabled]="!canGoNextMonth()"
+          [ariaLabel]="'getEconomy.month.next' | t"
+          (clicked)="nextMonth()"
+        />
+      </ds-stack>
+    </ds-stack>
+
+    @if (loading()) {
+      <ds-skeleton-list [count]="4" [gap]="'var(--ds-space-2)'" />
+    }
+
+    @if (!loading()) {
+      <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+        <ds-metric-card
+          [value]="incomeLabel()"
+          [label]="'getEconomy.summary.income' | t"
+        />
+        <ds-metric-card
+          [value]="expenseLabel()"
+          [label]="'getEconomy.summary.expense' | t"
+        />
+        <ds-metric-card
+          [value]="netLabel()"
+          [label]="'getEconomy.summary.net' | t"
+        />
+      </ds-stack>
+
+      <ds-card [padding]="'var(--ds-space-4)'">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="start"
+          [gap]="'var(--ds-space-2)'"
+        >
+          <ds-stack [gap]="'2px'" [grow]="true">
+            <ds-text variant="strong">{{
+              "getEconomy.evolution.title" | t
+            }}</ds-text>
+            <ds-text variant="meta">{{
+              "getEconomy.evolution.subtitle" | t
+            }}</ds-text>
+          </ds-stack>
+
+          <ds-trend-badge
+            [positive]="evolutionDeltaPositive()"
+            [label]="evolutionDeltaLabel()"
+          />
+        </ds-stack>
+
+        <ds-bar-chart [bars]="evolutionBars()" [height]="112" />
+      </ds-card>
+
+      @if (!hasMovements()) {
+        <ds-empty-state
+          icon="wallet"
+          [title]="'getEconomy.empty.title' | t"
+          [text]="'getEconomy.empty.text' | t"
+        />
+      }
+
+      @if (hasExpense()) {
+        <ds-section-header
+          [title]="'getEconomy.categories.title' | t"
+          size="md"
+        />
+        <ds-card [padding]="'var(--ds-space-4)'">
+          @for (row of categoryRows(); track row.key) {
+            <ds-breakdown-row
+              [label]="row.label"
+              [amountLabel]="row.amountLabel"
+              [percentageLabel]="row.percentageLabel"
+              [emoji]="row.emoji"
+              [color]="row.color"
+              [ratio]="row.ratio"
+            />
+          }
+        </ds-card>
+
+        @if (storeRows().length > 0) {
+          <ds-section-header
+            [title]="'getEconomy.stores.title' | t"
+            size="md"
+          />
+          <ds-card [padding]="'var(--ds-space-4)'">
+            @for (row of storeRows(); track row.key) {
+              <ds-breakdown-row
+                [label]="row.label"
+                [amountLabel]="row.amountLabel"
+                [ratio]="row.ratio"
+              />
+            }
+          </ds-card>
+        }
+      }
+
+      @if (subscriptionRows().length > 0) {
+        <ds-section-header
+          [title]="'getEconomy.subscriptions.title' | t"
+          [staticLabel]="subscriptionsSummary()"
+          size="md"
+        />
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          @for (row of subscriptionRows(); track row.note) {
+            <ds-transaction-row
+              [emoji]="row.emoji"
+              [title]="row.note"
+              [subtitle]="row.nextChargeLabel"
+              [amountLabel]="row.amountLabel"
+            />
+          }
+        </ds-stack>
+      }
+
+      @if (hasMovements()) {
+        <ds-section-header
+          [title]="'getEconomy.movements.title' | t"
+          [staticLabel]="movementsCountLabel()"
+          size="md"
+        />
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          @for (row of movementRows(); track row.transaction.id) {
+            <ds-swipe-to-delete
+              [disabled]="!canWrite()"
+              [removeLabel]="'getEconomy.movements.remove' | t"
+              (remove)="removeTransaction(row.transaction)"
+            >
+              <ds-pressable
+                [grow]="true"
+                [disabled]="!canWrite()"
+                [ariaLabel]="row.title"
+                (press)="openEditSheet(row.transaction)"
+              >
+                <ds-transaction-row
+                  [emoji]="row.emoji"
+                  [title]="row.title"
+                  [subtitle]="row.subtitle"
+                  [amountLabel]="row.amountLabel"
+                  [income]="row.income"
+                  [tags]="row.tags"
+                />
+              </ds-pressable>
+            </ds-swipe-to-delete>
+          }
+        </ds-stack>
+      }
+    }
+  }
+
+  <ds-modal-sheet
+    [open]="sheetOpen()"
+    [compact]="true"
+    [title]="sheetTitle() | t"
+    [closeLabel]="'getEconomy.sheet.close' | t"
+    (closed)="closeSheet()"
+  >
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-text variant="meta">{{ "getEconomy.sheet.subtitle" | t }}</ds-text>
+
+      <ds-segmented-toggle
+        [options]="kindOptions()"
+        [ngModel]="form().kind"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onKind($event)"
+      />
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getEconomy.sheet.amountLabel" | t
+        }}</ds-text>
+        <ds-amount-input
+          layout="stacked"
+          unit="€"
+          placeholder="0,00"
+          [large]="true"
+          [ariaLabel]="'getEconomy.sheet.amountLabel' | t"
+          [ngModel]="form().amount"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onAmount($event)"
+        />
+      </ds-stack>
+
+      @if (!isIncomeForm()) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-text variant="label">{{
+            "getEconomy.sheet.categoryLabel" | t
+          }}</ds-text>
+          <ds-choice-chips
+            [options]="categoryOptions()"
+            [wrap]="true"
+            [ngModel]="form().category"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onCategory($event)"
+          />
+        </ds-stack>
+      }
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{ noteLabel() | t }}</ds-text>
+        <ds-text-input
+          [strong]="true"
+          [maxLength]="255"
+          [placeholder]="notePlaceholder() | t"
+          [ariaLabel]="noteLabel() | t"
+          [ngModel]="form().note"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onNote($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getEconomy.sheet.dateLabel" | t
+        }}</ds-text>
+        <ds-date-input
+          type="date"
+          [ariaLabel]="'getEconomy.sheet.dateLabel' | t"
+          [ngModel]="form().transactionDate"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onDate($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{ storeLabel() | t }}</ds-text>
+        <ds-text-input
+          [maxLength]="120"
+          [placeholder]="'getEconomy.sheet.storePlaceholder' | t"
+          [ariaLabel]="storeLabel() | t"
+          [ngModel]="form().store"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onStore($event)"
+        />
+      </ds-stack>
+
+      @if (!isIncomeForm()) {
+        <ds-card variant="inset" [padding]="'var(--ds-space-3)'">
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="strong">{{
+                "getEconomy.sheet.recurringLabel" | t
+              }}</ds-text>
+              <ds-text variant="meta">{{
+                "getEconomy.sheet.recurringHint" | t
+              }}</ds-text>
+            </ds-stack>
+
+            <ds-toggle-switch
+              [ariaLabel]="'getEconomy.sheet.recurringLabel' | t"
+              [ngModel]="form().recurring"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onRecurring($event)"
+            />
+          </ds-stack>
+        </ds-card>
+      }
+
+      <ds-button
+        variant="primary"
+        [fullWidth]="true"
+        [disabled]="!formValid()"
+        [loading]="saving()"
+        (clicked)="save()"
+      >
+        {{ saveLabel() | t }}
+      </ds-button>
+    </ds-stack>
+  </ds-modal-sheet>
+</ds-page-wrapper>

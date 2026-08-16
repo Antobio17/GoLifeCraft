@@ -2,7 +2,7 @@ import { Component, Input } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 
-type NoteTone = "info" | "danger";
+type NoteTone = "info" | "warning" | "danger";
 
 @Component({
   selector: "ds-note",
@@ -38,6 +38,11 @@ type NoteTone = "info" | "danger";
         font-size: var(--ds-text-sm);
         color: var(--note-text, var(--ds-text-muted));
         line-height: 1.4;
+      }
+      :host([tone="warning"]) .ds-note {
+        --note-bg: var(--ds-warning-soft);
+        --note-accent: var(--ds-warning);
+        --note-text: var(--ds-warning);
       }
       :host([tone="danger"]) .ds-note {
         --note-bg: var(--ds-danger-soft);

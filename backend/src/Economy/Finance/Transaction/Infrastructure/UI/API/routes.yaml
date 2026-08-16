@@ -1,0 +1,33 @@
+get_finance_overview:
+  path: /api/v1/economy/overview
+  methods: [GET]
+  controller: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceOverviewController
+
+get_finance_calendar:
+  path: /api/v1/economy/calendar
+  methods: [GET]
+  controller: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceCalendarController
+
+get_finance_transactions:
+  path: /api/v1/economy/transactions
+  methods: [GET]
+  controller: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\GetFinanceTransactionsController
+
+create_finance_transaction:
+  path: /api/v1/economy/transactions
+  methods: [POST]
+  controller: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\CreateFinanceTransactionController
+
+update_finance_transaction:
+  path: /api/v1/economy/transactions/{financeTransactionId}
+  methods: [PUT]
+  controller: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\UpdateFinanceTransactionController
+  requirements:
+    financeTransactionId: '[0-9a-fA-F-]{36}'
+
+delete_finance_transaction:
+  path: /api/v1/economy/transactions/{financeTransactionId}
+  methods: [DELETE]
+  controller: Economy\Finance\Transaction\Infrastructure\UI\API\Controller\DeleteFinanceTransactionController
+  requirements:
+    financeTransactionId: '[0-9a-fA-F-]{36}'

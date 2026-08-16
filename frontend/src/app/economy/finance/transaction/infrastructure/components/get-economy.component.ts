@@ -1,0 +1,595 @@
+import { Component, OnInit, computed, inject, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { Observable } from "rxjs";
+import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { MetricCardComponent } from "@shared/design-system/metric-card/infrastructure/components/metric-card.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
+import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
+import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
+import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
+import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
+import { ToggleSwitchComponent } from "@shared/design-system/toggle-switch/infrastructure/components/toggle-switch.component";
+import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
+import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
+import { BalanceCardComponent } from "@shared/design-system/balance-card/infrastructure/components/balance-card.component";
+import { BarChartComponent } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
+import { BreakdownRowComponent } from "@shared/design-system/breakdown-row/infrastructure/components/breakdown-row.component";
+import { TransactionRowComponent } from "@shared/design-system/transaction-row/infrastructure/components/transaction-row.component";
+import { BarChartBar } from "@shared/design-system/bar-chart/domain/models/bar-chart-bar.model";
+import {
+  CalendarCell,
+  CalendarComponent,
+} from "@shared/design-system/calendar/infrastructure/components/calendar.component";
+import {
+  SegmentedOption,
+  SegmentedToggleComponent,
+} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import {
+  ChoiceChipOption,
+  ChoiceChipsComponent,
+} from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
+import { GetFinanceOverviewService } from "@economy/finance/transaction/application/services/get-finance-overview.service";
+import { GetFinanceTransactionsService } from "@economy/finance/transaction/application/services/get-finance-transactions.service";
+import { GetFinanceCalendarService } from "@economy/finance/transaction/application/services/get-finance-calendar.service";
+import { CreateFinanceTransactionService } from "@economy/finance/transaction/application/services/create-finance-transaction.service";
+import { UpdateFinanceTransactionService } from "@economy/finance/transaction/application/services/update-finance-transaction.service";
+import { DeleteFinanceTransactionService } from "@economy/finance/transaction/application/services/delete-finance-transaction.service";
+import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
+import { FinanceCalendarViewService } from "@economy/finance/transaction/application/services/finance-calendar-view.service";
+import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
+import { FinanceTransactionFormService } from "@economy/finance/transaction/application/services/finance-transaction-form.service";
+import { FinanceOverviewAttributes } from "@economy/finance/transaction/domain/models/finance-overview-attributes.model";
+import { FinanceCalendarDay } from "@economy/finance/transaction/domain/models/finance-calendar-day.model";
+import { FinanceTransactionView } from "@economy/finance/transaction/domain/models/finance-transaction-view.model";
+import { FinanceTransactionForm } from "@economy/finance/transaction/domain/models/finance-transaction-form.model";
+import { FinanceTransactionKind } from "@economy/finance/transaction/domain/models/finance-transaction-kind.model";
+import { FinanceTransactionSource } from "@economy/finance/transaction/domain/models/finance-transaction-source.model";
+import { FinanceCategory } from "@economy/finance/transaction/domain/models/finance-category.model";
+import { FinanceMovementRow } from "@economy/finance/transaction/domain/models/finance-movement-row.model";
+import { FinanceBreakdownRow } from "@economy/finance/transaction/domain/models/finance-breakdown-row.model";
+import { FinanceSubscriptionRow } from "@economy/finance/transaction/domain/models/finance-subscription-row.model";
+
+@Component({
+  selector: "app-get-economy",
+  templateUrl: "./get-economy.component.html",
+  styleUrls: ["./get-economy.component.css"],
+  imports: [
+    FormsModule,
+    ContextualTranslatePipe,
+    PageWrapperComponent,
+    StackComponent,
+    TextComponent,
+    HeadingComponent,
+    ButtonComponent,
+    IconButtonComponent,
+    CardComponent,
+    SectionHeaderComponent,
+    MetricCardComponent,
+    SkeletonListComponent,
+    EmptyStateComponent,
+    ModalSheetComponent,
+    NoteComponent,
+    TextInputComponent,
+    DateInputComponent,
+    AmountInputComponent,
+    ToggleSwitchComponent,
+    SwipeToDeleteComponent,
+    PressableComponent,
+    TrendBadgeComponent,
+    BalanceCardComponent,
+    BarChartComponent,
+    BreakdownRowComponent,
+    TransactionRowComponent,
+    CalendarComponent,
+    SegmentedToggleComponent,
+    ChoiceChipsComponent,
+  ],
+})
+export class GetEconomyComponent implements OnInit {
+  private translationService = inject(TranslationService);
+  private authSession = inject(AuthSessionService);
+  private getFinanceOverviewService = inject(GetFinanceOverviewService);
+  private getFinanceTransactionsService = inject(GetFinanceTransactionsService);
+  private getFinanceCalendarService = inject(GetFinanceCalendarService);
+  private createFinanceTransactionService = inject(
+    CreateFinanceTransactionService,
+  );
+  private updateFinanceTransactionService = inject(
+    UpdateFinanceTransactionService,
+  );
+  private deleteFinanceTransactionService = inject(
+    DeleteFinanceTransactionService,
+  );
+  protected view = inject(FinanceViewService);
+  protected calendarView = inject(FinanceCalendarViewService);
+  protected categoryCatalog = inject(FinanceCategoryCatalogService);
+  protected transactionForm = inject(FinanceTransactionFormService);
+
+  private readonly MODULE_PATH = "economy/finance/transaction";
+
+  canWrite = computed(() => this.authSession.isGod());
+
+  loading = signal(true);
+  saving = signal(false);
+  translationsReady = signal(false);
+
+  month = signal(this.view.currentMonth());
+  overview = signal<FinanceOverviewAttributes | null>(null);
+  transactions = signal<FinanceTransactionView[]>([]);
+  calendarDays = signal<FinanceCalendarDay[]>([]);
+
+  dayMode = signal(false);
+  selectedDate = signal<string | null>(null);
+  dayTransactions = signal<FinanceTransactionView[]>([]);
+
+  sheetOpen = signal(false);
+  editingId = signal<string | null>(null);
+  form = signal<FinanceTransactionForm>(
+    this.transactionForm.empty(this.view.todayIso()),
+  );
+
+  monthLabel = computed(() => this.view.monthLabel(this.month()));
+  canGoNextMonth = computed(
+    () => !this.view.isFutureMonth(this.view.shiftMonth(this.month(), 1)),
+  );
+
+  hasMovements = computed(() => this.transactions().length > 0);
+  hasExpense = computed(() => (this.overview()?.expense ?? 0) > 0);
+
+  balanceValue = computed(() =>
+    this.view.moneyPlain(this.overview()?.balance ?? 0),
+  );
+  balanceCaption = computed(() => {
+    this.translationsReady();
+    const delta = this.overview()?.balanceDelta ?? 0;
+
+    return `${this.view.signedMoney(delta)} ${this.t("getEconomy.balance.thisMonth")}`;
+  });
+  balanceTrendLabel = computed(() =>
+    this.view.percentage(this.overview()?.balanceDeltaPercentage ?? 0),
+  );
+  balancePositive = computed(() => (this.overview()?.balanceDelta ?? 0) >= 0);
+  balanceSeries = computed(() =>
+    (this.overview()?.series ?? []).map((point) => point.endBalance),
+  );
+
+  incomeLabel = computed(() => this.view.money(this.overview()?.income ?? 0));
+  expenseLabel = computed(() => this.view.money(this.overview()?.expense ?? 0));
+  netLabel = computed(() => this.view.signedMoney(this.overview()?.net ?? 0));
+
+  evolutionBars = computed<BarChartBar[]>(() =>
+    (this.overview()?.series ?? []).map((point) => ({
+      label: this.view.monthShort(point.month),
+      value: point.expense,
+      valueLabel: this.view.money(point.expense),
+      selected: point.month === this.month(),
+    })),
+  );
+  evolutionDeltaLabel = computed(() => {
+    const delta = this.overview()?.expenseDeltaPercentage;
+
+    return delta === null || delta === undefined
+      ? "—"
+      : this.view.percentage(delta);
+  });
+  evolutionDeltaPositive = computed(() => {
+    const delta = this.overview()?.expenseDeltaPercentage;
+
+    return delta === null || delta === undefined ? true : delta <= 0;
+  });
+
+  overspending = computed(() => this.overview()?.overspending ?? false);
+  overspendingText = computed(() => {
+    this.translationsReady();
+    const attributes = this.overview();
+
+    if (!attributes) return "";
+
+    return this.t("getEconomy.overspending.text")
+      .replace("{expense}", this.view.money(attributes.expense))
+      .replace(
+        "{percentage}",
+        `${Math.round(attributes.overspendingPercentage)}`,
+      )
+      .replace("{average}", this.view.money(attributes.averageExpense));
+  });
+
+  categoryRows = computed<FinanceBreakdownRow[]>(() => {
+    this.translationsReady();
+    const totals = this.overview()?.byCategory ?? [];
+    const max = Math.max(...totals.map((total) => total.amount), 0);
+
+    return totals.map((total) => ({
+      key: total.category,
+      label: this.categoryCatalog.label(total.category),
+      amountLabel: this.view.money(total.amount),
+      percentageLabel: `${Math.round(total.percentage)}%`,
+      emoji: this.categoryCatalog.emoji(total.category),
+      color: this.categoryCatalog.color(total.category),
+      ratio: this.view.ratio(total.amount, max),
+    }));
+  });
+
+  storeRows = computed<FinanceBreakdownRow[]>(() => {
+    const totals = this.overview()?.byStore ?? [];
+    const max = Math.max(...totals.map((total) => total.amount), 0);
+
+    return totals.map((total) => ({
+      key: total.store,
+      label: total.store,
+      amountLabel: this.view.money(total.amount),
+      percentageLabel: "",
+      emoji: "",
+      color: "",
+      ratio: this.view.ratio(total.amount, max),
+    }));
+  });
+
+  subscriptionRows = computed<FinanceSubscriptionRow[]>(() => {
+    this.translationsReady();
+
+    return (this.overview()?.subscriptions ?? []).map((subscription) => ({
+      note: subscription.note,
+      emoji: this.categoryCatalog.emoji(subscription.category),
+      color: this.categoryCatalog.color(subscription.category),
+      amountLabel: this.view.money(subscription.amount),
+      nextChargeLabel: `${this.t("getEconomy.subscriptions.next")} · ${this.view.nextChargeLabel(subscription.chargeDay)}`,
+    }));
+  });
+  subscriptionsSummary = computed(() => {
+    this.translationsReady();
+    const attributes = this.overview();
+
+    if (!attributes || attributes.subscriptions.length === 0) return "";
+
+    const count = attributes.subscriptions.length;
+    const unit = this.t(
+      count === 1
+        ? "getEconomy.subscriptions.one"
+        : "getEconomy.subscriptions.many",
+    );
+
+    return `${this.view.money(attributes.subscriptionsTotal)} / ${this.t("getEconomy.subscriptions.perMonth")} · ${count} ${unit}`;
+  });
+
+  movementRows = computed<FinanceMovementRow[]>(() =>
+    this.toRows(this.transactions()),
+  );
+  dayMovementRows = computed<FinanceMovementRow[]>(() =>
+    this.toRows(this.dayTransactions()),
+  );
+  movementsCountLabel = computed(() => {
+    this.translationsReady();
+    const count = this.transactions().length;
+    const unit = this.t(
+      count === 1 ? "getEconomy.movements.one" : "getEconomy.movements.many",
+    );
+
+    return `${count} ${unit}`;
+  });
+
+  calendarWeekdays = computed(() => this.calendarView.weekdays());
+  calendarCells = computed<CalendarCell[]>(() =>
+    this.calendarView.buildCells(
+      this.month(),
+      this.calendarDays(),
+      this.selectedDate(),
+      this.view.todayIso(),
+    ),
+  );
+
+  dayTitle = computed(() => {
+    const date = this.selectedDate();
+
+    return date ? this.view.dayLong(date) : "";
+  });
+  dayExpenseLabel = computed(() =>
+    this.view.money(
+      this.dayTransactions()
+        .filter(
+          (transaction) => transaction.kind === FinanceTransactionKind.EXPENSE,
+        )
+        .reduce((total, transaction) => total + transaction.amount, 0),
+    ),
+  );
+  dayIncomeTotal = computed(() =>
+    this.dayTransactions()
+      .filter(
+        (transaction) => transaction.kind === FinanceTransactionKind.INCOME,
+      )
+      .reduce((total, transaction) => total + transaction.amount, 0),
+  );
+  dayIncomeLabel = computed(() => this.view.money(this.dayIncomeTotal()));
+  dayHasIncome = computed(() => this.dayIncomeTotal() > 0);
+
+  kindOptions = computed<SegmentedOption[]>(() => {
+    this.translationsReady();
+
+    return [
+      {
+        value: FinanceTransactionKind.EXPENSE,
+        label: this.t("getEconomy.kind.expense"),
+      },
+      {
+        value: FinanceTransactionKind.INCOME,
+        label: this.t("getEconomy.kind.income"),
+      },
+    ];
+  });
+  categoryOptions = computed<ChoiceChipOption[]>(() => {
+    this.translationsReady();
+
+    return this.categoryCatalog.chipOptions();
+  });
+
+  isIncomeForm = computed(
+    () => this.form().kind === FinanceTransactionKind.INCOME,
+  );
+  sheetTitle = computed(() =>
+    this.isIncomeForm()
+      ? "getEconomy.sheet.incomeTitle"
+      : "getEconomy.sheet.expenseTitle",
+  );
+  noteLabel = computed(() =>
+    this.isIncomeForm()
+      ? "getEconomy.sheet.conceptLabel"
+      : "getEconomy.sheet.noteLabel",
+  );
+  notePlaceholder = computed(() =>
+    this.isIncomeForm()
+      ? "getEconomy.sheet.conceptPlaceholder"
+      : "getEconomy.sheet.notePlaceholder",
+  );
+  storeLabel = computed(() =>
+    this.isIncomeForm()
+      ? "getEconomy.sheet.originLabel"
+      : "getEconomy.sheet.storeLabel",
+  );
+  saveLabel = computed(() =>
+    this.isIncomeForm()
+      ? "getEconomy.sheet.saveIncome"
+      : "getEconomy.sheet.saveExpense",
+  );
+  formValid = computed(() => this.transactionForm.isValid(this.form()));
+
+  ngOnInit(): void {
+    this.translationService
+      .loadModuleTranslations(this.MODULE_PATH)
+      .then(() => {
+        this.translationsReady.set(true);
+        this.load();
+      });
+  }
+
+  t(key: string): string {
+    return this.translationService.translate(key, this.MODULE_PATH);
+  }
+
+  previousMonth(): void {
+    this.month.set(this.view.shiftMonth(this.month(), -1));
+    this.clearDay();
+    this.load();
+  }
+
+  nextMonth(): void {
+    if (!this.canGoNextMonth()) return;
+
+    this.month.set(this.view.shiftMonth(this.month(), 1));
+    this.clearDay();
+    this.load();
+  }
+
+  toggleDayMode(): void {
+    this.dayMode.update((mode) => !mode);
+  }
+
+  onCalendarDay(date: string): void {
+    this.selectedDate.set(date);
+    this.loadDay(date);
+  }
+
+  clearDay(): void {
+    this.selectedDate.set(null);
+    this.dayTransactions.set([]);
+  }
+
+  openNewSheet(): void {
+    if (!this.canWrite()) return;
+
+    this.editingId.set(null);
+    this.form.set(
+      this.transactionForm.empty(this.selectedDate() ?? this.view.todayIso()),
+    );
+    this.sheetOpen.set(true);
+  }
+
+  openEditSheet(transaction: FinanceTransactionView): void {
+    if (!this.canWrite()) return;
+
+    this.editingId.set(transaction.id);
+    this.form.set(this.transactionForm.fromView(transaction));
+    this.sheetOpen.set(true);
+  }
+
+  closeSheet(): void {
+    this.sheetOpen.set(false);
+    this.saving.set(false);
+  }
+
+  onKind(kind: string): void {
+    this.form.update((form) => ({
+      ...form,
+      kind: kind as FinanceTransactionKind,
+    }));
+  }
+
+  onCategory(category: string): void {
+    this.form.update((form) => ({
+      ...form,
+      category: category as FinanceCategory,
+    }));
+  }
+
+  onAmount(amount: string): void {
+    this.form.update((form) => ({ ...form, amount }));
+  }
+
+  onNote(note: string): void {
+    this.form.update((form) => ({ ...form, note }));
+  }
+
+  onStore(store: string): void {
+    this.form.update((form) => ({ ...form, store }));
+  }
+
+  onDate(transactionDate: string): void {
+    this.form.update((form) => ({ ...form, transactionDate }));
+  }
+
+  onRecurring(recurring: boolean): void {
+    this.form.update((form) => ({ ...form, recurring }));
+  }
+
+  save(): void {
+    if (!this.formValid() || this.saving()) return;
+
+    this.saving.set(true);
+
+    this.buildSaveRequest().subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.sheetOpen.set(false);
+        this.reload();
+      },
+      error: () => this.saving.set(false),
+    });
+  }
+
+  removeTransaction(transaction: FinanceTransactionView): void {
+    if (!this.canWrite()) return;
+
+    this.deleteFinanceTransactionService
+      .deleteFinanceTransaction(transaction.id)
+      .subscribe({ next: () => this.reload() });
+  }
+
+  private buildSaveRequest(): Observable<void> {
+    const form = this.form();
+    const payload = this.transactionForm.toPayload(
+      form,
+      this.fallbackNote(form),
+    );
+    const editingId = this.editingId();
+
+    if (editingId) {
+      return this.updateFinanceTransactionService.updateFinanceTransaction(
+        editingId,
+        payload,
+      );
+    }
+
+    return this.createFinanceTransactionService.createFinanceTransaction(
+      payload,
+    );
+  }
+
+  private fallbackNote(form: FinanceTransactionForm): string {
+    return form.kind === FinanceTransactionKind.INCOME
+      ? this.t("getEconomy.kind.income")
+      : this.categoryCatalog.label(form.category);
+  }
+
+  private toRows(transactions: FinanceTransactionView[]): FinanceMovementRow[] {
+    this.translationsReady();
+
+    return transactions.map((transaction) => {
+      const income = transaction.kind === FinanceTransactionKind.INCOME;
+      const category = this.categoryCatalog.label(transaction.category);
+      const origin = transaction.store ?? category;
+
+      return {
+        transaction,
+        emoji: income
+          ? this.categoryCatalog.incomeEmoji()
+          : this.categoryCatalog.emoji(transaction.category),
+        title: transaction.note || category,
+        subtitle: `${origin} · ${this.view.dayShort(transaction.transactionDate)}`,
+        amountLabel: `${income ? "+" : "−"}${this.view.money(transaction.amount)}`,
+        income,
+        tags: this.tagsFor(transaction),
+      };
+    });
+  }
+
+  private tagsFor(
+    transaction: FinanceTransactionView,
+  ): FinanceMovementRow["tags"] {
+    const tags = [];
+
+    if (transaction.source === FinanceTransactionSource.TICKET) {
+      tags.push({ label: this.t("getEconomy.tag.ticket"), highlighted: true });
+    }
+
+    if (transaction.recurring) {
+      tags.push({
+        label: this.t("getEconomy.tag.recurring"),
+        highlighted: false,
+      });
+    }
+
+    return tags;
+  }
+
+  private reload(): void {
+    this.load(true);
+
+    const date = this.selectedDate();
+
+    if (date) this.loadDay(date);
+  }
+
+  private load(silent = false): void {
+    if (!silent) this.loading.set(true);
+
+    const month = this.month();
+
+    this.getFinanceOverviewService.getFinanceOverview(month).subscribe({
+      next: (response) => {
+        this.overview.set(response.data.attributes);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
+
+    this.getFinanceTransactionsService.getFinanceTransactions(month).subscribe({
+      next: (response) =>
+        this.transactions.set(response.data.attributes.transactions),
+    });
+
+    this.getFinanceCalendarService.getFinanceCalendar(month).subscribe({
+      next: (response) => this.calendarDays.set(response.data.attributes.days),
+    });
+  }
+
+  private loadDay(date: string): void {
+    this.getFinanceTransactionsService
+      .getFinanceTransactions(this.month(), date)
+      .subscribe({
+        next: (response) =>
+          this.dayTransactions.set(response.data.attributes.transactions),
+      });
+  }
+}
