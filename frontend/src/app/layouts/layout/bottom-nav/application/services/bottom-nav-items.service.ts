@@ -12,21 +12,15 @@ export class BottomNavItemsService {
         exact: false,
       },
       {
-        route: "/gym",
-        icon: "dumbbell",
-        labelKey: "navbar.gym",
-        exact: false,
-      },
-      {
-        route: "/agenda",
-        icon: "agenda",
-        labelKey: "navbar.agenda",
-        exact: false,
-      },
-      {
         route: "/diary",
         icon: "diary",
         labelKey: "navbar.diary",
+        exact: false,
+      },
+      {
+        route: "/gym",
+        icon: "dumbbell",
+        labelKey: "navbar.gym",
         exact: false,
       },
       {
@@ -36,21 +30,27 @@ export class BottomNavItemsService {
         exact: false,
       },
       {
-        route: "/recipes",
-        icon: "chefHat",
-        labelKey: "navbar.recipes",
-        exact: false,
-      },
-      {
         route: "/catalog",
         icon: "leaf",
         labelKey: "navbar.catalog",
         exact: true,
       },
       {
+        route: "/recipes",
+        icon: "chefHat",
+        labelKey: "navbar.recipes",
+        exact: false,
+      },
+      {
         route: "/shopping-list",
         icon: "cart",
         labelKey: "navbar.list",
+        exact: false,
+      },
+      {
+        route: "/agenda",
+        icon: "agenda",
+        labelKey: "navbar.agenda",
         exact: false,
       },
     ];
