@@ -1,26 +1,28 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { SupportedLanguages } from "@shared/i18n/domain/models/translation.model";
 import {
   CalendarCell,
   CalendarDayMark,
 } from "@shared/design-system/calendar/infrastructure/components/calendar.component";
 import { FinanceCalendarDay } from "../../domain/models/finance-calendar-day.model";
 
+const FIRST_MONDAY = Date.UTC(2024, 0, 1);
+const DAY_IN_MS = 86400000;
+const DAYS_IN_WEEK = 7;
+
 @Injectable()
 export class FinanceCalendarViewService {
   private translationService = inject(TranslationService);
 
-  private readonly weekdayLabels = ["L", "M", "X", "J", "V", "S", "D"];
-
   weekdays(): string[] {
-    if (
-      SupportedLanguages.EN === this.translationService.getCurrentLanguage()
-    ) {
-      return ["M", "T", "W", "T", "F", "S", "S"];
-    }
+    const formatter = new Intl.DateTimeFormat(
+      this.translationService.getLocale(),
+      { weekday: "narrow", timeZone: "UTC" },
+    );
 
-    return this.weekdayLabels;
+    return Array.from({ length: DAYS_IN_WEEK }, (_unused, index) =>
+      formatter.format(new Date(FIRST_MONDAY + index * DAY_IN_MS)),
+    );
   }
 
   buildCells(
