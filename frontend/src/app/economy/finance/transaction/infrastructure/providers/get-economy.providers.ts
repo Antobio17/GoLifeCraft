@@ -11,6 +11,7 @@ import { GetFinanceCalendarService } from "@economy/finance/transaction/applicat
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCalendarViewService } from "@economy/finance/transaction/application/services/finance-calendar-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
+import { FinanceMovementGroupingService } from "@economy/finance/transaction/application/services/finance-movement-grouping.service";
 
 export class GetEconomyProviders {
   static getProviders(): Provider[] {
@@ -18,6 +19,7 @@ export class GetEconomyProviders {
       FinanceViewService,
       FinanceCalendarViewService,
       FinanceCategoryCatalogService,
+      FinanceMovementGroupingService,
       {
         provide: GetFinanceOverviewPort,
         useClass: HttpGetFinanceOverviewAdapter,

@@ -86,25 +86,24 @@
       <ds-stack [gap]="'var(--ds-space-2)'">
         @for (row of dayMovementRows(); track row.transaction.id) {
           <ds-swipe-to-delete
+            #daySwipe
+            radius="var(--ds-radius-lg)"
             [disabled]="!canWrite()"
             [removeLabel]="'getEconomy.movements.remove' | t"
             (remove)="removeTransaction(row.transaction)"
           >
-            <ds-pressable
-              [grow]="true"
-              [disabled]="!canWrite()"
-              [ariaLabel]="row.title"
-              (press)="openEditSheet(row.transaction)"
-            >
-              <ds-transaction-row
-                [emoji]="row.emoji"
-                [title]="row.title"
-                [subtitle]="row.subtitle"
-                [amountLabel]="row.amountLabel"
-                [income]="row.income"
-                [tags]="row.tags"
-              />
-            </ds-pressable>
+            <ds-transaction-row
+              [emoji]="row.emoji"
+              [title]="row.title"
+              [subtitle]="row.subtitle"
+              [amountLabel]="row.amountLabel"
+              [income]="row.income"
+              [tags]="row.tags"
+              [pressable]="canWrite()"
+              [pressLabel]="row.title"
+              [slid]="daySwipe.slid"
+              (pressed)="openEditSheet(row.transaction)"
+            />
           </ds-swipe-to-delete>
         }
       </ds-stack>
@@ -281,18 +280,30 @@
           [staticLabel]="movementsCountLabel()"
           size="md"
         />
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          @for (row of movementRows(); track row.transaction.id) {
-            <ds-swipe-to-delete
-              [disabled]="!canWrite()"
-              [removeLabel]="'getEconomy.movements.remove' | t"
-              (remove)="removeTransaction(row.transaction)"
-            >
-              <ds-pressable
-                [grow]="true"
+
+        <ds-segmented-toggle
+          [options]="groupingOptions()"
+          [ngModel]="grouping()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onGrouping($event)"
+        />
+
+        @for (group of movementGroups(); track group.key) {
+          @if (group.label) {
+            <ds-section-header
+              [title]="group.label"
+              [staticLabel]="group.summaryLabel"
+            />
+          }
+
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            @for (row of group.rows; track row.transaction.id) {
+              <ds-swipe-to-delete
+                #swipe
+                radius="var(--ds-radius-lg)"
                 [disabled]="!canWrite()"
-                [ariaLabel]="row.title"
-                (press)="openEditSheet(row.transaction)"
+                [removeLabel]="'getEconomy.movements.remove' | t"
+                (remove)="removeTransaction(row.transaction)"
               >
                 <ds-transaction-row
                   [emoji]="row.emoji"
@@ -301,11 +312,15 @@
                   [amountLabel]="row.amountLabel"
                   [income]="row.income"
                   [tags]="row.tags"
+                  [pressable]="canWrite()"
+                  [pressLabel]="row.title"
+                  [slid]="swipe.slid"
+                  (pressed)="openEditSheet(row.transaction)"
                 />
-              </ds-pressable>
-            </ds-swipe-to-delete>
-          }
-        </ds-stack>
+              </ds-swipe-to-delete>
+            }
+          </ds-stack>
+        }
       }
     }
   }

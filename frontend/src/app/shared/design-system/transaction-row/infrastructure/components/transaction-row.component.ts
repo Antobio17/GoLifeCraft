@@ -1,10 +1,29 @@
-import { Component, Input } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
 import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model";
 
 @Component({
   selector: "ds-transaction-row",
+  imports: [NgTemplateOutlet, PressableComponent],
   template: `
-    <div class="ds-tx">
+    <div class="ds-tx" [class.ds-tx--slid]="slid">
+      @if (pressable) {
+        <ds-pressable
+          [grow]="true"
+          [disabled]="disabled"
+          [ariaLabel]="pressLabel || title"
+          gap="var(--ds-space-2)"
+          (press)="pressed.emit()"
+        >
+          <ng-container [ngTemplateOutlet]="content" />
+        </ds-pressable>
+      } @else {
+        <ng-container [ngTemplateOutlet]="content" />
+      }
+    </div>
+
+    <ng-template #content>
       <span class="ds-tx__chip" [class.is-income]="income">{{ emoji }}</span>
       <span class="ds-tx__body">
         <span class="ds-tx__head">
@@ -20,12 +39,14 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
       <span class="ds-tx__amount" [class.is-income]="income">{{
         amountLabel
       }}</span>
-    </div>
+    </ng-template>
   `,
   styles: [
     `
       :host {
         display: block;
+        width: 100%;
+        min-width: 0;
       }
       .ds-tx {
         display: flex;
@@ -35,6 +56,10 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-2) var(--ds-space-3);
+      }
+      .ds-tx--slid {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
       }
       .ds-tx__chip {
         width: 2.5rem;
@@ -64,6 +89,8 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         min-width: 0;
       }
       .ds-tx__title {
+        flex: 0 1 auto;
+        min-width: 0;
         font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
@@ -113,4 +140,10 @@ export class TransactionRowComponent {
   @Input() amountLabel = "";
   @Input() income = false;
   @Input() tags: TransactionRowTag[] = [];
+  @Input() pressable = false;
+  @Input() pressLabel = "";
+  @Input() disabled = false;
+  @Input() slid = false;
+
+  @Output() pressed = new EventEmitter<void>();
 }
