@@ -202,7 +202,9 @@ export class GetEconomyComponent implements OnInit {
   );
 
   incomeLabel = computed(() => this.view.money(this.overview()?.income ?? 0));
-  expenseLabel = computed(() => this.view.money(this.overview()?.expense ?? 0));
+  expenseLabel = computed(() =>
+    this.view.negativeMoney(this.overview()?.expense ?? 0),
+  );
   netLabel = computed(() => this.view.signedMoney(this.overview()?.net ?? 0));
 
   evolutionBars = computed<BarChartBar[]>(() =>

@@ -5,7 +5,11 @@ export type MetricCardVariant = "plain" | "feature";
 @Component({
   selector: "ds-metric-card",
   template: `
-    <div class="ds-metric" [class.ds-metric--feature]="variant === 'feature'">
+    <div
+      class="ds-metric"
+      [class.ds-metric--feature]="variant === 'feature'"
+      [class.ds-metric--compact]="size === 'compact'"
+    >
       <div class="ds-metric__value">{{ value }}</div>
       <div class="ds-metric__label">{{ label }}</div>
     </div>
@@ -37,6 +41,9 @@ export type MetricCardVariant = "plain" | "feature";
         line-height: 1;
         color: var(--ds-text);
       }
+      .ds-metric--compact .ds-metric__value {
+        font-size: var(--ds-text-lg);
+      }
       .ds-metric--feature .ds-metric__value {
         color: var(--ds-on-surface-brand);
       }
@@ -57,4 +64,5 @@ export class MetricCardComponent {
   @Input() value: string | number = "";
   @Input() label = "";
   @Input() variant: MetricCardVariant = "plain";
+  @Input() size: "default" | "compact" = "default";
 }
