@@ -56,8 +56,7 @@
   right: 0;
   bottom: 0;
   max-height: 90%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   padding: 0 0 calc(env(safe-area-inset-bottom) + var(--ds-space-3));
@@ -154,6 +153,15 @@
 
 .drawer__rule--bottom {
   margin-top: var(--ds-space-2);
+}
+
+/* ─── Scrollable region ─── */
+
+.drawer__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* ─── Nav ─── */
@@ -307,6 +315,10 @@
     align-items: center;
     order: 1;
     padding: var(--ds-space-5) var(--ds-space-4) var(--ds-space-4);
+  }
+
+  .drawer__scroll {
+    display: contents;
   }
 
   .drawer__nav {
