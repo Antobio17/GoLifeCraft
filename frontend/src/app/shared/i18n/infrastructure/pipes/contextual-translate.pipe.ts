@@ -56,6 +56,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     getRecipe: "nutrition/recipe/recipe",
     recipeEditor: "nutrition/recipe/recipe",
     recipe: "nutrition/recipe/recipe",
+    getEconomy: "economy/finance/transaction",
     getWorkouts: "gym/training/workout",
     getWorkout: "gym/training/workout",
     workout: "gym/training/workout",
