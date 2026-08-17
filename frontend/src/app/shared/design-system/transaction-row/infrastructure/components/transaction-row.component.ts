@@ -77,7 +77,7 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.04em;
         border-radius: var(--ds-radius-sm);
-        padding: 0.125rem 0.3125rem;
+        padding: 0.125rem var(--ds-space-1);
         background: var(--ds-surface-inset);
         color: var(--ds-text-muted);
       }

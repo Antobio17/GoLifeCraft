@@ -44,9 +44,9 @@ const MIN_FILL = 4;
         gap: var(--ds-space-2);
       }
       .ds-breakdown__dot {
-        width: 0.625rem;
-        height: 0.625rem;
-        border-radius: 0.1875rem;
+        width: var(--ds-space-2);
+        height: var(--ds-space-2);
+        border-radius: var(--ds-radius-sm);
         flex: 0 0 auto;
       }
       .ds-breakdown__emoji {
@@ -83,8 +83,10 @@ const MIN_FILL = 4;
         background: var(--ds-surface-inset);
         overflow: hidden;
       }
+      /* El punto y el hueco miden un paso cada uno, así que la barra
+         arranca bajo la etiqueta en dos pasos exactos. */
       .ds-breakdown__track.is-indented {
-        margin-left: 1.1875rem;
+        margin-left: var(--ds-space-4);
       }
       .ds-breakdown__fill {
         display: block;

@@ -74,7 +74,7 @@ const PAD = 14;
         align-items: center;
         gap: var(--ds-space-1);
         border-radius: var(--ds-radius-pill);
-        padding: 0.25rem 0.5625rem;
+        padding: var(--ds-space-1) var(--ds-space-2);
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
         background: color-mix(
