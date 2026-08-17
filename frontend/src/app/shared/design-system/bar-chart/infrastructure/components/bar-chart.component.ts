@@ -47,8 +47,7 @@ const EMPTY_HEIGHT = 4;
         display: block;
         width: 100%;
         min-height: 0.25rem;
-        border-radius: var(--ds-radius-sm) var(--ds-radius-sm) 0.1875rem
-          0.1875rem;
+        border-radius: var(--ds-radius-sm) var(--ds-radius-sm) 0 0;
         background: var(--ds-data-3);
         transition: height var(--ds-transition-base);
       }
