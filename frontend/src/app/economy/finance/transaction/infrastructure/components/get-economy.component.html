@@ -16,10 +16,10 @@
       <ds-icon-button
         icon="calendar"
         [variant]="dayMode() ? 'solid' : 'soft'"
-        [size]="38"
-        [iconSize]="18"
+        [size]="40"
+        [iconSize]="19"
         [stroke]="2.1"
-        [radius]="'var(--ds-radius-md)'"
+        [radius]="'var(--ds-radius-lg)'"
         [ariaLabel]="'getEconomy.dayView' | t"
         (clicked)="toggleDayMode()"
       />
@@ -27,13 +27,12 @@
       @if (canWrite()) {
         <ds-button
           variant="primary"
-          size="sm"
+          size="icon-lg"
           icon="plus"
-          [iconSize]="15"
+          [iconSize]="19"
+          [ariaLabel]="'getEconomy.add' | t"
           (clicked)="openNewSheet()"
-        >
-          {{ "getEconomy.add" | t }}
-        </ds-button>
+        />
       }
     </ds-stack>
   </ds-stack>
