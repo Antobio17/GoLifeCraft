@@ -51,9 +51,14 @@ const PAD = 14;
         display: block;
       }
       .ds-balance {
-        background: var(--ds-surface-brand);
-        color: var(--ds-on-surface-brand);
-        border-radius: var(--ds-radius-2xl);
+        --ds-accent: var(--ds-accent-on-chart);
+        --ds-on-accent: var(--ds-on-accent-on-chart);
+        --ds-primary: var(--ds-accent-on-chart);
+        --ds-on-primary: var(--ds-on-accent-on-chart);
+        background: var(--ds-surface-chart);
+        color: var(--ds-on-surface-chart);
+        border: 1px solid var(--ds-border);
+        border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-4);
         overflow: hidden;
       }
@@ -67,7 +72,8 @@ const PAD = 14;
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-bold);
         letter-spacing: 0.06em;
-        color: var(--ds-accent-on-brand);
+        text-transform: uppercase;
+        color: var(--ds-accent);
       }
       .ds-balance__trend {
         display: inline-flex;
@@ -77,16 +83,11 @@ const PAD = 14;
         padding: var(--ds-space-1) var(--ds-space-2);
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
-        background: color-mix(
-          in srgb,
-          var(--ds-accent-on-brand) 20%,
-          transparent
-        );
-        color: var(--ds-accent-on-brand);
+        background: var(--ds-surface-inset);
+        color: var(--ds-accent);
       }
       .ds-balance__trend.is-down {
-        background: color-mix(in srgb, var(--ds-warning) 22%, transparent);
-        color: var(--ds-warning);
+        color: var(--ds-danger);
       }
       .ds-balance__value {
         margin-top: var(--ds-space-2);
@@ -99,36 +100,37 @@ const PAD = 14;
       .ds-balance__unit {
         font-size: var(--ds-text-lg);
         font-weight: var(--ds-weight-bold);
-        opacity: 0.55;
+        color: var(--ds-text-muted);
       }
       .ds-balance__caption {
         margin-top: var(--ds-space-1);
         font-size: var(--ds-text-sm);
-        opacity: 0.65;
+        color: var(--ds-text-muted);
       }
       .ds-balance__spark {
         display: block;
         width: 100%;
         height: 4rem;
-        margin-top: var(--ds-space-2);
+        margin-top: var(--ds-space-4);
         overflow: visible;
       }
       .ds-balance__area {
-        fill: var(--ds-accent-on-brand);
+        fill: var(--ds-accent);
         opacity: 0.16;
       }
       .ds-balance__line {
         fill: none;
-        stroke: var(--ds-accent-on-brand);
-        stroke-width: 2.5;
+        stroke: var(--ds-accent);
+        stroke-width: 2;
         stroke-linecap: round;
         stroke-linejoin: round;
         vector-effect: non-scaling-stroke;
       }
       .ds-balance__dot {
-        fill: var(--ds-accent-on-brand);
-        stroke: var(--ds-surface-brand);
+        fill: var(--ds-accent);
+        stroke: var(--ds-surface-chart);
         stroke-width: 2;
+        vector-effect: non-scaling-stroke;
       }
     `,
   ],
