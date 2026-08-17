@@ -33,9 +33,37 @@ const CATEGORIES: Record<FinanceCategory, FinanceCategoryEntry> = {
     emoji: "🏠",
     color: "var(--ds-cat-home)",
   },
+  [FinanceCategory.BILLS]: {
+    emoji: "💡",
+    color: "var(--ds-cat-bills)",
+  },
   [FinanceCategory.HEALTH]: {
     emoji: "🩺",
     color: "var(--ds-cat-health)",
+  },
+  [FinanceCategory.BEAUTY]: {
+    emoji: "💅",
+    color: "var(--ds-cat-beauty)",
+  },
+  [FinanceCategory.CLOTHING]: {
+    emoji: "👕",
+    color: "var(--ds-cat-clothing)",
+  },
+  [FinanceCategory.TREATS]: {
+    emoji: "🍫",
+    color: "var(--ds-cat-treats)",
+  },
+  [FinanceCategory.GIFTS]: {
+    emoji: "🎁",
+    color: "var(--ds-cat-gifts)",
+  },
+  [FinanceCategory.TRAVEL]: {
+    emoji: "✈️",
+    color: "var(--ds-cat-travel)",
+  },
+  [FinanceCategory.PETS]: {
+    emoji: "🐾",
+    color: "var(--ds-cat-pets)",
   },
   [FinanceCategory.SUBSCRIPTIONS]: {
     emoji: "🔁",

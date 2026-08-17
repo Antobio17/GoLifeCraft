@@ -63,7 +63,14 @@
   "getEconomy.category.transport": "Transporte",
   "getEconomy.category.leisure": "Ocio",
   "getEconomy.category.home": "Hogar",
+  "getEconomy.category.bills": "Suministros",
   "getEconomy.category.health": "Salud",
+  "getEconomy.category.beauty": "Estética",
+  "getEconomy.category.clothing": "Ropa",
+  "getEconomy.category.treats": "Caprichos",
+  "getEconomy.category.gifts": "Regalos",
+  "getEconomy.category.travel": "Viajes",
+  "getEconomy.category.pets": "Mascotas",
   "getEconomy.category.subscriptions": "Suscripciones",
   "getEconomy.category.other": "Otros"
 }
