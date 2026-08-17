@@ -173,7 +173,14 @@
   --ds-cat-transport: #5b7a9d;
   --ds-cat-leisure: #b4874a;
   --ds-cat-home: #8a7b5c;
+  --ds-cat-bills: #3f7f8f;
   --ds-cat-health: #b5544a;
+  --ds-cat-beauty: #c2688f;
+  --ds-cat-clothing: #5f6bb0;
+  --ds-cat-treats: #8b5e3c;
+  --ds-cat-gifts: #a05f9c;
+  --ds-cat-travel: #3f8f7d;
+  --ds-cat-pets: #a89234;
   --ds-cat-subscriptions: #7a6ba8;
   --ds-cat-other: #9a958a;
 
@@ -265,7 +272,14 @@
   --ds-cat-transport: #8fb0d3;
   --ds-cat-leisure: #dcb173;
   --ds-cat-home: #bdae8d;
+  --ds-cat-bills: #82bccb;
   --ds-cat-health: #e58379;
+  --ds-cat-beauty: #e9a0bd;
+  --ds-cat-clothing: #9aa4de;
+  --ds-cat-treats: #c69770;
+  --ds-cat-gifts: #cf9bcb;
+  --ds-cat-travel: #7cc4b1;
+  --ds-cat-pets: #dcc76a;
   --ds-cat-subscriptions: #ad9dd8;
   --ds-cat-other: #c2bdb1;
 
