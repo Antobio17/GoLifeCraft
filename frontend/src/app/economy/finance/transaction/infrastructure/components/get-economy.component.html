@@ -210,14 +210,17 @@
     @if (!loading()) {
       <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
         <ds-metric-card
+          size="compact"
           [value]="incomeLabel()"
           [label]="'getEconomy.summary.income' | t"
         />
         <ds-metric-card
+          size="compact"
           [value]="expenseLabel()"
           [label]="'getEconomy.summary.expense' | t"
         />
         <ds-metric-card
+          size="compact"
           [value]="netLabel()"
           [label]="'getEconomy.summary.net' | t"
         />

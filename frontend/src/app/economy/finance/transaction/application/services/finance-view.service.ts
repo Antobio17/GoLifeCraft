@@ -97,6 +97,10 @@ export class FinanceViewService {
     }).format(amount);
   }
 
+  negativeMoney(amount: number): string {
+    return `−${this.money(Math.abs(amount))}`;
+  }
+
   signedMoney(amount: number): string {
     const sign = amount >= 0 ? "+" : "−";
 
