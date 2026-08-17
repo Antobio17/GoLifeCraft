@@ -22,7 +22,6 @@ import { DateInputComponent } from "@shared/design-system/date-input/infrastruct
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { ToggleSwitchComponent } from "@shared/design-system/toggle-switch/infrastructure/components/toggle-switch.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
-import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
 import { BalanceCardComponent } from "@shared/design-system/balance-card/infrastructure/components/balance-card.component";
 import { BarChartComponent } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
@@ -50,6 +49,7 @@ import { DeleteFinanceTransactionService } from "@economy/finance/transaction/ap
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCalendarViewService } from "@economy/finance/transaction/application/services/finance-calendar-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
+import { FinanceMovementGroupingService } from "@economy/finance/transaction/application/services/finance-movement-grouping.service";
 import { FinanceTransactionFormService } from "@economy/finance/transaction/application/services/finance-transaction-form.service";
 import { FinanceOverviewAttributes } from "@economy/finance/transaction/domain/models/finance-overview-attributes.model";
 import { FinanceCalendarDay } from "@economy/finance/transaction/domain/models/finance-calendar-day.model";
@@ -59,6 +59,8 @@ import { FinanceTransactionKind } from "@economy/finance/transaction/domain/mode
 import { FinanceTransactionSource } from "@economy/finance/transaction/domain/models/finance-transaction-source.model";
 import { FinanceCategory } from "@economy/finance/transaction/domain/models/finance-category.model";
 import { FinanceMovementRow } from "@economy/finance/transaction/domain/models/finance-movement-row.model";
+import { FinanceMovementGroup } from "@economy/finance/transaction/domain/models/finance-movement-group.model";
+import { FinanceMovementGrouping } from "@economy/finance/transaction/domain/models/finance-movement-grouping.model";
 import { FinanceBreakdownRow } from "@economy/finance/transaction/domain/models/finance-breakdown-row.model";
 import { FinanceSubscriptionRow } from "@economy/finance/transaction/domain/models/finance-subscription-row.model";
 
@@ -87,7 +89,6 @@ import { FinanceSubscriptionRow } from "@economy/finance/transaction/domain/mode
     AmountInputComponent,
     ToggleSwitchComponent,
     SwipeToDeleteComponent,
-    PressableComponent,
     TrendBadgeComponent,
     BalanceCardComponent,
     BarChartComponent,
@@ -116,6 +117,7 @@ export class GetEconomyComponent implements OnInit {
   protected view = inject(FinanceViewService);
   protected calendarView = inject(FinanceCalendarViewService);
   protected categoryCatalog = inject(FinanceCategoryCatalogService);
+  protected movementGrouping = inject(FinanceMovementGroupingService);
   protected transactionForm = inject(FinanceTransactionFormService);
 
   private readonly MODULE_PATH = "economy/finance/transaction";
@@ -134,6 +136,7 @@ export class GetEconomyComponent implements OnInit {
   dayMode = signal(false);
   selectedDate = signal<string | null>(null);
   dayTransactions = signal<FinanceTransactionView[]>([]);
+  grouping = signal<FinanceMovementGrouping>(FinanceMovementGrouping.DATE);
 
   sheetOpen = signal(false);
   editingId = signal<string | null>(null);
@@ -271,6 +274,23 @@ export class GetEconomyComponent implements OnInit {
   dayMovementRows = computed<FinanceMovementRow[]>(() =>
     this.toRows(this.dayTransactions()),
   );
+  movementGroups = computed<FinanceMovementGroup[]>(() =>
+    this.movementGrouping.group(this.movementRows(), this.grouping()),
+  );
+  groupingOptions = computed<SegmentedOption[]>(() => {
+    this.translationsReady();
+
+    return [
+      {
+        value: FinanceMovementGrouping.DATE,
+        label: this.t("getEconomy.grouping.date"),
+      },
+      {
+        value: FinanceMovementGrouping.CATEGORY,
+        label: this.t("getEconomy.grouping.category"),
+      },
+    ];
+  });
   movementsCountLabel = computed(() => {
     this.translationsReady();
     const count = this.transactions().length;
@@ -394,6 +414,10 @@ export class GetEconomyComponent implements OnInit {
 
   toggleDayMode(): void {
     this.dayMode.update((mode) => !mode);
+  }
+
+  onGrouping(grouping: string): void {
+    this.grouping.set(grouping as FinanceMovementGrouping);
   }
 
   onCalendarDay(date: string): void {
