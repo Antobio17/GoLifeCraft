@@ -203,10 +203,7 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
                 movements: $movements,
             );
 
-            $endBalances[$key] = array_sum(array: array_intersect_key(
-                array: $balances,
-                keys: $knownAccounts,
-            ));
+            $endBalances[$key] = array_sum(array: array_intersect_key($balances, $knownAccounts));
         }
 
         return $endBalances;
