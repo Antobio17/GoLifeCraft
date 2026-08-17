@@ -21,3 +21,10 @@ delete_finance_balance_check:
   controller: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\DeleteFinanceBalanceCheckController
   requirements:
     financeBalanceCheckId: '[0-9a-fA-F-]{36}'
+
+set_finance_account_balance:
+  path: /api/v1/economy/accounts/{financeAccountId}/balance
+  methods: [PUT]
+  controller: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\SetFinanceAccountBalanceController
+  requirements:
+    financeAccountId: '[0-9a-fA-F-]{36}'

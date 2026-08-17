@@ -31,6 +31,8 @@ final readonly class CreateFinanceAccountCommandHandler
             type: $command->type,
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
+            initialBalance: $command->initialBalance,
+            initialBalanceDate: $command->initialBalanceDate,
         );
 
         $this->financeAccountRepository->save(financeAccount: $financeAccount);

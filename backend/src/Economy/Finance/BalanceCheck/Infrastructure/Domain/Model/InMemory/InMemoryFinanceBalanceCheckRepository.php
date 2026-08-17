@@ -36,6 +36,17 @@ final class InMemoryFinanceBalanceCheckRepository implements FinanceBalanceCheck
         ));
     }
 
+    public function findByAccountIdAndCheckDate(string $accountId, string $checkDate): ?FinanceBalanceCheck
+    {
+        foreach ($this->checks as $check) {
+            if ($check->accountId === $accountId && $check->checkDate === $checkDate) {
+                return $check;
+            }
+        }
+
+        return null;
+    }
+
     public function save(FinanceBalanceCheck $financeBalanceCheck): void
     {
         foreach ($this->checks as $key => $existing) {

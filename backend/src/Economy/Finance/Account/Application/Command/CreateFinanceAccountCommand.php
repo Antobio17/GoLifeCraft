@@ -10,6 +10,8 @@ final readonly class CreateFinanceAccountCommand implements Command
         public string $name,
         public string $type,
         public string $createdByUserId,
+        public ?float $initialBalance = null,
+        public string $initialBalanceDate = '',
     ) {
     }
 

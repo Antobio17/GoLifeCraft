@@ -21,6 +21,8 @@
   "getFinanceAccounts.sheet.nameLabel": "NAME",
   "getFinanceAccounts.sheet.namePlaceholder": "e.g. Salary account, Cash…",
   "getFinanceAccounts.sheet.typeLabel": "TYPE",
+  "getFinanceAccounts.sheet.balanceLabel": "CURRENT BALANCE",
+  "getFinanceAccounts.sheet.balanceHint": "What the account holds right now. It is stored as today's check: the movements already booked today are taken out on their own.",
   "getFinanceAccounts.sheet.save": "Save account",
   "getFinanceAccounts.sheet.delete": "Delete account",
   "getFinanceAccounts.sheet.deleteBlocked": "You cannot delete an account that still has movements attached to it.",

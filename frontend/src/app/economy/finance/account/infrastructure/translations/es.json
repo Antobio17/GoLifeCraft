@@ -21,6 +21,8 @@
   "getFinanceAccounts.sheet.nameLabel": "NOMBRE",
   "getFinanceAccounts.sheet.namePlaceholder": "Ej: Cuenta nómina, Efectivo…",
   "getFinanceAccounts.sheet.typeLabel": "TIPO",
+  "getFinanceAccounts.sheet.balanceLabel": "SALDO ACTUAL",
+  "getFinanceAccounts.sheet.balanceHint": "Lo que hay ahora mismo en la cuenta. Se guarda como el recuento de hoy: los movimientos que ya tengas apuntados de hoy se descuentan solos.",
   "getFinanceAccounts.sheet.save": "Guardar cuenta",
   "getFinanceAccounts.sheet.delete": "Eliminar cuenta",
   "getFinanceAccounts.sheet.deleteBlocked": "No puedes eliminar una cuenta que aún tiene movimientos asociados.",

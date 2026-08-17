@@ -38,6 +38,8 @@ class FinanceAccount extends GenericAggregate
         string $type,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
+        ?float $initialBalance = null,
+        string $initialBalanceDate = '',
     ): self {
         if (!self::hasValidName(name: $name)) {
             throw CreateFinanceAccountException::invalidName(maxLength: self::NAME_MAX_LENGTH);
@@ -45,6 +47,10 @@ class FinanceAccount extends GenericAggregate
 
         if (!in_array(needle: $type, haystack: self::TYPES, strict: true)) {
             throw CreateFinanceAccountException::invalidType(type: $type);
+        }
+
+        if (null !== $initialBalance && !self::hasValidDate(date: $initialBalanceDate)) {
+            throw CreateFinanceAccountException::invalidInitialBalanceDate(date: $initialBalanceDate);
         }
 
         $now = $dateTimeGenerator->now();
@@ -63,6 +69,8 @@ class FinanceAccount extends GenericAggregate
             updatedAt: $financeAccount->updatedAt,
             createdByUserId: $financeAccount->createdByUserId,
             updatedByUserId: $financeAccount->updatedByUserId,
+            initialBalance: $initialBalance,
+            initialBalanceDate: $initialBalanceDate,
         ));
 
         return $financeAccount;
@@ -119,6 +127,11 @@ class FinanceAccount extends GenericAggregate
     {
         $this->name = trim(string: $name);
         $this->type = $type;
+    }
+
+    private static function hasValidDate(string $date): bool
+    {
+        return 1 === preg_match(pattern: '/^\d{4}-\d{2}-\d{2}$/', subject: $date);
     }
 
     private static function hasValidName(string $name): bool
