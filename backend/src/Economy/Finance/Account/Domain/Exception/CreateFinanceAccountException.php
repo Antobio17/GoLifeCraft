@@ -24,6 +24,15 @@ final class CreateFinanceAccountException extends BaseException
         );
     }
 
+    public static function invalidInitialBalanceDate(string $date): self
+    {
+        return new static(
+            title: 'The initial balance date must follow the YYYY-MM-DD format.',
+            keyTranslation: 'finance.account.invalid.initial.balance.date',
+            details: ['date' => $date]
+        );
+    }
+
     public static function alreadyExists(string $name): self
     {
         return new static(

@@ -33,6 +33,8 @@ final class CreateFinanceAccountController
                 type: (string) RequestExtractor::getStringRequestValue(request: $request, fieldName: 'type', required: false)
                     ?: FinanceAccount::TYPE_BANK,
                 createdByUserId: RequestExtractor::getUserSessionId(request: $request),
+                initialBalance: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'balance', required: false),
+                initialBalanceDate: (string) RequestExtractor::getStringRequestValue(request: $request, fieldName: 'balanceDate', required: false),
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_CREATED);

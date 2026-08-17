@@ -171,6 +171,25 @@
         />
       </ds-stack>
 
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceAccounts.sheet.balanceLabel" | t
+        }}</ds-text>
+        <ds-amount-input
+          layout="stacked"
+          unit="€"
+          placeholder="0,00"
+          [large]="true"
+          [ariaLabel]="'getFinanceAccounts.sheet.balanceLabel' | t"
+          [ngModel]="account().balance"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onAccountBalance($event)"
+        />
+        <ds-text variant="meta">{{
+          "getFinanceAccounts.sheet.balanceHint" | t
+        }}</ds-text>
+      </ds-stack>
+
       <ds-button
         variant="primary"
         [fullWidth]="true"

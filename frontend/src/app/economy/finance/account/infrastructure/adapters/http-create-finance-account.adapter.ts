@@ -2,7 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { CreateFinanceAccountPort } from "../../domain/ports/create-finance-account.port";
-import { FinanceAccountPayload } from "../../domain/models/finance-account-payload.model";
+import { CreateFinanceAccountPayload } from "../../domain/models/create-finance-account-payload.model";
 
 @Injectable()
 export class HttpCreateFinanceAccountAdapter extends CreateFinanceAccountPort {
@@ -10,7 +10,7 @@ export class HttpCreateFinanceAccountAdapter extends CreateFinanceAccountPort {
 
   private readonly apiUrl = "/api/v1/economy/accounts";
 
-  createFinanceAccount(payload: FinanceAccountPayload): Observable<void> {
+  createFinanceAccount(payload: CreateFinanceAccountPayload): Observable<void> {
     return this.http.post<void>(this.apiUrl, payload);
   }
 }

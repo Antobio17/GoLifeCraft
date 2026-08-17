@@ -1,8 +1,8 @@
 import { Observable } from "rxjs";
-import { FinanceAccountPayload } from "../models/finance-account-payload.model";
+import { CreateFinanceAccountPayload } from "../models/create-finance-account-payload.model";
 
 export abstract class CreateFinanceAccountPort {
   abstract createFinanceAccount(
-    payload: FinanceAccountPayload,
+    payload: CreateFinanceAccountPayload,
   ): Observable<void>;
 }

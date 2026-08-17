@@ -13,6 +13,8 @@ interface FinanceBalanceCheckRepository
      */
     public function findByAccountId(string $accountId): array;
 
+    public function findByAccountIdAndCheckDate(string $accountId, string $checkDate): ?FinanceBalanceCheck;
+
     public function save(FinanceBalanceCheck $financeBalanceCheck): void;
 
     public function delete(FinanceBalanceCheck $financeBalanceCheck): void;

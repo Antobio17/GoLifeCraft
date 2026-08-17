@@ -1,8 +1,8 @@
 import { FinanceAccountType } from "./finance-account-type.model";
 
-export interface FinanceAccountForm {
-  id: string | null;
+export interface CreateFinanceAccountPayload {
   name: string;
   type: FinanceAccountType;
-  balance: string;
+  balance: number | null;
+  balanceDate: string;
 }

@@ -26,3 +26,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\SetFinanceAccountBalanceController:
+    class: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\SetFinanceAccountBalanceController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

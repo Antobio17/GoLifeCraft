@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Observable, forkJoin } from "rxjs";
+import { Observable, forkJoin, of, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -41,6 +41,7 @@ import { GetFinanceBalanceChecksService } from "@economy/finance/balance-check/a
 import { CreateFinanceBalanceCheckService } from "@economy/finance/balance-check/application/services/create-finance-balance-check.service";
 import { UpdateFinanceBalanceCheckService } from "@economy/finance/balance-check/application/services/update-finance-balance-check.service";
 import { DeleteFinanceBalanceCheckService } from "@economy/finance/balance-check/application/services/delete-finance-balance-check.service";
+import { SetFinanceAccountBalanceService } from "@economy/finance/balance-check/application/services/set-finance-account-balance.service";
 import { FinanceBalanceCheckFormService } from "@economy/finance/balance-check/application/services/finance-balance-check-form.service";
 import { FinanceBalanceCheck } from "@economy/finance/balance-check/domain/models/finance-balance-check.model";
 import { FinanceBalanceCheckForm } from "@economy/finance/balance-check/domain/models/finance-balance-check-form.model";
@@ -92,6 +93,9 @@ export class GetFinanceAccountsComponent implements OnInit {
   private deleteFinanceBalanceCheckService = inject(
     DeleteFinanceBalanceCheckService,
   );
+  private setFinanceAccountBalanceService = inject(
+    SetFinanceAccountBalanceService,
+  );
   protected view = inject(FinanceViewService);
   protected catalog = inject(FinanceAccountCatalogService);
   protected accountForm = inject(FinanceAccountFormService);
@@ -114,6 +118,7 @@ export class GetFinanceAccountsComponent implements OnInit {
   accountSheetOpen = signal(false);
   editingAccountId = signal<string | null>(null);
   account = signal<FinanceAccountForm>(this.accountForm.empty());
+  balanceAtOpen = signal("");
 
   checkSheetOpen = signal(false);
   editingCheckId = signal<string | null>(null);
@@ -192,16 +197,22 @@ export class GetFinanceAccountsComponent implements OnInit {
   openNewAccountSheet(): void {
     if (!this.canWrite()) return;
 
+    const form = this.accountForm.empty();
+
     this.editingAccountId.set(null);
-    this.account.set(this.accountForm.empty());
+    this.account.set(form);
+    this.balanceAtOpen.set(form.balance);
     this.accountSheetOpen.set(true);
   }
 
   openEditAccountSheet(account: FinanceAccount): void {
     if (!this.canWrite()) return;
 
+    const form = this.accountForm.fromAccount(account);
+
     this.editingAccountId.set(account.id);
-    this.account.set(this.accountForm.fromAccount(account));
+    this.account.set(form);
+    this.balanceAtOpen.set(form.balance);
     this.accountSheetOpen.set(true);
   }
 
@@ -212,6 +223,10 @@ export class GetFinanceAccountsComponent implements OnInit {
 
   onAccountName(name: string): void {
     this.account.update((form) => ({ ...form, name }));
+  }
+
+  onAccountBalance(balance: string): void {
+    this.account.update((form) => ({ ...form, balance }));
   }
 
   onAccountType(type: string): void {
@@ -310,17 +325,33 @@ export class GetFinanceAccountsComponent implements OnInit {
   }
 
   private buildAccountRequest(): Observable<void> {
-    const payload = this.accountForm.toPayload(this.account());
     const editingId = this.editingAccountId();
 
     if (editingId) {
-      return this.updateFinanceAccountService.updateFinanceAccount(
-        editingId,
-        payload,
-      );
+      return this.updateFinanceAccountService
+        .updateFinanceAccount(
+          editingId,
+          this.accountForm.toPayload(this.account()),
+        )
+        .pipe(switchMap(() => this.buildBalanceRequest(editingId)));
     }
 
-    return this.createFinanceAccountService.createFinanceAccount(payload);
+    return this.createFinanceAccountService.createFinanceAccount(
+      this.accountForm.toCreatePayload(this.account(), this.view.todayIso()),
+    );
+  }
+
+  private buildBalanceRequest(accountId: string): Observable<void> {
+    const balance = this.accountForm.balanceOf(this.account());
+
+    if (balance === null || this.account().balance === this.balanceAtOpen()) {
+      return of(undefined);
+    }
+
+    return this.setFinanceAccountBalanceService.setFinanceAccountBalance(
+      accountId,
+      { balance, checkDate: this.view.todayIso(), note: "" },
+    );
   }
 
   private buildCheckRequest(): Observable<void> {

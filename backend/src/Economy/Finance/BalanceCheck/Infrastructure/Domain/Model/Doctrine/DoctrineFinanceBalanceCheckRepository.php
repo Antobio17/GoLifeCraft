@@ -36,6 +36,19 @@ final class DoctrineFinanceBalanceCheckRepository extends EntityRepository imple
             ->getResult();
     }
 
+    public function findByAccountIdAndCheckDate(string $accountId, string $checkDate): ?FinanceBalanceCheck
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('financeBalanceCheck')
+            ->from(from: FinanceBalanceCheck::class, alias: 'financeBalanceCheck')
+            ->where('financeBalanceCheck.accountId = :accountId')
+            ->andWhere('financeBalanceCheck.checkDate = :checkDate')
+            ->setParameter(key: 'accountId', value: $accountId)
+            ->setParameter(key: 'checkDate', value: $checkDate)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function save(FinanceBalanceCheck $financeBalanceCheck): void
     {
         $this->getEntityManager()->persist(object: $financeBalanceCheck);

@@ -36,3 +36,13 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\BalanceCheck\Application\Command\SetFinanceAccountBalanceCommandHandler:
+    class: Economy\Finance\BalanceCheck\Application\Command\SetFinanceAccountBalanceCommandHandler
+    arguments:
+      $financeBalanceCheckRepository: '@Economy\Finance\BalanceCheck\Domain\Model\FinanceBalanceCheckRepository'
+      $needleDataQuery: '@Economy\Finance\BalanceCheck\Domain\QueryModel\SetFinanceAccountBalanceNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

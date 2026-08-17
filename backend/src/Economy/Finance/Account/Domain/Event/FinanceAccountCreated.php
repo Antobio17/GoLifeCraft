@@ -15,6 +15,8 @@ final readonly class FinanceAccountCreated extends DomainEvent
         public \DateTime $updatedAt,
         public string $createdByUserId,
         public string $updatedByUserId,
+        public ?float $initialBalance,
+        public string $initialBalanceDate,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }
