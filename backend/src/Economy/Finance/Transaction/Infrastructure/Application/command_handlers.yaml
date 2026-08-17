@@ -3,6 +3,7 @@ services:
     class: Economy\Finance\Transaction\Application\Command\CreateFinanceTransactionCommandHandler
     arguments:
       $financeTransactionRepository: '@Economy\Finance\Transaction\Domain\Model\FinanceTransactionRepository'
+      $needleDataQuery: '@Economy\Finance\Transaction\Domain\QueryModel\CreateFinanceTransactionNeedleDataQuery'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -12,6 +13,7 @@ services:
     class: Economy\Finance\Transaction\Application\Command\UpdateFinanceTransactionCommandHandler
     arguments:
       $financeTransactionRepository: '@Economy\Finance\Transaction\Domain\Model\FinanceTransactionRepository'
+      $needleDataQuery: '@Economy\Finance\Transaction\Domain\QueryModel\UpdateFinanceTransactionNeedleDataQuery'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

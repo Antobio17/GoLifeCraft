@@ -1,6 +1,15 @@
 label: Finance transaction
 
 fields:
+  accountId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      Identifier of the account the money moved in or out of. Look up the available
+      accounts in the finance_account resource before writing a movement.
+    filterable: true
   transactionDate:
     writable: true
     required: true

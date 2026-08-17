@@ -105,6 +105,20 @@ parameters:
             write_roles: [ROLE_GOD, ROLE_USER]
             delete_roles: [ROLE_GOD, ROLE_USER]
 
+        finance_account:
+            class: 'Economy\Finance\Account\Domain\Model\FinanceAccount'
+            sidecar: '%kernel.project_dir%/src/Economy/Finance/Account/Infrastructure/Domain/Model/Doctrine/Mapping/FinanceAccount.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
+        finance_balance_check:
+            class: 'Economy\Finance\BalanceCheck\Domain\Model\FinanceBalanceCheck'
+            sidecar: '%kernel.project_dir%/src/Economy/Finance/BalanceCheck/Infrastructure/Domain/Model/Doctrine/Mapping/FinanceBalanceCheck.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
         exercise:
             class: 'Gym\Library\Exercise\Domain\Model\Exercise'
             sidecar: '%kernel.project_dir%/src/Gym/Library/Exercise/Infrastructure/Domain/Model/Doctrine/Mapping/Exercise.mcp.yaml'

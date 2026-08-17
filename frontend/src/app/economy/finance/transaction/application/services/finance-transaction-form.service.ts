@@ -7,9 +7,10 @@ import { FinanceTransactionView } from "../../domain/models/finance-transaction-
 
 @Injectable()
 export class FinanceTransactionFormService {
-  empty(transactionDate: string): FinanceTransactionForm {
+  empty(transactionDate: string, accountId: string): FinanceTransactionForm {
     return {
       id: null,
+      accountId,
       kind: FinanceTransactionKind.EXPENSE,
       amount: "",
       category: FinanceCategory.GROCERIES,
@@ -23,6 +24,7 @@ export class FinanceTransactionFormService {
   fromView(transaction: FinanceTransactionView): FinanceTransactionForm {
     return {
       id: transaction.id,
+      accountId: transaction.accountId,
       kind: transaction.kind,
       amount: `${transaction.amount}`,
       category: transaction.category,
@@ -40,7 +42,7 @@ export class FinanceTransactionFormService {
   }
 
   isValid(form: FinanceTransactionForm): boolean {
-    return this.amountOf(form) > 0;
+    return this.amountOf(form) > 0 && form.accountId !== "";
   }
 
   toPayload(
@@ -52,6 +54,7 @@ export class FinanceTransactionFormService {
     const store = form.store.trim();
 
     return {
+      accountId: form.accountId,
       transactionDate: form.transactionDate,
       kind: form.kind,
       amount: this.amountOf(form),

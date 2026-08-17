@@ -1,0 +1,28 @@
+services:
+  Economy\Finance\Account\Infrastructure\UI\API\Controller\GetFinanceAccountsController:
+    class: Economy\Finance\Account\Infrastructure\UI\API\Controller\GetFinanceAccountsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Account\Infrastructure\UI\API\Controller\CreateFinanceAccountController:
+    class: Economy\Finance\Account\Infrastructure\UI\API\Controller\CreateFinanceAccountController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Account\Infrastructure\UI\API\Controller\UpdateFinanceAccountController:
+    class: Economy\Finance\Account\Infrastructure\UI\API\Controller\UpdateFinanceAccountController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Account\Infrastructure\UI\API\Controller\DeleteFinanceAccountController:
+    class: Economy\Finance\Account\Infrastructure\UI\API\Controller\DeleteFinanceAccountController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

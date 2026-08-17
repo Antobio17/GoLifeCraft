@@ -1,0 +1,21 @@
+services:
+  Economy\Finance\Account\Domain\QueryModel\CreateFinanceAccountNeedleDataQuery:
+    class: Economy\Finance\Account\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateFinanceAccountNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Account\Domain\QueryModel\UpdateFinanceAccountNeedleDataQuery:
+    class: Economy\Finance\Account\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateFinanceAccountNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Account\Domain\QueryModel\DeleteFinanceAccountNeedleDataQuery:
+    class: Economy\Finance\Account\Infrastructure\Domain\QueryModel\Doctrine\DoctrineDeleteFinanceAccountNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Account\Domain\QueryModel\GetFinanceAccountsNeedleDataQuery:
+    class: Economy\Finance\Account\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceAccountsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $financeBalanceReader: '@Economy\Finance\Account\Domain\Service\FinanceBalanceReader'

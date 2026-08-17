@@ -9,6 +9,7 @@ final readonly class FinanceTransactionDeleted extends DomainEvent
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
+        public string $accountId,
         public string $transactionDate,
         public string $kind,
         public float $amount,

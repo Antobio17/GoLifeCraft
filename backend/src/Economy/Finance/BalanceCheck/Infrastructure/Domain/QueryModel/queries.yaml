@@ -1,0 +1,16 @@
+services:
+  Economy\Finance\BalanceCheck\Domain\QueryModel\CreateFinanceBalanceCheckNeedleDataQuery:
+    class: Economy\Finance\BalanceCheck\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateFinanceBalanceCheckNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\BalanceCheck\Domain\QueryModel\UpdateFinanceBalanceCheckNeedleDataQuery:
+    class: Economy\Finance\BalanceCheck\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateFinanceBalanceCheckNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\BalanceCheck\Domain\QueryModel\GetFinanceBalanceChecksNeedleDataQuery:
+    class: Economy\Finance\BalanceCheck\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceBalanceChecksNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $financeBalanceReader: '@Economy\Finance\Account\Domain\Service\FinanceBalanceReader'

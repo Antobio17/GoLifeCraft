@@ -20,6 +20,8 @@ final readonly class DoctrineGetFinanceTransactionsNeedleDataQuery implements Ge
         $builder = $this->connection->createQueryBuilder()
             ->select(
                 't.id',
+                't.account_id',
+                'a.name AS account_name',
                 't.transaction_date',
                 't.kind',
                 't.amount',
@@ -30,6 +32,7 @@ final readonly class DoctrineGetFinanceTransactionsNeedleDataQuery implements Ge
                 't.source',
             )
             ->from(table: 'finance_transaction', alias: 't')
+            ->innerJoin('t', 'finance_account', 'a', 'a.id = t.account_id')
             ->orderBy('t.transaction_date', 'DESC')
             ->addOrderBy('t.created_at', 'DESC');
 
@@ -65,6 +68,8 @@ final readonly class DoctrineGetFinanceTransactionsNeedleDataQuery implements Ge
 
             $transactions[] = new FinanceTransactionView(
                 id: (string) $row['id'],
+                accountId: (string) $row['account_id'],
+                accountName: (string) $row['account_name'],
                 transactionDate: (string) $row['transaction_date'],
                 kind: $kind,
                 amount: $amount,

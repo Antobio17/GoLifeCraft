@@ -7,6 +7,7 @@ use Economy\Finance\Transaction\Application\Command\CreateFinanceTransactionComm
 use Economy\Finance\Transaction\Domain\Exception\CreateFinanceTransactionException;
 use Economy\Finance\Transaction\Domain\Model\FinanceTransaction;
 use Economy\Finance\Transaction\Infrastructure\Domain\Model\InMemory\InMemoryFinanceTransactionRepository;
+use Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\InMemory\InMemoryCreateFinanceTransactionNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -21,6 +22,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $this->repository = new InMemoryFinanceTransactionRepository();
         $this->handler = new CreateFinanceTransactionCommandHandler(
             financeTransactionRepository: $this->repository,
+            needleDataQuery: new InMemoryCreateFinanceTransactionNeedleDataQuery(accountIds: ['account-1']),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: new DateTimeGenerator(),
         );
@@ -29,6 +31,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
     public function testItCreatesAnExpense(): void
     {
         ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
             transactionDate: '2026-07-12',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 25.752,
@@ -43,6 +46,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $transaction = $this->repository->findById(id: 'finance-transaction-1');
 
         $this->assertNotNull(actual: $transaction);
+        $this->assertSame(expected: 'account-1', actual: $transaction->accountId);
         $this->assertSame(expected: '2026-07-12', actual: $transaction->transactionDate);
         $this->assertSame(expected: FinanceTransaction::KIND_EXPENSE, actual: $transaction->kind);
         $this->assertSame(expected: 25.75, actual: $transaction->amount);
@@ -56,6 +60,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
     public function testItCreatesARecurringExpense(): void
     {
         ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
             transactionDate: '2026-07-01',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 12.99,
@@ -77,6 +82,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
     public function testItForcesIncomeToTheOtherCategoryAndNeverRecurring(): void
     {
         ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
             transactionDate: '2026-07-01',
             kind: FinanceTransaction::KIND_INCOME,
             amount: 1850.0,
@@ -95,11 +101,30 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $this->assertFalse(condition: $transaction->recurring);
     }
 
+    public function testItThrowsWhenTheAccountDoesNotExist(): void
+    {
+        $this->expectException(exception: CreateFinanceTransactionException::class);
+
+        ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'unknown-account',
+            transactionDate: '2026-07-12',
+            kind: FinanceTransaction::KIND_EXPENSE,
+            amount: 10.0,
+            category: 'groceries',
+            note: 'Compra',
+            store: null,
+            recurring: false,
+            source: FinanceTransaction::SOURCE_MANUAL,
+            createdByUserId: 'god-user-id',
+        ));
+    }
+
     public function testItThrowsWhenAmountIsNotPositive(): void
     {
         $this->expectException(exception: CreateFinanceTransactionException::class);
 
         ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
             transactionDate: '2026-07-12',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 0.0,
@@ -117,6 +142,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateFinanceTransactionException::class);
 
         ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
             transactionDate: '12-07-2026',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 10.0,
@@ -134,6 +160,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateFinanceTransactionException::class);
 
         ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
             transactionDate: '2026-07-12',
             kind: 'transfer',
             amount: 10.0,
@@ -151,6 +178,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateFinanceTransactionException::class);
 
         ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
             transactionDate: '2026-07-12',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 10.0,
@@ -168,6 +196,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateFinanceTransactionException::class);
 
         ($this->handler)(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
             transactionDate: '2026-07-12',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 10.0,

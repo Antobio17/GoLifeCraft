@@ -1,0 +1,275 @@
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+  <ds-stack
+    direction="row"
+    justify="between"
+    align="start"
+    [gap]="'var(--ds-space-2)'"
+  >
+    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+      <ds-icon-button
+        icon="chevronLeft"
+        variant="soft"
+        [size]="36"
+        [iconSize]="17"
+        [stroke]="2.2"
+        [radius]="'var(--ds-radius-lg)'"
+        [ariaLabel]="'getFinanceAccounts.back' | t"
+        (clicked)="goBack()"
+      />
+
+      <ds-stack [gap]="'2px'" [grow]="true">
+        <ds-text variant="meta">{{ "getFinanceAccounts.eyebrow" | t }}</ds-text>
+        <ds-heading [level]="2" size="xl" [truncate]="true">{{
+          "getFinanceAccounts.title" | t
+        }}</ds-heading>
+      </ds-stack>
+    </ds-stack>
+
+    @if (canWrite()) {
+      <ds-button
+        variant="primary"
+        size="icon-lg"
+        icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getFinanceAccounts.add' | t"
+        (clicked)="openNewAccountSheet()"
+      />
+    }
+  </ds-stack>
+
+  @if (loading()) {
+    <ds-skeleton-list [count]="3" [gap]="'var(--ds-space-2)'" />
+  }
+
+  @if (!loading()) {
+    <ds-card [padding]="'var(--ds-space-4)'">
+      <ds-stack [gap]="'2px'">
+        <ds-text variant="meta">{{ "getFinanceAccounts.total" | t }}</ds-text>
+        <ds-heading [level]="3" size="lg">{{ totalBalanceLabel() }}</ds-heading>
+      </ds-stack>
+    </ds-card>
+
+    <ds-note icon="info" tone="info">{{
+      "getFinanceAccounts.hint" | t
+    }}</ds-note>
+
+    @if (!hasAccounts()) {
+      <ds-empty-state
+        icon="wallet"
+        [title]="'getFinanceAccounts.empty.title' | t"
+        [text]="'getFinanceAccounts.empty.text' | t"
+      />
+    }
+
+    @for (row of accountRows(); track row.account.id) {
+      <ds-card [padding]="'var(--ds-space-4)'">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'var(--ds-space-3)'"
+        >
+          <ds-stack [gap]="'2px'" [grow]="true">
+            <ds-text variant="strong"
+              >{{ row.emoji }} {{ row.account.name }}</ds-text
+            >
+            <ds-text variant="meta"
+              >{{ row.typeLabel }} · {{ row.lastCheckLabel }}</ds-text
+            >
+          </ds-stack>
+
+          <ds-heading [level]="3" size="md">{{ row.balanceLabel }}</ds-heading>
+        </ds-stack>
+
+        @if (canWrite()) {
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+            <ds-button
+              variant="outline"
+              size="sm"
+              icon="wallet"
+              [iconSize]="16"
+              (clicked)="openNewCheckSheet(row.account)"
+            >
+              {{ "getFinanceAccounts.check.add" | t }}
+            </ds-button>
+
+            <ds-icon-button
+              icon="pencil"
+              variant="soft"
+              [size]="34"
+              [iconSize]="16"
+              [radius]="'var(--ds-radius-md)'"
+              [ariaLabel]="'getFinanceAccounts.edit' | t"
+              (clicked)="openEditAccountSheet(row.account)"
+            />
+          </ds-stack>
+        }
+
+        @if (row.checks.length > 0) {
+          <ds-section-header [title]="'getFinanceAccounts.check.title' | t" />
+
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            @for (checkRow of row.checks; track checkRow.check.id) {
+              <ds-swipe-to-delete
+                #checkSwipe
+                radius="var(--ds-radius-lg)"
+                [disabled]="!canWrite()"
+                [removeLabel]="'getFinanceAccounts.check.remove' | t"
+                (remove)="removeCheck(checkRow.check)"
+              >
+                <ds-transaction-row
+                  [emoji]="checkEmoji"
+                  [title]="checkRow.dateLabel"
+                  [subtitle]="checkRow.driftLabel"
+                  [amountLabel]="checkRow.amountLabel"
+                  [pressable]="canWrite()"
+                  [pressLabel]="checkRow.dateLabel"
+                  [slid]="checkSwipe.slid"
+                  (pressed)="openEditCheckSheet(checkRow.check)"
+                />
+              </ds-swipe-to-delete>
+            }
+          </ds-stack>
+        }
+      </ds-card>
+    }
+  }
+
+  <ds-modal-sheet
+    [open]="accountSheetOpen()"
+    [compact]="true"
+    [title]="accountSheetTitle() | t"
+    [closeLabel]="'getFinanceAccounts.sheet.close' | t"
+    (closed)="closeAccountSheet()"
+  >
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceAccounts.sheet.nameLabel" | t
+        }}</ds-text>
+        <ds-text-input
+          [strong]="true"
+          [maxLength]="60"
+          [placeholder]="'getFinanceAccounts.sheet.namePlaceholder' | t"
+          [ariaLabel]="'getFinanceAccounts.sheet.nameLabel' | t"
+          [ngModel]="account().name"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onAccountName($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceAccounts.sheet.typeLabel" | t
+        }}</ds-text>
+        <ds-choice-chips
+          [options]="typeOptions()"
+          [wrap]="true"
+          [ngModel]="account().type"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onAccountType($event)"
+        />
+      </ds-stack>
+
+      <ds-button
+        variant="primary"
+        [fullWidth]="true"
+        [disabled]="!accountFormValid()"
+        [loading]="saving()"
+        (clicked)="saveAccount()"
+      >
+        {{ "getFinanceAccounts.sheet.save" | t }}
+      </ds-button>
+
+      @if (editingAccountId()) {
+        @if (canDeleteAccount()) {
+          <ds-button
+            variant="outline-danger"
+            [fullWidth]="true"
+            [loading]="saving()"
+            (clicked)="deleteAccount()"
+          >
+            {{ "getFinanceAccounts.sheet.delete" | t }}
+          </ds-button>
+        }
+
+        @if (!canDeleteAccount()) {
+          <ds-note icon="alertCircle" tone="warning">{{
+            "getFinanceAccounts.sheet.deleteBlocked" | t
+          }}</ds-note>
+        }
+      }
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <ds-modal-sheet
+    [open]="checkSheetOpen()"
+    [compact]="true"
+    [title]="checkSheetTitle() | t"
+    [closeLabel]="'getFinanceAccounts.sheet.close' | t"
+    (closed)="closeCheckSheet()"
+  >
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-text variant="meta"
+        >{{ "getFinanceAccounts.check.subtitle" | t }}
+        {{ checkSheetAccountName() }}</ds-text
+      >
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceAccounts.check.amountLabel" | t
+        }}</ds-text>
+        <ds-amount-input
+          layout="stacked"
+          unit="€"
+          placeholder="0,00"
+          [large]="true"
+          [ariaLabel]="'getFinanceAccounts.check.amountLabel' | t"
+          [ngModel]="check().amount"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onCheckAmount($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceAccounts.check.dateLabel" | t
+        }}</ds-text>
+        <ds-date-input
+          type="date"
+          [ariaLabel]="'getFinanceAccounts.check.dateLabel' | t"
+          [ngModel]="check().checkDate"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onCheckDate($event)"
+        />
+        <ds-text variant="meta">{{
+          "getFinanceAccounts.check.dateHint" | t
+        }}</ds-text>
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceAccounts.check.noteLabel" | t
+        }}</ds-text>
+        <ds-text-input
+          [maxLength]="255"
+          [placeholder]="'getFinanceAccounts.check.notePlaceholder' | t"
+          [ariaLabel]="'getFinanceAccounts.check.noteLabel' | t"
+          [ngModel]="check().note"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onCheckNote($event)"
+        />
+      </ds-stack>
+
+      <ds-button
+        variant="primary"
+        [fullWidth]="true"
+        [disabled]="!checkFormValid()"
+        [loading]="saving()"
+        (clicked)="saveCheck()"
+      >
+        {{ "getFinanceAccounts.check.save" | t }}
+      </ds-button>
+    </ds-stack>
+  </ds-modal-sheet>
+</ds-page-wrapper>

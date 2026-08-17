@@ -49,6 +49,7 @@ class FinanceTransaction extends GenericAggregate
         self::CATEGORY_OTHER,
     ];
 
+    public string $accountId;
     public string $transactionDate;
     public string $kind;
     public float $amount;
@@ -60,6 +61,7 @@ class FinanceTransaction extends GenericAggregate
 
     public static function create(
         string $id,
+        string $accountId,
         string $transactionDate,
         string $kind,
         float $amount,
@@ -71,6 +73,10 @@ class FinanceTransaction extends GenericAggregate
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
+        if (!self::hasValidAccountId(accountId: $accountId)) {
+            throw CreateFinanceTransactionException::accountRequired();
+        }
+
         if (!self::hasValidDate(transactionDate: $transactionDate)) {
             throw CreateFinanceTransactionException::invalidDate(transactionDate: $transactionDate);
         }
@@ -104,6 +110,7 @@ class FinanceTransaction extends GenericAggregate
         $transaction = new self();
         $transaction->id = $id;
         $transaction->write(
+            accountId: $accountId,
             transactionDate: $transactionDate,
             kind: $kind,
             amount: $amount,
@@ -118,6 +125,7 @@ class FinanceTransaction extends GenericAggregate
         $transaction->record(event: new FinanceTransactionCreated(
             aggregateId: $id,
             occurredOn: $now,
+            accountId: $transaction->accountId,
             transactionDate: $transaction->transactionDate,
             kind: $transaction->kind,
             amount: $transaction->amount,
@@ -136,6 +144,7 @@ class FinanceTransaction extends GenericAggregate
     }
 
     public function update(
+        string $accountId,
         string $transactionDate,
         string $kind,
         float $amount,
@@ -146,6 +155,10 @@ class FinanceTransaction extends GenericAggregate
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
+        if (!self::hasValidAccountId(accountId: $accountId)) {
+            throw UpdateFinanceTransactionException::accountRequired();
+        }
+
         if (!self::hasValidDate(transactionDate: $transactionDate)) {
             throw UpdateFinanceTransactionException::invalidDate(transactionDate: $transactionDate);
         }
@@ -173,6 +186,7 @@ class FinanceTransaction extends GenericAggregate
         $now = $dateTimeGenerator->now();
 
         $this->write(
+            accountId: $accountId,
             transactionDate: $transactionDate,
             kind: $kind,
             amount: $amount,
@@ -186,6 +200,7 @@ class FinanceTransaction extends GenericAggregate
         $this->record(event: new FinanceTransactionUpdated(
             aggregateId: $this->id,
             occurredOn: $now,
+            accountId: $this->accountId,
             transactionDate: $this->transactionDate,
             kind: $this->kind,
             amount: $this->amount,
@@ -211,6 +226,7 @@ class FinanceTransaction extends GenericAggregate
         $this->record(event: new FinanceTransactionDeleted(
             aggregateId: $this->id,
             occurredOn: $now,
+            accountId: $this->accountId,
             transactionDate: $this->transactionDate,
             kind: $this->kind,
             amount: $this->amount,
@@ -229,6 +245,7 @@ class FinanceTransaction extends GenericAggregate
     }
 
     private function write(
+        string $accountId,
         string $transactionDate,
         string $kind,
         float $amount,
@@ -237,6 +254,7 @@ class FinanceTransaction extends GenericAggregate
         ?string $store,
         bool $recurring,
     ): void {
+        $this->accountId = trim(string: $accountId);
         $this->transactionDate = $transactionDate;
         $this->kind = $kind;
         $this->amount = self::normalizeAmount(amount: $amount);
@@ -244,6 +262,11 @@ class FinanceTransaction extends GenericAggregate
         $this->note = trim(string: $note);
         $this->store = '' === trim(string: (string) $store) ? null : trim(string: (string) $store);
         $this->recurring = self::KIND_INCOME === $kind ? false : $recurring;
+    }
+
+    private static function hasValidAccountId(string $accountId): bool
+    {
+        return '' !== trim(string: $accountId);
     }
 
     private static function hasValidDate(string $transactionDate): bool

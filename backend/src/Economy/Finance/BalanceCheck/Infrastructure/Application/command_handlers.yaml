@@ -1,0 +1,38 @@
+services:
+  Economy\Finance\BalanceCheck\Application\Command\CreateFinanceBalanceCheckCommandHandler:
+    class: Economy\Finance\BalanceCheck\Application\Command\CreateFinanceBalanceCheckCommandHandler
+    arguments:
+      $financeBalanceCheckRepository: '@Economy\Finance\BalanceCheck\Domain\Model\FinanceBalanceCheckRepository'
+      $needleDataQuery: '@Economy\Finance\BalanceCheck\Domain\QueryModel\CreateFinanceBalanceCheckNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\BalanceCheck\Application\Command\UpdateFinanceBalanceCheckCommandHandler:
+    class: Economy\Finance\BalanceCheck\Application\Command\UpdateFinanceBalanceCheckCommandHandler
+    arguments:
+      $financeBalanceCheckRepository: '@Economy\Finance\BalanceCheck\Domain\Model\FinanceBalanceCheckRepository'
+      $needleDataQuery: '@Economy\Finance\BalanceCheck\Domain\QueryModel\UpdateFinanceBalanceCheckNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\BalanceCheck\Application\Command\DeleteFinanceBalanceCheckCommandHandler:
+    class: Economy\Finance\BalanceCheck\Application\Command\DeleteFinanceBalanceCheckCommandHandler
+    arguments:
+      $financeBalanceCheckRepository: '@Economy\Finance\BalanceCheck\Domain\Model\FinanceBalanceCheckRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\BalanceCheck\Application\Command\DeleteFinanceBalanceChecksByAccountCommandHandler:
+    class: Economy\Finance\BalanceCheck\Application\Command\DeleteFinanceBalanceChecksByAccountCommandHandler
+    arguments:
+      $financeBalanceCheckRepository: '@Economy\Finance\BalanceCheck\Domain\Model\FinanceBalanceCheckRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

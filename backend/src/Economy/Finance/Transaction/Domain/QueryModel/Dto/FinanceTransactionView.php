@@ -6,6 +6,8 @@ final readonly class FinanceTransactionView
 {
     public function __construct(
         public string $id,
+        public string $accountId,
+        public string $accountName,
         public string $transactionDate,
         public string $kind,
         public float $amount,

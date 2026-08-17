@@ -14,6 +14,17 @@
 
     <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
       <ds-icon-button
+        icon="wallet"
+        variant="soft"
+        [size]="40"
+        [iconSize]="19"
+        [stroke]="2.1"
+        [radius]="'var(--ds-radius-lg)'"
+        [ariaLabel]="'getEconomy.accounts.manage' | t"
+        (clicked)="goToAccounts()"
+      />
+
+      <ds-icon-button
         icon="calendar"
         [variant]="dayMode() ? 'solid' : 'soft'"
         [size]="40"
@@ -126,6 +137,30 @@
       [positive]="balancePositive()"
       [points]="balanceSeries()"
     />
+
+    @if (!hasAccounts()) {
+      <ds-note icon="alertCircle" tone="warning">{{
+        "getEconomy.accounts.missing" | t
+      }}</ds-note>
+    }
+
+    @if (accountRows().length > 0) {
+      <ds-section-header
+        [title]="'getEconomy.accounts.title' | t"
+        [actionLabel]="'getEconomy.accounts.manage' | t"
+        size="md"
+        (action)="goToAccounts()"
+      />
+      <ds-card [padding]="'var(--ds-space-4)'">
+        @for (row of accountRows(); track row.key) {
+          <ds-breakdown-row
+            [label]="row.label"
+            [amountLabel]="row.amountLabel"
+            [ratio]="row.ratio"
+          />
+        }
+      </ds-card>
+    }
 
     @if (overspending()) {
       <ds-note icon="alertCircle" tone="warning">{{
@@ -341,6 +376,27 @@
         [ngModelOptions]="{ standalone: true }"
         (ngModelChange)="onKind($event)"
       />
+
+      @if (!hasAccounts()) {
+        <ds-note icon="alertCircle" tone="warning">{{
+          "getEconomy.accounts.missing" | t
+        }}</ds-note>
+      }
+
+      @if (hasAccounts()) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-text variant="label">{{
+            "getEconomy.sheet.accountLabel" | t
+          }}</ds-text>
+          <ds-choice-chips
+            [options]="accountOptions()"
+            [wrap]="true"
+            [ngModel]="form().accountId"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onAccount($event)"
+          />
+        </ds-stack>
+      }
 
       <ds-stack [gap]="'var(--ds-space-2)'">
         <ds-text variant="label">{{

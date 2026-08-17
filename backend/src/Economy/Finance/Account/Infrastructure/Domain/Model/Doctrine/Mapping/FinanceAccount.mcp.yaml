@@ -1,0 +1,22 @@
+label: Finance account
+
+fields:
+  name:
+    writable: true
+    required: true
+    max: 60
+    description: >-
+      How the user calls the account, for example "Cuenta nómina", "Efectivo" or
+      "Ahorro". It is unique across accounts.
+    filterable: true
+    sortable: true
+    unique: true
+  type:
+    writable: true
+    required: false
+    enum: [bank, cash, savings, card, other]
+    description: >-
+      What kind of account it is. Defaults to "bank" when not specified.
+    filterable: true
+
+relations: {}

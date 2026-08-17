@@ -1,0 +1,28 @@
+services:
+  Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\GetFinanceBalanceChecksController:
+    class: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\GetFinanceBalanceChecksController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\CreateFinanceBalanceCheckController:
+    class: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\CreateFinanceBalanceCheckController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\UpdateFinanceBalanceCheckController:
+    class: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\UpdateFinanceBalanceCheckController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\DeleteFinanceBalanceCheckController:
+    class: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\DeleteFinanceBalanceCheckController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

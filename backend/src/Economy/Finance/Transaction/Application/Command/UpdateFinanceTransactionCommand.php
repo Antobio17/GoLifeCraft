@@ -8,6 +8,7 @@ final readonly class UpdateFinanceTransactionCommand implements Command
 {
     public function __construct(
         public string $financeTransactionId,
+        public string $accountId,
         public string $transactionDate,
         public string $kind,
         public float $amount,

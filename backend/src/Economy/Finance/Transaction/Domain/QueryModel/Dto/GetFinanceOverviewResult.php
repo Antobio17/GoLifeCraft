@@ -7,16 +7,18 @@ use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryAggregateResult;
 final class GetFinanceOverviewResult extends QueryAggregateResult
 {
     /**
-     * @param FinanceMonthPoint[]    $series
-     * @param FinanceCategoryTotal[] $byCategory
-     * @param FinanceStoreTotal[]    $byStore
-     * @param FinanceSubscription[]  $subscriptions
+     * @param FinanceMonthPoint[]     $series
+     * @param FinanceCategoryTotal[]  $byCategory
+     * @param FinanceStoreTotal[]     $byStore
+     * @param FinanceSubscription[]   $subscriptions
+     * @param FinanceAccountBalance[] $accounts
      */
     public function __construct(
         string $id,
         string $aggregateName,
         public readonly string $month,
         public readonly float $balance,
+        public readonly array $accounts,
         public readonly float $balanceDelta,
         public readonly float $balanceDeltaPercentage,
         public readonly float $income,

@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
@@ -63,6 +64,9 @@ import { FinanceMovementGroup } from "@economy/finance/transaction/domain/models
 import { FinanceMovementGrouping } from "@economy/finance/transaction/domain/models/finance-movement-grouping.model";
 import { FinanceBreakdownRow } from "@economy/finance/transaction/domain/models/finance-breakdown-row.model";
 import { FinanceSubscriptionRow } from "@economy/finance/transaction/domain/models/finance-subscription-row.model";
+import { GetFinanceAccountsService } from "@economy/finance/account/application/services/get-finance-accounts.service";
+import { FinanceAccountCatalogService } from "@economy/finance/account/application/services/finance-account-catalog.service";
+import { FinanceAccount } from "@economy/finance/account/domain/models/finance-account.model";
 
 @Component({
   selector: "app-get-economy",
@@ -114,11 +118,14 @@ export class GetEconomyComponent implements OnInit {
   private deleteFinanceTransactionService = inject(
     DeleteFinanceTransactionService,
   );
+  private getFinanceAccountsService = inject(GetFinanceAccountsService);
+  private router = inject(Router);
   protected view = inject(FinanceViewService);
   protected calendarView = inject(FinanceCalendarViewService);
   protected categoryCatalog = inject(FinanceCategoryCatalogService);
   protected movementGrouping = inject(FinanceMovementGroupingService);
   protected transactionForm = inject(FinanceTransactionFormService);
+  protected accountCatalog = inject(FinanceAccountCatalogService);
 
   private readonly MODULE_PATH = "economy/finance/transaction";
 
@@ -132,6 +139,7 @@ export class GetEconomyComponent implements OnInit {
   overview = signal<FinanceOverviewAttributes | null>(null);
   transactions = signal<FinanceTransactionView[]>([]);
   calendarDays = signal<FinanceCalendarDay[]>([]);
+  accounts = signal<FinanceAccount[]>([]);
 
   dayMode = signal(false);
   selectedDate = signal<string | null>(null);
@@ -141,13 +149,37 @@ export class GetEconomyComponent implements OnInit {
   sheetOpen = signal(false);
   editingId = signal<string | null>(null);
   form = signal<FinanceTransactionForm>(
-    this.transactionForm.empty(this.view.todayIso()),
+    this.transactionForm.empty(this.view.todayIso(), ""),
   );
 
   monthLabel = computed(() => this.view.monthLabel(this.month()));
   canGoNextMonth = computed(
     () => !this.view.isFutureMonth(this.view.shiftMonth(this.month(), 1)),
   );
+
+  hasAccounts = computed(() => this.accounts().length > 0);
+  hasSeveralAccounts = computed(() => this.accounts().length > 1);
+  defaultAccountId = computed(() => this.accounts()[0]?.id ?? "");
+  accountOptions = computed<ChoiceChipOption[]>(() =>
+    this.accounts().map((account) => ({
+      value: account.id,
+      label: `${this.accountCatalog.emoji(account.type)} ${account.name}`,
+    })),
+  );
+  accountRows = computed<FinanceBreakdownRow[]>(() => {
+    const balances = this.overview()?.accounts ?? [];
+    const max = Math.max(...balances.map((item) => Math.abs(item.balance)), 0);
+
+    return balances.map((item) => ({
+      key: item.accountId,
+      label: `${this.accountCatalog.emoji(item.type)} ${item.name}`,
+      amountLabel: this.view.money(item.balance),
+      percentageLabel: "",
+      emoji: "",
+      color: "",
+      ratio: this.view.ratio(Math.abs(item.balance), max),
+    }));
+  });
 
   hasMovements = computed(() => this.transactions().length > 0);
   hasExpense = computed(() => (this.overview()?.expense ?? 0) > 0);
@@ -430,12 +462,19 @@ export class GetEconomyComponent implements OnInit {
     this.dayTransactions.set([]);
   }
 
+  goToAccounts(): void {
+    this.router.navigate(["/economy/accounts"]);
+  }
+
   openNewSheet(): void {
     if (!this.canWrite()) return;
 
     this.editingId.set(null);
     this.form.set(
-      this.transactionForm.empty(this.selectedDate() ?? this.view.todayIso()),
+      this.transactionForm.empty(
+        this.selectedDate() ?? this.view.todayIso(),
+        this.defaultAccountId(),
+      ),
     );
     this.sheetOpen.set(true);
   }
@@ -451,6 +490,10 @@ export class GetEconomyComponent implements OnInit {
   closeSheet(): void {
     this.sheetOpen.set(false);
     this.saving.set(false);
+  }
+
+  onAccount(accountId: string): void {
+    this.form.update((form) => ({ ...form, accountId }));
   }
 
   onKind(kind: string): void {
@@ -563,6 +606,10 @@ export class GetEconomyComponent implements OnInit {
   ): FinanceMovementRow["tags"] {
     const tags = [];
 
+    if (this.hasSeveralAccounts()) {
+      tags.push({ label: transaction.accountName, highlighted: false });
+    }
+
     if (transaction.source === FinanceTransactionSource.TICKET) {
       tags.push({ label: this.t("getEconomy.tag.ticket"), highlighted: true });
     }
@@ -605,6 +652,10 @@ export class GetEconomyComponent implements OnInit {
 
     this.getFinanceCalendarService.getFinanceCalendar(month).subscribe({
       next: (response) => this.calendarDays.set(response.data.attributes.days),
+    });
+
+    this.getFinanceAccountsService.getFinanceAccounts().subscribe({
+      next: (response) => this.accounts.set(response.data.attributes.accounts),
     });
   }
 

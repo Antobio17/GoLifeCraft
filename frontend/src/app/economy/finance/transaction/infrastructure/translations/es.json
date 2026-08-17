@@ -65,5 +65,9 @@
   "getEconomy.category.home": "Hogar",
   "getEconomy.category.health": "Salud",
   "getEconomy.category.subscriptions": "Suscripciones",
-  "getEconomy.category.other": "Otros"
+  "getEconomy.category.other": "Otros",
+  "getEconomy.accounts.title": "Saldo por cuenta",
+  "getEconomy.accounts.manage": "Cuentas",
+  "getEconomy.accounts.missing": "Todavía no tienes ninguna cuenta. Crea una para poder registrar movimientos y cuadrar tu saldo real.",
+  "getEconomy.sheet.accountLabel": "CUENTA"
 }

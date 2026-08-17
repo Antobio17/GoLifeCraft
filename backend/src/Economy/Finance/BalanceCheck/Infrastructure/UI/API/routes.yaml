@@ -1,0 +1,23 @@
+get_finance_balance_checks:
+  path: /api/v1/economy/balance-checks
+  methods: [GET]
+  controller: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\GetFinanceBalanceChecksController
+
+create_finance_balance_check:
+  path: /api/v1/economy/balance-checks
+  methods: [POST]
+  controller: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\CreateFinanceBalanceCheckController
+
+update_finance_balance_check:
+  path: /api/v1/economy/balance-checks/{financeBalanceCheckId}
+  methods: [PUT]
+  controller: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\UpdateFinanceBalanceCheckController
+  requirements:
+    financeBalanceCheckId: '[0-9a-fA-F-]{36}'
+
+delete_finance_balance_check:
+  path: /api/v1/economy/balance-checks/{financeBalanceCheckId}
+  methods: [DELETE]
+  controller: Economy\Finance\BalanceCheck\Infrastructure\UI\API\Controller\DeleteFinanceBalanceCheckController
+  requirements:
+    financeBalanceCheckId: '[0-9a-fA-F-]{36}'

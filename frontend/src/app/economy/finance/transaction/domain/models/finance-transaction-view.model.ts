@@ -4,6 +4,8 @@ import { FinanceTransactionSource } from "./finance-transaction-source.model";
 
 export interface FinanceTransactionView {
   id: string;
+  accountId: string;
+  accountName: string;
   transactionDate: string;
   kind: FinanceTransactionKind;
   amount: number;

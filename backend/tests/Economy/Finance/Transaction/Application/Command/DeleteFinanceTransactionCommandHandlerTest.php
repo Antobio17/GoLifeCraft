@@ -27,6 +27,7 @@ final class DeleteFinanceTransactionCommandHandlerTest extends TestCase
 
         $this->repository->save(financeTransaction: FinanceTransaction::create(
             id: 'finance-transaction-1',
+            accountId: 'account-1',
             transactionDate: '2026-07-12',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 25.75,

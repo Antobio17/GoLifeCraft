@@ -3,6 +3,7 @@
   <entity repository-class="Economy\Finance\Transaction\Infrastructure\Domain\Model\Doctrine\DoctrineFinanceTransactionRepository" name="Economy\Finance\Transaction\Domain\Model\FinanceTransaction" table="finance_transaction">
     <id name="id" type="string" column="id" primary="true" length="36"/>
     <field name="version" type="integer" version="true"/>
+    <field name="accountId" type="string" column="account_id" length="36"/>
     <field name="transactionDate" type="string" column="transaction_date" length="10"/>
     <field name="kind" type="string" column="kind" length="10"/>
     <field name="amount" type="float" column="amount"/>
@@ -16,6 +17,7 @@
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
     <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
     <indexes>
+      <index name="idx_finance_transaction_account_id" columns="account_id"/>
       <index name="idx_finance_transaction_transaction_date" columns="transaction_date"/>
       <index name="idx_finance_transaction_kind" columns="kind"/>
       <index name="idx_finance_transaction_category" columns="category"/>
