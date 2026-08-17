@@ -1,0 +1,23 @@
+get_finance_accounts:
+  path: /api/v1/economy/accounts
+  methods: [GET]
+  controller: Economy\Finance\Account\Infrastructure\UI\API\Controller\GetFinanceAccountsController
+
+create_finance_account:
+  path: /api/v1/economy/accounts
+  methods: [POST]
+  controller: Economy\Finance\Account\Infrastructure\UI\API\Controller\CreateFinanceAccountController
+
+update_finance_account:
+  path: /api/v1/economy/accounts/{financeAccountId}
+  methods: [PUT]
+  controller: Economy\Finance\Account\Infrastructure\UI\API\Controller\UpdateFinanceAccountController
+  requirements:
+    financeAccountId: '[0-9a-fA-F-]{36}'
+
+delete_finance_account:
+  path: /api/v1/economy/accounts/{financeAccountId}
+  methods: [DELETE]
+  controller: Economy\Finance\Account\Infrastructure\UI\API\Controller\DeleteFinanceAccountController
+  requirements:
+    financeAccountId: '[0-9a-fA-F-]{36}'

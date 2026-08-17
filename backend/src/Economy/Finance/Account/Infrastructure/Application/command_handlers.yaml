@@ -1,0 +1,30 @@
+services:
+  Economy\Finance\Account\Application\Command\CreateFinanceAccountCommandHandler:
+    class: Economy\Finance\Account\Application\Command\CreateFinanceAccountCommandHandler
+    arguments:
+      $financeAccountRepository: '@Economy\Finance\Account\Domain\Model\FinanceAccountRepository'
+      $needleDataQuery: '@Economy\Finance\Account\Domain\QueryModel\CreateFinanceAccountNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Account\Application\Command\UpdateFinanceAccountCommandHandler:
+    class: Economy\Finance\Account\Application\Command\UpdateFinanceAccountCommandHandler
+    arguments:
+      $financeAccountRepository: '@Economy\Finance\Account\Domain\Model\FinanceAccountRepository'
+      $needleDataQuery: '@Economy\Finance\Account\Domain\QueryModel\UpdateFinanceAccountNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Account\Application\Command\DeleteFinanceAccountCommandHandler:
+    class: Economy\Finance\Account\Application\Command\DeleteFinanceAccountCommandHandler
+    arguments:
+      $financeAccountRepository: '@Economy\Finance\Account\Domain\Model\FinanceAccountRepository'
+      $needleDataQuery: '@Economy\Finance\Account\Domain\QueryModel\DeleteFinanceAccountNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

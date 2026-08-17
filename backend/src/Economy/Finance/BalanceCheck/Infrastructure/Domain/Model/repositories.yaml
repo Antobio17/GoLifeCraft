@@ -1,0 +1,6 @@
+services:
+  Economy\Finance\BalanceCheck\Domain\Model\FinanceBalanceCheckRepository:
+    class: Economy\Finance\BalanceCheck\Infrastructure\Domain\Model\Doctrine\DoctrineFinanceBalanceCheckRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Economy\Finance\BalanceCheck\Domain\Model\FinanceBalanceCheck

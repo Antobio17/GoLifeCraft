@@ -3,7 +3,9 @@
 namespace Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Economy\Finance\Account\Domain\Service\FinanceBalanceReader;
 use Economy\Finance\Transaction\Domain\Model\FinanceTransaction;
+use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceAccountBalance;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceCategoryTotal;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceMonthPoint;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceStoreTotal;
@@ -20,19 +22,30 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
 
     public function __construct(
         private Connection $connection,
+        private FinanceBalanceReader $financeBalanceReader,
     ) {
     }
 
     public function findOverview(string $month, string $today): GetFinanceOverviewResult
     {
         $monthlyTotals = $this->findMonthlyTotals(month: $month);
-        $series = $this->buildSeries(month: $month, monthlyTotals: $monthlyTotals);
+        $accounts = $this->findAccountBalances(date: $today);
+        $accountIds = array_column(array: $accounts, column_key: 'accountId');
+        $series = $this->buildSeries(
+            month: $month,
+            monthlyTotals: $monthlyTotals,
+            accountIds: $accountIds,
+        );
 
         $current = $monthlyTotals[$month] ?? ['income' => 0.0, 'expense' => 0.0, 'count' => 0];
         $income = $current['income'];
         $expense = $current['expense'];
 
-        $balance = $this->findBalanceAt(date: $today);
+        $balance = array_reduce(
+            array: $accounts,
+            callback: static fn (float $total, FinanceAccountBalance $account): float => $total + $account->balance,
+            initial: 0.0,
+        );
         $lastPoint = end($series);
         $previousPoint = count(value: $series) > 1 ? $series[count(value: $series) - 2] : $lastPoint;
         $balanceDelta = false === $lastPoint ? 0.0 : $lastPoint->endBalance - $previousPoint->endBalance;
@@ -64,6 +77,7 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
             aggregateName: 'FinanceOverview',
             month: $month,
             balance: round(num: $balance, precision: 2),
+            accounts: $accounts,
             balanceDelta: round(num: $balanceDelta, precision: 2),
             balanceDeltaPercentage: $balanceDeltaPercentage,
             income: round(num: $income, precision: 2),
@@ -116,34 +130,28 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
 
     /**
      * @param array<string, array{income: float, expense: float, count: int}> $monthlyTotals
+     * @param array<int, string>                                              $accountIds
      *
      * @return array<int, FinanceMonthPoint>
      */
-    private function buildSeries(string $month, array $monthlyTotals): array
+    private function buildSeries(string $month, array $monthlyTotals, array $accountIds): array
     {
-        $firstMonth = $this->shiftMonth(month: $month, offset: -(self::SERIES_MONTHS - 1));
-        $carried = 0.0;
-
-        foreach ($monthlyTotals as $key => $totals) {
-            if ($key < $firstMonth) {
-                $carried += $totals['income'] - $totals['expense'];
-            }
-        }
-
         $series = [];
-        $balance = $carried;
 
         for ($offset = self::SERIES_MONTHS - 1; $offset >= 0; --$offset) {
             $key = $this->shiftMonth(month: $month, offset: -$offset);
             $totals = $monthlyTotals[$key] ?? ['income' => 0.0, 'expense' => 0.0, 'count' => 0];
-            $balance += $totals['income'] - $totals['expense'];
+            $endBalance = $this->findBalanceAt(
+                date: $this->lastDayOfMonth(month: $key),
+                accountIds: $accountIds,
+            );
 
             $series[] = new FinanceMonthPoint(
                 month: $key,
                 income: round(num: $totals['income'], precision: 2),
                 expense: round(num: $totals['expense'], precision: 2),
                 net: round(num: $totals['income'] - $totals['expense'], precision: 2),
-                endBalance: round(num: $balance, precision: 2),
+                endBalance: round(num: $endBalance, precision: 2),
             );
         }
 
@@ -169,25 +177,78 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
         return [] === $expenses ? 0.0 : array_sum(array: $expenses) / count(value: $expenses);
     }
 
-    private function findBalanceAt(string $date): float
+    /**
+     * @param array<int, string> $accountIds
+     */
+    private function findBalanceAt(string $date, array $accountIds): float
+    {
+        $balances = $this->financeBalanceReader->balancesAt(date: $date);
+
+        return array_sum(array: array_intersect_key(
+            array: $balances,
+            keys: array_flip(array: $accountIds),
+        ));
+    }
+
+    /**
+     * @return array<int, FinanceAccountBalance>
+     */
+    private function findAccountBalances(string $date): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('t.kind', 'SUM(t.amount) AS total')
-            ->from(table: 'finance_transaction', alias: 't')
-            ->where('t.transaction_date <= :date')
-            ->setParameter(key: 'date', value: $date)
-            ->groupBy('t.kind')
+            ->select('a.id', 'a.name', 'a.type')
+            ->from(table: 'finance_account', alias: 'a')
+            ->orderBy('a.name', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
 
-        $balance = 0.0;
+        $balances = $this->financeBalanceReader->balancesAt(date: $date);
+        $lastCheckDates = $this->findLastCheckDates(date: $date);
+        $accounts = [];
 
         foreach ($rows as $row) {
-            $total = (float) $row['total'];
-            $balance += FinanceTransaction::KIND_INCOME === $row['kind'] ? $total : -$total;
+            $accountId = (string) $row['id'];
+
+            $accounts[] = new FinanceAccountBalance(
+                accountId: $accountId,
+                name: (string) $row['name'],
+                type: (string) $row['type'],
+                balance: round(num: $balances[$accountId] ?? 0.0, precision: 2),
+                lastCheckDate: $lastCheckDates[$accountId] ?? null,
+            );
         }
 
-        return $balance;
+        return $accounts;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function findLastCheckDates(string $date): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('c.account_id', 'MAX(c.check_date) AS anchor_date')
+            ->from(table: 'finance_balance_check', alias: 'c')
+            ->where('c.check_date <= :date')
+            ->setParameter(key: 'date', value: $date)
+            ->groupBy('c.account_id')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $dates = [];
+
+        foreach ($rows as $row) {
+            $dates[(string) $row['account_id']] = (string) $row['anchor_date'];
+        }
+
+        return $dates;
+    }
+
+    private function lastDayOfMonth(string $month): string
+    {
+        return (new \DateTimeImmutable(datetime: $month.'-01'))
+            ->modify(modifier: 'last day of this month')
+            ->format(format: 'Y-m-d');
     }
 
     /**

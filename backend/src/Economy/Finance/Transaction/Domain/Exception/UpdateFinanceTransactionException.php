@@ -15,6 +15,24 @@ final class UpdateFinanceTransactionException extends BaseException
         );
     }
 
+    public static function accountRequired(): self
+    {
+        return new static(
+            title: 'The movement needs an account.',
+            keyTranslation: 'finance.transaction.account.required',
+            details: []
+        );
+    }
+
+    public static function accountNotFound(string $accountId): self
+    {
+        return new static(
+            title: 'The account does not exist.',
+            keyTranslation: 'finance.transaction.account.not.found',
+            details: ['accountId' => $accountId]
+        );
+    }
+
     public static function invalidDate(string $transactionDate): self
     {
         return new static(

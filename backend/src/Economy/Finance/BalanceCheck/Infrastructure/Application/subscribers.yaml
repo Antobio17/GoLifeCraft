@@ -1,0 +1,7 @@
+services:
+  Economy\Finance\BalanceCheck\Application\Subscriber\DeleteFinanceBalanceChecksOnFinanceAccountDeleted:
+    class: Economy\Finance\BalanceCheck\Application\Subscriber\DeleteFinanceBalanceChecksOnFinanceAccountDeleted
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.economy.event.1.finance_account.deleted' }

@@ -1,0 +1,41 @@
+label: Finance balance check
+
+fields:
+  accountId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      Identifier of the account the money was counted in.
+    filterable: true
+  checkDate:
+    writable: true
+    required: true
+    min: 10
+    max: 10
+    regex: '^\d{4}-\d{2}-\d{2}$'
+    description: >-
+      Day the balance was counted, as an ISO date "YYYY-MM-DD". The amount is the
+      balance at the start of that day, so the movements of that same day are
+      applied on top of it.
+    filterable: true
+    sortable: true
+  amount:
+    writable: true
+    required: true
+    type: float
+    min: -9999999.99
+    max: 9999999.99
+    description: >-
+      Real money the account holds at the start of the check date, in euros. It can
+      be negative when the account is overdrawn.
+    sortable: true
+  note:
+    writable: false
+    required: false
+    max: 255
+    description: >-
+      Optional remark about the count, for example "cuadre tras la nómina".
+
+relations: {}

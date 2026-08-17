@@ -30,6 +30,7 @@ final class UpdateFinanceTransactionController
         try {
             $this->handle(message: new UpdateFinanceTransactionCommand(
                 financeTransactionId: $financeTransactionId,
+                accountId: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'accountId'),
                 transactionDate: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'transactionDate'),
                 kind: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'kind'),
                 amount: (float) RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'amount'),

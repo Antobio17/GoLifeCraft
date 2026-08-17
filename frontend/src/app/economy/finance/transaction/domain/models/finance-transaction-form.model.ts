@@ -3,6 +3,7 @@ import { FinanceTransactionKind } from "./finance-transaction-kind.model";
 
 export interface FinanceTransactionForm {
   id: string | null;
+  accountId: string;
   kind: FinanceTransactionKind;
   amount: string;
   category: FinanceCategory;

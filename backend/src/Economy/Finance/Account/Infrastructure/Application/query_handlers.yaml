@@ -1,0 +1,11 @@
+services:
+  Economy\Finance\Account\Application\Query\GetFinanceAccountsQueryHandler:
+    class: Economy\Finance\Account\Application\Query\GetFinanceAccountsQueryHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Account\Domain\QueryModel\GetFinanceAccountsNeedleDataQuery'
+      $dataTransform: '@Economy\Finance\Account\Application\Query\GetFinanceAccountsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Account\Application\Query\GetFinanceAccountsDataTransform:
+    class: Economy\Finance\Account\Infrastructure\UI\API\DataTransform\ApiGetFinanceAccountsDataTransform

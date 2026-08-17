@@ -1,0 +1,5 @@
+services:
+  Economy\Finance\Account\Domain\Service\FinanceBalanceReader:
+    class: Economy\Finance\Account\Infrastructure\Domain\Service\Doctrine\DoctrineFinanceBalanceReader
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

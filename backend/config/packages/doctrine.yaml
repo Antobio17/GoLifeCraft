@@ -159,6 +159,18 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Economy/Finance/Transaction/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Economy\Finance\Transaction\Domain\Model'
                         alias: finance_transaction
+                    FinanceAccount:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Economy/Finance/Account/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Economy\Finance\Account\Domain\Model'
+                        alias: finance_account
+                    FinanceBalanceCheck:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Economy/Finance/BalanceCheck/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Economy\Finance\BalanceCheck\Domain\Model'
+                        alias: finance_balance_check
                     Menu:
                         is_bundle: false
                         type: xml

@@ -72,5 +72,9 @@
   "getEconomy.category.travel": "Travel",
   "getEconomy.category.pets": "Pets",
   "getEconomy.category.subscriptions": "Subscriptions",
-  "getEconomy.category.other": "Other"
+  "getEconomy.category.other": "Other",
+  "getEconomy.accounts.title": "Balance per account",
+  "getEconomy.accounts.manage": "Accounts",
+  "getEconomy.accounts.missing": "You have no accounts yet. Create one to register movements and reconcile your real balance.",
+  "getEconomy.sheet.accountLabel": "ACCOUNT"
 }

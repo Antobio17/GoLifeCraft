@@ -4,6 +4,7 @@ namespace Economy\Finance\Transaction\Application\Command;
 
 use Economy\Finance\Transaction\Domain\Exception\UpdateFinanceTransactionException;
 use Economy\Finance\Transaction\Domain\Model\FinanceTransactionRepository;
+use Economy\Finance\Transaction\Domain\QueryModel\UpdateFinanceTransactionNeedleDataQuery;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -11,6 +12,7 @@ final readonly class UpdateFinanceTransactionCommandHandler
 {
     public function __construct(
         private FinanceTransactionRepository $financeTransactionRepository,
+        private UpdateFinanceTransactionNeedleDataQuery $needleDataQuery,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -26,7 +28,12 @@ final readonly class UpdateFinanceTransactionCommandHandler
             );
         }
 
+        if (!$this->needleDataQuery->accountExists(accountId: $command->accountId)) {
+            throw UpdateFinanceTransactionException::accountNotFound(accountId: $command->accountId);
+        }
+
         $financeTransaction->update(
+            accountId: $command->accountId,
             transactionDate: $command->transactionDate,
             kind: $command->kind,
             amount: $command->amount,

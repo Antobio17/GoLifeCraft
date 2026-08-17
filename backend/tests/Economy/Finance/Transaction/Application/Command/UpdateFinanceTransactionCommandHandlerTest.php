@@ -7,6 +7,7 @@ use Economy\Finance\Transaction\Application\Command\UpdateFinanceTransactionComm
 use Economy\Finance\Transaction\Domain\Exception\UpdateFinanceTransactionException;
 use Economy\Finance\Transaction\Domain\Model\FinanceTransaction;
 use Economy\Finance\Transaction\Infrastructure\Domain\Model\InMemory\InMemoryFinanceTransactionRepository;
+use Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\InMemory\InMemoryUpdateFinanceTransactionNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -21,12 +22,14 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
         $this->repository = new InMemoryFinanceTransactionRepository();
         $this->handler = new UpdateFinanceTransactionCommandHandler(
             financeTransactionRepository: $this->repository,
+            needleDataQuery: new InMemoryUpdateFinanceTransactionNeedleDataQuery(accountIds: ['account-1', 'account-2']),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: new DateTimeGenerator(),
         );
 
         $this->repository->save(financeTransaction: FinanceTransaction::create(
             id: 'finance-transaction-1',
+            accountId: 'account-1',
             transactionDate: '2026-07-12',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 25.75,
@@ -44,6 +47,7 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
     {
         ($this->handler)(new UpdateFinanceTransactionCommand(
             financeTransactionId: 'finance-transaction-1',
+            accountId: 'account-1',
             transactionDate: '2026-07-14',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 31.2,
@@ -67,6 +71,7 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
     {
         ($this->handler)(new UpdateFinanceTransactionCommand(
             financeTransactionId: 'finance-transaction-1',
+            accountId: 'account-1',
             transactionDate: '2026-07-12',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 25.75,
@@ -89,6 +94,46 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
 
         ($this->handler)(new UpdateFinanceTransactionCommand(
             financeTransactionId: 'unknown-transaction',
+            accountId: 'account-1',
+            transactionDate: '2026-07-14',
+            kind: FinanceTransaction::KIND_EXPENSE,
+            amount: 10.0,
+            category: 'groceries',
+            note: 'Compra',
+            store: null,
+            recurring: false,
+            updatedByUserId: 'god-user-id',
+        ));
+    }
+
+    public function testItMovesTheTransactionToAnotherAccount(): void
+    {
+        ($this->handler)(new UpdateFinanceTransactionCommand(
+            financeTransactionId: 'finance-transaction-1',
+            accountId: 'account-2',
+            transactionDate: '2026-07-12',
+            kind: FinanceTransaction::KIND_EXPENSE,
+            amount: 25.75,
+            category: 'groceries',
+            note: 'Compra semanal',
+            store: 'Mercadona',
+            recurring: false,
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $transaction = $this->repository->findById(id: 'finance-transaction-1');
+
+        $this->assertNotNull(actual: $transaction);
+        $this->assertSame(expected: 'account-2', actual: $transaction->accountId);
+    }
+
+    public function testItThrowsWhenTheAccountDoesNotExist(): void
+    {
+        $this->expectException(exception: UpdateFinanceTransactionException::class);
+
+        ($this->handler)(new UpdateFinanceTransactionCommand(
+            financeTransactionId: 'finance-transaction-1',
+            accountId: 'unknown-account',
             transactionDate: '2026-07-14',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: 10.0,
@@ -106,6 +151,7 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
 
         ($this->handler)(new UpdateFinanceTransactionCommand(
             financeTransactionId: 'finance-transaction-1',
+            accountId: 'account-1',
             transactionDate: '2026-07-14',
             kind: FinanceTransaction::KIND_EXPENSE,
             amount: -3.0,
