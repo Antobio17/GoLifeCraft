@@ -42,7 +42,7 @@ const CATEGORIES: Record<FinanceCategory, FinanceCategoryEntry> = {
     color: "var(--ds-cat-health)",
   },
   [FinanceCategory.BEAUTY]: {
-    emoji: "💅",
+    emoji: "💇",
     color: "var(--ds-cat-beauty)",
   },
   [FinanceCategory.CLOTHING]: {
