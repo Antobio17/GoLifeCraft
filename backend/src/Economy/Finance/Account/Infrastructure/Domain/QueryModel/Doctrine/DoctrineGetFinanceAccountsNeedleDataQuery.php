@@ -6,13 +6,13 @@ use Doctrine\DBAL\Connection;
 use Economy\Finance\Account\Domain\QueryModel\Dto\FinanceAccountView;
 use Economy\Finance\Account\Domain\QueryModel\Dto\GetFinanceAccountsResult;
 use Economy\Finance\Account\Domain\QueryModel\GetFinanceAccountsNeedleDataQuery;
-use Economy\Finance\Account\Domain\Service\FinanceBalanceReader;
 
 final readonly class DoctrineGetFinanceAccountsNeedleDataQuery implements GetFinanceAccountsNeedleDataQuery
 {
+    private const KIND_INCOME = 'income';
+
     public function __construct(
         private Connection $connection,
-        private FinanceBalanceReader $financeBalanceReader,
     ) {
     }
 
@@ -25,8 +25,8 @@ final readonly class DoctrineGetFinanceAccountsNeedleDataQuery implements GetFin
             ->executeQuery()
             ->fetchAllAssociative();
 
-        $balances = $this->financeBalanceReader->balancesAt(date: $date);
         $lastChecks = $this->findLastChecks(date: $date);
+        $movements = $this->findMovements(date: $date);
         $transactionCounts = $this->findTransactionCounts();
 
         $accounts = [];
@@ -34,7 +34,11 @@ final readonly class DoctrineGetFinanceAccountsNeedleDataQuery implements GetFin
 
         foreach ($rows as $row) {
             $accountId = (string) $row['id'];
-            $accountBalance = $balances[$accountId] ?? 0.0;
+            $lastCheck = $lastChecks[$accountId] ?? null;
+            $accountBalance = $this->buildBalance(
+                lastCheck: $lastCheck,
+                movements: $movements[$accountId] ?? [],
+            );
             $balance += $accountBalance;
 
             $accounts[] = new FinanceAccountView(
@@ -42,8 +46,8 @@ final readonly class DoctrineGetFinanceAccountsNeedleDataQuery implements GetFin
                 name: (string) $row['name'],
                 type: (string) $row['type'],
                 balance: round(num: $accountBalance, precision: 2),
-                lastCheckDate: $lastChecks[$accountId]['date'] ?? null,
-                lastCheckAmount: $lastChecks[$accountId]['amount'] ?? null,
+                lastCheckDate: $lastCheck['date'] ?? null,
+                lastCheckAmount: $lastCheck['amount'] ?? null,
                 transactionCount: $transactionCounts[$accountId] ?? 0,
             );
         }
@@ -55,6 +59,29 @@ final readonly class DoctrineGetFinanceAccountsNeedleDataQuery implements GetFin
             accounts: $accounts,
             balance: round(num: $balance, precision: 2),
         );
+    }
+
+    /**
+     * The checked amount is the balance at the start of the check day, so the
+     * movements of that same day are applied on top of it. Accounts that were
+     * never counted fall back to the sum of every movement they hold.
+     *
+     * @param array{date: string, amount: float}|null $lastCheck
+     * @param array<string, float>                    $movements
+     */
+    private function buildBalance(?array $lastCheck, array $movements): float
+    {
+        $balance = $lastCheck['amount'] ?? 0.0;
+
+        foreach ($movements as $movementDate => $net) {
+            if (null !== $lastCheck && $movementDate < $lastCheck['date']) {
+                continue;
+            }
+
+            $balance += $net;
+        }
+
+        return $balance;
     }
 
     /**
@@ -87,6 +114,34 @@ final readonly class DoctrineGetFinanceAccountsNeedleDataQuery implements GetFin
         }
 
         return $checks;
+    }
+
+    /**
+     * @return array<string, array<string, float>> net amount per account and day
+     */
+    private function findMovements(string $date): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('t.account_id', 't.transaction_date', 't.kind', 'SUM(t.amount) AS total')
+            ->from(table: 'finance_transaction', alias: 't')
+            ->where('t.transaction_date <= :date')
+            ->setParameter(key: 'date', value: $date)
+            ->groupBy('t.account_id', 't.transaction_date', 't.kind')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $movements = [];
+
+        foreach ($rows as $row) {
+            $accountId = (string) $row['account_id'];
+            $movementDate = (string) $row['transaction_date'];
+            $total = (float) $row['total'];
+
+            $movements[$accountId][$movementDate] ??= 0.0;
+            $movements[$accountId][$movementDate] += self::KIND_INCOME === $row['kind'] ? $total : -$total;
+        }
+
+        return $movements;
     }
 
     /**

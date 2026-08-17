@@ -13,7 +13,6 @@ services:
     class: Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceOverviewNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
-      $financeBalanceReader: '@Economy\Finance\Account\Domain\Service\FinanceBalanceReader'
 
   Economy\Finance\Transaction\Domain\QueryModel\GetFinanceTransactionsNeedleDataQuery:
     class: Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceTransactionsNeedleDataQuery
