@@ -3,7 +3,6 @@
 namespace Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
-use Economy\Finance\Account\Domain\Service\FinanceBalanceReader;
 use Economy\Finance\Transaction\Domain\Model\FinanceTransaction;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceAccountBalance;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceCategoryTotal;
@@ -22,19 +21,30 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
 
     public function __construct(
         private Connection $connection,
-        private FinanceBalanceReader $financeBalanceReader,
     ) {
     }
 
     public function findOverview(string $month, string $today): GetFinanceOverviewResult
     {
         $monthlyTotals = $this->findMonthlyTotals(month: $month);
-        $accounts = $this->findAccountBalances(date: $today);
-        $accountIds = array_column(array: $accounts, column_key: 'accountId');
+        $maxDate = max($today, $this->lastDayOfMonth(month: $month));
+        $checks = $this->findChecks(date: $maxDate);
+        $movements = $this->findMovements(date: $maxDate);
+
+        $accounts = $this->findAccountBalances(
+            date: $today,
+            checks: $checks,
+            movements: $movements,
+        );
         $series = $this->buildSeries(
             month: $month,
             monthlyTotals: $monthlyTotals,
-            accountIds: $accountIds,
+            endBalances: $this->buildEndBalances(
+                month: $month,
+                accountIds: array_column(array: $accounts, column_key: 'accountId'),
+                checks: $checks,
+                movements: $movements,
+            ),
         );
 
         $current = $monthlyTotals[$month] ?? ['income' => 0.0, 'expense' => 0.0, 'count' => 0];
@@ -130,28 +140,24 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
 
     /**
      * @param array<string, array{income: float, expense: float, count: int}> $monthlyTotals
-     * @param array<int, string>                                              $accountIds
+     * @param array<string, float>                                            $endBalances
      *
      * @return array<int, FinanceMonthPoint>
      */
-    private function buildSeries(string $month, array $monthlyTotals, array $accountIds): array
+    private function buildSeries(string $month, array $monthlyTotals, array $endBalances): array
     {
         $series = [];
 
         for ($offset = self::SERIES_MONTHS - 1; $offset >= 0; --$offset) {
             $key = $this->shiftMonth(month: $month, offset: -$offset);
             $totals = $monthlyTotals[$key] ?? ['income' => 0.0, 'expense' => 0.0, 'count' => 0];
-            $endBalance = $this->findBalanceAt(
-                date: $this->lastDayOfMonth(month: $key),
-                accountIds: $accountIds,
-            );
 
             $series[] = new FinanceMonthPoint(
                 month: $key,
                 income: round(num: $totals['income'], precision: 2),
                 expense: round(num: $totals['expense'], precision: 2),
                 net: round(num: $totals['income'] - $totals['expense'], precision: 2),
-                endBalance: round(num: $endBalance, precision: 2),
+                endBalance: round(num: $endBalances[$key] ?? 0.0, precision: 2),
             );
         }
 
@@ -178,22 +184,99 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
     }
 
     /**
-     * @param array<int, string> $accountIds
+     * @param array<int, string>                                            $accountIds
+     * @param array<string, array<int, array{date: string, amount: float}>> $checks
+     * @param array<string, array<string, float>>                           $movements
+     *
+     * @return array<string, float> month indexed balances at the end of each month
      */
-    private function findBalanceAt(string $date, array $accountIds): float
+    private function buildEndBalances(string $month, array $accountIds, array $checks, array $movements): array
     {
-        $balances = $this->financeBalanceReader->balancesAt(date: $date);
+        $knownAccounts = array_flip(array: $accountIds);
+        $endBalances = [];
 
-        return array_sum(array: array_intersect_key(
-            array: $balances,
-            keys: array_flip(array: $accountIds),
-        ));
+        for ($offset = self::SERIES_MONTHS - 1; $offset >= 0; --$offset) {
+            $key = $this->shiftMonth(month: $month, offset: -$offset);
+            $balances = $this->buildBalances(
+                date: $this->lastDayOfMonth(month: $key),
+                checks: $checks,
+                movements: $movements,
+            );
+
+            $endBalances[$key] = array_sum(array: array_intersect_key(
+                array: $balances,
+                keys: $knownAccounts,
+            ));
+        }
+
+        return $endBalances;
     }
 
     /**
+     * The checked amount is the balance at the start of the check day, so the
+     * movements of that same day are applied on top of it. Accounts that were
+     * never counted fall back to the sum of every movement they hold.
+     *
+     * @param array<string, array<int, array{date: string, amount: float}>> $checks
+     * @param array<string, array<string, float>>                           $movements
+     *
+     * @return array<string, float>
+     */
+    private function buildBalances(string $date, array $checks, array $movements): array
+    {
+        $accountIds = array_unique(array: array_merge(
+            array_keys($checks),
+            array_keys($movements),
+        ));
+        $balances = [];
+
+        foreach ($accountIds as $accountId) {
+            $anchor = $this->findAnchor(checks: $checks[$accountId] ?? [], date: $date);
+            $balance = null === $anchor ? 0.0 : $anchor['amount'];
+
+            foreach ($movements[$accountId] ?? [] as $movementDate => $net) {
+                $isBeforeAnchor = null !== $anchor && $movementDate < $anchor['date'];
+
+                if ($isBeforeAnchor || $movementDate > $date) {
+                    continue;
+                }
+
+                $balance += $net;
+            }
+
+            $balances[$accountId] = $balance;
+        }
+
+        return $balances;
+    }
+
+    /**
+     * @param array<int, array{date: string, amount: float}> $checks ascending by date
+     *
+     * @return array{date: string, amount: float}|null
+     */
+    private function findAnchor(array $checks, string $date): ?array
+    {
+        $anchor = null;
+
+        foreach ($checks as $check) {
+            if ($check['date'] > $date) {
+                break;
+            }
+
+            $anchor = $check;
+        }
+
+        return $anchor;
+    }
+
+    /**
+     * @param array<string, array<int, array{date: string, amount: float}>> $checks
+     * @param array<string, array<string, float>>                           $movements
+     *
      * @return array<int, FinanceAccountBalance>
      */
-    private function findAccountBalances(string $date): array
+    private function findAccountBalances(string $date, array $checks, array $movements): array
     {
         $rows = $this->connection->createQueryBuilder()
             ->select('a.id', 'a.name', 'a.type')
@@ -202,19 +285,19 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
             ->executeQuery()
             ->fetchAllAssociative();
 
-        $balances = $this->financeBalanceReader->balancesAt(date: $date);
-        $lastCheckDates = $this->findLastCheckDates(date: $date);
+        $balances = $this->buildBalances(date: $date, checks: $checks, movements: $movements);
         $accounts = [];
 
         foreach ($rows as $row) {
             $accountId = (string) $row['id'];
+            $anchor = $this->findAnchor(checks: $checks[$accountId] ?? [], date: $date);
 
             $accounts[] = new FinanceAccountBalance(
                 accountId: $accountId,
                 name: (string) $row['name'],
                 type: (string) $row['type'],
                 balance: round(num: $balances[$accountId] ?? 0.0, precision: 2),
-                lastCheckDate: $lastCheckDates[$accountId] ?? null,
+                lastCheckDate: $anchor['date'] ?? null,
             );
         }
 
@@ -222,26 +305,57 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, array<int, array{date: string, amount: float}>> ascending by date
      */
-    private function findLastCheckDates(string $date): array
+    private function findChecks(string $date): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('c.account_id', 'MAX(c.check_date) AS anchor_date')
+            ->select('c.account_id', 'c.check_date', 'c.amount')
             ->from(table: 'finance_balance_check', alias: 'c')
             ->where('c.check_date <= :date')
             ->setParameter(key: 'date', value: $date)
-            ->groupBy('c.account_id')
+            ->orderBy('c.check_date', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
 
-        $dates = [];
+        $checks = [];
 
         foreach ($rows as $row) {
-            $dates[(string) $row['account_id']] = (string) $row['anchor_date'];
+            $checks[(string) $row['account_id']][] = [
+                'date' => (string) $row['check_date'],
+                'amount' => round(num: (float) $row['amount'], precision: 2),
+            ];
         }
 
-        return $dates;
+        return $checks;
+    }
+
+    /**
+     * @return array<string, array<string, float>> net amount per account and day
+     */
+    private function findMovements(string $date): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('t.account_id', 't.transaction_date', 't.kind', 'SUM(t.amount) AS total')
+            ->from(table: 'finance_transaction', alias: 't')
+            ->where('t.transaction_date <= :date')
+            ->setParameter(key: 'date', value: $date)
+            ->groupBy('t.account_id', 't.transaction_date', 't.kind')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $movements = [];
+
+        foreach ($rows as $row) {
+            $accountId = (string) $row['account_id'];
+            $movementDate = (string) $row['transaction_date'];
+            $total = (float) $row['total'];
+
+            $movements[$accountId][$movementDate] ??= 0.0;
+            $movements[$accountId][$movementDate] += FinanceTransaction::KIND_INCOME === $row['kind'] ? $total : -$total;
+        }
+
+        return $movements;
     }
 
     private function lastDayOfMonth(string $month): string
