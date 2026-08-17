@@ -1,29 +1,18 @@
-<nav
-  class="tabbar"
-  aria-label="Principal"
-  [class.tabbar--drawer-open]="isDrawerOpen()"
->
-  <ds-scroll-row
-    #track
-    class="tabbar__track"
-    (transitionend)="scrollActiveIntoView()"
-  >
-    @for (item of items; track item.route) {
-      <ds-tab-item
-        [routerLink]="item.route"
-        routerLinkActive="is-active"
-        [routerLinkActiveOptions]="{ exact: item.exact }"
-        #itemActive="routerLinkActive"
-        [icon]="item.icon"
-        [label]="item.labelKey | t"
-        [active]="itemActive.isActive && !isDrawerOpen()"
-        [attr.aria-label]="item.labelKey | t"
-      />
-    }
-  </ds-scroll-row>
+<nav class="tabbar" aria-label="Principal">
+  @for (item of items; track item.route) {
+    <ds-tab-item
+      [routerLink]="item.route"
+      routerLinkActive="is-active"
+      [routerLinkActiveOptions]="{ exact: item.exact }"
+      #itemActive="routerLinkActive"
+      [icon]="item.icon"
+      [label]="item.labelKey | t"
+      [active]="itemActive.isActive && !isDrawerOpen()"
+      [attr.aria-label]="item.labelKey | t"
+    />
+  }
 
   <ds-tab-item
-    class="tabbar__pinned"
     icon="menu"
     [label]="'navbar.menu' | t"
     [active]="isDrawerOpen()"
