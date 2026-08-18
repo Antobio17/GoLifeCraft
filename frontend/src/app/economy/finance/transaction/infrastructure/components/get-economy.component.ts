@@ -144,7 +144,7 @@ export class GetEconomyComponent implements OnInit {
   dayMode = signal(false);
   selectedDate = signal<string | null>(null);
   dayTransactions = signal<FinanceTransactionView[]>([]);
-  grouping = signal<FinanceMovementGrouping>(FinanceMovementGrouping.DATE);
+  grouping = signal<FinanceMovementGrouping>(FinanceMovementGrouping.CATEGORY);
 
   sheetOpen = signal(false);
   editingId = signal<string | null>(null);
@@ -316,12 +316,12 @@ export class GetEconomyComponent implements OnInit {
 
     return [
       {
-        value: FinanceMovementGrouping.DATE,
-        label: this.t("getEconomy.grouping.date"),
-      },
-      {
         value: FinanceMovementGrouping.CATEGORY,
         label: this.t("getEconomy.grouping.category"),
+      },
+      {
+        value: FinanceMovementGrouping.DATE,
+        label: this.t("getEconomy.grouping.date"),
       },
     ];
   });
