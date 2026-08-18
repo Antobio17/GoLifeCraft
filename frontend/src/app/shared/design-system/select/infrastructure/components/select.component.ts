@@ -4,7 +4,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 import { SelectOption } from "../../domain/models/select-option.model";
 
-type SelectVariant = "pill" | "bare";
+type SelectVariant = "pill" | "bare" | "soft";
 
 @Component({
   selector: "ds-select",
@@ -19,6 +19,7 @@ type SelectVariant = "pill" | "bare";
       class="ds-select"
       [class.ds-select--pill]="variant === 'pill'"
       [class.ds-select--bare]="variant === 'bare'"
+      [class.ds-select--soft]="variant === 'soft'"
       [class.ds-select--fluid]="fluid"
       [class.ds-select--lead]="!!leadingIcon"
       [class.is-active]="variant === 'pill' && value !== ''"
@@ -106,6 +107,21 @@ type SelectVariant = "pill" | "bare";
       }
       .ds-select--pill.is-active .ds-select__chevron {
         color: var(--ds-on-primary);
+      }
+      .ds-select--soft {
+        border: 1px solid transparent;
+        background: var(--ds-surface-inset);
+        color: var(--ds-text);
+        border-radius: var(--ds-radius-lg);
+        padding: var(--ds-space-1-5) var(--ds-space-3);
+      }
+      .ds-select--soft .ds-select__native {
+        padding-right: var(--ds-space-4);
+        font-size: var(--ds-text-sm);
+        font-weight: 600;
+      }
+      .ds-select--soft.ds-select--lead .ds-select__native {
+        padding-left: var(--ds-space-5);
       }
       .ds-select--bare {
         border: 1px solid var(--ds-border-input);

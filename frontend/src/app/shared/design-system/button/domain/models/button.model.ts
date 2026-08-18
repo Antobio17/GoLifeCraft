@@ -1,6 +1,7 @@
 export type ButtonVariant =
   | "primary"
   | "secondary"
+  | "soft"
   | "danger"
   | "ghost"
   | "link"

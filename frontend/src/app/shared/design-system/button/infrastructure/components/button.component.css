@@ -124,6 +124,22 @@
   outline-offset: 2px;
 }
 
+/* ---- Variante: soft (fondo inset, texto de marca) ---- */
+.ds-btn--soft {
+  background: var(--ds-surface-inset);
+  color: var(--ds-primary-soft-text);
+  border-color: transparent;
+}
+
+.ds-btn--soft:hover:not(:disabled) {
+  background: var(--ds-surface-hover);
+}
+
+.ds-btn--soft:focus-visible {
+  outline: 2px solid var(--ds-primary);
+  outline-offset: 2px;
+}
+
 /* ---- Variante: danger ---- */
 .ds-btn--danger {
   background: var(--ds-danger-soft);
@@ -235,6 +251,14 @@
   color: var(--ds-text-disabled);
   border-color: var(--ds-border);
   box-shadow: none;
+}
+
+.ds-btn--soft:disabled,
+.ds-btn--soft[disabled] {
+  opacity: 1;
+  background: var(--ds-surface-inset);
+  color: var(--ds-text-disabled);
+  border-color: var(--ds-border);
 }
 
 .ds-btn--loading {
