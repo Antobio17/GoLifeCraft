@@ -58,6 +58,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     recipe: "nutrition/recipe/recipe",
     getEconomy: "economy/finance/transaction",
     getFinanceAccounts: "economy/finance/account",
+    getFinanceRecurrences: "economy/finance/recurrence",
     getCategories: "nutrition/catalog/category",
     createCategory: "nutrition/catalog/category",
     updateCategory: "nutrition/catalog/category",

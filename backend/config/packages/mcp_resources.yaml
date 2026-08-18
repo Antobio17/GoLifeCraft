@@ -119,6 +119,13 @@ parameters:
             write_roles: [ROLE_GOD, ROLE_USER]
             delete_roles: [ROLE_GOD, ROLE_USER]
 
+        finance_recurrence:
+            class: 'Economy\Finance\Recurrence\Domain\Model\FinanceRecurrence'
+            sidecar: '%kernel.project_dir%/src/Economy/Finance/Recurrence/Infrastructure/Domain/Model/Doctrine/Mapping/FinanceRecurrence.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
         exercise:
             class: 'Gym\Library\Exercise\Domain\Model\Exercise'
             sidecar: '%kernel.project_dir%/src/Gym/Library/Exercise/Infrastructure/Domain/Model/Doctrine/Mapping/Exercise.mcp.yaml'

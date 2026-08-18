@@ -1,0 +1,6 @@
+# Recurring incomes and expenses — books the pending movements every morning at 06:00.
+# Symfony's console loads backend/.env.local itself, so no env inheritance is needed.
+# The command is idempotent: every month is booked once, and a run that was missed
+# catches up with the months it skipped, so a failed night fixes itself the next day.
+# Job output is redirected to PID 1 so it shows up in `docker logs golifecraft_cron`.
+0 6 * * * root cd /var/www/html && /usr/local/bin/php bin/console app:economy:run-recurrences > /proc/1/fd/1 2> /proc/1/fd/2

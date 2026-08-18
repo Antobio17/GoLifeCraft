@@ -1,0 +1,289 @@
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+  <ds-stack
+    direction="row"
+    justify="between"
+    align="start"
+    [gap]="'var(--ds-space-2)'"
+  >
+    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+      <ds-icon-button
+        icon="chevronLeft"
+        variant="soft"
+        [size]="36"
+        [iconSize]="17"
+        [stroke]="2.2"
+        [radius]="'var(--ds-radius-lg)'"
+        [ariaLabel]="'getFinanceRecurrences.back' | t"
+        (clicked)="goBack()"
+      />
+
+      <ds-stack [gap]="'2px'" [grow]="true">
+        <ds-text variant="meta">{{
+          "getFinanceRecurrences.eyebrow" | t
+        }}</ds-text>
+        <ds-heading [level]="2" size="xl" [truncate]="true">{{
+          "getFinanceRecurrences.title" | t
+        }}</ds-heading>
+      </ds-stack>
+    </ds-stack>
+
+    @if (canWrite()) {
+      <ds-button
+        variant="primary"
+        size="icon-lg"
+        icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getFinanceRecurrences.add' | t"
+        (clicked)="openNewSheet()"
+      />
+    }
+  </ds-stack>
+
+  @if (loading()) {
+    <ds-skeleton-list [count]="3" [gap]="'var(--ds-space-2)'" />
+  }
+
+  @if (!loading()) {
+    <ds-card [padding]="'var(--ds-space-4)'">
+      <ds-stack
+        direction="row"
+        justify="between"
+        align="center"
+        [gap]="'var(--ds-space-3)'"
+      >
+        <ds-stack [gap]="'2px'">
+          <ds-text variant="meta">{{
+            "getFinanceRecurrences.monthlyIncome" | t
+          }}</ds-text>
+          <ds-heading [level]="3" size="md">{{
+            monthlyIncomeLabel()
+          }}</ds-heading>
+        </ds-stack>
+
+        <ds-stack [gap]="'2px'">
+          <ds-text variant="meta">{{
+            "getFinanceRecurrences.monthlyExpense" | t
+          }}</ds-text>
+          <ds-heading [level]="3" size="md">{{
+            monthlyExpenseLabel()
+          }}</ds-heading>
+        </ds-stack>
+
+        <ds-stack [gap]="'2px'">
+          <ds-text variant="meta">{{
+            "getFinanceRecurrences.monthlyNet" | t
+          }}</ds-text>
+          <ds-heading [level]="3" size="md">{{ monthlyNetLabel() }}</ds-heading>
+        </ds-stack>
+      </ds-stack>
+    </ds-card>
+
+    <ds-note icon="info" tone="info">{{
+      "getFinanceRecurrences.hint" | t
+    }}</ds-note>
+
+    @if (!hasAccounts()) {
+      <ds-note icon="alertCircle" tone="warning">{{
+        "getFinanceRecurrences.accounts.missing" | t
+      }}</ds-note>
+    }
+
+    @if (!hasRecurrences()) {
+      <ds-empty-state
+        icon="wallet"
+        [title]="'getFinanceRecurrences.empty.title' | t"
+        [text]="'getFinanceRecurrences.empty.text' | t"
+      />
+    }
+
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      @for (row of recurrenceRows(); track row.recurrence.id) {
+        <ds-swipe-to-delete
+          #recurrenceSwipe
+          radius="var(--ds-radius-lg)"
+          [disabled]="!canWrite()"
+          [removeLabel]="'getFinanceRecurrences.remove' | t"
+          (remove)="remove(row.recurrence)"
+        >
+          <ds-transaction-row
+            [emoji]="row.emoji"
+            [title]="row.recurrence.note"
+            [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
+            [amountLabel]="row.amountLabel"
+            [pressable]="canWrite()"
+            [pressLabel]="row.recurrence.note"
+            [slid]="recurrenceSwipe.slid"
+            (pressed)="openEditSheet(row.recurrence)"
+          />
+        </ds-swipe-to-delete>
+      }
+    </ds-stack>
+  }
+
+  <ds-modal-sheet
+    [open]="sheetOpen()"
+    [compact]="true"
+    [title]="sheetTitle() | t"
+    [closeLabel]="'getFinanceRecurrences.sheet.close' | t"
+    (closed)="closeSheet()"
+  >
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-text variant="meta">{{
+        "getFinanceRecurrences.sheet.subtitle" | t
+      }}</ds-text>
+
+      <ds-segmented-toggle
+        [options]="kindOptions()"
+        [ngModel]="form().kind"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onKind($event)"
+      />
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceRecurrences.sheet.accountLabel" | t
+        }}</ds-text>
+        <ds-choice-chips
+          [options]="accountOptions()"
+          [wrap]="true"
+          [ngModel]="form().accountId"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onAccount($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceRecurrences.sheet.amountLabel" | t
+        }}</ds-text>
+        <ds-amount-input
+          layout="stacked"
+          unit="€"
+          placeholder="0,00"
+          [large]="true"
+          [ariaLabel]="'getFinanceRecurrences.sheet.amountLabel' | t"
+          [ngModel]="form().amount"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onAmount($event)"
+        />
+      </ds-stack>
+
+      @if (!isIncomeForm()) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-text variant="label">{{
+            "getFinanceRecurrences.sheet.categoryLabel" | t
+          }}</ds-text>
+          <ds-choice-chips
+            [options]="categoryOptions()"
+            [wrap]="true"
+            [ngModel]="form().category"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onCategory($event)"
+          />
+        </ds-stack>
+      }
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{ noteLabel() | t }}</ds-text>
+        <ds-text-input
+          [strong]="true"
+          [maxLength]="255"
+          [placeholder]="notePlaceholder() | t"
+          [ariaLabel]="noteLabel() | t"
+          [ngModel]="form().note"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onNote($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{ storeLabel() | t }}</ds-text>
+        <ds-text-input
+          [maxLength]="120"
+          [placeholder]="'getFinanceRecurrences.sheet.storePlaceholder' | t"
+          [ariaLabel]="storeLabel() | t"
+          [ngModel]="form().store"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onStore($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceRecurrences.sheet.dayLabel" | t
+        }}</ds-text>
+        <ds-number-input
+          [stepper]="true"
+          [min]="1"
+          [max]="31"
+          [ariaLabel]="'getFinanceRecurrences.sheet.dayLabel' | t"
+          [ngModel]="form().dayOfMonth"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onDayOfMonth($event)"
+        />
+        <ds-text variant="meta">{{
+          "getFinanceRecurrences.sheet.dayHint" | t
+        }}</ds-text>
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceRecurrences.sheet.startMonthLabel" | t
+        }}</ds-text>
+        <ds-date-input
+          type="month"
+          [ariaLabel]="'getFinanceRecurrences.sheet.startMonthLabel' | t"
+          [ngModel]="form().startMonth"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onStartMonth($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{
+          "getFinanceRecurrences.sheet.endMonthLabel" | t
+        }}</ds-text>
+        <ds-date-input
+          type="month"
+          [ariaLabel]="'getFinanceRecurrences.sheet.endMonthLabel' | t"
+          [ngModel]="form().endMonth"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onEndMonth($event)"
+        />
+        <ds-text variant="meta">{{
+          "getFinanceRecurrences.sheet.endMonthHint" | t
+        }}</ds-text>
+      </ds-stack>
+
+      <ds-card variant="inset" [padding]="'var(--ds-space-3)'">
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+          <ds-stack [gap]="'2px'" [grow]="true">
+            <ds-text variant="strong">{{
+              "getFinanceRecurrences.sheet.activeLabel" | t
+            }}</ds-text>
+            <ds-text variant="meta">{{
+              "getFinanceRecurrences.sheet.activeHint" | t
+            }}</ds-text>
+          </ds-stack>
+
+          <ds-toggle-switch
+            [ariaLabel]="'getFinanceRecurrences.sheet.activeLabel' | t"
+            [ngModel]="form().active"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onActive($event)"
+          />
+        </ds-stack>
+      </ds-card>
+
+      <ds-button
+        variant="primary"
+        [fullWidth]="true"
+        [disabled]="!formValid()"
+        [loading]="saving()"
+        (clicked)="save()"
+      >
+        {{ "getFinanceRecurrences.sheet.save" | t }}
+      </ds-button>
+    </ds-stack>
+  </ds-modal-sheet>
+</ds-page-wrapper>

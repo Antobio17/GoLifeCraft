@@ -25,6 +25,17 @@
       />
 
       <ds-icon-button
+        icon="repeat"
+        variant="soft"
+        [size]="40"
+        [iconSize]="19"
+        [stroke]="2.1"
+        [radius]="'var(--ds-radius-lg)'"
+        [ariaLabel]="'getEconomy.recurrences.manage' | t"
+        (clicked)="goToRecurrences()"
+      />
+
+      <ds-icon-button
         icon="calendar"
         [variant]="dayMode() ? 'solid' : 'soft'"
         [size]="40"
@@ -470,27 +481,25 @@
         />
       </ds-stack>
 
-      @if (!isIncomeForm()) {
-        <ds-card variant="inset" [padding]="'var(--ds-space-3)'">
-          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-            <ds-stack [gap]="'2px'" [grow]="true">
-              <ds-text variant="strong">{{
-                "getEconomy.sheet.recurringLabel" | t
-              }}</ds-text>
-              <ds-text variant="meta">{{
-                "getEconomy.sheet.recurringHint" | t
-              }}</ds-text>
-            </ds-stack>
-
-            <ds-toggle-switch
-              [ariaLabel]="'getEconomy.sheet.recurringLabel' | t"
-              [ngModel]="form().recurring"
-              [ngModelOptions]="{ standalone: true }"
-              (ngModelChange)="onRecurring($event)"
-            />
+      <ds-card variant="inset" [padding]="'var(--ds-space-3)'">
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+          <ds-stack [gap]="'2px'" [grow]="true">
+            <ds-text variant="strong">{{
+              "getEconomy.sheet.recurringLabel" | t
+            }}</ds-text>
+            <ds-text variant="meta">{{
+              "getEconomy.sheet.recurringHint" | t
+            }}</ds-text>
           </ds-stack>
-        </ds-card>
-      }
+
+          <ds-toggle-switch
+            [ariaLabel]="'getEconomy.sheet.recurringLabel' | t"
+            [ngModel]="form().recurring"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onRecurring($event)"
+          />
+        </ds-stack>
+      </ds-card>
 
       <ds-button
         variant="primary"

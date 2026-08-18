@@ -1,0 +1,11 @@
+services:
+  Economy\Finance\Recurrence\Application\Query\GetFinanceRecurrencesQueryHandler:
+    class: Economy\Finance\Recurrence\Application\Query\GetFinanceRecurrencesQueryHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Recurrence\Domain\QueryModel\GetFinanceRecurrencesNeedleDataQuery'
+      $dataTransform: '@Economy\Finance\Recurrence\Application\Query\GetFinanceRecurrencesDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Recurrence\Application\Query\GetFinanceRecurrencesDataTransform:
+    class: Economy\Finance\Recurrence\Infrastructure\UI\API\DataTransform\ApiGetFinanceRecurrencesDataTransform

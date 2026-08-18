@@ -1,0 +1,7 @@
+services:
+  Economy\Finance\Transaction\Application\Subscriber\CreateFinanceTransactionOnFinanceRecurrenceGenerated:
+    class: Economy\Finance\Transaction\Application\Subscriber\CreateFinanceTransactionOnFinanceRecurrenceGenerated
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.economy.event.1.finance_recurrence.generated' }

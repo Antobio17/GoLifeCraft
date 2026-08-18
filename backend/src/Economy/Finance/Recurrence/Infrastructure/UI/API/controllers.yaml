@@ -1,0 +1,28 @@
+services:
+  Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\GetFinanceRecurrencesController:
+    class: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\GetFinanceRecurrencesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\CreateFinanceRecurrenceController:
+    class: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\CreateFinanceRecurrenceController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\UpdateFinanceRecurrenceController:
+    class: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\UpdateFinanceRecurrenceController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\DeleteFinanceRecurrenceController:
+    class: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\DeleteFinanceRecurrenceController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

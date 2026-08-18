@@ -1,0 +1,12 @@
+services:
+  Economy\Finance\Recurrence\Infrastructure\Application\Console\RunFinanceRecurrencesCommand:
+    class: Economy\Finance\Recurrence\Infrastructure\Application\Console\RunFinanceRecurrencesCommand
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
+      $tenantEntityManager: '@doctrine.orm.tenant_manager_entity_manager'
+      $needleDataQuery: '@Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery'
+      $messageBus: '@messenger.bus.default'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'console.command' }

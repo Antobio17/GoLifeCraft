@@ -468,6 +468,10 @@ export class GetEconomyComponent implements OnInit {
     this.router.navigate(["/economy/accounts"]);
   }
 
+  goToRecurrences(): void {
+    this.router.navigate(["/economy/recurrences"]);
+  }
+
   openNewSheet(): void {
     if (!this.canWrite()) return;
 

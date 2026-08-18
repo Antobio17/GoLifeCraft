@@ -89,17 +89,18 @@ fields:
     required: false
     type: bool
     description: >-
-      Whether the expense repeats every month. Recurring expenses show up as
-      subscriptions. Income is never recurring.
+      Whether the movement repeats every month, for an expense and for an income
+      alike. Recurring expenses show up as subscriptions. Movements booked by a
+      finance recurrence always carry it.
     filterable: true
   source:
     writable: false
     required: false
-    enum: [manual, ticket]
+    enum: [manual, ticket, recurrence]
     description: >-
-      How the movement got in: "manual" when the user wrote it down and "ticket" when
-      it was derived from a purchase ticket. It is assigned by the app, never by the
-      client.
+      How the movement got in: "manual" when the user wrote it down, "ticket" when
+      it was derived from a purchase ticket and "recurrence" when a finance
+      recurrence booked it. It is assigned by the app, never by the client.
     filterable: true
 
 relations: {}

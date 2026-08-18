@@ -79,7 +79,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $this->assertNull(actual: $transaction->store);
     }
 
-    public function testItForcesIncomeToTheOtherCategoryAndNeverRecurring(): void
+    public function testItForcesIncomeToTheOtherCategoryAndKeepsItRecurring(): void
     {
         ($this->handler)(new CreateFinanceTransactionCommand(
             accountId: 'account-1',
@@ -98,7 +98,7 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
 
         $this->assertNotNull(actual: $transaction);
         $this->assertSame(expected: FinanceTransaction::CATEGORY_OTHER, actual: $transaction->category);
-        $this->assertFalse(condition: $transaction->recurring);
+        $this->assertTrue(condition: $transaction->recurring);
     }
 
     public function testItThrowsWhenTheAccountDoesNotExist(): void

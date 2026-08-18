@@ -40,6 +40,9 @@ COPY infrastructure/docker/local/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY infrastructure/docker/local/cron/openfoodfacts-sync.cron /etc/cron.d/openfoodfacts-sync
 RUN chmod 0644 /etc/cron.d/openfoodfacts-sync
 
+COPY infrastructure/docker/local/cron/finance-recurrences.cron /etc/cron.d/finance-recurrences
+RUN chmod 0644 /etc/cron.d/finance-recurrences
+
 COPY backend/ /var/www/html/
 WORKDIR /var/www/html/
 
