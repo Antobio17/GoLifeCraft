@@ -28,15 +28,6 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
-  Economy\Finance\Recurrence\Application\Command\DeleteFinanceRecurrencesByAccountCommandHandler:
-    class: Economy\Finance\Recurrence\Application\Command\DeleteFinanceRecurrencesByAccountCommandHandler
-    arguments:
-      $financeRecurrenceRepository: '@Economy\Finance\Recurrence\Domain\Model\FinanceRecurrenceRepository'
-      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
-      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
-    tags:
-      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
-
   Economy\Finance\Recurrence\Application\Command\GenerateFinanceRecurrenceCommandHandler:
     class: Economy\Finance\Recurrence\Application\Command\GenerateFinanceRecurrenceCommandHandler
     arguments:

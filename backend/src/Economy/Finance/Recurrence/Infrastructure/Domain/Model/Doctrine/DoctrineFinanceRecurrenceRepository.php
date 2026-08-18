@@ -25,17 +25,6 @@ final class DoctrineFinanceRecurrenceRepository extends EntityRepository impleme
             ->getOneOrNullResult();
     }
 
-    public function findByAccountId(string $accountId): array
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('financeRecurrence')
-            ->from(from: FinanceRecurrence::class, alias: 'financeRecurrence')
-            ->where('financeRecurrence.accountId = :accountId')
-            ->setParameter(key: 'accountId', value: $accountId)
-            ->getQuery()
-            ->getResult();
-    }
-
     public function save(FinanceRecurrence $financeRecurrence): void
     {
         $this->getEntityManager()->persist(object: $financeRecurrence);
