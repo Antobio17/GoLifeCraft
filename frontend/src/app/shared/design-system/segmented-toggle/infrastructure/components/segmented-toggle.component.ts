@@ -9,7 +9,7 @@ export interface SegmentedOption {
 @Component({
   selector: "ds-segmented-toggle",
   template: `
-    <div class="ds-segmented" role="radiogroup">
+    <div class="ds-segmented" [class.is-stretch]="stretch" role="radiogroup">
       @for (option of options; track option.value) {
         <button
           type="button"
@@ -33,6 +33,9 @@ export interface SegmentedOption {
         gap: var(--ds-space-6);
         border-bottom: 1px solid var(--ds-border);
       }
+      .ds-segmented.is-stretch {
+        gap: var(--ds-space-2);
+      }
       .ds-segmented__option {
         flex: 0 0 auto;
         appearance: none;
@@ -51,6 +54,11 @@ export interface SegmentedOption {
         transition:
           color var(--ds-transition-fast),
           border-color var(--ds-transition-fast);
+      }
+      .ds-segmented.is-stretch .ds-segmented__option {
+        flex: 1 1 0;
+        min-width: fit-content;
+        text-align: center;
       }
       .ds-segmented__option.is-active {
         color: var(--ds-text);
@@ -73,6 +81,7 @@ export interface SegmentedOption {
 })
 export class SegmentedToggleComponent implements ControlValueAccessor {
   @Input() options: SegmentedOption[] = [];
+  @Input() stretch = true;
 
   value = "";
   disabled = false;
