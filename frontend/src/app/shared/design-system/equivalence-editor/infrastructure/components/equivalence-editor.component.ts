@@ -43,6 +43,7 @@ const BASE_UNITS = ["g", "ml"];
           <span class="ds-eq__base-hint">{{ baseHint }}</span>
         </div>
         <ds-segmented-toggle
+          [stretch]="false"
           [options]="baseOptions"
           [ngModel]="value.baseUnit"
           [ngModelOptions]="{ standalone: true }"
