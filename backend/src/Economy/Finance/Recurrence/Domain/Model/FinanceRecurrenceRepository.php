@@ -8,11 +8,6 @@ interface FinanceRecurrenceRepository
 
     public function findById(string $id): ?FinanceRecurrence;
 
-    /**
-     * @return array<int, FinanceRecurrence>
-     */
-    public function findByAccountId(string $accountId): array;
-
     public function save(FinanceRecurrence $financeRecurrence): void;
 
     public function delete(FinanceRecurrence $financeRecurrence): void;

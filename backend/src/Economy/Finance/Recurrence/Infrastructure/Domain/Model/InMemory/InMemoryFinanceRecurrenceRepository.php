@@ -28,14 +28,6 @@ final class InMemoryFinanceRecurrenceRepository implements FinanceRecurrenceRepo
         return null;
     }
 
-    public function findByAccountId(string $accountId): array
-    {
-        return array_values(array: array_filter(
-            array: $this->recurrences,
-            callback: static fn (FinanceRecurrence $recurrence): bool => $recurrence->accountId === $accountId,
-        ));
-    }
-
     public function save(FinanceRecurrence $financeRecurrence): void
     {
         foreach ($this->recurrences as $key => $existing) {
