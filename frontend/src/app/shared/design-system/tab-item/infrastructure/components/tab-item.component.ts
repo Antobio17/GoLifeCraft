@@ -5,7 +5,6 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
 @Component({
   selector: "ds-tab-item",
   imports: [IconComponent],
-  host: { "[class.ds-tab-item--active]": "active" },
   template: `
     <span class="tab" [class.tab--active]="active">
       <span class="tab__icon">
@@ -17,22 +16,18 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
   styles: [
     `
       :host {
-        flex: 1 1 0;
+        flex: 1;
         display: block;
         cursor: pointer;
-        min-width: 0;
-      }
-      :host(.ds-tab-item--active) {
-        flex: 0 1 auto;
       }
       .tab {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 0;
-        padding: var(--ds-space-3) var(--ds-space-1-5);
+        padding: var(--ds-space-2) var(--ds-space-1-5);
         border-radius: var(--ds-radius-lg);
-        color: var(--ds-text-muted);
+        color: var(--ds-text-meta);
         text-decoration: none;
         transition: all 0.3s cubic-bezier(0.6, 0.05, 0.28, 0.98);
       }
@@ -47,20 +42,20 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         overflow: hidden;
         opacity: 0;
         font-size: var(--ds-text-base);
-        font-weight: var(--ds-weight-bold);
-        letter-spacing: var(--ds-tracking-tight);
+        font-weight: 700;
         line-height: 1;
         white-space: nowrap;
         transition: all 0.3s cubic-bezier(0.6, 0.05, 0.28, 0.98);
       }
       .tab--active {
-        gap: var(--ds-space-2);
         color: var(--ds-text);
         background: var(--ds-surface-inset);
+        padding: var(--ds-space-2) var(--ds-space-3);
       }
       .tab--active .tab__label {
-        max-width: 5rem;
+        max-width: 10rem;
         opacity: 1;
+        padding-left: var(--ds-space-1-5);
       }
     `,
   ],
