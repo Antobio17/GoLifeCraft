@@ -18,3 +18,8 @@ services:
     class: Economy\Finance\Recurrence\Infrastructure\Domain\QueryModel\Doctrine\DoctrinePendingFinanceRecurrencesNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Recurrence\Domain\QueryModel\FindFinanceRecurrencesByAccountNeedleDataQuery:
+    class: Economy\Finance\Recurrence\Infrastructure\Domain\QueryModel\Doctrine\DoctrineFindFinanceRecurrencesByAccountNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'

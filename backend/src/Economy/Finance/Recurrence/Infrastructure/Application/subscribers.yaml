@@ -3,6 +3,6 @@ services:
     class: Economy\Finance\Recurrence\Application\Subscriber\DeleteFinanceRecurrencesOnFinanceAccountDeleted
     arguments:
       $messageBus: '@messenger.bus.default'
-      $needleDataQuery: '@Economy\Finance\Recurrence\Domain\QueryModel\GetFinanceRecurrencesNeedleDataQuery'
+      $needleDataQuery: '@Economy\Finance\Recurrence\Domain\QueryModel\FindFinanceRecurrencesByAccountNeedleDataQuery'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.economy.event.1.finance_account.deleted' }

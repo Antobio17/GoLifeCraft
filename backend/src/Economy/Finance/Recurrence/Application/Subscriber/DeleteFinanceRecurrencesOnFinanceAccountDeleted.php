@@ -4,7 +4,7 @@ namespace Economy\Finance\Recurrence\Application\Subscriber;
 
 use Economy\Finance\Account\Domain\Event\FinanceAccountDeleted;
 use Economy\Finance\Recurrence\Application\Command\DeleteFinanceRecurrenceCommand;
-use Economy\Finance\Recurrence\Domain\QueryModel\GetFinanceRecurrencesNeedleDataQuery;
+use Economy\Finance\Recurrence\Domain\QueryModel\FindFinanceRecurrencesByAccountNeedleDataQuery;
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 use Shared\Shared\Shared\Domain\Event\DomainEventSubscriber;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -13,7 +13,7 @@ final readonly class DeleteFinanceRecurrencesOnFinanceAccountDeleted implements 
 {
     public function __construct(
         private MessageBusInterface $messageBus,
-        private GetFinanceRecurrencesNeedleDataQuery $needleDataQuery,
+        private FindFinanceRecurrencesByAccountNeedleDataQuery $needleDataQuery,
     ) {
     }
 
@@ -23,11 +23,11 @@ final readonly class DeleteFinanceRecurrencesOnFinanceAccountDeleted implements 
             return;
         }
 
-        $recurrences = $this->needleDataQuery->findRecurrences(accountId: $event->aggregateId);
+        $recurrenceIds = $this->needleDataQuery->findIdsByAccount(accountId: $event->aggregateId);
 
-        foreach ($recurrences->recurrences as $recurrence) {
+        foreach ($recurrenceIds as $recurrenceId) {
             $this->messageBus->dispatch(new DeleteFinanceRecurrenceCommand(
-                financeRecurrenceId: $recurrence->id,
+                financeRecurrenceId: $recurrenceId,
                 deletedByUserId: $event->deletedByUserId,
             ));
         }
