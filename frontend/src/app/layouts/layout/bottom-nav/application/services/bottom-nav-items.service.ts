@@ -18,15 +18,45 @@ export class BottomNavItemsService {
         exact: false,
       },
       {
-        route: "/agenda",
-        icon: "agenda",
-        labelKey: "navbar.agenda",
-        exact: false,
-      },
-      {
         route: "/gym",
         icon: "dumbbell",
         labelKey: "navbar.gym",
+        exact: false,
+      },
+      {
+        route: "/economy",
+        icon: "wallet",
+        labelKey: "navbar.economy",
+        exact: false,
+      },
+      {
+        route: "/menus",
+        icon: "menuboard",
+        labelKey: "navbar.menus",
+        exact: false,
+      },
+      {
+        route: "/catalog",
+        icon: "leaf",
+        labelKey: "navbar.catalog",
+        exact: true,
+      },
+      {
+        route: "/recipes",
+        icon: "chefHat",
+        labelKey: "navbar.recipes",
+        exact: false,
+      },
+      {
+        route: "/shopping-list",
+        icon: "cart",
+        labelKey: "navbar.list",
+        exact: false,
+      },
+      {
+        route: "/agenda",
+        icon: "agenda",
+        labelKey: "navbar.agenda",
         exact: false,
       },
     ];
