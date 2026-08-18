@@ -36,6 +36,7 @@
 
     <ds-stack direction="row" [gap]="'var(--ds-space-1-5)'">
       <ds-select
+        variant="soft"
         [fluid]="true"
         [ariaLabel]="'getGlobalArticles.filterSource' | t"
         [options]="sourceOptions()"
@@ -44,6 +45,7 @@
         (ngModelChange)="onSourceChange($event)"
       />
       <ds-select
+        variant="soft"
         [fluid]="true"
         [ariaLabel]="'getGlobalArticles.filterCategory' | t"
         [placeholder]="'getGlobalArticles.category.all' | t"
