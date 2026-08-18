@@ -201,7 +201,6 @@ const BASE_UNITS = ["g", "ml"];
       }
       .ds-eq__base ds-segmented-toggle {
         flex: 0 0 auto;
-        width: 6rem;
       }
       .ds-eq__lines {
         padding: var(--ds-space-3) var(--ds-space-4);

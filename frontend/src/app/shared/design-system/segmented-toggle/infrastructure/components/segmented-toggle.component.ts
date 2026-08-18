@@ -9,18 +9,8 @@ export interface SegmentedOption {
 @Component({
   selector: "ds-segmented-toggle",
   template: `
-    <div
-      class="ds-segmented"
-      role="radiogroup"
-      [style.--ds-seg-count]="options.length"
-    >
-      <span
-        class="ds-segmented__indicator"
-        [style.transform]="'translateX(' + activeIndex * 100 + '%)'"
-        [style.opacity]="activeIndex >= 0 ? 1 : 0"
-        aria-hidden="true"
-      ></span>
-      @for (option of options; track option.value; let i = $index) {
+    <div class="ds-segmented" role="radiogroup">
+      @for (option of options; track option.value) {
         <button
           type="button"
           class="ds-segmented__option"
@@ -38,46 +28,34 @@ export interface SegmentedOption {
   styles: [
     `
       .ds-segmented {
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(var(--ds-seg-count, 2), 1fr);
-        background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-lg);
-        padding: var(--ds-space-1);
-        isolation: isolate;
-      }
-      .ds-segmented__indicator {
-        position: absolute;
-        z-index: 0;
-        top: 0.25rem;
-        bottom: 0.25rem;
-        left: 0.25rem;
-        width: calc((100% - 0.5rem) / var(--ds-seg-count, 2));
-        border-radius: var(--ds-radius-md);
-        background: var(--ds-primary);
-        box-shadow: 0 2px 0.5rem -2px var(--ds-primary);
-        transition: transform 0.22s cubic-bezier(0.4, 0.2, 0.2, 1);
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--ds-space-6);
+        border-bottom: 1px solid var(--ds-border);
       }
       .ds-segmented__option {
-        position: relative;
-        z-index: 1;
+        flex: 0 0 auto;
         appearance: none;
         border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
         background: transparent;
         cursor: pointer;
         user-select: none;
-        padding: var(--ds-space-2);
+        white-space: nowrap;
+        padding: var(--ds-space-2) 0 var(--ds-space-3);
         font: inherit;
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
         transition:
-          color 0.18s ease,
-          font-weight 0.18s ease;
+          color var(--ds-transition-fast),
+          border-color var(--ds-transition-fast);
       }
       .ds-segmented__option.is-active {
-        color: var(--ds-on-primary);
-        font-weight: var(--ds-weight-extrabold);
+        color: var(--ds-text);
+        font-weight: var(--ds-weight-bold);
+        border-bottom-color: var(--ds-primary);
       }
       .ds-segmented__option:disabled {
         cursor: not-allowed;
@@ -101,10 +79,6 @@ export class SegmentedToggleComponent implements ControlValueAccessor {
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
-
-  get activeIndex(): number {
-    return this.options.findIndex((option) => option.value === this.value);
-  }
 
   writeValue(value: string | null): void {
     this.value = value ?? "";
