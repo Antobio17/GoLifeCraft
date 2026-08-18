@@ -68,6 +68,8 @@ import { GetFinanceAccountsService } from "@economy/finance/account/application/
 import { FinanceAccountCatalogService } from "@economy/finance/account/application/services/finance-account-catalog.service";
 import { FinanceAccount } from "@economy/finance/account/domain/models/finance-account.model";
 
+const EVOLUTION_MONTHS = 6;
+
 @Component({
   selector: "app-get-economy",
   templateUrl: "./get-economy.component.html",
@@ -200,6 +202,16 @@ export class GetEconomyComponent implements OnInit {
   balanceSeries = computed(() =>
     (this.overview()?.series ?? []).map((point) => point.endBalance),
   );
+  balanceSeriesLabels = computed(() =>
+    (this.overview()?.series ?? []).map((point) =>
+      this.view.moneyShort(point.endBalance),
+    ),
+  );
+  balanceSeriesCaptions = computed(() =>
+    (this.overview()?.series ?? []).map((point) =>
+      this.view.monthShort(point.month),
+    ),
+  );
 
   incomeLabel = computed(() => this.view.money(this.overview()?.income ?? 0));
   expenseLabel = computed(() =>
@@ -208,7 +220,7 @@ export class GetEconomyComponent implements OnInit {
   netLabel = computed(() => this.view.signedMoney(this.overview()?.net ?? 0));
 
   evolutionBars = computed<BarChartBar[]>(() =>
-    (this.overview()?.series ?? []).map((point) => ({
+    (this.overview()?.series ?? []).slice(-EVOLUTION_MONTHS).map((point) => ({
       label: this.view.monthShort(point.month),
       value: point.expense,
       valueLabel: this.view.money(point.expense),

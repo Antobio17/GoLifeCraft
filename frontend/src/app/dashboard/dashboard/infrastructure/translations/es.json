@@ -29,6 +29,13 @@
         "appointment": "Cita"
       }
     },
+    "finance": {
+      "title": "Saldo en cuenta",
+      "seeAll": "Ver más",
+      "eyebrow": "SALDO EN CUENTA",
+      "caption": "{{delta}} este mes",
+      "empty": "Todavía no hay datos de tus cuentas."
+    },
     "gym": {
       "title": "Tu semana en el gimnasio",
       "seeAll": "Ver más",
@@ -45,11 +52,6 @@
         "tooltipEmpty": "{{date}} · sin entreno",
         "less": "menos",
         "more": "más"
-      },
-      "progression": {
-        "title": "Progresión",
-        "subtitle": "volumen acumulado",
-        "empty": "Crea más sesiones para ver tu progresión."
       },
       "muscles": {
         "title": "Grupos musculares",

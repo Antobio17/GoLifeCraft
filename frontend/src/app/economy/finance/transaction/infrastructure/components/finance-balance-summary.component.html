@@ -1,0 +1,33 @@
+<ds-stack [gap]="'var(--ds-space-2)'">
+  <ds-section-header
+    [title]="'dashboard.finance.title' | t"
+    [actionLabel]="'dashboard.finance.seeAll' | t"
+    (action)="seeAll.emit()"
+  />
+
+  @if (loading()) {
+    <ds-skeleton-panel
+      [brand]="true"
+      [figure]="true"
+      content="spark"
+      chartHeight="6.5rem"
+    />
+  } @else if (!hasBalance()) {
+    <ds-text variant="muted">{{ "dashboard.finance.empty" | t }}</ds-text>
+  } @else {
+    <ds-balance-card
+      [eyebrow]="'dashboard.finance.eyebrow' | t"
+      [value]="balanceValue()"
+      unit=" €"
+      [caption]="
+        'dashboard.finance.caption' | t: { delta: balanceDeltaLabel() }
+      "
+      [trendLabel]="balanceTrendLabel()"
+      [positive]="balancePositive()"
+      [points]="balanceSeries()"
+      [pointLabels]="balanceSeriesLabels()"
+      [pointCaptions]="balanceSeriesCaptions()"
+      [scrollable]="true"
+    />
+  }
+</ds-stack>

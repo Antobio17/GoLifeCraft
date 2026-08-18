@@ -23,40 +23,61 @@ interface Marker {
   label: string;
 }
 
+interface Caption {
+  left: number;
+  label: string;
+}
+
 @Component({
   selector: "ds-line-chart",
   template: `
     <div #scroller class="ds-line-scroll" [class.is-scrollable]="scrollable">
       <div class="ds-line-wrap" [style.min-width.px]="minWidth">
-        <svg
-          class="ds-line"
-          [attr.viewBox]="viewBox"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path [attr.d]="areaPath" class="ds-line__area" />
-          <polyline [attr.points]="linePoints" class="ds-line__stroke" />
-          @if (labels.length === 0) {
-            <circle
-              [attr.cx]="last.x"
-              [attr.cy]="last.y"
-              r="4"
-              class="ds-line__dot"
-            />
-          }
-        </svg>
+        <div class="ds-line-plot">
+          <svg
+            class="ds-line"
+            [attr.viewBox]="viewBox"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path [attr.d]="areaPath" class="ds-line__area" />
+            @if (!dots) {
+              <polyline [attr.points]="linePoints" class="ds-line__stroke" />
+            }
+            @if (labels.length === 0 && !dots) {
+              <circle
+                [attr.cx]="last.x"
+                [attr.cy]="last.y"
+                r="4"
+                class="ds-line__dot"
+              />
+            }
+          </svg>
 
-        @if (labels.length > 0) {
-          <div class="ds-line__markers">
-            @for (marker of markers; track $index) {
-              <span
-                class="ds-line__marker"
-                [style.left.%]="marker.left"
-                [style.top.%]="marker.top"
-              >
-                <span class="ds-line__value">{{ marker.label }}</span>
-                <span class="ds-line__point"></span>
-              </span>
+          @if (labels.length > 0 || dots) {
+            <div class="ds-line__markers">
+              @for (marker of markers; track $index) {
+                <span
+                  class="ds-line__marker"
+                  [style.left.%]="marker.left"
+                  [style.top.%]="marker.top"
+                >
+                  @if (marker.label) {
+                    <span class="ds-line__value">{{ marker.label }}</span>
+                  }
+                  <span class="ds-line__point" [class.is-large]="dots"></span>
+                </span>
+              }
+            </div>
+          }
+        </div>
+
+        @if (captions.length > 0) {
+          <div class="ds-line__axis">
+            @for (caption of axisCaptions; track $index) {
+              <span class="ds-line__caption" [style.left.%]="caption.left">{{
+                caption.label
+              }}</span>
             }
           </div>
         }
@@ -75,10 +96,11 @@ interface Marker {
       }
       .ds-line-scroll.is-scrollable {
         box-sizing: border-box;
-        padding: var(--ds-space-3) var(--ds-space-3) 0;
+        padding: var(--ds-space-3) var(--ds-space-8) 0;
         overflow-x: auto;
         overflow-y: hidden;
         overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
       }
       .ds-line-scroll.is-scrollable::-webkit-scrollbar {
@@ -86,8 +108,15 @@ interface Marker {
       }
       .ds-line-wrap {
         position: relative;
+        display: flex;
+        flex-direction: column;
         width: 100%;
         height: 100%;
+      }
+      .ds-line-plot {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 0;
       }
       .ds-line {
         display: block;
@@ -144,13 +173,37 @@ interface Marker {
         border: 1.5px solid var(--line-dot-stroke, var(--ds-surface));
         box-sizing: border-box;
       }
+      .ds-line__point.is-large {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-width: 2px;
+      }
+      .ds-line__axis {
+        position: relative;
+        flex: 0 0 auto;
+        height: 1rem;
+        margin-top: var(--ds-space-2);
+      }
+      .ds-line__caption {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+        font-size: var(--ds-text-xs);
+        font-weight: var(--ds-weight-bold, 700);
+        line-height: 1;
+        white-space: nowrap;
+        text-transform: capitalize;
+        opacity: 0.55;
+      }
     `,
   ],
 })
 export class LineChartComponent implements OnChanges, AfterViewChecked {
   @Input() points: number[] = [];
   @Input() labels: string[] = [];
+  @Input() captions: string[] = [];
   @Input() scrollable = false;
+  @Input() dots = false;
   @Input() pointSpacing = 44;
 
   @ViewChild("scroller") scroller?: ElementRef<HTMLElement>;
@@ -196,6 +249,13 @@ export class LineChartComponent implements OnChanges, AfterViewChecked {
       left: +((point.x / WIDTH) * 100).toFixed(2),
       top: +((point.y / HEIGHT) * 100).toFixed(2),
       label: this.labels[i] ?? "",
+    }));
+  }
+
+  get axisCaptions(): Caption[] {
+    return this.coords.map((point, i) => ({
+      left: +((point.x / WIDTH) * 100).toFixed(2),
+      label: this.captions[i] ?? "",
     }));
   }
 

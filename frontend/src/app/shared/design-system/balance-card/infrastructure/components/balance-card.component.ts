@@ -1,11 +1,9 @@
 import { Component, Input } from "@angular/core";
-
-const WIDTH = 300;
-const HEIGHT = 100;
-const PAD = 14;
+import { LineChartComponent } from "../../../line-chart/infrastructure/components/line-chart.component";
 
 @Component({
   selector: "ds-balance-card",
+  imports: [LineChartComponent],
   template: `
     <div class="ds-balance">
       <div class="ds-balance__top">
@@ -27,21 +25,16 @@ const PAD = 14;
       }
 
       @if (points.length > 1) {
-        <svg
-          class="ds-balance__spark"
-          [attr.viewBox]="viewBox"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path [attr.d]="areaPath" class="ds-balance__area" />
-          <polyline [attr.points]="linePoints" class="ds-balance__line" />
-          <circle
-            [attr.cx]="lastX"
-            [attr.cy]="lastY"
-            r="4"
-            class="ds-balance__dot"
-          />
-        </svg>
+        <ds-line-chart
+          class="ds-balance__chart"
+          [class.is-scrollable]="scrollable"
+          [points]="points"
+          [labels]="pointLabels"
+          [captions]="pointCaptions"
+          [scrollable]="scrollable"
+          [pointSpacing]="pointSpacing"
+          [dots]="true"
+        />
       }
     </div>
   `,
@@ -107,30 +100,18 @@ const PAD = 14;
         font-size: var(--ds-text-sm);
         color: var(--ds-text-muted);
       }
-      .ds-balance__spark {
+      .ds-balance__chart {
+        --line-stroke: var(--ds-accent);
+        --line-area: var(--ds-accent);
+        --line-area-opacity: 0.16;
+        --line-dot-stroke: var(--ds-surface-chart);
         display: block;
-        width: 100%;
         height: 4rem;
         margin-top: var(--ds-space-4);
-        overflow: visible;
       }
-      .ds-balance__area {
-        fill: var(--ds-accent);
-        opacity: 0.16;
-      }
-      .ds-balance__line {
-        fill: none;
-        stroke: var(--ds-accent);
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        vector-effect: non-scaling-stroke;
-      }
-      .ds-balance__dot {
-        fill: var(--ds-accent);
-        stroke: var(--ds-surface-chart);
-        stroke-width: 2;
-        vector-effect: non-scaling-stroke;
+      .ds-balance__chart.is-scrollable {
+        height: 7.5rem;
+        margin-top: var(--ds-space-2);
       }
     `,
   ],
@@ -143,53 +124,8 @@ export class BalanceCardComponent {
   @Input() trendLabel = "";
   @Input() positive = true;
   @Input() points: number[] = [];
-
-  readonly viewBox = `0 0 ${WIDTH} ${HEIGHT}`;
-
-  get linePoints(): string {
-    return this.coordinates.map((point) => `${point.x},${point.y}`).join(" ");
-  }
-
-  get areaPath(): string {
-    const coordinates = this.coordinates;
-
-    if (coordinates.length === 0) return "";
-
-    const first = coordinates[0];
-    const last = coordinates[coordinates.length - 1];
-    const line = coordinates
-      .map((point, index) => `${index === 0 ? "M" : "L"}${point.x} ${point.y}`)
-      .join(" ");
-
-    return `${line} L${last.x} ${HEIGHT} L${first.x} ${HEIGHT} Z`;
-  }
-
-  get lastX(): number {
-    const coordinates = this.coordinates;
-
-    return coordinates.length === 0 ? 0 : coordinates[coordinates.length - 1].x;
-  }
-
-  get lastY(): number {
-    const coordinates = this.coordinates;
-
-    return coordinates.length === 0 ? 0 : coordinates[coordinates.length - 1].y;
-  }
-
-  private get coordinates(): { x: number; y: number }[] {
-    const points = this.points;
-
-    if (points.length === 0) return [];
-
-    const max = Math.max(...points);
-    const min = Math.min(...points);
-    const span = max - min || 1;
-    const step = points.length > 1 ? WIDTH / (points.length - 1) : 0;
-    const usable = HEIGHT - PAD * 2;
-
-    return points.map((point, index) => ({
-      x: Math.round(index * step),
-      y: Math.round(PAD + usable - ((point - min) / span) * usable),
-    }));
-  }
+  @Input() pointLabels: string[] = [];
+  @Input() pointCaptions: string[] = [];
+  @Input() scrollable = false;
+  @Input() pointSpacing = 76;
 }

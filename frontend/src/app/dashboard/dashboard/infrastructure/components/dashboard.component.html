@@ -33,6 +33,8 @@
 
   <app-agenda-summary slot="agenda" (seeAll)="goToAgenda()" />
 
+  <app-finance-balance-summary slot="balance" (seeAll)="goToEconomy()" />
+
   <app-gym-analytics
     slot="gym"
     [stats]="gymStats()"

@@ -29,6 +29,13 @@
         "appointment": "Appointment"
       }
     },
+    "finance": {
+      "title": "Account balance",
+      "seeAll": "See more",
+      "eyebrow": "ACCOUNT BALANCE",
+      "caption": "{{delta}} this month",
+      "empty": "No account data yet."
+    },
     "gym": {
       "title": "Your week at the gym",
       "seeAll": "See more",
@@ -45,11 +52,6 @@
         "tooltipEmpty": "{{date}} · no training",
         "less": "less",
         "more": "more"
-      },
-      "progression": {
-        "title": "Progression",
-        "subtitle": "cumulative volume",
-        "empty": "Create more sessions to see your progression."
       },
       "muscles": {
         "title": "Muscle groups",

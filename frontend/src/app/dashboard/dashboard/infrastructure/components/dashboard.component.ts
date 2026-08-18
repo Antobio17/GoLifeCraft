@@ -26,6 +26,7 @@ import { GetDiaryService } from "@nutrition/diary/diary/application/services/get
 import { DiaryViewService } from "@nutrition/diary/diary/application/services/diary-view.service";
 import { DiaryDayAttributes } from "@nutrition/diary/diary/domain/models/diary.model";
 import { AgendaSummaryComponent } from "@agenda/agenda/agenda/infrastructure/components/agenda-summary.component";
+import { FinanceBalanceSummaryComponent } from "@economy/finance/transaction/infrastructure/components/finance-balance-summary.component";
 
 @Component({
   selector: "app-dashboard",
@@ -43,6 +44,7 @@ import { AgendaSummaryComponent } from "@agenda/agenda/agenda/infrastructure/com
     GridComponent,
     GymAnalyticsComponent,
     AgendaSummaryComponent,
+    FinanceBalanceSummaryComponent,
   ],
 })
 export class DashboardComponent implements OnInit {
@@ -112,6 +114,10 @@ export class DashboardComponent implements OnInit {
 
   goToAgenda(): void {
     this.router.navigate(["/agenda"]);
+  }
+
+  goToEconomy(): void {
+    this.router.navigate(["/economy"]);
   }
 
   goToCatalog(): void {

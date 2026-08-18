@@ -13,6 +13,9 @@ import { Component } from "@angular/core";
           <div class="dash__area dash__area--agenda">
             <ng-content select="[slot='agenda']"></ng-content>
           </div>
+          <div class="dash__area dash__area--balance">
+            <ng-content select="[slot='balance']"></ng-content>
+          </div>
           <div class="dash__area dash__area--explore">
             <ng-content select="[slot='explore']"></ng-content>
           </div>
@@ -52,11 +55,14 @@ import { Component } from "@angular/core";
       .dash__area--agenda {
         order: 1;
       }
-      .dash__area--gym {
+      .dash__area--balance {
         order: 2;
       }
-      .dash__area--explore {
+      .dash__area--gym {
         order: 3;
+      }
+      .dash__area--explore {
+        order: 4;
       }
       @media (min-width: 768px) {
         .dash {

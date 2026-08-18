@@ -26,16 +26,6 @@
   --ds-heat-today-strong: rgba(0, 0, 0, 0.75);
 }
 
-.panel__spark {
-  --line-stroke: var(--ds-accent);
-  --line-area: var(--ds-accent);
-  --line-area-opacity: 0.16;
-  --line-dot-stroke: var(--ds-surface-chart);
-  display: block;
-  height: 5.625rem;
-  margin-top: var(--ds-space-3);
-}
-
 .muscles {
   margin-top: var(--ds-space-3);
 }

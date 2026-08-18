@@ -14,7 +14,7 @@ use Economy\Finance\Transaction\Domain\QueryModel\GetFinanceOverviewNeedleDataQu
 
 final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFinanceOverviewNeedleDataQuery
 {
-    private const SERIES_MONTHS = 6;
+    private const SERIES_MONTHS = 12;
     private const AVERAGE_MONTHS = 3;
     private const OVERSPENDING_THRESHOLD = 1.08;
     private const TOP_STORES = 6;

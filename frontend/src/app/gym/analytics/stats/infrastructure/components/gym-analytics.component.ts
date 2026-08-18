@@ -3,15 +3,12 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ActivityHeatmapComponent } from "@shared/design-system/activity-heatmap/infrastructure/components/activity-heatmap.component";
-import { LineChartComponent } from "@shared/design-system/line-chart/infrastructure/components/line-chart.component";
 import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { StatTileComponent } from "@shared/design-system/stat-tile/infrastructure/components/stat-tile.component";
 import { PanelComponent } from "@shared/design-system/panel/infrastructure/components/panel.component";
-import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
 import { MeterComponent } from "@shared/design-system/meter/infrastructure/components/meter.component";
 import {
   GymActivityView,
@@ -23,11 +20,6 @@ interface RegionShare {
   region: string;
   percent: number;
   color: string;
-}
-
-interface ProgressionDelta {
-  label: string;
-  positive: boolean;
 }
 
 const ACTIVITY_WEEKS = 27;
@@ -46,15 +38,12 @@ const REGION_COLORS = [
     ContextualTranslatePipe,
     TextComponent,
     ActivityHeatmapComponent,
-    LineChartComponent,
     SkeletonMetricsComponent,
     SkeletonPanelComponent,
     StackComponent,
-    GridComponent,
     SectionHeaderComponent,
     StatTileComponent,
     PanelComponent,
-    TrendBadgeComponent,
     MeterComponent,
   ],
 })
@@ -86,30 +75,6 @@ export class GymAnalyticsComponent {
   readonly activity = computed<GymActivityView>(() =>
     this.activityView.build(this.stats()?.trainingDays ?? [], ACTIVITY_WEEKS),
   );
-
-  readonly progressionPoints = computed<number[]>(() =>
-    (this.stats()?.volumeProgression ?? []).map((point) => point.volumeKg),
-  );
-
-  readonly hasProgression = computed<boolean>(
-    () => this.progressionPoints().length >= 2,
-  );
-
-  readonly progressionDelta = computed<ProgressionDelta | null>(() => {
-    const values = this.progressionPoints();
-
-    if (values.length < 2) {
-      return null;
-    }
-
-    const first = values[0] || 1;
-    const delta = ((values[values.length - 1] - values[0]) / first) * 100;
-
-    return {
-      label: `${delta >= 0 ? "+" : ""}${delta.toFixed(0)}%`,
-      positive: delta >= 0,
-    };
-  });
 
   readonly regionShares = computed<RegionShare[]>(() => {
     const distribution = this.stats()?.muscleDistribution ?? [];

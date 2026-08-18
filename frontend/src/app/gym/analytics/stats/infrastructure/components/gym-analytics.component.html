@@ -16,14 +16,7 @@
       content="heatmap"
       chartHeight="6.75rem"
     />
-    <ds-grid [minColumn]="'15rem'" [gap]="'var(--ds-space-2)'">
-      <ds-skeleton-panel
-        [brand]="true"
-        content="spark"
-        chartHeight="3.375rem"
-      />
-      <ds-skeleton-panel content="meters" [meters]="4" />
-    </ds-grid>
+    <ds-skeleton-panel content="meters" [meters]="4" />
   } @else if (!hasData()) {
     <ds-text variant="muted">{{ "dashboard.gym.empty" | t }}</ds-text>
   } @else {
@@ -60,42 +53,19 @@
       />
     </ds-panel>
 
-    <ds-grid [minColumn]="'15rem'" [gap]="'var(--ds-space-2)'">
-      <ds-panel
-        [brand]="true"
-        [title]="'dashboard.gym.progression.title' | t"
-        [subtitle]="'dashboard.gym.progression.subtitle' | t"
-      >
-        @if (progressionDelta(); as delta) {
-          <ds-trend-badge
-            slot="aside"
-            [positive]="delta.positive"
-            [label]="delta.label"
+    <ds-panel
+      [title]="'dashboard.gym.muscles.title' | t"
+      [subtitle]="'dashboard.gym.muscles.subtitle' | t"
+    >
+      <ds-stack class="muscles" [gap]="'var(--ds-space-3)'">
+        @for (region of regionShares(); track region.region) {
+          <ds-meter
+            [label]="region.region"
+            [percent]="region.percent"
+            [color]="region.color"
           />
         }
-        @if (hasProgression()) {
-          <ds-line-chart class="panel__spark" [points]="progressionPoints()" />
-        } @else {
-          <ds-text variant="meta" [inherit]="true">
-            {{ "dashboard.gym.progression.empty" | t }}
-          </ds-text>
-        }
-      </ds-panel>
-
-      <ds-panel
-        [title]="'dashboard.gym.muscles.title' | t"
-        [subtitle]="'dashboard.gym.muscles.subtitle' | t"
-      >
-        <ds-stack class="muscles" [gap]="'var(--ds-space-3)'">
-          @for (region of regionShares(); track region.region) {
-            <ds-meter
-              [label]="region.region"
-              [percent]="region.percent"
-              [color]="region.color"
-            />
-          }
-        </ds-stack>
-      </ds-panel>
-    </ds-grid>
+      </ds-stack>
+    </ds-panel>
   }
 </ds-stack>
