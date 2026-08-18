@@ -1,0 +1,20 @@
+services:
+  Economy\Finance\Recurrence\Domain\QueryModel\CreateFinanceRecurrenceNeedleDataQuery:
+    class: Economy\Finance\Recurrence\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateFinanceRecurrenceNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Recurrence\Domain\QueryModel\UpdateFinanceRecurrenceNeedleDataQuery:
+    class: Economy\Finance\Recurrence\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateFinanceRecurrenceNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Recurrence\Domain\QueryModel\GetFinanceRecurrencesNeedleDataQuery:
+    class: Economy\Finance\Recurrence\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceRecurrencesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery:
+    class: Economy\Finance\Recurrence\Infrastructure\Domain\QueryModel\Doctrine\DoctrinePendingFinanceRecurrencesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

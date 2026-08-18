@@ -1,0 +1,23 @@
+get_finance_recurrences:
+  path: /api/v1/economy/recurrences
+  methods: [GET]
+  controller: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\GetFinanceRecurrencesController
+
+create_finance_recurrence:
+  path: /api/v1/economy/recurrences
+  methods: [POST]
+  controller: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\CreateFinanceRecurrenceController
+
+update_finance_recurrence:
+  path: /api/v1/economy/recurrences/{financeRecurrenceId}
+  methods: [PUT]
+  controller: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\UpdateFinanceRecurrenceController
+  requirements:
+    financeRecurrenceId: '[0-9a-fA-F-]{36}'
+
+delete_finance_recurrence:
+  path: /api/v1/economy/recurrences/{financeRecurrenceId}
+  methods: [DELETE]
+  controller: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\DeleteFinanceRecurrenceController
+  requirements:
+    financeRecurrenceId: '[0-9a-fA-F-]{36}'

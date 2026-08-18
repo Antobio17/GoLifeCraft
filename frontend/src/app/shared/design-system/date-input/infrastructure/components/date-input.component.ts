@@ -1,7 +1,7 @@
 import { Component, Input, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
-type DateInputType = "date" | "time";
+type DateInputType = "date" | "month" | "time";
 
 @Component({
   selector: "ds-date-input",

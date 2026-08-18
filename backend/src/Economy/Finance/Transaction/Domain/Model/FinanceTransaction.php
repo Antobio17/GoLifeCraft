@@ -17,6 +17,7 @@ class FinanceTransaction extends GenericAggregate
 
     public const SOURCE_MANUAL = 'manual';
     public const SOURCE_TICKET = 'ticket';
+    public const SOURCE_RECURRENCE = 'recurrence';
 
     public const CATEGORY_OTHER = 'other';
 
@@ -34,6 +35,7 @@ class FinanceTransaction extends GenericAggregate
     public const SOURCES = [
         self::SOURCE_MANUAL,
         self::SOURCE_TICKET,
+        self::SOURCE_RECURRENCE,
     ];
 
     /** @var array<int, string> */
@@ -268,7 +270,7 @@ class FinanceTransaction extends GenericAggregate
         $this->category = self::KIND_INCOME === $kind ? self::CATEGORY_OTHER : $category;
         $this->note = trim(string: $note);
         $this->store = '' === trim(string: (string) $store) ? null : trim(string: (string) $store);
-        $this->recurring = self::KIND_INCOME === $kind ? false : $recurring;
+        $this->recurring = $recurring;
     }
 
     private static function hasValidAccountId(string $accountId): bool

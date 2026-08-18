@@ -61,7 +61,7 @@ export class FinanceTransactionFormService {
       category: isIncome ? FinanceCategory.OTHER : form.category,
       note,
       store: store || null,
-      recurring: isIncome ? false : form.recurring,
+      recurring: form.recurring,
     };
   }
 }

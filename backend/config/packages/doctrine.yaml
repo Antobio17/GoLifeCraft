@@ -171,6 +171,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Economy/Finance/BalanceCheck/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Economy\Finance\BalanceCheck\Domain\Model'
                         alias: finance_balance_check
+                    FinanceRecurrence:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Economy/Finance/Recurrence/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Economy\Finance\Recurrence\Domain\Model'
+                        alias: finance_recurrence
                     Menu:
                         is_bundle: false
                         type: xml

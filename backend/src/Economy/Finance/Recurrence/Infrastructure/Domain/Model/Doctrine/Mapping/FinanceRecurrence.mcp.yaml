@@ -1,0 +1,101 @@
+label: Finance recurrence
+
+fields:
+  accountId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      Identifier of the account the movement is booked in every month.
+    filterable: true
+  kind:
+    writable: true
+    required: true
+    enum: [expense, income]
+    description: >-
+      "expense" for a monthly bill or subscription and "income" for a monthly
+      earning such as a salary.
+    filterable: true
+  amount:
+    writable: true
+    required: true
+    type: float
+    min: 0.01
+    max: 9999999.99
+    description: >-
+      Money moved every month, in euros, always positive. The kind decides whether
+      it adds or subtracts.
+    sortable: true
+  category:
+    writable: true
+    required: false
+    enum: [groceries, restaurants, gym, transport, leisure, home, bills, health, beauty, clothing, treats, gifts, travel, pets, subscriptions, other]
+    description: >-
+      Spending category of the generated expense. Income is always stored as
+      "other".
+    filterable: true
+  note:
+    writable: true
+    required: false
+    max: 255
+    description: >-
+      Description copied into every generated movement, for example "Nómina" or
+      "Netflix".
+    filterable: true
+  store:
+    writable: true
+    required: false
+    max: 120
+    description: >-
+      Where the money goes or comes from, for example "Endesa" or the employer name.
+    filterable: true
+  dayOfMonth:
+    writable: true
+    required: true
+    type: int
+    min: 1
+    max: 31
+    description: >-
+      Day of the month the movement is charged. Months shorter than that day use
+      their last day instead.
+    sortable: true
+  startMonth:
+    writable: true
+    required: true
+    min: 7
+    max: 7
+    regex: '^\d{4}-\d{2}$'
+    description: >-
+      First month the recurrence books a movement, as "YYYY-MM".
+    filterable: true
+    sortable: true
+  endMonth:
+    writable: true
+    required: false
+    min: 7
+    max: 7
+    regex: '^\d{4}-\d{2}$'
+    description: >-
+      Last month the recurrence books a movement, as "YYYY-MM". Empty means it runs
+      forever.
+    filterable: true
+  active:
+    writable: true
+    required: false
+    type: bool
+    description: >-
+      Whether the recurrence still books movements. A paused recurrence keeps its
+      history but generates nothing.
+    filterable: true
+  lastRunMonth:
+    writable: false
+    required: false
+    min: 7
+    max: 7
+    description: >-
+      Last month already booked, as "YYYY-MM". It is assigned by the app when the
+      movement is generated, never by the client.
+    filterable: true
+
+relations: {}

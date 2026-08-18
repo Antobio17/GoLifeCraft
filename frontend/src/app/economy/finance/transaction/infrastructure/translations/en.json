@@ -52,8 +52,8 @@
   "getEconomy.sheet.storeLabel": "STORE / PLACE (OPTIONAL)",
   "getEconomy.sheet.originLabel": "SOURCE (OPTIONAL)",
   "getEconomy.sheet.storePlaceholder": "E.g. Mercadona, Salary…",
-  "getEconomy.sheet.recurringLabel": "Recurring expense",
-  "getEconomy.sheet.recurringHint": "It will show up under Subscriptions every month",
+  "getEconomy.sheet.recurringLabel": "Recurring movement",
+  "getEconomy.sheet.recurringHint": "Mark the expenses and incomes that repeat every month",
   "getEconomy.sheet.saveExpense": "Record expense",
   "getEconomy.sheet.saveIncome": "Record income",
   "getEconomy.breadcrumb.list": "Economy",
@@ -75,6 +75,7 @@
   "getEconomy.category.other": "Other",
   "getEconomy.accounts.title": "Balance per account",
   "getEconomy.accounts.manage": "Accounts",
+  "getEconomy.recurrences.manage": "Recurring movements",
   "getEconomy.accounts.missing": "You have no accounts yet. Create one to register movements and reconcile your real balance.",
   "getEconomy.sheet.accountLabel": "ACCOUNT"
 }
