@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'64rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getFinanceRecurrences.back' | t"
@@ -34,95 +38,70 @@
   }
 
   @if (!loading()) {
-    <ds-card [padding]="'var(--ds-space-4)'">
-      <ds-stack
-        direction="row"
-        justify="between"
-        align="center"
-        [gap]="'var(--ds-space-3)'"
-      >
-        <ds-stack [gap]="'2px'">
-          <ds-text variant="meta">{{
-            "getFinanceRecurrences.monthlyIncome" | t
-          }}</ds-text>
-          <ds-heading [level]="3" size="md">{{
-            monthlyIncomeLabel()
-          }}</ds-heading>
-        </ds-stack>
+    <ds-split-view
+      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
+      [sticky]="true"
+    >
+      <ng-container slot="side">
+        <ds-card [padding]="'var(--ds-space-4)'">
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-3)'"
+          >
+            <ds-stack [gap]="'2px'">
+              <ds-text variant="meta">{{
+                "getFinanceRecurrences.monthlyIncome" | t
+              }}</ds-text>
+              <ds-heading [level]="3" size="md">{{
+                monthlyIncomeLabel()
+              }}</ds-heading>
+            </ds-stack>
 
-        <ds-stack [gap]="'2px'">
-          <ds-text variant="meta">{{
-            "getFinanceRecurrences.monthlyExpense" | t
-          }}</ds-text>
-          <ds-heading [level]="3" size="md">{{
-            monthlyExpenseLabel()
-          }}</ds-heading>
-        </ds-stack>
+            <ds-stack [gap]="'2px'">
+              <ds-text variant="meta">{{
+                "getFinanceRecurrences.monthlyExpense" | t
+              }}</ds-text>
+              <ds-heading [level]="3" size="md">{{
+                monthlyExpenseLabel()
+              }}</ds-heading>
+            </ds-stack>
 
-        <ds-stack [gap]="'2px'">
-          <ds-text variant="meta">{{
-            "getFinanceRecurrences.monthlyNet" | t
-          }}</ds-text>
-          <ds-heading [level]="3" size="md">{{ monthlyNetLabel() }}</ds-heading>
-        </ds-stack>
-      </ds-stack>
-    </ds-card>
+            <ds-stack [gap]="'2px'">
+              <ds-text variant="meta">{{
+                "getFinanceRecurrences.monthlyNet" | t
+              }}</ds-text>
+              <ds-heading [level]="3" size="md">{{
+                monthlyNetLabel()
+              }}</ds-heading>
+            </ds-stack>
+          </ds-stack>
+        </ds-card>
 
-    <ds-note icon="info" tone="info">{{
-      "getFinanceRecurrences.hint" | t
-    }}</ds-note>
+        <ds-note icon="info" tone="info">{{
+          "getFinanceRecurrences.hint" | t
+        }}</ds-note>
 
-    @if (!hasAccounts()) {
-      <ds-note icon="alertCircle" tone="warning">{{
-        "getFinanceRecurrences.accounts.missing" | t
-      }}</ds-note>
-    }
+        @if (!hasAccounts()) {
+          <ds-note icon="alertCircle" tone="warning">{{
+            "getFinanceRecurrences.accounts.missing" | t
+          }}</ds-note>
+        }
+      </ng-container>
 
-    @if (!hasRecurrences()) {
-      <ds-empty-state
-        icon="wallet"
-        [title]="'getFinanceRecurrences.empty.title' | t"
-        [text]="'getFinanceRecurrences.empty.text' | t"
-      />
-    }
-
-    <ds-stack [gap]="'var(--ds-space-2)'">
-      @for (row of activeRows(); track row.recurrence.id) {
-        <ds-swipe-to-delete
-          #recurrenceSwipe
-          radius="var(--ds-radius-lg)"
-          [disabled]="!canWrite()"
-          [removeLabel]="'getFinanceRecurrences.remove' | t"
-          (remove)="remove(row.recurrence)"
-        >
-          <ds-transaction-row
-            [emoji]="row.emoji"
-            [title]="row.recurrence.note"
-            [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
-            [amountLabel]="row.amountLabel"
-            [pressable]="canWrite()"
-            [pressLabel]="row.recurrence.note"
-            [slid]="recurrenceSwipe.slid"
-            [actionIcon]="canWrite() ? row.actionIcon : null"
-            [actionLabel]="row.actionLabel"
-            (pressed)="openEditSheet(row.recurrence)"
-            (actioned)="togglePause(row.recurrence)"
-          />
-        </ds-swipe-to-delete>
+      @if (!hasRecurrences()) {
+        <ds-empty-state
+          icon="wallet"
+          [title]="'getFinanceRecurrences.empty.title' | t"
+          [text]="'getFinanceRecurrences.empty.text' | t"
+        />
       }
-    </ds-stack>
-
-    @if (hasPausedRows()) {
-      <ds-section-header
-        [title]="'getFinanceRecurrences.pausedSection.title' | t"
-        [staticLabel]="'getFinanceRecurrences.pausedSection.hint' | t"
-        size="md"
-      />
 
       <ds-stack [gap]="'var(--ds-space-2)'">
-        @for (row of pausedRows(); track row.recurrence.id) {
+        @for (row of activeRows(); track row.recurrence.id) {
           <ds-swipe-to-delete
-            #pausedSwipe
+            #recurrenceSwipe
             radius="var(--ds-radius-lg)"
             [disabled]="!canWrite()"
             [removeLabel]="'getFinanceRecurrences.remove' | t"
@@ -133,10 +112,9 @@
               [title]="row.recurrence.note"
               [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
               [amountLabel]="row.amountLabel"
-              [muted]="true"
               [pressable]="canWrite()"
               [pressLabel]="row.recurrence.note"
-              [slid]="pausedSwipe.slid"
+              [slid]="recurrenceSwipe.slid"
               [actionIcon]="canWrite() ? row.actionIcon : null"
               [actionLabel]="row.actionLabel"
               (pressed)="openEditSheet(row.recurrence)"
@@ -145,7 +123,42 @@
           </ds-swipe-to-delete>
         }
       </ds-stack>
-    }
+
+      @if (hasPausedRows()) {
+        <ds-section-header
+          [title]="'getFinanceRecurrences.pausedSection.title' | t"
+          [staticLabel]="'getFinanceRecurrences.pausedSection.hint' | t"
+          size="md"
+        />
+
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          @for (row of pausedRows(); track row.recurrence.id) {
+            <ds-swipe-to-delete
+              #pausedSwipe
+              radius="var(--ds-radius-lg)"
+              [disabled]="!canWrite()"
+              [removeLabel]="'getFinanceRecurrences.remove' | t"
+              (remove)="remove(row.recurrence)"
+            >
+              <ds-transaction-row
+                [emoji]="row.emoji"
+                [title]="row.recurrence.note"
+                [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
+                [amountLabel]="row.amountLabel"
+                [muted]="true"
+                [pressable]="canWrite()"
+                [pressLabel]="row.recurrence.note"
+                [slid]="pausedSwipe.slid"
+                [actionIcon]="canWrite() ? row.actionIcon : null"
+                [actionLabel]="row.actionLabel"
+                (pressed)="openEditSheet(row.recurrence)"
+                (actioned)="togglePause(row.recurrence)"
+              />
+            </ds-swipe-to-delete>
+          }
+        </ds-stack>
+      }
+    </ds-split-view>
   }
 
   <ds-modal-sheet

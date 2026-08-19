@@ -19,6 +19,7 @@ import { TranslationService } from "@shared/i18n/application/services/translatio
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
 import { ChoiceChipsComponent } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
@@ -88,6 +89,7 @@ type PickerTab = "product" | "recipe";
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     ScreenHeaderComponent,
     EmojiPickerComponent,
     ChoiceChipsComponent,

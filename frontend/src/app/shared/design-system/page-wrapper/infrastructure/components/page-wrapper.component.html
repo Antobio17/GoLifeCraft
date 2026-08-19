@@ -1,5 +1,10 @@
 <div class="pw-wrapper">
-  <div class="pw-container" [style.max-width]="maxWidth" [style.gap]="gap">
+  <div
+    class="pw-container"
+    [style.--pw-max]="maxWidth"
+    [style.--pw-max-wide]="wideMaxWidth"
+    [style.gap]="gap"
+  >
     <ng-content></ng-content>
   </div>
 </div>

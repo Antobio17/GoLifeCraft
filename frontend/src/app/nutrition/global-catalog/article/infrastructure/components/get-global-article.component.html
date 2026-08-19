@@ -1,4 +1,8 @@
-<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'44rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -46,148 +50,152 @@
       (leadingClick)="goBack()"
     />
 
-    <ds-product-hero
-      [tall]="true"
-      [emoji]="d.emoji"
-      [imageUrl]="d.imageUrl"
-      [alt]="d.name"
-      [price]="d.price"
-    />
+    <ds-split-view [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'">
+      <ng-container slot="side">
+        <ds-product-hero
+          [tall]="true"
+          [emoji]="d.emoji"
+          [imageUrl]="d.imageUrl"
+          [alt]="d.name"
+          [price]="d.price"
+        />
 
-    @if (d.brand || d.source || d.quantity) {
-      <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
-        @if (d.brand) {
-          <ds-chip>{{ d.brand }}</ds-chip>
+        @if (d.brand || d.source || d.quantity) {
+          <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
+            @if (d.brand) {
+              <ds-chip>{{ d.brand }}</ds-chip>
+            }
+            @if (d.source) {
+              <ds-chip tone="warning">{{ d.source }}</ds-chip>
+            }
+            @if (d.quantity) {
+              <ds-chip tone="brand">{{ d.quantity }}</ds-chip>
+            }
+          </ds-stack>
         }
-        @if (d.source) {
-          <ds-chip tone="warning">{{ d.source }}</ds-chip>
+
+        @if (canImport) {
+          <ds-button
+            variant="soft"
+            [icon]="imported() ? 'check' : 'download'"
+            [fullWidth]="true"
+            [loading]="importing()"
+            [disabled]="imported()"
+            (clicked)="onImport()"
+          >
+            {{
+              (imported()
+                ? "getGlobalArticle.alreadyImported"
+                : "getGlobalArticle.import"
+              ) | t
+            }}
+          </ds-button>
         }
-        @if (d.quantity) {
-          <ds-chip tone="brand">{{ d.quantity }}</ds-chip>
-        }
-      </ds-stack>
-    }
+      </ng-container>
 
-    @if (canImport) {
-      <ds-button
-        variant="soft"
-        [icon]="imported() ? 'check' : 'download'"
-        [fullWidth]="true"
-        [loading]="importing()"
-        [disabled]="imported()"
-        (clicked)="onImport()"
-      >
-        {{
-          (imported()
-            ? "getGlobalArticle.alreadyImported"
-            : "getGlobalArticle.import"
-          ) | t
-        }}
-      </ds-button>
-    }
+      @if (d.hasNutrition) {
+        <ds-text variant="label">
+          {{ "getGlobalArticle.per" | t }} {{ d.referenceLabel }}
+        </ds-text>
 
-    @if (d.hasNutrition) {
-      <ds-text variant="label">
-        {{ "getGlobalArticle.per" | t }} {{ d.referenceLabel }}
-      </ds-text>
+        <ds-macro-bars
+          [kcal]="d.macros.kcal ?? '—'"
+          [kcalUnit]="'getGlobalArticle.macro.kcal' | t"
+          [macros]="[
+            {
+              label: 'getGlobalArticle.macro.protein' | t,
+              value: d.macros.proteinG ?? '—',
+              tone: 'protein',
+            },
+            {
+              label: 'getGlobalArticle.macro.fat' | t,
+              value: d.macros.fatG ?? '—',
+              tone: 'fat',
+            },
+            {
+              label: 'getGlobalArticle.macro.carbs' | t,
+              value: d.macros.carbsG ?? '—',
+              tone: 'carbs',
+            },
+          ]"
+        />
 
-      <ds-macro-bars
-        [kcal]="d.macros.kcal ?? '—'"
-        [kcalUnit]="'getGlobalArticle.macro.kcal' | t"
-        [macros]="[
-          {
-            label: 'getGlobalArticle.macro.protein' | t,
-            value: d.macros.proteinG ?? '—',
-            tone: 'protein',
-          },
-          {
-            label: 'getGlobalArticle.macro.fat' | t,
-            value: d.macros.fatG ?? '—',
-            tone: 'fat',
-          },
-          {
-            label: 'getGlobalArticle.macro.carbs' | t,
-            value: d.macros.carbsG ?? '—',
-            tone: 'carbs',
-          },
-        ]"
-      />
+        <ds-nutrition-facts
+          [rows]="[
+            {
+              label: 'getGlobalArticle.table.fat' | t,
+              value: d.macros.fatG ?? '—',
+            },
+            {
+              label: 'getGlobalArticle.table.saturated' | t,
+              value: d.macros.saturatedG ?? '—',
+              sub: true,
+            },
+            {
+              label: 'getGlobalArticle.table.carbs' | t,
+              value: d.macros.carbsG ?? '—',
+            },
+            {
+              label: 'getGlobalArticle.table.sugars' | t,
+              value: d.macros.sugarsG ?? '—',
+              sub: true,
+            },
+            {
+              label: 'getGlobalArticle.table.protein' | t,
+              value: d.macros.proteinG ?? '—',
+            },
+            {
+              label: 'getGlobalArticle.table.fiber' | t,
+              value: d.macros.fiberG ?? '—',
+              hidden: !d.macros.fiberG,
+            },
+            {
+              label: 'getGlobalArticle.table.salt' | t,
+              value: d.macros.saltG ?? '—',
+            },
+          ]"
+        />
+      } @else {
+        <ds-text variant="muted">{{
+          "getGlobalArticle.noNutrition" | t
+        }}</ds-text>
+      }
 
-      <ds-nutrition-facts
-        [rows]="[
-          {
-            label: 'getGlobalArticle.table.fat' | t,
-            value: d.macros.fatG ?? '—',
-          },
-          {
-            label: 'getGlobalArticle.table.saturated' | t,
-            value: d.macros.saturatedG ?? '—',
-            sub: true,
-          },
-          {
-            label: 'getGlobalArticle.table.carbs' | t,
-            value: d.macros.carbsG ?? '—',
-          },
-          {
-            label: 'getGlobalArticle.table.sugars' | t,
-            value: d.macros.sugarsG ?? '—',
-            sub: true,
-          },
-          {
-            label: 'getGlobalArticle.table.protein' | t,
-            value: d.macros.proteinG ?? '—',
-          },
-          {
-            label: 'getGlobalArticle.table.fiber' | t,
-            value: d.macros.fiberG ?? '—',
-            hidden: !d.macros.fiberG,
-          },
-          {
-            label: 'getGlobalArticle.table.salt' | t,
-            value: d.macros.saltG ?? '—',
-          },
-        ]"
-      />
-    } @else {
-      <ds-text variant="muted">{{
-        "getGlobalArticle.noNutrition" | t
-      }}</ds-text>
-    }
-
-    <ds-panel [title]="'getGlobalArticle.details.heading' | t">
-      <ds-nutrition-facts
-        class="detail__rows"
-        [rows]="[
-          {
-            label: 'getGlobalArticle.details.price' | t,
-            value: d.price ?? '—',
-          },
-          {
-            label: 'getGlobalArticle.details.previousPrice' | t,
-            value: d.previousPrice ?? '—',
-            hidden: !d.previousPrice,
-          },
-          {
-            label: 'getGlobalArticle.details.referencePrice' | t,
-            value: d.referencePrice ?? '—',
-            hidden: !d.referencePrice,
-          },
-          {
-            label: 'getGlobalArticle.details.bulkPrice' | t,
-            value: d.bulkPrice ?? '—',
-            hidden: !d.bulkPrice,
-          },
-          {
-            label: 'getGlobalArticle.details.stores' | t,
-            value: d.stores ?? '—',
-            hidden: !d.stores,
-          },
-          {
-            label: 'getGlobalArticle.details.barcode' | t,
-            value: d.barcode,
-          },
-        ]"
-      />
-    </ds-panel>
+      <ds-panel [title]="'getGlobalArticle.details.heading' | t">
+        <ds-nutrition-facts
+          class="detail__rows"
+          [rows]="[
+            {
+              label: 'getGlobalArticle.details.price' | t,
+              value: d.price ?? '—',
+            },
+            {
+              label: 'getGlobalArticle.details.previousPrice' | t,
+              value: d.previousPrice ?? '—',
+              hidden: !d.previousPrice,
+            },
+            {
+              label: 'getGlobalArticle.details.referencePrice' | t,
+              value: d.referencePrice ?? '—',
+              hidden: !d.referencePrice,
+            },
+            {
+              label: 'getGlobalArticle.details.bulkPrice' | t,
+              value: d.bulkPrice ?? '—',
+              hidden: !d.bulkPrice,
+            },
+            {
+              label: 'getGlobalArticle.details.stores' | t,
+              value: d.stores ?? '—',
+              hidden: !d.stores,
+            },
+            {
+              label: 'getGlobalArticle.details.barcode' | t,
+              value: d.barcode,
+            },
+          ]"
+        />
+      </ds-panel>
+    </ds-split-view>
   }
 </ds-page-wrapper>

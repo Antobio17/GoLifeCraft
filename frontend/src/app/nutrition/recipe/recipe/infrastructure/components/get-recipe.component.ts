@@ -7,6 +7,7 @@ import { TranslationService } from "@shared/i18n/application/services/translatio
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ProductHeroComponent } from "@shared/design-system/product-hero/infrastructure/components/product-hero.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
@@ -45,6 +46,7 @@ import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/mac
   imports: [
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     ScreenHeaderComponent,
     ProductHeroComponent,
     MacroBarsComponent,

@@ -18,6 +18,7 @@ import { Subject, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
@@ -90,6 +91,7 @@ import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-s
     NgTemplateOutlet,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     ScreenHeaderComponent,
     ModalSheetComponent,
     SearchInputComponent,

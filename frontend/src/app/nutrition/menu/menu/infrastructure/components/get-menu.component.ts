@@ -15,6 +15,7 @@ import { AuthSessionService } from "@shared/auth/application/services/auth-sessi
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
@@ -99,6 +100,7 @@ type PickerTab = "product" | "recipe";
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     StackComponent,
     CardComponent,
     TextComponent,

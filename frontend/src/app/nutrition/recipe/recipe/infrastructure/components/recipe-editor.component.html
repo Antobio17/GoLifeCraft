@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-4)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'66rem'"
+  [gap]="'var(--ds-space-4)'"
+>
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -42,181 +46,192 @@
           (leadingClick)="cancel()"
         />
 
-        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
-          <ds-field [label]="'recipeEditor.icon' | t">
-            <ds-emoji-picker
-              formControlName="emoji"
-              [groups]="emojiGroups"
-              [fallback]="fallbackEmoji"
-              [sheetTitle]="'recipeEditor.emojiTitle' | t"
-              [triggerLabel]="'recipeEditor.emojiTrigger' | t"
-              [searchPlaceholder]="'recipeEditor.emojiSearch' | t"
-              [closeLabel]="'recipeEditor.close' | t"
-              [emptyLabel]="'recipeEditor.emojiEmpty' | t"
-            />
-          </ds-field>
-          <ds-field
-            [grow]="true"
-            [label]="'recipeEditor.name' | t"
-            [required]="true"
-          >
-            <ds-text-input
-              variant="outlined"
-              formControlName="name"
-              [placeholder]="'recipeEditor.namePlaceholder' | t"
-            />
-          </ds-field>
-        </ds-stack>
-
-        <ds-field [label]="'recipeEditor.category' | t">
-          <ds-choice-chips
-            formControlName="category"
-            [wrap]="true"
-            [options]="categoryOptions"
-          />
-        </ds-field>
-
-        <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
-          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-            <ds-stack [gap]="'2px'" [grow]="true">
-              <ds-text variant="strong">{{
-                "recipeEditor.servings" | t
-              }}</ds-text>
-              <ds-text variant="meta">{{
-                "recipeEditor.servingsHint" | t
-              }}</ds-text>
-            </ds-stack>
-            <ds-number-input
-              [stepper]="true"
-              [min]="minServings"
-              [max]="maxServings"
-              [ngModel]="servings()"
-              [ngModelOptions]="{ standalone: true }"
-              (ngModelChange)="servings.set($event)"
-              [incrementLabel]="'recipeEditor.servingsPlus' | t"
-              [decrementLabel]="'recipeEditor.servingsMinus' | t"
-            />
-          </ds-stack>
-        </ds-card>
-
-        <ds-section-header
-          [title]="'recipeEditor.ingredients' | t"
-          [staticLabel]="totalLabel()"
-        />
-
-        <ds-macro-bars
-          [kcal]="formatMacro(perServing().calories)"
-          [kcalUnit]="'recipeEditor.perServing' | t"
-          [macros]="[
-            {
-              label: 'recipeEditor.macro.protein' | t,
-              value: formatMacro(perServing().protein) + ' g',
-              tone: 'protein',
-            },
-            {
-              label: 'recipeEditor.macro.fat' | t,
-              value: formatMacro(perServing().fat) + ' g',
-              tone: 'fat',
-            },
-            {
-              label: 'recipeEditor.macro.carbs' | t,
-              value: formatMacro(perServing().carbs) + ' g',
-              tone: 'carbs',
-            },
-          ]"
-        />
-
-        @if (hasIngredients) {
-          <ds-stack [gap]="'var(--ds-space-2)'">
-            @for (row of ingredientRows(); track row.ingredient.key) {
-              <ds-swipe-to-delete
-                #swipe
-                [reveal]="66"
-                [removeLabel]="'recipeEditor.removeIngredient' | t"
-                (remove)="onRemoveIngredient(row.ingredient.key)"
-              >
-                <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
-                  <ds-stack
-                    direction="row"
-                    align="center"
-                    [gap]="'var(--ds-space-2)'"
-                  >
-                    <ds-stack align="center" [gap]="'var(--ds-space-1)'">
-                      <ds-emoji-tile
-                        [emoji]="row.ingredient.emoji"
-                        [size]="36"
-                      />
-                      <ds-macro-badges [kcal]="row.kcal" />
-                    </ds-stack>
-                    <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                      <ds-stack
-                        direction="row"
-                        align="center"
-                        [gap]="'var(--ds-space-1-5)'"
-                      >
-                        <ds-text variant="strong" [truncate]="true">{{
-                          row.ingredient.name
-                        }}</ds-text>
-                        @if (row.ingredient.kind === "recipe") {
-                          <ds-chip tone="brand">{{
-                            "recipeEditor.subRecipe" | t
-                          }}</ds-chip>
-                        }
-                      </ds-stack>
-                      <ds-macro-badges [macros]="row.macros" />
-                    </ds-stack>
-                    <ds-inline-quantity
-                      [quantity]="row.ingredient.quantity"
-                      [unit]="row.ingredient.unit"
-                      [unitLabel]="row.unitLabel"
-                      [unitOptions]="row.unitOptions"
-                      [ariaLabel]="'recipeEditor.quantity' | t"
-                      [unitAriaLabel]="'recipeEditor.unit' | t"
-                      (quantityChange)="
-                        onIngredientQuantity(row.ingredient.key, $event)
-                      "
-                      (unitChange)="
-                        onIngredientUnit(row.ingredient.key, $event)
-                      "
-                    />
-                  </ds-stack>
-                </ds-card>
-              </ds-swipe-to-delete>
-            }
-          </ds-stack>
-        } @else {
-          <ds-empty-state
-            icon="leaf"
-            [title]="'recipeEditor.noIngredients' | t"
-          />
-        }
-
-        <ds-add-tile
-          variant="dashed"
-          [label]="'recipeEditor.addIngredient' | t"
-          (clicked)="openPicker()"
-        />
-
-        <ds-button
-          type="submit"
-          variant="primary"
-          [fullWidth]="true"
-          [loading]="saving()"
+        <ds-split-view
+          [gap]="'var(--ds-space-4)'"
+          [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
         >
-          {{ saveLabel }}
-        </ds-button>
+          <ng-container slot="side">
+            <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
+              <ds-field [label]="'recipeEditor.icon' | t">
+                <ds-emoji-picker
+                  formControlName="emoji"
+                  [groups]="emojiGroups"
+                  [fallback]="fallbackEmoji"
+                  [sheetTitle]="'recipeEditor.emojiTitle' | t"
+                  [triggerLabel]="'recipeEditor.emojiTrigger' | t"
+                  [searchPlaceholder]="'recipeEditor.emojiSearch' | t"
+                  [closeLabel]="'recipeEditor.close' | t"
+                  [emptyLabel]="'recipeEditor.emojiEmpty' | t"
+                />
+              </ds-field>
+              <ds-field
+                [grow]="true"
+                [label]="'recipeEditor.name' | t"
+                [required]="true"
+              >
+                <ds-text-input
+                  variant="outlined"
+                  formControlName="name"
+                  [placeholder]="'recipeEditor.namePlaceholder' | t"
+                />
+              </ds-field>
+            </ds-stack>
 
-        @if (isEdit) {
+            <ds-field [label]="'recipeEditor.category' | t">
+              <ds-choice-chips
+                formControlName="category"
+                [wrap]="true"
+                [options]="categoryOptions"
+              />
+            </ds-field>
+
+            <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+              >
+                <ds-stack [gap]="'2px'" [grow]="true">
+                  <ds-text variant="strong">{{
+                    "recipeEditor.servings" | t
+                  }}</ds-text>
+                  <ds-text variant="meta">{{
+                    "recipeEditor.servingsHint" | t
+                  }}</ds-text>
+                </ds-stack>
+                <ds-number-input
+                  [stepper]="true"
+                  [min]="minServings"
+                  [max]="maxServings"
+                  [ngModel]="servings()"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="servings.set($event)"
+                  [incrementLabel]="'recipeEditor.servingsPlus' | t"
+                  [decrementLabel]="'recipeEditor.servingsMinus' | t"
+                />
+              </ds-stack>
+            </ds-card>
+
+            <ds-macro-bars
+              [kcal]="formatMacro(perServing().calories)"
+              [kcalUnit]="'recipeEditor.perServing' | t"
+              [macros]="[
+                {
+                  label: 'recipeEditor.macro.protein' | t,
+                  value: formatMacro(perServing().protein) + ' g',
+                  tone: 'protein',
+                },
+                {
+                  label: 'recipeEditor.macro.fat' | t,
+                  value: formatMacro(perServing().fat) + ' g',
+                  tone: 'fat',
+                },
+                {
+                  label: 'recipeEditor.macro.carbs' | t,
+                  value: formatMacro(perServing().carbs) + ' g',
+                  tone: 'carbs',
+                },
+              ]"
+            />
+          </ng-container>
+
+          <ds-section-header
+            [title]="'recipeEditor.ingredients' | t"
+            [staticLabel]="totalLabel()"
+          />
+
+          @if (hasIngredients) {
+            <ds-stack [gap]="'var(--ds-space-2)'">
+              @for (row of ingredientRows(); track row.ingredient.key) {
+                <ds-swipe-to-delete
+                  #swipe
+                  [reveal]="66"
+                  [removeLabel]="'recipeEditor.removeIngredient' | t"
+                  (remove)="onRemoveIngredient(row.ingredient.key)"
+                >
+                  <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
+                    <ds-stack
+                      direction="row"
+                      align="center"
+                      [gap]="'var(--ds-space-2)'"
+                    >
+                      <ds-stack align="center" [gap]="'var(--ds-space-1)'">
+                        <ds-emoji-tile
+                          [emoji]="row.ingredient.emoji"
+                          [size]="36"
+                        />
+                        <ds-macro-badges [kcal]="row.kcal" />
+                      </ds-stack>
+                      <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                        <ds-stack
+                          direction="row"
+                          align="center"
+                          [gap]="'var(--ds-space-1-5)'"
+                        >
+                          <ds-text variant="strong" [truncate]="true">{{
+                            row.ingredient.name
+                          }}</ds-text>
+                          @if (row.ingredient.kind === "recipe") {
+                            <ds-chip tone="brand">{{
+                              "recipeEditor.subRecipe" | t
+                            }}</ds-chip>
+                          }
+                        </ds-stack>
+                        <ds-macro-badges [macros]="row.macros" />
+                      </ds-stack>
+                      <ds-inline-quantity
+                        [quantity]="row.ingredient.quantity"
+                        [unit]="row.ingredient.unit"
+                        [unitLabel]="row.unitLabel"
+                        [unitOptions]="row.unitOptions"
+                        [ariaLabel]="'recipeEditor.quantity' | t"
+                        [unitAriaLabel]="'recipeEditor.unit' | t"
+                        (quantityChange)="
+                          onIngredientQuantity(row.ingredient.key, $event)
+                        "
+                        (unitChange)="
+                          onIngredientUnit(row.ingredient.key, $event)
+                        "
+                      />
+                    </ds-stack>
+                  </ds-card>
+                </ds-swipe-to-delete>
+              }
+            </ds-stack>
+          } @else {
+            <ds-empty-state
+              icon="leaf"
+              [title]="'recipeEditor.noIngredients' | t"
+            />
+          }
+
+          <ds-add-tile
+            variant="dashed"
+            [label]="'recipeEditor.addIngredient' | t"
+            (clicked)="openPicker()"
+          />
+
           <ds-button
-            type="button"
-            variant="outline-danger"
+            type="submit"
+            variant="primary"
             [fullWidth]="true"
-            icon="trash"
-            (clicked)="onDelete()"
+            [loading]="saving()"
           >
-            {{ "recipeEditor.deleteRecipe" | t }}
+            {{ saveLabel }}
           </ds-button>
-        }
+
+          @if (isEdit) {
+            <ds-button
+              type="button"
+              variant="outline-danger"
+              [fullWidth]="true"
+              icon="trash"
+              (clicked)="onDelete()"
+            >
+              {{ "recipeEditor.deleteRecipe" | t }}
+            </ds-button>
+          }
+        </ds-split-view>
       </ds-stack>
     </form>
   }

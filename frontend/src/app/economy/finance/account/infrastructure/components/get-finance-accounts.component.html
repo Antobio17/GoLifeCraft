@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'64rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getFinanceAccounts.back' | t"
@@ -24,97 +28,114 @@
   }
 
   @if (!loading()) {
-    <ds-card [padding]="'var(--ds-space-4)'">
-      <ds-stack [gap]="'2px'">
-        <ds-text variant="meta">{{ "getFinanceAccounts.total" | t }}</ds-text>
-        <ds-heading [level]="3" size="lg">{{ totalBalanceLabel() }}</ds-heading>
-      </ds-stack>
-    </ds-card>
-
-    <ds-note icon="info" tone="info">{{
-      "getFinanceAccounts.hint" | t
-    }}</ds-note>
-
-    @if (!hasAccounts()) {
-      <ds-empty-state
-        icon="wallet"
-        [title]="'getFinanceAccounts.empty.title' | t"
-        [text]="'getFinanceAccounts.empty.text' | t"
-      />
-    }
-
-    @for (row of accountRows(); track row.account.id) {
-      <ds-card [padding]="'var(--ds-space-4)'">
-        <ds-stack
-          direction="row"
-          justify="between"
-          align="center"
-          [gap]="'var(--ds-space-3)'"
-        >
-          <ds-stack [gap]="'2px'" [grow]="true">
-            <ds-text variant="strong"
-              >{{ row.emoji }} {{ row.account.name }}</ds-text
-            >
-            <ds-text variant="meta"
-              >{{ row.typeLabel }} · {{ row.lastCheckLabel }}</ds-text
-            >
+    <ds-split-view
+      [columns]="'minmax(0, 0.75fr) minmax(0, 1fr)'"
+      [sticky]="true"
+    >
+      <ng-container slot="side">
+        <ds-card [padding]="'var(--ds-space-4)'">
+          <ds-stack [gap]="'2px'">
+            <ds-text variant="meta">{{
+              "getFinanceAccounts.total" | t
+            }}</ds-text>
+            <ds-heading [level]="3" size="lg">{{
+              totalBalanceLabel()
+            }}</ds-heading>
           </ds-stack>
+        </ds-card>
 
-          <ds-heading [level]="3" size="md">{{ row.balanceLabel }}</ds-heading>
-        </ds-stack>
+        <ds-note icon="info" tone="info">{{
+          "getFinanceAccounts.hint" | t
+        }}</ds-note>
+      </ng-container>
 
-        @if (canWrite()) {
-          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
-            <ds-button
-              variant="outline"
-              size="sm"
-              icon="wallet"
-              [iconSize]="16"
-              (clicked)="openNewCheckSheet(row.account)"
-            >
-              {{ "getFinanceAccounts.check.add" | t }}
-            </ds-button>
+      @if (!hasAccounts()) {
+        <ds-empty-state
+          icon="wallet"
+          [title]="'getFinanceAccounts.empty.title' | t"
+          [text]="'getFinanceAccounts.empty.text' | t"
+        />
+      }
 
-            <ds-icon-button
-              icon="pencil"
-              variant="soft"
-              [size]="34"
-              [iconSize]="16"
-              [radius]="'var(--ds-radius-md)'"
-              [ariaLabel]="'getFinanceAccounts.edit' | t"
-              (clicked)="openEditAccountSheet(row.account)"
-            />
-          </ds-stack>
-        }
-
-        @if (row.checks.length > 0) {
-          <ds-section-header [title]="'getFinanceAccounts.check.title' | t" />
-
-          <ds-stack [gap]="'var(--ds-space-2)'">
-            @for (checkRow of row.checks; track checkRow.check.id) {
-              <ds-swipe-to-delete
-                #checkSwipe
-                radius="var(--ds-radius-lg)"
-                [disabled]="!canWrite()"
-                [removeLabel]="'getFinanceAccounts.check.remove' | t"
-                (remove)="removeCheck(checkRow.check)"
+      @for (row of accountRows(); track row.account.id) {
+        <ds-card [padding]="'var(--ds-space-4)'">
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-3)'"
+          >
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="strong"
+                >{{ row.emoji }} {{ row.account.name }}</ds-text
               >
-                <ds-transaction-row
-                  [emoji]="checkEmoji"
-                  [title]="checkRow.dateLabel"
-                  [subtitle]="checkRow.driftLabel"
-                  [amountLabel]="checkRow.amountLabel"
-                  [pressable]="canWrite()"
-                  [pressLabel]="checkRow.dateLabel"
-                  [slid]="checkSwipe.slid"
-                  (pressed)="openEditCheckSheet(checkRow.check)"
-                />
-              </ds-swipe-to-delete>
-            }
+              <ds-text variant="meta"
+                >{{ row.typeLabel }} · {{ row.lastCheckLabel }}</ds-text
+              >
+            </ds-stack>
+
+            <ds-heading [level]="3" size="md">{{
+              row.balanceLabel
+            }}</ds-heading>
           </ds-stack>
-        }
-      </ds-card>
-    }
+
+          @if (canWrite()) {
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-2)'"
+            >
+              <ds-button
+                variant="outline"
+                size="sm"
+                icon="wallet"
+                [iconSize]="16"
+                (clicked)="openNewCheckSheet(row.account)"
+              >
+                {{ "getFinanceAccounts.check.add" | t }}
+              </ds-button>
+
+              <ds-icon-button
+                icon="pencil"
+                variant="soft"
+                [size]="34"
+                [iconSize]="16"
+                [radius]="'var(--ds-radius-md)'"
+                [ariaLabel]="'getFinanceAccounts.edit' | t"
+                (clicked)="openEditAccountSheet(row.account)"
+              />
+            </ds-stack>
+          }
+
+          @if (row.checks.length > 0) {
+            <ds-section-header [title]="'getFinanceAccounts.check.title' | t" />
+
+            <ds-stack [gap]="'var(--ds-space-2)'">
+              @for (checkRow of row.checks; track checkRow.check.id) {
+                <ds-swipe-to-delete
+                  #checkSwipe
+                  radius="var(--ds-radius-lg)"
+                  [disabled]="!canWrite()"
+                  [removeLabel]="'getFinanceAccounts.check.remove' | t"
+                  (remove)="removeCheck(checkRow.check)"
+                >
+                  <ds-transaction-row
+                    [emoji]="checkEmoji"
+                    [title]="checkRow.dateLabel"
+                    [subtitle]="checkRow.driftLabel"
+                    [amountLabel]="checkRow.amountLabel"
+                    [pressable]="canWrite()"
+                    [pressLabel]="checkRow.dateLabel"
+                    [slid]="checkSwipe.slid"
+                    (pressed)="openEditCheckSheet(checkRow.check)"
+                  />
+                </ds-swipe-to-delete>
+              }
+            </ds-stack>
+          }
+        </ds-card>
+      }
+    </ds-split-view>
   }
 
   <ds-modal-sheet

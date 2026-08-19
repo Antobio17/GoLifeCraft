@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -125,198 +129,212 @@
       }
     </ds-stack>
 
-    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-      <ds-emoji-tile [emoji]="menu.emoji" [size]="60" [radius]="16" />
-      <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-        <ds-text variant="label">{{ typeLabel() }}</ds-text>
-        @if (canWrite()) {
-          <ds-text-input
-            [strong]="true"
-            [ariaLabel]="'getMenu.nameLabel' | t"
-            [placeholder]="'getMenu.namePlaceholder' | t"
-            [ngModel]="name()"
-            [ngModelOptions]="{ standalone: true }"
-            (ngModelChange)="onName($event)"
-          />
-        } @else {
-          <ds-heading [level]="2" size="lg" [truncate]="true">{{
-            menu.name
-          }}</ds-heading>
-        }
-      </ds-stack>
-    </ds-stack>
-
-    @if (canWrite()) {
-      <ds-text-input
-        variant="outlined"
-        [ariaLabel]="'getMenu.noteLabel' | t"
-        [placeholder]="'getMenu.notePlaceholder' | t"
-        [ngModel]="note()"
-        [ngModelOptions]="{ standalone: true }"
-        (ngModelChange)="onNote($event)"
-      />
-    } @else if (menu.note) {
-      <ds-text variant="meta">{{ menu.note }}</ds-text>
-    }
-
-    @if (isDraft()) {
-      <ds-note icon="info">{{ "getMenu.draft.hint" | t }}</ds-note>
-    }
-
-    @if (isWeek()) {
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        <ds-stack
-          direction="row"
-          justify="between"
-          align="center"
-          [gap]="'var(--ds-space-2)'"
-        >
-          <ds-text variant="label">{{ "getMenu.week.title" | t }}</ds-text>
-          <ds-text variant="meta">{{ activeDaysLabel() }}</ds-text>
-        </ds-stack>
-
-        <ds-week-day-tabs [days]="dayTabs()" (selected)="onSelectDay($event)" />
-
-        <ds-text variant="meta">{{ "getMenu.week.hint" | t }}</ds-text>
-
-        @if (canWrite() && !isDraft()) {
-          <ds-button
-            variant="secondary"
-            icon="calendar"
-            [fullWidth]="true"
-            (clicked)="onApplyWeek()"
-          >
-            {{ "getMenu.week.apply" | t }}
-          </ds-button>
-        }
-      </ds-stack>
-    }
-
-    <ds-macro-panel
-      [kcal]="totalsKcal()"
-      [kcalGoal]="goalKcal()"
-      [caption]="caloriesFootnote()"
-      [over]="exceedsCalories()"
-      [macros]="goalMacros()"
-    />
-
-    @for (meal of mealRows(); track meal.key) {
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        <ds-stack
-          direction="row"
-          justify="between"
-          align="center"
-          [gap]="'var(--ds-space-2)'"
-        >
-          <ds-stack [gap]="'1px'" [grow]="true">
-            <ds-heading [level]="3" size="sm">{{ meal.label }}</ds-heading>
-            <ds-text variant="meta">{{ meal.meta }}</ds-text>
-          </ds-stack>
+    <ds-split-view [columns]="'minmax(0, 0.85fr) minmax(0, 1fr)'">
+      <ds-stack
+        slot="side"
+        direction="row"
+        align="center"
+        [gap]="'var(--ds-space-3)'"
+      >
+        <ds-emoji-tile [emoji]="menu.emoji" [size]="60" [radius]="16" />
+        <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+          <ds-text variant="label">{{ typeLabel() }}</ds-text>
           @if (canWrite()) {
+            <ds-text-input
+              [strong]="true"
+              [ariaLabel]="'getMenu.nameLabel' | t"
+              [placeholder]="'getMenu.namePlaceholder' | t"
+              [ngModel]="name()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onName($event)"
+            />
+          } @else {
+            <ds-heading [level]="2" size="lg" [truncate]="true">{{
+              menu.name
+            }}</ds-heading>
+          }
+        </ds-stack>
+      </ds-stack>
+
+      @if (canWrite()) {
+        <ds-text-input
+          slot="side"
+          variant="outlined"
+          [ariaLabel]="'getMenu.noteLabel' | t"
+          [placeholder]="'getMenu.notePlaceholder' | t"
+          [ngModel]="note()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onNote($event)"
+        />
+      } @else if (menu.note) {
+        <ds-text slot="side" variant="meta">{{ menu.note }}</ds-text>
+      }
+
+      @if (isDraft()) {
+        <ds-note slot="side" icon="info">{{
+          "getMenu.draft.hint" | t
+        }}</ds-note>
+      }
+
+      @if (isWeek()) {
+        <ds-stack slot="side" [gap]="'var(--ds-space-2)'">
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-text variant="label">{{ "getMenu.week.title" | t }}</ds-text>
+            <ds-text variant="meta">{{ activeDaysLabel() }}</ds-text>
+          </ds-stack>
+
+          <ds-week-day-tabs
+            [days]="dayTabs()"
+            (selected)="onSelectDay($event)"
+          />
+
+          <ds-text variant="meta">{{ "getMenu.week.hint" | t }}</ds-text>
+
+          @if (canWrite() && !isDraft()) {
             <ds-button
-              variant="outline"
-              size="sm"
-              icon="plus"
-              (clicked)="openPicker(meal.key)"
+              variant="secondary"
+              icon="calendar"
+              [fullWidth]="true"
+              (clicked)="onApplyWeek()"
             >
-              {{ "getMenu.meal.add" | t }}
+              {{ "getMenu.week.apply" | t }}
             </ds-button>
           }
         </ds-stack>
+      }
 
-        @if (meal.items.length === 0) {
-          <ds-placeholder-note [message]="'getMenu.meal.empty' | t" />
-        } @else {
-          <ds-stack [gap]="'var(--ds-space-1-5)'">
-            @for (row of meal.items; track row.item.id) {
-              <ds-stack [gap]="'var(--ds-space-1-5)'">
-                <ds-diary-entry
-                  [emoji]="row.item.emoji"
-                  [name]="row.item.name"
-                  [badge]="row.badge"
-                  [badgeTone]="row.badgeTone"
-                  [kcalLabel]="row.kcal"
-                  [macros]="row.macros"
-                  [unit]="row.unitLabel"
-                  [unitValue]="row.unitValue"
-                  [unitOptions]="row.unitOptions"
-                  [quantity]="row.item.quantity"
-                  [quantityLabel]="row.quantityLabel"
-                  [canWrite]="canWrite()"
-                  [quantityAriaLabel]="'getMenu.quantity' | t"
-                  [unitAriaLabel]="'getMenu.unit' | t"
-                  [removeLabel]="'getMenu.remove' | t"
-                  [expandable]="row.expandable"
-                  [expanded]="row.expanded"
-                  [expandLabel]="'getMenu.tree.expand' | t"
-                  [collapseLabel]="'getMenu.tree.collapse' | t"
-                  (quantityChange)="onQuantity(row.item, $event)"
-                  (unitChange)="onUnit(row.item, $event)"
-                  (remove)="onRemoveItem(row.item)"
-                  (expandToggled)="toggleItemTree(row.item.id)"
-                />
+      <ds-macro-panel
+        slot="side"
+        [kcal]="totalsKcal()"
+        [kcalGoal]="goalKcal()"
+        [caption]="caloriesFootnote()"
+        [over]="exceedsCalories()"
+        [macros]="goalMacros()"
+      />
 
-                @if (row.expanded) {
-                  <ds-diary-tree
-                    [rows]="row.treeRows"
-                    [title]="'getMenu.tree.title' | t"
-                    [canWrite]="canWrite()"
-                    [showReset]="row.showReset"
-                    [resetMessage]="'getMenu.tree.customized' | t"
-                    [resetLabel]="'getMenu.tree.reset' | t"
-                    [expandLabel]="'getMenu.tree.expand' | t"
-                    [collapseLabel]="'getMenu.tree.collapse' | t"
-                    [quantityAriaLabel]="'getMenu.quantity' | t"
-                    [unitAriaLabel]="'getMenu.unit' | t"
-                    (toggled)="toggleTreeNode($event)"
-                    (quantityChanged)="onNodeQuantityChange(row.item, $event)"
-                    (unitChanged)="onNodeUnitChange(row.item, $event)"
-                    (restored)="onResetTree(row.item)"
-                  />
-                }
-              </ds-stack>
+      @for (meal of mealRows(); track meal.key) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-stack [gap]="'1px'" [grow]="true">
+              <ds-heading [level]="3" size="sm">{{ meal.label }}</ds-heading>
+              <ds-text variant="meta">{{ meal.meta }}</ds-text>
+            </ds-stack>
+            @if (canWrite()) {
+              <ds-button
+                variant="outline"
+                size="sm"
+                icon="plus"
+                (clicked)="openPicker(meal.key)"
+              >
+                {{ "getMenu.meal.add" | t }}
+              </ds-button>
             }
           </ds-stack>
-        }
-      </ds-stack>
-    }
 
-    @if (canWrite() && isDraft()) {
-      <ds-button
-        variant="primary"
-        icon="check"
-        [fullWidth]="true"
-        [disabled]="!draftSavable()"
-        [loading]="saving()"
-        (clicked)="saveDraft()"
-      >
-        {{ "getMenu.actions.save" | t }}
-      </ds-button>
-    } @else if (canWrite()) {
-      <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-        <ds-stack [grow]="true">
-          <ds-button
-            variant="primary"
-            icon="download"
-            [fullWidth]="true"
-            [disabled]="currentDayEmpty()"
-            (clicked)="onPrimaryAction()"
-          >
-            {{ primaryLabel() }}
-          </ds-button>
+          @if (meal.items.length === 0) {
+            <ds-placeholder-note [message]="'getMenu.meal.empty' | t" />
+          } @else {
+            <ds-stack [gap]="'var(--ds-space-1-5)'">
+              @for (row of meal.items; track row.item.id) {
+                <ds-stack [gap]="'var(--ds-space-1-5)'">
+                  <ds-diary-entry
+                    [emoji]="row.item.emoji"
+                    [name]="row.item.name"
+                    [badge]="row.badge"
+                    [badgeTone]="row.badgeTone"
+                    [kcalLabel]="row.kcal"
+                    [macros]="row.macros"
+                    [unit]="row.unitLabel"
+                    [unitValue]="row.unitValue"
+                    [unitOptions]="row.unitOptions"
+                    [quantity]="row.item.quantity"
+                    [quantityLabel]="row.quantityLabel"
+                    [canWrite]="canWrite()"
+                    [quantityAriaLabel]="'getMenu.quantity' | t"
+                    [unitAriaLabel]="'getMenu.unit' | t"
+                    [removeLabel]="'getMenu.remove' | t"
+                    [expandable]="row.expandable"
+                    [expanded]="row.expanded"
+                    [expandLabel]="'getMenu.tree.expand' | t"
+                    [collapseLabel]="'getMenu.tree.collapse' | t"
+                    (quantityChange)="onQuantity(row.item, $event)"
+                    (unitChange)="onUnit(row.item, $event)"
+                    (remove)="onRemoveItem(row.item)"
+                    (expandToggled)="toggleItemTree(row.item.id)"
+                  />
+
+                  @if (row.expanded) {
+                    <ds-diary-tree
+                      [rows]="row.treeRows"
+                      [title]="'getMenu.tree.title' | t"
+                      [canWrite]="canWrite()"
+                      [showReset]="row.showReset"
+                      [resetMessage]="'getMenu.tree.customized' | t"
+                      [resetLabel]="'getMenu.tree.reset' | t"
+                      [expandLabel]="'getMenu.tree.expand' | t"
+                      [collapseLabel]="'getMenu.tree.collapse' | t"
+                      [quantityAriaLabel]="'getMenu.quantity' | t"
+                      [unitAriaLabel]="'getMenu.unit' | t"
+                      (toggled)="toggleTreeNode($event)"
+                      (quantityChanged)="onNodeQuantityChange(row.item, $event)"
+                      (unitChanged)="onNodeUnitChange(row.item, $event)"
+                      (restored)="onResetTree(row.item)"
+                    />
+                  }
+                </ds-stack>
+              }
+            </ds-stack>
+          }
         </ds-stack>
-        <ds-stack [grow]="true">
-          <ds-button
-            variant="outline"
-            icon="cart"
-            [fullWidth]="true"
-            (clicked)="onShop()"
-          >
-            {{ "getMenu.actions.shop" | t }}
-          </ds-button>
+      }
+
+      @if (canWrite() && isDraft()) {
+        <ds-button
+          variant="primary"
+          icon="check"
+          [fullWidth]="true"
+          [disabled]="!draftSavable()"
+          [loading]="saving()"
+          (clicked)="saveDraft()"
+        >
+          {{ "getMenu.actions.save" | t }}
+        </ds-button>
+      } @else if (canWrite()) {
+        <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+          <ds-stack [grow]="true">
+            <ds-button
+              variant="primary"
+              icon="download"
+              [fullWidth]="true"
+              [disabled]="currentDayEmpty()"
+              (clicked)="onPrimaryAction()"
+            >
+              {{ primaryLabel() }}
+            </ds-button>
+          </ds-stack>
+          <ds-stack [grow]="true">
+            <ds-button
+              variant="outline"
+              icon="cart"
+              [fullWidth]="true"
+              (clicked)="onShop()"
+            >
+              {{ "getMenu.actions.shop" | t }}
+            </ds-button>
+          </ds-stack>
         </ds-stack>
-      </ds-stack>
-    }
+      }
+    </ds-split-view>
   } @else {
     <ds-placeholder-note [message]="'getMenu.error' | t" />
   }

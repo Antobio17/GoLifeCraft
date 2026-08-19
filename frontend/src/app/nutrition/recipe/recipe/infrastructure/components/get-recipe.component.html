@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'64rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -58,79 +62,92 @@
       }
     </ds-screen-header>
 
-    <ds-product-hero
-      [emoji]="recipe.emoji"
-      [badge]="view.servingsLabel(recipe.servings)"
-    />
+    <ds-split-view
+      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
+      [sticky]="true"
+    >
+      <ng-container slot="side">
+        <ds-product-hero
+          [emoji]="recipe.emoji"
+          [badge]="view.servingsLabel(recipe.servings)"
+        />
 
-    <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
-      <ds-chip>{{ view.ingredientsLabel(recipe.ingredients.length) }}</ds-chip>
-    </ds-stack>
+        <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
+          <ds-chip>{{
+            view.ingredientsLabel(recipe.ingredients.length)
+          }}</ds-chip>
+        </ds-stack>
 
-    <ds-macro-bars
-      [kcal]="view.integer(recipe.perServing.calories)"
-      [kcalUnit]="'getRecipe.perServing' | t"
-      [macros]="[
-        {
-          label: 'getRecipe.macro.protein' | t,
-          value: view.grams(recipe.perServing.protein),
-          tone: 'protein',
-        },
-        {
-          label: 'getRecipe.macro.fat' | t,
-          value: view.grams(recipe.perServing.fat),
-          tone: 'fat',
-        },
-        {
-          label: 'getRecipe.macro.carbs' | t,
-          value: view.grams(recipe.perServing.carbs),
-          tone: 'carbs',
-        },
-      ]"
-    />
+        <ds-macro-bars
+          [kcal]="view.integer(recipe.perServing.calories)"
+          [kcalUnit]="'getRecipe.perServing' | t"
+          [macros]="[
+            {
+              label: 'getRecipe.macro.protein' | t,
+              value: view.grams(recipe.perServing.protein),
+              tone: 'protein',
+            },
+            {
+              label: 'getRecipe.macro.fat' | t,
+              value: view.grams(recipe.perServing.fat),
+              tone: 'fat',
+            },
+            {
+              label: 'getRecipe.macro.carbs' | t,
+              value: view.grams(recipe.perServing.carbs),
+              tone: 'carbs',
+            },
+          ]"
+        />
+      </ng-container>
 
-    <ds-section-header
-      [title]="'getRecipe.ingredients' | t"
-      [staticLabel]="totalLabel(recipe.total.calories)"
-    />
+      <ds-section-header
+        [title]="'getRecipe.ingredients' | t"
+        [staticLabel]="totalLabel(recipe.total.calories)"
+      />
 
-    <ds-stack [gap]="'var(--ds-space-2)'">
-      @for (row of ingredientRows(); track row.ingredient.id) {
-        <ds-card [padding]="'var(--ds-space-2)'">
-          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-            <ds-emoji-tile [emoji]="row.ingredient.emoji" />
-            <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-              <ds-stack
-                direction="row"
-                align="center"
-                justify="between"
-                [gap]="'var(--ds-space-2)'"
-              >
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (row of ingredientRows(); track row.ingredient.id) {
+          <ds-card [padding]="'var(--ds-space-2)'">
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+            >
+              <ds-emoji-tile [emoji]="row.ingredient.emoji" />
+              <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
                 <ds-stack
                   direction="row"
                   align="center"
-                  [gap]="'var(--ds-space-1-5)'"
-                  [grow]="true"
+                  justify="between"
+                  [gap]="'var(--ds-space-2)'"
                 >
-                  <ds-text variant="strong" [truncate]="true">{{
-                    row.ingredient.name
-                  }}</ds-text>
-                  @if (row.ingredient.kind === "recipe") {
-                    <ds-chip tone="brand">{{
-                      "getRecipe.subRecipe" | t
-                    }}</ds-chip>
-                  }
+                  <ds-stack
+                    direction="row"
+                    align="center"
+                    [gap]="'var(--ds-space-1-5)'"
+                    [grow]="true"
+                  >
+                    <ds-text variant="strong" [truncate]="true">{{
+                      row.ingredient.name
+                    }}</ds-text>
+                    @if (row.ingredient.kind === "recipe") {
+                      <ds-chip tone="brand">{{
+                        "getRecipe.subRecipe" | t
+                      }}</ds-chip>
+                    }
+                  </ds-stack>
+                  <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
                 </ds-stack>
-                <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
+                <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
               </ds-stack>
-              <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
             </ds-stack>
-          </ds-stack>
-        </ds-card>
-      }
-    </ds-stack>
+          </ds-card>
+        }
+      </ds-stack>
 
-    <ds-note icon="info">{{ "getRecipe.note" | t }}</ds-note>
+      <ds-note icon="info">{{ "getRecipe.note" | t }}</ds-note>
+    </ds-split-view>
   } @else {
     <ds-empty-state
       icon="leaf"

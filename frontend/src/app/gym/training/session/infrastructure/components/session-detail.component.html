@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'42.5rem'" [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'42.5rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -53,18 +57,6 @@
       />
     </ds-screen-header>
 
-    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
-      <ds-chip>
-        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1)'">
-          <ds-icon name="clock" [size]="13" />
-          ~{{ estimatedDurationMinutes() }} min
-        </ds-stack>
-      </ds-chip>
-      @if (saving()) {
-        <ds-text variant="meta">{{ "getSession.saving" | t }}</ds-text>
-      }
-    </ds-stack>
-
     @if (isActiveHere) {
       <ds-active-workout-banner
         [scrolled]="sessScrolled()"
@@ -98,145 +90,169 @@
       />
     }
 
-    @if (!isActiveHere) {
-      @if (statsLoading()) {
-        <ng-container [ngTemplateOutlet]="progressSkeleton" />
-      } @else if (hasProgress()) {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-stack
-            direction="row"
-            align="center"
-            justify="between"
-            [gap]="'var(--ds-space-2)'"
-          >
-            <ds-text variant="label">
-              {{ "getSession.progress.title" | t }}
-            </ds-text>
-            <ds-select
-              variant="bare"
-              [options]="rangeOptions()"
-              [ariaLabel]="'getSession.progress.rangeLabel' | t"
-              [ngModel]="range()"
-              (ngModelChange)="onRangeChange($event)"
-            />
-          </ds-stack>
-
-          <ds-segmented-toggle
-            [options]="metricOptions()"
-            [ngModel]="metric()"
-            (ngModelChange)="onMetricChange($event)"
-          />
-
-          @if (hasProgressPoints()) {
-            <ds-progression-card
-              [metricLabel]="progressMetricName()"
-              [value]="progressValue()"
-              [delta]="progressDeltaLabel()"
-              [trend]="progressTrend()"
-              [prLabel]="progressLastDate()"
-              [points]="progressPoints()"
-              [pointLabels]="progressLabels()"
-              [firstLabel]="progressFirstDate()"
-              [lastLabel]="progressLastDate()"
-              [scrollable]="true"
-            />
-          } @else {
-            <ds-text variant="muted">
-              {{ "getSession.progress.empty" | t }}
-            </ds-text>
-          }
-        </ds-stack>
-      }
-    }
-
-    @if (exercises().length === 0) {
-      <ds-empty-state
-        icon="dumbbell"
-        [title]="'getSession.empty.title' | t"
-        [text]="'getSession.empty.text' | t"
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-stack
+        slot="side"
+        direction="row"
+        align="center"
+        [gap]="'var(--ds-space-2)'"
       >
-        <ds-button icon="plus" (clicked)="openPicker()">
-          {{ "getSession.exercise.add" | t }}
-        </ds-button>
-      </ds-empty-state>
-    } @else {
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        @for (exercise of exerciseRows(); track exercise.id; let i = $index) {
-          <ds-card [gap]="'var(--ds-space-2)'" [padding]="'var(--ds-space-3)'">
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-3)'"
-            >
-              <ds-chip tone="brand">{{ i + 1 }}</ds-chip>
-              <ds-stack [gap]="'2px'" [grow]="true">
-                <ds-heading [level]="3" size="sm">
-                  {{ exercise.exerciseName }}
-                </ds-heading>
-                <ds-text variant="meta">{{ exercise.muscleLabel }}</ds-text>
-              </ds-stack>
-              <ds-chip tone="brand">
-                {{ exercise.modeLabel }}
-              </ds-chip>
-              <ds-icon-button
-                icon="close"
-                [ariaLabel]="'getSession.exercise.remove' | t"
-                (clicked)="removeExercise(exercise.id)"
-              />
-            </ds-stack>
-
-            <ds-set-header
-              [numLabel]="'getSession.set.number' | t"
-              [repsLabel]="'getSession.set.reps' | t"
-              [weightLabel]="'getSession.set.weight' | t"
-            />
-
-            <ds-textarea
-              [value]="exercise.note ?? ''"
-              [placeholder]="'getSession.exercise.notePlaceholder' | t"
-              [ariaLabel]="'getSession.exercise.noteLabel' | t"
-              [rows]="2"
-              [compact]="true"
-              (valueChange)="setNote(exercise.id, $event)"
-            />
-
-            @for (set of exercise.sets; track set.id; let j = $index) {
-              <ds-set-row
-                [displayIndex]="j + 1"
-                [reps]="set.reps"
-                [weight]="set.weight ?? 0"
-                [done]="isSetDone(i, j)"
-                [showCheck]="isActiveHere"
-                [repsAriaLabel]="'getSession.set.reps' | t"
-                [weightAriaLabel]="'getSession.set.weight' | t"
-                [repsUpLabel]="'getSession.set.repsUp' | t"
-                [repsDownLabel]="'getSession.set.repsDown' | t"
-                [weightUpLabel]="'getSession.set.weightUp' | t"
-                [weightDownLabel]="'getSession.set.weightDown' | t"
-                [removeLabel]="'getSession.set.remove' | t"
-                [markDoneLabel]="'getSession.active.markDone' | t"
-                (repsChange)="setReps(exercise.id, set.id, $event)"
-                (weightChange)="setWeight(exercise.id, set.id, $event)"
-                (toggleDone)="toggleSetDone(i, j)"
-                (remove)="removeSet(exercise.id, set.id)"
-              />
-            }
-
-            <ds-add-tile
-              variant="inline"
-              [label]="'getSession.set.add' | t"
-              (clicked)="addSet(exercise.id)"
-            />
-          </ds-card>
+        <ds-chip>
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1)'">
+            <ds-icon name="clock" [size]="13" />
+            ~{{ estimatedDurationMinutes() }} min
+          </ds-stack>
+        </ds-chip>
+        @if (saving()) {
+          <ds-text variant="meta">{{ "getSession.saving" | t }}</ds-text>
         }
       </ds-stack>
 
-      <ds-add-tile
-        variant="dashed"
-        [label]="'getSession.exercise.add' | t"
-        (clicked)="openPicker()"
-      />
-    }
+      <ng-container slot="side">
+        @if (!isActiveHere) {
+          @if (statsLoading()) {
+            <ng-container [ngTemplateOutlet]="progressSkeleton" />
+          } @else if (hasProgress()) {
+            <ds-stack [gap]="'var(--ds-space-2)'">
+              <ds-stack
+                direction="row"
+                align="center"
+                justify="between"
+                [gap]="'var(--ds-space-2)'"
+              >
+                <ds-text variant="label">
+                  {{ "getSession.progress.title" | t }}
+                </ds-text>
+                <ds-select
+                  variant="bare"
+                  [options]="rangeOptions()"
+                  [ariaLabel]="'getSession.progress.rangeLabel' | t"
+                  [ngModel]="range()"
+                  (ngModelChange)="onRangeChange($event)"
+                />
+              </ds-stack>
+
+              <ds-segmented-toggle
+                [options]="metricOptions()"
+                [ngModel]="metric()"
+                (ngModelChange)="onMetricChange($event)"
+              />
+
+              @if (hasProgressPoints()) {
+                <ds-progression-card
+                  [metricLabel]="progressMetricName()"
+                  [value]="progressValue()"
+                  [delta]="progressDeltaLabel()"
+                  [trend]="progressTrend()"
+                  [prLabel]="progressLastDate()"
+                  [points]="progressPoints()"
+                  [pointLabels]="progressLabels()"
+                  [firstLabel]="progressFirstDate()"
+                  [lastLabel]="progressLastDate()"
+                  [scrollable]="true"
+                />
+              } @else {
+                <ds-text variant="muted">
+                  {{ "getSession.progress.empty" | t }}
+                </ds-text>
+              }
+            </ds-stack>
+          }
+        }
+      </ng-container>
+
+      @if (exercises().length === 0) {
+        <ds-empty-state
+          icon="dumbbell"
+          [title]="'getSession.empty.title' | t"
+          [text]="'getSession.empty.text' | t"
+        >
+          <ds-button icon="plus" (clicked)="openPicker()">
+            {{ "getSession.exercise.add" | t }}
+          </ds-button>
+        </ds-empty-state>
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          @for (exercise of exerciseRows(); track exercise.id; let i = $index) {
+            <ds-card
+              [gap]="'var(--ds-space-2)'"
+              [padding]="'var(--ds-space-3)'"
+            >
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+              >
+                <ds-chip tone="brand">{{ i + 1 }}</ds-chip>
+                <ds-stack [gap]="'2px'" [grow]="true">
+                  <ds-heading [level]="3" size="sm">
+                    {{ exercise.exerciseName }}
+                  </ds-heading>
+                  <ds-text variant="meta">{{ exercise.muscleLabel }}</ds-text>
+                </ds-stack>
+                <ds-chip tone="brand">
+                  {{ exercise.modeLabel }}
+                </ds-chip>
+                <ds-icon-button
+                  icon="close"
+                  [ariaLabel]="'getSession.exercise.remove' | t"
+                  (clicked)="removeExercise(exercise.id)"
+                />
+              </ds-stack>
+
+              <ds-set-header
+                [numLabel]="'getSession.set.number' | t"
+                [repsLabel]="'getSession.set.reps' | t"
+                [weightLabel]="'getSession.set.weight' | t"
+              />
+
+              <ds-textarea
+                [value]="exercise.note ?? ''"
+                [placeholder]="'getSession.exercise.notePlaceholder' | t"
+                [ariaLabel]="'getSession.exercise.noteLabel' | t"
+                [rows]="2"
+                [compact]="true"
+                (valueChange)="setNote(exercise.id, $event)"
+              />
+
+              @for (set of exercise.sets; track set.id; let j = $index) {
+                <ds-set-row
+                  [displayIndex]="j + 1"
+                  [reps]="set.reps"
+                  [weight]="set.weight ?? 0"
+                  [done]="isSetDone(i, j)"
+                  [showCheck]="isActiveHere"
+                  [repsAriaLabel]="'getSession.set.reps' | t"
+                  [weightAriaLabel]="'getSession.set.weight' | t"
+                  [repsUpLabel]="'getSession.set.repsUp' | t"
+                  [repsDownLabel]="'getSession.set.repsDown' | t"
+                  [weightUpLabel]="'getSession.set.weightUp' | t"
+                  [weightDownLabel]="'getSession.set.weightDown' | t"
+                  [removeLabel]="'getSession.set.remove' | t"
+                  [markDoneLabel]="'getSession.active.markDone' | t"
+                  (repsChange)="setReps(exercise.id, set.id, $event)"
+                  (weightChange)="setWeight(exercise.id, set.id, $event)"
+                  (toggleDone)="toggleSetDone(i, j)"
+                  (remove)="removeSet(exercise.id, set.id)"
+                />
+              }
+
+              <ds-add-tile
+                variant="inline"
+                [label]="'getSession.set.add' | t"
+                (clicked)="addSet(exercise.id)"
+              />
+            </ds-card>
+          }
+        </ds-stack>
+
+        <ds-add-tile
+          variant="dashed"
+          [label]="'getSession.exercise.add' | t"
+          (clicked)="openPicker()"
+        />
+      }
+    </ds-split-view>
   }
 </ds-page-wrapper>
 
