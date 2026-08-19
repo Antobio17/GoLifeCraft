@@ -40,7 +40,6 @@ final readonly class UpdateFinanceTransactionCommandHandler
             category: $command->category,
             note: $command->note,
             store: $command->store,
-            recurring: $command->recurring,
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

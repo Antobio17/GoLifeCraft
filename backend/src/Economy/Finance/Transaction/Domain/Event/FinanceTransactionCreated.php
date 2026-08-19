@@ -16,7 +16,6 @@ final readonly class FinanceTransactionCreated extends DomainEvent
         public string $category,
         public string $note,
         public ?string $store,
-        public bool $recurring,
         public string $source,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,

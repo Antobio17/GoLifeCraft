@@ -10,5 +10,4 @@ export interface FinanceTransactionForm {
   note: string;
   store: string;
   transactionDate: string;
-  recurring: boolean;
 }

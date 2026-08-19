@@ -30,7 +30,6 @@ final readonly class CreateFinanceTransactionOnFinanceRecurrenceGenerated implem
             category: $event->category,
             note: $event->note,
             store: $event->store,
-            recurring: true,
             source: FinanceTransaction::SOURCE_RECURRENCE,
             createdByUserId: $event->createdByUserId,
         ));

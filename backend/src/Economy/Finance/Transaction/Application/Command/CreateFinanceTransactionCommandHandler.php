@@ -34,7 +34,6 @@ final readonly class CreateFinanceTransactionCommandHandler
             category: $command->category,
             note: $command->note,
             store: $command->store,
-            recurring: $command->recurring,
             source: $command->source,
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,

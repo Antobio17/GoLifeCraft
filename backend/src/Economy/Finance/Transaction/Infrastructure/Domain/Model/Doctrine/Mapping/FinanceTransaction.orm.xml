@@ -10,7 +10,6 @@
     <field name="category" type="string" column="category" length="30"/>
     <field name="note" type="string" column="note" length="255"/>
     <field name="store" type="string" column="store" length="120" nullable="true"/>
-    <field name="recurring" type="boolean" column="recurring"/>
     <field name="source" type="string" column="source" length="10"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
@@ -21,7 +20,6 @@
       <index name="idx_finance_transaction_transaction_date" columns="transaction_date"/>
       <index name="idx_finance_transaction_kind" columns="kind"/>
       <index name="idx_finance_transaction_category" columns="category"/>
-      <index name="idx_finance_transaction_recurring" columns="recurring"/>
     </indexes>
   </entity>
 </doctrine-mapping>

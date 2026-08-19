@@ -28,7 +28,6 @@ final readonly class DoctrineGetFinanceTransactionsNeedleDataQuery implements Ge
                 't.category',
                 't.note',
                 't.store',
-                't.recurring',
                 't.source',
             )
             ->from(table: 'finance_transaction', alias: 't')
@@ -76,7 +75,6 @@ final readonly class DoctrineGetFinanceTransactionsNeedleDataQuery implements Ge
                 category: (string) $row['category'],
                 note: (string) $row['note'],
                 store: $row['store'],
-                recurring: (bool) $row['recurring'],
                 source: (string) $row['source'],
             );
         }

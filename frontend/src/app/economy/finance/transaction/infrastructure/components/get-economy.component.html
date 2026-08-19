@@ -308,24 +308,6 @@
         }
       }
 
-      @if (subscriptionRows().length > 0) {
-        <ds-section-header
-          [title]="'getEconomy.subscriptions.title' | t"
-          [staticLabel]="subscriptionsSummary()"
-          size="md"
-        />
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          @for (row of subscriptionRows(); track row.note) {
-            <ds-transaction-row
-              [emoji]="row.emoji"
-              [title]="row.note"
-              [subtitle]="row.nextChargeLabel"
-              [amountLabel]="row.amountLabel"
-            />
-          }
-        </ds-stack>
-      }
-
       @if (hasMovements()) {
         <ds-section-header
           [title]="'getEconomy.movements.title' | t"
@@ -483,26 +465,6 @@
           (ngModelChange)="onStore($event)"
         />
       </ds-stack>
-
-      <ds-card variant="inset" [padding]="'var(--ds-space-3)'">
-        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-          <ds-stack [gap]="'2px'" [grow]="true">
-            <ds-text variant="strong">{{
-              "getEconomy.sheet.recurringLabel" | t
-            }}</ds-text>
-            <ds-text variant="meta">{{
-              "getEconomy.sheet.recurringHint" | t
-            }}</ds-text>
-          </ds-stack>
-
-          <ds-toggle-switch
-            [ariaLabel]="'getEconomy.sheet.recurringLabel' | t"
-            [ngModel]="form().recurring"
-            [ngModelOptions]="{ standalone: true }"
-            (ngModelChange)="onRecurring($event)"
-          />
-        </ds-stack>
-      </ds-card>
 
       <ds-button
         variant="primary"

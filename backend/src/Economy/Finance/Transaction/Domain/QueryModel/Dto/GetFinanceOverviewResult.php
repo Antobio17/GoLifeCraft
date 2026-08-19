@@ -10,7 +10,6 @@ final class GetFinanceOverviewResult extends QueryAggregateResult
      * @param FinanceMonthPoint[]     $series
      * @param FinanceCategoryTotal[]  $byCategory
      * @param FinanceStoreTotal[]     $byStore
-     * @param FinanceSubscription[]   $subscriptions
      * @param FinanceAccountBalance[] $accounts
      */
     public function __construct(
@@ -28,8 +27,6 @@ final class GetFinanceOverviewResult extends QueryAggregateResult
         public readonly array $series,
         public readonly array $byCategory,
         public readonly array $byStore,
-        public readonly array $subscriptions,
-        public readonly float $subscriptionsTotal,
         public readonly ?float $expenseDeltaPercentage,
         public readonly bool $overspending,
         public readonly float $averageExpense,

@@ -9,5 +9,4 @@ export interface FinanceTransactionPayload {
   category: FinanceCategory;
   note: string;
   store: string | null;
-  recurring: boolean;
 }

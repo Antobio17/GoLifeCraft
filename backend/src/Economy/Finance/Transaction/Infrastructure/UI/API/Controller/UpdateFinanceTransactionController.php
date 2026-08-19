@@ -38,7 +38,6 @@ final class UpdateFinanceTransactionController
                     ?: FinanceTransaction::CATEGORY_OTHER,
                 note: (string) RequestExtractor::getStringRequestValue(request: $request, fieldName: 'note', required: false),
                 store: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'store'),
-                recurring: (bool) RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'recurring', required: false, nullable: false),
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 

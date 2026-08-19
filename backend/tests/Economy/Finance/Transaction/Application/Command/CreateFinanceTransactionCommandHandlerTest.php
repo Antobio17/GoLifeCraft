@@ -38,7 +38,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: '  Compra semanal  ',
             store: '  Mercadona  ',
-            recurring: false,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
         ));
@@ -53,11 +52,10 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $this->assertSame(expected: 'groceries', actual: $transaction->category);
         $this->assertSame(expected: 'Compra semanal', actual: $transaction->note);
         $this->assertSame(expected: 'Mercadona', actual: $transaction->store);
-        $this->assertFalse(condition: $transaction->recurring);
         $this->assertSame(expected: FinanceTransaction::SOURCE_MANUAL, actual: $transaction->source);
     }
 
-    public function testItCreatesARecurringExpense(): void
+    public function testItCreatesAnExpenseWithoutStore(): void
     {
         ($this->handler)(new CreateFinanceTransactionCommand(
             accountId: 'account-1',
@@ -67,7 +65,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'subscriptions',
             note: 'Netflix',
             store: null,
-            recurring: true,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
         ));
@@ -75,11 +72,10 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
         $transaction = $this->repository->findById(id: 'finance-transaction-1');
 
         $this->assertNotNull(actual: $transaction);
-        $this->assertTrue(condition: $transaction->recurring);
         $this->assertNull(actual: $transaction->store);
     }
 
-    public function testItForcesIncomeToTheOtherCategoryAndKeepsItRecurring(): void
+    public function testItForcesIncomeToTheOtherCategory(): void
     {
         ($this->handler)(new CreateFinanceTransactionCommand(
             accountId: 'account-1',
@@ -89,7 +85,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Nómina',
             store: 'Nómina',
-            recurring: true,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
         ));
@@ -98,7 +93,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
 
         $this->assertNotNull(actual: $transaction);
         $this->assertSame(expected: FinanceTransaction::CATEGORY_OTHER, actual: $transaction->category);
-        $this->assertTrue(condition: $transaction->recurring);
     }
 
     public function testItThrowsWhenTheAccountDoesNotExist(): void
@@ -113,7 +107,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra',
             store: null,
-            recurring: false,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
         ));
@@ -131,7 +124,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra',
             store: null,
-            recurring: false,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
         ));
@@ -149,7 +141,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra',
             store: null,
-            recurring: false,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
         ));
@@ -167,7 +158,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra',
             store: null,
-            recurring: false,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
         ));
@@ -185,7 +175,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'crypto',
             note: 'Compra',
             store: null,
-            recurring: false,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
         ));
@@ -203,7 +192,6 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra',
             store: null,
-            recurring: false,
             source: 'import',
             createdByUserId: 'god-user-id',
         ));

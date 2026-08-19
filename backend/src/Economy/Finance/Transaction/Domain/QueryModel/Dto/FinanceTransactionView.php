@@ -14,7 +14,6 @@ final readonly class FinanceTransactionView
         public string $category,
         public string $note,
         public ?string $store,
-        public bool $recurring,
         public string $source,
     ) {
     }

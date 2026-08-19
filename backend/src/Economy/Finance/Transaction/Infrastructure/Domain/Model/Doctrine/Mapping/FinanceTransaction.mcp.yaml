@@ -84,15 +84,6 @@ fields:
       Where the money was spent or where the income came from, for example
       "Mercadona" or "Freelance".
     filterable: true
-  recurring:
-    writable: true
-    required: false
-    type: bool
-    description: >-
-      Whether the movement repeats every month, for an expense and for an income
-      alike. Recurring expenses show up as subscriptions. Movements booked by a
-      finance recurrence always carry it.
-    filterable: true
   source:
     writable: false
     required: false
