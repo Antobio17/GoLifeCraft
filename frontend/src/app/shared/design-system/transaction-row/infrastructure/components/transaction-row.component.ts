@@ -1,13 +1,15 @@
 import { NgTemplateOutlet } from "@angular/common";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
+import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
+import { DsIconName } from "../../../icon/domain/models/icon.model";
 import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model";
 
 @Component({
   selector: "ds-transaction-row",
-  imports: [NgTemplateOutlet, PressableComponent],
+  imports: [NgTemplateOutlet, PressableComponent, IconButtonComponent],
   template: `
-    <div class="ds-tx" [class.ds-tx--slid]="slid">
+    <div class="ds-tx" [class.ds-tx--slid]="slid" [class.ds-tx--muted]="muted">
       @if (pressable) {
         <ds-pressable
           [grow]="true"
@@ -20,6 +22,16 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         </ds-pressable>
       } @else {
         <ng-container [ngTemplateOutlet]="content" />
+      }
+
+      @if (actionIcon; as icon) {
+        <ds-icon-button
+          variant="soft"
+          [icon]="icon"
+          [iconSize]="16"
+          [ariaLabel]="actionLabel"
+          (clicked)="actioned.emit()"
+        />
       }
     </div>
 
@@ -56,6 +68,11 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-2) var(--ds-space-3);
+      }
+      .ds-tx--muted .ds-tx__chip,
+      .ds-tx--muted .ds-tx__title,
+      .ds-tx--muted .ds-tx__amount {
+        opacity: 0.55;
       }
       .ds-tx--slid {
         border-top-right-radius: 0;
@@ -144,6 +161,10 @@ export class TransactionRowComponent {
   @Input() pressLabel = "";
   @Input() disabled = false;
   @Input() slid = false;
+  @Input() muted = false;
+  @Input() actionIcon: DsIconName | null = null;
+  @Input() actionLabel = "";
 
   @Output() pressed = new EventEmitter<void>();
+  @Output() actioned = new EventEmitter<void>();
 }

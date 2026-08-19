@@ -21,6 +21,7 @@ import { DateInputComponent } from "@shared/design-system/date-input/infrastruct
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { ToggleSwitchComponent } from "@shared/design-system/toggle-switch/infrastructure/components/toggle-switch.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { TransactionRowComponent } from "@shared/design-system/transaction-row/infrastructure/components/transaction-row.component";
 import {
@@ -39,6 +40,7 @@ import { FinanceRecurrenceFormService } from "@economy/finance/recurrence/applic
 import { FinanceRecurrence } from "@economy/finance/recurrence/domain/models/finance-recurrence.model";
 import { FinanceRecurrenceForm } from "@economy/finance/recurrence/domain/models/finance-recurrence-form.model";
 import { FinanceRecurrenceRow } from "@economy/finance/recurrence/domain/models/finance-recurrence-row.model";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
 import { FinanceCategory } from "@economy/finance/transaction/domain/models/finance-category.model";
@@ -69,6 +71,7 @@ import { FinanceAccount } from "@economy/finance/account/domain/models/finance-a
     NumberInputComponent,
     AmountInputComponent,
     ToggleSwitchComponent,
+    SectionHeaderComponent,
     SwipeToDeleteComponent,
     TransactionRowComponent,
     SegmentedToggleComponent,
@@ -132,8 +135,23 @@ export class GetFinanceRecurrencesComponent implements OnInit {
       amountLabel: this.amountLabelOf(recurrence),
       scheduleLabel: `${this.t("getFinanceRecurrences.day")} ${recurrence.dayOfMonth} · ${recurrence.accountName}`,
       nextChargeLabel: this.nextChargeLabelOf(recurrence),
+      paused: !recurrence.active,
+      actionIcon: (recurrence.active ? "pause" : "play") as DsIconName,
+      actionLabel: this.t(
+        recurrence.active
+          ? "getFinanceRecurrences.pause"
+          : "getFinanceRecurrences.resume",
+      ),
     }));
   });
+
+  activeRows = computed<FinanceRecurrenceRow[]>(() =>
+    this.recurrenceRows().filter((row) => !row.paused),
+  );
+  pausedRows = computed<FinanceRecurrenceRow[]>(() =>
+    this.recurrenceRows().filter((row) => row.paused),
+  );
+  hasPausedRows = computed(() => this.pausedRows().length > 0);
 
   accountOptions = computed<ChoiceChipOption[]>(() =>
     this.accounts().map((account) => ({
@@ -289,6 +307,28 @@ export class GetFinanceRecurrencesComponent implements OnInit {
       },
       error: () => this.saving.set(false),
     });
+  }
+
+  togglePause(recurrence: FinanceRecurrence): void {
+    if (!this.canWrite() || this.saving()) return;
+
+    this.saving.set(true);
+
+    this.updateFinanceRecurrenceService
+      .updateFinanceRecurrence(recurrence.id, {
+        ...this.recurrenceForm.toPayload(
+          this.recurrenceForm.fromRecurrence(recurrence),
+          recurrence.note,
+        ),
+        active: !recurrence.active,
+      })
+      .subscribe({
+        next: () => {
+          this.saving.set(false);
+          this.load(true);
+        },
+        error: () => this.saving.set(false),
+      });
   }
 
   remove(recurrence: FinanceRecurrence): void {

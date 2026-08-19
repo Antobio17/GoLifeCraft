@@ -97,7 +97,7 @@
     }
 
     <ds-stack [gap]="'var(--ds-space-2)'">
-      @for (row of recurrenceRows(); track row.recurrence.id) {
+      @for (row of activeRows(); track row.recurrence.id) {
         <ds-swipe-to-delete
           #recurrenceSwipe
           radius="var(--ds-radius-lg)"
@@ -113,11 +113,49 @@
             [pressable]="canWrite()"
             [pressLabel]="row.recurrence.note"
             [slid]="recurrenceSwipe.slid"
+            [actionIcon]="canWrite() ? row.actionIcon : null"
+            [actionLabel]="row.actionLabel"
             (pressed)="openEditSheet(row.recurrence)"
+            (actioned)="togglePause(row.recurrence)"
           />
         </ds-swipe-to-delete>
       }
     </ds-stack>
+
+    @if (hasPausedRows()) {
+      <ds-section-header
+        [title]="'getFinanceRecurrences.pausedSection.title' | t"
+        [staticLabel]="'getFinanceRecurrences.pausedSection.hint' | t"
+        size="md"
+      />
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (row of pausedRows(); track row.recurrence.id) {
+          <ds-swipe-to-delete
+            #pausedSwipe
+            radius="var(--ds-radius-lg)"
+            [disabled]="!canWrite()"
+            [removeLabel]="'getFinanceRecurrences.remove' | t"
+            (remove)="remove(row.recurrence)"
+          >
+            <ds-transaction-row
+              [emoji]="row.emoji"
+              [title]="row.recurrence.note"
+              [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
+              [amountLabel]="row.amountLabel"
+              [muted]="true"
+              [pressable]="canWrite()"
+              [pressLabel]="row.recurrence.note"
+              [slid]="pausedSwipe.slid"
+              [actionIcon]="canWrite() ? row.actionIcon : null"
+              [actionLabel]="row.actionLabel"
+              (pressed)="openEditSheet(row.recurrence)"
+              (actioned)="togglePause(row.recurrence)"
+            />
+          </ds-swipe-to-delete>
+        }
+      </ds-stack>
+    }
   }
 
   <ds-modal-sheet
