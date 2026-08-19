@@ -36,6 +36,18 @@ final class DoctrineShoppingListItemRepository extends EntityRepository implemen
             ->getOneOrNullResult();
     }
 
+    public function findByCustomName(string $customName): ?ShoppingListItem
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('shoppingListItem')
+            ->from(from: ShoppingListItem::class, alias: 'shoppingListItem')
+            ->where('LOWER(shoppingListItem.customName) = :customName')
+            ->setParameter(key: 'customName', value: mb_strtolower(string: $customName))
+            ->setMaxResults(maxResults: 1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function save(ShoppingListItem $shoppingListItem): void
     {
         $this->getEntityManager()->persist(object: $shoppingListItem);

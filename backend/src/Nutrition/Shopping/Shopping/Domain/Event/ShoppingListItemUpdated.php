@@ -9,7 +9,8 @@ final readonly class ShoppingListItemUpdated extends DomainEvent
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
-        public string $articleId,
+        public ?string $articleId,
+        public ?string $customName,
         public int $quantity,
         public ?float $baseQuantity,
         public bool $checked,

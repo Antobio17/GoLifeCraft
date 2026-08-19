@@ -37,6 +37,21 @@ final class InMemoryShoppingListItemRepository implements ShoppingListItemReposi
         return null;
     }
 
+    public function findByCustomName(string $customName): ?ShoppingListItem
+    {
+        foreach ($this->items as $item) {
+            if (null === $item->customName) {
+                continue;
+            }
+
+            if (mb_strtolower(string: $item->customName) === mb_strtolower(string: $customName)) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
     public function save(ShoppingListItem $shoppingListItem): void
     {
         foreach ($this->items as $key => $existing) {

@@ -9,7 +9,8 @@ final readonly class ShoppingListItemRemoved extends DomainEvent
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
-        public string $articleId,
+        public ?string $articleId,
+        public ?string $customName,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

@@ -6,7 +6,8 @@ final readonly class ShoppingListItemView
 {
     public function __construct(
         public string $id,
-        public string $articleId,
+        public ?string $articleId,
+        public bool $custom,
         public string $name,
         public string $emoji,
         public ?string $brand,

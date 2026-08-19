@@ -1,7 +1,7 @@
 {
   "getShopping": {
     "title": "Shopping list",
-    "subtitle": "Add items from your catalog",
+    "subtitle": "Add items from your catalog or type your own",
     "add": "Add",
     "items": "items",
     "toggle": "Mark as bought",
@@ -25,7 +25,12 @@
     },
     "empty": {
       "title": "Your list is empty",
-      "text": "Add items already in your catalog to build your shopping list."
+      "text": "Add items from your catalog or type whatever you need to build your shopping list."
+    },
+    "custom": {
+      "subtitle": "Type anything you need, even if it is not in your catalog",
+      "placeholder": "Kitchen roll, bin bags…",
+      "add": "Add by hand"
     },
     "filters": {
       "all": "All",

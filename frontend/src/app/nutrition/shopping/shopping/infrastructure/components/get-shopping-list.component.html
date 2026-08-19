@@ -187,6 +187,37 @@
     (closed)="closeSheet()"
   >
     <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="meta">{{
+          "getShopping.custom.subtitle" | t
+        }}</ds-text>
+
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+          <ds-stack [grow]="true">
+            <ds-text-input
+              [placeholder]="customPlaceholder()"
+              [ariaLabel]="customPlaceholder()"
+              [maxLength]="customNameMaxLength"
+              [ngModel]="customName()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onCustomName($event)"
+              (submitted)="addCustomItem()"
+            />
+          </ds-stack>
+          <ds-button
+            variant="primary"
+            size="icon-lg"
+            icon="plus"
+            [iconSize]="19"
+            [disabled]="!canAddCustom()"
+            [ariaLabel]="customAddLabel()"
+            (clicked)="addCustomItem()"
+          />
+        </ds-stack>
+      </ds-stack>
+
+      <ds-divider />
+
       <ds-text variant="meta">{{ "getShopping.sheet.subtitle" | t }}</ds-text>
 
       <ds-search-input

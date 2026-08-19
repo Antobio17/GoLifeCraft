@@ -26,6 +26,7 @@ final class AddShoppingListItemCommandHandlerTest extends TestCase
 
         ($handler)(new AddShoppingListItemCommand(
             articleId: 'article-1',
+            customName: null,
             quantity: 2,
             baseQuantity: 750.0,
             createdByUserId: 'god-user-id',
@@ -35,6 +36,7 @@ final class AddShoppingListItemCommandHandlerTest extends TestCase
 
         $this->assertNotNull(actual: $item);
         $this->assertSame(expected: 'article-1', actual: $item->articleId);
+        $this->assertNull(actual: $item->customName);
         $this->assertSame(expected: 2, actual: $item->quantity);
         $this->assertSame(expected: 750.0, actual: $item->baseQuantity);
         $this->assertFalse(condition: $item->checked);
@@ -48,6 +50,7 @@ final class AddShoppingListItemCommandHandlerTest extends TestCase
 
         ($handler)(new AddShoppingListItemCommand(
             articleId: 'ghost-article',
+            customName: null,
             quantity: 1,
             baseQuantity: null,
             createdByUserId: 'god-user-id',
@@ -60,6 +63,7 @@ final class AddShoppingListItemCommandHandlerTest extends TestCase
 
         ($handler)(new AddShoppingListItemCommand(
             articleId: 'article-1',
+            customName: null,
             quantity: 2,
             baseQuantity: 750.0,
             createdByUserId: 'god-user-id',
@@ -67,6 +71,7 @@ final class AddShoppingListItemCommandHandlerTest extends TestCase
 
         ($handler)(new AddShoppingListItemCommand(
             articleId: 'article-1',
+            customName: null,
             quantity: 3,
             baseQuantity: 1250.0,
             createdByUserId: 'god-user-id',
@@ -87,7 +92,87 @@ final class AddShoppingListItemCommandHandlerTest extends TestCase
 
         ($handler)(new AddShoppingListItemCommand(
             articleId: 'article-1',
+            customName: null,
             quantity: 0,
+            baseQuantity: null,
+            createdByUserId: 'god-user-id',
+        ));
+    }
+
+    public function testItAddsCustomItemWithoutArticle(): void
+    {
+        $handler = $this->buildHandler(existingArticleIds: []);
+
+        ($handler)(new AddShoppingListItemCommand(
+            articleId: null,
+            customName: '  Papel   de cocina ',
+            quantity: 2,
+            baseQuantity: null,
+            createdByUserId: 'god-user-id',
+        ));
+
+        $item = $this->repository->findById(id: 'shopping-list-item-1');
+
+        $this->assertNotNull(actual: $item);
+        $this->assertNull(actual: $item->articleId);
+        $this->assertSame(expected: 'Papel de cocina', actual: $item->customName);
+        $this->assertSame(expected: 2, actual: $item->quantity);
+        $this->assertNull(actual: $item->baseQuantity);
+        $this->assertFalse(condition: $item->checked);
+    }
+
+    public function testItAccumulatesQuantityWhenCustomNameAlreadyInList(): void
+    {
+        $handler = $this->buildHandler(existingArticleIds: []);
+
+        ($handler)(new AddShoppingListItemCommand(
+            articleId: null,
+            customName: 'Papel de cocina',
+            quantity: 1,
+            baseQuantity: null,
+            createdByUserId: 'god-user-id',
+        ));
+
+        ($handler)(new AddShoppingListItemCommand(
+            articleId: null,
+            customName: 'papel de COCINA',
+            quantity: 3,
+            baseQuantity: null,
+            createdByUserId: 'god-user-id',
+        ));
+
+        $item = $this->repository->findByCustomName(customName: 'Papel de cocina');
+
+        $this->assertNotNull(actual: $item);
+        $this->assertSame(expected: 'shopping-list-item-1', actual: $item->id);
+        $this->assertSame(expected: 4, actual: $item->quantity);
+    }
+
+    public function testItThrowsWhenCustomNameIsBlank(): void
+    {
+        $this->expectException(exception: AddShoppingListItemException::class);
+
+        $handler = $this->buildHandler(existingArticleIds: []);
+
+        ($handler)(new AddShoppingListItemCommand(
+            articleId: null,
+            customName: '   ',
+            quantity: 1,
+            baseQuantity: null,
+            createdByUserId: 'god-user-id',
+        ));
+    }
+
+    public function testItThrowsWhenNeitherArticleNorCustomNameIsGiven(): void
+    {
+        $this->expectException(exception: AddShoppingListItemException::class);
+
+        $handler = $this->buildHandler(existingArticleIds: []);
+
+        ($handler)(new AddShoppingListItemCommand(
+            articleId: null,
+            customName: null,
+            quantity: 1,
             baseQuantity: null,
             createdByUserId: 'god-user-id',
         ));

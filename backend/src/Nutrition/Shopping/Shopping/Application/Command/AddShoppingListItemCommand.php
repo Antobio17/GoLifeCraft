@@ -7,7 +7,8 @@ use Shared\Shared\Shared\Application\Command\Command;
 final readonly class AddShoppingListItemCommand implements Command
 {
     public function __construct(
-        public string $articleId,
+        public ?string $articleId,
+        public ?string $customName,
         public int $quantity,
         public ?float $baseQuantity,
         public string $createdByUserId,
