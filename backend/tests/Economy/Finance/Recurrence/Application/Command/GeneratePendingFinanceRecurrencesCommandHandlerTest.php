@@ -37,6 +37,26 @@ final class GeneratePendingFinanceRecurrencesCommandHandlerTest extends TestCase
         $this->assertSame(expected: '2026-08-25', actual: $messageBus->dispatched[2]->today);
     }
 
+    public function testItBooksOnlyTheCurrentMonthWhenTheRunIsManual(): void
+    {
+        $messageBus = $this->givenMessageBus();
+        $handler = new GeneratePendingFinanceRecurrencesCommandHandler(
+            needleDataQuery: $this->givenNeedleDataQuery(pending: [
+                new PendingFinanceRecurrence(id: 'recurrence-1', note: 'Nómina', months: ['2026-06', '2026-07', '2026-08']),
+                new PendingFinanceRecurrence(id: 'recurrence-2', note: 'Alquiler', months: ['2026-07']),
+            ]),
+            messageBus: $messageBus,
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
+
+        $booked = $handler(new GeneratePendingFinanceRecurrencesCommand(today: '2026-08-25', onlyCurrentMonth: true));
+
+        $this->assertSame(expected: 1, actual: $booked);
+        $this->assertCount(expectedCount: 1, haystack: $messageBus->dispatched);
+        $this->assertSame(expected: 'recurrence-1', actual: $messageBus->dispatched[0]->financeRecurrenceId);
+        $this->assertSame(expected: '2026-08', actual: $messageBus->dispatched[0]->month);
+    }
+
     public function testItBooksNothingWhenNoRecurrenceIsPending(): void
     {
         $messageBus = $this->givenMessageBus();
