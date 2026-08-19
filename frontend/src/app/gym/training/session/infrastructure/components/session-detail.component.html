@@ -11,24 +11,30 @@
       titleWidth="62%"
       [actions]="2"
     />
-    <ds-skeleton-chips
-      [count]="1"
-      height="1.625rem"
-      [gap]="'var(--ds-space-1-5)'"
-    />
-    <ng-container [ngTemplateOutlet]="progressSkeleton" />
-    <ds-stack [gap]="'var(--ds-space-2)'">
-      @for (sets of skeletonExercises; track $index) {
-        <ds-skeleton-exercise
-          badge="4.5rem"
-          [action]="true"
-          [note]="true"
-          [sets]="sets"
-          [addTile]="true"
-        />
-      }
-    </ds-stack>
-    <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-skeleton-chips
+        slot="side"
+        [count]="1"
+        height="1.625rem"
+        [gap]="'var(--ds-space-1-5)'"
+      />
+      <ng-container slot="side">
+        <ng-container [ngTemplateOutlet]="progressSkeleton" />
+      </ng-container>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (sets of skeletonExercises; track $index) {
+          <ds-skeleton-exercise
+            badge="4.5rem"
+            [action]="true"
+            [note]="true"
+            [sets]="sets"
+            [addTile]="true"
+          />
+        }
+      </ds-stack>
+      <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+    </ds-split-view>
   } @else {
     <ds-screen-header
       [leading]="'back'"

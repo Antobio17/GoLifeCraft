@@ -4,79 +4,130 @@
   [gap]="'var(--ds-space-3)'"
 >
   @if (loading()) {
-    <ds-skeleton-screen-header
-      [leading]="true"
-      [eyebrow]="true"
-      [subtitle]="false"
-      titleWidth="54%"
-      [actions]="canWrite() ? 3 : 1"
-    />
-
-    @if (canWrite()) {
-      <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
-    }
-
-    @if (skeletonWeek()) {
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        <ds-stack
-          direction="row"
-          justify="between"
-          align="center"
-          [gap]="'var(--ds-space-2)'"
-        >
-          <ds-skeleton-line width="8rem" height="0.625rem" />
-          <ds-skeleton-line width="9.375rem" height="0.625rem" />
-        </ds-stack>
-        <ds-skeleton-chips
-          [count]="7"
-          [equal]="true"
-          height="2.875rem"
-          [gap]="'var(--ds-space-1)'"
+    <ds-stack
+      direction="row"
+      justify="between"
+      align="center"
+      [gap]="'var(--ds-space-2)'"
+    >
+      <ds-skeleton-line
+        width="2.5rem"
+        height="2.5rem"
+        radius="var(--ds-radius-lg)"
+      />
+      <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+        <ds-skeleton-line
+          width="2.5rem"
+          height="2.5rem"
           radius="var(--ds-radius-lg)"
         />
-        <ds-skeleton-line width="82%" height="0.625rem" />
         @if (canWrite()) {
-          <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+          <ds-skeleton-line
+            width="2.5rem"
+            height="2.5rem"
+            radius="var(--ds-radius-lg)"
+          />
+          <ds-skeleton-line
+            width="2.5rem"
+            height="2.5rem"
+            radius="var(--ds-radius-lg)"
+          />
         }
       </ds-stack>
-    }
+    </ds-stack>
 
-    <ds-skeleton-macro-bars />
+    <ds-split-view [columns]="'minmax(0, 0.85fr) minmax(0, 1fr)'">
+      <ds-stack
+        slot="side"
+        direction="row"
+        align="center"
+        [gap]="'var(--ds-space-3)'"
+      >
+        <ds-skeleton-line width="3.75rem" height="3.75rem" radius="16px" />
+        <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
+          <ds-skeleton-line width="5.25rem" height="0.5625rem" />
+          @if (canWrite()) {
+            <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+          } @else {
+            <ds-skeleton-line
+              width="62%"
+              height="1.375rem"
+              radius="var(--ds-radius-md)"
+            />
+          }
+        </ds-stack>
+      </ds-stack>
 
-    @for (entries of skeletonMeals; track $index) {
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        <ds-skeleton-section-header
-          titleWidth="6.5rem"
-          [subtitle]="true"
-          [action]="canWrite()"
-          actionWidth="4.625rem"
-        />
-        <ds-skeleton-list
-          [count]="entries"
-          [gap]="'var(--ds-space-1-5)'"
+      @if (canWrite()) {
+        <ds-skeleton
+          slot="side"
+          height="2.875rem"
           radius="var(--ds-radius-lg)"
-          padding="var(--ds-space-2) var(--ds-space-3)"
-          [tile]="38"
-          [tileRadius]="11"
-          titleWidth="58%"
-          [meta]="false"
-          [chips]="2"
-          trailing="pill"
-          pillWidth="2.875rem"
         />
-      </ds-stack>
-    }
+      }
 
-    @if (canWrite()) {
-      <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-        <ds-stack [grow]="true">
-          <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+      @if (skeletonWeek()) {
+        <ds-stack slot="side" [gap]="'var(--ds-space-2)'">
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-skeleton-line width="8rem" height="0.625rem" />
+            <ds-skeleton-line width="9.375rem" height="0.625rem" />
+          </ds-stack>
+          <ds-skeleton-chips
+            [count]="7"
+            [equal]="true"
+            height="2.875rem"
+            [gap]="'var(--ds-space-1)'"
+            radius="var(--ds-radius-lg)"
+          />
+          <ds-skeleton-line width="82%" height="0.625rem" />
+          @if (canWrite()) {
+            <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+          }
         </ds-stack>
-        <ds-stack [grow]="true">
-          <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+      }
+
+      <ds-skeleton-macro-bars slot="side" />
+
+      @for (entries of skeletonMeals; track $index) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-skeleton-section-header
+            titleWidth="6.5rem"
+            [subtitle]="true"
+            [action]="canWrite()"
+            actionWidth="4.625rem"
+          />
+          <ds-skeleton-list
+            [count]="entries"
+            [gap]="'var(--ds-space-1-5)'"
+            radius="var(--ds-radius-lg)"
+            padding="var(--ds-space-2) var(--ds-space-3)"
+            [tile]="38"
+            [tileRadius]="11"
+            titleWidth="58%"
+            [meta]="false"
+            [chips]="2"
+            trailing="pill"
+            pillWidth="2.875rem"
+          />
         </ds-stack>
-      </ds-stack>
-    }
+      }
+
+      @if (canWrite()) {
+        <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+          <ds-stack [grow]="true">
+            <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+          </ds-stack>
+          <ds-stack [grow]="true">
+            <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+          </ds-stack>
+        </ds-stack>
+      }
+    </ds-split-view>
   } @else if (detail(); as menu) {
     <ds-stack
       direction="row"

@@ -10,31 +10,42 @@
       [subtitle]="false"
       titleWidth="54%"
     />
-    <ds-skeleton-fields [rows]="[2, 1]" [gap]="'var(--ds-space-4)'" />
-    <ds-skeleton-list-item
-      padding="var(--ds-space-3) var(--ds-space-3)"
-      radius="var(--ds-radius-xl)"
-      titleWidth="34%"
-      metaWidth="58%"
-      trailing="pill"
-      pillWidth="6.5rem"
-      pillHeight="2.125rem"
-    />
-    <ds-skeleton-section-header titleWidth="7.625rem" [action]="true" />
-    <ds-skeleton-macro-bars />
-    <ds-skeleton-list
-      [count]="3"
-      [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-xl)"
-      padding="var(--ds-space-2) var(--ds-space-3)"
-      [tile]="36"
-      [tileRadius]="10"
-      titleWidth="54%"
-      metaWidth="36%"
-      trailing="pill"
-      pillWidth="4.875rem"
-      pillHeight="2.25rem"
-    />
+    <ds-split-view
+      [gap]="'var(--ds-space-4)'"
+      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
+    >
+      <ds-skeleton-fields
+        slot="side"
+        [rows]="[2, 1]"
+        [gap]="'var(--ds-space-4)'"
+      />
+      <ds-skeleton-list-item
+        slot="side"
+        padding="var(--ds-space-3) var(--ds-space-3)"
+        radius="var(--ds-radius-xl)"
+        titleWidth="34%"
+        metaWidth="58%"
+        trailing="pill"
+        pillWidth="6.5rem"
+        pillHeight="2.125rem"
+      />
+      <ds-skeleton-macro-bars slot="side" />
+
+      <ds-skeleton-section-header titleWidth="7.625rem" [action]="true" />
+      <ds-skeleton-list
+        [count]="3"
+        [gap]="'var(--ds-space-2)'"
+        radius="var(--ds-radius-xl)"
+        padding="var(--ds-space-2) var(--ds-space-3)"
+        [tile]="36"
+        [tileRadius]="10"
+        titleWidth="54%"
+        metaWidth="36%"
+        trailing="pill"
+        pillWidth="4.875rem"
+        pillHeight="2.25rem"
+      />
+    </ds-split-view>
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-stack [gap]="'var(--ds-space-4)'">

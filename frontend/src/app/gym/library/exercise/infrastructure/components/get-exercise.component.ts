@@ -14,6 +14,7 @@ import {
   ExerciseStatsSession,
 } from "../../domain/models/exercise-stats.model";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import {
   SegmentedToggleComponent,
@@ -57,6 +58,7 @@ interface SessionRow {
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     ScreenHeaderComponent,
     SegmentedToggleComponent,
     StackComponent,

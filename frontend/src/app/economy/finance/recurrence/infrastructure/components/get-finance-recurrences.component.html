@@ -38,10 +38,7 @@
   }
 
   @if (!loading()) {
-    <ds-split-view
-      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
-      [sticky]="true"
-    >
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ng-container slot="side">
         <ds-card [padding]="'var(--ds-space-4)'">
           <ds-stack

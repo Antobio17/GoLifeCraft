@@ -19,8 +19,11 @@
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'var(--ds-space-4)'">
-      <ds-stack [gap]="'var(--ds-space-4)'">
+    <ds-split-view
+      [gap]="'var(--ds-space-4)'"
+      [columns]="'minmax(0, 0.85fr) minmax(0, 1fr)'"
+    >
+      <ds-stack slot="side" [gap]="'var(--ds-space-4)'">
         <ds-skeleton-list-item
           padding="var(--ds-space-3) var(--ds-space-4)"
           [tile]="60"
@@ -53,10 +56,13 @@
           pillHeight="1rem"
         />
       </ds-stack>
-    </ds-grid>
+    </ds-split-view>
   } @else {
-    <ds-grid [columns]="1" [tabletColumns]="2" [gap]="'var(--ds-space-4)'">
-      <ds-stack [gap]="'var(--ds-space-4)'">
+    <ds-split-view
+      [gap]="'var(--ds-space-4)'"
+      [columns]="'minmax(0, 0.85fr) minmax(0, 1fr)'"
+    >
+      <ds-stack slot="side" [gap]="'var(--ds-space-4)'">
         <ds-card [padding]="'var(--ds-space-3) var(--ds-space-4)'">
           <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
             <ds-icon-badge
@@ -159,6 +165,6 @@
           />
         }
       </ds-stack>
-    </ds-grid>
+    </ds-split-view>
   }
 </ds-page-wrapper>

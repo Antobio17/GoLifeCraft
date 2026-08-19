@@ -83,10 +83,7 @@
   </ds-stack>
 
   @if (loading()) {
-    <ds-split-view
-      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
-      [sticky]="true"
-    >
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ds-skeleton-summary slot="side" macros="bars" />
 
       @for (entries of skeletonMeals; track $index) {
@@ -114,10 +111,7 @@
       }
     </ds-split-view>
   } @else if (attributes(); as diary) {
-    <ds-split-view
-      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
-      [sticky]="true"
-    >
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ds-diary-summary
         slot="side"
         [eyebrow]="summaryEyebrowKey() | t"

@@ -10,6 +10,7 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
 import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
@@ -64,6 +65,7 @@ type FilterKind = "store" | "cat" | "brand";
     TextComponent,
     HeadingComponent,
     ButtonComponent,
+    SkeletonComponent,
     SkeletonChipsComponent,
     SkeletonSummaryComponent,
     SkeletonSectionHeaderComponent,

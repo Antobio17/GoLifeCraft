@@ -47,44 +47,45 @@
   </ds-stack>
 
   @if (loading()) {
-    <ds-skeleton-chips [count]="3" height="2rem" />
-    <ds-skeleton-summary
-      tone="primary"
-      [ring]="false"
-      [mainAside]="true"
-      macros="none"
-      [progress]="true"
-    />
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-skeleton slot="side" height="2.5rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton-chips slot="side" [count]="3" height="2rem" />
+      <ds-skeleton-summary
+        slot="side"
+        tone="primary"
+        [ring]="false"
+        [mainAside]="true"
+        macros="none"
+        [progress]="true"
+      />
 
-    @for (items of skeletonGroups; track $index) {
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        <ds-skeleton-section-header
-          titleWidth="6rem"
-          [count]="true"
-          [divider]="true"
-        />
-        <ds-skeleton-list
-          [count]="items"
-          [gap]="'var(--ds-space-2)'"
-          radius="var(--ds-radius-xl)"
-          padding="var(--ds-space-2) var(--ds-space-3)"
-          [check]="canWrite()"
-          [tile]="44"
-          [tileRadius]="12"
-          titleWidth="62%"
-          metaWidth="44%"
-          trailing="stack"
-          pillWidth="5rem"
-          pillHeight="1.8125rem"
-        />
-      </ds-stack>
-    }
+      @for (items of skeletonGroups; track $index) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-skeleton-section-header
+            titleWidth="6rem"
+            [count]="true"
+            [divider]="true"
+          />
+          <ds-skeleton-list
+            [count]="items"
+            [gap]="'var(--ds-space-2)'"
+            radius="var(--ds-radius-xl)"
+            padding="var(--ds-space-2) var(--ds-space-3)"
+            [check]="canWrite()"
+            [tile]="44"
+            [tileRadius]="12"
+            titleWidth="62%"
+            metaWidth="44%"
+            trailing="stack"
+            pillWidth="5rem"
+            pillHeight="1.8125rem"
+          />
+        </ds-stack>
+      }
+    </ds-split-view>
   } @else if (attributes(); as list) {
     @if (list.itemCount > 0) {
-      <ds-split-view
-        [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
-        [sticky]="true"
-      >
+      <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
         <ng-container slot="side">
           <ds-segmented-toggle
             [options]="sortOptions()"

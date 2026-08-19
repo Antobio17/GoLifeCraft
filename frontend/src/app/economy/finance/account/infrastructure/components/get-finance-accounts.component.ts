@@ -16,6 +16,8 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonNoteComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-note.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
@@ -66,6 +68,8 @@ import { FinanceBalanceCheckRow } from "@economy/finance/balance-check/domain/mo
     CardComponent,
     SectionHeaderComponent,
     SkeletonListComponent,
+    SkeletonLineComponent,
+    SkeletonNoteComponent,
     EmptyStateComponent,
     ModalSheetComponent,
     NoteComponent,
@@ -110,6 +114,8 @@ export class GetFinanceAccountsComponent implements OnInit {
   protected readonly checkEmoji = "🧾";
 
   canWrite = computed(() => this.authSession.isGod());
+
+  readonly skeletonAccounts = [2, 1, 2];
 
   loading = signal(true);
   saving = signal(false);
