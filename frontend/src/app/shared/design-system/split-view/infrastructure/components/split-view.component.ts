@@ -51,8 +51,16 @@ type SplitViewSide = "start" | "end";
         }
 
         .split__side--sticky {
+          --split-sticky-offset: var(--split-sticky-top, var(--ds-space-5));
           position: sticky;
-          top: var(--ds-space-5);
+          top: var(--split-sticky-offset);
+          max-height: calc(100dvh - var(--split-sticky-offset) * 2);
+          overflow-x: hidden;
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          scrollbar-width: thin;
+          padding-inline: var(--ds-space-1);
+          margin-inline: calc(-1 * var(--ds-space-1));
         }
       }
     `,
@@ -61,6 +69,7 @@ type SplitViewSide = "start" | "end";
     "[style.--split-gap]": "gap",
     "[style.--split-columns]": "columns",
     "[style.--split-column-gap]": "columnGap",
+    "[style.--split-sticky-top]": "stickyTop",
     "[class.ds-split--end]": "side === 'end'",
   },
 })
@@ -69,5 +78,6 @@ export class SplitViewComponent {
   @Input() columnGap = "var(--ds-space-5)";
   @Input() columns = "minmax(0, 1fr) minmax(0, 1fr)";
   @Input() side: SplitViewSide = "start";
-  @Input() sticky = false;
+  @Input() stickyTop = "var(--ds-space-5)";
+  @Input() sticky = true;
 }

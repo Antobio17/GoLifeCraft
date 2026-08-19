@@ -24,14 +24,81 @@
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-skeleton-list [count]="3" [gap]="'var(--ds-space-2)'" />
+    <ds-split-view [columns]="'minmax(0, 0.75fr) minmax(0, 1fr)'">
+      <ds-card slot="side" [padding]="'var(--ds-space-4)'">
+        <ds-stack [gap]="'var(--ds-space-1-5)'">
+          <ds-skeleton-line width="5.5rem" height="0.625rem" />
+          <ds-skeleton-line
+            width="7.5rem"
+            height="1.375rem"
+            radius="var(--ds-radius-md)"
+          />
+        </ds-stack>
+      </ds-card>
+
+      <ds-skeleton-note slot="side" [lines]="2" />
+
+      @for (checks of skeletonAccounts; track $index) {
+        <ds-card [padding]="'var(--ds-space-4)'">
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-3)'"
+          >
+            <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
+              <ds-skeleton-line width="52%" height="0.8125rem" />
+              <ds-skeleton-line width="40%" height="0.6875rem" />
+            </ds-stack>
+
+            <ds-skeleton-line
+              width="4.5rem"
+              height="1.125rem"
+              radius="var(--ds-radius-md)"
+            />
+          </ds-stack>
+
+          @if (canWrite()) {
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-2)'"
+            >
+              <ds-skeleton-line
+                width="7.5rem"
+                height="2rem"
+                radius="var(--ds-radius-lg)"
+              />
+              <ds-skeleton-line
+                width="2.125rem"
+                height="2.125rem"
+                radius="var(--ds-radius-md)"
+              />
+            </ds-stack>
+          }
+
+          <ds-skeleton-line width="7rem" height="0.625rem" />
+
+          <ds-skeleton-list
+            [count]="checks"
+            [gap]="'var(--ds-space-2)'"
+            radius="var(--ds-radius-lg)"
+            padding="var(--ds-space-2) var(--ds-space-3)"
+            [tile]="40"
+            [tileRadius]="10"
+            titleWidth="46%"
+            metaWidth="34%"
+            trailing="pill"
+            pillWidth="3.75rem"
+            pillHeight="0.875rem"
+          />
+        </ds-card>
+      }
+    </ds-split-view>
   }
 
   @if (!loading()) {
-    <ds-split-view
-      [columns]="'minmax(0, 0.75fr) minmax(0, 1fr)'"
-      [sticky]="true"
-    >
+    <ds-split-view [columns]="'minmax(0, 0.75fr) minmax(0, 1fr)'">
       <ng-container slot="side">
         <ds-card [padding]="'var(--ds-space-4)'">
           <ds-stack [gap]="'2px'">

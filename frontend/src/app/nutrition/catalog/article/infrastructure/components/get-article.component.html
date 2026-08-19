@@ -11,32 +11,37 @@
       titleWidth="58%"
       [actions]="canWrite() ? 2 : 0"
     />
-    <ds-skeleton-hero />
-    <ds-skeleton-chips
-      [count]="2"
-      height="1.625rem"
-      [gap]="'var(--ds-space-1-5)'"
-    />
-    <ds-skeleton height="2.5rem" radius="var(--ds-radius-lg)" />
-    <ds-skeleton-line width="9.25rem" height="0.75rem" />
-    <ds-skeleton-macro-bars />
-    <ds-skeleton-rows [rows]="7" />
-    <ds-skeleton-rows
-      [card]="true"
-      [header]="true"
-      [badge]="true"
-      [rows]="3"
-      labelWidth="36%"
-      valueWidth="5.125rem"
-    />
-    <ds-skeleton-rows
-      [card]="true"
-      [header]="true"
-      [badge]="true"
-      [rows]="1"
-      labelWidth="36%"
-      valueWidth="5.125rem"
-    />
+    <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
+      <ds-skeleton-hero />
+      <ds-skeleton-chips
+        [count]="2"
+        height="1.625rem"
+        [gap]="'var(--ds-space-1-5)'"
+      />
+      <ds-skeleton height="2.5rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton-line width="9.25rem" height="0.75rem" />
+      <ds-skeleton-macro-bars />
+      <ds-skeleton-rows [rows]="7" />
+
+      <ds-skeleton-rows
+        slot="side"
+        [card]="true"
+        [header]="true"
+        [badge]="true"
+        [rows]="3"
+        labelWidth="36%"
+        valueWidth="5.125rem"
+      />
+      <ds-skeleton-rows
+        slot="side"
+        [card]="true"
+        [header]="true"
+        [badge]="true"
+        [rows]="1"
+        labelWidth="36%"
+        valueWidth="5.125rem"
+      />
+    </ds-split-view>
   } @else if (notFound() || detail() === null) {
     <ds-screen-header
       [leading]="'back'"

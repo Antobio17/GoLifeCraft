@@ -17,6 +17,12 @@ import { CardComponent } from "@shared/design-system/card/infrastructure/compone
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { MetricCardComponent } from "@shared/design-system/metric-card/infrastructure/components/metric-card.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
+import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
+import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
+import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
@@ -89,6 +95,12 @@ const EVOLUTION_MONTHS = 6;
     SectionHeaderComponent,
     MetricCardComponent,
     SkeletonListComponent,
+    SkeletonComponent,
+    SkeletonLineComponent,
+    SkeletonPanelComponent,
+    SkeletonMetricsComponent,
+    SkeletonRowsComponent,
+    SkeletonSectionHeaderComponent,
     EmptyStateComponent,
     ModalSheetComponent,
     NoteComponent,
@@ -133,6 +145,8 @@ export class GetEconomyComponent implements OnInit {
   private readonly MODULE_PATH = "economy/finance/transaction";
 
   canWrite = computed(() => this.authSession.isGod());
+
+  readonly skeletonMovementGroups = [3, 2];
 
   loading = signal(true);
   saving = signal(false);

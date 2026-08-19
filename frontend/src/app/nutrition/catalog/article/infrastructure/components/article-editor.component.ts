@@ -37,6 +37,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
@@ -113,6 +114,7 @@ function equivalencesValidator(
     NoteComponent,
     SkeletonRowsComponent,
     SkeletonFieldsComponent,
+    SkeletonComponent,
     ManageAislesComponent,
   ],
 })

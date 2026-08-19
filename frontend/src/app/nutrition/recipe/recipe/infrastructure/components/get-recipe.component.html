@@ -11,27 +11,31 @@
       titleWidth="56%"
       [actions]="canWrite() ? 2 : 0"
     />
-    <ds-skeleton-hero />
-    <ds-skeleton-chips
-      [count]="1"
-      height="1.625rem"
-      [gap]="'var(--ds-space-1-5)'"
-    />
-    <ds-skeleton-macro-bars />
-    <ds-skeleton-section-header titleWidth="7.375rem" [action]="true" />
-    <ds-skeleton-list
-      [count]="4"
-      [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-xl)"
-      padding="var(--ds-space-2)"
-      [tile]="44"
-      [tileRadius]="12"
-      titleWidth="56%"
-      metaWidth="40%"
-      trailing="stack"
-      pillWidth="2.375rem"
-      pillHeight="0.6875rem"
-    />
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-skeleton-hero slot="side" />
+      <ds-skeleton-chips
+        slot="side"
+        [count]="1"
+        height="1.625rem"
+        [gap]="'var(--ds-space-1-5)'"
+      />
+      <ds-skeleton-macro-bars slot="side" />
+
+      <ds-skeleton-section-header titleWidth="7.375rem" [action]="true" />
+      <ds-skeleton-list
+        [count]="4"
+        [gap]="'var(--ds-space-2)'"
+        radius="var(--ds-radius-xl)"
+        padding="var(--ds-space-2)"
+        [tile]="44"
+        [tileRadius]="12"
+        titleWidth="56%"
+        metaWidth="40%"
+        trailing="stack"
+        pillWidth="2.375rem"
+        pillHeight="0.6875rem"
+      />
+    </ds-split-view>
   } @else if (attributes(); as recipe) {
     <ds-screen-header
       [leading]="'back'"
@@ -62,10 +66,7 @@
       }
     </ds-screen-header>
 
-    <ds-split-view
-      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
-      [sticky]="true"
-    >
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ng-container slot="side">
         <ds-product-hero
           [emoji]="recipe.emoji"

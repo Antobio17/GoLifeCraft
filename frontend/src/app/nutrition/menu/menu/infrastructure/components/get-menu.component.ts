@@ -32,7 +32,6 @@ import {
   SegmentedOption,
 } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
-import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
@@ -114,7 +113,6 @@ type PickerTab = "product" | "recipe";
     SearchInputComponent,
     SegmentedToggleComponent,
     ModalSheetComponent,
-    SkeletonScreenHeaderComponent,
     SkeletonListComponent,
     SkeletonMacroBarsComponent,
     SkeletonSectionHeaderComponent,

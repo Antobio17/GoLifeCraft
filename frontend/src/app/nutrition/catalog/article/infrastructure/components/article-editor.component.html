@@ -12,21 +12,32 @@
   />
 
   @if (loading()) {
-    <ds-skeleton-fields [rows]="[2, 2, 1, 1, 1]" [gap]="'var(--ds-space-5)'" />
-    <ds-skeleton-rows
-      [card]="true"
-      [header]="true"
-      [badge]="true"
-      [rows]="7"
-      valueWidth="4.625rem"
-    />
-    <ds-skeleton-rows
-      [card]="true"
-      [header]="true"
-      [rows]="3"
-      labelWidth="38%"
-      valueWidth="6.75rem"
-    />
+    <ds-split-view
+      [gap]="'var(--ds-space-5)'"
+      [columns]="'minmax(0, 1fr) minmax(0, 1fr)'"
+    >
+      <ds-skeleton-fields
+        slot="side"
+        [rows]="[2, 2, 1, 1, 1]"
+        [gap]="'var(--ds-space-5)'"
+      />
+
+      <ds-skeleton-rows
+        [card]="true"
+        [header]="true"
+        [badge]="true"
+        [rows]="7"
+        valueWidth="4.625rem"
+      />
+      <ds-skeleton-rows
+        [card]="true"
+        [header]="true"
+        [rows]="3"
+        labelWidth="38%"
+        valueWidth="6.75rem"
+      />
+      <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+    </ds-split-view>
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-split-view

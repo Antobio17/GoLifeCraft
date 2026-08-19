@@ -55,10 +55,7 @@
   </ds-screen-header>
 
   @if (dayMode()) {
-    <ds-split-view
-      [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'"
-      [sticky]="true"
-    >
+    <ds-split-view [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'">
       <ds-card slot="side" [padding]="'var(--ds-space-4)'">
         <ds-calendar
           [monthLabel]="monthLabel()"
@@ -72,154 +69,274 @@
         />
       </ds-card>
 
-      @if (selectedDate()) {
-        <ds-stack
-          direction="row"
-          justify="between"
-          align="center"
-          [gap]="'var(--ds-space-3)'"
-        >
-          <ds-stack [gap]="'2px'" [grow]="true">
-            <ds-heading [level]="3" size="md" [truncate]="true">{{
-              dayTitle()
-            }}</ds-heading>
-            <ds-text variant="meta">
-              {{ "getEconomy.day.spent" | t }} {{ dayExpenseLabel() }}
-              @if (dayHasIncome()) {
-                · {{ "getEconomy.day.earned" | t }} {{ dayIncomeLabel() }}
-              }
-            </ds-text>
+      @if (loading()) {
+        <ds-stack [gap]="'2px'">
+          <ds-skeleton-line
+            width="9rem"
+            height="1rem"
+            radius="var(--ds-radius-md)"
+          />
+          <ds-skeleton-line width="12rem" height="0.6875rem" />
+        </ds-stack>
+
+        <ds-skeleton-list
+          [count]="3"
+          [gap]="'var(--ds-space-2)'"
+          radius="var(--ds-radius-lg)"
+          padding="var(--ds-space-2) var(--ds-space-3)"
+          [tile]="40"
+          [tileRadius]="10"
+          titleWidth="52%"
+          metaWidth="34%"
+          trailing="pill"
+          pillWidth="3.75rem"
+          pillHeight="0.875rem"
+        />
+      } @else {
+        @if (selectedDate()) {
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-3)'"
+          >
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-heading [level]="3" size="md" [truncate]="true">{{
+                dayTitle()
+              }}</ds-heading>
+              <ds-text variant="meta">
+                {{ "getEconomy.day.spent" | t }} {{ dayExpenseLabel() }}
+                @if (dayHasIncome()) {
+                  · {{ "getEconomy.day.earned" | t }} {{ dayIncomeLabel() }}
+                }
+              </ds-text>
+            </ds-stack>
+
+            <ds-button variant="link" (clicked)="clearDay()">{{
+              "getEconomy.day.clear" | t
+            }}</ds-button>
           </ds-stack>
 
-          <ds-button variant="link" (clicked)="clearDay()">{{
-            "getEconomy.day.clear" | t
-          }}</ds-button>
-        </ds-stack>
+          @if (dayMovementRows().length === 0) {
+            <ds-empty-state
+              icon="wallet"
+              [title]="'getEconomy.day.emptyTitle' | t"
+              [text]="'getEconomy.day.emptyText' | t"
+            />
+          }
 
-        @if (dayMovementRows().length === 0) {
-          <ds-empty-state
-            icon="wallet"
-            [title]="'getEconomy.day.emptyTitle' | t"
-            [text]="'getEconomy.day.emptyText' | t"
-          />
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            @for (row of dayMovementRows(); track row.transaction.id) {
+              <ds-swipe-to-delete
+                #daySwipe
+                radius="var(--ds-radius-lg)"
+                [disabled]="!canWrite()"
+                [removeLabel]="'getEconomy.movements.remove' | t"
+                (remove)="removeTransaction(row.transaction)"
+              >
+                <ds-transaction-row
+                  [emoji]="row.emoji"
+                  [title]="row.title"
+                  [subtitle]="row.subtitle"
+                  [amountLabel]="row.amountLabel"
+                  [income]="row.income"
+                  [tags]="row.tags"
+                  [pressable]="canWrite()"
+                  [pressLabel]="row.title"
+                  [slid]="daySwipe.slid"
+                  (pressed)="openEditSheet(row.transaction)"
+                />
+              </ds-swipe-to-delete>
+            }
+          </ds-stack>
         }
 
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          @for (row of dayMovementRows(); track row.transaction.id) {
-            <ds-swipe-to-delete
-              #daySwipe
-              radius="var(--ds-radius-lg)"
-              [disabled]="!canWrite()"
-              [removeLabel]="'getEconomy.movements.remove' | t"
-              (remove)="removeTransaction(row.transaction)"
-            >
-              <ds-transaction-row
-                [emoji]="row.emoji"
-                [title]="row.title"
-                [subtitle]="row.subtitle"
-                [amountLabel]="row.amountLabel"
-                [income]="row.income"
-                [tags]="row.tags"
-                [pressable]="canWrite()"
-                [pressLabel]="row.title"
-                [slid]="daySwipe.slid"
-                (pressed)="openEditSheet(row.transaction)"
-              />
-            </ds-swipe-to-delete>
-          }
-        </ds-stack>
-      }
-
-      @if (!selectedDate()) {
-        <ds-text variant="meta" align="center">{{
-          "getEconomy.day.hint" | t
-        }}</ds-text>
+        @if (!selectedDate()) {
+          <ds-text variant="meta" align="center">{{
+            "getEconomy.day.hint" | t
+          }}</ds-text>
+        }
       }
     </ds-split-view>
   }
 
   @if (!dayMode()) {
-    <ds-balance-card
-      [eyebrow]="'getEconomy.balance.eyebrow' | t"
-      [value]="balanceValue()"
-      unit=" €"
-      [caption]="balanceCaption()"
-      [trendLabel]="balanceTrendLabel()"
-      [positive]="balancePositive()"
-      [points]="balanceSeries()"
-      [pointLabels]="balanceSeriesLabels()"
-      [pointCaptions]="balanceSeriesCaptions()"
-      [scrollable]="true"
-    />
+    @if (loading()) {
+      <ds-skeleton-panel
+        [brand]="true"
+        [figure]="true"
+        content="spark"
+        chartHeight="6.5rem"
+      />
 
-    <ds-stack
-      direction="row"
-      justify="between"
-      align="center"
-      [gap]="'var(--ds-space-2)'"
-    >
-      <ds-heading [level]="3" size="md" [truncate]="true">{{
-        monthLabel()
-      }}</ds-heading>
-
-      <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
-        <ds-icon-button
-          icon="chevronLeft"
-          variant="soft"
-          [size]="30"
-          [iconSize]="15"
-          [stroke]="2.4"
-          [radius]="'var(--ds-radius-md)'"
-          [ariaLabel]="'getEconomy.month.previous' | t"
-          (clicked)="previousMonth()"
+      <ds-stack
+        direction="row"
+        justify="between"
+        align="center"
+        [gap]="'var(--ds-space-2)'"
+      >
+        <ds-skeleton-line
+          width="8.5rem"
+          height="1.125rem"
+          radius="var(--ds-radius-md)"
         />
-        <ds-icon-button
-          icon="chevronRight"
-          variant="soft"
-          [size]="30"
-          [iconSize]="15"
-          [stroke]="2.4"
-          [radius]="'var(--ds-radius-md)'"
-          [disabled]="!canGoNextMonth()"
-          [ariaLabel]="'getEconomy.month.next' | t"
-          (clicked)="nextMonth()"
-        />
-      </ds-stack>
-    </ds-stack>
-
-    <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
-      <ng-container slot="side">
-        @if (!hasAccounts()) {
-          <ds-note icon="alertCircle" tone="warning">{{
-            "getEconomy.accounts.missing" | t
-          }}</ds-note>
-        }
-
-        @if (accountRows().length > 0) {
-          <ds-section-header
-            [title]="'getEconomy.accounts.title' | t"
-            [actionLabel]="'getEconomy.accounts.manage' | t"
-            size="md"
-            (action)="goToAccounts()"
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
+          <ds-skeleton-line
+            width="1.875rem"
+            height="1.875rem"
+            radius="var(--ds-radius-md)"
           />
-          <ds-card [padding]="'var(--ds-space-4)'">
-            @for (row of accountRows(); track row.key) {
-              <ds-breakdown-row
-                [label]="row.label"
-                [amountLabel]="row.amountLabel"
-                [ratio]="row.ratio"
-              />
-            }
-          </ds-card>
-        }
+          <ds-skeleton-line
+            width="1.875rem"
+            height="1.875rem"
+            radius="var(--ds-radius-md)"
+          />
+        </ds-stack>
+      </ds-stack>
 
-        @if (overspending()) {
-          <ds-note icon="alertCircle" tone="warning">{{
-            overspendingText()
-          }}</ds-note>
-        }
+      <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
+        <ds-skeleton-section-header
+          slot="side"
+          titleWidth="5.5rem"
+          [action]="true"
+          actionWidth="5.25rem"
+        />
+        <ds-skeleton-rows
+          slot="side"
+          [card]="true"
+          [rows]="3"
+          labelWidth="40%"
+          valueWidth="4.5rem"
+        />
 
-        @if (!loading()) {
+        <ds-skeleton-metrics slot="side" [count]="3" />
+
+        <ds-skeleton-panel
+          slot="side"
+          [figure]="true"
+          content="spark"
+          chartHeight="6rem"
+        />
+
+        <ds-skeleton-section-header slot="side" titleWidth="7rem" />
+        <ds-skeleton-rows
+          slot="side"
+          [card]="true"
+          [rows]="5"
+          labelWidth="48%"
+          valueWidth="4.5rem"
+        />
+
+        <ds-skeleton-section-header slot="side" titleWidth="6rem" />
+        <ds-skeleton-rows
+          slot="side"
+          [card]="true"
+          [rows]="3"
+          labelWidth="44%"
+          valueWidth="4.5rem"
+        />
+
+        <ds-skeleton-section-header titleWidth="7.5rem" [count]="true" />
+        <ds-skeleton height="2.5rem" radius="var(--ds-radius-lg)" />
+
+        @for (rows of skeletonMovementGroups; track $index) {
+          <ds-skeleton-section-header titleWidth="6.5rem" [count]="true" />
+          <ds-skeleton-list
+            [count]="rows"
+            [gap]="'var(--ds-space-2)'"
+            radius="var(--ds-radius-lg)"
+            padding="var(--ds-space-2) var(--ds-space-3)"
+            [tile]="40"
+            [tileRadius]="10"
+            titleWidth="52%"
+            metaWidth="34%"
+            trailing="pill"
+            pillWidth="3.75rem"
+            pillHeight="0.875rem"
+          />
+        }
+      </ds-split-view>
+    } @else {
+      <ds-balance-card
+        [eyebrow]="'getEconomy.balance.eyebrow' | t"
+        [value]="balanceValue()"
+        unit=" €"
+        [caption]="balanceCaption()"
+        [trendLabel]="balanceTrendLabel()"
+        [positive]="balancePositive()"
+        [points]="balanceSeries()"
+        [pointLabels]="balanceSeriesLabels()"
+        [pointCaptions]="balanceSeriesCaptions()"
+        [scrollable]="true"
+      />
+
+      <ds-stack
+        direction="row"
+        justify="between"
+        align="center"
+        [gap]="'var(--ds-space-2)'"
+      >
+        <ds-heading [level]="3" size="md" [truncate]="true">{{
+          monthLabel()
+        }}</ds-heading>
+
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
+          <ds-icon-button
+            icon="chevronLeft"
+            variant="soft"
+            [size]="30"
+            [iconSize]="15"
+            [stroke]="2.4"
+            [radius]="'var(--ds-radius-md)'"
+            [ariaLabel]="'getEconomy.month.previous' | t"
+            (clicked)="previousMonth()"
+          />
+          <ds-icon-button
+            icon="chevronRight"
+            variant="soft"
+            [size]="30"
+            [iconSize]="15"
+            [stroke]="2.4"
+            [radius]="'var(--ds-radius-md)'"
+            [disabled]="!canGoNextMonth()"
+            [ariaLabel]="'getEconomy.month.next' | t"
+            (clicked)="nextMonth()"
+          />
+        </ds-stack>
+      </ds-stack>
+
+      <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
+        <ng-container slot="side">
+          @if (!hasAccounts()) {
+            <ds-note icon="alertCircle" tone="warning">{{
+              "getEconomy.accounts.missing" | t
+            }}</ds-note>
+          }
+
+          @if (accountRows().length > 0) {
+            <ds-section-header
+              [title]="'getEconomy.accounts.title' | t"
+              [actionLabel]="'getEconomy.accounts.manage' | t"
+              size="md"
+              (action)="goToAccounts()"
+            />
+            <ds-card [padding]="'var(--ds-space-4)'">
+              @for (row of accountRows(); track row.key) {
+                <ds-breakdown-row
+                  [label]="row.label"
+                  [amountLabel]="row.amountLabel"
+                  [ratio]="row.ratio"
+                />
+              }
+            </ds-card>
+          }
+
+          @if (overspending()) {
+            <ds-note icon="alertCircle" tone="warning">{{
+              overspendingText()
+            }}</ds-note>
+          }
+
           <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
             <ds-metric-card
               size="compact"
@@ -297,14 +414,8 @@
               </ds-card>
             }
           }
-        }
-      </ng-container>
+        </ng-container>
 
-      @if (loading()) {
-        <ds-skeleton-list [count]="4" [gap]="'var(--ds-space-2)'" />
-      }
-
-      @if (!loading()) {
         @if (!hasMovements()) {
           <ds-empty-state
             icon="wallet"
@@ -361,8 +472,8 @@
             </ds-stack>
           }
         }
-      }
-    </ds-split-view>
+      </ds-split-view>
+    }
   }
 
   <ds-modal-sheet
