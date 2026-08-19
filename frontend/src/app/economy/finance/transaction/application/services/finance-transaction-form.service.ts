@@ -17,7 +17,6 @@ export class FinanceTransactionFormService {
       note: "",
       store: "",
       transactionDate,
-      recurring: false,
     };
   }
 
@@ -31,7 +30,6 @@ export class FinanceTransactionFormService {
       note: transaction.note,
       store: transaction.store ?? "",
       transactionDate: transaction.transactionDate,
-      recurring: transaction.recurring,
     };
   }
 
@@ -61,7 +59,6 @@ export class FinanceTransactionFormService {
       category: isIncome ? FinanceCategory.OTHER : form.category,
       note,
       store: store || null,
-      recurring: form.recurring,
     };
   }
 }

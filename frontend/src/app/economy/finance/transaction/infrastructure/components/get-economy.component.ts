@@ -21,7 +21,6 @@ import { NoteComponent } from "@shared/design-system/note/infrastructure/compone
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
-import { ToggleSwitchComponent } from "@shared/design-system/toggle-switch/infrastructure/components/toggle-switch.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
 import { BalanceCardComponent } from "@shared/design-system/balance-card/infrastructure/components/balance-card.component";
@@ -63,7 +62,6 @@ import { FinanceMovementRow } from "@economy/finance/transaction/domain/models/f
 import { FinanceMovementGroup } from "@economy/finance/transaction/domain/models/finance-movement-group.model";
 import { FinanceMovementGrouping } from "@economy/finance/transaction/domain/models/finance-movement-grouping.model";
 import { FinanceBreakdownRow } from "@economy/finance/transaction/domain/models/finance-breakdown-row.model";
-import { FinanceSubscriptionRow } from "@economy/finance/transaction/domain/models/finance-subscription-row.model";
 import { GetFinanceAccountsService } from "@economy/finance/account/application/services/get-finance-accounts.service";
 import { FinanceAccountCatalogService } from "@economy/finance/account/application/services/finance-account-catalog.service";
 import { FinanceAccount } from "@economy/finance/account/domain/models/finance-account.model";
@@ -93,7 +91,6 @@ const EVOLUTION_MONTHS = 6;
     TextInputComponent,
     DateInputComponent,
     AmountInputComponent,
-    ToggleSwitchComponent,
     SwipeToDeleteComponent,
     TrendBadgeComponent,
     BalanceCardComponent,
@@ -285,33 +282,6 @@ export class GetEconomyComponent implements OnInit {
       color: "",
       ratio: this.view.ratio(total.amount, max),
     }));
-  });
-
-  subscriptionRows = computed<FinanceSubscriptionRow[]>(() => {
-    this.translationsReady();
-
-    return (this.overview()?.subscriptions ?? []).map((subscription) => ({
-      note: subscription.note,
-      emoji: this.categoryCatalog.emoji(subscription.category),
-      color: this.categoryCatalog.color(subscription.category),
-      amountLabel: this.view.money(subscription.amount),
-      nextChargeLabel: `${this.t("getEconomy.subscriptions.next")} · ${this.view.nextChargeLabel(subscription.chargeDay)}`,
-    }));
-  });
-  subscriptionsSummary = computed(() => {
-    this.translationsReady();
-    const attributes = this.overview();
-
-    if (!attributes || attributes.subscriptions.length === 0) return "";
-
-    const count = attributes.subscriptions.length;
-    const unit = this.t(
-      count === 1
-        ? "getEconomy.subscriptions.one"
-        : "getEconomy.subscriptions.many",
-    );
-
-    return `${this.view.money(attributes.subscriptionsTotal)} / ${this.t("getEconomy.subscriptions.perMonth")} · ${count} ${unit}`;
   });
 
   movementRows = computed<FinanceMovementRow[]>(() =>
@@ -544,10 +514,6 @@ export class GetEconomyComponent implements OnInit {
     this.form.update((form) => ({ ...form, transactionDate }));
   }
 
-  onRecurring(recurring: boolean): void {
-    this.form.update((form) => ({ ...form, recurring }));
-  }
-
   save(): void {
     if (!this.formValid() || this.saving()) return;
 
@@ -632,7 +598,7 @@ export class GetEconomyComponent implements OnInit {
       tags.push({ label: this.t("getEconomy.tag.ticket"), highlighted: true });
     }
 
-    if (transaction.recurring) {
+    if (transaction.source === FinanceTransactionSource.RECURRENCE) {
       tags.push({
         label: this.t("getEconomy.tag.recurring"),
         highlighted: false,

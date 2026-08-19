@@ -34,7 +34,6 @@ final class DeleteFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra semanal',
             store: 'Mercadona',
-            recurring: false,
             source: FinanceTransaction::SOURCE_MANUAL,
             createdByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),

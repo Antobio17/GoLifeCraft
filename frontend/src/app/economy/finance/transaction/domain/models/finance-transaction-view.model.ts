@@ -12,6 +12,5 @@ export interface FinanceTransactionView {
   category: FinanceCategory;
   note: string;
   store: string | null;
-  recurring: boolean;
   source: FinanceTransactionSource;
 }

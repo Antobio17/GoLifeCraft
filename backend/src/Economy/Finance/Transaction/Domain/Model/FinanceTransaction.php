@@ -65,7 +65,6 @@ class FinanceTransaction extends GenericAggregate
     public string $category;
     public string $note = '';
     public ?string $store = null;
-    public bool $recurring = false;
     public string $source = self::SOURCE_MANUAL;
 
     public static function create(
@@ -77,7 +76,6 @@ class FinanceTransaction extends GenericAggregate
         string $category,
         string $note,
         ?string $store,
-        bool $recurring,
         string $source,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -126,7 +124,6 @@ class FinanceTransaction extends GenericAggregate
             category: $category,
             note: $note,
             store: $store,
-            recurring: $recurring,
         );
         $transaction->source = $source;
         $transaction->stampCreation(userId: $createdByUserId, now: $now);
@@ -141,7 +138,6 @@ class FinanceTransaction extends GenericAggregate
             category: $transaction->category,
             note: $transaction->note,
             store: $transaction->store,
-            recurring: $transaction->recurring,
             source: $transaction->source,
             createdAt: $transaction->createdAt,
             updatedAt: $transaction->updatedAt,
@@ -160,7 +156,6 @@ class FinanceTransaction extends GenericAggregate
         string $category,
         string $note,
         ?string $store,
-        bool $recurring,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -202,7 +197,6 @@ class FinanceTransaction extends GenericAggregate
             category: $category,
             note: $note,
             store: $store,
-            recurring: $recurring,
         );
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
@@ -216,7 +210,6 @@ class FinanceTransaction extends GenericAggregate
             category: $this->category,
             note: $this->note,
             store: $this->store,
-            recurring: $this->recurring,
             source: $this->source,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
@@ -242,7 +235,6 @@ class FinanceTransaction extends GenericAggregate
             category: $this->category,
             note: $this->note,
             store: $this->store,
-            recurring: $this->recurring,
             source: $this->source,
             deletedByUserId: $deletedByUserId,
         ));
@@ -261,7 +253,6 @@ class FinanceTransaction extends GenericAggregate
         string $category,
         string $note,
         ?string $store,
-        bool $recurring,
     ): void {
         $this->accountId = trim(string: $accountId);
         $this->transactionDate = $transactionDate;
@@ -270,7 +261,6 @@ class FinanceTransaction extends GenericAggregate
         $this->category = self::KIND_INCOME === $kind ? self::CATEGORY_OTHER : $category;
         $this->note = trim(string: $note);
         $this->store = '' === trim(string: (string) $store) ? null : trim(string: (string) $store);
-        $this->recurring = $recurring;
     }
 
     private static function hasValidAccountId(string $accountId): bool

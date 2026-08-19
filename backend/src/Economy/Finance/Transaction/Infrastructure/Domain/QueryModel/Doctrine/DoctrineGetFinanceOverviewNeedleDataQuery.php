@@ -8,7 +8,6 @@ use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceAccountBalance;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceCategoryTotal;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceMonthPoint;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceStoreTotal;
-use Economy\Finance\Transaction\Domain\QueryModel\Dto\FinanceSubscription;
 use Economy\Finance\Transaction\Domain\QueryModel\Dto\GetFinanceOverviewResult;
 use Economy\Finance\Transaction\Domain\QueryModel\GetFinanceOverviewNeedleDataQuery;
 
@@ -75,13 +74,6 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
             ? round(num: ($expense - $averageExpense) / $averageExpense * 100, precision: 2)
             : 0.0;
 
-        $subscriptions = $this->findSubscriptions();
-        $subscriptionsTotal = array_reduce(
-            array: $subscriptions,
-            callback: static fn (float $total, FinanceSubscription $subscription): float => $total + $subscription->amount,
-            initial: 0.0,
-        );
-
         return new GetFinanceOverviewResult(
             id: $month,
             aggregateName: 'FinanceOverview',
@@ -97,8 +89,6 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
             series: $series,
             byCategory: $this->findCategoryTotals(month: $month, expense: $expense),
             byStore: $this->findStoreTotals(month: $month),
-            subscriptions: $subscriptions,
-            subscriptionsTotal: round(num: $subscriptionsTotal, precision: 2),
             expenseDeltaPercentage: $expenseDeltaPercentage,
             overspending: $overspending,
             averageExpense: round(num: $averageExpense, precision: 2),
@@ -423,48 +413,6 @@ final readonly class DoctrineGetFinanceOverviewNeedleDataQuery implements GetFin
         }
 
         return $totals;
-    }
-
-    /**
-     * @return array<int, FinanceSubscription>
-     */
-    private function findSubscriptions(): array
-    {
-        $rows = $this->connection->createQueryBuilder()
-            ->select('t.note', 't.amount', 't.category', 't.transaction_date')
-            ->from(table: 'finance_transaction', alias: 't')
-            ->where('t.recurring = :recurring')
-            ->andWhere('t.kind = :kind')
-            ->setParameter(key: 'recurring', value: true)
-            ->setParameter(key: 'kind', value: FinanceTransaction::KIND_EXPENSE)
-            ->orderBy('t.transaction_date', 'DESC')
-            ->executeQuery()
-            ->fetchAllAssociative();
-
-        $subscriptions = [];
-
-        foreach ($rows as $row) {
-            $note = (string) $row['note'];
-
-            if (array_key_exists(key: $note, array: $subscriptions)) {
-                continue;
-            }
-
-            $subscriptions[$note] = new FinanceSubscription(
-                note: $note,
-                amount: round(num: (float) $row['amount'], precision: 2),
-                category: (string) $row['category'],
-                chargeDay: (int) substr(string: (string) $row['transaction_date'], offset: 8, length: 2),
-            );
-        }
-
-        $subscriptions = array_values(array: $subscriptions);
-        usort(
-            array: $subscriptions,
-            callback: static fn (FinanceSubscription $a, FinanceSubscription $b): int => $b->amount <=> $a->amount,
-        );
-
-        return $subscriptions;
     }
 
     private function shiftMonth(string $month, int $offset): string

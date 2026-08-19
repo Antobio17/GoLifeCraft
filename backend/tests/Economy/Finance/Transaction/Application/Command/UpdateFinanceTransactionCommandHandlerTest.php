@@ -36,7 +36,6 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra semanal',
             store: 'Mercadona',
-            recurring: false,
             source: FinanceTransaction::SOURCE_TICKET,
             createdByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),
@@ -54,7 +53,6 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'restaurants',
             note: 'Cena fuera',
             store: 'La Tagliatella',
-            recurring: false,
             updatedByUserId: 'god-user-id',
         ));
 
@@ -78,7 +76,6 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra semanal',
             store: 'Mercadona',
-            recurring: false,
             updatedByUserId: 'god-user-id',
         ));
 
@@ -101,7 +98,6 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra',
             store: null,
-            recurring: false,
             updatedByUserId: 'god-user-id',
         ));
     }
@@ -117,7 +113,6 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra semanal',
             store: 'Mercadona',
-            recurring: false,
             updatedByUserId: 'god-user-id',
         ));
 
@@ -140,7 +135,6 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra',
             store: null,
-            recurring: false,
             updatedByUserId: 'god-user-id',
         ));
     }
@@ -158,7 +152,6 @@ final class UpdateFinanceTransactionCommandHandlerTest extends TestCase
             category: 'groceries',
             note: 'Compra',
             store: null,
-            recurring: false,
             updatedByUserId: 'god-user-id',
         ));
     }

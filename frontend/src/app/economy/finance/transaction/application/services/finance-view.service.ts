@@ -65,22 +65,6 @@ export class FinanceViewService {
     return this.capitalize(label.replace(/\./g, ""));
   }
 
-  nextChargeLabel(chargeDay: number): string {
-    const today = new Date();
-    const candidate = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      chargeDay,
-    );
-    const next =
-      candidate <
-      new Date(today.getFullYear(), today.getMonth(), today.getDate())
-        ? new Date(today.getFullYear(), today.getMonth() + 1, chargeDay)
-        : candidate;
-
-    return this.dayShort(this.toIso(next));
-  }
-
   money(amount: number): string {
     return new Intl.NumberFormat(this.locale(), {
       style: "currency",
