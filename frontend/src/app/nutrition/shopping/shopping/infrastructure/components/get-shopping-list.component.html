@@ -10,14 +10,19 @@
     [gap]="'var(--ds-space-3)'"
   >
     <ds-stack [gap]="'2px'" [grow]="true">
-      <ds-heading [level]="2" size="xl" [truncate]="true">{{
+      <ds-heading [level]="2" size="xl">{{
         "getShopping.title" | t
       }}</ds-heading>
       <ds-text variant="meta">{{ "getShopping.subtitle" | t }}</ds-text>
     </ds-stack>
 
     @if (canWrite()) {
-      <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
+      <ds-stack
+        direction="row"
+        align="center"
+        [gap]="'var(--ds-space-1-5)'"
+        [shrink]="false"
+      >
         <ds-button
           variant="secondary"
           size="icon-lg"
