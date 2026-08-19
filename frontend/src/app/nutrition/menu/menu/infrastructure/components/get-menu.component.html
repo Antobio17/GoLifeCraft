@@ -43,7 +43,11 @@
         align="center"
         [gap]="'var(--ds-space-3)'"
       >
-        <ds-skeleton-line width="3.75rem" height="3.75rem" radius="16px" />
+        <ds-skeleton-line
+          width="3.75rem"
+          height="3.75rem"
+          radius="var(--ds-radius-xl)"
+        />
         <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
           <ds-skeleton-line width="5.25rem" height="0.5625rem" />
           @if (canWrite()) {
