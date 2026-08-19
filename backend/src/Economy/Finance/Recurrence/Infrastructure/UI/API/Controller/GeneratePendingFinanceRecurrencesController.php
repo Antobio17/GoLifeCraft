@@ -27,7 +27,7 @@ final class GeneratePendingFinanceRecurrencesController
                 'data' => [
                     'type' => 'financeRecurrenceRun',
                     'attributes' => [
-                        'booked' => $this->handle(message: new GeneratePendingFinanceRecurrencesCommand()),
+                        'booked' => $this->handle(message: new GeneratePendingFinanceRecurrencesCommand(onlyCurrentMonth: true)),
                     ],
                 ],
             ], status: Response::HTTP_OK);

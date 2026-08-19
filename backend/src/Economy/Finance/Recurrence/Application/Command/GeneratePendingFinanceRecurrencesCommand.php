@@ -8,6 +8,7 @@ final readonly class GeneratePendingFinanceRecurrencesCommand implements Command
 {
     public function __construct(
         public ?string $today = null,
+        public bool $onlyCurrentMonth = false,
     ) {
     }
 
