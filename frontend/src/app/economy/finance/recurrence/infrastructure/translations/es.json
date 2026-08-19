@@ -1,8 +1,11 @@
 {
   "getFinanceRecurrences.title": "Movimientos fijos",
-  "getFinanceRecurrences.eyebrow": "Lo que se repite cada mes",
+  "getFinanceRecurrences.subtitle": "Lo que se repite cada mes",
   "getFinanceRecurrences.back": "Volver a Economía",
   "getFinanceRecurrences.add": "Nuevo movimiento fijo",
+  "getFinanceRecurrences.run": "Generar movimientos pendientes",
+  "getFinanceRecurrences.run.success": "Movimientos pendientes generados: {{count}}",
+  "getFinanceRecurrences.run.empty": "No hay movimientos pendientes de generar.",
   "getFinanceRecurrences.remove": "Borrar",
   "getFinanceRecurrences.day": "Día",
   "getFinanceRecurrences.next": "Próximo:",

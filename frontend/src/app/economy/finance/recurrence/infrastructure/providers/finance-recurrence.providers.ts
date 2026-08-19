@@ -3,14 +3,17 @@ import { GetFinanceRecurrencesPort } from "@economy/finance/recurrence/domain/po
 import { CreateFinanceRecurrencePort } from "@economy/finance/recurrence/domain/ports/create-finance-recurrence.port";
 import { UpdateFinanceRecurrencePort } from "@economy/finance/recurrence/domain/ports/update-finance-recurrence.port";
 import { DeleteFinanceRecurrencePort } from "@economy/finance/recurrence/domain/ports/delete-finance-recurrence.port";
+import { GeneratePendingFinanceRecurrencesPort } from "@economy/finance/recurrence/domain/ports/generate-pending-finance-recurrences.port";
 import { HttpGetFinanceRecurrencesAdapter } from "@economy/finance/recurrence/infrastructure/adapters/http-get-finance-recurrences.adapter";
 import { HttpCreateFinanceRecurrenceAdapter } from "@economy/finance/recurrence/infrastructure/adapters/http-create-finance-recurrence.adapter";
 import { HttpUpdateFinanceRecurrenceAdapter } from "@economy/finance/recurrence/infrastructure/adapters/http-update-finance-recurrence.adapter";
 import { HttpDeleteFinanceRecurrenceAdapter } from "@economy/finance/recurrence/infrastructure/adapters/http-delete-finance-recurrence.adapter";
+import { HttpGeneratePendingFinanceRecurrencesAdapter } from "@economy/finance/recurrence/infrastructure/adapters/http-generate-pending-finance-recurrences.adapter";
 import { GetFinanceRecurrencesService } from "@economy/finance/recurrence/application/services/get-finance-recurrences.service";
 import { CreateFinanceRecurrenceService } from "@economy/finance/recurrence/application/services/create-finance-recurrence.service";
 import { UpdateFinanceRecurrenceService } from "@economy/finance/recurrence/application/services/update-finance-recurrence.service";
 import { DeleteFinanceRecurrenceService } from "@economy/finance/recurrence/application/services/delete-finance-recurrence.service";
+import { GeneratePendingFinanceRecurrencesService } from "@economy/finance/recurrence/application/services/generate-pending-finance-recurrences.service";
 import { FinanceRecurrenceFormService } from "@economy/finance/recurrence/application/services/finance-recurrence-form.service";
 
 export class FinanceRecurrenceProviders {
@@ -56,6 +59,16 @@ export class FinanceRecurrenceProviders {
         useFactory: (port: DeleteFinanceRecurrencePort) =>
           new DeleteFinanceRecurrenceService(port),
         deps: [DeleteFinanceRecurrencePort],
+      },
+      {
+        provide: GeneratePendingFinanceRecurrencesPort,
+        useClass: HttpGeneratePendingFinanceRecurrencesAdapter,
+      },
+      {
+        provide: GeneratePendingFinanceRecurrencesService,
+        useFactory: (port: GeneratePendingFinanceRecurrencesPort) =>
+          new GeneratePendingFinanceRecurrencesService(port),
+        deps: [GeneratePendingFinanceRecurrencesPort],
       },
     ];
   }

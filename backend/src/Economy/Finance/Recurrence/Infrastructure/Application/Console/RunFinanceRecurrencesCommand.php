@@ -4,7 +4,7 @@ namespace Economy\Finance\Recurrence\Infrastructure\Application\Console;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Economy\Finance\Recurrence\Application\Command\GenerateFinanceRecurrenceCommand;
+use Economy\Finance\Recurrence\Application\Command\GeneratePendingFinanceRecurrencesCommand;
 use Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -12,18 +12,23 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final class RunFinanceRecurrencesCommand extends Command
 {
+    use HandleTrait;
+
     public function __construct(
         private readonly TenantConnectionSwitcher $switcher,
         private readonly Connection $writerTenantConnection,
         private readonly EntityManagerInterface $tenantEntityManager,
         private readonly PendingFinanceRecurrencesNeedleDataQuery $needleDataQuery,
-        private readonly MessageBusInterface $messageBus,
+        MessageBusInterface $messageBus,
         private readonly DateTimeGenerator $dateTimeGenerator,
     ) {
+        $this->messageBus = $messageBus;
+
         parent::__construct(name: 'app:economy:run-recurrences');
     }
 
@@ -82,24 +87,19 @@ final class RunFinanceRecurrencesCommand extends Command
             return;
         }
 
-        $booked = 0;
-
         foreach ($pending as $recurrence) {
             foreach ($recurrence->months as $month) {
                 $output->writeln(messages: sprintf('%s: %s → %s', $dbname, $recurrence->note, $month));
-
-                if ($dryRun) {
-                    continue;
-                }
-
-                $this->messageBus->dispatch(new GenerateFinanceRecurrenceCommand(
-                    financeRecurrenceId: $recurrence->id,
-                    month: $month,
-                    today: $today,
-                ));
-                ++$booked;
             }
         }
+
+        if ($dryRun) {
+            $output->writeln(messages: sprintf('<comment>%s: dry run, nothing booked.</comment>', $dbname));
+
+            return;
+        }
+
+        $booked = $this->handle(message: new GeneratePendingFinanceRecurrencesCommand(today: $today));
 
         $output->writeln(messages: sprintf('<info>%s: %d movements booked.</info>', $dbname, $booked));
     }

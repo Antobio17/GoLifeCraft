@@ -2,7 +2,7 @@ services:
   Economy\Finance\Transaction\Domain\QueryModel\CreateFinanceTransactionNeedleDataQuery:
     class: Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateFinanceTransactionNeedleDataQuery
     arguments:
-      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $connection: '@doctrine.dbal.writer_tenant_connection'
 
   Economy\Finance\Transaction\Domain\QueryModel\UpdateFinanceTransactionNeedleDataQuery:
     class: Economy\Finance\Transaction\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateFinanceTransactionNeedleDataQuery

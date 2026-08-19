@@ -4,13 +4,14 @@ import { Router } from "@angular/router";
 import { Observable, forkJoin } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
@@ -36,6 +37,7 @@ import { GetFinanceRecurrencesService } from "@economy/finance/recurrence/applic
 import { CreateFinanceRecurrenceService } from "@economy/finance/recurrence/application/services/create-finance-recurrence.service";
 import { UpdateFinanceRecurrenceService } from "@economy/finance/recurrence/application/services/update-finance-recurrence.service";
 import { DeleteFinanceRecurrenceService } from "@economy/finance/recurrence/application/services/delete-finance-recurrence.service";
+import { GeneratePendingFinanceRecurrencesService } from "@economy/finance/recurrence/application/services/generate-pending-finance-recurrences.service";
 import { FinanceRecurrenceFormService } from "@economy/finance/recurrence/application/services/finance-recurrence-form.service";
 import { FinanceRecurrence } from "@economy/finance/recurrence/domain/models/finance-recurrence.model";
 import { FinanceRecurrenceForm } from "@economy/finance/recurrence/domain/models/finance-recurrence-form.model";
@@ -59,8 +61,8 @@ import { FinanceAccount } from "@economy/finance/account/domain/models/finance-a
     StackComponent,
     TextComponent,
     HeadingComponent,
+    ScreenHeaderComponent,
     ButtonComponent,
-    IconButtonComponent,
     CardComponent,
     SkeletonListComponent,
     EmptyStateComponent,
@@ -92,6 +94,10 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   private deleteFinanceRecurrenceService = inject(
     DeleteFinanceRecurrenceService,
   );
+  private generatePendingFinanceRecurrencesService = inject(
+    GeneratePendingFinanceRecurrencesService,
+  );
+  private floatingToastService = inject(FloatingToastService);
   private getFinanceAccountsService = inject(GetFinanceAccountsService);
   protected view = inject(FinanceViewService);
   protected categoryCatalog = inject(FinanceCategoryCatalogService);
@@ -105,6 +111,7 @@ export class GetFinanceRecurrencesComponent implements OnInit {
 
   loading = signal(true);
   saving = signal(false);
+  running = signal(false);
   translationsReady = signal(false);
 
   recurrences = signal<FinanceRecurrence[]>([]);
@@ -219,6 +226,23 @@ export class GetFinanceRecurrencesComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(["/economy"]);
+  }
+
+  runPending(): void {
+    if (!this.canWrite() || this.running()) return;
+
+    this.running.set(true);
+
+    this.generatePendingFinanceRecurrencesService
+      .generatePendingFinanceRecurrences()
+      .subscribe({
+        next: (response) => {
+          this.running.set(false);
+          this.showRunFeedback(response.data.attributes.booked);
+          this.load(true);
+        },
+        error: () => this.running.set(false),
+      });
   }
 
   openNewSheet(): void {
@@ -355,6 +379,18 @@ export class GetFinanceRecurrencesComponent implements OnInit {
     }
 
     return this.createFinanceRecurrenceService.createFinanceRecurrence(payload);
+  }
+
+  private showRunFeedback(booked: number): void {
+    this.floatingToastService.showToast({
+      status: 200,
+      type: booked > 0 ? "success" : "info",
+      keyTranslation:
+        booked > 0
+          ? "getFinanceRecurrences.run.success"
+          : "getFinanceRecurrences.run.empty",
+      details: { count: booked },
+    });
   }
 
   private fallbackNote(form: FinanceRecurrenceForm): string {

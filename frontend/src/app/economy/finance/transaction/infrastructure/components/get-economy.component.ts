@@ -9,6 +9,7 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
@@ -79,6 +80,7 @@ const EVOLUTION_MONTHS = 6;
     StackComponent,
     TextComponent,
     HeadingComponent,
+    ScreenHeaderComponent,
     ButtonComponent,
     IconButtonComponent,
     CardComponent,
