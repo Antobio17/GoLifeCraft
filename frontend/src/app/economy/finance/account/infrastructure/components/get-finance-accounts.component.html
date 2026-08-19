@@ -1,32 +1,14 @@
 <ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
-  <ds-stack
-    direction="row"
-    justify="between"
-    align="start"
-    [gap]="'var(--ds-space-2)'"
+  <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getFinanceAccounts.back' | t"
+    [title]="'getFinanceAccounts.title' | t"
+    [subtitle]="'getFinanceAccounts.subtitle' | t"
+    (leadingClick)="goBack()"
   >
-    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
-      <ds-icon-button
-        icon="chevronLeft"
-        variant="soft"
-        [size]="36"
-        [iconSize]="17"
-        [stroke]="2.2"
-        [radius]="'var(--ds-radius-lg)'"
-        [ariaLabel]="'getFinanceAccounts.back' | t"
-        (clicked)="goBack()"
-      />
-
-      <ds-stack [gap]="'2px'" [grow]="true">
-        <ds-text variant="meta">{{ "getFinanceAccounts.eyebrow" | t }}</ds-text>
-        <ds-heading [level]="2" size="xl" [truncate]="true">{{
-          "getFinanceAccounts.title" | t
-        }}</ds-heading>
-      </ds-stack>
-    </ds-stack>
-
     @if (canWrite()) {
       <ds-button
+        slot="actions"
         variant="primary"
         size="icon-lg"
         icon="plus"
@@ -35,7 +17,7 @@
         (clicked)="openNewAccountSheet()"
       />
     }
-  </ds-stack>
+  </ds-screen-header>
 
   @if (loading()) {
     <ds-skeleton-list [count]="3" [gap]="'var(--ds-space-2)'" />

@@ -1,8 +1,11 @@
 {
   "getFinanceRecurrences.title": "Recurring movements",
-  "getFinanceRecurrences.eyebrow": "What repeats every month",
+  "getFinanceRecurrences.subtitle": "What repeats every month",
   "getFinanceRecurrences.back": "Back to Economy",
   "getFinanceRecurrences.add": "New recurring movement",
+  "getFinanceRecurrences.run": "Book the pending movements",
+  "getFinanceRecurrences.run.success": "Pending movements booked: {{count}}",
+  "getFinanceRecurrences.run.empty": "There are no pending movements to book.",
   "getFinanceRecurrences.remove": "Delete",
   "getFinanceRecurrences.day": "Day",
   "getFinanceRecurrences.next": "Next:",

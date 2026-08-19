@@ -196,4 +196,82 @@ final class CreateFinanceTransactionCommandHandlerTest extends TestCase
             createdByUserId: 'god-user-id',
         ));
     }
+
+    public function testItSkipsARecurringMovementAlreadyBookedThisMonth(): void
+    {
+        $handler = $this->handlerWithBookedRecurrence();
+
+        $handler(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
+            transactionDate: '2026-07-28',
+            kind: FinanceTransaction::KIND_EXPENSE,
+            amount: 60.0,
+            category: 'bills',
+            note: 'Alquiler',
+            store: null,
+            source: FinanceTransaction::SOURCE_RECURRENCE,
+            createdByUserId: 'god-user-id',
+        ));
+
+        $this->assertNull(actual: $this->repository->findById(id: 'finance-transaction-1'));
+    }
+
+    public function testItBooksARecurringMovementOfAMonthNotBookedYet(): void
+    {
+        $handler = $this->handlerWithBookedRecurrence();
+
+        $handler(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
+            transactionDate: '2026-08-12',
+            kind: FinanceTransaction::KIND_EXPENSE,
+            amount: 60.0,
+            category: 'bills',
+            note: 'Alquiler',
+            store: null,
+            source: FinanceTransaction::SOURCE_RECURRENCE,
+            createdByUserId: 'god-user-id',
+        ));
+
+        $this->assertNotNull(actual: $this->repository->findById(id: 'finance-transaction-1'));
+    }
+
+    public function testItBooksAManualMovementEvenWhenTheRecurringOneIsAlreadyBooked(): void
+    {
+        $handler = $this->handlerWithBookedRecurrence();
+
+        $handler(new CreateFinanceTransactionCommand(
+            accountId: 'account-1',
+            transactionDate: '2026-07-12',
+            kind: FinanceTransaction::KIND_EXPENSE,
+            amount: 60.0,
+            category: 'bills',
+            note: 'Alquiler',
+            store: null,
+            source: FinanceTransaction::SOURCE_MANUAL,
+            createdByUserId: 'god-user-id',
+        ));
+
+        $this->assertNotNull(actual: $this->repository->findById(id: 'finance-transaction-1'));
+    }
+
+    private function handlerWithBookedRecurrence(): CreateFinanceTransactionCommandHandler
+    {
+        return new CreateFinanceTransactionCommandHandler(
+            financeTransactionRepository: $this->repository,
+            needleDataQuery: new InMemoryCreateFinanceTransactionNeedleDataQuery(
+                accountIds: ['account-1'],
+                recurrenceMovements: [
+                    InMemoryCreateFinanceTransactionNeedleDataQuery::movementKey(
+                        accountId: 'account-1',
+                        month: '2026-07',
+                        kind: FinanceTransaction::KIND_EXPENSE,
+                        amount: 60.0,
+                        note: 'Alquiler',
+                    ),
+                ],
+            ),
+            domainEventCollectorService: new DomainEventCollectorService(),
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
+    }
 }

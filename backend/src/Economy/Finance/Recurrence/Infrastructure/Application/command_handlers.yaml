@@ -36,3 +36,12 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Recurrence\Application\Command\GeneratePendingFinanceRecurrencesCommandHandler:
+    class: Economy\Finance\Recurrence\Application\Command\GeneratePendingFinanceRecurrencesCommandHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery'
+      $messageBus: '@messenger.bus.default'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

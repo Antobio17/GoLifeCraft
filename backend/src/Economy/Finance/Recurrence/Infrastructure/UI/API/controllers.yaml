@@ -13,6 +13,13 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\GeneratePendingFinanceRecurrencesController:
+    class: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\GeneratePendingFinanceRecurrencesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\UpdateFinanceRecurrenceController:
     class: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\UpdateFinanceRecurrenceController
     arguments:

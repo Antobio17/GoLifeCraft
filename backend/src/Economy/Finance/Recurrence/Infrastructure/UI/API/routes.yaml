@@ -8,6 +8,11 @@ create_finance_recurrence:
   methods: [POST]
   controller: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\CreateFinanceRecurrenceController
 
+generate_pending_finance_recurrences:
+  path: /api/v1/economy/recurrences/run
+  methods: [POST]
+  controller: Economy\Finance\Recurrence\Infrastructure\UI\API\Controller\GeneratePendingFinanceRecurrencesController
+
 update_finance_recurrence:
   path: /api/v1/economy/recurrences/{financeRecurrenceId}
   methods: [PUT]
