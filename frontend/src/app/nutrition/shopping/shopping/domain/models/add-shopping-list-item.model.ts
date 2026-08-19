@@ -1,5 +1,6 @@
 export interface AddShoppingListItemRequest {
-  articleId: string;
+  articleId: string | null;
+  customName: string | null;
   quantity: number;
   baseQuantity: number | null;
 }

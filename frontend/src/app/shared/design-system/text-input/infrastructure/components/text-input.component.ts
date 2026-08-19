@@ -1,4 +1,4 @@
-import { Component, Input, inject } from "@angular/core";
+import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
@@ -35,6 +35,7 @@ type TextInputVariant = "default" | "outlined";
           [attr.autocomplete]="autocomplete"
           [attr.aria-label]="ariaLabel || null"
           (input)="onInput($event)"
+          (keydown.enter)="submitted.emit()"
           (blur)="onTouched()"
         />
         @if (passwordToggle) {
@@ -63,6 +64,7 @@ type TextInputVariant = "default" | "outlined";
         [attr.autocomplete]="autocomplete"
         [attr.aria-label]="ariaLabel || null"
         (input)="onInput($event)"
+        (keydown.enter)="submitted.emit()"
         (blur)="onTouched()"
       />
     }
@@ -189,6 +191,8 @@ export class TextInputComponent implements ControlValueAccessor {
   @Input() strong = false;
   @Input() passwordToggle = false;
   @Input() togglePasswordLabel = "";
+
+  @Output() submitted = new EventEmitter<void>();
 
   value = "";
   disabled = false;

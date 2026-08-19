@@ -11,8 +11,21 @@ export class AddShoppingListItemService {
   ): Observable<void> {
     return this.addShoppingListItemPort.addShoppingListItem({
       articleId,
+      customName: null,
       quantity,
       baseQuantity,
+    });
+  }
+
+  addCustomShoppingListItem(
+    customName: string,
+    quantity = 1,
+  ): Observable<void> {
+    return this.addShoppingListItemPort.addShoppingListItem({
+      articleId: null,
+      customName,
+      quantity,
+      baseQuantity: null,
     });
   }
 }

@@ -8,6 +8,7 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -63,6 +64,7 @@ type FilterKind = "store" | "cat" | "brand";
     SplitViewComponent,
     StackComponent,
     TextComponent,
+    TextInputComponent,
     HeadingComponent,
     ButtonComponent,
     SkeletonComponent,
@@ -103,6 +105,8 @@ export class GetShoppingListComponent implements OnInit {
 
   readonly skeletonGroups = [3, 2];
 
+  readonly customNameMaxLength = 120;
+
   loading = signal(true);
   attributes = signal<ShoppingListAttributes | null>(null);
   activeTab = signal<string>(ALL_STORES);
@@ -115,6 +119,7 @@ export class GetShoppingListComponent implements OnInit {
   clearing = signal(false);
 
   sheetOpen = signal(false);
+  customName = signal("");
   articles = signal<Article[]>([]);
   sheetSearch = signal("");
   storeFilter = signal(ALL_FILTER);
@@ -174,6 +179,14 @@ export class GetShoppingListComponent implements OnInit {
 
   addLabel = computed(() => this.t("getShopping.add"));
 
+  customPlaceholder = computed(() => this.t("getShopping.custom.placeholder"));
+
+  customAddLabel = computed(() => this.t("getShopping.custom.add"));
+
+  canAddCustom = computed(
+    () => this.view.normalizeCustomName(this.customName()).length > 0,
+  );
+
   generateFromDiaryLabel = computed(() => this.t("getShopping.diary.title"));
 
   activeSupermarketId = computed(() => {
@@ -210,7 +223,11 @@ export class GetShoppingListComponent implements OnInit {
 
   private listArticleIds = computed(
     () =>
-      new Set((this.attributes()?.items ?? []).map((item) => item.articleId)),
+      new Set(
+        (this.attributes()?.items ?? [])
+          .map((item) => item.articleId)
+          .filter((articleId): articleId is string => null !== articleId),
+      ),
   );
 
   facets = computed(() => this.view.facets(this.articles()));
@@ -316,6 +333,7 @@ export class GetShoppingListComponent implements OnInit {
   }
 
   openSheet(): void {
+    this.customName.set("");
     this.sheetSearch.set("");
     this.storeFilter.set(ALL_FILTER);
     this.categoryFilter.set(ALL_FILTER);
@@ -361,6 +379,41 @@ export class GetShoppingListComponent implements OnInit {
     this.addShoppingListItemService.addShoppingListItem(articleId).subscribe({
       next: () => this.load(true),
       error: () => this.load(true),
+    });
+  }
+
+  onCustomName(value: string): void {
+    this.customName.set(value);
+  }
+
+  addCustomItem(): void {
+    const customName = this.view.normalizeCustomName(this.customName());
+    if (!customName) return;
+
+    this.customName.set("");
+    this.applyOptimisticCustomItem(customName);
+
+    this.addShoppingListItemService
+      .addCustomShoppingListItem(customName)
+      .subscribe({
+        next: () => this.load(true),
+        error: () => this.load(true),
+      });
+  }
+
+  private applyOptimisticCustomItem(customName: string): void {
+    this.attributes.update((current) => {
+      if (!current) return current;
+
+      const existing = this.view.findCustomItem(current, customName);
+      if (existing) {
+        return this.view.increaseItemQuantity(current, existing.id);
+      }
+
+      return this.view.addItem(
+        current,
+        this.view.optimisticCustomItem(customName, `pending-${customName}`),
+      );
     });
   }
 

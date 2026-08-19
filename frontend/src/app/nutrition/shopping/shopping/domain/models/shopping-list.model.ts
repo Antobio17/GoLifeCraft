@@ -1,6 +1,7 @@
 export interface ShoppingListItemView {
   id: string;
-  articleId: string;
+  articleId: string | null;
+  custom: boolean;
   name: string;
   emoji: string;
   brand: string | null;

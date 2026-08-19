@@ -3,7 +3,8 @@
   <entity repository-class="Nutrition\Shopping\Shopping\Infrastructure\Domain\Model\Doctrine\DoctrineShoppingListItemRepository" name="Nutrition\Shopping\Shopping\Domain\Model\ShoppingListItem" table="shopping_list_item">
     <id name="id" type="string" column="id" primary="true" length="36"/>
     <field name="version" type="integer" version="true"/>
-    <field name="articleId" type="string" column="article_id" length="36"/>
+    <field name="articleId" type="string" column="article_id" length="36" nullable="true"/>
+    <field name="customName" type="string" column="custom_name" length="120" nullable="true"/>
     <field name="quantity" type="integer" column="quantity"/>
     <field name="baseQuantity" type="float" column="base_quantity" nullable="true"/>
     <field name="checked" type="boolean" column="checked"/>
@@ -16,6 +17,7 @@
     </indexes>
     <unique-constraints>
       <unique-constraint name="uniq_shopping_list_item_article" columns="article_id"/>
+      <unique-constraint name="uniq_shopping_list_item_custom_name" columns="custom_name"/>
     </unique-constraints>
   </entity>
 </doctrine-mapping>

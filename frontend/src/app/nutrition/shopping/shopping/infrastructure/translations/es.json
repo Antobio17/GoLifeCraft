@@ -1,7 +1,7 @@
 {
   "getShopping": {
     "title": "Lista de compra",
-    "subtitle": "Añade artículos de tu catálogo",
+    "subtitle": "Añade artículos de tu catálogo o escríbelos a mano",
     "add": "Añadir",
     "items": "art.",
     "toggle": "Marcar como comprado",
@@ -25,7 +25,12 @@
     },
     "empty": {
       "title": "Tu lista está vacía",
-      "text": "Añade artículos ya existentes en tu catálogo para armar la compra."
+      "text": "Añade artículos de tu catálogo o escribe lo que necesites para armar la compra."
+    },
+    "custom": {
+      "subtitle": "Escribe cualquier cosa que necesites, aunque no esté en tu catálogo",
+      "placeholder": "Papel de cocina, bolsas de basura…",
+      "add": "Añadir a mano"
     },
     "filters": {
       "all": "Todos",

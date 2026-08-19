@@ -12,6 +12,9 @@ import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/sho
 export const ALL_STORES = "all";
 export const ALL_FILTER = "all";
 
+const OTHER_CATEGORY = "Otros";
+const CUSTOM_NAME_MAX_LENGTH = 120;
+
 export interface ShoppingStoreTab {
   key: string;
   label: string;
@@ -26,7 +29,8 @@ export interface ShoppingPackLabels {
 
 export interface ShoppingItemRow {
   id: string;
-  articleId: string;
+  articleId: string | null;
+  custom: boolean;
   emoji: string;
   name: string;
   brand: string | null;
@@ -182,7 +186,7 @@ export class ShoppingListViewService {
     const buckets: Record<string, ShoppingListItemView[]> = {};
 
     items.forEach((item) => {
-      const category = item.category || "Otros";
+      const category = item.category || OTHER_CATEGORY;
       if (!buckets[category]) {
         buckets[category] = [];
         order.push(category);
@@ -207,13 +211,14 @@ export class ShoppingListViewService {
     return {
       id: item.id,
       articleId: item.articleId,
+      custom: item.custom,
       emoji: item.emoji,
       name: item.name,
       brand: item.brand,
       store: item.store,
       quantity: item.quantity,
       checked: item.checked,
-      priceLabel: this.money(item.lineTotal),
+      priceLabel: item.custom ? "" : this.money(item.lineTotal),
       unitLabel: this.unitLabel(item),
       packLabel: this.packLabel(item, packLabels),
     };
@@ -308,11 +313,12 @@ export class ShoppingListViewService {
     return {
       id,
       articleId: article.id,
+      custom: false,
       name: article.attributes.name,
       emoji: this.articleView.emoji(article),
       brand: this.articleView.brand(article),
       store: this.articleView.store(article),
-      category: this.articleView.category(article) ?? "Otros",
+      category: this.articleView.category(article) ?? OTHER_CATEGORY,
       aisle: null,
       aislePosition: null,
       unitPrice,
@@ -324,6 +330,68 @@ export class ShoppingListViewService {
       checked: false,
       lineTotal: unitPrice ?? 0,
     };
+  }
+
+  optimisticCustomItem(customName: string, id: string): ShoppingListItemView {
+    return {
+      id,
+      articleId: null,
+      custom: true,
+      name: customName,
+      emoji: "📝",
+      brand: null,
+      store: null,
+      category: OTHER_CATEGORY,
+      aisle: null,
+      aislePosition: null,
+      unitPrice: null,
+      quantity: 1,
+      packUnit: null,
+      packSize: null,
+      baseUnit: "g",
+      baseQuantity: null,
+      checked: false,
+      lineTotal: 0,
+    };
+  }
+
+  normalizeCustomName(customName: string): string {
+    return customName
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, CUSTOM_NAME_MAX_LENGTH);
+  }
+
+  findCustomItem(
+    attributes: ShoppingListAttributes,
+    customName: string,
+  ): ShoppingListItemView | null {
+    const name = this.normalizeCustomName(customName).toLowerCase();
+
+    return (
+      attributes.items.find(
+        (item) => item.custom && item.name.toLowerCase() === name,
+      ) ?? null
+    );
+  }
+
+  increaseItemQuantity(
+    attributes: ShoppingListAttributes,
+    itemId: string,
+  ): ShoppingListAttributes {
+    const items = attributes.items.map((item) => {
+      if (item.id !== itemId) return item;
+
+      const quantity = item.quantity + 1;
+
+      return {
+        ...item,
+        quantity,
+        lineTotal: Math.round((item.unitPrice ?? 0) * quantity * 100) / 100,
+      };
+    });
+
+    return { ...attributes, items };
   }
 
   addItem(

@@ -45,11 +45,14 @@ final readonly class DoctrineGetShoppingListNeedleDataQuery implements GetShoppi
                 size: null !== $row['pack_size'] ? (float) $row['pack_size'] : null,
             );
 
+            $custom = null === $row['article_id'];
+
             $items[] = new ShoppingListItemView(
                 id: $row['id'],
                 articleId: $row['article_id'],
-                name: $row['name'] ?? '(eliminado)',
-                emoji: $row['emoji'] ?? '🛒',
+                custom: $custom,
+                name: $row['custom_name'] ?? $row['name'] ?? '(eliminado)',
+                emoji: $row['emoji'] ?? ($custom ? '📝' : '🛒'),
                 brand: $row['brand'],
                 store: $store,
                 category: $row['category'] ?? 'Otros',
@@ -88,6 +91,7 @@ final readonly class DoctrineGetShoppingListNeedleDataQuery implements GetShoppi
             ->select(
                 'sli.id',
                 'sli.article_id',
+                'sli.custom_name',
                 'sli.quantity',
                 'sli.base_quantity',
                 'sli.checked',

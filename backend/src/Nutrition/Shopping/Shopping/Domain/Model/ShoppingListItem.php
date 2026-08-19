@@ -12,7 +12,10 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class ShoppingListItem extends GenericAggregate
 {
-    public string $articleId;
+    public const CUSTOM_NAME_MAX_LENGTH = 120;
+
+    public ?string $articleId = null;
+    public ?string $customName = null;
     public int $quantity;
     public ?float $baseQuantity = null;
     public bool $checked;
@@ -39,15 +42,38 @@ class ShoppingListItem extends GenericAggregate
         $item->checked = false;
         $item->stampCreation(userId: $createdByUserId, now: $now);
 
-        $item->record(event: new ShoppingListItemAdded(
-            aggregateId: $id,
-            occurredOn: $now,
-            articleId: $articleId,
-            quantity: $quantity,
-            baseQuantity: $baseQuantity,
-            checked: false,
-            createdByUserId: $createdByUserId,
-        ));
+        $item->recordAdded(createdByUserId: $createdByUserId, occurredOn: $now);
+
+        return $item;
+    }
+
+    public static function createCustom(
+        string $id,
+        string $customName,
+        int $quantity,
+        string $createdByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): self {
+        $name = self::normalizeCustomName(customName: $customName);
+
+        if ('' === $name) {
+            throw AddShoppingListItemException::customNameIsEmpty();
+        }
+
+        if (!self::hasValidQuantity(quantity: $quantity)) {
+            throw AddShoppingListItemException::quantityMustBePositive();
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $item = new self();
+        $item->id = $id;
+        $item->customName = $name;
+        $item->quantity = $quantity;
+        $item->checked = false;
+        $item->stampCreation(userId: $createdByUserId, now: $now);
+
+        $item->recordAdded(createdByUserId: $createdByUserId, occurredOn: $now);
 
         return $item;
     }
@@ -69,14 +95,7 @@ class ShoppingListItem extends GenericAggregate
         $this->checked = false;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
-        $this->record(event: new ShoppingListItemUpdated(
-            aggregateId: $this->id,
-            occurredOn: $now,
-            articleId: $this->articleId,
-            quantity: $this->quantity,
-            baseQuantity: $this->baseQuantity,
-            checked: $this->checked,
-        ));
+        $this->recordUpdated(occurredOn: $now);
     }
 
     public function update(
@@ -95,14 +114,7 @@ class ShoppingListItem extends GenericAggregate
         $this->checked = $checked;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
-        $this->record(event: new ShoppingListItemUpdated(
-            aggregateId: $this->id,
-            occurredOn: $now,
-            articleId: $this->articleId,
-            quantity: $quantity,
-            baseQuantity: $this->baseQuantity,
-            checked: $checked,
-        ));
+        $this->recordUpdated(occurredOn: $now);
     }
 
     public function delete(
@@ -116,6 +128,43 @@ class ShoppingListItem extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             articleId: $this->articleId,
+            customName: $this->customName,
+        ));
+    }
+
+    public static function normalizeCustomName(string $customName): string
+    {
+        return mb_substr(
+            string: trim(string: preg_replace(pattern: '/\s+/u', replacement: ' ', subject: $customName) ?? ''),
+            start: 0,
+            length: self::CUSTOM_NAME_MAX_LENGTH,
+        );
+    }
+
+    private function recordAdded(string $createdByUserId, \DateTime $occurredOn): void
+    {
+        $this->record(event: new ShoppingListItemAdded(
+            aggregateId: $this->id,
+            occurredOn: $occurredOn,
+            articleId: $this->articleId,
+            customName: $this->customName,
+            quantity: $this->quantity,
+            baseQuantity: $this->baseQuantity,
+            checked: $this->checked,
+            createdByUserId: $createdByUserId,
+        ));
+    }
+
+    private function recordUpdated(\DateTime $occurredOn): void
+    {
+        $this->record(event: new ShoppingListItemUpdated(
+            aggregateId: $this->id,
+            occurredOn: $occurredOn,
+            articleId: $this->articleId,
+            customName: $this->customName,
+            quantity: $this->quantity,
+            baseQuantity: $this->baseQuantity,
+            checked: $this->checked,
         ));
     }
 

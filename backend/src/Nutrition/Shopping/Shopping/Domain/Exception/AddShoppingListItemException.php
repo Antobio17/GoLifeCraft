@@ -15,6 +15,24 @@ final class AddShoppingListItemException extends BaseException
         );
     }
 
+    public static function articleOrCustomNameIsRequired(): self
+    {
+        return new static(
+            title: 'An article or a custom name is required.',
+            keyTranslation: 'shopping.list.item.article.or.custom.name.required',
+            details: []
+        );
+    }
+
+    public static function customNameIsEmpty(): self
+    {
+        return new static(
+            title: 'The custom name cannot be empty.',
+            keyTranslation: 'shopping.list.item.custom.name.empty',
+            details: []
+        );
+    }
+
     public static function quantityMustBePositive(): self
     {
         return new static(
