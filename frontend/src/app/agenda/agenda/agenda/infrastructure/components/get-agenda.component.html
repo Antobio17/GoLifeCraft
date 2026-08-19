@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'66rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   <ds-stack
     direction="row"
     justify="between"
@@ -24,103 +28,107 @@
     }
   </ds-stack>
 
-  <ds-card
-    class="agenda-calendar-card"
-    [padding]="'var(--ds-space-4) var(--ds-space-4) var(--ds-space-4)'"
-  >
-    <ds-calendar
-      [monthLabel]="calendarMonthLabel()"
-      [weekdays]="calendarWeekdays()"
-      [cells]="calendarCells()"
-      [previousLabel]="'getAgenda.calendar.previous' | t"
-      [nextLabel]="'getAgenda.calendar.next' | t"
-      (previousMonth)="previousMonth()"
-      (nextMonth)="nextMonth()"
-      (daySelected)="onCalendarDay($event)"
-    />
-  </ds-card>
-
-  <ds-stack
-    direction="row"
-    justify="between"
-    align="center"
-    [gap]="'var(--ds-space-2)'"
-  >
-    <ds-stack [gap]="'2px'" [grow]="true">
-      <ds-heading [level]="3" size="md" [truncate]="true">{{
-        dayTitle()
-      }}</ds-heading>
-      <ds-text variant="meta">{{ dayLabel() }} · {{ countLabel() }}</ds-text>
-    </ds-stack>
-
-    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
-      <ds-icon-button
-        icon="chevronLeft"
-        variant="soft"
-        [size]="30"
-        [iconSize]="15"
-        [stroke]="2.4"
-        [radius]="'var(--ds-radius-md)'"
-        [ariaLabel]="'getAgenda.nav.previous' | t"
-        (clicked)="previousDay()"
+  <ds-split-view [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'" [sticky]="true">
+    <ds-card
+      slot="side"
+      class="agenda-calendar-card"
+      [padding]="'var(--ds-space-4) var(--ds-space-4) var(--ds-space-4)'"
+    >
+      <ds-calendar
+        [monthLabel]="calendarMonthLabel()"
+        [weekdays]="calendarWeekdays()"
+        [cells]="calendarCells()"
+        [previousLabel]="'getAgenda.calendar.previous' | t"
+        [nextLabel]="'getAgenda.calendar.next' | t"
+        (previousMonth)="previousMonth()"
+        (nextMonth)="nextMonth()"
+        (daySelected)="onCalendarDay($event)"
       />
-      <ds-button variant="link" (clicked)="goToday()">{{
-        navLabel()
-      }}</ds-button>
-      <ds-icon-button
-        icon="chevronRight"
-        variant="soft"
-        [size]="30"
-        [iconSize]="15"
-        [stroke]="2.4"
-        [radius]="'var(--ds-radius-md)'"
-        [ariaLabel]="'getAgenda.nav.next' | t"
-        (clicked)="nextDay()"
-      />
-    </ds-stack>
-  </ds-stack>
+    </ds-card>
 
-  @if (loading()) {
-    <ds-skeleton-list
-      [count]="4"
+    <ds-stack
+      direction="row"
+      justify="between"
+      align="center"
       [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-xl)"
-      padding="var(--ds-space-3) var(--ds-space-3)"
-      [check]="canWrite()"
-      [checkSize]="24"
-      titleWidth="62%"
-      [meta]="false"
-      [chips]="2"
-    />
-  } @else if (hasEntries()) {
-    <ds-stack [gap]="'var(--ds-space-2)'">
-      @for (entry of entries(); track entry.id) {
-        <ds-agenda-item
-          [title]="entry.title"
-          [kindLabel]="entryKindLabel(entry)"
-          [appointment]="entry.kind === 'appointment'"
-          [timeLabel]="entry.time ?? ''"
-          [notes]="entry.notes"
-          [done]="entry.done"
-          [canWrite]="canWrite()"
-          [toggleLabel]="'getAgenda.entry.toggle' | t"
-          [editLabel]="'getAgenda.entry.edit' | t"
-          [removeLabel]="'getAgenda.entry.remove' | t"
-          (toggled)="toggleEntry(entry)"
-          (opened)="openEditSheet(entry)"
-          (removed)="removeEntry(entry)"
+    >
+      <ds-stack [gap]="'2px'" [grow]="true">
+        <ds-heading [level]="3" size="md" [truncate]="true">{{
+          dayTitle()
+        }}</ds-heading>
+        <ds-text variant="meta">{{ dayLabel() }} · {{ countLabel() }}</ds-text>
+      </ds-stack>
+
+      <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
+        <ds-icon-button
+          icon="chevronLeft"
+          variant="soft"
+          [size]="30"
+          [iconSize]="15"
+          [stroke]="2.4"
+          [radius]="'var(--ds-radius-md)'"
+          [ariaLabel]="'getAgenda.nav.previous' | t"
+          (clicked)="previousDay()"
         />
-      }
+        <ds-button variant="link" (clicked)="goToday()">{{
+          navLabel()
+        }}</ds-button>
+        <ds-icon-button
+          icon="chevronRight"
+          variant="soft"
+          [size]="30"
+          [iconSize]="15"
+          [stroke]="2.4"
+          [radius]="'var(--ds-radius-md)'"
+          [ariaLabel]="'getAgenda.nav.next' | t"
+          (clicked)="nextDay()"
+        />
+      </ds-stack>
     </ds-stack>
-  } @else {
-    <ds-empty-state
-      icon="agenda"
-      [title]="'getAgenda.empty.title' | t"
-      [text]="
-        (canWrite() ? 'getAgenda.empty.textAction' : 'getAgenda.empty.text') | t
-      "
-    />
-  }
+
+    @if (loading()) {
+      <ds-skeleton-list
+        [count]="4"
+        [gap]="'var(--ds-space-2)'"
+        radius="var(--ds-radius-xl)"
+        padding="var(--ds-space-3) var(--ds-space-3)"
+        [check]="canWrite()"
+        [checkSize]="24"
+        titleWidth="62%"
+        [meta]="false"
+        [chips]="2"
+      />
+    } @else if (hasEntries()) {
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (entry of entries(); track entry.id) {
+          <ds-agenda-item
+            [title]="entry.title"
+            [kindLabel]="entryKindLabel(entry)"
+            [appointment]="entry.kind === 'appointment'"
+            [timeLabel]="entry.time ?? ''"
+            [notes]="entry.notes"
+            [done]="entry.done"
+            [canWrite]="canWrite()"
+            [toggleLabel]="'getAgenda.entry.toggle' | t"
+            [editLabel]="'getAgenda.entry.edit' | t"
+            [removeLabel]="'getAgenda.entry.remove' | t"
+            (toggled)="toggleEntry(entry)"
+            (opened)="openEditSheet(entry)"
+            (removed)="removeEntry(entry)"
+          />
+        }
+      </ds-stack>
+    } @else {
+      <ds-empty-state
+        icon="agenda"
+        [title]="'getAgenda.empty.title' | t"
+        [text]="
+          (canWrite() ? 'getAgenda.empty.textAction' : 'getAgenda.empty.text')
+            | t
+        "
+      />
+    }
+  </ds-split-view>
 
   <ds-modal-sheet
     [open]="sheetOpen()"

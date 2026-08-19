@@ -5,6 +5,7 @@ import { TranslationService } from "@shared/i18n/application/services/translatio
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
@@ -58,6 +59,7 @@ type FilterKind = "store" | "cat" | "brand";
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     StackComponent,
     TextComponent,
     HeadingComponent,

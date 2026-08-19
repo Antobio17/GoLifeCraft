@@ -22,6 +22,7 @@ import { ThemeService } from "@shared/theme/application/services/theme.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { getRoleLabelKey } from "@authorization/domain/utils/role.utils";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
@@ -86,6 +87,7 @@ function passwordMatchValidator(
     ReactiveFormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     ScreenHeaderComponent,
     StackComponent,
     TextComponent,

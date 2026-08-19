@@ -18,6 +18,7 @@ import { StockUnitMode } from "@nutrition/pantry/stock/domain/models/stock-unit-
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -52,6 +53,7 @@ type NutritionMode = "pack" | "per100";
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     ScreenHeaderComponent,
     ConfirmActionModalComponent,
     SkeletonComponent,

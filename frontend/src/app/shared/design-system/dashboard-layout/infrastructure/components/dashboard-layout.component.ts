@@ -13,15 +13,17 @@ import { Component } from "@angular/core";
           <div class="dash__area dash__area--agenda">
             <ng-content select="[slot='agenda']"></ng-content>
           </div>
-          <div class="dash__area dash__area--balance">
-            <ng-content select="[slot='balance']"></ng-content>
-          </div>
           <div class="dash__area dash__area--explore">
             <ng-content select="[slot='explore']"></ng-content>
           </div>
         </div>
-        <div class="dash__area dash__area--gym">
-          <ng-content select="[slot='gym']"></ng-content>
+        <div class="dash__aside">
+          <div class="dash__area dash__area--gym">
+            <ng-content select="[slot='gym']"></ng-content>
+          </div>
+          <div class="dash__area dash__area--balance">
+            <ng-content select="[slot='balance']"></ng-content>
+          </div>
         </div>
       </div>
     </div>
@@ -43,7 +45,8 @@ import { Component } from "@angular/core";
         gap: var(--ds-space-3);
         padding: var(--ds-space-3) 0 var(--ds-space-5);
       }
-      .dash__main {
+      .dash__main,
+      .dash__aside {
         display: contents;
       }
       .dash__area {
@@ -77,14 +80,21 @@ import { Component } from "@angular/core";
       @media (min-width: 1000px) {
         .dash__body {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
           align-items: start;
           column-gap: var(--ds-space-6);
         }
-        .dash__main {
+        .dash__main,
+        .dash__aside {
           display: flex;
           flex-direction: column;
-          gap: var(--ds-space-3);
+          gap: var(--ds-space-4);
+        }
+        .dash__area--gym {
+          order: 0;
+        }
+        .dash__area--balance {
+          order: 1;
         }
       }
     `,

@@ -11,10 +11,17 @@
 
 .pw-container {
   margin: 0 auto;
+  max-width: var(--pw-max);
   padding: var(--ds-space-6) var(--ds-space-8) 3rem;
   position: relative;
   display: flex;
   flex-direction: column;
+}
+
+@media (min-width: 1000px) {
+  .pw-container {
+    max-width: var(--pw-max-wide, var(--pw-max));
+  }
 }
 
 :host ::ng-deep .pw-container > ds-list-filters + ds-list-table,

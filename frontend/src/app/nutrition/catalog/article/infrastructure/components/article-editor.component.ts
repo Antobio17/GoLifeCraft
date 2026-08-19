@@ -19,6 +19,7 @@ import {
 import { forkJoin } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
@@ -95,6 +96,7 @@ function equivalencesValidator(
     ReactiveFormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    SplitViewComponent,
     ScreenHeaderComponent,
     FieldComponent,
     TextInputComponent,

@@ -1,9 +1,10 @@
 /* ============================================================
    DESIGN SYSTEM — LAYOUT
    Breakpoints (referencia, para media queries en componentes):
-     Móvil   : ≤ 639px
-     Tablet  : 640px – 1023px
-     Desktop : ≥ 1024px
+     Móvil            : ≤ 639px
+     Tablet vertical  : 640px – 999px
+     Tablet apaisada  : ≥ 1000px  (dos columnas, ds-split-view)
+     Desktop          : ≥ 1024px
    ============================================================ */
 
 :root {

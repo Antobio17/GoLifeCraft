@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'66rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   <ds-stack
     direction="row"
     justify="between"
@@ -77,85 +81,92 @@
     }
   } @else if (attributes(); as list) {
     @if (list.itemCount > 0) {
-      <ds-segmented-toggle
-        [options]="sortOptions()"
-        [ngModel]="sortMode()"
-        [ngModelOptions]="{ standalone: true }"
-        (ngModelChange)="onSort($event)"
-      />
+      <ds-split-view
+        [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
+        [sticky]="true"
+      >
+        <ng-container slot="side">
+          <ds-segmented-toggle
+            [options]="sortOptions()"
+            [ngModel]="sortMode()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onSort($event)"
+          />
 
-      @if (showTabs()) {
-        <ds-store-tabs
-          [tabs]="storeTabs()"
-          [active]="effectiveTab()"
-          (selected)="onTab($event)"
-        />
-      }
+          @if (showTabs()) {
+            <ds-store-tabs
+              [tabs]="storeTabs()"
+              [active]="effectiveTab()"
+              (selected)="onTab($event)"
+            />
+          }
 
-      <ds-shopping-summary
-        [eyebrow]="'getShopping.summary.total' | t"
-        [totalLabel]="summary().totalLabel"
-        [boughtLabel]="summary().boughtLabel"
-        [percent]="summary().percent"
-      />
+          <ds-shopping-summary
+            [eyebrow]="'getShopping.summary.total' | t"
+            [totalLabel]="summary().totalLabel"
+            [boughtLabel]="summary().boughtLabel"
+            [percent]="summary().percent"
+          />
+        </ng-container>
 
-      @if (tabEmpty()) {
-        <ds-empty-state icon="cart" [title]="'getShopping.tabEmpty' | t" />
-      } @else {
-        @for (group of groups(); track group.category) {
-          <ds-stack [gap]="'var(--ds-space-2)'">
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-2)'"
-            >
-              @if (group.badge) {
-                <ds-chip tone="brand-solid">{{ group.badge }}</ds-chip>
+        @if (tabEmpty()) {
+          <ds-empty-state icon="cart" [title]="'getShopping.tabEmpty' | t" />
+        } @else {
+          @for (group of groups(); track group.category) {
+            <ds-stack [gap]="'var(--ds-space-2)'">
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-2)'"
+              >
+                @if (group.badge) {
+                  <ds-chip tone="brand-solid">{{ group.badge }}</ds-chip>
+                }
+                <ds-text variant="meta">{{ group.label }}</ds-text>
+                <ds-text variant="meta">{{ group.countLabel }}</ds-text>
+                @if (group.tag) {
+                  <ds-chip [uppercase]="true">{{ group.tag }}</ds-chip>
+                }
+                <ds-divider [grow]="true" />
+              </ds-stack>
+
+              @for (item of group.items; track item.id) {
+                <ds-shopping-item
+                  [emoji]="item.emoji"
+                  [name]="item.name"
+                  [brand]="item.brand"
+                  [store]="item.store"
+                  [priceLabel]="item.priceLabel"
+                  [packLabel]="item.packLabel"
+                  [quantity]="item.quantity"
+                  [unitLabel]="item.unitLabel"
+                  [checked]="item.checked"
+                  [canWrite]="canWrite()"
+                  [toggleAriaLabel]="'getShopping.toggle' | t"
+                  [incrementLabel]="'getShopping.increment' | t"
+                  [decrementLabel]="'getShopping.decrement' | t"
+                  [removeLabel]="'getShopping.remove' | t"
+                  (toggled)="toggleChecked(item)"
+                  (increment)="increment(item)"
+                  (decrement)="decrement(item)"
+                  (remove)="removeItem(item)"
+                />
               }
-              <ds-text variant="meta">{{ group.label }}</ds-text>
-              <ds-text variant="meta">{{ group.countLabel }}</ds-text>
-              @if (group.tag) {
-                <ds-chip [uppercase]="true">{{ group.tag }}</ds-chip>
-              }
-              <ds-divider [grow]="true" />
             </ds-stack>
+          }
 
-            @for (item of group.items; track item.id) {
-              <ds-shopping-item
-                [emoji]="item.emoji"
-                [name]="item.name"
-                [brand]="item.brand"
-                [store]="item.store"
-                [priceLabel]="item.priceLabel"
-                [packLabel]="item.packLabel"
-                [quantity]="item.quantity"
-                [unitLabel]="item.unitLabel"
-                [checked]="item.checked"
-                [canWrite]="canWrite()"
-                [toggleAriaLabel]="'getShopping.toggle' | t"
-                [incrementLabel]="'getShopping.increment' | t"
-                [decrementLabel]="'getShopping.decrement' | t"
-                [removeLabel]="'getShopping.remove' | t"
-                (toggled)="toggleChecked(item)"
-                (increment)="increment(item)"
-                (decrement)="decrement(item)"
-                (remove)="removeItem(item)"
-              />
-            }
-          </ds-stack>
+          @if (canWrite() && hasChecked()) {
+            <ds-button
+              variant="outline"
+              [fullWidth]="true"
+              icon="trash"
+              (clicked)="askClearChecked()"
+            >
+              {{ "getShopping.clearChecked" | t }}
+            </ds-button>
+          }
         }
-
-        @if (canWrite() && hasChecked()) {
-          <ds-button
-            variant="outline"
-            [fullWidth]="true"
-            icon="trash"
-            (clicked)="askClearChecked()"
-          >
-            {{ "getShopping.clearChecked" | t }}
-          </ds-button>
-        }
-      }
+      </ds-split-view>
     } @else {
       <ds-empty-state
         icon="cart"

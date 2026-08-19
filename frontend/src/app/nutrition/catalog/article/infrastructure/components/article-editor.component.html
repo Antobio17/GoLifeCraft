@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-5)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-5)'"
+>
   <ds-screen-header
     [leading]="'close'"
     [leadingLabel]="'articleEditor.back' | t"
@@ -25,98 +29,106 @@
     />
   } @else {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <ds-stack [gap]="'var(--ds-space-5)'">
-        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
-          <ds-field [label]="'articleEditor.field.icon' | t">
-            <ds-emoji-picker
-              formControlName="emoji"
-              [groups]="emojiGroups"
-              [fallback]="fallbackEmoji"
-              [sheetTitle]="'articleEditor.field.emojiSheetTitle' | t"
-              [closeLabel]="'articleEditor.field.emojiClose' | t"
-              [triggerLabel]="'articleEditor.field.emojiTrigger' | t"
-              [searchPlaceholder]="'articleEditor.field.emojiSearch' | t"
-              [emptyLabel]="'articleEditor.field.emojiEmpty' | t"
-            />
-          </ds-field>
-          <ds-field
-            [grow]="true"
-            [label]="'articleEditor.field.name' | t"
-            [required]="true"
-          >
-            <ds-text-input
-              variant="outlined"
-              formControlName="name"
-              [placeholder]="'articleEditor.field.namePlaceholder' | t"
-            />
-          </ds-field>
-        </ds-stack>
-
-        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
-          <ds-field [grow]="true" [label]="'articleEditor.field.brand' | t">
-            <ds-text-input
-              variant="outlined"
-              formControlName="brand"
-              [placeholder]="'articleEditor.field.brandPlaceholder' | t"
-            />
-          </ds-field>
-
-          <ds-field [width]="'8rem'" [label]="'articleEditor.field.price' | t">
-            <ds-price-input formControlName="price" />
-          </ds-field>
-        </ds-stack>
-
-        <ds-field [label]="'articleEditor.field.category' | t">
-          <ds-select-chips
-            formControlName="categoryId"
-            [options]="categoryOptions()"
-          />
-        </ds-field>
-
-        <ds-field [label]="'articleEditor.field.store' | t">
-          <ds-select-chips
-            formControlName="supermarketId"
-            [options]="supermarketOptions()"
-          />
-        </ds-field>
-
-        @if (hasSupermarket()) {
-          <ds-stack [gap]="'var(--ds-space-2)'">
-            <ds-stack
-              direction="row"
-              justify="between"
-              align="center"
-              [gap]="'var(--ds-space-2)'"
-            >
-              <ds-text variant="label">{{ aisleSectionLabel() }}</ds-text>
-
-              <ds-button
-                type="button"
-                variant="ghost"
-                size="sm"
-                icon="aisles"
-                (clicked)="openAisleSheet()"
-              >
-                {{ "aisles.manage" | t }}
-              </ds-button>
-            </ds-stack>
-
-            @if (hasAisles()) {
-              <ds-select-chips
-                formControlName="aisleId"
-                [options]="aisleOptions()"
+      <ds-split-view
+        [gap]="'var(--ds-space-5)'"
+        [columns]="'minmax(0, 1fr) minmax(0, 1fr)'"
+      >
+        <ng-container slot="side">
+          <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
+            <ds-field [label]="'articleEditor.field.icon' | t">
+              <ds-emoji-picker
+                formControlName="emoji"
+                [groups]="emojiGroups"
+                [fallback]="fallbackEmoji"
+                [sheetTitle]="'articleEditor.field.emojiSheetTitle' | t"
+                [closeLabel]="'articleEditor.field.emojiClose' | t"
+                [triggerLabel]="'articleEditor.field.emojiTrigger' | t"
+                [searchPlaceholder]="'articleEditor.field.emojiSearch' | t"
+                [emptyLabel]="'articleEditor.field.emojiEmpty' | t"
               />
-            } @else {
-              <ds-note icon="plus">{{
-                "articleEditor.field.aisleEmpty" | t
-              }}</ds-note>
-            }
-
-            <ds-text variant="meta">{{
-              "articleEditor.field.aisleHint" | t
-            }}</ds-text>
+            </ds-field>
+            <ds-field
+              [grow]="true"
+              [label]="'articleEditor.field.name' | t"
+              [required]="true"
+            >
+              <ds-text-input
+                variant="outlined"
+                formControlName="name"
+                [placeholder]="'articleEditor.field.namePlaceholder' | t"
+              />
+            </ds-field>
           </ds-stack>
-        }
+
+          <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
+            <ds-field [grow]="true" [label]="'articleEditor.field.brand' | t">
+              <ds-text-input
+                variant="outlined"
+                formControlName="brand"
+                [placeholder]="'articleEditor.field.brandPlaceholder' | t"
+              />
+            </ds-field>
+
+            <ds-field
+              [width]="'8rem'"
+              [label]="'articleEditor.field.price' | t"
+            >
+              <ds-price-input formControlName="price" />
+            </ds-field>
+          </ds-stack>
+
+          <ds-field [label]="'articleEditor.field.category' | t">
+            <ds-select-chips
+              formControlName="categoryId"
+              [options]="categoryOptions()"
+            />
+          </ds-field>
+
+          <ds-field [label]="'articleEditor.field.store' | t">
+            <ds-select-chips
+              formControlName="supermarketId"
+              [options]="supermarketOptions()"
+            />
+          </ds-field>
+
+          @if (hasSupermarket()) {
+            <ds-stack [gap]="'var(--ds-space-2)'">
+              <ds-stack
+                direction="row"
+                justify="between"
+                align="center"
+                [gap]="'var(--ds-space-2)'"
+              >
+                <ds-text variant="label">{{ aisleSectionLabel() }}</ds-text>
+
+                <ds-button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  icon="aisles"
+                  (clicked)="openAisleSheet()"
+                >
+                  {{ "aisles.manage" | t }}
+                </ds-button>
+              </ds-stack>
+
+              @if (hasAisles()) {
+                <ds-select-chips
+                  formControlName="aisleId"
+                  [options]="aisleOptions()"
+                />
+              } @else {
+                <ds-note icon="plus">{{
+                  "articleEditor.field.aisleEmpty" | t
+                }}</ds-note>
+              }
+
+              <ds-text variant="meta">{{
+                "articleEditor.field.aisleHint" | t
+              }}</ds-text>
+            </ds-stack>
+          }
+        </ng-container>
 
         <ds-stack [gap]="'var(--ds-space-2)'">
           <ds-nutrition-editor
@@ -198,7 +210,7 @@
             {{ "articleEditor.delete" | t }}
           </ds-button>
         }
-      </ds-stack>
+      </ds-split-view>
     </form>
   }
 </ds-page-wrapper>

@@ -1,4 +1,4 @@
-<ds-page-wrapper [maxWidth]="'35rem'" [gap]="'0'">
+<ds-page-wrapper [maxWidth]="'35rem'" [wideMaxWidth]="'62rem'" [gap]="'0'">
   <ds-stack [gap]="'var(--ds-space-3)'">
     <ds-screen-header
       leading="back"
@@ -59,8 +59,12 @@
         <ds-skeleton height="2.75rem" radius="var(--ds-radius-lg)" />
       </ds-stack>
     } @else {
-      <ds-stack [gap]="'var(--ds-space-6)'">
+      <ds-split-view
+        [gap]="'var(--ds-space-6)'"
+        [columns]="'minmax(0, 1fr) minmax(0, 1fr)'"
+      >
         <ds-profile-card
+          slot="side"
           [initial]="initial()"
           [name]="fullName()"
           [email]="email()"
@@ -72,7 +76,7 @@
           "
         ></ds-profile-card>
 
-        <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
           <ds-text variant="label">{{
             "settings.section.personal" | t
           }}</ds-text>
@@ -124,7 +128,7 @@
           </ds-button>
         </ds-stack>
 
-        <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
           <ds-text variant="label">
             {{ "settings.section.preferences" | t }}
           </ds-text>
@@ -239,7 +243,7 @@
         >
           {{ "settings.logout" | t }}
         </ds-button>
-      </ds-stack>
+      </ds-split-view>
     }
   </ds-stack>
 </ds-page-wrapper>

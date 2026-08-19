@@ -1,4 +1,8 @@
-<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'44rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   @if (loading()) {
     <ds-skeleton-screen-header
       [leading]="true"
@@ -75,134 +79,141 @@
       }
     </ds-screen-header>
 
-    <ds-product-hero [emoji]="d.emoji" [price]="d.price" />
+    <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
+      <ds-product-hero [emoji]="d.emoji" [price]="d.price" />
 
-    @if (d.brand || d.store || d.aisle) {
-      <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
-        @if (d.brand) {
-          <ds-chip>{{ d.brand }}</ds-chip>
-        }
-        @if (d.store) {
-          <ds-chip tone="warning">{{ d.store }}</ds-chip>
-        }
-        @if (d.aisle) {
-          <ds-chip tone="brand"
-            >{{ "getArticle.aisle" | t }} · {{ d.aisle }}</ds-chip
-          >
-        }
-      </ds-stack>
-    }
-
-    @if (d.hasNutrition) {
-      @if (d.hasPack) {
-        <ds-segmented-toggle
-          [options]="[
-            { value: 'per100', label: 'getArticle.tab.per100' | t },
-            { value: 'pack', label: 'getArticle.tab.pack' | t },
-          ]"
-          [ngModel]="mode()"
-          (ngModelChange)="setMode($event)"
-        />
+      @if (d.brand || d.store || d.aisle) {
+        <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
+          @if (d.brand) {
+            <ds-chip>{{ d.brand }}</ds-chip>
+          }
+          @if (d.store) {
+            <ds-chip tone="warning">{{ d.store }}</ds-chip>
+          }
+          @if (d.aisle) {
+            <ds-chip tone="brand"
+              >{{ "getArticle.aisle" | t }} · {{ d.aisle }}</ds-chip
+            >
+          }
+        </ds-stack>
       }
 
-      @if (activeMacros(); as m) {
-        <ds-text variant="label">
-          {{ "getArticle.per" | t }}
-          {{ "pack" === mode() ? d.packLabel : d.per100Label }}
-        </ds-text>
-
-        <ds-macro-bars
-          [kcal]="m.kcal ?? '—'"
-          [kcalUnit]="'getArticle.macro.kcal' | t"
-          [macros]="[
-            {
-              label: 'getArticle.macro.protein' | t,
-              value: m.proteinG ?? '—',
-              tone: 'protein',
-            },
-            {
-              label: 'getArticle.macro.fat' | t,
-              value: m.fatG ?? '—',
-              tone: 'fat',
-            },
-            {
-              label: 'getArticle.macro.carbs' | t,
-              value: m.carbsG ?? '—',
-              tone: 'carbs',
-            },
-          ]"
-        />
-
-        <ds-nutrition-facts
-          [rows]="[
-            { label: 'getArticle.table.fat' | t, value: m.fatG ?? '—' },
-            {
-              label: 'getArticle.table.saturated' | t,
-              value: m.saturatedG ?? '—',
-              sub: true,
-            },
-            { label: 'getArticle.table.carbs' | t, value: m.carbsG ?? '—' },
-            {
-              label: 'getArticle.table.sugars' | t,
-              value: m.sugarsG ?? '—',
-              sub: true,
-            },
-            { label: 'getArticle.table.protein' | t, value: m.proteinG ?? '—' },
-            {
-              label: 'getArticle.table.fiber' | t,
-              value: m.fiberG ?? '—',
-              hidden: !m.fiberG,
-            },
-            { label: 'getArticle.table.salt' | t, value: m.saltG ?? '—' },
-          ]"
-        />
-      }
-    } @else {
-      <ds-text variant="muted">{{ "getArticle.noNutrition" | t }}</ds-text>
-    }
-
-    <ds-equivalence-summary
-      [title]="'getArticle.units.heading' | t"
-      [baseBadge]="('getArticle.units.base' | t) + ' ' + d.units.baseUnit"
-      [recipeLabel]="'getArticle.units.recipe' | t"
-      [recipeUnit]="d.units.recipeUnit"
-      [diaryLabel]="'getArticle.units.diary' | t"
-      [diaryUnit]="d.units.diaryUnit"
-      [equivalencesLabel]="'getArticle.units.equivalences' | t"
-      [lines]="d.units.lines"
-    />
-
-    <ds-purchase-summary
-      [title]="'getArticle.purchase.heading' | t"
-      [priceBadge]="d.purchase.pricePerPack"
-      [hasPack]="d.purchase.hasPack"
-      [packLabel]="'getArticle.purchase.pack' | t"
-      [packValue]="d.purchase.packLabel"
-      [costLabel]="'getArticle.purchase.cost' | t"
-      [costValue]="d.purchase.costPer100"
-      [emptyText]="'getArticle.purchase.empty' | t"
-    >
-      @if (stock(); as s) {
-        @if (s.hasPack) {
-          <ds-stock-control
-            [stockLabel]="'getArticle.stock.heading' | t"
-            [mainText]="s.packsText"
-            [subText]="s.baseText"
-            [valueLabel]="'getArticle.stock.value' | t"
-            [valueText]="s.valueText"
-            [stepLabel]="'getArticle.stock.step' | t"
-            [clearLabel]="'getArticle.stock.clear' | t"
-            [editLabel]="'getArticle.stock.edit' | t"
-            [disabled]="savingStock()"
-            [readonly]="!canWrite()"
-            (incremented)="onIncrementStock()"
-            (decremented)="onDecrementStock()"
-            (cleared)="onClearStock()"
-            (editRequested)="onOpenStockEditor()"
+      @if (d.hasNutrition) {
+        @if (d.hasPack) {
+          <ds-segmented-toggle
+            [options]="[
+              { value: 'per100', label: 'getArticle.tab.per100' | t },
+              { value: 'pack', label: 'getArticle.tab.pack' | t },
+            ]"
+            [ngModel]="mode()"
+            (ngModelChange)="setMode($event)"
           />
         }
+
+        @if (activeMacros(); as m) {
+          <ds-text variant="label">
+            {{ "getArticle.per" | t }}
+            {{ "pack" === mode() ? d.packLabel : d.per100Label }}
+          </ds-text>
+
+          <ds-macro-bars
+            [kcal]="m.kcal ?? '—'"
+            [kcalUnit]="'getArticle.macro.kcal' | t"
+            [macros]="[
+              {
+                label: 'getArticle.macro.protein' | t,
+                value: m.proteinG ?? '—',
+                tone: 'protein',
+              },
+              {
+                label: 'getArticle.macro.fat' | t,
+                value: m.fatG ?? '—',
+                tone: 'fat',
+              },
+              {
+                label: 'getArticle.macro.carbs' | t,
+                value: m.carbsG ?? '—',
+                tone: 'carbs',
+              },
+            ]"
+          />
+
+          <ds-nutrition-facts
+            [rows]="[
+              { label: 'getArticle.table.fat' | t, value: m.fatG ?? '—' },
+              {
+                label: 'getArticle.table.saturated' | t,
+                value: m.saturatedG ?? '—',
+                sub: true,
+              },
+              { label: 'getArticle.table.carbs' | t, value: m.carbsG ?? '—' },
+              {
+                label: 'getArticle.table.sugars' | t,
+                value: m.sugarsG ?? '—',
+                sub: true,
+              },
+              {
+                label: 'getArticle.table.protein' | t,
+                value: m.proteinG ?? '—',
+              },
+              {
+                label: 'getArticle.table.fiber' | t,
+                value: m.fiberG ?? '—',
+                hidden: !m.fiberG,
+              },
+              { label: 'getArticle.table.salt' | t, value: m.saltG ?? '—' },
+            ]"
+          />
+        }
+      } @else {
+        <ds-text variant="muted">{{ "getArticle.noNutrition" | t }}</ds-text>
       }
-    </ds-purchase-summary>
+
+      <ds-equivalence-summary
+        slot="side"
+        [title]="'getArticle.units.heading' | t"
+        [baseBadge]="('getArticle.units.base' | t) + ' ' + d.units.baseUnit"
+        [recipeLabel]="'getArticle.units.recipe' | t"
+        [recipeUnit]="d.units.recipeUnit"
+        [diaryLabel]="'getArticle.units.diary' | t"
+        [diaryUnit]="d.units.diaryUnit"
+        [equivalencesLabel]="'getArticle.units.equivalences' | t"
+        [lines]="d.units.lines"
+      />
+
+      <ds-purchase-summary
+        slot="side"
+        [title]="'getArticle.purchase.heading' | t"
+        [priceBadge]="d.purchase.pricePerPack"
+        [hasPack]="d.purchase.hasPack"
+        [packLabel]="'getArticle.purchase.pack' | t"
+        [packValue]="d.purchase.packLabel"
+        [costLabel]="'getArticle.purchase.cost' | t"
+        [costValue]="d.purchase.costPer100"
+        [emptyText]="'getArticle.purchase.empty' | t"
+      >
+        @if (stock(); as s) {
+          @if (s.hasPack) {
+            <ds-stock-control
+              [stockLabel]="'getArticle.stock.heading' | t"
+              [mainText]="s.packsText"
+              [subText]="s.baseText"
+              [valueLabel]="'getArticle.stock.value' | t"
+              [valueText]="s.valueText"
+              [stepLabel]="'getArticle.stock.step' | t"
+              [clearLabel]="'getArticle.stock.clear' | t"
+              [editLabel]="'getArticle.stock.edit' | t"
+              [disabled]="savingStock()"
+              [readonly]="!canWrite()"
+              (incremented)="onIncrementStock()"
+              (decremented)="onDecrementStock()"
+              (cleared)="onClearStock()"
+              (editRequested)="onOpenStockEditor()"
+            />
+          }
+        }
+      </ds-purchase-summary>
+    </ds-split-view>
   }
 </ds-page-wrapper>
 
