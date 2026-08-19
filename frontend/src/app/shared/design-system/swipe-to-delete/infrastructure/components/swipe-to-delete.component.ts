@@ -69,10 +69,16 @@ export class SwipeToDeleteComponent {
     this.reset();
   }
 
-  onDelete(): void {
-    this.offset = 0;
-    this.reset();
-    this.remove.emit();
+  onDeletePointerUp(event: PointerEvent): void {
+    if (!this.isInsideTarget(event)) return;
+
+    this.emitRemove();
+  }
+
+  onDeleteClick(event: MouseEvent): void {
+    if (event.detail !== 0) return;
+
+    this.emitRemove();
   }
 
   private tryStartSwipe(
@@ -95,6 +101,23 @@ export class SwipeToDeleteComponent {
     }
 
     return false;
+  }
+
+  private isInsideTarget(event: PointerEvent): boolean {
+    const rect = (event.currentTarget as Element).getBoundingClientRect();
+
+    return (
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom
+    );
+  }
+
+  private emitRemove(): void {
+    this.offset = 0;
+    this.reset();
+    this.remove.emit();
   }
 
   private reset(): void {

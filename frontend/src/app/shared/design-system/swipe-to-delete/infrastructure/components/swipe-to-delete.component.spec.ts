@@ -5,11 +5,17 @@ import { CardComponent } from "../../../card/infrastructure/components/card.comp
 
 @Component({
   imports: [SwipeToDeleteComponent, CardComponent],
-  template: `<ds-swipe-to-delete [reveal]="66" removeLabel="x">
+  template: `<ds-swipe-to-delete
+    [reveal]="66"
+    removeLabel="x"
+    (remove)="removed = removed + 1"
+  >
     <ds-card>contenido</ds-card>
   </ds-swipe-to-delete>`,
 })
-class HostComponent {}
+class HostComponent {
+  removed = 0;
+}
 
 describe("SwipeToDeleteComponent", () => {
   function render() {
@@ -42,5 +48,57 @@ describe("SwipeToDeleteComponent", () => {
     expect(getComputedStyle(swipe).borderRadius).toBe(
       getComputedStyle(card).borderRadius,
     );
+  });
+
+  function pointerUpOn(element: HTMLElement, offsetX = 0, offsetY = 0): void {
+    const rect = element.getBoundingClientRect();
+    element.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        clientX: rect.left + rect.width / 2 + offsetX,
+        clientY: rect.top + rect.height / 2 + offsetY,
+      }),
+    );
+  }
+
+  it("borra al levantar el dedo sobre el boton, sin esperar al click", () => {
+    const fixture = render();
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+
+    pointerUpOn(deleteButton);
+
+    expect(fixture.componentInstance.removed).toBe(1);
+  });
+
+  it("no borra dos veces cuando el click sintetico llega tras el pointerup", () => {
+    const fixture = render();
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+
+    pointerUpOn(deleteButton);
+    deleteButton.dispatchEvent(
+      new MouseEvent("click", { bubbles: true, detail: 1 }),
+    );
+
+    expect(fixture.componentInstance.removed).toBe(1);
+  });
+
+  it("no borra si el dedo se sale del boton antes de levantarlo", () => {
+    const fixture = render();
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+
+    pointerUpOn(deleteButton, -200);
+
+    expect(fixture.componentInstance.removed).toBe(0);
+  });
+
+  it("borra con el teclado, que no emite pointerup", () => {
+    const fixture = render();
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+
+    deleteButton.dispatchEvent(
+      new MouseEvent("click", { bubbles: true, detail: 0 }),
+    );
+
+    expect(fixture.componentInstance.removed).toBe(1);
   });
 });

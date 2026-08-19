@@ -6,7 +6,8 @@
       [class.swipe__delete--revealed]="slid"
       [style.width.px]="reveal"
       [attr.aria-label]="removeLabel"
-      (click)="onDelete()"
+      (pointerup)="onDeletePointerUp($event)"
+      (click)="onDeleteClick($event)"
     >
       <ds-icon name="trash" [size]="17" />
     </button>
