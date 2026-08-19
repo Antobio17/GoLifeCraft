@@ -22,6 +22,10 @@ type StackJustify = "start" | "center" | "end" | "between";
       :host([grow]) {
         flex: 1 1 auto;
       }
+      :host([no-shrink]) {
+        flex-shrink: 0;
+        min-width: auto;
+      }
     `,
   ],
   host: {
@@ -31,6 +35,7 @@ type StackJustify = "start" | "center" | "end" | "between";
     "[style.--stack-justify]": "justifyValue",
     "[style.--stack-wrap]": "wrap ? 'wrap' : 'nowrap'",
     "[attr.grow]": "grow ? '' : null",
+    "[attr.no-shrink]": "shrink ? null : ''",
   },
 })
 export class StackComponent {
@@ -40,6 +45,7 @@ export class StackComponent {
   @Input() justify: StackJustify = "start";
   @Input() wrap = false;
   @Input() grow = false;
+  @Input() shrink = true;
 
   private readonly edges: Record<string, string> = {
     start: "flex-start",
