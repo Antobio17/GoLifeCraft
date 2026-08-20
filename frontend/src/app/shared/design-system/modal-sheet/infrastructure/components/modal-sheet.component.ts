@@ -10,6 +10,7 @@ import {
   ViewChild,
   inject,
 } from "@angular/core";
+import { StatusBarService } from "@shared/theme/application/services/status-bar.service";
 
 @Component({
   selector: "ds-modal-sheet",
@@ -86,12 +87,21 @@ import {
         inset: 0;
         z-index: 1000;
         background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: var(--ds-blur-sm);
         display: flex;
         align-items: flex-end;
         justify-content: center;
       }
+      .ds-sheet__overlay::before {
+        content: "";
+        position: absolute;
+        top: env(safe-area-inset-top);
+        right: 0;
+        bottom: 0;
+        left: 0;
+        backdrop-filter: var(--ds-blur-sm);
+      }
       .ds-sheet {
+        position: relative;
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -220,6 +230,7 @@ export class ModalSheetComponent implements OnDestroy {
 
   private renderer = inject(Renderer2);
   private document = inject(DOCUMENT);
+  private statusBar = inject(StatusBarService);
 
   private isOpen = false;
   private overlayNode: HTMLElement | null = null;
@@ -238,8 +249,13 @@ export class ModalSheetComponent implements OnDestroy {
 
   @Input()
   set open(value: boolean) {
+    if (value === this.isOpen) {
+      return;
+    }
+
     this.isOpen = value;
     this.toggleScrollLock(value);
+    this.statusBar.refresh();
   }
 
   get open(): boolean {
@@ -256,6 +272,13 @@ export class ModalSheetComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.toggleScrollLock(false);
     this.detachOverlay();
+
+    if (!this.isOpen) {
+      return;
+    }
+
+    this.isOpen = false;
+    this.statusBar.refresh();
   }
 
   private detachOverlay(): void {
