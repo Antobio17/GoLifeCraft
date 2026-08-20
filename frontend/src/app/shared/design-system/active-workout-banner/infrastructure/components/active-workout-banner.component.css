@@ -10,7 +10,7 @@
 
 .active-banner {
   position: sticky;
-  top: 0.5rem;
+  top: calc(env(safe-area-inset-top) + 0.5rem);
   z-index: 20;
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 :host {
   position: fixed;
-  top: 1rem;
+  top: calc(env(safe-area-inset-top) + 1rem);
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
