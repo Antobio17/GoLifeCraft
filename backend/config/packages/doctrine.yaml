@@ -177,6 +177,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Economy/Finance/Recurrence/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Economy\Finance\Recurrence\Domain\Model'
                         alias: finance_recurrence
+                    FinanceBudget:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Economy/Finance/Budget/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Economy\Finance\Budget\Domain\Model'
+                        alias: finance_budget
                     Menu:
                         is_bundle: false
                         type: xml

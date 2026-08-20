@@ -31,6 +31,9 @@ import { DateInputComponent } from "@shared/design-system/date-input/infrastruct
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
+import { BudgetMeterComponent } from "@shared/design-system/budget-meter/infrastructure/components/budget-meter.component";
+import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { BalanceCardComponent } from "@shared/design-system/balance-card/infrastructure/components/balance-card.component";
 import { BarChartComponent } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
 import { BreakdownRowComponent } from "@shared/design-system/breakdown-row/infrastructure/components/breakdown-row.component";
@@ -73,6 +76,10 @@ import { FinanceBreakdownRow } from "@economy/finance/transaction/domain/models/
 import { GetFinanceAccountsService } from "@economy/finance/account/application/services/get-finance-accounts.service";
 import { FinanceAccountCatalogService } from "@economy/finance/account/application/services/finance-account-catalog.service";
 import { FinanceAccount } from "@economy/finance/account/domain/models/finance-account.model";
+import { GetFinanceBudgetService } from "@economy/finance/budget/application/services/get-finance-budget.service";
+import { FinanceBudgetViewService } from "@economy/finance/budget/application/services/finance-budget-view.service";
+import { FinanceBudgetAttributes } from "@economy/finance/budget/domain/models/finance-budget-attributes.model";
+import { FinanceBudgetStatus } from "@economy/finance/budget/domain/models/finance-budget-status.model";
 
 const EVOLUTION_MONTHS = 6;
 
@@ -109,6 +116,9 @@ const EVOLUTION_MONTHS = 6;
     AmountInputComponent,
     SwipeToDeleteComponent,
     TrendBadgeComponent,
+    BudgetMeterComponent,
+    CtaRowComponent,
+    ChipComponent,
     BalanceCardComponent,
     BarChartComponent,
     BreakdownRowComponent,
@@ -134,8 +144,10 @@ export class GetEconomyComponent implements OnInit {
     DeleteFinanceTransactionService,
   );
   private getFinanceAccountsService = inject(GetFinanceAccountsService);
+  private getFinanceBudgetService = inject(GetFinanceBudgetService);
   private router = inject(Router);
   protected view = inject(FinanceViewService);
+  protected budgetView = inject(FinanceBudgetViewService);
   protected calendarView = inject(FinanceCalendarViewService);
   protected categoryCatalog = inject(FinanceCategoryCatalogService);
   protected movementGrouping = inject(FinanceMovementGroupingService);
@@ -143,6 +155,7 @@ export class GetEconomyComponent implements OnInit {
   protected accountCatalog = inject(FinanceAccountCatalogService);
 
   private readonly MODULE_PATH = "economy/finance/transaction";
+  private readonly BUDGET_MODULE_PATH = "economy/finance/budget";
 
   canWrite = computed(() => this.authSession.isGod());
 
@@ -157,6 +170,7 @@ export class GetEconomyComponent implements OnInit {
   transactions = signal<FinanceTransactionView[]>([]);
   calendarDays = signal<FinanceCalendarDay[]>([]);
   accounts = signal<FinanceAccount[]>([]);
+  budget = signal<FinanceBudgetAttributes | null>(null);
 
   dayMode = signal(false);
   selectedDate = signal<string | null>(null);
@@ -200,6 +214,40 @@ export class GetEconomyComponent implements OnInit {
 
   hasMovements = computed(() => this.transactions().length > 0);
   hasExpense = computed(() => (this.overview()?.expense ?? 0) > 0);
+
+  budgetConfigured = computed(() => this.budget()?.configured ?? false);
+  budgetSpentLabel = computed(() =>
+    this.view.money(this.budget()?.variableSpent ?? 0),
+  );
+  budgetTotalLabel = computed(() =>
+    this.view.money(this.budget()?.variableBudget ?? 0),
+  );
+  budgetExpectedLabel = computed(() =>
+    this.view.money(this.budget()?.variableExpected ?? 0),
+  );
+  budgetRatio = computed(() => this.budget()?.variableProgress ?? 0);
+  budgetPaceRatio = computed(() => this.budget()?.monthProgress ?? 0);
+  budgetStatus = computed(
+    () => this.budget()?.variableStatus ?? FinanceBudgetStatus.ON_TRACK,
+  );
+  budgetTone = computed(() => this.budgetView.tone(this.budgetStatus()));
+  budgetBadgeLabel = computed(() => {
+    this.translationsReady();
+
+    return this.budgetView.statusLabel(this.budgetStatus());
+  });
+  budgetDifferenceLabel = computed(() => {
+    this.translationsReady();
+    const difference = this.budget()?.variableDifference ?? 0;
+
+    return this.budgetView.differenceLabel(
+      difference,
+      this.view.money(Math.abs(difference)),
+    );
+  });
+  budgetDifferencePositive = computed(
+    () => (this.budget()?.variableDifference ?? 0) >= 0,
+  );
 
   balanceValue = computed(() =>
     this.view.moneyPlain(this.overview()?.balance ?? 0),
@@ -420,12 +468,13 @@ export class GetEconomyComponent implements OnInit {
   formValid = computed(() => this.transactionForm.isValid(this.form()));
 
   ngOnInit(): void {
-    this.translationService
-      .loadModuleTranslations(this.MODULE_PATH)
-      .then(() => {
-        this.translationsReady.set(true);
-        this.load();
-      });
+    Promise.all([
+      this.translationService.loadModuleTranslations(this.MODULE_PATH),
+      this.translationService.loadModuleTranslations(this.BUDGET_MODULE_PATH),
+    ]).then(() => {
+      this.translationsReady.set(true);
+      this.load();
+    });
   }
 
   t(key: string): string {
@@ -470,6 +519,14 @@ export class GetEconomyComponent implements OnInit {
 
   goToRecurrences(): void {
     this.router.navigate(["/economy/recurrences"]);
+  }
+
+  goToBudget(): void {
+    this.router.navigate(["/economy/budget"]);
+  }
+
+  goToBudgetSettings(): void {
+    this.router.navigate(["/economy/budget/settings"]);
   }
 
   openNewSheet(): void {
@@ -658,6 +715,10 @@ export class GetEconomyComponent implements OnInit {
 
     this.getFinanceAccountsService.getFinanceAccounts().subscribe({
       next: (response) => this.accounts.set(response.data.attributes.accounts),
+    });
+
+    this.getFinanceBudgetService.getFinanceBudget(month).subscribe({
+      next: (response) => this.budget.set(response.data.attributes),
     });
   }
 

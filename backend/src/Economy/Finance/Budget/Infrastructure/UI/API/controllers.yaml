@@ -1,0 +1,21 @@
+services:
+  Economy\Finance\Budget\Infrastructure\UI\API\Controller\GetFinanceBudgetController:
+    class: Economy\Finance\Budget\Infrastructure\UI\API\Controller\GetFinanceBudgetController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Budget\Infrastructure\UI\API\Controller\GetFinanceBudgetSettingsController:
+    class: Economy\Finance\Budget\Infrastructure\UI\API\Controller\GetFinanceBudgetSettingsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Economy\Finance\Budget\Infrastructure\UI\API\Controller\SaveFinanceBudgetController:
+    class: Economy\Finance\Budget\Infrastructure\UI\API\Controller\SaveFinanceBudgetController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

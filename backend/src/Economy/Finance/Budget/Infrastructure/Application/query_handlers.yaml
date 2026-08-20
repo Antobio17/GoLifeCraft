@@ -1,0 +1,22 @@
+services:
+  Economy\Finance\Budget\Application\Query\GetFinanceBudgetQueryHandler:
+    class: Economy\Finance\Budget\Application\Query\GetFinanceBudgetQueryHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Budget\Domain\QueryModel\GetFinanceBudgetNeedleDataQuery'
+      $dataTransform: '@Economy\Finance\Budget\Application\Query\GetFinanceBudgetDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Budget\Application\Query\GetFinanceBudgetDataTransform:
+    class: Economy\Finance\Budget\Infrastructure\UI\API\DataTransform\ApiGetFinanceBudgetDataTransform
+
+  Economy\Finance\Budget\Application\Query\GetFinanceBudgetSettingsQueryHandler:
+    class: Economy\Finance\Budget\Application\Query\GetFinanceBudgetSettingsQueryHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Budget\Domain\QueryModel\GetFinanceBudgetSettingsNeedleDataQuery'
+      $dataTransform: '@Economy\Finance\Budget\Application\Query\GetFinanceBudgetSettingsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Economy\Finance\Budget\Application\Query\GetFinanceBudgetSettingsDataTransform:
+    class: Economy\Finance\Budget\Infrastructure\UI\API\DataTransform\ApiGetFinanceBudgetSettingsDataTransform

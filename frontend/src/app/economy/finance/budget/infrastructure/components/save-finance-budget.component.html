@@ -1,0 +1,215 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'70rem'"
+  [gap]="'var(--ds-space-3)'"
+>
+  <ds-screen-header
+    leading="back"
+    [leadingLabel]="'saveFinanceBudget.back' | t"
+    [eyebrow]="'saveFinanceBudget.eyebrow' | t"
+    [title]="'saveFinanceBudget.title' | t"
+    (leadingClick)="goBack()"
+  />
+
+  @if (loading()) {
+    <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
+      <ds-skeleton-panel slot="side" content="none" />
+      <ds-skeleton-panel slot="side" [figure]="true" content="meters" />
+
+      <ds-skeleton-section-header titleWidth="9rem" />
+      <ds-skeleton-rows [card]="true" [rows]="8" labelWidth="50%" />
+    </ds-split-view>
+  } @else {
+    <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
+      <ng-container slot="side">
+        <ds-card [padding]="'var(--ds-space-4)'">
+          <ds-text variant="label">{{
+            "saveFinanceBudget.income.title" | t
+          }}</ds-text>
+
+          <ds-amount-input
+            unit="€"
+            placeholder="0,00"
+            [large]="true"
+            [ariaLabel]="'saveFinanceBudget.income.title' | t"
+            [ngModel]="form().referenceIncome"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onReferenceIncome($event)"
+          />
+
+          <ds-note icon="info">{{ suggestedIncomeHint() }}</ds-note>
+        </ds-card>
+
+        <ds-card [padding]="'var(--ds-space-4)'">
+          <ds-text variant="label">{{
+            "saveFinanceBudget.savings.title" | t
+          }}</ds-text>
+
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="end"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="strong">{{
+                "saveFinanceBudget.savings.goal" | t
+              }}</ds-text>
+              <ds-text variant="meta"
+                >{{ savingsAmountLabel() }}
+                {{ "saveFinanceBudget.savings.perMonth" | t }}</ds-text
+              >
+            </ds-stack>
+
+            <ds-heading [level]="3" size="lg">{{
+              savingsPercentageLabel()
+            }}</ds-heading>
+          </ds-stack>
+
+          <ds-slider
+            [min]="0"
+            [max]="savingsMax"
+            [step]="savingsStep()"
+            [ariaLabel]="'saveFinanceBudget.savings.goal' | t"
+            [valueText]="savingsPercentageLabel()"
+            [ngModel]="form().savingsPercentage"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onSavingsPercentage($event)"
+          />
+        </ds-card>
+
+        <ds-card [padding]="'var(--ds-space-4)'">
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="start"
+            [gap]="'var(--ds-space-3)'"
+          >
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="label">{{
+                "saveFinanceBudget.unassigned.title" | t
+              }}</ds-text>
+              <ds-text variant="meta">{{ unassignedHint() }}</ds-text>
+            </ds-stack>
+
+            <ds-stack align="end" [gap]="'2px'">
+              <ds-heading [level]="3" size="md">{{
+                unassignedPercentageLabel()
+              }}</ds-heading>
+              <ds-text [variant]="overAssigned() ? 'danger' : 'muted'">{{
+                unassignedAmountLabel()
+              }}</ds-text>
+            </ds-stack>
+          </ds-stack>
+
+          <ds-allocation-bar
+            [segments]="allocationSegments()"
+            [ariaLabel]="'saveFinanceBudget.allocation.aria' | t"
+          />
+        </ds-card>
+
+        @if (overAssigned()) {
+          <ds-note icon="alertCircle" tone="danger">{{
+            "saveFinanceBudget.unassigned.warning" | t
+          }}</ds-note>
+        }
+      </ng-container>
+
+      <ds-section-header
+        [title]="'saveFinanceBudget.categories.title' | t"
+        [staticLabel]="'saveFinanceBudget.categories.hint' | t"
+        size="md"
+      />
+
+      @if (!hasReferenceIncome()) {
+        <ds-note icon="alertCircle" tone="warning">{{
+          "saveFinanceBudget.income.missing" | t
+        }}</ds-note>
+      }
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (row of categoryRows(); track row.key) {
+          <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-3)'">
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+              [wrap]="true"
+            >
+              <ds-emoji-tile [emoji]="row.emoji" [size]="34" [radius]="10" />
+              <ds-stack [grow]="true">
+                <ds-text variant="strong" [truncate]="true">{{
+                  row.name
+                }}</ds-text>
+              </ds-stack>
+
+              <ds-type-toggle
+                [options]="kindOptions()"
+                [ngModel]="row.kind"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="onCategoryKind(row.index, $event)"
+              />
+            </ds-stack>
+
+            @if (row.variable) {
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-4)'"
+              >
+                <ds-stack [grow]="true">
+                  <ds-slider
+                    [min]="0"
+                    [max]="row.sliderMax"
+                    [step]="variableStep()"
+                    [ariaLabel]="row.name"
+                    [valueText]="row.amountLabel"
+                    [ngModel]="row.amount"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="onCategorySlider(row.index, $event)"
+                  />
+                </ds-stack>
+
+                <ds-stack align="end" [gap]="'2px'">
+                  <ds-text variant="strong">{{ row.amountLabel }}</ds-text>
+                  <ds-text variant="meta">{{ row.percentageLabel }}</ds-text>
+                </ds-stack>
+              </ds-stack>
+            } @else {
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+                [wrap]="true"
+              >
+                <ds-amount-input
+                  unit="€"
+                  placeholder="0,00"
+                  [ariaLabel]="row.name"
+                  [ngModel]="row.amountText"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="onCategoryAmount(row.index, $event)"
+                />
+
+                <ds-text variant="meta"
+                  >{{ row.percentageLabel }} ·
+                  {{ "saveFinanceBudget.kind.exactHint" | t }}</ds-text
+                >
+              </ds-stack>
+            }
+          </ds-card>
+        }
+      </ds-stack>
+
+      <ds-button
+        variant="primary"
+        [fullWidth]="true"
+        [disabled]="!canSave()"
+        [loading]="saving()"
+        (clicked)="save()"
+      >
+        {{ "saveFinanceBudget.save" | t }}
+      </ds-button>
+    </ds-split-view>
+  }
+</ds-page-wrapper>

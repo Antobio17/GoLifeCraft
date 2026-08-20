@@ -54,6 +54,71 @@
     </ng-container>
   </ds-screen-header>
 
+  @if (budgetConfigured()) {
+    <ds-card
+      [padding]="'var(--ds-space-4)'"
+      [interactive]="true"
+      (activated)="goToBudget()"
+    >
+      <ds-stack
+        direction="row"
+        justify="between"
+        align="center"
+        [gap]="'var(--ds-space-2)'"
+      >
+        <ds-text variant="label">{{ "getEconomy.budget.eyebrow" | t }}</ds-text>
+        <ds-chip
+          [tone]="budgetTone() === 'positive' ? 'brand' : 'warning'"
+          [uppercase]="true"
+          >{{ budgetBadgeLabel() }}</ds-chip
+        >
+      </ds-stack>
+
+      <ds-stack
+        direction="row"
+        align="end"
+        [gap]="'var(--ds-space-2)'"
+        [wrap]="true"
+      >
+        <ds-heading [level]="3" size="lg">{{ budgetSpentLabel() }}</ds-heading>
+        <ds-text variant="meta"
+          >{{ "getEconomy.budget.of" | t }} {{ budgetTotalLabel() }}</ds-text
+        >
+      </ds-stack>
+
+      <ds-budget-meter
+        [ratio]="budgetRatio()"
+        [paceRatio]="budgetPaceRatio()"
+        [tone]="budgetTone()"
+        [ariaLabel]="'getEconomy.budget.eyebrow' | t"
+      />
+
+      <ds-stack
+        direction="row"
+        justify="between"
+        align="center"
+        [gap]="'var(--ds-space-2)'"
+      >
+        <ds-text variant="meta"
+          >{{ "getEconomy.budget.pace" | t }} ·
+          {{ budgetExpectedLabel() }}</ds-text
+        >
+        <ds-text
+          [variant]="budgetDifferencePositive() ? 'success' : 'danger'"
+          >{{ budgetDifferenceLabel() }}</ds-text
+        >
+      </ds-stack>
+    </ds-card>
+  } @else if (canWrite()) {
+    <ds-cta-row
+      icon="wallet"
+      [dashed]="true"
+      [title]="'getEconomy.budget.ctaTitle' | t"
+      [subtitle]="'getEconomy.budget.ctaText' | t"
+      (clicked)="goToBudgetSettings()"
+    />
+  }
+
   @if (dayMode()) {
     <ds-split-view [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'">
       <ds-card slot="side" [padding]="'var(--ds-space-4)'">

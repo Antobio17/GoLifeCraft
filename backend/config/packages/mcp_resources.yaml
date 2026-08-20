@@ -126,6 +126,20 @@ parameters:
             write_roles: [ROLE_GOD, ROLE_USER]
             delete_roles: [ROLE_GOD, ROLE_USER]
 
+        finance_budget:
+            class: 'Economy\Finance\Budget\Domain\Model\FinanceBudget'
+            sidecar: '%kernel.project_dir%/src/Economy/Finance/Budget/Infrastructure/Domain/Model/Doctrine/Mapping/FinanceBudget.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
+        finance_budget_category:
+            class: 'Economy\Finance\Budget\Domain\Model\FinanceBudgetCategory'
+            sidecar: '%kernel.project_dir%/src/Economy/Finance/Budget/Infrastructure/Domain/Model/Doctrine/Mapping/FinanceBudgetCategory.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
         exercise:
             class: 'Gym\Library\Exercise\Domain\Model\Exercise'
             sidecar: '%kernel.project_dir%/src/Gym/Library/Exercise/Infrastructure/Domain/Model/Doctrine/Mapping/Exercise.mcp.yaml'

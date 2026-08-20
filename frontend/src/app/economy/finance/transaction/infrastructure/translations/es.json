@@ -70,5 +70,10 @@
   "getEconomy.accounts.manage": "Cuentas",
   "getEconomy.recurrences.manage": "Movimientos fijos",
   "getEconomy.accounts.missing": "Todavía no tienes ninguna cuenta. Crea una para poder registrar movimientos y cuadrar tu saldo real.",
-  "getEconomy.sheet.accountLabel": "CUENTA"
+  "getEconomy.sheet.accountLabel": "CUENTA",
+  "getEconomy.budget.eyebrow": "PRESUPUESTO · GASTO VARIABLE",
+  "getEconomy.budget.of": "de",
+  "getEconomy.budget.pace": "Ritmo de hoy",
+  "getEconomy.budget.ctaTitle": "Crea tu presupuesto",
+  "getEconomy.budget.ctaText": "Fíjate un tope por categoría y un objetivo de ahorro"
 }

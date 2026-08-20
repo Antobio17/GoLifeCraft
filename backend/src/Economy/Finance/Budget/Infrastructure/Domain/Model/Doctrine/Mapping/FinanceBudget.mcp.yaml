@@ -1,0 +1,28 @@
+label: Finance budget
+
+fields:
+  referenceIncome:
+    writable: true
+    required: true
+    type: float
+    min: 0.01
+    max: 9999999.99
+    description: >-
+      Monthly income the budget is distributed over, in euros. It defaults to the
+      average of the three latest monthly incomes but the user can adjust it.
+    sortable: true
+  savingsPercentage:
+    writable: true
+    required: false
+    type: float
+    min: 0
+    max: 100
+    description: >-
+      Share of the reference income set aside as savings before any category gets
+      its budget, as a percentage between 0 and 100.
+    sortable: true
+
+relations: {}
+
+cascade_delete:
+  - { resource: finance_budget_category, foreign_field: budgetId }

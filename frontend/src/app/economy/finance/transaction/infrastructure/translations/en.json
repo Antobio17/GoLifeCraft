@@ -70,5 +70,10 @@
   "getEconomy.accounts.manage": "Accounts",
   "getEconomy.recurrences.manage": "Recurring movements",
   "getEconomy.accounts.missing": "You have no accounts yet. Create one to register movements and reconcile your real balance.",
-  "getEconomy.sheet.accountLabel": "ACCOUNT"
+  "getEconomy.sheet.accountLabel": "ACCOUNT",
+  "getEconomy.budget.eyebrow": "BUDGET · VARIABLE SPENDING",
+  "getEconomy.budget.of": "of",
+  "getEconomy.budget.pace": "Today's pace",
+  "getEconomy.budget.ctaTitle": "Create your budget",
+  "getEconomy.budget.ctaText": "Set a cap per category and a savings goal"
 }
