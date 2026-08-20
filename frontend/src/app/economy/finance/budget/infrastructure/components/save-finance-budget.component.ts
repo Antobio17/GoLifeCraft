@@ -272,7 +272,7 @@ export class SaveFinanceBudgetComponent implements OnInit {
           this.floatingToastService.showToast({
             status: 200,
             title: this.t("saveFinanceBudget.saved"),
-            keyTranslation: "finance.budget.saved",
+            keyTranslation: "saveFinanceBudget.saved",
             details: [],
           });
           this.router.navigate(["/economy/budget"]);
