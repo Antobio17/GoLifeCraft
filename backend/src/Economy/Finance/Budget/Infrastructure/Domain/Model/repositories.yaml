@@ -1,0 +1,6 @@
+services:
+  Economy\Finance\Budget\Domain\Model\FinanceBudgetRepository:
+    class: Economy\Finance\Budget\Infrastructure\Domain\Model\Doctrine\DoctrineFinanceBudgetRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Economy\Finance\Budget\Domain\Model\FinanceBudget

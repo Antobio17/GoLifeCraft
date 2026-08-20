@@ -1,0 +1,10 @@
+services:
+  Economy\Finance\Budget\Domain\QueryModel\GetFinanceBudgetNeedleDataQuery:
+    class: Economy\Finance\Budget\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceBudgetNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Economy\Finance\Budget\Domain\QueryModel\GetFinanceBudgetSettingsNeedleDataQuery:
+    class: Economy\Finance\Budget\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetFinanceBudgetSettingsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

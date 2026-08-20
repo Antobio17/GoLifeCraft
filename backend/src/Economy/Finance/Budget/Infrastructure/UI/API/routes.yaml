@@ -1,0 +1,14 @@
+get_finance_budget:
+  path: /api/v1/economy/budget
+  methods: [GET]
+  controller: Economy\Finance\Budget\Infrastructure\UI\API\Controller\GetFinanceBudgetController
+
+get_finance_budget_settings:
+  path: /api/v1/economy/budget/settings
+  methods: [GET]
+  controller: Economy\Finance\Budget\Infrastructure\UI\API\Controller\GetFinanceBudgetSettingsController
+
+save_finance_budget:
+  path: /api/v1/economy/budget
+  methods: [PUT]
+  controller: Economy\Finance\Budget\Infrastructure\UI\API\Controller\SaveFinanceBudgetController

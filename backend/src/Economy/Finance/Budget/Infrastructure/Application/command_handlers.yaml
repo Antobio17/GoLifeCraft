@@ -1,0 +1,15 @@
+services:
+  Economy\Finance\Budget\Application\Command\FinanceBudgetCategoryAssembler:
+    class: Economy\Finance\Budget\Application\Command\FinanceBudgetCategoryAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Economy\Finance\Budget\Application\Command\SaveFinanceBudgetCommandHandler:
+    class: Economy\Finance\Budget\Application\Command\SaveFinanceBudgetCommandHandler
+    arguments:
+      $financeBudgetRepository: '@Economy\Finance\Budget\Domain\Model\FinanceBudgetRepository'
+      $financeBudgetCategoryAssembler: '@Economy\Finance\Budget\Application\Command\FinanceBudgetCategoryAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

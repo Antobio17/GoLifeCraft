@@ -1,0 +1,46 @@
+label: Finance budget category
+
+fields:
+  budgetId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      Identifier of the budget this allocation belongs to.
+    filterable: true
+  category:
+    writable: true
+    required: true
+    enum: [groceries, restaurants, gym, transport, leisure, home, bills, health, beauty, clothing, treats, gifts, travel, pets, subscriptions, other]
+    description: >-
+      Spending category the allocation caps. Each category can only appear once
+      per budget.
+    filterable: true
+  kind:
+    writable: true
+    required: false
+    enum: [variable, fixed]
+    description: >-
+      "variable" for a category tracked against a monthly cap and "fixed" for a
+      bill or provision whose exact amount is known and only informs.
+    filterable: true
+  amount:
+    writable: true
+    required: true
+    type: float
+    min: 0
+    max: 9999999.99
+    description: >-
+      Euros assigned to the category every month.
+    sortable: true
+  position:
+    writable: true
+    required: false
+    type: int
+    min: 1
+    description: >-
+      Order the allocation is listed in when configuring the budget.
+    sortable: true
+
+relations: {}
