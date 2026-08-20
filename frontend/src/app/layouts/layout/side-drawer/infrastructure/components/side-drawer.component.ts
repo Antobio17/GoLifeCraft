@@ -11,6 +11,7 @@ import { ScrollLockService } from "@shared/design-system/scroll-lock/application
 import { ViewportService } from "@shared/viewport/application/services/viewport.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ThemeService } from "@shared/theme/application/services/theme.service";
+import { StatusBarService } from "@shared/theme/application/services/status-bar.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
@@ -45,9 +46,12 @@ export class SideDrawerComponent {
   private router = inject(Router);
   private viewport = inject(ViewportService);
   private scrollLock = inject(ScrollLockService);
+  private statusBar = inject(StatusBarService);
   private destroyRef = inject(DestroyRef);
 
   private readonly isDocked = this.viewport.matches("(min-width: 768px)");
+
+  private statusBarOpen = false;
 
   readonly grafanaUrl = "/grafana/";
 
@@ -77,7 +81,10 @@ export class SideDrawerComponent {
     this.destroyRef.onDestroy(() => this.scrollLock.release(this));
 
     effect(() => {
-      const lockScroll = this.isOpen() && !this.isDocked();
+      const open = this.isOpen();
+      const lockScroll = open && !this.isDocked();
+
+      this.syncStatusBar(open);
 
       if (lockScroll) {
         this.scrollLock.lock(this);
@@ -87,6 +94,15 @@ export class SideDrawerComponent {
 
       this.scrollLock.release(this);
     });
+  }
+
+  private syncStatusBar(open: boolean): void {
+    if (open === this.statusBarOpen) {
+      return;
+    }
+
+    this.statusBarOpen = open;
+    this.statusBar.refresh();
   }
 
   close(): void {
