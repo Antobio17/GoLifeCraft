@@ -66,12 +66,14 @@
             }}</ds-heading>
           </ds-stack>
 
-          <ds-slider
+          <ds-slider-stepper
             [min]="0"
             [max]="savingsMax"
             [step]="savingsStep()"
             [ariaLabel]="'saveFinanceBudget.savings.goal' | t"
             [valueText]="savingsPercentageLabel()"
+            [decreaseAriaLabel]="'saveFinanceBudget.slider.decreaseSavings' | t"
+            [increaseAriaLabel]="'saveFinanceBudget.slider.increaseSavings' | t"
             [ngModel]="form().savingsPercentage"
             [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="onSavingsPercentage($event)"
@@ -158,12 +160,22 @@
                 [gap]="'var(--ds-space-4)'"
               >
                 <ds-stack [grow]="true">
-                  <ds-slider
+                  <ds-slider-stepper
                     [min]="0"
                     [max]="row.sliderMax"
                     [step]="variableStep()"
                     [ariaLabel]="row.name"
                     [valueText]="row.amountLabel"
+                    [decreaseAriaLabel]="
+                      ('saveFinanceBudget.slider.decreaseCategory' | t) +
+                      ' ' +
+                      row.name
+                    "
+                    [increaseAriaLabel]="
+                      ('saveFinanceBudget.slider.increaseCategory' | t) +
+                      ' ' +
+                      row.name
+                    "
                     [ngModel]="row.amount"
                     [ngModelOptions]="{ standalone: true }"
                     (ngModelChange)="onCategorySlider(row.index, $event)"

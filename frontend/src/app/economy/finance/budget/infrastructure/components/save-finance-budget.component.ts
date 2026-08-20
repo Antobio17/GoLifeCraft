@@ -17,12 +17,12 @@ import { SectionHeaderComponent } from "@shared/design-system/section-header/inf
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
-import { SliderComponent } from "@shared/design-system/slider/infrastructure/components/slider.component";
 import { AllocationBarComponent } from "@shared/design-system/allocation-bar/infrastructure/components/allocation-bar.component";
 import { AllocationSegment } from "@shared/design-system/allocation-bar/domain/models/allocation-segment.model";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
+import { SliderStepperComponent } from "@shared/design-system/slider-stepper/infrastructure/components/slider-stepper.component";
 import {
   TypeToggleComponent,
   TypeToggleOption,
@@ -57,7 +57,7 @@ const REDIRECT_DELAY_MS = 600;
     NoteComponent,
     AmountInputComponent,
     EmojiTileComponent,
-    SliderComponent,
+    SliderStepperComponent,
     AllocationBarComponent,
     TypeToggleComponent,
     SkeletonPanelComponent,
