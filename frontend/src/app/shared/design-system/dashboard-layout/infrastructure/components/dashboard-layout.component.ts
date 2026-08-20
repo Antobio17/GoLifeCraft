@@ -36,8 +36,7 @@ import { Component } from "@angular/core";
       .dash {
         display: flex;
         flex-direction: column;
-        padding: calc(env(safe-area-inset-top) + var(--ds-space-2))
-          var(--ds-space-5) 0;
+        padding: var(--ds-space-2) var(--ds-space-5) 0;
       }
       .dash__body {
         display: flex;

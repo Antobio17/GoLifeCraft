@@ -70,7 +70,7 @@ import { StatusBarService } from "@shared/theme/application/services/status-bar.
       }
 
       .ds-sheet__overlay {
-        --ds-sheet-viewport: 100dvh;
+        --ds-sheet-viewport: calc(100dvh - env(safe-area-inset-top));
         --ds-sheet-height: min(calc(var(--ds-sheet-viewport) * 0.9), 53.75rem);
         --ds-sheet-height-tall: min(
           calc(var(--ds-sheet-viewport) * 0.94),

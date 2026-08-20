@@ -51,7 +51,10 @@ type SplitViewSide = "start" | "end";
         }
 
         .split__side--sticky {
-          --split-sticky-offset: var(--split-sticky-top, var(--ds-space-5));
+          --split-sticky-offset: calc(
+            env(safe-area-inset-top) +
+              var(--split-sticky-top, var(--ds-space-5))
+          );
           position: sticky;
           top: var(--split-sticky-offset);
           max-height: calc(100dvh - var(--split-sticky-offset) * 2);
