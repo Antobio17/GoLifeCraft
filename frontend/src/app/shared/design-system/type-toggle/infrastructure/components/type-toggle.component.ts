@@ -27,32 +27,47 @@ export interface TypeToggleOption {
   `,
   styles: [
     `
+      :host {
+        display: inline-flex;
+        flex: 0 0 auto;
+      }
       .ds-type-toggle {
         display: inline-flex;
-        gap: var(--ds-space-1);
+        gap: 2px;
         padding: var(--ds-space-1);
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
-        border: 1px solid var(--ds-border);
+        border: 1px solid var(--ds-border-hairline);
       }
       .ds-type-toggle__option {
         appearance: none;
         cursor: pointer;
         border: none;
         background: transparent;
-        color: var(--ds-text-body);
+        color: var(--ds-text-muted);
         border-radius: var(--ds-radius-pill);
-        padding: var(--ds-space-1-5) var(--ds-space-4);
+        padding: var(--ds-space-1-5) var(--ds-space-3);
         font: inherit;
-        font-size: var(--ds-text-md);
-        font-weight: 600;
+        font-size: var(--ds-text-base);
+        font-weight: var(--ds-weight-semibold);
+        letter-spacing: 0.01em;
+        white-space: nowrap;
         transition:
-          background 0.15s ease,
-          color 0.15s ease;
+          background var(--ds-transition-fast),
+          color var(--ds-transition-fast),
+          box-shadow var(--ds-transition-fast);
+      }
+      .ds-type-toggle__option:hover:not(:disabled):not(.is-active) {
+        color: var(--ds-text-body);
       }
       .ds-type-toggle__option.is-active {
-        background: var(--ds-primary);
-        color: var(--ds-on-primary);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
+        box-shadow: inset 0 0 0 1px var(--ds-primary-soft-border);
+      }
+      .ds-type-toggle__option:focus-visible {
+        outline: none;
+        box-shadow: var(--ds-focus-ring);
       }
       .ds-type-toggle__option:disabled {
         opacity: 0.5;

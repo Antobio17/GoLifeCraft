@@ -2,6 +2,7 @@ import { Component, Input, inject } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
 
 type AmountInputLayout = "row" | "stacked";
+type AmountInputAlign = "start" | "end";
 
 @Component({
   selector: "ds-amount-input",
@@ -10,6 +11,7 @@ type AmountInputLayout = "row" | "stacked";
       class="ds-amount"
       [class.ds-amount--stacked]="layout === 'stacked'"
       [class.ds-amount--large]="large"
+      [class.ds-amount--end]="align === 'end'"
     >
       @if (layout === "stacked") {
         <span class="ds-amount__label">{{ label }}</span>
@@ -91,6 +93,9 @@ type AmountInputLayout = "row" | "stacked";
       .ds-amount--large .ds-amount__input {
         font-size: var(--ds-text-2xl);
       }
+      .ds-amount--end .ds-amount__input {
+        text-align: right;
+      }
       .ds-amount__input::placeholder {
         color: var(--ds-text-meta);
       }
@@ -110,6 +115,7 @@ export class AmountInputComponent implements ControlValueAccessor {
   ngControl = inject(NgControl, { optional: true, self: true });
 
   @Input() layout: AmountInputLayout = "row";
+  @Input() align: AmountInputAlign = "start";
   @Input() emoji = "";
   @Input() label = "";
   @Input() unit = "";
