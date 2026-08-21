@@ -134,15 +134,22 @@
           <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-3)'">
             <ds-stack
               direction="row"
-              align="center"
+              align="start"
+              justify="between"
               [gap]="'var(--ds-space-3)'"
-              [wrap]="true"
             >
-              <ds-emoji-tile [emoji]="row.emoji" [size]="34" [radius]="10" />
-              <ds-stack [grow]="true">
-                <ds-text variant="strong" [truncate]="true">{{
-                  row.name
-                }}</ds-text>
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+                [grow]="true"
+              >
+                <ds-emoji-tile [emoji]="row.emoji" [size]="34" [radius]="10" />
+                <ds-stack [grow]="true">
+                  <ds-text variant="strong" [truncate]="true">{{
+                    row.name
+                  }}</ds-text>
+                </ds-stack>
               </ds-stack>
 
               <ds-type-toggle
@@ -191,22 +198,25 @@
               <ds-stack
                 direction="row"
                 align="center"
-                [gap]="'var(--ds-space-3)'"
-                [wrap]="true"
+                justify="between"
+                [gap]="'var(--ds-space-4)'"
               >
                 <ds-amount-input
                   unit="€"
                   placeholder="0,00"
+                  [grow]="true"
                   [ariaLabel]="row.name"
                   [ngModel]="row.amountText"
                   [ngModelOptions]="{ standalone: true }"
                   (ngModelChange)="onCategoryAmount(row.index, $event)"
                 />
 
-                <ds-text variant="meta"
-                  >{{ row.percentageLabel }} ·
-                  {{ "saveFinanceBudget.kind.exactHint" | t }}</ds-text
-                >
+                <ds-stack align="end" [gap]="'2px'" [shrink]="false">
+                  <ds-text variant="strong">{{ row.percentageLabel }}</ds-text>
+                  <ds-text variant="meta">{{
+                    "saveFinanceBudget.kind.exactHint" | t
+                  }}</ds-text>
+                </ds-stack>
               </ds-stack>
             }
           </ds-card>

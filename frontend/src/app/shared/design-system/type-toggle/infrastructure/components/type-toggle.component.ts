@@ -27,32 +27,41 @@ export interface TypeToggleOption {
   `,
   styles: [
     `
+      :host {
+        display: inline-flex;
+        flex: 0 0 auto;
+      }
       .ds-type-toggle {
         display: inline-flex;
         gap: var(--ds-space-1);
         padding: var(--ds-space-1);
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
-        border: 1px solid var(--ds-border);
       }
       .ds-type-toggle__option {
         appearance: none;
         cursor: pointer;
         border: none;
         background: transparent;
-        color: var(--ds-text-body);
+        color: var(--ds-text-meta);
         border-radius: var(--ds-radius-pill);
-        padding: var(--ds-space-1-5) var(--ds-space-4);
+        padding: var(--ds-space-1) var(--ds-space-3);
         font: inherit;
-        font-size: var(--ds-text-md);
-        font-weight: 600;
+        font-size: var(--ds-text-sm);
+        font-weight: var(--ds-weight-semibold);
+        white-space: nowrap;
         transition:
           background 0.15s ease,
-          color 0.15s ease;
+          color 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .ds-type-toggle__option:hover:not(.is-active):not(:disabled) {
+        color: var(--ds-text-body);
       }
       .ds-type-toggle__option.is-active {
-        background: var(--ds-primary);
-        color: var(--ds-on-primary);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
+        box-shadow: inset 0 0 0 1px var(--ds-primary-soft-border);
       }
       .ds-type-toggle__option:disabled {
         opacity: 0.5;
