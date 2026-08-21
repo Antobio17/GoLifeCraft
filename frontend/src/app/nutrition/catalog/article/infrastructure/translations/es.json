@@ -102,7 +102,6 @@
     "saveCreate": "Crear artículo",
     "saveEdit": "Guardar cambios",
     "saving": "Guardando…",
-    "delete": "Borrar artículo",
     "deleteModal": {
       "title": "Borrar artículo",
       "body": "Se eliminará este artículo del catálogo de forma permanente.",

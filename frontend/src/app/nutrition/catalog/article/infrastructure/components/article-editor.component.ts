@@ -31,7 +31,6 @@ import { NutritionEditorComponent } from "@shared/design-system/nutrition-editor
 import { EquivalenceEditorComponent } from "@shared/design-system/equivalence-editor/infrastructure/components/equivalence-editor.component";
 import { EquivalenceEditorValue } from "@shared/design-system/equivalence-editor/domain/models/equivalence-editor.model";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
@@ -49,7 +48,6 @@ import { EmojiCatalogService } from "../../application/services/emoji-catalog.se
 import { UnitCatalogService } from "../../application/services/unit-catalog.service";
 import { CreateArticleService } from "../../application/services/create-article.service";
 import { UpdateArticleService } from "../../application/services/update-article.service";
-import { DeleteArticleService } from "../../application/services/delete-article.service";
 import { GetArticleService } from "../../application/services/get-article.service";
 import { Article } from "../../domain/models/article.model";
 import {
@@ -108,7 +106,6 @@ function equivalencesValidator(
     NutritionEditorComponent,
     EquivalenceEditorComponent,
     ButtonComponent,
-    ConfirmActionModalComponent,
     StackComponent,
     TextComponent,
     NoteComponent,
@@ -123,7 +120,6 @@ export class ArticleEditorComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private createArticleService = inject(CreateArticleService);
   private updateArticleService = inject(UpdateArticleService);
-  private deleteArticleService = inject(DeleteArticleService);
   private getArticleService = inject(GetArticleService);
   private getCategoriesService = inject(GetCategoriesService);
   private getSupermarketsService = inject(GetSupermarketsService);
@@ -177,8 +173,6 @@ export class ArticleEditorComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
-  showDeleteModal = signal(false);
-  deleting = signal(false);
   articleName = signal("");
   aisleSheetOpen = signal(false);
 
@@ -301,30 +295,6 @@ export class ArticleEditorComponent implements OnInit {
       next: (response) => {
         this.supermarkets.set(response.data);
         this.dropUnknownAisle();
-      },
-    });
-  }
-
-  onDelete(): void {
-    this.showDeleteModal.set(true);
-  }
-
-  onCancelDelete(): void {
-    this.showDeleteModal.set(false);
-  }
-
-  onConfirmDelete(): void {
-    this.deleting.set(true);
-
-    this.deleteArticleService.deleteArticle(this.id()).subscribe({
-      next: () => {
-        this.deleting.set(false);
-        this.showDeleteModal.set(false);
-        this.router.navigate(["/catalog"]);
-      },
-      error: () => {
-        this.deleting.set(false);
-        this.showDeleteModal.set(false);
       },
     });
   }

@@ -1,6 +1,5 @@
 import {
   Component,
-  DestroyRef,
   EventEmitter,
   Input,
   Output,
@@ -8,16 +7,9 @@ import {
   inject,
   signal,
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import {
-  Observable,
-  Subject,
-  debounceTime,
-  forkJoin,
-  mergeMap,
-  of,
-} from "rxjs";
+import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
@@ -29,6 +21,9 @@ import { StoreTabsComponent } from "@shared/design-system/store-tabs/infrastruct
 import { AisleListComponent } from "@shared/design-system/aisle-list/infrastructure/components/aisle-list.component";
 import { AisleListMove } from "@shared/design-system/aisle-list/domain/models/aisle-list-move.model";
 import { AisleListRename } from "@shared/design-system/aisle-list/domain/models/aisle-list-rename.model";
+import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
+import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
+import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
 import { Supermarket } from "../../domain/models/supermarket.model";
 import { SupermarketAisle } from "../../domain/models/supermarket-aisle.model";
 import { AisleCatalogService } from "../../application/services/aisle-catalog.service";
@@ -46,7 +41,9 @@ import { UpdateSupermarketAislesService } from "../../application/services/updat
     ButtonComponent,
     StoreTabsComponent,
     AisleListComponent,
+    SaveStatusComponent,
   ],
+  providers: [...AutosaveProvider.getProviders()],
 })
 export class ManageAislesComponent {
   private translationService = inject(TranslationService);
@@ -55,10 +52,9 @@ export class ManageAislesComponent {
   private updateSupermarketAislesService = inject(
     UpdateSupermarketAislesService,
   );
-  private destroyRef = inject(DestroyRef);
+  protected autosave = inject(AutosaveService);
 
   private readonly MODULE_PATH = "nutrition/catalog/supermarket";
-  private readonly pendingSaves = new Subject<void>();
   private dirtyStores = new Set<string>();
 
   @Input() set open(value: boolean) {
@@ -130,16 +126,10 @@ export class ManageAislesComponent {
 
   constructor() {
     this.translationService.loadModuleTranslations(this.MODULE_PATH);
+  }
 
-    this.pendingSaves
-      .pipe(
-        debounceTime(350),
-        mergeMap(() => this.flushDirtyStores()),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({
-        next: () => this.saved.emit(),
-      });
+  onRetrySave(): void {
+    this.autosave.retry();
   }
 
   onSelectStore(storeId: string): void {
@@ -213,16 +203,15 @@ export class ManageAislesComponent {
   private applyAisles(storeId: string, aisles: SupermarketAisle[]): void {
     this.aislesByStore.update((current) => ({ ...current, [storeId]: aisles }));
     this.dirtyStores.add(storeId);
-    this.pendingSaves.next();
+
+    this.autosave.push(`store:${storeId}`, () =>
+      this.persist(storeId).pipe(tap(() => this.onStoreSaved(storeId))),
+    );
   }
 
-  private flushDirtyStores(): Observable<unknown> {
-    const storeIds = [...this.dirtyStores];
-    this.dirtyStores.clear();
-
-    if (0 === storeIds.length) return of(null);
-
-    return forkJoin(storeIds.map((storeId) => this.persist(storeId)));
+  private onStoreSaved(storeId: string): void {
+    this.dirtyStores.delete(storeId);
+    this.saved.emit();
   }
 
   private persist(storeId: string): Observable<void> {

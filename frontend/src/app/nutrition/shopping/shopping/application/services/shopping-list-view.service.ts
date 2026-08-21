@@ -394,6 +394,21 @@ export class ShoppingListViewService {
     return { ...attributes, items };
   }
 
+  withoutItem(
+    attributes: ShoppingListAttributes,
+    itemId: string,
+  ): ShoppingListAttributes {
+    const removed = attributes.items.find((item) => item.id === itemId);
+    if (!removed) return attributes;
+
+    return {
+      ...attributes,
+      items: attributes.items.filter((item) => item.id !== itemId),
+      itemCount: attributes.itemCount - 1,
+      totalEstimated: attributes.totalEstimated - removed.lineTotal,
+    };
+  }
+
   addItem(
     attributes: ShoppingListAttributes,
     item: ShoppingListItemView,

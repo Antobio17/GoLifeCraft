@@ -4,6 +4,8 @@ import { GetRecipesProviders } from "@nutrition/recipe/recipe/infrastructure/pro
 import { GetDiaryProviders } from "../providers/get-diary.providers";
 import { DiaryWriteProviders } from "../providers/diary-write.providers";
 import { DiaryGoalProviders } from "@nutrition/diary/goal/infrastructure/providers/diary-goal.providers";
+import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
+import { UndoProvider } from "@shared/undo/infrastructure/providers/undo.provider";
 
 export const DIARY_ROUTES: Routes = [
   {
@@ -14,6 +16,8 @@ export const DIARY_ROUTES: Routes = [
       ...DiaryGoalProviders.getProviders(),
       ...GetArticlesProviders.getProviders(),
       ...GetRecipesProviders.getProviders(),
+      ...AutosaveProvider.getProviders(),
+      ...UndoProvider.getProviders(),
     ],
     children: [
       {

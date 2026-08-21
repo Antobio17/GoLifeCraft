@@ -3,6 +3,7 @@ import { MacroGoal } from "@shared/design-system/macro-panel/domain/models/macro
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import {
+  DiaryDay,
   DiaryDayAttributes,
   DiaryEntryView,
   DiaryGoals,
@@ -131,6 +132,32 @@ export class DiaryViewService {
       { label: labels.fat, value: this.grams(macros.fat) },
       { label: labels.carbs, value: this.grams(macros.carbs) },
     ];
+  }
+
+  findEntry(day: DiaryDay | null, entryId: string): DiaryEntryView | null {
+    if (!day) return null;
+
+    for (const meal of day.attributes.meals) {
+      const entry = meal.entries.find((candidate) => candidate.id === entryId);
+      if (entry) return entry;
+    }
+
+    return null;
+  }
+
+  withoutEntry(day: DiaryDay | null, entryId: string): DiaryDay | null {
+    if (!day) return null;
+
+    return {
+      ...day,
+      attributes: {
+        ...day.attributes,
+        meals: day.attributes.meals.map((meal) => ({
+          ...meal,
+          entries: meal.entries.filter((entry) => entry.id !== entryId),
+        })),
+      },
+    };
   }
 
   entryBadgeTone(kind: string): "brand" | "neutral" | "accent" {

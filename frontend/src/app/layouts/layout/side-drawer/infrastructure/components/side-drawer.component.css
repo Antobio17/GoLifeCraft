@@ -168,10 +168,14 @@
 
 .drawer__nav {
   flex: none;
-  padding: var(--ds-space-1) var(--ds-space-3);
+  padding: var(--ds-space-1) var(--ds-space-3) var(--ds-space-2);
   display: flex;
   flex-direction: column;
-  gap: var(--ds-space-1);
+  gap: var(--ds-space-4);
+}
+
+.drawer__group-label {
+  padding: 0 var(--ds-space-3) var(--ds-space-1);
 }
 
 /* ─── Theme switch ─── */

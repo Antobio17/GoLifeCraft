@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.ds-save-status {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  min-height: 1.25rem;
+  font-family: var(--ds-font-body);
+  font-size: var(--ds-text-base);
+  color: var(--ds-text-meta);
+  transition: color var(--ds-transition-fast);
+}
+
+.ds-save-status[data-align="center"] {
+  justify-content: center;
+}
+
+.ds-save-status[data-align="end"] {
+  justify-content: flex-end;
+}
+
+.ds-save-status[data-state="saved"] {
+  color: var(--ds-success);
+}
+
+.ds-save-status[data-state="error"] {
+  color: var(--ds-danger);
+}
+
+.ds-save-status__label {
+  white-space: nowrap;
+}
+
+.ds-save-status__spinner {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1.5px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-top-color: currentColor;
+  border-radius: var(--ds-radius-pill);
+  animation: ds-save-status-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes ds-save-status-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-save-status__spinner {
+    animation-duration: 2.4s;
+  }
+}

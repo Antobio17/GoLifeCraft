@@ -1,0 +1,57 @@
+<?php
+
+namespace Gym\Training\Session\Infrastructure\UI\API\Controller;
+
+use Gym\Training\Session\Application\Command\AddSessionExerciseCommand;
+use Gym\Training\Session\Application\Command\ExerciseSetData;
+use Gym\Training\Session\Domain\Exception\UpdateSessionException;
+use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\HandleTrait;
+use Symfony\Component\Messenger\MessageBusInterface;
+
+final class AddSessionExerciseController
+{
+    use HandleTrait;
+
+    public function __construct(
+        MessageBusInterface $messageBus,
+    ) {
+        $this->messageBus = $messageBus;
+    }
+
+    public function __invoke(Request $request): JsonResponse
+    {
+        try {
+            $this->handle(message: new AddSessionExerciseCommand(
+                sessionId: $request->attributes->get(key: 'sessionId'),
+                sessionExerciseId: $request->attributes->get(key: 'sessionExerciseId'),
+                exerciseId: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'exerciseId'),
+                sets: ExerciseSetData::listFromArray(
+                    rawSets: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'sets'),
+                ),
+                note: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'note'),
+                addedByUserId: RequestExtractor::getUserSessionId(request: $request),
+            ));
+
+            return new JsonResponse(data: null, status: Response::HTTP_NO_CONTENT);
+        } catch (HandlerFailedException $e) {
+            return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
+                exception: $e,
+                exceptionStatusMap: [
+                    UpdateSessionException::class => Response::HTTP_BAD_REQUEST,
+                ]
+            );
+        } catch (ArgumentRequestException $e) {
+            return JsonResponseBuilder::buildResponseFromBaseException(
+                exception: $e,
+                status: Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+}

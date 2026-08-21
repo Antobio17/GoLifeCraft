@@ -10,7 +10,7 @@ import {
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Subject, debounceTime, groupBy, mergeMap, switchMap } from "rxjs";
+import { Observable, of, tap } from "rxjs";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -55,7 +55,6 @@ import { GetDiaryGoalService } from "@nutrition/diary/goal/application/services/
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
 import { GetRecipesService } from "@nutrition/recipe/recipe/application/services/get-recipes.service";
 import { GetMenuService } from "@nutrition/menu/menu/application/services/get-menu.service";
-import { UpdateMenuService } from "@nutrition/menu/menu/application/services/update-menu.service";
 import { DeleteMenuService } from "@nutrition/menu/menu/application/services/delete-menu.service";
 import { DuplicateMenuService } from "@nutrition/menu/menu/application/services/duplicate-menu.service";
 import { ExportMenuService } from "@nutrition/menu/menu/application/services/export-menu.service";
@@ -64,6 +63,14 @@ import {
   MenuViewService,
 } from "@nutrition/menu/menu/application/services/menu-view.service";
 import { MenuEditorService } from "@nutrition/menu/menu/application/services/menu-editor.service";
+import { UpdateMenuDetailsService } from "@nutrition/menu/menu/application/services/update-menu-details.service";
+import { SaveMenuItemService } from "@nutrition/menu/menu/application/services/save-menu-item.service";
+import { AddMenuItemRequest } from "@nutrition/menu/menu/domain/models/add-menu-item-request.model";
+import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
+import { UndoService } from "@shared/undo/application/services/undo.service";
+import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
+import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
+import { uuidV4 } from "@shared/uuid/uuid";
 import {
   MenuDraft,
   MenuDraftService,
@@ -85,7 +92,6 @@ import {
   MenuType,
   MenuWeekDayKey,
 } from "@nutrition/menu/menu/domain/models/menu.model";
-import { UpdateMenuRequest } from "@nutrition/menu/menu/domain/models/write-menu.model";
 import { MenuLoadSheetComponent } from "./menu-load-sheet.component";
 import { MenuApplyWeekSheetComponent } from "./menu-apply-week-sheet.component";
 import { MenuShoppingSheetComponent } from "./menu-shopping-sheet.component";
@@ -128,6 +134,8 @@ type PickerTab = "product" | "recipe";
     MenuLoadSheetComponent,
     MenuApplyWeekSheetComponent,
     MenuShoppingSheetComponent,
+    SaveStatusComponent,
+    UndoBarComponent,
   ],
 })
 export class GetMenuComponent implements OnInit {
@@ -137,7 +145,6 @@ export class GetMenuComponent implements OnInit {
   private getMenuService = inject(GetMenuService);
   private getMenusService = inject(GetMenusService);
   private createMenuService = inject(CreateMenuService);
-  private updateMenuService = inject(UpdateMenuService);
   private deleteMenuService = inject(DeleteMenuService);
   private duplicateMenuService = inject(DuplicateMenuService);
   private exportMenuService = inject(ExportMenuService);
@@ -147,6 +154,10 @@ export class GetMenuComponent implements OnInit {
   private getArticlesService = inject(GetArticlesService);
   private getRecipesService = inject(GetRecipesService);
   private getDiaryGoalService = inject(GetDiaryGoalService);
+  private updateMenuDetailsService = inject(UpdateMenuDetailsService);
+  private saveMenuItemService = inject(SaveMenuItemService);
+  protected autosave = inject(AutosaveService);
+  protected undo = inject(UndoService);
   private editor = inject(MenuEditorService);
   private drafts = inject(MenuDraftService);
   private destroyRef = inject(DestroyRef);
@@ -154,20 +165,10 @@ export class GetMenuComponent implements OnInit {
   protected picker = inject(MenuPickerService);
 
   private readonly MODULE_PATH = "nutrition/menu/menu";
-  private readonly TEXT_DEBOUNCE = 600;
-  private readonly QUANTITY_DEBOUNCE = 500;
 
   readonly id = input<string>("");
   readonly draftRoute = input<boolean>(false);
   readonly type = input<MenuType | undefined>(undefined);
-
-  private textChanges = new Subject<UpdateMenuRequest>();
-  private quantityChanges = new Subject<UpdateMenuRequest>();
-  private nodeQuantityChanges = new Subject<{
-    menuItemId: string;
-    path: string;
-    quantity: number;
-  }>();
 
   canWrite = computed(() => this.authSession.isGod());
 
@@ -175,6 +176,7 @@ export class GetMenuComponent implements OnInit {
   goal = signal<DiaryGoalConfig | null>(null);
   draft = signal<MenuDraft | null>(null);
   loadedDetail = signal<MenuDetailAttributes | null>(null);
+  private readonly pendingItems = new Map<string, AddMenuItemRequest>();
   saving = signal(false);
   selectedDayKey = signal<MenuWeekDayKey | null>(null);
   name = signal("");
@@ -397,42 +399,6 @@ export class GetMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.textChanges
-      .pipe(
-        debounceTime(this.TEXT_DEBOUNCE),
-        switchMap((request) =>
-          this.updateMenuService.updateMenu(this.id(), request),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({ next: () => this.load(true) });
-
-    this.quantityChanges
-      .pipe(
-        debounceTime(this.QUANTITY_DEBOUNCE),
-        switchMap((request) =>
-          this.updateMenuService.updateMenu(this.id(), request),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({ next: () => this.load(true) });
-
-    this.nodeQuantityChanges
-      .pipe(
-        groupBy((change) => `${change.menuItemId}:${change.path}`),
-        mergeMap((group) => group.pipe(debounceTime(this.QUANTITY_DEBOUNCE))),
-        mergeMap((change) =>
-          this.updateMenuItemNodeService.updateMenuItemNode(
-            this.id(),
-            change.menuItemId,
-            change.path,
-            change.quantity,
-          ),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({ next: () => this.load(true) });
-
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
@@ -519,10 +485,9 @@ export class GetMenuComponent implements OnInit {
       return;
     }
 
-    const detail = this.loadedDetail();
-    if (!detail) return;
+    if (!this.loadedDetail()) return;
 
-    this.textChanges.next(this.editor.withName(detail, value));
+    this.queueDetails();
   }
 
   onNote(value: string): void {
@@ -537,10 +502,9 @@ export class GetMenuComponent implements OnInit {
       return;
     }
 
-    const detail = this.loadedDetail();
-    if (!detail) return;
+    if (!this.loadedDetail()) return;
 
-    this.textChanges.next(this.editor.withNote(detail, value));
+    this.queueDetails();
   }
 
   onSelectDay(dayKey: string): void {
@@ -591,19 +555,20 @@ export class GetMenuComponent implements OnInit {
       return;
     }
 
-    const detail = this.loadedDetail();
-    if (!detail) return;
+    if (!this.loadedDetail()) return;
 
-    this.save(
-      this.editor.withItemAdded(
-        detail,
-        this.selectedDayKey(),
-        meal,
-        choice.kind,
-        choice.refId,
-        defaults.quantity,
-        defaults.unit,
-      ),
+    const menuItemId = uuidV4();
+    this.pendingItems.set(menuItemId, {
+      dayKey: this.selectedDayKey(),
+      meal,
+      kind: choice.kind,
+      refId: choice.refId,
+      quantity: defaults.quantity,
+      unit: defaults.unit,
+    });
+
+    this.autosave.push(this.itemKey(menuItemId), () =>
+      this.persistItem(menuItemId),
     );
   }
 
@@ -627,7 +592,8 @@ export class GetMenuComponent implements OnInit {
     );
 
     this.loadedDetail.set(patched);
-    this.quantityChanges.next(this.editor.toUpdateRequest(patched));
+    this.patchPendingItem(item.id, { quantity });
+    this.queueItem(item.id);
   }
 
   onUnit(item: MenuItemView, unit: string): void {
@@ -641,7 +607,11 @@ export class GetMenuComponent implements OnInit {
     const detail = this.loadedDetail();
     if (!detail) return;
 
-    this.save(this.editor.withItemUnit(detail, item.id, unit));
+    this.loadedDetail.set(
+      this.editor.withItemUnitApplied(detail, item.id, unit),
+    );
+    this.patchPendingItem(item.id, { unit });
+    this.queueItem(item.id);
   }
 
   toggleItemTree(itemId: string): void {
@@ -658,11 +628,11 @@ export class GetMenuComponent implements OnInit {
   ): void {
     if (this.isDraft() || !change.quantity || change.quantity <= 0) return;
 
-    this.nodeQuantityChanges.next({
-      menuItemId: item.id,
-      path: change.path,
-      quantity: change.quantity,
-    });
+    this.autosave.push(`node:${item.id}:${change.path}`, () =>
+      this.updateMenuItemNodeService
+        .updateMenuItemNode(this.id(), item.id, change.path, change.quantity)
+        .pipe(tap(() => this.load(true))),
+    );
   }
 
   onNodeUnitChange(item: MenuItemView, change: DiaryTreeUnitChange): void {
@@ -714,7 +684,13 @@ export class GetMenuComponent implements OnInit {
     const detail = this.loadedDetail();
     if (!detail) return;
 
-    this.save(this.editor.withoutItem(detail, item.id));
+    this.loadedDetail.set(this.editor.withoutItemApplied(detail, item.id));
+
+    this.undo.schedule({
+      label: this.translate("getMenu.removed", { name: item.name }),
+      commit: () => this.commitRemoveItem(item.id),
+      revert: () => this.loadedDetail.set(detail),
+    });
   }
 
   saveDraft(): void {
@@ -834,10 +810,87 @@ export class GetMenuComponent implements OnInit {
     );
   }
 
-  private save(request: UpdateMenuRequest): void {
-    this.updateMenuService.updateMenu(this.id(), request).subscribe({
-      next: () => this.load(true),
-    });
+  onRetrySave(): void {
+    this.autosave.retry();
+  }
+
+  onUndoRemove(): void {
+    this.undo.undo();
+  }
+
+  private queueDetails(): void {
+    this.autosave.push("details", () =>
+      this.updateMenuDetailsService.updateMenuDetails(this.id(), {
+        name: this.name(),
+        emoji: this.loadedDetail()?.emoji ?? "",
+        note: this.note(),
+      }),
+    );
+  }
+
+  /**
+   * An item edited before its creating PUT has landed must carry the edit in that PUT,
+   * not only in a follow-up PATCH the server would reject for a row that does not exist yet.
+   */
+  private patchPendingItem(
+    menuItemId: string,
+    patch: Partial<AddMenuItemRequest>,
+  ): void {
+    const pending = this.pendingItems.get(menuItemId);
+    if (!pending) return;
+
+    this.pendingItems.set(menuItemId, { ...pending, ...patch });
+  }
+
+  private queueItem(menuItemId: string): void {
+    this.autosave.push(this.itemKey(menuItemId), () =>
+      this.persistItem(menuItemId),
+    );
+  }
+
+  /**
+   * Resolved when the task runs: an item edited right after being picked coalesces
+   * onto the same key and must still land as the creating PUT.
+   */
+  private persistItem(menuItemId: string): Observable<unknown> {
+    const pending = this.pendingItems.get(menuItemId);
+
+    if (pending) {
+      return this.saveMenuItemService
+        .addMenuItem(this.id(), menuItemId, pending)
+        .pipe(
+          tap(() => {
+            this.pendingItems.delete(menuItemId);
+            this.load(true);
+          }),
+        );
+    }
+
+    const item = this.editor
+      .flatItems(this.loadedDetail())
+      .find((candidate) => candidate.id === menuItemId);
+    if (!item) return of(void 0);
+
+    return this.saveMenuItemService
+      .updateMenuItem(this.id(), menuItemId, {
+        quantity: item.quantity,
+        unit: item.unit,
+      })
+      .pipe(tap(() => this.load(true)));
+  }
+
+  private commitRemoveItem(menuItemId: string): void {
+    this.pendingItems.delete(menuItemId);
+
+    this.autosave.push(this.itemKey(menuItemId), () =>
+      this.saveMenuItemService
+        .removeMenuItem(this.id(), menuItemId)
+        .pipe(tap(() => this.load(true))),
+    );
+  }
+
+  private itemKey(menuItemId: string): string {
+    return `item:${menuItemId}`;
   }
 
   private loadChoices(): void {

@@ -211,6 +211,14 @@
         </ds-stack>
       </ds-stack>
 
+      @if (canWrite() && !isDraft()) {
+        <ds-save-status
+          slot="side"
+          [status]="autosave.status()"
+          (retried)="onRetrySave()"
+        />
+      }
+
       @if (canWrite()) {
         <ds-text-input
           slot="side"
@@ -355,7 +363,7 @@
 
       @if (canWrite() && isDraft()) {
         <ds-button
-          variant="primary"
+          variant="soft"
           icon="check"
           [fullWidth]="true"
           [disabled]="!draftSavable()"
@@ -488,3 +496,9 @@
     (cancelled)="cancelDelete()"
   />
 </ds-page-wrapper>
+
+<ds-undo-bar
+  [show]="!!undo.request()"
+  [label]="undo.request()?.label ?? ''"
+  (undone)="onUndoRemove()"
+/>

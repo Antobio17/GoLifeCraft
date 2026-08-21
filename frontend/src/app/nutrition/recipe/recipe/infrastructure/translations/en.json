@@ -98,17 +98,10 @@
     "rationUnit": "srv",
     "noIngredients": "No ingredients yet",
     "addIngredient": "Add ingredient",
-    "deleteRecipe": "Delete recipe",
     "pickerTitle": "Add ingredient",
     "pickerSearch": "Search article or recipe…",
     "pickerEmpty": "No results.",
     "tabProducts": "Articles",
-    "tabRecipes": "Sub-recipes",
-    "deleteTitle": "Delete recipe",
-    "deleteBody": "It will be removed and taken out of any recipe using it as a sub-recipe.",
-    "deleteWarning": "This action cannot be undone.",
-    "cancel": "Cancel",
-    "deleteConfirm": "Delete",
-    "deleting": "Deleting…"
+    "tabRecipes": "Sub-recipes"
   }
 }

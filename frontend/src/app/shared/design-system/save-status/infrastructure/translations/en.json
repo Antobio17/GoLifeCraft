@@ -1,0 +1,8 @@
+{
+  "saveStatus": {
+    "saving": "Saving…",
+    "saved": "Saved",
+    "error": "Not saved",
+    "retry": "Retry"
+  }
+}

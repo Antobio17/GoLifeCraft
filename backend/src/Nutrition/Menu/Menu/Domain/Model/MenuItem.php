@@ -45,6 +45,36 @@ class MenuItem extends GenericAggregate
     /** @var MenuItemNode[] */
     public array $nodes = [];
 
+    public static function createWithId(
+        string $id,
+        string $menuId,
+        ?string $dayKey,
+        string $meal,
+        string $kind,
+        string $refId,
+        float $quantity,
+        ?string $unit,
+        int $position,
+        string $createdByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): self {
+        $item = self::create(
+            menuId: $menuId,
+            dayKey: $dayKey,
+            meal: $meal,
+            kind: $kind,
+            refId: $refId,
+            quantity: $quantity,
+            unit: $unit,
+            position: $position,
+            createdByUserId: $createdByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+        $item->id = $id;
+
+        return $item;
+    }
+
     public static function create(
         string $menuId,
         ?string $dayKey,
@@ -98,6 +128,33 @@ class MenuItem extends GenericAggregate
         $this->meal = $meal;
         $this->quantity = $quantity;
         $this->unit = $unit;
+        $this->position = $position;
+        $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
+    }
+
+    public function adjustQuantity(
+        float $quantity,
+        ?string $unit,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $this->reassign(
+            dayKey: $this->dayKey,
+            meal: $this->meal,
+            quantity: $quantity,
+            unit: $unit,
+            position: $this->position,
+            updatedByUserId: $updatedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+    }
+
+    public function moveTo(int $position, string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        if ($this->position === $position) {
+            return;
+        }
+
         $this->position = $position;
         $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
     }

@@ -45,7 +45,6 @@ import {
 } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list-item.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
@@ -59,7 +58,6 @@ import { GetRecipesService } from "@nutrition/recipe/recipe/application/services
 import { GetRecipeService } from "@nutrition/recipe/recipe/application/services/get-recipe.service";
 import { CreateRecipeService } from "@nutrition/recipe/recipe/application/services/create-recipe.service";
 import { UpdateRecipeService } from "@nutrition/recipe/recipe/application/services/update-recipe.service";
-import { DeleteRecipeService } from "@nutrition/recipe/recipe/application/services/delete-recipe.service";
 import { RecipeCategoryService } from "@nutrition/recipe/recipe/application/services/recipe-category.service";
 import {
   FormIngredient,
@@ -113,7 +111,6 @@ type PickerTab = "product" | "recipe";
     SegmentedToggleComponent,
     ModalSheetComponent,
     SearchInputComponent,
-    ConfirmActionModalComponent,
     SkeletonListItemComponent,
     SkeletonScreenHeaderComponent,
     SkeletonFieldsComponent,
@@ -134,7 +131,6 @@ export class RecipeEditorComponent implements OnInit {
   private getRecipeService = inject(GetRecipeService);
   private createRecipeService = inject(CreateRecipeService);
   private updateRecipeService = inject(UpdateRecipeService);
-  private deleteRecipeService = inject(DeleteRecipeService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
 
@@ -145,8 +141,6 @@ export class RecipeEditorComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
-  showDeleteModal = signal(false);
-  deleting = signal(false);
 
   readonly minServings = MIN_SERVINGS;
   readonly maxServings = MAX_SERVINGS;
@@ -379,30 +373,6 @@ export class RecipeEditorComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(this.isEdit ? ["/recipes", this.id()] : ["/recipes"]);
-  }
-
-  onDelete(): void {
-    this.showDeleteModal.set(true);
-  }
-
-  onCancelDelete(): void {
-    this.showDeleteModal.set(false);
-  }
-
-  onConfirmDelete(): void {
-    this.deleting.set(true);
-
-    this.deleteRecipeService.deleteRecipe(this.id()).subscribe({
-      next: () => {
-        this.deleting.set(false);
-        this.showDeleteModal.set(false);
-        this.router.navigate(["/recipes"]);
-      },
-      error: () => {
-        this.deleting.set(false);
-        this.showDeleteModal.set(false);
-      },
-    });
   }
 
   t(key: string): string {

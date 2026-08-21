@@ -123,7 +123,8 @@ export class SliderStepperComponent implements ControlValueAccessor {
   private quantize(value: number): number {
     if (this.step <= 0) return value;
 
-    const raw = Math.round((value - this.min) / this.step) * this.step + this.min;
+    const raw =
+      Math.round((value - this.min) / this.step) * this.step + this.min;
     const decimals = this.decimalsOf(this.step);
 
     return Number(raw.toFixed(decimals));

@@ -16,6 +16,28 @@ class SessionExercise extends GenericAggregate
     /** @var ExerciseSet[] */
     public array $sets = [];
 
+    public static function createWithId(
+        string $id,
+        string $sessionId,
+        string $exerciseId,
+        int $position,
+        ?string $note,
+        string $createdByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): self {
+        $sessionExercise = self::create(
+            sessionId: $sessionId,
+            exerciseId: $exerciseId,
+            position: $position,
+            note: $note,
+            createdByUserId: $createdByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+        $sessionExercise->id = $id;
+
+        return $sessionExercise;
+    }
+
     public static function create(
         string $sessionId,
         string $exerciseId,
@@ -40,5 +62,46 @@ class SessionExercise extends GenericAggregate
     public function addSet(ExerciseSet $exerciseSet): void
     {
         $this->sets[] = $exerciseSet;
+    }
+
+    /**
+     * @param ExerciseSet[] $sets
+     */
+    public function replaceSets(
+        array $sets,
+        ?string $note,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $this->note = $note;
+        $this->sets = array_values(array: $sets);
+        $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
+    }
+
+    public function moveTo(int $position, string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        if ($this->position === $position) {
+            return;
+        }
+
+        $this->position = $position;
+        $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
+    }
+
+    /**
+     * @return array{id: string, exerciseId: string, position: int, note: ?string, sets: array<int, array<string, mixed>>}
+     */
+    public function toPayload(): array
+    {
+        return [
+            'id' => $this->id,
+            'exerciseId' => $this->exerciseId,
+            'position' => $this->position,
+            'note' => $this->note,
+            'sets' => array_map(
+                callback: static fn (ExerciseSet $set): array => $set->toPayload(),
+                array: array_values(array: $this->sets),
+            ),
+        ];
     }
 }

@@ -32,13 +32,6 @@ reset_menu_item_tree:
     menuId: '[0-9a-fA-F-]{36}'
     menuItemId: '[0-9a-fA-F-]{36}'
 
-update_menu:
-  path: /api/v1/nutrition/menu/{menuId}
-  methods: [PUT]
-  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuController
-  requirements:
-    menuId: '[0-9a-fA-F-]{36}'
-
 delete_menu:
   path: /api/v1/nutrition/menu/{menuId}
   methods: [DELETE]
@@ -80,3 +73,34 @@ export_menu:
   controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ExportMenuController
   requirements:
     menuId: '[0-9a-fA-F-]{36}'
+
+update_menu_details:
+  path: /api/v1/nutrition/menu/{menuId}/details
+  methods: [PATCH]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuDetailsController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+
+add_menu_item:
+  path: /api/v1/nutrition/menu/{menuId}/items/{menuItemId}
+  methods: [PUT]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\AddMenuItemController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+    menuItemId: '[0-9a-fA-F-]{36}'
+
+update_menu_item:
+  path: /api/v1/nutrition/menu/{menuId}/items/{menuItemId}
+  methods: [PATCH]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuItemController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+    menuItemId: '[0-9a-fA-F-]{36}'
+
+remove_menu_item:
+  path: /api/v1/nutrition/menu/{menuId}/items/{menuItemId}
+  methods: [DELETE]
+  controller: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\RemoveMenuItemController
+  requirements:
+    menuId: '[0-9a-fA-F-]{36}'
+    menuItemId: '[0-9a-fA-F-]{36}'

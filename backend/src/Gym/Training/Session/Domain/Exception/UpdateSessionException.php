@@ -24,6 +24,24 @@ final class UpdateSessionException extends BaseException
         );
     }
 
+    public static function sessionExerciseNotFound(string $sessionExerciseId): self
+    {
+        return new static(
+            title: 'Session exercise does not exist.',
+            keyTranslation: 'session.exercise.does.not.exist',
+            details: ['sessionExerciseId' => $sessionExerciseId]
+        );
+    }
+
+    public static function sessionExerciseAlreadyExists(string $sessionExerciseId): self
+    {
+        return new static(
+            title: 'Session exercise already exists.',
+            keyTranslation: 'session.exercise.already.exists',
+            details: ['sessionExerciseId' => $sessionExerciseId]
+        );
+    }
+
     public static function durationMustNotBeNegative(): self
     {
         return new static(

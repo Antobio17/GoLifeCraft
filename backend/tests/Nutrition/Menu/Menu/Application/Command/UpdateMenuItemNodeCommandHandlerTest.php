@@ -6,8 +6,8 @@ use Nutrition\Menu\Menu\Application\Command\MenuItemAssembler;
 use Nutrition\Menu\Menu\Application\Command\MenuItemData;
 use Nutrition\Menu\Menu\Application\Command\ResetMenuItemTreeCommand;
 use Nutrition\Menu\Menu\Application\Command\ResetMenuItemTreeCommandHandler;
-use Nutrition\Menu\Menu\Application\Command\UpdateMenuCommand;
-use Nutrition\Menu\Menu\Application\Command\UpdateMenuCommandHandler;
+use Nutrition\Menu\Menu\Application\Command\UpdateMenuItemCommand;
+use Nutrition\Menu\Menu\Application\Command\UpdateMenuItemCommandHandler;
 use Nutrition\Menu\Menu\Application\Command\UpdateMenuItemNodeCommand;
 use Nutrition\Menu\Menu\Application\Command\UpdateMenuItemNodeCommandHandler;
 use Nutrition\Menu\Menu\Domain\Exception\UpdateMenuException;
@@ -37,7 +37,7 @@ final class UpdateMenuItemNodeCommandHandlerTest extends TestCase
 
     private ResetMenuItemTreeCommandHandler $resetHandler;
 
-    private UpdateMenuCommandHandler $updateMenuHandler;
+    private UpdateMenuItemCommandHandler $updateItemHandler;
 
     private string $recipeItemId;
 
@@ -101,9 +101,8 @@ final class UpdateMenuItemNodeCommandHandlerTest extends TestCase
             domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
-        $this->updateMenuHandler = new UpdateMenuCommandHandler(
+        $this->updateItemHandler = new UpdateMenuItemCommandHandler(
             menuRepository: $this->menuRepository,
-            menuItemAssembler: new MenuItemAssembler(dateTimeGenerator: $this->dateTimeGenerator),
             domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -176,7 +175,7 @@ final class UpdateMenuItemNodeCommandHandlerTest extends TestCase
         $this->assertSame(expected: 300.0, actual: $item->treeMacros()->calories);
     }
 
-    public function testItKeepsTheBreakdownWhenTheMenuIsRewritten(): void
+    public function testItKeepsTheBreakdownWhenTheItemIsSavedAgain(): void
     {
         ($this->handler)(new UpdateMenuItemNodeCommand(
             menuId: self::MENU_ID,
@@ -187,23 +186,11 @@ final class UpdateMenuItemNodeCommandHandlerTest extends TestCase
             updatedByUserId: self::USER_ID,
         ));
 
-        ($this->updateMenuHandler)(new UpdateMenuCommand(
+        ($this->updateItemHandler)(new UpdateMenuItemCommand(
             menuId: self::MENU_ID,
-            name: 'Día ligero',
-            emoji: '🥗',
-            note: '',
-            items: [
-                new MenuItemData(
-                    dayKey: null,
-                    meal: MenuItem::MEAL_LUNCH,
-                    kind: MenuItem::KIND_RECIPE,
-                    refId: 'recipe-1',
-                    quantity: 1.0,
-                    position: 1,
-                    unit: null,
-                    id: $this->recipeItemId,
-                ),
-            ],
+            menuItemId: $this->recipeItemId,
+            quantity: 1.0,
+            unit: null,
             updatedByUserId: self::USER_ID,
         ));
 
@@ -224,23 +211,11 @@ final class UpdateMenuItemNodeCommandHandlerTest extends TestCase
             updatedByUserId: self::USER_ID,
         ));
 
-        ($this->updateMenuHandler)(new UpdateMenuCommand(
+        ($this->updateItemHandler)(new UpdateMenuItemCommand(
             menuId: self::MENU_ID,
-            name: 'Día ligero',
-            emoji: '🥗',
-            note: '',
-            items: [
-                new MenuItemData(
-                    dayKey: null,
-                    meal: MenuItem::MEAL_LUNCH,
-                    kind: MenuItem::KIND_RECIPE,
-                    refId: 'recipe-1',
-                    quantity: 2.0,
-                    position: 1,
-                    unit: null,
-                    id: $this->recipeItemId,
-                ),
-            ],
+            menuItemId: $this->recipeItemId,
+            quantity: 2.0,
+            unit: null,
             updatedByUserId: self::USER_ID,
         ));
 

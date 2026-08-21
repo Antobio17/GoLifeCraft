@@ -14,8 +14,8 @@ import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { NgTemplateOutlet } from "@angular/common";
-import { Subject, Subscription } from "rxjs";
-import { debounceTime } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -62,9 +62,14 @@ import {
 } from "@shared/design-system/progression-card/infrastructure/components/progression-card.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
+import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
+import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
+import { UndoService } from "@shared/undo/application/services/undo.service";
+import { uuidV4 } from "@shared/uuid/uuid";
 import { GetSessionService } from "../../application/services/get-session.service";
 import { GetSessionStatsService } from "../../application/services/get-session-stats.service";
-import { UpdateSessionService } from "../../application/services/update-session.service";
+import { SaveSessionExerciseService } from "../../application/services/save-session-exercise.service";
 import { DeleteSessionService } from "../../application/services/delete-session.service";
 import { SessionDraftService } from "../../application/services/session-draft.service";
 import { SessionProgressService } from "../../application/services/session-progress.service";
@@ -122,13 +127,17 @@ import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-s
     SelectComponent,
     ProgressionCardComponent,
     SkeletonPanelComponent,
+    SaveStatusComponent,
+    UndoBarComponent,
   ],
 })
 export class SessionDetailComponent implements OnInit, OnDestroy {
   private translationService = inject(TranslationService);
   private getSessionService = inject(GetSessionService);
   private getSessionStatsService = inject(GetSessionStatsService);
-  private updateSessionService = inject(UpdateSessionService);
+  private saveSessionExerciseService = inject(SaveSessionExerciseService);
+  protected autosave = inject(AutosaveService);
+  protected undo = inject(UndoService);
   private deleteSessionService = inject(DeleteSessionService);
   private sessionDraft = inject(SessionDraftService);
   private sessionProgress = inject(SessionProgressService);
@@ -146,7 +155,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   readonly skeletonExercises = [3, 4, 3];
 
   loading = signal(true);
-  saving = signal(false);
+  private readonly persistedExercises = new Set<string>();
 
   name = signal("");
   estimatedDurationMinutes = signal(0);
@@ -387,9 +396,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.stickySentinel = undefined;
   }
 
-  private persist$ = new Subject<void>();
-  private sub?: Subscription;
-
   constructor() {
     toObservable(this.id)
       .pipe(takeUntilDestroyed())
@@ -401,10 +407,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub = this.persist$
-      .pipe(debounceTime(500))
-      .subscribe(() => this.persist());
-
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => this.loadLibrary());
@@ -416,6 +418,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.name.set("");
     this.estimatedDurationMinutes.set(0);
     this.exercises.set([]);
+    this.persistedExercises.clear();
     this.templateExercises.set([]);
     this.workouts.set([]);
   }
@@ -435,7 +438,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.sub?.unsubscribe();
     this.teardownStickyTracking();
   }
 
@@ -460,6 +462,10 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   private finalizeLoad(templateExercises: SessionExerciseView[]): void {
+    this.persistedExercises.clear();
+    templateExercises.forEach((exercise) =>
+      this.persistedExercises.add(exercise.id),
+    );
     this.templateExercises.set(this.sessionDraft.clone(templateExercises));
     this.seedExercises(templateExercises);
     this.loading.set(false);
@@ -592,59 +598,86 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   addFromLibrary(exercise: Exercise): void {
+    const sessionExerciseId = uuidV4();
+
     this.exercises.update((list) =>
-      this.sessionDraft.fromLibrary(list, exercise),
+      this.sessionDraft.fromLibrary(list, exercise, sessionExerciseId),
     );
     this.pickerOpen.set(false);
-    this.afterEdit();
+    this.afterEdit(sessionExerciseId);
   }
 
   removeExercise(exerciseId: string): void {
+    const removed = this.exercises().find(
+      (candidate) => candidate.id === exerciseId,
+    );
+    if (!removed) return;
+
+    const previous = this.exercises();
+
     this.exercises.update((list) =>
       this.sessionDraft.removeExercise(list, exerciseId),
     );
-    this.afterEdit();
+
+    if (this.isActiveHere) {
+      this.activeWorkout.syncProgress(this.toActive());
+      return;
+    }
+
+    this.undo.schedule({
+      label: this.t("getSession.removed", { name: removed.exerciseName }),
+      commit: () => this.commitRemoveExercise(exerciseId),
+      revert: () => this.exercises.set(previous),
+    });
   }
 
   addSet(exerciseId: string): void {
     this.exercises.update((list) => this.sessionDraft.addSet(list, exerciseId));
-    this.afterEdit();
+    this.afterEdit(exerciseId);
   }
 
   removeSet(exerciseId: string, setId: string): void {
     this.exercises.update((list) =>
       this.sessionDraft.removeSet(list, exerciseId, setId),
     );
-    this.afterEdit();
+    this.afterEdit(exerciseId);
   }
 
   setReps(exerciseId: string, setId: string, value: number): void {
     this.exercises.update((list) =>
       this.sessionDraft.setReps(list, exerciseId, setId, value),
     );
-    this.afterEdit();
+    this.afterEdit(exerciseId);
   }
 
   setWeight(exerciseId: string, setId: string, value: number): void {
     this.exercises.update((list) =>
       this.sessionDraft.setWeight(list, exerciseId, setId, value),
     );
-    this.afterEdit();
+    this.afterEdit(exerciseId);
   }
 
   setNote(exerciseId: string, value: string): void {
     this.exercises.update((list) =>
       this.sessionDraft.setNote(list, exerciseId, value),
     );
-    this.afterEdit();
+    this.afterEdit(exerciseId);
   }
 
-  private afterEdit(): void {
+  private commitRemoveExercise(sessionExerciseId: string): void {
+    this.autosave.push(this.exerciseKey(sessionExerciseId), () =>
+      this.saveSessionExerciseService
+        .removeSessionExercise(this.id(), sessionExerciseId)
+        .pipe(tap(() => this.persistedExercises.delete(sessionExerciseId))),
+    );
+  }
+
+  private afterEdit(sessionExerciseId: string): void {
     if (this.isActiveHere) {
       this.activeWorkout.syncProgress(this.toActive());
       return;
     }
-    this.queuePersist();
+    this.queuePersist(sessionExerciseId);
   }
 
   get isActiveHere(): boolean {
@@ -734,22 +767,56 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     this.showStopModal.set(false);
   }
 
-  private queuePersist(): void {
-    this.persist$.next();
+  private queuePersist(sessionExerciseId: string): void {
+    this.autosave.push(this.exerciseKey(sessionExerciseId), () =>
+      this.persistExercise(sessionExerciseId),
+    );
   }
 
-  private persist(): void {
-    this.saving.set(true);
-    const payload = this.sessionDraft.toRequest(
-      this.name(),
-      this.estimatedDurationMinutes(),
-      this.exercises(),
+  /**
+   * Decided at run time, not when queued: a set edited right after adding the exercise
+   * coalesces onto the same key and must still land as the creating PUT.
+   */
+  private persistExercise(sessionExerciseId: string): Observable<unknown> {
+    const exercise = this.exercises().find(
+      (candidate) => candidate.id === sessionExerciseId,
     );
 
-    this.updateSessionService.updateSession(this.id(), payload).subscribe({
-      next: () => this.saving.set(false),
-      error: () => this.saving.set(false),
-    });
+    if (!exercise || !exercise.exerciseId) return of(void 0);
+
+    const request = {
+      exerciseId: exercise.exerciseId,
+      note: exercise.note,
+      sets: exercise.sets.map((set, index) => ({
+        position: index + 1,
+        reps: set.reps,
+        weight: set.weight,
+      })),
+    };
+
+    if (this.persistedExercises.has(sessionExerciseId)) {
+      return this.saveSessionExerciseService.updateSessionExercise(
+        this.id(),
+        sessionExerciseId,
+        request,
+      );
+    }
+
+    return this.saveSessionExerciseService
+      .addSessionExercise(this.id(), sessionExerciseId, request)
+      .pipe(tap(() => this.persistedExercises.add(sessionExerciseId)));
+  }
+
+  private exerciseKey(sessionExerciseId: string): string {
+    return `exercise:${sessionExerciseId}`;
+  }
+
+  onRetrySave(): void {
+    this.autosave.retry();
+  }
+
+  onUndoRemove(): void {
+    this.undo.undo();
   }
 
   onEdit(): void {

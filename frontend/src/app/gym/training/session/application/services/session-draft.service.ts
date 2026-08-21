@@ -38,9 +38,10 @@ export class SessionDraftService {
   fromLibrary(
     list: SessionExerciseView[],
     exercise: Exercise,
+    sessionExerciseId: string = this.uid("x"),
   ): SessionExerciseView[] {
     const added: SessionExerciseView = {
-      id: this.uid("x"),
+      id: sessionExerciseId,
       exerciseId: exercise.id,
       exerciseName: exercise.attributes.name,
       muscleGroups: [...exercise.attributes.muscleGroups],

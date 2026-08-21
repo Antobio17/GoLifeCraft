@@ -1,5 +1,6 @@
 {
   "getShopping": {
+    "removed": "{{name}} eliminado",
     "title": "Lista de compra",
     "subtitle": "Añade artículos de tu catálogo o escríbelos a mano",
     "add": "Añadir",

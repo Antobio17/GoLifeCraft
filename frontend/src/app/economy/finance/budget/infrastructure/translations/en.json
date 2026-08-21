@@ -58,7 +58,6 @@
   "saveFinanceBudget.allocation.aria": "Income split",
   "saveFinanceBudget.legend.savings": "Savings",
   "saveFinanceBudget.save": "Save budget",
-  "saveFinanceBudget.saved": "Budget saved",
   "getFinanceBudget.empty.ctaTitle": "Create your budget",
   "getFinanceBudget.empty.ctaText": "Set a cap per category and a savings goal"
 }

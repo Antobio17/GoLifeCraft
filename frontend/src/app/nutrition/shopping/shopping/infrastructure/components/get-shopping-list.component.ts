@@ -1,6 +1,11 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { forkJoin } from "rxjs";
+import { forkJoin, of } from "rxjs";
+import { tap } from "rxjs/operators";
+import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
+import { UndoService } from "@shared/undo/application/services/undo.service";
+import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
+import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -86,10 +91,14 @@ type FilterKind = "store" | "cat" | "brand";
     ChipComponent,
     ManageAislesComponent,
     DiaryShoppingSheetComponent,
+    SaveStatusComponent,
+    UndoBarComponent,
   ],
 })
 export class GetShoppingListComponent implements OnInit {
   private translationService = inject(TranslationService);
+  protected autosave = inject(AutosaveService);
+  protected undo = inject(UndoService);
   private authSession = inject(AuthSessionService);
   private getShoppingListService = inject(GetShoppingListService);
   private addShoppingListItemService = inject(AddShoppingListItemService);
@@ -307,8 +316,8 @@ export class GetShoppingListComponent implements OnInit {
     this.load(true);
   }
 
-  t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   filterChevron(kind: FilterKind): DsIconName {
@@ -418,40 +427,65 @@ export class GetShoppingListComponent implements OnInit {
   }
 
   toggleChecked(item: ShoppingItemRow): void {
-    const checked = !item.checked;
-    this.patchItem(item.id, { checked });
-
-    this.updateShoppingListItemService
-      .updateShoppingListItem(item.id, item.quantity, checked)
-      .subscribe();
+    this.patchItem(item.id, { checked: !item.checked });
+    this.queueItem(item.id);
   }
 
   increment(item: ShoppingItemRow): void {
-    const quantity = item.quantity + 1;
-    this.patchItem(item.id, { quantity });
-
-    this.updateShoppingListItemService
-      .updateShoppingListItem(item.id, quantity, item.checked)
-      .subscribe();
+    this.patchItem(item.id, { quantity: item.quantity + 1 });
+    this.queueItem(item.id);
   }
 
   decrement(item: ShoppingItemRow): void {
     if (item.quantity <= 1) return;
 
-    const quantity = item.quantity - 1;
-    this.patchItem(item.id, { quantity });
-
-    this.updateShoppingListItemService
-      .updateShoppingListItem(item.id, quantity, item.checked)
-      .subscribe();
+    this.patchItem(item.id, { quantity: item.quantity - 1 });
+    this.queueItem(item.id);
   }
 
   removeItem(item: ShoppingItemRow): void {
-    this.deleteShoppingListItemService
-      .deleteShoppingListItem(item.id)
-      .subscribe({
-        next: () => this.load(true),
-      });
+    const previous = this.attributes();
+
+    this.attributes.update((current) =>
+      current ? this.view.withoutItem(current, item.id) : current,
+    );
+
+    this.undo.schedule({
+      label: this.t("getShopping.removed", { name: item.name }),
+      commit: () => this.commitRemoveItem(item.id),
+      revert: () => this.attributes.set(previous),
+    });
+  }
+
+  onRetrySave(): void {
+    this.autosave.retry();
+  }
+
+  onUndoRemove(): void {
+    this.undo.undo();
+  }
+
+  private queueItem(itemId: string): void {
+    this.autosave.push(`item:${itemId}`, () => {
+      const item = this.attributes()?.items.find(
+        (candidate) => candidate.id === itemId,
+      );
+      if (!item) return of(void 0);
+
+      return this.updateShoppingListItemService.updateShoppingListItem(
+        itemId,
+        item.quantity,
+        item.checked,
+      );
+    });
+  }
+
+  private commitRemoveItem(itemId: string): void {
+    this.autosave.push(`item:${itemId}`, () =>
+      this.deleteShoppingListItemService
+        .deleteShoppingListItem(itemId)
+        .pipe(tap(() => this.load(true))),
+    );
   }
 
   askClearChecked(): void {

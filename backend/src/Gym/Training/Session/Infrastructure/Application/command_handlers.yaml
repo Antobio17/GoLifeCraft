@@ -15,17 +15,6 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
-  Gym\Training\Session\Application\Command\UpdateSessionCommandHandler:
-    class: Gym\Training\Session\Application\Command\UpdateSessionCommandHandler
-    arguments:
-      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
-      $needleDataQuery: '@Gym\Training\Session\Domain\QueryModel\UpdateSessionNeedleDataQuery'
-      $sessionExerciseAssembler: '@Gym\Training\Session\Application\Command\SessionExerciseAssembler'
-      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
-      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
-    tags:
-      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
-
   Gym\Training\Session\Application\Command\SyncSessionExercisesCommandHandler:
     class: Gym\Training\Session\Application\Command\SyncSessionExercisesCommandHandler
     arguments:
@@ -38,6 +27,50 @@ services:
 
   Gym\Training\Session\Application\Command\DeleteSessionCommandHandler:
     class: Gym\Training\Session\Application\Command\DeleteSessionCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Command\ExerciseSetAssembler:
+    class: Gym\Training\Session\Application\Command\ExerciseSetAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Gym\Training\Session\Application\Command\UpdateSessionDetailsCommandHandler:
+    class: Gym\Training\Session\Application\Command\UpdateSessionDetailsCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $needleDataQuery: '@Gym\Training\Session\Domain\QueryModel\UpdateSessionNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Command\AddSessionExerciseCommandHandler:
+    class: Gym\Training\Session\Application\Command\AddSessionExerciseCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $exerciseSetAssembler: '@Gym\Training\Session\Application\Command\ExerciseSetAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Command\UpdateSessionExerciseCommandHandler:
+    class: Gym\Training\Session\Application\Command\UpdateSessionExerciseCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $exerciseSetAssembler: '@Gym\Training\Session\Application\Command\ExerciseSetAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Command\RemoveSessionExerciseCommandHandler:
+    class: Gym\Training\Session\Application\Command\RemoveSessionExerciseCommandHandler
     arguments:
       $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'

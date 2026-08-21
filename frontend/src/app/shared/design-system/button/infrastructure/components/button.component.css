@@ -124,15 +124,18 @@
   outline-offset: 2px;
 }
 
-/* ---- Variante: soft (fondo inset, texto de marca) ---- */
+/* ---- Variante: soft (fondo inset, texto de marca) ----
+   El borde de marca es lo que la separa de su propio :disabled, que comparte
+   el mismo fondo inset y sólo cambia el color del texto. ---- */
 .ds-btn--soft {
   background: var(--ds-surface-inset);
   color: var(--ds-primary-soft-text);
-  border-color: transparent;
+  border-color: var(--ds-primary-soft-border);
 }
 
 .ds-btn--soft:hover:not(:disabled) {
-  background: var(--ds-surface-hover);
+  background: var(--ds-primary-soft-hover);
+  border-color: color-mix(in srgb, var(--ds-primary) 45%, transparent);
 }
 
 .ds-btn--soft:focus-visible {

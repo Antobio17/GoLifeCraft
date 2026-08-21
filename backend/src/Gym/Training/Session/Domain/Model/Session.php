@@ -4,6 +4,10 @@ namespace Gym\Training\Session\Domain\Model;
 
 use Gym\Training\Session\Domain\Event\SessionCreated;
 use Gym\Training\Session\Domain\Event\SessionDeleted;
+use Gym\Training\Session\Domain\Event\SessionDetailsUpdated;
+use Gym\Training\Session\Domain\Event\SessionExerciseAdded;
+use Gym\Training\Session\Domain\Event\SessionExerciseRemoved;
+use Gym\Training\Session\Domain\Event\SessionExerciseUpdated;
 use Gym\Training\Session\Domain\Event\SessionUpdated;
 use Gym\Training\Session\Domain\Exception\CreateSessionException;
 use Gym\Training\Session\Domain\Exception\UpdateSessionException;
@@ -52,34 +56,6 @@ class Session extends GenericAggregate
         ));
 
         return $session;
-    }
-
-    /**
-     * @param SessionExercise[] $exercises
-     */
-    public function update(
-        string $name,
-        int $estimatedDurationMinutes,
-        array $exercises,
-        string $updatedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        if (!self::hasValidDuration(estimatedDurationMinutes: $estimatedDurationMinutes)) {
-            throw UpdateSessionException::durationMustNotBeNegative();
-        }
-
-        $now = $dateTimeGenerator->now();
-
-        $this->name = $name;
-        $this->estimatedDurationMinutes = $estimatedDurationMinutes;
-        $this->exercises = $exercises;
-        $this->stampUpdate(userId: $updatedByUserId, now: $now);
-
-        $this->record(event: new SessionUpdated(
-            aggregateId: $this->id,
-            occurredOn: $now,
-            name: $name,
-        ));
     }
 
     /**
@@ -145,6 +121,180 @@ class Session extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
         ));
+    }
+
+    public function updateDetails(
+        string $name,
+        int $estimatedDurationMinutes,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!self::hasValidDuration(estimatedDurationMinutes: $estimatedDurationMinutes)) {
+            throw UpdateSessionException::durationMustNotBeNegative();
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->name = $name;
+        $this->estimatedDurationMinutes = $estimatedDurationMinutes;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new SessionDetailsUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+            estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            exercises: $this->exercisesPayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function addExercise(
+        SessionExercise $sessionExercise,
+        string $addedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (null !== $this->findExercise(sessionExerciseId: $sessionExercise->id)) {
+            throw UpdateSessionException::sessionExerciseAlreadyExists(sessionExerciseId: $sessionExercise->id);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->exercises[] = $sessionExercise;
+        $this->repositionExercises(updatedByUserId: $addedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        $this->stampUpdate(userId: $addedByUserId, now: $now);
+
+        $this->record(event: new SessionExerciseAdded(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            sessionExerciseId: $sessionExercise->id,
+            exerciseId: $sessionExercise->exerciseId,
+            name: $this->name,
+            estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            exercises: $this->exercisesPayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $addedByUserId,
+        ));
+    }
+
+    /**
+     * @param ExerciseSet[] $sets
+     */
+    public function updateExercise(
+        string $sessionExerciseId,
+        ?string $note,
+        array $sets,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $sessionExercise = $this->exercise(sessionExerciseId: $sessionExerciseId);
+        $now = $dateTimeGenerator->now();
+
+        $sessionExercise->replaceSets(
+            sets: $sets,
+            note: $note,
+            updatedByUserId: $updatedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new SessionExerciseUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            sessionExerciseId: $sessionExercise->id,
+            exerciseId: $sessionExercise->exerciseId,
+            name: $this->name,
+            estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            exercises: $this->exercisesPayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function removeExercise(
+        string $sessionExerciseId,
+        string $removedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $sessionExercise = $this->exercise(sessionExerciseId: $sessionExerciseId);
+        $now = $dateTimeGenerator->now();
+
+        $this->exercises = array_values(array: array_filter(
+            array: $this->exercises,
+            callback: static fn (SessionExercise $candidate): bool => $candidate->id !== $sessionExerciseId,
+        ));
+        $this->repositionExercises(updatedByUserId: $removedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        $this->stampUpdate(userId: $removedByUserId, now: $now);
+
+        $this->record(event: new SessionExerciseRemoved(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            sessionExerciseId: $sessionExercise->id,
+            exerciseId: $sessionExercise->exerciseId,
+            name: $this->name,
+            estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            exercises: $this->exercisesPayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $removedByUserId,
+        ));
+    }
+
+    public function exercise(string $sessionExerciseId): SessionExercise
+    {
+        $sessionExercise = $this->findExercise(sessionExerciseId: $sessionExerciseId);
+
+        if (null === $sessionExercise) {
+            throw UpdateSessionException::sessionExerciseNotFound(sessionExerciseId: $sessionExerciseId);
+        }
+
+        return $sessionExercise;
+    }
+
+    public function nextExercisePosition(): int
+    {
+        return count(value: $this->exercises) + 1;
+    }
+
+    public function findExercise(string $sessionExerciseId): ?SessionExercise
+    {
+        foreach ($this->exercises as $sessionExercise) {
+            if ($sessionExercise->id === $sessionExerciseId) {
+                return $sessionExercise;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function exercisesPayload(): array
+    {
+        return array_map(
+            callback: static fn (SessionExercise $sessionExercise): array => $sessionExercise->toPayload(),
+            array: array_values(array: $this->exercises),
+        );
+    }
+
+    private function repositionExercises(string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        foreach (array_values(array: $this->exercises) as $index => $sessionExercise) {
+            $sessionExercise->moveTo(
+                position: $index + 1,
+                updatedByUserId: $updatedByUserId,
+                dateTimeGenerator: $dateTimeGenerator,
+            );
+        }
     }
 
     private function replayExercise(

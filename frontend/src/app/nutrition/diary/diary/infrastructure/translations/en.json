@@ -1,5 +1,6 @@
 {
   "getDiary": {
+    "removed": "{{name}} removed",
     "title": "Diary",
     "kcal": "kcal",
     "add": "Add",

@@ -14,6 +14,7 @@
         "getShopping.title" | t
       }}</ds-heading>
       <ds-text variant="meta">{{ "getShopping.subtitle" | t }}</ds-text>
+      <ds-save-status [status]="autosave.status()" (retried)="onRetrySave()" />
     </ds-stack>
 
     @if (canWrite()) {
@@ -319,3 +320,9 @@
     (closed)="closeAisleSheet()"
   />
 </ds-page-wrapper>
+
+<ds-undo-bar
+  [show]="!!undo.request()"
+  [label]="undo.request()?.label ?? ''"
+  (undone)="onUndoRemove()"
+/>

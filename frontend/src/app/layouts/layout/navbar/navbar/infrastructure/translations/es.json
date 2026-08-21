@@ -28,6 +28,14 @@
     "add": "Añadir",
     "list": "Lista de compra",
     "profile": "Perfil",
-    "menu": "Menú"
+    "menu": "Menú",
+    "groupGeneral": "General",
+    "groupNutrition": "Nutrición",
+    "groupFitness": "Deporte",
+    "groupFinance": "Finanzas",
+    "groupAdmin": "Administración",
+    "budget": "Presupuesto",
+    "accounts": "Cuentas",
+    "recurrences": "Recurrentes"
   }
 }

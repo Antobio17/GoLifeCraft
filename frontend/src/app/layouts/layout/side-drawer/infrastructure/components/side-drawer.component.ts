@@ -20,7 +20,9 @@ import { NavItemComponent } from "@shared/design-system/nav-item/infrastructure/
 import { AvatarComponent } from "@shared/design-system/avatar/infrastructure/components/avatar.component";
 import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { SideDrawerService } from "../../application/services/side-drawer.service";
+import { DrawerNavSectionsService } from "../../application/services/drawer-nav-sections.service";
 
 @Component({
   selector: "app-side-drawer",
@@ -35,12 +37,14 @@ import { SideDrawerService } from "../../application/services/side-drawer.servic
     AvatarComponent,
     DividerComponent,
     StackComponent,
+    TextComponent,
   ],
   templateUrl: "./side-drawer.component.html",
   styleUrls: ["./side-drawer.component.css"],
 })
 export class SideDrawerComponent {
   private drawer = inject(SideDrawerService);
+  private navSectionsService = inject(DrawerNavSectionsService);
   private themeService = inject(ThemeService);
   private authSessionService = inject(AuthSessionService);
   private router = inject(Router);
@@ -53,11 +57,13 @@ export class SideDrawerComponent {
 
   private statusBarOpen = false;
 
-  readonly grafanaUrl = "/grafana/";
-
   readonly isOpen = this.drawer.isOpen;
   readonly isDark = this.themeService.isDark;
   readonly isGod = computed(() => this.authSessionService.isGod());
+
+  readonly sections = computed(() =>
+    this.navSectionsService.getSections(this.isGod()),
+  );
 
   readonly isInteractive = computed(() => this.isOpen() || this.isDocked());
 

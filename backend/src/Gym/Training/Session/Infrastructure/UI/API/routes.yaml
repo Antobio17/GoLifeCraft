@@ -3,11 +3,6 @@ create_session:
   methods: [POST]
   controller: Gym\Training\Session\Infrastructure\UI\API\Controller\CreateSessionController
 
-update_session:
-  path: /api/v1/gym/session/{sessionId}
-  methods: [PUT]
-  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\UpdateSessionController
-
 delete_session:
   path: /api/v1/gym/session/{sessionId}
   methods: [DELETE]
@@ -22,3 +17,23 @@ get_session:
   path: /api/v1/gym/session/{sessionId}
   methods: [GET]
   controller: Gym\Training\Session\Infrastructure\UI\API\Controller\GetSessionController
+
+update_session_details:
+  path: /api/v1/gym/session/{sessionId}/details
+  methods: [PATCH]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\UpdateSessionDetailsController
+
+add_session_exercise:
+  path: /api/v1/gym/session/{sessionId}/exercise/{sessionExerciseId}
+  methods: [PUT]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\AddSessionExerciseController
+
+update_session_exercise:
+  path: /api/v1/gym/session/{sessionId}/exercise/{sessionExerciseId}
+  methods: [PATCH]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\UpdateSessionExerciseController
+
+remove_session_exercise:
+  path: /api/v1/gym/session/{sessionId}/exercise/{sessionExerciseId}
+  methods: [DELETE]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\RemoveSessionExerciseController

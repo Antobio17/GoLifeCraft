@@ -58,7 +58,6 @@
   "saveFinanceBudget.allocation.aria": "Reparto del ingreso",
   "saveFinanceBudget.legend.savings": "Ahorro",
   "saveFinanceBudget.save": "Guardar presupuesto",
-  "saveFinanceBudget.saved": "Presupuesto guardado",
   "getFinanceBudget.empty.ctaTitle": "Crea tu presupuesto",
   "getFinanceBudget.empty.ctaText": "Fíjate un tope por categoría y un objetivo de ahorro"
 }

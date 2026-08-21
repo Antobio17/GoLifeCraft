@@ -1,0 +1,8 @@
+{
+  "saveStatus": {
+    "saving": "Guardando…",
+    "saved": "Guardado",
+    "error": "No se ha guardado",
+    "retry": "Reintentar"
+  }
+}

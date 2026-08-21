@@ -6,9 +6,12 @@ import {
   inject,
   signal,
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { Subject, debounceTime, groupBy, mergeMap } from "rxjs";
+import { tap } from "rxjs/operators";
+import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
+import { UndoService } from "@shared/undo/application/services/undo.service";
+import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
+import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -131,6 +134,8 @@ type PickerTab = "product" | "recipe" | "quick";
     ChipComponent,
     CalendarComponent,
     DiaryTreeComponent,
+    SaveStatusComponent,
+    UndoBarComponent,
   ],
 })
 export class GetDiaryComponent implements OnInit {
@@ -156,20 +161,10 @@ export class GetDiaryComponent implements OnInit {
   protected calendarView = inject(DiaryCalendarViewService);
   protected picker = inject(DiaryPickerService);
   private destroyRef = inject(DestroyRef);
+  protected autosave = inject(AutosaveService);
+  protected undo = inject(UndoService);
 
   private readonly MODULE_PATH = "nutrition/diary/diary";
-  private readonly QUANTITY_DEBOUNCE = 500;
-
-  private quantityChanges = new Subject<{
-    entryId: string;
-    quantity: number;
-  }>();
-
-  private nodeQuantityChanges = new Subject<{
-    entryId: string;
-    path: string;
-    quantity: number;
-  }>();
 
   canWrite = computed(() => this.authSession.isGod());
 
@@ -361,35 +356,6 @@ export class GetDiaryComponent implements OnInit {
   goalValid = computed(() => this.goalForm.isValid(this.goal()));
 
   ngOnInit(): void {
-    this.quantityChanges
-      .pipe(
-        groupBy((change) => change.entryId),
-        mergeMap((group) => group.pipe(debounceTime(this.QUANTITY_DEBOUNCE))),
-        mergeMap((change) =>
-          this.updateDiaryEntryService.updateDiaryEntryQuantity(
-            change.entryId,
-            change.quantity,
-          ),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({ next: () => this.load(this.date(), true) });
-
-    this.nodeQuantityChanges
-      .pipe(
-        groupBy((change) => `${change.entryId}:${change.path}`),
-        mergeMap((group) => group.pipe(debounceTime(this.QUANTITY_DEBOUNCE))),
-        mergeMap((change) =>
-          this.updateDiaryEntryNodeService.updateDiaryEntryNode(
-            change.entryId,
-            change.path,
-            change.quantity,
-          ),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({ next: () => this.load(this.date(), true) });
-
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
@@ -398,8 +364,8 @@ export class GetDiaryComponent implements OnInit {
       });
   }
 
-  t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   macroLabels = computed<MacroShortLabels>(() => ({
@@ -583,7 +549,19 @@ export class GetDiaryComponent implements OnInit {
   onQuantityChange(entryId: string, quantity: number): void {
     if (!quantity || quantity <= 0) return;
 
-    this.quantityChanges.next({ entryId, quantity });
+    this.autosave.push(`entry:${entryId}`, () =>
+      this.updateDiaryEntryService
+        .updateDiaryEntryQuantity(entryId, quantity)
+        .pipe(tap(() => this.load(this.date(), true))),
+    );
+  }
+
+  onRetrySave(): void {
+    this.autosave.retry();
+  }
+
+  onUndoRemove(): void {
+    this.undo.undo();
   }
 
   onEntryUnitChange(entry: DiaryEntryView, unit: string): void {
@@ -595,11 +573,11 @@ export class GetDiaryComponent implements OnInit {
   onNodeQuantityChange(entryId: string, change: DiaryTreeQuantityChange): void {
     if (!change.quantity || change.quantity <= 0) return;
 
-    this.nodeQuantityChanges.next({
-      entryId,
-      path: change.path,
-      quantity: change.quantity,
-    });
+    this.autosave.push(`node:${entryId}:${change.path}`, () =>
+      this.updateDiaryEntryNodeService
+        .updateDiaryEntryNode(entryId, change.path, change.quantity)
+        .pipe(tap(() => this.load(this.date(), true))),
+    );
   }
 
   onNodeUnitChange(entryId: string, change: DiaryTreeUnitChange): void {
@@ -639,9 +617,25 @@ export class GetDiaryComponent implements OnInit {
   }
 
   onRemove(entryId: string): void {
-    this.deleteDiaryEntryService.deleteDiaryEntry(entryId).subscribe({
-      next: () => this.load(this.date()),
+    const day = this.day();
+    const entry = this.view.findEntry(day, entryId);
+    if (!entry) return;
+
+    this.day.set(this.view.withoutEntry(day, entryId));
+
+    this.undo.schedule({
+      label: this.t("getDiary.removed", { name: entry.name }),
+      commit: () => this.commitRemoveEntry(entryId),
+      revert: () => this.day.set(day),
     });
+  }
+
+  private commitRemoveEntry(entryId: string): void {
+    this.autosave.push(`entry:${entryId}`, () =>
+      this.deleteDiaryEntryService
+        .deleteDiaryEntry(entryId)
+        .pipe(tap(() => this.load(this.date(), true))),
+    );
   }
 
   openGoalSheet(): void {

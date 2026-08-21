@@ -224,24 +224,12 @@
 
           <ds-button
             type="submit"
-            variant="primary"
+            variant="soft"
             [fullWidth]="true"
             [loading]="saving()"
           >
             {{ saveLabel }}
           </ds-button>
-
-          @if (isEdit) {
-            <ds-button
-              type="button"
-              variant="outline-danger"
-              [fullWidth]="true"
-              icon="trash"
-              (clicked)="onDelete()"
-            >
-              {{ "recipeEditor.deleteRecipe" | t }}
-            </ds-button>
-          }
         </ds-split-view>
       </ds-stack>
     </form>
@@ -299,18 +287,4 @@
       }
     </ds-stack>
   </ds-modal-sheet>
-
-  <ds-confirm-action-modal
-    [show]="showDeleteModal()"
-    [title]="'recipeEditor.deleteTitle' | t"
-    [body]="'recipeEditor.deleteBody' | t"
-    [itemName]="form.value.name || ''"
-    [warningText]="'recipeEditor.deleteWarning' | t"
-    [isDeleting]="deleting()"
-    [cancelLabel]="'recipeEditor.cancel' | t"
-    [confirmLabel]="'recipeEditor.deleteConfirm' | t"
-    [deletingLabel]="'recipeEditor.deleting' | t"
-    (confirmed)="onConfirmDelete()"
-    (cancelled)="onCancelDelete()"
-  />
 </ds-page-wrapper>

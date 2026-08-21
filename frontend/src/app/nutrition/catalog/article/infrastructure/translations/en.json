@@ -102,7 +102,6 @@
     "saveCreate": "Create item",
     "saveEdit": "Save changes",
     "saving": "Saving…",
-    "delete": "Delete item",
     "deleteModal": {
       "title": "Delete item",
       "body": "This item will be permanently removed from the catalog.",

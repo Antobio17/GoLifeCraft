@@ -66,6 +66,7 @@
     }
   },
   "getMenu": {
+    "removed": "{{name}} removed",
     "back": "Back to menus",
     "export": "Export to PDF",
     "duplicate": "Duplicate menu",

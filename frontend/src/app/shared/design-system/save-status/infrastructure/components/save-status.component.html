@@ -1,0 +1,26 @@
+<span
+  class="ds-save-status"
+  [attr.data-state]="status"
+  [attr.data-align]="align"
+>
+  @switch (status) {
+    @case (statuses.Saving) {
+      <span class="ds-save-status__spinner"></span>
+      <span class="ds-save-status__label">{{ "saveStatus.saving" | t }}</span>
+    }
+    @case (statuses.Saved) {
+      <ds-icon name="checkCircle" [size]="14"></ds-icon>
+      <span class="ds-save-status__label">{{ "saveStatus.saved" | t }}</span>
+    }
+    @case (statuses.Error) {
+      <ds-icon name="alertCircle" [size]="14"></ds-icon>
+      <span class="ds-save-status__label">{{ "saveStatus.error" | t }}</span>
+      <ds-button variant="link" size="sm" (clicked)="retried.emit()">
+        {{ "saveStatus.retry" | t }}
+      </ds-button>
+    }
+    @default {
+      <span class="ds-save-status__label">&nbsp;</span>
+    }
+  }
+</span>

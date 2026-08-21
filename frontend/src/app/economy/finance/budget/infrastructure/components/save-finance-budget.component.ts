@@ -3,7 +3,6 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { delay } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -68,7 +67,6 @@ const REDIRECT_DELAY_MS = 600;
 export class SaveFinanceBudgetComponent implements OnInit {
   private translationService = inject(TranslationService);
   private router = inject(Router);
-  private floatingToastService = inject(FloatingToastService);
   private getFinanceBudgetSettingsService = inject(
     GetFinanceBudgetSettingsService,
   );
@@ -269,12 +267,6 @@ export class SaveFinanceBudgetComponent implements OnInit {
       .subscribe({
         next: () => {
           this.saving.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            title: this.t("saveFinanceBudget.saved"),
-            keyTranslation: "saveFinanceBudget.saved",
-            details: [],
-          });
           this.router.navigate(["/economy/budget"]);
         },
         error: () => this.saving.set(false),

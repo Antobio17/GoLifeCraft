@@ -16,11 +16,10 @@ import { TextInputComponent } from "@shared/design-system/text-input/infrastruct
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { CreateSessionService } from "../../application/services/create-session.service";
-import { UpdateSessionService } from "../../application/services/update-session.service";
+import { UpdateSessionDetailsService } from "../../application/services/update-session-details.service";
 import { GetSessionService } from "../../application/services/get-session.service";
 import { SessionDraftService } from "../../application/services/session-draft.service";
 import { GetSessionResponse } from "../../domain/models/get-session-response.model";
-import { SessionExerciseView } from "../../domain/models/session-detail.model";
 
 @Component({
   selector: "app-session-form",
@@ -41,7 +40,7 @@ export class SessionFormComponent implements OnInit {
   private translationService = inject(TranslationService);
   private formBuilder = inject(FormBuilder);
   private createSessionService = inject(CreateSessionService);
-  private updateSessionService = inject(UpdateSessionService);
+  private updateSessionDetailsService = inject(UpdateSessionDetailsService);
   private getSessionService = inject(GetSessionService);
   private sessionDraft = inject(SessionDraftService);
   private router = inject(Router);
@@ -57,7 +56,6 @@ export class SessionFormComponent implements OnInit {
   loading = signal(true);
   saving = signal(false);
   readonly id = input<string>("");
-  private existingExercises: SessionExerciseView[] = [];
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -90,7 +88,6 @@ export class SessionFormComponent implements OnInit {
         this.getSessionService.getSession(this.id()).subscribe({
           next: (response: GetSessionResponse) => {
             const attributes = response.data.attributes;
-            this.existingExercises = attributes.exercises;
             this.form.patchValue({
               name: attributes.name,
               estimatedDurationMinutes: attributes.estimatedDurationMinutes,
@@ -114,15 +111,18 @@ export class SessionFormComponent implements OnInit {
 
     this.saving.set(true);
 
-    const payload = this.sessionDraft.toRequest(
-      this.form.value.name ?? "",
-      this.form.value.estimatedDurationMinutes ?? 0,
-      this.existingExercises,
-    );
+    const name = this.form.value.name ?? "";
+    const estimatedDurationMinutes =
+      this.form.value.estimatedDurationMinutes ?? 0;
 
     const request$ = this.isEdit
-      ? this.updateSessionService.updateSession(this.id(), payload)
-      : this.createSessionService.createSession(payload);
+      ? this.updateSessionDetailsService.updateSessionDetails(this.id(), {
+          name,
+          estimatedDurationMinutes,
+        })
+      : this.createSessionService.createSession(
+          this.sessionDraft.toRequest(name, estimatedDurationMinutes, []),
+        );
 
     request$.subscribe({
       next: () => {

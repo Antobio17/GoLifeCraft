@@ -6,6 +6,8 @@ import { GetDiaryShoppingNeedsProviders } from "@nutrition/diary/diary/infrastru
 import { DiaryShoppingViewService } from "@nutrition/shopping/shopping/application/services/diary-shopping-view.service";
 import { GetShoppingListProviders } from "../providers/get-shopping-list.providers";
 import { ShoppingWriteProviders } from "../providers/shopping-write.providers";
+import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
+import { UndoProvider } from "@shared/undo/infrastructure/providers/undo.provider";
 
 export const SHOPPING_ROUTES: Routes = [
   {
@@ -18,6 +20,8 @@ export const SHOPPING_ROUTES: Routes = [
       ...UpdateSupermarketAislesProviders.getProviders(),
       ...GetDiaryShoppingNeedsProviders.getProviders(),
       DiaryShoppingViewService,
+      ...AutosaveProvider.getProviders(),
+      ...UndoProvider.getProviders(),
     ],
     children: [
       {

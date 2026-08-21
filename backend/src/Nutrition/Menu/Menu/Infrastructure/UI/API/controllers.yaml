@@ -6,13 +6,6 @@ services:
     tags:
       - { name: controller.service_arguments }
 
-  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuController:
-    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuController
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: controller.service_arguments }
-
   Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\DeleteMenuController:
     class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\DeleteMenuController
     arguments:
@@ -78,6 +71,34 @@ services:
 
   Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ExportMenuController:
     class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\ExportMenuController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuDetailsController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuDetailsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\AddMenuItemController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\AddMenuItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuItemController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\UpdateMenuItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\RemoveMenuItemController:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\API\Controller\RemoveMenuItemController
     arguments:
       $messageBus: '@messenger.bus.default'
     tags:

@@ -109,9 +109,10 @@
             ~{{ estimatedDurationMinutes() }} min
           </ds-stack>
         </ds-chip>
-        @if (saving()) {
-          <ds-text variant="meta">{{ "getSession.saving" | t }}</ds-text>
-        }
+        <ds-save-status
+          [status]="autosave.status()"
+          (retried)="onRetrySave()"
+        />
       </ds-stack>
 
       <ng-container slot="side">
@@ -365,4 +366,10 @@
   [busy]="finishing()"
   (chosen)="onFinishModeChosen($event)"
   (cancelled)="onCancelFinish()"
+/>
+
+<ds-undo-bar
+  [show]="!!undo.request()"
+  [label]="undo.request()?.label ?? ''"
+  (undone)="onUndoRemove()"
 />

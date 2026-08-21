@@ -5,10 +5,13 @@ namespace Nutrition\Menu\Menu\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Menu\Menu\Domain\Event\MenuCreated;
 use Nutrition\Menu\Menu\Domain\Event\MenuDeleted;
+use Nutrition\Menu\Menu\Domain\Event\MenuDetailsUpdated;
+use Nutrition\Menu\Menu\Domain\Event\MenuItemAdded;
+use Nutrition\Menu\Menu\Domain\Event\MenuItemRemoved;
 use Nutrition\Menu\Menu\Domain\Event\MenuItemTreeAdjusted;
 use Nutrition\Menu\Menu\Domain\Event\MenuItemTreeReset;
+use Nutrition\Menu\Menu\Domain\Event\MenuItemUpdated;
 use Nutrition\Menu\Menu\Domain\Event\MenuLoadedIntoDiary;
-use Nutrition\Menu\Menu\Domain\Event\MenuUpdated;
 use Nutrition\Menu\Menu\Domain\Exception\CreateMenuException;
 use Nutrition\Menu\Menu\Domain\Exception\LoadMenuIntoDiaryException;
 use Nutrition\Menu\Menu\Domain\Exception\UpdateMenuException;
@@ -82,43 +85,6 @@ class Menu extends GenericAggregate
         ));
 
         return $menu;
-    }
-
-    /**
-     * @param MenuItem[] $items
-     */
-    public function update(
-        string $name,
-        string $emoji,
-        string $note,
-        array $items,
-        string $updatedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        $now = $dateTimeGenerator->now();
-
-        $this->name = $name;
-        $this->emoji = $emoji;
-        $this->note = $note;
-        $this->items = $items;
-        $this->guardItems(items: $items, updating: true);
-        $this->weekDays = $this->packWeekDays();
-        $this->stampUpdate(userId: $updatedByUserId, now: $now);
-
-        $this->record(event: new MenuUpdated(
-            aggregateId: $this->id,
-            occurredOn: $now,
-            name: $name,
-            emoji: $emoji,
-            note: $note,
-            type: $this->type,
-            weekDays: $this->weekDays,
-            items: $this->plannedItems(items: $items),
-            createdAt: $this->createdAt,
-            updatedAt: $now,
-            createdByUserId: $this->createdByUserId,
-            updatedByUserId: $updatedByUserId,
-        ));
     }
 
     public function delete(
@@ -200,6 +166,165 @@ class Menu extends GenericAggregate
             loadedByUserId: $loadedByUserId,
             dateTimeGenerator: $dateTimeGenerator,
         );
+    }
+
+    public function updateDetails(
+        string $name,
+        string $emoji,
+        string $note,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->name = $name;
+        $this->emoji = $emoji;
+        $this->note = $note;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new MenuDetailsUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+            emoji: $this->emoji,
+            note: $this->note,
+            type: $this->type,
+            weekDays: $this->weekDays,
+            items: $this->plannedItems(items: $this->items),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function addItem(
+        MenuItem $item,
+        string $addedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->items[] = $item;
+        $this->guardItems(items: [$item], updating: true);
+        $this->repositionItems(updatedByUserId: $addedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        $this->weekDays = $this->packWeekDays();
+        $this->stampUpdate(userId: $addedByUserId, now: $now);
+
+        $this->record(event: new MenuItemAdded(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            menuItemId: $item->id,
+            name: $this->name,
+            emoji: $this->emoji,
+            note: $this->note,
+            type: $this->type,
+            weekDays: $this->weekDays,
+            items: $this->plannedItems(items: $this->items),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $addedByUserId,
+        ));
+    }
+
+    public function updateItem(
+        string $menuItemId,
+        float $quantity,
+        ?string $unit,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if ($quantity <= 0) {
+            throw UpdateMenuException::quantityMustBePositive();
+        }
+
+        $item = $this->item(menuItemId: $menuItemId);
+        $now = $dateTimeGenerator->now();
+
+        $item->adjustQuantity(
+            quantity: $quantity,
+            unit: $unit,
+            updatedByUserId: $updatedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new MenuItemUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            menuItemId: $item->id,
+            name: $this->name,
+            emoji: $this->emoji,
+            note: $this->note,
+            type: $this->type,
+            weekDays: $this->weekDays,
+            items: $this->plannedItems(items: $this->items),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function removeItem(
+        string $menuItemId,
+        string $removedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $item = $this->item(menuItemId: $menuItemId);
+        $now = $dateTimeGenerator->now();
+
+        $this->items = array_values(array: array_filter(
+            array: $this->items,
+            callback: static fn (MenuItem $candidate): bool => $candidate->id !== $menuItemId,
+        ));
+        $this->repositionItems(updatedByUserId: $removedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        $this->weekDays = $this->packWeekDays();
+        $this->stampUpdate(userId: $removedByUserId, now: $now);
+
+        $this->record(event: new MenuItemRemoved(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            menuItemId: $item->id,
+            name: $this->name,
+            emoji: $this->emoji,
+            note: $this->note,
+            type: $this->type,
+            weekDays: $this->weekDays,
+            items: $this->plannedItems(items: $this->items),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $removedByUserId,
+        ));
+    }
+
+    public function item(string $menuItemId): MenuItem
+    {
+        $item = $this->findItem(menuItemId: $menuItemId);
+
+        if (null === $item) {
+            throw UpdateMenuException::menuItemNotFound(menuId: $this->id, menuItemId: $menuItemId);
+        }
+
+        return $item;
+    }
+
+    public function nextItemPosition(): int
+    {
+        return count(value: $this->items) + 1;
+    }
+
+    private function repositionItems(string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        foreach (array_values(array: $this->items) as $index => $item) {
+            $item->moveTo(
+                position: $index + 1,
+                updatedByUserId: $updatedByUserId,
+                dateTimeGenerator: $dateTimeGenerator,
+            );
+        }
     }
 
     public function recipeItem(string $menuItemId): MenuItem

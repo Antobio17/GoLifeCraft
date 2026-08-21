@@ -16,5 +16,3 @@ export interface CreateSessionRequest {
   estimatedDurationMinutes: number;
   exercises: SessionExerciseRequest[];
 }
-
-export type UpdateSessionRequest = CreateSessionRequest;

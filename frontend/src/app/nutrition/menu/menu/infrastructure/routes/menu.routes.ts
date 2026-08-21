@@ -8,6 +8,8 @@ import { MenuPickerService } from "../../application/services/menu-picker.servic
 import { GetMenusProviders } from "../providers/get-menus.providers";
 import { GetMenuProviders } from "../providers/get-menu.providers";
 import { MenuWriteProviders } from "../providers/menu-write.providers";
+import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
+import { UndoProvider } from "@shared/undo/infrastructure/providers/undo.provider";
 
 export const MENU_ROUTES: Routes = [
   {
@@ -34,6 +36,10 @@ export const MENU_ROUTES: Routes = [
         path: "new",
         canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "menu.breadcrumb.create", draftRoute: true },
+        providers: [
+          ...AutosaveProvider.getProviders(),
+          ...UndoProvider.getProviders(),
+        ],
         loadComponent: () =>
           import("../components/get-menu.component").then(
             (m) => m.GetMenuComponent,
@@ -42,6 +48,10 @@ export const MENU_ROUTES: Routes = [
       {
         path: ":id",
         data: { breadcrumb: "menu.breadcrumb.detail" },
+        providers: [
+          ...AutosaveProvider.getProviders(),
+          ...UndoProvider.getProviders(),
+        ],
         loadComponent: () =>
           import("../components/get-menu.component").then(
             (m) => m.GetMenuComponent,

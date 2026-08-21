@@ -6,7 +6,6 @@ import {
 } from "./menu.model";
 
 export interface MenuItemRequest {
-  id?: string | null;
   dayKey: MenuWeekDayKey | null;
   meal: MenuMealKey;
   kind: MenuItemKind;
@@ -21,13 +20,6 @@ export interface CreateMenuRequest {
   emoji: string;
   note: string;
   type: MenuType;
-  items: MenuItemRequest[];
-}
-
-export interface UpdateMenuRequest {
-  name: string;
-  emoji: string;
-  note: string;
   items: MenuItemRequest[];
 }
 

@@ -66,6 +66,7 @@
     }
   },
   "getMenu": {
+    "removed": "{{name}} eliminado",
     "back": "Volver a menús",
     "export": "Exportar a PDF",
     "duplicate": "Duplicar menú",

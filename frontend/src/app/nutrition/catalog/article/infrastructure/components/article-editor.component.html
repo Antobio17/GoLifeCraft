@@ -203,42 +203,17 @@
 
         <ds-button
           type="submit"
+          variant="soft"
           [fullWidth]="true"
           [loading]="saving()"
           [disabled]="saving()"
         >
           {{ saving() ? ("articleEditor.saving" | t) : saveLabel }}
         </ds-button>
-
-        @if (isEdit) {
-          <ds-button
-            type="button"
-            variant="outline-danger"
-            [fullWidth]="true"
-            icon="trash"
-            (clicked)="onDelete()"
-          >
-            {{ "articleEditor.delete" | t }}
-          </ds-button>
-        }
       </ds-split-view>
     </form>
   }
 </ds-page-wrapper>
-
-<ds-confirm-action-modal
-  [show]="showDeleteModal()"
-  [title]="'articleEditor.deleteModal.title' | t"
-  [body]="'articleEditor.deleteModal.body' | t"
-  [itemName]="articleName()"
-  [warningText]="'articleEditor.deleteModal.warning' | t"
-  [isDeleting]="deleting()"
-  [cancelLabel]="'articleEditor.deleteModal.cancel' | t"
-  [confirmLabel]="'articleEditor.deleteModal.confirm' | t"
-  [deletingLabel]="'articleEditor.deleteModal.deleting' | t"
-  (confirmed)="onConfirmDelete()"
-  (cancelled)="onCancelDelete()"
-/>
 
 <app-manage-aisles
   [open]="aisleSheetOpen()"

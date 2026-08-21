@@ -1,0 +1,13 @@
+@if (show) {
+  <div
+    class="ds-undo-bar"
+    [attr.data-lifted]="liftedForBottomNav ? '' : null"
+    role="status"
+  >
+    <ds-icon name="trash" [size]="16"></ds-icon>
+    <span class="ds-undo-bar__label">{{ label }}</span>
+    <ds-button variant="link" size="sm" (clicked)="undone.emit()">
+      {{ "undoBar.undo" | t }}
+    </ds-button>
+  </div>
+}

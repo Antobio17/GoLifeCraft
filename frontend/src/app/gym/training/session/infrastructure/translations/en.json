@@ -52,7 +52,7 @@
     "back": "Sessions",
     "eyebrow": "Gym",
     "exercises": "exercises",
-    "saving": "Saving…",
+    "removed": "{{name}} removed",
     "actions": "Actions",
     "edit": "Edit session",
     "delete": "Delete session",

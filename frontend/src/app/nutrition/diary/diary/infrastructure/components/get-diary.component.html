@@ -15,6 +15,10 @@
           "getDiary.title" | t
         }}</ds-heading>
         <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
+        <ds-save-status
+          [status]="autosave.status()"
+          (retried)="onRetrySave()"
+        />
       </ds-stack>
       @if (dayStatus(); as status) {
         <ds-chip>
@@ -466,7 +470,7 @@
       </ds-note>
 
       <ds-button
-        variant="primary"
+        variant="soft"
         [fullWidth]="true"
         [disabled]="!goalValid()"
         [loading]="goalSaving()"
@@ -503,3 +507,9 @@
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>
+
+<ds-undo-bar
+  [show]="!!undo.request()"
+  [label]="undo.request()?.label ?? ''"
+  (undone)="onUndoRemove()"
+/>

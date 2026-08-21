@@ -98,17 +98,10 @@
     "rationUnit": "rac.",
     "noIngredients": "Sin ingredientes todavía",
     "addIngredient": "Añadir ingrediente",
-    "deleteRecipe": "Borrar receta",
     "pickerTitle": "Añadir ingrediente",
     "pickerSearch": "Buscar artículo o receta…",
     "pickerEmpty": "Sin resultados.",
     "tabProducts": "Artículos",
-    "tabRecipes": "Subrecetas",
-    "deleteTitle": "Borrar receta",
-    "deleteBody": "Se eliminará y se quitará de otras recetas que la usen como subreceta.",
-    "deleteWarning": "Esta acción no se puede deshacer.",
-    "cancel": "Cancelar",
-    "deleteConfirm": "Borrar",
-    "deleting": "Borrando…"
+    "tabRecipes": "Subrecetas"
   }
 }

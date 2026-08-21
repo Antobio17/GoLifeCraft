@@ -6,7 +6,19 @@
   (closed)="onClose()"
 >
   <ds-stack [gap]="'var(--ds-space-3)'">
-    <ds-text variant="meta">{{ subtitle() }}</ds-text>
+    <ds-stack
+      direction="row"
+      align="center"
+      justify="between"
+      [gap]="'var(--ds-space-2)'"
+    >
+      <ds-text variant="meta">{{ subtitle() }}</ds-text>
+      <ds-save-status
+        align="end"
+        [status]="autosave.status()"
+        (retried)="onRetrySave()"
+      />
+    </ds-stack>
 
     @if (!hasStores()) {
       <ds-text variant="muted">{{ noStoresText() }}</ds-text>

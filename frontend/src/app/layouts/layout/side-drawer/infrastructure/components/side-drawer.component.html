@@ -46,112 +46,36 @@
 
     <ds-stack class="drawer__scroll" gap="0">
       <nav class="drawer__nav" [attr.aria-label]="'navbar.openMenu' | t">
-        <ds-nav-item
-          routerLink="/dashboard"
-          routerLinkActive="is-active"
-          icon="home"
-          [label]="'navbar.home' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/diary"
-          routerLinkActive="is-active"
-          icon="diary"
-          [label]="'navbar.diary' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/menus"
-          routerLinkActive="is-active"
-          icon="menuboard"
-          [label]="'navbar.menus' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/agenda"
-          routerLinkActive="is-active"
-          icon="agenda"
-          [label]="'navbar.agenda' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/economy"
-          routerLinkActive="is-active"
-          icon="wallet"
-          [label]="'navbar.economy' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/catalog"
-          routerLinkActive="is-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          icon="leaf"
-          [label]="'navbar.catalog' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/global-catalog"
-          routerLinkActive="is-active"
-          [sub]="true"
-          icon="download"
-          [label]="'navbar.import' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/recipes"
-          routerLinkActive="is-active"
-          icon="chefHat"
-          [label]="'navbar.recipes' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/shopping-list"
-          routerLinkActive="is-active"
-          icon="cart"
-          [label]="'navbar.list' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/gym"
-          routerLinkActive="is-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          icon="dumbbell"
-          [label]="'navbar.gym' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/gym/exercises"
-          routerLinkActive="is-active"
-          [sub]="true"
-          icon="dumbbell"
-          [label]="'navbar.exercises' | t"
-          (click)="close()"
-        />
-        <ds-nav-item
-          routerLink="/gym/history"
-          routerLinkActive="is-active"
-          [sub]="true"
-          icon="history"
-          [label]="'navbar.history' | t"
-          (click)="close()"
-        />
-        @if (isGod()) {
-          <ds-nav-item
-            routerLink="/users"
-            routerLinkActive="is-active"
-            icon="users"
-            [label]="'navbar.users' | t"
-            badge="ADMIN"
-            (click)="close()"
-          />
-          <ds-nav-item
-            icon="chart"
-            [href]="grafanaUrl"
-            [external]="false"
-            [label]="'navbar.logs' | t"
-            badge="ADMIN"
-            (click)="close()"
-          />
+        @for (section of sections(); track section.labelKey) {
+          <ds-stack class="drawer__group" gap="var(--ds-space-1)">
+            <ds-text class="drawer__group-label" variant="label">{{
+              section.labelKey | t
+            }}</ds-text>
+
+            @for (item of section.items; track item.labelKey) {
+              @if (item.route) {
+                <ds-nav-item
+                  [routerLink]="item.route"
+                  routerLinkActive="is-active"
+                  [routerLinkActiveOptions]="item.activeOptions"
+                  [icon]="item.icon"
+                  [label]="item.labelKey | t"
+                  [sub]="item.sub"
+                  [badge]="item.badge"
+                  (click)="close()"
+                />
+              } @else {
+                <ds-nav-item
+                  [icon]="item.icon"
+                  [href]="item.href"
+                  [external]="false"
+                  [label]="item.labelKey | t"
+                  [badge]="item.badge"
+                  (click)="close()"
+                />
+              }
+            }
+          </ds-stack>
         }
       </nav>
 
