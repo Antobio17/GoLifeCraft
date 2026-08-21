@@ -51,8 +51,6 @@ export class SideDrawerComponent {
 
   private readonly isDocked = this.viewport.matches("(min-width: 768px)");
 
-  private statusBarOpen = false;
-
   readonly grafanaUrl = "/grafana/";
 
   readonly isOpen = this.drawer.isOpen;
@@ -78,13 +76,16 @@ export class SideDrawerComponent {
   });
 
   constructor() {
-    this.destroyRef.onDestroy(() => this.scrollLock.release(this));
+    this.destroyRef.onDestroy(() => {
+      this.scrollLock.release(this);
+      this.statusBar.uncover(this);
+    });
 
     effect(() => {
       const open = this.isOpen();
       const lockScroll = open && !this.isDocked();
 
-      this.syncStatusBar(open);
+      this.syncStatusBar(lockScroll);
 
       if (lockScroll) {
         this.scrollLock.lock(this);
@@ -97,12 +98,13 @@ export class SideDrawerComponent {
   }
 
   private syncStatusBar(open: boolean): void {
-    if (open === this.statusBarOpen) {
+    if (open) {
+      this.statusBar.cover(this);
+
       return;
     }
 
-    this.statusBarOpen = open;
-    this.statusBar.refresh();
+    this.statusBar.uncover(this);
   }
 
   close(): void {

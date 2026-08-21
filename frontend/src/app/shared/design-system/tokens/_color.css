@@ -63,6 +63,8 @@
 
   /* ---- Semánticos: Superficies ---- */
   --ds-bg: var(--ds-gray-0);
+  --ds-status-bar: #ffffff;
+  --ds-status-bar-scrim: #7d7e7d;
   --ds-surface: var(--ds-gray-0);
   --ds-surface-raised: var(--ds-gray-0);
   --ds-surface-hover: var(--ds-gray-50);
@@ -196,6 +198,8 @@
 [data-theme="dark"] {
   /* ---- Superficies: negro puro de lienzo, cada nivel sube un escalón ---- */
   --ds-bg: var(--ds-gray-950);
+  --ds-status-bar: #000000;
+  --ds-status-bar-scrim: #0c100e;
   --ds-surface: var(--ds-gray-875);
   --ds-surface-raised: var(--ds-gray-850);
   --ds-surface-hover: #182019;

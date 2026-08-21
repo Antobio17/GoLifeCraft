@@ -255,7 +255,7 @@ export class ModalSheetComponent implements OnDestroy {
 
     this.isOpen = value;
     this.toggleScrollLock(value);
-    this.statusBar.refresh();
+    this.toggleStatusBarScrim(value);
   }
 
   get open(): boolean {
@@ -278,7 +278,7 @@ export class ModalSheetComponent implements OnDestroy {
     }
 
     this.isOpen = false;
-    this.statusBar.refresh();
+    this.toggleStatusBarScrim(false);
   }
 
   private detachOverlay(): void {
@@ -288,6 +288,16 @@ export class ModalSheetComponent implements OnDestroy {
 
     this.overlayNode.remove();
     this.overlayNode = null;
+  }
+
+  private toggleStatusBarScrim(covered: boolean): void {
+    if (covered) {
+      this.statusBar.cover(this);
+
+      return;
+    }
+
+    this.statusBar.uncover(this);
   }
 
   private toggleScrollLock(locked: boolean): void {

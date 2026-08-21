@@ -1,102 +1,75 @@
 import { DOCUMENT } from "@angular/common";
 import { Injectable, inject } from "@angular/core";
-import {
-  Theme,
-  THEME_COLOR_DARK,
-  THEME_COLOR_LIGHT,
-} from "../../domain/models/theme.model";
+import { Theme } from "../../domain/models/theme.model";
 
 @Injectable({ providedIn: "root" })
 export class StatusBarService {
-  private static readonly HEX_COLOR = /^#[0-9a-f]{6}$/i;
   private static readonly COLOR_META = "theme-color";
   private static readonly STYLE_META = "apple-mobile-web-app-status-bar-style";
   private static readonly STYLE_TRANSLUCENT = "black-translucent";
   private static readonly STYLE_OPAQUE = "black";
+  private static readonly CANVAS_TOKEN = "--ds-status-bar";
+  private static readonly SCRIM_TOKEN = "--ds-status-bar-scrim";
 
   private readonly document = inject(DOCUMENT);
+  private readonly scrims = new Set<object>();
 
-  private pendingFrame: number | null = null;
+  cover(owner: object): void {
+    this.scrims.add(owner);
+    this.apply();
+  }
+
+  uncover(owner: object): void {
+    this.scrims.delete(owner);
+    this.apply();
+  }
 
   paint(theme: Theme): void {
-    const isDark = "dark" === theme;
-
-    this.writeMeta(
-      StatusBarService.COLOR_META,
-      isDark ? THEME_COLOR_DARK : THEME_COLOR_LIGHT,
-    );
     this.writeMeta(
       StatusBarService.STYLE_META,
-      isDark
+      "dark" === theme
         ? StatusBarService.STYLE_TRANSLUCENT
         : StatusBarService.STYLE_OPAQUE,
     );
+    this.apply();
   }
 
-  refresh(): void {
-    const meta = this.metaOf(StatusBarService.COLOR_META);
+  private apply(): void {
+    const token =
+      0 === this.scrims.size
+        ? StatusBarService.CANVAS_TOKEN
+        : StatusBarService.SCRIM_TOKEN;
+    const color = this.tokenOf(token);
 
-    if (!meta) {
+    if (!color) {
       return;
     }
 
+    this.writeMeta(StatusBarService.COLOR_META, color);
+  }
+
+  private tokenOf(name: string): string {
     const view = this.document.defaultView;
 
     if (!view) {
-      return;
+      return "";
     }
 
-    const color = meta.content;
-    const probe = this.probeOf(color);
-
-    if (!probe) {
-      return;
-    }
-
-    this.cancelPendingFrame(view);
-
-    meta.content = probe;
-    this.pendingFrame = view.requestAnimationFrame(() => {
-      this.pendingFrame = null;
-
-      if (meta.content !== probe) {
-        return;
-      }
-
-      meta.content = color;
-    });
+    return view
+      .getComputedStyle(this.document.documentElement)
+      .getPropertyValue(name)
+      .trim();
   }
 
   private writeMeta(name: string, content: string): void {
-    const meta = this.metaOf(name);
+    const meta = this.document.querySelector<HTMLMetaElement>(
+      `meta[name="${name}"]`,
+    );
 
     if (!meta) {
       return;
     }
 
     meta.content = content;
-  }
-
-  private metaOf(name: string): HTMLMetaElement | null {
-    return this.document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
-  }
-
-  private cancelPendingFrame(view: Window): void {
-    if (null === this.pendingFrame) {
-      return;
-    }
-
-    view.cancelAnimationFrame(this.pendingFrame);
-    this.pendingFrame = null;
-  }
-
-  private probeOf(color: string): string | null {
-    if (!StatusBarService.HEX_COLOR.test(color)) {
-      return null;
-    }
-
-    const channels = Number.parseInt(color.slice(1), 16) ^ 0x000001;
-
-    return `#${channels.toString(16).padStart(6, "0")}`;
   }
 }
