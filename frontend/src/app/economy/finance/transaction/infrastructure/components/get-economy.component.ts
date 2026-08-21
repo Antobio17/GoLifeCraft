@@ -20,6 +20,7 @@ import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
+import { SkeletonBudgetComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-budget.component";
 import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
@@ -105,6 +106,7 @@ const EVOLUTION_MONTHS = 6;
     SkeletonComponent,
     SkeletonLineComponent,
     SkeletonPanelComponent,
+    SkeletonBudgetComponent,
     SkeletonMetricsComponent,
     SkeletonRowsComponent,
     SkeletonSectionHeaderComponent,
@@ -162,6 +164,7 @@ export class GetEconomyComponent implements OnInit {
   readonly skeletonMovementGroups = [3, 2];
 
   loading = signal(true);
+  budgetLoading = signal(true);
   saving = signal(false);
   translationsReady = signal(false);
 
@@ -692,7 +695,10 @@ export class GetEconomyComponent implements OnInit {
   }
 
   private load(silent = false): void {
-    if (!silent) this.loading.set(true);
+    if (!silent) {
+      this.loading.set(true);
+      this.budgetLoading.set(true);
+    }
 
     const month = this.month();
 
@@ -718,7 +724,11 @@ export class GetEconomyComponent implements OnInit {
     });
 
     this.getFinanceBudgetService.getFinanceBudget(month).subscribe({
-      next: (response) => this.budget.set(response.data.attributes),
+      next: (response) => {
+        this.budget.set(response.data.attributes);
+        this.budgetLoading.set(false);
+      },
+      error: () => this.budgetLoading.set(false),
     });
   }
 

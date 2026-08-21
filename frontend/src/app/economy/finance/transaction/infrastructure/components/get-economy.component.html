@@ -54,7 +54,9 @@
     </ng-container>
   </ds-screen-header>
 
-  @if (budgetConfigured()) {
+  @if (budgetLoading()) {
+    <ds-skeleton-budget />
+  } @else if (budgetConfigured()) {
     <ds-card
       [padding]="'var(--ds-space-4)'"
       [interactive]="true"
