@@ -1,0 +1,75 @@
+:host {
+  display: block;
+}
+
+.skbud {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-4);
+  border-radius: var(--ds-radius-xl);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border-hairline);
+  box-shadow: var(--ds-shadow-card);
+}
+
+.skbud__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+}
+
+.skbud__eyebrow {
+  width: 6.5rem;
+  height: 0.625rem;
+}
+
+.skbud__chip {
+  width: 4.5rem;
+  height: 1.125rem;
+  border-radius: var(--ds-radius-pill);
+}
+
+.skbud__amount {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ds-space-2);
+}
+
+.skbud__value {
+  width: 6.25rem;
+  height: 1.5rem;
+  border-radius: var(--ds-radius-md);
+}
+
+.skbud__total {
+  width: 5.5rem;
+  height: 0.75rem;
+  margin-bottom: 0.1875rem;
+}
+
+.skbud__meter {
+  display: block;
+  width: 100%;
+  border-radius: var(--ds-radius-pill);
+}
+
+.skbud__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+}
+
+.skbud__pace {
+  width: 9.5rem;
+  max-width: 60%;
+  height: 0.6875rem;
+}
+
+.skbud__difference {
+  width: 3.75rem;
+  height: 0.6875rem;
+}
