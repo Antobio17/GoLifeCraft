@@ -114,6 +114,22 @@ export class GetFinanceBudgetComponent implements OnInit {
     return this.budgetView.savingsStatusLabel(this.savingsStatus());
   });
 
+  savingsRemaining = computed(
+    () =>
+      (this.budget()?.savingsObjective ?? 0) -
+      (this.budget()?.savingsReal ?? 0),
+  );
+  savingsGoalReached = computed(() => this.savingsRemaining() <= 0);
+  savingsRemainingLabel = computed(() => {
+    this.translationsReady();
+    const remaining = this.savingsRemaining();
+
+    return this.budgetView.savingsRemainingLabel(
+      remaining,
+      this.view.money(Math.abs(remaining)),
+    );
+  });
+
   variableSpentLabel = computed(() =>
     this.view.money(this.budget()?.variableSpent ?? 0),
   );

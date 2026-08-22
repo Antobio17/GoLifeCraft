@@ -8,6 +8,8 @@
   "getFinanceBudget.month.day": "Day {day} of {days}",
   "getFinanceBudget.savings.title": "SAVINGS THIS MONTH",
   "getFinanceBudget.savings.goal": "of",
+  "getFinanceBudget.savings.remaining": "{amount} to go to reach your goal",
+  "getFinanceBudget.savings.reached": "Goal reached · {amount} extra",
   "getFinanceBudget.variable.title": "VARIABLE SPENDING",
   "getFinanceBudget.variable.of": "of",
   "getFinanceBudget.pace.today": "Today's pace",

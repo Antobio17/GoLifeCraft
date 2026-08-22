@@ -8,6 +8,8 @@
   "getFinanceBudget.month.day": "Día {day} de {days}",
   "getFinanceBudget.savings.title": "AHORRO DEL MES",
   "getFinanceBudget.savings.goal": "de",
+  "getFinanceBudget.savings.remaining": "Te faltan {amount} para el objetivo",
+  "getFinanceBudget.savings.reached": "Objetivo cubierto · {amount} de más",
   "getFinanceBudget.variable.title": "GASTO VARIABLE",
   "getFinanceBudget.variable.of": "de",
   "getFinanceBudget.pace.today": "Ritmo de hoy",

@@ -44,6 +44,15 @@ export class FinanceBudgetViewService {
     return this.translate(key).replace("{amount}", money);
   }
 
+  savingsRemainingLabel(remaining: number, money: string): string {
+    const key =
+      remaining > 0
+        ? "getFinanceBudget.savings.remaining"
+        : "getFinanceBudget.savings.reached";
+
+    return this.translate(key).replace("{amount}", money);
+  }
+
   remainingLabel(remaining: number, money: string): string {
     const key =
       remaining >= 0

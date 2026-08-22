@@ -127,6 +127,10 @@
             [tone]="savingsTone()"
             [ariaLabel]="'getFinanceBudget.savings.title' | t"
           />
+
+          <ds-text [variant]="savingsGoalReached() ? 'success' : 'meta'">{{
+            savingsRemainingLabel()
+          }}</ds-text>
         </ds-card>
 
         <ds-card [padding]="'var(--ds-space-4)'">
