@@ -1,14 +1,9 @@
 :host {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
+  display: contents;
+}
 
-  --drawer-bg: var(--ds-surface-nav);
-  --drawer-scrim: rgba(27, 26, 21, 0.45);
-  --drawer-shadow: none;
+.drawer,
+.drawer__sheet {
   --drawer-active-bg: var(--ds-primary-soft);
   --drawer-active-fg: var(--ds-primary-soft-text);
   --drawer-active-icon: var(--ds-primary-soft-text);
@@ -16,78 +11,19 @@
   --drawer-mark-fg: var(--ds-primary-soft-text);
   --drawer-mark-border: var(--ds-primary-soft-border);
   --drawer-switch-off: var(--ds-gray-300);
-  --drawer-sheet-x: var(--ds-space-5);
 }
 
-:host-context([data-theme="dark"]) {
-  --drawer-scrim: rgba(0, 0, 0, 0.5);
+[data-theme="dark"] .drawer,
+[data-theme="dark"] .drawer__sheet {
   --drawer-switch-off: var(--ds-surface-inset);
-}
-
-.drawer-root {
-  position: relative;
-  width: 100%;
-  max-width: var(--ds-app-frame-width, 30rem);
-  height: 100%;
-}
-
-.drawer-scrim {
-  position: absolute;
-  inset: 0;
-  border: none;
-  padding: 0;
-  background: var(--drawer-scrim);
-  opacity: 0;
-  cursor: pointer;
-  pointer-events: none;
-  transition: opacity 0.28s ease;
-}
-
-.drawer-root.is-open .drawer-scrim {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 /* ─── Sheet (phone) ─── */
 
-.drawer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  max-height: 90%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  padding: 0 0 calc(env(safe-area-inset-bottom) + var(--ds-space-3));
-  background: var(--drawer-bg);
-  border-radius: var(--ds-radius-2xl) var(--ds-radius-2xl) 0 0;
-  box-shadow: var(--drawer-shadow);
-  transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.6, 0.05, 0.28, 0.98);
-  pointer-events: none;
-}
-
-.drawer-root.is-open {
-  --drawer-shadow: 0 -1.5rem 3.75rem rgba(0, 0, 0, 0.34);
-}
-
-.drawer-root.is-open .drawer {
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.drawer__grip {
-  flex: none;
-  width: 2.5rem;
-  height: 0.25rem;
-  margin: var(--ds-space-2) auto 0.125rem;
-  border-radius: var(--ds-radius-pill);
-  background: var(--ds-border-strong);
-}
-
-.drawer__brand {
-  display: none;
+.drawer__sheet {
+  flex: 1 1 auto;
+  min-height: 0;
+  --drawer-sheet-x: var(--ds-space-5);
 }
 
 /* ─── Profile ─── */
@@ -271,47 +207,30 @@
   background: color-mix(in srgb, var(--ds-danger) 10%, transparent);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .drawer {
-    transition: none;
-  }
-}
-
 /* ─── Docked sidebar (≥768px) — must stay at end ─── */
 
 @media (min-width: 768px) {
   :host {
+    display: block;
+    position: fixed;
     inset: 0 auto 0 0;
     width: var(--ds-app-sidebar-width);
     z-index: 30;
-    justify-content: flex-start;
-    pointer-events: auto;
-  }
-
-  .drawer-root {
-    width: var(--ds-app-sidebar-width);
-    max-width: none;
-  }
-
-  .drawer-scrim,
-  .drawer__close,
-  .drawer__grip {
-    display: none;
   }
 
   .drawer {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    max-height: none;
     overflow: hidden;
-    transform: none;
-    box-shadow: none;
-    border-radius: 0;
     background: var(--ds-surface-nav);
     border-right: 1px solid var(--ds-border);
-    pointer-events: auto;
     --drawer-sheet-x: var(--ds-space-3);
+  }
+
+  .drawer__close {
+    display: none;
   }
 
   .drawer__brand {

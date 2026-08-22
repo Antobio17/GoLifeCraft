@@ -1,111 +1,111 @@
-<div class="drawer-root" [class.is-open]="isOpen()">
-  <button
-    type="button"
-    class="drawer-scrim"
-    [attr.tabindex]="isOpen() ? 0 : -1"
-    [attr.aria-label]="'navbar.closeMenu' | t"
-    (click)="close()"
-  ></button>
+<ng-template #drawerBody>
+  <div class="drawer__profile">
+    <a class="drawer__user" routerLink="/me" (click)="close()">
+      <ds-avatar [initial]="initial()" [size]="46" />
+      <span class="drawer__user-text">
+        <span class="drawer__user-name">{{ displayName() }}</span>
+        <span class="drawer__user-email">{{ email() }}</span>
+      </span>
+    </a>
 
-  <aside
-    class="drawer"
-    role="dialog"
-    aria-modal="true"
-    [attr.aria-hidden]="!isInteractive()"
-    [attr.inert]="isInteractive() ? null : ''"
-  >
-    <span class="drawer__grip" aria-hidden="true"></span>
+    <ds-icon-button
+      class="drawer__close"
+      icon="close"
+      variant="soft"
+      [size]="32"
+      [iconSize]="15"
+      [stroke]="2.2"
+      [radius]="'var(--ds-radius-pill)'"
+      [ariaLabel]="'navbar.closeMenu' | t"
+      (clicked)="close()"
+    />
+  </div>
 
+  <ds-divider class="drawer__rule drawer__rule--top" />
+
+  <ds-stack class="drawer__scroll" gap="0">
+    <nav class="drawer__nav" [attr.aria-label]="'navbar.openMenu' | t">
+      @for (section of sections(); track section.labelKey) {
+        <ds-stack gap="var(--ds-space-1)">
+          <ds-text class="drawer__group-label" variant="label">{{
+            section.labelKey | t
+          }}</ds-text>
+
+          @for (item of section.items; track item.labelKey) {
+            @if (item.route) {
+              <ds-nav-item
+                [routerLink]="item.route"
+                routerLinkActive="is-active"
+                [routerLinkActiveOptions]="item.activeOptions"
+                [icon]="item.icon"
+                [label]="item.labelKey | t"
+                [sub]="item.sub"
+                [badge]="item.badge"
+                (click)="close()"
+              />
+            } @else {
+              <ds-nav-item
+                [icon]="item.icon"
+                [href]="item.href"
+                [external]="false"
+                [label]="item.labelKey | t"
+                [badge]="item.badge"
+                (click)="close()"
+              />
+            }
+          }
+        </ds-stack>
+      }
+    </nav>
+
+    <ds-divider class="drawer__rule drawer__rule--bottom" />
+
+    <button
+      type="button"
+      class="drawer__theme"
+      role="switch"
+      [attr.aria-checked]="isDark()"
+      (click)="toggleTheme()"
+    >
+      <ds-icon
+        class="drawer__theme-icon"
+        [class.drawer__theme-icon--moon]="isDark()"
+        [class.drawer__theme-icon--sun]="!isDark()"
+        [name]="isDark() ? 'moon' : 'sun'"
+        [size]="18"
+        [stroke]="2.1"
+      />
+      <span class="drawer__theme-label">{{ "navbar.darkMode" | t }}</span>
+      <span class="drawer__switch" [class.is-on]="isDark()">
+        <span class="drawer__switch-knob"></span>
+      </span>
+    </button>
+
+    <button type="button" class="drawer__logout" (click)="logout()">
+      <ds-icon name="logout" [size]="17" [stroke]="2.2" />
+      <span>{{ "navbar.logout" | t }}</span>
+    </button>
+  </ds-stack>
+</ng-template>
+
+@if (isDocked()) {
+  <aside class="drawer">
     <header class="drawer__brand">
       <ds-brand-logo [markSize]="34" [wordmarkSize]="17"></ds-brand-logo>
     </header>
 
-    <div class="drawer__profile">
-      <a class="drawer__user" routerLink="/me" (click)="close()">
-        <ds-avatar [initial]="initial()" [size]="46" />
-        <span class="drawer__user-text">
-          <span class="drawer__user-name">{{ displayName() }}</span>
-          <span class="drawer__user-email">{{ email() }}</span>
-        </span>
-      </a>
-
-      <ds-icon-button
-        class="drawer__close"
-        icon="close"
-        variant="soft"
-        [size]="32"
-        [iconSize]="15"
-        [stroke]="2.2"
-        [radius]="'var(--ds-radius-pill)'"
-        [ariaLabel]="'navbar.closeMenu' | t"
-        (clicked)="close()"
-      />
-    </div>
-
-    <ds-divider class="drawer__rule drawer__rule--top" />
-
-    <ds-stack class="drawer__scroll" gap="0">
-      <nav class="drawer__nav" [attr.aria-label]="'navbar.openMenu' | t">
-        @for (section of sections(); track section.labelKey) {
-          <ds-stack class="drawer__group" gap="var(--ds-space-1)">
-            <ds-text class="drawer__group-label" variant="label">{{
-              section.labelKey | t
-            }}</ds-text>
-
-            @for (item of section.items; track item.labelKey) {
-              @if (item.route) {
-                <ds-nav-item
-                  [routerLink]="item.route"
-                  routerLinkActive="is-active"
-                  [routerLinkActiveOptions]="item.activeOptions"
-                  [icon]="item.icon"
-                  [label]="item.labelKey | t"
-                  [sub]="item.sub"
-                  [badge]="item.badge"
-                  (click)="close()"
-                />
-              } @else {
-                <ds-nav-item
-                  [icon]="item.icon"
-                  [href]="item.href"
-                  [external]="false"
-                  [label]="item.labelKey | t"
-                  [badge]="item.badge"
-                  (click)="close()"
-                />
-              }
-            }
-          </ds-stack>
-        }
-      </nav>
-
-      <ds-divider class="drawer__rule drawer__rule--bottom" />
-
-      <button
-        type="button"
-        class="drawer__theme"
-        role="switch"
-        [attr.aria-checked]="isDark()"
-        (click)="toggleTheme()"
-      >
-        <ds-icon
-          class="drawer__theme-icon"
-          [class.drawer__theme-icon--moon]="isDark()"
-          [class.drawer__theme-icon--sun]="!isDark()"
-          [name]="isDark() ? 'moon' : 'sun'"
-          [size]="18"
-          [stroke]="2.1"
-        />
-        <span class="drawer__theme-label">{{ "navbar.darkMode" | t }}</span>
-        <span class="drawer__switch" [class.is-on]="isDark()">
-          <span class="drawer__switch-knob"></span>
-        </span>
-      </button>
-
-      <button type="button" class="drawer__logout" (click)="logout()">
-        <ds-icon name="logout" [size]="17" [stroke]="2.2" />
-        <span>{{ "navbar.logout" | t }}</span>
-      </button>
-    </ds-stack>
+    <ng-container [ngTemplateOutlet]="drawerBody" />
   </aside>
-</div>
+} @else {
+  <ds-modal-sheet
+    [open]="isOpen()"
+    [auto]="true"
+    [bare]="true"
+    [title]="'navbar.openMenu' | t"
+    (closed)="close()"
+  >
+    <ds-stack class="drawer__sheet" gap="0">
+      <ng-container [ngTemplateOutlet]="drawerBody" />
+    </ds-stack>
+  </ds-modal-sheet>
+}

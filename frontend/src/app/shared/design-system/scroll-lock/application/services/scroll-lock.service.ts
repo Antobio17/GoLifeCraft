@@ -3,6 +3,8 @@ import { Injectable, RendererFactory2, inject } from "@angular/core";
 
 @Injectable({ providedIn: "root" })
 export class ScrollLockService {
+  private static readonly LOCK_CLASS = "ds-scroll-locked";
+
   private readonly document = inject(DOCUMENT);
   private readonly renderer = inject(RendererFactory2).createRenderer(
     null,
@@ -24,11 +26,11 @@ export class ScrollLockService {
     const body = this.document.body;
 
     if (0 === this.owners.size) {
-      this.renderer.removeStyle(body, "overflow");
+      this.renderer.removeClass(body, ScrollLockService.LOCK_CLASS);
 
       return;
     }
 
-    this.renderer.setStyle(body, "overflow", "hidden");
+    this.renderer.addClass(body, ScrollLockService.LOCK_CLASS);
   }
 }

@@ -1,17 +1,10 @@
-import {
-  Component,
-  DestroyRef,
-  HostListener,
-  computed,
-  effect,
-  inject,
-} from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
+import { Component, HostListener, computed, inject } from "@angular/core";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
-import { ScrollLockService } from "@shared/design-system/scroll-lock/application/services/scroll-lock.service";
+import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { ViewportService } from "@shared/viewport/application/services/viewport.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ThemeService } from "@shared/theme/application/services/theme.service";
-import { StatusBarService } from "@shared/theme/application/services/status-bar.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
@@ -27,9 +20,11 @@ import { DrawerNavSectionsService } from "../../application/services/drawer-nav-
 @Component({
   selector: "app-side-drawer",
   imports: [
+    NgTemplateOutlet,
     RouterLink,
     RouterLinkActive,
     ContextualTranslatePipe,
+    ModalSheetComponent,
     BrandLogoComponent,
     IconComponent,
     IconButtonComponent,
@@ -49,13 +44,8 @@ export class SideDrawerComponent {
   private authSessionService = inject(AuthSessionService);
   private router = inject(Router);
   private viewport = inject(ViewportService);
-  private scrollLock = inject(ScrollLockService);
-  private statusBar = inject(StatusBarService);
-  private destroyRef = inject(DestroyRef);
 
-  private readonly isDocked = this.viewport.matches("(min-width: 768px)");
-
-  private statusBarOpen = false;
+  readonly isDocked = this.viewport.matches("(min-width: 768px)");
 
   readonly isOpen = this.drawer.isOpen;
   readonly isDark = this.themeService.isDark;
@@ -64,8 +54,6 @@ export class SideDrawerComponent {
   readonly sections = computed(() =>
     this.navSectionsService.getSections(this.isGod()),
   );
-
-  readonly isInteractive = computed(() => this.isOpen() || this.isDocked());
 
   readonly email = computed(() => this.authSessionService.getUsername());
 
@@ -82,34 +70,6 @@ export class SideDrawerComponent {
     const value = this.displayName().trim();
     return value ? value.charAt(0).toUpperCase() : "?";
   });
-
-  constructor() {
-    this.destroyRef.onDestroy(() => this.scrollLock.release(this));
-
-    effect(() => {
-      const open = this.isOpen();
-      const lockScroll = open && !this.isDocked();
-
-      this.syncStatusBar(open);
-
-      if (lockScroll) {
-        this.scrollLock.lock(this);
-
-        return;
-      }
-
-      this.scrollLock.release(this);
-    });
-  }
-
-  private syncStatusBar(open: boolean): void {
-    if (open === this.statusBarOpen) {
-      return;
-    }
-
-    this.statusBarOpen = open;
-    this.statusBar.refresh();
-  }
 
   close(): void {
     this.drawer.close();

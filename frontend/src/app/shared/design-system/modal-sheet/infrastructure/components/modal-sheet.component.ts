@@ -10,7 +10,7 @@ import {
   ViewChild,
   inject,
 } from "@angular/core";
-import { StatusBarService } from "@shared/theme/application/services/status-bar.service";
+import { ScrollLockService } from "@shared/design-system/scroll-lock/application/services/scroll-lock.service";
 
 @Component({
   selector: "ds-modal-sheet",
@@ -28,34 +28,38 @@ import { StatusBarService } from "@shared/theme/application/services/status-bar.
           [class.ds-sheet--tall]="tall"
           [class.ds-sheet--compact]="compact"
           [class.ds-sheet--auto]="auto"
+          [class.ds-sheet--bare]="bare"
           role="dialog"
           aria-modal="true"
+          [attr.aria-label]="bare ? title : null"
           tabindex="-1"
           (click)="$event.stopPropagation()"
           (keydown)="$event.stopPropagation()"
         >
           <div class="ds-sheet__grip" aria-hidden="true"></div>
-          <header class="ds-sheet__header">
-            <h2 class="ds-sheet__title">{{ title }}</h2>
-            <button
-              class="ds-sheet__close"
-              type="button"
-              [attr.aria-label]="closeLabel"
-              (click)="closed.emit()"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.2"
-                stroke-linecap="round"
+          @if (!bare) {
+            <header class="ds-sheet__header">
+              <h2 class="ds-sheet__title">{{ title }}</h2>
+              <button
+                class="ds-sheet__close"
+                type="button"
+                [attr.aria-label]="closeLabel"
+                (click)="closed.emit()"
               >
-                <path d="M6 6l12 12M18 6L6 18"></path>
-              </svg>
-            </button>
-          </header>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M6 6l12 12M18 6L6 18"></path>
+                </svg>
+              </button>
+            </header>
+          }
           <div class="ds-sheet__body">
             <ng-content></ng-content>
           </div>
@@ -174,9 +178,17 @@ import { StatusBarService } from "@shared/theme/application/services/status-bar.
       .ds-sheet__body {
         flex: 1 1 auto;
         min-width: 0;
-        padding: var(--ds-space-4) var(--ds-space-4) var(--ds-space-5);
+        padding: var(--ds-space-4) var(--ds-space-4)
+          max(env(safe-area-inset-bottom), var(--ds-space-5));
         overflow-x: hidden;
         overflow-y: auto;
+      }
+      .ds-sheet--bare .ds-sheet__body {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: 0 0 max(env(safe-area-inset-bottom), var(--ds-space-3));
+        overflow: hidden;
       }
       @keyframes ds-sheet-up {
         from {
@@ -226,11 +238,9 @@ import { StatusBarService } from "@shared/theme/application/services/status-bar.
   ],
 })
 export class ModalSheetComponent implements OnDestroy {
-  private static readonly SCROLL_LOCK_CLASS = "ds-scroll-locked";
-
   private renderer = inject(Renderer2);
   private document = inject(DOCUMENT);
-  private statusBar = inject(StatusBarService);
+  private scrollLock = inject(ScrollLockService);
 
   private isOpen = false;
   private overlayNode: HTMLElement | null = null;
@@ -255,7 +265,6 @@ export class ModalSheetComponent implements OnDestroy {
 
     this.isOpen = value;
     this.toggleScrollLock(value);
-    this.statusBar.refresh();
   }
 
   get open(): boolean {
@@ -265,6 +274,7 @@ export class ModalSheetComponent implements OnDestroy {
   @Input() tall = false;
   @Input() compact = false;
   @Input() auto = false;
+  @Input() bare = false;
   @Input() title = "";
   @Input() closeLabel = "Close";
   @Output() closed = new EventEmitter<void>();
@@ -272,13 +282,6 @@ export class ModalSheetComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.toggleScrollLock(false);
     this.detachOverlay();
-
-    if (!this.isOpen) {
-      return;
-    }
-
-    this.isOpen = false;
-    this.statusBar.refresh();
   }
 
   private detachOverlay(): void {
@@ -291,13 +294,12 @@ export class ModalSheetComponent implements OnDestroy {
   }
 
   private toggleScrollLock(locked: boolean): void {
-    const body = this.document.body;
-
     if (locked) {
-      this.renderer.addClass(body, ModalSheetComponent.SCROLL_LOCK_CLASS);
+      this.scrollLock.lock(this);
+
       return;
     }
 
-    this.renderer.removeClass(body, ModalSheetComponent.SCROLL_LOCK_CLASS);
+    this.scrollLock.release(this);
   }
 }

@@ -1,15 +1,14 @@
-import { computed, inject, signal } from "@angular/core";
+import { computed, signal } from "@angular/core";
 import {
   DEFAULT_THEME,
   Theme,
+  THEME_COLOR_DARK,
+  THEME_COLOR_LIGHT,
   THEME_STORAGE_KEY,
 } from "../../domain/models/theme.model";
 import { UpdateThemePort } from "../../domain/ports/update-theme.port";
-import { StatusBarService } from "./status-bar.service";
 
 export class ThemeService {
-  private readonly statusBar = inject(StatusBarService);
-
   private readonly theme = signal<Theme>(this.loadInitialTheme());
 
   readonly isDark = computed(() => this.theme() === "dark");
@@ -39,7 +38,19 @@ export class ThemeService {
 
   private paint(theme: Theme): void {
     document.documentElement.setAttribute("data-theme", theme);
-    this.statusBar.paint(theme);
+    this.paintThemeColor(theme);
+  }
+
+  private paintThemeColor(theme: Theme): void {
+    const meta = document.querySelector<HTMLMetaElement>(
+      'meta[name="theme-color"]',
+    );
+
+    if (!meta) {
+      return;
+    }
+
+    meta.content = "dark" === theme ? THEME_COLOR_DARK : THEME_COLOR_LIGHT;
   }
 
   private loadInitialTheme(): Theme {
