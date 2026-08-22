@@ -113,9 +113,9 @@ import { ScrollLockService } from "@shared/design-system/scroll-lock/application
         height: var(--ds-sheet-height);
         max-height: calc(var(--ds-sheet-viewport) - var(--ds-sheet-max-gap));
         min-height: min(calc(var(--ds-sheet-viewport) * 0.76), 38.75rem);
-        background: var(--ds-surface-raised);
+        background: var(--ds-surface-sheet);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg) var(--ds-radius-lg) 0 0;
+        border-radius: var(--ds-radius-xl) var(--ds-radius-xl) 0 0;
         box-shadow: 0 -0.5rem 2.5rem rgba(0, 0, 0, 0.28);
         animation: ds-sheet-up 0.24s cubic-bezier(0.4, 0.2, 0.2, 1);
       }
@@ -161,7 +161,7 @@ import { ScrollLockService } from "@shared/design-system/scroll-lock/application
       .ds-sheet__close {
         appearance: none;
         border: none;
-        background: var(--ds-surface-subtle);
+        background: var(--ds-surface-hover);
         color: var(--ds-text-muted);
         cursor: pointer;
         width: 2rem;

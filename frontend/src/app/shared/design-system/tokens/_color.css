@@ -69,6 +69,7 @@
   --ds-surface-subtle: var(--ds-gray-50);
   --ds-surface-inset: var(--ds-gray-100);
   --ds-surface-nav: var(--ds-gray-0);
+  --ds-surface-sheet: var(--ds-surface-raised);
   --ds-surface-brand: var(--ds-green-800);
   --ds-on-surface-brand: #e9f7ec;
 
@@ -202,6 +203,7 @@
   --ds-surface-subtle: var(--ds-gray-900);
   --ds-surface-inset: #182019;
   --ds-surface-nav: var(--ds-gray-900);
+  --ds-surface-sheet: var(--ds-surface);
   --ds-surface-brand: var(--ds-green-800);
   --ds-on-surface-brand: #e9f7ec;
 
