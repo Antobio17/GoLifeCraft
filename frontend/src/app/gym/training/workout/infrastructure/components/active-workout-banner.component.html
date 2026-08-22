@@ -1,15 +1,10 @@
 @if (visible()) {
   <ds-floating-workout-banner
     [paused]="activeWorkout.paused()"
-    [stateLabel]="
-      (activeWorkout.paused()
-        ? 'workout.banner.paused'
-        : 'workout.banner.active'
-      ) | t
-    "
+    [stateLabel]="stateKey() | t"
     [elapsedLabel]="activeWorkout.elapsedLabel()"
     [name]="activeWorkout.activeName()"
-    [goLabel]="'workout.banner.goToSession' | t"
+    [goLabel]="goKey() | t"
     (go)="goToSession()"
   />
 }

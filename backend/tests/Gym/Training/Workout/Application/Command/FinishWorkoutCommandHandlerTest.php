@@ -76,6 +76,69 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
         $this->assertTrue(condition: $workout->exercises[0]->sets[0]->done);
     }
 
+    public function testItLinksAFreeWorkoutToTheSessionCreatedOnFinish(): void
+    {
+        $workoutId = 'workout-free-1';
+
+        ($this->startHandler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
+            sessionId: null,
+            sessionName: 'Entrenamiento libre',
+            exercises: [],
+            startedByUserId: 'god-user-id',
+        ));
+
+        ($this->handler)(new FinishWorkoutCommand(
+            workoutId: $workoutId,
+            exercises: [
+                new WorkoutExerciseData(
+                    exerciseId: 'ex-1',
+                    exerciseName: 'Press banca',
+                    type: 'bilateral',
+                    muscleGroups: ['Pecho'],
+                    position: 1,
+                    note: null,
+                    sets: [
+                        new WorkoutSetData(position: 1, reps: 10, weight: 40.0, done: true),
+                    ],
+                ),
+            ],
+            durationSeconds: 1800,
+            templateSyncMode: WorkoutFinished::TEMPLATE_SYNC_NONE,
+            finishedByUserId: 'god-user-id',
+            sessionId: 'session-created-1',
+        ));
+
+        $workout = $this->workoutRepository->findById(id: $workoutId);
+        $this->assertEquals(expected: Workout::STATUS_COMPLETED, actual: $workout->status);
+        $this->assertEquals(expected: 'session-created-1', actual: $workout->sessionId);
+    }
+
+    public function testItKeepsTheWorkoutOrphanWhenNoSessionIsGivenOnFinish(): void
+    {
+        $workoutId = 'workout-free-2';
+
+        ($this->startHandler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
+            sessionId: null,
+            sessionName: 'Entrenamiento libre',
+            exercises: [],
+            startedByUserId: 'god-user-id',
+        ));
+
+        ($this->handler)(new FinishWorkoutCommand(
+            workoutId: $workoutId,
+            exercises: [],
+            durationSeconds: 900,
+            templateSyncMode: WorkoutFinished::TEMPLATE_SYNC_NONE,
+            finishedByUserId: 'god-user-id',
+        ));
+
+        $workout = $this->workoutRepository->findById(id: $workoutId);
+        $this->assertEquals(expected: Workout::STATUS_COMPLETED, actual: $workout->status);
+        $this->assertNull(actual: $workout->sessionId);
+    }
+
     public function testItThrowsExceptionWhenWorkoutDoesNotExist(): void
     {
         $this->expectException(exception: FinishWorkoutException::class);

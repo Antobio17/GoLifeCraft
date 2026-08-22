@@ -38,6 +38,7 @@ final class FinishWorkoutController
                 templateSyncMode: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'templateSyncMode')
                     ?? WorkoutFinished::TEMPLATE_SYNC_EXERCISES,
                 finishedByUserId: RequestExtractor::getUserSessionId(request: $request),
+                sessionId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'sessionId'),
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_NO_CONTENT);

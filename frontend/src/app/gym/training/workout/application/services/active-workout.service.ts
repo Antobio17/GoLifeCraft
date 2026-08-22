@@ -47,6 +47,10 @@ export class ActiveWorkoutService implements OnDestroy {
 
   readonly isActive = computed(() => this.workoutId() !== null);
 
+  readonly isFree = computed(
+    () => this.isActive() && this.activeSessionId() === null,
+  );
+
   readonly elapsedSeconds = computed(() => {
     if (this.paused()) {
       return this.baseSeconds();
@@ -107,7 +111,7 @@ export class ActiveWorkoutService implements OnDestroy {
   }
 
   start(
-    sessionId: string,
+    sessionId: string | null,
     sessionName: string,
     exercises: ActiveExercise[],
   ): Observable<void> {
@@ -152,9 +156,19 @@ export class ActiveWorkoutService implements OnDestroy {
     this.queueProgress(exercises);
   }
 
+  rename(name: string, exercises: ActiveExercise[]): void {
+    if (!this.isActive()) {
+      return;
+    }
+
+    this.activeName.set(name);
+    this.queueProgress(exercises);
+  }
+
   finish(
     exercises: ActiveExercise[],
     templateSyncMode: TemplateSyncMode,
+    sessionId: string | null = null,
   ): Observable<void> {
     const workoutId = this.workoutId();
     if (!workoutId) {
@@ -167,6 +181,7 @@ export class ActiveWorkoutService implements OnDestroy {
       .finish(workoutId, {
         ...this.buildProgress(exercises),
         templateSyncMode,
+        sessionId,
       })
       .pipe(tap(() => this.reset()));
   }
@@ -302,6 +317,7 @@ export class ActiveWorkoutService implements OnDestroy {
     return {
       exercises: this.buildExercises(exercises),
       durationSeconds: this.elapsedSeconds(),
+      sessionName: this.activeName(),
     };
   }
 

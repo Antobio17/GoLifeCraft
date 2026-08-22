@@ -20,7 +20,7 @@ final readonly class StartWorkoutCommandHandler
 
     public function __invoke(StartWorkoutCommand $command): void
     {
-        if ([] === $command->exercises) {
+        if (null !== $command->sessionId && [] === $command->exercises) {
             throw StartWorkoutException::noExercises();
         }
 

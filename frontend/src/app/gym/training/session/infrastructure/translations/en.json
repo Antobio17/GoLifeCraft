@@ -29,6 +29,10 @@
       "cancel": "Cancel",
       "confirm": "Yes, delete",
       "deleting": "Deleting…"
+    },
+    "free": {
+      "title": "Free workout",
+      "subtitle": "Start without a template and add exercises as you go"
     }
   },
   "createSession": {

@@ -32,6 +32,13 @@
     />
   </ds-screen-header>
 
+  <ds-cta-row
+    icon="stopwatch"
+    [title]="'getSessions.free.title' | t"
+    [subtitle]="'getSessions.free.subtitle' | t"
+    (clicked)="onFreeWorkout()"
+  />
+
   <ds-text variant="label">{{ "getSessions.yourSessions" | t }}</ds-text>
 
   @if (loading()) {

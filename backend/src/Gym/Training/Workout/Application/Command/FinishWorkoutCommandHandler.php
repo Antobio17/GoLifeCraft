@@ -34,6 +34,7 @@ final readonly class FinishWorkoutCommandHandler
             templateSyncMode: $command->templateSyncMode,
             finishedByUserId: $command->finishedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
+            linkedSessionId: $command->sessionId,
         );
 
         $this->workoutRepository->save(workout: $workout);

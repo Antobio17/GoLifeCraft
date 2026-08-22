@@ -19,6 +19,14 @@ export const GYM_ROUTES: Routes = [
       ),
   },
   {
+    path: "free",
+    data: { breadcrumb: "workout.breadcrumb.free" },
+    loadChildren: () =>
+      import("@gym/training/workout/infrastructure/routes/free-workout.routes").then(
+        (m) => m.FREE_WORKOUT_ROUTES,
+      ),
+  },
+  {
     path: "history",
     data: { breadcrumb: "workout.breadcrumb.list" },
     loadChildren: () =>

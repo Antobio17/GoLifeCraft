@@ -29,6 +29,10 @@
       "cancel": "Cancelar",
       "confirm": "Sí, borrar",
       "deleting": "Borrando…"
+    },
+    "free": {
+      "title": "Entrenamiento libre",
+      "subtitle": "Empieza sin plantilla y añade ejercicios sobre la marcha"
     }
   },
   "createSession": {

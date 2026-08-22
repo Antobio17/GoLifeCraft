@@ -14,6 +14,7 @@ import { ChipComponent } from "@shared/design-system/chip/infrastructure/compone
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -42,6 +43,7 @@ interface SessionRow {
     ButtonComponent,
     EmptyStateComponent,
     SkeletonListComponent,
+    CtaRowComponent,
   ],
 })
 export class GetSessionsComponent extends AbstractListPageComponent<Session> {
@@ -102,6 +104,10 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
 
   onHistory(): void {
     this.router.navigate(["/gym/history"]);
+  }
+
+  onFreeWorkout(): void {
+    this.router.navigate(["/gym/free"]);
   }
 
   onStart(id: string): void {

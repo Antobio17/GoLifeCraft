@@ -14,6 +14,7 @@ final readonly class CreateSessionCommand implements Command
         public int $estimatedDurationMinutes,
         public array $exercises,
         public string $createdByUserId,
+        public ?string $sessionId = null,
     ) {
     }
 

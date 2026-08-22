@@ -1,0 +1,243 @@
+<ds-page-wrapper
+  [maxWidth]="'42.5rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-3)'"
+>
+  @if (loading()) {
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="62%"
+      [actions]="0"
+    />
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      @for (sets of skeletonExercises; track $index) {
+        <ds-skeleton-exercise
+          badge="4.5rem"
+          [action]="true"
+          [note]="true"
+          [sets]="sets"
+          [addTile]="true"
+        />
+      }
+    </ds-stack>
+  } @else {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'workout.free.back' | t"
+      [eyebrow]="'workout.free.eyebrow' | t"
+      [title]="name()"
+      (leadingClick)="goBack()"
+    />
+
+    <ds-active-workout-banner
+      [scrolled]="sticky.collapsed()"
+      [paused]="activeWorkout.paused()"
+      [stateLabel]="
+        (activeWorkout.paused()
+          ? 'workout.free.active.paused'
+          : 'workout.free.active.running'
+        ) | t
+      "
+      [elapsedLabel]="activeWorkout.elapsedLabel()"
+      [doneCount]="doneCount"
+      [totalSets]="totalSets"
+      [setsLabel]="'workout.free.active.sets' | t"
+      [finishing]="finishing()"
+      [finishLabel]="'workout.free.finish' | t"
+      [pauseLabel]="'workout.free.active.pause' | t"
+      [resumeLabel]="'workout.free.active.resume' | t"
+      [stopLabel]="'workout.free.active.stop' | t"
+      [finishAriaLabel]="'workout.free.finish' | t"
+      [pauseAriaLabel]="
+        (activeWorkout.paused()
+          ? 'workout.free.active.resume'
+          : 'workout.free.active.pause'
+        ) | t
+      "
+      [stopAriaLabel]="'workout.free.active.stop' | t"
+      (finished)="onFinishWorkout()"
+      (pauseToggle)="onPauseWorkout()"
+      (stopped)="onRequestStop()"
+    />
+
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-stack slot="side" [gap]="'var(--ds-space-2)'">
+        <ds-text variant="label">{{ "workout.free.nameLabel" | t }}</ds-text>
+        <ds-text-input
+          variant="outlined"
+          [strong]="true"
+          [maxLength]="255"
+          [placeholder]="'workout.free.namePlaceholder' | t"
+          [ariaLabel]="'workout.free.nameLabel' | t"
+          [ngModel]="name()"
+          (ngModelChange)="onRename($event)"
+        />
+        <ds-text variant="muted">{{ "workout.free.nameHint" | t }}</ds-text>
+      </ds-stack>
+
+      @if (!hasExercises()) {
+        <ds-empty-state
+          icon="dumbbell"
+          [title]="'workout.free.empty.title' | t"
+          [text]="'workout.free.empty.text' | t"
+        >
+          <ds-button icon="plus" (clicked)="openPicker()">
+            {{ "workout.free.exercise.add" | t }}
+          </ds-button>
+        </ds-empty-state>
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          @for (exercise of exerciseRows(); track exercise.id; let i = $index) {
+            <ds-card
+              [gap]="'var(--ds-space-2)'"
+              [padding]="'var(--ds-space-3)'"
+            >
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+              >
+                <ds-chip tone="brand">{{ i + 1 }}</ds-chip>
+                <ds-stack [gap]="'2px'" [grow]="true">
+                  <ds-heading [level]="3" size="sm">
+                    {{ exercise.exerciseName }}
+                  </ds-heading>
+                  <ds-text variant="meta">{{ exercise.muscleLabel }}</ds-text>
+                </ds-stack>
+                <ds-chip tone="brand">
+                  {{ exercise.modeLabel }}
+                </ds-chip>
+                <ds-icon-button
+                  icon="close"
+                  [ariaLabel]="'workout.free.exercise.remove' | t"
+                  (clicked)="removeExercise(exercise.id)"
+                />
+              </ds-stack>
+
+              <ds-set-header
+                [numLabel]="'workout.free.set.number' | t"
+                [repsLabel]="'workout.free.set.reps' | t"
+                [weightLabel]="'workout.free.set.weight' | t"
+              />
+
+              <ds-textarea
+                [value]="exercise.note ?? ''"
+                [placeholder]="'workout.free.exercise.notePlaceholder' | t"
+                [ariaLabel]="'workout.free.exercise.noteLabel' | t"
+                [rows]="2"
+                [compact]="true"
+                (valueChange)="setNote(exercise.id, $event)"
+              />
+
+              @for (set of exercise.sets; track set.id; let j = $index) {
+                <ds-set-row
+                  [displayIndex]="j + 1"
+                  [reps]="set.reps"
+                  [weight]="set.weight ?? 0"
+                  [done]="isSetDone(i, j)"
+                  [showCheck]="true"
+                  [repsAriaLabel]="'workout.free.set.reps' | t"
+                  [weightAriaLabel]="'workout.free.set.weight' | t"
+                  [repsUpLabel]="'workout.free.set.repsUp' | t"
+                  [repsDownLabel]="'workout.free.set.repsDown' | t"
+                  [weightUpLabel]="'workout.free.set.weightUp' | t"
+                  [weightDownLabel]="'workout.free.set.weightDown' | t"
+                  [removeLabel]="'workout.free.set.remove' | t"
+                  [markDoneLabel]="'workout.free.active.markDone' | t"
+                  (repsChange)="setReps(exercise.id, set.id, $event)"
+                  (weightChange)="setWeight(exercise.id, set.id, $event)"
+                  (toggleDone)="toggleSetDone(i, j)"
+                  (remove)="removeSet(exercise.id, set.id)"
+                />
+              }
+
+              <ds-add-tile
+                variant="inline"
+                [label]="'workout.free.set.add' | t"
+                (clicked)="addSet(exercise.id)"
+              />
+            </ds-card>
+          }
+        </ds-stack>
+
+        <ds-add-tile
+          variant="dashed"
+          [label]="'workout.free.exercise.add' | t"
+          (clicked)="openPicker()"
+        />
+      }
+    </ds-split-view>
+  }
+</ds-page-wrapper>
+
+<ds-modal-sheet
+  [open]="pickerOpen()"
+  [compact]="true"
+  [title]="'workout.free.picker.title' | t"
+  [closeLabel]="'workout.free.picker.close' | t"
+  (closed)="closePicker()"
+>
+  <ds-stack [gap]="'var(--ds-space-4)'">
+    <ds-search-input
+      [placeholder]="'workout.free.picker.search' | t"
+      [clearLabel]="'workout.free.picker.clear' | t"
+      (searched)="onLibrarySearch($event)"
+    />
+
+    @if (libraryRows().length === 0) {
+      <ds-text variant="muted">{{ "workout.free.picker.empty" | t }}</ds-text>
+    } @else {
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (row of libraryRows(); track row.id) {
+          <ds-card [padding]="'var(--ds-space-2)'">
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+            >
+              <ds-icon-badge icon="dumbbell" />
+              <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-text variant="strong">{{ row.name }}</ds-text>
+                <ds-text variant="meta">{{ row.muscleLabel }}</ds-text>
+              </ds-stack>
+              <ds-icon-button
+                icon="plus"
+                variant="soft"
+                [ariaLabel]="'workout.free.exercise.add' | t"
+                (clicked)="addFromLibrary(row.exercise)"
+              />
+            </ds-stack>
+          </ds-card>
+        }
+      </ds-stack>
+    }
+  </ds-stack>
+</ds-modal-sheet>
+
+<ds-confirm-action-modal
+  [show]="showStopModal()"
+  [title]="'workout.free.stopModal.title' | t"
+  [body]="'workout.free.stopModal.body' | t"
+  [itemName]="name()"
+  [warningText]="'workout.free.stopModal.warning' | t"
+  [isDeleting]="false"
+  [cancelLabel]="'workout.free.stopModal.cancel' | t"
+  [confirmLabel]="'workout.free.stopModal.confirm' | t"
+  [deletingLabel]="'workout.free.stopModal.confirm' | t"
+  (confirmed)="onConfirmStop()"
+  (cancelled)="onCancelStop()"
+/>
+
+<ds-choice-modal
+  [show]="showFinishModal()"
+  [title]="'workout.free.finishModal.title' | t"
+  [body]="'workout.free.finishModal.body' | t"
+  [note]="finishModalNote()"
+  [options]="finishOptions()"
+  [cancelLabel]="'workout.free.finishModal.cancel' | t"
+  [busy]="finishing()"
+  (chosen)="onFinishModeChosen($event)"
+  (cancelled)="onCancelFinish()"
+/>

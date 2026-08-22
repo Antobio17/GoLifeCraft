@@ -67,6 +67,21 @@ final class CreateSessionCommandHandlerTest extends TestCase
         $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());
     }
 
+    public function testItCreatesASessionWithTheGivenId(): void
+    {
+        ($this->handler)(new CreateSessionCommand(
+            name: 'Entrenamiento libre',
+            estimatedDurationMinutes: 30,
+            exercises: [],
+            createdByUserId: 'god-user-id',
+            sessionId: 'session-from-free-workout',
+        ));
+
+        $session = $this->sessionRepository->findById(id: 'session-from-free-workout');
+        $this->assertNotNull(actual: $session);
+        $this->assertEquals(expected: 'Entrenamiento libre', actual: $session->name);
+    }
+
     public function testItThrowsExceptionWhenSessionNameAlreadyExists(): void
     {
         $this->needleDataQuery->addExistingName(name: 'Empuje A');

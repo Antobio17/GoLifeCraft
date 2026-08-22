@@ -1,8 +1,6 @@
 import {
   Component,
   DestroyRef,
-  NgZone,
-  OnDestroy,
   OnInit,
   ViewChild,
   computed,
@@ -36,6 +34,7 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ActiveWorkoutBannerComponent } from "@shared/design-system/active-workout-banner/infrastructure/components/active-workout-banner.component";
+import { StickyCollapseService } from "@shared/design-system/active-workout-banner/application/services/sticky-collapse.service";
 import { SetHeaderComponent } from "@shared/design-system/set-header/infrastructure/components/set-header.component";
 import { SetRowComponent } from "@shared/design-system/set-row/infrastructure/components/set-row.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
@@ -91,6 +90,7 @@ import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-s
   selector: "app-session-detail",
   templateUrl: "./session-detail.component.html",
   styleUrls: ["./session-detail.component.css"],
+  providers: [StickyCollapseService],
   imports: [
     FormsModule,
     NgTemplateOutlet,
@@ -131,7 +131,7 @@ import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-s
     UndoBarComponent,
   ],
 })
-export class SessionDetailComponent implements OnInit, OnDestroy {
+export class SessionDetailComponent implements OnInit {
   private translationService = inject(TranslationService);
   private getSessionService = inject(GetSessionService);
   private getSessionStatsService = inject(GetSessionStatsService);
@@ -143,9 +143,9 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   private sessionProgress = inject(SessionProgressService);
   private getExercisesService = inject(GetExercisesService);
   protected activeWorkout = inject(ActiveWorkoutService);
+  protected sticky = inject(StickyCollapseService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private ngZone = inject(NgZone);
   private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "gym/training/session";
@@ -343,57 +343,9 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
     ];
   });
 
-  readonly sessScrolled = signal(false);
-  private readonly STICKY_TOP = 8;
-  private readonly STICKY_BAND = 72;
-  private stickySentinel?: HTMLElement;
-  private stickyObservers: IntersectionObserver[] = [];
-
   @ViewChild(ActiveWorkoutBannerComponent)
   set bannerRef(ref: ActiveWorkoutBannerComponent | undefined) {
-    const element = ref?.sentinelElement;
-    if (element === this.stickySentinel) {
-      return;
-    }
-
-    this.teardownStickyTracking();
-    this.stickySentinel = element;
-    if (!element) {
-      this.sessScrolled.set(false);
-      return;
-    }
-
-    const collapseLine = this.STICKY_TOP + 1;
-    const expandLine = collapseLine + this.STICKY_BAND;
-
-    const collapseObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          return;
-        }
-        this.ngZone.run(() => this.sessScrolled.set(true));
-      },
-      { rootMargin: `-${collapseLine}px 0px 0px 0px`, threshold: 0 },
-    );
-    const expandObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
-        this.ngZone.run(() => this.sessScrolled.set(false));
-      },
-      { rootMargin: `-${expandLine}px 0px 0px 0px`, threshold: 0 },
-    );
-
-    collapseObserver.observe(element);
-    expandObserver.observe(element);
-    this.stickyObservers = [collapseObserver, expandObserver];
-  }
-
-  private teardownStickyTracking(): void {
-    this.stickyObservers.forEach((observer) => observer.disconnect());
-    this.stickyObservers = [];
-    this.stickySentinel = undefined;
+    this.sticky.track(ref?.sentinelElement);
   }
 
   constructor() {
@@ -435,10 +387,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
         weight: set.weight,
       })),
     }));
-  }
-
-  ngOnDestroy(): void {
-    this.teardownStickyTracking();
   }
 
   private loadSession(): void {
@@ -492,10 +440,6 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
       queryParams: {},
       replaceUrl: true,
     });
-
-    if (this.isActiveHere) {
-      return;
-    }
 
     this.onStartWorkout();
   }
@@ -703,7 +647,7 @@ export class SessionDetailComponent implements OnInit, OnDestroy {
   }
 
   onStartWorkout(): void {
-    if (this.exercises().length === 0) {
+    if (this.exercises().length === 0 || this.activeWorkout.isActive()) {
       return;
     }
 

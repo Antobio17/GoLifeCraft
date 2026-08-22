@@ -23,9 +23,26 @@ export class ActiveWorkoutBannerComponent implements OnInit {
     if (!this.activeWorkout.isActive()) {
       return false;
     }
-    const sessionId = this.activeWorkout.activeSessionId();
-    return this.currentPath() !== `/gym/sessions/${sessionId}`;
+    return this.currentPath() !== this.workoutPath();
   });
+
+  readonly stateKey = computed(() => {
+    if (this.activeWorkout.paused()) {
+      return "workout.banner.paused";
+    }
+
+    if (this.activeWorkout.isFree()) {
+      return "workout.banner.freeActive";
+    }
+
+    return "workout.banner.active";
+  });
+
+  readonly goKey = computed(() =>
+    this.activeWorkout.isFree()
+      ? "workout.banner.goToWorkout"
+      : "workout.banner.goToSession",
+  );
 
   ngOnInit(): void {
     this.router.events
@@ -51,10 +68,16 @@ export class ActiveWorkoutBannerComponent implements OnInit {
   }
 
   goToSession(): void {
+    this.router.navigate([this.workoutPath()]);
+  }
+
+  private workoutPath(): string {
     const sessionId = this.activeWorkout.activeSessionId();
+
     if (!sessionId) {
-      return;
+      return "/gym/free";
     }
-    this.router.navigate(["/gym/sessions", sessionId]);
+
+    return `/gym/sessions/${sessionId}`;
   }
 }

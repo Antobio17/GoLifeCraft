@@ -73,6 +73,26 @@ final class StartWorkoutCommandHandlerTest extends TestCase
         $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());
     }
 
+    public function testItStartsAFreeWorkoutWithoutSessionNorExercises(): void
+    {
+        $workoutId = 'workout-free-1';
+
+        ($this->handler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
+            sessionId: null,
+            sessionName: 'Entrenamiento libre',
+            exercises: [],
+            startedByUserId: 'god-user-id',
+        ));
+
+        $workout = $this->workoutRepository->findById(id: $workoutId);
+        $this->assertNotNull(actual: $workout);
+        $this->assertNull(actual: $workout->sessionId);
+        $this->assertEquals(expected: Workout::STATUS_IN_PROGRESS, actual: $workout->status);
+        $this->assertSame(expected: [], actual: $workout->exercises);
+        $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());
+    }
+
     public function testItThrowsExceptionWhenStartingWithoutExercises(): void
     {
         $this->expectException(exception: StartWorkoutException::class);

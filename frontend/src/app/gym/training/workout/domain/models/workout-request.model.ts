@@ -27,8 +27,10 @@ export interface StartWorkoutRequest {
 export interface WorkoutProgressRequest {
   exercises: WorkoutExerciseRequest[];
   durationSeconds: number;
+  sessionName?: string;
 }
 
 export interface FinishWorkoutRequest extends WorkoutProgressRequest {
   templateSyncMode: TemplateSyncMode;
+  sessionId?: string | null;
 }

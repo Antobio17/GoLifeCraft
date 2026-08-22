@@ -94,6 +94,54 @@ final class UpdateWorkoutCommandHandlerTest extends TestCase
         $this->assertTrue(condition: $workout->exercises[0]->sets[0]->done);
     }
 
+    public function testItRenamesAFreeWorkoutOnProgress(): void
+    {
+        $workoutId = 'workout-free-1';
+
+        ($this->startHandler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
+            sessionId: null,
+            sessionName: 'Entrenamiento libre',
+            exercises: [],
+            startedByUserId: 'god-user-id',
+        ));
+
+        ($this->handler)(new UpdateWorkoutCommand(
+            workoutId: $workoutId,
+            exercises: [],
+            durationSeconds: 120,
+            updatedByUserId: 'god-user-id',
+            sessionName: '  Pecho improvisado  ',
+        ));
+
+        $workout = $this->workoutRepository->findById(id: $workoutId);
+        $this->assertEquals(expected: 'Pecho improvisado', actual: $workout->sessionName);
+    }
+
+    public function testItKeepsTheWorkoutNameWhenNoneIsGiven(): void
+    {
+        $workoutId = 'workout-free-2';
+
+        ($this->startHandler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
+            sessionId: null,
+            sessionName: 'Entrenamiento libre',
+            exercises: [],
+            startedByUserId: 'god-user-id',
+        ));
+
+        ($this->handler)(new UpdateWorkoutCommand(
+            workoutId: $workoutId,
+            exercises: [],
+            durationSeconds: 120,
+            updatedByUserId: 'god-user-id',
+            sessionName: '   ',
+        ));
+
+        $workout = $this->workoutRepository->findById(id: $workoutId);
+        $this->assertEquals(expected: 'Entrenamiento libre', actual: $workout->sessionName);
+    }
+
     public function testItThrowsExceptionWhenWorkoutDoesNotExist(): void
     {
         $this->expectException(exception: UpdateWorkoutException::class);

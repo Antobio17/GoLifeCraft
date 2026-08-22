@@ -71,9 +71,14 @@ class Workout extends GenericAggregate
         int $durationSeconds,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
+        ?string $sessionName = null,
     ): void {
         if (self::STATUS_COMPLETED === $this->status) {
             throw UpdateWorkoutException::workoutAlreadyFinished(workoutId: $this->id);
+        }
+
+        if (null !== $sessionName && '' !== trim($sessionName)) {
+            $this->sessionName = trim($sessionName);
         }
 
         $this->exercises = $exercises;
@@ -90,6 +95,7 @@ class Workout extends GenericAggregate
         string $templateSyncMode,
         string $finishedByUserId,
         DateTimeGenerator $dateTimeGenerator,
+        ?string $linkedSessionId = null,
     ): void {
         if (self::STATUS_COMPLETED === $this->status) {
             throw FinishWorkoutException::workoutAlreadyFinished(workoutId: $this->id);
@@ -100,6 +106,10 @@ class Workout extends GenericAggregate
         }
 
         $now = $dateTimeGenerator->now();
+
+        if (null !== $linkedSessionId) {
+            $this->sessionId = $linkedSessionId;
+        }
 
         $this->exercises = $exercises;
         $this->durationSeconds = max(0, $durationSeconds);

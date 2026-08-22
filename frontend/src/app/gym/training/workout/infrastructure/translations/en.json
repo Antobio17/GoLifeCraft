@@ -32,12 +32,88 @@
   "workout": {
     "breadcrumb": {
       "list": "History",
-      "detail": "Workout"
+      "detail": "Workout",
+      "free": "Free workout"
     },
     "banner": {
       "active": "Active session",
       "paused": "Paused",
-      "goToSession": "Go to session"
+      "goToSession": "Go to session",
+      "freeActive": "Free workout",
+      "goToWorkout": "Go to workout"
+    },
+    "free": {
+      "eyebrow": "Gym",
+      "back": "Sessions",
+      "defaultName": "Free workout",
+      "nameLabel": "Workout name",
+      "namePlaceholder": "Give it a name",
+      "nameHint": "No template: this workout only lands in your history.",
+      "finish": "Finish",
+      "active": {
+        "running": "Free workout",
+        "paused": "Paused",
+        "sets": "sets",
+        "pause": "Pause",
+        "resume": "Resume",
+        "stop": "Discard",
+        "markDone": "Mark set"
+      },
+      "empty": {
+        "title": "No exercises yet",
+        "text": "Add exercises from the library as you go through them."
+      },
+      "mode": {
+        "bilateral": "Bilateral",
+        "unilateral": "Unilateral"
+      },
+      "exercise": {
+        "add": "Add exercise",
+        "remove": "Remove exercise",
+        "notePlaceholder": "Exercise notes",
+        "noteLabel": "Exercise notes"
+      },
+      "set": {
+        "number": "Set",
+        "reps": "Reps",
+        "weight": "Weight (kg)",
+        "add": "Add set",
+        "remove": "Remove set",
+        "repsUp": "Increase reps",
+        "repsDown": "Decrease reps",
+        "weightUp": "Increase weight",
+        "weightDown": "Decrease weight"
+      },
+      "picker": {
+        "title": "Exercise library",
+        "search": "Search exercise",
+        "clear": "Clear",
+        "close": "Close",
+        "empty": "No exercises match your search."
+      },
+      "stopModal": {
+        "title": "Discard workout",
+        "body": "You are about to discard this free workout:",
+        "warning": "Everything you logged will be lost and it won't reach your history.",
+        "cancel": "Keep training",
+        "confirm": "Discard"
+      },
+      "finishModal": {
+        "title": "Finish workout",
+        "body": "What should we do with this workout?",
+        "emptyNote": "You haven't logged any exercise.",
+        "cancel": "Cancel",
+        "options": {
+          "history": {
+            "title": "History only",
+            "description": "Save the workout as it is, without creating a template."
+          },
+          "template": {
+            "title": "Save as session",
+            "description": "Also create a template with these exercises to repeat it."
+          }
+        }
+      }
     }
   }
 }

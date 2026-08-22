@@ -32,12 +32,88 @@
   "workout": {
     "breadcrumb": {
       "list": "Historial",
-      "detail": "Entreno"
+      "detail": "Entreno",
+      "free": "Entrenamiento libre"
     },
     "banner": {
       "active": "Sesión activa",
       "paused": "En pausa",
-      "goToSession": "Ir a la sesión"
+      "goToSession": "Ir a la sesión",
+      "freeActive": "Entreno libre",
+      "goToWorkout": "Ir al entreno"
+    },
+    "free": {
+      "eyebrow": "Gimnasio",
+      "back": "Sesiones",
+      "defaultName": "Entrenamiento libre",
+      "nameLabel": "Nombre del entreno",
+      "namePlaceholder": "Ponle un nombre",
+      "nameHint": "Sin plantilla: este entreno solo queda en el historial.",
+      "finish": "Terminar",
+      "active": {
+        "running": "Entreno libre",
+        "paused": "En pausa",
+        "sets": "series",
+        "pause": "Pausar",
+        "resume": "Reanudar",
+        "stop": "Descartar",
+        "markDone": "Marcar serie"
+      },
+      "empty": {
+        "title": "Sin ejercicios todavía",
+        "text": "Añade ejercicios de la biblioteca según los vayas haciendo."
+      },
+      "mode": {
+        "bilateral": "Bilateral",
+        "unilateral": "Unilateral"
+      },
+      "exercise": {
+        "add": "Añadir ejercicio",
+        "remove": "Quitar ejercicio",
+        "notePlaceholder": "Notas del ejercicio",
+        "noteLabel": "Notas del ejercicio"
+      },
+      "set": {
+        "number": "Serie",
+        "reps": "Reps",
+        "weight": "Peso (kg)",
+        "add": "Añadir serie",
+        "remove": "Quitar serie",
+        "repsUp": "Subir repeticiones",
+        "repsDown": "Bajar repeticiones",
+        "weightUp": "Subir peso",
+        "weightDown": "Bajar peso"
+      },
+      "picker": {
+        "title": "Biblioteca de ejercicios",
+        "search": "Buscar ejercicio",
+        "clear": "Limpiar",
+        "close": "Cerrar",
+        "empty": "No hay ejercicios que coincidan."
+      },
+      "stopModal": {
+        "title": "Descartar entreno",
+        "body": "Vas a descartar este entrenamiento libre:",
+        "warning": "Se perderá todo lo registrado y no quedará en el historial.",
+        "cancel": "Seguir entrenando",
+        "confirm": "Descartar"
+      },
+      "finishModal": {
+        "title": "Terminar entreno",
+        "body": "¿Qué hacemos con este entrenamiento?",
+        "emptyNote": "No has registrado ningún ejercicio.",
+        "cancel": "Cancelar",
+        "options": {
+          "history": {
+            "title": "Solo al historial",
+            "description": "Guarda el entreno tal cual, sin crear ninguna plantilla."
+          },
+          "template": {
+            "title": "Guardar como sesión",
+            "description": "Además crea una plantilla con estos ejercicios para repetirla."
+          }
+        }
+      }
     }
   }
 }

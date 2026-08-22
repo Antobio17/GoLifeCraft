@@ -43,7 +43,7 @@
       [title]="name()"
       (leadingClick)="goBack()"
     >
-      @if (!isActiveHere) {
+      @if (!activeWorkout.isActive()) {
         <ds-button
           slot="actions"
           variant="primary"
@@ -65,7 +65,7 @@
 
     @if (isActiveHere) {
       <ds-active-workout-banner
-        [scrolled]="sessScrolled()"
+        [scrolled]="sticky.collapsed()"
         [paused]="activeWorkout.paused()"
         [stateLabel]="
           (activeWorkout.paused()

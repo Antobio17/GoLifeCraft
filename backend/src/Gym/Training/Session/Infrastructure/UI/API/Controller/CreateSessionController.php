@@ -35,6 +35,7 @@ final class CreateSessionController
                     rawExercises: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'exercises'),
                 ),
                 createdByUserId: RequestExtractor::getUserSessionId(request: $request),
+                sessionId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'sessionId'),
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_CREATED);

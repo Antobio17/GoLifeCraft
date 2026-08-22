@@ -26,7 +26,7 @@ final readonly class CreateSessionCommandHandler
             throw CreateSessionException::sessionWithNameAlreadyExists(name: $command->name);
         }
 
-        $sessionId = $this->sessionRepository->nextId();
+        $sessionId = $command->sessionId ?? $this->sessionRepository->nextId();
 
         $session = Session::create(
             id: $sessionId,

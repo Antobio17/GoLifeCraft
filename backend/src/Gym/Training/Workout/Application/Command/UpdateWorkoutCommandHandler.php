@@ -33,6 +33,7 @@ final readonly class UpdateWorkoutCommandHandler
             durationSeconds: $command->durationSeconds,
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
+            sessionName: $command->sessionName,
         );
 
         $this->workoutRepository->save(workout: $workout);
