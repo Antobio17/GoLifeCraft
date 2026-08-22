@@ -18,6 +18,7 @@
 }
 
 .app-frame__content {
+  box-sizing: border-box;
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
@@ -26,7 +27,7 @@
 
 .app-frame--with-tabbar .app-frame__content {
   padding-bottom: calc(
-    var(--ds-app-bottom-nav-height) + var(--ds-space-8) +
+    var(--ds-app-bottom-nav-height) + var(--ds-space-1) +
       env(safe-area-inset-bottom)
   );
 }

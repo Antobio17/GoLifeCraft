@@ -3,7 +3,6 @@
 }
 
 .pw-wrapper {
-  min-height: calc(100vh - 4.5rem);
   background: transparent;
   font-family: var(--ds-font-body);
   position: relative;
@@ -60,12 +59,12 @@
 
 @media (max-width: 768px) {
   .pw-container {
-    padding: var(--ds-space-4) var(--ds-space-4) var(--ds-space-6);
+    padding: var(--ds-space-4) var(--ds-space-4) var(--ds-space-4);
   }
 }
 
 @media (max-width: 480px) {
   .pw-container {
-    padding: var(--ds-space-3) var(--ds-space-4) var(--ds-space-5);
+    padding: var(--ds-space-3) var(--ds-space-4) var(--ds-space-3);
   }
 }

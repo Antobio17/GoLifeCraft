@@ -61,6 +61,21 @@ body.ds-scroll-locked {
   background: transparent;
 }
 
+@media (display-mode: standalone),
+  (display-mode: fullscreen),
+  (display-mode: minimal-ui) {
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+}
+
 @keyframes pulse-bg {
   0%,
   100% {
