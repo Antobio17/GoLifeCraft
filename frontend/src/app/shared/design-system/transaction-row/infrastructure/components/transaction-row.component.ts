@@ -9,7 +9,12 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
   selector: "ds-transaction-row",
   imports: [NgTemplateOutlet, PressableComponent, IconButtonComponent],
   template: `
-    <div class="ds-tx" [class.ds-tx--slid]="slid" [class.ds-tx--muted]="muted">
+    <div
+      class="ds-tx"
+      [class.ds-tx--grouped]="grouped"
+      [class.ds-tx--slid]="slid"
+      [class.ds-tx--muted]="muted"
+    >
       @if (pressable) {
         <ds-pressable
           [grow]="true"
@@ -69,6 +74,17 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-2) var(--ds-space-3);
       }
+      .ds-tx--grouped {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        border-bottom: 1px solid var(--ds-border);
+        padding: var(--ds-space-3);
+      }
+      .ds-tx--grouped:last-child {
+        border-bottom: none;
+      }
       .ds-tx--muted .ds-tx__chip,
       .ds-tx--muted .ds-tx__title,
       .ds-tx--muted .ds-tx__amount {
@@ -88,6 +104,9 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         align-items: center;
         justify-content: center;
         font-size: var(--ds-text-lg);
+      }
+      .ds-tx--grouped .ds-tx__chip {
+        background: var(--ds-surface-inset);
       }
       .ds-tx__chip.is-income {
         background: var(--ds-primary-soft);
@@ -155,6 +174,7 @@ export class TransactionRowComponent {
   @Input() title = "";
   @Input() subtitle = "";
   @Input() amountLabel = "";
+  @Input() grouped = false;
   @Input() income = false;
   @Input() tags: TransactionRowTag[] = [];
   @Input() pressable = false;

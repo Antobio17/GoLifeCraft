@@ -207,7 +207,12 @@
 
       <ds-stack [gap]="'var(--ds-space-2)'">
         @for (row of categoryRows(); track row.key) {
-          <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-2)'">
+          <ds-card
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'var(--ds-space-2)'"
+            [interactive]="true"
+            (activated)="selectCategory(row.key)"
+          >
             <ds-stack
               direction="row"
               align="center"
@@ -248,6 +253,37 @@
               }}</ds-text>
             </ds-stack>
           </ds-card>
+
+          @if (selectedCategoryKey() === row.key) {
+            <ds-section-header
+              [title]="selectedCategoryTitle()"
+              size="md"
+            />
+
+            @if (loadingCategoryTransactions()) {
+              <ds-card [padding]="'0'" [gap]="'0'">
+                <ds-skeleton-rows [card]="true" [rows]="4" labelWidth="55%" />
+              </ds-card>
+            } @else if (hasSelectedCategoryTransactions()) {
+              <ds-card [padding]="'0'" [gap]="'0'">
+                @for (row of selectedCategoryRows(); track row.id) {
+                  <ds-transaction-row
+                    [emoji]="row.emoji"
+                    [title]="row.title"
+                    [subtitle]="row.subtitle"
+                    [amountLabel]="row.amountLabel"
+                    [grouped]="true"
+                  />
+                }
+              </ds-card>
+            } @else {
+              <ds-empty-state
+                icon="wallet"
+                [title]="'getFinanceBudget.categoryMovements.emptyTitle' | t"
+                [text]="'getFinanceBudget.categoryMovements.emptyText' | t"
+              />
+            }
+          }
         }
       </ds-stack>
 

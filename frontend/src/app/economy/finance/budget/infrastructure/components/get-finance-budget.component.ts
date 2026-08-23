@@ -21,8 +21,12 @@ import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/co
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
+import { TransactionRowComponent } from "@shared/design-system/transaction-row/infrastructure/components/transaction-row.component";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
+import { GetFinanceTransactionsService } from "@economy/finance/transaction/application/services/get-finance-transactions.service";
+import { FinanceTransactionKind } from "@economy/finance/transaction/domain/models/finance-transaction-kind.model";
+import { FinanceTransactionView } from "@economy/finance/transaction/domain/models/finance-transaction-view.model";
 import { GetFinanceBudgetService } from "@economy/finance/budget/application/services/get-finance-budget.service";
 import { FinanceBudgetViewService } from "@economy/finance/budget/application/services/finance-budget-view.service";
 import { FinanceBudgetAttributes } from "@economy/finance/budget/domain/models/finance-budget-attributes.model";
@@ -30,6 +34,7 @@ import { FinanceBudgetCategoryProgress } from "@economy/finance/budget/domain/mo
 import { FinanceBudgetCategoryRow } from "@economy/finance/budget/domain/models/finance-budget-category-row.model";
 import { FinanceBudgetFixedRow } from "@economy/finance/budget/domain/models/finance-budget-fixed-row.model";
 import { FinanceBudgetStatus } from "@economy/finance/budget/domain/models/finance-budget-status.model";
+import { FinanceCategory } from "@economy/finance/transaction/domain/models/finance-category.model";
 
 @Component({
   selector: "app-get-finance-budget",
@@ -54,6 +59,7 @@ import { FinanceBudgetStatus } from "@economy/finance/budget/domain/models/finan
     SkeletonPanelComponent,
     SkeletonRowsComponent,
     SkeletonSectionHeaderComponent,
+    TransactionRowComponent,
   ],
 })
 export class GetFinanceBudgetComponent implements OnInit {
@@ -61,11 +67,13 @@ export class GetFinanceBudgetComponent implements OnInit {
   private authSession = inject(AuthSessionService);
   private router = inject(Router);
   private getFinanceBudgetService = inject(GetFinanceBudgetService);
+  private getFinanceTransactionsService = inject(GetFinanceTransactionsService);
   protected view = inject(FinanceViewService);
   protected budgetView = inject(FinanceBudgetViewService);
   protected categoryCatalog = inject(FinanceCategoryCatalogService);
 
   private readonly MODULE_PATH = "economy/finance/budget";
+  private categoryTransactionsRequestId = 0;
 
   canWrite = computed(() => this.authSession.isGod());
 
@@ -74,6 +82,9 @@ export class GetFinanceBudgetComponent implements OnInit {
 
   month = signal(this.view.currentMonth());
   budget = signal<FinanceBudgetAttributes | null>(null);
+  selectedCategoryKey = signal<FinanceCategory | null>(null);
+  selectedCategoryTransactions = signal<FinanceTransactionView[]>([]);
+  loadingCategoryTransactions = signal(false);
 
   monthLabel = computed(() => this.view.monthLabel(this.month()));
   canGoNextMonth = computed(
@@ -182,6 +193,33 @@ export class GetFinanceBudgetComponent implements OnInit {
 
   hasCategories = computed(() => this.categoryRows().length > 0);
   hasFixed = computed(() => this.fixedRows().length > 0);
+  hasSelectedCategoryTransactions = computed(
+    () => this.selectedCategoryTransactions().length > 0,
+  );
+  selectedCategoryName = computed(() => {
+    const selectedCategoryKey = this.selectedCategoryKey();
+
+    if (!selectedCategoryKey) return "";
+
+    return this.categoryCatalog.label(selectedCategoryKey);
+  });
+  selectedCategoryTitle = computed(() => {
+    this.translationsReady();
+
+    return this.t("getFinanceBudget.categoryMovements.title").replace(
+      "{category}",
+      this.selectedCategoryName(),
+    );
+  });
+  selectedCategoryRows = computed(() =>
+    this.selectedCategoryTransactions().map((transaction) => ({
+      id: transaction.id,
+      emoji: this.categoryCatalog.emoji(transaction.category),
+      title: transaction.note || this.categoryCatalog.label(transaction.category),
+      subtitle: `${transaction.store || this.categoryCatalog.label(transaction.category)} · ${this.view.dayShort(transaction.transactionDate)}`,
+      amountLabel: `−${this.view.money(transaction.amount)}`,
+    })),
+  );
 
   ngOnInit(): void {
     this.translationService
@@ -198,6 +236,7 @@ export class GetFinanceBudgetComponent implements OnInit {
 
   previousMonth(): void {
     this.month.set(this.view.shiftMonth(this.month(), -1));
+    this.clearCategorySelection();
     this.load();
   }
 
@@ -205,7 +244,24 @@ export class GetFinanceBudgetComponent implements OnInit {
     if (!this.canGoNextMonth()) return;
 
     this.month.set(this.view.shiftMonth(this.month(), 1));
+    this.clearCategorySelection();
     this.load();
+  }
+
+  selectCategory(categoryKey: FinanceCategory): void {
+    if (this.selectedCategoryKey() === categoryKey) {
+      this.clearCategorySelection();
+      return;
+    }
+
+    this.selectedCategoryKey.set(categoryKey);
+    this.loadCategoryTransactions(categoryKey);
+  }
+
+  clearCategorySelection(): void {
+    this.selectedCategoryKey.set(null);
+    this.selectedCategoryTransactions.set([]);
+    this.loadingCategoryTransactions.set(false);
   }
 
   goBack(): void {
@@ -269,5 +325,35 @@ export class GetFinanceBudgetComponent implements OnInit {
       },
       error: () => this.loading.set(false),
     });
+  }
+
+  private loadCategoryTransactions(categoryKey: FinanceCategory): void {
+    const requestId = ++this.categoryTransactionsRequestId;
+    this.loadingCategoryTransactions.set(true);
+    this.selectedCategoryTransactions.set([]);
+
+    this.getFinanceTransactionsService
+      .getFinanceTransactions(this.month())
+      .subscribe({
+        next: (response) => {
+          if (requestId !== this.categoryTransactionsRequestId) return;
+
+          const monthlyCategoryExpenseTransactions =
+            response.data.attributes.transactions.filter(
+              (transaction) =>
+                transaction.kind === FinanceTransactionKind.EXPENSE &&
+                transaction.category === categoryKey,
+            );
+
+          this.selectedCategoryTransactions.set(monthlyCategoryExpenseTransactions);
+          this.loadingCategoryTransactions.set(false);
+        },
+        error: () => {
+          if (requestId !== this.categoryTransactionsRequestId) return;
+
+          this.selectedCategoryTransactions.set([]);
+          this.loadingCategoryTransactions.set(false);
+        },
+      });
   }
 }
