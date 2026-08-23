@@ -1,6 +1,9 @@
 @for (toast of toasts(); track toast.id) {
   <ds-toast
-    [@toastSlide]
+    [@toastSlide]="{
+      value: 'visible',
+      params: { enterTransform: enterTransform, leaveTransform: leaveTransform }
+    }"
     [type]="toast.type"
     [icon]="toast.icon"
     [title]="toast.keyTranslation | t: asParams(toast.details)"

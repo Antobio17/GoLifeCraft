@@ -1,15 +1,22 @@
 :host {
   position: fixed;
-  top: calc(env(safe-area-inset-top) + 1rem);
-  left: 50%;
-  transform: translateX(-50%);
+  top: max(env(safe-area-inset-top), 1rem);
+  left: 0;
+  right: 0;
   width: 100%;
-  max-width: var(--ds-app-frame-width, 30rem);
+  box-sizing: border-box;
   padding: 0 var(--ds-space-3);
   z-index: 999999;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: stretch;
   gap: var(--ds-space-2);
   pointer-events: none;
+}
+
+:host > * {
+  width: 100%;
+  max-width: var(--ds-app-frame-width, 30rem);
+  margin: 0 auto;
 }
