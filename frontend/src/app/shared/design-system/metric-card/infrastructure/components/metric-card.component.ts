@@ -30,9 +30,9 @@ export type MetricCardVariant = "plain" | "feature";
         box-sizing: border-box;
       }
       .ds-metric--feature {
-        background: var(--ds-surface-brand);
-        border-color: var(--ds-surface-brand);
-        color: var(--ds-on-surface-brand);
+        background: var(--ds-primary-soft);
+        border-color: var(--ds-primary-soft-border);
+        color: var(--ds-primary-soft-text);
       }
       .ds-metric__value {
         font-family: var(--ds-font-display);
@@ -45,7 +45,7 @@ export type MetricCardVariant = "plain" | "feature";
         font-size: var(--ds-text-lg);
       }
       .ds-metric--feature .ds-metric__value {
-        color: var(--ds-on-surface-brand);
+        color: var(--ds-primary-soft-text);
       }
       .ds-metric__label {
         margin-top: var(--ds-space-1);
@@ -54,8 +54,8 @@ export type MetricCardVariant = "plain" | "feature";
         color: var(--ds-text-muted);
       }
       .ds-metric--feature .ds-metric__label {
-        color: var(--ds-on-surface-brand);
-        opacity: 0.82;
+        color: var(--ds-primary-soft-text);
+        opacity: 0.78;
       }
     `,
   ],
