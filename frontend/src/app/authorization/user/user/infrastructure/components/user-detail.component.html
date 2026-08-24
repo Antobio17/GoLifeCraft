@@ -1,0 +1,124 @@
+<ds-page-wrapper [maxWidth]="'56rem'" [gap]="'var(--ds-space-3)'">
+  <ds-screen-header
+    leading="back"
+    [leadingLabel]="'userDetail.back' | t"
+    [eyebrow]="'userDetail.eyebrow' | t"
+    [title]="loading() ? ('userDetail.title' | t) : displayName()"
+    [wrapTitle]="true"
+    (leadingClick)="back()"
+  >
+    <ds-chip slot="actions" tone="brand" [uppercase]="true">{{
+      "userDetail.adminOnly" | t
+    }}</ds-chip>
+  </ds-screen-header>
+
+  @if (loading()) {
+    <ds-split-view
+      [gap]="'var(--ds-space-4)'"
+      [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+    >
+      <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
+        <ds-skeleton-list-item
+          padding="var(--ds-space-4)"
+          [tile]="54"
+          [tileRadius]="27"
+          titleWidth="64%"
+          metaWidth="48%"
+        />
+        <ds-skeleton-list
+          [count]="4"
+          [gap]="'var(--ds-space-2)'"
+          padding="var(--ds-space-3)"
+          titleWidth="38%"
+          metaWidth="56%"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-skeleton-line width="9rem" height="0.75rem" />
+        <ds-skeleton-note [lines]="3" />
+        <ds-skeleton-line width="100%" height="2.75rem" />
+      </ds-stack>
+    </ds-split-view>
+  } @else if (user()) {
+    <ds-split-view
+      [gap]="'var(--ds-space-4)'"
+      [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+    >
+      <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
+        <ds-profile-card
+          [initial]="initial()"
+          [name]="displayName()"
+          [email]="user()!.email"
+          [roleLabel]="roleLabel()"
+          [active]="user()!.isActive"
+          [activeLabel]="accessLabel()"
+        ></ds-profile-card>
+
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-text variant="label">{{ "userDetail.section.data" | t }}</ds-text>
+
+          <ds-readonly-strip
+            [label]="'userDetail.field.tenant' | t"
+            [value]="user()!.tenantId"
+          ></ds-readonly-strip>
+          <ds-readonly-strip
+            [label]="'userDetail.field.username' | t"
+            [value]="user()!.username"
+          ></ds-readonly-strip>
+          <ds-readonly-strip
+            [label]="'userDetail.field.emailVerified' | t"
+            [value]="verifiedLabel()"
+          ></ds-readonly-strip>
+          <ds-readonly-strip
+            [label]="'userDetail.field.createdAt' | t"
+            [value]="createdAtLabel()"
+          ></ds-readonly-strip>
+          <ds-readonly-strip
+            [label]="'userDetail.field.updatedAt' | t"
+            [value]="updatedAtLabel()"
+          ></ds-readonly-strip>
+        </ds-stack>
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-text variant="label">{{
+          "userDetail.section.support" | t
+        }}</ds-text>
+
+        <ds-note icon="eye">{{ "userDetail.impersonate.help" | t }}</ds-note>
+
+        @if (canImpersonate()) {
+          <ds-button
+            variant="primary"
+            icon="eye"
+            [fullWidth]="true"
+            [loading]="entering()"
+            (clicked)="askForImpersonation()"
+            >{{ "userDetail.impersonate.action" | t }}</ds-button
+          >
+        } @else {
+          <ds-note icon="alertCircle" tone="warning">{{
+            "userDetail.impersonate.blocked" | t
+          }}</ds-note>
+        }
+      </ds-stack>
+    </ds-split-view>
+  }
+
+  <ds-confirm-action-modal
+    [show]="confirming()"
+    [title]="'userDetail.impersonate.confirmTitle' | t"
+    [body]="'userDetail.impersonate.confirmBody' | t"
+    [itemName]="displayName()"
+    [warningText]="'userDetail.impersonate.confirmWarning' | t"
+    [isDeleting]="entering()"
+    [cancelLabel]="'userDetail.impersonate.cancel' | t"
+    [confirmLabel]="'userDetail.impersonate.confirm' | t"
+    [deletingLabel]="'userDetail.impersonate.entering' | t"
+    confirmVariant="primary"
+    iconVariant="success"
+    (confirmed)="confirmImpersonation()"
+    (cancelled)="cancelImpersonation()"
+  ></ds-confirm-action-modal>
+</ds-page-wrapper>

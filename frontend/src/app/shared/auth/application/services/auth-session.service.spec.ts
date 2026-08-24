@@ -1,6 +1,7 @@
 import { AuthSessionService } from "./auth-session.service";
 import { AuthSessionPort } from "../../domain/ports/auth-session.port";
 import { AuthSession } from "../../domain/models/auth-session.model";
+import { ImpersonationSessionPort } from "../../domain/ports/impersonation-session.port";
 
 const mockSession: AuthSession = {
   token: "test-token",
@@ -9,6 +10,12 @@ const mockSession: AuthSession = {
   user: { username: "testuser", email: "test@test.com", roles: ["admin"] },
   email: "test@test.com",
 };
+
+class MockImpersonationSessionPort extends ImpersonationSessionPort {
+  save = jasmine.createSpy("save");
+  get = jasmine.createSpy("get").and.returnValue(null);
+  clear = jasmine.createSpy("clear");
+}
 
 class MockAuthSessionPort extends AuthSessionPort {
   save = jasmine.createSpy("save");
@@ -20,15 +27,17 @@ class MockAuthSessionPort extends AuthSessionPort {
 describe("AuthSessionService", () => {
   let service: AuthSessionService;
   let mockPort: MockAuthSessionPort;
+  let mockImpersonationPort: MockImpersonationSessionPort;
 
   beforeEach(() => {
     mockPort = new MockAuthSessionPort();
-    service = new AuthSessionService(mockPort);
+    mockImpersonationPort = new MockImpersonationSessionPort();
+    service = new AuthSessionService(mockPort, mockImpersonationPort);
   });
 
   it("should initialize session from port on construction", () => {
     mockPort.get.and.returnValue(mockSession);
-    const s = new AuthSessionService(mockPort);
+    const s = new AuthSessionService(mockPort, mockImpersonationPort);
     expect(s.getSession()).toEqual(mockSession);
   });
 

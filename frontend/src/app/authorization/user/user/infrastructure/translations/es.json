@@ -282,7 +282,8 @@
     "note": "Activa el interruptor para conceder acceso a la app. Solo los administradores ven esta pantalla.",
     "toast": {
       "error": "No se pudo guardar el cambio de acceso."
-    }
+    },
+    "openAria": "Abrir ficha de este usuario"
   },
   "createUser": {
     "title": "Crear Nuevo Usuario",
@@ -349,6 +350,57 @@
         }
       },
       "super_admin_or_self_required": "Acceso denegado. Se requiere ser administrador o el propio usuario"
+    }
+  },
+  "userDetail": {
+    "breadcrumb": "Ficha de usuario",
+    "back": "Atrás",
+    "eyebrow": "Administración",
+    "title": "Ficha de usuario",
+    "adminOnly": "Solo admin",
+    "section": {
+      "data": "Datos de la cuenta",
+      "support": "Soporte"
+    },
+    "field": {
+      "tenant": "Base de datos",
+      "username": "Usuario",
+      "emailVerified": "Email",
+      "createdAt": "Alta",
+      "updatedAt": "Última modificación"
+    },
+    "badge": {
+      "verified": "Verificado",
+      "unverified": "Sin verificar"
+    },
+    "access": {
+      "active": "Con acceso",
+      "inactive": "Sin acceso"
+    },
+    "role": {
+      "ROLE_GOD": "Administrador",
+      "ROLE_USER": "Usuario"
+    },
+    "impersonate": {
+      "help": "Entrar en la cuenta abre la aplicación con la base de datos de este cliente durante 30 minutos. Podrás leer y escribir sus datos, y todo lo que hagas queda registrado.",
+      "action": "Entrar en su cuenta",
+      "blocked": "Este usuario no tiene acceso concedido. Actívalo en el listado antes de entrar en su cuenta.",
+      "confirmTitle": "Entrar en la cuenta",
+      "confirmBody": "Vas a trabajar sobre la base de datos de este cliente:",
+      "confirmWarning": "La sesión caduca a los 30 minutos y puedes salir cuando quieras desde la barra superior.",
+      "cancel": "Cancelar",
+      "confirm": "Entrar",
+      "entering": "Entrando..."
+    },
+    "toast": {
+      "error": "No se pudo entrar en la cuenta de este usuario."
+    }
+  },
+  "impersonation": {
+    "bar": {
+      "label": "Estás dentro de la cuenta de",
+      "exit": "Salir",
+      "exitAria": "Salir de la cuenta del cliente y volver a la tuya"
     }
   }
 }

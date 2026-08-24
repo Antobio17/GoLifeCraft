@@ -40,3 +40,25 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Authorization\User\User\Infrastructure\UI\API\Controller\GetUserController:
+    class: Authorization\User\User\Infrastructure\UI\API\Controller\GetUserController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Authorization\User\User\Infrastructure\UI\API\Controller\ImpersonateUserController:
+    class: Authorization\User\User\Infrastructure\UI\API\Controller\ImpersonateUserController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $impersonationTokenGenerator: '@Authorization\User\User\Domain\Service\ImpersonationTokenGenerator'
+    tags:
+      - { name: controller.service_arguments }
+
+  Authorization\User\User\Infrastructure\UI\API\Controller\RevokeImpersonationController:
+    class: Authorization\User\User\Infrastructure\UI\API\Controller\RevokeImpersonationController
+    arguments:
+      $impersonationRevoker: '@Authorization\User\User\Domain\Service\ImpersonationRevoker'
+    tags:
+      - { name: controller.service_arguments }

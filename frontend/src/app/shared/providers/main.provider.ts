@@ -3,6 +3,7 @@ import { FloatingToastProviders } from "@shared/floating-toasts/infrastructure/p
 import { TranslationProvider } from "@shared/i18n/infrastructure/providers/translation.provider";
 import { AuthSessionProvider } from "@shared/auth/infrastructure/providers/auth-session.provider";
 import { RefreshTokenProvider } from "@shared/auth/infrastructure/providers/refresh-token.provider";
+import { ImpersonationProvider } from "@shared/auth/infrastructure/providers/impersonation.provider";
 
 export type ProviderModule = {
   getProviders(): Provider[];
@@ -14,6 +15,7 @@ export class GlobalProviders {
     TranslationProvider,
     AuthSessionProvider,
     RefreshTokenProvider,
+    ImpersonationProvider,
   ];
 
   static getProviders(): Provider[] {

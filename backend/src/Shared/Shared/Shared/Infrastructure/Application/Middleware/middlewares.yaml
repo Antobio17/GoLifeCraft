@@ -20,6 +20,7 @@ services:
       $domainEventLogRepository: '@Shared\Shared\DomainEventLog\Domain\Model\DomainEventLogRepository'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
       $tenantContext: '@Shared\Tenant\Tenant\Domain\Service\TenantContext'
+      $impersonationContext: '@Shared\Shared\Shared\Domain\Service\ImpersonationContext'
       $subscribers: []
     tags:
       - { name: 'messenger.middleware', bus: 'messenger.bus.default', priority: 90 }

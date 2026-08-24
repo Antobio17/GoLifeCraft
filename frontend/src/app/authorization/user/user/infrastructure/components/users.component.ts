@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { Location } from "@angular/common";
+import { Router } from "@angular/router";
 import { GetUsersService } from "../../application/services/get-users.service";
 import { SetUserAccessService } from "../../application/services/set-user-access.service";
 import { GetUsersProvider } from "../providers/get-users.provider";
@@ -62,6 +63,7 @@ export class UsersComponent implements OnInit {
   private floatingToastService = inject(FloatingToastService);
   private translationService = inject(TranslationService);
   private location = inject(Location);
+  private router = inject(Router);
 
   private readonly MODULE_PATH = "authorization/user/user";
 
@@ -113,6 +115,10 @@ export class UsersComponent implements OnInit {
 
   back(): void {
     this.location.back();
+  }
+
+  openUser(row: UserRowViewModel): void {
+    this.router.navigate(["/users", row.id]);
   }
 
   onToggle(row: UserRowViewModel): void {

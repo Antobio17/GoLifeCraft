@@ -282,7 +282,8 @@
     "note": "Turn on the switch to grant access to the app. Only administrators can see this screen.",
     "toast": {
       "error": "The access change could not be saved."
-    }
+    },
+    "openAria": "Open this user's detail"
   },
   "createUser": {
     "title": "Create New User",
@@ -349,6 +350,57 @@
         }
       },
       "super_admin_or_self_required": "Access denied. Super admin or self required"
+    }
+  },
+  "userDetail": {
+    "breadcrumb": "User detail",
+    "back": "Back",
+    "eyebrow": "Administration",
+    "title": "User detail",
+    "adminOnly": "Admin only",
+    "section": {
+      "data": "Account data",
+      "support": "Support"
+    },
+    "field": {
+      "tenant": "Database",
+      "username": "Username",
+      "emailVerified": "Email",
+      "createdAt": "Created",
+      "updatedAt": "Last updated"
+    },
+    "badge": {
+      "verified": "Verified",
+      "unverified": "Unverified"
+    },
+    "access": {
+      "active": "Access granted",
+      "inactive": "No access"
+    },
+    "role": {
+      "ROLE_GOD": "Administrator",
+      "ROLE_USER": "User"
+    },
+    "impersonate": {
+      "help": "Entering the account opens the app against this client's database for 30 minutes. You can read and write their data, and everything you do is logged.",
+      "action": "Enter their account",
+      "blocked": "This user has no access granted. Enable it in the list before entering their account.",
+      "confirmTitle": "Enter the account",
+      "confirmBody": "You are about to work on this client's database:",
+      "confirmWarning": "The session expires after 30 minutes and you can leave at any time from the top bar.",
+      "cancel": "Cancel",
+      "confirm": "Enter",
+      "entering": "Entering..."
+    },
+    "toast": {
+      "error": "Could not enter this user's account."
+    }
+  },
+  "impersonation": {
+    "bar": {
+      "label": "You are inside the account of",
+      "exit": "Exit",
+      "exitAria": "Leave the client's account and go back to yours"
     }
   }
 }

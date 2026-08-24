@@ -6,6 +6,7 @@ use Authorization\User\User\Domain\Event\MyThemeChanged;
 use Authorization\User\User\Domain\Event\UserAccessGranted;
 use Authorization\User\User\Domain\Event\UserAccessRevoked;
 use Authorization\User\User\Domain\Event\UserEmailVerified;
+use Authorization\User\User\Domain\Event\UserImpersonated;
 use Authorization\User\User\Domain\Event\UserRegistered;
 use Authorization\User\User\Domain\Event\UserUpdated;
 use Authorization\User\User\Domain\Exception\ChangeMyThemeException;
@@ -155,6 +156,24 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
             occurredOn: $now,
             tenantId: $this->tenantId,
             email: $this->email,
+        ));
+    }
+
+    public function impersonate(
+        string $impersonatorUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $this->record(event: new UserImpersonated(
+            aggregateId: $this->id,
+            occurredOn: $dateTimeGenerator->now(),
+            username: $this->username,
+            email: $this->email,
+            name: $this->name,
+            lastname: $this->lastname,
+            role: $this->role,
+            tenantId: $this->tenantId,
+            isActive: $this->isActive,
+            impersonatorUserId: $impersonatorUserId,
         ));
     }
 

@@ -5,3 +5,14 @@ services:
       $tenantProvisioner: '@Shared\Tenant\Tenant\Domain\Service\TenantProvisioner'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.authorization.event.1.user.access_granted' }
+
+  Authorization\User\User\Application\Subscriber\ImpersonationSubscriber:
+    class: Authorization\User\User\Application\Subscriber\ImpersonationSubscriber
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $tokenStorage: '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+      $jwtEncoder: '@Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface'
+      $impersonationRevoker: '@Authorization\User\User\Domain\Service\ImpersonationRevoker'
+      $impersonationContext: '@Shared\Shared\Shared\Domain\Service\ImpersonationContext'
+    tags:
+      - { name: kernel.event_subscriber }

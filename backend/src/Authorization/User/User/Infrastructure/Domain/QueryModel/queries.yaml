@@ -9,3 +9,8 @@ services:
     arguments:
       $masterConnection: '@doctrine.dbal.master_connection'
       $tenantConnection: '@doctrine.dbal.reader_tenant_connection'
+
+  Authorization\User\User\Domain\QueryModel\GetUserNeedleDataQuery:
+    class: Authorization\User\User\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetUserNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'

@@ -20,3 +20,14 @@ services:
 
   Authorization\User\User\Application\Query\GetMyProfile\GetMyProfileDataTransform:
     class: Authorization\User\User\Infrastructure\UI\API\DataTransform\ApiGetMyProfileDataTransform
+
+  Authorization\User\User\Application\Query\GetUser\GetUserQueryHandler:
+    class: Authorization\User\User\Application\Query\GetUser\GetUserQueryHandler
+    arguments:
+      $needleDataQuery: '@Authorization\User\User\Domain\QueryModel\GetUserNeedleDataQuery'
+      $dataTransform: '@Authorization\User\User\Application\Query\GetUser\GetUserDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Authorization\User\User\Application\Query\GetUser\GetUserDataTransform:
+    class: Authorization\User\User\Infrastructure\UI\API\DataTransform\ApiGetUserDataTransform

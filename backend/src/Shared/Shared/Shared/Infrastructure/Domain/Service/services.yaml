@@ -1,3 +1,6 @@
 services:
   Shared\Shared\Shared\Domain\Service\DomainEventCollectorService:
     class: Shared\Shared\Shared\Domain\Service\DomainEventCollectorService
+
+  Shared\Shared\Shared\Domain\Service\ImpersonationContext:
+    class: Shared\Shared\Shared\Domain\Service\ImpersonationContext

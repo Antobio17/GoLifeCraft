@@ -8,4 +8,13 @@ export const USERS_ROUTES: Routes = [
     loadComponent: () =>
       import("../components/users.component").then((m) => m.UsersComponent),
   },
+  {
+    path: ":id",
+    canActivate: [godOnlyGuard],
+    data: { breadcrumb: "userDetail.breadcrumb" },
+    loadComponent: () =>
+      import("../components/user-detail.component").then(
+        (m) => m.UserDetailComponent,
+      ),
+  },
 ];
