@@ -1,8 +1,8 @@
 import { Signal, computed } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { catchError, finalize } from "rxjs/operators";
-import { AuthSession } from "../../domain/models/auth-session.model";
 import { Impersonation } from "../../domain/models/impersonation.model";
+import { ImpersonationToken } from "../../domain/models/impersonation-token.model";
 import { ImpersonationSessionPort } from "../../domain/ports/impersonation-session.port";
 import { RevokeImpersonationPort } from "../../domain/ports/revoke-impersonation.port";
 import { AuthSessionService } from "./auth-session.service";
@@ -24,14 +24,20 @@ export class ImpersonationService {
     this.isImpersonating = computed(() => this.impersonation() !== null);
   }
 
-  start(impersonation: Impersonation, session: AuthSession): void {
+  start(impersonation: Impersonation, token: ImpersonationToken): void {
     const originalSession =
       this.port.get()?.originalSession ?? this.authSessionService.getSession();
 
     if (!originalSession) return;
 
     this.port.save({ impersonation, originalSession });
-    this.authSessionService.saveSession(session);
+    this.authSessionService.saveSession({
+      ...originalSession,
+      token: token.token,
+      expiresAt: token.expiresAt,
+      tokenType: token.tokenType,
+      refreshToken: undefined,
+    });
   }
 
   revokeAndStop(): Observable<void> {

@@ -5,7 +5,6 @@ namespace Authorization\User\User\Application\Subscriber;
 use Authorization\User\User\Domain\Model\User;
 use Authorization\User\User\Domain\Service\ImpersonationRevoker;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Shared\Shared\Shared\Domain\Service\ImpersonationContext;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +21,6 @@ final class ImpersonationSubscriber implements EventSubscriberInterface
         private readonly TokenStorageInterface $tokenStorage,
         private readonly JWTEncoderInterface $jwtEncoder,
         private readonly ImpersonationRevoker $impersonationRevoker,
-        private readonly ImpersonationContext $impersonationContext,
     ) {
     }
 
@@ -57,11 +55,8 @@ final class ImpersonationSubscriber implements EventSubscriberInterface
         }
 
         $request->attributes->set(key: 'tenantSessionId', value: $tenantId);
-        $request->attributes->set(key: 'userSessionId', value: $impersonatedUserId);
-        $request->attributes->set(key: 'impersonatorUserId', value: $user->id);
         $request->attributes->set(key: 'impersonationTokenId', value: $tokenId);
 
-        $this->impersonationContext->set(impersonatorUserId: $user->id);
         $this->switcher->switch(tenantId: $tenantId);
     }
 

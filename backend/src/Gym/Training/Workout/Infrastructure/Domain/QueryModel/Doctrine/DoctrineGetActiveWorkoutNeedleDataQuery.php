@@ -13,7 +13,7 @@ final readonly class DoctrineGetActiveWorkoutNeedleDataQuery implements GetActiv
     {
     }
 
-    public function findActiveWorkoutByUser(string $userId): ?GetWorkoutResult
+    public function findActiveWorkout(): ?GetWorkoutResult
     {
         $row = $this->connection->createQueryBuilder()
             ->select(
@@ -30,9 +30,7 @@ final readonly class DoctrineGetActiveWorkoutNeedleDataQuery implements GetActiv
                 'w.updated_by_user_id'
             )
             ->from(table: 'training_workout', alias: 'w')
-            ->where('w.created_by_user_id = :userId')
-            ->andWhere('w.status = :status')
-            ->setParameter(key: 'userId', value: $userId)
+            ->where('w.status = :status')
             ->setParameter(key: 'status', value: Workout::STATUS_IN_PROGRESS)
             ->orderBy('w.started_at', 'DESC')
             ->setMaxResults(1)

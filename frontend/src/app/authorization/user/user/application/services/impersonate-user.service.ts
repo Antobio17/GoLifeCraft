@@ -28,20 +28,7 @@ export class ImpersonateUserService {
         tenantId: user.tenantId,
         expiresAt: expires_at,
       },
-      {
-        token,
-        expiresAt: expires_at,
-        tokenType: token_type,
-        user: {
-          username: user.email,
-          email: user.email,
-          name: user.name,
-          lastname: user.lastname,
-          roles: user.roles,
-          role: user.role,
-        },
-        email: user.email,
-      },
+      { token, expiresAt: expires_at, tokenType: token_type },
     );
   }
 }

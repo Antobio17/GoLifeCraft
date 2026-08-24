@@ -6,7 +6,6 @@ use Shared\Shared\DomainEventLog\Domain\Model\DomainEventLog;
 use Shared\Shared\DomainEventLog\Domain\Model\DomainEventLogRepository;
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
-use Shared\Shared\Shared\Domain\Service\ImpersonationContext;
 use Shared\Tenant\Tenant\Domain\Service\TenantContext;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 use Symfony\Component\Messenger\Envelope;
@@ -20,7 +19,6 @@ final readonly class DomainEventMiddleware implements MiddlewareInterface
         private DomainEventLogRepository $domainEventLogRepository,
         private DateTimeGenerator $dateTimeGenerator,
         private TenantContext $tenantContext,
-        private ImpersonationContext $impersonationContext,
         private array $subscribers,
     ) {
     }
@@ -78,13 +76,6 @@ final readonly class DomainEventMiddleware implements MiddlewareInterface
 
             $payload[$property->getName()] = $value;
         }
-
-        $impersonatorUserId = $this->impersonationContext->get();
-        if (null === $impersonatorUserId) {
-            return $payload;
-        }
-
-        $payload['impersonatorUserId'] = $impersonatorUserId;
 
         return $payload;
     }

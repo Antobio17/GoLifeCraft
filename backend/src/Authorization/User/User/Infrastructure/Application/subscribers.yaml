@@ -13,6 +13,5 @@ services:
       $tokenStorage: '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
       $jwtEncoder: '@Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface'
       $impersonationRevoker: '@Authorization\User\User\Domain\Service\ImpersonationRevoker'
-      $impersonationContext: '@Shared\Shared\Shared\Domain\Service\ImpersonationContext'
     tags:
       - { name: kernel.event_subscriber }

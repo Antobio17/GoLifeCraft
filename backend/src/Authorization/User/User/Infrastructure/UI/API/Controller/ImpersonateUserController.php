@@ -27,8 +27,7 @@ final class ImpersonateUserController
 
     public function __invoke(Request $request): JsonResponse
     {
-        $impersonatorUserId = RequestExtractor::getImpersonatorUserId(request: $request)
-            ?? RequestExtractor::getUserSessionId(request: $request);
+        $impersonatorUserId = RequestExtractor::getUserSessionId(request: $request);
         $targetUserId = $request->attributes->get(key: 'id');
 
         try {
@@ -62,8 +61,6 @@ final class ImpersonateUserController
                         'email' => $impersonationToken->impersonatedUser->email,
                         'name' => $impersonationToken->impersonatedUser->name,
                         'lastname' => $impersonationToken->impersonatedUser->lastname,
-                        'roles' => $impersonationToken->impersonator->getRoles(),
-                        'role' => $impersonationToken->impersonator->role,
                         'tenantId' => $impersonationToken->impersonatedUser->tenantId,
                     ],
                 ],

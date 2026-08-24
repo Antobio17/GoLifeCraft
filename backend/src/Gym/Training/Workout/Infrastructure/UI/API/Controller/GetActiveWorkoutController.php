@@ -5,7 +5,6 @@ namespace Gym\Training\Workout\Infrastructure\UI\API\Controller;
 use Gym\Training\Workout\Application\Query\GetActiveWorkoutQuery;
 use Gym\Training\Workout\Domain\Exception\GetWorkoutException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
-use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,9 +26,7 @@ final class GetActiveWorkoutController
     {
         try {
             return JsonResponseBuilder::buildSingleResponse(
-                querySingleResult: $this->handle(message: new GetActiveWorkoutQuery(
-                    userId: RequestExtractor::getUserSessionId(request: $request),
-                )),
+                querySingleResult: $this->handle(message: new GetActiveWorkoutQuery()),
             );
         } catch (HandlerFailedException $e) {
             if ($e->getPrevious() instanceof GetWorkoutException) {

@@ -16,9 +16,7 @@ final readonly class GetActiveWorkoutQueryHandler
 
     public function __invoke(GetActiveWorkoutQuery $query): QueryResult
     {
-        $workout = $this->needleDataQuery->findActiveWorkoutByUser(
-            userId: $query->userId,
-        );
+        $workout = $this->needleDataQuery->findActiveWorkout();
 
         if (null === $workout) {
             throw GetWorkoutException::noActiveWorkout();
