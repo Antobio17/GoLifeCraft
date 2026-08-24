@@ -30,3 +30,18 @@ change_my_theme:
   path: /api/v1/authorization/me/theme
   methods: [PUT]
   controller: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyThemeController
+
+get_user:
+  path: /api/v1/authorization/users/{id}
+  methods: [GET]
+  controller: Authorization\User\User\Infrastructure\UI\API\Controller\GetUserController
+
+impersonate_user:
+  path: /api/v1/authorization/users/{id}/impersonation
+  methods: [POST]
+  controller: Authorization\User\User\Infrastructure\UI\API\Controller\ImpersonateUserController
+
+revoke_impersonation:
+  path: /api/v1/authorization/impersonation
+  methods: [DELETE]
+  controller: Authorization\User\User\Infrastructure\UI\API\Controller\RevokeImpersonationController

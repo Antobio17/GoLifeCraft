@@ -29,3 +29,17 @@ services:
 
     Authorization\User\User\Infrastructure\Domain\Service\Security\ActiveUserChecker:
         class: Authorization\User\User\Infrastructure\Domain\Service\Security\ActiveUserChecker
+
+    Authorization\User\User\Domain\Service\ImpersonationTokenGenerator:
+        class: Authorization\User\User\Infrastructure\Domain\Service\Security\LexikImpersonationTokenGenerator
+        arguments:
+            $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+            $jwtManager: '@Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface'
+            $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+            $ttlSeconds: '%env(int:IMPERSONATION_TOKEN_TTL_SECONDS)%'
+
+    Authorization\User\User\Domain\Service\ImpersonationRevoker:
+        class: Authorization\User\User\Infrastructure\Domain\Service\Security\CacheImpersonationRevoker
+        arguments:
+            $cache: '@cache.app'
+            $ttlSeconds: '%env(int:IMPERSONATION_TOKEN_TTL_SECONDS)%'

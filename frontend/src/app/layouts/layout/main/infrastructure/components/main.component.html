@@ -1,6 +1,16 @@
 <div class="app-frame" [class.app-frame--with-tabbar]="showTabBar()">
   <app-floating-toast></app-floating-toast>
 
+  @if (impersonation(); as active) {
+    <ds-impersonation-bar
+      [label]="'impersonation.bar.label' | t"
+      [name]="active.name"
+      [exitLabel]="'impersonation.bar.exit' | t"
+      [exitAriaLabel]="'impersonation.bar.exitAria' | t"
+      (exited)="exitImpersonation()"
+    ></ds-impersonation-bar>
+  }
+
   <div class="app-frame__content">
     <router-outlet></router-outlet>
   </div>

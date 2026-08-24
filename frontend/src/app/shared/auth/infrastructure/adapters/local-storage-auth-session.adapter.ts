@@ -20,9 +20,12 @@ export class LocalStorageAuthSessionAdapter extends AuthSessionPort {
     localStorage.setItem(this.KEYS.USER, JSON.stringify(session.user));
     localStorage.setItem(this.KEYS.EMAIL, session.email);
 
-    if (session.refreshToken) {
-      localStorage.setItem(this.KEYS.REFRESH_TOKEN, session.refreshToken);
+    if (!session.refreshToken) {
+      localStorage.removeItem(this.KEYS.REFRESH_TOKEN);
+      return;
     }
+
+    localStorage.setItem(this.KEYS.REFRESH_TOKEN, session.refreshToken);
   }
 
   get(): AuthSession | null {

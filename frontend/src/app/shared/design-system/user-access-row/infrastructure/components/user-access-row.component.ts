@@ -6,7 +6,14 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
     <div class="ds-uar" [class.ds-uar--inactive]="!active">
       <div class="ds-uar__avatar">{{ initial }}</div>
 
-      <div class="ds-uar__body">
+      <button
+        type="button"
+        class="ds-uar__body"
+        [class.ds-uar__body--selectable]="selectable"
+        [disabled]="!selectable"
+        [attr.aria-label]="selectAriaLabel || null"
+        (click)="selected.emit()"
+      >
         <div class="ds-uar__name">{{ name }}</div>
         <div class="ds-uar__email">{{ email }}</div>
         <div class="ds-uar__badges">
@@ -46,7 +53,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
             {{ verified ? verifiedLabel : unverifiedLabel }}
           </span>
         </div>
-      </div>
+      </button>
 
       <button
         type="button"
@@ -100,6 +107,17 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       .ds-uar__body {
         flex: 1 1 auto;
         min-width: 0;
+        appearance: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+      }
+      .ds-uar__body--selectable {
+        cursor: pointer;
       }
       .ds-uar__name {
         font-size: var(--ds-text-lg);
@@ -207,5 +225,8 @@ export class UserAccessRowComponent {
   @Input() inactiveLabel = "";
   @Input() disabled = false;
   @Input() ariaLabel = "";
+  @Input() selectable = false;
+  @Input() selectAriaLabel = "";
   @Output() toggled = new EventEmitter<void>();
+  @Output() selected = new EventEmitter<void>();
 }

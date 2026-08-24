@@ -9,6 +9,7 @@ import { Observable, throwError } from "rxjs";
 import { catchError, finalize, shareReplay, switchMap } from "rxjs/operators";
 import { AuthSessionService } from "../../application/services/auth-session.service";
 import { SessionRefreshService } from "../../application/services/session-refresh.service";
+import { ImpersonationService } from "../../application/services/impersonation.service";
 import { AuthSession } from "../../domain/models/auth-session.model";
 
 let refreshInProgress: Observable<AuthSession> | null = null;
@@ -34,6 +35,7 @@ const logout = (authSession: AuthSessionService, router: Router): void => {
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authSession = inject(AuthSessionService);
   const sessionRefresh = inject(SessionRefreshService);
+  const impersonation = inject(ImpersonationService);
   const router = inject(Router);
   const session = authSession.getSession();
 
@@ -43,6 +45,12 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authenticatedRequest).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status !== 401 || isAuthEndpoint(req.url)) {
+        return throwError(() => error);
+      }
+
+      if (impersonation.isImpersonating()) {
+        impersonation.stop();
+        router.navigate(["/users"]);
         return throwError(() => error);
       }
 

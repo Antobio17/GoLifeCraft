@@ -81,7 +81,10 @@
                 [inactiveLabel]="'users.access.inactive' | t"
                 [disabled]="row.saving"
                 [ariaLabel]="'users.access.toggleAria' | t"
+                [selectable]="true"
+                [selectAriaLabel]="'users.openAria' | t"
                 (toggled)="onToggle(row)"
+                (selected)="openUser(row)"
               ></ds-user-access-row>
             }
           }

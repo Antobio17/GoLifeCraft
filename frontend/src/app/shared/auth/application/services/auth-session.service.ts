@@ -1,12 +1,16 @@
 import { Signal, WritableSignal, signal } from "@angular/core";
 import { AuthSession, AuthUser } from "../../domain/models/auth-session.model";
 import { AuthSessionPort } from "../../domain/ports/auth-session.port";
+import { ImpersonationSessionPort } from "../../domain/ports/impersonation-session.port";
 
 export class AuthSessionService {
   private readonly _session: WritableSignal<AuthSession | null>;
   readonly session: Signal<AuthSession | null>;
 
-  constructor(private port: AuthSessionPort) {
+  constructor(
+    private port: AuthSessionPort,
+    private impersonationSessionPort: ImpersonationSessionPort,
+  ) {
     this._session = signal(this.port.get());
     this.session = this._session.asReadonly();
   }
@@ -21,6 +25,7 @@ export class AuthSessionService {
   }
 
   clearSession(): void {
+    this.impersonationSessionPort.clear();
     this.port.clear();
     this._session.set(null);
   }

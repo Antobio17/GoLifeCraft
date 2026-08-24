@@ -388,4 +388,9 @@ final class RequestExtractor
     {
         return $request->attributes->get(key: 'tenantSessionId');
     }
+
+    public static function getImpersonatorUserId(Request $request): ?string
+    {
+        return $request->attributes->get(key: 'impersonatorUserId');
+    }
 }

@@ -13,6 +13,7 @@ import { of, throwError } from "rxjs";
 import { authTokenInterceptor } from "./auth-token.interceptor";
 import { AuthSessionService } from "../../application/services/auth-session.service";
 import { SessionRefreshService } from "../../application/services/session-refresh.service";
+import { ImpersonationService } from "../../application/services/impersonation.service";
 import { AuthSession } from "../../domain/models/auth-session.model";
 
 const mockSession: AuthSession = {
@@ -30,6 +31,7 @@ describe("authTokenInterceptor", () => {
   let mockAuthSession: jasmine.SpyObj<AuthSessionService>;
   let mockSessionRefresh: jasmine.SpyObj<SessionRefreshService>;
   let mockRouter: jasmine.SpyObj<Router>;
+  let mockImpersonation: jasmine.SpyObj<ImpersonationService>;
 
   beforeEach(() => {
     mockAuthSession = jasmine.createSpyObj("AuthSessionService", [
@@ -42,6 +44,11 @@ describe("authTokenInterceptor", () => {
     mockRouter = jasmine.createSpyObj("Router", ["navigate"], {
       url: "/dashboard",
     });
+    mockImpersonation = jasmine.createSpyObj("ImpersonationService", [
+      "isImpersonating",
+      "stop",
+    ]);
+    mockImpersonation.isImpersonating.and.returnValue(false);
 
     TestBed.configureTestingModule({
       providers: [
@@ -50,6 +57,7 @@ describe("authTokenInterceptor", () => {
         { provide: AuthSessionService, useValue: mockAuthSession },
         { provide: SessionRefreshService, useValue: mockSessionRefresh },
         { provide: Router, useValue: mockRouter },
+        { provide: ImpersonationService, useValue: mockImpersonation },
       ],
     });
 

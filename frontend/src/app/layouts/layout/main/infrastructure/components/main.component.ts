@@ -6,6 +6,9 @@ import { BottomNavComponent } from "@layouts/layout/bottom-nav/infrastructure/co
 import { SideDrawerComponent } from "@layouts/layout/side-drawer/infrastructure/components/side-drawer.component";
 import { ActiveWorkoutBannerComponent } from "@gym/training/workout/infrastructure/components/active-workout-banner.component";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { ImpersonationService } from "@shared/auth/application/services/impersonation.service";
+import { ImpersonationBarComponent } from "@shared/design-system/impersonation-bar/infrastructure/components/impersonation-bar.component";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { GetMyProfileService } from "@authorization/user/user/application/services/get-my-profile.service";
 import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/providers/get-my-profile.provider";
 
@@ -17,6 +20,8 @@ import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/pr
     BottomNavComponent,
     SideDrawerComponent,
     ActiveWorkoutBannerComponent,
+    ImpersonationBarComponent,
+    ContextualTranslatePipe,
   ],
   providers: [...GetMyProfileProvider.getProviders()],
   styleUrls: ["./main.component.css"],
@@ -26,8 +31,10 @@ export class MainLayoutComponent implements OnInit {
   private router = inject(Router);
   private authSessionService = inject(AuthSessionService);
   private getMyProfileService = inject(GetMyProfileService);
+  private impersonationService = inject(ImpersonationService);
 
   showTabBar = signal(this.computeShowTabBar());
+  readonly impersonation = this.impersonationService.impersonation;
 
   ngOnInit(): void {
     this.router.events
@@ -35,6 +42,12 @@ export class MainLayoutComponent implements OnInit {
       .subscribe(() => this.showTabBar.set(this.computeShowTabBar()));
 
     this.refreshProfileName();
+  }
+
+  exitImpersonation(): void {
+    this.impersonationService
+      .revokeAndStop()
+      .subscribe({ complete: () => this.router.navigate(["/users"]) });
   }
 
   private refreshProfileName(): void {
