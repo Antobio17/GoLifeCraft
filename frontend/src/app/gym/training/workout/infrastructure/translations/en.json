@@ -113,6 +113,14 @@
             "description": "Also create a template with these exercises to repeat it."
           }
         }
+      },
+      "reorder": {
+        "title": "Reorder exercises",
+        "body": "Drag by the handle to rearrange. Nothing is applied until you save.",
+        "save": "Save order",
+        "cancel": "Cancel",
+        "drag": "Drag to reorder",
+        "trigger": "Reorder exercises, currently {{name}}"
       }
     }
   }

@@ -32,6 +32,16 @@ export class HttpSaveSessionExerciseAdapter extends SaveSessionExercisePort {
     );
   }
 
+  reorderSessionExercises(
+    sessionId: string,
+    orderedSessionExerciseIds: string[],
+  ): Observable<void> {
+    return this.http.patch<void>(
+      `${this.apiUrl}/${sessionId}/exercises/order`,
+      { order: orderedSessionExerciseIds },
+    );
+  }
+
   removeSessionExercise(
     sessionId: string,
     sessionExerciseId: string,

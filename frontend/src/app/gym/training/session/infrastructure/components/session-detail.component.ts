@@ -12,8 +12,8 @@ import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { NgTemplateOutlet } from "@angular/common";
-import { Observable, of } from "rxjs";
-import { tap } from "rxjs/operators";
+import { Observable, forkJoin, of } from "rxjs";
+import { map, switchMap, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -29,6 +29,9 @@ import { CardComponent } from "@shared/design-system/card/infrastructure/compone
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { PositionChipComponent } from "@shared/design-system/position-chip/infrastructure/components/position-chip.component";
+import { ReorderSheetComponent } from "@shared/design-system/reorder-sheet/infrastructure/components/reorder-sheet.component";
+import { ReorderSheetItem } from "@shared/design-system/reorder-sheet/domain/models/reorder-sheet-item.model";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
@@ -107,6 +110,8 @@ import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-s
     HeadingComponent,
     TextComponent,
     ChipComponent,
+    PositionChipComponent,
+    ReorderSheetComponent,
     IconComponent,
     IconButtonComponent,
     IconBadgeComponent,
@@ -155,6 +160,7 @@ export class SessionDetailComponent implements OnInit {
   readonly skeletonExercises = [3, 4, 3];
 
   loading = signal(true);
+  private readonly ORDER_KEY = "exercises-order";
   private readonly persistedExercises = new Set<string>();
 
   name = signal("");
@@ -168,6 +174,24 @@ export class SessionDetailComponent implements OnInit {
       modeLabel: this.modeLabel(exercise.type),
     })),
   );
+
+  reorderExerciseId = signal<string | null>(null);
+
+  reorderOpen = computed(() => this.reorderExerciseId() !== null);
+
+  reorderItems = computed<ReorderSheetItem[]>(() =>
+    this.exerciseRows().map((exercise) => ({
+      id: exercise.id,
+      label: exercise.exerciseName,
+      meta: exercise.muscleLabel,
+    })),
+  );
+
+  reorderTitle = computed(() => this.t("getSession.reorder.title"));
+  reorderBody = computed(() => this.t("getSession.reorder.body"));
+  reorderSaveLabel = computed(() => this.t("getSession.reorder.save"));
+  reorderCancelLabel = computed(() => this.t("getSession.reorder.cancel"));
+  reorderDragLabel = computed(() => this.t("getSession.reorder.drag"));
 
   statsLoading = signal(true);
   workouts = signal<SessionWorkoutStats[]>([]);
@@ -575,6 +599,46 @@ export class SessionDetailComponent implements OnInit {
     });
   }
 
+  openReorder(exerciseId: string): void {
+    if (this.exercises().length < 2) {
+      return;
+    }
+
+    this.reorderExerciseId.set(exerciseId);
+  }
+
+  closeReorder(): void {
+    this.reorderExerciseId.set(null);
+  }
+
+  reorderAriaLabel(exerciseName: string): string {
+    return this.t("getSession.reorder.trigger", { name: exerciseName });
+  }
+
+  onReorderSaved(orderedIds: string[]): void {
+    this.reorderExerciseId.set(null);
+
+    const originalIndexes = this.sessionDraft.originalIndexes(
+      this.exercises(),
+      orderedIds,
+    );
+
+    if (originalIndexes.some((index) => index < 0)) {
+      return;
+    }
+
+    this.exercises.update((list) =>
+      this.sessionDraft.applyOrder(list, orderedIds),
+    );
+
+    if (this.isActiveHere) {
+      this.activeWorkout.reorderExercises(originalIndexes, this.toActive());
+      return;
+    }
+
+    this.autosave.push(this.ORDER_KEY, () => this.persistOrder(orderedIds));
+  }
+
   addSet(exerciseId: string): void {
     this.exercises.update((list) => this.sessionDraft.addSet(list, exerciseId));
     this.afterEdit(exerciseId);
@@ -749,6 +813,34 @@ export class SessionDetailComponent implements OnInit {
     return this.saveSessionExerciseService
       .addSessionExercise(this.id(), sessionExerciseId, request)
       .pipe(tap(() => this.persistedExercises.add(sessionExerciseId)));
+  }
+
+  /**
+   * El servidor valida que el orden traiga exactamente sus ejercicios, así que los que
+   * aún no se hayan creado (recién añadidos, con el guardado en cola) van antes.
+   */
+  private persistOrder(orderedIds: string[]): Observable<unknown> {
+    const missing = orderedIds.filter(
+      (sessionExerciseId) => !this.persistedExercises.has(sessionExerciseId),
+    );
+
+    const ensured =
+      missing.length === 0
+        ? of(void 0)
+        : forkJoin(
+            missing.map((sessionExerciseId) =>
+              this.persistExercise(sessionExerciseId),
+            ),
+          ).pipe(map(() => void 0));
+
+    return ensured.pipe(
+      switchMap(() =>
+        this.saveSessionExerciseService.reorderSessionExercises(
+          this.id(),
+          orderedIds,
+        ),
+      ),
+    );
   }
 
   private exerciseKey(sessionExerciseId: string): string {

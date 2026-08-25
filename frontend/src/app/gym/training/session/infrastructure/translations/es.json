@@ -154,6 +154,14 @@
       "search": "Buscar en la biblioteca…",
       "clear": "Limpiar búsqueda",
       "empty": "No se han encontrado ejercicios"
+    },
+    "reorder": {
+      "title": "Ordenar ejercicios",
+      "body": "Arrastra por el asa para recolocar. Los cambios no se aplican hasta que guardes.",
+      "save": "Guardar orden",
+      "cancel": "Cancelar",
+      "drag": "Arrastrar para recolocar",
+      "trigger": "Ordenar ejercicios, ahora {{name}}"
     }
   },
   "session": {

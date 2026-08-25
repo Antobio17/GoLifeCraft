@@ -110,6 +110,44 @@ export class ActiveWorkoutService implements OnDestroy {
     this.queueProgress(exercises);
   }
 
+  reorderExercises(
+    originalIndexes: number[],
+    exercises: ActiveExercise[],
+  ): void {
+    if (!this.isActive()) {
+      return;
+    }
+
+    this.remapDoneKeys(originalIndexes);
+    this.queueProgress(exercises);
+  }
+
+  /**
+   * Las series hechas se guardan por índice de ejercicio, así que al recolocar la lista
+   * hay que moverlas con ella o los checks se quedan en el ejercicio equivocado.
+   */
+  private remapDoneKeys(originalIndexes: number[]): void {
+    const movedTo = new Map<number, number>();
+    originalIndexes.forEach((originalIndex, index) =>
+      movedTo.set(originalIndex, index),
+    );
+
+    const next = new Set<string>();
+
+    this.doneKeys().forEach((key) => {
+      const [exerciseIndex, setIndex] = key.split(":").map(Number);
+      const moved = movedTo.get(exerciseIndex);
+
+      if (undefined === moved) {
+        return;
+      }
+
+      next.add(this.doneKey(moved, setIndex));
+    });
+
+    this.doneKeys.set(next);
+  }
+
   start(
     sessionId: string | null,
     sessionName: string,

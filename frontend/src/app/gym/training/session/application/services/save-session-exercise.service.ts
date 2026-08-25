@@ -29,6 +29,16 @@ export class SaveSessionExerciseService {
     );
   }
 
+  reorderSessionExercises(
+    sessionId: string,
+    orderedSessionExerciseIds: string[],
+  ): Observable<void> {
+    return this.saveSessionExercisePort.reorderSessionExercises(
+      sessionId,
+      orderedSessionExerciseIds,
+    );
+  }
+
   removeSessionExercise(
     sessionId: string,
     sessionExerciseId: string,

@@ -7,6 +7,7 @@ use Gym\Training\Session\Domain\Event\SessionDeleted;
 use Gym\Training\Session\Domain\Event\SessionDetailsUpdated;
 use Gym\Training\Session\Domain\Event\SessionExerciseAdded;
 use Gym\Training\Session\Domain\Event\SessionExerciseRemoved;
+use Gym\Training\Session\Domain\Event\SessionExercisesReordered;
 use Gym\Training\Session\Domain\Event\SessionExerciseUpdated;
 use Gym\Training\Session\Domain\Event\SessionUpdated;
 use Gym\Training\Session\Domain\Exception\CreateSessionException;
@@ -218,6 +219,46 @@ class Session extends GenericAggregate
         ));
     }
 
+    /**
+     * @param string[] $orderedSessionExerciseIds
+     */
+    public function reorderExercises(
+        array $orderedSessionExerciseIds,
+        string $reorderedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $previousOrder = $this->exerciseIds();
+
+        if (!self::isSameSet(current: $previousOrder, ordered: $orderedSessionExerciseIds)) {
+            throw UpdateSessionException::sessionExerciseOrderMismatch(sessionId: $this->id);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->exercises = array_map(
+            callback: fn (string $sessionExerciseId): SessionExercise => $this->exercise(
+                sessionExerciseId: $sessionExerciseId,
+            ),
+            array: $orderedSessionExerciseIds,
+        );
+        $this->repositionExercises(updatedByUserId: $reorderedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        $this->stampUpdate(userId: $reorderedByUserId, now: $now);
+
+        $this->record(event: new SessionExercisesReordered(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            previousOrder: $previousOrder,
+            currentOrder: $this->exerciseIds(),
+            name: $this->name,
+            estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            exercises: $this->exercisesPayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $reorderedByUserId,
+        ));
+    }
+
     public function removeExercise(
         string $sessionExerciseId,
         string $removedByUserId,
@@ -257,6 +298,17 @@ class Session extends GenericAggregate
         }
 
         return $sessionExercise;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function exerciseIds(): array
+    {
+        return array_map(
+            callback: static fn (SessionExercise $sessionExercise): string => $sessionExercise->id,
+            array: array_values(array: $this->exercises),
+        );
     }
 
     public function nextExercisePosition(): int
@@ -340,6 +392,18 @@ class Session extends GenericAggregate
         }
 
         return null;
+    }
+
+    /**
+     * @param string[] $current
+     * @param string[] $ordered
+     */
+    private static function isSameSet(array $current, array $ordered): bool
+    {
+        sort(array: $current);
+        sort(array: $ordered);
+
+        return $current === $ordered;
     }
 
     private static function hasValidDuration(int $estimatedDurationMinutes): bool

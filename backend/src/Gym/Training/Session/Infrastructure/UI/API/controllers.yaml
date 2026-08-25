@@ -54,3 +54,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Gym\Training\Session\Infrastructure\UI\API\Controller\ReorderSessionExercisesController:
+    class: Gym\Training\Session\Infrastructure\UI\API\Controller\ReorderSessionExercisesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

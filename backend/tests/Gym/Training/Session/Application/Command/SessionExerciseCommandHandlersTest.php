@@ -10,6 +10,8 @@ use Gym\Training\Session\Application\Command\ExerciseSetAssembler;
 use Gym\Training\Session\Application\Command\ExerciseSetData;
 use Gym\Training\Session\Application\Command\RemoveSessionExerciseCommand;
 use Gym\Training\Session\Application\Command\RemoveSessionExerciseCommandHandler;
+use Gym\Training\Session\Application\Command\ReorderSessionExercisesCommand;
+use Gym\Training\Session\Application\Command\ReorderSessionExercisesCommandHandler;
 use Gym\Training\Session\Application\Command\SessionExerciseAssembler;
 use Gym\Training\Session\Application\Command\SessionExerciseData;
 use Gym\Training\Session\Application\Command\UpdateSessionDetailsCommand;
@@ -32,6 +34,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
     private AddSessionExerciseCommandHandler $addExerciseHandler;
     private UpdateSessionExerciseCommandHandler $updateExerciseHandler;
     private RemoveSessionExerciseCommandHandler $removeExerciseHandler;
+    private ReorderSessionExercisesCommandHandler $reorderExercisesHandler;
 
     protected function setUp(): void
     {
@@ -83,6 +86,11 @@ final class SessionExerciseCommandHandlersTest extends TestCase
             dateTimeGenerator: $dateTimeGenerator,
         );
         $this->removeExerciseHandler = new RemoveSessionExerciseCommandHandler(
+            sessionRepository: $this->sessionRepository,
+            domainEventCollectorService: $domainEventCollectorService,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+        $this->reorderExercisesHandler = new ReorderSessionExercisesCommandHandler(
             sessionRepository: $this->sessionRepository,
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
@@ -194,12 +202,107 @@ final class SessionExerciseCommandHandlersTest extends TestCase
         $this->assertCount(expectedCount: 1, haystack: $session->exercises);
     }
 
-    private function addCommand(): AddSessionExerciseCommand
+    public function testItAppliesTheWholeOrderInOneGo(): void
     {
+        ($this->addExerciseHandler)($this->addCommand());
+        ($this->addExerciseHandler)($this->addCommand(sessionExerciseId: 'session-exercise-3', exerciseId: 'exercise-3'));
+
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $firstId = $session->exercises[0]->id;
+
+        ($this->reorderExercisesHandler)(new ReorderSessionExercisesCommand(
+            sessionId: 'session-1',
+            orderedSessionExerciseIds: ['session-exercise-3', 'session-exercise-2', $firstId],
+            reorderedByUserId: 'god-user-id',
+        ));
+
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $this->assertEquals(
+            expected: ['exercise-3', 'exercise-2', 'exercise-1'],
+            actual: array_map(
+                callback: static fn ($sessionExercise): string => $sessionExercise->exerciseId,
+                array: $session->exercises,
+            ),
+        );
+        $this->assertEquals(
+            expected: [1, 2, 3],
+            actual: array_map(
+                callback: static fn ($sessionExercise): int => $sessionExercise->position,
+                array: $session->exercises,
+            ),
+        );
+    }
+
+    public function testReorderingKeepsTheSetsAttachedToTheirExercise(): void
+    {
+        ($this->addExerciseHandler)($this->addCommand());
+
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $firstId = $session->exercises[0]->id;
+
+        ($this->reorderExercisesHandler)(new ReorderSessionExercisesCommand(
+            sessionId: 'session-1',
+            orderedSessionExerciseIds: ['session-exercise-2', $firstId],
+            reorderedByUserId: 'god-user-id',
+        ));
+
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $this->assertEquals(expected: $firstId, actual: $session->exercises[1]->id);
+        $this->assertCount(expectedCount: 1, haystack: $session->exercises[1]->sets);
+        $this->assertEquals(expected: 40.0, actual: $session->exercises[1]->sets[0]->weight);
+    }
+
+    public function testReorderingWithTheSameOrderChangesNothing(): void
+    {
+        ($this->addExerciseHandler)($this->addCommand());
+
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $order = $session->exerciseIds();
+
+        ($this->reorderExercisesHandler)(new ReorderSessionExercisesCommand(
+            sessionId: 'session-1',
+            orderedSessionExerciseIds: $order,
+            reorderedByUserId: 'god-user-id',
+        ));
+
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $this->assertEquals(expected: $order, actual: $session->exerciseIds());
+    }
+
+    public function testItThrowsWhenTheOrderDoesNotMatchTheExercises(): void
+    {
+        ($this->addExerciseHandler)($this->addCommand());
+
+        $this->expectException(exception: UpdateSessionException::class);
+
+        ($this->reorderExercisesHandler)(new ReorderSessionExercisesCommand(
+            sessionId: 'session-1',
+            orderedSessionExerciseIds: ['session-exercise-2', 'missing-exercise'],
+            reorderedByUserId: 'god-user-id',
+        ));
+    }
+
+    public function testItThrowsWhenTheOrderDropsAnExercise(): void
+    {
+        ($this->addExerciseHandler)($this->addCommand());
+
+        $this->expectException(exception: UpdateSessionException::class);
+
+        ($this->reorderExercisesHandler)(new ReorderSessionExercisesCommand(
+            sessionId: 'session-1',
+            orderedSessionExerciseIds: ['session-exercise-2'],
+            reorderedByUserId: 'god-user-id',
+        ));
+    }
+
+    private function addCommand(
+        string $sessionExerciseId = 'session-exercise-2',
+        string $exerciseId = 'exercise-2',
+    ): AddSessionExerciseCommand {
         return new AddSessionExerciseCommand(
             sessionId: 'session-1',
-            sessionExerciseId: 'session-exercise-2',
-            exerciseId: 'exercise-2',
+            sessionExerciseId: $sessionExerciseId,
+            exerciseId: $exerciseId,
             sets: [new ExerciseSetData(position: 1, reps: 12, weight: 20.0)],
             note: null,
             addedByUserId: 'god-user-id',

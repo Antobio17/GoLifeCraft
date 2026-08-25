@@ -60,6 +60,32 @@ export class SessionDraftService {
     return list.filter((exercise) => exercise.id !== exerciseId);
   }
 
+  applyOrder(
+    list: SessionExerciseView[],
+    orderedIds: string[],
+  ): SessionExerciseView[] {
+    const ordered = orderedIds
+      .map((exerciseId) => list.find((exercise) => exercise.id === exerciseId))
+      .filter(
+        (exercise): exercise is SessionExerciseView => exercise !== undefined,
+      );
+
+    if (ordered.length !== list.length) {
+      return list;
+    }
+
+    return ordered.map((exercise, index) => ({
+      ...exercise,
+      position: index + 1,
+    }));
+  }
+
+  originalIndexes(list: SessionExerciseView[], orderedIds: string[]): number[] {
+    return orderedIds.map((exerciseId) =>
+      list.findIndex((exercise) => exercise.id === exerciseId),
+    );
+  }
+
   addSet(
     list: SessionExerciseView[],
     exerciseId: string,

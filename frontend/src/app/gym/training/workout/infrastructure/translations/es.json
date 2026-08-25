@@ -113,6 +113,14 @@
             "description": "Además crea una plantilla con estos ejercicios para repetirla."
           }
         }
+      },
+      "reorder": {
+        "title": "Ordenar ejercicios",
+        "body": "Arrastra por el asa para recolocar. Los cambios no se aplican hasta que guardes.",
+        "save": "Guardar orden",
+        "cancel": "Cancelar",
+        "drag": "Arrastrar para recolocar",
+        "trigger": "Ordenar ejercicios, ahora {{name}}"
       }
     }
   }

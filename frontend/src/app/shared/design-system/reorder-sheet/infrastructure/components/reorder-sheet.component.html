@@ -1,0 +1,66 @@
+<ds-modal-sheet
+  [open]="show"
+  [auto]="true"
+  [title]="title"
+  [closeLabel]="cancelLabel"
+  (closed)="cancelled.emit()"
+>
+  <ds-stack [gap]="'var(--ds-space-3)'">
+    @if (body) {
+      <ds-text variant="meta">{{ body }}</ds-text>
+    }
+
+    <div #list class="ds-reorder__list">
+      @for (item of draft(); track item.id; let i = $index) {
+        <div
+          class="ds-reorder__row"
+          [class.ds-reorder__row--current]="item.id === currentId"
+          [class.ds-reorder__row--dragged]="i === dragIndex()"
+          [class.ds-reorder__row--settling]="dragIndex() === null"
+          [style.transform]="rowTransform(i)"
+        >
+          <button
+            type="button"
+            class="ds-reorder__grip"
+            [attr.aria-label]="dragLabel"
+            (pointerdown)="onGripDown($event, i)"
+            (pointermove)="onGripMove($event)"
+            (pointerup)="onGripUp()"
+            (pointercancel)="onGripUp()"
+          >
+            <ds-icon name="grip" [size]="16" />
+          </button>
+
+          <span class="ds-reorder__position">{{ i + 1 }}</span>
+
+          <span class="ds-reorder__text">
+            <span class="ds-reorder__label">{{ item.label }}</span>
+            @if (item.meta) {
+              <span class="ds-reorder__meta">{{ item.meta }}</span>
+            }
+          </span>
+        </div>
+      }
+    </div>
+
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-button
+        variant="primary"
+        size="md"
+        [fullWidth]="true"
+        [disabled]="!dirty()"
+        (clicked)="saved.emit(orderedIds())"
+      >
+        {{ saveLabel }}
+      </ds-button>
+      <ds-button
+        variant="ghost"
+        size="md"
+        [fullWidth]="true"
+        (clicked)="cancelled.emit()"
+      >
+        {{ cancelLabel }}
+      </ds-button>
+    </ds-stack>
+  </ds-stack>
+</ds-modal-sheet>

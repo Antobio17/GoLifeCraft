@@ -42,6 +42,15 @@ final class UpdateSessionException extends BaseException
         );
     }
 
+    public static function sessionExerciseOrderMismatch(string $sessionId): self
+    {
+        return new static(
+            title: 'The given order does not match the exercises of the session.',
+            keyTranslation: 'session.exercise.order.mismatch',
+            details: ['sessionId' => $sessionId]
+        );
+    }
+
     public static function durationMustNotBeNegative(): self
     {
         return new static(

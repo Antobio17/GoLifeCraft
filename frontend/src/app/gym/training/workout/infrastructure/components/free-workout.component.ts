@@ -26,6 +26,9 @@ import { HeadingComponent } from "@shared/design-system/heading/infrastructure/c
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { PositionChipComponent } from "@shared/design-system/position-chip/infrastructure/components/position-chip.component";
+import { ReorderSheetComponent } from "@shared/design-system/reorder-sheet/infrastructure/components/reorder-sheet.component";
+import { ReorderSheetItem } from "@shared/design-system/reorder-sheet/domain/models/reorder-sheet-item.model";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
@@ -73,6 +76,8 @@ import { FreeWorkoutFinishMode } from "@gym/training/workout/domain/models/free-
     TextComponent,
     TextInputComponent,
     ChipComponent,
+    PositionChipComponent,
+    ReorderSheetComponent,
     IconButtonComponent,
     IconBadgeComponent,
     ButtonComponent,
@@ -111,6 +116,24 @@ export class FreeWorkoutComponent implements OnInit {
       modeLabel: this.modeLabel(exercise.type),
     })),
   );
+
+  reorderExerciseId = signal<string | null>(null);
+
+  reorderOpen = computed(() => this.reorderExerciseId() !== null);
+
+  reorderItems = computed<ReorderSheetItem[]>(() =>
+    this.exerciseRows().map((exercise) => ({
+      id: exercise.id,
+      label: exercise.exerciseName,
+      meta: exercise.muscleLabel,
+    })),
+  );
+
+  reorderTitle = computed(() => this.t("workout.free.reorder.title"));
+  reorderBody = computed(() => this.t("workout.free.reorder.body"));
+  reorderSaveLabel = computed(() => this.t("workout.free.reorder.save"));
+  reorderCancelLabel = computed(() => this.t("workout.free.reorder.cancel"));
+  reorderDragLabel = computed(() => this.t("workout.free.reorder.drag"));
 
   pickerOpen = signal(false);
   library = signal<Exercise[]>([]);
@@ -319,6 +342,40 @@ export class FreeWorkoutComponent implements OnInit {
       this.sessionDraft.removeExercise(list, exerciseId),
     );
     this.syncProgress();
+  }
+
+  openReorder(exerciseId: string): void {
+    if (this.exercises().length < 2) {
+      return;
+    }
+
+    this.reorderExerciseId.set(exerciseId);
+  }
+
+  closeReorder(): void {
+    this.reorderExerciseId.set(null);
+  }
+
+  reorderAriaLabel(exerciseName: string): string {
+    return this.t("workout.free.reorder.trigger", { name: exerciseName });
+  }
+
+  onReorderSaved(orderedIds: string[]): void {
+    this.reorderExerciseId.set(null);
+
+    const originalIndexes = this.sessionDraft.originalIndexes(
+      this.exercises(),
+      orderedIds,
+    );
+
+    if (originalIndexes.some((index) => index < 0)) {
+      return;
+    }
+
+    this.exercises.update((list) =>
+      this.sessionDraft.applyOrder(list, orderedIds),
+    );
+    this.activeWorkout.reorderExercises(originalIndexes, this.toActive());
   }
 
   addSet(exerciseId: string): void {

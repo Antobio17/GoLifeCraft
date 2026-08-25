@@ -14,6 +14,11 @@ export abstract class SaveSessionExercisePort {
     request: SaveSessionExerciseRequest,
   ): Observable<void>;
 
+  abstract reorderSessionExercises(
+    sessionId: string,
+    orderedSessionExerciseIds: string[],
+  ): Observable<void>;
+
   abstract removeSessionExercise(
     sessionId: string,
     sessionExerciseId: string,

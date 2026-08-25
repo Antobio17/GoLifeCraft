@@ -77,3 +77,12 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Session\Application\Command\ReorderSessionExercisesCommandHandler:
+    class: Gym\Training\Session\Application\Command\ReorderSessionExercisesCommandHandler
+    arguments:
+      $sessionRepository: '@Gym\Training\Session\Domain\Model\SessionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

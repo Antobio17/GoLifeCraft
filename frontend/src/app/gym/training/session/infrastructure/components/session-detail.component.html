@@ -190,7 +190,12 @@
                 align="center"
                 [gap]="'var(--ds-space-3)'"
               >
-                <ds-chip tone="brand">{{ i + 1 }}</ds-chip>
+                <ds-position-chip
+                  [position]="i + 1"
+                  [disabled]="exercises().length < 2"
+                  [ariaLabel]="reorderAriaLabel(exercise.exerciseName)"
+                  (clicked)="openReorder(exercise.id)"
+                />
                 <ds-stack [gap]="'2px'" [grow]="true">
                   <ds-heading [level]="3" size="sm">
                     {{ exercise.exerciseName }}
@@ -366,6 +371,19 @@
   [busy]="finishing()"
   (chosen)="onFinishModeChosen($event)"
   (cancelled)="onCancelFinish()"
+/>
+
+<ds-reorder-sheet
+  [items]="reorderItems()"
+  [show]="reorderOpen()"
+  [title]="reorderTitle()"
+  [body]="reorderBody()"
+  [currentId]="reorderExerciseId() ?? ''"
+  [saveLabel]="reorderSaveLabel()"
+  [cancelLabel]="reorderCancelLabel()"
+  [dragLabel]="reorderDragLabel()"
+  (saved)="onReorderSaved($event)"
+  (cancelled)="closeReorder()"
 />
 
 <ds-undo-bar

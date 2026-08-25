@@ -154,6 +154,14 @@
       "search": "Search the library…",
       "clear": "Clear search",
       "empty": "No exercises found"
+    },
+    "reorder": {
+      "title": "Reorder exercises",
+      "body": "Drag by the handle to rearrange. Nothing is applied until you save.",
+      "save": "Save order",
+      "cancel": "Cancel",
+      "drag": "Drag to reorder",
+      "trigger": "Reorder exercises, currently {{name}}"
     }
   },
   "session": {

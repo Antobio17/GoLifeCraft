@@ -33,6 +33,11 @@ update_session_exercise:
   methods: [PATCH]
   controller: Gym\Training\Session\Infrastructure\UI\API\Controller\UpdateSessionExerciseController
 
+reorder_session_exercises:
+  path: /api/v1/gym/session/{sessionId}/exercises/order
+  methods: [PATCH]
+  controller: Gym\Training\Session\Infrastructure\UI\API\Controller\ReorderSessionExercisesController
+
 remove_session_exercise:
   path: /api/v1/gym/session/{sessionId}/exercise/{sessionExerciseId}
   methods: [DELETE]
