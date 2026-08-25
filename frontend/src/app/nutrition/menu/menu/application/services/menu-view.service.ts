@@ -279,10 +279,6 @@ export class MenuViewService {
     ];
   }
 
-  itemQuantityLabel(item: MenuItemView, unitLabel: string): string {
-    return `${this.format(item.quantity)} ${unitLabel}`;
-  }
-
   itemKey(item: MenuItemView): string {
     return `${item.dayKey ?? "single"}:${item.meal}:${item.position}`;
   }

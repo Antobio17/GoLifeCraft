@@ -77,7 +77,6 @@
       "saveInvalid": "Los porcentajes deben sumar 100%",
       "upcomingScope": "Cambiar el objetivo afecta al día de hoy y a los días futuros que hayas planificado. Los días pasados conservan el suyo."
     },
-    "empty": "Sin alimentos registrados",
     "emptyAction": "Sin alimentos, añade uno desde el botón +",
     "error": "No hemos podido cargar el diario de este día",
     "quick": {

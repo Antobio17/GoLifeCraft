@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetSupermarketsProviders } from "../providers/get-supermarkets.providers";
 import { GetSupermarketProviders } from "../providers/get-supermarket.providers";
 import { CreateSupermarketProviders } from "../providers/create-supermarket.providers";
@@ -24,7 +23,6 @@ export const SUPERMARKET_ROUTES: Routes = [
       },
       {
         path: "create",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "supermarket.breadcrumb.create" },
         loadComponent: () =>
           import("../components/create-supermarket.component").then(
@@ -33,7 +31,6 @@ export const SUPERMARKET_ROUTES: Routes = [
       },
       {
         path: ":id/edit",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "supermarket.breadcrumb.edit" },
         loadComponent: () =>
           import("../components/update-supermarket.component").then(

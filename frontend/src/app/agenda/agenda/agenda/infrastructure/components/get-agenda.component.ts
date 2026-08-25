@@ -2,7 +2,6 @@ import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Observable } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -82,7 +81,6 @@ import { AgendaCalendarDay } from "@agenda/agenda/agenda/domain/models/agenda-ca
 })
 export class GetAgendaComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private authSession = inject(AuthSessionService);
   private getAgendaDayService = inject(GetAgendaDayService);
   private getAgendaCalendarService = inject(GetAgendaCalendarService);
   private createAgendaEntryService = inject(CreateAgendaEntryService);
@@ -107,8 +105,6 @@ export class GetAgendaComponent implements OnInit {
   protected entryForm = inject(AgendaEntryFormService);
 
   private readonly MODULE_PATH = "agenda/agenda/agenda";
-
-  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   day = signal<AgendaDayAttributes | null>(null);
@@ -275,8 +271,6 @@ export class GetAgendaComponent implements OnInit {
   }
 
   openNewSheet(): void {
-    if (!this.canWrite()) return;
-
     this.editingId.set(null);
     this.editingSeriesId.set(null);
     this.form.set(this.entryForm.empty(this.date()));
@@ -284,8 +278,6 @@ export class GetAgendaComponent implements OnInit {
   }
 
   openEditSheet(entry: AgendaEntryView): void {
-    if (!this.canWrite()) return;
-
     this.editingId.set(entry.id);
     this.editingSeriesId.set(entry.seriesId);
     this.sheetOpen.set(true);
@@ -348,8 +340,6 @@ export class GetAgendaComponent implements OnInit {
   }
 
   toggleEntry(entry: AgendaEntryView): void {
-    if (!this.canWrite()) return;
-
     const previousDay = this.day();
     const previousCalendarDays = this.calendarDays();
     const done = !entry.done;
@@ -372,8 +362,6 @@ export class GetAgendaComponent implements OnInit {
   }
 
   removeEntry(entry: AgendaEntryView): void {
-    if (!this.canWrite()) return;
-
     const request$ = entry.seriesId
       ? this.deleteAgendaEntrySeriesService.deleteAgendaEntrySeries(
           entry.seriesId,

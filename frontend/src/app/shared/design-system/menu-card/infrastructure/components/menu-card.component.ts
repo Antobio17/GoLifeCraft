@@ -24,34 +24,28 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       <ds-macro-badges [macros]="macros" />
 
       <div class="ds-mcard__actions">
-        @if (canWrite) {
-          <button type="button" class="ds-mcard__load" (click)="loaded.emit()">
-            <ds-icon [name]="loadIcon" [size]="14" [stroke]="2.4" />
-            {{ loadLabel }}
-          </button>
-          <button
-            type="button"
-            class="ds-mcard__action"
-            [attr.aria-label]="shopLabel"
-            [attr.title]="shopLabel"
-            (click)="shopped.emit()"
-          >
-            <ds-icon name="cart" [size]="17" [stroke]="2.1" />
-          </button>
-        }
+        <button type="button" class="ds-mcard__load" (click)="loaded.emit()">
+          <ds-icon [name]="loadIcon" [size]="14" [stroke]="2.4" />
+          {{ loadLabel }}
+        </button>
         <button
           type="button"
           class="ds-mcard__action"
-          [class.ds-mcard__action--wide]="!canWrite"
+          [attr.aria-label]="shopLabel"
+          [attr.title]="shopLabel"
+          (click)="shopped.emit()"
+        >
+          <ds-icon name="cart" [size]="17" [stroke]="2.1" />
+        </button>
+        <button
+          type="button"
+          class="ds-mcard__action"
           [disabled]="exporting"
           [attr.aria-label]="exportLabel"
           [attr.title]="exportLabel"
           (click)="exported.emit()"
         >
           <ds-icon name="share" [size]="17" [stroke]="2.1" />
-          @if (!canWrite) {
-            {{ exportLabel }}
-          }
         </button>
       </div>
     </div>
@@ -180,15 +174,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         color: var(--ds-text);
         border-radius: var(--ds-radius-lg);
       }
-      .ds-mcard__action--wide {
-        flex: 1 1 auto;
-        gap: var(--ds-space-1);
-        width: auto;
-        padding: var(--ds-space-2);
-        font: inherit;
-        font-size: var(--ds-text-base);
-        font-weight: var(--ds-weight-bold);
-      }
       .ds-mcard__action[disabled] {
         opacity: 0.55;
         cursor: default;
@@ -208,7 +193,6 @@ export class MenuCardComponent {
   @Input() shopLabel = "";
   @Input() exportLabel = "";
   @Input() exporting = false;
-  @Input() canWrite = false;
 
   @Output() activated = new EventEmitter<void>();
   @Output() loaded = new EventEmitter<void>();

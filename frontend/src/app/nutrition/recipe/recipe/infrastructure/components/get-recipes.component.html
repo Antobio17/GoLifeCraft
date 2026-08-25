@@ -3,17 +3,15 @@
     [title]="'getRecipes.heading' | t"
     [subtitle]="headerSubtitle()"
   >
-    @if (canWrite()) {
-      <ds-button
-        slot="actions"
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [ariaLabel]="'getRecipes.create' | t"
-        (clicked)="onCreate()"
-      />
-    }
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="'getRecipes.create' | t"
+      (clicked)="onCreate()"
+    />
   </ds-screen-header>
 
   @if (loading()) {

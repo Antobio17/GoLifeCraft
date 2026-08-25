@@ -36,7 +36,6 @@
     },
     "empty": {
       "title": "Nothing planned for this day",
-      "text": "There are no appointments or tasks for this day.",
       "textAction": "Add an appointment or a task you have to do."
     },
     "sheet": {

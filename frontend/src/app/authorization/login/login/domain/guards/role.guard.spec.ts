@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { Router, UrlTree } from "@angular/router";
-import { blockReadOnlyUserGuard, godOnlyGuard } from "./role.guard";
+import { godOnlyGuard } from "./role.guard";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { USER_ROLES } from "@authorization/domain/constants/user-roles.constants";
 
@@ -22,32 +22,6 @@ describe("role guards", () => {
         { provide: AuthSessionService, useValue: mockAuthSessionService },
         { provide: Router, useValue: mockRouter },
       ],
-    });
-  });
-
-  describe("blockReadOnlyUserGuard", () => {
-    it("should allow access for a god user", () => {
-      mockAuthSessionService.getCurrentUserRole.and.returnValue(USER_ROLES.GOD);
-
-      const result = TestBed.runInInjectionContext(() =>
-        blockReadOnlyUserGuard({} as never, {} as never),
-      );
-
-      expect(result).toBeTrue();
-      expect(mockRouter.createUrlTree).not.toHaveBeenCalled();
-    });
-
-    it("should redirect a read only user to /dashboard", () => {
-      mockAuthSessionService.getCurrentUserRole.and.returnValue(
-        USER_ROLES.USER,
-      );
-
-      const result = TestBed.runInInjectionContext(() =>
-        blockReadOnlyUserGuard({} as never, {} as never),
-      );
-
-      expect(result).toBe(redirectUrlTree);
-      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(["/dashboard"]);
     });
   });
 

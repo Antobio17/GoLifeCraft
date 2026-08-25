@@ -1,6 +1,5 @@
 import { Component, computed, inject, signal } from "@angular/core";
 import { Observable } from "rxjs";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -83,13 +82,10 @@ const WEEK_EMOJI = "🗓️";
 export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   private getMenusService = inject(GetMenusService);
   private exportMenuService = inject(ExportMenuService);
-  private authSession = inject(AuthSessionService);
   protected view = inject(MenuViewService);
 
   protected readonly modulePath = "nutrition/menu/menu";
   protected readonly storageKey = "pageSize_menus";
-
-  canWrite = computed(() => this.authSession.isGod());
 
   searchQuery = signal("");
   typeSheetOpen = signal(false);

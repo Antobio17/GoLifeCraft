@@ -710,8 +710,10 @@ Solo existen dos roles (ver `User::ROLE_HERARCHY` en backend y `USER_ROLES` en `
 
 | Rol | Alcance |
 |---|---|
-| `ROLE_GOD` | Acceso total (lectura y escritura). |
-| `ROLE_USER` | Usuario de solo lectura. El guard `blockReadOnlyUserGuard` lo bloquea en rutas de escritura. |
+| `ROLE_GOD` | Todo lo del `ROLE_USER` más la administración: listado de usuarios, entrar en un usuario como observador y los logs de Grafana. |
+| `ROLE_USER` | Rol por defecto al registrarse. Lee y escribe todo su propio tenant sin restricciones; solo queda fuera de la administración. |
+
+Cada usuario registrado tiene su propio tenant, así que escribir nunca alcanza los datos de otro: **no existe un rol de solo lectura y ninguna pantalla de negocio debe condicionar sus acciones al rol**. Lo único que se cierra por rol es la administración, y se cierra en un solo sitio: el `godOnlyGuard` en las rutas de `/users` y la sección `navbar.groupAdmin` del `DrawerNavSectionsService`, que solo se añade si `isGod`.
 
 ## Checklist frontend — nuevo caso de uso
 

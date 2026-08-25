@@ -111,7 +111,6 @@ const DEFAULT_RANGE_DAYS = 6;
                   [packLabel]="row.packLabel"
                   [quantity]="row.quantity"
                   [checked]="row.checked"
-                  [canWrite]="true"
                   [swipeable]="false"
                   [dimChecked]="false"
                   [toggleAriaLabel]="'getShopping.toggle' | t"
