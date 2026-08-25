@@ -26,7 +26,7 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
       .ds-poschip {
         display: inline-flex;
         align-items: center;
-        gap: 3px;
+        gap: var(--ds-space-1);
         appearance: none;
         cursor: pointer;
         font: inherit;
