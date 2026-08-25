@@ -50,16 +50,14 @@
         [ariaLabel]="'getDiary.calendar.open' | t"
         (clicked)="openCalendar()"
       />
-      @if (canWrite()) {
-        <ds-button
-          variant="secondary"
-          size="icon-lg"
-          icon="settings"
-          [iconSize]="19"
-          [ariaLabel]="'getDiary.goal.open' | t"
-          (clicked)="openGoalSheet()"
-        />
-      }
+      <ds-button
+        variant="secondary"
+        size="icon-lg"
+        icon="settings"
+        [iconSize]="19"
+        [ariaLabel]="'getDiary.goal.open' | t"
+        (clicked)="openGoalSheet()"
+      />
       <ds-icon-button
         icon="chevronLeft"
         variant="soft"
