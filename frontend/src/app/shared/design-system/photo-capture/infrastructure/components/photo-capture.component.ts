@@ -115,9 +115,9 @@ import { ImageResizerService } from "../../application/services/image-resizer.se
         justify-content: center;
         gap: var(--ds-space-1);
         cursor: pointer;
-        color: var(--ds-text-soft);
+        color: var(--ds-text-muted);
         background: var(--ds-surface-alt);
-        border: 1px dashed var(--ds-border-strong, var(--ds-border));
+        border: 1px dashed var(--ds-border-strong);
         border-radius: var(--ds-radius-lg);
         transition: border-color var(--ds-transition-fast);
       }
@@ -138,7 +138,7 @@ import { ImageResizerService } from "../../application/services/image-resizer.se
       .ds-photo-capture__hint {
         margin: 0;
         font-size: var(--ds-text-sm);
-        color: var(--ds-text-soft);
+        color: var(--ds-text-muted);
       }
       .ds-photo-capture__input {
         display: none;
