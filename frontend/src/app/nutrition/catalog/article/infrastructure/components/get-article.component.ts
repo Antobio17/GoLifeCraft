@@ -15,7 +15,6 @@ import { UpdateArticleStockService } from "@nutrition/pantry/stock/application/s
 import { StockViewService } from "@nutrition/pantry/stock/application/services/stock-view.service";
 import { ArticleStockView } from "@nutrition/pantry/stock/domain/models/article-stock-view.model";
 import { StockUnitMode } from "@nutrition/pantry/stock/domain/models/stock-unit-mode.model";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -85,7 +84,6 @@ export class GetArticleComponent {
   private deleteArticleService = inject(DeleteArticleService);
   private updateArticleStockService = inject(UpdateArticleStockService);
   private stockView = inject(StockViewService);
-  private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
 
   loading = signal(true);
@@ -93,7 +91,6 @@ export class GetArticleComponent {
   detail = signal<ArticleDetailView | null>(null);
   showDeleteModal = signal(false);
   deleting = signal(false);
-  canWrite = computed(() => this.authSession.isGod());
   mode = signal<NutritionMode>("per100");
   activeMacros = computed<ArticleMacroSet | null>(() => {
     const detail = this.detail();

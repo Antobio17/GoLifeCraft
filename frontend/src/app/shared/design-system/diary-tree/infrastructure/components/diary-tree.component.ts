@@ -35,7 +35,6 @@ const INDENT_PER_LEVEL_REM = 0.9375;
 export class DiaryTreeComponent {
   @Input() rows: DiaryTreeRow[] = [];
   @Input() title = "";
-  @Input() canWrite = false;
   @Input() showReset = false;
   @Input() resetMessage = "";
   @Input() resetLabel = "";

@@ -33,17 +33,15 @@
         (clicked)="nextMonth()"
       />
 
-      @if (canWrite()) {
-        <ds-icon-button
-          icon="settings"
-          variant="soft"
-          [size]="36"
-          [iconSize]="18"
-          [radius]="'var(--ds-radius-md)'"
-          [ariaLabel]="'getFinanceBudget.configure' | t"
-          (clicked)="goToSettings()"
-        />
-      }
+      <ds-icon-button
+        icon="settings"
+        variant="soft"
+        [size]="36"
+        [iconSize]="18"
+        [radius]="'var(--ds-radius-md)'"
+        [ariaLabel]="'getFinanceBudget.configure' | t"
+        (clicked)="goToSettings()"
+      />
     </ng-container>
   </ds-screen-header>
 
@@ -64,15 +62,13 @@
       [text]="'getFinanceBudget.empty.text' | t"
     />
 
-    @if (canWrite()) {
-      <ds-cta-row
-        icon="wallet"
-        [dashed]="true"
-        [title]="'getFinanceBudget.empty.ctaTitle' | t"
-        [subtitle]="'getFinanceBudget.empty.ctaText' | t"
-        (clicked)="goToSettings()"
-      />
-    }
+    <ds-cta-row
+      icon="wallet"
+      [dashed]="true"
+      [title]="'getFinanceBudget.empty.ctaTitle' | t"
+      [subtitle]="'getFinanceBudget.empty.ctaText' | t"
+      (clicked)="goToSettings()"
+    />
   } @else {
     <ds-stack
       direction="row"
@@ -255,10 +251,7 @@
           </ds-card>
 
           @if (selectedCategoryKey() === row.key) {
-            <ds-section-header
-              [title]="selectedCategoryTitle()"
-              size="md"
-            />
+            <ds-section-header [title]="selectedCategoryTitle()" size="md" />
 
             @if (loadingCategoryTransactions()) {
               <ds-card [padding]="'0'" [gap]="'0'">

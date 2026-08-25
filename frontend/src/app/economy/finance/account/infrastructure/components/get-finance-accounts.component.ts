@@ -3,7 +3,6 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, forkJoin, of, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -83,7 +82,6 @@ import { FinanceBalanceCheckRow } from "@economy/finance/balance-check/domain/mo
 })
 export class GetFinanceAccountsComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private authSession = inject(AuthSessionService);
   private router = inject(Router);
   private getFinanceAccountsService = inject(GetFinanceAccountsService);
   private createFinanceAccountService = inject(CreateFinanceAccountService);
@@ -112,8 +110,6 @@ export class GetFinanceAccountsComponent implements OnInit {
   private readonly MODULE_PATH = "economy/finance/account";
 
   protected readonly checkEmoji = "🧾";
-
-  canWrite = computed(() => this.authSession.isGod());
 
   readonly skeletonAccounts = [2, 1, 2];
 
@@ -205,8 +201,6 @@ export class GetFinanceAccountsComponent implements OnInit {
   }
 
   openNewAccountSheet(): void {
-    if (!this.canWrite()) return;
-
     const form = this.accountForm.empty();
 
     this.editingAccountId.set(null);
@@ -216,8 +210,6 @@ export class GetFinanceAccountsComponent implements OnInit {
   }
 
   openEditAccountSheet(account: FinanceAccount): void {
-    if (!this.canWrite()) return;
-
     const form = this.accountForm.fromAccount(account);
 
     this.editingAccountId.set(account.id);
@@ -264,7 +256,7 @@ export class GetFinanceAccountsComponent implements OnInit {
   deleteAccount(): void {
     const editingId = this.editingAccountId();
 
-    if (!this.canWrite() || editingId === null || this.saving()) return;
+    if (editingId === null || this.saving()) return;
 
     this.saving.set(true);
 
@@ -279,16 +271,12 @@ export class GetFinanceAccountsComponent implements OnInit {
   }
 
   openNewCheckSheet(account: FinanceAccount): void {
-    if (!this.canWrite()) return;
-
     this.editingCheckId.set(null);
     this.check.set(this.checkForm.empty(account.id, this.view.todayIso()));
     this.checkSheetOpen.set(true);
   }
 
   openEditCheckSheet(check: FinanceBalanceCheck): void {
-    if (!this.canWrite()) return;
-
     this.editingCheckId.set(check.id);
     this.check.set(this.checkForm.fromCheck(check));
     this.checkSheetOpen.set(true);
@@ -327,8 +315,6 @@ export class GetFinanceAccountsComponent implements OnInit {
   }
 
   removeCheck(check: FinanceBalanceCheck): void {
-    if (!this.canWrite()) return;
-
     this.deleteFinanceBalanceCheckService
       .deleteFinanceBalanceCheck(check.id)
       .subscribe({ next: () => this.load(true) });

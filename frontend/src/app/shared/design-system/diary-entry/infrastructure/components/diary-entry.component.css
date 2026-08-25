@@ -29,16 +29,3 @@ ds-text.diary-entry__name {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-
-ds-text.diary-entry__qty {
-  flex: 0 0 auto;
-  align-self: center;
-  background: var(--ds-surface-inset);
-  border-radius: var(--ds-radius-md);
-  padding: var(--ds-space-1) var(--ds-space-2);
-  font-family: var(--ds-font-display);
-  font-size: var(--ds-text-base);
-  font-weight: 800;
-  color: var(--ds-text);
-  white-space: nowrap;
-}

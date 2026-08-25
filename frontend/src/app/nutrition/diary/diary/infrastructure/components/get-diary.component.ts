@@ -13,7 +13,6 @@ import { UndoService } from "@shared/undo/application/services/undo.service";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
 import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -140,7 +139,6 @@ type PickerTab = "product" | "recipe" | "quick";
 })
 export class GetDiaryComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private authSession = inject(AuthSessionService);
   private getDiaryService = inject(GetDiaryService);
   private getDiaryCalendarService = inject(GetDiaryCalendarService);
   private getArticlesService = inject(GetArticlesService);
@@ -165,8 +163,6 @@ export class GetDiaryComponent implements OnInit {
   protected undo = inject(UndoService);
 
   private readonly MODULE_PATH = "nutrition/diary/diary";
-
-  canWrite = computed(() => this.authSession.isGod());
 
   readonly skeletonMeals = [2, 2, 1, 1];
 
@@ -249,8 +245,7 @@ export class GetDiaryComponent implements OnInit {
           "product" === entry.kind && entry.refId
             ? this.picker.unitOptions(entry.refId)
             : [],
-        quantityLabel: this.view.entryQuantityLabel(entry),
-        openable: this.canWrite() && "quick" === entry.kind,
+        openable: "quick" === entry.kind,
         expandable: entry.tree.length > 0,
         expanded: this.expandedEntries().has(entry.id),
         treeRows: this.expandedEntries().has(entry.id)
@@ -260,7 +255,7 @@ export class GetDiaryComponent implements OnInit {
               this.treeLabels(),
             )
           : [],
-        showReset: this.canWrite() && entry.customized,
+        showReset: entry.customized,
       })),
     })),
   );
@@ -458,7 +453,7 @@ export class GetDiaryComponent implements OnInit {
   }
 
   openQuickEditor(mealKey: string, entry: DiaryEntryView): void {
-    if (!this.canWrite() || entry.kind !== "quick") return;
+    if (entry.kind !== "quick") return;
 
     this.pickerMeal.set(mealKey);
     this.pickerTab.set("quick");

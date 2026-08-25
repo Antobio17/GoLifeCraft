@@ -122,10 +122,6 @@ export class DiaryViewService {
     return this.unitCatalog.label(entry.unit);
   }
 
-  entryQuantityLabel(entry: DiaryEntryView): string {
-    return `${this.format(entry.quantity)} ${this.entryUnitLabel(entry)}`;
-  }
-
   macroItems(macros: DiaryMacros, labels: MacroShortLabels): MacroBadge[] {
     return [
       { label: labels.protein, value: this.grams(macros.protein) },

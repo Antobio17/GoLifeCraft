@@ -8,7 +8,6 @@ import {
   RecipeViewService,
 } from "@nutrition/recipe/recipe/application/services/recipe-view.service";
 import { GetRecipesService } from "@nutrition/recipe/recipe/application/services/get-recipes.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -45,10 +44,7 @@ import {
 })
 export class GetRecipesComponent extends AbstractListPageComponent<RecipeListItem> {
   private getRecipesService = inject(GetRecipesService);
-  private authSession = inject(AuthSessionService);
   protected view = inject(RecipeViewService);
-
-  canWrite = computed(() => this.authSession.isGod());
 
   protected readonly modulePath = "nutrition/recipe/recipe";
   protected readonly storageKey = "pageSize_recipes";

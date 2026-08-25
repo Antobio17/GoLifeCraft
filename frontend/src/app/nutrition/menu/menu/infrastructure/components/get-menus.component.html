@@ -3,17 +3,15 @@
     [title]="'getMenus.title' | t"
     [subtitle]="headerSubtitle()"
   >
-    @if (canWrite()) {
-      <ds-button
-        slot="actions"
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [ariaLabel]="'getMenus.create' | t"
-        (clicked)="openTypeSheet()"
-      />
-    }
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="'getMenus.create' | t"
+      (clicked)="openTypeSheet()"
+    />
   </ds-screen-header>
 
   @if (loading()) {
@@ -74,7 +72,6 @@
               [shopLabel]="'getMenus.card.shop' | t"
               [exportLabel]="'getMenus.card.export' | t"
               [exporting]="exportingMenuId() === card.id"
-              [canWrite]="canWrite()"
               (activated)="onOpen(card)"
               (loaded)="onLoad(card)"
               (shopped)="onShop(card.id)"

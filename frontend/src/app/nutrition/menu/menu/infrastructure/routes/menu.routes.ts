@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/providers/get-articles.providers";
 import { GetRecipesProviders } from "@nutrition/recipe/recipe/infrastructure/providers/get-recipes.providers";
 import { ShoppingWriteProviders } from "@nutrition/shopping/shopping/infrastructure/providers/shopping-write.providers";
@@ -34,7 +33,6 @@ export const MENU_ROUTES: Routes = [
       },
       {
         path: "new",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "menu.breadcrumb.create", draftRoute: true },
         providers: [
           ...AutosaveProvider.getProviders(),

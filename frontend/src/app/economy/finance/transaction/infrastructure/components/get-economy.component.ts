@@ -3,7 +3,6 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -132,7 +131,6 @@ const EVOLUTION_MONTHS = 6;
 })
 export class GetEconomyComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private authSession = inject(AuthSessionService);
   private getFinanceOverviewService = inject(GetFinanceOverviewService);
   private getFinanceTransactionsService = inject(GetFinanceTransactionsService);
   private getFinanceCalendarService = inject(GetFinanceCalendarService);
@@ -158,8 +156,6 @@ export class GetEconomyComponent implements OnInit {
 
   private readonly MODULE_PATH = "economy/finance/transaction";
   private readonly BUDGET_MODULE_PATH = "economy/finance/budget";
-
-  canWrite = computed(() => this.authSession.isGod());
 
   readonly skeletonMovementGroups = [3, 2];
 
@@ -533,8 +529,6 @@ export class GetEconomyComponent implements OnInit {
   }
 
   openNewSheet(): void {
-    if (!this.canWrite()) return;
-
     this.editingId.set(null);
     this.form.set(
       this.transactionForm.empty(
@@ -546,8 +540,6 @@ export class GetEconomyComponent implements OnInit {
   }
 
   openEditSheet(transaction: FinanceTransactionView): void {
-    if (!this.canWrite()) return;
-
     this.editingId.set(transaction.id);
     this.form.set(this.transactionForm.fromView(transaction));
     this.sheetOpen.set(true);
@@ -608,8 +600,6 @@ export class GetEconomyComponent implements OnInit {
   }
 
   removeTransaction(transaction: FinanceTransactionView): void {
-    if (!this.canWrite()) return;
-
     this.deleteFinanceTransactionService
       .deleteFinanceTransaction(transaction.id)
       .subscribe({ next: () => this.reload() });

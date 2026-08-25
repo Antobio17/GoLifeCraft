@@ -10,17 +10,15 @@
     [subtitle]="'getFinanceAccounts.subtitle' | t"
     (leadingClick)="goBack()"
   >
-    @if (canWrite()) {
-      <ds-button
-        slot="actions"
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [ariaLabel]="'getFinanceAccounts.add' | t"
-        (clicked)="openNewAccountSheet()"
-      />
-    }
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="'getFinanceAccounts.add' | t"
+      (clicked)="openNewAccountSheet()"
+    />
   </ds-screen-header>
 
   @if (loading()) {
@@ -58,24 +56,18 @@
             />
           </ds-stack>
 
-          @if (canWrite()) {
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-2)'"
-            >
-              <ds-skeleton-line
-                width="7.5rem"
-                height="2rem"
-                radius="var(--ds-radius-lg)"
-              />
-              <ds-skeleton-line
-                width="2.125rem"
-                height="2.125rem"
-                radius="var(--ds-radius-md)"
-              />
-            </ds-stack>
-          }
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+            <ds-skeleton-line
+              width="7.5rem"
+              height="2rem"
+              radius="var(--ds-radius-lg)"
+            />
+            <ds-skeleton-line
+              width="2.125rem"
+              height="2.125rem"
+              radius="var(--ds-radius-md)"
+            />
+          </ds-stack>
 
           <ds-skeleton-line width="7rem" height="0.625rem" />
 
@@ -146,33 +138,27 @@
             }}</ds-heading>
           </ds-stack>
 
-          @if (canWrite()) {
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-2)'"
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+            <ds-button
+              variant="outline"
+              size="sm"
+              icon="wallet"
+              [iconSize]="16"
+              (clicked)="openNewCheckSheet(row.account)"
             >
-              <ds-button
-                variant="outline"
-                size="sm"
-                icon="wallet"
-                [iconSize]="16"
-                (clicked)="openNewCheckSheet(row.account)"
-              >
-                {{ "getFinanceAccounts.check.add" | t }}
-              </ds-button>
+              {{ "getFinanceAccounts.check.add" | t }}
+            </ds-button>
 
-              <ds-icon-button
-                icon="pencil"
-                variant="soft"
-                [size]="34"
-                [iconSize]="16"
-                [radius]="'var(--ds-radius-md)'"
-                [ariaLabel]="'getFinanceAccounts.edit' | t"
-                (clicked)="openEditAccountSheet(row.account)"
-              />
-            </ds-stack>
-          }
+            <ds-icon-button
+              icon="pencil"
+              variant="soft"
+              [size]="34"
+              [iconSize]="16"
+              [radius]="'var(--ds-radius-md)'"
+              [ariaLabel]="'getFinanceAccounts.edit' | t"
+              (clicked)="openEditAccountSheet(row.account)"
+            />
+          </ds-stack>
 
           @if (row.checks.length > 0) {
             <ds-section-header [title]="'getFinanceAccounts.check.title' | t" />
@@ -182,7 +168,6 @@
                 <ds-swipe-to-delete
                   #checkSwipe
                   radius="var(--ds-radius-lg)"
-                  [disabled]="!canWrite()"
                   [removeLabel]="'getFinanceAccounts.check.remove' | t"
                   (remove)="removeCheck(checkRow.check)"
                 >
@@ -191,7 +176,7 @@
                     [title]="checkRow.dateLabel"
                     [subtitle]="checkRow.driftLabel"
                     [amountLabel]="checkRow.amountLabel"
-                    [pressable]="canWrite()"
+                    [pressable]="true"
                     [pressLabel]="checkRow.dateLabel"
                     [slid]="checkSwipe.slid"
                     (pressed)="openEditCheckSheet(checkRow.check)"

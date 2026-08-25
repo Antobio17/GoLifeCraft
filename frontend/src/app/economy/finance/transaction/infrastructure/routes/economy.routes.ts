@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetEconomyProviders } from "../providers/get-economy.providers";
 import { EconomyWriteProviders } from "../providers/economy-write.providers";
 import { FinanceAccountProviders } from "@economy/finance/account/infrastructure/providers/finance-account.providers";
@@ -52,7 +51,6 @@ export const ECONOMY_ROUTES: Routes = [
       },
       {
         path: "budget/settings",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "saveFinanceBudget.breadcrumb.settings" },
         loadComponent: () =>
           import("@economy/finance/budget/infrastructure/components/save-finance-budget.component").then(

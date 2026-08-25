@@ -1,6 +1,6 @@
 <ds-swipe-to-delete
   #swipe
-  [disabled]="!canWrite || !removable"
+  [disabled]="!removable"
   [reveal]="66"
   [removeLabel]="removeLabel"
   (remove)="removed.emit()"
@@ -17,7 +17,6 @@
       <ds-pressable
         class="agenda-item__check"
         [class.is-checked]="done"
-        [disabled]="!canWrite"
         [ariaLabel]="toggleLabel"
         justify="center"
         [gap]="'0'"
@@ -32,8 +31,7 @@
     <ds-pressable
       class="agenda-item__body"
       [grow]="true"
-      [disabled]="!canWrite"
-      [ariaLabel]="canWrite ? editLabel : ''"
+      [ariaLabel]="editLabel"
       (press)="opened.emit()"
     >
       <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">

@@ -1,6 +1,5 @@
 <ds-swipe-to-delete
   #swipe
-  [disabled]="!canWrite"
   [reveal]="66"
   radius="var(--ds-radius-lg)"
   [removeLabel]="removeLabel"
@@ -22,20 +21,16 @@
       <ng-container [ngTemplateOutlet]="content" />
     }
 
-    @if (canWrite) {
-      <ds-inline-quantity
-        [quantity]="quantity"
-        [unit]="unitValue || unit"
-        [unitLabel]="unit"
-        [unitOptions]="unitOptions"
-        [ariaLabel]="quantityAriaLabel"
-        [unitAriaLabel]="unitAriaLabel"
-        (quantityChange)="quantityChange.emit($event)"
-        (unitChange)="unitChange.emit($event)"
-      />
-    } @else {
-      <ds-text class="diary-entry__qty">{{ quantityLabel }}</ds-text>
-    }
+    <ds-inline-quantity
+      [quantity]="quantity"
+      [unit]="unitValue || unit"
+      [unitLabel]="unit"
+      [unitOptions]="unitOptions"
+      [ariaLabel]="quantityAriaLabel"
+      [unitAriaLabel]="unitAriaLabel"
+      (quantityChange)="quantityChange.emit($event)"
+      (unitChange)="unitChange.emit($event)"
+    />
   </ds-stack>
 </ds-swipe-to-delete>
 

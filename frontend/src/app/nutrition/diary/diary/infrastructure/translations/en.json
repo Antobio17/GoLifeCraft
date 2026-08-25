@@ -77,7 +77,6 @@
       "saveInvalid": "Percentages must add up to 100%",
       "upcomingScope": "Changing the goal affects today and any future day you have planned. Past days keep their own."
     },
-    "empty": "No food logged",
     "emptyAction": "No food yet, add one with the + button",
     "error": "We couldn't load this day's diary",
     "quick": {

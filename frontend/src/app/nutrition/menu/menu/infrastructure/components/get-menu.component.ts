@@ -11,7 +11,6 @@ import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, of, tap } from "rxjs";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -141,7 +140,6 @@ type PickerTab = "product" | "recipe";
 export class GetMenuComponent implements OnInit {
   private router = inject(Router);
   private translationService = inject(TranslationService);
-  private authSession = inject(AuthSessionService);
   private getMenuService = inject(GetMenuService);
   private getMenusService = inject(GetMenusService);
   private createMenuService = inject(CreateMenuService);
@@ -169,8 +167,6 @@ export class GetMenuComponent implements OnInit {
   readonly id = input<string>("");
   readonly draftRoute = input<boolean>(false);
   readonly type = input<MenuType | undefined>(undefined);
-
-  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   goal = signal<DiaryGoalConfig | null>(null);
@@ -259,10 +255,6 @@ export class GetMenuComponent implements OnInit {
         unitLabel: this.itemUnitLabel(item),
         unitValue: item.unit ?? item.baseUnit,
         unitOptions: item.kind === "product" ? this.itemUnitOptions(item) : [],
-        quantityLabel: this.view.itemQuantityLabel(
-          item,
-          this.itemUnitLabel(item),
-        ),
         expandable: item.tree.length > 0,
         expanded: this.expandedItems().has(item.id),
         treeRows: this.expandedItems().has(item.id)
@@ -272,7 +264,7 @@ export class GetMenuComponent implements OnInit {
               this.treeLabels(),
             )
           : [],
-        showReset: this.canWrite() && item.customized,
+        showReset: item.customized,
       })),
     })),
   );
@@ -474,8 +466,6 @@ export class GetMenuComponent implements OnInit {
   }
 
   onName(value: string): void {
-    if (!this.canWrite()) return;
-
     this.name.set(value);
 
     const draft = this.draft();
@@ -491,8 +481,6 @@ export class GetMenuComponent implements OnInit {
   }
 
   onNote(value: string): void {
-    if (!this.canWrite()) return;
-
     this.note.set(value);
 
     const draft = this.draft();

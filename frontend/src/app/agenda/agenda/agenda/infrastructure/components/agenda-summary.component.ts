@@ -7,7 +7,6 @@ import {
   signal,
 } from "@angular/core";
 import { catchError, forkJoin, map, Observable, of, switchMap } from "rxjs";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
@@ -54,15 +53,12 @@ interface AgendaSummaryEntry {
   ],
 })
 export class AgendaSummaryComponent implements OnInit {
-  private authSession = inject(AuthSessionService);
   private getAgendaUpcomingService = inject(GetAgendaUpcomingService);
   private getAgendaSeriesService = inject(GetAgendaSeriesService);
   private view = inject(AgendaViewService);
   private categoryCatalog = inject(AgendaCategoryCatalogService);
 
   readonly seeAll = output<void>();
-
-  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   upcoming = signal<AgendaUpcomingAttributes | null>(null);

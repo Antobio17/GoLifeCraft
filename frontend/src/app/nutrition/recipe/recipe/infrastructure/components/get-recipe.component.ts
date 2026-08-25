@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -73,13 +72,10 @@ export class GetRecipeComponent {
   private translationService = inject(TranslationService);
   private getRecipeService = inject(GetRecipeService);
   private deleteRecipeService = inject(DeleteRecipeService);
-  private authSession = inject(AuthSessionService);
   protected view = inject(RecipeViewService);
   private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/recipe/recipe";
-
-  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   recipe = signal<RecipeDetail | null>(null);

@@ -96,16 +96,3 @@ ds-text.diary-tree__name {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-ds-text.diary-tree__qty {
-  flex: 0 0 auto;
-  align-self: center;
-  background: var(--ds-surface-inset);
-  border-radius: var(--ds-radius-md);
-  padding: var(--ds-space-1) var(--ds-space-1-5);
-  font-family: var(--ds-font-display);
-  font-size: var(--ds-text-sm);
-  font-weight: 800;
-  color: var(--ds-text);
-  white-space: nowrap;
-}

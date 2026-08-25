@@ -36,7 +36,6 @@
     },
     "empty": {
       "title": "Nada anotado este día",
-      "text": "No hay citas ni tareas para este día.",
       "textAction": "Añade una cita o una tarea que tengas que hacer."
     },
     "sheet": {

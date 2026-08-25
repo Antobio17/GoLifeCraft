@@ -56,31 +56,25 @@
           />
         }
 
-        @if (canWrite) {
-          <ds-inline-quantity
-            size="sm"
-            [quantity]="row.quantity"
-            [unit]="row.unit"
-            [unitLabel]="row.unitLabel"
-            [unitOptions]="row.unitOptions"
-            [ariaLabel]="quantityAriaLabel"
-            [unitAriaLabel]="unitAriaLabel"
-            (quantityChange)="
-              quantityChanged.emit({ path: row.path, quantity: $event })
-            "
-            (unitChange)="
-              unitChanged.emit({
-                path: row.path,
-                unit: $event,
-                quantity: row.quantity,
-              })
-            "
-          />
-        } @else {
-          <ds-text class="diary-tree__qty"
-            >{{ row.quantity }} {{ row.unitLabel }}</ds-text
-          >
-        }
+        <ds-inline-quantity
+          size="sm"
+          [quantity]="row.quantity"
+          [unit]="row.unit"
+          [unitLabel]="row.unitLabel"
+          [unitOptions]="row.unitOptions"
+          [ariaLabel]="quantityAriaLabel"
+          [unitAriaLabel]="unitAriaLabel"
+          (quantityChange)="
+            quantityChanged.emit({ path: row.path, quantity: $event })
+          "
+          (unitChange)="
+            unitChanged.emit({
+              path: row.path,
+              unit: $event,
+              quantity: row.quantity,
+            })
+          "
+        />
       </ds-stack>
     }
   </ds-stack>

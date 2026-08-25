@@ -40,8 +40,6 @@ export class DiaryEntryComponent {
   @Input() unitValue = "";
   @Input() unitOptions: SelectOption[] = [];
   @Input() quantity = 0;
-  @Input() quantityLabel = "";
-  @Input() canWrite = false;
   @Input() quantityAriaLabel = "";
   @Input() unitAriaLabel = "";
   @Input() removeLabel = "";

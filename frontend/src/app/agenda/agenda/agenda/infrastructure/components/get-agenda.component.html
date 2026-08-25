@@ -16,16 +16,14 @@
       <ds-text variant="meta">{{ "getAgenda.eyebrow" | t }}</ds-text>
     </ds-stack>
 
-    @if (canWrite()) {
-      <ds-button
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [ariaLabel]="'getAgenda.add' | t"
-        (clicked)="openNewSheet()"
-      />
-    }
+    <ds-button
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="'getAgenda.add' | t"
+      (clicked)="openNewSheet()"
+    />
   </ds-stack>
 
   <ds-split-view [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'">
@@ -92,7 +90,7 @@
         [gap]="'var(--ds-space-2)'"
         radius="var(--ds-radius-xl)"
         padding="var(--ds-space-3) var(--ds-space-3)"
-        [check]="canWrite()"
+        [check]="true"
         [checkSize]="24"
         titleWidth="62%"
         [meta]="false"
@@ -108,7 +106,6 @@
             [timeLabel]="entry.time ?? ''"
             [notes]="entry.notes"
             [done]="entry.done"
-            [canWrite]="canWrite()"
             [toggleLabel]="'getAgenda.entry.toggle' | t"
             [editLabel]="'getAgenda.entry.edit' | t"
             [removeLabel]="'getAgenda.entry.remove' | t"
@@ -122,10 +119,7 @@
       <ds-empty-state
         icon="agenda"
         [title]="'getAgenda.empty.title' | t"
-        [text]="
-          (canWrite() ? 'getAgenda.empty.textAction' : 'getAgenda.empty.text')
-            | t
-        "
+        [text]="'getAgenda.empty.textAction' | t"
       />
     }
   </ds-split-view>
