@@ -7,7 +7,6 @@ import { UndoService } from "@shared/undo/application/services/undo.service";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
 import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -99,7 +98,6 @@ export class GetShoppingListComponent implements OnInit {
   private translationService = inject(TranslationService);
   protected autosave = inject(AutosaveService);
   protected undo = inject(UndoService);
-  private authSession = inject(AuthSessionService);
   private getShoppingListService = inject(GetShoppingListService);
   private addShoppingListItemService = inject(AddShoppingListItemService);
   private updateShoppingListItemService = inject(UpdateShoppingListItemService);
@@ -109,8 +107,6 @@ export class GetShoppingListComponent implements OnInit {
   protected view = inject(ShoppingListViewService);
 
   private readonly MODULE_PATH = "nutrition/shopping/shopping";
-
-  canWrite = computed(() => this.authSession.isGod());
 
   readonly skeletonGroups = [3, 2];
 

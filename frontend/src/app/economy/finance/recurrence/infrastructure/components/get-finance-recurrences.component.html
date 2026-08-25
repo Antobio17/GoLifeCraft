@@ -10,27 +10,25 @@
     [subtitle]="'getFinanceRecurrences.subtitle' | t"
     (leadingClick)="goBack()"
   >
-    @if (canWrite()) {
-      <ng-container slot="actions">
-        <ds-button
-          variant="secondary"
-          size="icon-lg"
-          icon="restore"
-          [iconSize]="19"
-          [loading]="running()"
-          [ariaLabel]="'getFinanceRecurrences.run' | t"
-          (clicked)="runPending()"
-        />
-        <ds-button
-          variant="primary"
-          size="icon-lg"
-          icon="plus"
-          [iconSize]="19"
-          [ariaLabel]="'getFinanceRecurrences.add' | t"
-          (clicked)="openNewSheet()"
-        />
-      </ng-container>
-    }
+    <ng-container slot="actions">
+      <ds-button
+        variant="secondary"
+        size="icon-lg"
+        icon="restore"
+        [iconSize]="19"
+        [loading]="running()"
+        [ariaLabel]="'getFinanceRecurrences.run' | t"
+        (clicked)="runPending()"
+      />
+      <ds-button
+        variant="primary"
+        size="icon-lg"
+        icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getFinanceRecurrences.add' | t"
+        (clicked)="openNewSheet()"
+      />
+    </ng-container>
   </ds-screen-header>
 
   @if (loading()) {
@@ -100,7 +98,6 @@
           <ds-swipe-to-delete
             #recurrenceSwipe
             radius="var(--ds-radius-lg)"
-            [disabled]="!canWrite()"
             [removeLabel]="'getFinanceRecurrences.remove' | t"
             (remove)="remove(row.recurrence)"
           >
@@ -109,10 +106,10 @@
               [title]="row.recurrence.note"
               [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
               [amountLabel]="row.amountLabel"
-              [pressable]="canWrite()"
+              [pressable]="true"
               [pressLabel]="row.recurrence.note"
               [slid]="recurrenceSwipe.slid"
-              [actionIcon]="canWrite() ? row.actionIcon : null"
+              [actionIcon]="row.actionIcon"
               [actionLabel]="row.actionLabel"
               (pressed)="openEditSheet(row.recurrence)"
               (actioned)="togglePause(row.recurrence)"
@@ -133,7 +130,6 @@
             <ds-swipe-to-delete
               #pausedSwipe
               radius="var(--ds-radius-lg)"
-              [disabled]="!canWrite()"
               [removeLabel]="'getFinanceRecurrences.remove' | t"
               (remove)="remove(row.recurrence)"
             >
@@ -143,10 +139,10 @@
                 [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
                 [amountLabel]="row.amountLabel"
                 [muted]="true"
-                [pressable]="canWrite()"
+                [pressable]="true"
                 [pressLabel]="row.recurrence.note"
                 [slid]="pausedSwipe.slid"
-                [actionIcon]="canWrite() ? row.actionIcon : null"
+                [actionIcon]="row.actionIcon"
                 [actionLabel]="row.actionLabel"
                 (pressed)="openEditSheet(row.recurrence)"
                 (actioned)="togglePause(row.recurrence)"

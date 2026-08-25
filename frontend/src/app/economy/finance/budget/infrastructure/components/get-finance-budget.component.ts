@@ -1,7 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -64,7 +63,6 @@ import { FinanceCategory } from "@economy/finance/transaction/domain/models/fina
 })
 export class GetFinanceBudgetComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private authSession = inject(AuthSessionService);
   private router = inject(Router);
   private getFinanceBudgetService = inject(GetFinanceBudgetService);
   private getFinanceTransactionsService = inject(GetFinanceTransactionsService);
@@ -74,8 +72,6 @@ export class GetFinanceBudgetComponent implements OnInit {
 
   private readonly MODULE_PATH = "economy/finance/budget";
   private categoryTransactionsRequestId = 0;
-
-  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   translationsReady = signal(false);
@@ -215,7 +211,8 @@ export class GetFinanceBudgetComponent implements OnInit {
     this.selectedCategoryTransactions().map((transaction) => ({
       id: transaction.id,
       emoji: this.categoryCatalog.emoji(transaction.category),
-      title: transaction.note || this.categoryCatalog.label(transaction.category),
+      title:
+        transaction.note || this.categoryCatalog.label(transaction.category),
       subtitle: `${transaction.store || this.categoryCatalog.label(transaction.category)} · ${this.view.dayShort(transaction.transactionDate)}`,
       amountLabel: `−${this.view.money(transaction.amount)}`,
     })),
@@ -345,7 +342,9 @@ export class GetFinanceBudgetComponent implements OnInit {
                 transaction.category === categoryKey,
             );
 
-          this.selectedCategoryTransactions.set(monthlyCategoryExpenseTransactions);
+          this.selectedCategoryTransactions.set(
+            monthlyCategoryExpenseTransactions,
+          );
           this.loadingCategoryTransactions.set(false);
         },
         error: () => {

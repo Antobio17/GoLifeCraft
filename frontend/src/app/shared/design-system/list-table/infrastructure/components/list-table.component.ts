@@ -43,7 +43,6 @@ export class ListTableComponent<T = unknown> implements OnChanges {
   }
   @Input() emptyTitle = "No hay elementos";
   @Input() emptyMessage = "No se han encontrado resultados";
-  @Input() canWrite = true;
 
   @Output() actionClick = new EventEmitter<ListActionEvent<T>>();
   @Output() cellClick = new EventEmitter<ListCellClickEvent<T>>();
@@ -97,13 +96,7 @@ export class ListTableComponent<T = unknown> implements OnChanges {
   }
 
   get primaryActions(): ListAction<T>[] {
-    return this.actions
-      .filter((a) => !a.danger)
-      .filter((a) => {
-        if (a.icon === "edit") return this.canWrite;
-        if (a.icon === "view") return !this.canWrite;
-        return true;
-      });
+    return this.actions.filter((a) => !a.danger);
   }
 
   get dangerActions(): ListAction<T>[] {

@@ -41,16 +41,14 @@
         (clicked)="toggleDayMode()"
       />
 
-      @if (canWrite()) {
-        <ds-button
-          variant="primary"
-          size="icon-lg"
-          icon="plus"
-          [iconSize]="19"
-          [ariaLabel]="'getEconomy.add' | t"
-          (clicked)="openNewSheet()"
-        />
-      }
+      <ds-button
+        variant="primary"
+        size="icon-lg"
+        icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getEconomy.add' | t"
+        (clicked)="openNewSheet()"
+      />
     </ng-container>
   </ds-screen-header>
 
@@ -111,7 +109,7 @@
         >
       </ds-stack>
     </ds-card>
-  } @else if (canWrite()) {
+  } @else {
     <ds-cta-row
       icon="wallet"
       [dashed]="true"
@@ -197,7 +195,6 @@
               <ds-swipe-to-delete
                 #daySwipe
                 radius="var(--ds-radius-lg)"
-                [disabled]="!canWrite()"
                 [removeLabel]="'getEconomy.movements.remove' | t"
                 (remove)="removeTransaction(row.transaction)"
               >
@@ -208,7 +205,7 @@
                   [amountLabel]="row.amountLabel"
                   [income]="row.income"
                   [tags]="row.tags"
-                  [pressable]="canWrite()"
+                  [pressable]="true"
                   [pressLabel]="row.title"
                   [slid]="daySwipe.slid"
                   (pressed)="openEditSheet(row.transaction)"
@@ -519,7 +516,6 @@
                 <ds-swipe-to-delete
                   #swipe
                   radius="var(--ds-radius-lg)"
-                  [disabled]="!canWrite()"
                   [removeLabel]="'getEconomy.movements.remove' | t"
                   (remove)="removeTransaction(row.transaction)"
                 >
@@ -530,7 +526,7 @@
                     [amountLabel]="row.amountLabel"
                     [income]="row.income"
                     [tags]="row.tags"
-                    [pressable]="canWrite()"
+                    [pressable]="true"
                     [pressLabel]="row.title"
                     [slid]="swipe.slid"
                     (pressed)="openEditSheet(row.transaction)"

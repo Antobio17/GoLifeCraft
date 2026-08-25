@@ -29,7 +29,6 @@ export class ShoppingItemComponent {
   @Input() quantity = 0;
   @Input() unitLabel: string | null = null;
   @Input() checked = false;
-  @Input() canWrite = false;
   @Input() swipeable = true;
   @Input() dimChecked = true;
   @Input() toggleAriaLabel = "";

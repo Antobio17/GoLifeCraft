@@ -93,7 +93,7 @@
           <ds-skeleton-section-header
             titleWidth="6.5rem"
             [subtitle]="true"
-            [action]="canWrite()"
+            [action]="true"
             actionWidth="4.625rem"
           />
           <ds-skeleton-list
@@ -140,16 +140,14 @@
               }}</ds-heading>
               <ds-text variant="meta">{{ meal.meta }}</ds-text>
             </ds-stack>
-            @if (canWrite()) {
-              <ds-button
-                variant="outline"
-                size="sm"
-                icon="plus"
-                (clicked)="openPicker(meal.key)"
-              >
-                {{ "getDiary.add" | t }}
-              </ds-button>
-            }
+            <ds-button
+              variant="outline"
+              size="sm"
+              icon="plus"
+              (clicked)="openPicker(meal.key)"
+            >
+              {{ "getDiary.add" | t }}
+            </ds-button>
           </ds-stack>
 
           @if (meal.entries.length > 0) {
@@ -169,8 +167,6 @@
                     [unitValue]="row.unitValue"
                     [unitOptions]="row.unitOptions"
                     [quantity]="row.entry.quantity"
-                    [quantityLabel]="row.quantityLabel"
-                    [canWrite]="canWrite()"
                     [quantityAriaLabel]="'getDiary.quantity' | t"
                     [unitAriaLabel]="'getDiary.unit' | t"
                     [removeLabel]="'getDiary.remove' | t"
@@ -191,7 +187,6 @@
                       animate.leave="diary-tree--out"
                       [rows]="row.treeRows"
                       [title]="'getDiary.tree.title' | t"
-                      [canWrite]="canWrite()"
                       [showReset]="row.showReset"
                       [resetMessage]="'getDiary.tree.customized' | t"
                       [resetLabel]="'getDiary.tree.reset' | t"
@@ -210,10 +205,8 @@
                 </ds-stack>
               }
             </ds-stack>
-          } @else if (canWrite()) {
-            <ds-placeholder-note [message]="'getDiary.emptyAction' | t" />
           } @else {
-            <ds-placeholder-note [message]="'getDiary.empty' | t" />
+            <ds-placeholder-note [message]="'getDiary.emptyAction' | t" />
           }
         </ds-stack>
       }

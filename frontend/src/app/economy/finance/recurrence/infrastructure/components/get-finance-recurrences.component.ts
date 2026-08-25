@@ -3,7 +3,6 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, forkJoin } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -84,7 +83,6 @@ import { FinanceAccount } from "@economy/finance/account/domain/models/finance-a
 })
 export class GetFinanceRecurrencesComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private authSession = inject(AuthSessionService);
   private router = inject(Router);
   private getFinanceRecurrencesService = inject(GetFinanceRecurrencesService);
   private createFinanceRecurrenceService = inject(
@@ -108,8 +106,6 @@ export class GetFinanceRecurrencesComponent implements OnInit {
 
   private readonly MODULE_PATH = "economy/finance/recurrence";
   private readonly DEFAULT_CHARGE_DAY = 1;
-
-  canWrite = computed(() => this.authSession.isGod());
 
   loading = signal(true);
   saving = signal(false);
@@ -231,7 +227,7 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   }
 
   runPending(): void {
-    if (!this.canWrite() || this.running()) return;
+    if (this.running()) return;
 
     this.running.set(true);
 
@@ -248,7 +244,7 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   }
 
   openNewSheet(): void {
-    if (!this.canWrite() || !this.hasAccounts()) return;
+    if (!this.hasAccounts()) return;
 
     this.editingId.set(null);
     this.form.set(
@@ -262,8 +258,6 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   }
 
   openEditSheet(recurrence: FinanceRecurrence): void {
-    if (!this.canWrite()) return;
-
     this.editingId.set(recurrence.id);
     this.form.set(this.recurrenceForm.fromRecurrence(recurrence));
     this.sheetOpen.set(true);
@@ -336,7 +330,7 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   }
 
   togglePause(recurrence: FinanceRecurrence): void {
-    if (!this.canWrite() || this.saving()) return;
+    if (this.saving()) return;
 
     this.saving.set(true);
 
@@ -358,8 +352,6 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   }
 
   remove(recurrence: FinanceRecurrence): void {
-    if (!this.canWrite()) return;
-
     this.deleteFinanceRecurrenceService
       .deleteFinanceRecurrence(recurrence.id)
       .subscribe({ next: () => this.load(true) });

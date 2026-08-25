@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetCategoriesProviders } from "../providers/get-categories.providers";
 import { GetCategoryProviders } from "../providers/get-category.providers";
 import { CreateCategoryProviders } from "../providers/create-category.providers";
@@ -24,7 +23,6 @@ export const CATEGORY_ROUTES: Routes = [
       },
       {
         path: "create",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "category.breadcrumb.create" },
         loadComponent: () =>
           import("../components/create-category.component").then(
@@ -33,7 +31,6 @@ export const CATEGORY_ROUTES: Routes = [
       },
       {
         path: ":id/edit",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "category.breadcrumb.edit" },
         loadComponent: () =>
           import("../components/update-category.component").then(

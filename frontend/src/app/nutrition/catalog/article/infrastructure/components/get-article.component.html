@@ -9,7 +9,7 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="58%"
-      [actions]="canWrite() ? 2 : 0"
+      [actions]="2"
     />
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
       <ds-skeleton-hero />
@@ -62,26 +62,24 @@
       [title]="d.name"
       (leadingClick)="goBack()"
     >
-      @if (canWrite()) {
-        <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
-          <ds-button
-            variant="secondary"
-            size="icon-lg"
-            icon="pencil"
-            [iconSize]="19"
-            [ariaLabel]="'getArticle.edit' | t"
-            (clicked)="onEdit()"
-          />
-          <ds-button
-            variant="danger"
-            size="icon-lg"
-            icon="trash"
-            [iconSize]="19"
-            [ariaLabel]="'getArticle.delete' | t"
-            (clicked)="onDelete()"
-          />
-        </ds-stack>
-      }
+      <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
+        <ds-button
+          variant="secondary"
+          size="icon-lg"
+          icon="pencil"
+          [iconSize]="19"
+          [ariaLabel]="'getArticle.edit' | t"
+          (clicked)="onEdit()"
+        />
+        <ds-button
+          variant="danger"
+          size="icon-lg"
+          icon="trash"
+          [iconSize]="19"
+          [ariaLabel]="'getArticle.delete' | t"
+          (clicked)="onDelete()"
+        />
+      </ds-stack>
     </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
@@ -209,7 +207,6 @@
               [clearLabel]="'getArticle.stock.clear' | t"
               [editLabel]="'getArticle.stock.edit' | t"
               [disabled]="savingStock()"
-              [readonly]="!canWrite()"
               (incremented)="onIncrementStock()"
               (decremented)="onDecrementStock()"
               (cleared)="onClearStock()"

@@ -9,7 +9,7 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="56%"
-      [actions]="canWrite() ? 2 : 0"
+      [actions]="2"
     />
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ds-skeleton-hero slot="side" />
@@ -44,26 +44,24 @@
       [title]="recipe.name"
       (leadingClick)="back()"
     >
-      @if (canWrite()) {
-        <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
-          <ds-button
-            variant="secondary"
-            size="icon-lg"
-            icon="pencil"
-            [iconSize]="19"
-            [ariaLabel]="'getRecipe.edit' | t"
-            (clicked)="onEdit()"
-          />
-          <ds-button
-            variant="danger"
-            size="icon-lg"
-            icon="trash"
-            [iconSize]="19"
-            [ariaLabel]="'getRecipe.delete' | t"
-            (clicked)="onDelete()"
-          />
-        </ds-stack>
-      }
+      <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
+        <ds-button
+          variant="secondary"
+          size="icon-lg"
+          icon="pencil"
+          [iconSize]="19"
+          [ariaLabel]="'getRecipe.edit' | t"
+          (clicked)="onEdit()"
+        />
+        <ds-button
+          variant="danger"
+          size="icon-lg"
+          icon="trash"
+          [iconSize]="19"
+          [ariaLabel]="'getRecipe.delete' | t"
+          (clicked)="onDelete()"
+        />
+      </ds-stack>
     </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">

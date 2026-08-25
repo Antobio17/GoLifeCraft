@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { blockReadOnlyUserGuard } from "@authorization/login/login/domain/guards/role.guard";
 import { GetArticlesProviders } from "../providers/get-articles.providers";
 import { GetArticleProviders } from "../providers/get-article.providers";
 import { CreateArticleProviders } from "../providers/create-article.providers";
@@ -44,7 +43,6 @@ export const ARTICLE_ROUTES: Routes = [
       },
       {
         path: ":id/edit",
-        canActivate: [blockReadOnlyUserGuard],
         data: { breadcrumb: "article.breadcrumb.edit" },
         loadComponent: () =>
           import("../components/article-editor.component").then(
