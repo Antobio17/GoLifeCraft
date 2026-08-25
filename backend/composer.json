@@ -23,6 +23,7 @@
         "symfony/mcp-bundle": "^0.10",
         "symfony/messenger": "7.4.*",
         "symfony/monolog-bundle": "^3.11",
+        "symfony/process": "7.4.*",
         "symfony/rate-limiter": "7.4.*",
         "symfony/runtime": "7.4.*",
         "symfony/security-bundle": "7.4.*",

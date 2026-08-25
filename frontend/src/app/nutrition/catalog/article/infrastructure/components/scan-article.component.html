@@ -1,0 +1,78 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-5)'"
+>
+  <ds-screen-header
+    [leading]="'close'"
+    [leadingLabel]="'scanArticle.back' | t"
+    [eyebrow]="'scanArticle.eyebrow' | t"
+    [title]="title()"
+    [subtitle]="'scanArticle.subtitle' | t"
+    (leadingClick)="cancel()"
+  />
+
+  @if (analyzing()) {
+    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+      <ds-spinner [ariaLabel]="'scanArticle.analyzing' | t" />
+      <ds-text variant="strong">{{ "scanArticle.analyzing" | t }}</ds-text>
+    </ds-stack>
+
+    <app-article-form-skeleton />
+  } @else if (globalMatch()) {
+    <ds-card>
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-text variant="meta">{{ "scanArticle.match.eyebrow" | t }}</ds-text>
+        <ds-heading [level]="2" size="md">{{ matchName() }}</ds-heading>
+        @if (matchBrand()) {
+          <ds-text variant="meta">{{ matchBrand() }}</ds-text>
+        }
+        <ds-text>{{ "scanArticle.match.text" | t }}</ds-text>
+      </ds-stack>
+    </ds-card>
+
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-button
+        [fullWidth]="true"
+        [loading]="importing()"
+        icon="plus"
+        (clicked)="onImport()"
+      >
+        {{ "scanArticle.match.import" | t }}
+      </ds-button>
+      <ds-button
+        variant="secondary"
+        [fullWidth]="true"
+        [disabled]="importing()"
+        icon="pencil"
+        (clicked)="onEditMatch()"
+      >
+        {{ "scanArticle.match.edit" | t }}
+      </ds-button>
+    </ds-stack>
+  } @else {
+    <ds-photo-capture
+      [max]="maxPhotos"
+      [addLabel]="'scanArticle.capture.add' | t"
+      [hint]="'scanArticle.capture.hint' | t"
+      [removeLabel]="'scanArticle.capture.remove' | t"
+      (photosChange)="onPhotosChange($event)"
+    />
+
+    <ds-note icon="sparkles">{{ "scanArticle.note" | t }}</ds-note>
+
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-button
+        [fullWidth]="true"
+        [disabled]="!hasPhotos()"
+        icon="sparkles"
+        (clicked)="onAnalyze()"
+      >
+        {{ "scanArticle.analyze" | t }}
+      </ds-button>
+      <ds-button variant="ghost" [fullWidth]="true" (clicked)="onFillByHand()">
+        {{ "scanArticle.manual" | t }}
+      </ds-button>
+    </ds-stack>
+  }
+</ds-page-wrapper>

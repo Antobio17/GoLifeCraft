@@ -23,7 +23,8 @@
     "empty": {
       "title": "Catálogo vacío",
       "text": "Aún no hay productos en el catálogo"
-    }
+    },
+    "scan": "Escanear"
   },
   "getArticle": {
     "back": "Volver",
@@ -88,10 +89,16 @@
       "list": "Catálogo",
       "detail": "Producto",
       "create": "Nuevo artículo",
-      "edit": "Editar artículo"
+      "edit": "Editar artículo",
+      "scan": "Escanear producto"
     },
     "equivalence": {
       "incomplete": "Completa o elimina las equivalencias sin unidad o cantidad."
+    },
+    "draft": {
+      "not": {
+        "recognized": "No hemos podido reconocer el producto en las fotos. Rellénalo a mano."
+      }
     }
   },
   "articleEditor": {
@@ -156,6 +163,29 @@
       "remove": "Quitar equivalencia",
       "quantity": "Cantidad",
       "unitPlaceholder": "Selecciona…"
+    },
+    "draftNote": "Ficha rellenada a partir de tus fotos. Revísala antes de guardar.",
+    "draftLowConfidence": "Revisa con atención: {fields}."
+  },
+  "scanArticle": {
+    "eyebrow": "Catálogo",
+    "title": "Escanear producto",
+    "subtitle": "Haz fotos del producto y rellenamos la ficha por ti",
+    "back": "Volver",
+    "analyze": "Analizar fotos",
+    "analyzing": "Leyendo las fotos…",
+    "manual": "Rellenar a mano",
+    "note": "Lee la etiqueta y el código de barras. Revisa siempre lo que salga: el precio y los datos que no se vean claros quedan en blanco.",
+    "capture": {
+      "add": "Añadir foto",
+      "hint": "Hasta 3 fotos: el frontal, la etiqueta nutricional y el código de barras.",
+      "remove": "Quitar foto"
+    },
+    "match": {
+      "eyebrow": "Encontrado en el catálogo global",
+      "text": "Ya tenemos este producto con sus datos nutricionales. Puedes añadirlo tal cual o editarlo antes de guardar.",
+      "import": "Añadir a mi catálogo",
+      "edit": "Editar antes de guardar"
     }
   }
 }

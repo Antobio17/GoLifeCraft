@@ -14,6 +14,14 @@
           (clicked)="onImportCatalog()"
         />
         <ds-button
+          variant="secondary"
+          size="icon-lg"
+          icon="camera"
+          [iconSize]="19"
+          [ariaLabel]="'getArticles.scan' | t"
+          (clicked)="onScan()"
+        />
+        <ds-button
           variant="primary"
           size="icon-lg"
           icon="plus"

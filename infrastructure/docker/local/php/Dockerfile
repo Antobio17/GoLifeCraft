@@ -15,6 +15,7 @@ RUN apt-get update && \
         unzip \
         cron \
         default-mysql-client \
+        zbar-tools \
         qpdf \
         ghostscript \
         libpng-dev \

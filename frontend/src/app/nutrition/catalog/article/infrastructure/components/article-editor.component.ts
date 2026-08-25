@@ -34,9 +34,7 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
-import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
-import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { ArticleFormSkeletonComponent } from "./article-form-skeleton.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
@@ -46,6 +44,8 @@ import { Supermarket } from "@nutrition/catalog/supermarket/domain/models/superm
 import { ManageAislesComponent } from "@nutrition/catalog/supermarket/infrastructure/components/manage-aisles.component";
 import { EmojiCatalogService } from "../../application/services/emoji-catalog.service";
 import { UnitCatalogService } from "../../application/services/unit-catalog.service";
+import { ArticleDraftStoreService } from "../../application/services/article-draft-store.service";
+import { ArticleDraft } from "../../domain/models/article-draft.model";
 import { CreateArticleService } from "../../application/services/create-article.service";
 import { UpdateArticleService } from "../../application/services/update-article.service";
 import { GetArticleService } from "../../application/services/get-article.service";
@@ -109,9 +109,7 @@ function equivalencesValidator(
     StackComponent,
     TextComponent,
     NoteComponent,
-    SkeletonRowsComponent,
-    SkeletonFieldsComponent,
-    SkeletonComponent,
+    ArticleFormSkeletonComponent,
     ManageAislesComponent,
   ],
 })
@@ -126,6 +124,7 @@ export class ArticleEditorComponent implements OnInit {
   private aisleCatalog = inject(AisleCatalogService);
   private emojiCatalog = inject(EmojiCatalogService);
   private unitCatalogService = inject(UnitCatalogService);
+  private articleDraftStore = inject(ArticleDraftStoreService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
 
@@ -158,6 +157,20 @@ export class ArticleEditorComponent implements OnInit {
       .map((aisle) => ({ value: aisle.id, label: aisle.name })),
   );
 
+  draftLowConfidenceLabel = computed(() => {
+    const labels = this.draftLowConfidenceFields()
+      .map((field) => this.draftFieldLabel(field))
+      .filter((label): label is string => null !== label);
+
+    if (0 === labels.length) {
+      return "";
+    }
+
+    return this.t("articleEditor.draftLowConfidence", {
+      fields: labels.join(", "),
+    });
+  });
+
   hasSupermarket = computed(() => null !== this.selectedSupermarketId());
   hasAisles = computed(() => this.aisleOptions().length > 0);
 
@@ -172,6 +185,8 @@ export class ArticleEditorComponent implements OnInit {
 
   form: FormGroup;
   loading = signal(true);
+  fromDraft = signal(false);
+  draftLowConfidenceFields = signal<string[]>([]);
   saving = signal(false);
   articleName = signal("");
   aisleSheetOpen = signal(false);
@@ -238,6 +253,7 @@ export class ArticleEditorComponent implements OnInit {
             this.supermarkets.set(supermarkets.data);
 
             if (!this.isEdit) {
+              this.applyDraft();
               this.loading.set(false);
               return;
             }
@@ -311,6 +327,67 @@ export class ArticleEditorComponent implements OnInit {
     if (this.aisleOptions().some((option) => option.value === aisleId)) return;
 
     this.form.patchValue({ aisleId: null });
+  }
+
+  private applyDraft(): void {
+    const stored = this.articleDraftStore.take();
+
+    if (null === stored) {
+      return;
+    }
+
+    this.fromDraft.set(true);
+    this.draftLowConfidenceFields.set(stored.lowConfidenceFields);
+    this.patchDraft(stored.draft);
+    this.form.markAsDirty();
+  }
+
+  private patchDraft(draft: ArticleDraft): void {
+    const nutrition = draft.nutrition;
+
+    this.form.patchValue({
+      name: draft.name ?? "",
+      emoji: draft.emoji ?? "",
+      brand: draft.brand ?? "",
+      price: this.formatNumber(draft.price),
+      categoryId: draft.categoryId,
+      supermarketId: draft.supermarketId,
+      aisleId: draft.aisleId,
+      units: {
+        baseUnit: draft.baseUnit,
+        recipeUnit: draft.recipeUnit,
+        diaryUnit: draft.diaryUnit,
+        packUnit: draft.packUnit,
+        equivalences: draft.equivalences.map((item) => ({
+          unit: item.unit,
+          quantity: item.quantity,
+        })),
+      },
+      calories: this.formatNumber(nutrition?.calories ?? null),
+      protein: this.formatNumber(nutrition?.protein ?? null),
+      fat: this.formatNumber(nutrition?.fat ?? null),
+      saturatedFat: this.formatNumber(nutrition?.saturatedFat ?? null),
+      carbs: this.formatNumber(nutrition?.carbs ?? null),
+      sugars: this.formatNumber(nutrition?.sugars ?? null),
+      salt: this.formatNumber(nutrition?.salt ?? null),
+    });
+  }
+
+  private draftFieldLabel(field: string): string | null {
+    const labels: Record<string, string> = {
+      name: "articleEditor.field.name",
+      brand: "articleEditor.field.brand",
+      emoji: "articleEditor.field.icon",
+      price: "articleEditor.field.price",
+      categoryId: "articleEditor.field.category",
+      supermarketId: "articleEditor.field.store",
+      aisleId: "articleEditor.field.aisle",
+      nutrition: "articleEditor.nutrition.heading",
+    };
+
+    const key = labels[field];
+
+    return undefined === key ? null : this.t(key);
   }
 
   private loadArticle(): void {

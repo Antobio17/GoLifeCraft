@@ -4,6 +4,7 @@ FROM php:8.5-fpm AS base
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
+        zbar-tools \
         qpdf \
         ghostscript \
         libpng-dev \

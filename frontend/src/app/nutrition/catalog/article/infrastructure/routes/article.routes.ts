@@ -8,6 +8,8 @@ import { UpdateArticleStockProviders } from "@nutrition/pantry/stock/infrastruct
 import { GetCategoriesProviders } from "@nutrition/catalog/category/infrastructure/providers/get-categories.providers";
 import { GetSupermarketsProviders } from "@nutrition/catalog/supermarket/infrastructure/providers/get-supermarkets.providers";
 import { UpdateSupermarketAislesProviders } from "@nutrition/catalog/supermarket/infrastructure/providers/update-supermarket-aisles.providers";
+import { GetArticleDraftProviders } from "../providers/get-article-draft.providers";
+import { ImportGlobalArticleProviders } from "@nutrition/global-catalog/article/infrastructure/providers/import-global-article.providers";
 import { EmojiCatalogService } from "../../application/services/emoji-catalog.service";
 
 export const ARTICLE_ROUTES: Routes = [
@@ -23,6 +25,8 @@ export const ARTICLE_ROUTES: Routes = [
       ...GetCategoriesProviders.getProviders(),
       ...GetSupermarketsProviders.getProviders(),
       ...UpdateSupermarketAislesProviders.getProviders(),
+      ...GetArticleDraftProviders.getProviders(),
+      ...ImportGlobalArticleProviders.getProviders(),
       EmojiCatalogService,
     ],
     children: [
@@ -31,6 +35,14 @@ export const ARTICLE_ROUTES: Routes = [
         loadComponent: () =>
           import("../components/get-articles.component").then(
             (m) => m.GetArticlesComponent,
+          ),
+      },
+      {
+        path: "scan",
+        data: { breadcrumb: "article.breadcrumb.scan" },
+        loadComponent: () =>
+          import("../components/scan-article.component").then(
+            (m) => m.ScanArticleComponent,
           ),
       },
       {

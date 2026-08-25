@@ -140,7 +140,7 @@ Cada deploy hace, por SSH contra el servidor:
 ```bash
 # Subir secrets con gh CLI
 gh secret set SERVER_SSH_KEY < ~/.ssh/golifecraft_prod_deploy
-gh secret set PROD_ENV_FILE < .env.local.prod
+gh secret set PROD_ENV_FILE < backend/.env.prod
 gh secret set SERVER_SSH_PASSPHRASE   # pide el valor interactivamente
 ```
 
@@ -324,7 +324,8 @@ redespliega, o edítala directamente en el `.env.local` del servidor:
 ssh golifecraft
 cd $SERVER_PROJECT_PATH
 # En .env.local:
-#   MERCADONA_GEMINI_KEY=AIza...tu_clave...
+#   GEMINI_KEY=AIza...tu_clave...
+#   GEMINI_MODEL=gemini-flash-latest
 #   MERCADONA_GEMINI_MODEL=gemini-flash-lite-latest
 ```
 

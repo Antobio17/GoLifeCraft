@@ -170,6 +170,10 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     this.router.navigate(["/catalog", id]);
   }
 
+  onScan(): void {
+    this.router.navigate(["/catalog/scan"]);
+  }
+
   onCreate(): void {
     this.router.navigate(["/catalog", "create"]);
   }

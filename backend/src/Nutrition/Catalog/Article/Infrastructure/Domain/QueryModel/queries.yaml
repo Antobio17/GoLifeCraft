@@ -23,3 +23,8 @@ services:
     class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateArticleNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Catalog\Article\Domain\QueryModel\ArticleDraftGroundingNeedleDataQuery:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineArticleDraftGroundingNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

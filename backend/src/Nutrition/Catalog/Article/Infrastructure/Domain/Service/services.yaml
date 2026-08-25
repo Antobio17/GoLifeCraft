@@ -1,0 +1,20 @@
+parameters:
+  env(ARTICLE_DRAFT_DAILY_LIMIT): '20'
+
+services:
+  Nutrition\Catalog\Article\Domain\Service\BarcodeReader:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\Service\Zbar\ZbarBarcodeReader
+    arguments:
+      $logger: '@logger'
+
+  Nutrition\Catalog\Article\Domain\Service\ArticleDraftExtractor:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\Service\Gemini\GeminiArticleDraftExtractor
+    arguments:
+      $geminiClient: '@Integration\Gemini\Client\Domain\Service\GeminiClient'
+
+  Nutrition\Catalog\Article\Domain\Service\ArticleDraftQuotaGuard:
+    class: Nutrition\Catalog\Article\Infrastructure\Domain\Service\Cache\CacheArticleDraftQuotaGuard
+    arguments:
+      $cache: '@cache.app'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+      $dailyLimit: '%env(int:ARTICLE_DRAFT_DAILY_LIMIT)%'

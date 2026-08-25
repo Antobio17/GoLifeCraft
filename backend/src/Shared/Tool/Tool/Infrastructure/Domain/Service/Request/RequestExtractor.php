@@ -362,6 +362,51 @@ final class RequestExtractor
         );
     }
 
+    /**
+     * @param string[] $allowedMimeTypes
+     *
+     * @return FileUploadedResult[]
+     */
+    public static function getUploadedImages(
+        Request $request,
+        string $fieldName,
+        int $maxFiles,
+        array $allowedMimeTypes,
+        int $maxBytes,
+    ): array {
+        $uploadedFiles = $request->files->all()[$fieldName] ?? [];
+        $uploadedFiles = is_array(value: $uploadedFiles) ? $uploadedFiles : [$uploadedFiles];
+        $uploadedFiles = array_values(array_filter($uploadedFiles));
+
+        if ([] === $uploadedFiles) {
+            throw ArgumentRequestException::argumentIsRequired(argumentName: $fieldName);
+        }
+
+        if (count($uploadedFiles) > $maxFiles) {
+            throw ArgumentRequestException::tooManyFiles(argumentName: $fieldName, maximum: $maxFiles);
+        }
+
+        $images = [];
+
+        foreach ($uploadedFiles as $uploadedFile) {
+            $mimeType = $uploadedFile->getMimeType() ?? $uploadedFile->getClientMimeType();
+
+            if (!in_array($mimeType, $allowedMimeTypes, true) || $uploadedFile->getSize() > $maxBytes) {
+                throw ArgumentRequestException::argumentMustBeImage(argumentName: $fieldName);
+            }
+
+            $images[] = new FileUploadedResult(
+                name: pathinfo(path: $uploadedFile->getClientOriginalName(), flags: PATHINFO_FILENAME),
+                extension: $uploadedFile->getClientOriginalExtension(),
+                mimeType: $mimeType,
+                size: (float) $uploadedFile->getSize(),
+                tempPath: $uploadedFile->getPathname(),
+            );
+        }
+
+        return $images;
+    }
+
     public static function getUserSessionId(Request $request, bool $required = true): ?string
     {
         $userSessionId = $request->attributes->get(key: 'userSessionId');

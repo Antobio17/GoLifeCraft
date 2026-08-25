@@ -23,7 +23,8 @@
     "empty": {
       "title": "Empty catalog",
       "text": "There are no products in the catalog yet"
-    }
+    },
+    "scan": "Scan"
   },
   "getArticle": {
     "back": "Back",
@@ -88,10 +89,16 @@
       "list": "Catalog",
       "detail": "Product",
       "create": "New item",
-      "edit": "Edit item"
+      "edit": "Edit item",
+      "scan": "Scan product"
     },
     "equivalence": {
       "incomplete": "Complete or remove equivalences without a unit or amount."
+    },
+    "draft": {
+      "not": {
+        "recognized": "We could not recognise the product in the photos. Please fill it in by hand."
+      }
     }
   },
   "articleEditor": {
@@ -156,6 +163,29 @@
       "remove": "Remove equivalence",
       "quantity": "Quantity",
       "unitPlaceholder": "Select…"
+    },
+    "draftNote": "Filled in from your photos. Review it before saving.",
+    "draftLowConfidence": "Double-check these: {fields}."
+  },
+  "scanArticle": {
+    "eyebrow": "Catalog",
+    "title": "Scan product",
+    "subtitle": "Take a few photos and we fill the form for you",
+    "back": "Back",
+    "analyze": "Analyse photos",
+    "analyzing": "Reading the photos…",
+    "manual": "Fill it in by hand",
+    "note": "It reads the label and the barcode. Always review the result: the price and anything unclear is left blank.",
+    "capture": {
+      "add": "Add photo",
+      "hint": "Up to 3 photos: the front, the nutrition label and the barcode.",
+      "remove": "Remove photo"
+    },
+    "match": {
+      "eyebrow": "Found in the global catalog",
+      "text": "We already have this product with its nutrition facts. Add it as is, or edit it before saving.",
+      "import": "Add to my catalog",
+      "edit": "Edit before saving"
     }
   }
 }

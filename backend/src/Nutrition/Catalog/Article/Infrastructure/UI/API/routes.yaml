@@ -13,6 +13,11 @@ get_article:
   methods: [GET]
   controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleController
 
+get_article_draft:
+  path: /api/v1/nutrition/catalog/article-draft
+  methods: [POST]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleDraftController
+
 create_article:
   path: /api/v1/nutrition/catalog/article
   methods: [POST]

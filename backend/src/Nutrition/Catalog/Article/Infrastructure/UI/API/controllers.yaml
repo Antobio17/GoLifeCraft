@@ -47,3 +47,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleDraftController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleDraftController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

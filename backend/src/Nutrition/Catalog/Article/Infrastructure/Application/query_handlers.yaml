@@ -27,3 +27,18 @@ services:
       $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\GetArticleFacetsNeedleDataQuery'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Article\Application\Query\GlobalArticleDraftAssembler:
+    class: Nutrition\Catalog\Article\Application\Query\GlobalArticleDraftAssembler
+
+  Nutrition\Catalog\Article\Application\Query\GetArticleDraftQueryHandler:
+    class: Nutrition\Catalog\Article\Application\Query\GetArticleDraftQueryHandler
+    arguments:
+      $barcodeReader: '@Nutrition\Catalog\Article\Domain\Service\BarcodeReader'
+      $globalArticleRepository: '@Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleRepository'
+      $globalArticleDraftAssembler: '@Nutrition\Catalog\Article\Application\Query\GlobalArticleDraftAssembler'
+      $needleDataQuery: '@Nutrition\Catalog\Article\Domain\QueryModel\ArticleDraftGroundingNeedleDataQuery'
+      $articleDraftExtractor: '@Nutrition\Catalog\Article\Domain\Service\ArticleDraftExtractor'
+      $quotaGuard: '@Nutrition\Catalog\Article\Domain\Service\ArticleDraftQuotaGuard'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
