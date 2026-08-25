@@ -2,6 +2,7 @@
 
 namespace Integration\Mercadona\Infrastructure\Application\Console;
 
+use Integration\Gemini\Client\Domain\Exception\GeminiThrottledException;
 use Integration\Mercadona\Domain\Exception\MercadonaThrottledException;
 use Integration\Mercadona\Domain\Model\MercadonaNutrition;
 use Integration\Mercadona\Domain\Model\MercadonaProduct;
@@ -71,7 +72,7 @@ final class SyncMercadonaCatalogCommand extends Command
             $this->initializeIfNeeded(categoryId: $categoryId, output: $output);
             $this->fillBuffer(limit: $limit, scanLimit: $scanLimit, output: $output);
             $this->importPending(limit: $limit, delayMilliseconds: $delayMilliseconds, force: $force, output: $output);
-        } catch (MercadonaThrottledException $e) {
+        } catch (MercadonaThrottledException|GeminiThrottledException $e) {
             $output->writeln(messages: sprintf('<comment>Throttled: %s Stopping; will resume on the next run.</comment>', $e->getMessage()));
 
             return Command::FAILURE;

@@ -1,0 +1,17 @@
+parameters:
+  env(GEMINI_BASE_URL): 'https://generativelanguage.googleapis.com'
+  env(GEMINI_KEY): ''
+  env(GEMINI_MODEL): 'gemini-3.6-flash'
+  env(GEMINI_USER_AGENT): 'GoLifeCraft/1.0 (catalog; antoniojr997@gmail.com)'
+  env(GEMINI_TIMEOUT): '45'
+
+services:
+  Integration\Gemini\Client\Domain\Service\GeminiClient:
+    class: Integration\Gemini\Client\Infrastructure\Domain\Service\Http\HttpGeminiClient
+    arguments:
+      $httpClient: '@http_client'
+      $baseUrl: '%env(GEMINI_BASE_URL)%'
+      $apiKey: '%env(GEMINI_KEY)%'
+      $model: '%env(GEMINI_MODEL)%'
+      $userAgent: '%env(GEMINI_USER_AGENT)%'
+      $timeoutInSeconds: '%env(int:GEMINI_TIMEOUT)%'

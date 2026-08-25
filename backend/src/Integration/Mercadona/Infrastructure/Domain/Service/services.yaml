@@ -3,8 +3,6 @@ parameters:
   env(MERCADONA_WAREHOUSE): 'mad1'
   env(MERCADONA_LANG): 'es'
   env(MERCADONA_USER_AGENT): 'GoLifeCraft/1.0 (catalog sync; antoniojr997@gmail.com)'
-  env(MERCADONA_GEMINI_BASE_URL): 'https://generativelanguage.googleapis.com'
-  env(MERCADONA_GEMINI_KEY): ''
   env(MERCADONA_GEMINI_MODEL): 'gemini-flash-lite-latest'
 
 services:
@@ -21,8 +19,7 @@ services:
     class: Integration\Mercadona\Infrastructure\Domain\Service\Gemini\GeminiNutritionExtractor
     arguments:
       $httpClient: '@http_client'
-      $baseUrl: '%env(MERCADONA_GEMINI_BASE_URL)%'
-      $apiKey: '%env(MERCADONA_GEMINI_KEY)%'
+      $geminiClient: '@Integration\Gemini\Client\Domain\Service\GeminiClient'
       $model: '%env(MERCADONA_GEMINI_MODEL)%'
       $userAgent: '%env(MERCADONA_USER_AGENT)%'
 

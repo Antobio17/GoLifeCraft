@@ -2,22 +2,20 @@
 
 namespace Integration\Mercadona\Infrastructure\Domain\Service\Gemini;
 
-use Integration\Mercadona\Domain\Exception\MercadonaThrottledException;
+use Integration\Gemini\Client\Domain\Model\GeminiImage;
+use Integration\Gemini\Client\Domain\Service\GeminiClient;
 use Integration\Mercadona\Domain\Model\MercadonaNutrition;
 use Integration\Mercadona\Domain\Model\NutritionExtraction;
 use Integration\Mercadona\Domain\Service\MercadonaNutritionExtractor;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtractor
 {
-    private const string SERVICE = 'Gemini';
     private const float REFERENCE_AMOUNT = 100.0;
     private const float ETHANOL_DENSITY = 0.789;
     private const int MAX_ATTEMPTS = 2;
-    private const int RETRY_BASE_DELAY_MICROSECONDS = 2000000;
-    private const array THROTTLE_STATUS_CODES = [429, 500, 503];
+    private const string IMAGE_MIME_TYPE = 'image/jpeg';
     private const string PROMPT = <<<'PROMPT'
         Eres un extractor de información nutricional. En las imágenes aparece la etiqueta de un producto de alimentación de supermercado.
         Localiza la tabla de "Información nutricional" y devuelve los valores POR 100 g o POR 100 ml (nunca por ración).
@@ -30,8 +28,7 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
 
     public function __construct(
         private HttpClientInterface $httpClient,
-        private string $baseUrl,
-        private string $apiKey,
+        private GeminiClient $geminiClient,
         private string $model,
         private string $userAgent,
     ) {
@@ -39,10 +36,10 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
 
     public function extract(array $imageUrls): NutritionExtraction
     {
-        if ('' === $this->apiKey) {
+        if (!$this->geminiClient->isConfigured()) {
             return NutritionExtraction::failure(
                 status: NutritionExtraction::STATUS_MISSING_API_KEY,
-                notes: ['MERCADONA_GEMINI_KEY is empty: every product would be skipped.'],
+                notes: ['GEMINI_KEY is empty: every product would be skipped.'],
             );
         }
 
@@ -55,21 +52,26 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
 
         $notes = [sprintf('Label images sent to Gemini: %d', count($imageUrls))];
 
-        $parts = $this->imageParts(imageUrls: $imageUrls, notes: $notes);
-        if ([] === $parts) {
+        $images = $this->images(imageUrls: $imageUrls, notes: $notes);
+        if ([] === $images) {
             return NutritionExtraction::failure(status: NutritionExtraction::STATUS_IMAGES_UNAVAILABLE, notes: $notes);
         }
 
-        $parts[] = ['text' => self::PROMPT];
+        $response = $this->geminiClient->generateJson(
+            prompt: self::PROMPT,
+            images: $images,
+            schema: $this->schema(),
+            maxAttempts: self::MAX_ATTEMPTS,
+            model: $this->model,
+        );
 
-        $data = $this->generate(parts: $parts, notes: $notes);
-        if (null === $data) {
+        $notes = array_merge($notes, $response->notes);
+
+        if (!$response->isSuccessful()) {
             return NutritionExtraction::failure(status: NutritionExtraction::STATUS_NO_RESPONSE, notes: $notes);
         }
 
-        $notes[] = 'Gemini answered: '.json_encode($data, JSON_UNESCAPED_UNICODE);
-
-        $nutrition = $this->toNutrition(data: $data);
+        $nutrition = $this->toNutrition(data: $response->data);
         if (null === $nutrition) {
             return NutritionExtraction::failure(status: NutritionExtraction::STATUS_NOT_FOUND, notes: $notes);
         }
@@ -85,28 +87,23 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
      * @param string[] $imageUrls
      * @param string[] $notes
      *
-     * @return array<int, array{inline_data: array{mime_type: string, data: string}}>
+     * @return GeminiImage[]
      */
-    private function imageParts(array $imageUrls, array &$notes): array
+    private function images(array $imageUrls, array &$notes): array
     {
-        $parts = [];
+        $images = [];
         foreach ($imageUrls as $imageUrl) {
             $bytes = $this->download(url: $imageUrl, notes: $notes);
             if (null === $bytes) {
                 continue;
             }
 
-            $notes[] = sprintf('  ok (%d KB) %s', intdiv(strlen($bytes), 1024), $imageUrl);
-
-            $parts[] = [
-                'inline_data' => [
-                    'mime_type' => 'image/jpeg',
-                    'data' => base64_encode($bytes),
-                ],
-            ];
+            $image = new GeminiImage(mimeType: self::IMAGE_MIME_TYPE, bytes: $bytes);
+            $notes[] = sprintf('  ok (%d KB) %s', $image->sizeInKilobytes(), $imageUrl);
+            $images[] = $image;
         }
 
-        return $parts;
+        return $images;
     }
 
     /**
@@ -128,102 +125,8 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
     }
 
     /**
-     * @param array<int, array<string, mixed>> $parts
+     * @param array<string, mixed> $data
      */
-    /**
-     * @param array<int, array<string, mixed>> $parts
-     * @param string[]                         $notes
-     */
-    private function generate(array $parts, array &$notes): ?array
-    {
-        $payload = [
-            'contents' => [['parts' => $parts]],
-            'generationConfig' => [
-                'temperature' => 0,
-                'responseMimeType' => 'application/json',
-                'responseSchema' => $this->schema(),
-            ],
-        ];
-
-        $response = $this->requestWithRetry(payload: $payload, notes: $notes);
-        if (null === $response) {
-            return null;
-        }
-
-        $text = $response['candidates'][0]['content']['parts'][0]['text'] ?? null;
-        if (!is_string($text)) {
-            $notes[] = 'Gemini replied without usable text: '.self::truncate(value: json_encode($response, JSON_UNESCAPED_UNICODE));
-
-            return null;
-        }
-
-        $decoded = json_decode($text, true);
-        if (!is_array($decoded)) {
-            $notes[] = 'Gemini text is not valid JSON: '.self::truncate(value: $text);
-
-            return null;
-        }
-
-        return $decoded;
-    }
-
-    /**
-     * @param string[] $notes
-     */
-    private function requestWithRetry(array $payload, array &$notes): ?array
-    {
-        $url = rtrim($this->baseUrl, '/').'/v1beta/models/'.$this->model.':generateContent';
-
-        for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; ++$attempt) {
-            try {
-                return $this->httpClient->request(
-                    method: 'POST',
-                    url: $url,
-                    options: [
-                        'headers' => [
-                            'x-goog-api-key' => $this->apiKey,
-                            'Content-Type' => 'application/json',
-                            'User-Agent' => $this->userAgent,
-                        ],
-                        'json' => $payload,
-                    ],
-                )->toArray();
-            } catch (ExceptionInterface $e) {
-                $this->abortOnThrottle(exception: $e);
-
-                $notes[] = sprintf('Gemini call failed (attempt %d/%d) on %s: %s', $attempt, self::MAX_ATTEMPTS, $url, $this->describeFailure(exception: $e));
-
-                if ($attempt >= self::MAX_ATTEMPTS) {
-                    return null;
-                }
-
-                usleep(self::RETRY_BASE_DELAY_MICROSECONDS * $attempt);
-            }
-        }
-
-        return null;
-    }
-
-    private function describeFailure(ExceptionInterface $exception): string
-    {
-        if (!$exception instanceof HttpExceptionInterface) {
-            return $exception->getMessage();
-        }
-
-        $response = $exception->getResponse();
-
-        return sprintf('HTTP %d — %s', $response->getStatusCode(), self::truncate(value: $response->getContent(throw: false)));
-    }
-
-    private static function truncate(string|false $value): string
-    {
-        if (false === $value) {
-            return '(empty)';
-        }
-
-        return mb_strimwidth(trim($value), 0, 600, '…');
-    }
-
     private function toNutrition(array $data): ?MercadonaNutrition
     {
         if (true !== ($data['found'] ?? null)) {
@@ -259,6 +162,9 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
         return $alcoholVolume * self::ETHANOL_DENSITY;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function schema(): array
     {
         $nullableNumber = ['type' => 'NUMBER', 'nullable' => true];
@@ -279,19 +185,5 @@ final readonly class GeminiNutritionExtractor implements MercadonaNutritionExtra
             ],
             'required' => ['found'],
         ];
-    }
-
-    private function abortOnThrottle(ExceptionInterface $exception): void
-    {
-        if (!$exception instanceof HttpExceptionInterface) {
-            return;
-        }
-
-        $statusCode = $exception->getResponse()->getStatusCode();
-        if (!in_array($statusCode, self::THROTTLE_STATUS_CODES, true)) {
-            return;
-        }
-
-        throw MercadonaThrottledException::forStatus(service: self::SERVICE, statusCode: $statusCode);
     }
 }
