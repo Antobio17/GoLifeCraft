@@ -11,3 +11,7 @@ docs/sql/
 
 # Datos de contenedores en runtime (uploads, claves DKIM, certificados…)
 /volumes/
+
+# Utillaje de Claude Design: se queda en local, fuera del repo público.
+frontend/tools/design-sync/
+/.design-sync/
