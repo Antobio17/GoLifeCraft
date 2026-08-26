@@ -98,6 +98,10 @@ export class FinanceCategoryCatalogService {
     return CATEGORIES[category].color;
   }
 
+  loadTranslations(): Promise<void> {
+    return this.translationService.loadModuleTranslations(MODULE_PATH);
+  }
+
   label(category: FinanceCategory): string {
     return this.translationService.translate(
       `getEconomy.category.${category}`,

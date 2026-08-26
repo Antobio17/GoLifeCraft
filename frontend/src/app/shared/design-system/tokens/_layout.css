@@ -13,9 +13,16 @@
      lo que cualquier capa fija de abajo tiene que dejar libre. */
   --ds-app-bottom-nav-height: 4.375rem;
   --ds-app-sidebar-width: 15.25rem;
+  --ds-app-inset-left: 0px;
   --ds-app-content-max: 73.75rem;
   --ds-form-max-width: 60rem;
   --ds-z-drawer: 100;
   --ds-z-modal: 200;
   --ds-z-toast: 300;
+}
+
+@media (min-width: 768px) {
+  :root:has(.app-frame--with-tabbar) {
+    --ds-app-inset-left: var(--ds-app-sidebar-width);
+  }
 }

@@ -87,8 +87,10 @@ import { ScrollLockService } from "@shared/design-system/scroll-lock/application
         --ds-sheet-max-gap: 1rem;
         --ds-sheet-max-gap-desktop: 2rem;
 
+        box-sizing: border-box;
         position: fixed;
         inset: 0;
+        padding-left: var(--ds-app-inset-left, 0px);
         z-index: 1000;
         background: rgba(0, 0, 0, 0.5);
         display: flex;
@@ -101,7 +103,7 @@ import { ScrollLockService } from "@shared/design-system/scroll-lock/application
         top: env(safe-area-inset-top);
         right: 0;
         bottom: 0;
-        left: 0;
+        left: calc(-1 * var(--ds-app-inset-left, 0px));
         backdrop-filter: var(--ds-blur-sm);
       }
       .ds-sheet {

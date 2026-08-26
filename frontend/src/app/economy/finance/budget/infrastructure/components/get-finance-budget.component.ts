@@ -219,12 +219,13 @@ export class GetFinanceBudgetComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    this.translationService
-      .loadModuleTranslations(this.MODULE_PATH)
-      .then(() => {
-        this.translationsReady.set(true);
-        this.load();
-      });
+    Promise.all([
+      this.translationService.loadModuleTranslations(this.MODULE_PATH),
+      this.categoryCatalog.loadTranslations(),
+    ]).then(() => {
+      this.translationsReady.set(true);
+      this.load();
+    });
   }
 
   t(key: string): string {
