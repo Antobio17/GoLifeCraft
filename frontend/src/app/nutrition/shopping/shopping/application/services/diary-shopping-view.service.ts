@@ -35,8 +35,10 @@ export class DiaryShoppingViewService {
       .map((need) => need.articleId);
   }
 
-  baseQuantity(need: DiaryShoppingNeed, quantity: number): number {
-    return this.round(quantity * this.unitBase(need));
+  baseQuantity(need: DiaryShoppingNeed): number {
+    return this.round(
+      need.missingQuantity > 0 ? need.missingQuantity : need.quantity,
+    );
   }
 
   rows(
@@ -57,7 +59,7 @@ export class DiaryShoppingViewService {
         priceLabel: this.shoppingView.money((need.price ?? 0) * quantity),
         packLabel: this.packLabel(need, quantity, labels),
         quantity,
-        baseQuantity: this.baseQuantity(need, quantity),
+        baseQuantity: this.baseQuantity(need),
         covered: need.missingQuantity <= 0,
         checked: !unchecked.includes(need.articleId),
       };
