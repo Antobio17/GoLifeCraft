@@ -7,6 +7,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Gym\Training\Session\Domain\QueryModel\Dto\GetSessionsResult;
 use Gym\Training\Session\Domain\QueryModel\GetSessionsNeedleDataQuery;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNeedleDataQuery
 {
@@ -109,10 +110,7 @@ final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNe
     {
         $qb = $this->connection->createQueryBuilder()->from(table: 'training_session', alias: 's');
 
-        if (null !== $filterName) {
-            $qb->andWhere('s.name LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['s.name']);
 
         return $qb;
     }

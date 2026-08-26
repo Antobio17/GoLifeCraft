@@ -8,6 +8,7 @@ import {
 } from "@nutrition/shopping/shopping/domain/models/shopping-list.model";
 import { ShoppingGroupLabels } from "@nutrition/shopping/shopping/domain/models/shopping-group-labels.model";
 import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/shopping-sort-mode.model";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 export const ALL_STORES = "all";
 export const ALL_FILTER = "all";
@@ -75,6 +76,7 @@ export interface ShoppingFacets {
 
 @Injectable()
 export class ShoppingListViewService {
+  private textSearch = inject(TextSearchService);
   private articleView = inject(ArticleViewService);
   private unitCatalog = inject(UnitCatalogService);
 
@@ -459,11 +461,9 @@ export class ShoppingListViewService {
     categoryFilter: string,
     brandFilter: string,
   ): ShoppingSheetProduct[] {
-    const query = search.trim().toLowerCase();
-
     return articles
       .filter((article) =>
-        this.matches(article, query, storeFilter, categoryFilter, brandFilter),
+        this.matches(article, search, storeFilter, categoryFilter, brandFilter),
       )
       .map((article) => ({
         articleId: article.id,
@@ -491,14 +491,13 @@ export class ShoppingListViewService {
     if (categoryFilter !== ALL_FILTER && category !== categoryFilter)
       return false;
     if (brandFilter !== ALL_FILTER && brand !== brandFilter) return false;
-    if (!query) return true;
 
-    const haystack = [article.attributes.name, brand, category]
-      .filter((value): value is string => !!value)
-      .join(" ")
-      .toLowerCase();
-
-    return haystack.includes(query);
+    return this.textSearch.matches(
+      query,
+      article.attributes.name,
+      brand,
+      category,
+    );
   }
 
   private uniqueSorted(values: (string | null)[]): string[] {

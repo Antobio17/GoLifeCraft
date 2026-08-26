@@ -7,6 +7,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\Catalog\Supermarket\Domain\QueryModel\Dto\GetSupermarketsResult;
 use Nutrition\Catalog\Supermarket\Domain\QueryModel\GetSupermarketsNeedleDataQuery;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetSupermarketsNeedleDataQuery implements GetSupermarketsNeedleDataQuery
 {
@@ -57,10 +58,7 @@ final readonly class DoctrineGetSupermarketsNeedleDataQuery implements GetSuperm
             ->select('COUNT(*)')
             ->from(table: 'supermarket', alias: 't');
 
-        if (null !== $filterName) {
-            $qb->andWhere('t.name LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['t.name']);
 
         return (int) $qb->executeQuery()->fetchOne();
     }
@@ -115,10 +113,7 @@ final readonly class DoctrineGetSupermarketsNeedleDataQuery implements GetSuperm
             )
             ->from(table: 'supermarket', alias: 't');
 
-        if (null !== $filterName) {
-            $qb->andWhere('t.name LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['t.name']);
 
         return $qb;
     }

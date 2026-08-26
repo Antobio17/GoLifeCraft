@@ -13,6 +13,7 @@ use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
 use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetMenusNeedleDataQuery implements GetMenusNeedleDataQuery
 {
@@ -151,10 +152,7 @@ final readonly class DoctrineGetMenusNeedleDataQuery implements GetMenusNeedleDa
     {
         $qb = $this->connection->createQueryBuilder()->from(table: 'menu', alias: 'm');
 
-        if (null !== $filterName) {
-            $qb->andWhere('(m.name LIKE :name OR m.note LIKE :name)')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['m.name', 'm.note']);
 
         if (null !== $filterType) {
             $qb->andWhere('m.type = :type')

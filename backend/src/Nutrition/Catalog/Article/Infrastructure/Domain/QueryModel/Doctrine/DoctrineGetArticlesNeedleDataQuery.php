@@ -10,6 +10,7 @@ use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticlesResult;
 use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleSupermarketResult;
 use Nutrition\Catalog\Article\Domain\QueryModel\GetArticlesNeedleDataQuery;
 use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryRelationshipResult;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNeedleDataQuery
 {
@@ -157,10 +158,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         ?string $filterBrand,
         ?string $filterStore,
     ): void {
-        if (null !== $filterName) {
-            $qb->andWhere('t.name LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['t.name', 't.brand']);
 
         if (null !== $filterCategory) {
             $qb->andWhere('c.name = :category')

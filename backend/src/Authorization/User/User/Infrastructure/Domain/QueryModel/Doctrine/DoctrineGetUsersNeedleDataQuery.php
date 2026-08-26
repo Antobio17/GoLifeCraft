@@ -6,6 +6,7 @@ use Authorization\User\User\Domain\QueryModel\Dto\GetUsersResult;
 use Authorization\User\User\Domain\QueryModel\GetUsersNeedleDataQuery;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDataQuery
 {
@@ -90,15 +91,9 @@ final readonly class DoctrineGetUsersNeedleDataQuery implements GetUsersNeedleDa
             )
             ->from(table: 'user', alias: 'u');
 
-        if (null !== $filterUsername) {
-            $qb->andWhere('u.username LIKE :username')
-                ->setParameter(key: 'username', value: '%'.$filterUsername.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterUsername, columns: ['u.username']);
 
-        if (null !== $filterEmail) {
-            $qb->andWhere('u.email LIKE :email')
-                ->setParameter(key: 'email', value: '%'.$filterEmail.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterEmail, columns: ['u.email']);
 
         if (null !== $filterRole) {
             $qb->andWhere('u.role = :role')

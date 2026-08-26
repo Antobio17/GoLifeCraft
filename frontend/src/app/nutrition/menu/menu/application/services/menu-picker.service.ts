@@ -4,6 +4,7 @@ import { UnitCatalogService } from "@nutrition/catalog/article/application/servi
 import { RecipeListItem } from "@nutrition/recipe/recipe/domain/models/recipe.model";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { MenuItemKind, MenuMacros } from "../../domain/models/menu.model";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 export interface MenuChoice {
   kind: MenuItemKind;
@@ -56,6 +57,7 @@ const DEFAULT_ALIAS_QUANTITY = 1;
 
 @Injectable()
 export class MenuPickerService {
+  private textSearch = inject(TextSearchService);
   private unitCatalog = inject(UnitCatalogService);
 
   private products = signal(new Map<string, ProductEntry>());
@@ -225,12 +227,8 @@ export class MenuPickerService {
     query: string,
     macros: (entry: T) => MenuMacros,
   ): MenuChoice[] {
-    const needle = query.trim().toLowerCase();
-
     return Array.from(entries.entries())
-      .filter(
-        ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
-      )
+      .filter(([, entry]) => this.textSearch.matches(query, entry.name))
       .map(([refId, entry]) => ({
         kind,
         refId,

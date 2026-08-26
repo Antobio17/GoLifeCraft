@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Gym\Library\Exercise\Domain\QueryModel\Dto\GetExercisesResult;
 use Gym\Library\Exercise\Domain\QueryModel\GetExercisesNeedleDataQuery;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetExercisesNeedleDataQuery implements GetExercisesNeedleDataQuery
 {
@@ -85,10 +86,7 @@ final readonly class DoctrineGetExercisesNeedleDataQuery implements GetExercises
             ->from(table: 'exercise', alias: 'e')
             ->where('e.deleted = 0');
 
-        if (null !== $filterName) {
-            $qb->andWhere('e.name LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['e.name']);
 
         if (null !== $filterType) {
             $qb->andWhere('e.type = :type')

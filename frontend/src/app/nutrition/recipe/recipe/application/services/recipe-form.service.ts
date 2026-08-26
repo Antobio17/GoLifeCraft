@@ -3,6 +3,7 @@ import { Article } from "@nutrition/catalog/article/domain/models/article.model"
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { RecipeListItem, RecipeMacros } from "../../domain/models/recipe.model";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 export interface FormIngredient {
   key: string;
@@ -47,6 +48,7 @@ const RECIPE_UNIT = "ration";
 
 @Injectable()
 export class RecipeFormService {
+  private textSearch = inject(TextSearchService);
   private unitCatalog = inject(UnitCatalogService);
   private products = signal(new Map<string, ProductEntry>());
   private recipes = signal(new Map<string, RecipeEntry>());
@@ -105,12 +107,8 @@ export class RecipeFormService {
   }
 
   productChoices(query: string): PickableIngredient[] {
-    const needle = query.trim().toLowerCase();
-
     return Array.from(this.products().entries())
-      .filter(
-        ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
-      )
+      .filter(([, entry]) => this.textSearch.matches(query, entry.name))
       .map(([refId, entry]) => ({
         kind: "product" as const,
         refId,
@@ -123,13 +121,9 @@ export class RecipeFormService {
   }
 
   recipeChoices(query: string, excludeId: string): PickableIngredient[] {
-    const needle = query.trim().toLowerCase();
-
     return Array.from(this.recipes().entries())
       .filter(([refId]) => refId !== excludeId)
-      .filter(
-        ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
-      )
+      .filter(([, entry]) => this.textSearch.matches(query, entry.name))
       .map(([refId, entry]) => ({
         kind: "recipe" as const,
         refId,

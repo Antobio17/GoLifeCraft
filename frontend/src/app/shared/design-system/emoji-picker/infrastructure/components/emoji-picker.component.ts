@@ -1,8 +1,16 @@
-import { Component, Input, computed, forwardRef, signal } from "@angular/core";
+import {
+  Component,
+  Input,
+  computed,
+  forwardRef,
+  inject,
+  signal,
+} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SearchInputComponent } from "../../../search-input/infrastructure/components/search-input.component";
 import { ModalSheetComponent } from "../../../modal-sheet/infrastructure/components/modal-sheet.component";
 import { EmojiGroup } from "../../domain/models/emoji-group.model";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 @Component({
   selector: "ds-emoji-picker",
@@ -200,8 +208,10 @@ export class EmojiPickerComponent implements ControlValueAccessor {
 
   preview = computed(() => this.selected() || this.fallback);
 
+  private textSearch = inject(TextSearchService);
+
   visibleGroups = computed(() => {
-    const term = this.normalize(this.query());
+    const term = this.query().trim();
 
     if (term.length === 0) {
       return this.allGroups();
@@ -272,12 +282,8 @@ export class EmojiPickerComponent implements ControlValueAccessor {
   ): boolean {
     if (emoji === term) return true;
 
-    const haystack = this.normalize([label, ...(keywords ?? [])].join(" "));
+    if (this.textSearch.tokens(term).length === 0) return false;
 
-    return haystack.includes(term);
-  }
-
-  private normalize(value: string): string {
-    return value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+    return this.textSearch.matches(term, label, ...(keywords ?? []));
   }
 }

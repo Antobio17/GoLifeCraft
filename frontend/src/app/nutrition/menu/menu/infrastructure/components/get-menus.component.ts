@@ -32,6 +32,7 @@ import {
 import { MenuLoadSheetComponent } from "./menu-load-sheet.component";
 import { MenuApplyWeekSheetComponent } from "./menu-apply-week-sheet.component";
 import { MenuShoppingSheetComponent } from "./menu-shopping-sheet.component";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 interface MenuCardView {
   id: string;
@@ -82,6 +83,7 @@ const WEEK_EMOJI = "🗓️";
   ],
 })
 export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
+  private textSearch = inject(TextSearchService);
   private getMenusService = inject(GetMenusService);
   private exportMenuService = inject(ExportMenuService);
   protected view = inject(MenuViewService);
@@ -112,10 +114,10 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   });
 
   filteredMenus = computed<MenuListItem[]>(() => {
-    const query = this.searchQuery().trim().toLowerCase();
+    const query = this.searchQuery();
 
-    return this.items().filter(
-      (menu) => !query || menu.attributes.name.toLowerCase().includes(query),
+    return this.items().filter((menu) =>
+      this.textSearch.matches(query, menu.attributes.name),
     );
   });
 

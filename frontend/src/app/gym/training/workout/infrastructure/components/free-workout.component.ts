@@ -55,6 +55,7 @@ import {
 } from "@gym/training/workout/application/services/active-workout.service";
 import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-sync-mode.model";
 import { FreeWorkoutFinishMode } from "@gym/training/workout/domain/models/free-workout-finish-mode.model";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 @Component({
   selector: "app-free-workout",
@@ -92,6 +93,7 @@ import { FreeWorkoutFinishMode } from "@gym/training/workout/domain/models/free-
   ],
 })
 export class FreeWorkoutComponent implements OnInit {
+  private textSearch = inject(TextSearchService);
   private translationService = inject(TranslationService);
   private getExercisesService = inject(GetExercisesService);
   private createSessionService = inject(CreateSessionService);
@@ -140,16 +142,14 @@ export class FreeWorkoutComponent implements OnInit {
   librarySearch = signal("");
 
   libraryRows = computed(() => {
-    const query = this.librarySearch().trim().toLowerCase();
-    const items = query
-      ? this.library().filter(
-          (exercise) =>
-            exercise.attributes.name.toLowerCase().includes(query) ||
-            exercise.attributes.muscleGroups.some((muscle) =>
-              muscle.toLowerCase().includes(query),
-            ),
-        )
-      : this.library();
+    const query = this.librarySearch();
+    const items = this.library().filter((exercise) =>
+      this.textSearch.matches(
+        query,
+        exercise.attributes.name,
+        ...exercise.attributes.muscleGroups,
+      ),
+    );
 
     return items.map((exercise) => ({
       id: exercise.id,

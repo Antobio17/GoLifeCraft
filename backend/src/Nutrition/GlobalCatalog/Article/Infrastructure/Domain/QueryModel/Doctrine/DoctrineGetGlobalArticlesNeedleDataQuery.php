@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\GlobalCatalog\Article\Domain\QueryModel\Dto\GetGlobalArticlesResult;
 use Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticlesNeedleDataQuery;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlobalArticlesNeedleDataQuery
 {
@@ -112,10 +113,7 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
         $qb = $this->connection->createQueryBuilder()
             ->from(table: 'global_article', alias: 't');
 
-        if (null !== $filterName) {
-            $qb->andWhere('t.name LIKE :name OR t.brand LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['t.name', 't.brand']);
 
         if (null !== $filterSource) {
             $qb->andWhere('t.source = :source')

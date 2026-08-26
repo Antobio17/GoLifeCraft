@@ -9,6 +9,7 @@ use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\GetRecipesResult;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipesNeedleDataQuery;
 use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetRecipesNeedleDataQuery implements GetRecipesNeedleDataQuery
 {
@@ -119,10 +120,7 @@ final readonly class DoctrineGetRecipesNeedleDataQuery implements GetRecipesNeed
     {
         $qb = $this->connection->createQueryBuilder()->from(table: 'recipe', alias: 'r');
 
-        if (null !== $filterName) {
-            $qb->andWhere('(r.name LIKE :name OR r.category LIKE :name)')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['r.name', 'r.category']);
 
         if (null !== $filterCategory) {
             $qb->andWhere('r.category = :category')

@@ -4,6 +4,7 @@ import { UnitCatalogService } from "@nutrition/catalog/article/application/servi
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { RecipeListItem } from "@nutrition/recipe/recipe/domain/models/recipe.model";
 import { DiaryMacros } from "../../domain/models/diary.model";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 export interface DiaryChoice {
   kind: "product" | "recipe";
@@ -45,6 +46,7 @@ const DEFAULT_RECIPE_QUANTITY = 1;
 
 @Injectable()
 export class DiaryPickerService {
+  private textSearch = inject(TextSearchService);
   private unitCatalog = inject(UnitCatalogService);
 
   private products = signal(new Map<string, ProductEntry>());
@@ -142,12 +144,8 @@ export class DiaryPickerService {
   }
 
   productChoices(query: string): DiaryChoice[] {
-    const needle = query.trim().toLowerCase();
-
     return Array.from(this.products().entries())
-      .filter(
-        ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
-      )
+      .filter(([, entry]) => this.textSearch.matches(query, entry.name))
       .map(([refId, entry]) => ({
         kind: "product" as const,
         refId,
@@ -160,12 +158,8 @@ export class DiaryPickerService {
   }
 
   recipeChoices(query: string): DiaryChoice[] {
-    const needle = query.trim().toLowerCase();
-
     return Array.from(this.recipes().entries())
-      .filter(
-        ([, entry]) => !needle || entry.name.toLowerCase().includes(needle),
-      )
+      .filter(([, entry]) => this.textSearch.matches(query, entry.name))
       .map(([refId, entry]) => ({
         kind: "recipe" as const,
         refId,

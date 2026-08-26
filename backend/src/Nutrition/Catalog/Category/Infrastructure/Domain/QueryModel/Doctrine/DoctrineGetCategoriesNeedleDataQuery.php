@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\Catalog\Category\Domain\QueryModel\Dto\GetCategoriesResult;
 use Nutrition\Catalog\Category\Domain\QueryModel\GetCategoriesNeedleDataQuery;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
 final readonly class DoctrineGetCategoriesNeedleDataQuery implements GetCategoriesNeedleDataQuery
 {
@@ -52,10 +53,7 @@ final readonly class DoctrineGetCategoriesNeedleDataQuery implements GetCategori
             ->select('COUNT(*)')
             ->from(table: 'category', alias: 't');
 
-        if (null !== $filterName) {
-            $qb->andWhere('t.name LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['t.name']);
 
         return (int) $qb->executeQuery()->fetchOne();
     }
@@ -73,10 +71,7 @@ final readonly class DoctrineGetCategoriesNeedleDataQuery implements GetCategori
             )
             ->from(table: 'category', alias: 't');
 
-        if (null !== $filterName) {
-            $qb->andWhere('t.name LIKE :name')
-                ->setParameter(key: 'name', value: '%'.$filterName.'%');
-        }
+        SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['t.name']);
 
         return $qb;
     }

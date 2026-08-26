@@ -1,10 +1,18 @@
-import { Component, Input, computed, forwardRef, signal } from "@angular/core";
+import {
+  Component,
+  Input,
+  computed,
+  forwardRef,
+  inject,
+  signal,
+} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SearchInputComponent } from "../../../search-input/infrastructure/components/search-input.component";
 import { ModalSheetComponent } from "../../../modal-sheet/infrastructure/components/modal-sheet.component";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 import { IconGroup } from "../../domain/models/icon-group.model";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 @Component({
   selector: "ds-icon-picker",
@@ -201,8 +209,10 @@ export class IconPickerComponent implements ControlValueAccessor {
 
   preview = computed<DsIconName>(() => this.selected() ?? this.fallback);
 
+  private textSearch = inject(TextSearchService);
+
   visibleGroups = computed(() => {
-    const term = this.normalize(this.query());
+    const term = this.query().trim();
 
     if (term.length === 0) {
       return this.allGroups();
@@ -271,14 +281,8 @@ export class IconPickerComponent implements ControlValueAccessor {
     keywords: string[] | undefined,
     term: string,
   ): boolean {
-    const haystack = this.normalize(
-      [icon, label, ...(keywords ?? [])].join(" "),
-    );
+    if (this.textSearch.tokens(term).length === 0) return false;
 
-    return haystack.includes(term);
-  }
-
-  private normalize(value: string): string {
-    return value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+    return this.textSearch.matches(term, icon, label, ...(keywords ?? []));
   }
 }

@@ -24,6 +24,7 @@ import {
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import { TextSearchService } from "@shared/search/application/services/text-search.service";
 
 @Component({
   selector: "app-get-recipes",
@@ -45,6 +46,7 @@ import { RevealDirective } from "@shared/design-system/reveal/infrastructure/dir
   ],
 })
 export class GetRecipesComponent extends AbstractListPageComponent<RecipeListItem> {
+  private textSearch = inject(TextSearchService);
   private getRecipesService = inject(GetRecipesService);
   protected view = inject(RecipeViewService);
 
@@ -54,16 +56,15 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
   searchQuery = signal("");
 
   filteredRecipes = computed<RecipeListItem[]>(() => {
-    const query = this.searchQuery().trim().toLowerCase();
+    const query = this.searchQuery();
 
-    return this.items().filter((recipe) => {
-      if (!query) return true;
-
-      return (
-        recipe.attributes.name.toLowerCase().includes(query) ||
-        recipe.attributes.category.toLowerCase().includes(query)
-      );
-    });
+    return this.items().filter((recipe) =>
+      this.textSearch.matches(
+        query,
+        recipe.attributes.name,
+        recipe.attributes.category,
+      ),
+    );
   });
 
   macroLabels = computed<MacroShortLabels>(() => ({
