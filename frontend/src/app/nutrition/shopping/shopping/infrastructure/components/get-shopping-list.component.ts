@@ -33,6 +33,7 @@ import { ConfirmActionModalComponent } from "@shared/design-system/confirm-actio
 import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { Supermarket } from "@nutrition/catalog/supermarket/domain/models/supermarket.model";
 import { GetSupermarketsService } from "@nutrition/catalog/supermarket/application/services/get-supermarkets.service";
 import { ManageAislesComponent } from "@nutrition/catalog/supermarket/infrastructure/components/manage-aisles.component";
@@ -62,6 +63,7 @@ type FilterKind = "store" | "cat" | "brand";
   templateUrl: "./get-shopping-list.component.html",
   styleUrls: ["./get-shopping-list.component.css"],
   imports: [
+    RevealDirective,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,

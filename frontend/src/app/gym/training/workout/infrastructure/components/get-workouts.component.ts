@@ -23,6 +23,7 @@ import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 
 interface WorkoutRow {
   id: string;
@@ -38,6 +39,7 @@ interface WorkoutRow {
   selector: "app-get-workouts",
   templateUrl: "./get-workouts.component.html",
   imports: [
+    RevealDirective,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,

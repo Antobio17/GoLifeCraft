@@ -14,6 +14,7 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { AgendaItemComponent } from "@shared/design-system/agenda-item/infrastructure/components/agenda-item.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetAgendaUpcomingService } from "@agenda/agenda/agenda/application/services/get-agenda-upcoming.service";
 import { AgendaViewService } from "@agenda/agenda/agenda/application/services/agenda-view.service";
 import { AgendaCategoryCatalogService } from "@agenda/agenda/agenda/application/services/agenda-category-catalog.service";
@@ -43,6 +44,7 @@ interface AgendaSummaryEntry {
   selector: "app-agenda-summary",
   templateUrl: "./agenda-summary.component.html",
   imports: [
+    RevealDirective,
     ContextualTranslatePipe,
     StackComponent,
     TextComponent,

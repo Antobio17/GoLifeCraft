@@ -69,6 +69,7 @@ import { AutosaveService } from "@shared/autosave/application/services/autosave.
 import { UndoService } from "@shared/undo/application/services/undo.service";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
 import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { uuidV4 } from "@shared/uuid/uuid";
 import {
   MenuDraft,
@@ -101,6 +102,7 @@ type PickerTab = "product" | "recipe";
   selector: "app-get-menu",
   templateUrl: "./get-menu.component.html",
   imports: [
+    RevealDirective,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,

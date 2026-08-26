@@ -97,7 +97,7 @@
         />
       }
     } @else {
-      <ds-grid [minColumn]="'20rem'">
+      <ds-grid dsReveal="children" [minColumn]="'20rem'">
         @for (card of cards(); track card.id) {
           <ds-product-card
             [actionable]="canImport"

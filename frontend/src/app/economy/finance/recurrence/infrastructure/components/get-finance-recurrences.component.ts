@@ -43,6 +43,7 @@ import { FinanceRecurrence } from "@economy/finance/recurrence/domain/models/fin
 import { FinanceRecurrenceForm } from "@economy/finance/recurrence/domain/models/finance-recurrence-form.model";
 import { FinanceRecurrenceRow } from "@economy/finance/recurrence/domain/models/finance-recurrence-row.model";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
 import { FinanceCategory } from "@economy/finance/transaction/domain/models/finance-category.model";
@@ -55,6 +56,7 @@ import { FinanceAccount } from "@economy/finance/account/domain/models/finance-a
   selector: "app-get-finance-recurrences",
   templateUrl: "./get-finance-recurrences.component.html",
   imports: [
+    RevealDirective,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,

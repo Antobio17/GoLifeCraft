@@ -93,7 +93,7 @@
         />
       }
 
-      <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
         @for (row of activeRows(); track row.recurrence.id) {
           <ds-swipe-to-delete
             #recurrenceSwipe
@@ -125,7 +125,7 @@
           size="md"
         />
 
-        <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
           @for (row of pausedRows(); track row.recurrence.id) {
             <ds-swipe-to-delete
               #pausedSwipe

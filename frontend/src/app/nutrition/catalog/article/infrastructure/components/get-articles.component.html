@@ -117,7 +117,7 @@
         />
       }
     } @else {
-      <ds-grid [minColumn]="'18.75rem'">
+      <ds-grid dsReveal="children" [minColumn]="'18.75rem'">
         @for (card of cards(); track card.id) {
           <ds-product-card
             [emoji]="card.emoji"

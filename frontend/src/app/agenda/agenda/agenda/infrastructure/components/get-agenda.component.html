@@ -97,7 +97,7 @@
         [chips]="2"
       />
     } @else if (hasEntries()) {
-      <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
         @for (entry of entries(); track entry.id) {
           <ds-agenda-item
             [title]="entry.title"

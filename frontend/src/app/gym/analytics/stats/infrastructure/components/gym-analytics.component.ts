@@ -10,6 +10,7 @@ import { SectionHeaderComponent } from "@shared/design-system/section-header/inf
 import { StatTileComponent } from "@shared/design-system/stat-tile/infrastructure/components/stat-tile.component";
 import { PanelComponent } from "@shared/design-system/panel/infrastructure/components/panel.component";
 import { MeterComponent } from "@shared/design-system/meter/infrastructure/components/meter.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import {
   GymActivityView,
   GymActivityViewService,
@@ -35,6 +36,7 @@ const REGION_COLORS = [
   templateUrl: "./gym-analytics.component.html",
   styleUrls: ["./gym-analytics.component.css"],
   imports: [
+    RevealDirective,
     ContextualTranslatePipe,
     TextComponent,
     ActivityHeatmapComponent,

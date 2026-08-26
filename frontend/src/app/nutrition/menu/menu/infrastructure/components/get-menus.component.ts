@@ -21,6 +21,7 @@ import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetMenusService } from "@nutrition/menu/menu/application/services/get-menus.service";
 import { ExportMenuService } from "@nutrition/menu/menu/application/services/export-menu.service";
 import { MenuViewService } from "@nutrition/menu/menu/application/services/menu-view.service";
@@ -58,6 +59,7 @@ const WEEK_EMOJI = "🗓️";
   selector: "app-get-menus",
   templateUrl: "./get-menus.component.html",
   imports: [
+    RevealDirective,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,

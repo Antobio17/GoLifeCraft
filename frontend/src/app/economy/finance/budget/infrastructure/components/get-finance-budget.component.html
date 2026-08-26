@@ -201,7 +201,7 @@
         />
       }
 
-      <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
         @for (row of categoryRows(); track row.key) {
           <ds-card
             [padding]="'var(--ds-space-3)'"

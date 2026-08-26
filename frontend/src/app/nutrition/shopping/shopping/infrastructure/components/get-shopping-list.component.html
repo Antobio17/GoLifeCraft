@@ -270,7 +270,7 @@
       @if (sheetProducts().length === 0) {
         <ds-text variant="muted">{{ "getShopping.sheet.empty" | t }}</ds-text>
       } @else {
-        <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
           @for (product of sheetProducts(); track product.articleId) {
             <ds-product-card
               [emoji]="product.emoji"

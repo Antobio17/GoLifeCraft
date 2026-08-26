@@ -58,7 +58,7 @@
           [staticLabel]="group.countLabel"
         />
 
-        <ds-grid [minColumn]="'20rem'">
+        <ds-grid dsReveal="children" [minColumn]="'20rem'">
           @for (card of group.cards; track card.id) {
             <ds-menu-card
               [emoji]="card.emoji"

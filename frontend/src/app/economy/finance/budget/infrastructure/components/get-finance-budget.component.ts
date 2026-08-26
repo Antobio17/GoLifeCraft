@@ -21,6 +21,7 @@ import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastru
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { TransactionRowComponent } from "@shared/design-system/transaction-row/infrastructure/components/transaction-row.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
 import { GetFinanceTransactionsService } from "@economy/finance/transaction/application/services/get-finance-transactions.service";
@@ -39,6 +40,7 @@ import { FinanceCategory } from "@economy/finance/transaction/domain/models/fina
   selector: "app-get-finance-budget",
   templateUrl: "./get-finance-budget.component.html",
   imports: [
+    RevealDirective,
     ContextualTranslatePipe,
     PageWrapperComponent,
     SplitViewComponent,

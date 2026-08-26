@@ -105,7 +105,7 @@
         [staticLabel]="totalLabel(recipe.total.calories)"
       />
 
-      <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
         @for (row of ingredientRows(); track row.ingredient.id) {
           <ds-card [padding]="'var(--ds-space-2)'">
             <ds-stack

@@ -23,11 +23,13 @@ import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 
 @Component({
   selector: "app-get-recipes",
   templateUrl: "./get-recipes.component.html",
   imports: [
+    RevealDirective,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,

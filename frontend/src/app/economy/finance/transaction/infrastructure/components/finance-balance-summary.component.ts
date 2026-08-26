@@ -14,6 +14,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { BalanceCardComponent } from "@shared/design-system/balance-card/infrastructure/components/balance-card.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetFinanceOverviewService } from "@economy/finance/transaction/application/services/get-finance-overview.service";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceOverviewAttributes } from "@economy/finance/transaction/domain/models/finance-overview-attributes.model";
@@ -22,6 +23,7 @@ import { FinanceOverviewAttributes } from "@economy/finance/transaction/domain/m
   selector: "app-finance-balance-summary",
   templateUrl: "./finance-balance-summary.component.html",
   imports: [
+    RevealDirective,
     ContextualTranslatePipe,
     StackComponent,
     TextComponent,

@@ -19,6 +19,7 @@ import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 
 interface SessionRow {
   id: string;
@@ -31,6 +32,7 @@ interface SessionRow {
   selector: "app-get-sessions",
   templateUrl: "./get-sessions.component.html",
   imports: [
+    RevealDirective,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,

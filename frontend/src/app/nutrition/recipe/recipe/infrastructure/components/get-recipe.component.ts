@@ -38,11 +38,13 @@ import {
 } from "@nutrition/recipe/recipe/domain/models/recipe.model";
 import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 
 @Component({
   selector: "app-get-recipe",
   templateUrl: "./get-recipe.component.html",
   imports: [
+    RevealDirective,
     ContextualTranslatePipe,
     PageWrapperComponent,
     SplitViewComponent,

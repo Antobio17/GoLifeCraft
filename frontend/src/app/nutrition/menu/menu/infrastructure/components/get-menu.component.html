@@ -397,7 +397,7 @@
           ) | t
         }}</ds-text>
       } @else {
-        <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
           @for (row of pickerRows(); track row.choice.refId) {
             <ds-card [padding]="'var(--ds-space-2)'">
               <ds-stack

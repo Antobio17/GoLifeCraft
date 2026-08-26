@@ -27,6 +27,7 @@ import {
   CalendarCell,
   CalendarComponent,
 } from "@shared/design-system/calendar/infrastructure/components/calendar.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetAgendaDayService } from "@agenda/agenda/agenda/application/services/get-agenda-day.service";
 import { GetAgendaCalendarService } from "@agenda/agenda/agenda/application/services/get-agenda-calendar.service";
 import { CreateAgendaEntryService } from "@agenda/agenda/agenda/application/services/create-agenda-entry.service";
@@ -57,6 +58,7 @@ import { AgendaCalendarDay } from "@agenda/agenda/agenda/domain/models/agenda-ca
   templateUrl: "./get-agenda.component.html",
   styleUrls: ["./get-agenda.component.css"],
   imports: [
+    RevealDirective,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,

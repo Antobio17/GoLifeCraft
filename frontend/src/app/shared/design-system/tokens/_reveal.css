@@ -1,0 +1,31 @@
+/* ============================================================
+   DESIGN SYSTEM — REVEAL
+   Entrada de contenido. La clase no se escribe a mano en ningún
+   template: la pone ContentRevealService, que la retira al acabar
+   la animación para que el fill-mode no deje un transform fijado
+   sobre el elemento. El escalonado llega por --ds-reveal-delay.
+   ============================================================ */
+
+@keyframes ds-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ds-reveal-shift));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.ds-reveal {
+  animation: ds-reveal-in var(--ds-dur-3) var(--ds-ease-out) both;
+  animation-delay: var(--ds-reveal-delay, 0ms);
+}
+
+/* La regla global recorta la duración a 0.01ms; sin recortar también
+   el retardo, el elemento se quedaría invisible mientras lo espera. */
+@media (prefers-reduced-motion: reduce) {
+  .ds-reveal {
+    animation-delay: 0ms;
+  }
+}

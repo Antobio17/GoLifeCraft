@@ -117,7 +117,7 @@
         />
       }
     } @else if (view() === "list") {
-      <ds-grid [minColumn]="'17.5rem'" [tabletColumns]="2">
+      <ds-grid dsReveal="children" [minColumn]="'17.5rem'" [tabletColumns]="2">
         @for (row of rows(); track row.id) {
           <ng-container
             [ngTemplateOutlet]="exerciseRow"
@@ -149,7 +149,7 @@
         (reached)="loadMore()"
       />
     } @else {
-      <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-stack dsReveal="children" [gap]="'var(--ds-space-4)'">
         @for (group of groupedItems(); track group.muscle) {
           <ds-stack [gap]="'var(--ds-space-2)'">
             <ds-stack

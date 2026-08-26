@@ -28,6 +28,7 @@ import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 
 const ALL = "";
 
@@ -35,6 +36,7 @@ const ALL = "";
   selector: "app-get-articles",
   templateUrl: "./get-articles.component.html",
   imports: [
+    RevealDirective,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,

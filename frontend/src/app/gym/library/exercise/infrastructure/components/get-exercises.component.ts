@@ -37,6 +37,7 @@ import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 
 interface ExerciseRow {
   id: string;
@@ -58,6 +59,7 @@ type LibraryView = "list" | "grouped";
   selector: "app-get-exercises",
   templateUrl: "./get-exercises.component.html",
   imports: [
+    RevealDirective,
     FormsModule,
     NgTemplateOutlet,
     ContextualTranslatePipe,
