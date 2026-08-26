@@ -1,12 +1,35 @@
 /* ============================================================
    DESIGN SYSTEM — MOTION
+   Una sola escala para toda la app. Las duraciones se nombran
+   por intención, no por número: si algo no encaja en ninguna
+   de las cuatro, casi siempre es que está mal planteado.
    ============================================================ */
 
 :root {
-  --ds-transition-fast: 0.15s ease;
-  --ds-transition-base: 0.2s ease;
-  --ds-transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --ds-transition-slow: 0.5s ease;
+  --ds-dur-1: 120ms;
+  --ds-dur-2: 180ms;
+  --ds-dur-3: 260ms;
+  --ds-dur-4: 420ms;
 
-  --ds-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ds-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ds-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-ease-spring: cubic-bezier(0.34, 1.28, 0.64, 1);
+
+  --ds-motion-press: transform var(--ds-dur-1) var(--ds-ease-out);
+  --ds-motion-tint:
+    background var(--ds-dur-1) var(--ds-ease-out),
+    color var(--ds-dur-1) var(--ds-ease-out),
+    border-color var(--ds-dur-1) var(--ds-ease-out);
+  --ds-motion-fill: width var(--ds-dur-4) var(--ds-ease-in-out);
+
+  --ds-reveal-shift: 0.5rem;
+  --ds-reveal-stagger: 32ms;
+  --ds-reveal-stagger-max: 6;
+
+  --ds-transition-fast: var(--ds-dur-1) var(--ds-ease-out);
+  --ds-transition-base: var(--ds-dur-2) var(--ds-ease-out);
+  --ds-transition-smooth: var(--ds-dur-3) var(--ds-ease-in-out);
+  --ds-transition-slow: var(--ds-dur-4) var(--ds-ease-in-out);
+  --ds-ease-standard: var(--ds-ease-in-out);
 }

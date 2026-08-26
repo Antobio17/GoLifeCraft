@@ -158,7 +158,7 @@ import { EmojiGroup } from "../../domain/models/emoji-group.model";
         font-size: var(--ds-text-2xl);
         line-height: 1;
         user-select: none;
-        transition: all 0.14s ease;
+        transition: var(--ds-motion-tint), var(--ds-motion-press);
       }
       .ds-emoji-cell:hover:not(.is-selected) {
         border-color: var(--ds-primary-soft-border);

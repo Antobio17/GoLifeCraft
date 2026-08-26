@@ -52,9 +52,9 @@
   font-weight: 500;
   cursor: pointer;
   transition:
-    border-color 0.18s,
-    box-shadow 0.18s,
-    background 0.18s;
+    border-color var(--ds-dur-2) var(--ds-ease-out),
+    box-shadow var(--ds-dur-2) var(--ds-ease-out),
+    background var(--ds-dur-2) var(--ds-ease-out);
   outline: none;
   appearance: none;
   -webkit-appearance: none;

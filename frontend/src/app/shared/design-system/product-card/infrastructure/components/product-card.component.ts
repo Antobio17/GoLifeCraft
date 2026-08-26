@@ -125,10 +125,10 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         cursor: pointer;
         box-shadow: var(--ds-elev);
         transition:
-          border-color 0.15s ease,
-          background 0.15s ease,
-          box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-          transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+          border-color var(--ds-dur-2) var(--ds-ease-out),
+          background var(--ds-dur-2) var(--ds-ease-out),
+          box-shadow var(--ds-dur-3) var(--ds-ease-in-out),
+          transform var(--ds-dur-3) var(--ds-ease-in-out);
       }
       button.ds-pcard:hover {
         border-color: var(--ds-border-strong);
@@ -183,8 +183,8 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         padding: var(--ds-space-2) var(--ds-space-3);
         cursor: pointer;
         transition:
-          background 0.15s ease,
-          color 0.15s ease;
+          background var(--ds-dur-2) var(--ds-ease-out),
+          color var(--ds-dur-2) var(--ds-ease-out);
       }
       .ds-pcard__action:disabled {
         cursor: default;

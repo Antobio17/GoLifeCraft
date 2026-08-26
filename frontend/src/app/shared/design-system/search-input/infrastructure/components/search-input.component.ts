@@ -73,8 +73,8 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-3);
         transition:
-          border-color 0.15s ease,
-          box-shadow 0.15s ease;
+          border-color var(--ds-dur-2) var(--ds-ease-out),
+          box-shadow var(--ds-dur-2) var(--ds-ease-out);
       }
       .ds-search.is-focused {
         border-color: var(--ds-border-focus);

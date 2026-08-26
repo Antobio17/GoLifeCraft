@@ -53,9 +53,9 @@ export interface ChoiceChipOption {
         font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         transition:
-          background 0.15s ease,
-          border-color 0.15s ease,
-          color 0.15s ease;
+          background var(--ds-dur-2) var(--ds-ease-out),
+          border-color var(--ds-dur-2) var(--ds-ease-out),
+          color var(--ds-dur-2) var(--ds-ease-out);
       }
       .ds-choice-chip:hover:not(:disabled):not(.is-selected) {
         border-color: var(--ds-primary-soft-border);

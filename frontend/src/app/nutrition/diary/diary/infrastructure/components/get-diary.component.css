@@ -1,9 +1,9 @@
 .diary-tree--in {
-  animation: diary-tree-in 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: diary-tree-in var(--ds-dur-3) var(--ds-ease-out);
 }
 
 .diary-tree--out {
-  animation: diary-tree-in 0.18s cubic-bezier(0.4, 0, 1, 1) reverse;
+  animation: diary-tree-in var(--ds-dur-2) var(--ds-ease-in) reverse;
 }
 
 @keyframes diary-tree-in {

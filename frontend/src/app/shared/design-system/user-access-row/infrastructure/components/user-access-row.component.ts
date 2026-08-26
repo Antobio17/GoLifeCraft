@@ -85,7 +85,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-3);
-        transition: opacity 0.15s ease;
+        transition: opacity var(--ds-dur-2) var(--ds-ease-out);
       }
       .ds-uar--inactive {
         opacity: 0.62;
@@ -182,8 +182,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         box-sizing: border-box;
         display: block;
         transition:
-          background 0.18s ease,
-          border-color 0.18s ease;
+          background var(--ds-dur-2) var(--ds-ease-out),
+          border-color var(--ds-dur-2) var(--ds-ease-out);
       }
       .ds-uar__track.is-on {
         background: var(--ds-primary);
@@ -196,7 +196,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-raised);
         box-shadow: 0 1px 0.1875rem rgba(0, 0, 0, 0.2);
-        transition: transform 0.18s ease;
+        transition: transform var(--ds-dur-2) var(--ds-ease-out);
       }
       .ds-uar__track.is-on .ds-uar__knob {
         transform: translateX(1.125rem);

@@ -23,7 +23,7 @@
      redondeado deja asomar una franja de rojo en las esquinas. Se pinta sólo
      cuando la fila está desplazada. */
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .swipe__delete--revealed,

@@ -67,8 +67,8 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         box-shadow: var(--ds-elev);
         transition:
           border-color var(--ds-transition-fast),
-          box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-          transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow var(--ds-dur-3) var(--ds-ease-in-out),
+          transform var(--ds-dur-3) var(--ds-ease-in-out);
       }
       .ds-mcard:hover {
         border-color: var(--ds-border-strong);

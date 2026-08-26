@@ -44,7 +44,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: 0.15s ease;
+  transition: var(--ds-dur-2) var(--ds-ease-out);
   background: var(--ds-surface);
   border: 1.5px solid var(--ds-border-strong);
   color: var(--ds-accent);

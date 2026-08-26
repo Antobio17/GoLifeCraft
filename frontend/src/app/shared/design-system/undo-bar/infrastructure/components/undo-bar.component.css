@@ -23,7 +23,7 @@
   font-family: var(--ds-font-body);
   font-size: var(--ds-text-base);
   pointer-events: auto;
-  animation: ds-undo-bar-in var(--ds-transition-fast) ease-out;
+  animation: ds-undo-bar-in var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .ds-undo-bar[data-lifted] {

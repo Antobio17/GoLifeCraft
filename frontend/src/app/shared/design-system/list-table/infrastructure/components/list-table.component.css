@@ -101,7 +101,7 @@
   align-items: center;
   background: transparent;
   border-bottom: 1px solid var(--ds-border);
-  transition: background 0.12s ease;
+  transition: background var(--ds-dur-1) var(--ds-ease-out);
 }
 
 .lt-row:last-child {
@@ -145,7 +145,7 @@
   text-align: left;
   cursor: pointer;
   color: var(--ds-text);
-  transition: color 0.15s ease;
+  transition: color var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .lt-text-link:hover {
@@ -474,8 +474,8 @@
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
   transition:
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+    box-shadow var(--ds-dur-2) var(--ds-ease-out),
+    border-color var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .lt-card:active {
@@ -561,8 +561,8 @@
   color: var(--ds-primary);
   font-family: inherit;
   transition:
-    background 0.15s ease,
-    border-color 0.15s ease;
+    background var(--ds-dur-2) var(--ds-ease-out),
+    border-color var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .lt-card-btn:active {

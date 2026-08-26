@@ -9,7 +9,7 @@
   border: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-xl);
   padding: var(--ds-space-2) var(--ds-space-3);
-  transition: background 0.2s ease;
+  transition: background var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .shopping-item--checked {
@@ -39,7 +39,7 @@
   background: var(--ds-surface-inset);
   border: 1.5px solid var(--ds-border-input);
   color: transparent;
-  transition: all 0.15s ease;
+  transition: var(--ds-motion-tint);
 }
 
 .shopping-item__check.is-checked {

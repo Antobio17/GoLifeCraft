@@ -186,7 +186,7 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         display: block;
         height: 100%;
         border-radius: var(--ds-radius-pill);
-        transition: width 0.4s cubic-bezier(0.6, 0.05, 0.28, 0.98);
+        transition: width var(--ds-dur-4) var(--ds-ease-in-out);
       }
       .macro__fill--capped {
         border-radius: var(--ds-radius-pill) 0 0 var(--ds-radius-pill);
@@ -197,7 +197,7 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         border-radius: 0 var(--ds-radius-pill) var(--ds-radius-pill) 0;
         background: var(--ds-danger);
         border-left: 2px solid var(--ds-surface);
-        transition: width 0.4s cubic-bezier(0.6, 0.05, 0.28, 0.98);
+        transition: width var(--ds-dur-4) var(--ds-ease-in-out);
       }
       .macro__fill--protein {
         background: var(--ds-data-1);

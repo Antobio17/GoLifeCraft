@@ -31,7 +31,7 @@
   border: 1.5px solid var(--ds-border-input);
   color: transparent;
   overflow: hidden;
-  transition: all 0.15s ease;
+  transition: var(--ds-motion-tint);
 }
 
 .agenda-item__check.is-checked {

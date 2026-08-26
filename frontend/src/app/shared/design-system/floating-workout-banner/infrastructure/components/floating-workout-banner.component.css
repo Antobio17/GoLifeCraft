@@ -27,7 +27,7 @@
   border-radius: var(--ds-radius-pill);
   padding: var(--ds-space-1-5) var(--ds-space-3);
   box-shadow: var(--ds-shadow-card);
-  animation: workoutBannerUp 0.28s cubic-bezier(0.6, 0.05, 0.28, 0.98);
+  animation: workoutBannerUp var(--ds-dur-3) var(--ds-ease-out);
 }
 
 .workout-banner:hover {

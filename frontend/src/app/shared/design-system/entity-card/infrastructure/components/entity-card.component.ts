@@ -50,9 +50,9 @@ import { NgTemplateOutlet } from "@angular/common";
         padding: var(--ds-space-4);
         box-shadow: var(--ds-shadow-card);
         transition:
-          border-color 0.15s ease,
-          box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-          transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+          border-color var(--ds-dur-2) var(--ds-ease-out),
+          box-shadow var(--ds-dur-3) var(--ds-ease-in-out),
+          transform var(--ds-dur-3) var(--ds-ease-in-out);
       }
       .ds-entity-card.is-clickable:hover {
         border-color: var(--ds-primary-soft-border);

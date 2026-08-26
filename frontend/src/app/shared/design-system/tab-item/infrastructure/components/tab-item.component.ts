@@ -29,7 +29,14 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         border-radius: var(--ds-radius-lg);
         color: var(--ds-text-meta);
         text-decoration: none;
-        transition: all 0.3s cubic-bezier(0.6, 0.05, 0.28, 0.98);
+        transition:
+          background var(--ds-dur-3) var(--ds-ease-out),
+          color var(--ds-dur-2) var(--ds-ease-out),
+          padding var(--ds-dur-3) var(--ds-ease-spring),
+          transform var(--ds-dur-1) var(--ds-ease-out);
+      }
+      :host(:active) .tab {
+        transform: scale(0.94);
       }
       .tab__icon {
         display: flex;
@@ -45,7 +52,10 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         font-weight: 700;
         line-height: 1;
         white-space: nowrap;
-        transition: all 0.3s cubic-bezier(0.6, 0.05, 0.28, 0.98);
+        transition:
+          max-width var(--ds-dur-3) var(--ds-ease-spring),
+          padding-left var(--ds-dur-3) var(--ds-ease-spring),
+          opacity var(--ds-dur-2) var(--ds-ease-out);
       }
       .tab--active {
         color: var(--ds-text);

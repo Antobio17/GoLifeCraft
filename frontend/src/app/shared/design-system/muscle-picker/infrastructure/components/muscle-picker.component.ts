@@ -87,7 +87,7 @@ export interface MuscleRegion {
         font-weight: var(--ds-weight-semibold);
         line-height: 1;
         user-select: none;
-        transition: all 0.14s ease;
+        transition: var(--ds-motion-tint), var(--ds-motion-press);
       }
       .ds-muscle-chip:hover:not(:disabled):not(.is-selected) {
         border-color: var(--ds-primary-soft-border);

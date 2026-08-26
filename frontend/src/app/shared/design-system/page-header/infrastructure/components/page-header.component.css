@@ -174,7 +174,7 @@
   font-weight: 500;
   color: var(--ds-text-body);
   letter-spacing: -0.005em;
-  transition: border-color 0.15s ease;
+  transition: border-color var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .ph-stat__icon {
@@ -303,7 +303,7 @@
     cursor: pointer;
     position: relative;
     padding-right: var(--ds-space-5);
-    transition: max-height 0.25s ease;
+    transition: max-height var(--ds-dur-3) var(--ds-ease-out);
   }
 
   .ph-subtitle__text {
@@ -333,7 +333,7 @@
     height: 1.125rem;
     font-size: var(--ds-text-base);
     color: var(--ds-primary);
-    transition: transform 0.2s ease;
+    transition: transform var(--ds-dur-2) var(--ds-ease-out);
   }
 
   .ph-subtitle--expanded .ph-subtitle__chevron {

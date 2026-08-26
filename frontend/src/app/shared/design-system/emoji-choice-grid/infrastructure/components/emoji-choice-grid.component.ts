@@ -53,7 +53,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
         font-size: var(--ds-text-2xl);
         line-height: 1;
         user-select: none;
-        transition: transform 0.12s ease;
+        transition: transform var(--ds-dur-1) var(--ds-ease-out);
       }
       .ds-emoji-choice:hover:not(:disabled):not(.is-selected) {
         transform: translateY(-1px);

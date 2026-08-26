@@ -130,8 +130,8 @@ input[type="number"].form-control::-webkit-inner-spin-button {
   cursor: pointer;
   color: var(--ds-text-disabled);
   transition:
-    color 0.2s ease,
-    background 0.2s ease;
+    color var(--ds-dur-2) var(--ds-ease-out),
+    background var(--ds-dur-2) var(--ds-ease-out);
   padding: 0;
 }
 
@@ -174,7 +174,7 @@ input[type="number"].form-control::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   gap: var(--ds-space-1-5);
-  animation: ds-input-slide-down 0.3s ease-out;
+  animation: ds-input-slide-down var(--ds-dur-3) var(--ds-ease-out);
 }
 
 .error-message svg {

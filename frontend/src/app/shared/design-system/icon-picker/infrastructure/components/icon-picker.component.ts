@@ -158,7 +158,7 @@ import { IconGroup } from "../../domain/models/icon-group.model";
         border-radius: var(--ds-radius-lg);
         height: 3.125rem;
         color: var(--ds-text);
-        transition: all 0.14s ease;
+        transition: var(--ds-motion-tint), var(--ds-motion-press);
       }
       .ds-icon-cell:hover:not(.is-selected) {
         border-color: var(--ds-primary-soft-border);

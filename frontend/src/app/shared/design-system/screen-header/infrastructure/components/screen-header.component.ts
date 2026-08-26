@@ -76,7 +76,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         color: var(--ds-text);
         border-radius: var(--ds-radius-lg);
         cursor: pointer;
-        transition: background 0.15s ease;
+        transition: background var(--ds-dur-2) var(--ds-ease-out);
       }
       .ds-screen-head__lead:hover {
         background: color-mix(in srgb, var(--ds-surface-inset) 88%, black);

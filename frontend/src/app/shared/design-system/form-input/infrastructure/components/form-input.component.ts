@@ -256,7 +256,8 @@ export class FormInputComponent implements ControlValueAccessor, OnDestroy {
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
       opacity: "0",
       visibility: "hidden",
-      transition: "opacity 0.2s ease, visibility 0.2s ease",
+      transition:
+        "opacity var(--ds-dur-2) var(--ds-ease-out), visibility var(--ds-dur-2) var(--ds-ease-out)",
       fontFamily: "inherit",
       whiteSpace: "normal",
       wordBreak: "break-word",

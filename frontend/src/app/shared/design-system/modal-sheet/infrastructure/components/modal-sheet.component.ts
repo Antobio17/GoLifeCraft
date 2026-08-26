@@ -122,7 +122,7 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-xl) var(--ds-radius-xl) 0 0;
         box-shadow: 0 -0.5rem 2.5rem rgba(0, 0, 0, 0.28);
-        animation: ds-sheet-up 0.24s cubic-bezier(0.4, 0.2, 0.2, 1);
+        animation: ds-sheet-up var(--ds-dur-3) var(--ds-ease-out);
       }
       .ds-sheet--tall {
         height: var(--ds-sheet-height-tall);

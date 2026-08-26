@@ -43,9 +43,9 @@ export interface SelectChipOption {
         font-size: var(--ds-text-md);
         line-height: 1.2;
         transition:
-          background 0.15s ease,
-          border-color 0.15s ease,
-          color 0.15s ease;
+          background var(--ds-dur-2) var(--ds-ease-out),
+          border-color var(--ds-dur-2) var(--ds-ease-out),
+          color var(--ds-dur-2) var(--ds-ease-out);
       }
       .ds-select-chip:hover:not(:disabled):not(.is-selected) {
         border-color: var(--ds-primary);

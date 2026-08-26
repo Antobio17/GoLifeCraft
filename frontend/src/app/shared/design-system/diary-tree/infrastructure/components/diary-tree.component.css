@@ -58,11 +58,11 @@ ds-text.diary-tree__reset-text {
 }
 
 .diary-tree__row--in {
-  animation: diary-tree-row-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: diary-tree-row-in var(--ds-dur-3) var(--ds-ease-out);
 }
 
 .diary-tree__row--out {
-  animation: diary-tree-row-in 0.14s cubic-bezier(0.4, 0, 1, 1) reverse;
+  animation: diary-tree-row-in var(--ds-dur-2) var(--ds-ease-in) reverse;
 }
 
 @keyframes diary-tree-row-in {

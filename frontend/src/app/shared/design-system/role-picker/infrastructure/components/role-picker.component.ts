@@ -52,7 +52,7 @@ import { RoleOption } from "../../domain/models/role-option.model";
         border: 2px solid var(--ds-primary-soft-border);
         border-radius: var(--ds-radius-lg);
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: var(--ds-motion-tint);
         position: relative;
         overflow: hidden;
       }
@@ -75,7 +75,7 @@ import { RoleOption } from "../../domain/models/role-option.model";
         background: var(--ds-surface-subtle);
         border-radius: var(--ds-radius-md);
         color: var(--ds-text-muted);
-        transition: all 0.3s ease;
+        transition: var(--ds-motion-tint);
       }
       .ds-role__content {
         flex: 1;
@@ -106,7 +106,7 @@ import { RoleOption } from "../../domain/models/role-option.model";
         border: 2px solid var(--ds-text-disabled);
         border-radius: 50%;
         color: transparent;
-        transition: all 0.3s ease;
+        transition: var(--ds-motion-tint);
       }
       .ds-role.is-selected[data-tone="accent"] {
         background: var(--ds-accent-soft);

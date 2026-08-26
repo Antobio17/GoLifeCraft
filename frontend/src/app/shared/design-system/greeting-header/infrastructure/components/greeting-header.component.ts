@@ -72,7 +72,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         font-family: var(--ds-font-display);
         font-weight: 800;
         font-size: var(--ds-text-lg);
-        transition: transform 0.15s ease;
+        transition: transform var(--ds-dur-2) var(--ds-ease-out);
       }
       .dash__avatar:hover {
         transform: scale(1.05);

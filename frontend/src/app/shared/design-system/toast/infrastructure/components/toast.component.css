@@ -98,8 +98,8 @@
   justify-content: center;
   color: var(--ds-text-disabled);
   transition:
-    color 150ms ease,
-    transform 150ms ease;
+    color var(--ds-dur-2) var(--ds-ease-out),
+    transform var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .toast__close:hover {

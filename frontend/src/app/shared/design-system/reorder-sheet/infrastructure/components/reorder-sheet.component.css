@@ -20,7 +20,7 @@
 }
 
 .ds-reorder__row--settling {
-  transition: transform 0.16s ease;
+  transition: transform var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .ds-reorder__row--current {
