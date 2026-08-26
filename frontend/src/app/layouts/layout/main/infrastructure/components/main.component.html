@@ -1,4 +1,8 @@
-<div class="app-frame" [class.app-frame--with-tabbar]="showTabBar()">
+<div
+  class="app-frame"
+  [class.app-frame--with-tabbar]="showTabBar()"
+  [class.app-frame--with-workout-tag]="showTabBar() && workoutTagVisible()"
+>
   <app-floating-toast></app-floating-toast>
 
   @if (impersonation(); as active) {
@@ -16,8 +20,9 @@
   </div>
 
   @if (showTabBar()) {
-    <app-active-workout-banner></app-active-workout-banner>
-    <app-bottom-nav></app-bottom-nav>
+    <app-bottom-nav>
+      <app-active-workout-banner></app-active-workout-banner>
+    </app-bottom-nav>
     <app-side-drawer></app-side-drawer>
   }
 </div>

@@ -12,6 +12,9 @@
   /* Alto real de la tabbar más su separación del borde inferior:
      lo que cualquier capa fija de abajo tiene que dejar libre. */
   --ds-app-bottom-nav-height: 4.375rem;
+  /* Alto del tag de sesión activa dentro de la tabbar, con su separación
+     de la fila de pestañas: 0 mientras no hay entreno en curso. */
+  --ds-app-workout-tag-height: 0rem;
   --ds-app-sidebar-width: 15.25rem;
   --ds-app-inset-left: 0px;
   --ds-app-content-max: 73.75rem;
@@ -21,7 +24,15 @@
   --ds-z-toast: 300;
 }
 
+:root:has(.app-frame--with-workout-tag) {
+  --ds-app-workout-tag-height: 2.375rem;
+}
+
 @media (min-width: 768px) {
+  :root:has(.app-frame--with-workout-tag) {
+    --ds-app-workout-tag-height: 0rem;
+  }
+
   :root:has(.app-frame--with-tabbar) {
     --ds-app-inset-left: var(--ds-app-sidebar-width);
   }

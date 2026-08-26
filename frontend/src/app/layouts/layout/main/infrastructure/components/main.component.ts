@@ -5,6 +5,7 @@ import { FloatingToastComponent } from "@shared/floating-toasts/infrastructure/c
 import { BottomNavComponent } from "@layouts/layout/bottom-nav/infrastructure/components/bottom-nav.component";
 import { SideDrawerComponent } from "@layouts/layout/side-drawer/infrastructure/components/side-drawer.component";
 import { ActiveWorkoutBannerComponent } from "@gym/training/workout/infrastructure/components/active-workout-banner.component";
+import { ActiveWorkoutBannerVisibilityService } from "@gym/training/workout/application/services/active-workout-banner-visibility.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ImpersonationService } from "@shared/auth/application/services/impersonation.service";
 import { ImpersonationBarComponent } from "@shared/design-system/impersonation-bar/infrastructure/components/impersonation-bar.component";
@@ -32,9 +33,13 @@ export class MainLayoutComponent implements OnInit {
   private authSessionService = inject(AuthSessionService);
   private getMyProfileService = inject(GetMyProfileService);
   private impersonationService = inject(ImpersonationService);
+  private workoutBannerVisibility = inject(
+    ActiveWorkoutBannerVisibilityService,
+  );
 
   showTabBar = signal(this.computeShowTabBar());
   readonly impersonation = this.impersonationService.impersonation;
+  readonly workoutTagVisible = this.workoutBannerVisibility.visible;
 
   ngOnInit(): void {
     this.router.events

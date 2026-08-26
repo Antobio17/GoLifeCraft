@@ -1,6 +1,7 @@
 @if (visible()) {
   <ds-floating-workout-banner
     [paused]="activeWorkout.paused()"
+    [embedded]="embedded()"
     [stateLabel]="stateKey() | t"
     [elapsedLabel]="activeWorkout.elapsedLabel()"
     [name]="activeWorkout.activeName()"

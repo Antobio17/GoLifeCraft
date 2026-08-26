@@ -27,7 +27,9 @@
 }
 
 .ds-undo-bar[data-lifted] {
-  margin-bottom: var(--ds-app-bottom-nav-height);
+  margin-bottom: calc(
+    var(--ds-app-bottom-nav-height) + var(--ds-app-workout-tag-height)
+  );
 }
 
 .ds-undo-bar__label {

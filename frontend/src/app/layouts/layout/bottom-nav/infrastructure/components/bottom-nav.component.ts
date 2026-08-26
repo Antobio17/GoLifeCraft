@@ -11,6 +11,7 @@ import { delay, filter, map, startWith } from "rxjs";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { TabItemComponent } from "@shared/design-system/tab-item/infrastructure/components/tab-item.component";
 import { ScrollRowComponent } from "@shared/design-system/scroll-row/infrastructure/components/scroll-row.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SideDrawerService } from "@layouts/layout/side-drawer/application/services/side-drawer.service";
 import { BottomNavItemsService } from "../../application/services/bottom-nav-items.service";
 import { BottomNavActiveItemService } from "../../application/services/bottom-nav-active-item.service";
@@ -24,6 +25,7 @@ import { BottomNavActiveItemService } from "../../application/services/bottom-na
     ContextualTranslatePipe,
     TabItemComponent,
     ScrollRowComponent,
+    StackComponent,
   ],
 })
 export class BottomNavComponent {

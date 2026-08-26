@@ -1,10 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
-import { filter } from "rxjs/operators";
+import { Component, OnInit, computed, inject } from "@angular/core";
+import { Router } from "@angular/router";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingWorkoutBannerComponent } from "@shared/design-system/floating-workout-banner/infrastructure/components/floating-workout-banner.component";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { ViewportService } from "@shared/viewport/application/services/viewport.service";
 import { ActiveWorkoutService } from "@gym/training/workout/application/services/active-workout.service";
+import { ActiveWorkoutBannerVisibilityService } from "@gym/training/workout/application/services/active-workout-banner-visibility.service";
 
 @Component({
   selector: "app-active-workout-banner",
@@ -14,17 +15,16 @@ import { ActiveWorkoutService } from "@gym/training/workout/application/services
 })
 export class ActiveWorkoutBannerComponent implements OnInit {
   protected activeWorkout = inject(ActiveWorkoutService);
+  private bannerVisibility = inject(ActiveWorkoutBannerVisibilityService);
   private authSessionService = inject(AuthSessionService);
+  private viewportService = inject(ViewportService);
   private router = inject(Router);
 
-  private readonly currentPath = signal(this.pathOf(this.router.url));
+  readonly visible = this.bannerVisibility.visible;
 
-  readonly visible = computed(() => {
-    if (!this.activeWorkout.isActive()) {
-      return false;
-    }
-    return this.currentPath() !== this.workoutPath();
-  });
+  private readonly isWide = this.viewportService.matches("(min-width: 768px)");
+
+  readonly embedded = computed(() => !this.isWide());
 
   readonly stateKey = computed(() => {
     if (this.activeWorkout.paused()) {
@@ -45,14 +45,6 @@ export class ActiveWorkoutBannerComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event) =>
-        this.currentPath.set(
-          this.pathOf((event as NavigationEnd).urlAfterRedirects),
-        ),
-      );
-
     this.restoreActiveWorkout();
   }
 
@@ -63,21 +55,7 @@ export class ActiveWorkoutBannerComponent implements OnInit {
     this.activeWorkout.ensureRestored().subscribe();
   }
 
-  private pathOf(url: string): string {
-    return url.split("?")[0];
-  }
-
   goToSession(): void {
-    this.router.navigate([this.workoutPath()]);
-  }
-
-  private workoutPath(): string {
-    const sessionId = this.activeWorkout.activeSessionId();
-
-    if (!sessionId) {
-      return "/gym/free";
-    }
-
-    return `/gym/sessions/${sessionId}`;
+    this.router.navigate([this.bannerVisibility.workoutPath()]);
   }
 }

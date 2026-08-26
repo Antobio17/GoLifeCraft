@@ -104,3 +104,29 @@
 .workout-banner__go {
   flex: 0 0 auto;
 }
+
+/* Variante embebida: el tag vive dentro de la tabbar, así que no flota —
+   se queda sin sombra y con el radio concéntrico al del pill de la nav
+   (su radio menos el padding), para que las dos curvas casen. */
+.workout-banner--embedded {
+  box-shadow: none;
+  gap: var(--ds-space-1-5);
+  padding: var(--ds-space-1) var(--ds-space-2);
+  border-radius: calc(var(--ds-radius-2xl) - var(--ds-space-1-5));
+  animation: workoutBannerIn var(--ds-dur-2) var(--ds-ease-out);
+}
+
+.workout-banner--embedded .workout-banner__time {
+  font-size: var(--ds-text-sm);
+}
+
+@keyframes workoutBannerIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

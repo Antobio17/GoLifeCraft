@@ -37,10 +37,12 @@
   padding-top: env(safe-area-inset-top);
 }
 
+/* El tag de sesión activa crece la tabbar: el contenido tiene que dejarle
+   sitio o la última fila se queda debajo. */
 .app-frame--with-tabbar .app-frame__content {
   padding-bottom: calc(
-    var(--ds-app-bottom-nav-height) + var(--ds-space-1) +
-      env(safe-area-inset-bottom)
+    var(--ds-app-bottom-nav-height) + var(--ds-app-workout-tag-height) +
+      var(--ds-space-1) + env(safe-area-inset-bottom)
   );
 }
 

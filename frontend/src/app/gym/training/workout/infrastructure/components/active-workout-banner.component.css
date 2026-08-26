@@ -1,31 +1,12 @@
 :host {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: calc(
-    var(--ds-app-bottom-nav-height) + var(--ds-space-2) +
-      env(safe-area-inset-bottom)
-  );
-  z-index: 39;
   display: flex;
   justify-content: center;
-  padding: 0 var(--ds-space-4);
+  width: 100%;
   pointer-events: none;
 }
 
-@media (display-mode: standalone) {
-  :host {
-    bottom: calc(var(--ds-app-bottom-nav-height) + var(--ds-space-2));
-  }
-}
-
-@media (min-width: 768px) {
-  :host {
-    bottom: 1.25rem;
-    justify-content: flex-start;
-    padding-left: calc(var(--ds-app-sidebar-width) + var(--ds-space-5));
-    padding-right: var(--ds-space-5);
-  }
+:host:empty {
+  display: none;
 }
 
 ds-floating-workout-banner {
