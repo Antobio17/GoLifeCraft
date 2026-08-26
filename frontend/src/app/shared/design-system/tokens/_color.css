@@ -72,6 +72,7 @@
   --ds-surface-sheet: var(--ds-surface-raised);
   --ds-surface-brand: var(--ds-green-800);
   --ds-on-surface-brand: #e9f7ec;
+  --ds-status-bar-tint: transparent;
 
   /* Superficie de las tarjetas con gráfica: nunca es la de marca.
      La tarjeta es lienzo (blanco en claro, casi negro en oscuro) y la
@@ -206,6 +207,7 @@
   --ds-surface-sheet: var(--ds-surface);
   --ds-surface-brand: var(--ds-green-800);
   --ds-on-surface-brand: #e9f7ec;
+  --ds-status-bar-tint: transparent;
 
   --ds-surface-chart: var(--ds-surface-raised);
 

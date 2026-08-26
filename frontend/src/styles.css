@@ -4,6 +4,16 @@ body {
   touch-action: pan-x pan-y;
 }
 
+html {
+  transition: background-color 0.24s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+}
+
 body {
   font-family: var(--ds-font-body);
   letter-spacing: -0.01em;

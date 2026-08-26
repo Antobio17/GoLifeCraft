@@ -11,6 +11,7 @@ import {
   inject,
 } from "@angular/core";
 import { ScrollLockService } from "@shared/design-system/scroll-lock/application/services/scroll-lock.service";
+import { StatusBarTintService } from "@shared/design-system/status-bar-tint/application/services/status-bar-tint.service";
 
 @Component({
   selector: "ds-modal-sheet",
@@ -90,7 +91,13 @@ import { ScrollLockService } from "@shared/design-system/scroll-lock/application
         position: fixed;
         inset: 0 0 0 var(--ds-app-inset-left, 0px);
         z-index: 1000;
-        background: rgba(0, 0, 0, 0.5);
+        background:
+          linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.28),
+            rgba(0, 0, 0, 0) calc(env(safe-area-inset-top) + 3rem)
+          ),
+          rgba(0, 0, 0, 0.5);
         display: flex;
         align-items: flex-end;
         justify-content: center;
@@ -98,11 +105,9 @@ import { ScrollLockService } from "@shared/design-system/scroll-lock/application
       .ds-sheet__overlay::before {
         content: "";
         position: absolute;
-        top: env(safe-area-inset-top);
-        right: 0;
-        bottom: 0;
-        left: 0;
+        inset: 0;
         backdrop-filter: var(--ds-blur-sm);
+        -webkit-backdrop-filter: var(--ds-blur-sm);
       }
       .ds-sheet {
         position: relative;
@@ -241,6 +246,7 @@ export class ModalSheetComponent implements OnDestroy {
   private renderer = inject(Renderer2);
   private document = inject(DOCUMENT);
   private scrollLock = inject(ScrollLockService);
+  private statusBarTint = inject(StatusBarTintService);
 
   private isOpen = false;
   private overlayNode: HTMLElement | null = null;
@@ -264,7 +270,7 @@ export class ModalSheetComponent implements OnDestroy {
     }
 
     this.isOpen = value;
-    this.toggleScrollLock(value);
+    this.toggleOverlayEffects(value);
   }
 
   get open(): boolean {
@@ -280,7 +286,7 @@ export class ModalSheetComponent implements OnDestroy {
   @Output() closed = new EventEmitter<void>();
 
   ngOnDestroy(): void {
-    this.toggleScrollLock(false);
+    this.toggleOverlayEffects(false);
     this.detachOverlay();
   }
 
@@ -293,13 +299,15 @@ export class ModalSheetComponent implements OnDestroy {
     this.overlayNode = null;
   }
 
-  private toggleScrollLock(locked: boolean): void {
-    if (locked) {
+  private toggleOverlayEffects(active: boolean): void {
+    if (active) {
       this.scrollLock.lock(this);
+      this.statusBarTint.tint(this);
 
       return;
     }
 
     this.scrollLock.release(this);
+    this.statusBarTint.release(this);
   }
 }

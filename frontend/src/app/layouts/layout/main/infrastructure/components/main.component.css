@@ -17,6 +17,18 @@
   }
 }
 
+.app-frame::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  background: var(--ds-status-bar-tint, transparent);
+  pointer-events: none;
+  z-index: 30;
+}
+
 .app-frame__content {
   box-sizing: border-box;
   position: relative;
