@@ -11,12 +11,10 @@
     @for (item of items; track item.route) {
       <ds-tab-item
         [routerLink]="item.route"
-        routerLinkActive="is-active"
-        [routerLinkActiveOptions]="{ exact: item.exact }"
-        #itemActive="routerLinkActive"
+        [class.is-active]="activeRoute() === item.route"
         [icon]="item.icon"
         [label]="item.labelKey | t"
-        [active]="itemActive.isActive && !isDrawerOpen()"
+        [active]="activeRoute() === item.route && !isDrawerOpen()"
         [attr.aria-label]="item.labelKey | t"
       />
     }

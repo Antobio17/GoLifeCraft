@@ -4,5 +4,5 @@ export interface BottomNavItem {
   route: string;
   icon: DsIconName;
   labelKey: string;
-  exact: boolean;
+  activeRoutes: string[];
 }
