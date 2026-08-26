@@ -10,7 +10,10 @@ import {
   provideRouter,
   withComponentInputBinding,
   withInMemoryScrolling,
+  withPreloading,
+  withViewTransitions,
 } from "@angular/router";
+import { IdlePreloadStrategy } from "./app/shared/routing/infrastructure/strategies/idle-preload.strategy";
 import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/components/main.component";
 import { APP_ROUTES } from "./app/app.routes";
 import { GlobalProviders } from "@shared/providers/main.provider";
@@ -28,6 +31,8 @@ bootstrapApplication(MainLayoutComponent, {
         anchorScrolling: "enabled",
         scrollPositionRestoration: "enabled",
       }),
+      withViewTransitions({ skipInitialTransition: true }),
+      withPreloading(IdlePreloadStrategy),
     ),
     provideHttpClient(
       withInterceptors([authTokenInterceptor, httpErrorInterceptor]),

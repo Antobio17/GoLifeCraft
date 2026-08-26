@@ -229,3 +229,46 @@ input:-webkit-autofill::first-line {
 .ds-field-block__required {
   color: var(--ds-danger);
 }
+
+/* ============================================================
+   TRANSICIÓN DE PANTALLA (View Transitions API)
+   El contenido saliente se apaga rápido y el entrante sube a su
+   sitio: la navegación deja de ser un corte. El cromo persistente
+   (tabbar, drawer, toasts, banners) lleva su propio
+   view-transition-name para quedarse fuera del snapshot raíz y
+   no parpadear con cada cambio de ruta.
+   ============================================================ */
+
+@keyframes ds-page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes ds-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ds-reveal-shift));
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation: ds-page-out var(--ds-dur-1) var(--ds-ease-in) both;
+}
+
+::view-transition-new(root) {
+  animation: ds-page-in var(--ds-dur-3) var(--ds-ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

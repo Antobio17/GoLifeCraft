@@ -173,7 +173,7 @@
   box-shadow: 0 1px 0.1875rem rgba(0, 0, 0, 0.25);
   transform: translateX(0);
   transition:
-    transform 0.22s ease,
+    transform var(--ds-dur-3) var(--ds-ease-out),
     background var(--ds-transition-base);
 }
 
@@ -224,6 +224,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    view-transition-name: ds-vt-sidebar;
     background: var(--ds-surface-nav);
     border-right: 1px solid var(--ds-border);
     --drawer-sheet-x: var(--ds-space-3);
