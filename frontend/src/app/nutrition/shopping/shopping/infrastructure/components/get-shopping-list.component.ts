@@ -5,7 +5,6 @@ import { tap } from "rxjs/operators";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
-import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -93,7 +92,6 @@ type FilterKind = "store" | "cat" | "brand";
     ManageAislesComponent,
     DiaryShoppingSheetComponent,
     SaveStatusComponent,
-    UndoBarComponent,
   ],
 })
 export class GetShoppingListComponent implements OnInit {
@@ -115,7 +113,7 @@ export class GetShoppingListComponent implements OnInit {
   readonly customNameMaxLength = 120;
 
   loading = signal(true);
-  attributes = signal<ShoppingListAttributes | null>(null);
+  loadedAttributes = signal<ShoppingListAttributes | null>(null);
   activeTab = signal<string>(ALL_STORES);
   sortMode = signal<ShoppingSortMode>(ShoppingSortMode.Aisle);
   supermarkets = signal<Supermarket[]>([]);
@@ -133,6 +131,14 @@ export class GetShoppingListComponent implements OnInit {
   categoryFilter = signal(ALL_FILTER);
   brandFilter = signal(ALL_FILTER);
   openFilter = signal<FilterKind | null>(null);
+
+  attributes = computed<ShoppingListAttributes | null>(() => {
+    const removedId = this.undo.removedId();
+    const loadedAttributes = this.loadedAttributes();
+    if (!removedId || !loadedAttributes) return loadedAttributes;
+
+    return this.view.withoutItem(loadedAttributes, removedId);
+  });
 
   effectiveTab = computed(() => {
     const attributes = this.attributes();
@@ -379,7 +385,7 @@ export class GetShoppingListComponent implements OnInit {
       article,
       `pending-${articleId}`,
     );
-    this.attributes.update((current) =>
+    this.loadedAttributes.update((current) =>
       current ? this.view.addItem(current, optimistic) : current,
     );
 
@@ -409,7 +415,7 @@ export class GetShoppingListComponent implements OnInit {
   }
 
   private applyOptimisticCustomItem(customName: string): void {
-    this.attributes.update((current) => {
+    this.loadedAttributes.update((current) => {
       if (!current) return current;
 
       const existing = this.view.findCustomItem(current, customName);
@@ -442,25 +448,16 @@ export class GetShoppingListComponent implements OnInit {
   }
 
   removeItem(item: ShoppingItemRow): void {
-    const previous = this.attributes();
-
-    this.attributes.update((current) =>
-      current ? this.view.withoutItem(current, item.id) : current,
-    );
-
     this.undo.schedule({
-      label: this.t("getShopping.removed", { name: item.name }),
+      id: item.id,
+      keyTranslation: "getShopping.removed",
+      details: { name: item.name },
       commit: () => this.commitRemoveItem(item.id),
-      revert: () => this.attributes.set(previous),
     });
   }
 
   onRetrySave(): void {
     this.autosave.retry();
-  }
-
-  onUndoRemove(): void {
-    this.undo.undo();
   }
 
   private queueItem(itemId: string): void {
@@ -479,6 +476,10 @@ export class GetShoppingListComponent implements OnInit {
   }
 
   private commitRemoveItem(itemId: string): void {
+    this.loadedAttributes.update((current) =>
+      current ? this.view.withoutItem(current, itemId) : current,
+    );
+
     this.autosave.push(`item:${itemId}`, () =>
       this.deleteShoppingListItemService
         .deleteShoppingListItem(itemId)
@@ -523,7 +524,7 @@ export class GetShoppingListComponent implements OnInit {
     itemId: string,
     changes: Partial<Pick<ShoppingListItemView, "quantity" | "checked">>,
   ): void {
-    this.attributes.update((current) => {
+    this.loadedAttributes.update((current) => {
       if (!current) return current;
 
       const items = current.items.map((item) => {
@@ -549,7 +550,7 @@ export class GetShoppingListComponent implements OnInit {
 
     this.getShoppingListService.getShoppingList().subscribe({
       next: (response) => {
-        this.attributes.set(response.data.attributes);
+        this.loadedAttributes.set(response.data.attributes);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

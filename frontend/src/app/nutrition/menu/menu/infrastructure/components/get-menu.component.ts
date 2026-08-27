@@ -68,7 +68,6 @@ import { AddMenuItemRequest } from "@nutrition/menu/menu/domain/models/add-menu-
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
-import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { uuidV4 } from "@shared/uuid/uuid";
 import {
@@ -136,7 +135,6 @@ type PickerTab = "product" | "recipe";
     MenuApplyWeekSheetComponent,
     MenuShoppingSheetComponent,
     SaveStatusComponent,
-    UndoBarComponent,
   ],
 })
 export class GetMenuComponent implements OnInit {
@@ -204,8 +202,13 @@ export class GetMenuComponent implements OnInit {
 
   detail = computed<MenuDetailAttributes | null>(() => {
     const draft = this.draft();
+    if (draft) return this.drafts.toDetail(draft);
 
-    return draft ? this.drafts.toDetail(draft) : this.loadedDetail();
+    const loadedDetail = this.loadedDetail();
+    const removedId = this.undo.removedId();
+    if (!loadedDetail || !removedId) return loadedDetail;
+
+    return this.editor.withoutItemApplied(loadedDetail, removedId);
   });
 
   draftSavable = computed(() => {
@@ -671,15 +674,13 @@ export class GetMenuComponent implements OnInit {
       return;
     }
 
-    const detail = this.loadedDetail();
-    if (!detail) return;
-
-    this.loadedDetail.set(this.editor.withoutItemApplied(detail, item.id));
+    if (!this.loadedDetail()) return;
 
     this.undo.schedule({
-      label: this.translate("getMenu.removed", { name: item.name }),
+      id: item.id,
+      keyTranslation: "getMenu.removed",
+      details: { name: item.name },
       commit: () => this.commitRemoveItem(item.id),
-      revert: () => this.loadedDetail.set(detail),
     });
   }
 
@@ -804,10 +805,6 @@ export class GetMenuComponent implements OnInit {
     this.autosave.retry();
   }
 
-  onUndoRemove(): void {
-    this.undo.undo();
-  }
-
   private queueDetails(): void {
     this.autosave.push("details", () =>
       this.updateMenuDetailsService.updateMenuDetails(this.id(), {
@@ -857,7 +854,7 @@ export class GetMenuComponent implements OnInit {
     }
 
     const item = this.editor
-      .flatItems(this.loadedDetail())
+      .flatItems(this.detail())
       .find((candidate) => candidate.id === menuItemId);
     if (!item) return of(void 0);
 
@@ -871,6 +868,9 @@ export class GetMenuComponent implements OnInit {
 
   private commitRemoveItem(menuItemId: string): void {
     this.pendingItems.delete(menuItemId);
+    this.loadedDetail.update((detail) =>
+      detail ? this.editor.withoutItemApplied(detail, menuItemId) : detail,
+    );
 
     this.autosave.push(this.itemKey(menuItemId), () =>
       this.saveMenuItemService

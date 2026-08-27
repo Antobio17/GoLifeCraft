@@ -7,4 +7,7 @@ export interface FloatingToastMessage {
   keyTranslation: string;
   subtitleTranslation?: string;
   details: Record<string, unknown> | unknown[];
+  durationMs?: number;
+  actionKeyTranslation?: string;
+  onAction?: () => void;
 }
