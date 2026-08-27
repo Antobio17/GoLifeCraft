@@ -459,9 +459,3 @@
     (cancelled)="cancelDelete()"
   />
 </ds-page-wrapper>
-
-<ds-undo-bar
-  [show]="!!undo.request()"
-  [label]="undo.request()?.label ?? ''"
-  (undone)="onUndoRemove()"
-/>

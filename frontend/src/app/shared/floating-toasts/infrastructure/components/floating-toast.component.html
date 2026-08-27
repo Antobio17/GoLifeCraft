@@ -2,7 +2,10 @@
   <ds-toast
     [@toastSlide]="{
       value: 'visible',
-      params: { enterTransform: enterTransform, leaveTransform: leaveTransform }
+      params: {
+        enterTransform: enterTransform,
+        leaveTransform: leaveTransform,
+      },
     }"
     [type]="toast.type"
     [icon]="toast.icon"
@@ -14,6 +17,12 @@
     "
     [durationMs]="toast.durationMs"
     [closeLabel]="'floatingToast.close' | t"
+    [actionLabel]="
+      toast.actionKeyTranslation
+        ? (toast.actionKeyTranslation | t: asParams(toast.details))
+        : ''
+    "
     (dismissed)="dismiss()"
+    (actioned)="runAction(toast)"
   />
 }

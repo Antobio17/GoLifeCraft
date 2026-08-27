@@ -1,5 +1,6 @@
 export interface UndoRequest {
-  label: string;
+  id: string;
+  keyTranslation: string;
+  details: Record<string, unknown>;
   commit: () => void;
-  revert: () => void;
 }

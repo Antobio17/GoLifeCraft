@@ -84,6 +84,30 @@
   color: var(--ds-text-muted);
 }
 
+.toast__action {
+  flex: none;
+  align-self: center;
+  padding: var(--ds-space-1) var(--ds-space-2);
+  border: none;
+  border-radius: var(--ds-radius-md);
+  background: var(--toast-icon-bg);
+  color: var(--toast-icon-color);
+  font-family: inherit;
+  font-size: var(--ds-text-base);
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: transform var(--ds-dur-2) var(--ds-ease-out);
+}
+
+.toast__action:hover {
+  transform: scale(1.04);
+}
+
+.toast__action:active {
+  transform: scale(0.94);
+}
+
 .toast__close {
   flex: none;
   width: 1rem;

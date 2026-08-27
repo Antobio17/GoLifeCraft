@@ -65,7 +65,6 @@ import {
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
-import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
 import { uuidV4 } from "@shared/uuid/uuid";
@@ -134,7 +133,6 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
     ProgressionCardComponent,
     SkeletonPanelComponent,
     SaveStatusComponent,
-    UndoBarComponent,
   ],
 })
 export class SessionDetailComponent implements OnInit {
@@ -167,7 +165,15 @@ export class SessionDetailComponent implements OnInit {
 
   name = signal("");
   estimatedDurationMinutes = signal(0);
-  exercises = signal<SessionExerciseView[]>([]);
+  loadedExercises = signal<SessionExerciseView[]>([]);
+
+  exercises = computed<SessionExerciseView[]>(() => {
+    const removedId = this.undo.removedId();
+    const loadedExercises = this.loadedExercises();
+    if (!removedId) return loadedExercises;
+
+    return this.sessionDraft.removeExercise(loadedExercises, removedId);
+  });
 
   exerciseRows = computed(() =>
     this.exercises().map((exercise) => ({
@@ -393,7 +399,7 @@ export class SessionDetailComponent implements OnInit {
     this.statsLoading.set(true);
     this.name.set("");
     this.estimatedDurationMinutes.set(0);
-    this.exercises.set([]);
+    this.loadedExercises.set([]);
     this.persistedExercises.clear();
     this.templateExercises.set([]);
     this.workouts.set([]);
@@ -446,12 +452,12 @@ export class SessionDetailComponent implements OnInit {
 
   private seedExercises(templateExercises: SessionExerciseView[]): void {
     if (this.isActiveHere) {
-      this.exercises.set(
+      this.loadedExercises.set(
         this.sessionDraft.fromActive(this.activeWorkout.liveExercises()),
       );
       return;
     }
-    this.exercises.set(this.sessionDraft.clone(templateExercises));
+    this.loadedExercises.set(this.sessionDraft.clone(templateExercises));
   }
 
   private maybeAutoStart(): void {
@@ -568,7 +574,7 @@ export class SessionDetailComponent implements OnInit {
   addFromLibrary(exercise: Exercise): void {
     const sessionExerciseId = uuidV4();
 
-    this.exercises.update((list) =>
+    this.loadedExercises.update((list) =>
       this.sessionDraft.fromLibrary(list, exercise, sessionExerciseId),
     );
     this.pickerOpen.set(false);
@@ -581,21 +587,20 @@ export class SessionDetailComponent implements OnInit {
     );
     if (!removed) return;
 
-    const previous = this.exercises();
-
-    this.exercises.update((list) =>
-      this.sessionDraft.removeExercise(list, exerciseId),
-    );
-
     if (this.isActiveHere) {
+      this.loadedExercises.update((list) =>
+        this.sessionDraft.removeExercise(list, exerciseId),
+      );
       this.activeWorkout.syncProgress(this.toActive());
+
       return;
     }
 
     this.undo.schedule({
-      label: this.t("getSession.removed", { name: removed.exerciseName }),
+      id: exerciseId,
+      keyTranslation: "getSession.removed",
+      details: { name: removed.exerciseName },
       commit: () => this.commitRemoveExercise(exerciseId),
-      revert: () => this.exercises.set(previous),
     });
   }
 
@@ -617,6 +622,7 @@ export class SessionDetailComponent implements OnInit {
 
   onReorderSaved(orderedIds: string[]): void {
     this.reorderExerciseId.set(null);
+    this.undo.commitPending();
 
     const originalIndexes = this.sessionDraft.originalIndexes(
       this.exercises(),
@@ -627,7 +633,7 @@ export class SessionDetailComponent implements OnInit {
       return;
     }
 
-    this.exercises.update((list) =>
+    this.loadedExercises.update((list) =>
       this.sessionDraft.applyOrder(list, orderedIds),
     );
 
@@ -640,39 +646,45 @@ export class SessionDetailComponent implements OnInit {
   }
 
   addSet(exerciseId: string): void {
-    this.exercises.update((list) => this.sessionDraft.addSet(list, exerciseId));
+    this.loadedExercises.update((list) =>
+      this.sessionDraft.addSet(list, exerciseId),
+    );
     this.afterEdit(exerciseId);
   }
 
   removeSet(exerciseId: string, setId: string): void {
-    this.exercises.update((list) =>
+    this.loadedExercises.update((list) =>
       this.sessionDraft.removeSet(list, exerciseId, setId),
     );
     this.afterEdit(exerciseId);
   }
 
   setReps(exerciseId: string, setId: string, value: number): void {
-    this.exercises.update((list) =>
+    this.loadedExercises.update((list) =>
       this.sessionDraft.setReps(list, exerciseId, setId, value),
     );
     this.afterEdit(exerciseId);
   }
 
   setWeight(exerciseId: string, setId: string, value: number): void {
-    this.exercises.update((list) =>
+    this.loadedExercises.update((list) =>
       this.sessionDraft.setWeight(list, exerciseId, setId, value),
     );
     this.afterEdit(exerciseId);
   }
 
   setNote(exerciseId: string, value: string): void {
-    this.exercises.update((list) =>
+    this.loadedExercises.update((list) =>
       this.sessionDraft.setNote(list, exerciseId, value),
     );
     this.afterEdit(exerciseId);
   }
 
   private commitRemoveExercise(sessionExerciseId: string): void {
+    this.loadedExercises.update((list) =>
+      this.sessionDraft.removeExercise(list, sessionExerciseId),
+    );
+
     this.autosave.push(this.exerciseKey(sessionExerciseId), () =>
       this.saveSessionExerciseService
         .removeSessionExercise(this.id(), sessionExerciseId)
@@ -849,10 +861,6 @@ export class SessionDetailComponent implements OnInit {
 
   onRetrySave(): void {
     this.autosave.retry();
-  }
-
-  onUndoRemove(): void {
-    this.undo.undo();
   }
 
   onEdit(): void {
