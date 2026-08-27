@@ -19,6 +19,14 @@
   user-select: none;
 }
 
+.toast:not(:has(.toast__subtitle)) {
+  align-items: center;
+}
+
+.toast:not(:has(.toast__subtitle)) .toast__close {
+  margin-top: 0;
+}
+
 :host-context([data-theme="dark"]) .toast {
   border-color: var(--ds-border);
 }
