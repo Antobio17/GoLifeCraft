@@ -1,0 +1,42 @@
+services:
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\StartProductionController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\StartProductionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\FinishProductionController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\FinishProductionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\DiscardProductionController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\DiscardProductionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionsController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetKitchenDayController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetKitchenDayController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

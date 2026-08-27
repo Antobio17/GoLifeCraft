@@ -5,3 +5,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.article.deleted' }
+
+  Nutrition\Pantry\Stock\Application\Subscriber\DecreaseArticleStockOnProductionCooked:
+    class: Nutrition\Pantry\Stock\Application\Subscriber\DecreaseArticleStockOnProductionCooked
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.cooked' }

@@ -1,0 +1,105 @@
+{
+  "kitchen": {
+    "breadcrumb": {
+      "list": "Kitchen"
+    }
+  },
+  "getKitchenDay": {
+    "title": "Kitchen",
+    "today": "Go to today",
+    "summary": {
+      "eyebrow": "To cook today",
+      "recipes": "{{recipes}} recipes",
+      "recipesOne": "1 recipe",
+      "servings": "{{servings}} servings",
+      "servingsOne": "1 serving"
+    },
+    "toCook": {
+      "title": "To cook",
+      "meta": "The diary asks for {{demand}} · you have {{stock}}",
+      "metaEmpty": "The diary asks for {{demand}} · you have none",
+      "action": "Cook",
+      "resume": "Resume"
+    },
+    "expected": {
+      "title": "You should already have",
+      "titleAlone": "Already cooked",
+      "meta": "You should have {{servings}} servings",
+      "metaOne": "You should have 1 serving",
+      "clear": "none left",
+      "cleared": "{{name}}: none left"
+    },
+    "done": {
+      "title": "Cooked today",
+      "meta": "{{servings}} servings · {{time}}",
+      "metaOne": "1 serving · {{time}}"
+    },
+    "empty": {
+      "title": "Nothing to cook today",
+      "text": "What today's diary asks for is already covered by what you have cooked."
+    },
+    "error": {
+      "title": "We could not load the kitchen",
+      "text": "Please try again in a moment.",
+      "stock": "We could not update the servings"
+    }
+  },
+  "startProduction": {
+    "pack": {
+      "title": "Make the most of the pack",
+      "close": "Close",
+      "note": "The diary asks for {{needed}} of {{article}}, but your {{packUnit}} holds {{pack}}.",
+      "exactTitle": "Cook {{servings}} servings",
+      "exactDescription": "Uses {{needed}}. {{leftover}} stay raw in the fridge.",
+      "suggestedTitle": "Cook {{servings}} servings",
+      "suggestedDescription": "Uses the whole {{packUnit}}. {{extra}} servings go to the surplus.",
+      "badge": "Suggested",
+      "confirm": "Start production"
+    },
+    "error": {
+      "start": "We could not start the production"
+    }
+  },
+  "getProduction": {
+    "back": "Back to the kitchen",
+    "discard": "Discard production",
+    "breadcrumb": {
+      "detail": "Production"
+    },
+    "status": {
+      "pending": "Pending",
+      "cooking": "Cooking",
+      "done": "Finished"
+    },
+    "recipeServings": "Recipe for {{servings}}",
+    "ingredients": "Ingredients",
+    "steps": "Steps",
+    "step": "Step {{position}}",
+    "minutes": "{{minutes}} min",
+    "noSteps": "This recipe has no steps. Add them in the recipe.",
+    "error": {
+      "title": "We could not find this production",
+      "text": "It may have been discarded from another device."
+    },
+    "servingsLabel": "Servings you are cooking",
+    "servingsHint": "Adjust it if the surplus was not what you thought",
+    "servingsChanged": "You started with {{servings}}",
+    "servingsLess": "One serving less",
+    "servingsMore": "One serving more"
+  },
+  "finishProduction": {
+    "submit": "Finish production",
+    "discard": {
+      "title": "Discard production",
+      "body": "You are about to discard the production of",
+      "warning": "Nothing will be added to the surplus and no ingredient will be deducted.",
+      "cancel": "Cancel",
+      "confirm": "Discard",
+      "deleting": "Discarding…"
+    },
+    "error": {
+      "finish": "We could not finish the production",
+      "discard": "We could not discard the production"
+    }
+  }
+}

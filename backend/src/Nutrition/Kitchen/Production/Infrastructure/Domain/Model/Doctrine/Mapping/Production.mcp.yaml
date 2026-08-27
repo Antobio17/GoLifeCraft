@@ -1,0 +1,52 @@
+label: Production
+
+fields:
+  recipeId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      Id of the recipe that was cooked. The batch keeps its own name and emoji snapshots, so
+      editing the recipe afterwards never rewrites what was cooked.
+    filterable: true
+  cookDate:
+    writable: true
+    required: true
+    min: 10
+    max: 10
+    regex: '^\d{4}-\d{2}-\d{2}$'
+    description: >-
+      Day the batch was cooked, as "YYYY-MM-DD". A batch feeds as many days as its servings last,
+      so this is when you cooked, not when you eat it.
+    filterable: true
+    sortable: true
+  status:
+    writable: true
+    required: true
+    enum: [pending, cooking, done]
+    description: >-
+      "cooking" while the batch is in the pan, "done" once finished. Only a finished batch adds
+      its servings to the recipe stock and discounts its articles from the pantry.
+    filterable: true
+  servingsCooked:
+    writable: true
+    required: true
+    type: float
+    min: 0
+    description: >-
+      Servings actually cooked, which need not match what the diary asked for: cooking 4 when the
+      diary asked for 2 is overproduction and the extra 2 simply stay in the recipe stock.
+    sortable: true
+  nameSnapshot:
+    writable: true
+    required: true
+    max: 255
+    description: Name of the recipe as it was on the day of cooking.
+  emojiSnapshot:
+    writable: true
+    required: true
+    max: 16
+    description: Emoji of the recipe as it was on the day of cooking.
+
+relations: {}

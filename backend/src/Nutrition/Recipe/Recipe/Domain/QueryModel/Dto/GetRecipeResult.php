@@ -8,6 +8,7 @@ final class GetRecipeResult extends QueryAggregateResult
 {
     /**
      * @param RecipeIngredientView[] $ingredients
+     * @param RecipeStepView[]       $steps
      */
     public function __construct(
         string $id,
@@ -17,6 +18,7 @@ final class GetRecipeResult extends QueryAggregateResult
         public readonly string $category,
         public readonly int $servings,
         public readonly array $ingredients,
+        public readonly array $steps,
         public readonly MacroBreakdown $total,
         public readonly MacroBreakdown $perServing,
         public readonly \DateTime $createdAt,

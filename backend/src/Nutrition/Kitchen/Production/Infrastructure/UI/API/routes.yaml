@@ -1,0 +1,29 @@
+get_kitchen_day:
+  path: /api/v1/nutrition/kitchen/day
+  methods: [GET]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetKitchenDayController
+
+start_production:
+  path: /api/v1/nutrition/kitchen/productions
+  methods: [POST]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\StartProductionController
+
+get_productions:
+  path: /api/v1/nutrition/kitchen/productions
+  methods: [GET]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionsController
+
+finish_production:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/finish
+  methods: [PUT]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\FinishProductionController
+
+get_production:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}
+  methods: [GET]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionController
+
+discard_production:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}
+  methods: [DELETE]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\DiscardProductionController

@@ -93,6 +93,18 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Nutrition/Pantry/Stock/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Nutrition\Pantry\Stock\Domain\Model'
                         alias: article_stock
+                    RecipeStock:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Pantry/RecipeStock/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Pantry\RecipeStock\Domain\Model'
+                        alias: recipe_stock
+                    Production:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Kitchen/Production/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Kitchen\Production\Domain\Model'
+                        alias: production
                     Supermarket:
                         is_bundle: false
                         type: xml

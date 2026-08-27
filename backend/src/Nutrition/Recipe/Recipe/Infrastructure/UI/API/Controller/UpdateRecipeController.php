@@ -3,6 +3,7 @@
 namespace Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller;
 
 use Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientData;
+use Nutrition\Recipe\Recipe\Application\Command\RecipeStepData;
 use Nutrition\Recipe\Recipe\Application\Command\UpdateRecipeCommand;
 use Nutrition\Recipe\Recipe\Domain\Exception\UpdateRecipeException;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
@@ -36,6 +37,9 @@ final class UpdateRecipeController
                 servings: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'servings'),
                 ingredients: RecipeIngredientData::listFromArray(
                     rawIngredients: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'ingredients'),
+                ),
+                steps: RecipeStepData::listFromArray(
+                    rawSteps: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'steps', required: false),
                 ),
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));

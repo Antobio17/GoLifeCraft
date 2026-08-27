@@ -8,6 +8,7 @@ final readonly class CreateRecipeCommand implements Command
 {
     /**
      * @param RecipeIngredientData[] $ingredients
+     * @param ?RecipeStepData[]      $steps
      */
     public function __construct(
         public string $name,
@@ -15,6 +16,7 @@ final readonly class CreateRecipeCommand implements Command
         public string $category,
         public int $servings,
         public array $ingredients,
+        public ?array $steps,
         public string $createdByUserId,
     ) {
     }

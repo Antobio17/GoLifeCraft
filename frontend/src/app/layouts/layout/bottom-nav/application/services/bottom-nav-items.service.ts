@@ -48,6 +48,12 @@ export class BottomNavItemsService {
         activeRoutes: [],
       },
       {
+        route: "/cocina",
+        icon: "flame",
+        labelKey: "navbar.kitchen",
+        activeRoutes: [],
+      },
+      {
         route: "/shopping-list",
         icon: "cart",
         labelKey: "navbar.list",

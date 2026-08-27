@@ -1,0 +1,105 @@
+{
+  "kitchen": {
+    "breadcrumb": {
+      "list": "Cocina"
+    }
+  },
+  "getKitchenDay": {
+    "title": "Cocina",
+    "today": "Ir a hoy",
+    "summary": {
+      "eyebrow": "Por producir hoy",
+      "recipes": "{{recipes}} recetas",
+      "recipesOne": "1 receta",
+      "servings": "{{servings}} raciones",
+      "servingsOne": "1 ración"
+    },
+    "toCook": {
+      "title": "Por cocinar",
+      "meta": "El diario pide {{demand}} · tienes {{stock}}",
+      "metaEmpty": "El diario pide {{demand}} · no tienes nada",
+      "action": "Cocinar",
+      "resume": "Continuar"
+    },
+    "expected": {
+      "title": "Ya deberías tener",
+      "titleAlone": "Tienes hecho",
+      "meta": "Deberías tener {{servings}} raciones",
+      "metaOne": "Deberías tener 1 ración",
+      "clear": "no queda",
+      "cleared": "{{name}}: sin existencias"
+    },
+    "done": {
+      "title": "Hecho hoy",
+      "meta": "{{servings}} raciones · {{time}}",
+      "metaOne": "1 ración · {{time}}"
+    },
+    "empty": {
+      "title": "Hoy no hay que cocinar",
+      "text": "Lo que pide el diario de hoy ya está cubierto con lo que tienes hecho."
+    },
+    "error": {
+      "title": "No hemos podido cargar la cocina",
+      "text": "Vuelve a intentarlo en un momento.",
+      "stock": "No hemos podido actualizar las raciones"
+    }
+  },
+  "startProduction": {
+    "pack": {
+      "title": "Aprovecha el formato",
+      "close": "Cerrar",
+      "note": "El diario pide {{needed}} de {{article}}, pero tu {{packUnit}} es de {{pack}}.",
+      "exactTitle": "Cocinar {{servings}} raciones",
+      "exactDescription": "Usa {{needed}}. Te quedan {{leftover}} crudos en la nevera.",
+      "suggestedTitle": "Cocinar {{servings}} raciones",
+      "suggestedDescription": "Gasta la {{packUnit}} entera. {{extra}} raciones van al sobrante.",
+      "badge": "Sugerido",
+      "confirm": "Empezar producción"
+    },
+    "error": {
+      "start": "No hemos podido empezar la producción"
+    }
+  },
+  "getProduction": {
+    "back": "Volver a la cocina",
+    "discard": "Descartar producción",
+    "breadcrumb": {
+      "detail": "Producción"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "cooking": "Cocinando",
+      "done": "Terminada"
+    },
+    "recipeServings": "Receta para {{servings}}",
+    "ingredients": "Ingredientes",
+    "steps": "Pasos",
+    "step": "Paso {{position}}",
+    "minutes": "{{minutes}} min",
+    "noSteps": "Esta receta no tiene pasos. Añádelos en la receta.",
+    "error": {
+      "title": "No hemos encontrado esta producción",
+      "text": "Puede que se haya descartado desde otro dispositivo."
+    },
+    "servingsLabel": "Raciones que cocinas",
+    "servingsHint": "Ajústalo si el sobrante no era el que creías",
+    "servingsChanged": "Empezaste con {{servings}}",
+    "servingsLess": "Una ración menos",
+    "servingsMore": "Una ración más"
+  },
+  "finishProduction": {
+    "submit": "Terminar producción",
+    "discard": {
+      "title": "Descartar producción",
+      "body": "Vas a descartar la producción de",
+      "warning": "No se sumará nada al sobrante ni se descontará ningún ingrediente.",
+      "cancel": "Cancelar",
+      "confirm": "Descartar",
+      "deleting": "Descartando…"
+    },
+    "error": {
+      "finish": "No hemos podido terminar la producción",
+      "discard": "No hemos podido descartar la producción"
+    }
+  }
+}

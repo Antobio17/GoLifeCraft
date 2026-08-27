@@ -1,0 +1,6 @@
+services:
+  Nutrition\Kitchen\Production\Domain\Model\ProductionRepository:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\Model\Doctrine\DoctrineProductionRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Kitchen\Production\Domain\Model\Production

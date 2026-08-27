@@ -7,6 +7,7 @@ use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\GetRecipeResult;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeIngredientView;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeStepView;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\GetRecipeNeedleDataQuery;
 use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
 
@@ -54,6 +55,7 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
             category: $row['category'],
             servings: (int) $row['servings'],
             ingredients: $this->ingredients(recipeId: $recipeId, graph: $graph),
+            steps: $this->steps(recipeId: $recipeId),
             total: $this->calculator->totalsFor(graph: $graph, recipeId: $recipeId)->rounded(),
             perServing: $this->calculator->perServingFor(graph: $graph, recipeId: $recipeId)->rounded(),
             createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
@@ -61,6 +63,28 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
             createdByUserId: $row['created_by_user_id'],
             updatedByUserId: $row['updated_by_user_id'],
         );
+    }
+
+    /**
+     * @return RecipeStepView[]
+     */
+    private function steps(string $recipeId): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('rs.id', 'rs.position', 'rs.text', 'rs.minutes')
+            ->from(table: 'recipe_step', alias: 'rs')
+            ->where('rs.recipe_id = :recipeId')
+            ->setParameter(key: 'recipeId', value: $recipeId)
+            ->orderBy('rs.position', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        return array_map(callback: static fn (array $row): RecipeStepView => new RecipeStepView(
+            id: $row['id'],
+            position: (int) $row['position'],
+            text: (string) $row['text'],
+            minutes: null !== $row['minutes'] ? (int) $row['minutes'] : null,
+        ), array: $rows);
     }
 
     private function ingredients(string $recipeId, RecipeNutritionGraph $graph): array
