@@ -82,6 +82,44 @@ describe("SwipeToDeleteComponent", () => {
     expect(fixture.componentInstance.removed).toBe(1);
   });
 
+  it("se traga el click que llega tras el pointerup, ya sin la fila debajo", () => {
+    const fixture = render();
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+    const neighbour = document.createElement("button");
+    let neighbourClicks = 0;
+    neighbour.addEventListener("click", () => (neighbourClicks += 1));
+    document.body.appendChild(neighbour);
+
+    pointerUpOn(deleteButton);
+    neighbour.dispatchEvent(
+      new MouseEvent("click", { bubbles: true, detail: 1 }),
+    );
+    neighbour.remove();
+
+    expect(neighbourClicks).toBe(0);
+  });
+
+  it("deja de tragarse clicks pasada la ventana del click fantasma", () => {
+    const fixture = render();
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+    const neighbour = document.createElement("button");
+    let neighbourClicks = 0;
+    neighbour.addEventListener("click", () => (neighbourClicks += 1));
+    document.body.appendChild(neighbour);
+
+    jasmine.clock().install();
+    pointerUpOn(deleteButton);
+    jasmine.clock().tick(400);
+    jasmine.clock().uninstall();
+
+    neighbour.dispatchEvent(
+      new MouseEvent("click", { bubbles: true, detail: 1 }),
+    );
+    neighbour.remove();
+
+    expect(neighbourClicks).toBe(1);
+  });
+
   it("no borra si el dedo se sale del boton antes de levantarlo", () => {
     const fixture = render();
     const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
