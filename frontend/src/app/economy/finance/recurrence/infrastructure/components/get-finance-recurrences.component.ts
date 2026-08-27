@@ -3,6 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, forkJoin } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { UndoService } from "@shared/undo/application/services/undo.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -101,6 +102,7 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   );
   private floatingToastService = inject(FloatingToastService);
   private getFinanceAccountsService = inject(GetFinanceAccountsService);
+  protected undo = inject(UndoService);
   protected view = inject(FinanceViewService);
   protected categoryCatalog = inject(FinanceCategoryCatalogService);
   protected accountCatalog = inject(FinanceAccountCatalogService);
@@ -114,7 +116,7 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   running = signal(false);
   translationsReady = signal(false);
 
-  recurrences = signal<FinanceRecurrence[]>([]);
+  private loadedRecurrences = signal<FinanceRecurrence[]>([]);
   accounts = signal<FinanceAccount[]>([]);
   monthlyIncome = signal(0);
   monthlyExpense = signal(0);
@@ -123,6 +125,10 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   editingId = signal<string | null>(null);
   form = signal<FinanceRecurrenceForm>(
     this.recurrenceForm.empty("", "", this.DEFAULT_CHARGE_DAY),
+  );
+
+  recurrences = computed<FinanceRecurrence[]>(() =>
+    this.undo.withoutRemoved(this.loadedRecurrences()),
   );
 
   hasAccounts = computed(() => this.accounts().length > 0);
@@ -355,8 +361,21 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   }
 
   remove(recurrence: FinanceRecurrence): void {
+    this.undo.schedule({
+      id: recurrence.id,
+      keyTranslation: "getFinanceRecurrences.removed",
+      details: { name: recurrence.note },
+      commit: () => this.commitRemove(recurrence.id),
+    });
+  }
+
+  private commitRemove(recurrenceId: string): void {
+    this.loadedRecurrences.update((recurrences) =>
+      recurrences.filter((recurrence) => recurrence.id !== recurrenceId),
+    );
+
     this.deleteFinanceRecurrenceService
-      .deleteFinanceRecurrence(recurrence.id)
+      .deleteFinanceRecurrence(recurrenceId)
       .subscribe({ next: () => this.load(true) });
   }
 
@@ -429,7 +448,9 @@ export class GetFinanceRecurrencesComponent implements OnInit {
     }).subscribe({
       next: (responses) => {
         this.accounts.set(responses.accounts.data.attributes.accounts);
-        this.recurrences.set(responses.recurrences.data.attributes.recurrences);
+        this.loadedRecurrences.set(
+          responses.recurrences.data.attributes.recurrences,
+        );
         this.monthlyIncome.set(
           responses.recurrences.data.attributes.monthlyIncome,
         );
