@@ -15,6 +15,7 @@ final readonly class CreateRecipeCommandHandler
         private RecipeRepository $recipeRepository,
         private CreateRecipeNeedleDataQuery $needleDataQuery,
         private RecipeIngredientAssembler $recipeIngredientAssembler,
+        private RecipeStepAssembler $recipeStepAssembler,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -37,6 +38,11 @@ final readonly class CreateRecipeCommandHandler
             ingredients: $this->recipeIngredientAssembler->assemble(
                 recipeId: $recipeId,
                 ingredients: $command->ingredients,
+                userId: $command->createdByUserId,
+            ),
+            steps: $this->recipeStepAssembler->assemble(
+                recipeId: $recipeId,
+                steps: $command->steps ?? [],
                 userId: $command->createdByUserId,
             ),
             createdByUserId: $command->createdByUserId,

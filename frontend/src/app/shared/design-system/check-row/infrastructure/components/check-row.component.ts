@@ -20,8 +20,16 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         <span class="ds-checkrow__emoji">{{ emoji }}</span>
       }
       <span class="ds-checkrow__text">
+        @if (eyebrow) {
+          <span class="ds-checkrow__eyebrow">{{ eyebrow }}</span>
+        }
         <span class="ds-checkrow__name">{{ name }}</span>
-        <span class="ds-checkrow__meta">{{ meta }}</span>
+        @if (meta) {
+          <span class="ds-checkrow__meta">{{ meta }}</span>
+        }
+        @if (chip) {
+          <span class="ds-checkrow__chip">{{ chip }}</span>
+        }
       </span>
     </button>
   `,
@@ -99,13 +107,51 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         font-size: var(--ds-text-xs);
         color: var(--ds-text-muted);
       }
+      :host([wrap]) .ds-checkrow {
+        align-items: flex-start;
+        padding: var(--ds-space-3);
+      }
+      :host([wrap]) .ds-checkrow__box {
+        margin-top: 1px;
+      }
+      :host([wrap]) .ds-checkrow__name {
+        font-weight: var(--ds-weight-semibold);
+        line-height: 1.4;
+        white-space: normal;
+      }
+      .ds-checkrow__eyebrow {
+        font-size: var(--ds-text-xs);
+        font-weight: var(--ds-weight-extrabold);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ds-text-meta);
+      }
+      .ds-checkrow:not(.is-off) .ds-checkrow__eyebrow {
+        color: var(--ds-primary-soft-text);
+      }
+      .ds-checkrow__chip {
+        align-self: flex-start;
+        margin-top: var(--ds-space-1);
+        border-radius: var(--ds-radius-pill);
+        padding: 0.125rem var(--ds-space-2);
+        background: var(--ds-surface);
+        font-size: var(--ds-text-xs);
+        font-weight: var(--ds-weight-semibold);
+        color: var(--ds-text-muted);
+      }
     `,
   ],
+  host: {
+    "[attr.wrap]": "wrap ? '' : null",
+  },
 })
 export class CheckRowComponent {
   @Input() name = "";
   @Input() meta = "";
   @Input() emoji = "";
+  @Input() eyebrow = "";
+  @Input() chip = "";
+  @Input() wrap = false;
   @Input() checked = false;
 
   @Output() toggled = new EventEmitter<void>();

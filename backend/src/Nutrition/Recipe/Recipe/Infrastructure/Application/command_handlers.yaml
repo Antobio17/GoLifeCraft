@@ -4,12 +4,18 @@ services:
     arguments:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
 
+  Nutrition\Recipe\Recipe\Application\Command\RecipeStepAssembler:
+    class: Nutrition\Recipe\Recipe\Application\Command\RecipeStepAssembler
+    arguments:
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
   Nutrition\Recipe\Recipe\Application\Command\CreateRecipeCommandHandler:
     class: Nutrition\Recipe\Recipe\Application\Command\CreateRecipeCommandHandler
     arguments:
       $recipeRepository: '@Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository'
       $needleDataQuery: '@Nutrition\Recipe\Recipe\Domain\QueryModel\CreateRecipeNeedleDataQuery'
       $recipeIngredientAssembler: '@Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientAssembler'
+      $recipeStepAssembler: '@Nutrition\Recipe\Recipe\Application\Command\RecipeStepAssembler'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -21,6 +27,7 @@ services:
       $recipeRepository: '@Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository'
       $needleDataQuery: '@Nutrition\Recipe\Recipe\Domain\QueryModel\UpdateRecipeNeedleDataQuery'
       $recipeIngredientAssembler: '@Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientAssembler'
+      $recipeStepAssembler: '@Nutrition\Recipe\Recipe\Application\Command\RecipeStepAssembler'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

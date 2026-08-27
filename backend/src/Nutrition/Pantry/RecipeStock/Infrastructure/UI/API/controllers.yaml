@@ -1,0 +1,7 @@
+services:
+  Nutrition\Pantry\RecipeStock\Infrastructure\UI\API\Controller\UpdateRecipeStockController:
+    class: Nutrition\Pantry\RecipeStock\Infrastructure\UI\API\Controller\UpdateRecipeStockController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

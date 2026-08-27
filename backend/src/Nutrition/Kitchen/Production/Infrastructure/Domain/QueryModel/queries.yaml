@@ -1,0 +1,33 @@
+services:
+  Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver
+    arguments:
+      $graphProvider: '@Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator'
+
+  Nutrition\Kitchen\Production\Domain\QueryModel\StartProductionNeedleDataQuery:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineStartProductionNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Kitchen\Production\Domain\QueryModel\FinishProductionNeedleDataQuery:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineFinishProductionNeedleDataQuery
+    arguments:
+      $ingredientResolver: '@Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver'
+
+  Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionNeedleDataQuery:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetProductionNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $ingredientResolver: '@Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver'
+
+  Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionsNeedleDataQuery:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetProductionsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Kitchen\Production\Domain\QueryModel\GetKitchenDayNeedleDataQuery:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetKitchenDayNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $ingredientResolver: '@Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver'

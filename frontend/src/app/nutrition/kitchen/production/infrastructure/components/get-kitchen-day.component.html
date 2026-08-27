@@ -1,0 +1,227 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'66rem'"
+  [gap]="'var(--ds-space-3)'"
+>
+  <ds-stack
+    direction="row"
+    justify="between"
+    align="center"
+    [gap]="'var(--ds-space-3)'"
+  >
+    <ds-stack [gap]="'2px'" [grow]="true">
+      <ds-heading [level]="2" size="xl">{{
+        "getKitchenDay.title" | t
+      }}</ds-heading>
+      <ds-text variant="meta">{{ dateLine() }}</ds-text>
+    </ds-stack>
+
+    @if (!isToday()) {
+      <ds-button
+        variant="secondary"
+        size="icon-lg"
+        icon="clock"
+        [iconSize]="18"
+        [ariaLabel]="'getKitchenDay.today' | t"
+        (clicked)="onToday()"
+      />
+    }
+  </ds-stack>
+
+  @if (loading()) {
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-skeleton slot="side" height="3.25rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton slot="side" height="5.25rem" radius="var(--ds-radius-xl)" />
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-skeleton-section-header titleWidth="6rem" [count]="true" />
+        <ds-skeleton-list
+          [count]="2"
+          [gap]="'var(--ds-space-2)'"
+          radius="var(--ds-radius-xl)"
+          padding="var(--ds-space-3)"
+          [tile]="40"
+          [tileRadius]="12"
+          titleWidth="62%"
+          metaWidth="46%"
+          trailing="pill"
+        />
+        <ds-skeleton-section-header titleWidth="8rem" [count]="true" />
+        <ds-skeleton-list
+          [count]="2"
+          [gap]="'var(--ds-space-2)'"
+          radius="var(--ds-radius-xl)"
+          padding="var(--ds-space-3)"
+          [tile]="40"
+          [tileRadius]="12"
+          titleWidth="58%"
+          metaWidth="42%"
+        />
+      </ds-stack>
+    </ds-split-view>
+  } @else if (day()) {
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-week-day-tabs
+        slot="side"
+        [days]="weekTabs()"
+        (selected)="onSelectDay($event)"
+      />
+
+      @if (!hasNothing()) {
+        <ds-stack
+          slot="side"
+          class="kitchen-summary"
+          direction="row"
+          align="center"
+          [gap]="'var(--ds-space-3)'"
+        >
+          <ds-icon-badge
+            icon="chefHat"
+            tone="brand"
+            [size]="44"
+            [iconSize]="21"
+          />
+          <ds-stack [gap]="'2px'" [grow]="true">
+            <ds-text class="kitchen-summary__eyebrow" variant="meta">{{
+              "getKitchenDay.summary.eyebrow" | t
+            }}</ds-text>
+            <ds-stack
+              direction="row"
+              align="end"
+              [wrap]="true"
+              [gap]="'var(--ds-space-1-5)'"
+            >
+              <ds-text class="kitchen-summary__value" [inline]="true">{{
+                summaryRecipes()
+              }}</ds-text>
+              <ds-text
+                class="kitchen-summary__sub"
+                variant="meta"
+                [inline]="true"
+                >{{ summaryServings() }}</ds-text
+              >
+            </ds-stack>
+          </ds-stack>
+        </ds-stack>
+      }
+
+      @if (hasNothing()) {
+        <ds-empty-state
+          icon="chefHat"
+          [title]="'getKitchenDay.empty.title' | t"
+          [text]="'getKitchenDay.empty.text' | t"
+        />
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="'getKitchenDay.toCook.title' | t"
+            [staticLabel]="toCookRows().length.toString()"
+          />
+
+          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+            @for (row of toCookRows(); track row.item.recipeId) {
+              <ds-production-row
+                state="deficit"
+                [emoji]="row.item.emoji"
+                [name]="row.item.name"
+                [meta]="row.meta"
+                [actionLabel]="row.actionLabel"
+                [busy]="starting() === row.item.recipeId"
+                (action)="onCook(row.item)"
+              />
+            }
+          </ds-stack>
+        </ds-stack>
+      }
+
+      @if (expectedRows().length) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="expectedTitleKey() | t"
+            [staticLabel]="expectedRows().length.toString()"
+          />
+
+          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+            @for (row of expectedRows(); track row.item.recipeId) {
+              <ds-production-row
+                state="expected"
+                [emoji]="row.item.emoji"
+                [name]="row.item.name"
+                [meta]="row.meta"
+                [linkLabel]="'getKitchenDay.expected.clear' | t"
+                (linked)="onNoStock(row.item)"
+              />
+            }
+          </ds-stack>
+        </ds-stack>
+      }
+
+      @if (doneRows().length) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="'getKitchenDay.done.title' | t"
+            [staticLabel]="doneRows().length.toString()"
+          />
+
+          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+            @for (row of doneRows(); track row.item.productionId) {
+              <ds-production-row
+                state="done"
+                [emoji]="row.item.emoji"
+                [name]="row.item.name"
+                [meta]="row.meta"
+              />
+            }
+          </ds-stack>
+        </ds-stack>
+      }
+    </ds-split-view>
+  } @else {
+    <ds-empty-state
+      icon="alertCircle"
+      [title]="'getKitchenDay.error.title' | t"
+      [text]="'getKitchenDay.error.text' | t"
+    />
+  }
+</ds-page-wrapper>
+
+<ds-modal-sheet
+  [open]="!!packItem()"
+  [auto]="true"
+  [title]="'startProduction.pack.title' | t"
+  [closeLabel]="'startProduction.pack.close' | t"
+  (closed)="closePack()"
+>
+  <ds-stack [gap]="'var(--ds-space-4)'">
+    <ds-note icon="package" tone="warning">{{ packNote() }}</ds-note>
+
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      @for (choice of packChoices(); track choice.servings) {
+        <ds-choice-row
+          [selectable]="true"
+          [selected]="choice.servings === packServings()"
+          [title]="choice.title"
+          [description]="choice.description"
+          [badge]="choice.suggested ? ('startProduction.pack.badge' | t) : ''"
+          (activated)="onPackChoice(choice)"
+        />
+      }
+    </ds-stack>
+
+    <ds-button
+      variant="primary"
+      size="lg"
+      [fullWidth]="true"
+      [loading]="!!starting()"
+      [disabled]="!!starting()"
+      (clicked)="onPackConfirm()"
+      >{{ "startProduction.pack.confirm" | t }}</ds-button
+    >
+  </ds-stack>
+</ds-modal-sheet>
+
+<ds-undo-bar
+  [show]="!!undo.request()"
+  [label]="undo.request()?.label ?? ''"
+  (undone)="onUndoNoStock()"
+/>

@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Nutrition\Recipe\Recipe\Domain\Model\Recipe;
 use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository;
+use Nutrition\Recipe\Recipe\Domain\Model\RecipeStep;
 use Ramsey\Uuid\Uuid;
 
 final class DoctrineRecipeRepository extends EntityRepository implements RecipeRepository
@@ -36,6 +37,10 @@ final class DoctrineRecipeRepository extends EntityRepository implements RecipeR
         foreach ($recipe->ingredients as $ingredient) {
             $entityManager->persist(object: $ingredient);
         }
+
+        foreach ($recipe->steps as $step) {
+            $entityManager->persist(object: $step);
+        }
     }
 
     public function delete(Recipe $recipe): void
@@ -46,9 +51,15 @@ final class DoctrineRecipeRepository extends EntityRepository implements RecipeR
 
     private function removeChildren(string $recipeId): void
     {
+        $this->removeChildrenOf(entityClass: RecipeIngredient::class, alias: 'recipeIngredient', recipeId: $recipeId);
+        $this->removeChildrenOf(entityClass: RecipeStep::class, alias: 'recipeStep', recipeId: $recipeId);
+    }
+
+    private function removeChildrenOf(string $entityClass, string $alias, string $recipeId): void
+    {
         $this->getEntityManager()->createQueryBuilder()
-            ->delete(delete: RecipeIngredient::class, alias: 'recipeIngredient')
-            ->where('recipeIngredient.recipeId = :recipeId')
+            ->delete(delete: $entityClass, alias: $alias)
+            ->where($alias.'.recipeId = :recipeId')
             ->setParameter(key: 'recipeId', value: $recipeId)
             ->getQuery()
             ->execute();

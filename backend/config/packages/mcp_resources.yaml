@@ -21,6 +21,13 @@ parameters:
             write_roles: [ROLE_GOD, ROLE_USER]
             delete_roles: [ROLE_GOD, ROLE_USER]
 
+        recipe_stock:
+            class: 'Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStock'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Pantry/RecipeStock/Infrastructure/Domain/Model/Doctrine/Mapping/RecipeStock.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
         nutrition_facts:
             class: 'Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts'
             sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping/NutritionFacts.mcp.yaml'
@@ -59,6 +66,20 @@ parameters:
         recipe_ingredient:
             class: 'Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient'
             sidecar: '%kernel.project_dir%/src/Nutrition/Recipe/Recipe/Infrastructure/Domain/Model/Doctrine/Mapping/RecipeIngredient.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
+        recipe_step:
+            class: 'Nutrition\Recipe\Recipe\Domain\Model\RecipeStep'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Recipe/Recipe/Infrastructure/Domain/Model/Doctrine/Mapping/RecipeStep.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
+        production:
+            class: 'Nutrition\Kitchen\Production\Domain\Model\Production'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Kitchen/Production/Infrastructure/Domain/Model/Doctrine/Mapping/Production.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
             write_roles: [ROLE_GOD, ROLE_USER]
             delete_roles: [ROLE_GOD, ROLE_USER]

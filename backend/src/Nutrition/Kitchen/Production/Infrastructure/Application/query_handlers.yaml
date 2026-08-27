@@ -1,0 +1,33 @@
+services:
+  Nutrition\Kitchen\Production\Application\Query\GetProductionQueryHandler:
+    class: Nutrition\Kitchen\Production\Application\Query\GetProductionQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionNeedleDataQuery'
+      $dataTransform: '@Nutrition\Kitchen\Production\Application\Query\GetProductionDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Query\GetProductionDataTransform:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetProductionDataTransform
+
+  Nutrition\Kitchen\Production\Application\Query\GetProductionsQueryHandler:
+    class: Nutrition\Kitchen\Production\Application\Query\GetProductionsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionsNeedleDataQuery'
+      $dataTransform: '@Nutrition\Kitchen\Production\Application\Query\GetProductionsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Query\GetProductionsDataTransform:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetProductionsDataTransform
+
+  Nutrition\Kitchen\Production\Application\Query\GetKitchenDayQueryHandler:
+    class: Nutrition\Kitchen\Production\Application\Query\GetKitchenDayQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\GetKitchenDayNeedleDataQuery'
+      $dataTransform: '@Nutrition\Kitchen\Production\Application\Query\GetKitchenDayDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Query\GetKitchenDayDataTransform:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetKitchenDayDataTransform

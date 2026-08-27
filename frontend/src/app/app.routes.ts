@@ -114,6 +114,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "cocina",
+        data: { breadcrumb: "kitchen.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/kitchen/production/infrastructure/routes/kitchen.routes").then(
+            (m) => m.KITCHEN_ROUTES,
+          ),
+      },
+      {
         path: "recipes",
         data: { breadcrumb: "recipe.breadcrumb.list" },
         loadChildren: () =>

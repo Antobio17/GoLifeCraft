@@ -8,6 +8,7 @@ use Nutrition\Recipe\Recipe\Application\Command\DeleteRecipeCommand;
 use Nutrition\Recipe\Recipe\Application\Command\DeleteRecipeCommandHandler;
 use Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientAssembler;
 use Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientData;
+use Nutrition\Recipe\Recipe\Application\Command\RecipeStepAssembler;
 use Nutrition\Recipe\Recipe\Domain\Exception\DeleteRecipeException;
 use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\Model\InMemory\InMemoryRecipeRepository;
@@ -31,6 +32,7 @@ final class DeleteRecipeCommandHandlerTest extends TestCase
             recipeRepository: $this->recipeRepository,
             needleDataQuery: new InMemoryCreateRecipeNeedleDataQuery(),
             recipeIngredientAssembler: new RecipeIngredientAssembler(dateTimeGenerator: $dateTimeGenerator),
+            recipeStepAssembler: new RecipeStepAssembler(dateTimeGenerator: $dateTimeGenerator),
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -42,6 +44,7 @@ final class DeleteRecipeCommandHandlerTest extends TestCase
             ingredients: [
                 new RecipeIngredientData(kind: RecipeIngredient::KIND_PRODUCT, refId: 'article-1', quantity: 60.0, position: 1),
             ],
+            steps: [],
             createdByUserId: 'god-user-id',
         ));
 

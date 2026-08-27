@@ -1,0 +1,33 @@
+label: Recipe step
+
+fields:
+  recipeId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    filterable: true
+  position:
+    writable: true
+    required: true
+    type: int
+    min: 1
+    description: >-
+      Order of the step within the recipe, starting at 1. Steps are always read sorted by it.
+    sortable: true
+  text:
+    writable: true
+    required: true
+    description: >-
+      What to do in this step, written as an instruction ("Sofríe la cebolla a fuego medio").
+      Keep one action per step instead of packing the whole recipe into a single one.
+  minutes:
+    writable: true
+    required: false
+    type: int
+    min: 1
+    description: >-
+      How long the step takes, in minutes. Leave null when the step has no meaningful duration,
+      which is the usual case for preparation steps.
+
+relations: {}
