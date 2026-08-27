@@ -7,6 +7,7 @@
   "getFinanceRecurrences.run.success": "Pending movements booked: {{count}}",
   "getFinanceRecurrences.run.empty": "There are no pending movements to book this month.",
   "getFinanceRecurrences.remove": "Delete",
+  "getFinanceRecurrences.removed": "{{name}} removed",
   "getFinanceRecurrences.day": "Day",
   "getFinanceRecurrences.next": "Next:",
   "getFinanceRecurrences.paused": "Paused",

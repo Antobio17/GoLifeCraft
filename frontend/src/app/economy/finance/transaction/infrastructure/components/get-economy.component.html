@@ -196,7 +196,7 @@
                 #daySwipe
                 radius="var(--ds-radius-lg)"
                 [removeLabel]="'getEconomy.movements.remove' | t"
-                (remove)="removeTransaction(row.transaction)"
+                (remove)="removeTransaction(row)"
               >
                 <ds-transaction-row
                   [emoji]="row.emoji"
@@ -517,7 +517,7 @@
                   #swipe
                   radius="var(--ds-radius-lg)"
                   [removeLabel]="'getEconomy.movements.remove' | t"
-                  (remove)="removeTransaction(row.transaction)"
+                  (remove)="removeTransaction(row)"
                 >
                   <ds-transaction-row
                     [emoji]="row.emoji"

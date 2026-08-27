@@ -7,6 +7,7 @@
   "getFinanceRecurrences.run.success": "Movimientos pendientes generados: {{count}}",
   "getFinanceRecurrences.run.empty": "Este mes no hay movimientos pendientes de generar.",
   "getFinanceRecurrences.remove": "Borrar",
+  "getFinanceRecurrences.removed": "{{name}} eliminado",
   "getFinanceRecurrences.day": "Día",
   "getFinanceRecurrences.next": "Próximo:",
   "getFinanceRecurrences.paused": "En pausa",

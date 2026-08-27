@@ -3,6 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, forkJoin, of, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { UndoService } from "@shared/undo/application/services/undo.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -102,6 +103,7 @@ export class GetFinanceAccountsComponent implements OnInit {
   private setFinanceAccountBalanceService = inject(
     SetFinanceAccountBalanceService,
   );
+  protected undo = inject(UndoService);
   protected view = inject(FinanceViewService);
   protected catalog = inject(FinanceAccountCatalogService);
   protected accountForm = inject(FinanceAccountFormService);
@@ -118,7 +120,7 @@ export class GetFinanceAccountsComponent implements OnInit {
   translationsReady = signal(false);
 
   accounts = signal<FinanceAccount[]>([]);
-  checks = signal<FinanceBalanceCheck[]>([]);
+  private loadedChecks = signal<FinanceBalanceCheck[]>([]);
   totalBalance = signal(0);
 
   accountSheetOpen = signal(false);
@@ -130,6 +132,10 @@ export class GetFinanceAccountsComponent implements OnInit {
   editingCheckId = signal<string | null>(null);
   check = signal<FinanceBalanceCheckForm>(
     this.checkForm.empty("", this.view.todayIso()),
+  );
+
+  checks = computed<FinanceBalanceCheck[]>(() =>
+    this.undo.withoutRemoved(this.loadedChecks()),
   );
 
   totalBalanceLabel = computed(() => this.view.money(this.totalBalance()));
@@ -315,8 +321,21 @@ export class GetFinanceAccountsComponent implements OnInit {
   }
 
   removeCheck(check: FinanceBalanceCheck): void {
+    this.undo.schedule({
+      id: check.id,
+      keyTranslation: "getFinanceAccounts.check.removed",
+      details: { name: this.view.dayLong(check.checkDate) },
+      commit: () => this.commitRemoveCheck(check.id),
+    });
+  }
+
+  private commitRemoveCheck(checkId: string): void {
+    this.loadedChecks.update((checks) =>
+      checks.filter((check) => check.id !== checkId),
+    );
+
     this.deleteFinanceBalanceCheckService
-      .deleteFinanceBalanceCheck(check.id)
+      .deleteFinanceBalanceCheck(checkId)
       .subscribe({ next: () => this.load(true) });
   }
 
@@ -399,7 +418,7 @@ export class GetFinanceAccountsComponent implements OnInit {
       next: (responses) => {
         this.accounts.set(responses.accounts.data.attributes.accounts);
         this.totalBalance.set(responses.accounts.data.attributes.balance);
-        this.checks.set(responses.checks.data.attributes.checks);
+        this.loadedChecks.set(responses.checks.data.attributes.checks);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

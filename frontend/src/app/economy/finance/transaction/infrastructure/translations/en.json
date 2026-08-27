@@ -19,6 +19,7 @@
   "getEconomy.movements.one": "movement",
   "getEconomy.movements.many": "movements",
   "getEconomy.movements.remove": "Delete",
+  "getEconomy.removed": "{{name}} removed",
   "getEconomy.grouping.date": "By date",
   "getEconomy.grouping.category": "By category",
   "getEconomy.empty.title": "No movements this month",

@@ -38,6 +38,13 @@ export class UndoService {
     this.take();
   }
 
+  withoutRemoved<T extends { id: string }>(items: T[]): T[] {
+    const removedId = this.removedId();
+    if (!removedId) return items;
+
+    return items.filter((item) => item.id !== removedId);
+  }
+
   commitPending(): void {
     const request = this.take();
     if (!request) return;

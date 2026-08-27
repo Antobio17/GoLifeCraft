@@ -38,6 +38,7 @@
   "getFinanceAccounts.check.notePlaceholder": "Ej: cuadre tras la nómina",
   "getFinanceAccounts.check.save": "Guardar recuento",
   "getFinanceAccounts.check.remove": "Borrar",
+  "getFinanceAccounts.check.removed": "Recuento del {{name}} eliminado",
   "getFinanceAccounts.check.drift": "Desvío",
   "getFinanceAccounts.check.noDrift": "Cuadraba con lo calculado",
   "getFinanceAccounts.breadcrumb.list": "Cuentas"
