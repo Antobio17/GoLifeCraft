@@ -6,15 +6,20 @@ use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryAggregateResult;
 
 final class GetProductionsResult extends QueryAggregateResult
 {
+    /**
+     * @param string[] $emojis
+     */
     public function __construct(
         string $id,
         string $aggregateName,
-        public readonly string $recipeId,
-        public readonly string $name,
-        public readonly string $emoji,
-        public readonly string $cookDate,
+        public readonly string $fromDate,
+        public readonly string $toDate,
         public readonly string $status,
+        public readonly int $itemCount,
+        public readonly int $cookedCount,
+        public readonly float $servingsPlanned,
         public readonly float $servingsCooked,
+        public readonly array $emojis,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
         public readonly string $createdByUserId,

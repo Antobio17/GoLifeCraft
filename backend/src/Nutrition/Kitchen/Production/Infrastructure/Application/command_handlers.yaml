@@ -9,11 +9,48 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
+  Nutrition\Kitchen\Production\Application\Command\CookProductionItemCommandHandler:
+    class: Nutrition\Kitchen\Production\Application\Command\CookProductionItemCommandHandler
+    arguments:
+      $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\FinishProductionNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Command\CheckProductionItemCommandHandler:
+    class: Nutrition\Kitchen\Production\Application\Command\CheckProductionItemCommandHandler
+    arguments:
+      $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Command\UncookProductionItemCommandHandler:
+    class: Nutrition\Kitchen\Production\Application\Command\UncookProductionItemCommandHandler
+    arguments:
+      $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\FinishProductionNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Nutrition\Kitchen\Production\Application\Command\FinishProductionCommandHandler:
     class: Nutrition\Kitchen\Production\Application\Command\FinishProductionCommandHandler
     arguments:
       $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
-      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\FinishProductionNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Command\ReopenProductionCommandHandler:
+    class: Nutrition\Kitchen\Production\Application\Command\ReopenProductionCommandHandler
+    arguments:
+      $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

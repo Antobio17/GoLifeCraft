@@ -3,65 +3,65 @@
 namespace Nutrition\Kitchen\Production\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
-use Nutrition\Kitchen\Production\Domain\Event\ProductionCooked;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionDiscarded;
+use Nutrition\Kitchen\Production\Domain\Event\ProductionFinished;
+use Nutrition\Kitchen\Production\Domain\Event\ProductionItemChecked;
+use Nutrition\Kitchen\Production\Domain\Event\ProductionItemCooked;
+use Nutrition\Kitchen\Production\Domain\Event\ProductionItemUncooked;
+use Nutrition\Kitchen\Production\Domain\Event\ProductionReopened;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionStarted;
+use Nutrition\Kitchen\Production\Domain\Exception\CookProductionItemException;
 use Nutrition\Kitchen\Production\Domain\Exception\FinishProductionException;
+use Nutrition\Kitchen\Production\Domain\Exception\ReopenProductionException;
 use Nutrition\Kitchen\Production\Domain\Exception\StartProductionException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class Production extends GenericAggregate
 {
-    public const string STATUS_PENDING = 'pending';
     public const string STATUS_COOKING = 'cooking';
     public const string STATUS_DONE = 'done';
 
-    public string $recipeId;
-    public string $cookDate;
+    public string $fromDate;
+    public string $toDate;
     public string $status;
-    public float $servingsCooked = 0.0;
-    public string $nameSnapshot;
-    public string $emojiSnapshot;
 
+    /** @var ProductionItem[] */
+    public array $items = [];
+
+    /**
+     * @param ProductionItem[] $items
+     */
     public static function start(
         string $id,
-        string $recipeId,
-        string $cookDate,
-        float $servingsPlanned,
-        string $nameSnapshot,
-        string $emojiSnapshot,
+        string $fromDate,
+        string $toDate,
+        array $items,
         string $startedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
-        if (!self::isCookDate(cookDate: $cookDate)) {
-            throw StartProductionException::invalidCookDate(cookDate: $cookDate);
-        }
+        self::guardRange(fromDate: $fromDate, toDate: $toDate);
 
-        if ($servingsPlanned <= 0.0) {
-            throw StartProductionException::servingsMustBePositive(servings: $servingsPlanned);
+        if ([] === $items) {
+            throw StartProductionException::emptyProduction();
         }
 
         $now = $dateTimeGenerator->now();
 
         $production = new self();
         $production->id = $id;
-        $production->recipeId = $recipeId;
-        $production->cookDate = $cookDate;
+        $production->fromDate = $fromDate;
+        $production->toDate = $toDate;
         $production->status = self::STATUS_COOKING;
-        $production->servingsCooked = $servingsPlanned;
-        $production->nameSnapshot = $nameSnapshot;
-        $production->emojiSnapshot = $emojiSnapshot;
+        $production->items = $items;
         $production->stampCreation(userId: $startedByUserId, now: $now);
 
         $production->record(event: new ProductionStarted(
             aggregateId: $id,
             occurredOn: $now,
-            recipeId: $recipeId,
-            cookDate: $cookDate,
+            fromDate: $fromDate,
+            toDate: $toDate,
             status: $production->status,
-            servingsPlanned: $servingsPlanned,
-            nameSnapshot: $nameSnapshot,
-            emojiSnapshot: $emojiSnapshot,
+            items: $production->recordedItems(),
             createdAt: $now,
             updatedAt: $now,
             createdByUserId: $startedByUserId,
@@ -72,61 +72,217 @@ class Production extends GenericAggregate
     }
 
     /**
+     * The servings actually cooked are decided here, not when the batch is planned: the balance the
+     * proposal starts from is an expectation, and the fridge is only opened once you are cooking.
+     *
      * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
+     * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
      */
-    public function finish(
+    public function cookItem(
+        string $itemId,
         float $servingsCooked,
         array $consumedArticles,
-        string $finishedByUserId,
+        array $consumedRecipes,
+        string $cookedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
-        if (self::STATUS_DONE === $this->status) {
-            throw FinishProductionException::productionAlreadyFinished(productionId: $this->id);
+        if ($this->isDone()) {
+            throw CookProductionItemException::productionAlreadyFinished(productionId: $this->id);
+        }
+
+        $item = $this->item(itemId: $itemId);
+
+        if (null === $item) {
+            throw CookProductionItemException::itemNotFound(productionId: $this->id, itemId: $itemId);
+        }
+
+        if ($item->isDone()) {
+            throw CookProductionItemException::itemAlreadyCooked(productionId: $this->id, itemId: $itemId);
         }
 
         if ($servingsCooked <= 0.0) {
-            throw FinishProductionException::servingsMustBePositive(servings: $servingsCooked);
+            throw CookProductionItemException::servingsMustBePositive(servings: $servingsCooked);
         }
 
         $now = $dateTimeGenerator->now();
 
-        $this->servingsCooked = $servingsCooked;
-        $this->status = self::STATUS_DONE;
-        $this->stampUpdate(userId: $finishedByUserId, now: $now);
+        $item->cook(servingsCooked: $servingsCooked, cookedByUserId: $cookedByUserId, now: $now);
+        $this->stampUpdate(userId: $cookedByUserId, now: $now);
 
-        $this->record(event: new ProductionCooked(
+        $this->record(event: new ProductionItemCooked(
             aggregateId: $this->id,
             occurredOn: $now,
-            recipeId: $this->recipeId,
-            cookDate: $this->cookDate,
-            status: $this->status,
+            itemId: $item->id,
+            recipeId: $item->recipeId,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            servingsPlanned: $item->servingsPlanned,
             servingsCooked: $servingsCooked,
-            nameSnapshot: $this->nameSnapshot,
-            emojiSnapshot: $this->emojiSnapshot,
+            nameSnapshot: $item->nameSnapshot,
+            emojiSnapshot: $item->emojiSnapshot,
             consumedArticles: $consumedArticles,
+            consumedRecipes: $consumedRecipes,
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
-            updatedByUserId: $finishedByUserId,
+            updatedByUserId: $cookedByUserId,
+        ));
+
+        if (!$this->allItemsCooked()) {
+            return;
+        }
+
+        $this->close(finishedByUserId: $cookedByUserId, now: $now);
+    }
+
+    /**
+     * Marking a recipe cooked is undoable while the batch is open: the servings go back out of the
+     * stock and the articles return to the pantry, because you never actually cooked it.
+     *
+     * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
+     * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
+     */
+    public function uncookItem(
+        string $itemId,
+        array $consumedArticles,
+        array $consumedRecipes,
+        string $uncookedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if ($this->isDone()) {
+            throw CookProductionItemException::productionAlreadyFinished(productionId: $this->id);
+        }
+
+        $item = $this->item(itemId: $itemId);
+
+        if (null === $item) {
+            throw CookProductionItemException::itemNotFound(productionId: $this->id, itemId: $itemId);
+        }
+
+        if (!$item->isDone()) {
+            throw CookProductionItemException::itemNotCooked(productionId: $this->id, itemId: $itemId);
+        }
+
+        $now = $dateTimeGenerator->now();
+        $servingsCooked = $item->servingsCooked;
+
+        $item->uncook(uncookedByUserId: $uncookedByUserId, now: $now);
+        $this->stampUpdate(userId: $uncookedByUserId, now: $now);
+
+        $this->record(event: new ProductionItemUncooked(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            itemId: $item->id,
+            recipeId: $item->recipeId,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            servingsPlanned: $item->servingsPlanned,
+            servingsCooked: $servingsCooked,
+            nameSnapshot: $item->nameSnapshot,
+            emojiSnapshot: $item->emojiSnapshot,
+            consumedArticles: $consumedArticles,
+            consumedRecipes: $consumedRecipes,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $uncookedByUserId,
         ));
     }
 
-    public function discard(
-        string $discardedByUserId,
+    /**
+     * The checklist is state of the batch, not of the browser: you tick things off over a morning,
+     * across screens and devices, and what you ticked has to still be there when you come back.
+     *
+     * @param string[] $articleIds
+     */
+    public function checkItemIngredients(
+        string $itemId,
+        array $articleIds,
+        string $checkedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
+        if ($this->isDone()) {
+            throw CookProductionItemException::productionAlreadyFinished(productionId: $this->id);
+        }
+
+        $item = $this->item(itemId: $itemId);
+
+        if (null === $item) {
+            throw CookProductionItemException::itemNotFound(productionId: $this->id, itemId: $itemId);
+        }
+
+        if ($item->isDone()) {
+            throw CookProductionItemException::itemAlreadyCooked(productionId: $this->id, itemId: $itemId);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $item->check(articleIds: $articleIds, checkedByUserId: $checkedByUserId, now: $now);
+        $this->stampUpdate(userId: $checkedByUserId, now: $now);
+
+        $this->record(event: new ProductionItemChecked(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            itemId: $item->id,
+            recipeId: $item->recipeId,
+            checkedArticleIds: $item->checkedArticleIds,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $checkedByUserId,
+        ));
+    }
+
+    public function finish(string $finishedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        if (self::STATUS_DONE === $this->status) {
+            throw FinishProductionException::productionAlreadyFinished(productionId: $this->id);
+        }
+
+        $this->close(finishedByUserId: $finishedByUserId, now: $dateTimeGenerator->now());
+    }
+
+    /**
+     * Closing a batch is a gesture, not an irreversible fact: if you called it finished too soon,
+     * this puts it back on the stove without touching anything already cooked.
+     */
+    public function reopen(string $reopenedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        if (!$this->isDone()) {
+            throw ReopenProductionException::productionNotFinished(productionId: $this->id);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->status = self::STATUS_COOKING;
+        $this->stampUpdate(userId: $reopenedByUserId, now: $now);
+
+        $this->record(event: new ProductionReopened(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            status: $this->status,
+            items: $this->recordedItems(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $reopenedByUserId,
+        ));
+    }
+
+    public function discard(string $discardedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
         $now = $dateTimeGenerator->now();
         $this->stampUpdate(userId: $discardedByUserId, now: $now);
 
         $this->record(event: new ProductionDiscarded(
             aggregateId: $this->id,
             occurredOn: $now,
-            recipeId: $this->recipeId,
-            cookDate: $this->cookDate,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
             status: $this->status,
-            servingsCooked: $this->servingsCooked,
-            nameSnapshot: $this->nameSnapshot,
-            emojiSnapshot: $this->emojiSnapshot,
+            items: $this->recordedItems(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -139,12 +295,79 @@ class Production extends GenericAggregate
         return self::STATUS_DONE === $this->status;
     }
 
-    private static function isCookDate(string $cookDate): bool
+    public function item(string $itemId): ?ProductionItem
     {
-        if (1 !== preg_match(pattern: '/^\d{4}-\d{2}-\d{2}$/', subject: $cookDate)) {
+        foreach ($this->items as $item) {
+            if ($item->id === $itemId) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<int, array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, checkedArticleIds: string[]}>
+     */
+    public function recordedItems(): array
+    {
+        return array_map(
+            callback: static fn (ProductionItem $item): array => $item->toRecordedItem(),
+            array: array_values(array: $this->items),
+        );
+    }
+
+    private function close(string $finishedByUserId, \DateTime $now): void
+    {
+        $this->status = self::STATUS_DONE;
+        $this->stampUpdate(userId: $finishedByUserId, now: $now);
+
+        $this->record(event: new ProductionFinished(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            status: $this->status,
+            items: $this->recordedItems(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $finishedByUserId,
+        ));
+    }
+
+    private function allItemsCooked(): bool
+    {
+        foreach ($this->items as $item) {
+            if (!$item->isDone()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static function guardRange(string $fromDate, string $toDate): void
+    {
+        if (!self::isDate(date: $fromDate)) {
+            throw StartProductionException::invalidDate(date: $fromDate);
+        }
+
+        if (!self::isDate(date: $toDate)) {
+            throw StartProductionException::invalidDate(date: $toDate);
+        }
+
+        if ($toDate < $fromDate) {
+            throw StartProductionException::invalidRange(fromDate: $fromDate, toDate: $toDate);
+        }
+    }
+
+    private static function isDate(string $date): bool
+    {
+        if (1 !== preg_match(pattern: '/^\d{4}-\d{2}-\d{2}$/', subject: $date)) {
             return false;
         }
 
-        return false !== \DateTimeImmutable::createFromFormat(format: '!Y-m-d', datetime: $cookDate);
+        return false !== \DateTimeImmutable::createFromFormat(format: '!Y-m-d', datetime: $date);
     }
 }

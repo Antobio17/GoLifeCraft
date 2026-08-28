@@ -3,24 +3,17 @@
   <entity repository-class="Nutrition\Kitchen\Production\Infrastructure\Domain\Model\Doctrine\DoctrineProductionRepository" name="Nutrition\Kitchen\Production\Domain\Model\Production" table="production">
     <id name="id" type="string" column="id" primary="true" length="36"/>
     <field name="version" type="integer" version="true"/>
-    <field name="recipeId" type="string" column="recipe_id" length="36"/>
-    <field name="cookDate" type="string" column="cook_date" length="10"/>
+    <field name="fromDate" type="string" column="from_date" length="10"/>
+    <field name="toDate" type="string" column="to_date" length="10"/>
     <field name="status" type="string" column="status" length="16"/>
-    <field name="servingsCooked" type="float" column="servings_cooked">
-      <options>
-        <option name="default">0</option>
-      </options>
-    </field>
-    <field name="nameSnapshot" type="string" column="name_snapshot" length="255"/>
-    <field name="emojiSnapshot" type="string" column="emoji_snapshot" length="16"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
     <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
     <indexes>
-      <index name="idx_production_recipe_id" columns="recipe_id"/>
-      <index name="idx_production_cook_date" columns="cook_date"/>
-      <index name="idx_production_cook_date_status" columns="cook_date,status"/>
+      <index name="idx_production_from_date" columns="from_date"/>
+      <index name="idx_production_status" columns="status"/>
+      <index name="idx_production_range" columns="from_date,to_date"/>
     </indexes>
   </entity>
 </doctrine-mapping>

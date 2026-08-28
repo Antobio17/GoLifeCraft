@@ -28,9 +28,9 @@ final class StartProductionController
     {
         try {
             $this->handle(message: new StartProductionCommand(
-                recipeId: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'recipeId'),
-                cookDate: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'cookDate'),
-                servingsPlanned: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'servingsPlanned'),
+                fromDate: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'fromDate'),
+                toDate: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'toDate'),
+                items: $this->items(request: $request),
                 startedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 
@@ -48,5 +48,26 @@ final class StartProductionController
                 status: Response::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    /**
+     * @return array<int, array{recipeId: string, servings: float}>
+     */
+    private function items(Request $request): array
+    {
+        $items = [];
+
+        foreach (RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'items') as $item) {
+            if (!is_array(value: $item)) {
+                throw ArgumentRequestException::argumentMustBeArray(argumentName: 'items');
+            }
+
+            $items[] = [
+                'recipeId' => (string) ($item['recipeId'] ?? ''),
+                'servings' => (float) ($item['servings'] ?? 0),
+            ];
+        }
+
+        return $items;
     }
 }

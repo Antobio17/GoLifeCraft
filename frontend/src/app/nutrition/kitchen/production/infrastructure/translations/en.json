@@ -4,102 +4,164 @@
       "list": "Kitchen"
     }
   },
-  "getKitchenDay": {
+  "getProductions": {
     "title": "Kitchen",
-    "today": "Go to today",
-    "summary": {
-      "eyebrow": "To cook today",
-      "recipes": "{{recipes}} recipes",
-      "recipesOne": "1 recipe",
-      "servings": "{{servings}} servings",
-      "servingsOne": "1 serving"
-    },
-    "toCook": {
-      "title": "To cook",
-      "meta": "The diary asks for {{demand}} · you have {{stock}}",
-      "metaEmpty": "The diary asks for {{demand}} · you have none",
-      "action": "Cook",
-      "resume": "Resume"
-    },
-    "expected": {
-      "title": "You should already have",
-      "titleAlone": "Already cooked",
-      "meta": "You should have {{servings}} servings",
-      "metaOne": "You should have 1 serving",
-      "clear": "none left",
-      "cleared": "{{name}}: none left"
-    },
-    "done": {
-      "title": "Cooked today",
-      "meta": "{{servings}} servings · {{time}}",
-      "metaOne": "1 serving · {{time}}"
+    "subtitle": "What you batch-cook and lasts you several days",
+    "create": "New production",
+    "meta": "{{recipes}} recipes · {{servings}} servings",
+    "status": {
+      "cooking": "{{cooked}} of {{total}}",
+      "done": "Finished"
     },
     "empty": {
-      "title": "Nothing to cook today",
-      "text": "What today's diary asks for is already covered by what you have cooked."
-    },
-    "error": {
-      "title": "We could not load the kitchen",
-      "text": "Please try again in a moment.",
-      "stock": "We could not update the servings"
+      "title": "You have not batch-cooked yet",
+      "text": "Pick a range of days and we will tell you what to produce to cover the diary."
     }
   },
-  "startProduction": {
-    "pack": {
-      "title": "Make the most of the pack",
-      "close": "Close",
-      "note": "The diary asks for {{needed}} of {{article}}, but your {{packUnit}} holds {{pack}}.",
-      "exactTitle": "Cook {{servings}} servings",
-      "exactDescription": "Uses {{needed}}. {{leftover}} stay raw in the fridge.",
-      "suggestedTitle": "Cook {{servings}} servings",
-      "suggestedDescription": "Uses the whole {{packUnit}}. {{extra}} servings go to the surplus.",
-      "badge": "Suggested",
-      "confirm": "Start production"
+  "createProduction": {
+    "title": "New production",
+    "breadcrumb": "New",
+    "back": "Back to productions",
+    "from": "From",
+    "to": "To",
+    "days": "{{days}} days",
+    "dayOne": "1 day",
+    "hint": "We add up what the diary asks for on those days and subtract what you already have cooked.",
+    "toCook": "To produce",
+    "summary": "{{recipes}} recipes · {{servings}} servings",
+    "submit": "Create production",
+    "row": {
+      "meta": "The diary asks for {{demand}} · you have {{stock}}",
+      "metaEmpty": "The diary asks for {{demand}} · you have none",
+      "metaInProduction": "The diary asks for {{demand}} · you have {{stock}} · {{cooking}} under way",
+      "packHint": "Your {{packUnit}} of {{article}} covers {{servings}}",
+      "usePack": "use it all",
+      "toggle": "Add to or remove from the batch",
+      "servings": "Servings to produce",
+      "less": "One serving less",
+      "more": "One serving more",
+      "requiredBy": "For {{parents}}",
+      "fromDiary": "From the diary"
     },
-    "error": {
-      "start": "We could not start the production"
-    }
+    "covered": {
+      "title": "Already covered",
+      "meta": "You should have {{servings}} servings",
+      "metaInProduction": "{{cooking}} servings already under way",
+      "clear": "none left"
+    },
+    "empty": {
+      "title": "Nothing to produce",
+      "text": "The diary for those days is already covered by what you have cooked. Try a longer range."
+    },
+    "hint2": "If a recipe contains another one, the sub-recipe joins the batch and is cooked first."
   },
   "getProduction": {
-    "back": "Back to the kitchen",
+    "back": "Back to productions",
+    "breadcrumb": "Production",
+    "recipes": "Recipes in the batch",
+    "summary": "{{recipes}} recipes · {{servings}} servings",
+    "pending": "{{pending}} left to cook",
+    "finish": "Finish production",
     "discard": "Discard production",
-    "breadcrumb": {
-      "detail": "Production"
-    },
     "status": {
-      "pending": "Pending",
       "cooking": "Cooking",
       "done": "Finished"
     },
-    "recipeServings": "Recipe for {{servings}}",
-    "ingredients": "Ingredients",
-    "steps": "Steps",
-    "step": "Step {{position}}",
-    "minutes": "{{minutes}} min",
-    "noSteps": "This recipe has no steps. Add them in the recipe.",
-    "error": {
-      "title": "We could not find this production",
-      "text": "It may have been discarded from another device."
+    "row": {
+      "planned": "{{servings}} servings planned",
+      "cooked": "{{servings}} servings cooked",
+      "requiredBy": "For {{parents}}",
+      "fromDiary": "From the diary"
     },
-    "servingsLabel": "Servings you are cooking",
-    "servingsHint": "Adjust it if the surplus was not what you thought",
-    "servingsChanged": "You started with {{servings}}",
-    "servingsLess": "One serving less",
-    "servingsMore": "One serving more"
-  },
-  "finishProduction": {
-    "submit": "Finish production",
-    "discard": {
+    "discardModal": {
       "title": "Discard production",
       "body": "You are about to discard the production of",
-      "warning": "Nothing will be added to the surplus and no ingredient will be deducted.",
+      "warning": "Whatever you already cooked still counts in the surplus; only the batch disappears.",
       "cancel": "Cancel",
       "confirm": "Discard",
       "deleting": "Discarding…"
     },
     "error": {
-      "finish": "We could not finish the production",
-      "discard": "We could not discard the production"
+      "title": "We could not find this production",
+      "text": "It may have been discarded from another device."
+    },
+    "reopen": "Put it back on the stove",
+    "locked": "Finished: put it back on the stove to change anything."
+  },
+  "getProductionRecipe": {
+    "back": "Back to the batch",
+    "breadcrumb": "Recipe",
+    "status": {
+      "pending": "Cooking",
+      "done": "Cooked"
+    },
+    "recipeServings": "Recipe for {{servings}}",
+    "servingsLabel": "Servings you are cooking",
+    "servingsHint": "Adjust it if the surplus was not what you thought",
+    "servingsChanged": "The batch planned {{servings}}",
+    "servingsLess": "One serving less",
+    "servingsMore": "One serving more",
+    "ingredients": "Ingredients",
+    "steps": "Steps",
+    "step": "Step {{position}}",
+    "minutes": "{{minutes}} min",
+    "noSteps": "This recipe has no steps. Add them in the recipe.",
+    "submit": "Mark as cooked",
+    "error": {
+      "title": "We could not find this recipe",
+      "text": "The batch may have been discarded from another device."
+    },
+    "undo": "Unmark",
+    "undoHint": "Unmarking takes its servings out of the surplus and puts its ingredients back in the pantry.",
+    "subRecipe": {
+      "ready": "{{servings}} servings · you have {{stock}} cooked",
+      "short": "{{servings}} servings · you only have {{stock}}",
+      "chip": "needs cooking first"
+    }
+  },
+  "production": {
+    "does": {
+      "not": {
+        "exist": "That production no longer exists"
+      }
+    },
+    "already": {
+      "finished": "That production was already finished"
+    },
+    "needs": {
+      "items": "Add at least one recipe to the production"
+    },
+    "recipe": {
+      "duplicated": "That recipe is already in the production"
+    },
+    "range": {
+      "invalid": "The range ends before it starts"
+    },
+    "date": {
+      "invalid": "That date is not valid"
+    },
+    "servings": {
+      "must": {
+        "be": {
+          "positive": "Servings must be greater than zero"
+        }
+      }
+    },
+    "item": {
+      "does": {
+        "not": {
+          "exist": "That recipe is not in the production"
+        }
+      },
+      "already": {
+        "cooked": "That recipe was already cooked"
+      },
+      "not": {
+        "cooked": "That recipe is not cooked yet"
+      }
+    },
+    "not": {
+      "finished": "That production is still under way"
     }
   }
 }

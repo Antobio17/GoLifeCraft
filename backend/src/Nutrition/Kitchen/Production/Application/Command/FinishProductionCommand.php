@@ -8,7 +8,6 @@ final readonly class FinishProductionCommand implements Command
 {
     public function __construct(
         public string $productionId,
-        public float $servingsCooked,
         public string $finishedByUserId,
     ) {
     }

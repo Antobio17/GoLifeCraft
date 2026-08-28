@@ -99,6 +99,18 @@
       "not": {
         "recognized": "No hemos podido reconocer el producto en las fotos. Rellénalo a mano."
       }
+    },
+    "does": {
+      "not": {
+        "exist": "Ese artículo ya no existe"
+      }
+    },
+    "stock": {
+      "cannot": {
+        "be": {
+          "negative": "El stock no puede ser negativo"
+        }
+      }
     }
   },
   "articleEditor": {

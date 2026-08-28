@@ -14,4 +14,22 @@ final class GetProductionException extends BaseException
             details: ['productionId' => $productionId]
         );
     }
+
+    public static function itemNotFound(string $productionId, string $itemId): self
+    {
+        return new static(
+            title: 'The production does not contain that recipe.',
+            keyTranslation: 'production.item.does.not.exist',
+            details: ['productionId' => $productionId, 'itemId' => $itemId]
+        );
+    }
+
+    public static function invalidRange(string $fromDate, string $toDate): self
+    {
+        return new static(
+            title: 'The range ends before it starts.',
+            keyTranslation: 'production.range.invalid',
+            details: ['fromDate' => $fromDate, 'toDate' => $toDate]
+        );
+    }
 }

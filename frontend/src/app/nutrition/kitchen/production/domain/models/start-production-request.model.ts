@@ -1,5 +1,7 @@
+import { StartProductionItem } from "./start-production-item.model";
+
 export interface StartProductionRequest {
-  recipeId: string;
-  cookDate: string;
-  servingsPlanned: number;
+  fromDate: string;
+  toDate: string;
+  items: StartProductionItem[];
 }

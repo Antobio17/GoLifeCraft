@@ -1,6 +1,6 @@
 <ds-page-wrapper
   [maxWidth]="'40rem'"
-  [wideMaxWidth]="'64rem'"
+  [wideMaxWidth]="'60rem'"
   [gap]="'var(--ds-space-3)'"
 >
   @if (loading()) {
@@ -8,147 +8,112 @@
       [leading]="true"
       [eyebrow]="true"
       [subtitle]="false"
-      titleWidth="52%"
+      titleWidth="46%"
       [actions]="1"
     />
-    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-      <ds-skeleton-hero slot="side" />
-      <ds-skeleton-chips
-        slot="side"
-        [count]="2"
-        height="1.625rem"
-        [gap]="'var(--ds-space-1-5)'"
-      />
-
-      <ds-skeleton-section-header titleWidth="7rem" [count]="true" />
-      <ds-skeleton-list
-        [count]="5"
-        [gap]="'var(--ds-space-2)'"
-        radius="var(--ds-radius-lg)"
-        padding="var(--ds-space-2) var(--ds-space-3)"
-        [check]="true"
-        [tile]="36"
-        [tileRadius]="12"
-        titleWidth="52%"
-        metaWidth="28%"
-      />
-    </ds-split-view>
+    <ds-skeleton-list
+      [count]="3"
+      [gap]="'var(--ds-space-2)'"
+      radius="var(--ds-radius-xl)"
+      padding="var(--ds-space-3)"
+      [tile]="44"
+      [tileRadius]="12"
+      titleWidth="52%"
+      metaWidth="40%"
+      trailing="pill"
+    />
   } @else if (production(); as detail) {
     <ds-screen-header
       [leading]="'back'"
       [leadingLabel]="'getProduction.back' | t"
       [eyebrow]="statusLabel()"
-      [title]="detail.name"
+      [title]="rangeLabel()"
       (leadingClick)="onBack()"
     >
-      <ds-button
-        slot="actions"
-        variant="secondary"
-        size="icon-lg"
-        icon="trash"
-        [iconSize]="19"
-        [ariaLabel]="'getProduction.discard' | t"
-        (clicked)="onDiscard()"
-      />
+      <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
+        @if (!cooking()) {
+          <ds-button
+            variant="soft"
+            size="icon-lg"
+            icon="restore"
+            [iconSize]="19"
+            [loading]="reopening()"
+            [disabled]="reopening()"
+            [ariaLabel]="'getProduction.reopen' | t"
+            (clicked)="onReopen()"
+          />
+        }
+
+        <ds-button
+          variant="secondary"
+          size="icon-lg"
+          icon="trash"
+          [iconSize]="19"
+          [ariaLabel]="'getProduction.discard' | t"
+          (clicked)="onDiscard()"
+        />
+      </ds-stack>
     </ds-screen-header>
 
-    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-      <ds-stack
-        slot="side"
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-4)'"
-      >
-        <ds-emoji-tile [emoji]="detail.emoji" [size]="56" [radius]="16" />
-        <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-          <ds-heading [level]="3" size="lg" [truncate]="true">{{
-            detail.name
-          }}</ds-heading>
-          <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
-            <ds-chip>{{ recipeServingsLabel() }}</ds-chip>
-          </ds-stack>
+    <ds-split-view [columns]="'minmax(0, 0.7fr) minmax(0, 1fr)'">
+      <ds-stack slot="side" [gap]="'var(--ds-space-2)'">
+        <ds-text variant="meta">{{ summary() }}</ds-text>
+        <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
+          <ds-chip [tone]="cooking() ? 'brand' : 'neutral'">{{
+            statusLabel()
+          }}</ds-chip>
+          @if (cooking()) {
+            <ds-chip>{{
+              "getProduction.pending" | t: { pending: pendingCount() }
+            }}</ds-chip>
+          }
         </ds-stack>
-      </ds-stack>
-
-      <ds-stack
-        slot="side"
-        class="production-servings"
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-3)'"
-      >
-        <ds-stack [gap]="'2px'" [grow]="true">
-          <ds-text variant="label">{{
-            "getProduction.servingsLabel" | t
-          }}</ds-text>
-          <ds-text variant="meta">{{ servingsHint() }}</ds-text>
-        </ds-stack>
-
-        <ds-number-input
-          [stepper]="true"
-          [min]="1"
-          [ariaLabel]="'getProduction.servingsLabel' | t"
-          [decrementLabel]="'getProduction.servingsLess' | t"
-          [incrementLabel]="'getProduction.servingsMore' | t"
-          [ngModel]="servings()"
-          [ngModelOptions]="{ standalone: true }"
-          (ngModelChange)="onServings($event)"
-        />
       </ds-stack>
 
       <ds-section-header
-        [title]="'getProduction.ingredients' | t"
-        [staticLabel]="ingredientsProgress()"
+        [title]="'getProduction.recipes' | t"
+        [staticLabel]="detail.items.length.toString()"
       />
 
       <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-        @for (row of ingredientRows(); track row.key) {
-          <ds-check-row
-            [emoji]="row.emoji"
-            [name]="row.name"
+        @for (row of rows(); track row.item.itemId) {
+          <ds-production-row
+            [state]="row.done ? 'done' : 'deficit'"
+            [interactive]="true"
+            [emoji]="row.item.emoji"
+            [name]="row.item.name"
             [meta]="row.meta"
-            [checked]="row.checked"
-            (toggled)="onToggleIngredient(row.key)"
+            [tag]="row.origin"
+            (opened)="onOpen(row.item)"
           />
         }
       </ds-stack>
 
-      @if (stepRows().length) {
-        <ds-section-header
-          [title]="'getProduction.steps' | t"
-          [staticLabel]="stepsProgress()"
-        />
-
-        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-          @for (row of stepRows(); track row.key) {
-            <ds-check-row
-              [wrap]="true"
-              [eyebrow]="row.eyebrow"
-              [name]="row.text"
-              [chip]="row.chip"
-              [checked]="row.checked"
-              (toggled)="onToggleStep(row.key)"
-            />
-          }
-        </ds-stack>
+      @if (cooking()) {
+        <ds-button
+          variant="secondary"
+          size="lg"
+          [fullWidth]="true"
+          [loading]="finishing()"
+          [disabled]="finishing()"
+          (clicked)="onFinish()"
+          >{{ "getProduction.finish" | t }}</ds-button
+        >
       } @else {
-        <ds-cta-row
-          icon="pencil"
-          [dashed]="true"
-          [title]="'getProduction.noSteps' | t"
-          (clicked)="onOpenRecipe()"
-        />
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-text variant="meta">{{ "getProduction.locked" | t }}</ds-text>
+          <ds-button
+            variant="soft"
+            size="lg"
+            icon="restore"
+            [fullWidth]="true"
+            [loading]="reopening()"
+            [disabled]="reopening()"
+            (clicked)="onReopen()"
+            >{{ "getProduction.reopen" | t }}</ds-button
+          >
+        </ds-stack>
       }
-
-      <ds-button
-        variant="primary"
-        size="lg"
-        [fullWidth]="true"
-        [loading]="finishing()"
-        [disabled]="finishing()"
-        (clicked)="onFinish()"
-        >{{ "finishProduction.submit" | t }}</ds-button
-      >
     </ds-split-view>
   } @else {
     <ds-empty-state
@@ -161,14 +126,14 @@
 
 <ds-confirm-action-modal
   [show]="showDiscardModal()"
-  [title]="'finishProduction.discard.title' | t"
-  [body]="'finishProduction.discard.body' | t"
-  [itemName]="production()?.name ?? ''"
-  [warningText]="'finishProduction.discard.warning' | t"
+  [title]="'getProduction.discardModal.title' | t"
+  [body]="'getProduction.discardModal.body' | t"
+  [itemName]="rangeLabel()"
+  [warningText]="'getProduction.discardModal.warning' | t"
   [isDeleting]="discarding()"
-  [cancelLabel]="'finishProduction.discard.cancel' | t"
-  [confirmLabel]="'finishProduction.discard.confirm' | t"
-  [deletingLabel]="'finishProduction.discard.deleting' | t"
+  [cancelLabel]="'getProduction.discardModal.cancel' | t"
+  [confirmLabel]="'getProduction.discardModal.confirm' | t"
+  [deletingLabel]="'getProduction.discardModal.deleting' | t"
   (confirmed)="onConfirmDiscard()"
   (cancelled)="onCancelDiscard()"
 />

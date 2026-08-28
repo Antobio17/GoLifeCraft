@@ -1,0 +1,72 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'60rem'"
+  [gap]="'var(--ds-space-3)'"
+>
+  <ds-stack
+    direction="row"
+    justify="between"
+    align="center"
+    [gap]="'var(--ds-space-3)'"
+  >
+    <ds-stack [gap]="'2px'" [grow]="true">
+      <ds-heading [level]="2" size="xl">{{
+        "getProductions.title" | t
+      }}</ds-heading>
+      <ds-text variant="meta">{{ "getProductions.subtitle" | t }}</ds-text>
+    </ds-stack>
+
+    <ds-button
+      variant="primary"
+      size="md"
+      icon="plus"
+      [iconOnlyMobile]="true"
+      [ariaLabel]="'getProductions.create' | t"
+      (clicked)="onCreate()"
+      >{{ "getProductions.create" | t }}</ds-button
+    >
+  </ds-stack>
+
+  @if (loading()) {
+    <ds-skeleton-list
+      [count]="3"
+      [gap]="'var(--ds-space-2)'"
+      radius="var(--ds-radius-xl)"
+      padding="var(--ds-space-3)"
+      [tile]="44"
+      [tileRadius]="12"
+      titleWidth="42%"
+      metaWidth="64%"
+      trailing="pill"
+    />
+  } @else if (rows().length) {
+    <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+      @for (row of rows(); track row.production.id) {
+        <ds-card
+          [interactive]="true"
+          [padding]="'var(--ds-space-3)'"
+          (activated)="onOpen(row.production)"
+        >
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+            <ds-emoji-tile [emoji]="row.emoji" [size]="44" [radius]="12" />
+
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="strong">{{ row.title }}</ds-text>
+              <ds-text variant="meta">{{ row.meta }}</ds-text>
+            </ds-stack>
+
+            <ds-chip [tone]="row.cooking ? 'brand' : 'neutral'">{{
+              row.statusLabel
+            }}</ds-chip>
+          </ds-stack>
+        </ds-card>
+      }
+    </ds-stack>
+  } @else {
+    <ds-empty-state
+      icon="chefHat"
+      [title]="'getProductions.empty.title' | t"
+      [text]="'getProductions.empty.text' | t"
+    />
+  }
+</ds-page-wrapper>

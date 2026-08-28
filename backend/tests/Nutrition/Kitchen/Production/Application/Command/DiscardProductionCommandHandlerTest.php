@@ -6,6 +6,7 @@ use Nutrition\Kitchen\Production\Application\Command\DiscardProductionCommand;
 use Nutrition\Kitchen\Production\Application\Command\DiscardProductionCommandHandler;
 use Nutrition\Kitchen\Production\Domain\Exception\DiscardProductionException;
 use Nutrition\Kitchen\Production\Domain\Model\Production;
+use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Infrastructure\Domain\Model\InMemory\InMemoryProductionRepository;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -29,11 +30,20 @@ final class DiscardProductionCommandHandlerTest extends TestCase
 
         $this->productionRepository->save(production: Production::start(
             id: 'production-1',
-            recipeId: 'recipe-1',
-            cookDate: '2026-08-26',
-            servingsPlanned: 4.0,
-            nameSnapshot: 'Lentejas con chorizo',
-            emojiSnapshot: '🍲',
+            fromDate: '2026-08-26',
+            toDate: '2026-08-28',
+            items: [
+                ProductionItem::plan(
+                    productionId: 'production-1',
+                    position: 1,
+                    recipeId: 'recipe-1',
+                    servingsPlanned: 4.0,
+                    nameSnapshot: 'Lentejas con chorizo',
+                    emojiSnapshot: '🍲',
+                    createdByUserId: 'god-user-id',
+                    dateTimeGenerator: $this->dateTimeGenerator,
+                ),
+            ],
             startedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         ));

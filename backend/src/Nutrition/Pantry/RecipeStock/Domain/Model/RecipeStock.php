@@ -73,6 +73,26 @@ class RecipeStock extends GenericAggregate
         );
     }
 
+    /**
+     * Eating and undoing a cooked recipe move the same ledger, so this one is allowed to go below
+     * zero. Bottoming out at zero looked safer but broke the undo: taking one serving from an empty
+     * shelf took nothing, and giving it back handed over a serving that never existed. A negative
+     * balance is the honest reading, "the diary says you ate more than you cooked", and it feeds
+     * the kitchen proposal as a deficit instead of hiding.
+     */
+    public function decrease(
+        float $servings,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $this->applyServings(
+            servings: round(num: $this->servings - $servings, precision: 2),
+            updatedByUserId: $updatedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+            allowNegative: true,
+        );
+    }
+
     public function delete(
         string $deletedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -96,8 +116,11 @@ class RecipeStock extends GenericAggregate
         float $servings,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
+        bool $allowNegative = false,
     ): void {
-        self::assertServingsAreNotNegative(servings: $servings);
+        if (!$allowNegative) {
+            self::assertServingsAreNotNegative(servings: $servings);
+        }
 
         $now = $dateTimeGenerator->now();
         $previousServings = $this->servings;

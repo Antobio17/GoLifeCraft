@@ -1,7 +1,7 @@
-get_kitchen_day:
-  path: /api/v1/nutrition/kitchen/day
+get_production_proposal:
+  path: /api/v1/nutrition/kitchen/proposal
   methods: [GET]
-  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetKitchenDayController
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionProposalController
 
 start_production:
   path: /api/v1/nutrition/kitchen/productions
@@ -13,10 +13,35 @@ get_productions:
   methods: [GET]
   controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionsController
 
+cook_production_item:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}/cook
+  methods: [PUT]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\CookProductionItemController
+
+check_production_item:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}/checks
+  methods: [PUT]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\CheckProductionItemController
+
+uncook_production_item:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}/uncook
+  methods: [PUT]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\UncookProductionItemController
+
+get_production_item:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}
+  methods: [GET]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionItemController
+
 finish_production:
   path: /api/v1/nutrition/kitchen/productions/{productionId}/finish
   methods: [PUT]
   controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\FinishProductionController
+
+reopen_production:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/reopen
+  methods: [PUT]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ReopenProductionController
 
 get_production:
   path: /api/v1/nutrition/kitchen/productions/{productionId}

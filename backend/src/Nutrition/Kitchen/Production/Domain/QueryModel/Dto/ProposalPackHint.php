@@ -2,7 +2,7 @@
 
 namespace Nutrition\Kitchen\Production\Domain\QueryModel\Dto;
 
-final readonly class KitchenDayPackHint
+final readonly class ProposalPackHint
 {
     public function __construct(
         public string $articleId,

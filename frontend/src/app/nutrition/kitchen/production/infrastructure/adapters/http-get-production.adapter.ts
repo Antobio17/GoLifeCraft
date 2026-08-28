@@ -10,7 +10,9 @@ export class HttpGetProductionAdapter extends GetProductionPort {
 
   private readonly apiUrl = "/api/v1/nutrition/kitchen/productions";
 
-  getProduction(id: string): Observable<GetProductionResponse> {
-    return this.http.get<GetProductionResponse>(`${this.apiUrl}/${id}`);
+  getProduction(productionId: string): Observable<GetProductionResponse> {
+    return this.http.get<GetProductionResponse>(
+      `${this.apiUrl}/${productionId}`,
+    );
   }
 }

@@ -3,12 +3,17 @@
 namespace Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory;
 
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionIngredient;
+use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionNeeds;
+use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionSubRecipe;
 use Nutrition\Kitchen\Production\Domain\QueryModel\FinishProductionNeedleDataQuery;
 
 final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionNeedleDataQuery
 {
-    /** @var array<string, array<int, array{articleId: string, name: string, emoji: string, quantity: float, unit: string, factor: float, baseUnit: string}>> */
-    private array $recipes = [];
+    /** @var array<string, array<int, array{articleId: string, quantity: float, unit: string, factor: float, baseUnit: string}>> */
+    private array $articles = [];
+
+    /** @var array<string, array<int, array{recipeId: string, servingsPerServing: float}>> */
+    private array $subRecipes = [];
 
     public function addIngredient(
         string $recipeId,
@@ -18,10 +23,8 @@ final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionN
         float $factor = 1.0,
         string $baseUnit = 'g',
     ): void {
-        $this->recipes[$recipeId][] = [
+        $this->articles[$recipeId][] = [
             'articleId' => $articleId,
-            'name' => $articleId,
-            'emoji' => '🥕',
             'quantity' => $quantityPerServing,
             'unit' => $unit,
             'factor' => $factor,
@@ -29,17 +32,25 @@ final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionN
         ];
     }
 
-    public function resolveIngredients(string $recipeId, float $servings): array
+    public function addSubRecipe(string $recipeId, string $subRecipeId, float $servingsPerServing): void
     {
-        $ingredients = [];
+        $this->subRecipes[$recipeId][] = [
+            'recipeId' => $subRecipeId,
+            'servingsPerServing' => $servingsPerServing,
+        ];
+    }
 
-        foreach ($this->recipes[$recipeId] ?? [] as $ingredient) {
+    public function resolveNeeds(string $recipeId, float $servings): ProductionNeeds
+    {
+        $articles = [];
+
+        foreach ($this->articles[$recipeId] ?? [] as $ingredient) {
             $quantity = $ingredient['quantity'] * $servings;
 
-            $ingredients[] = new ProductionIngredient(
+            $articles[] = new ProductionIngredient(
                 articleId: $ingredient['articleId'],
-                name: $ingredient['name'],
-                emoji: $ingredient['emoji'],
+                name: $ingredient['articleId'],
+                emoji: '🥕',
                 quantity: $quantity,
                 unit: $ingredient['unit'],
                 baseQuantity: $quantity * $ingredient['factor'],
@@ -47,6 +58,17 @@ final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionN
             );
         }
 
-        return $ingredients;
+        $subRecipes = [];
+
+        foreach ($this->subRecipes[$recipeId] ?? [] as $subRecipe) {
+            $subRecipes[] = new ProductionSubRecipe(
+                recipeId: $subRecipe['recipeId'],
+                name: $subRecipe['recipeId'],
+                emoji: '🍲',
+                servings: $subRecipe['servingsPerServing'] * $servings,
+            );
+        }
+
+        return new ProductionNeeds(articles: $articles, subRecipes: $subRecipes);
     }
 }
