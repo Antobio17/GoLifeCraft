@@ -88,3 +88,20 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\ConsumeDiaryEntryCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\ConsumeDiaryEntryCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\ConsumeDiaryMealCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\ConsumeDiaryMealCommandHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\ConsumeDiaryMealNeedleDataQuery'
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

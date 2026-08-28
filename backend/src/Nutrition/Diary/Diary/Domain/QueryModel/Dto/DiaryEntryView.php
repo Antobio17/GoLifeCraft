@@ -21,6 +21,8 @@ final readonly class DiaryEntryView
         public ?DiaryQuickEntryView $quick = null,
         public bool $customized = false,
         public array $tree = [],
+        public bool $consumed = false,
+        public string $stockState = 'none',
     ) {
     }
 }

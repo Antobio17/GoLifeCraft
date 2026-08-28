@@ -14,6 +14,7 @@ final readonly class DiaryMealView
         public int $entryCount,
         public MacroBreakdown $totals,
         public array $entries,
+        public bool $consumed = false,
     ) {
     }
 }

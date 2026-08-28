@@ -3,6 +3,7 @@
 namespace Nutrition\Diary\Diary\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
+use Nutrition\Diary\Diary\Domain\Event\DiaryEntryConsumed;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryCreated;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryDeleted;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryMacrosRecalculated;
@@ -88,6 +89,12 @@ class DiaryEntry extends GenericAggregate
     public float $quickCarbs = 0.0;
 
     public bool $customized = false;
+
+    /**
+     * Whether the meal has already been eaten. A recipe entry that is eaten is what takes its
+     * servings out of the balance: cooking fills the fridge and eating empties it.
+     */
+    public bool $consumed = false;
 
     /** @var DiaryEntryNode[] */
     public array $nodes = [];
@@ -329,6 +336,32 @@ class DiaryEntry extends GenericAggregate
             carbs: $snapshot->macros->carbs,
             customized: $this->customized,
             tree: $this->treePayload(),
+        ));
+    }
+
+    public function consume(bool $consumed, string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        if ($consumed === $this->consumed) {
+            return;
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->consumed = $consumed;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new DiaryEntryConsumed(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            entryDate: $this->entryDate,
+            meal: $this->meal,
+            kind: $this->kind,
+            refId: $this->refId,
+            quantity: $this->quantity,
+            consumed: $consumed,
+            name: $this->nameSnapshot,
+            emoji: $this->emojiSnapshot,
+            updatedByUserId: $updatedByUserId,
         ));
     }
 

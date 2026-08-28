@@ -68,3 +68,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\ConsumeDiaryMealController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\ConsumeDiaryMealController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

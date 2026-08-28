@@ -6,6 +6,7 @@ import {
   inject,
   signal,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { tap } from "rxjs/operators";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
@@ -72,6 +73,7 @@ import { UpdateDiaryEntryNodeService } from "@nutrition/diary/diary/application/
 import { ResetDiaryEntryTreeService } from "@nutrition/diary/diary/application/services/reset-diary-entry-tree.service";
 import { DiaryTreeViewService } from "@nutrition/diary/diary/application/services/diary-tree-view.service";
 import { DeleteDiaryEntryService } from "@nutrition/diary/diary/application/services/delete-diary-entry.service";
+import { ConsumeDiaryMealService } from "@nutrition/diary/diary/application/services/consume-diary-meal.service";
 import { DiaryTreeComponent } from "@shared/design-system/diary-tree/infrastructure/components/diary-tree.component";
 import {
   DiaryTreeQuantityChange,
@@ -80,7 +82,9 @@ import {
 import {
   DiaryDay,
   DiaryEntryView,
+  DiaryMealView,
 } from "@nutrition/diary/diary/domain/models/diary.model";
+import { DiaryStockState } from "@nutrition/diary/diary/domain/models/diary-stock-state.model";
 import { CreateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/create-quick-diary-entry.service";
 import { UpdateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/update-quick-diary-entry.service";
 import {
@@ -146,6 +150,7 @@ export class GetDiaryComponent implements OnInit {
   private updateDiaryEntryNodeService = inject(UpdateDiaryEntryNodeService);
   private resetDiaryEntryTreeService = inject(ResetDiaryEntryTreeService);
   private deleteDiaryEntryService = inject(DeleteDiaryEntryService);
+  private consumeDiaryMealService = inject(ConsumeDiaryMealService);
   private treeView = inject(DiaryTreeViewService);
   private createQuickDiaryEntryService = inject(CreateQuickDiaryEntryService);
   private updateQuickDiaryEntryService = inject(UpdateQuickDiaryEntryService);
@@ -239,6 +244,10 @@ export class GetDiaryComponent implements OnInit {
       key: meal.key,
       label: this.mealLabel(meal.key),
       meta: this.view.mealMeta(meal),
+      consumed: meal.consumed,
+      partial: !meal.consumed && meal.entries.some((entry) => entry.consumed),
+      consumable: meal.entries.length > 0,
+      consumeLabel: this.mealConsumeLabel(meal),
       entries: meal.entries.map((entry) => ({
         entry,
         badge: this.badgeLabel(entry.kind),
@@ -262,6 +271,11 @@ export class GetDiaryComponent implements OnInit {
             )
           : [],
         showReset: entry.customized,
+        stockLabel: this.stockLabel(entry),
+        stockTone:
+          DiaryStockState.Covered === entry.stockState
+            ? ("brand" as const)
+            : ("neutral" as const),
       })),
     })),
   );
@@ -355,6 +369,50 @@ export class GetDiaryComponent implements OnInit {
   );
   goalPercentTotal = computed(() => this.goalForm.percentTotal(this.goal()));
   goalValid = computed(() => this.goalForm.isValid(this.goal()));
+
+  /**
+   * Adding something to a meal that was ticked off leaves it half eaten: what was already eaten
+   * stays eaten, so the check says so instead of pretending nothing was. From there the tap undoes
+   * the whole meal, because the reason to touch a half-eaten meal is almost always a mistake, and
+   * undoing has to give every serving back in one go.
+   */
+  mealConsumeLabel(meal: DiaryMealView): string {
+    if (meal.consumed || meal.entries.some((entry) => entry.consumed)) {
+      return this.t("getDiary.meal.unmark");
+    }
+
+    return this.t("getDiary.meal.markEaten");
+  }
+
+  stockLabel(entry: DiaryEntryView): string {
+    if ("recipe" !== entry.kind || entry.consumed) return "";
+
+    if (DiaryStockState.Covered === entry.stockState) {
+      return this.t("getDiary.stock.covered");
+    }
+
+    if (DiaryStockState.Short === entry.stockState) {
+      return this.t("getDiary.stock.short");
+    }
+
+    return "";
+  }
+
+  /**
+   * Ticking a meal repaints only its own rows: fetching the whole day sent the screen back to the
+   * skeleton for a one-tap gesture.
+   */
+  onConsumeMeal(mealKey: string, consumed: boolean): void {
+    const previous = this.day();
+    if (!previous) return;
+
+    this.day.set(this.view.withMealConsumed(previous, mealKey, consumed));
+
+    this.consumeDiaryMealService
+      .consumeDiaryMeal(this.date(), mealKey, consumed)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ error: () => this.day.set(previous) });
+  }
 
   ngOnInit(): void {
     this.translationService

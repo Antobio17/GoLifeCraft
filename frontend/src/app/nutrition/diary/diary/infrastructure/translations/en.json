@@ -99,6 +99,14 @@
       "reset": "Restore",
       "servings": "srv."
     },
-    "unit": "Unit"
+    "unit": "Unit",
+    "stock": {
+      "covered": "IN STOCK",
+      "short": "TO COOK"
+    },
+    "meal": {
+      "markEaten": "Mark as eaten",
+      "unmark": "Unmark the meal"
+    }
   }
 }

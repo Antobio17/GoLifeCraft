@@ -34,6 +34,8 @@ export class DiaryEntryComponent {
   @Input() name = "";
   @Input() badge = "";
   @Input() badgeTone: ChipTone = "neutral";
+  @Input() tag = "";
+  @Input() tagTone: ChipTone = "neutral";
   @Input() kcalLabel = "";
   @Input() macros: MacroBadge[] = [];
   @Input() unit = "";

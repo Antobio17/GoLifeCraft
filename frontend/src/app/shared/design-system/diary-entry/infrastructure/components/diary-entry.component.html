@@ -46,6 +46,9 @@
       [wrap]="true"
     >
       <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
+      @if (tag) {
+        <ds-chip [tone]="tagTone">{{ tag }}</ds-chip>
+      }
       <ds-macro-badges [kcal]="kcalLabel" />
     </ds-stack>
     <ds-macro-badges [macros]="macros" />
