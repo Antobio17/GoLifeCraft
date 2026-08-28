@@ -21,6 +21,7 @@ final class GetRecipeResult extends QueryAggregateResult
         public readonly array $steps,
         public readonly MacroBreakdown $total,
         public readonly MacroBreakdown $perServing,
+        public readonly float $stock,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
         public readonly string $createdByUserId,

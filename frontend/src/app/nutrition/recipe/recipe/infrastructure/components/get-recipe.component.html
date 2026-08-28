@@ -77,6 +77,24 @@
           }}</ds-chip>
         </ds-stack>
 
+        <ds-stock-control
+          [stockLabel]="'getRecipe.stock.heading' | t"
+          [mainText]="stockText()"
+          [subText]="'getRecipe.stock.hint' | t"
+          [stepLabel]="'getRecipe.stock.step' | t"
+          [clearLabel]="'getRecipe.stock.clear' | t"
+          [editLabel]="'getRecipe.stock.edit' | t"
+          (incremented)="onIncrementStock()"
+          (decremented)="onDecrementStock()"
+          (cleared)="onClearStock()"
+          (editRequested)="onOpenStockEditor()"
+        />
+
+        <ds-save-status
+          [status]="autosave.status()"
+          (retried)="onRetrySave()"
+        />
+
         <ds-macro-bars
           [kcal]="view.integer(recipe.perServing.calories)"
           [kcalUnit]="'getRecipe.perServing' | t"
@@ -169,3 +187,32 @@
     (cancelled)="onCancelDelete()"
   />
 </ds-page-wrapper>
+
+<ds-modal-sheet
+  [open]="showStockEditor()"
+  [auto]="true"
+  [title]="'getRecipe.stock.editor.title' | t"
+  [closeLabel]="'getRecipe.stock.editor.close' | t"
+  (closed)="onCloseStockEditor()"
+>
+  <ds-stack [gap]="'var(--ds-space-3)'">
+    <ds-text variant="muted">{{ "getRecipe.stock.editor.hint" | t }}</ds-text>
+
+    <ds-number-input
+      [stepper]="true"
+      [min]="0"
+      [ariaLabel]="'getRecipe.stock.heading' | t"
+      [ngModel]="stockDraft()"
+      [ngModelOptions]="{ standalone: true }"
+      (ngModelChange)="onStockDraft($event)"
+    />
+
+    <ds-button
+      variant="primary"
+      size="lg"
+      [fullWidth]="true"
+      (clicked)="onSaveStock()"
+      >{{ "getRecipe.stock.editor.save" | t }}</ds-button
+    >
+  </ds-stack>
+</ds-modal-sheet>

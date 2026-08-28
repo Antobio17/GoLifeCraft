@@ -3,6 +3,9 @@ import { EmojiCatalogService } from "@nutrition/catalog/article/application/serv
 import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/providers/get-articles.providers";
 import { GetRecipesProviders } from "../providers/get-recipes.providers";
 import { GetRecipeProviders } from "../providers/get-recipe.providers";
+import { UpdateRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/update-recipe-stock.providers";
+import { RecipeStockViewService } from "@nutrition/pantry/recipe-stock/application/services/recipe-stock-view.service";
+import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
 import { CreateRecipeProviders } from "../providers/create-recipe.providers";
 import { UpdateRecipeProviders } from "../providers/update-recipe.providers";
 import { DeleteRecipeProviders } from "../providers/delete-recipe.providers";
@@ -15,6 +18,9 @@ export const RECIPE_ROUTES: Routes = [
     providers: [
       ...GetRecipesProviders.getProviders(),
       ...GetRecipeProviders.getProviders(),
+      ...UpdateRecipeStockProviders.getProviders(),
+      RecipeStockViewService,
+      ...AutosaveProvider.getProviders(),
       ...CreateRecipeProviders.getProviders(),
       ...UpdateRecipeProviders.getProviders(),
       ...DeleteRecipeProviders.getProviders(),
