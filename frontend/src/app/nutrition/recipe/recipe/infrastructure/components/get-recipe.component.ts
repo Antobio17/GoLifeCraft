@@ -26,8 +26,16 @@ import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/i
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { StockControlComponent } from "@shared/design-system/stock-control/infrastructure/components/stock-control.component";
+import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
+import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
+import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { FormsModule } from "@angular/forms";
 import { GetRecipeService } from "@nutrition/recipe/recipe/application/services/get-recipe.service";
 import { DeleteRecipeService } from "@nutrition/recipe/recipe/application/services/delete-recipe.service";
+import { UpdateRecipeStockService } from "@nutrition/pantry/recipe-stock/application/services/update-recipe-stock.service";
+import { RecipeStockViewService } from "@nutrition/pantry/recipe-stock/application/services/recipe-stock-view.service";
+import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import {
   MacroShortLabels,
   RecipeViewService,
@@ -68,12 +76,20 @@ import { RevealDirective } from "@shared/design-system/reveal/infrastructure/dir
     SkeletonListComponent,
     EmptyStateComponent,
     ConfirmActionModalComponent,
+    StockControlComponent,
+    ModalSheetComponent,
+    SaveStatusComponent,
+    NumberInputComponent,
+    FormsModule,
   ],
 })
 export class GetRecipeComponent {
   private translationService = inject(TranslationService);
   private getRecipeService = inject(GetRecipeService);
   private deleteRecipeService = inject(DeleteRecipeService);
+  private updateRecipeStockService = inject(UpdateRecipeStockService);
+  protected stockView = inject(RecipeStockViewService);
+  protected autosave = inject(AutosaveService);
   protected view = inject(RecipeViewService);
   private router = inject(Router);
 
@@ -82,6 +98,18 @@ export class GetRecipeComponent {
   loading = signal(true);
   recipe = signal<RecipeDetail | null>(null);
   showDeleteModal = signal(false);
+  stock = signal(0);
+  showStockEditor = signal(false);
+  stockDraft = signal(0);
+
+  stockText = computed(() =>
+    this.t(
+      1 === this.stock()
+        ? "getRecipe.stock.oneServing"
+        : "getRecipe.stock.servings",
+      { servings: this.stockView.servings(this.stock()) },
+    ),
+  );
   deleting = signal(false);
 
   readonly id = input.required<string>();
@@ -103,12 +131,13 @@ export class GetRecipeComponent {
       )
       .subscribe((response) => {
         this.recipe.set(response?.data ?? null);
+        this.stock.set(response?.data.attributes.stock ?? 0);
         this.loading.set(false);
       });
   }
 
-  t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   macroLabels = computed<MacroShortLabels>(() => ({
@@ -144,6 +173,54 @@ export class GetRecipeComponent {
 
   onEdit(): void {
     this.router.navigate(["/recipes", this.id(), "edit"]);
+  }
+
+  onIncrementStock(): void {
+    this.saveStock(this.stockView.step(this.stock(), 1));
+  }
+
+  onDecrementStock(): void {
+    this.saveStock(this.stockView.step(this.stock(), -1));
+  }
+
+  onClearStock(): void {
+    this.saveStock(0);
+  }
+
+  onRetrySave(): void {
+    this.autosave.retry();
+  }
+
+  onOpenStockEditor(): void {
+    this.stockDraft.set(this.stock());
+    this.showStockEditor.set(true);
+  }
+
+  onCloseStockEditor(): void {
+    this.showStockEditor.set(false);
+  }
+
+  onStockDraft(value: number): void {
+    this.stockDraft.set(Math.max(0, value));
+  }
+
+  onSaveStock(): void {
+    this.saveStock(this.stockDraft());
+    this.showStockEditor.set(false);
+  }
+
+  /**
+   * Tapping the stepper has to feel like a stepper: the number moves at once and the calls pile up
+   * into one. Blocking the buttons until the server answered turned a handful of taps into a queue.
+   */
+  private saveStock(servings: number): void {
+    if (servings < 0) return;
+
+    this.stock.set(servings);
+
+    this.autosave.push("recipe-stock", () =>
+      this.updateRecipeStockService.updateRecipeStock(this.id(), servings),
+    );
   }
 
   onDelete(): void {

@@ -32,9 +32,11 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
                 'r.created_at',
                 'r.updated_at',
                 'r.created_by_user_id',
-                'r.updated_by_user_id'
+                'r.updated_by_user_id',
+                's.servings AS stock'
             )
             ->from(table: 'recipe', alias: 'r')
+            ->leftJoin(fromAlias: 'r', join: 'recipe_stock', alias: 's', condition: 's.recipe_id = r.id')
             ->where('r.id = :id')
             ->setParameter(key: 'id', value: $recipeId)
             ->executeQuery()
@@ -58,6 +60,7 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
             steps: $this->steps(recipeId: $recipeId),
             total: $this->calculator->totalsFor(graph: $graph, recipeId: $recipeId)->rounded(),
             perServing: $this->calculator->perServingFor(graph: $graph, recipeId: $recipeId)->rounded(),
+            stock: (float) ($row['stock'] ?? 0),
             createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
             createdByUserId: $row['created_by_user_id'],

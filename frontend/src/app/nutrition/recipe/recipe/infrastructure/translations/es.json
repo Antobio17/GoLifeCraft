@@ -46,7 +46,22 @@
     "deleteWarning": "Esta acción no se puede deshacer.",
     "cancel": "Cancelar",
     "deleteConfirm": "Borrar",
-    "deleting": "Borrando…"
+    "deleting": "Borrando…",
+    "stock": {
+      "heading": "RACIONES HECHAS",
+      "hint": "Lo que tienes en la nevera de esta receta",
+      "servings": "{{servings}} raciones",
+      "oneServing": "1 ración",
+      "step": "1",
+      "clear": "No queda",
+      "edit": "Ajustar raciones",
+      "editor": {
+        "title": "Raciones hechas",
+        "close": "Cerrar",
+        "hint": "Corrige a mano lo que te queda en la nevera de esta receta.",
+        "save": "Guardar"
+      }
+    }
   },
   "recipe": {
     "breadcrumb": {
@@ -57,6 +72,14 @@
     },
     "ingredient": {
       "required": "Añade al menos un ingrediente"
+    },
+    "does": {
+      "not": {
+        "exist": "Esa receta ya no existe"
+      }
+    },
+    "stock": {
+      "negative": "El saldo de raciones no puede ser negativo"
     }
   },
   "recipeEditor": {

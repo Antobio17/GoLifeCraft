@@ -38,6 +38,7 @@ export interface RecipeDetailAttributes {
   ingredients: RecipeIngredientView[];
   total: RecipeMacros;
   perServing: RecipeMacros;
+  stock: number;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -46,7 +46,22 @@
     "deleteWarning": "This action cannot be undone.",
     "cancel": "Cancel",
     "deleteConfirm": "Delete",
-    "deleting": "Deleting…"
+    "deleting": "Deleting…",
+    "stock": {
+      "heading": "COOKED SERVINGS",
+      "hint": "What you have in the fridge of this recipe",
+      "servings": "{{servings}} servings",
+      "oneServing": "1 serving",
+      "step": "1",
+      "clear": "None left",
+      "edit": "Adjust servings",
+      "editor": {
+        "title": "Cooked servings",
+        "close": "Close",
+        "hint": "Correct by hand what is left in the fridge of this recipe.",
+        "save": "Save"
+      }
+    }
   },
   "recipe": {
     "breadcrumb": {
@@ -57,6 +72,14 @@
     },
     "ingredient": {
       "required": "Add at least one ingredient"
+    },
+    "does": {
+      "not": {
+        "exist": "That recipe no longer exists"
+      }
+    },
+    "stock": {
+      "negative": "The servings balance cannot be negative"
     }
   },
   "recipeEditor": {
