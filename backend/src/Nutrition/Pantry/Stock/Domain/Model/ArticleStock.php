@@ -79,6 +79,21 @@ class ArticleStock extends GenericAggregate
         );
     }
 
+    /**
+     * The mirror of the discount cooking applies: what a recipe never used goes back to the shelf.
+     */
+    public function increase(
+        float $quantity,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $this->change(
+            quantity: $this->quantity + $quantity,
+            updatedByUserId: $updatedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+    }
+
     public function delete(
         string $deletedByUserId,
         DateTimeGenerator $dateTimeGenerator,

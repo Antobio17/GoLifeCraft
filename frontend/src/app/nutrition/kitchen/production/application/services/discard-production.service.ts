@@ -4,7 +4,7 @@ import { DiscardProductionPort } from "../../domain/ports/discard-production.por
 export class DiscardProductionService {
   constructor(private discardProductionPort: DiscardProductionPort) {}
 
-  discardProduction(id: string): Observable<void> {
-    return this.discardProductionPort.discardProduction(id);
+  discardProduction(productionId: string): Observable<void> {
+    return this.discardProductionPort.discardProduction(productionId);
   }
 }

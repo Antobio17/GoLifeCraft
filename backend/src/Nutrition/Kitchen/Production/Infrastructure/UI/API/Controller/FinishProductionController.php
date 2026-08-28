@@ -29,7 +29,6 @@ final class FinishProductionController
         try {
             $this->handle(message: new FinishProductionCommand(
                 productionId: $request->attributes->get(key: 'productionId'),
-                servingsCooked: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'servingsCooked'),
                 finishedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 

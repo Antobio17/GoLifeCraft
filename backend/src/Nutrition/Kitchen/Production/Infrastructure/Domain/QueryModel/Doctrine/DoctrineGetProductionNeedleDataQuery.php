@@ -4,9 +4,7 @@ namespace Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine
 
 use Doctrine\DBAL\Connection;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\GetProductionResult;
-use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionIngredient;
-use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionIngredientView;
-use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionStepView;
+use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionItemView;
 use Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionNeedleDataQuery;
 
 final readonly class DoctrineGetProductionNeedleDataQuery implements GetProductionNeedleDataQuery
@@ -22,20 +20,15 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
         $row = $this->connection->createQueryBuilder()
             ->select(
                 'p.id',
-                'p.recipe_id',
-                'p.cook_date',
+                'p.from_date',
+                'p.to_date',
                 'p.status',
-                'p.servings_cooked',
-                'p.name_snapshot',
-                'p.emoji_snapshot',
                 'p.created_at',
                 'p.updated_at',
                 'p.created_by_user_id',
-                'p.updated_by_user_id',
-                'r.servings AS recipe_servings'
+                'p.updated_by_user_id'
             )
             ->from(table: 'production', alias: 'p')
-            ->leftJoin(fromAlias: 'p', join: 'recipe', alias: 'r', condition: 'r.id = p.recipe_id')
             ->where('p.id = :productionId')
             ->setParameter(key: 'productionId', value: $productionId)
             ->executeQuery()
@@ -45,21 +38,18 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
             return null;
         }
 
+        $items = $this->items(productionId: $productionId);
         $utc = new \DateTimeZone(timezone: 'UTC');
-        $servingsCooked = (float) $row['servings_cooked'];
 
         return new GetProductionResult(
             id: $row['id'],
             aggregateName: 'Production',
-            recipeId: $row['recipe_id'],
-            name: $row['name_snapshot'],
-            emoji: $row['emoji_snapshot'],
-            cookDate: $row['cook_date'],
+            fromDate: $row['from_date'],
+            toDate: $row['to_date'],
             status: $row['status'],
-            servingsCooked: $servingsCooked,
-            recipeServings: max(1, (int) ($row['recipe_servings'] ?? 1)),
-            ingredients: $this->ingredients(recipeId: $row['recipe_id'], servings: $servingsCooked),
-            steps: $this->steps(recipeId: $row['recipe_id']),
+            items: $items,
+            servingsPlanned: $this->sum(items: $items, field: 'servingsPlanned'),
+            servingsCooked: $this->sum(items: $items, field: 'servingsCooked'),
             createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
             createdByUserId: $row['created_by_user_id'],
@@ -68,40 +58,81 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
     }
 
     /**
-     * @return ProductionIngredientView[]
+     * @return ProductionItemView[]
      */
-    private function ingredients(string $recipeId, float $servings): array
-    {
-        return array_map(
-            callback: static fn (ProductionIngredient $ingredient): ProductionIngredientView => new ProductionIngredientView(
-                articleId: $ingredient->articleId,
-                name: $ingredient->name,
-                emoji: $ingredient->emoji,
-                quantity: $ingredient->quantity,
-                unit: $ingredient->unit,
-            ),
-            array: $this->ingredientResolver->resolve(recipeId: $recipeId, servings: $servings),
-        );
-    }
-
-    /**
-     * @return ProductionStepView[]
-     */
-    private function steps(string $recipeId): array
+    private function items(string $productionId): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('rs.position', 'rs.text', 'rs.minutes')
-            ->from(table: 'recipe_step', alias: 'rs')
-            ->where('rs.recipe_id = :recipeId')
-            ->setParameter(key: 'recipeId', value: $recipeId)
-            ->orderBy('rs.position', 'ASC')
+            ->select(
+                'i.id',
+                'i.recipe_id',
+                'i.status',
+                'i.servings_planned',
+                'i.servings_cooked',
+                'i.name_snapshot',
+                'i.emoji_snapshot'
+            )
+            ->from(table: 'production_item', alias: 'i')
+            ->where('i.production_id = :productionId')
+            ->setParameter(key: 'productionId', value: $productionId)
+            ->orderBy('i.position', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
 
-        return array_map(callback: static fn (array $row): ProductionStepView => new ProductionStepView(
-            position: (int) $row['position'],
-            text: (string) $row['text'],
-            minutes: null !== $row['minutes'] ? (int) $row['minutes'] : null,
+        $requiredBy = $this->requiredBy(rows: $rows);
+
+        return array_map(callback: static fn (array $row): ProductionItemView => new ProductionItemView(
+            itemId: $row['id'],
+            recipeId: $row['recipe_id'],
+            name: $row['name_snapshot'],
+            emoji: $row['emoji_snapshot'],
+            status: $row['status'],
+            servingsPlanned: (float) $row['servings_planned'],
+            servingsCooked: (float) $row['servings_cooked'],
+            requiredBy: $requiredBy[$row['recipe_id']] ?? [],
         ), array: $rows);
+    }
+
+    /**
+     * Which recipes of this same batch eat each line. It is asked to the recipes themselves instead
+     * of being written down when the batch was planned: a note would go stale the moment a recipe
+     * changes or a line is dropped, and a sub-recipe can feed more than one parent.
+     *
+     * @param array<int, array<string, mixed>> $rows
+     *
+     * @return array<string, string[]>
+     */
+    private function requiredBy(array $rows): array
+    {
+        $names = array_column(array: $rows, column_key: 'name_snapshot', index_key: 'recipe_id');
+        $requiredBy = [];
+
+        foreach ($rows as $row) {
+            $needs = $this->ingredientResolver->resolveDirect(recipeId: $row['recipe_id'], servings: 1.0);
+
+            foreach ($needs->subRecipes as $subRecipe) {
+                if (!isset($names[$subRecipe->recipeId])) {
+                    continue;
+                }
+
+                $requiredBy[$subRecipe->recipeId][] = $row['name_snapshot'];
+            }
+        }
+
+        return $requiredBy;
+    }
+
+    /**
+     * @param ProductionItemView[] $items
+     */
+    private function sum(array $items, string $field): float
+    {
+        $total = 0.0;
+
+        foreach ($items as $item) {
+            $total += $item->$field;
+        }
+
+        return round(num: $total, precision: 2);
     }
 }

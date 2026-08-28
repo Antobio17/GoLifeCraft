@@ -7,69 +7,55 @@ import {
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
-import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
-import { CheckRowComponent } from "@shared/design-system/check-row/infrastructure/components/check-row.component";
-import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
+import { ProductionRowComponent } from "@shared/design-system/production-row/infrastructure/components/production-row.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
-import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
-import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
-import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetProductionService } from "@nutrition/kitchen/production/application/services/get-production.service";
 import { FinishProductionService } from "@nutrition/kitchen/production/application/services/finish-production.service";
+import { ReopenProductionService } from "@nutrition/kitchen/production/application/services/reopen-production.service";
 import { DiscardProductionService } from "@nutrition/kitchen/production/application/services/discard-production.service";
+import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
-import { ProductionDetail } from "@nutrition/kitchen/production/domain/models/production-detail.model";
-import { IngredientRow } from "@nutrition/kitchen/production/domain/models/ingredient-row.model";
-import { StepRow } from "@nutrition/kitchen/production/domain/models/step-row.model";
+import { ProductionDetailAttributes } from "@nutrition/kitchen/production/domain/models/production-detail-attributes.model";
+import { ProductionItemStatus } from "@nutrition/kitchen/production/domain/models/production-item-status.model";
+import { ProductionItemView } from "@nutrition/kitchen/production/domain/models/production-item-view.model";
+import { ProductionRecipeRow } from "@nutrition/kitchen/production/domain/models/production-recipe-row.model";
+import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/production-status.model";
 
 @Component({
   selector: "app-get-production",
   templateUrl: "./get-production.component.html",
-  styleUrls: ["./get-production.component.css"],
   imports: [
-    FormsModule,
     ContextualTranslatePipe,
     RevealDirective,
     PageWrapperComponent,
     SplitViewComponent,
     ScreenHeaderComponent,
     StackComponent,
-    HeadingComponent,
-    ChipComponent,
     TextComponent,
-    NumberInputComponent,
     ButtonComponent,
-    EmojiTileComponent,
+    ChipComponent,
     SectionHeaderComponent,
-    CheckRowComponent,
-    CtaRowComponent,
+    ProductionRowComponent,
     EmptyStateComponent,
     ConfirmActionModalComponent,
     SkeletonScreenHeaderComponent,
-    SkeletonHeroComponent,
-    SkeletonChipsComponent,
-    SkeletonSectionHeaderComponent,
     SkeletonListComponent,
   ],
 })
@@ -77,10 +63,11 @@ export class GetProductionComponent {
   private translationService = inject(TranslationService);
   private getProductionService = inject(GetProductionService);
   private finishProductionService = inject(FinishProductionService);
+  private reopenProductionService = inject(ReopenProductionService);
   private discardProductionService = inject(DiscardProductionService);
-  private floatingToastService = inject(FloatingToastService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
+  protected range = inject(ProductionRangeService);
   protected view = inject(ProductionViewService);
 
   private readonly MODULE_PATH = "nutrition/kitchen/production";
@@ -88,85 +75,66 @@ export class GetProductionComponent {
   readonly id = input.required<string>();
 
   loading = signal(true);
-  production = signal<ProductionDetail | null>(null);
-  checkedIngredients = signal<ReadonlySet<string>>(new Set());
-  checkedSteps = signal<ReadonlySet<string>>(new Set());
-  servings = signal(1);
+  production = signal<ProductionDetailAttributes | null>(null);
   finishing = signal(false);
+  reopening = signal(false);
   discarding = signal(false);
   showDiscardModal = signal(false);
 
-  statusLabel = computed(() => {
+  cooking = computed(
+    () => ProductionStatus.Cooking === this.production()?.status,
+  );
+
+  rangeLabel = computed(() => {
     const detail = this.production();
 
-    return detail ? this.t(`getProduction.status.${detail.status}`) : "";
+    return detail ? this.range.rangeLabel(detail.fromDate, detail.toDate) : "";
   });
 
-  servingsHint = computed(() => {
-    const detail = this.production();
-    if (!detail || detail.servingsCooked === this.servings()) {
-      return this.t("getProduction.servingsHint");
-    }
+  statusLabel = computed(() =>
+    this.t(
+      this.cooking()
+        ? "getProduction.status.cooking"
+        : "getProduction.status.done",
+    ),
+  );
 
-    return this.t("getProduction.servingsChanged", {
-      servings: this.view.servings(detail.servingsCooked),
-    });
-  });
+  rows = computed<ProductionRecipeRow[]>(() =>
+    (this.production()?.items ?? []).map((item) => {
+      const done = ProductionItemStatus.Done === item.status;
 
-  recipeServingsLabel = computed(() => {
+      return {
+        item,
+        meta: done
+          ? this.t("getProduction.row.cooked", {
+              servings: this.range.servings(item.servingsCooked),
+            })
+          : this.t("getProduction.row.planned", {
+              servings: this.range.servings(item.servingsPlanned),
+            }),
+        done,
+        origin: item.requiredBy.length
+          ? this.t("getProduction.row.requiredBy", {
+              parents: this.view.joinNames(item.requiredBy),
+            })
+          : this.t("getProduction.row.fromDiary"),
+      };
+    }),
+  );
+
+  pendingCount = computed(() => this.rows().filter((row) => !row.done).length);
+
+  summary = computed(() => {
     const detail = this.production();
     if (!detail) return "";
 
-    return this.t("getProduction.recipeServings", {
-      servings: this.view.servings(detail.recipeServings),
+    return this.t("getProduction.summary", {
+      recipes: detail.items.length,
+      servings: this.range.servings(
+        this.cooking() ? detail.servingsPlanned : detail.servingsCooked,
+      ),
     });
   });
-
-  ingredientRows = computed<IngredientRow[]>(() => {
-    const detail = this.production();
-    if (!detail) return [];
-
-    return detail.ingredients.map((ingredient) => ({
-      key: ingredient.articleId,
-      name: ingredient.name,
-      emoji: ingredient.emoji,
-      meta: this.view.quantityLabel(
-        this.view.scale(
-          ingredient.quantity,
-          detail.servingsCooked,
-          this.servings(),
-        ),
-        ingredient.unit,
-      ),
-      checked: this.checkedIngredients().has(ingredient.articleId),
-    }));
-  });
-
-  stepRows = computed<StepRow[]>(() =>
-    (this.production()?.steps ?? []).map((step) => ({
-      key: `${step.position}`,
-      eyebrow: this.t("getProduction.step", { position: step.position }),
-      text: step.text,
-      chip: step.minutes
-        ? this.t("getProduction.minutes", { minutes: step.minutes })
-        : "",
-      checked: this.checkedSteps().has(`${step.position}`),
-    })),
-  );
-
-  ingredientsProgress = computed(() =>
-    this.view.progressLabel(
-      this.ingredientRows().filter((row) => row.checked).length,
-      this.ingredientRows().length,
-    ),
-  );
-
-  stepsProgress = computed(() =>
-    this.view.progressLabel(
-      this.stepRows().filter((row) => row.checked).length,
-      this.stepRows().length,
-    ),
-  );
 
   constructor() {
     this.translationService.loadModuleTranslations(this.MODULE_PATH);
@@ -175,8 +143,6 @@ export class GetProductionComponent {
       .pipe(
         switchMap((id) => {
           this.loading.set(true);
-          this.checkedIngredients.set(new Set());
-          this.checkedSteps.set(new Set());
 
           return this.getProductionService
             .getProduction(id)
@@ -185,10 +151,7 @@ export class GetProductionComponent {
         takeUntilDestroyed(),
       )
       .subscribe((response) => {
-        const detail = response?.data ?? null;
-
-        this.production.set(detail);
-        this.servings.set(detail?.servingsCooked ?? 1);
+        this.production.set(response?.data.attributes ?? null);
         this.loading.set(false);
       });
   }
@@ -197,51 +160,49 @@ export class GetProductionComponent {
     return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
-  onServings(value: number): void {
-    this.servings.set(Math.max(1, value));
-  }
-
-  onToggleIngredient(key: string): void {
-    this.checkedIngredients.set(
-      this.view.toggle(this.checkedIngredients(), key),
-    );
-  }
-
-  onToggleStep(key: string): void {
-    this.checkedSteps.set(this.view.toggle(this.checkedSteps(), key));
-  }
-
   onBack(): void {
-    this.router.navigate(["/cocina"], {
-      queryParams: { date: this.production()?.cookDate },
-    });
+    this.router.navigate(["/cocina"]);
   }
 
-  onOpenRecipe(): void {
-    const detail = this.production();
-    if (!detail) return;
+  onOpen(item: ProductionItemView): void {
+    this.router.navigate(["/cocina", this.id(), item.itemId]);
+  }
 
-    this.router.navigate(["/recipes", detail.recipeId]);
+  onReopen(): void {
+    if (this.reopening()) return;
+
+    this.reopening.set(true);
+
+    this.reopenProductionService
+      .reopenProduction(this.id())
+      .pipe(
+        switchMap(() => this.getProductionService.getProduction(this.id())),
+        catchError(() => of(null)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((response) => {
+        this.reopening.set(false);
+
+        if (!response) return;
+
+        this.production.set(response.data.attributes);
+      });
   }
 
   onFinish(): void {
-    const detail = this.production();
-    if (!detail || this.finishing()) return;
+    if (this.finishing()) return;
 
     this.finishing.set(true);
 
     this.finishProductionService
-      .finishProduction(detail.id, { servingsCooked: this.servings() })
+      .finishProduction(this.id())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.finishing.set(false);
           this.onBack();
         },
-        error: () => {
-          this.finishing.set(false);
-          this.showError("finishProduction.error.finish");
-        },
+        error: () => this.finishing.set(false),
       });
   }
 
@@ -254,34 +215,20 @@ export class GetProductionComponent {
   }
 
   onConfirmDiscard(): void {
-    const detail = this.production();
-    if (!detail || this.discarding()) return;
+    if (this.discarding()) return;
 
     this.discarding.set(true);
 
     this.discardProductionService
-      .discardProduction(detail.id)
+      .discardProduction(this.id())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.discarding.set(false);
           this.showDiscardModal.set(false);
-          this.router.navigate(["/cocina"], {
-            queryParams: { date: detail.cookDate },
-          });
+          this.onBack();
         },
-        error: () => {
-          this.discarding.set(false);
-          this.showError("finishProduction.error.discard");
-        },
+        error: () => this.discarding.set(false),
       });
-  }
-
-  private showError(keyTranslation: string): void {
-    this.floatingToastService.showToast({
-      status: 500,
-      keyTranslation,
-      details: [],
-    });
   }
 }

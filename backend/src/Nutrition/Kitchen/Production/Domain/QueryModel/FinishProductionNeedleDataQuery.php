@@ -2,15 +2,13 @@
 
 namespace Nutrition\Kitchen\Production\Domain\QueryModel;
 
-use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionIngredient;
+use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionNeeds;
 
 interface FinishProductionNeedleDataQuery
 {
     /**
-     * Flattens the recipe down to articles, nested sub-recipes included, scaled to the servings
-     * actually cooked.
-     *
-     * @return ProductionIngredient[]
+     * What cooking these servings consumes directly: the recipe's own articles and the servings of
+     * the recipes it uses as ingredients.
      */
-    public function resolveIngredients(string $recipeId, float $servings): array;
+    public function resolveNeeds(string $recipeId, float $servings): ProductionNeeds;
 }

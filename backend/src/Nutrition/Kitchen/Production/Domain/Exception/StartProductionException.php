@@ -24,12 +24,39 @@ final class StartProductionException extends BaseException
         );
     }
 
-    public static function invalidCookDate(string $cookDate): self
+    public static function emptyProduction(): self
     {
         return new static(
-            title: 'Cook date is not a valid date.',
-            keyTranslation: 'production.cook.date.invalid',
-            details: ['cookDate' => $cookDate]
+            title: 'A production needs at least one recipe.',
+            keyTranslation: 'production.needs.items',
+            details: []
+        );
+    }
+
+    public static function invalidDate(string $date): self
+    {
+        return new static(
+            title: 'Date is not a valid date.',
+            keyTranslation: 'production.date.invalid',
+            details: ['date' => $date]
+        );
+    }
+
+    public static function invalidRange(string $fromDate, string $toDate): self
+    {
+        return new static(
+            title: 'The range ends before it starts.',
+            keyTranslation: 'production.range.invalid',
+            details: ['fromDate' => $fromDate, 'toDate' => $toDate]
+        );
+    }
+
+    public static function duplicatedRecipe(string $recipeId): self
+    {
+        return new static(
+            title: 'The same recipe cannot be planned twice in one production.',
+            keyTranslation: 'production.recipe.duplicated',
+            details: ['recipeId' => $recipeId]
         );
     }
 }

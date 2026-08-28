@@ -1,0 +1,62 @@
+label: Production recipe
+
+fields:
+  productionId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: Id of the batch this recipe belongs to.
+    filterable: true
+  position:
+    writable: true
+    required: true
+    type: integer
+    min: 1
+    description: Order of the recipe inside the batch.
+    sortable: true
+  recipeId:
+    writable: true
+    required: true
+    min: 36
+    max: 36
+    description: >-
+      Id of the recipe to cook. The item keeps its own name and emoji snapshots, so editing the
+      recipe afterwards never rewrites what was cooked.
+    filterable: true
+  status:
+    writable: true
+    required: true
+    enum: [pending, done]
+    description: '"done" once this recipe has been cooked, which is what feeds the recipe stock.'
+    filterable: true
+  servingsPlanned:
+    writable: true
+    required: true
+    type: float
+    min: 0
+    description: >-
+      Servings the proposal asked for, from the diary demand across the range minus what was
+      already in stock or already planned in another open batch.
+    sortable: true
+  servingsCooked:
+    writable: true
+    required: true
+    type: float
+    min: 0
+    description: >-
+      Servings actually cooked, decided while cooking and not when planning: the stock the proposal
+      started from is an expectation. Cooking 4 when the plan said 2 leaves the extra 2 in stock.
+    sortable: true
+  nameSnapshot:
+    writable: true
+    required: true
+    max: 255
+    description: Name of the recipe as it was when the batch was planned.
+  emojiSnapshot:
+    writable: true
+    required: true
+    max: 16
+    description: Emoji of the recipe as it was when the batch was planned.
+
+relations: {}

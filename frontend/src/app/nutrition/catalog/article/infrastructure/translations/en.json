@@ -99,6 +99,18 @@
       "not": {
         "recognized": "We could not recognise the product in the photos. Please fill it in by hand."
       }
+    },
+    "does": {
+      "not": {
+        "exist": "That article no longer exists"
+      }
+    },
+    "stock": {
+      "cannot": {
+        "be": {
+          "negative": "Stock cannot be negative"
+        }
+      }
     }
   },
   "articleEditor": {

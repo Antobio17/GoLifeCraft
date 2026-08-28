@@ -9,7 +9,7 @@ export class HttpDiscardProductionAdapter extends DiscardProductionPort {
 
   private readonly apiUrl = "/api/v1/nutrition/kitchen/productions";
 
-  discardProduction(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  discardProduction(productionId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${productionId}`);
   }
 }

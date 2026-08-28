@@ -1,0 +1,70 @@
+.range-panel {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--ds-surface-inset);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-3);
+}
+
+.proposal-row {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-2) var(--ds-space-3);
+  transition: opacity var(--ds-dur-2) var(--ds-ease-out);
+}
+
+.proposal-row.is-off {
+  background: var(--ds-surface-subtle);
+  opacity: 0.62;
+}
+
+.proposal-row__check,
+.proposal-row__servings {
+  flex: 0 0 auto;
+}
+
+/* The amount sits on its own line so the recipe name gets the full width: four columns in one
+   row left the text a sliver on a phone. */
+.proposal-row__amount {
+  margin-top: var(--ds-space-2);
+  border-top: 1px solid var(--ds-border-hairline);
+  padding-top: var(--ds-space-3);
+}
+
+.summary {
+  width: 100%;
+  box-sizing: border-box;
+  position: sticky;
+  bottom: calc(var(--ds-app-bottom-nav-height, 0px) + var(--ds-space-3));
+  background: var(--ds-surface-inset);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-2) var(--ds-space-3);
+}
+
+.proposal-row__origin {
+  align-self: flex-start;
+  max-width: 100%;
+  margin-top: 2px;
+  border-radius: var(--ds-radius-lg);
+  padding: 1px var(--ds-space-2);
+  background: var(--ds-surface-inset);
+  --ds-text-base: var(--ds-text-xs);
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.proposal-row__hint {
+  min-width: 0;
+  max-width: 100%;
+  --ds-text-base: var(--ds-text-xs);
+  --ds-text-meta: var(--ds-warning);
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}

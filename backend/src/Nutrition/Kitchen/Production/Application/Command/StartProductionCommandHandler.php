@@ -4,6 +4,7 @@ namespace Nutrition\Kitchen\Production\Application\Command;
 
 use Nutrition\Kitchen\Production\Domain\Exception\StartProductionException;
 use Nutrition\Kitchen\Production\Domain\Model\Production;
+use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionRepository;
 use Nutrition\Kitchen\Production\Domain\QueryModel\StartProductionNeedleDataQuery;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -21,23 +22,60 @@ final readonly class StartProductionCommandHandler
 
     public function __invoke(StartProductionCommand $command): void
     {
-        $recipe = $this->needleDataQuery->findRecipeSnapshot(recipeId: $command->recipeId);
-        if (null === $recipe) {
-            throw StartProductionException::recipeNotFound(recipeId: $command->recipeId);
-        }
+        $productionId = $this->productionRepository->nextId();
 
         $production = Production::start(
-            id: $this->productionRepository->nextId(),
-            recipeId: $command->recipeId,
-            cookDate: $command->cookDate,
-            servingsPlanned: $command->servingsPlanned,
-            nameSnapshot: $recipe->name,
-            emojiSnapshot: $recipe->emoji,
+            id: $productionId,
+            fromDate: $command->fromDate,
+            toDate: $command->toDate,
+            items: $this->planItems(productionId: $productionId, command: $command),
             startedByUserId: $command->startedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 
         $this->productionRepository->save(production: $production);
         $this->domainEventCollectorService->register(aggregate: $production);
+    }
+
+    /**
+     * @return ProductionItem[]
+     */
+    private function planItems(string $productionId, StartProductionCommand $command): array
+    {
+        $items = [];
+        $position = 0;
+
+        foreach ($command->items as $item) {
+            $recipeId = $item['recipeId'];
+
+            if (isset($items[$recipeId])) {
+                throw StartProductionException::duplicatedRecipe(recipeId: $recipeId);
+            }
+
+            $servings = (float) $item['servings'];
+            if ($servings <= 0.0) {
+                throw StartProductionException::servingsMustBePositive(servings: $servings);
+            }
+
+            $recipe = $this->needleDataQuery->findRecipeSnapshot(recipeId: $recipeId);
+            if (null === $recipe) {
+                throw StartProductionException::recipeNotFound(recipeId: $recipeId);
+            }
+
+            ++$position;
+
+            $items[$recipeId] = ProductionItem::plan(
+                productionId: $productionId,
+                position: $position,
+                recipeId: $recipeId,
+                servingsPlanned: $servings,
+                nameSnapshot: $recipe->name,
+                emojiSnapshot: $recipe->emoji,
+                createdByUserId: $command->startedByUserId,
+                dateTimeGenerator: $this->dateTimeGenerator,
+            );
+        }
+
+        return array_values(array: $items);
     }
 }

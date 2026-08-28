@@ -21,13 +21,24 @@ services:
   Nutrition\Kitchen\Production\Application\Query\GetProductionsDataTransform:
     class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetProductionsDataTransform
 
-  Nutrition\Kitchen\Production\Application\Query\GetKitchenDayQueryHandler:
-    class: Nutrition\Kitchen\Production\Application\Query\GetKitchenDayQueryHandler
+  Nutrition\Kitchen\Production\Application\Query\GetProductionProposalQueryHandler:
+    class: Nutrition\Kitchen\Production\Application\Query\GetProductionProposalQueryHandler
     arguments:
-      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\GetKitchenDayNeedleDataQuery'
-      $dataTransform: '@Nutrition\Kitchen\Production\Application\Query\GetKitchenDayDataTransform'
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionProposalNeedleDataQuery'
+      $dataTransform: '@Nutrition\Kitchen\Production\Application\Query\GetProductionProposalDataTransform'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
-  Nutrition\Kitchen\Production\Application\Query\GetKitchenDayDataTransform:
-    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetKitchenDayDataTransform
+  Nutrition\Kitchen\Production\Application\Query\GetProductionProposalDataTransform:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetProductionProposalDataTransform
+
+  Nutrition\Kitchen\Production\Application\Query\GetProductionItemQueryHandler:
+    class: Nutrition\Kitchen\Production\Application\Query\GetProductionItemQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionItemNeedleDataQuery'
+      $dataTransform: '@Nutrition\Kitchen\Production\Application\Query\GetProductionItemDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Query\GetProductionItemDataTransform:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetProductionItemDataTransform

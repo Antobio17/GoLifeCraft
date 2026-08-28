@@ -13,6 +13,27 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\CheckProductionItemController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\CheckProductionItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\UncookProductionItemController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\UncookProductionItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ReopenProductionController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ReopenProductionController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\DiscardProductionController:
     class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\DiscardProductionController
     arguments:
@@ -34,8 +55,22 @@ services:
     tags:
       - { name: controller.service_arguments }
 
-  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetKitchenDayController:
-    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetKitchenDayController
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionProposalController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionProposalController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionItemController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\CookProductionItemController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\CookProductionItemController
     arguments:
       $messageBus: '@messenger.bus.default'
     tags:

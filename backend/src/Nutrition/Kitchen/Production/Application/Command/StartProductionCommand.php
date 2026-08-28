@@ -6,10 +6,13 @@ use Shared\Shared\Shared\Application\Command\Command;
 
 final readonly class StartProductionCommand implements Command
 {
+    /**
+     * @param array<int, array{recipeId: string, servings: float}> $items
+     */
     public function __construct(
-        public string $recipeId,
-        public string $cookDate,
-        public float $servingsPlanned,
+        public string $fromDate,
+        public string $toDate,
+        public array $items,
         public string $startedByUserId,
     ) {
     }

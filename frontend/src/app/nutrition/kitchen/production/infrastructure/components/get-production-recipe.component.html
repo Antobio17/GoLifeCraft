@@ -1,0 +1,173 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'64rem'"
+  [gap]="'var(--ds-space-3)'"
+>
+  @if (loading()) {
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="52%"
+    />
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-skeleton-hero slot="side" />
+
+      <ds-skeleton-section-header titleWidth="7rem" [count]="true" />
+      <ds-skeleton-list
+        [count]="5"
+        [gap]="'var(--ds-space-2)'"
+        radius="var(--ds-radius-lg)"
+        padding="var(--ds-space-2) var(--ds-space-3)"
+        [check]="true"
+        [tile]="36"
+        [tileRadius]="12"
+        titleWidth="52%"
+        metaWidth="28%"
+      />
+    </ds-split-view>
+  } @else if (recipe(); as detail) {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getProductionRecipe.back' | t"
+      [eyebrow]="statusLabel()"
+      [title]="detail.name"
+      (leadingClick)="onBack()"
+    />
+
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-stack
+        slot="side"
+        direction="row"
+        align="center"
+        [gap]="'var(--ds-space-4)'"
+      >
+        <ds-emoji-tile [emoji]="detail.emoji" [size]="56" [radius]="16" />
+        <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
+          <ds-heading [level]="3" size="lg" [truncate]="true">{{
+            detail.name
+          }}</ds-heading>
+          <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
+            <ds-chip>{{ recipeServingsLabel() }}</ds-chip>
+          </ds-stack>
+        </ds-stack>
+      </ds-stack>
+
+      <ds-stack
+        slot="side"
+        class="production-servings"
+        direction="row"
+        align="center"
+        [gap]="'var(--ds-space-3)'"
+      >
+        <ds-stack [gap]="'2px'" [grow]="true">
+          <ds-text variant="label">{{
+            "getProductionRecipe.servingsLabel" | t
+          }}</ds-text>
+          <ds-text variant="meta">{{ servingsHint() }}</ds-text>
+        </ds-stack>
+
+        <ds-number-input
+          [stepper]="true"
+          [min]="1"
+          [disabled]="!editable()"
+          [ariaLabel]="'getProductionRecipe.servingsLabel' | t"
+          [decrementLabel]="'getProductionRecipe.servingsLess' | t"
+          [incrementLabel]="'getProductionRecipe.servingsMore' | t"
+          [ngModel]="servings()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onServings($event)"
+        />
+      </ds-stack>
+
+      <ds-section-header
+        [title]="'getProductionRecipe.ingredients' | t"
+        [staticLabel]="ingredientsProgress()"
+      />
+
+      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+        @for (row of subRecipeRows(); track row.item.recipeId) {
+          <ds-check-row
+            [emoji]="row.item.emoji"
+            [name]="row.item.name"
+            [meta]="row.meta"
+            [chip]="row.short ? ('getProductionRecipe.subRecipe.chip' | t) : ''"
+            [checked]="row.checked"
+            (toggled)="onToggleIngredient(row.item.recipeId)"
+          />
+        }
+
+        @for (row of ingredientRows(); track row.key) {
+          <ds-check-row
+            [emoji]="row.emoji"
+            [name]="row.name"
+            [meta]="row.meta"
+            [checked]="row.checked"
+            (toggled)="onToggleIngredient(row.key)"
+          />
+        }
+      </ds-stack>
+
+      @if (stepRows().length) {
+        <ds-section-header
+          [title]="'getProductionRecipe.steps' | t"
+          [staticLabel]="stepsProgress()"
+        />
+
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+          @for (row of stepRows(); track row.key) {
+            <ds-check-row
+              [wrap]="true"
+              [eyebrow]="row.eyebrow"
+              [name]="row.text"
+              [chip]="row.chip"
+              [checked]="row.checked"
+              (toggled)="onToggleStep(row.key)"
+            />
+          }
+        </ds-stack>
+      } @else {
+        <ds-cta-row
+          icon="pencil"
+          [dashed]="true"
+          [title]="'getProductionRecipe.noSteps' | t"
+          (clicked)="onOpenRecipe()"
+        />
+      }
+
+      @if (editable()) {
+        <ds-button
+          variant="primary"
+          size="lg"
+          [fullWidth]="true"
+          [loading]="cooking()"
+          [disabled]="cooking()"
+          (clicked)="onCook()"
+          >{{ "getProductionRecipe.submit" | t }}</ds-button
+        >
+      } @else if (undoable()) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-text variant="meta">{{
+            "getProductionRecipe.undoHint" | t
+          }}</ds-text>
+          <ds-button
+            variant="secondary"
+            size="lg"
+            icon="restore"
+            [fullWidth]="true"
+            [loading]="uncooking()"
+            [disabled]="uncooking()"
+            (clicked)="onUncook()"
+            >{{ "getProductionRecipe.undo" | t }}</ds-button
+          >
+        </ds-stack>
+      }
+    </ds-split-view>
+  } @else {
+    <ds-empty-state
+      icon="alertCircle"
+      [title]="'getProductionRecipe.error.title' | t"
+      [text]="'getProductionRecipe.error.text' | t"
+    />
+  }
+</ds-page-wrapper>

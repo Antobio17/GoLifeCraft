@@ -4,102 +4,164 @@
       "list": "Cocina"
     }
   },
-  "getKitchenDay": {
+  "getProductions": {
     "title": "Cocina",
-    "today": "Ir a hoy",
-    "summary": {
-      "eyebrow": "Por producir hoy",
-      "recipes": "{{recipes}} recetas",
-      "recipesOne": "1 receta",
-      "servings": "{{servings}} raciones",
-      "servingsOne": "1 ración"
-    },
-    "toCook": {
-      "title": "Por cocinar",
-      "meta": "El diario pide {{demand}} · tienes {{stock}}",
-      "metaEmpty": "El diario pide {{demand}} · no tienes nada",
-      "action": "Cocinar",
-      "resume": "Continuar"
-    },
-    "expected": {
-      "title": "Ya deberías tener",
-      "titleAlone": "Tienes hecho",
-      "meta": "Deberías tener {{servings}} raciones",
-      "metaOne": "Deberías tener 1 ración",
-      "clear": "no queda",
-      "cleared": "{{name}}: sin existencias"
-    },
-    "done": {
-      "title": "Hecho hoy",
-      "meta": "{{servings}} raciones · {{time}}",
-      "metaOne": "1 ración · {{time}}"
+    "subtitle": "Lo que cocinas en lote y te dura varios días",
+    "create": "Nueva producción",
+    "meta": "{{recipes}} recetas · {{servings}} raciones",
+    "status": {
+      "cooking": "{{cooked}} de {{total}}",
+      "done": "Terminada"
     },
     "empty": {
-      "title": "Hoy no hay que cocinar",
-      "text": "Lo que pide el diario de hoy ya está cubierto con lo que tienes hecho."
-    },
-    "error": {
-      "title": "No hemos podido cargar la cocina",
-      "text": "Vuelve a intentarlo en un momento.",
-      "stock": "No hemos podido actualizar las raciones"
+      "title": "Todavía no has cocinado en lote",
+      "text": "Elige un rango de días y te decimos qué toca producir para cubrir el diario."
     }
   },
-  "startProduction": {
-    "pack": {
-      "title": "Aprovecha el formato",
-      "close": "Cerrar",
-      "note": "El diario pide {{needed}} de {{article}}, pero tu {{packUnit}} es de {{pack}}.",
-      "exactTitle": "Cocinar {{servings}} raciones",
-      "exactDescription": "Usa {{needed}}. Te quedan {{leftover}} crudos en la nevera.",
-      "suggestedTitle": "Cocinar {{servings}} raciones",
-      "suggestedDescription": "Gasta la {{packUnit}} entera. {{extra}} raciones van al sobrante.",
-      "badge": "Sugerido",
-      "confirm": "Empezar producción"
+  "createProduction": {
+    "title": "Nueva producción",
+    "breadcrumb": "Nueva",
+    "back": "Volver a producciones",
+    "from": "Desde",
+    "to": "Hasta",
+    "days": "{{days}} días",
+    "dayOne": "1 día",
+    "hint": "Sumamos lo que el diario pide en esos días y le restamos lo que ya tienes hecho.",
+    "toCook": "Por producir",
+    "summary": "{{recipes}} recetas · {{servings}} raciones",
+    "submit": "Crear producción",
+    "row": {
+      "meta": "El diario pide {{demand}} · tienes {{stock}}",
+      "metaEmpty": "El diario pide {{demand}} · no tienes nada",
+      "metaInProduction": "El diario pide {{demand}} · tienes {{stock}} · {{cooking}} en marcha",
+      "packHint": "Tu {{packUnit}} de {{article}} da para {{servings}}",
+      "usePack": "aprovechar",
+      "toggle": "Incluir o quitar del lote",
+      "servings": "Raciones a producir",
+      "less": "Una ración menos",
+      "more": "Una ración más",
+      "requiredBy": "Para {{parents}}",
+      "fromDiary": "Del diario"
     },
-    "error": {
-      "start": "No hemos podido empezar la producción"
-    }
+    "covered": {
+      "title": "Ya lo tienes cubierto",
+      "meta": "Deberías tener {{servings}} raciones",
+      "metaInProduction": "{{cooking}} raciones ya en marcha",
+      "clear": "no queda"
+    },
+    "empty": {
+      "title": "No hay nada que producir",
+      "text": "El diario de esos días ya está cubierto con lo que tienes hecho. Prueba con un rango más largo."
+    },
+    "hint2": "Si una receta lleva otra dentro, la sub-receta entra en el lote y se cocina primero."
   },
   "getProduction": {
-    "back": "Volver a la cocina",
+    "back": "Volver a producciones",
+    "breadcrumb": "Producción",
+    "recipes": "Recetas del lote",
+    "summary": "{{recipes}} recetas · {{servings}} raciones",
+    "pending": "{{pending}} por cocinar",
+    "finish": "Terminar producción",
     "discard": "Descartar producción",
-    "breadcrumb": {
-      "detail": "Producción"
-    },
     "status": {
-      "pending": "Pendiente",
       "cooking": "Cocinando",
       "done": "Terminada"
     },
-    "recipeServings": "Receta para {{servings}}",
-    "ingredients": "Ingredientes",
-    "steps": "Pasos",
-    "step": "Paso {{position}}",
-    "minutes": "{{minutes}} min",
-    "noSteps": "Esta receta no tiene pasos. Añádelos en la receta.",
-    "error": {
-      "title": "No hemos encontrado esta producción",
-      "text": "Puede que se haya descartado desde otro dispositivo."
+    "row": {
+      "planned": "{{servings}} raciones planificadas",
+      "cooked": "{{servings}} raciones hechas",
+      "requiredBy": "Para {{parents}}",
+      "fromDiary": "Del diario"
     },
-    "servingsLabel": "Raciones que cocinas",
-    "servingsHint": "Ajústalo si el sobrante no era el que creías",
-    "servingsChanged": "Empezaste con {{servings}}",
-    "servingsLess": "Una ración menos",
-    "servingsMore": "Una ración más"
-  },
-  "finishProduction": {
-    "submit": "Terminar producción",
-    "discard": {
+    "discardModal": {
       "title": "Descartar producción",
       "body": "Vas a descartar la producción de",
-      "warning": "No se sumará nada al sobrante ni se descontará ningún ingrediente.",
+      "warning": "Lo que ya hayas cocinado sigue contando en el sobrante; solo desaparece el lote.",
       "cancel": "Cancelar",
       "confirm": "Descartar",
       "deleting": "Descartando…"
     },
     "error": {
-      "finish": "No hemos podido terminar la producción",
-      "discard": "No hemos podido descartar la producción"
+      "title": "No hemos encontrado esta producción",
+      "text": "Puede que se haya descartado desde otro dispositivo."
+    },
+    "reopen": "Volver a ponerla en marcha",
+    "locked": "Terminada: para tocar algo hay que volver a ponerla en marcha."
+  },
+  "getProductionRecipe": {
+    "back": "Volver al lote",
+    "breadcrumb": "Receta",
+    "status": {
+      "pending": "Cocinando",
+      "done": "Hecha"
+    },
+    "recipeServings": "Receta para {{servings}}",
+    "servingsLabel": "Raciones que cocinas",
+    "servingsHint": "Ajústalo si el sobrante no era el que creías",
+    "servingsChanged": "El lote planificaba {{servings}}",
+    "servingsLess": "Una ración menos",
+    "servingsMore": "Una ración más",
+    "ingredients": "Ingredientes",
+    "steps": "Pasos",
+    "step": "Paso {{position}}",
+    "minutes": "{{minutes}} min",
+    "noSteps": "Esta receta no tiene pasos. Añádelos en la receta.",
+    "submit": "Marcar como hecha",
+    "error": {
+      "title": "No hemos encontrado esta receta",
+      "text": "Puede que el lote se haya descartado desde otro dispositivo."
+    },
+    "undo": "Desmarcar",
+    "undoHint": "Al desmarcarla, sus raciones salen del sobrante y sus ingredientes vuelven a la despensa.",
+    "subRecipe": {
+      "ready": "{{servings}} raciones · tienes {{stock}} hechas",
+      "short": "{{servings}} raciones · solo tienes {{stock}}",
+      "chip": "hay que producirla antes"
+    }
+  },
+  "production": {
+    "does": {
+      "not": {
+        "exist": "Esa producción ya no existe"
+      }
+    },
+    "already": {
+      "finished": "Esa producción ya estaba terminada"
+    },
+    "needs": {
+      "items": "Añade al menos una receta a la producción"
+    },
+    "recipe": {
+      "duplicated": "Esa receta ya está en la producción"
+    },
+    "range": {
+      "invalid": "El rango termina antes de empezar"
+    },
+    "date": {
+      "invalid": "Esa fecha no es válida"
+    },
+    "servings": {
+      "must": {
+        "be": {
+          "positive": "Las raciones tienen que ser mayores que cero"
+        }
+      }
+    },
+    "item": {
+      "does": {
+        "not": {
+          "exist": "Esa receta no está en la producción"
+        }
+      },
+      "already": {
+        "cooked": "Esa receta ya estaba cocinada"
+      },
+      "not": {
+        "cooked": "Esa receta todavía no está cocinada"
+      }
+    },
+    "not": {
+      "finished": "Esa producción sigue en marcha"
     }
   }
 }

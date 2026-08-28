@@ -5,7 +5,7 @@ import { GetProductionResponse } from "../../domain/models/get-production-respon
 export class GetProductionService {
   constructor(private getProductionPort: GetProductionPort) {}
 
-  getProduction(id: string): Observable<GetProductionResponse> {
-    return this.getProductionPort.getProduction(id);
+  getProduction(productionId: string): Observable<GetProductionResponse> {
+    return this.getProductionPort.getProduction(productionId);
   }
 }

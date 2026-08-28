@@ -1,0 +1,186 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'64rem'"
+  [gap]="'var(--ds-space-3)'"
+>
+  <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'createProduction.back' | t"
+    [eyebrow]="daysLabel()"
+    [title]="'createProduction.title' | t"
+    (leadingClick)="onBack()"
+  />
+
+  <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+    <ds-stack slot="side" class="range-panel" [gap]="'var(--ds-space-3)'">
+      <ds-stack [gap]="'var(--ds-space-1)'">
+        <ds-text variant="label">{{ "createProduction.from" | t }}</ds-text>
+        <ds-date-input
+          [ariaLabel]="'createProduction.from' | t"
+          [ngModel]="fromDate()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onFromDate($event)"
+        />
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-1)'">
+        <ds-text variant="label">{{ "createProduction.to" | t }}</ds-text>
+        <ds-date-input
+          [min]="fromDate()"
+          [ariaLabel]="'createProduction.to' | t"
+          [ngModel]="toDate()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onToDate($event)"
+        />
+      </ds-stack>
+
+      <ds-note icon="info">{{ "createProduction.hint" | t }}</ds-note>
+    </ds-stack>
+
+    @if (loading()) {
+      <ds-skeleton-section-header titleWidth="8rem" [count]="true" />
+      <ds-skeleton-list
+        [count]="3"
+        [gap]="'var(--ds-space-2)'"
+        radius="var(--ds-radius-xl)"
+        padding="var(--ds-space-3)"
+        [check]="true"
+        [tile]="44"
+        [tileRadius]="12"
+        titleWidth="54%"
+        metaWidth="66%"
+        trailing="pill"
+      />
+    } @else if (rows().length) {
+      <ds-section-header
+        [title]="'createProduction.toCook' | t"
+        [staticLabel]="rangeLabel()"
+      />
+
+      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+        @for (row of rows(); track row.item.recipeId) {
+          <ds-stack
+            class="proposal-row"
+            [class.is-off]="!row.selected"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+            >
+              <ds-button
+                class="proposal-row__check"
+                [variant]="row.selected ? 'primary' : 'secondary'"
+                size="icon-sm"
+                [icon]="row.selected ? 'check' : 'plus'"
+                [iconSize]="15"
+                [ariaLabel]="'createProduction.row.toggle' | t"
+                (clicked)="onToggle(row.item)"
+              />
+
+              <ds-emoji-tile
+                [emoji]="row.item.emoji"
+                [size]="44"
+                [radius]="12"
+              />
+
+              <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-text variant="strong">{{ row.item.name }}</ds-text>
+                <ds-text variant="meta">{{ row.meta }}</ds-text>
+                <ds-text class="proposal-row__origin" variant="meta">{{
+                  row.origin
+                }}</ds-text>
+              </ds-stack>
+            </ds-stack>
+
+            <ds-stack
+              class="proposal-row__amount"
+              direction="row"
+              align="center"
+              justify="between"
+              [gap]="'var(--ds-space-3)'"
+            >
+              <ds-text variant="label">{{
+                "createProduction.row.servings" | t
+              }}</ds-text>
+
+              <ds-number-input
+                class="proposal-row__servings"
+                [stepper]="true"
+                [min]="0"
+                [ariaLabel]="'createProduction.row.servings' | t"
+                [decrementLabel]="'createProduction.row.less' | t"
+                [incrementLabel]="'createProduction.row.more' | t"
+                [ngModel]="row.servings"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="onServings(row.item, $event)"
+              />
+            </ds-stack>
+
+            @if (row.hint) {
+              <ds-stack
+                direction="row"
+                align="center"
+                [wrap]="true"
+                [gap]="'var(--ds-space-2)'"
+              >
+                <ds-text class="proposal-row__hint" variant="meta">{{
+                  row.hint
+                }}</ds-text>
+                <ds-button
+                  variant="link"
+                  size="sm"
+                  (clicked)="onUsePack(row.item)"
+                  >{{ "createProduction.row.usePack" | t }}</ds-button
+                >
+              </ds-stack>
+            }
+          </ds-stack>
+        }
+      </ds-stack>
+
+      <ds-stack
+        class="summary"
+        direction="row"
+        align="center"
+        [gap]="'var(--ds-space-3)'"
+      >
+        <ds-stack [grow]="true">
+          <ds-text variant="meta">{{ summary() }}</ds-text>
+        </ds-stack>
+        <ds-button
+          variant="primary"
+          size="md"
+          [disabled]="!canSubmit() || saving()"
+          [loading]="saving()"
+          (clicked)="onSubmit()"
+          >{{ "createProduction.submit" | t }}</ds-button
+        >
+      </ds-stack>
+    } @else {
+      <ds-empty-state
+        icon="chefHat"
+        [title]="'createProduction.empty.title' | t"
+        [text]="'createProduction.empty.text' | t"
+      />
+    }
+
+    @if (coveredRows().length) {
+      <ds-section-header [title]="'createProduction.covered.title' | t" />
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (row of coveredRows(); track row.item.recipeId) {
+          <ds-production-row
+            state="expected"
+            [emoji]="row.item.emoji"
+            [name]="row.item.name"
+            [meta]="row.meta"
+            [linkLabel]="'createProduction.covered.clear' | t"
+            (linked)="onNoStock(row.item)"
+          />
+        }
+      </ds-stack>
+    }
+  </ds-split-view>
+</ds-page-wrapper>
