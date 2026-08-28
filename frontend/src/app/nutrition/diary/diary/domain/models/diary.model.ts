@@ -1,3 +1,5 @@
+import { DiaryStockState } from "./diary-stock-state.model";
+
 export interface DiaryMacros {
   calories: number;
   protein: number;
@@ -44,6 +46,8 @@ export interface DiaryEntryView {
   quick: DiaryQuickEntryView | null;
   customized: boolean;
   tree: DiaryEntryNodeView[];
+  consumed: boolean;
+  stockState: DiaryStockState;
 }
 
 export interface DiaryMealView {
@@ -51,6 +55,7 @@ export interface DiaryMealView {
   entryCount: number;
   totals: DiaryMacros;
   entries: DiaryEntryView[];
+  consumed: boolean;
 }
 
 export interface DiaryDayAttributes {

@@ -39,3 +39,8 @@ services:
       $connection: '@doctrine.dbal.reader_tenant_connection'
       $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DiaryReaderRecipeNutritionGraphProvider'
       $needsCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryArticleNeedsCalculator'
+
+  Nutrition\Diary\Diary\Domain\QueryModel\ConsumeDiaryMealNeedleDataQuery:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineConsumeDiaryMealNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

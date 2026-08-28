@@ -134,6 +134,25 @@
             align="center"
             [gap]="'var(--ds-space-2)'"
           >
+            @if (meal.consumable) {
+              <ds-button
+                [variant]="
+                  meal.consumed
+                    ? 'primary'
+                    : meal.partial
+                      ? 'soft'
+                      : 'secondary'
+                "
+                size="icon-sm"
+                [icon]="meal.partial ? 'minus' : 'check'"
+                [iconSize]="15"
+                [ariaLabel]="meal.consumeLabel"
+                (clicked)="
+                  onConsumeMeal(meal.key, !meal.consumed && !meal.partial)
+                "
+              />
+            }
+
             <ds-stack [gap]="'1px'" [grow]="true">
               <ds-heading [level]="3" size="sm" [truncate]="true">{{
                 meal.label
@@ -161,6 +180,8 @@
                     [openLabel]="'getDiary.quick.edit' | t"
                     [badge]="row.badge"
                     [badgeTone]="row.badgeTone"
+                    [tag]="row.stockLabel"
+                    [tagTone]="row.stockTone"
                     [kcalLabel]="row.kcalLabel"
                     [macros]="row.macros"
                     [unit]="row.unit"

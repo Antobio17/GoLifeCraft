@@ -99,6 +99,14 @@
       "reset": "Restablecer",
       "servings": "rac."
     },
-    "unit": "Unidad"
+    "unit": "Unidad",
+    "stock": {
+      "covered": "EN STOCK",
+      "short": "POR COCINAR"
+    },
+    "meal": {
+      "markEaten": "Marcar como comida",
+      "unmark": "Desmarcar la comida"
+    }
   }
 }

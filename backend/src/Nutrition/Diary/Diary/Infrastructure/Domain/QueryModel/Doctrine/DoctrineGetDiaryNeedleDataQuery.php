@@ -30,11 +30,18 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
     ) {
     }
 
+    private const string STOCK_NONE = 'none';
+
+    private const string STOCK_COVERED = 'covered';
+
+    private const string STOCK_SHORT = 'short';
+
     public function findDiaryDay(string $date): GetDiaryResult
     {
         $rows = $this->fetchEntries(date: $date);
         $goals = $this->resolveGoals(date: $date);
         $nodesByEntry = $this->fetchNodes(entryIds: array_column($rows, 'id'));
+        $stockState = $this->stockStateByEntry(date: $date);
 
         $meals = [];
         $totals = MacroBreakdown::zero();
@@ -65,6 +72,8 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                     quick: $this->quickView(row: $row),
                     customized: (bool) ($row['customized'] ?? false),
                     tree: $this->treeFor(row: $row, nodes: $nodesByEntry[$row['id']] ?? []),
+                    consumed: (bool) ($row['consumed'] ?? false),
+                    stockState: $stockState[$row['id']] ?? self::STOCK_NONE,
                 );
             }
 
@@ -75,6 +84,10 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                 entryCount: count($mealEntries),
                 totals: $mealTotals->rounded(),
                 entries: $mealEntries,
+                consumed: [] !== $mealEntries && [] === array_filter(
+                    array: $mealEntries,
+                    callback: static fn (DiaryEntryView $entry): bool => !$entry->consumed,
+                ),
             );
         }
 
@@ -189,6 +202,84 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
         return false === $separator ? null : substr(string: $path, offset: 0, length: $separator);
     }
 
+    /**
+     * Which recipe entries of the day the balance actually covers. The servings on the shelf are
+     * claimed by the meals still to eat, earliest first, so if the fridge holds four porridges and
+     * the week asks for six, the first four are the ones marked as being there.
+     *
+     * Entries already eaten claim nothing: their servings left the balance when they were ticked.
+     *
+     * @return array<string, string>
+     */
+    private function stockStateByEntry(string $date): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('e.id', 'e.ref_id', 'e.quantity', 'e.entry_date', 'e.meal')
+            ->from(table: 'diary_entry', alias: 'e')
+            ->where('e.kind = :kind')
+            ->andWhere('e.consumed = :consumed')
+            ->andWhere('e.ref_id IS NOT NULL')
+            ->andWhere('e.entry_date >= :from')
+            ->setParameter(key: 'kind', value: DiaryEntry::KIND_RECIPE)
+            ->setParameter(key: 'consumed', value: false, type: \Doctrine\DBAL\ParameterType::BOOLEAN)
+            ->setParameter(key: 'from', value: min($date, (new \DateTimeImmutable())->format(format: 'Y-m-d')))
+            ->orderBy('e.entry_date', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        if ([] === $rows) {
+            return [];
+        }
+
+        $remaining = $this->stockByRecipe(recipeIds: array_values(array: array_unique(array: array_column(array: $rows, column_key: 'ref_id'))));
+        $mealOrder = array_flip(array: DiaryEntry::MEALS);
+        usort($rows, static fn (array $left, array $right): int => [$left['entry_date'], $mealOrder[$left['meal']] ?? 0]
+            <=> [$right['entry_date'], $mealOrder[$right['meal']] ?? 0]);
+
+        $state = [];
+
+        foreach ($rows as $row) {
+            $recipeId = $row['ref_id'];
+            $quantity = (float) $row['quantity'];
+            $left = $remaining[$recipeId] ?? 0.0;
+
+            if ($left + 0.0001 < $quantity) {
+                $state[$row['id']] = self::STOCK_SHORT;
+
+                continue;
+            }
+
+            $remaining[$recipeId] = round(num: $left - $quantity, precision: 2);
+            $state[$row['id']] = self::STOCK_COVERED;
+        }
+
+        return $state;
+    }
+
+    /**
+     * @param string[] $recipeIds
+     *
+     * @return array<string, float>
+     */
+    private function stockByRecipe(array $recipeIds): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('s.recipe_id', 's.servings')
+            ->from(table: 'recipe_stock', alias: 's')
+            ->where('s.recipe_id IN (:recipeIds)')
+            ->setParameter(key: 'recipeIds', value: $recipeIds, type: ArrayParameterType::STRING)
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $stock = [];
+
+        foreach ($rows as $row) {
+            $stock[$row['recipe_id']] = (float) $row['servings'];
+        }
+
+        return $stock;
+    }
+
     private function unitFor(string $kind, ?string $storedUnit): string
     {
         if (DiaryEntry::KIND_PRODUCT === $kind) {
@@ -266,7 +357,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
     private function fetchEntries(string $date): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.unit', 'e.customized', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
+            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.unit', 'e.customized', 'e.consumed', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
             ->from(table: 'diary_entry', alias: 'e')
             ->where('e.entry_date = :date')
             ->setParameter(key: 'date', value: $date)

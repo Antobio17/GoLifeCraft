@@ -1,4 +1,7 @@
 import { Provider } from "@angular/core";
+import { ConsumeDiaryMealPort } from "@nutrition/diary/diary/domain/ports/consume-diary-meal.port";
+import { HttpConsumeDiaryMealAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-consume-diary-meal.adapter";
+import { ConsumeDiaryMealService } from "@nutrition/diary/diary/application/services/consume-diary-meal.service";
 import { CreateDiaryEntryPort } from "@nutrition/diary/diary/domain/ports/create-diary-entry.port";
 import { UpdateDiaryEntryPort } from "@nutrition/diary/diary/domain/ports/update-diary-entry.port";
 import { DeleteDiaryEntryPort } from "@nutrition/diary/diary/domain/ports/delete-diary-entry.port";
@@ -27,6 +30,13 @@ import { DiaryTreeViewService } from "@nutrition/diary/diary/application/service
 export class DiaryWriteProviders {
   static getProviders(): Provider[] {
     return [
+      { provide: ConsumeDiaryMealPort, useClass: HttpConsumeDiaryMealAdapter },
+      {
+        provide: ConsumeDiaryMealService,
+        useFactory: (port: ConsumeDiaryMealPort) =>
+          new ConsumeDiaryMealService(port),
+        deps: [ConsumeDiaryMealPort],
+      },
       DiaryPickerService,
       QuickDiaryEntryFormService,
       {
