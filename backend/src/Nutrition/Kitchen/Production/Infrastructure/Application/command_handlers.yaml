@@ -13,7 +13,7 @@ services:
     class: Nutrition\Kitchen\Production\Application\Command\CookProductionItemCommandHandler
     arguments:
       $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
-      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\FinishProductionNeedleDataQuery'
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\CookProductionItemNeedleDataQuery'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

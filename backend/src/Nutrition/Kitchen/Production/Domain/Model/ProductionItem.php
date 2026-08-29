@@ -8,6 +8,8 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class ProductionItem extends GenericAggregate
 {
+    public const int SERVINGS_PRECISION = 2;
+
     public const string STATUS_PENDING = 'pending';
     public const string STATUS_DONE = 'done';
 
@@ -28,9 +30,6 @@ class ProductionItem extends GenericAggregate
 
     /** @var ProductionItemConsumption[] */
     public array $consumptions = [];
-
-    /** @var string[] */
-    public array $releasedConsumptionIds = [];
 
     public static function plan(
         string $productionId,
@@ -59,19 +58,16 @@ class ProductionItem extends GenericAggregate
     /**
      * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
      * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
-     * @param int[]                                                               $stepPositions
      */
     public function cook(
         float $servingsCooked,
         array $consumedArticles,
         array $consumedRecipes,
-        array $stepPositions,
         string $cookedByUserId,
         \DateTime $now,
     ): void {
         $this->status = self::STATUS_DONE;
         $this->servingsCooked = $servingsCooked;
-        $this->checkedStepPositions = array_values(array: array_unique(array: $stepPositions));
         $this->consumptions = $this->takeConsumptions(
             consumedArticles: $consumedArticles,
             consumedRecipes: $consumedRecipes,
@@ -100,10 +96,6 @@ class ProductionItem extends GenericAggregate
     {
         $this->status = self::STATUS_PENDING;
         $this->servingsCooked = 0.0;
-        $this->releasedConsumptionIds = array_map(
-            callback: static fn (ProductionItemConsumption $consumption): string => $consumption->id,
-            array: $this->consumptions,
-        );
         $this->consumptions = [];
         $this->stampUpdate(userId: $uncookedByUserId, now: $now);
     }

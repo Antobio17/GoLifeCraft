@@ -11,7 +11,7 @@ use Nutrition\Kitchen\Production\Domain\Exception\CookProductionItemException;
 use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Infrastructure\Domain\Model\InMemory\InMemoryProductionRepository;
-use Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory\InMemoryFinishProductionNeedleDataQuery;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory\InMemoryCookProductionItemNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -19,7 +19,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class UncookProductionItemCommandHandlerTest extends TestCase
 {
     private InMemoryProductionRepository $productionRepository;
-    private InMemoryFinishProductionNeedleDataQuery $needleDataQuery;
+    private InMemoryCookProductionItemNeedleDataQuery $needleDataQuery;
     private DomainEventCollectorService $domainEventCollectorService;
     private CookProductionItemCommandHandler $cookHandler;
     private UncookProductionItemCommandHandler $handler;
@@ -28,7 +28,7 @@ final class UncookProductionItemCommandHandlerTest extends TestCase
     protected function setUp(): void
     {
         $dateTimeGenerator = new DateTimeGenerator();
-        $this->needleDataQuery = new InMemoryFinishProductionNeedleDataQuery();
+        $this->needleDataQuery = new InMemoryCookProductionItemNeedleDataQuery();
         $this->needleDataQuery->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 120.0);
 
         $this->productionRepository = new InMemoryProductionRepository();

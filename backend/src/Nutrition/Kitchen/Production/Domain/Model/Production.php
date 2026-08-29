@@ -78,7 +78,6 @@ class Production extends GenericAggregate
         float $servingsCooked,
         array $consumedArticles,
         array $consumedRecipes,
-        array $stepPositions,
         string $cookedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -102,7 +101,6 @@ class Production extends GenericAggregate
             servingsCooked: $servingsCooked,
             consumedArticles: $consumedArticles,
             consumedRecipes: $consumedRecipes,
-            stepPositions: $stepPositions,
             cookedByUserId: $cookedByUserId,
             now: $now,
         );
