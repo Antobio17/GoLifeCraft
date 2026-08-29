@@ -22,11 +22,9 @@ use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRe
 
 final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
 {
-    private const string STOCK_NONE = 'none';
+    private const string TIMEZONE = 'Europe/Madrid';
 
-    private const string STOCK_COVERED = 'covered';
-
-    private const string STOCK_SHORT = 'short';
+    private const float STOCK_TOLERANCE = 0.0001;
 
     private ?RecipeNutritionGraph $graph = null;
 
@@ -74,7 +72,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                     customized: (bool) ($row['customized'] ?? false),
                     tree: $this->treeFor(row: $row, nodes: $nodesByEntry[$row['id']] ?? []),
                     consumed: (bool) ($row['consumed'] ?? false),
-                    stockState: $stockState[$row['id']] ?? self::STOCK_NONE,
+                    stockState: $stockState[$row['id']] ?? DiaryEntryView::STOCK_NONE,
                 );
             }
 
@@ -85,9 +83,9 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                 entryCount: count($mealEntries),
                 totals: $mealTotals->rounded(),
                 entries: $mealEntries,
-                consumed: [] !== $mealEntries && [] === array_filter(
+                consumed: [] !== $mealEntries && array_all(
                     array: $mealEntries,
-                    callback: static fn (DiaryEntryView $entry): bool => !$entry->consumed,
+                    callback: static fn (DiaryEntryView $entry): bool => $entry->consumed,
                 ),
             );
         }
@@ -217,7 +215,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
             ->andWhere('e.entry_date BETWEEN :from AND :to')
             ->setParameter(key: 'kind', value: DiaryEntry::KIND_RECIPE)
             ->setParameter(key: 'consumed', value: false, type: ParameterType::BOOLEAN)
-            ->setParameter(key: 'from', value: min($date, (new \DateTimeImmutable())->format(format: 'Y-m-d')))
+            ->setParameter(key: 'from', value: min($date, $this->today()))
             ->setParameter(key: 'to', value: $date)
             ->executeQuery()
             ->fetchAllAssociative();
@@ -238,17 +236,23 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
             $quantity = (float) $row['quantity'];
             $left = $remaining[$recipeId] ?? 0.0;
 
-            if ($left + 0.0001 < $quantity) {
-                $state[$row['id']] = self::STOCK_SHORT;
+            if ($left + self::STOCK_TOLERANCE < $quantity) {
+                $state[$row['id']] = DiaryEntryView::STOCK_SHORT;
 
                 continue;
             }
 
             $remaining[$recipeId] = round(num: $left - $quantity, precision: 2);
-            $state[$row['id']] = self::STOCK_COVERED;
+            $state[$row['id']] = DiaryEntryView::STOCK_COVERED;
         }
 
         return $state;
+    }
+
+    private function today(): string
+    {
+        return (new \DateTime(datetime: 'now', timezone: new \DateTimeZone(timezone: self::TIMEZONE)))
+            ->format(format: 'Y-m-d');
     }
 
     /**

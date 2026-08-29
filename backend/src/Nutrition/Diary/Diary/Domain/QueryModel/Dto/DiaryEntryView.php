@@ -6,6 +6,12 @@ use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 
 final readonly class DiaryEntryView
 {
+    public const string STOCK_NONE = 'none';
+
+    public const string STOCK_COVERED = 'covered';
+
+    public const string STOCK_SHORT = 'short';
+
     /**
      * @param DiaryEntryNodeView[] $tree
      */
@@ -22,7 +28,7 @@ final readonly class DiaryEntryView
         public bool $customized = false,
         public array $tree = [],
         public bool $consumed = false,
-        public string $stockState = 'none',
+        public string $stockState = self::STOCK_NONE,
     ) {
     }
 }
