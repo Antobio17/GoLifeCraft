@@ -2,22 +2,19 @@ label: Production recipe
 
 fields:
   productionId:
-    writable: true
-    required: true
+    writable: false
     min: 36
     max: 36
     description: Id of the batch this recipe belongs to.
     filterable: true
   position:
-    writable: true
-    required: true
+    writable: false
     type: integer
     min: 1
     description: Order of the recipe inside the batch.
     sortable: true
   recipeId:
-    writable: true
-    required: true
+    writable: false
     min: 36
     max: 36
     description: >-
@@ -25,14 +22,12 @@ fields:
       recipe afterwards never rewrites what was cooked.
     filterable: true
   status:
-    writable: true
-    required: true
+    writable: false
     enum: [pending, done]
     description: '"done" once this recipe has been cooked, which is what feeds the recipe stock.'
     filterable: true
   servingsPlanned:
-    writable: true
-    required: true
+    writable: false
     type: float
     min: 0
     description: >-
@@ -40,8 +35,7 @@ fields:
       already in stock or already planned in another open batch.
     sortable: true
   servingsCooked:
-    writable: true
-    required: true
+    writable: false
     type: float
     min: 0
     description: >-
@@ -49,13 +43,11 @@ fields:
       started from is an expectation. Cooking 4 when the plan said 2 leaves the extra 2 in stock.
     sortable: true
   nameSnapshot:
-    writable: true
-    required: true
+    writable: false
     max: 255
     description: Name of the recipe as it was when the batch was planned.
   emojiSnapshot:
-    writable: true
-    required: true
+    writable: false
     max: 16
     description: Emoji of the recipe as it was when the batch was planned.
 

@@ -2,8 +2,7 @@ label: Production
 
 fields:
   fromDate:
-    writable: true
-    required: true
+    writable: false
     min: 10
     max: 10
     regex: '^\d{4}-\d{2}-\d{2}$'
@@ -14,8 +13,7 @@ fields:
     filterable: true
     sortable: true
   toDate:
-    writable: true
-    required: true
+    writable: false
     min: 10
     max: 10
     regex: '^\d{4}-\d{2}-\d{2}$'
@@ -23,8 +21,7 @@ fields:
     filterable: true
     sortable: true
   status:
-    writable: true
-    required: true
+    writable: false
     enum: [cooking, done]
     description: >-
       "cooking" while any recipe in the batch is still pending, "done" once every recipe has been
