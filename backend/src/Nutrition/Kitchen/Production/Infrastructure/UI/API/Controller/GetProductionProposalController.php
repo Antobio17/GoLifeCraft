@@ -17,6 +17,8 @@ final class GetProductionProposalController
 {
     use HandleTrait;
 
+    private const string TIMEZONE = 'Europe/Madrid';
+
     public function __construct(
         MessageBusInterface $messageBus,
     ) {
@@ -25,7 +27,8 @@ final class GetProductionProposalController
 
     public function __invoke(Request $request): JsonResponse
     {
-        $today = (new \DateTimeImmutable())->format(format: 'Y-m-d');
+        $today = (new \DateTime(datetime: 'now', timezone: new \DateTimeZone(timezone: self::TIMEZONE)))
+            ->format(format: 'Y-m-d');
 
         try {
             return JsonResponseBuilder::buildSingleResponse(
