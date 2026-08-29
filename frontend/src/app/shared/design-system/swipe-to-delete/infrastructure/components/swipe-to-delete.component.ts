@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DOCUMENT } from "@angular/common";
 import { timer } from "rxjs";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
@@ -14,6 +22,11 @@ export class SwipeToDeleteComponent {
   private readonly GHOST_CLICK_WINDOW_MS = 400;
 
   private readonly document = inject(DOCUMENT);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly swallow = (event: MouseEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
 
   @Input() disabled = false;
   @Input() reveal = 66;
@@ -23,6 +36,10 @@ export class SwipeToDeleteComponent {
   @Input() removeLabel = "";
 
   @Output() remove = new EventEmitter<void>();
+
+  constructor() {
+    this.destroyRef.onDestroy(() => this.stopSwallowingClicks());
+  }
 
   offset = 0;
   private dragging = false;
@@ -121,19 +138,18 @@ export class SwipeToDeleteComponent {
   }
 
   private swallowGhostClick(): void {
-    const swallow = (event: MouseEvent): void => {
-      event.preventDefault();
-      event.stopPropagation();
-    };
-
-    this.document.addEventListener("click", swallow, {
+    this.document.addEventListener("click", this.swallow, {
       capture: true,
       once: true,
     });
 
-    timer(this.GHOST_CLICK_WINDOW_MS).subscribe(() =>
-      this.document.removeEventListener("click", swallow, true),
-    );
+    timer(this.GHOST_CLICK_WINDOW_MS)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.stopSwallowingClicks());
+  }
+
+  private stopSwallowingClicks(): void {
+    this.document.removeEventListener("click", this.swallow, true);
   }
 
   private emitRemove(): void {
