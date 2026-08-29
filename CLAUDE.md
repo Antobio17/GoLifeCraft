@@ -85,6 +85,37 @@ php bin/phpunit
   - Ejemplo real: al finalizar un `Workout` se emite `WorkoutFinished`; `UpdateSessionOnWorkoutFinished` (subscriber) despacha `SyncSessionExercisesCommand` sobre el agregado `Session`. Ningún handler toca ambos.
 - **Los eventos de dominio se registran completos (hidratados).** Cada evento debe llevar **todas las propiedades relevantes del modelo** en su estado tras la acción, no solo el `id` o un par de campos. El log de eventos es el registro histórico: si el evento va incompleto, la traza queda incompleta e irreconstruible.
   - Los ejemplos de esta guía muestran a veces eventos con pocos campos por brevedad; **eso NO es el patrón a seguir** — hidrata siempre con el estado completo del agregado.
+- **Un comando nunca devuelve datos.** El `__invoke` de un CommandHandler es siempre `: void`. Un comando cambia estado; leer es cosa de una Query. Si el que llama necesita saber el resultado, despacha después la Query que lo responde — nunca se cuela el dato de vuelta por el bus de comandos.
+  - Tampoco se devuelve el agregado desde métodos auxiliares del handler: nada de `private function applyX(...): MiAgregado` para que el `__invoke` haga `save()` con lo que le devuelvan. El flujo se lee de arriba abajo en el propio `__invoke`: cargar (o crear) el agregado, invocar su método de dominio, guardar y registrar.
+
+```php
+public function __invoke(DecreaseRecipeStockCommand $command): void
+{
+    if (!$this->needleDataQuery->recipeExists(recipeId: $command->recipeId)) {
+        throw UpdateRecipeStockException::recipeNotFound(recipeId: $command->recipeId);
+    }
+
+    $recipeStock = $this->recipeStockRepository->findByRecipeId(recipeId: $command->recipeId)
+        ?? RecipeStock::start(
+            id: $this->recipeStockRepository->nextId(),
+            recipeId: $command->recipeId,
+            servings: 0.0,
+            createdByUserId: $command->updatedByUserId,
+            dateTimeGenerator: $this->dateTimeGenerator,
+        );
+
+    $recipeStock->decrease(
+        servings: $command->servings,
+        updatedByUserId: $command->updatedByUserId,
+        dateTimeGenerator: $this->dateTimeGenerator,
+    );
+
+    $this->recipeStockRepository->save(recipeStock: $recipeStock);
+    $this->domainEventCollectorService->register(aggregate: $recipeStock);
+}
+```
+
+> Los métodos auxiliares privados sí pueden devolver **value objects** que el handler necesita para construir la llamada de dominio (`snapshotFor(): DiaryEntrySnapshot`). Lo prohibido es devolver el agregado o el resultado del caso de uso.
 
 ## Criterio de validación: Dominio vs Aplicación
 
@@ -499,6 +530,7 @@ Bounded context que implementa el flujo OAuth 2.0 propio del MCP y la autenticac
 - [ ] `{Action}{Entity}Controller`
 - [ ] Eventos de dominio **hidratados con todas las propiedades del modelo**
 - [ ] El handler toca **un solo agregado**; si afecta a otro → `Subscriber` + `subscribers.yaml`
+- [ ] Si es comando: `__invoke(): void` y **ningún método del handler devuelve el agregado**
 - [ ] Registrar en los YAML correspondientes (`command_handlers`, `query_handlers`, `queries`, `controllers`, `routes`, `subscribers`)
 - [ ] Tests unitarios con InMemory
 
