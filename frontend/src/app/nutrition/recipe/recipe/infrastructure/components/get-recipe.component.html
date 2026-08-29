@@ -194,12 +194,7 @@
           }
         </ds-stack>
       } @else {
-        <ds-cta-row
-          icon="pencil"
-          [dashed]="true"
-          [title]="'getRecipe.noSteps' | t"
-          (clicked)="onEdit()"
-        />
+        <ds-text variant="meta">{{ "getRecipe.noSteps" | t }}</ds-text>
       }
     </ds-split-view>
   } @else {

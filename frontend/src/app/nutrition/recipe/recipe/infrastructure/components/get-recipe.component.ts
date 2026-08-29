@@ -26,7 +26,6 @@ import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/i
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
-import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
 import { StockControlComponent } from "@shared/design-system/stock-control/infrastructure/components/stock-control.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
@@ -77,7 +76,6 @@ import { RevealDirective } from "@shared/design-system/reveal/infrastructure/dir
     SkeletonListComponent,
     EmptyStateComponent,
     ConfirmActionModalComponent,
-    CtaRowComponent,
     StockControlComponent,
     ModalSheetComponent,
     SaveStatusComponent,
@@ -217,10 +215,6 @@ export class GetRecipeComponent {
     this.showStockEditor.set(false);
   }
 
-  /**
-   * Tapping the stepper has to feel like a stepper: the number moves at once and the calls pile up
-   * into one. Blocking the buttons until the server answered turned a handful of taps into a queue.
-   */
   private saveStock(servings: number): void {
     if (servings < 0) return;
 
