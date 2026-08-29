@@ -9,7 +9,6 @@ use Nutrition\Catalog\Article\Domain\Model\ArticleRepository;
 use Nutrition\Catalog\Article\Domain\Model\ArticleUnit;
 use Nutrition\Catalog\Category\Domain\Model\Category;
 use Nutrition\Catalog\Category\Domain\Model\CategoryRepository;
-use Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts;
 use Nutrition\Catalog\Supermarket\Domain\Model\Supermarket;
 use Nutrition\Catalog\Supermarket\Domain\Model\SupermarketRepository;
 use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticle;
@@ -54,11 +53,12 @@ final readonly class ImportGlobalArticleCommandHandler
 
     private function import(GlobalArticle $globalArticle, ArticlePackaging $packaging, ImportGlobalArticleCommand $command): void
     {
-        $nutritionFacts = $this->resolveNutritionFacts(
-            existingNutritionFacts: null,
-            globalArticle: $globalArticle,
+        $nutritionFacts = $this->nutritionFactsAssembler->assemble(
+            nutritionFacts: null,
+            nutrition: $this->buildNutritionData(globalArticle: $globalArticle),
             userId: $command->importedByUserId,
         );
+        $this->articleRepository->saveNutritionFacts(nutritionFacts: $nutritionFacts);
         $articleId = $this->articleRepository->nextId();
 
         $article = Article::create(
@@ -94,11 +94,12 @@ final readonly class ImportGlobalArticleCommandHandler
         $existingNutritionFacts = null !== $article->nutritionFactsId
             ? $this->articleRepository->findNutritionFactsById(nutritionFactsId: $article->nutritionFactsId)
             : null;
-        $nutritionFacts = $this->resolveNutritionFacts(
-            existingNutritionFacts: $existingNutritionFacts,
-            globalArticle: $globalArticle,
+        $nutritionFacts = $this->nutritionFactsAssembler->assemble(
+            nutritionFacts: $existingNutritionFacts,
+            nutrition: $this->buildNutritionData(globalArticle: $globalArticle),
             userId: $command->importedByUserId,
         );
+        $this->articleRepository->saveNutritionFacts(nutritionFacts: $nutritionFacts);
 
         $article->update(
             name: $article->name,
@@ -129,18 +130,6 @@ final readonly class ImportGlobalArticleCommandHandler
 
         $this->articleRepository->save(article: $article);
         $this->domainEventCollectorService->register(aggregate: $article);
-    }
-
-    private function resolveNutritionFacts(?NutritionFacts $existingNutritionFacts, GlobalArticle $globalArticle, string $userId): NutritionFacts
-    {
-        $nutritionFacts = $this->nutritionFactsAssembler->assemble(
-            nutritionFacts: $existingNutritionFacts,
-            nutrition: $this->buildNutritionData(globalArticle: $globalArticle),
-            userId: $userId,
-        );
-        $this->articleRepository->saveNutritionFacts(nutritionFacts: $nutritionFacts);
-
-        return $nutritionFacts;
     }
 
     /**
