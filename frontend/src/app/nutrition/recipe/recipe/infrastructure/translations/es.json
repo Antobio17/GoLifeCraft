@@ -61,7 +61,11 @@
         "hint": "Corrige a mano lo que te queda en la nevera de esta receta.",
         "save": "Guardar"
       }
-    }
+    },
+    "steps": "Pasos",
+    "step": "Paso {{position}}",
+    "minutes": "{{minutes}} min",
+    "noSteps": "Esta receta no tiene pasos. Añádelos aquí."
   },
   "recipe": {
     "breadcrumb": {
@@ -125,6 +129,14 @@
     "pickerSearch": "Buscar artículo o receta…",
     "pickerEmpty": "Sin resultados.",
     "tabProducts": "Artículos",
-    "tabRecipes": "Subrecetas"
+    "tabRecipes": "Subrecetas",
+    "steps": "Pasos",
+    "stepsHint": "Opcionales. Si te la sabes de memoria, déjalos en blanco.",
+    "stepsCount": "{{count}}",
+    "step": "Paso {{position}}",
+    "stepPlaceholder": "Sofríe la cebolla hasta que esté blanda…",
+    "stepMinutes": "Minutos del paso",
+    "addStep": "Añadir paso",
+    "removeStep": "Quitar paso"
   }
 }

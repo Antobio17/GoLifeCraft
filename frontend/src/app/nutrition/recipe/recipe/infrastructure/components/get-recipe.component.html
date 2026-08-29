@@ -164,6 +164,43 @@
       </ds-stack>
 
       <ds-note icon="info">{{ "getRecipe.note" | t }}</ds-note>
+      <ds-section-header
+        [title]="'getRecipe.steps' | t"
+        [staticLabel]="stepsLabel()"
+      />
+
+      @if (recipe.steps.length) {
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+          @for (step of recipe.steps; track step.position) {
+            <ds-card [padding]="'var(--ds-space-3)'">
+              <ds-stack [gap]="'var(--ds-space-1)'">
+                <ds-stack
+                  direction="row"
+                  align="center"
+                  [gap]="'var(--ds-space-2)'"
+                >
+                  <ds-text variant="label">{{
+                    "getRecipe.step" | t: { position: step.position }
+                  }}</ds-text>
+                  @if (step.minutes) {
+                    <ds-chip>{{
+                      "getRecipe.minutes" | t: { minutes: step.minutes }
+                    }}</ds-chip>
+                  }
+                </ds-stack>
+                <ds-text>{{ step.text }}</ds-text>
+              </ds-stack>
+            </ds-card>
+          }
+        </ds-stack>
+      } @else {
+        <ds-cta-row
+          icon="pencil"
+          [dashed]="true"
+          [title]="'getRecipe.noSteps' | t"
+          (clicked)="onEdit()"
+        />
+      }
     </ds-split-view>
   } @else {
     <ds-empty-state

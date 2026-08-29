@@ -33,6 +33,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
 import { InlineQuantityComponent } from "@shared/design-system/inline-quantity/infrastructure/components/inline-quantity.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
@@ -61,6 +62,7 @@ import { UpdateRecipeService } from "@nutrition/recipe/recipe/application/servic
 import { RecipeCategoryService } from "@nutrition/recipe/recipe/application/services/recipe-category.service";
 import {
   FormIngredient,
+  FormStep,
   PickableIngredient,
   RecipeFormService,
 } from "@nutrition/recipe/recipe/application/services/recipe-form.service";
@@ -102,6 +104,7 @@ type PickerTab = "product" | "recipe";
     MacroBarsComponent,
     MacroBadgesComponent,
     NumberInputComponent,
+    TextareaComponent,
     InlineQuantityComponent,
     IconButtonComponent,
     AddTileComponent,
@@ -147,6 +150,12 @@ export class RecipeEditorComponent implements OnInit {
 
   servings = signal(1);
   ingredients = signal<FormIngredient[]>([]);
+  steps = signal<FormStep[]>([]);
+  stepsLabel = computed(() =>
+    this.t("recipeEditor.stepsCount", {
+      count: this.recipeForm.writtenSteps(this.steps()).length,
+    }),
+  );
   readonly categoryOptions: ChoiceChipOption[] = this.categoryService
     .categories()
     .map((category) => ({ value: category, label: category }));
@@ -269,6 +278,30 @@ export class RecipeEditorComponent implements OnInit {
     );
   }
 
+  onAddStep(): void {
+    this.steps.update((steps) => [...steps, this.recipeForm.createStep()]);
+  }
+
+  onStepText(key: string, text: string): void {
+    this.steps.update((steps) =>
+      steps.map((step) => (step.key === key ? { ...step, text } : step)),
+    );
+  }
+
+  onStepMinutes(key: string, minutes: number): void {
+    this.steps.update((steps) =>
+      steps.map((step) =>
+        step.key === key
+          ? { ...step, minutes: minutes > 0 ? minutes : null }
+          : step,
+      ),
+    );
+  }
+
+  onRemoveStep(key: string): void {
+    this.steps.update((steps) => steps.filter((step) => step.key !== key));
+  }
+
   onRemoveIngredient(key: string): void {
     this.ingredients.update((list) =>
       list.filter((ingredient) => ingredient.key !== key),
@@ -375,8 +408,8 @@ export class RecipeEditorComponent implements OnInit {
     this.router.navigate(this.isEdit ? ["/recipes", this.id()] : ["/recipes"]);
   }
 
-  t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   private loadRecipe(): void {
@@ -396,6 +429,14 @@ export class RecipeEditorComponent implements OnInit {
       category: recipe.attributes.category,
     });
     this.servings.set(recipe.attributes.servings);
+
+    this.steps.set(
+      recipe.attributes.steps.map((step) => ({
+        key: `step-loaded-${step.position}`,
+        text: step.text,
+        minutes: step.minutes,
+      })),
+    );
 
     this.ingredients.set(
       recipe.attributes.ingredients.map((ingredient, index) => ({
@@ -424,6 +465,11 @@ export class RecipeEditorComponent implements OnInit {
         quantity: Number(ingredient.quantity) || 0,
         unit: this.isProduct(ingredient) ? ingredient.unit : null,
         position: index + 1,
+      })),
+      steps: this.recipeForm.writtenSteps(this.steps()).map((step, index) => ({
+        position: index + 1,
+        text: step.text.trim(),
+        minutes: step.minutes,
       })),
     };
   }

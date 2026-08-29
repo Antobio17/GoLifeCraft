@@ -222,6 +222,70 @@
             (clicked)="openPicker()"
           />
 
+          <ds-section-header
+            [title]="'recipeEditor.steps' | t"
+            [staticLabel]="stepsLabel()"
+          />
+
+          <ds-text variant="meta">{{ "recipeEditor.stepsHint" | t }}</ds-text>
+
+          @if (steps().length) {
+            <ds-stack [gap]="'var(--ds-space-2)'">
+              @for (step of steps(); track step.key; let index = $index) {
+                <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
+                  <ds-stack [gap]="'var(--ds-space-2)'">
+                    <ds-stack
+                      direction="row"
+                      align="center"
+                      [gap]="'var(--ds-space-2)'"
+                    >
+                      <ds-stack [grow]="true">
+                        <ds-text variant="label">{{
+                          "recipeEditor.step" | t: { position: index + 1 }
+                        }}</ds-text>
+                      </ds-stack>
+
+                      <ds-number-input
+                        class="step-minutes"
+                        [min]="0"
+                        unit="min"
+                        [ariaLabel]="'recipeEditor.stepMinutes' | t"
+                        [ngModel]="step.minutes ?? 0"
+                        [ngModelOptions]="{ standalone: true }"
+                        (ngModelChange)="onStepMinutes(step.key, $event)"
+                      />
+
+                      <ds-button
+                        variant="ghost"
+                        size="icon-sm"
+                        icon="trash"
+                        [iconSize]="15"
+                        [ariaLabel]="'recipeEditor.removeStep' | t"
+                        (clicked)="onRemoveStep(step.key)"
+                      />
+                    </ds-stack>
+
+                    <ds-textarea
+                      [rows]="2"
+                      [value]="step.text"
+                      [placeholder]="'recipeEditor.stepPlaceholder' | t"
+                      [ariaLabel]="
+                        'recipeEditor.step' | t: { position: index + 1 }
+                      "
+                      (valueChange)="onStepText(step.key, $event)"
+                    />
+                  </ds-stack>
+                </ds-card>
+              }
+            </ds-stack>
+          }
+
+          <ds-add-tile
+            variant="dashed"
+            [label]="'recipeEditor.addStep' | t"
+            (clicked)="onAddStep()"
+          />
+
           <ds-button
             type="submit"
             variant="soft"
