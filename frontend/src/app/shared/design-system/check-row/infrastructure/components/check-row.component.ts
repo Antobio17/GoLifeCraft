@@ -9,7 +9,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       type="button"
       class="ds-checkrow"
       role="checkbox"
-      [class.is-off]="!checked"
+      [class.is-done]="checked"
       [attr.aria-checked]="checked"
       (click)="toggled.emit()"
     >
@@ -20,15 +20,19 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         <span class="ds-checkrow__emoji">{{ emoji }}</span>
       }
       <span class="ds-checkrow__text">
-        @if (eyebrow) {
-          <span class="ds-checkrow__eyebrow">{{ eyebrow }}</span>
+        @if (eyebrow || chip) {
+          <span class="ds-checkrow__head">
+            @if (eyebrow) {
+              <span class="ds-checkrow__eyebrow">{{ eyebrow }}</span>
+            }
+            @if (chip) {
+              <span class="ds-checkrow__chip">{{ chip }}</span>
+            }
+          </span>
         }
         <span class="ds-checkrow__name">{{ name }}</span>
         @if (meta) {
           <span class="ds-checkrow__meta">{{ meta }}</span>
-        }
-        @if (chip) {
-          <span class="ds-checkrow__chip">{{ chip }}</span>
         }
       </span>
     </button>
@@ -54,7 +58,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         color: inherit;
         transition: opacity var(--ds-transition-fast);
       }
-      .ds-checkrow.is-off {
+      /* What is still pending is what you need to read while cooking, so the tick fades the row
+         instead of lighting it up. */
+      .ds-checkrow.is-done {
         opacity: 0.5;
       }
       .ds-checkrow__box {
@@ -126,12 +132,15 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         text-transform: uppercase;
         color: var(--ds-text-meta);
       }
-      .ds-checkrow:not(.is-off) .ds-checkrow__eyebrow {
+      .ds-checkrow:not(.is-done) .ds-checkrow__eyebrow {
         color: var(--ds-primary-soft-text);
       }
+      .ds-checkrow__head {
+        display: flex;
+        align-items: center;
+        gap: var(--ds-space-2);
+      }
       .ds-checkrow__chip {
-        align-self: flex-start;
-        margin-top: var(--ds-space-1);
         border-radius: var(--ds-radius-pill);
         padding: 0.125rem var(--ds-space-2);
         background: var(--ds-surface);
