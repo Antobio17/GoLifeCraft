@@ -90,10 +90,6 @@ class DiaryEntry extends GenericAggregate
 
     public bool $customized = false;
 
-    /**
-     * Whether the meal has already been eaten. A recipe entry that is eaten is what takes its
-     * servings out of the balance: cooking fills the fridge and eating empties it.
-     */
     public bool $consumed = false;
 
     /** @var DiaryEntryNode[] */
@@ -361,6 +357,9 @@ class DiaryEntry extends GenericAggregate
             consumed: $consumed,
             name: $this->nameSnapshot,
             emoji: $this->emojiSnapshot,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             updatedByUserId: $updatedByUserId,
         ));
     }

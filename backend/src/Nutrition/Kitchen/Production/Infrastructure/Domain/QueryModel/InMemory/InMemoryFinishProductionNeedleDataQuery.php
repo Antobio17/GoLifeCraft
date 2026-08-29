@@ -15,6 +15,9 @@ final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionN
     /** @var array<string, array<int, array{recipeId: string, servingsPerServing: float}>> */
     private array $subRecipes = [];
 
+    /** @var array<string, int[]> */
+    private array $steps = [];
+
     public function addIngredient(
         string $recipeId,
         string $articleId,
@@ -39,9 +42,6 @@ final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionN
             'servingsPerServing' => $servingsPerServing,
         ];
     }
-
-    /** @var array<string, int[]> */
-    private array $steps = [];
 
     /**
      * @param int[] $positions

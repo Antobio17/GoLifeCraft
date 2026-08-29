@@ -1,3 +1,4 @@
+import { DiaryEntryKind } from "./diary-entry-kind.model";
 import { DiaryStockState } from "./diary-stock-state.model";
 
 export interface DiaryMacros {
@@ -13,8 +14,6 @@ export interface DiaryGoals {
   fat: number;
   carbs: number;
 }
-
-export type DiaryEntryKind = "product" | "recipe" | "quick";
 
 export interface DiaryQuickEntryView {
   name: string;

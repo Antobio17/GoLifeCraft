@@ -7,9 +7,6 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class ProductionItemCooked extends DomainEvent
 {
     /**
-     * Consumed articles travel already flattened and scaled to the servings actually cooked, in
-     * each article's base unit, so no subscriber has to resolve the recipe again.
-     *
      * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
      * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
      */

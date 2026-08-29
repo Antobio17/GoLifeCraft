@@ -31,7 +31,9 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
         }
       </ds-stack>
 
-      @if (!interactive && "expected" !== state && actionLabel) {
+      @if (
+        !interactive && ProductionRowState.Expected !== state && actionLabel
+      ) {
         <ds-button
           variant="soft"
           size="sm"
@@ -42,14 +44,14 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
         >
       }
 
-      @if ("done" === state && doneLabel) {
+      @if (ProductionRowState.Done === state && doneLabel) {
         <span class="ds-prow__done">
           <ds-icon name="check" [size]="13" [stroke]="3" />
           {{ doneLabel }}
         </span>
       }
 
-      @if (!interactive && "expected" === state && linkLabel) {
+      @if (!interactive && ProductionRowState.Expected === state && linkLabel) {
         <ds-button
           variant="link"
           size="sm"
@@ -176,7 +178,9 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
   },
 })
 export class ProductionRowComponent {
-  @Input() state: ProductionRowState = "deficit";
+  protected readonly ProductionRowState = ProductionRowState;
+
+  @Input() state: ProductionRowState = ProductionRowState.Deficit;
   @Input() emoji = "";
   @Input() name = "";
   @Input() meta = "";

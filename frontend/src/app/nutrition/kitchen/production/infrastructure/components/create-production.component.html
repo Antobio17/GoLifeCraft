@@ -172,7 +172,7 @@
       <ds-stack [gap]="'var(--ds-space-2)'">
         @for (row of coveredRows(); track row.item.recipeId) {
           <ds-production-row
-            state="expected"
+            [state]="ProductionRowState.Expected"
             [emoji]="row.item.emoji"
             [name]="row.item.name"
             [meta]="row.meta"

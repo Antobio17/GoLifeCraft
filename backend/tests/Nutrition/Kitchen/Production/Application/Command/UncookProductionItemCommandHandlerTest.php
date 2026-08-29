@@ -19,6 +19,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class UncookProductionItemCommandHandlerTest extends TestCase
 {
     private InMemoryProductionRepository $productionRepository;
+    private InMemoryFinishProductionNeedleDataQuery $needleDataQuery;
     private DomainEventCollectorService $domainEventCollectorService;
     private CookProductionItemCommandHandler $cookHandler;
     private UncookProductionItemCommandHandler $handler;
@@ -27,20 +28,19 @@ final class UncookProductionItemCommandHandlerTest extends TestCase
     protected function setUp(): void
     {
         $dateTimeGenerator = new DateTimeGenerator();
-        $needleDataQuery = new InMemoryFinishProductionNeedleDataQuery();
-        $needleDataQuery->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 120.0);
+        $this->needleDataQuery = new InMemoryFinishProductionNeedleDataQuery();
+        $this->needleDataQuery->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 120.0);
 
         $this->productionRepository = new InMemoryProductionRepository();
         $this->domainEventCollectorService = new DomainEventCollectorService();
         $this->cookHandler = new CookProductionItemCommandHandler(
             productionRepository: $this->productionRepository,
-            needleDataQuery: $needleDataQuery,
+            needleDataQuery: $this->needleDataQuery,
             domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
         $this->handler = new UncookProductionItemCommandHandler(
             productionRepository: $this->productionRepository,
-            needleDataQuery: $needleDataQuery,
             domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -113,6 +113,32 @@ final class UncookProductionItemCommandHandlerTest extends TestCase
 
         $this->assertNotNull(actual: $uncooked);
         $this->assertSame(expected: 5.0, actual: $uncooked->servingsCooked);
+        $this->assertSame(
+            expected: [['articleId' => 'article-1', 'quantity' => 600.0, 'unit' => 'g']],
+            actual: $uncooked->consumedArticles,
+        );
+    }
+
+    public function testItGivesBackWhatWasTakenEvenAfterTheRecipeChanged(): void
+    {
+        $itemId = $this->itemId(position: 1);
+        $this->cook(itemId: $itemId, servings: 5.0);
+        $this->domainEventCollectorService->reset();
+
+        $this->needleDataQuery->addIngredient(
+            recipeId: 'recipe-1',
+            articleId: 'article-2',
+            quantityPerServing: 50.0,
+        );
+
+        ($this->handler)(new UncookProductionItemCommand(
+            productionId: 'production-1',
+            itemId: $itemId,
+            uncookedByUserId: 'god-user-id',
+        ));
+
+        $uncooked = $this->firstEventOf(class: ProductionItemUncooked::class);
+
         $this->assertSame(
             expected: [['articleId' => 'article-1', 'quantity' => 600.0, 'unit' => 'g']],
             actual: $uncooked->consumedArticles,

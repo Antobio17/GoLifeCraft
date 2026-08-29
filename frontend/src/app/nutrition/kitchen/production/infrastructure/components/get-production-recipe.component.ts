@@ -9,8 +9,8 @@ import {
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { of } from "rxjs";
-import { catchError, switchMap } from "rxjs/operators";
+import { Subject, of } from "rxjs";
+import { catchError, debounceTime, switchMap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -39,6 +39,8 @@ import { ProductionItemStatus } from "@nutrition/kitchen/production/domain/model
 import { IngredientRow } from "@nutrition/kitchen/production/domain/models/ingredient-row.model";
 import { StepRow } from "@nutrition/kitchen/production/domain/models/step-row.model";
 import { SubRecipeRow } from "@nutrition/kitchen/production/domain/models/sub-recipe-row.model";
+
+const CHECKLIST_SAVE_DEBOUNCE_MS = 400;
 
 @Component({
   selector: "app-get-production-recipe",
@@ -87,6 +89,13 @@ export class GetProductionRecipeComponent {
   checkedSteps = signal<ReadonlySet<string>>(new Set());
   cooking = signal(false);
   uncooking = signal(false);
+
+  private checklistSaves = new Subject<void>();
+
+  private target = computed(() => ({
+    productionId: this.id(),
+    itemId: this.itemId(),
+  }));
 
   done = computed(() => ProductionItemStatus.Done === this.recipe()?.status);
 
@@ -181,15 +190,13 @@ export class GetProductionRecipeComponent {
   constructor() {
     this.translationService.loadModuleTranslations(this.MODULE_PATH);
 
-    toObservable(computed(() => `${this.id()}|${this.itemId()}`))
+    toObservable(this.target)
       .pipe(
-        switchMap((key) => {
-          const [productionId, itemId] = key.split("|");
-
+        switchMap((target) => {
           this.loading.set(true);
 
           return this.getProductionRecipeService
-            .getProductionRecipe(productionId, itemId)
+            .getProductionRecipe(target.productionId, target.itemId)
             .pipe(catchError(() => of(null)));
         }),
         takeUntilDestroyed(),
@@ -213,6 +220,21 @@ export class GetProductionRecipeComponent {
         );
         this.loading.set(false);
       });
+
+    this.checklistSaves
+      .pipe(
+        debounceTime(CHECKLIST_SAVE_DEBOUNCE_MS),
+        switchMap(() =>
+          this.checkProductionItemService.checkProductionItem(
+            this.id(),
+            this.itemId(),
+            [...this.checkedIngredients()],
+            [...this.checkedSteps()].map(Number),
+          ),
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
   }
 
   t(key: string, params?: Record<string, unknown>): string {
@@ -240,15 +262,7 @@ export class GetProductionRecipeComponent {
   }
 
   private saveChecklist(): void {
-    this.checkProductionItemService
-      .checkProductionItem(
-        this.id(),
-        this.itemId(),
-        [...this.checkedIngredients()],
-        [...this.checkedSteps()].map(Number),
-      )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+    this.checklistSaves.next();
   }
 
   onBack(): void {

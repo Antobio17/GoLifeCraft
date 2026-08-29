@@ -12,10 +12,6 @@ export class RecipeStockViewService {
     }).format(value);
   }
 
-  /**
-   * The balance is allowed to go below zero, which reads as "the diary says you ate more than you
-   * cooked". Stepping down from there keeps that debt instead of quietly rounding it away.
-   */
   step(current: number, servings: number): number {
     return Math.round((current + servings) * 100) / 100;
   }

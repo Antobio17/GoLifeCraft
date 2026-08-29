@@ -147,10 +147,6 @@ export class RecipeFormService {
     return { key: `step-${this.counter}`, text: "", minutes: null };
   }
 
-  /**
-   * Steps are optional on purpose: there are dishes you know by heart, and a recipe without them
-   * is not broken. Only the ones with something written are worth keeping.
-   */
   writtenSteps(steps: FormStep[]): FormStep[] {
     return steps.filter((step) => step.text.trim().length > 0);
   }

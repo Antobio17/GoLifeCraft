@@ -51,10 +51,6 @@ final readonly class CookProductionItemCommandHandler
     }
 
     /**
-     * Reading the recipe here is fine: the rule forbids writing two aggregates, not reading one.
-     * Neither the pantry nor the servings balance is touched from this handler, only told through
-     * the event.
-     *
      * @return array{articles: array<int, array{articleId: string, quantity: float, unit: string}>, recipes: array<int, array{recipeId: string, servings: float}>}
      */
     private function needsOf(string $recipeId, float $servings): array

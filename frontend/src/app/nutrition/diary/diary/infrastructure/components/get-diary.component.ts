@@ -84,6 +84,7 @@ import {
   DiaryEntryView,
   DiaryMealView,
 } from "@nutrition/diary/diary/domain/models/diary.model";
+import { DiaryEntryKind } from "@nutrition/diary/diary/domain/models/diary-entry-kind.model";
 import { DiaryStockState } from "@nutrition/diary/diary/domain/models/diary-stock-state.model";
 import { CreateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/create-quick-diary-entry.service";
 import { UpdateQuickDiaryEntryService } from "@nutrition/diary/diary/application/services/update-quick-diary-entry.service";
@@ -370,12 +371,6 @@ export class GetDiaryComponent implements OnInit {
   goalPercentTotal = computed(() => this.goalForm.percentTotal(this.goal()));
   goalValid = computed(() => this.goalForm.isValid(this.goal()));
 
-  /**
-   * Adding something to a meal that was ticked off leaves it half eaten: what was already eaten
-   * stays eaten, so the check says so instead of pretending nothing was. From there the tap undoes
-   * the whole meal, because the reason to touch a half-eaten meal is almost always a mistake, and
-   * undoing has to give every serving back in one go.
-   */
   mealConsumeLabel(meal: DiaryMealView): string {
     if (meal.consumed || meal.entries.some((entry) => entry.consumed)) {
       return this.t("getDiary.meal.unmark");
@@ -385,7 +380,7 @@ export class GetDiaryComponent implements OnInit {
   }
 
   stockLabel(entry: DiaryEntryView): string {
-    if ("recipe" !== entry.kind || entry.consumed) return "";
+    if (DiaryEntryKind.Recipe !== entry.kind || entry.consumed) return "";
 
     if (DiaryStockState.Covered === entry.stockState) {
       return this.t("getDiary.stock.covered");
@@ -398,10 +393,6 @@ export class GetDiaryComponent implements OnInit {
     return "";
   }
 
-  /**
-   * Ticking a meal repaints only its own rows: fetching the whole day sent the screen back to the
-   * skeleton for a one-tap gesture.
-   */
   onConsumeMeal(mealKey: string, consumed: boolean): void {
     const previous = this.day();
     if (!previous) return;
@@ -445,9 +436,9 @@ export class GetDiaryComponent implements OnInit {
     return this.view.macroItems(entry.macros, this.macroLabels());
   }
 
-  badgeLabel(kind: string): string {
-    if (kind === "recipe") return this.t("getDiary.badge.recipe");
-    if (kind === "quick") return this.t("getDiary.badge.quick");
+  badgeLabel(kind: DiaryEntryKind): string {
+    if (DiaryEntryKind.Recipe === kind) return this.t("getDiary.badge.recipe");
+    if (DiaryEntryKind.Quick === kind) return this.t("getDiary.badge.quick");
 
     return this.t("getDiary.badge.product");
   }

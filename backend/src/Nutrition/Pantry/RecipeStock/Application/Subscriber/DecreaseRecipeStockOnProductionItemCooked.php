@@ -8,10 +8,6 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 use Shared\Shared\Shared\Domain\Event\DomainEventSubscriber;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-/**
- * A composite recipe eats the servings of the recipes it is made of, exactly as it eats articles
- * from the pantry: their own raw materials were already spent by whoever cooked them.
- */
 final readonly class DecreaseRecipeStockOnProductionItemCooked implements DomainEventSubscriber
 {
     public function __construct(

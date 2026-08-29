@@ -70,9 +70,6 @@ class Production extends GenericAggregate
     }
 
     /**
-     * The servings actually cooked are decided here, not when the batch is planned: the balance the
-     * proposal starts from is an expectation, and the fridge is only opened once you are cooking.
-     *
      * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
      * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
      */
@@ -103,6 +100,8 @@ class Production extends GenericAggregate
 
         $item->cook(
             servingsCooked: $servingsCooked,
+            consumedArticles: $consumedArticles,
+            consumedRecipes: $consumedRecipes,
             stepPositions: $stepPositions,
             cookedByUserId: $cookedByUserId,
             now: $now,
@@ -135,17 +134,8 @@ class Production extends GenericAggregate
         $this->close(finishedByUserId: $cookedByUserId, now: $now);
     }
 
-    /**
-     * Marking a recipe cooked is undoable while the batch is open: the servings go back out of the
-     * stock and the articles return to the pantry, because you never actually cooked it.
-     *
-     * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
-     * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
-     */
     public function uncookItem(
         string $itemId,
-        array $consumedArticles,
-        array $consumedRecipes,
         string $uncookedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -161,6 +151,8 @@ class Production extends GenericAggregate
 
         $now = $dateTimeGenerator->now();
         $servingsCooked = $item->servingsCooked;
+        $consumedArticles = $item->consumedArticles();
+        $consumedRecipes = $item->consumedRecipes();
 
         $item->uncook(uncookedByUserId: $uncookedByUserId, now: $now);
         $this->stampUpdate(userId: $uncookedByUserId, now: $now);
@@ -192,9 +184,6 @@ class Production extends GenericAggregate
     }
 
     /**
-     * The checklist is state of the batch, not of the browser: you tick things off over a morning,
-     * across screens and devices, and what you ticked has to still be there when you come back.
-     *
      * @param string[] $articleIds
      * @param int[]    $stepPositions
      */
@@ -275,7 +264,7 @@ class Production extends GenericAggregate
     }
 
     /**
-     * @return array<int, array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, checkedArticleIds: string[]}>
+     * @return array<int, array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, checkedArticleIds: string[], checkedStepPositions: int[]}>
      */
     public function recordedItems(): array
     {
@@ -285,10 +274,6 @@ class Production extends GenericAggregate
         );
     }
 
-    /**
-     * The batch has no state of its own to manage: it is finished when every recipe in it is, and
-     * unticking one takes it back to the stove. Nobody has to remember to close or reopen it.
-     */
     private function reopen(string $reopenedByUserId, \DateTime $now): void
     {
         $this->status = self::STATUS_COOKING;

@@ -57,10 +57,6 @@ class RecipeStock extends GenericAggregate
         );
     }
 
-    /**
-     * Cooking adds to whatever is left, so the increment is resolved inside the aggregate:
-     * two batches finished at once must not overwrite each other.
-     */
     public function increase(
         float $servings,
         string $updatedByUserId,
@@ -73,13 +69,6 @@ class RecipeStock extends GenericAggregate
         );
     }
 
-    /**
-     * Eating and undoing a cooked recipe move the same ledger, so this one is allowed to go below
-     * zero. Bottoming out at zero looked safer but broke the undo: taking one serving from an empty
-     * shelf took nothing, and giving it back handed over a serving that never existed. A negative
-     * balance is the honest reading, "the diary says you ate more than you cooked", and it feeds
-     * the kitchen proposal as a deficit instead of hiding.
-     */
     public function decrease(
         float $servings,
         string $updatedByUserId,

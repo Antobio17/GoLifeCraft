@@ -21,14 +21,11 @@ export class ProductionViewService {
     return Math.round(((quantity / from) * to + Number.EPSILON) * 100) / 100;
   }
 
-  /**
-   * Reads the list the way you would say it out loud, because a sub-recipe can feed more than one
-   * parent in the same batch.
-   */
   joinNames(names: string[]): string {
-    if (names.length < 2) return names[0] ?? "";
-
-    return `${names.slice(0, -1).join(", ")} y ${names[names.length - 1]}`;
+    return new Intl.ListFormat(this.format.locale(), {
+      style: "long",
+      type: "conjunction",
+    }).format(names);
   }
 
   progressLabel(checked: number, total: number): string {

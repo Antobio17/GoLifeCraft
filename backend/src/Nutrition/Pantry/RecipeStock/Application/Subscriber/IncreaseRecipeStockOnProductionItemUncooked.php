@@ -8,10 +8,6 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 use Shared\Shared\Shared\Domain\Event\DomainEventSubscriber;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-/**
- * Undoing a composite recipe gives back the sub-recipe servings it had eaten, the same way it
- * gives back the articles.
- */
 final readonly class IncreaseRecipeStockOnProductionItemUncooked implements DomainEventSubscriber
 {
     public function __construct(

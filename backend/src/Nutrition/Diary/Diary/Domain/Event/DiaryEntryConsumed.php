@@ -4,10 +4,6 @@ namespace Nutrition\Diary\Diary\Domain\Event;
 
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
-/**
- * Carries the flag both ways: unticking a meal you did not eat after all has to give its servings
- * back, so the same event serves for eating and for undoing it.
- */
 final readonly class DiaryEntryConsumed extends DomainEvent
 {
     public function __construct(
@@ -21,6 +17,9 @@ final readonly class DiaryEntryConsumed extends DomainEvent
         public bool $consumed,
         public string $name,
         public string $emoji,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
         public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
