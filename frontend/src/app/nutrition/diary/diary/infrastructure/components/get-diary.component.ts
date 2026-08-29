@@ -394,15 +394,15 @@ export class GetDiaryComponent implements OnInit {
   }
 
   onConsumeMeal(mealKey: string, consumed: boolean): void {
-    const previous = this.day();
+    const previous = this.loadedDay();
     if (!previous) return;
 
-    this.day.set(this.view.withMealConsumed(previous, mealKey, consumed));
+    this.loadedDay.set(this.view.withMealConsumed(previous, mealKey, consumed));
 
     this.consumeDiaryMealService
       .consumeDiaryMeal(this.date(), mealKey, consumed)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({ error: () => this.day.set(previous) });
+      .subscribe({ error: () => this.loadedDay.set(previous) });
   }
 
   ngOnInit(): void {
