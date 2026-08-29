@@ -45,10 +45,6 @@ export class ProductionRangeService {
     return toDate < fromDate;
   }
 
-  servings(value: number): string {
-    return this.format.decimal(value);
-  }
-
   private dayMonth(date: Date): string {
     return new Intl.DateTimeFormat(this.format.locale(), {
       day: "numeric",
