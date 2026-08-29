@@ -21,10 +21,6 @@ export interface MacroShortLabels {
 export class DiaryViewService {
   private unitCatalog = inject(UnitCatalogService);
 
-  /**
-   * Only the eaten flag moves: the balance each entry sits on is left untouched so unticking can
-   * put its chip back exactly as it was. What hides the chip is the flag, not wiping the state.
-   */
   withMealConsumed(
     day: DiaryDay,
     mealKey: string,

@@ -15,10 +15,6 @@ use Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionProposalNeedleDa
 
 final readonly class DoctrineGetProductionProposalNeedleDataQuery implements GetProductionProposalNeedleDataQuery
 {
-    /**
-     * A whole pack has to cover at most this much more than the deficit for the hint to be worth
-     * showing: buying one pack of saffron is not a reason to cook forty servings.
-     */
     private const float MAX_PACK_UPLIFT = 2.0;
 
     public function __construct(
@@ -27,15 +23,6 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
     ) {
     }
 
-    /**
-     * The whole point of the range: the diary is summed across every day in it, so two days asking
-     * for three servings each become one batch of six instead of two separate cooking sessions.
-     *
-     * A composite recipe pulls its sub-recipes into the batch as lines of their own, because a
-     * sub-recipe is an ingredient with a balance: cooking the parent spends its servings, and those
-     * servings have to be cooked by somebody. They come out ordered children first, which is the
-     * order you cook them in.
-     */
     public function findProposal(string $fromDate, string $toDate): GetProductionProposalResult
     {
         $demand = $this->demandByRecipe(fromDate: $fromDate, toDate: $toDate);
@@ -65,6 +52,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
 
         $toCook = [];
         $covered = [];
+        $packs = null;
 
         foreach ($order as $recipeId) {
             $recipe = $recipes[$recipeId] ?? null;
@@ -103,7 +91,11 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
                 inProduction: $inProduction[$recipeId] ?? 0.0,
                 deficit: $deficit,
                 requiredBy: array_values(array: array_unique(array: $requiredBy[$recipeId] ?? [])),
-                packHint: $this->packHint(recipeId: $recipeId, deficit: $deficit),
+                packHint: $this->packHint(
+                    recipeId: $recipeId,
+                    deficit: $deficit,
+                    packs: $packs ??= $this->packsByArticle(),
+                ),
             );
         }
 
@@ -119,9 +111,6 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
     }
 
     /**
-     * Depth-first over the recipe tree, deepest first: a sub-recipe has to be cooked before the
-     * recipe that eats it, and it may be shared by two parents, so it appears only once.
-     *
      * @param string[] $recipeIds
      *
      * @return string[]
@@ -214,9 +203,6 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
     }
 
     /**
-     * Servings already planned in a batch that is still cooking. Without this the proposal would
-     * keep asking for what you are already standing in the kitchen making.
-     *
      * @param string[] $recipeIds
      *
      * @return array<string, float>
@@ -286,9 +272,11 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         return (int) $from->diff(targetObject: $to)->days + 1;
     }
 
-    private function packHint(string $recipeId, float $deficit): ?ProposalPackHint
+    /**
+     * @param array<string, array{unit: string, quantity: float}> $packs
+     */
+    private function packHint(string $recipeId, float $deficit, array $packs): ?ProposalPackHint
     {
-        $packs = $this->packsByArticle();
         $candidate = null;
 
         foreach ($this->ingredientResolver->resolve(recipeId: $recipeId, servings: $deficit) as $ingredient) {
@@ -319,9 +307,6 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
     }
 
     /**
-     * Rounded down so the suggestion never overshoots the pack: the point is filling the format
-     * you are going to open anyway, not opening a second one.
-     *
      * @param array{ingredient: \Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionIngredient, pack: array{unit: string, quantity: float}, uplift: float} $candidate
      */
     private function toPackHint(array $candidate, float $deficit): ?ProposalPackHint

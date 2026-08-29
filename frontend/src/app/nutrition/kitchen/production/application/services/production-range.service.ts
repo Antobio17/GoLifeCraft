@@ -16,10 +16,6 @@ export class ProductionRangeService {
     return this.toIso(date);
   }
 
-  /**
-   * A range shown the way you would say it out loud: one day is just the day, a range inside the
-   * same month drops the repeated month, and only a range across months spells both out.
-   */
   rangeLabel(fromDate: string, toDate: string): string {
     const from = this.parse(fromDate);
     const to = this.parse(toDate);
@@ -45,7 +41,7 @@ export class ProductionRangeService {
     return Math.floor((to - from) / 86400000) + 1;
   }
 
-  isBefore(fromDate: string, toDate: string): boolean {
+  isInverted(fromDate: string, toDate: string): boolean {
     return toDate < fromDate;
   }
 

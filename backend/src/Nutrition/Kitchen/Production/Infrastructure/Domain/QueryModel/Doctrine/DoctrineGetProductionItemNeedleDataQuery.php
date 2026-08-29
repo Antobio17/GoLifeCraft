@@ -91,9 +91,6 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
     }
 
     /**
-     * Ingredients come scaled to what is still ahead of you: the planned servings while the recipe
-     * is pending, and what you actually cooked once it is done.
-     *
      * @param array<string, mixed> $row
      */
     private function servingsToShow(array $row): float
@@ -106,9 +103,6 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
     }
 
     /**
-     * Rows written before a checklist column existed hold a JSON null, which decodes to null and
-     * not to a list.
-     *
      * @return array<int, mixed>
      */
     private function decodeList(mixed $value): array
@@ -127,13 +121,6 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
     }
 
     /**
-     * The same article can arrive from several ingredients of the recipe, so those become one line
-     * with the amounts added up. It is also what keeps a tick from marking two rows at once, since
-     * the tick is stored per article.
-     *
-     * When the ingredients disagree on the unit there is nothing to add up in the recipe's own
-     * terms, so the line falls back to the article's base unit, which is always comparable.
-     *
      * @param ProductionIngredient[] $ingredients
      *
      * @return ProductionIngredientView[]
@@ -190,9 +177,6 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
     }
 
     /**
-     * A sub-recipe is shown as what it is, an ingredient you should already have cooked, with the
-     * servings you have left next to it. Its own articles belong to its own production.
-     *
      * @return ProductionSubRecipeView[]
      */
     private function subRecipes(ProductionNeeds $needs): array

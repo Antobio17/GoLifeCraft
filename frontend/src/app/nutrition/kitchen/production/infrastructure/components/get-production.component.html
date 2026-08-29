@@ -65,7 +65,9 @@
       <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
         @for (row of rows(); track row.item.itemId) {
           <ds-production-row
-            [state]="row.done ? 'done' : 'deficit'"
+            [state]="
+              row.done ? ProductionRowState.Done : ProductionRowState.Deficit
+            "
             [interactive]="true"
             [emoji]="row.item.emoji"
             [name]="row.item.name"

@@ -83,9 +83,6 @@ final readonly class DoctrineGetProductionsNeedleDataQuery implements GetProduct
     }
 
     /**
-     * One query for every row on the page: the list shows how far each batch got, and asking that
-     * per row would be a query per production.
-     *
      * @param string[] $productionIds
      *
      * @return array<string, array{itemCount: int, cookedCount: int, servingsPlanned: float, servingsCooked: float, emojis: string[]}>

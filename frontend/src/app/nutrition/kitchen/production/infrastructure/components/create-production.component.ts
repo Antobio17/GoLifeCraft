@@ -3,7 +3,7 @@ import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { of } from "rxjs";
-import { catchError, switchMap } from "rxjs/operators";
+import { catchError, switchMap, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -27,6 +27,7 @@ import { StartProductionService } from "@nutrition/kitchen/production/applicatio
 import { UpdateRecipeStockService } from "@nutrition/kitchen/production/application/services/update-recipe-stock.service";
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
 import { ProposalFormService } from "@nutrition/kitchen/production/application/services/proposal-form.service";
+import { ProductionRowState } from "@shared/design-system/production-row/domain/models/production-row-state.model";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProposalAttributes } from "@nutrition/kitchen/production/domain/models/proposal-attributes.model";
 import { ProposalCovered } from "@nutrition/kitchen/production/domain/models/proposal-covered.model";
@@ -71,6 +72,8 @@ export class CreateProductionComponent {
 
   private readonly MODULE_PATH = "nutrition/kitchen/production";
 
+  protected readonly ProductionRowState = ProductionRowState;
+
   loading = signal(true);
   saving = signal(false);
   proposal = signal<ProposalAttributes | null>(null);
@@ -97,7 +100,7 @@ export class CreateProductionComponent {
   });
 
   invalidRange = computed(() =>
-    this.range.isBefore(this.fromDate(), this.toDate()),
+    this.range.isInverted(this.fromDate(), this.toDate()),
   );
 
   rows = computed<ProposalRow[]>(() =>
@@ -134,6 +137,11 @@ export class CreateProductionComponent {
     }),
   );
 
+  private range$ = computed(() => ({
+    fromDate: this.fromDate(),
+    toDate: this.toDate(),
+  }));
+
   canSubmit = computed(
     () =>
       this.form.toItems(this.selected(), this.servings()).length > 0 &&
@@ -143,9 +151,9 @@ export class CreateProductionComponent {
   constructor() {
     this.translationService.loadModuleTranslations(this.MODULE_PATH);
 
-    toObservable(computed(() => `${this.fromDate()}|${this.toDate()}`))
+    toObservable(this.range$)
       .pipe(
-        switchMap((range) => this.fetch(range)),
+        switchMap((range) => this.fetch(range.fromDate, range.toDate)),
         takeUntilDestroyed(),
       )
       .subscribe();
@@ -160,7 +168,7 @@ export class CreateProductionComponent {
 
     this.fromDate.set(value);
 
-    if (!this.range.isBefore(value, this.toDate())) return;
+    if (!this.range.isInverted(value, this.toDate())) return;
 
     this.toDate.set(value);
   }
@@ -272,28 +280,25 @@ export class CreateProductionComponent {
   }
 
   private reload(): void {
-    this.fetch(`${this.fromDate()}|${this.toDate()}`)
+    this.fetch(this.fromDate(), this.toDate())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
-  private fetch(range: string) {
-    const [fromDate, toDate] = range.split("|");
+  private fetch(fromDate: string, toDate: string) {
     this.loading.set(true);
 
     return this.getProductionProposalService
       .getProductionProposal(fromDate, toDate)
       .pipe(
         catchError(() => of(null)),
-        switchMap((response) => {
+        tap((response) => {
           const attributes = response?.data.attributes ?? null;
 
           this.proposal.set(attributes);
           this.selected.set(this.form.selection(attributes?.toCook ?? []));
           this.servings.set(this.form.seed(attributes?.toCook ?? []));
           this.loading.set(false);
-
-          return of(attributes);
         }),
       );
   }

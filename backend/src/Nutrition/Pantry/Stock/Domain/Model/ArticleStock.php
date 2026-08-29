@@ -63,10 +63,6 @@ class ArticleStock extends GenericAggregate
         ));
     }
 
-    /**
-     * Cooking already happened, so a pantry that does not reach zero is the pantry being wrong,
-     * not the batch: the stock bottoms out at zero instead of blowing up the production.
-     */
     public function decrease(
         float $quantity,
         string $updatedByUserId,
@@ -79,9 +75,6 @@ class ArticleStock extends GenericAggregate
         );
     }
 
-    /**
-     * The mirror of the discount cooking applies: what a recipe never used goes back to the shelf.
-     */
     public function increase(
         float $quantity,
         string $updatedByUserId,

@@ -94,10 +94,6 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
     }
 
     /**
-     * Which recipes of this same batch eat each line. It is asked to the recipes themselves instead
-     * of being written down when the batch was planned: a note would go stale the moment a recipe
-     * changes or a line is dropped, and a sub-recipe can feed more than one parent.
-     *
      * @param array<int, array<string, mixed>> $rows
      *
      * @return array<string, string[]>

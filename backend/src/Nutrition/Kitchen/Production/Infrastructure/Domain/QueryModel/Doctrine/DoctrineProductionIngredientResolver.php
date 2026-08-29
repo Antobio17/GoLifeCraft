@@ -10,22 +10,19 @@ use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
 use Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 
-final readonly class DoctrineProductionIngredientResolver
+final class DoctrineProductionIngredientResolver
 {
+    private ?RecipeNutritionGraph $graph = null;
+
     public function __construct(
-        private DoctrineRecipeNutritionGraphProvider $graphProvider,
-        private RecipeBreakdownCalculator $calculator,
+        private readonly DoctrineRecipeNutritionGraphProvider $graphProvider,
+        private readonly RecipeBreakdownCalculator $calculator,
     ) {
     }
 
-    /**
-     * What a batch of this recipe consumes directly: its own articles and the servings of the
-     * recipes it uses as ingredients. A sub-recipe is an ingredient with a balance of its own, so
-     * its raw materials are spent by whoever cooks it, not here.
-     */
     public function resolveDirect(string $recipeId, float $servings): ProductionNeeds
     {
-        $graph = $this->graphProvider->load();
+        $graph = $this->graph();
 
         if (!$graph->hasRecipe(recipeId: $recipeId)) {
             return new ProductionNeeds(articles: [], subRecipes: []);
@@ -85,7 +82,7 @@ final readonly class DoctrineProductionIngredientResolver
      */
     public function resolve(string $recipeId, float $servings): array
     {
-        $graph = $this->graphProvider->load();
+        $graph = $this->graph();
         $ingredients = [];
 
         foreach ($this->calculator->expand(graph: $graph, recipeId: $recipeId, servings: $servings) as $item) {
@@ -97,6 +94,11 @@ final readonly class DoctrineProductionIngredientResolver
         }
 
         return $ingredients;
+    }
+
+    private function graph(): RecipeNutritionGraph
+    {
+        return $this->graph ??= $this->graphProvider->load();
     }
 
     private function toIngredient(RecipeBreakdownItem $item, RecipeNutritionGraph $graph): ProductionIngredient

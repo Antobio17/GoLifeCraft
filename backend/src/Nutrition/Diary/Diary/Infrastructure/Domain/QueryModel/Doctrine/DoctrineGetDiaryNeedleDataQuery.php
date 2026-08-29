@@ -4,6 +4,7 @@ namespace Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryEntryNodeView;
@@ -21,6 +22,12 @@ use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRe
 
 final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
 {
+    private const string STOCK_NONE = 'none';
+
+    private const string STOCK_COVERED = 'covered';
+
+    private const string STOCK_SHORT = 'short';
+
     private ?RecipeNutritionGraph $graph = null;
 
     public function __construct(
@@ -29,12 +36,6 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
         private readonly RecipeBreakdownCalculator $breakdownCalculator,
     ) {
     }
-
-    private const string STOCK_NONE = 'none';
-
-    private const string STOCK_COVERED = 'covered';
-
-    private const string STOCK_SHORT = 'short';
 
     public function findDiaryDay(string $date): GetDiaryResult
     {
@@ -203,12 +204,6 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
     }
 
     /**
-     * Which recipe entries of the day the balance actually covers. The servings on the shelf are
-     * claimed by the meals still to eat, earliest first, so if the fridge holds four porridges and
-     * the week asks for six, the first four are the ones marked as being there.
-     *
-     * Entries already eaten claim nothing: their servings left the balance when they were ticked.
-     *
      * @return array<string, string>
      */
     private function stockStateByEntry(string $date): array
@@ -219,11 +214,11 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
             ->where('e.kind = :kind')
             ->andWhere('e.consumed = :consumed')
             ->andWhere('e.ref_id IS NOT NULL')
-            ->andWhere('e.entry_date >= :from')
+            ->andWhere('e.entry_date BETWEEN :from AND :to')
             ->setParameter(key: 'kind', value: DiaryEntry::KIND_RECIPE)
-            ->setParameter(key: 'consumed', value: false, type: \Doctrine\DBAL\ParameterType::BOOLEAN)
+            ->setParameter(key: 'consumed', value: false, type: ParameterType::BOOLEAN)
             ->setParameter(key: 'from', value: min($date, (new \DateTimeImmutable())->format(format: 'Y-m-d')))
-            ->orderBy('e.entry_date', 'ASC')
+            ->setParameter(key: 'to', value: $date)
             ->executeQuery()
             ->fetchAllAssociative();
 

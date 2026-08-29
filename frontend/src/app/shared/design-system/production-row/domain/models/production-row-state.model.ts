@@ -1,1 +1,5 @@
-export type ProductionRowState = "deficit" | "expected" | "done";
+export enum ProductionRowState {
+  Deficit = "deficit",
+  Expected = "expected",
+  Done = "done",
+}

@@ -5,6 +5,7 @@ namespace Nutrition\Kitchen\Production\Infrastructure\Domain\Model\Doctrine;
 use Doctrine\ORM\EntityRepository;
 use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
+use Nutrition\Kitchen\Production\Domain\Model\ProductionItemConsumption;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionRepository;
 use Ramsey\Uuid\Uuid;
 
@@ -15,10 +16,6 @@ final class DoctrineProductionRepository extends EntityRepository implements Pro
         return Uuid::uuid4()->toString();
     }
 
-    /**
-     * The items are loaded and attached here because cooking one of them mutates a child: the
-     * aggregate has to arrive whole for its own rules to hold.
-     */
     public function findById(string $id): ?Production
     {
         $production = $this->find($id);
@@ -40,6 +37,12 @@ final class DoctrineProductionRepository extends EntityRepository implements Pro
 
         foreach ($production->items as $item) {
             $entityManager->persist(object: $item);
+
+            foreach ($item->consumptions as $consumption) {
+                $entityManager->persist(object: $consumption);
+            }
+
+            $this->releaseConsumptions(item: $item);
         }
     }
 
@@ -47,7 +50,8 @@ final class DoctrineProductionRepository extends EntityRepository implements Pro
     {
         $entityManager = $this->getEntityManager();
 
-        foreach ($this->itemsOf(productionId: $production->id) as $item) {
+        foreach ($production->items as $item) {
+            $this->removeConsumptionsOf(productionItemId: $item->id);
             $entityManager->remove(object: $item);
         }
 
@@ -68,32 +72,67 @@ final class DoctrineProductionRepository extends EntityRepository implements Pro
             ->getQuery()
             ->getResult();
 
-        return $this->withChecklist(items: $items);
+        return $this->withConsumptions(items: $items);
     }
 
     /**
-     * Rows written before the checklist column existed hold a JSON null, and Doctrine leaves a
-     * typed property uninitialised rather than assigning null to it. An empty checklist is what
-     * those rows mean, so that is what the aggregate gets.
-     *
      * @param ProductionItem[] $items
      *
      * @return ProductionItem[]
      */
-    private function withChecklist(array $items): array
+    private function withConsumptions(array $items): array
     {
+        if ([] === $items) {
+            return $items;
+        }
+
+        $consumptions = $this->getEntityManager()->createQueryBuilder()
+            ->select('consumption')
+            ->from(from: ProductionItemConsumption::class, alias: 'consumption')
+            ->where('consumption.productionItemId IN (:productionItemIds)')
+            ->setParameter(key: 'productionItemIds', value: array_map(
+                callback: static fn (ProductionItem $item): string => $item->id,
+                array: $items,
+            ))
+            ->getQuery()
+            ->getResult();
+
+        $byItem = [];
+
+        foreach ($consumptions as $consumption) {
+            $byItem[$consumption->productionItemId][] = $consumption;
+        }
+
         foreach ($items as $item) {
-            if (!isset($item->checkedArticleIds)) {
-                $item->checkedArticleIds = [];
-            }
-
-            if (isset($item->checkedStepPositions)) {
-                continue;
-            }
-
-            $item->checkedStepPositions = [];
+            $item->consumptions = $byItem[$item->id] ?? [];
         }
 
         return $items;
+    }
+
+    private function releaseConsumptions(ProductionItem $item): void
+    {
+        if ([] === $item->releasedConsumptionIds) {
+            return;
+        }
+
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete(delete: ProductionItemConsumption::class, alias: 'consumption')
+            ->where('consumption.id IN (:consumptionIds)')
+            ->setParameter(key: 'consumptionIds', value: $item->releasedConsumptionIds)
+            ->getQuery()
+            ->execute();
+
+        $item->releasedConsumptionIds = [];
+    }
+
+    private function removeConsumptionsOf(string $productionItemId): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete(delete: ProductionItemConsumption::class, alias: 'consumption')
+            ->where('consumption.productionItemId = :productionItemId')
+            ->setParameter(key: 'productionItemId', value: $productionItemId)
+            ->getQuery()
+            ->execute();
     }
 }

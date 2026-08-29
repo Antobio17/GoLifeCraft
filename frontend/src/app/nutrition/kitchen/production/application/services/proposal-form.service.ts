@@ -4,10 +4,6 @@ import { StartProductionItem } from "../../domain/models/start-production-item.m
 
 @Injectable()
 export class ProposalFormService {
-  /**
-   * The proposal arrives as a suggestion, not an order: every row starts selected with the deficit
-   * the diary implies, and the pack hint pre-fills the amount that fills the format instead.
-   */
   seed(items: ProposalToCook[]): Map<string, number> {
     const servings = new Map<string, number>();
 

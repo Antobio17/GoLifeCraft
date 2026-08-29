@@ -25,25 +25,14 @@ final readonly class UpdateRecipeStockCommandHandler
             throw UpdateRecipeStockException::recipeNotFound(recipeId: $command->recipeId);
         }
 
-        $recipeStock = $this->applyServings(command: $command);
-
-        $this->recipeStockRepository->save(recipeStock: $recipeStock);
-        $this->domainEventCollectorService->register(aggregate: $recipeStock);
-    }
-
-    private function applyServings(UpdateRecipeStockCommand $command): RecipeStock
-    {
-        $recipeStock = $this->recipeStockRepository->findByRecipeId(recipeId: $command->recipeId);
-
-        if (null === $recipeStock) {
-            return RecipeStock::start(
+        $recipeStock = $this->recipeStockRepository->findByRecipeId(recipeId: $command->recipeId)
+            ?? RecipeStock::start(
                 id: $this->recipeStockRepository->nextId(),
                 recipeId: $command->recipeId,
-                servings: $command->servings,
+                servings: 0.0,
                 createdByUserId: $command->updatedByUserId,
                 dateTimeGenerator: $this->dateTimeGenerator,
             );
-        }
 
         $recipeStock->change(
             servings: $command->servings,
@@ -51,6 +40,7 @@ final readonly class UpdateRecipeStockCommandHandler
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 
-        return $recipeStock;
+        $this->recipeStockRepository->save(recipeStock: $recipeStock);
+        $this->domainEventCollectorService->register(aggregate: $recipeStock);
     }
 }

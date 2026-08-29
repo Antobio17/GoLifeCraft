@@ -20,21 +20,17 @@ class ProductionItem extends GenericAggregate
     public string $nameSnapshot;
     public string $emojiSnapshot;
 
-    /**
-     * Ids of the articles already ticked off in the checklist. They survive the cooking so that
-     * reopening a recipe shows the same ticks you left, instead of a blank list.
-     *
-     * @var string[]
-     */
+    /** @var string[] */
     public array $checkedArticleIds = [];
 
-    /**
-     * Positions of the steps already ticked off. Cooking the recipe fills this with every step:
-     * you just did them all, and coming back to a finished recipe should show it that way.
-     *
-     * @var int[]
-     */
+    /** @var int[] */
     public array $checkedStepPositions = [];
+
+    /** @var ProductionItemConsumption[] */
+    public array $consumptions = [];
+
+    /** @var string[] */
+    public array $releasedConsumptionIds = [];
 
     public static function plan(
         string $productionId,
@@ -61,10 +57,14 @@ class ProductionItem extends GenericAggregate
     }
 
     /**
-     * @param int[] $stepPositions
+     * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
+     * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
+     * @param int[]                                                               $stepPositions
      */
     public function cook(
         float $servingsCooked,
+        array $consumedArticles,
+        array $consumedRecipes,
         array $stepPositions,
         string $cookedByUserId,
         \DateTime $now,
@@ -72,12 +72,15 @@ class ProductionItem extends GenericAggregate
         $this->status = self::STATUS_DONE;
         $this->servingsCooked = $servingsCooked;
         $this->checkedStepPositions = array_values(array: array_unique(array: $stepPositions));
+        $this->consumptions = $this->takeConsumptions(
+            consumedArticles: $consumedArticles,
+            consumedRecipes: $consumedRecipes,
+            cookedByUserId: $cookedByUserId,
+            now: $now,
+        );
         $this->stampUpdate(userId: $cookedByUserId, now: $now);
     }
 
-    /**
-     * @param string[] $articleIds
-     */
     /**
      * @param string[] $articleIds
      * @param int[]    $stepPositions
@@ -97,12 +100,45 @@ class ProductionItem extends GenericAggregate
     {
         $this->status = self::STATUS_PENDING;
         $this->servingsCooked = 0.0;
+        $this->releasedConsumptionIds = array_map(
+            callback: static fn (ProductionItemConsumption $consumption): string => $consumption->id,
+            array: $this->consumptions,
+        );
+        $this->consumptions = [];
         $this->stampUpdate(userId: $uncookedByUserId, now: $now);
     }
 
     public function isDone(): bool
     {
         return self::STATUS_DONE === $this->status;
+    }
+
+    /**
+     * @return array<int, array{articleId: string, quantity: float, unit: string}>
+     */
+    public function consumedArticles(): array
+    {
+        return array_values(array: array_map(
+            callback: static fn (ProductionItemConsumption $consumption): array => $consumption->toConsumedArticle(),
+            array: array_filter(
+                array: $this->consumptions,
+                callback: static fn (ProductionItemConsumption $consumption): bool => $consumption->isArticle(),
+            ),
+        ));
+    }
+
+    /**
+     * @return array<int, array{recipeId: string, servings: float}>
+     */
+    public function consumedRecipes(): array
+    {
+        return array_values(array: array_map(
+            callback: static fn (ProductionItemConsumption $consumption): array => $consumption->toConsumedRecipe(),
+            array: array_filter(
+                array: $this->consumptions,
+                callback: static fn (ProductionItemConsumption $consumption): bool => !$consumption->isArticle(),
+            ),
+        ));
     }
 
     /**
@@ -122,5 +158,46 @@ class ProductionItem extends GenericAggregate
             'checkedArticleIds' => $this->checkedArticleIds,
             'checkedStepPositions' => $this->checkedStepPositions,
         ];
+    }
+
+    /**
+     * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
+     * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
+     *
+     * @return ProductionItemConsumption[]
+     */
+    private function takeConsumptions(
+        array $consumedArticles,
+        array $consumedRecipes,
+        string $cookedByUserId,
+        \DateTime $now,
+    ): array {
+        $consumptions = [];
+
+        foreach ($consumedArticles as $consumed) {
+            $consumptions[] = ProductionItemConsumption::take(
+                productionItemId: $this->id,
+                kind: ProductionItemConsumption::KIND_ARTICLE,
+                refId: $consumed['articleId'],
+                quantity: $consumed['quantity'],
+                unit: $consumed['unit'],
+                createdByUserId: $cookedByUserId,
+                now: $now,
+            );
+        }
+
+        foreach ($consumedRecipes as $consumed) {
+            $consumptions[] = ProductionItemConsumption::take(
+                productionItemId: $this->id,
+                kind: ProductionItemConsumption::KIND_RECIPE,
+                refId: $consumed['recipeId'],
+                quantity: $consumed['servings'],
+                unit: null,
+                createdByUserId: $cookedByUserId,
+                now: $now,
+            );
+        }
+
+        return $consumptions;
     }
 }

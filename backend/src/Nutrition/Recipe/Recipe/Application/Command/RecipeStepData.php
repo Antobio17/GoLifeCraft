@@ -21,9 +21,6 @@ final readonly class RecipeStepData
     }
 
     /**
-     * An empty step is not a step: the recipe form leaves blank rows behind while you type.
-     * A missing "steps" key is not an empty list either, so it travels as null.
-     *
      * @return ?self[]
      */
     public static function listFromArray(?array $rawSteps): ?array

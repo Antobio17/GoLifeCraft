@@ -29,6 +29,7 @@ import { RevealDirective } from "@shared/design-system/reveal/infrastructure/dir
 import { GetProductionService } from "@nutrition/kitchen/production/application/services/get-production.service";
 import { DiscardProductionService } from "@nutrition/kitchen/production/application/services/discard-production.service";
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
+import { ProductionRowState } from "@shared/design-system/production-row/domain/models/production-row-state.model";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProductionDetailAttributes } from "@nutrition/kitchen/production/domain/models/production-detail-attributes.model";
 import { ProductionItemStatus } from "@nutrition/kitchen/production/domain/models/production-item-status.model";
@@ -67,6 +68,8 @@ export class GetProductionComponent {
   protected view = inject(ProductionViewService);
 
   private readonly MODULE_PATH = "nutrition/kitchen/production";
+
+  protected readonly ProductionRowState = ProductionRowState;
 
   readonly id = input.required<string>();
 
