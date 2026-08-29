@@ -36,3 +36,5 @@ relations: {}
 
 cascade_delete:
   - { resource: recipe_ingredient, foreign_field: recipeId }
+  - { resource: recipe_step, foreign_field: recipeId }
+  - { resource: recipe_stock, foreign_field: recipeId }
