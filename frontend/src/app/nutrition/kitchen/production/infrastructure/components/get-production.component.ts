@@ -104,10 +104,10 @@ export class GetProductionComponent {
         item,
         meta: done
           ? this.t("getProduction.row.cooked", {
-              servings: this.range.servings(item.servingsCooked),
+              servings: this.view.servings(item.servingsCooked),
             })
           : this.t("getProduction.row.planned", {
-              servings: this.range.servings(item.servingsPlanned),
+              servings: this.view.servings(item.servingsPlanned),
             }),
         done,
         origin: item.requiredBy.length
@@ -127,7 +127,7 @@ export class GetProductionComponent {
 
     return this.t("getProduction.summary", {
       recipes: detail.items.length,
-      servings: this.range.servings(
+      servings: this.view.servings(
         this.cooking() ? detail.servingsPlanned : detail.servingsCooked,
       ),
     });

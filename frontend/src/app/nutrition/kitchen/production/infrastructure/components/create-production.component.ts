@@ -24,7 +24,7 @@ import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/i
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetProductionProposalService } from "@nutrition/kitchen/production/application/services/get-production-proposal.service";
 import { StartProductionService } from "@nutrition/kitchen/production/application/services/start-production.service";
-import { UpdateRecipeStockService } from "@nutrition/kitchen/production/application/services/update-recipe-stock.service";
+import { UpdateRecipeStockService } from "@nutrition/pantry/recipe-stock/application/services/update-recipe-stock.service";
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
 import { ProposalFormService } from "@nutrition/kitchen/production/application/services/proposal-form.service";
 import { ProductionRowState } from "@shared/design-system/production-row/domain/models/production-row-state.model";
@@ -133,11 +133,11 @@ export class CreateProductionComponent {
   summary = computed(() =>
     this.t("createProduction.summary", {
       recipes: this.selectedCount(),
-      servings: this.range.servings(this.totalServings()),
+      servings: this.view.servings(this.totalServings()),
     }),
   );
 
-  private range$ = computed(() => ({
+  private dateRange = computed(() => ({
     fromDate: this.fromDate(),
     toDate: this.toDate(),
   }));
@@ -151,7 +151,7 @@ export class CreateProductionComponent {
   constructor() {
     this.translationService.loadModuleTranslations(this.MODULE_PATH);
 
-    toObservable(this.range$)
+    toObservable(this.dateRange)
       .pipe(
         switchMap((range) => this.fetch(range.fromDate, range.toDate)),
         takeUntilDestroyed(),
@@ -180,15 +180,7 @@ export class CreateProductionComponent {
   }
 
   onToggle(item: ProposalToCook): void {
-    const next = new Set(this.selected());
-
-    if (next.has(item.recipeId)) {
-      next.delete(item.recipeId);
-    } else {
-      next.add(item.recipeId);
-    }
-
-    this.selected.set(next);
+    this.selected.set(this.view.toggle(this.selected(), item.recipeId));
   }
 
   onServings(item: ProposalToCook, value: number): void {
@@ -206,7 +198,7 @@ export class CreateProductionComponent {
 
   onNoStock(item: ProposalCovered): void {
     this.updateRecipeStockService
-      .updateRecipeStock(item.recipeId, { servings: 0 })
+      .updateRecipeStock(item.recipeId, 0)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.reload());
   }
@@ -239,21 +231,21 @@ export class CreateProductionComponent {
   private rowMeta(item: ProposalToCook): string {
     if (item.inStock <= 0 && item.inProduction <= 0) {
       return this.t("createProduction.row.metaEmpty", {
-        demand: this.range.servings(item.demand),
+        demand: this.view.servings(item.demand),
       });
     }
 
     if (item.inProduction > 0) {
       return this.t("createProduction.row.metaInProduction", {
-        demand: this.range.servings(item.demand),
-        stock: this.range.servings(item.inStock),
-        cooking: this.range.servings(item.inProduction),
+        demand: this.view.servings(item.demand),
+        stock: this.view.servings(item.inStock),
+        cooking: this.view.servings(item.inProduction),
       });
     }
 
     return this.t("createProduction.row.meta", {
-      demand: this.range.servings(item.demand),
-      stock: this.range.servings(item.inStock),
+      demand: this.view.servings(item.demand),
+      stock: this.view.servings(item.inStock),
     });
   }
 
@@ -263,19 +255,19 @@ export class CreateProductionComponent {
     return this.t("createProduction.row.packHint", {
       article: item.packHint.articleName,
       packUnit: item.packHint.packUnit,
-      servings: this.range.servings(item.packHint.suggestedServings),
+      servings: this.view.servings(item.packHint.suggestedServings),
     });
   }
 
   private coveredMeta(item: ProposalCovered): string {
     if (item.inProduction > 0) {
       return this.t("createProduction.covered.metaInProduction", {
-        cooking: this.range.servings(item.inProduction),
+        cooking: this.view.servings(item.inProduction),
       });
     }
 
     return this.t("createProduction.covered.meta", {
-      servings: this.range.servings(item.inStock),
+      servings: this.view.servings(item.inStock),
     });
   }
 

@@ -12,7 +12,7 @@ import { CookProductionItemProviders } from "../providers/cook-production-item.p
 import { UncookProductionItemProviders } from "../providers/uncook-production-item.providers";
 import { CheckProductionItemProviders } from "../providers/check-production-item.providers";
 import { DiscardProductionProviders } from "../providers/discard-production.providers";
-import { UpdateRecipeStockProviders } from "../providers/update-recipe-stock.providers";
+import { UpdateRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/update-recipe-stock.providers";
 
 export const KITCHEN_ROUTES: Routes = [
   {
