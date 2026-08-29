@@ -3,6 +3,7 @@
 namespace Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\GetProductionResult;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionItemView;
 use Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionNeedleDataQuery;
@@ -48,8 +49,14 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
             toDate: $row['to_date'],
             status: $row['status'],
             items: $items,
-            servingsPlanned: $this->sum(items: $items, field: 'servingsPlanned'),
-            servingsCooked: $this->sum(items: $items, field: 'servingsCooked'),
+            servingsPlanned: $this->sum(servings: array_map(
+                callback: static fn (ProductionItemView $item): float => $item->servingsPlanned,
+                array: $items,
+            )),
+            servingsCooked: $this->sum(servings: array_map(
+                callback: static fn (ProductionItemView $item): float => $item->servingsCooked,
+                array: $items,
+            )),
             createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
             createdByUserId: $row['created_by_user_id'],
@@ -119,16 +126,10 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
     }
 
     /**
-     * @param ProductionItemView[] $items
+     * @param float[] $servings
      */
-    private function sum(array $items, string $field): float
+    private function sum(array $servings): float
     {
-        $total = 0.0;
-
-        foreach ($items as $item) {
-            $total += $item->$field;
-        }
-
-        return round(num: $total, precision: 2);
+        return round(num: array_sum(array: $servings), precision: ProductionItem::SERVINGS_PRECISION);
     }
 }
