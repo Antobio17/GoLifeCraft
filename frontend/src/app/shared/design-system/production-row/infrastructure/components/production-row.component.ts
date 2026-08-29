@@ -31,19 +31,6 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
         }
       </ds-stack>
 
-      @if (
-        !interactive && ProductionRowState.Expected !== state && actionLabel
-      ) {
-        <ds-button
-          variant="soft"
-          size="sm"
-          [disabled]="busy"
-          [loading]="busy"
-          (clicked)="action.emit()"
-          >{{ actionLabel }}</ds-button
-        >
-      }
-
       @if (ProductionRowState.Done === state && doneLabel) {
         <span class="ds-prow__done">
           <ds-icon name="check" [size]="13" [stroke]="3" />
@@ -52,13 +39,9 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
       }
 
       @if (!interactive && ProductionRowState.Expected === state && linkLabel) {
-        <ds-button
-          variant="link"
-          size="sm"
-          [disabled]="busy"
-          (clicked)="linked.emit()"
-          >{{ linkLabel }}</ds-button
-        >
+        <ds-button variant="link" size="sm" (clicked)="linked.emit()">{{
+          linkLabel
+        }}</ds-button>
       }
     </ng-template>
 
@@ -66,7 +49,6 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
       <button
         type="button"
         class="ds-prow ds-prow--interactive"
-        [disabled]="busy"
         (click)="opened.emit()"
       >
         <ng-container [ngTemplateOutlet]="content" />
@@ -109,10 +91,10 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
           border-color var(--ds-transition-fast),
           background var(--ds-transition-fast);
       }
-      .ds-prow--interactive:hover:not(:disabled) {
+      .ds-prow--interactive:hover {
         border-color: var(--ds-border-strong);
       }
-      .ds-prow--interactive:active:not(:disabled) {
+      .ds-prow--interactive:active {
         transform: scale(0.995);
       }
       .ds-prow--interactive:focus-visible {
@@ -130,8 +112,6 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
       :host([state="done"]) .ds-prow__body {
         opacity: 0.62;
       }
-      /* A status, not a control: the tick used to look like a checkbox that would untick, and it
-         never did, because the whole row opens the recipe. */
       .ds-prow__done {
         flex: 0 0 auto;
         display: inline-flex;
@@ -185,13 +165,10 @@ export class ProductionRowComponent {
   @Input() name = "";
   @Input() meta = "";
   @Input() tag = "";
-  @Input() actionLabel = "";
   @Input() doneLabel = "";
   @Input() linkLabel = "";
   @Input() interactive = false;
-  @Input() busy = false;
 
-  @Output() action = new EventEmitter<void>();
   @Output() linked = new EventEmitter<void>();
   @Output() opened = new EventEmitter<void>();
 }

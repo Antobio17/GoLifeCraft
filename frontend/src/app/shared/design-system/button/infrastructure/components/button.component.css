@@ -264,8 +264,6 @@
   border-color: var(--ds-border);
 }
 
-/* The label stays in place and only turns invisible: hiding it outright made the button shrink
-   the moment you pressed it, which reads as the layout jumping under your finger. */
 .ds-btn--loading {
   pointer-events: none;
   position: relative;
