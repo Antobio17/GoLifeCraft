@@ -153,7 +153,7 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
       .ds-prow__tag {
         align-self: flex-start;
         max-width: 100%;
-        margin-top: 3px;
+        margin-top: var(--ds-space-1);
         border-radius: var(--ds-radius-lg);
         padding: 1px var(--ds-space-2);
         background: var(--ds-surface-inset);

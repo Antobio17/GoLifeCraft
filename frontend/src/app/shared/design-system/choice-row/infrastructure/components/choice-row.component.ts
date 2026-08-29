@@ -152,7 +152,7 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
       .ds-choicerow__badge {
         flex: 0 0 auto;
         border-radius: var(--ds-radius-pill);
-        padding: 0.25rem var(--ds-space-2);
+        padding: var(--ds-space-1) var(--ds-space-2);
         background: var(--ds-surface);
         color: var(--ds-primary-soft-text);
         font-size: var(--ds-text-xs);
