@@ -26,6 +26,7 @@ import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/i
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
 import { StockControlComponent } from "@shared/design-system/stock-control/infrastructure/components/stock-control.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
@@ -76,6 +77,7 @@ import { RevealDirective } from "@shared/design-system/reveal/infrastructure/dir
     SkeletonListComponent,
     EmptyStateComponent,
     ConfirmActionModalComponent,
+    CtaRowComponent,
     StockControlComponent,
     ModalSheetComponent,
     SaveStatusComponent,
@@ -101,6 +103,12 @@ export class GetRecipeComponent {
   stock = signal(0);
   showStockEditor = signal(false);
   stockDraft = signal(0);
+
+  stepsLabel = computed(() => {
+    const steps = this.attributes()?.steps ?? [];
+
+    return steps.length ? `${steps.length}` : "";
+  });
 
   stockText = computed(() =>
     this.t(

@@ -15,6 +15,12 @@ export interface FormIngredient {
   unit: string;
 }
 
+export interface FormStep {
+  key: string;
+  text: string;
+  minutes: number | null;
+}
+
 export interface PickableIngredient {
   kind: "product" | "recipe";
   refId: string;
@@ -133,6 +139,20 @@ export class RecipeFormService {
         macros: entry.perServing,
       }))
       .sort((left, right) => left.name.localeCompare(right.name, "es"));
+  }
+
+  createStep(): FormStep {
+    this.counter += 1;
+
+    return { key: `step-${this.counter}`, text: "", minutes: null };
+  }
+
+  /**
+   * Steps are optional on purpose: there are dishes you know by heart, and a recipe without them
+   * is not broken. Only the ones with something written are worth keeping.
+   */
+  writtenSteps(steps: FormStep[]): FormStep[] {
+    return steps.filter((step) => step.text.trim().length > 0);
   }
 
   createIngredient(kind: "product" | "recipe", refId: string): FormIngredient {

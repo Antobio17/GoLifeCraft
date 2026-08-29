@@ -1,3 +1,4 @@
+import { RecipeStepView } from "./recipe-step.model";
 export interface RecipeMacros {
   calories: number;
   protein: number;
@@ -36,6 +37,7 @@ export interface RecipeDetailAttributes {
   category: string;
   servings: number;
   ingredients: RecipeIngredientView[];
+  steps: RecipeStepView[];
   total: RecipeMacros;
   perServing: RecipeMacros;
   stock: number;

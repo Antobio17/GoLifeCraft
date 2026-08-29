@@ -61,7 +61,11 @@
         "hint": "Correct by hand what is left in the fridge of this recipe.",
         "save": "Save"
       }
-    }
+    },
+    "steps": "Steps",
+    "step": "Step {{position}}",
+    "minutes": "{{minutes}} min",
+    "noSteps": "This recipe has no steps. Add them here."
   },
   "recipe": {
     "breadcrumb": {
@@ -125,6 +129,14 @@
     "pickerSearch": "Search article or recipe…",
     "pickerEmpty": "No results.",
     "tabProducts": "Articles",
-    "tabRecipes": "Sub-recipes"
+    "tabRecipes": "Sub-recipes",
+    "steps": "Steps",
+    "stepsHint": "Optional. If you know the dish by heart, leave them blank.",
+    "stepsCount": "{{count}}",
+    "step": "Step {{position}}",
+    "stepPlaceholder": "Fry the onion until soft…",
+    "stepMinutes": "Minutes for this step",
+    "addStep": "Add step",
+    "removeStep": "Remove step"
   }
 }
