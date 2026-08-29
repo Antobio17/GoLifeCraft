@@ -27,8 +27,6 @@ import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/in
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetProductionService } from "@nutrition/kitchen/production/application/services/get-production.service";
-import { FinishProductionService } from "@nutrition/kitchen/production/application/services/finish-production.service";
-import { ReopenProductionService } from "@nutrition/kitchen/production/application/services/reopen-production.service";
 import { DiscardProductionService } from "@nutrition/kitchen/production/application/services/discard-production.service";
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
@@ -62,8 +60,6 @@ import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/pr
 export class GetProductionComponent {
   private translationService = inject(TranslationService);
   private getProductionService = inject(GetProductionService);
-  private finishProductionService = inject(FinishProductionService);
-  private reopenProductionService = inject(ReopenProductionService);
   private discardProductionService = inject(DiscardProductionService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
@@ -76,8 +72,6 @@ export class GetProductionComponent {
 
   loading = signal(true);
   production = signal<ProductionDetailAttributes | null>(null);
-  finishing = signal(false);
-  reopening = signal(false);
   discarding = signal(false);
   showDiscardModal = signal(false);
 
@@ -166,44 +160,6 @@ export class GetProductionComponent {
 
   onOpen(item: ProductionItemView): void {
     this.router.navigate(["/cocina", this.id(), item.itemId]);
-  }
-
-  onReopen(): void {
-    if (this.reopening()) return;
-
-    this.reopening.set(true);
-
-    this.reopenProductionService
-      .reopenProduction(this.id())
-      .pipe(
-        switchMap(() => this.getProductionService.getProduction(this.id())),
-        catchError(() => of(null)),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((response) => {
-        this.reopening.set(false);
-
-        if (!response) return;
-
-        this.production.set(response.data.attributes);
-      });
-  }
-
-  onFinish(): void {
-    if (this.finishing()) return;
-
-    this.finishing.set(true);
-
-    this.finishProductionService
-      .finishProduction(this.id())
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.finishing.set(false);
-          this.onBack();
-        },
-        error: () => this.finishing.set(false),
-      });
   }
 
   onDiscard(): void {

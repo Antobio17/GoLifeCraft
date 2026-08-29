@@ -15,6 +15,7 @@ export interface ProductionRecipeAttributes {
   servingsCooked: number;
   recipeServings: number;
   checkedArticleIds: string[];
+  checkedStepPositions: number[];
   ingredients: ProductionIngredient[];
   subRecipes: ProductionSubRecipe[];
   steps: ProductionStep[];

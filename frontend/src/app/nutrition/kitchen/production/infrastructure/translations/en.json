@@ -61,7 +61,6 @@
     "recipes": "Recipes in the batch",
     "summary": "{{recipes}} recipes · {{servings}} servings",
     "pending": "{{pending}} left to cook",
-    "finish": "Finish production",
     "discard": "Discard production",
     "status": {
       "cooking": "Cooking",
@@ -71,7 +70,8 @@
       "planned": "{{servings}} servings planned",
       "cooked": "{{servings}} servings cooked",
       "requiredBy": "For {{parents}}",
-      "fromDiary": "From the diary"
+      "fromDiary": "From the diary",
+      "done": "Done"
     },
     "discardModal": {
       "title": "Discard production",
@@ -84,9 +84,7 @@
     "error": {
       "title": "We could not find this production",
       "text": "It may have been discarded from another device."
-    },
-    "reopen": "Put it back on the stove",
-    "locked": "Finished: put it back on the stove to change anything."
+    }
   },
   "getProductionRecipe": {
     "back": "Back to the batch",
@@ -95,7 +93,6 @@
       "pending": "Cooking",
       "done": "Cooked"
     },
-    "recipeServings": "Recipe for {{servings}}",
     "servingsLabel": "Servings you are cooking",
     "servingsHint": "Adjust it if the surplus was not what you thought",
     "servingsChanged": "The batch planned {{servings}}",
@@ -106,7 +103,7 @@
     "step": "Step {{position}}",
     "minutes": "{{minutes}} min",
     "noSteps": "This recipe has no steps. Add them in the recipe.",
-    "submit": "Mark as cooked",
+    "submit": "Finish",
     "error": {
       "title": "We could not find this recipe",
       "text": "The batch may have been discarded from another device."
@@ -124,9 +121,6 @@
       "not": {
         "exist": "That production no longer exists"
       }
-    },
-    "already": {
-      "finished": "That production was already finished"
     },
     "needs": {
       "items": "Add at least one recipe to the production"
@@ -159,9 +153,6 @@
       "not": {
         "cooked": "That recipe is not cooked yet"
       }
-    },
-    "not": {
-      "finished": "That production is still under way"
     }
   }
 }

@@ -17,12 +17,9 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { CheckRowComponent } from "@shared/design-system/check-row/infrastructure/components/check-row.component";
 import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
@@ -39,7 +36,6 @@ import { CheckProductionItemService } from "@nutrition/kitchen/production/applic
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProductionRecipeAttributes } from "@nutrition/kitchen/production/domain/models/production-recipe-attributes.model";
 import { ProductionItemStatus } from "@nutrition/kitchen/production/domain/models/production-item-status.model";
-import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/production-status.model";
 import { IngredientRow } from "@nutrition/kitchen/production/domain/models/ingredient-row.model";
 import { StepRow } from "@nutrition/kitchen/production/domain/models/step-row.model";
 import { SubRecipeRow } from "@nutrition/kitchen/production/domain/models/sub-recipe-row.model";
@@ -56,12 +52,9 @@ import { SubRecipeRow } from "@nutrition/kitchen/production/domain/models/sub-re
     SplitViewComponent,
     ScreenHeaderComponent,
     StackComponent,
-    HeadingComponent,
     TextComponent,
-    ChipComponent,
     ButtonComponent,
     NumberInputComponent,
-    EmojiTileComponent,
     SectionHeaderComponent,
     CheckRowComponent,
     CtaRowComponent,
@@ -97,14 +90,9 @@ export class GetProductionRecipeComponent {
 
   done = computed(() => ProductionItemStatus.Done === this.recipe()?.status);
 
-  /** Un lote cerrado no se toca: la receta se ve, pero no se cocina ni se ajusta. */
-  locked = computed(
-    () => ProductionStatus.Done === this.recipe()?.productionStatus,
-  );
+  editable = computed(() => !this.done());
 
-  editable = computed(() => !this.done() && !this.locked());
-
-  undoable = computed(() => this.done() && !this.locked());
+  undoable = computed(() => this.done());
 
   statusLabel = computed(() =>
     this.t(
@@ -113,15 +101,6 @@ export class GetProductionRecipeComponent {
         : "getProductionRecipe.status.pending",
     ),
   );
-
-  recipeServingsLabel = computed(() => {
-    const recipe = this.recipe();
-    if (!recipe) return "";
-
-    return this.t("getProductionRecipe.recipeServings", {
-      servings: this.view.servings(recipe.recipeServings),
-    });
-  });
 
   servingsHint = computed(() => {
     const recipe = this.recipe();
@@ -208,7 +187,6 @@ export class GetProductionRecipeComponent {
           const [productionId, itemId] = key.split("|");
 
           this.loading.set(true);
-          this.checkedSteps.set(new Set());
 
           return this.getProductionRecipeService
             .getProductionRecipe(productionId, itemId)
@@ -222,6 +200,9 @@ export class GetProductionRecipeComponent {
         this.recipe.set(attributes);
         this.checkedIngredients.set(
           new Set(attributes?.checkedArticleIds ?? []),
+        );
+        this.checkedSteps.set(
+          new Set((attributes?.checkedStepPositions ?? []).map(String)),
         );
         this.servings.set(
           attributes
@@ -245,17 +226,29 @@ export class GetProductionRecipeComponent {
   onToggleIngredient(key: string): void {
     if (!this.editable()) return;
 
-    const checked = this.view.toggle(this.checkedIngredients(), key);
-    this.checkedIngredients.set(checked);
-
-    this.checkProductionItemService
-      .checkProductionItem(this.id(), this.itemId(), [...checked])
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+    this.checkedIngredients.set(
+      this.view.toggle(this.checkedIngredients(), key),
+    );
+    this.saveChecklist();
   }
 
   onToggleStep(key: string): void {
+    if (!this.editable()) return;
+
     this.checkedSteps.set(this.view.toggle(this.checkedSteps(), key));
+    this.saveChecklist();
+  }
+
+  private saveChecklist(): void {
+    this.checkProductionItemService
+      .checkProductionItem(
+        this.id(),
+        this.itemId(),
+        [...this.checkedIngredients()],
+        [...this.checkedSteps()].map(Number),
+      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   onBack(): void {

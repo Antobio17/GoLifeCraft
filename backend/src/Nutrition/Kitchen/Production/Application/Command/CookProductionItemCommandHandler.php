@@ -41,6 +41,7 @@ final readonly class CookProductionItemCommandHandler
             servingsCooked: $command->servingsCooked,
             consumedArticles: $needs['articles'],
             consumedRecipes: $needs['recipes'],
+            stepPositions: $this->needleDataQuery->stepPositions(recipeId: $item->recipeId),
             cookedByUserId: $command->cookedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

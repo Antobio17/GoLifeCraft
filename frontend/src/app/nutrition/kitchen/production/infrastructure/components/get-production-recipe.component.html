@@ -38,23 +38,6 @@
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ds-stack
         slot="side"
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-4)'"
-      >
-        <ds-emoji-tile [emoji]="detail.emoji" [size]="56" [radius]="16" />
-        <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-          <ds-heading [level]="3" size="lg" [truncate]="true">{{
-            detail.name
-          }}</ds-heading>
-          <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
-            <ds-chip>{{ recipeServingsLabel() }}</ds-chip>
-          </ds-stack>
-        </ds-stack>
-      </ds-stack>
-
-      <ds-stack
-        slot="side"
         class="production-servings"
         direction="row"
         align="center"

@@ -28,6 +28,14 @@ class ProductionItem extends GenericAggregate
      */
     public array $checkedArticleIds = [];
 
+    /**
+     * Positions of the steps already ticked off. Cooking the recipe fills this with every step:
+     * you just did them all, and coming back to a finished recipe should show it that way.
+     *
+     * @var int[]
+     */
+    public array $checkedStepPositions = [];
+
     public static function plan(
         string $productionId,
         int $position,
@@ -52,19 +60,36 @@ class ProductionItem extends GenericAggregate
         return $item;
     }
 
-    public function cook(float $servingsCooked, string $cookedByUserId, \DateTime $now): void
-    {
+    /**
+     * @param int[] $stepPositions
+     */
+    public function cook(
+        float $servingsCooked,
+        array $stepPositions,
+        string $cookedByUserId,
+        \DateTime $now,
+    ): void {
         $this->status = self::STATUS_DONE;
         $this->servingsCooked = $servingsCooked;
+        $this->checkedStepPositions = array_values(array: array_unique(array: $stepPositions));
         $this->stampUpdate(userId: $cookedByUserId, now: $now);
     }
 
     /**
      * @param string[] $articleIds
      */
-    public function check(array $articleIds, string $checkedByUserId, \DateTime $now): void
-    {
+    /**
+     * @param string[] $articleIds
+     * @param int[]    $stepPositions
+     */
+    public function check(
+        array $articleIds,
+        array $stepPositions,
+        string $checkedByUserId,
+        \DateTime $now,
+    ): void {
         $this->checkedArticleIds = array_values(array: array_unique(array: $articleIds));
+        $this->checkedStepPositions = array_values(array: array_unique(array: $stepPositions));
         $this->stampUpdate(userId: $checkedByUserId, now: $now);
     }
 
@@ -81,7 +106,7 @@ class ProductionItem extends GenericAggregate
     }
 
     /**
-     * @return array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, checkedArticleIds: string[]}
+     * @return array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, checkedArticleIds: string[], checkedStepPositions: int[]}
      */
     public function toRecordedItem(): array
     {
@@ -95,6 +120,7 @@ class ProductionItem extends GenericAggregate
             'nameSnapshot' => $this->nameSnapshot,
             'emojiSnapshot' => $this->emojiSnapshot,
             'checkedArticleIds' => $this->checkedArticleIds,
+            'checkedStepPositions' => $this->checkedStepPositions,
         ];
     }
 }

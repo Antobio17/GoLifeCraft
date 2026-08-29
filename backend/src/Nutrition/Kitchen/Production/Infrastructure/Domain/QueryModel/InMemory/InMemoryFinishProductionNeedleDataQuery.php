@@ -40,6 +40,22 @@ final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionN
         ];
     }
 
+    /** @var array<string, int[]> */
+    private array $steps = [];
+
+    /**
+     * @param int[] $positions
+     */
+    public function addSteps(string $recipeId, array $positions): void
+    {
+        $this->steps[$recipeId] = $positions;
+    }
+
+    public function stepPositions(string $recipeId): array
+    {
+        return $this->steps[$recipeId] ?? [];
+    }
+
     public function resolveNeeds(string $recipeId, float $servings): ProductionNeeds
     {
         $articles = [];

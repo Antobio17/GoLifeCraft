@@ -139,6 +139,23 @@ final class CookProductionItemCommandHandlerTest extends TestCase
         );
     }
 
+    public function testCookingARecipeTicksOffEveryStep(): void
+    {
+        $this->needleDataQuery->addSteps(recipeId: 'recipe-1', positions: [1, 2, 3]);
+
+        ($this->handler)(new CookProductionItemCommand(
+            productionId: 'production-1',
+            itemId: $this->itemId(position: 1),
+            servingsCooked: 2.0,
+            cookedByUserId: 'god-user-id',
+        ));
+
+        $this->assertSame(
+            expected: [1, 2, 3],
+            actual: $this->production->item(itemId: $this->itemId(position: 1))->checkedStepPositions,
+        );
+    }
+
     public function testItClosesTheBatchWhenEveryRecipeIsCooked(): void
     {
         ($this->handler)(new CookProductionItemCommand(
@@ -177,42 +194,6 @@ final class CookProductionItemCommandHandlerTest extends TestCase
             productionId: 'production-1',
             itemId: $this->itemId(position: 1),
             servingsCooked: 2.0,
-            cookedByUserId: 'god-user-id',
-        ));
-    }
-
-    public function testItThrowsWhenTheBatchIsAlreadyFinished(): void
-    {
-        ($this->handler)(new CookProductionItemCommand(
-            productionId: 'production-1',
-            itemId: $this->itemId(position: 1),
-            servingsCooked: 2.0,
-            cookedByUserId: 'god-user-id',
-        ));
-        ($this->handler)(new CookProductionItemCommand(
-            productionId: 'production-1',
-            itemId: $this->itemId(position: 2),
-            servingsCooked: 3.0,
-            cookedByUserId: 'god-user-id',
-        ));
-
-        $this->production->items[] = ProductionItem::plan(
-            productionId: 'production-1',
-            position: 3,
-            recipeId: 'recipe-3',
-            servingsPlanned: 1.0,
-            nameSnapshot: 'Boloñesa',
-            emojiSnapshot: '🥘',
-            createdByUserId: 'god-user-id',
-            dateTimeGenerator: new DateTimeGenerator(),
-        );
-
-        $this->expectException(exception: CookProductionItemException::class);
-
-        ($this->handler)(new CookProductionItemCommand(
-            productionId: 'production-1',
-            itemId: $this->itemId(position: 3),
-            servingsCooked: 1.0,
             cookedByUserId: 'god-user-id',
         ));
     }

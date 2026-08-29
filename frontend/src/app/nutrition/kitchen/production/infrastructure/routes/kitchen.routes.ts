@@ -11,8 +11,6 @@ import { StartProductionProviders } from "../providers/start-production.provider
 import { CookProductionItemProviders } from "../providers/cook-production-item.providers";
 import { UncookProductionItemProviders } from "../providers/uncook-production-item.providers";
 import { CheckProductionItemProviders } from "../providers/check-production-item.providers";
-import { FinishProductionProviders } from "../providers/finish-production.providers";
-import { ReopenProductionProviders } from "../providers/reopen-production.providers";
 import { DiscardProductionProviders } from "../providers/discard-production.providers";
 import { UpdateRecipeStockProviders } from "../providers/update-recipe-stock.providers";
 
@@ -32,8 +30,6 @@ export const KITCHEN_ROUTES: Routes = [
       ...CookProductionItemProviders.getProviders(),
       ...UncookProductionItemProviders.getProviders(),
       ...CheckProductionItemProviders.getProviders(),
-      ...FinishProductionProviders.getProviders(),
-      ...ReopenProductionProviders.getProviders(),
       ...DiscardProductionProviders.getProviders(),
       ...UpdateRecipeStockProviders.getProviders(),
     ],

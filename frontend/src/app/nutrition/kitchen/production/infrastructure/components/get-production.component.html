@@ -31,19 +31,6 @@
       (leadingClick)="onBack()"
     >
       <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
-        @if (!cooking()) {
-          <ds-button
-            variant="soft"
-            size="icon-lg"
-            icon="restore"
-            [iconSize]="19"
-            [loading]="reopening()"
-            [disabled]="reopening()"
-            [ariaLabel]="'getProduction.reopen' | t"
-            (clicked)="onReopen()"
-          />
-        }
-
         <ds-button
           variant="secondary"
           size="icon-lg"
@@ -84,36 +71,11 @@
             [name]="row.item.name"
             [meta]="row.meta"
             [tag]="row.origin"
+            [doneLabel]="'getProduction.row.done' | t"
             (opened)="onOpen(row.item)"
           />
         }
       </ds-stack>
-
-      @if (cooking()) {
-        <ds-button
-          variant="secondary"
-          size="lg"
-          [fullWidth]="true"
-          [loading]="finishing()"
-          [disabled]="finishing()"
-          (clicked)="onFinish()"
-          >{{ "getProduction.finish" | t }}</ds-button
-        >
-      } @else {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-text variant="meta">{{ "getProduction.locked" | t }}</ds-text>
-          <ds-button
-            variant="soft"
-            size="lg"
-            icon="restore"
-            [fullWidth]="true"
-            [loading]="reopening()"
-            [disabled]="reopening()"
-            (clicked)="onReopen()"
-            >{{ "getProduction.reopen" | t }}</ds-button
-          >
-        </ds-stack>
-      }
     </ds-split-view>
   } @else {
     <ds-empty-state

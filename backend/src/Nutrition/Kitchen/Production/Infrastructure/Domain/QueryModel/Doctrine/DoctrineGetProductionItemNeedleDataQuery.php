@@ -35,6 +35,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
                 'i.name_snapshot',
                 'i.emoji_snapshot',
                 'i.checked_articles',
+                'i.checked_steps',
                 'i.created_at',
                 'i.updated_at',
                 'i.created_by_user_id',
@@ -74,7 +75,11 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
             servingsPlanned: (float) $row['servings_planned'],
             servingsCooked: (float) $row['servings_cooked'],
             recipeServings: max(1, (int) ($row['recipe_servings'] ?? 1)),
-            checkedArticleIds: $this->checkedArticleIds(row: $row),
+            checkedArticleIds: $this->decodeList(value: $row['checked_articles'] ?? null),
+            checkedStepPositions: array_map(
+                callback: static fn (mixed $position): int => (int) $position,
+                array: $this->decodeList(value: $row['checked_steps'] ?? null),
+            ),
             ingredients: $this->ingredients(needs: $needs),
             subRecipes: $this->subRecipes(needs: $needs),
             steps: $this->steps(recipeId: $row['recipe_id']),
@@ -101,13 +106,14 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
     }
 
     /**
-     * @param array<string, mixed> $row
+     * Rows written before a checklist column existed hold a JSON null, which decodes to null and
+     * not to a list.
      *
-     * @return string[]
+     * @return array<int, mixed>
      */
-    private function checkedArticleIds(array $row): array
+    private function decodeList(mixed $value): array
     {
-        $decoded = json_decode(json: (string) ($row['checked_articles'] ?? '[]'), associative: true);
+        $decoded = json_decode(json: (string) ($value ?? '[]'), associative: true);
 
         return is_array(value: $decoded) ? array_values(array: $decoded) : [];
     }

@@ -13,6 +13,7 @@ services:
   Nutrition\Kitchen\Production\Domain\QueryModel\FinishProductionNeedleDataQuery:
     class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineFinishProductionNeedleDataQuery
     arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
       $ingredientResolver: '@Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver'
 
   Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionNeedleDataQuery:

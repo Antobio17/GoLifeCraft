@@ -8,11 +8,13 @@ export class CheckProductionItemService {
     productionId: string,
     itemId: string,
     articleIds: string[],
+    stepPositions: number[],
   ): Observable<void> {
     return this.checkProductionItemPort.checkProductionItem(
       productionId,
       itemId,
       articleIds,
+      stepPositions,
     );
   }
 }

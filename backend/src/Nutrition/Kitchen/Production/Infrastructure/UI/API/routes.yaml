@@ -33,16 +33,6 @@ get_production_item:
   methods: [GET]
   controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionItemController
 
-finish_production:
-  path: /api/v1/nutrition/kitchen/productions/{productionId}/finish
-  methods: [PUT]
-  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\FinishProductionController
-
-reopen_production:
-  path: /api/v1/nutrition/kitchen/productions/{productionId}/reopen
-  methods: [PUT]
-  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ReopenProductionController
-
 get_production:
   path: /api/v1/nutrition/kitchen/productions/{productionId}
   methods: [GET]

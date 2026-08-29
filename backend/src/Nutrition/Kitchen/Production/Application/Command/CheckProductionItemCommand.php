@@ -8,11 +8,13 @@ final readonly class CheckProductionItemCommand implements Command
 {
     /**
      * @param string[] $articleIds
+     * @param int[]    $stepPositions
      */
     public function __construct(
         public string $productionId,
         public string $itemId,
         public array $articleIds,
+        public array $stepPositions,
         public string $checkedByUserId,
     ) {
     }

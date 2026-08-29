@@ -6,13 +6,6 @@ services:
     tags:
       - { name: controller.service_arguments }
 
-  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\FinishProductionController:
-    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\FinishProductionController
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: controller.service_arguments }
-
   Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\CheckProductionItemController:
     class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\CheckProductionItemController
     arguments:
@@ -22,13 +15,6 @@ services:
 
   Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\UncookProductionItemController:
     class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\UncookProductionItemController
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: controller.service_arguments }
-
-  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ReopenProductionController:
-    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ReopenProductionController
     arguments:
       $messageBus: '@messenger.bus.default'
     tags:

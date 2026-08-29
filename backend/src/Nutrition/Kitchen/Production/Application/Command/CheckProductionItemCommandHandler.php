@@ -23,9 +23,10 @@ final readonly class CheckProductionItemCommandHandler
             throw CookProductionItemException::productionNotFound(productionId: $command->productionId);
         }
 
-        $production->checkItemIngredients(
+        $production->checkItem(
             itemId: $command->itemId,
             articleIds: $command->articleIds,
+            stepPositions: $command->stepPositions,
             checkedByUserId: $command->checkedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
