@@ -31,7 +31,8 @@
       [text]="'getWorkouts.empty.text' | t"
     />
   } @else {
-    <ds-grid dsReveal="children"
+    <ds-grid
+      dsReveal="children"
       [minColumn]="'16.25rem'"
       [gap]="'var(--ds-space-2)'"
       [tabletColumns]="2"
@@ -83,5 +84,28 @@
         </ds-card>
       }
     </ds-grid>
+
+    @if (loadingMore()) {
+      <ds-skeleton-list
+        [count]="2"
+        [columns]="null"
+        minColumn="16.25rem"
+        [tabletColumns]="2"
+        [gap]="'var(--ds-space-2)'"
+        radius="var(--ds-radius-xl)"
+        padding="var(--ds-space-3)"
+        [alignTop]="true"
+        titleWidth="56%"
+        metaWidth="46%"
+        headTrailing="4rem"
+        [progress]="true"
+        [footItems]="2"
+      />
+    }
+
+    <ds-infinite-scroll
+      [disabled]="loadingMore() || !hasMore()"
+      (reached)="loadMore()"
+    />
   }
 </ds-page-wrapper>

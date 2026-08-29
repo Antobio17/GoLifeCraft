@@ -1,4 +1,5 @@
-import { Component, computed, inject } from "@angular/core";
+import { Component, computed, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Observable } from "rxjs";
 import { GetWorkoutsService } from "@gym/training/workout/application/services/get-workouts.service";
 import {
@@ -19,6 +20,7 @@ import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrast
 import { MetaItemComponent } from "@shared/design-system/meta-item/infrastructure/components/meta-item.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -54,13 +56,21 @@ interface WorkoutRow {
     MetaItemComponent,
     EmptyStateComponent,
     SkeletonListComponent,
+    InfiniteScrollComponent,
   ],
 })
 export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
+  private static readonly PAGE_SIZE = 20;
+
   private getWorkoutsService = inject(GetWorkoutsService);
 
   protected readonly modulePath = "gym/training/workout";
   protected readonly storageKey = "pageSize_workouts";
+  protected override readonly appendsPages = true;
+
+  loadingMore = signal(false);
+
+  hasMore = computed(() => this.items().length < this.totalItems());
 
   headerSubtitle = computed(
     () => `${this.totalItems()} ${this.t("getWorkouts.subtitle")}`,
@@ -79,7 +89,8 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
   );
 
   protected configureList(): void {
-    this.pageSize.set(50);
+    this.currentPage.set(1);
+    this.pageSize.set(GetWorkoutsComponent.PAGE_SIZE);
   }
 
   protected fetch(
@@ -87,6 +98,25 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
     pageSize: number,
   ): Observable<PagedResult<Workout>> {
     return this.getWorkoutsService.getWorkouts(page, pageSize);
+  }
+
+  loadMore(): void {
+    if (this.loading() || this.loadingMore() || !this.hasMore()) return;
+
+    const nextPage = this.currentPage() + 1;
+    this.loadingMore.set(true);
+
+    this.fetch(nextPage, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.currentPage.set(nextPage);
+          this.items.update((current) => [...current, ...response.data]);
+          this.totalItems.set(response.meta.total);
+          this.loadingMore.set(false);
+        },
+        error: () => this.loadingMore.set(false),
+      });
   }
 
   private ratioLabel(attributes: WorkoutListAttributes): string {
