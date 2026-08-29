@@ -38,8 +38,6 @@
 .summary {
   width: 100%;
   box-sizing: border-box;
-  position: sticky;
-  bottom: calc(var(--ds-app-bottom-nav-height, 0px) + var(--ds-space-3));
   background: var(--ds-surface-inset);
   border: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-xl);

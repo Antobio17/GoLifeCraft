@@ -264,9 +264,23 @@
   border-color: var(--ds-border);
 }
 
+/* The label stays in place and only turns invisible: hiding it outright made the button shrink
+   the moment you pressed it, which reads as the layout jumping under your finger. */
 .ds-btn--loading {
   pointer-events: none;
-  opacity: 0.55;
+  position: relative;
+}
+
+.ds-btn--loading .ds-btn__content {
+  visibility: hidden;
+}
+
+.ds-btn--loading .ds-btn__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
 }
 
 .ds-btn--full {

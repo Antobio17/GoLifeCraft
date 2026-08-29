@@ -8,11 +8,11 @@
   [attr.aria-expanded]="expanded === null ? null : expanded"
   (click)="handleClick()"
 >
+  @if (loading) {
+    <span class="ds-btn__spinner"></span>
+  }
   <span class="ds-btn__content">
-    @if (loading) {
-      <span class="ds-btn__spinner"></span>
-    }
-    @if (icon && !loading) {
+    @if (icon) {
       <ds-icon [name]="icon" [size]="resolvedIconSize" [stroke]="2.75" />
     }
     <span class="ds-btn__label"><ng-content></ng-content></span>
