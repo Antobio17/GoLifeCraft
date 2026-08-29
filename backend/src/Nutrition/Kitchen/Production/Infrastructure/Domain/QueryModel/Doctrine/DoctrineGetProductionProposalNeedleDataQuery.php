@@ -9,6 +9,7 @@ use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\GetProductionProposalResult;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalCoveredItem;
+use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalPackCandidate;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalPackHint;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalToCookItem;
 use Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionProposalNeedleDataQuery;
@@ -34,8 +35,12 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         $requiredBy = [];
 
         foreach (array_reverse(array: $order) as $recipeId) {
-            $available = ($stock[$recipeId] ?? 0.0) + ($inProduction[$recipeId] ?? 0.0);
-            $deficit = round(num: ($demand[$recipeId] ?? 0.0) - $available, precision: 2);
+            $deficit = $this->deficitOf(
+                demand: $demand[$recipeId] ?? 0.0,
+                recipeId: $recipeId,
+                stock: $stock,
+                inProduction: $inProduction,
+            );
 
             if ($deficit <= 0.0) {
                 continue;
@@ -44,7 +49,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
             foreach ($this->ingredientResolver->resolveDirect(recipeId: $recipeId, servings: $deficit)->subRecipes as $subRecipe) {
                 $demand[$subRecipe->recipeId] = round(
                     num: ($demand[$subRecipe->recipeId] ?? 0.0) + $subRecipe->servings,
-                    precision: 2,
+                    precision: ProductionItem::SERVINGS_PRECISION,
                 );
                 $requiredBy[$subRecipe->recipeId][] = $recipes[$recipeId]['name'] ?? '';
             }
@@ -66,8 +71,12 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
                 continue;
             }
 
-            $available = ($stock[$recipeId] ?? 0.0) + ($inProduction[$recipeId] ?? 0.0);
-            $deficit = round(num: $servings - $available, precision: 2);
+            $deficit = $this->deficitOf(
+                demand: $servings,
+                recipeId: $recipeId,
+                stock: $stock,
+                inProduction: $inProduction,
+            );
 
             if ($deficit <= 0.0) {
                 $covered[] = new ProposalCoveredItem(
@@ -108,6 +117,17 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
             toCook: $toCook,
             covered: $covered,
         );
+    }
+
+    /**
+     * @param array<string, float> $stock
+     * @param array<string, float> $inProduction
+     */
+    private function deficitOf(float $demand, string $recipeId, array $stock, array $inProduction): float
+    {
+        $available = ($stock[$recipeId] ?? 0.0) + ($inProduction[$recipeId] ?? 0.0);
+
+        return round(num: $demand - $available, precision: ProductionItem::SERVINGS_PRECISION);
     }
 
     /**
@@ -168,7 +188,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         $demand = [];
 
         foreach ($rows as $row) {
-            $demand[$row['ref_id']] = round(num: (float) $row['servings'], precision: 2);
+            $demand[$row['ref_id']] = round(num: (float) $row['servings'], precision: ProductionItem::SERVINGS_PRECISION);
         }
 
         return $demand;
@@ -230,7 +250,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         $planned = [];
 
         foreach ($rows as $row) {
-            $planned[$row['recipe_id']] = round(num: (float) $row['servings'], precision: 2);
+            $planned[$row['recipe_id']] = round(num: (float) $row['servings'], precision: ProductionItem::SERVINGS_PRECISION);
         }
 
         return $planned;
@@ -277,6 +297,34 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
      */
     private function packHint(string $recipeId, float $deficit, array $packs): ?ProposalPackHint
     {
+        $candidate = $this->bestPackCandidate(recipeId: $recipeId, deficit: $deficit, packs: $packs);
+
+        if (null === $candidate) {
+            return null;
+        }
+
+        $suggestedServings = floor(num: $deficit * $candidate->uplift);
+
+        if ($suggestedServings <= $deficit) {
+            return null;
+        }
+
+        return new ProposalPackHint(
+            articleId: $candidate->ingredient->articleId,
+            articleName: $candidate->ingredient->name,
+            packUnit: $candidate->packUnit,
+            packQuantity: $candidate->packQuantity,
+            unit: $candidate->ingredient->baseUnit,
+            neededQuantity: $candidate->ingredient->baseQuantity,
+            suggestedServings: $suggestedServings,
+        );
+    }
+
+    /**
+     * @param array<string, array{unit: string, quantity: float}> $packs
+     */
+    private function bestPackCandidate(string $recipeId, float $deficit, array $packs): ?ProposalPackCandidate
+    {
         $candidate = null;
 
         foreach ($this->ingredientResolver->resolve(recipeId: $recipeId, servings: $deficit) as $ingredient) {
@@ -292,40 +340,19 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
                 continue;
             }
 
-            if (null !== $candidate && $candidate['ingredient']->baseQuantity >= $ingredient->baseQuantity) {
+            if (null !== $candidate && $candidate->ingredient->baseQuantity >= $ingredient->baseQuantity) {
                 continue;
             }
 
-            $candidate = ['ingredient' => $ingredient, 'pack' => $pack, 'uplift' => $uplift];
+            $candidate = new ProposalPackCandidate(
+                ingredient: $ingredient,
+                packUnit: $pack['unit'],
+                packQuantity: $pack['quantity'],
+                uplift: $uplift,
+            );
         }
 
-        if (null === $candidate) {
-            return null;
-        }
-
-        return $this->toPackHint(candidate: $candidate, deficit: $deficit);
-    }
-
-    /**
-     * @param array{ingredient: \Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionIngredient, pack: array{unit: string, quantity: float}, uplift: float} $candidate
-     */
-    private function toPackHint(array $candidate, float $deficit): ?ProposalPackHint
-    {
-        $suggestedServings = floor(num: $deficit * $candidate['uplift']);
-
-        if ($suggestedServings <= $deficit) {
-            return null;
-        }
-
-        return new ProposalPackHint(
-            articleId: $candidate['ingredient']->articleId,
-            articleName: $candidate['ingredient']->name,
-            packUnit: $candidate['pack']['unit'],
-            packQuantity: $candidate['pack']['quantity'],
-            unit: $candidate['ingredient']->baseUnit,
-            neededQuantity: $candidate['ingredient']->baseQuantity,
-            suggestedServings: $suggestedServings,
-        );
+        return $candidate;
     }
 
     /**
