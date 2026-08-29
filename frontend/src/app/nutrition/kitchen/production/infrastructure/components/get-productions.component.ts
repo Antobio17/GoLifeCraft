@@ -7,7 +7,7 @@ import { TranslationService } from "@shared/i18n/application/services/translatio
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
@@ -30,7 +30,7 @@ import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/pr
     RevealDirective,
     PageWrapperComponent,
     StackComponent,
-    HeadingComponent,
+    ScreenHeaderComponent,
     TextComponent,
     ButtonComponent,
     CardComponent,

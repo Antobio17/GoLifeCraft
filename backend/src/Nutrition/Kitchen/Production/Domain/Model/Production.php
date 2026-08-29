@@ -11,8 +11,6 @@ use Nutrition\Kitchen\Production\Domain\Event\ProductionItemUncooked;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionReopened;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionStarted;
 use Nutrition\Kitchen\Production\Domain\Exception\CookProductionItemException;
-use Nutrition\Kitchen\Production\Domain\Exception\FinishProductionException;
-use Nutrition\Kitchen\Production\Domain\Exception\ReopenProductionException;
 use Nutrition\Kitchen\Production\Domain\Exception\StartProductionException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -83,13 +81,10 @@ class Production extends GenericAggregate
         float $servingsCooked,
         array $consumedArticles,
         array $consumedRecipes,
+        array $stepPositions,
         string $cookedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
-        if ($this->isDone()) {
-            throw CookProductionItemException::productionAlreadyFinished(productionId: $this->id);
-        }
-
         $item = $this->item(itemId: $itemId);
 
         if (null === $item) {
@@ -106,7 +101,12 @@ class Production extends GenericAggregate
 
         $now = $dateTimeGenerator->now();
 
-        $item->cook(servingsCooked: $servingsCooked, cookedByUserId: $cookedByUserId, now: $now);
+        $item->cook(
+            servingsCooked: $servingsCooked,
+            stepPositions: $stepPositions,
+            cookedByUserId: $cookedByUserId,
+            now: $now,
+        );
         $this->stampUpdate(userId: $cookedByUserId, now: $now);
 
         $this->record(event: new ProductionItemCooked(
@@ -149,10 +149,6 @@ class Production extends GenericAggregate
         string $uncookedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
-        if ($this->isDone()) {
-            throw CookProductionItemException::productionAlreadyFinished(productionId: $this->id);
-        }
-
         $item = $this->item(itemId: $itemId);
 
         if (null === $item) {
@@ -187,6 +183,12 @@ class Production extends GenericAggregate
             createdByUserId: $this->createdByUserId,
             updatedByUserId: $uncookedByUserId,
         ));
+
+        if (!$this->isDone()) {
+            return;
+        }
+
+        $this->reopen(reopenedByUserId: $uncookedByUserId, now: $now);
     }
 
     /**
@@ -194,17 +196,15 @@ class Production extends GenericAggregate
      * across screens and devices, and what you ticked has to still be there when you come back.
      *
      * @param string[] $articleIds
+     * @param int[]    $stepPositions
      */
-    public function checkItemIngredients(
+    public function checkItem(
         string $itemId,
         array $articleIds,
+        array $stepPositions,
         string $checkedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
-        if ($this->isDone()) {
-            throw CookProductionItemException::productionAlreadyFinished(productionId: $this->id);
-        }
-
         $item = $this->item(itemId: $itemId);
 
         if (null === $item) {
@@ -217,7 +217,12 @@ class Production extends GenericAggregate
 
         $now = $dateTimeGenerator->now();
 
-        $item->check(articleIds: $articleIds, checkedByUserId: $checkedByUserId, now: $now);
+        $item->check(
+            articleIds: $articleIds,
+            stepPositions: $stepPositions,
+            checkedByUserId: $checkedByUserId,
+            now: $now,
+        );
         $this->stampUpdate(userId: $checkedByUserId, now: $now);
 
         $this->record(event: new ProductionItemChecked(
@@ -226,48 +231,11 @@ class Production extends GenericAggregate
             itemId: $item->id,
             recipeId: $item->recipeId,
             checkedArticleIds: $item->checkedArticleIds,
+            checkedStepPositions: $item->checkedStepPositions,
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
             updatedByUserId: $checkedByUserId,
-        ));
-    }
-
-    public function finish(string $finishedByUserId, DateTimeGenerator $dateTimeGenerator): void
-    {
-        if (self::STATUS_DONE === $this->status) {
-            throw FinishProductionException::productionAlreadyFinished(productionId: $this->id);
-        }
-
-        $this->close(finishedByUserId: $finishedByUserId, now: $dateTimeGenerator->now());
-    }
-
-    /**
-     * Closing a batch is a gesture, not an irreversible fact: if you called it finished too soon,
-     * this puts it back on the stove without touching anything already cooked.
-     */
-    public function reopen(string $reopenedByUserId, DateTimeGenerator $dateTimeGenerator): void
-    {
-        if (!$this->isDone()) {
-            throw ReopenProductionException::productionNotFinished(productionId: $this->id);
-        }
-
-        $now = $dateTimeGenerator->now();
-
-        $this->status = self::STATUS_COOKING;
-        $this->stampUpdate(userId: $reopenedByUserId, now: $now);
-
-        $this->record(event: new ProductionReopened(
-            aggregateId: $this->id,
-            occurredOn: $now,
-            fromDate: $this->fromDate,
-            toDate: $this->toDate,
-            status: $this->status,
-            items: $this->recordedItems(),
-            createdAt: $this->createdAt,
-            updatedAt: $now,
-            createdByUserId: $this->createdByUserId,
-            updatedByUserId: $reopenedByUserId,
         ));
     }
 
@@ -315,6 +283,29 @@ class Production extends GenericAggregate
             callback: static fn (ProductionItem $item): array => $item->toRecordedItem(),
             array: array_values(array: $this->items),
         );
+    }
+
+    /**
+     * The batch has no state of its own to manage: it is finished when every recipe in it is, and
+     * unticking one takes it back to the stove. Nobody has to remember to close or reopen it.
+     */
+    private function reopen(string $reopenedByUserId, \DateTime $now): void
+    {
+        $this->status = self::STATUS_COOKING;
+        $this->stampUpdate(userId: $reopenedByUserId, now: $now);
+
+        $this->record(event: new ProductionReopened(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            status: $this->status,
+            items: $this->recordedItems(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $reopenedByUserId,
+        ));
     }
 
     private function close(string $finishedByUserId, \DateTime $now): void

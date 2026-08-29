@@ -11,6 +11,7 @@ final class GetProductionItemResult extends QueryAggregateResult
      * @param ProductionSubRecipeView[]  $subRecipes
      * @param ProductionStepView[]       $steps
      * @param string[]                   $checkedArticleIds
+     * @param int[]                      $checkedStepPositions
      */
     public function __construct(
         string $id,
@@ -25,6 +26,7 @@ final class GetProductionItemResult extends QueryAggregateResult
         public readonly float $servingsCooked,
         public readonly int $recipeServings,
         public readonly array $checkedArticleIds,
+        public readonly array $checkedStepPositions,
         public readonly array $ingredients,
         public readonly array $subRecipes,
         public readonly array $steps,

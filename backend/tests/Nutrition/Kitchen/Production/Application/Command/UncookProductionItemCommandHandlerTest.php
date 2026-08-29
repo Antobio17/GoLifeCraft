@@ -130,18 +130,20 @@ final class UncookProductionItemCommandHandlerTest extends TestCase
         ));
     }
 
-    public function testItThrowsWhenTheBatchIsAlreadyFinished(): void
+    public function testUntickingARecipePutsTheFinishedBatchBackOnTheStove(): void
     {
         $this->cook(itemId: $this->itemId(position: 1), servings: 2.0);
         $this->cook(itemId: $this->itemId(position: 2), servings: 3.0);
 
-        $this->expectException(exception: CookProductionItemException::class);
+        $this->assertTrue(condition: $this->production->isDone());
 
         ($this->handler)(new UncookProductionItemCommand(
             productionId: 'production-1',
             itemId: $this->itemId(position: 1),
             uncookedByUserId: 'god-user-id',
         ));
+
+        $this->assertFalse(condition: $this->production->isDone());
     }
 
     public function testItThrowsWhenTheProductionDoesNotExist(): void

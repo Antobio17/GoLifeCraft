@@ -13,10 +13,11 @@ export class HttpCheckProductionItemAdapter extends CheckProductionItemPort {
     productionId: string,
     itemId: string,
     articleIds: string[],
+    stepPositions: number[],
   ): Observable<void> {
     return this.http.put<void>(
       `${this.apiUrl}/${productionId}/items/${itemId}/checks`,
-      { articleIds },
+      { articleIds, stepPositions },
     );
   }
 }

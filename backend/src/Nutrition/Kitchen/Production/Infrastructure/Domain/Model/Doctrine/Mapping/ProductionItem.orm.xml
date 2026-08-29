@@ -20,6 +20,7 @@
     <field name="nameSnapshot" type="string" column="name_snapshot" length="255"/>
     <field name="emojiSnapshot" type="string" column="emoji_snapshot" length="16"/>
     <field name="checkedArticleIds" type="json" column="checked_articles"/>
+    <field name="checkedStepPositions" type="json" column="checked_steps"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

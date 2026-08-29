@@ -83,11 +83,15 @@ final class DoctrineProductionRepository extends EntityRepository implements Pro
     private function withChecklist(array $items): array
     {
         foreach ($items as $item) {
-            if (isset($item->checkedArticleIds)) {
+            if (!isset($item->checkedArticleIds)) {
+                $item->checkedArticleIds = [];
+            }
+
+            if (isset($item->checkedStepPositions)) {
                 continue;
             }
 
-            $item->checkedArticleIds = [];
+            $item->checkedStepPositions = [];
         }
 
         return $items;

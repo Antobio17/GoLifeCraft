@@ -8,6 +8,7 @@ final readonly class ProductionItemChecked extends DomainEvent
 {
     /**
      * @param string[] $checkedArticleIds
+     * @param int[]    $checkedStepPositions
      */
     public function __construct(
         string $aggregateId,
@@ -15,6 +16,7 @@ final readonly class ProductionItemChecked extends DomainEvent
         public string $itemId,
         public string $recipeId,
         public array $checkedArticleIds,
+        public array $checkedStepPositions,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

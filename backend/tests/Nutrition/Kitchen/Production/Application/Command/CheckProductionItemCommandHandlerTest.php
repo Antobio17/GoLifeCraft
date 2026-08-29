@@ -62,6 +62,7 @@ final class CheckProductionItemCommandHandlerTest extends TestCase
             productionId: 'production-1',
             itemId: $this->itemId(),
             articleIds: ['article-1', 'article-2'],
+            stepPositions: [],
             checkedByUserId: 'god-user-id',
         ));
 
@@ -81,12 +82,14 @@ final class CheckProductionItemCommandHandlerTest extends TestCase
             productionId: 'production-1',
             itemId: $this->itemId(),
             articleIds: ['article-1', 'article-2'],
+            stepPositions: [],
             checkedByUserId: 'god-user-id',
         ));
         ($this->handler)(new CheckProductionItemCommand(
             productionId: 'production-1',
             itemId: $this->itemId(),
             articleIds: ['article-2', 'article-2'],
+            stepPositions: [],
             checkedByUserId: 'god-user-id',
         ));
 
@@ -103,6 +106,7 @@ final class CheckProductionItemCommandHandlerTest extends TestCase
             servingsCooked: 2.0,
             consumedArticles: [],
             consumedRecipes: [],
+            stepPositions: [],
             cookedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -113,6 +117,7 @@ final class CheckProductionItemCommandHandlerTest extends TestCase
             productionId: 'production-1',
             itemId: $this->itemId(),
             articleIds: ['article-1'],
+            stepPositions: [],
             checkedByUserId: 'god-user-id',
         ));
     }

@@ -31,6 +31,7 @@ final class CheckProductionItemController
                 productionId: $request->attributes->get(key: 'productionId'),
                 itemId: $request->attributes->get(key: 'itemId'),
                 articleIds: $this->articleIds(request: $request),
+                stepPositions: $this->stepPositions(request: $request),
                 checkedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 
@@ -48,6 +49,17 @@ final class CheckProductionItemController
                 status: Response::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    /**
+     * @return int[]
+     */
+    private function stepPositions(Request $request): array
+    {
+        return array_values(array: array_map(
+            callback: static fn (mixed $position): int => (int) $position,
+            array: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'stepPositions', required: false) ?? [],
+        ));
     }
 
     /**

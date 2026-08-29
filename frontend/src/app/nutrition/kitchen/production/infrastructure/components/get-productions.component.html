@@ -3,29 +3,20 @@
   [wideMaxWidth]="'60rem'"
   [gap]="'var(--ds-space-3)'"
 >
-  <ds-stack
-    direction="row"
-    justify="between"
-    align="center"
-    [gap]="'var(--ds-space-3)'"
+  <ds-screen-header
+    [title]="'getProductions.title' | t"
+    [subtitle]="'getProductions.subtitle' | t"
   >
-    <ds-stack [gap]="'2px'" [grow]="true">
-      <ds-heading [level]="2" size="xl">{{
-        "getProductions.title" | t
-      }}</ds-heading>
-      <ds-text variant="meta">{{ "getProductions.subtitle" | t }}</ds-text>
-    </ds-stack>
-
     <ds-button
+      slot="actions"
       variant="primary"
-      size="md"
+      size="icon-lg"
       icon="plus"
-      [iconOnlyMobile]="true"
+      [iconSize]="19"
       [ariaLabel]="'getProductions.create' | t"
       (clicked)="onCreate()"
-      >{{ "getProductions.create" | t }}</ds-button
-    >
-  </ds-stack>
+    />
+  </ds-screen-header>
 
   @if (loading()) {
     <ds-skeleton-list

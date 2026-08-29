@@ -61,7 +61,6 @@
     "recipes": "Recetas del lote",
     "summary": "{{recipes}} recetas · {{servings}} raciones",
     "pending": "{{pending}} por cocinar",
-    "finish": "Terminar producción",
     "discard": "Descartar producción",
     "status": {
       "cooking": "Cocinando",
@@ -71,7 +70,8 @@
       "planned": "{{servings}} raciones planificadas",
       "cooked": "{{servings}} raciones hechas",
       "requiredBy": "Para {{parents}}",
-      "fromDiary": "Del diario"
+      "fromDiary": "Del diario",
+      "done": "Listo"
     },
     "discardModal": {
       "title": "Descartar producción",
@@ -84,9 +84,7 @@
     "error": {
       "title": "No hemos encontrado esta producción",
       "text": "Puede que se haya descartado desde otro dispositivo."
-    },
-    "reopen": "Volver a ponerla en marcha",
-    "locked": "Terminada: para tocar algo hay que volver a ponerla en marcha."
+    }
   },
   "getProductionRecipe": {
     "back": "Volver al lote",
@@ -95,7 +93,6 @@
       "pending": "Cocinando",
       "done": "Hecha"
     },
-    "recipeServings": "Receta para {{servings}}",
     "servingsLabel": "Raciones que cocinas",
     "servingsHint": "Ajústalo si el sobrante no era el que creías",
     "servingsChanged": "El lote planificaba {{servings}}",
@@ -106,7 +103,7 @@
     "step": "Paso {{position}}",
     "minutes": "{{minutes}} min",
     "noSteps": "Esta receta no tiene pasos. Añádelos en la receta.",
-    "submit": "Marcar como hecha",
+    "submit": "Terminar",
     "error": {
       "title": "No hemos encontrado esta receta",
       "text": "Puede que el lote se haya descartado desde otro dispositivo."
@@ -124,9 +121,6 @@
       "not": {
         "exist": "Esa producción ya no existe"
       }
-    },
-    "already": {
-      "finished": "Esa producción ya estaba terminada"
     },
     "needs": {
       "items": "Añade al menos una receta a la producción"
@@ -159,9 +153,6 @@
       "not": {
         "cooked": "Esa receta todavía no está cocinada"
       }
-    },
-    "not": {
-      "finished": "Esa producción sigue en marcha"
     }
   }
 }

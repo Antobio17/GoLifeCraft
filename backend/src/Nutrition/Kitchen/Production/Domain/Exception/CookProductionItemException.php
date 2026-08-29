@@ -15,15 +15,6 @@ final class CookProductionItemException extends BaseException
         );
     }
 
-    public static function productionAlreadyFinished(string $productionId): self
-    {
-        return new static(
-            title: 'Production is already finished.',
-            keyTranslation: 'production.already.finished',
-            details: ['productionId' => $productionId]
-        );
-    }
-
     public static function itemNotFound(string $productionId, string $itemId): self
     {
         return new static(
