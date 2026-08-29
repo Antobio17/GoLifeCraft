@@ -1,4 +1,12 @@
 services:
+  Economy\Finance\Recurrence\Application\Query\CountPendingFinanceRecurrencesQueryHandler:
+    class: Economy\Finance\Recurrence\Application\Query\CountPendingFinanceRecurrencesQueryHandler
+    arguments:
+      $needleDataQuery: '@Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Economy\Finance\Recurrence\Application\Query\GetFinanceRecurrencesQueryHandler:
     class: Economy\Finance\Recurrence\Application\Query\GetFinanceRecurrencesQueryHandler
     arguments:

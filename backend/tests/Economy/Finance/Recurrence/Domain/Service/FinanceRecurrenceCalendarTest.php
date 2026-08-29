@@ -99,4 +99,40 @@ final class FinanceRecurrenceCalendarTest extends TestCase
             ),
         );
     }
+
+    public function testItBooksEveryPendingMonthOnAnAutomaticRun(): void
+    {
+        $this->assertSame(
+            expected: ['2026-06', '2026-07', '2026-08'],
+            actual: FinanceRecurrenceCalendar::monthsToBook(
+                months: ['2026-06', '2026-07', '2026-08'],
+                today: '2026-08-25',
+                onlyCurrentMonth: false,
+            ),
+        );
+    }
+
+    public function testItBooksOnlyTheCurrentMonthOnAManualRun(): void
+    {
+        $this->assertSame(
+            expected: ['2026-08'],
+            actual: FinanceRecurrenceCalendar::monthsToBook(
+                months: ['2026-06', '2026-07', '2026-08'],
+                today: '2026-08-25',
+                onlyCurrentMonth: true,
+            ),
+        );
+    }
+
+    public function testItBooksNothingWhenTheCurrentMonthIsNotPending(): void
+    {
+        $this->assertSame(
+            expected: [],
+            actual: FinanceRecurrenceCalendar::monthsToBook(
+                months: ['2026-06', '2026-07'],
+                today: '2026-08-25',
+                onlyCurrentMonth: true,
+            ),
+        );
+    }
 }

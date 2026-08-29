@@ -2,9 +2,9 @@
 
 namespace App\Tests\Economy\Finance\Recurrence\Application\Command;
 
+use Economy\Finance\Recurrence\Application\Command\GenerateFinanceRecurrenceCommand;
 use Economy\Finance\Recurrence\Application\Command\GeneratePendingFinanceRecurrencesCommand;
 use Economy\Finance\Recurrence\Application\Command\GeneratePendingFinanceRecurrencesCommandHandler;
-use Economy\Finance\Recurrence\Application\Command\GenerateFinanceRecurrenceCommand;
 use Economy\Finance\Recurrence\Domain\QueryModel\Dto\PendingFinanceRecurrence;
 use Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
@@ -26,9 +26,8 @@ final class GeneratePendingFinanceRecurrencesCommandHandlerTest extends TestCase
             dateTimeGenerator: new DateTimeGenerator(),
         );
 
-        $booked = $handler(new GeneratePendingFinanceRecurrencesCommand(today: '2026-08-25'));
+        $handler(new GeneratePendingFinanceRecurrencesCommand(today: '2026-08-25'));
 
-        $this->assertSame(expected: 3, actual: $booked);
         $this->assertCount(expectedCount: 3, haystack: $messageBus->dispatched);
         $this->assertSame(expected: 'recurrence-1', actual: $messageBus->dispatched[0]->financeRecurrenceId);
         $this->assertSame(expected: '2026-07', actual: $messageBus->dispatched[0]->month);
@@ -49,9 +48,8 @@ final class GeneratePendingFinanceRecurrencesCommandHandlerTest extends TestCase
             dateTimeGenerator: new DateTimeGenerator(),
         );
 
-        $booked = $handler(new GeneratePendingFinanceRecurrencesCommand(today: '2026-08-25', onlyCurrentMonth: true));
+        $handler(new GeneratePendingFinanceRecurrencesCommand(today: '2026-08-25', onlyCurrentMonth: true));
 
-        $this->assertSame(expected: 1, actual: $booked);
         $this->assertCount(expectedCount: 1, haystack: $messageBus->dispatched);
         $this->assertSame(expected: 'recurrence-1', actual: $messageBus->dispatched[0]->financeRecurrenceId);
         $this->assertSame(expected: '2026-08', actual: $messageBus->dispatched[0]->month);
@@ -66,9 +64,8 @@ final class GeneratePendingFinanceRecurrencesCommandHandlerTest extends TestCase
             dateTimeGenerator: new DateTimeGenerator(),
         );
 
-        $booked = $handler(new GeneratePendingFinanceRecurrencesCommand(today: '2026-08-25'));
+        $handler(new GeneratePendingFinanceRecurrencesCommand(today: '2026-08-25'));
 
-        $this->assertSame(expected: 0, actual: $booked);
         $this->assertCount(expectedCount: 0, haystack: $messageBus->dispatched);
     }
 

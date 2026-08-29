@@ -2,7 +2,6 @@
 
 namespace Economy\Finance\Recurrence\Application\Command;
 
-use Economy\Finance\Recurrence\Domain\QueryModel\Dto\PendingFinanceRecurrence;
 use Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery;
 use Economy\Finance\Recurrence\Domain\Service\FinanceRecurrenceCalendar;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -17,14 +16,13 @@ final readonly class GeneratePendingFinanceRecurrencesCommandHandler
     ) {
     }
 
-    public function __invoke(GeneratePendingFinanceRecurrencesCommand $command): int
+    public function __invoke(GeneratePendingFinanceRecurrencesCommand $command): void
     {
         $today = $command->today ?? $this->dateTimeGenerator->now()->format(format: 'Y-m-d');
-        $booked = 0;
 
         foreach ($this->needleDataQuery->findPending(today: $today) as $pendingRecurrence) {
-            $months = $this->monthsToBook(
-                pendingRecurrence: $pendingRecurrence,
+            $months = FinanceRecurrenceCalendar::monthsToBook(
+                months: $pendingRecurrence->months,
                 today: $today,
                 onlyCurrentMonth: $command->onlyCurrentMonth,
             );
@@ -35,30 +33,7 @@ final readonly class GeneratePendingFinanceRecurrencesCommandHandler
                     month: $month,
                     today: $today,
                 ));
-                ++$booked;
             }
         }
-
-        return $booked;
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function monthsToBook(
-        PendingFinanceRecurrence $pendingRecurrence,
-        string $today,
-        bool $onlyCurrentMonth,
-    ): array {
-        if (!$onlyCurrentMonth) {
-            return $pendingRecurrence->months;
-        }
-
-        $currentMonth = FinanceRecurrenceCalendar::monthOf(date: $today);
-
-        return array_values(array_filter(
-            array: $pendingRecurrence->months,
-            callback: static fn (string $month): bool => $month === $currentMonth,
-        ));
     }
 }

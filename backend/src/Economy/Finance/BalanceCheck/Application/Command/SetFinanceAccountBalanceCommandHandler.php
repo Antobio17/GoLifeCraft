@@ -31,21 +31,13 @@ final readonly class SetFinanceAccountBalanceCommandHandler
             checkDate: $command->checkDate,
         );
 
-        $financeBalanceCheck = $this->resolveCheck(command: $command, amount: $amount);
-
-        $this->financeBalanceCheckRepository->save(financeBalanceCheck: $financeBalanceCheck);
-        $this->domainEventCollectorService->register(aggregate: $financeBalanceCheck);
-    }
-
-    private function resolveCheck(SetFinanceAccountBalanceCommand $command, float $amount): FinanceBalanceCheck
-    {
         $financeBalanceCheck = $this->financeBalanceCheckRepository->findByAccountIdAndCheckDate(
             accountId: $command->accountId,
             checkDate: $command->checkDate,
         );
 
         if (null === $financeBalanceCheck) {
-            return FinanceBalanceCheck::create(
+            $financeBalanceCheck = FinanceBalanceCheck::create(
                 id: $this->financeBalanceCheckRepository->nextId(),
                 accountId: $command->accountId,
                 checkDate: $command->checkDate,
@@ -54,6 +46,11 @@ final readonly class SetFinanceAccountBalanceCommandHandler
                 createdByUserId: $command->setByUserId,
                 dateTimeGenerator: $this->dateTimeGenerator,
             );
+
+            $this->financeBalanceCheckRepository->save(financeBalanceCheck: $financeBalanceCheck);
+            $this->domainEventCollectorService->register(aggregate: $financeBalanceCheck);
+
+            return;
         }
 
         $financeBalanceCheck->update(
@@ -64,7 +61,8 @@ final readonly class SetFinanceAccountBalanceCommandHandler
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 
-        return $financeBalanceCheck;
+        $this->financeBalanceCheckRepository->save(financeBalanceCheck: $financeBalanceCheck);
+        $this->domainEventCollectorService->register(aggregate: $financeBalanceCheck);
     }
 
     private function keepNote(string $incoming, string $current): string
