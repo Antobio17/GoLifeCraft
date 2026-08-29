@@ -6,32 +6,20 @@ services:
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.recipe.deleted' }
 
-  Nutrition\Pantry\RecipeStock\Application\Subscriber\IncreaseRecipeStockOnProductionItemCooked:
-    class: Nutrition\Pantry\RecipeStock\Application\Subscriber\IncreaseRecipeStockOnProductionItemCooked
+  Nutrition\Pantry\RecipeStock\Application\Subscriber\UpdateRecipeStockOnProductionItemCookChanged:
+    class: Nutrition\Pantry\RecipeStock\Application\Subscriber\UpdateRecipeStockOnProductionItemCookChanged
     arguments:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_cooked' }
-
-  Nutrition\Pantry\RecipeStock\Application\Subscriber\DecreaseRecipeStockOnProductionItemUncooked:
-    class: Nutrition\Pantry\RecipeStock\Application\Subscriber\DecreaseRecipeStockOnProductionItemUncooked
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_uncooked' }
 
-  Nutrition\Pantry\RecipeStock\Application\Subscriber\DecreaseRecipeStockOnProductionItemCooked:
-    class: Nutrition\Pantry\RecipeStock\Application\Subscriber\DecreaseRecipeStockOnProductionItemCooked
+  Nutrition\Pantry\RecipeStock\Application\Subscriber\UpdateSubRecipeStockOnProductionItemCookChanged:
+    class: Nutrition\Pantry\RecipeStock\Application\Subscriber\UpdateSubRecipeStockOnProductionItemCookChanged
     arguments:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_cooked' }
-
-  Nutrition\Pantry\RecipeStock\Application\Subscriber\IncreaseRecipeStockOnProductionItemUncooked:
-    class: Nutrition\Pantry\RecipeStock\Application\Subscriber\IncreaseRecipeStockOnProductionItemUncooked
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_uncooked' }
 
   Nutrition\Pantry\RecipeStock\Application\Subscriber\UpdateRecipeStockOnDiaryEntryConsumed:
