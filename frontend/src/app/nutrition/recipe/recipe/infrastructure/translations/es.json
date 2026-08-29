@@ -65,7 +65,7 @@
     "steps": "Pasos",
     "step": "Paso {{position}}",
     "minutes": "{{minutes}} min",
-    "noSteps": "Esta receta no tiene pasos. Añádelos aquí."
+    "noSteps": "Esta receta no tiene pasos."
   },
   "recipe": {
     "breadcrumb": {
