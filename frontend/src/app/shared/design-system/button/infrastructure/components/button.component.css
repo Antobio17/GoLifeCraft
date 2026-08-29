@@ -50,12 +50,14 @@
 }
 
 .ds-btn--icon,
+.ds-btn--icon-xs,
 .ds-btn--icon-sm,
 .ds-btn--icon-lg {
   padding: 0;
 }
 
 .ds-btn--icon .ds-btn__content,
+.ds-btn--icon-xs .ds-btn__content,
 .ds-btn--icon-sm .ds-btn__content,
 .ds-btn--icon-lg .ds-btn__content {
   gap: 0;
@@ -65,6 +67,13 @@
   width: 2rem;
   height: 2rem;
   border-radius: var(--ds-radius-md);
+}
+
+.ds-btn--icon-xs {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--ds-radius-md);
+  border-width: 1px;
 }
 
 .ds-btn--icon-sm {

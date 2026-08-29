@@ -7,5 +7,12 @@ export type ButtonVariant =
   | "link"
   | "outline"
   | "outline-danger";
-export type ButtonSize = "lg" | "md" | "sm" | "icon" | "icon-sm" | "icon-lg";
+export type ButtonSize =
+  | "lg"
+  | "md"
+  | "sm"
+  | "icon"
+  | "icon-xs"
+  | "icon-sm"
+  | "icon-lg";
 export type ButtonType = "button" | "submit" | "reset";

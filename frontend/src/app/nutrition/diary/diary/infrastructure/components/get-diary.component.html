@@ -143,9 +143,9 @@
                       ? 'soft'
                       : 'secondary'
                 "
-                size="icon-sm"
+                size="icon-xs"
                 [icon]="meal.partial ? 'minus' : 'check'"
-                [iconSize]="15"
+                [iconSize]="12"
                 [ariaLabel]="meal.consumeLabel"
                 (clicked)="
                   onConsumeMeal(meal.key, !meal.consumed && !meal.partial)

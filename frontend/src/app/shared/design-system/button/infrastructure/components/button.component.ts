@@ -35,6 +35,7 @@ export class ButtonComponent {
     md: 18,
     sm: 16,
     icon: 16,
+    "icon-xs": 13,
     "icon-sm": 16,
     "icon-lg": 20,
   };
