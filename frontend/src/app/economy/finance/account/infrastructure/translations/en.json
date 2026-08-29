@@ -38,6 +38,7 @@
   "getFinanceAccounts.check.notePlaceholder": "e.g. reconciled after payday",
   "getFinanceAccounts.check.save": "Save count",
   "getFinanceAccounts.check.remove": "Delete",
+  "getFinanceAccounts.check.removed": "Balance check of {{name}} removed",
   "getFinanceAccounts.check.drift": "Drift",
   "getFinanceAccounts.check.noDrift": "Matched the computed balance",
   "getFinanceAccounts.breadcrumb.list": "Accounts"

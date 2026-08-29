@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { UndoProvider } from "@shared/undo/infrastructure/providers/undo.provider";
 import { GetEconomyProviders } from "../providers/get-economy.providers";
 import { EconomyWriteProviders } from "../providers/economy-write.providers";
 import { FinanceAccountProviders } from "@economy/finance/account/infrastructure/providers/finance-account.providers";
@@ -20,6 +21,7 @@ export const ECONOMY_ROUTES: Routes = [
     children: [
       {
         path: "",
+        providers: [...UndoProvider.getProviders()],
         loadComponent: () =>
           import("../components/get-economy.component").then(
             (m) => m.GetEconomyComponent,
@@ -28,6 +30,7 @@ export const ECONOMY_ROUTES: Routes = [
       {
         path: "recurrences",
         data: { breadcrumb: "getFinanceRecurrences.breadcrumb.list" },
+        providers: [...UndoProvider.getProviders()],
         loadComponent: () =>
           import("@economy/finance/recurrence/infrastructure/components/get-finance-recurrences.component").then(
             (m) => m.GetFinanceRecurrencesComponent,
@@ -36,6 +39,7 @@ export const ECONOMY_ROUTES: Routes = [
       {
         path: "accounts",
         data: { breadcrumb: "getFinanceAccounts.breadcrumb.list" },
+        providers: [...UndoProvider.getProviders()],
         loadComponent: () =>
           import("@economy/finance/account/infrastructure/components/get-finance-accounts.component").then(
             (m) => m.GetFinanceAccountsComponent,

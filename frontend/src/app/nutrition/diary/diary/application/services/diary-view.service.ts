@@ -166,16 +166,61 @@ export class DiaryViewService {
   withoutEntry(day: DiaryDay | null, entryId: string): DiaryDay | null {
     if (!day) return null;
 
+    const removed = this.findEntry(day, entryId);
+    if (!removed) return day;
+
+    const meals = day.attributes.meals.map((meal) =>
+      this.mealWithoutEntry(meal, entryId),
+    );
+    const totals = this.subtractMacros(day.attributes.totals, removed.macros);
+    const consumedCalories = Math.round(totals.calories);
+    const goalCalories = day.attributes.goalCalories;
+
     return {
       ...day,
       attributes: {
         ...day.attributes,
-        meals: day.attributes.meals.map((meal) => ({
-          ...meal,
-          entries: meal.entries.filter((entry) => entry.id !== entryId),
-        })),
+        meals,
+        totals,
+        entryCount: day.attributes.entryCount - 1,
+        consumedCalories,
+        remainingCalories: Math.max(0, goalCalories - consumedCalories),
+        percent: this.consumedPercent(consumedCalories, goalCalories),
       },
     };
+  }
+
+  private mealWithoutEntry(
+    meal: DiaryMealView,
+    entryId: string,
+  ): DiaryMealView {
+    const removed = meal.entries.find((entry) => entry.id === entryId);
+    if (!removed) return meal;
+
+    return {
+      ...meal,
+      entries: meal.entries.filter((entry) => entry.id !== entryId),
+      entryCount: meal.entryCount - 1,
+      totals: this.subtractMacros(meal.totals, removed.macros),
+    };
+  }
+
+  private subtractMacros(
+    totals: DiaryMacros,
+    macros: DiaryMacros,
+  ): DiaryMacros {
+    return {
+      calories: Math.max(0, totals.calories - macros.calories),
+      protein: Math.max(0, totals.protein - macros.protein),
+      fat: Math.max(0, totals.fat - macros.fat),
+      carbs: Math.max(0, totals.carbs - macros.carbs),
+    };
+  }
+
+  private consumedPercent(consumed: number, goalCalories: number): number {
+    if (goalCalories <= 0) return 0;
+
+    return Math.min(100, Math.round((consumed / goalCalories) * 100));
   }
 
   entryBadgeTone(kind: string): "brand" | "neutral" | "accent" {

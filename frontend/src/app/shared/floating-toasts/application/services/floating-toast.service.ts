@@ -45,8 +45,15 @@ export class FloatingToastService {
   }
 
   durationOf(message: FloatingToastMessage): number {
+    if (message.durationMs) return message.durationMs;
+
     return "success" === this.typeOf(message)
       ? SUCCESS_DURATION_MS
       : DEFAULT_DURATION_MS;
+  }
+
+  runAction(message: FloatingToastMessage): void {
+    this.dismiss();
+    message.onAction?.();
   }
 }

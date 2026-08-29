@@ -385,9 +385,3 @@
   (saved)="onReorderSaved($event)"
   (cancelled)="closeReorder()"
 />
-
-<ds-undo-bar
-  [show]="!!undo.request()"
-  [label]="undo.request()?.label ?? ''"
-  (undone)="onUndoRemove()"
-/>

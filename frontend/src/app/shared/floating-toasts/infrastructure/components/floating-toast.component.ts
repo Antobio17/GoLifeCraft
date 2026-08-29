@@ -39,27 +39,35 @@ const TOAST_ICONS: Record<FloatingToastType, DsIconName> = {
   styleUrls: ["./floating-toast.component.css"],
   animations: [
     trigger("toastSlide", [
-      transition(":enter", [
-        style({ opacity: 0, transform: "{{enterTransform}}" }),
-        animate(
-          "420ms cubic-bezier(0.34,1.4,0.64,1)",
-          style({ opacity: 1, transform: "translate3d(0,0,0)" }),
-        ),
-      ], {
-        params: {
-          enterTransform: "translateY(-120%)",
+      transition(
+        ":enter",
+        [
+          style({ opacity: 0, transform: "{{enterTransform}}" }),
+          animate(
+            "420ms cubic-bezier(0.34,1.4,0.64,1)",
+            style({ opacity: 1, transform: "translate3d(0,0,0)" }),
+          ),
+        ],
+        {
+          params: {
+            enterTransform: "translateY(-120%)",
+          },
         },
-      }),
-      transition(":leave", [
-        animate(
-          "280ms cubic-bezier(0.4,0,1,1)",
-          style({ opacity: 0, transform: "{{leaveTransform}}" }),
-        ),
-      ], {
-        params: {
-          leaveTransform: "translateY(-120%)",
+      ),
+      transition(
+        ":leave",
+        [
+          animate(
+            "280ms cubic-bezier(0.4,0,1,1)",
+            style({ opacity: 0, transform: "{{leaveTransform}}" }),
+          ),
+        ],
+        {
+          params: {
+            leaveTransform: "translateY(-120%)",
+          },
         },
-      }),
+      ),
     ]),
   ],
   imports: [ContextualTranslatePipe, ToastComponent],
@@ -100,8 +108,15 @@ export class FloatingToastComponent implements AfterViewInit, OnDestroy {
     this.floatingToastService.dismiss();
   }
 
+  runAction(toast: FloatingToastView): void {
+    this.floatingToastService.runAction(toast);
+  }
+
   ngAfterViewInit(): void {
-    this.renderer.appendChild(this.document.body, this.hostElement.nativeElement);
+    this.renderer.appendChild(
+      this.document.body,
+      this.hostElement.nativeElement,
+    );
   }
 
   ngOnDestroy(): void {

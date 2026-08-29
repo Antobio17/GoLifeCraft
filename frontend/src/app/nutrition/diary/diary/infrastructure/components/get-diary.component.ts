@@ -12,7 +12,6 @@ import { tap } from "rxjs/operators";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
-import { UndoBarComponent } from "@shared/design-system/undo-bar/infrastructure/components/undo-bar.component";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -139,7 +138,6 @@ type PickerTab = "product" | "recipe" | "quick";
     CalendarComponent,
     DiaryTreeComponent,
     SaveStatusComponent,
-    UndoBarComponent,
   ],
 })
 export class GetDiaryComponent implements OnInit {
@@ -173,8 +171,16 @@ export class GetDiaryComponent implements OnInit {
   readonly skeletonMeals = [2, 2, 1, 1];
 
   loading = signal(true);
-  day = signal<DiaryDay | null>(null);
+  loadedDay = signal<DiaryDay | null>(null);
   date = signal(this.view.todayIso());
+
+  day = computed<DiaryDay | null>(() => {
+    const removedId = this.undo.removedId();
+    const loadedDay = this.loadedDay();
+    if (!removedId) return loadedDay;
+
+    return this.view.withoutEntry(loadedDay, removedId);
+  });
 
   pickerOpen = signal(false);
   pickerMeal = signal("");
@@ -604,10 +610,6 @@ export class GetDiaryComponent implements OnInit {
     this.autosave.retry();
   }
 
-  onUndoRemove(): void {
-    this.undo.undo();
-  }
-
   onEntryUnitChange(entry: DiaryEntryView, unit: string): void {
     this.updateDiaryEntryService
       .updateDiaryEntryQuantity(entry.id, entry.quantity, unit)
@@ -661,20 +663,20 @@ export class GetDiaryComponent implements OnInit {
   }
 
   onRemove(entryId: string): void {
-    const day = this.day();
-    const entry = this.view.findEntry(day, entryId);
+    const entry = this.view.findEntry(this.day(), entryId);
     if (!entry) return;
 
-    this.day.set(this.view.withoutEntry(day, entryId));
-
     this.undo.schedule({
-      label: this.t("getDiary.removed", { name: entry.name }),
+      id: entryId,
+      keyTranslation: "getDiary.removed",
+      details: { name: entry.name },
       commit: () => this.commitRemoveEntry(entryId),
-      revert: () => this.day.set(day),
     });
   }
 
   private commitRemoveEntry(entryId: string): void {
+    this.loadedDay.update((day) => this.view.withoutEntry(day, entryId));
+
     this.autosave.push(`entry:${entryId}`, () =>
       this.deleteDiaryEntryService
         .deleteDiaryEntry(entryId)
@@ -760,7 +762,7 @@ export class GetDiaryComponent implements OnInit {
 
     this.getDiaryService.getDiary(date).subscribe({
       next: (response) => {
-        this.day.set(response.data);
+        this.loadedDay.set(response.data);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

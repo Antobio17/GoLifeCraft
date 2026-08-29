@@ -3,6 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { UndoService } from "@shared/undo/application/services/undo.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -146,6 +147,7 @@ export class GetEconomyComponent implements OnInit {
   private getFinanceAccountsService = inject(GetFinanceAccountsService);
   private getFinanceBudgetService = inject(GetFinanceBudgetService);
   private router = inject(Router);
+  protected undo = inject(UndoService);
   protected view = inject(FinanceViewService);
   protected budgetView = inject(FinanceBudgetViewService);
   protected calendarView = inject(FinanceCalendarViewService);
@@ -166,14 +168,14 @@ export class GetEconomyComponent implements OnInit {
 
   month = signal(this.view.currentMonth());
   overview = signal<FinanceOverviewAttributes | null>(null);
-  transactions = signal<FinanceTransactionView[]>([]);
+  private loadedTransactions = signal<FinanceTransactionView[]>([]);
   calendarDays = signal<FinanceCalendarDay[]>([]);
   accounts = signal<FinanceAccount[]>([]);
   budget = signal<FinanceBudgetAttributes | null>(null);
 
   dayMode = signal(false);
   selectedDate = signal<string | null>(null);
-  dayTransactions = signal<FinanceTransactionView[]>([]);
+  private loadedDayTransactions = signal<FinanceTransactionView[]>([]);
   grouping = signal<FinanceMovementGrouping>(FinanceMovementGrouping.CATEGORY);
 
   sheetOpen = signal(false);
@@ -210,6 +212,13 @@ export class GetEconomyComponent implements OnInit {
       ratio: this.view.ratio(Math.abs(item.balance), max),
     }));
   });
+
+  transactions = computed<FinanceTransactionView[]>(() =>
+    this.undo.withoutRemoved(this.loadedTransactions()),
+  );
+  dayTransactions = computed<FinanceTransactionView[]>(() =>
+    this.undo.withoutRemoved(this.loadedDayTransactions()),
+  );
 
   hasMovements = computed(() => this.transactions().length > 0);
   hasExpense = computed(() => (this.overview()?.expense ?? 0) > 0);
@@ -509,7 +518,7 @@ export class GetEconomyComponent implements OnInit {
 
   clearDay(): void {
     this.selectedDate.set(null);
-    this.dayTransactions.set([]);
+    this.loadedDayTransactions.set([]);
   }
 
   goToAccounts(): void {
@@ -599,9 +608,25 @@ export class GetEconomyComponent implements OnInit {
     });
   }
 
-  removeTransaction(transaction: FinanceTransactionView): void {
+  removeTransaction(row: FinanceMovementRow): void {
+    this.undo.schedule({
+      id: row.transaction.id,
+      keyTranslation: "getEconomy.removed",
+      details: { name: row.title },
+      commit: () => this.commitRemoveTransaction(row.transaction.id),
+    });
+  }
+
+  private commitRemoveTransaction(transactionId: string): void {
+    this.loadedTransactions.update((transactions) =>
+      transactions.filter((transaction) => transaction.id !== transactionId),
+    );
+    this.loadedDayTransactions.update((transactions) =>
+      transactions.filter((transaction) => transaction.id !== transactionId),
+    );
+
     this.deleteFinanceTransactionService
-      .deleteFinanceTransaction(transaction.id)
+      .deleteFinanceTransaction(transactionId)
       .subscribe({ next: () => this.reload() });
   }
 
@@ -702,7 +727,7 @@ export class GetEconomyComponent implements OnInit {
 
     this.getFinanceTransactionsService.getFinanceTransactions(month).subscribe({
       next: (response) =>
-        this.transactions.set(response.data.attributes.transactions),
+        this.loadedTransactions.set(response.data.attributes.transactions),
     });
 
     this.getFinanceCalendarService.getFinanceCalendar(month).subscribe({
@@ -727,7 +752,7 @@ export class GetEconomyComponent implements OnInit {
       .getFinanceTransactions(this.month(), date)
       .subscribe({
         next: (response) =>
-          this.dayTransactions.set(response.data.attributes.transactions),
+          this.loadedDayTransactions.set(response.data.attributes.transactions),
       });
   }
 }

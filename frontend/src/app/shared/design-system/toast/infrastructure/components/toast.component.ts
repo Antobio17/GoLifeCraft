@@ -20,6 +20,12 @@ type ToastType = "success" | "info" | "warning" | "error";
         }
       </div>
 
+      @if (actionLabel) {
+        <button type="button" class="toast__action" (click)="actioned.emit()">
+          {{ actionLabel }}
+        </button>
+      }
+
       <button
         type="button"
         class="toast__close"
@@ -44,6 +50,8 @@ export class ToastComponent {
   @Input() subtitle = "";
   @Input() durationMs = 4000;
   @Input() closeLabel = "";
+  @Input() actionLabel = "";
 
   @Output() dismissed = new EventEmitter<void>();
+  @Output() actioned = new EventEmitter<void>();
 }
