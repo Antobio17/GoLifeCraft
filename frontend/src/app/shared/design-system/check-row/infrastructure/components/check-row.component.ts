@@ -9,6 +9,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       type="button"
       class="ds-checkrow"
       role="checkbox"
+      [class.is-off]="!checked"
       [class.is-done]="checked"
       [attr.aria-checked]="checked"
       (click)="toggled.emit()"
@@ -58,9 +59,13 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         color: inherit;
         transition: opacity var(--ds-transition-fast);
       }
-      /* What is still pending is what you need to read while cooking, so the tick fades the row
-         instead of lighting it up. */
-      .ds-checkrow.is-done {
+      .ds-checkrow.is-off {
+        opacity: 0.5;
+      }
+      :host([dim-checked]) .ds-checkrow.is-off {
+        opacity: 1;
+      }
+      :host([dim-checked]) .ds-checkrow.is-done {
         opacity: 0.5;
       }
       .ds-checkrow__box {
@@ -152,6 +157,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
   ],
   host: {
     "[attr.wrap]": "wrap ? '' : null",
+    "[attr.dim-checked]": "dimChecked ? '' : null",
   },
 })
 export class CheckRowComponent {
@@ -161,6 +167,7 @@ export class CheckRowComponent {
   @Input() eyebrow = "";
   @Input() chip = "";
   @Input() wrap = false;
+  @Input() dimChecked = false;
   @Input() checked = false;
 
   @Output() toggled = new EventEmitter<void>();

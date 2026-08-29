@@ -99,10 +99,6 @@ export class GetProductionRecipeComponent {
 
   done = computed(() => ProductionItemStatus.Done === this.recipe()?.status);
 
-  editable = computed(() => !this.done());
-
-  undoable = computed(() => this.done());
-
   statusLabel = computed(() =>
     this.t(
       this.done()
@@ -211,13 +207,7 @@ export class GetProductionRecipeComponent {
         this.checkedSteps.set(
           new Set((attributes?.checkedStepPositions ?? []).map(String)),
         );
-        this.servings.set(
-          attributes
-            ? ProductionItemStatus.Done === attributes.status
-              ? attributes.servingsCooked
-              : attributes.servingsPlanned
-            : 1,
-        );
+        this.servings.set(this.servingsOf(attributes));
         this.loading.set(false);
       });
 
@@ -246,7 +236,7 @@ export class GetProductionRecipeComponent {
   }
 
   onToggleIngredient(key: string): void {
-    if (!this.editable()) return;
+    if (this.done()) return;
 
     this.checkedIngredients.set(
       this.view.toggle(this.checkedIngredients(), key),
@@ -255,10 +245,19 @@ export class GetProductionRecipeComponent {
   }
 
   onToggleStep(key: string): void {
-    if (!this.editable()) return;
+    if (this.done()) return;
 
     this.checkedSteps.set(this.view.toggle(this.checkedSteps(), key));
     this.saveChecklist();
+  }
+
+  private servingsOf(recipe: ProductionRecipeAttributes | null): number {
+    if (null === recipe) return 1;
+
+    if (ProductionItemStatus.Done === recipe.status)
+      return recipe.servingsCooked;
+
+    return recipe.servingsPlanned;
   }
 
   private saveChecklist(): void {
@@ -277,7 +276,7 @@ export class GetProductionRecipeComponent {
   }
 
   onUncook(): void {
-    if (this.uncooking() || !this.undoable()) return;
+    if (this.uncooking() || !this.done()) return;
 
     this.uncooking.set(true);
 
@@ -294,7 +293,7 @@ export class GetProductionRecipeComponent {
   }
 
   onCook(): void {
-    if (this.cooking() || !this.editable()) return;
+    if (this.cooking() || this.done()) return;
 
     this.cooking.set(true);
 
