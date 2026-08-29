@@ -81,15 +81,15 @@ parameters:
             class: 'Nutrition\Kitchen\Production\Domain\Model\Production'
             sidecar: '%kernel.project_dir%/src/Nutrition/Kitchen/Production/Infrastructure/Domain/Model/Doctrine/Mapping/Production.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
-            write_roles: [ROLE_GOD, ROLE_USER]
-            delete_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
 
         production_item:
             class: 'Nutrition\Kitchen\Production\Domain\Model\ProductionItem'
             sidecar: '%kernel.project_dir%/src/Nutrition/Kitchen/Production/Infrastructure/Domain/Model/Doctrine/Mapping/ProductionItem.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
-            write_roles: [ROLE_GOD, ROLE_USER]
-            delete_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
 
         diary_entry:
             class: 'Nutrition\Diary\Diary\Domain\Model\DiaryEntry'
