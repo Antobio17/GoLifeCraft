@@ -1,9 +1,5 @@
-import { Component, computed, inject, signal } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { Router } from "@angular/router";
-import { of } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { Component, computed, inject } from "@angular/core";
+import { Observable } from "rxjs";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -16,11 +12,18 @@ import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastruct
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import {
+  AbstractListPageComponent,
+  PagedResult,
+} from "@shared/design-system/list-page/abstract-list-page.component";
 import { GetProductionsService } from "@nutrition/kitchen/production/application/services/get-productions.service";
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
+import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProductionListItem } from "@nutrition/kitchen/production/domain/models/production-list-item.model";
 import { ProductionListRow } from "@nutrition/kitchen/production/domain/models/production-list-row.model";
 import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/production-status.model";
+
+const FALLBACK_EMOJI = "🍲";
 
 @Component({
   selector: "app-get-productions",
@@ -40,50 +43,49 @@ import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/pr
     SkeletonListComponent,
   ],
 })
-export class GetProductionsComponent {
-  private translationService = inject(TranslationService);
+export class GetProductionsComponent extends AbstractListPageComponent<ProductionListItem> {
   private getProductionsService = inject(GetProductionsService);
-  private router = inject(Router);
   protected range = inject(ProductionRangeService);
+  protected view = inject(ProductionViewService);
 
-  private readonly MODULE_PATH = "nutrition/kitchen/production";
-
-  loading = signal(true);
-  productions = signal<ProductionListItem[]>([]);
+  protected readonly modulePath = "nutrition/kitchen/production";
+  protected readonly storageKey = "pageSize_productions";
 
   rows = computed<ProductionListRow[]>(() =>
-    this.productions().map((production) => {
+    this.items().map((production) => {
       const attributes = production.attributes;
       const cooking = ProductionStatus.Cooking === attributes.status;
 
       return {
         production,
         title: this.range.rangeLabel(attributes.fromDate, attributes.toDate),
-        meta: this.t("getProductions.meta", {
+        meta: this.translate("getProductions.meta", {
           recipes: attributes.itemCount,
-          servings: this.range.servings(
+          servings: this.view.servings(
             cooking ? attributes.servingsPlanned : attributes.servingsCooked,
           ),
         }),
         statusLabel: cooking
-          ? this.t("getProductions.status.cooking", {
+          ? this.translate("getProductions.status.cooking", {
               cooked: attributes.cookedCount,
               total: attributes.itemCount,
             })
           : this.t("getProductions.status.done"),
         cooking,
-        emoji: attributes.emojis[0] ?? "🍲",
+        emoji: attributes.emojis[0] ?? FALLBACK_EMOJI,
       };
     }),
   );
 
-  constructor() {
-    this.translationService.loadModuleTranslations(this.MODULE_PATH);
-    this.load();
+  protected configureList(): void {
+    this.pageSize.set(100);
   }
 
-  t(key: string, params?: Record<string, unknown>): string {
-    return this.translationService.translate(key, this.MODULE_PATH, params);
+  protected fetch(
+    page: number,
+    pageSize: number,
+  ): Observable<PagedResult<ProductionListItem>> {
+    return this.getProductionsService.getProductions(page, pageSize);
   }
 
   onCreate(): void {
@@ -94,18 +96,7 @@ export class GetProductionsComponent {
     this.router.navigate(["/cocina", production.id]);
   }
 
-  private load(): void {
-    this.loading.set(true);
-
-    this.getProductionsService
-      .getProductions()
-      .pipe(
-        catchError(() => of(null)),
-        takeUntilDestroyed(),
-      )
-      .subscribe((response) => {
-        this.productions.set(response?.data ?? []);
-        this.loading.set(false);
-      });
+  private translate(key: string, params: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.modulePath, params);
   }
 }
