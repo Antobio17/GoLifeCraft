@@ -25,7 +25,7 @@ final class DoctrineProductionIngredientResolver
         $graph = $this->graph();
 
         if (!$graph->hasRecipe(recipeId: $recipeId)) {
-            return new ProductionNeeds(articles: [], subRecipes: []);
+            return ProductionNeeds::of(articles: [], subRecipes: []);
         }
 
         $factor = $servings / $graph->recipeServings(recipeId: $recipeId);
@@ -54,7 +54,7 @@ final class DoctrineProductionIngredientResolver
             );
         }
 
-        return new ProductionNeeds(articles: $articles, subRecipes: $subRecipes);
+        return ProductionNeeds::of(articles: $articles, subRecipes: $subRecipes);
     }
 
     private function toDirectIngredient(

@@ -2,21 +2,18 @@
 
 namespace Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory;
 
+use Nutrition\Kitchen\Production\Domain\QueryModel\CookProductionItemNeedleDataQuery;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionIngredient;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionNeeds;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionSubRecipe;
-use Nutrition\Kitchen\Production\Domain\QueryModel\FinishProductionNeedleDataQuery;
 
-final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionNeedleDataQuery
+final class InMemoryCookProductionItemNeedleDataQuery implements CookProductionItemNeedleDataQuery
 {
     /** @var array<string, array<int, array{articleId: string, quantity: float, unit: string, factor: float, baseUnit: string}>> */
     private array $articles = [];
 
     /** @var array<string, array<int, array{recipeId: string, servingsPerServing: float}>> */
     private array $subRecipes = [];
-
-    /** @var array<string, int[]> */
-    private array $steps = [];
 
     public function addIngredient(
         string $recipeId,
@@ -41,19 +38,6 @@ final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionN
             'recipeId' => $subRecipeId,
             'servingsPerServing' => $servingsPerServing,
         ];
-    }
-
-    /**
-     * @param int[] $positions
-     */
-    public function addSteps(string $recipeId, array $positions): void
-    {
-        $this->steps[$recipeId] = $positions;
-    }
-
-    public function stepPositions(string $recipeId): array
-    {
-        return $this->steps[$recipeId] ?? [];
     }
 
     public function resolveNeeds(string $recipeId, float $servings): ProductionNeeds
@@ -85,6 +69,6 @@ final class InMemoryFinishProductionNeedleDataQuery implements FinishProductionN
             );
         }
 
-        return new ProductionNeeds(articles: $articles, subRecipes: $subRecipes);
+        return ProductionNeeds::of(articles: $articles, subRecipes: $subRecipes);
     }
 }

@@ -106,7 +106,6 @@ final class CheckProductionItemCommandHandlerTest extends TestCase
             servingsCooked: 2.0,
             consumedArticles: [],
             consumedRecipes: [],
-            stepPositions: [],
             cookedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

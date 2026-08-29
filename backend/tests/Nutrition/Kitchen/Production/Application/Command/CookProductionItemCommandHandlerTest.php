@@ -10,7 +10,7 @@ use Nutrition\Kitchen\Production\Domain\Exception\CookProductionItemException;
 use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Infrastructure\Domain\Model\InMemory\InMemoryProductionRepository;
-use Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory\InMemoryFinishProductionNeedleDataQuery;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory\InMemoryCookProductionItemNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -18,7 +18,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class CookProductionItemCommandHandlerTest extends TestCase
 {
     private InMemoryProductionRepository $productionRepository;
-    private InMemoryFinishProductionNeedleDataQuery $needleDataQuery;
+    private InMemoryCookProductionItemNeedleDataQuery $needleDataQuery;
     private DomainEventCollectorService $domainEventCollectorService;
     private CookProductionItemCommandHandler $handler;
     private Production $production;
@@ -27,7 +27,7 @@ final class CookProductionItemCommandHandlerTest extends TestCase
     {
         $dateTimeGenerator = new DateTimeGenerator();
         $this->productionRepository = new InMemoryProductionRepository();
-        $this->needleDataQuery = new InMemoryFinishProductionNeedleDataQuery();
+        $this->needleDataQuery = new InMemoryCookProductionItemNeedleDataQuery();
         $this->domainEventCollectorService = new DomainEventCollectorService();
         $this->handler = new CookProductionItemCommandHandler(
             productionRepository: $this->productionRepository,
@@ -139,9 +139,15 @@ final class CookProductionItemCommandHandlerTest extends TestCase
         );
     }
 
-    public function testCookingARecipeTicksOffEveryStep(): void
+    public function testCookingARecipeKeepsTheStepsTickedSoFar(): void
     {
-        $this->needleDataQuery->addSteps(recipeId: 'recipe-1', positions: [1, 2, 3]);
+        $this->production->checkItem(
+            itemId: $this->itemId(position: 1),
+            articleIds: [],
+            stepPositions: [1, 3],
+            checkedByUserId: 'god-user-id',
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
 
         ($this->handler)(new CookProductionItemCommand(
             productionId: 'production-1',
@@ -151,8 +157,9 @@ final class CookProductionItemCommandHandlerTest extends TestCase
         ));
 
         $this->assertSame(
-            expected: [1, 2, 3],
+            expected: [1, 3],
             actual: $this->production->item(itemId: $this->itemId(position: 1))->checkedStepPositions,
+            message: 'Cooking must not tick off steps the cook never went through.',
         );
     }
 

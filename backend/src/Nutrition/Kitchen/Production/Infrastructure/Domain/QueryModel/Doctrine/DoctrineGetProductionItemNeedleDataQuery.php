@@ -117,31 +117,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
      */
     private function ingredients(ProductionNeeds $needs): array
     {
-        return $this->mergeByArticle(ingredients: $needs->articles);
-    }
-
-    /**
-     * @param ProductionIngredient[] $ingredients
-     *
-     * @return ProductionIngredientView[]
-     */
-    private function mergeByArticle(array $ingredients): array
-    {
-        $merged = [];
-
-        foreach ($ingredients as $ingredient) {
-            $articleId = $ingredient->articleId;
-
-            if (!isset($merged[$articleId])) {
-                $merged[$articleId] = $ingredient;
-
-                continue;
-            }
-
-            $merged[$articleId] = $this->addUp(left: $merged[$articleId], right: $ingredient);
-        }
-
-        return array_values(array: array_map(
+        return array_map(
             callback: static fn (ProductionIngredient $ingredient): ProductionIngredientView => new ProductionIngredientView(
                 articleId: $ingredient->articleId,
                 name: $ingredient->name,
@@ -149,30 +125,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
                 quantity: $ingredient->quantity,
                 unit: $ingredient->unit,
             ),
-            array: $merged,
-        ));
-    }
-
-    private function addUp(ProductionIngredient $left, ProductionIngredient $right): ProductionIngredient
-    {
-        $sameUnit = $left->unit === $right->unit;
-
-        return new ProductionIngredient(
-            articleId: $left->articleId,
-            name: $left->name,
-            emoji: $left->emoji,
-            quantity: round(
-                num: $sameUnit
-                    ? $left->quantity + $right->quantity
-                    : $left->baseQuantity + $right->baseQuantity,
-                precision: ProductionIngredient::QUANTITY_PRECISION,
-            ),
-            unit: $sameUnit ? $left->unit : $left->baseUnit,
-            baseQuantity: round(
-                num: $left->baseQuantity + $right->baseQuantity,
-                precision: ProductionIngredient::QUANTITY_PRECISION,
-            ),
-            baseUnit: $left->baseUnit,
+            array: $needs->articles,
         );
     }
 

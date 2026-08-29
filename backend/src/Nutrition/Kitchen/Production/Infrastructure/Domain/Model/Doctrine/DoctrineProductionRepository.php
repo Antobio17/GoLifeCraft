@@ -41,9 +41,9 @@ final class DoctrineProductionRepository extends EntityRepository implements Pro
             foreach ($item->consumptions as $consumption) {
                 $entityManager->persist(object: $consumption);
             }
-
-            $this->releaseConsumptions(item: $item);
         }
+
+        $this->releaseConsumptions(items: $production->items);
     }
 
     public function delete(Production $production): void
@@ -51,9 +51,11 @@ final class DoctrineProductionRepository extends EntityRepository implements Pro
         $entityManager = $this->getEntityManager();
 
         foreach ($production->items as $item) {
-            $this->removeConsumptionsOf(productionItemId: $item->id);
+            $item->consumptions = [];
             $entityManager->remove(object: $item);
         }
+
+        $this->releaseConsumptions(items: $production->items);
 
         $entityManager->remove(object: $production);
     }
@@ -110,29 +112,35 @@ final class DoctrineProductionRepository extends EntityRepository implements Pro
         return $items;
     }
 
-    private function releaseConsumptions(ProductionItem $item): void
+    /**
+     * @param ProductionItem[] $items
+     */
+    private function releaseConsumptions(array $items): void
     {
-        if ([] === $item->releasedConsumptionIds) {
+        if ([] === $items) {
             return;
         }
 
-        $this->getEntityManager()->createQueryBuilder()
-            ->delete(delete: ProductionItemConsumption::class, alias: 'consumption')
-            ->where('consumption.id IN (:consumptionIds)')
-            ->setParameter(key: 'consumptionIds', value: $item->releasedConsumptionIds)
-            ->getQuery()
-            ->execute();
+        $keptIds = [];
 
-        $item->releasedConsumptionIds = [];
-    }
+        foreach ($items as $item) {
+            foreach ($item->consumptions as $consumption) {
+                $keptIds[] = $consumption->id;
+            }
+        }
 
-    private function removeConsumptionsOf(string $productionItemId): void
-    {
-        $this->getEntityManager()->createQueryBuilder()
+        $query = $this->getEntityManager()->createQueryBuilder()
             ->delete(delete: ProductionItemConsumption::class, alias: 'consumption')
-            ->where('consumption.productionItemId = :productionItemId')
-            ->setParameter(key: 'productionItemId', value: $productionItemId)
-            ->getQuery()
-            ->execute();
+            ->where('consumption.productionItemId IN (:productionItemIds)')
+            ->setParameter(key: 'productionItemIds', value: array_map(
+                callback: static fn (ProductionItem $item): string => $item->id,
+                array: $items,
+            ));
+
+        if ([] !== $keptIds) {
+            $query->andWhere('consumption.id NOT IN (:keptIds)')->setParameter(key: 'keptIds', value: $keptIds);
+        }
+
+        $query->getQuery()->execute();
     }
 }
