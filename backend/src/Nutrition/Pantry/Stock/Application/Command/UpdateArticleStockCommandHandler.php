@@ -25,25 +25,14 @@ final readonly class UpdateArticleStockCommandHandler
             throw UpdateArticleStockException::articleNotFound(articleId: $command->articleId);
         }
 
-        $articleStock = $this->applyQuantity(command: $command);
-
-        $this->articleStockRepository->save(articleStock: $articleStock);
-        $this->domainEventCollectorService->register(aggregate: $articleStock);
-    }
-
-    private function applyQuantity(UpdateArticleStockCommand $command): ArticleStock
-    {
-        $articleStock = $this->articleStockRepository->findByArticleId(articleId: $command->articleId);
-
-        if (null === $articleStock) {
-            return ArticleStock::start(
+        $articleStock = $this->articleStockRepository->findByArticleId(articleId: $command->articleId)
+            ?? ArticleStock::start(
                 id: $this->articleStockRepository->nextId(),
                 articleId: $command->articleId,
-                quantity: $command->quantity,
+                quantity: 0.0,
                 createdByUserId: $command->updatedByUserId,
                 dateTimeGenerator: $this->dateTimeGenerator,
             );
-        }
 
         $articleStock->change(
             quantity: $command->quantity,
@@ -51,6 +40,7 @@ final readonly class UpdateArticleStockCommandHandler
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 
-        return $articleStock;
+        $this->articleStockRepository->save(articleStock: $articleStock);
+        $this->domainEventCollectorService->register(aggregate: $articleStock);
     }
 }
