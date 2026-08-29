@@ -6,16 +6,10 @@ services:
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.article.deleted' }
 
-  Nutrition\Pantry\Stock\Application\Subscriber\DecreaseArticleStockOnProductionItemCooked:
-    class: Nutrition\Pantry\Stock\Application\Subscriber\DecreaseArticleStockOnProductionItemCooked
+  Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnProductionItemCookChanged:
+    class: Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnProductionItemCookChanged
     arguments:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_cooked' }
-
-  Nutrition\Pantry\Stock\Application\Subscriber\IncreaseArticleStockOnProductionItemUncooked:
-    class: Nutrition\Pantry\Stock\Application\Subscriber\IncreaseArticleStockOnProductionItemUncooked
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_uncooked' }
