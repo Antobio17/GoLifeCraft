@@ -19,12 +19,6 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
   ],
   template: `
     <ng-template #content>
-      @if ("done" === state) {
-        <span class="ds-prow__check" aria-hidden="true">
-          <ds-icon name="check" [size]="15" [stroke]="3" />
-        </span>
-      }
-
       <ds-emoji-tile [emoji]="emoji" [size]="44" [radius]="12" />
 
       <ds-stack class="ds-prow__body" [gap]="'2px'" [grow]="true">
@@ -46,6 +40,13 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
           (clicked)="action.emit()"
           >{{ actionLabel }}</ds-button
         >
+      }
+
+      @if ("done" === state && doneLabel) {
+        <span class="ds-prow__done">
+          <ds-icon name="check" [size]="13" [stroke]="3" />
+          {{ doneLabel }}
+        </span>
       }
 
       @if (!interactive && "expected" === state && linkLabel) {
@@ -127,17 +128,20 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
       :host([state="done"]) .ds-prow__body {
         opacity: 0.62;
       }
-      .ds-prow__check {
+      /* A status, not a control: the tick used to look like a checkbox that would untick, and it
+         never did, because the whole row opens the recipe. */
+      .ds-prow__done {
         flex: 0 0 auto;
-        width: 1.625rem;
-        height: 1.625rem;
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        border-radius: var(--ds-radius-md);
-        background: var(--ds-accent);
-        border: 1.5px solid var(--ds-accent);
-        color: var(--ds-on-accent);
+        gap: var(--ds-space-1);
+        border-radius: var(--ds-radius-pill);
+        padding: 2px var(--ds-space-2);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
+        font-size: var(--ds-text-xs);
+        font-weight: var(--ds-weight-bold);
+        white-space: nowrap;
       }
       .ds-prow__body {
         min-width: 0;
@@ -178,6 +182,7 @@ export class ProductionRowComponent {
   @Input() meta = "";
   @Input() tag = "";
   @Input() actionLabel = "";
+  @Input() doneLabel = "";
   @Input() linkLabel = "";
   @Input() interactive = false;
   @Input() busy = false;
