@@ -87,9 +87,12 @@ final class RunFinanceRecurrencesCommand extends Command
             return;
         }
 
+        $booked = 0;
+
         foreach ($pending as $recurrence) {
             foreach ($recurrence->months as $month) {
                 $output->writeln(messages: sprintf('%s: %s → %s', $dbname, $recurrence->note, $month));
+                ++$booked;
             }
         }
 
@@ -99,7 +102,7 @@ final class RunFinanceRecurrencesCommand extends Command
             return;
         }
 
-        $booked = $this->handle(message: new GeneratePendingFinanceRecurrencesCommand(today: $today));
+        $this->handle(message: new GeneratePendingFinanceRecurrencesCommand(today: $today));
 
         $output->writeln(messages: sprintf('<info>%s: %d movements booked.</info>', $dbname, $booked));
     }

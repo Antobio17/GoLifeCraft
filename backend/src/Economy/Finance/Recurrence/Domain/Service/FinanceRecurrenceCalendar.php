@@ -66,6 +66,25 @@ final class FinanceRecurrenceCalendar
         return $months;
     }
 
+    /**
+     * @param array<int, string> $months
+     *
+     * @return array<int, string>
+     */
+    public static function monthsToBook(array $months, string $today, bool $onlyCurrentMonth): array
+    {
+        if (!$onlyCurrentMonth) {
+            return $months;
+        }
+
+        $currentMonth = self::monthOf(date: $today);
+
+        return array_values(array_filter(
+            array: $months,
+            callback: static fn (string $month): bool => $month === $currentMonth,
+        ));
+    }
+
     public static function nextChargeDate(
         string $startMonth,
         ?string $endMonth,
