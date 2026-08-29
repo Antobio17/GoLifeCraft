@@ -11,6 +11,8 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class RecipeStock extends GenericAggregate
 {
+    private const int SERVINGS_PRECISION = 2;
+
     public string $recipeId;
     public float $servings = 0.0;
 
@@ -50,6 +52,8 @@ class RecipeStock extends GenericAggregate
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
+        self::assertServingsAreNotNegative(servings: $servings);
+
         $this->applyServings(
             servings: $servings,
             updatedByUserId: $updatedByUserId,
@@ -62,6 +66,8 @@ class RecipeStock extends GenericAggregate
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
+        self::assertServingsAreNotNegative(servings: $this->servings + $servings);
+
         $this->applyServings(
             servings: $this->servings + $servings,
             updatedByUserId: $updatedByUserId,
@@ -75,10 +81,9 @@ class RecipeStock extends GenericAggregate
         DateTimeGenerator $dateTimeGenerator,
     ): void {
         $this->applyServings(
-            servings: round(num: $this->servings - $servings, precision: 2),
+            servings: $this->servings - $servings,
             updatedByUserId: $updatedByUserId,
             dateTimeGenerator: $dateTimeGenerator,
-            allowNegative: true,
         );
     }
 
@@ -105,16 +110,11 @@ class RecipeStock extends GenericAggregate
         float $servings,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
-        bool $allowNegative = false,
     ): void {
-        if (!$allowNegative) {
-            self::assertServingsAreNotNegative(servings: $servings);
-        }
-
         $now = $dateTimeGenerator->now();
         $previousServings = $this->servings;
 
-        $this->servings = $servings;
+        $this->servings = round(num: $servings, precision: self::SERVINGS_PRECISION);
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new RecipeStockChanged(
@@ -122,7 +122,7 @@ class RecipeStock extends GenericAggregate
             occurredOn: $now,
             recipeId: $this->recipeId,
             previousServings: $previousServings,
-            servings: $servings,
+            servings: $this->servings,
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
