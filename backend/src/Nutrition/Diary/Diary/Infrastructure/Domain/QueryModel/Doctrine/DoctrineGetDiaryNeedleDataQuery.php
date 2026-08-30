@@ -7,6 +7,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
+use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryEntryLotView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryEntryNodeView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryEntryView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryGoals;
@@ -41,6 +42,12 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
         $goals = $this->resolveGoals(date: $date);
         $nodesByEntry = $this->fetchNodes(entryIds: array_column($rows, 'id'));
         $stockState = $this->stockStateByEntry(date: $date);
+        $lots = $this->lotsByProductionItem(
+            productionItemIds: array_merge(
+                array_column(array: $rows, column_key: 'production_item_id'),
+                array_column(array: array_merge(...array_values(array: $nodesByEntry)), column_key: 'production_item_id'),
+            ),
+        );
 
         $meals = [];
         $totals = MacroBreakdown::zero();
@@ -70,9 +77,10 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                     macros: $macros->rounded(),
                     quick: $this->quickView(row: $row),
                     customized: (bool) ($row['customized'] ?? false),
-                    tree: $this->treeFor(row: $row, nodes: $nodesByEntry[$row['id']] ?? []),
+                    tree: $this->treeFor(row: $row, nodes: $nodesByEntry[$row['id']] ?? [], lots: $lots),
                     consumed: (bool) ($row['consumed'] ?? false),
                     stockState: $stockState[$row['id']] ?? DiaryEntryView::STOCK_NONE,
+                    lot: $this->lotOf(lots: $lots, productionItemId: $row['production_item_id']),
                 );
             }
 
@@ -112,10 +120,11 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
     /**
      * @param array<string, mixed>             $row
      * @param array<int, array<string, mixed>> $nodes
+     * @param array<string, DiaryEntryLotView> $lots
      *
      * @return DiaryEntryNodeView[]
      */
-    private function treeFor(array $row, array $nodes): array
+    private function treeFor(array $row, array $nodes, array $lots): array
     {
         if (DiaryEntry::KIND_RECIPE !== $row['kind'] || null === $row['ref_id']) {
             return [];
@@ -129,7 +138,42 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                 servings: (float) $row['quantity'],
             );
 
-        return $this->nest(items: $items, parentPath: null);
+        return $this->nest(items: $items, parentPath: null, lotByPath: $this->lotByPath(nodes: $nodes, lots: $lots));
+    }
+
+    /**
+     * @param array<string, DiaryEntryLotView> $lots
+     */
+    private function lotOf(array $lots, ?string $productionItemId): ?DiaryEntryLotView
+    {
+        if (null === $productionItemId) {
+            return null;
+        }
+
+        return $lots[$productionItemId] ?? null;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $nodes
+     * @param array<string, DiaryEntryLotView> $lots
+     *
+     * @return array<string, DiaryEntryLotView>
+     */
+    private function lotByPath(array $nodes, array $lots): array
+    {
+        $byPath = [];
+
+        foreach ($nodes as $node) {
+            $lot = $this->lotOf(lots: $lots, productionItemId: $node['production_item_id']);
+
+            if (null === $lot) {
+                continue;
+            }
+
+            $byPath[$node['path']] = $lot;
+        }
+
+        return $byPath;
     }
 
     /**
@@ -160,11 +204,12 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
     }
 
     /**
-     * @param RecipeBreakdownItem[] $items
+     * @param RecipeBreakdownItem[]            $items
+     * @param array<string, DiaryEntryLotView> $lotByPath
      *
      * @return DiaryEntryNodeView[]
      */
-    private function nest(array $items, ?string $parentPath): array
+    private function nest(array $items, ?string $parentPath, array $lotByPath = []): array
     {
         $views = [];
 
@@ -182,7 +227,8 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                 quantity: round(num: $item->quantity, precision: 2),
                 unit: $item->isRecipe() ? 'rac.' : ($item->unit ?? 'g'),
                 macros: $item->macros->rounded(),
-                children: $this->nest(items: $items, parentPath: $item->path),
+                children: $this->nest(items: $items, parentPath: $item->path, lotByPath: $lotByPath),
+                lot: $lotByPath[$item->path] ?? null,
             );
         }
 
@@ -352,11 +398,47 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
         );
     }
 
+    /**
+     * @param array<int, ?string> $productionItemIds
+     *
+     * @return array<string, DiaryEntryLotView>
+     */
+    private function lotsByProductionItem(array $productionItemIds): array
+    {
+        $productionItemIds = array_values(array: array_unique(array: array_filter(array: $productionItemIds)));
+
+        if ([] === $productionItemIds) {
+            return [];
+        }
+
+        $lotRows = $this->connection->createQueryBuilder()
+            ->select('i.id', 'i.code', 'i.label', 'i.customized', 'i.updated_at')
+            ->from(table: 'production_item', alias: 'i')
+            ->where('i.id IN (:productionItemIds)')
+            ->setParameter(key: 'productionItemIds', value: $productionItemIds, type: ArrayParameterType::STRING)
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $lots = [];
+
+        foreach ($lotRows as $lotRow) {
+            $lots[$lotRow['id']] = new DiaryEntryLotView(
+                productionItemId: $lotRow['id'],
+                code: $lotRow['code'],
+                label: (string) ($lotRow['label'] ?? ''),
+                cookedOn: substr(string: (string) $lotRow['updated_at'], offset: 0, length: 10),
+                customized: (bool) $lotRow['customized'],
+            );
+        }
+
+        return $lots;
+    }
+
     /** @return array<int, array<string, mixed>> */
     private function fetchEntries(string $date): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.quantity', 'e.unit', 'e.customized', 'e.consumed', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
+            ->select('e.id', 'e.meal', 'e.kind', 'e.ref_id', 'e.production_item_id', 'e.quantity', 'e.unit', 'e.customized', 'e.consumed', 'e.snapshot_name', 'e.snapshot_emoji', 'e.snapshot_calories', 'e.snapshot_protein', 'e.snapshot_fat', 'e.snapshot_carbs', 'e.quick_name', 'e.quick_emoji', 'e.quick_calories', 'e.quick_protein', 'e.quick_fat', 'e.quick_carbs')
             ->from(table: 'diary_entry', alias: 'e')
             ->where('e.entry_date = :date')
             ->setParameter(key: 'date', value: $date)
@@ -377,7 +459,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
         }
 
         $rows = $this->connection->createQueryBuilder()
-            ->select('n.diary_entry_id', 'n.path', 'n.depth', 'n.position', 'n.kind', 'n.ref_id', 'n.quantity', 'n.unit', 'n.snapshot_name', 'n.snapshot_emoji', 'n.snapshot_calories', 'n.snapshot_protein', 'n.snapshot_fat', 'n.snapshot_carbs')
+            ->select('n.diary_entry_id', 'n.path', 'n.depth', 'n.position', 'n.kind', 'n.ref_id', 'n.production_item_id', 'n.quantity', 'n.unit', 'n.snapshot_name', 'n.snapshot_emoji', 'n.snapshot_calories', 'n.snapshot_protein', 'n.snapshot_fat', 'n.snapshot_carbs')
             ->from(table: 'diary_entry_node', alias: 'n')
             ->where('n.diary_entry_id IN (:entryIds)')
             ->setParameter(key: 'entryIds', value: $entryIds, type: ArrayParameterType::STRING)

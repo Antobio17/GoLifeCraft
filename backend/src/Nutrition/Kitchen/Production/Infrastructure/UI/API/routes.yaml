@@ -13,6 +13,11 @@ get_productions:
   methods: [GET]
   controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetProductionsController
 
+get_recipe_lots:
+  path: /api/v1/nutrition/kitchen/lots
+  methods: [GET]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetRecipeLotsController
+
 cook_production_item:
   path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}/cook
   methods: [PUT]
@@ -42,3 +47,25 @@ discard_production:
   path: /api/v1/nutrition/kitchen/productions/{productionId}
   methods: [DELETE]
   controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\DiscardProductionController
+
+adjust_production_item_ingredients:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}/ingredients
+  methods: [PUT]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\AdjustProductionItemIngredientsController
+
+restore_production_item_ingredients:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}/ingredients/restore
+  methods: [POST]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\RestoreProductionItemIngredientsController
+
+label_production_item:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}/label
+  methods: [PUT]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\LabelProductionItemController
+
+serve_production_item_sub_recipe:
+  path: /api/v1/nutrition/kitchen/productions/{productionId}/items/{itemId}/sub-recipes/{subRecipeId}/lot
+  methods: [PUT]
+  controller: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ServeProductionItemSubRecipeController
+  requirements:
+    subRecipeId: '[0-9a-fA-F-]{36}'

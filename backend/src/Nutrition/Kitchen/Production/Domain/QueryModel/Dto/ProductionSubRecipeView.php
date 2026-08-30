@@ -10,6 +10,9 @@ final readonly class ProductionSubRecipeView
         public string $emoji,
         public float $servings,
         public float $inStock,
+        public ?string $sourceProductionItemId = null,
+        public ?string $lotCode = null,
+        public string $lotLabel = '',
     ) {
     }
 }

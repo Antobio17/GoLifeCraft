@@ -11,6 +11,7 @@ use Nutrition\Diary\Diary\Application\Command\UpdateQuickDiaryEntryCommandHandle
 use Nutrition\Diary\Diary\Domain\Exception\UpdateDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
+use Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\InMemory\InMemoryFindDiaryEntryLotNeedleDataQuery;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntryTreeBuilder;
 use PHPUnit\Framework\TestCase;
@@ -90,6 +91,7 @@ final class UpdateQuickDiaryEntryCommandHandlerTest extends TestCase
             diaryEntryRepository: $this->repository,
             snapshotCalculator: new InMemoryDiaryEntrySnapshotCalculator(),
             treeBuilder: new InMemoryDiaryEntryTreeBuilder(),
+            lotNeedleDataQuery: new InMemoryFindDiaryEntryLotNeedleDataQuery(),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: new DateTimeGenerator(),
         );

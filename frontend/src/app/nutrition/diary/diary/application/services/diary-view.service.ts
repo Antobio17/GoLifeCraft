@@ -88,6 +88,12 @@ export class DiaryViewService {
     return `${date.getDate()} ${month}`;
   }
 
+  decimal(value: number | null | undefined): string {
+    if (value === null || value === undefined) return "0";
+
+    return this.format(value);
+  }
+
   integer(value: number | null | undefined): string {
     if (value === null || value === undefined) return "0";
 

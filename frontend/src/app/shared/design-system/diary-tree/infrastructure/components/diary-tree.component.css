@@ -96,3 +96,18 @@ ds-text.diary-tree__name {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.diary-tree__lot {
+  margin-top: calc(var(--ds-space-1) * -1);
+}
+
+.diary-tree__lot--fixed {
+  padding-left: var(--ds-space-2);
+  color: var(--ds-text-meta);
+}
+
+.diary-tree__lot-text {
+  font-size: var(--ds-text-xs);
+  font-weight: 700;
+  color: var(--ds-text-meta);
+}

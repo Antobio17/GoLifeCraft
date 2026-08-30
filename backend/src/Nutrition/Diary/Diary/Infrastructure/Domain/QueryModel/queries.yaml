@@ -44,3 +44,9 @@ services:
     class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineConsumeDiaryMealNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Diary\Diary\Domain\QueryModel\FindDiaryEntryLotNeedleDataQuery:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineFindDiaryEntryLotNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'
+      $lotAllocator: '@Nutrition\Kitchen\Production\Domain\Service\ProductionLotAllocator'

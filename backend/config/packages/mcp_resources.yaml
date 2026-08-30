@@ -91,12 +91,26 @@ parameters:
             write_roles: []
             delete_roles: []
 
+        production_item_consumption:
+            class: 'Nutrition\Kitchen\Production\Domain\Model\ProductionItemConsumption'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Kitchen/Production/Infrastructure/Domain/Model/Doctrine/Mapping/ProductionItemConsumption.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
+
         diary_entry:
             class: 'Nutrition\Diary\Diary\Domain\Model\DiaryEntry'
             sidecar: '%kernel.project_dir%/src/Nutrition/Diary/Diary/Infrastructure/Domain/Model/Doctrine/Mapping/DiaryEntry.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
             write_roles: [ROLE_GOD, ROLE_USER]
             delete_roles: [ROLE_GOD, ROLE_USER]
+
+        diary_entry_node:
+            class: 'Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Diary/Diary/Infrastructure/Domain/Model/Doctrine/Mapping/DiaryEntryNode.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
 
         diary_goal:
             class: 'Nutrition\Diary\Goal\Domain\Model\DiaryGoal'

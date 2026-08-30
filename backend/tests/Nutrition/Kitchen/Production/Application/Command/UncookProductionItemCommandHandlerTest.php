@@ -11,7 +11,9 @@ use Nutrition\Kitchen\Production\Domain\Exception\CookProductionItemException;
 use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Infrastructure\Domain\Model\InMemory\InMemoryProductionRepository;
-use Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory\InMemoryCookProductionItemNeedleDataQuery;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\Service\InMemory\InMemoryProductionCompositionResolver;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\Service\InMemory\InMemoryProductionLotAllocator;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\Service\InMemory\InMemoryProductionLotCodeGenerator;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -19,7 +21,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class UncookProductionItemCommandHandlerTest extends TestCase
 {
     private InMemoryProductionRepository $productionRepository;
-    private InMemoryCookProductionItemNeedleDataQuery $needleDataQuery;
+    private InMemoryProductionCompositionResolver $compositionResolver;
     private DomainEventCollectorService $domainEventCollectorService;
     private CookProductionItemCommandHandler $cookHandler;
     private UncookProductionItemCommandHandler $handler;
@@ -28,14 +30,16 @@ final class UncookProductionItemCommandHandlerTest extends TestCase
     protected function setUp(): void
     {
         $dateTimeGenerator = new DateTimeGenerator();
-        $this->needleDataQuery = new InMemoryCookProductionItemNeedleDataQuery();
-        $this->needleDataQuery->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 120.0);
+        $this->compositionResolver = new InMemoryProductionCompositionResolver();
+        $this->compositionResolver->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 120.0);
 
         $this->productionRepository = new InMemoryProductionRepository();
         $this->domainEventCollectorService = new DomainEventCollectorService();
         $this->cookHandler = new CookProductionItemCommandHandler(
             productionRepository: $this->productionRepository,
-            needleDataQuery: $this->needleDataQuery,
+            compositionResolver: $this->compositionResolver,
+            lotCodeGenerator: new InMemoryProductionLotCodeGenerator(),
+            lotAllocator: new InMemoryProductionLotAllocator(),
             domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -57,6 +61,7 @@ final class UncookProductionItemCommandHandlerTest extends TestCase
                     servingsPlanned: 2.0,
                     nameSnapshot: 'Lentejas con chorizo',
                     emojiSnapshot: '🍲',
+                    composition: [],
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $dateTimeGenerator,
                 ),
@@ -67,6 +72,7 @@ final class UncookProductionItemCommandHandlerTest extends TestCase
                     servingsPlanned: 3.0,
                     nameSnapshot: 'Arroz basmati',
                     emojiSnapshot: '🍚',
+                    composition: [],
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $dateTimeGenerator,
                 ),
@@ -125,7 +131,7 @@ final class UncookProductionItemCommandHandlerTest extends TestCase
         $this->cook(itemId: $itemId, servings: 5.0);
         $this->domainEventCollectorService->reset();
 
-        $this->needleDataQuery->addIngredient(
+        $this->compositionResolver->addIngredient(
             recipeId: 'recipe-1',
             articleId: 'article-2',
             quantityPerServing: 50.0,

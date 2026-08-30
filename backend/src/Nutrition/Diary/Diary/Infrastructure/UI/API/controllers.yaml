@@ -75,3 +75,17 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\AssignDiaryEntryLotController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\AssignDiaryEntryLotController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\AssignDiaryEntryNodeLotController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\AssignDiaryEntryNodeLotController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

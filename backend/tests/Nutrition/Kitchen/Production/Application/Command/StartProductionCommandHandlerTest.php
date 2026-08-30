@@ -9,6 +9,7 @@ use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Infrastructure\Domain\Model\InMemory\InMemoryProductionRepository;
 use Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory\InMemoryStartProductionNeedleDataQuery;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\Service\InMemory\InMemoryProductionCompositionResolver;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -30,6 +31,7 @@ final class StartProductionCommandHandlerTest extends TestCase
         $this->handler = new StartProductionCommandHandler(
             productionRepository: $this->productionRepository,
             needleDataQuery: $needleDataQuery,
+            compositionResolver: new InMemoryProductionCompositionResolver(),
             domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: new DateTimeGenerator(),
         );

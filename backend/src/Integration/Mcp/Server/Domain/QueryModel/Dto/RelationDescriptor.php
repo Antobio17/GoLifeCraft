@@ -11,6 +11,7 @@ final readonly class RelationDescriptor
         public string $kind,
         public bool $writable,
         public bool $expandable,
+        public ?string $foreignField = null,
     ) {
     }
 
@@ -22,6 +23,7 @@ final readonly class RelationDescriptor
             'kind' => $this->kind,
             'writable' => $this->writable,
             'expandable' => $this->expandable,
+            'foreignField' => $this->foreignField,
         ];
     }
 }

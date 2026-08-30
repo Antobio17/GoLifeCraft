@@ -39,6 +39,7 @@ final readonly class ResetDiaryEntryTreeCommandHandler
                 servings: $diaryEntry->quantity,
                 existingNodes: $diaryEntry->nodes,
                 userId: $command->updatedByUserId,
+                productionItemId: $diaryEntry->productionItemId,
             ),
             customized: false,
         );

@@ -16,6 +16,7 @@ final readonly class DiaryEntryTreeAdjusted extends DomainEvent
         public string $meal,
         public string $kind,
         public ?string $refId,
+        public ?string $productionItemId,
         public float $quantity,
         public bool $customized,
         public string $name,

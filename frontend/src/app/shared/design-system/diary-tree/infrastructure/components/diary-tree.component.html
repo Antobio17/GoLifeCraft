@@ -76,6 +76,34 @@
           "
         />
       </ds-stack>
+
+      @if (row.lotPickable) {
+        <ds-stack
+          class="diary-tree__lot"
+          [style.margin-left]="indentOf(row)"
+          direction="row"
+          align="center"
+        >
+          <ds-button
+            variant="ghost"
+            size="sm"
+            icon="package"
+            (clicked)="lotPicked.emit(row.path)"
+            >{{ row.lotLabel }}</ds-button
+          >
+        </ds-stack>
+      } @else if (row.lotLabel) {
+        <ds-stack
+          class="diary-tree__lot diary-tree__lot--fixed"
+          [style.margin-left]="indentOf(row)"
+          direction="row"
+          align="center"
+          gap="var(--ds-space-1-5)"
+        >
+          <ds-icon name="package" [size]="13" [stroke]="2.2" />
+          <ds-text class="diary-tree__lot-text">{{ row.lotLabel }}</ds-text>
+        </ds-stack>
+      }
     }
   </ds-stack>
 </ds-stack>

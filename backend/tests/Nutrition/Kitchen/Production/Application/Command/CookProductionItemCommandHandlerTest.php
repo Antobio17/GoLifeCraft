@@ -10,7 +10,9 @@ use Nutrition\Kitchen\Production\Domain\Exception\CookProductionItemException;
 use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Infrastructure\Domain\Model\InMemory\InMemoryProductionRepository;
-use Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory\InMemoryCookProductionItemNeedleDataQuery;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\Service\InMemory\InMemoryProductionCompositionResolver;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\Service\InMemory\InMemoryProductionLotAllocator;
+use Nutrition\Kitchen\Production\Infrastructure\Domain\Service\InMemory\InMemoryProductionLotCodeGenerator;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -18,7 +20,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class CookProductionItemCommandHandlerTest extends TestCase
 {
     private InMemoryProductionRepository $productionRepository;
-    private InMemoryCookProductionItemNeedleDataQuery $needleDataQuery;
+    private InMemoryProductionCompositionResolver $compositionResolver;
     private DomainEventCollectorService $domainEventCollectorService;
     private CookProductionItemCommandHandler $handler;
     private Production $production;
@@ -27,11 +29,13 @@ final class CookProductionItemCommandHandlerTest extends TestCase
     {
         $dateTimeGenerator = new DateTimeGenerator();
         $this->productionRepository = new InMemoryProductionRepository();
-        $this->needleDataQuery = new InMemoryCookProductionItemNeedleDataQuery();
+        $this->compositionResolver = new InMemoryProductionCompositionResolver();
         $this->domainEventCollectorService = new DomainEventCollectorService();
         $this->handler = new CookProductionItemCommandHandler(
             productionRepository: $this->productionRepository,
-            needleDataQuery: $this->needleDataQuery,
+            compositionResolver: $this->compositionResolver,
+            lotCodeGenerator: new InMemoryProductionLotCodeGenerator(),
+            lotAllocator: new InMemoryProductionLotAllocator(),
             domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -48,6 +52,7 @@ final class CookProductionItemCommandHandlerTest extends TestCase
                     servingsPlanned: 2.0,
                     nameSnapshot: 'Lentejas con chorizo',
                     emojiSnapshot: '🍲',
+                    composition: [],
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $dateTimeGenerator,
                 ),
@@ -58,6 +63,7 @@ final class CookProductionItemCommandHandlerTest extends TestCase
                     servingsPlanned: 3.0,
                     nameSnapshot: 'Arroz basmati',
                     emojiSnapshot: '🍚',
+                    composition: [],
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $dateTimeGenerator,
                 ),
@@ -72,7 +78,7 @@ final class CookProductionItemCommandHandlerTest extends TestCase
 
     public function testItCooksOneRecipeWithTheServingsActuallyCooked(): void
     {
-        $this->needleDataQuery->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 120.0);
+        $this->compositionResolver->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 120.0);
 
         ($this->handler)(new CookProductionItemCommand(
             productionId: 'production-1',
@@ -97,8 +103,8 @@ final class CookProductionItemCommandHandlerTest extends TestCase
 
     public function testItMergesTheSameArticleComingFromNestedRecipes(): void
     {
-        $this->needleDataQuery->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 100.0);
-        $this->needleDataQuery->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 50.0);
+        $this->compositionResolver->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 100.0);
+        $this->compositionResolver->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 50.0);
 
         ($this->handler)(new CookProductionItemCommand(
             productionId: 'production-1',
@@ -115,9 +121,9 @@ final class CookProductionItemCommandHandlerTest extends TestCase
 
     public function testACompositeRecipeSpendsItsOwnArticlesAndTheSubRecipeServings(): void
     {
-        $this->needleDataQuery->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 20.0);
-        $this->needleDataQuery->addSubRecipe(recipeId: 'recipe-1', subRecipeId: 'recipe-porridge', servingsPerServing: 1.0);
-        $this->needleDataQuery->addIngredient(recipeId: 'recipe-porridge', articleId: 'article-oats', quantityPerServing: 60.0);
+        $this->compositionResolver->addIngredient(recipeId: 'recipe-1', articleId: 'article-1', quantityPerServing: 20.0);
+        $this->compositionResolver->addSubRecipe(recipeId: 'recipe-1', subRecipeId: 'recipe-porridge', servingsPerServing: 1.0);
+        $this->compositionResolver->addIngredient(recipeId: 'recipe-porridge', articleId: 'article-oats', quantityPerServing: 60.0);
 
         ($this->handler)(new CookProductionItemCommand(
             productionId: 'production-1',

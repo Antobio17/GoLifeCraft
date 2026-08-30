@@ -107,6 +107,20 @@
     "meal": {
       "markEaten": "Mark as eaten",
       "unmark": "Unmark the meal"
+    },
+    "lot": {
+      "title": "From which batch?",
+      "hint": "What the diary counts is what went into that batch.",
+      "close": "Close",
+      "loading": "Looking for batches…",
+      "empty": "Nothing cooked of this recipe.",
+      "none": "No batch",
+      "untitled": "Batch",
+      "left": "{{servings}} left",
+      "gone": "no servings free",
+      "changed": "ingredients changed",
+      "followRecipe": "Follow the recipe",
+      "followRecipeHint": "Counts the recipe ingredients instead of a batch."
     }
   }
 }

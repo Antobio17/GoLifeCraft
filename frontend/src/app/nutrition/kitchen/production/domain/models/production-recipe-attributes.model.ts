@@ -14,6 +14,9 @@ export interface ProductionRecipeAttributes {
   servingsPlanned: number;
   servingsCooked: number;
   recipeServings: number;
+  code: string | null;
+  label: string;
+  customized: boolean;
   checkedArticleIds: string[];
   checkedStepPositions: number[];
   ingredients: ProductionIngredient[];

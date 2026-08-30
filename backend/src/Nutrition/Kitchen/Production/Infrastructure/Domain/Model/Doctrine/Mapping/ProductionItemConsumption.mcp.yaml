@@ -1,0 +1,58 @@
+label: Cooked batch ingredient
+
+fields:
+  productionItemId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the batch this line belongs to. The lines of a batch are what it was really cooked
+      with: they are frozen when the recipe is cooked, so editing the recipe afterwards never
+      rewrites them, and a diary entry served from the batch counts these and not the recipe.
+    filterable: true
+  kind:
+    writable: false
+    enum: [article, recipe]
+    description: >-
+      Whether the line is a catalog article ("article", the amount discounted from the pantry) or
+      another recipe used as a sub-recipe ("recipe", in servings).
+    filterable: true
+  refId:
+    writable: false
+    min: 36
+    max: 36
+    description: 'Id of the referenced entity: an Article id when kind is "article", a Recipe id when kind is "recipe".'
+    filterable: true
+  quantity:
+    writable: false
+    type: float
+    min: 0
+    description: >-
+      Amount really used for the whole batch, in the article's base unit ("g"/"ml") when kind is
+      "article", or in servings of the sub-recipe when kind is "recipe". Divide it by the batch's
+      servingsCooked to get the amount per serving.
+  unit:
+    writable: false
+    max: 32
+    description: 'Base unit of "quantity" when kind is "article" ("g" or "ml"). Null for kind "recipe", which is always servings.'
+  displayQuantity:
+    writable: false
+    type: float
+    min: 0
+    description: >-
+      The same amount as the cook wrote it, in the unit they picked (for example 2 "unit" instead
+      of 120 g). Only there to show the line back; the maths always uses "quantity".
+  displayUnit:
+    writable: false
+    max: 32
+    description: Unit of "displayQuantity", one of the article's equivalence alias keys. Null when it matches the base unit.
+  sourceProductionItemId:
+    writable: false
+    max: 36
+    description: >-
+      Only for kind "recipe": the id of the batch the sub-recipe was served from, when it was
+      served from a cooked batch instead of from the recipe. It chains batch to batch, so the
+      whole tree of what was really cooked hangs from here.
+    filterable: true
+
+relations: {}

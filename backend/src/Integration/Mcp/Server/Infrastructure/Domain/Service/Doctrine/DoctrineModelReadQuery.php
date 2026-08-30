@@ -5,10 +5,13 @@ namespace Integration\Mcp\Server\Infrastructure\Domain\Service\Doctrine;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Integration\Mcp\Server\Domain\QueryModel\Dto\ModelDescriptor;
+use Integration\Mcp\Server\Domain\QueryModel\Dto\RelationDescriptor;
 use Integration\Mcp\Server\Domain\Service\ModelReadQuery;
 
 final readonly class DoctrineModelReadQuery implements ModelReadQuery
 {
+    private const string KIND_ONE = 'one';
+
     public function __construct(
         private EntityManagerInterface $entityManager,
     ) {
@@ -25,13 +28,15 @@ final readonly class DoctrineModelReadQuery implements ModelReadQuery
     ): array {
         $total = $this->count(descriptor: $descriptor, filters: $filters);
 
+        $joined = $this->joinedRelations(descriptor: $descriptor, include: $include);
+
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('e')
             ->from(from: $descriptor->class, alias: 'e')
             ->setFirstResult(firstResult: ($page - 1) * $pageSize)
             ->setMaxResults(maxResults: $pageSize);
 
-        foreach ($include as $relationName) {
+        foreach ($joined as $relationName) {
             $queryBuilder->leftJoin(sprintf('e.%s', $relationName), $relationName)->addSelect($relationName);
         }
 
@@ -42,9 +47,17 @@ final readonly class DoctrineModelReadQuery implements ModelReadQuery
         }
 
         $records = array_map(
-            fn (object $entity) => $this->mapEntity($descriptor, $entity, $include, $includedDescriptors),
+            fn (object $entity) => $this->mapEntity($descriptor, $entity, $joined, $includedDescriptors),
             $queryBuilder->getQuery()->getResult(),
         );
+
+        foreach (array_diff($include, $joined) as $relationName) {
+            $records = $this->attachChildren(
+                relation: $descriptor->relation($relationName),
+                childDescriptor: $includedDescriptors[$relationName],
+                records: $records,
+            );
+        }
 
         return ['total' => $total, 'data' => $records];
     }
@@ -79,6 +92,74 @@ final readonly class DoctrineModelReadQuery implements ModelReadQuery
     }
 
     /**
+     * @param string[] $include
+     *
+     * @return string[] the relations Doctrine can reach by navigation, the rest are read by their foreign key
+     */
+    private function joinedRelations(ModelDescriptor $descriptor, array $include): array
+    {
+        return array_values(array_filter(
+            $include,
+            static fn (string $name): bool => null === $descriptor->relation($name)?->foreignField,
+        ));
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $records
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function attachChildren(RelationDescriptor $relation, ModelDescriptor $childDescriptor, array $records): array
+    {
+        $childrenByOwner = $this->childrenByOwner(
+            relation: $relation,
+            childDescriptor: $childDescriptor,
+            ownerIds: array_column($records, 'id'),
+        );
+
+        return array_map(
+            static function (array $record) use ($relation, $childrenByOwner): array {
+                $children = $childrenByOwner[$record['id']] ?? [];
+                $record[$relation->name] = self::KIND_ONE === $relation->kind ? ($children[0] ?? null) : $children;
+
+                return $record;
+            },
+            $records,
+        );
+    }
+
+    /**
+     * @param string[] $ownerIds
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    private function childrenByOwner(RelationDescriptor $relation, ModelDescriptor $childDescriptor, array $ownerIds): array
+    {
+        if ([] === $ownerIds) {
+            return [];
+        }
+
+        $children = $this->entityManager->createQueryBuilder()
+            ->select('c')
+            ->from(from: $childDescriptor->class, alias: 'c')
+            ->where(sprintf('c.%s IN (:ownerIds)', $relation->foreignField))
+            ->setParameter(key: 'ownerIds', value: $ownerIds)
+            ->addOrderBy('c.createdAt', 'ASC')
+            ->addOrderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $grouped = [];
+
+        foreach ($children as $child) {
+            $grouped[$child->{$relation->foreignField}][] = $this->mapRelated(descriptor: $childDescriptor, entity: $child);
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @param string[]                       $include
      * @param array<string, ModelDescriptor> $includedDescriptors
      */
     private function mapEntity(ModelDescriptor $descriptor, object $entity, array $include, array $includedDescriptors): array

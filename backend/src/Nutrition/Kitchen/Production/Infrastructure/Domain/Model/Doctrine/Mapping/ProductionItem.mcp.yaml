@@ -50,5 +50,33 @@ fields:
     writable: false
     max: 16
     description: Emoji of the recipe as it was when the batch was planned.
+  code:
+    writable: false
+    max: 16
+    description: >-
+      Short code the batch gets when it is cooked, like "L-042": what the cook writes on the tupper
+      or the freezer bag. A diary entry points at a batch through it, so what was actually cooked
+      is what the diary counts, even a month later.
+    filterable: true
+  label:
+    writable: false
+    max: 120
+    description: >-
+      Free text the cook adds when storing the batch, like "congelador cajón 2" or "3 tuppers".
+      Only there to recognise the batch when picking it from the diary. Written from the kitchen
+      screen, which is also what stamps the batch as cooked.
+  customized:
+    writable: false
+    type: boolean
+    description: >-
+      True when the ingredients of this batch were changed before cooking, so its composition no
+      longer matches the recipe. The diary entries eating from it count the changed composition.
+    filterable: true
 
-relations: {}
+relations:
+  consumptions:
+    target: production_item_consumption
+    kind: many
+    foreign_field: productionItemId
+    writable: false
+    expandable: true

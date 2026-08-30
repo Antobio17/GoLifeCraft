@@ -109,10 +109,8 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-checkrow__name {
         font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-bold);
-        line-height: 1.2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
       }
       .ds-checkrow__meta {
         font-size: var(--ds-text-xs);
@@ -128,7 +126,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       :host([wrap]) .ds-checkrow__name {
         font-weight: var(--ds-weight-semibold);
         line-height: 1.4;
-        white-space: normal;
       }
       .ds-checkrow__eyebrow {
         font-size: var(--ds-text-xs);

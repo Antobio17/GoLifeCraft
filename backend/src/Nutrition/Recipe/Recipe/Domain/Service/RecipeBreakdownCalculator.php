@@ -10,10 +10,56 @@ final class RecipeBreakdownCalculator
 {
     private const string DELETED_NAME = '(eliminado)';
 
-    /** @return RecipeBreakdownItem[] */
-    public function expand(RecipeNutritionGraph $graph, string $recipeId, float $servings): array
+    /**
+     * Compositions given from the outside, keyed by the path of the recipe node they replace: a
+     * sub-recipe pinned to a cooked batch is expanded with what that batch went in with, per
+     * serving, instead of with what its recipe declares. A sub-recipe ingredient that carries its
+     * own "composition" key does the same without being pinned by hand: it is the batch the
+     * kitchen already recorded as its source.
+     *
+     * @param array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>> $compositionByPath
+     *
+     * @return RecipeBreakdownItem[]
+     */
+    public function expand(RecipeNutritionGraph $graph, string $recipeId, float $servings, array $compositionByPath = []): array
     {
-        return $this->expandRecipe(graph: $graph, recipeId: $recipeId, servings: $servings, parentPath: null, depth: 0, stack: []);
+        return $this->expandRecipe(
+            graph: $graph,
+            recipeId: $recipeId,
+            servings: $servings,
+            parentPath: null,
+            depth: 0,
+            stack: [],
+            compositionByPath: $compositionByPath,
+        );
+    }
+
+    /**
+     * Same breakdown, but from an ingredient list given from the outside instead of the one the
+     * recipe declares: what a cooked batch actually went in with.
+     *
+     * @param array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>                $ingredients
+     * @param array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>> $compositionByPath
+     *
+     * @return RecipeBreakdownItem[]
+     */
+    public function expandComposition(
+        RecipeNutritionGraph $graph,
+        array $ingredients,
+        float $factor = 1.0,
+        ?string $parentPath = null,
+        int $depth = 0,
+        array $compositionByPath = [],
+    ): array {
+        return $this->expandIngredients(
+            graph: $graph,
+            ingredients: $ingredients,
+            factor: $factor,
+            parentPath: $parentPath,
+            depth: $depth,
+            stack: [],
+            compositionByPath: $compositionByPath,
+        );
     }
 
     /**
@@ -54,7 +100,8 @@ final class RecipeBreakdownCalculator
     }
 
     /**
-     * @param array<int, string> $stack
+     * @param array<int, string>                                                                            $stack
+     * @param array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>> $compositionByPath
      *
      * @return RecipeBreakdownItem[]
      */
@@ -65,16 +112,56 @@ final class RecipeBreakdownCalculator
         ?string $parentPath,
         int $depth,
         array $stack,
+        array $compositionByPath,
     ): array {
+        $composition = null === $parentPath ? null : ($compositionByPath[$parentPath] ?? null);
+
+        if (null !== $composition) {
+            return $this->expandIngredients(
+                graph: $graph,
+                ingredients: $composition,
+                factor: $servings,
+                parentPath: $parentPath,
+                depth: $depth,
+                stack: $stack,
+                compositionByPath: $compositionByPath,
+            );
+        }
+
         if (!$graph->hasRecipe(recipeId: $recipeId) || in_array(needle: $recipeId, haystack: $stack, strict: true)) {
             return [];
         }
 
-        $factor = $servings / $graph->recipeServings(recipeId: $recipeId);
-        $nextStack = array_merge($stack, [$recipeId]);
+        return $this->expandIngredients(
+            graph: $graph,
+            ingredients: $graph->recipeIngredients(recipeId: $recipeId),
+            factor: $servings / $graph->recipeServings(recipeId: $recipeId),
+            parentPath: $parentPath,
+            depth: $depth,
+            stack: array_merge($stack, [$recipeId]),
+            compositionByPath: $compositionByPath,
+        );
+    }
+
+    /**
+     * @param array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>                $ingredients
+     * @param array<int, string>                                                                            $stack
+     * @param array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>> $compositionByPath
+     *
+     * @return RecipeBreakdownItem[]
+     */
+    private function expandIngredients(
+        RecipeNutritionGraph $graph,
+        array $ingredients,
+        float $factor,
+        ?string $parentPath,
+        int $depth,
+        array $stack,
+        array $compositionByPath = [],
+    ): array {
         $items = [];
 
-        foreach (array_values($graph->recipeIngredients(recipeId: $recipeId)) as $position => $ingredient) {
+        foreach (array_values($ingredients) as $position => $ingredient) {
             $path = RecipeBreakdownItem::buildPath(parentPath: $parentPath, position: $position);
             $quantity = RecipeBreakdownItem::round(value: $ingredient['quantity'] * $factor);
 
@@ -93,14 +180,25 @@ final class RecipeBreakdownCalculator
                 continue;
             }
 
-            $children = $this->expandRecipe(
-                graph: $graph,
-                recipeId: $ingredient['refId'],
-                servings: $quantity,
-                parentPath: $path,
-                depth: $depth + 1,
-                stack: $nextStack,
-            );
+            $children = isset($ingredient['composition'])
+                ? $this->expandIngredients(
+                    graph: $graph,
+                    ingredients: $ingredient['composition'],
+                    factor: $quantity,
+                    parentPath: $path,
+                    depth: $depth + 1,
+                    stack: $stack,
+                    compositionByPath: $compositionByPath,
+                )
+                : $this->expandRecipe(
+                    graph: $graph,
+                    recipeId: $ingredient['refId'],
+                    servings: $quantity,
+                    parentPath: $path,
+                    depth: $depth + 1,
+                    stack: $stack,
+                    compositionByPath: $compositionByPath,
+                );
 
             $items[] = $this->recipeItem(
                 graph: $graph,

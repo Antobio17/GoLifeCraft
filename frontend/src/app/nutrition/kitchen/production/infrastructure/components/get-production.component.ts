@@ -102,13 +102,7 @@ export class GetProductionComponent {
 
       return {
         item,
-        meta: done
-          ? this.t("getProduction.row.cooked", {
-              servings: this.view.servings(item.servingsCooked),
-            })
-          : this.t("getProduction.row.planned", {
-              servings: this.view.servings(item.servingsPlanned),
-            }),
+        meta: this.rowMeta(item, done),
         done,
         origin: item.requiredBy.length
           ? this.t("getProduction.row.requiredBy", {
@@ -120,6 +114,23 @@ export class GetProductionComponent {
   );
 
   pendingCount = computed(() => this.rows().filter((row) => !row.done).length);
+
+  private rowMeta(item: ProductionItemView, done: boolean): string {
+    const servings = done
+      ? this.t("getProduction.row.cooked", {
+          servings: this.view.servings(item.servingsCooked),
+        })
+      : this.t("getProduction.row.planned", {
+          servings: this.view.servings(item.servingsPlanned),
+        });
+
+    const marks = [
+      item.code ?? "",
+      item.customized ? this.t("getProduction.row.changed") : "",
+    ].filter((mark) => "" !== mark);
+
+    return 0 === marks.length ? servings : `${servings} · ${marks.join(" · ")}`;
+  }
 
   summary = computed(() => {
     const detail = this.production();

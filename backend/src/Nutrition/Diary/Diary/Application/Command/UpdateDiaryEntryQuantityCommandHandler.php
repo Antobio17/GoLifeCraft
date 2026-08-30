@@ -78,6 +78,7 @@ final readonly class UpdateDiaryEntryQuantityCommandHandler
                     servings: $command->quantity,
                     existingNodes: [],
                     userId: $command->updatedByUserId,
+                    productionItemId: $diaryEntry->productionItemId,
                 ),
                 customized: false,
             );

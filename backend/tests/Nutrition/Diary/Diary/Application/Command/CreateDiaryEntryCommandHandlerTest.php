@@ -8,6 +8,7 @@ use Nutrition\Diary\Diary\Domain\Exception\CreateDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
+use Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\InMemory\InMemoryFindDiaryEntryLotNeedleDataQuery;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntryTreeBuilder;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
@@ -31,6 +32,7 @@ final class CreateDiaryEntryCommandHandlerTest extends TestCase
             diaryEntryRepository: $this->repository,
             snapshotCalculator: $this->snapshotCalculator,
             treeBuilder: $this->treeBuilder,
+            lotNeedleDataQuery: new InMemoryFindDiaryEntryLotNeedleDataQuery(),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: new DateTimeGenerator(),
         );

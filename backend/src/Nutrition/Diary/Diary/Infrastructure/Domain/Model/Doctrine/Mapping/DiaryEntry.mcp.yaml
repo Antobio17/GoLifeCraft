@@ -38,6 +38,16 @@ fields:
       The id of the referenced entity: an Article id when kind is "product",
       or a Recipe id when kind is "recipe". Leave it null when kind is "quick".
     filterable: true
+  productionItemId:
+    writable: false
+    required: false
+    max: 36
+    description: >-
+      Only for kind "recipe": the id of the cooked batch this plate is served from. When it is
+      set, the breakdown and the macros come from what that batch was actually cooked with, not
+      from the recipe, so swapping an ingredient while cooking is what the diary counts. Assigned
+      on its own to the oldest batch with servings left, and changed by hand from the diary.
+    filterable: true
   quantity:
     writable: true
     required: true
@@ -95,5 +105,61 @@ fields:
     type: float
     min: 0
     description: Grams of carbs per unit of the free entry, only when kind is "quick". Optional.
+  nameSnapshot:
+    writable: false
+    max: 255
+    description: >-
+      Name of the article or recipe as it was when the entry was logged. The diary never rewrites
+      what was already eaten, so renaming the article afterwards leaves past entries alone.
+  emojiSnapshot:
+    writable: false
+    max: 16
+    description: Emoji of the article or recipe as it was when the entry was logged.
+  caloriesSnapshot:
+    writable: false
+    type: float
+    min: 0
+    description: >-
+      Calories of the whole entry, already multiplied by "quantity". Recalculated on its own after
+      every write, from the recipe or from the cooked batch when there is one, so never write the
+      totals: write "quantity" and read this back.
+  proteinSnapshot:
+    writable: false
+    type: float
+    min: 0
+    description: Grams of protein of the whole entry, kept in step with caloriesSnapshot.
+  fatSnapshot:
+    writable: false
+    type: float
+    min: 0
+    description: Grams of fat of the whole entry, kept in step with caloriesSnapshot.
+  carbsSnapshot:
+    writable: false
+    type: float
+    min: 0
+    description: Grams of carbs of the whole entry, kept in step with caloriesSnapshot.
+  customized:
+    writable: false
+    type: boolean
+    description: >-
+      True when the breakdown of this plate was edited by hand, which detaches it from the recipe:
+      from then on the entry keeps its own tree and changes to the recipe no longer reach it.
+    filterable: true
+  consumed:
+    writable: false
+    type: boolean
+    description: >-
+      True once the meal has been ticked off as eaten, which is what discounts the servings from
+      the recipe stock. It is only toggled from the diary, never by writing this field.
+    filterable: true
 
-relations: {}
+relations:
+  nodes:
+    target: diary_entry_node
+    kind: many
+    foreign_field: diaryEntryId
+    writable: false
+    expandable: true
+
+cascade_delete:
+  - { resource: diary_entry_node, foreign_field: diaryEntryId }

@@ -4,6 +4,7 @@ services:
     arguments:
       $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
       $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\StartProductionNeedleDataQuery'
+      $compositionResolver: '@Nutrition\Kitchen\Production\Domain\Service\ProductionCompositionResolver'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -13,7 +14,9 @@ services:
     class: Nutrition\Kitchen\Production\Application\Command\CookProductionItemCommandHandler
     arguments:
       $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
-      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\CookProductionItemNeedleDataQuery'
+      $compositionResolver: '@Nutrition\Kitchen\Production\Domain\Service\ProductionCompositionResolver'
+      $lotCodeGenerator: '@Nutrition\Kitchen\Production\Domain\Service\ProductionLotCodeGenerator'
+      $lotAllocator: '@Nutrition\Kitchen\Production\Domain\Service\ProductionLotAllocator'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -39,6 +42,44 @@ services:
 
   Nutrition\Kitchen\Production\Application\Command\DiscardProductionCommandHandler:
     class: Nutrition\Kitchen\Production\Application\Command\DiscardProductionCommandHandler
+    arguments:
+      $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Command\AdjustProductionItemIngredientsCommandHandler:
+    class: Nutrition\Kitchen\Production\Application\Command\AdjustProductionItemIngredientsCommandHandler
+    arguments:
+      $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
+      $compositionResolver: '@Nutrition\Kitchen\Production\Domain\Service\ProductionCompositionResolver'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Command\RestoreProductionItemIngredientsCommandHandler:
+    class: Nutrition\Kitchen\Production\Application\Command\RestoreProductionItemIngredientsCommandHandler
+    arguments:
+      $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
+      $compositionResolver: '@Nutrition\Kitchen\Production\Domain\Service\ProductionCompositionResolver'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Command\LabelProductionItemCommandHandler:
+    class: Nutrition\Kitchen\Production\Application\Command\LabelProductionItemCommandHandler
+    arguments:
+      $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Command\ServeProductionItemSubRecipeCommandHandler:
+    class: Nutrition\Kitchen\Production\Application\Command\ServeProductionItemSubRecipeCommandHandler
     arguments:
       $productionRepository: '@Nutrition\Kitchen\Production\Domain\Model\ProductionRepository'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'

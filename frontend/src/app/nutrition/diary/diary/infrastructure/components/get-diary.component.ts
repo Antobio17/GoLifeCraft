@@ -8,6 +8,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
+import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
@@ -31,6 +32,7 @@ import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrast
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
+import { ChoiceRowComponent } from "@shared/design-system/choice-row/infrastructure/components/choice-row.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
@@ -71,6 +73,13 @@ import { CreateDiaryEntryService } from "@nutrition/diary/diary/application/serv
 import { UpdateDiaryEntryService } from "@nutrition/diary/diary/application/services/update-diary-entry.service";
 import { UpdateDiaryEntryNodeService } from "@nutrition/diary/diary/application/services/update-diary-entry-node.service";
 import { ResetDiaryEntryTreeService } from "@nutrition/diary/diary/application/services/reset-diary-entry-tree.service";
+import { AssignDiaryEntryLotService } from "@nutrition/diary/diary/application/services/assign-diary-entry-lot.service";
+import {
+  DiaryLotLabels,
+  DiaryLotViewService,
+} from "@nutrition/diary/diary/application/services/diary-lot-view.service";
+import { GetRecipeLotsService } from "@nutrition/kitchen/production/application/services/get-recipe-lots.service";
+import { DiaryLotRow } from "@nutrition/diary/diary/domain/models/diary-lot-row.model";
 import { DiaryTreeViewService } from "@nutrition/diary/diary/application/services/diary-tree-view.service";
 import { DeleteDiaryEntryService } from "@nutrition/diary/diary/application/services/delete-diary-entry.service";
 import { ConsumeDiaryMealService } from "@nutrition/diary/diary/application/services/consume-diary-meal.service";
@@ -125,6 +134,7 @@ type PickerTab = "product" | "recipe" | "quick";
     SkeletonSectionHeaderComponent,
     SkeletonListComponent,
     ModalSheetComponent,
+    ChoiceRowComponent,
     SearchInputComponent,
     SegmentedToggleComponent,
     NutrientInputComponent,
@@ -150,6 +160,9 @@ export class GetDiaryComponent implements OnInit {
   private updateDiaryEntryService = inject(UpdateDiaryEntryService);
   private updateDiaryEntryNodeService = inject(UpdateDiaryEntryNodeService);
   private resetDiaryEntryTreeService = inject(ResetDiaryEntryTreeService);
+  private assignDiaryEntryLotService = inject(AssignDiaryEntryLotService);
+  private getRecipeLotsService = inject(GetRecipeLotsService);
+  private lotView = inject(DiaryLotViewService);
   private deleteDiaryEntryService = inject(DeleteDiaryEntryService);
   private consumeDiaryMealService = inject(ConsumeDiaryMealService);
   private treeView = inject(DiaryTreeViewService);
@@ -231,6 +244,22 @@ export class GetDiaryComponent implements OnInit {
     this.pickerMeal() ? this.mealLabel(this.pickerMeal()) : "",
   );
 
+  lotEntryId = signal<string | null>(null);
+  lotNodePath = signal<string | null>(null);
+  lotSelectedId = signal<string | null>(null);
+  lotRows = signal<DiaryLotRow[]>([]);
+  lotLoading = signal(false);
+  lotSaving = signal(false);
+
+  lotOpen = computed(() => null !== this.lotEntryId());
+
+  lotLabels = computed<DiaryLotLabels>(() => ({
+    untitled: this.t("getDiary.lot.untitled"),
+    left: (servings: string) => this.t("getDiary.lot.left", { servings }),
+    gone: this.t("getDiary.lot.gone"),
+    changed: this.t("getDiary.lot.changed"),
+  }));
+
   expandedEntries = signal<ReadonlySet<string>>(new Set());
   collapsedNodes = signal<ReadonlySet<string>>(new Set());
 
@@ -238,6 +267,7 @@ export class GetDiaryComponent implements OnInit {
     ...this.macroLabels(),
     kcal: this.t("getDiary.kcal"),
     servings: this.t("getDiary.tree.servings"),
+    lotNone: this.t("getDiary.lot.none"),
   }));
 
   mealRows = computed(() =>
@@ -269,9 +299,13 @@ export class GetDiaryComponent implements OnInit {
               entry.tree,
               this.collapsedNodes(),
               this.treeLabels(),
+              0,
+              null !== entry.lot,
             )
           : [],
         showReset: entry.customized,
+        lotPickable: "recipe" === entry.kind && null !== entry.refId,
+        lotLabel: this.lotView.entryLabel(entry.lot, this.treeLabels().lotNone),
         stockLabel: this.stockLabel(entry),
         stockTone:
           DiaryStockState.Covered === entry.stockState
@@ -402,7 +436,10 @@ export class GetDiaryComponent implements OnInit {
     this.consumeDiaryMealService
       .consumeDiaryMeal(this.date(), mealKey, consumed)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({ error: () => this.loadedDay.set(previous) });
+      .subscribe({
+        next: () => this.load(this.date(), true),
+        error: () => this.loadedDay.set(previous),
+      });
   }
 
   ngOnInit(): void {
@@ -636,6 +673,107 @@ export class GetDiaryComponent implements OnInit {
     this.resetDiaryEntryTreeService.resetDiaryEntryTree(entryId).subscribe({
       next: () => this.load(this.date(), true),
     });
+  }
+
+  openNodeLotPicker(entryId: string, path: string): void {
+    const entry = this.entryOf(entryId);
+    const node = entry ? this.treeView.findNode(entry.tree, path) : null;
+
+    if (null === node) return;
+
+    this.lotNodePath.set(path);
+    this.showLotPicker(entryId, node.refId, node.lot?.productionItemId ?? null);
+  }
+
+  openLotPicker(entryId: string, recipeId: string | null): void {
+    this.lotNodePath.set(null);
+    this.showLotPicker(entryId, recipeId, this.lotOf(entryId));
+  }
+
+  private showLotPicker(
+    entryId: string,
+    recipeId: string | null,
+    selectedId: string | null,
+  ): void {
+    if (null === recipeId) return;
+
+    this.lotEntryId.set(entryId);
+    this.lotSelectedId.set(selectedId);
+    this.lotRows.set([]);
+    this.lotLoading.set(true);
+
+    this.getRecipeLotsService
+      .getRecipeLots(recipeId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.lotRows.set(
+            this.lotView.rows(
+              response.data,
+              this.lotSelectedId(),
+              this.lotLabels(),
+            ),
+          );
+          this.lotLoading.set(false);
+        },
+        error: () => this.lotLoading.set(false),
+      });
+  }
+
+  closeLotPicker(): void {
+    this.lotEntryId.set(null);
+    this.lotNodePath.set(null);
+    this.lotRows.set([]);
+  }
+
+  onPickLot(productionItemId: string | null): void {
+    const entryId = this.lotEntryId();
+    if (null === entryId || this.lotSaving()) return;
+
+    const nodePath = this.lotNodePath();
+    this.lotSaving.set(true);
+
+    this.assignment(entryId, nodePath, productionItemId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.lotSaving.set(false);
+          this.closeLotPicker();
+          this.load(this.date(), true);
+        },
+        error: () => this.lotSaving.set(false),
+      });
+  }
+
+  private assignment(
+    entryId: string,
+    nodePath: string | null,
+    productionItemId: string | null,
+  ): Observable<void> {
+    if (null === nodePath) {
+      return this.assignDiaryEntryLotService.assignDiaryEntryLot(
+        entryId,
+        productionItemId,
+      );
+    }
+
+    return this.assignDiaryEntryLotService.assignDiaryEntryNodeLot(
+      entryId,
+      nodePath,
+      productionItemId,
+    );
+  }
+
+  private entryOf(entryId: string): DiaryEntryView | null {
+    return (
+      (this.attributes()?.meals ?? [])
+        .flatMap((meal) => meal.entries)
+        .find((entry) => entry.id === entryId) ?? null
+    );
+  }
+
+  private lotOf(entryId: string): string | null {
+    return this.entryOf(entryId)?.lot?.productionItemId ?? null;
   }
 
   toggleEntryTree(entryId: string): void {

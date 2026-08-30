@@ -1,0 +1,27 @@
+services:
+  Nutrition\Kitchen\Production\Domain\Service\ProductionCompositionResolver:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\Service\RecipeGraph\RecipeGraphProductionCompositionResolver
+    arguments:
+      $graphProvider: '@Nutrition\Kitchen\Production\Infrastructure\Domain\Service\RecipeGraph\ProductionWriterRecipeNutritionGraphProvider'
+      $ingredientResolver: '@Nutrition\Kitchen\Production\Infrastructure\Domain\Service\RecipeGraph\ProductionWriterProductionIngredientResolver'
+
+  Nutrition\Kitchen\Production\Infrastructure\Domain\Service\RecipeGraph\ProductionWriterRecipeNutritionGraphProvider:
+    class: Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'
+
+  Nutrition\Kitchen\Production\Infrastructure\Domain\Service\RecipeGraph\ProductionWriterProductionIngredientResolver:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver
+    arguments:
+      $graphProvider: '@Nutrition\Kitchen\Production\Infrastructure\Domain\Service\RecipeGraph\ProductionWriterRecipeNutritionGraphProvider'
+      $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator'
+
+  Nutrition\Kitchen\Production\Domain\Service\ProductionLotCodeGenerator:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\Service\Doctrine\DoctrineProductionLotCodeGenerator
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'
+
+  Nutrition\Kitchen\Production\Domain\Service\ProductionLotAllocator:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\Service\Doctrine\DoctrineProductionLotAllocator
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'

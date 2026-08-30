@@ -38,6 +38,21 @@ update_diary_entry_node:
     diaryEntryId: '[0-9a-fA-F-]{36}'
     nodePath: '[0-9]+(\.[0-9]+)*'
 
+assign_diary_entry_node_lot:
+  path: /api/v1/nutrition/diary/{diaryEntryId}/nodes/{nodePath}/lot
+  methods: [PUT]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\AssignDiaryEntryNodeLotController
+  requirements:
+    diaryEntryId: '[0-9a-fA-F-]{36}'
+    nodePath: '[0-9]+(\.[0-9]+)*'
+
+assign_diary_entry_lot:
+  path: /api/v1/nutrition/diary/{diaryEntryId}/lot
+  methods: [PUT]
+  controller: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\AssignDiaryEntryLotController
+  requirements:
+    diaryEntryId: '[0-9a-fA-F-]{36}'
+
 reset_diary_entry_tree:
   path: /api/v1/nutrition/diary/{diaryEntryId}/tree/reset
   methods: [POST]

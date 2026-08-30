@@ -40,6 +40,7 @@ final class DiscardProductionCommandHandlerTest extends TestCase
                     servingsPlanned: 4.0,
                     nameSnapshot: 'Lentejas con chorizo',
                     emojiSnapshot: '🍲',
+                    composition: [],
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $this->dateTimeGenerator,
                 ),

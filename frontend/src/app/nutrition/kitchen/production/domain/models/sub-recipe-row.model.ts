@@ -5,4 +5,5 @@ export interface SubRecipeRow {
   meta: string;
   short: boolean;
   checked: boolean;
+  lotLabel: string;
 }

@@ -42,3 +42,14 @@ services:
 
   Nutrition\Kitchen\Production\Application\Query\GetProductionItemDataTransform:
     class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetProductionItemDataTransform
+
+  Nutrition\Kitchen\Production\Application\Query\GetRecipeLotsQueryHandler:
+    class: Nutrition\Kitchen\Production\Application\Query\GetRecipeLotsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Kitchen\Production\Domain\QueryModel\GetRecipeLotsNeedleDataQuery'
+      $dataTransform: '@Nutrition\Kitchen\Production\Application\Query\GetRecipeLotsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Kitchen\Production\Application\Query\GetRecipeLotsDataTransform:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\DataTransform\ApiGetRecipeLotsDataTransform

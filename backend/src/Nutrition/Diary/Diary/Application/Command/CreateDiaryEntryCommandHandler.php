@@ -6,6 +6,7 @@ use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
+use Nutrition\Diary\Diary\Domain\QueryModel\FindDiaryEntryLotNeedleDataQuery;
 use Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator;
 use Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -17,6 +18,7 @@ final readonly class CreateDiaryEntryCommandHandler
         private DiaryEntryRepository $diaryEntryRepository,
         private DiaryEntrySnapshotCalculator $snapshotCalculator,
         private DiaryEntryTreeBuilder $treeBuilder,
+        private FindDiaryEntryLotNeedleDataQuery $lotNeedleDataQuery,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -32,7 +34,8 @@ final readonly class CreateDiaryEntryCommandHandler
             unit: $command->unit,
         );
 
-        $nodes = $this->nodesFor(command: $command, diaryEntryId: $id);
+        $productionItemId = $this->lotFor(command: $command);
+        $nodes = $this->nodesFor(command: $command, diaryEntryId: $id, productionItemId: $productionItemId);
 
         $diaryEntry = DiaryEntry::create(
             id: $id,
@@ -47,6 +50,7 @@ final readonly class CreateDiaryEntryCommandHandler
             dateTimeGenerator: $this->dateTimeGenerator,
             nodes: $nodes,
             customized: [] !== $command->tree,
+            productionItemId: $productionItemId,
         );
 
         $this->diaryEntryRepository->save(diaryEntry: $diaryEntry);
@@ -54,11 +58,29 @@ final readonly class CreateDiaryEntryCommandHandler
     }
 
     /**
+     * A plate of a recipe eats from the batch that has been waiting the longest, so what it counts
+     * is what that batch was actually cooked with. An entry that comes with its own breakdown, or
+     * one with nothing cooked to eat from, keeps following the recipe.
+     */
+    private function lotFor(CreateDiaryEntryCommand $command): ?string
+    {
+        if (DiaryEntry::KIND_RECIPE !== $command->kind || [] !== $command->tree) {
+            return null;
+        }
+
+        return $this->lotNeedleDataQuery->findLotWithRoom(
+            recipeId: $command->refId,
+            entryDate: $command->entryDate,
+            servings: $command->quantity,
+        );
+    }
+
+    /**
      * An entry planned from an adjusted menu is born with that same breakdown.
      *
      * @return DiaryEntryNode[]
      */
-    private function nodesFor(CreateDiaryEntryCommand $command, string $diaryEntryId): array
+    private function nodesFor(CreateDiaryEntryCommand $command, string $diaryEntryId, ?string $productionItemId): array
     {
         if (DiaryEntry::KIND_RECIPE !== $command->kind) {
             return [];
@@ -78,6 +100,7 @@ final readonly class CreateDiaryEntryCommandHandler
             servings: $command->quantity,
             existingNodes: [],
             userId: $command->createdByUserId,
+            productionItemId: $productionItemId,
         );
     }
 

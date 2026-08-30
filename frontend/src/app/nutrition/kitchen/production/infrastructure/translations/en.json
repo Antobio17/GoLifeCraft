@@ -71,7 +71,8 @@
       "cooked": "{{servings}} servings cooked",
       "requiredBy": "For {{parents}}",
       "fromDiary": "From the diary",
-      "done": "Done"
+      "done": "Done",
+      "changed": "changed"
     },
     "discardModal": {
       "title": "Discard production",
@@ -114,7 +115,37 @@
       "ready": "{{servings}} servings · you have {{stock}} cooked",
       "short": "{{servings}} servings · you only have {{stock}}",
       "chip": "needs cooking first"
-    }
+    },
+    "edit": "Change",
+    "editCancel": "Cancel",
+    "editHint": "Amounts for the {{servings}} planned servings. Cooking scales them to what comes out.",
+    "customizedChip": "Changed",
+    "customizedHint": "This batch no longer goes in with what the recipe says.",
+    "quantity": "Amount",
+    "unit": "Unit",
+    "addIngredient": "Add ingredient",
+    "removeIngredient": "Remove",
+    "saveIngredients": "Save ingredients",
+    "restoreIngredients": "Back to the recipe",
+    "pickerTitle": "Add to the batch",
+    "pickerSearch": "Search",
+    "pickerEmpty": "Nothing matches",
+    "pickerProducts": "Articles",
+    "pickerRecipes": "Recipes",
+    "close": "Close",
+    "lotHint": "Write it on the tupper",
+    "lotLabel": "Where you store it",
+    "lotPlaceholder": "Freezer, drawer 2",
+    "lotNone": "Automatic batch",
+    "lotTitle": "From which batch?",
+    "lotPickHint": "What is cooked here will count what that batch went in with.",
+    "lotLoading": "Looking for batches…",
+    "lotEmpty": "Nothing cooked of this recipe.",
+    "lotUntitled": "Batch",
+    "lotLeft": "{{servings}} left",
+    "lotGone": "no servings free",
+    "lotAuto": "The oldest one with servings",
+    "lotAutoHint": "Decided when cooking, the way the diary does."
   },
   "production": {
     "does": {

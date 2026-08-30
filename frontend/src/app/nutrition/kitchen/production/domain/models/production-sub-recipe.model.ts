@@ -4,4 +4,7 @@ export interface ProductionSubRecipe {
   emoji: string;
   servings: number;
   inStock: number;
+  sourceProductionItemId: string | null;
+  lotCode: string | null;
+  lotLabel: string;
 }

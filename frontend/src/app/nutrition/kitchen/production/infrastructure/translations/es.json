@@ -71,7 +71,8 @@
       "cooked": "{{servings}} raciones hechas",
       "requiredBy": "Para {{parents}}",
       "fromDiary": "Del diario",
-      "done": "Listo"
+      "done": "Listo",
+      "changed": "modificado"
     },
     "discardModal": {
       "title": "Descartar producción",
@@ -114,7 +115,37 @@
       "ready": "{{servings}} raciones · tienes {{stock}} hechas",
       "short": "{{servings}} raciones · solo tienes {{stock}}",
       "chip": "hay que producirla antes"
-    }
+    },
+    "edit": "Cambiar",
+    "editCancel": "Cancelar",
+    "editHint": "Cantidades para las {{servings}} raciones planificadas. Al cocinar se escalan a lo que salga.",
+    "customizedChip": "Modificado",
+    "customizedHint": "Este lote ya no lleva lo que dice la receta.",
+    "quantity": "Cantidad",
+    "unit": "Unidad",
+    "addIngredient": "Añadir ingrediente",
+    "removeIngredient": "Quitar",
+    "saveIngredients": "Guardar ingredientes",
+    "restoreIngredients": "Volver a la receta",
+    "pickerTitle": "Añadir al lote",
+    "pickerSearch": "Buscar",
+    "pickerEmpty": "Nada que coincida",
+    "pickerProducts": "Artículos",
+    "pickerRecipes": "Recetas",
+    "close": "Cerrar",
+    "lotHint": "Escríbelo en el tupper",
+    "lotLabel": "Dónde lo guardas",
+    "lotPlaceholder": "Congelador, cajón 2",
+    "lotNone": "Lote automático",
+    "lotTitle": "¿De qué lote sale?",
+    "lotPickHint": "Lo que se cocine aquí contará lo que llevaba ese lote.",
+    "lotLoading": "Buscando lotes…",
+    "lotEmpty": "No hay nada cocinado de esta receta.",
+    "lotUntitled": "Lote",
+    "lotLeft": "quedan {{servings}}",
+    "lotGone": "sin raciones libres",
+    "lotAuto": "El más antiguo con raciones",
+    "lotAutoHint": "Se decide al cocinar, como hace el diario."
   },
   "production": {
     "does": {

@@ -7,6 +7,7 @@ use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionRepository;
 use Nutrition\Kitchen\Production\Domain\QueryModel\StartProductionNeedleDataQuery;
+use Nutrition\Kitchen\Production\Domain\Service\ProductionCompositionResolver;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -15,6 +16,7 @@ final readonly class StartProductionCommandHandler
     public function __construct(
         private ProductionRepository $productionRepository,
         private StartProductionNeedleDataQuery $needleDataQuery,
+        private ProductionCompositionResolver $compositionResolver,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -71,6 +73,7 @@ final readonly class StartProductionCommandHandler
                 servingsPlanned: $servings,
                 nameSnapshot: $recipe->name,
                 emojiSnapshot: $recipe->emoji,
+                composition: $this->compositionResolver->fromRecipe(recipeId: $recipeId, servings: $servings),
                 createdByUserId: $command->startedByUserId,
                 dateTimeGenerator: $this->dateTimeGenerator,
             );

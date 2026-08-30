@@ -14,6 +14,7 @@ final readonly class DiaryEntryQuantityUpdated extends DomainEvent
         \DateTime $occurredOn,
         public float $quantity,
         public ?string $unit,
+        public ?string $productionItemId,
         public string $name,
         public string $emoji,
         public float $calories,

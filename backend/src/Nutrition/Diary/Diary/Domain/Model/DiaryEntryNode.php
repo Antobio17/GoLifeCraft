@@ -26,6 +26,8 @@ class DiaryEntryNode extends GenericAggregate
 
     public string $refId;
 
+    public ?string $productionItemId = null;
+
     public float $quantity;
 
     public ?string $unit = null;
@@ -93,6 +95,12 @@ class DiaryEntryNode extends GenericAggregate
     public function isRecipe(): bool
     {
         return self::KIND_RECIPE === $this->kind;
+    }
+
+    public function assignLot(?string $productionItemId, string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        $this->productionItemId = $productionItemId;
+        $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
     }
 
     public function isDescendantOf(self $other): bool

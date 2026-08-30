@@ -1,4 +1,5 @@
 import { DiaryEntryKind } from "./diary-entry-kind.model";
+import { DiaryEntryLot } from "./diary-entry-lot.model";
 import { DiaryStockState } from "./diary-stock-state.model";
 
 export interface DiaryMacros {
@@ -31,6 +32,7 @@ export interface DiaryEntryNodeView {
   unit: string;
   macros: DiaryMacros;
   children: DiaryEntryNodeView[];
+  lot: DiaryEntryLot | null;
 }
 
 export interface DiaryEntryView {
@@ -47,6 +49,7 @@ export interface DiaryEntryView {
   tree: DiaryEntryNodeView[];
   consumed: boolean;
   stockState: DiaryStockState;
+  lot: DiaryEntryLot | null;
 }
 
 export interface DiaryMealView {

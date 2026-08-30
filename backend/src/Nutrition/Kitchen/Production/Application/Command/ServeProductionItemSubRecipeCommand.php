@@ -1,0 +1,22 @@
+<?php
+
+namespace Nutrition\Kitchen\Production\Application\Command;
+
+use Shared\Shared\Shared\Application\Command\Command;
+
+final readonly class ServeProductionItemSubRecipeCommand implements Command
+{
+    public function __construct(
+        public string $productionId,
+        public string $itemId,
+        public string $subRecipeId,
+        public ?string $sourceProductionItemId,
+        public string $updatedByUserId,
+    ) {
+    }
+
+    public static function getName(): string
+    {
+        return 'golifecraft.nutrition.command.1.production.serve_item_sub_recipe';
+    }
+}

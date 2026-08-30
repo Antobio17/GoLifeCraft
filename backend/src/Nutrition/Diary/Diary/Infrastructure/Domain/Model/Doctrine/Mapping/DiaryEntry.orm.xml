@@ -7,6 +7,7 @@
     <field name="meal" type="string" column="meal" length="16"/>
     <field name="kind" type="string" column="kind" length="16"/>
     <field name="refId" type="string" column="ref_id" length="36" nullable="true"/>
+    <field name="productionItemId" type="string" column="production_item_id" length="36" nullable="true"/>
     <field name="quantity" type="float" column="quantity"/>
     <field name="unit" type="string" column="unit" length="30" nullable="true"/>
     <field name="nameSnapshot" type="string" column="snapshot_name" length="255"/>
@@ -31,6 +32,7 @@
       <index name="idx_diary_entry_date" columns="entry_date"/>
       <index name="idx_diary_entry_date_meal" columns="entry_date,meal"/>
       <index name="idx_diary_entry_ref_id" columns="ref_id"/>
+      <index name="idx_diary_entry_production_item_id" columns="production_item_id"/>
     </indexes>
   </entity>
 </doctrine-mapping>

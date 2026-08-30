@@ -12,6 +12,13 @@
       </options>
     </field>
     <field name="unit" type="string" column="unit" length="32" nullable="true"/>
+    <field name="displayQuantity" type="float" column="display_quantity">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="displayUnit" type="string" column="display_unit" length="32" nullable="true"/>
+    <field name="sourceProductionItemId" type="string" column="source_production_item_id" length="36" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
@@ -19,6 +26,7 @@
     <indexes>
       <index name="idx_production_item_consumption_item_id" columns="production_item_id"/>
       <index name="idx_production_item_consumption_ref_id" columns="ref_id"/>
+      <index name="idx_production_item_consumption_source_id" columns="source_production_item_id"/>
     </indexes>
   </entity>
 </doctrine-mapping>

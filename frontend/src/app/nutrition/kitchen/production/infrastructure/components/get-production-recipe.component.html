@@ -36,117 +36,266 @@
     />
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-      <ds-stack
-        slot="side"
-        class="production-servings"
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-3)'"
-      >
-        <ds-stack [gap]="'2px'" [grow]="true">
-          <ds-text variant="label">{{
-            "getProductionRecipe.servingsLabel" | t
-          }}</ds-text>
-          <ds-text variant="meta">{{ servingsHint() }}</ds-text>
-        </ds-stack>
+      @if (!editing()) {
+        <ds-stack
+          slot="side"
+          class="production-servings"
+          direction="row"
+          align="center"
+          [gap]="'var(--ds-space-3)'"
+        >
+          <ds-stack [gap]="'2px'" [grow]="true">
+            <ds-text variant="label">{{
+              "getProductionRecipe.servingsLabel" | t
+            }}</ds-text>
+            <ds-text variant="meta">{{ servingsHint() }}</ds-text>
+          </ds-stack>
 
-        <ds-number-input
-          [stepper]="true"
-          [min]="1"
-          [disabled]="done()"
-          [ariaLabel]="'getProductionRecipe.servingsLabel' | t"
-          [decrementLabel]="'getProductionRecipe.servingsLess' | t"
-          [incrementLabel]="'getProductionRecipe.servingsMore' | t"
-          [ngModel]="servings()"
-          [ngModelOptions]="{ standalone: true }"
-          (ngModelChange)="onServings($event)"
-        />
-      </ds-stack>
+          <ds-number-input
+            [stepper]="true"
+            [min]="1"
+            [disabled]="done()"
+            [ariaLabel]="'getProductionRecipe.servingsLabel' | t"
+            [decrementLabel]="'getProductionRecipe.servingsLess' | t"
+            [incrementLabel]="'getProductionRecipe.servingsMore' | t"
+            [ngModel]="servings()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onServings($event)"
+          />
+        </ds-stack>
+      }
 
       <ds-section-header
         [title]="'getProductionRecipe.ingredients' | t"
-        [staticLabel]="ingredientsProgress()"
+        [staticLabel]="editing() ? '' : ingredientsProgress()"
+        [actionLabel]="
+          done()
+            ? ''
+            : ((editing()
+                ? 'getProductionRecipe.editCancel'
+                : 'getProductionRecipe.edit'
+              ) | t)
+        "
+        (action)="editing() ? onCancelEdit() : onEdit()"
       />
 
-      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-        @for (row of subRecipeRows(); track row.item.recipeId) {
-          <ds-check-row
-            [dimChecked]="true"
-            [emoji]="row.item.emoji"
-            [name]="row.item.name"
-            [meta]="row.meta"
-            [chip]="row.short ? ('getProductionRecipe.subRecipe.chip' | t) : ''"
-            [checked]="row.checked"
-            (toggled)="onToggleIngredient(row.item.recipeId)"
+      @if (customized()) {
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+          <ds-chip tone="brand">{{
+            "getProductionRecipe.customizedChip" | t
+          }}</ds-chip>
+          <ds-text variant="meta">{{
+            "getProductionRecipe.customizedHint" | t
+          }}</ds-text>
+        </ds-stack>
+      }
+
+      @if (editing()) {
+        <ds-text variant="meta">{{ plannedHint() }}</ds-text>
+
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          @for (row of draftRows(); track row.ingredient.key) {
+            <ds-swipe-to-delete
+              [reveal]="66"
+              [removeLabel]="'getProductionRecipe.removeIngredient' | t"
+              (remove)="onRemoveDraft(row.ingredient.key)"
+            >
+              <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
+                <ds-stack
+                  direction="row"
+                  align="center"
+                  [gap]="'var(--ds-space-3)'"
+                >
+                  <ds-emoji-tile [emoji]="row.ingredient.emoji" [size]="34" />
+                  <ds-stack
+                    align="start"
+                    [gap]="'var(--ds-space-1)'"
+                    [grow]="true"
+                  >
+                    <ds-text variant="strong">{{
+                      row.ingredient.name
+                    }}</ds-text>
+                    @if (row.ingredient.kind === "recipe") {
+                      <ds-chip tone="brand">{{
+                        "getProductionRecipe.subRecipe.chip" | t
+                      }}</ds-chip>
+                    }
+                  </ds-stack>
+                  <ds-inline-quantity
+                    [quantity]="row.ingredient.quantity"
+                    [unit]="row.ingredient.unit"
+                    [unitLabel]="row.unitLabel"
+                    [unitOptions]="row.unitOptions"
+                    [ariaLabel]="'getProductionRecipe.quantity' | t"
+                    [unitAriaLabel]="'getProductionRecipe.unit' | t"
+                    (quantityChange)="
+                      onDraftQuantity(row.ingredient.key, $event)
+                    "
+                    (unitChange)="onDraftUnit(row.ingredient.key, $event)"
+                  />
+                </ds-stack>
+              </ds-card>
+            </ds-swipe-to-delete>
+          }
+
+          <ds-add-tile
+            variant="dashed"
+            [label]="'getProductionRecipe.addIngredient' | t"
+            (clicked)="onOpenPicker()"
           />
-        }
 
-        @for (row of ingredientRows(); track row.key) {
-          <ds-check-row
-            [dimChecked]="true"
-            [emoji]="row.emoji"
-            [name]="row.name"
-            [meta]="row.meta"
-            [checked]="row.checked"
-            (toggled)="onToggleIngredient(row.key)"
-          />
-        }
-      </ds-stack>
+          <ds-button
+            variant="soft"
+            [fullWidth]="true"
+            [loading]="savingIngredients()"
+            [disabled]="savingIngredients() || draftRows().length === 0"
+            (clicked)="onSaveIngredients()"
+            >{{ "getProductionRecipe.saveIngredients" | t }}</ds-button
+          >
 
-      @if (stepRows().length) {
-        <ds-section-header
-          [title]="'getProductionRecipe.steps' | t"
-          [staticLabel]="stepsProgress()"
-        />
-
-        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-          @for (row of stepRows(); track row.key) {
-            <ds-check-row
-              [dimChecked]="true"
-              [wrap]="true"
-              [eyebrow]="row.eyebrow"
-              [name]="row.text"
-              [chip]="row.chip"
-              [checked]="row.checked"
-              (toggled)="onToggleStep(row.key)"
-            />
+          @if (customized()) {
+            <ds-button
+              variant="ghost"
+              icon="restore"
+              [fullWidth]="true"
+              [loading]="restoring()"
+              [disabled]="restoring()"
+              (clicked)="onRestoreIngredients()"
+              >{{ "getProductionRecipe.restoreIngredients" | t }}</ds-button
+            >
           }
         </ds-stack>
       } @else {
-        <ds-cta-row
-          icon="pencil"
-          [dashed]="true"
-          [title]="'getProductionRecipe.noSteps' | t"
-          (clicked)="onOpenRecipe()"
-        />
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+          @for (row of subRecipeRows(); track row.item.recipeId) {
+            <ds-stack [gap]="'var(--ds-space-1)'">
+              <ds-check-row
+                [dimChecked]="true"
+                [emoji]="row.item.emoji"
+                [name]="row.item.name"
+                [meta]="row.meta"
+                [chip]="
+                  row.short ? ('getProductionRecipe.subRecipe.chip' | t) : ''
+                "
+                [checked]="row.checked"
+                (toggled)="onToggleIngredient(row.item.recipeId)"
+              />
+
+              @if (!done()) {
+                <ds-button
+                  variant="ghost"
+                  size="sm"
+                  icon="package"
+                  (clicked)="
+                    onOpenLotPicker(
+                      row.item.recipeId,
+                      row.item.sourceProductionItemId
+                    )
+                  "
+                  >{{ row.lotLabel }}</ds-button
+                >
+              }
+            </ds-stack>
+          }
+
+          @for (row of ingredientRows(); track row.key) {
+            <ds-check-row
+              [dimChecked]="true"
+              [emoji]="row.emoji"
+              [name]="row.name"
+              [meta]="row.meta"
+              [checked]="row.checked"
+              (toggled)="onToggleIngredient(row.key)"
+            />
+          }
+        </ds-stack>
       }
 
-      @if (!done()) {
-        <ds-button
-          variant="primary"
-          size="lg"
-          [fullWidth]="true"
-          [loading]="cooking()"
-          [disabled]="cooking()"
-          (clicked)="onCook()"
-          >{{ "getProductionRecipe.submit" | t }}</ds-button
-        >
-      } @else {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-text variant="meta">{{
-            "getProductionRecipe.undoHint" | t
-          }}</ds-text>
+      @if (!editing()) {
+        @if (stepRows().length) {
+          <ds-section-header
+            [title]="'getProductionRecipe.steps' | t"
+            [staticLabel]="stepsProgress()"
+          />
+
+          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+            @for (row of stepRows(); track row.key) {
+              <ds-check-row
+                [dimChecked]="true"
+                [wrap]="true"
+                [eyebrow]="row.eyebrow"
+                [name]="row.text"
+                [chip]="row.chip"
+                [checked]="row.checked"
+                (toggled)="onToggleStep(row.key)"
+              />
+            }
+          </ds-stack>
+        } @else {
+          <ds-cta-row
+            icon="pencil"
+            [dashed]="true"
+            [title]="'getProductionRecipe.noSteps' | t"
+            (clicked)="onOpenRecipe()"
+          />
+        }
+      }
+
+      @if (!editing()) {
+        @if (!done()) {
           <ds-button
-            variant="secondary"
+            variant="primary"
             size="lg"
-            icon="restore"
             [fullWidth]="true"
-            [loading]="uncooking()"
-            [disabled]="uncooking()"
-            (clicked)="onUncook()"
-            >{{ "getProductionRecipe.undo" | t }}</ds-button
+            [loading]="cooking()"
+            [disabled]="cooking()"
+            (clicked)="onCook()"
+            >{{ "getProductionRecipe.submit" | t }}</ds-button
           >
-        </ds-stack>
+        } @else {
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            @if (lotCode()) {
+              <ds-card [padding]="'var(--ds-space-3)'">
+                <ds-stack [gap]="'var(--ds-space-2)'">
+                  <ds-stack
+                    direction="row"
+                    align="center"
+                    [gap]="'var(--ds-space-2)'"
+                  >
+                    <ds-heading [level]="2">{{ lotCode() }}</ds-heading>
+                    <ds-text variant="meta">{{
+                      "getProductionRecipe.lotHint" | t
+                    }}</ds-text>
+                  </ds-stack>
+
+                  <ds-field [label]="'getProductionRecipe.lotLabel' | t">
+                    <ds-text-input
+                      variant="outlined"
+                      [placeholder]="'getProductionRecipe.lotPlaceholder' | t"
+                      [ngModel]="label()"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="onLabel($event)"
+                    />
+                  </ds-field>
+                </ds-stack>
+              </ds-card>
+            }
+
+            <ds-text variant="meta">{{
+              "getProductionRecipe.undoHint" | t
+            }}</ds-text>
+            <ds-button
+              variant="secondary"
+              size="lg"
+              icon="restore"
+              [fullWidth]="true"
+              [loading]="uncooking()"
+              [disabled]="uncooking()"
+              (clicked)="onUncook()"
+              >{{ "getProductionRecipe.undo" | t }}</ds-button
+            >
+          </ds-stack>
+        }
       }
     </ds-split-view>
   } @else {
@@ -156,4 +305,108 @@
       [text]="'getProductionRecipe.error.text' | t"
     />
   }
+
+  <ds-modal-sheet
+    [open]="pickerOpen()"
+    [compact]="true"
+    [title]="'getProductionRecipe.pickerTitle' | t"
+    [closeLabel]="'getProductionRecipe.close' | t"
+    (closed)="onClosePicker()"
+  >
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-segmented-toggle
+        [options]="pickerTabs()"
+        [ngModel]="pickerTab()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onPickerTab($event)"
+      />
+
+      <ds-search-input
+        [placeholder]="'getProductionRecipe.pickerSearch' | t"
+        [clearLabel]="'getProductionRecipe.close' | t"
+        [debounce]="120"
+        (searched)="onPickerSearch($event)"
+      />
+
+      @if (pickerChoices().length === 0) {
+        <ds-text variant="muted">{{
+          "getProductionRecipe.pickerEmpty" | t
+        }}</ds-text>
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          @for (choice of pickerChoices(); track choice.refId) {
+            <ds-card [padding]="'var(--ds-space-3)'">
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+              >
+                <ds-emoji-tile [emoji]="choice.emoji" [size]="34" />
+                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                  <ds-text variant="strong">{{ choice.name }}</ds-text>
+                  <ds-text variant="meta">{{ choice.detail }}</ds-text>
+                </ds-stack>
+                <ds-icon-button
+                  icon="plus"
+                  variant="soft"
+                  [ariaLabel]="'getProductionRecipe.addIngredient' | t"
+                  (clicked)="onPickIngredient(choice)"
+                />
+              </ds-stack>
+            </ds-card>
+          }
+        </ds-stack>
+      }
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <ds-modal-sheet
+    [open]="lotOpen()"
+    [compact]="true"
+    [title]="'getProductionRecipe.lotTitle' | t"
+    [closeLabel]="'getProductionRecipe.close' | t"
+    (closed)="onCloseLotPicker()"
+  >
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-text variant="meta">{{
+        "getProductionRecipe.lotPickHint" | t
+      }}</ds-text>
+
+      @if (lotLoading()) {
+        <ds-text variant="muted">{{
+          "getProductionRecipe.lotLoading" | t
+        }}</ds-text>
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-choice-row
+            icon="restore"
+            [title]="'getProductionRecipe.lotAuto' | t"
+            [description]="'getProductionRecipe.lotAutoHint' | t"
+            [selectable]="true"
+            [selected]="lotSelectedId() === null"
+            [disabled]="lotSaving()"
+            (activated)="onPickLot(null)"
+          />
+
+          @for (lot of lotRows(); track lot.productionItemId) {
+            <ds-choice-row
+              icon="package"
+              [title]="lot.title"
+              [description]="lot.description"
+              [selectable]="true"
+              [selected]="lot.selected"
+              [disabled]="lotSaving()"
+              (activated)="onPickLot(lot.productionItemId)"
+            />
+          }
+
+          @if (lotRows().length === 0) {
+            <ds-text variant="muted">{{
+              "getProductionRecipe.lotEmpty" | t
+            }}</ds-text>
+          }
+        </ds-stack>
+      }
+    </ds-stack>
+  </ds-modal-sheet>
 </ds-page-wrapper>

@@ -19,6 +19,7 @@ final readonly class DiaryEntryNodeView
         public string $unit,
         public MacroBreakdown $macros,
         public array $children,
+        public ?DiaryEntryLotView $lot = null,
     ) {
     }
 }

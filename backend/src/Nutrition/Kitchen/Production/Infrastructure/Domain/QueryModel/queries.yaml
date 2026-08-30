@@ -10,11 +10,6 @@ services:
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
 
-  Nutrition\Kitchen\Production\Domain\QueryModel\CookProductionItemNeedleDataQuery:
-    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCookProductionItemNeedleDataQuery
-    arguments:
-      $ingredientResolver: '@Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver'
-
   Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionNeedleDataQuery:
     class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetProductionNeedleDataQuery
     arguments:
@@ -37,3 +32,8 @@ services:
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
       $ingredientResolver: '@Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineProductionIngredientResolver'
+
+  Nutrition\Kitchen\Production\Domain\QueryModel\GetRecipeLotsNeedleDataQuery:
+    class: Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetRecipeLotsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

@@ -19,6 +19,9 @@
     </field>
     <field name="nameSnapshot" type="string" column="name_snapshot" length="255"/>
     <field name="emojiSnapshot" type="string" column="emoji_snapshot" length="16"/>
+    <field name="code" type="string" column="code" length="16" nullable="true"/>
+    <field name="label" type="string" column="label" length="120" options="{&quot;default&quot;: &quot;&quot;}"/>
+    <field name="customized" type="boolean" column="customized" options="{&quot;default&quot;: false}"/>
     <field name="checkedArticleIds" type="json" column="checked_articles"/>
     <field name="checkedStepPositions" type="json" column="checked_steps"/>
     <field name="createdAt" type="datetime" column="created_at"/>
@@ -29,5 +32,8 @@
       <index name="idx_production_item_production_id" columns="production_id"/>
       <index name="idx_production_item_recipe_id" columns="recipe_id"/>
     </indexes>
+    <unique-constraints>
+      <unique-constraint name="uniq_production_item_code" columns="code"/>
+    </unique-constraints>
   </entity>
 </doctrine-mapping>

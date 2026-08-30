@@ -34,3 +34,19 @@ services:
       $impactedEntries: '@Nutrition\Diary\Diary\Domain\QueryModel\FindImpactedDiaryEntriesNeedleDataQuery'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.mcp.event.1.model.written' }
+
+  Nutrition\Diary\Diary\Application\Subscriber\AttachDiaryEntriesToLotOnProductionItemCooked:
+    class: Nutrition\Diary\Diary\Application\Subscriber\AttachDiaryEntriesToLotOnProductionItemCooked
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $lotNeedleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\FindDiaryEntryLotNeedleDataQuery'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_cooked' }
+
+  Nutrition\Diary\Diary\Application\Subscriber\ReleaseDiaryEntriesOnProductionItemUncooked:
+    class: Nutrition\Diary\Diary\Application\Subscriber\ReleaseDiaryEntriesOnProductionItemUncooked
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $lotNeedleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\FindDiaryEntryLotNeedleDataQuery'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_uncooked' }

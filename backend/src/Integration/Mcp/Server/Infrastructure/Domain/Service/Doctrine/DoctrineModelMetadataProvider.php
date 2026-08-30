@@ -130,6 +130,7 @@ final readonly class DoctrineModelMetadataProvider implements ModelMetadataProvi
                 kind: $rules['kind'],
                 writable: (bool) ($rules['writable'] ?? false),
                 expandable: (bool) ($rules['expandable'] ?? false),
+                foreignField: $rules['foreign_field'] ?? null,
             );
         }
 

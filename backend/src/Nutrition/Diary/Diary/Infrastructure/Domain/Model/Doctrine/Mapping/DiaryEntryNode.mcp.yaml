@@ -1,0 +1,98 @@
+label: Diary entry breakdown node
+
+fields:
+  diaryEntryId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the diary entry this node belongs to. Only entries of kind "recipe" have a tree: it is
+      the plate broken down into what it is really made of, one row per ingredient at every level.
+    filterable: true
+  parentNodeId:
+    writable: false
+    max: 100
+    description: Id of the node this one hangs from. Null on the roots, which are the ingredients of the plate itself.
+    filterable: true
+  path:
+    writable: false
+    max: 60
+    description: >-
+      Position of the node inside the tree as dot-separated positions, like "2.1" for the first
+      ingredient of the second ingredient. The node id is "{diaryEntryId}#{path}".
+    sortable: true
+  kind:
+    writable: false
+    enum: [product, recipe]
+    description: >-
+      Whether the node is a catalog article ("product", quantity in its unit) or a sub-recipe
+      ("recipe", quantity in servings), which in turn hangs its own children.
+    filterable: true
+  refId:
+    writable: false
+    min: 36
+    max: 36
+    description: 'Id of the referenced entity: an Article id when kind is "product", a Recipe id when kind is "recipe".'
+    filterable: true
+  productionItemId:
+    writable: false
+    max: 36
+    description: >-
+      Only for kind "recipe": the id of the cooked batch this branch is served from. When it is
+      set, the children come from what that batch was really cooked with instead of from the
+      recipe.
+    filterable: true
+  quantity:
+    writable: false
+    type: float
+    min: 0
+    description: Amount of the node in its "unit" when kind is "product", or servings of the sub-recipe when kind is "recipe".
+  unit:
+    writable: false
+    max: 30
+    description: 'Unit of "quantity" when kind is "product": the article base unit or one of its equivalence alias keys. Null for kind "recipe".'
+  depth:
+    writable: false
+    type: int
+    min: 0
+    description: Level of the node in the tree, 0 for the ingredients of the plate itself.
+    sortable: true
+  position:
+    writable: false
+    type: int
+    min: 1
+    description: Order of the node among its siblings.
+    sortable: true
+  nameSnapshot:
+    writable: false
+    max: 255
+    description: Name of the article or recipe as it was when the tree was built.
+  emojiSnapshot:
+    writable: false
+    max: 16
+    description: Emoji of the article or recipe as it was when the tree was built.
+  caloriesSnapshot:
+    writable: false
+    type: float
+    min: 0
+    description: >-
+      Calories of this node. A "product" node counts its own amount; a "recipe" node already
+      carries the total of its whole branch, so adding every row of the tree up double counts.
+      The total of the plate is the sum of the nodes with depth 0, and lives in the diary entry.
+  proteinSnapshot:
+    writable: false
+    type: float
+    min: 0
+    description: Grams of protein of this node, rolled up the same way as caloriesSnapshot.
+  fatSnapshot:
+    writable: false
+    type: float
+    min: 0
+    description: Grams of fat of this node, rolled up the same way as caloriesSnapshot.
+  carbsSnapshot:
+    writable: false
+    type: float
+    min: 0
+    description: Grams of carbs of this node, rolled up the same way as caloriesSnapshot.
+
+relations: {}

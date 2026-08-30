@@ -33,5 +33,6 @@ relations:
   items:
     target: production_item
     kind: many
+    foreign_field: productionId
     writable: false
     expandable: true

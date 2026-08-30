@@ -16,6 +16,7 @@ final readonly class DiaryEntryCreated extends DomainEvent
         public string $meal,
         public string $kind,
         public ?string $refId,
+        public ?string $productionItemId,
         public float $quantity,
         public string $name,
         public string $emoji,

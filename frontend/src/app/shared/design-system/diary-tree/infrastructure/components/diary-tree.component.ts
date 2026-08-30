@@ -47,6 +47,7 @@ export class DiaryTreeComponent {
   @Output() quantityChanged = new EventEmitter<DiaryTreeQuantityChange>();
   @Output() unitChanged = new EventEmitter<DiaryTreeUnitChange>();
   @Output() restored = new EventEmitter<void>();
+  @Output() lotPicked = new EventEmitter<string>();
 
   indentOf(row: DiaryTreeRow): string {
     return `${row.depth * INDENT_PER_LEVEL_REM}rem`;

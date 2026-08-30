@@ -61,3 +61,38 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\AdjustProductionItemIngredientsController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\AdjustProductionItemIngredientsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\RestoreProductionItemIngredientsController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\RestoreProductionItemIngredientsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\LabelProductionItemController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\LabelProductionItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetRecipeLotsController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\GetRecipeLotsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ServeProductionItemSubRecipeController:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\API\Controller\ServeProductionItemSubRecipeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

@@ -107,6 +107,20 @@
     "meal": {
       "markEaten": "Marcar como comida",
       "unmark": "Desmarcar la comida"
+    },
+    "lot": {
+      "title": "¿De qué lote?",
+      "hint": "Lo que cuenta el diario es lo que se cocinó en ese lote.",
+      "close": "Cerrar",
+      "loading": "Buscando lotes…",
+      "empty": "No hay nada cocinado de esta receta.",
+      "none": "Sin lote",
+      "untitled": "Lote",
+      "left": "quedan {{servings}}",
+      "gone": "sin raciones libres",
+      "changed": "ingredientes cambiados",
+      "followRecipe": "Seguir la receta",
+      "followRecipeHint": "Cuenta los ingredientes de la receta, no los de un lote."
     }
   }
 }

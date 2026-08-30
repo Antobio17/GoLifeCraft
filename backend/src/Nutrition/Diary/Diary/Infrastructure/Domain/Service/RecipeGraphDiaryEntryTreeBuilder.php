@@ -5,29 +5,138 @@ namespace Nutrition\Diary\Diary\Infrastructure\Domain\Service;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
 use Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder;
+use Nutrition\Diary\Diary\Domain\Service\DiaryLotCompositionProvider;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeBreakdownItem;
+use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
 use Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
-final readonly class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeBuilder
+final class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeBuilder
 {
+    private ?RecipeNutritionGraph $graph = null;
+
     public function __construct(
-        private DoctrineRecipeNutritionGraphProvider $graphProvider,
-        private RecipeBreakdownCalculator $calculator,
-        private DateTimeGenerator $dateTimeGenerator,
+        private readonly DoctrineRecipeNutritionGraphProvider $graphProvider,
+        private readonly RecipeBreakdownCalculator $calculator,
+        private readonly DiaryLotCompositionProvider $lotCompositionProvider,
+        private readonly DateTimeGenerator $dateTimeGenerator,
     ) {
     }
 
-    public function materialize(string $diaryEntryId, string $recipeId, float $servings, array $existingNodes, string $userId): array
+    public function materialize(string $diaryEntryId, string $recipeId, float $servings, array $existingNodes, string $userId, ?string $productionItemId = null): array
     {
-        $items = $this->calculator->expand(
-            graph: $this->graphProvider->load(),
-            recipeId: $recipeId,
-            servings: $servings,
+        return $this->toNodes(
+            diaryEntryId: $diaryEntryId,
+            items: $this->breakdownOf(
+                recipeId: $recipeId,
+                servings: $servings,
+                productionItemId: $productionItemId,
+                compositionByPath: $this->pinnedCompositions(nodes: $existingNodes),
+            ),
+            existingNodes: $existingNodes,
+            userId: $userId,
         );
+    }
 
+    public function materializeSubtree(DiaryEntryNode $node, array $existingNodes, string $userId): array
+    {
+        $composition = null === $node->productionItemId
+            ? null
+            : $this->lotCompositionProvider->findComposition(productionItemId: $node->productionItemId);
+
+        $pinned = $this->pinnedCompositions(nodes: $existingNodes);
+        $graph = $this->graph();
+
+        $items = null === $composition
+            ? $this->calculator->expandComposition(
+                graph: $graph,
+                ingredients: $graph->recipeIngredients(recipeId: $node->refId),
+                factor: $node->quantity / $graph->recipeServings(recipeId: $node->refId),
+                parentPath: $node->path,
+                depth: $node->depth + 1,
+                compositionByPath: $pinned,
+            )
+            : $this->calculator->expandComposition(
+                graph: $graph,
+                ingredients: $composition->scaledTo(servings: $node->quantity),
+                parentPath: $node->path,
+                depth: $node->depth + 1,
+                compositionByPath: $pinned,
+            );
+
+        return $this->toNodes(
+            diaryEntryId: $node->diaryEntryId,
+            items: $items,
+            existingNodes: $existingNodes,
+            userId: $userId,
+        );
+    }
+
+    /**
+     * A batch already carries the whole chain of what was cooked, its sub-recipes included, so a
+     * batch pinned to a single node only has a say while the entry itself follows its recipe.
+     *
+     * @param array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>> $compositionByPath
+     *
+     * @return RecipeBreakdownItem[]
+     */
+    private function breakdownOf(string $recipeId, float $servings, ?string $productionItemId, array $compositionByPath): array
+    {
+        $composition = null === $productionItemId
+            ? null
+            : $this->lotCompositionProvider->findComposition(productionItemId: $productionItemId);
+
+        if (null === $composition) {
+            return $this->calculator->expand(
+                graph: $this->graph(),
+                recipeId: $recipeId,
+                servings: $servings,
+                compositionByPath: $compositionByPath,
+            );
+        }
+
+        return $this->calculator->expandComposition(
+            graph: $this->graph(),
+            ingredients: $composition->scaledTo(servings: $servings),
+        );
+    }
+
+    /**
+     * @param DiaryEntryNode[] $nodes
+     *
+     * @return array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>>
+     */
+    private function pinnedCompositions(array $nodes): array
+    {
+        $compositions = [];
+
+        foreach ($nodes as $node) {
+            if (null === $node->productionItemId) {
+                continue;
+            }
+
+            $composition = $this->lotCompositionProvider->findComposition(productionItemId: $node->productionItemId);
+
+            if (null === $composition) {
+                continue;
+            }
+
+            $compositions[$node->path] = $composition->ingredientsPerServing;
+        }
+
+        return $compositions;
+    }
+
+    /**
+     * @param RecipeBreakdownItem[] $items
+     * @param DiaryEntryNode[]      $existingNodes
+     *
+     * @return DiaryEntryNode[]
+     */
+    private function toNodes(string $diaryEntryId, array $items, array $existingNodes, string $userId): array
+    {
         $existing = [];
         foreach ($existingNodes as $node) {
             $existing[$node->id] = $node;
@@ -93,7 +202,7 @@ final readonly class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeB
             $ordered,
         );
 
-        $refreshed = $this->calculator->refresh(graph: $this->graphProvider->load(), items: $items);
+        $refreshed = $this->calculator->refresh(graph: $this->graph(), items: $items);
 
         foreach ($ordered as $index => $node) {
             $item = $refreshed[$index];
@@ -138,6 +247,11 @@ final readonly class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeB
         );
 
         return $node;
+    }
+
+    private function graph(): RecipeNutritionGraph
+    {
+        return $this->graph ??= $this->graphProvider->load();
     }
 
     private static function parentPathOf(DiaryEntryNode $node): ?string

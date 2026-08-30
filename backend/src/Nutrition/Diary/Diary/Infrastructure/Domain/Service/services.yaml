@@ -15,7 +15,13 @@ services:
     arguments:
       $graphProvider: '@Nutrition\Diary\Diary\Infrastructure\Domain\Service\DiaryWriterRecipeNutritionGraphProvider'
       $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator'
+      $lotCompositionProvider: '@Nutrition\Diary\Diary\Domain\Service\DiaryLotCompositionProvider'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+
+  Nutrition\Diary\Diary\Domain\Service\DiaryLotCompositionProvider:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\Service\DoctrineDiaryLotCompositionProvider
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'
 
   Nutrition\Diary\Diary\Domain\Service\DiaryArticleNeedsCalculator:
     class: Nutrition\Diary\Diary\Domain\Service\DiaryArticleNeedsCalculator

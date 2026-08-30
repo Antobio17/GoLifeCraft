@@ -44,6 +44,7 @@ final class CheckProductionItemCommandHandlerTest extends TestCase
                     servingsPlanned: 2.0,
                     nameSnapshot: 'Lentejas con chorizo',
                     emojiSnapshot: '🍲',
+                    composition: [],
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $this->dateTimeGenerator,
                 ),
@@ -104,8 +105,8 @@ final class CheckProductionItemCommandHandlerTest extends TestCase
         $this->production->cookItem(
             itemId: $this->itemId(),
             servingsCooked: 2.0,
-            consumedArticles: [],
-            consumedRecipes: [],
+            composition: [],
+            code: 'L-001',
             cookedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

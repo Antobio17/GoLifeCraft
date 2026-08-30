@@ -29,6 +29,7 @@ final readonly class DiaryEntryView
         public array $tree = [],
         public bool $consumed = false,
         public string $stockState = self::STOCK_NONE,
+        public ?DiaryEntryLotView $lot = null,
     ) {
     }
 }

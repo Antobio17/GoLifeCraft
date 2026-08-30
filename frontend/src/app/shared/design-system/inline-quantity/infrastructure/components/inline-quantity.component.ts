@@ -17,17 +17,20 @@ type InlineQuantitySize = "md" | "sm";
         (keydown.enter)="onEnter($event)"
       />
       @if (unitOptions.length > 1) {
-        <select
-          class="ds-inline-qty__select"
-          [attr.aria-label]="unitAriaLabel || null"
-          (change)="onUnit($event)"
-        >
-          @for (option of unitOptions; track option.value) {
-            <option [value]="option.value" [selected]="option.value === unit">
-              {{ option.label }}
-            </option>
-          }
-        </select>
+        <span class="ds-inline-qty__picker">
+          <span class="ds-inline-qty__unit">{{ selectedLabel }}</span>
+          <select
+            class="ds-inline-qty__select"
+            [attr.aria-label]="unitAriaLabel || null"
+            (change)="onUnit($event)"
+          >
+            @for (option of unitOptions; track option.value) {
+              <option [value]="option.value" [selected]="option.value === unit">
+                {{ option.label }}
+              </option>
+            }
+          </select>
+        </span>
       } @else if (unitLabel || unit) {
         <span class="ds-inline-qty__unit">{{ unitLabel || unit }}</span>
       }
@@ -53,7 +56,7 @@ type InlineQuantitySize = "md" | "sm";
         border-radius: var(--ds-radius-md);
       }
       .ds-inline-qty__input {
-        width: 2rem;
+        width: 3.25rem;
         text-align: right;
         background: transparent;
         border: none;
@@ -67,7 +70,7 @@ type InlineQuantitySize = "md" | "sm";
         appearance: textfield;
       }
       .ds-inline-qty--sm .ds-inline-qty__input {
-        width: 1.875rem;
+        width: 2.75rem;
         font-size: var(--ds-text-base);
       }
       .ds-inline-qty__unit {
@@ -79,22 +82,37 @@ type InlineQuantitySize = "md" | "sm";
       .ds-inline-qty--sm .ds-inline-qty__unit {
         font-size: var(--ds-text-xs);
       }
+      .ds-inline-qty__picker {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        max-width: 6rem;
+        border-radius: var(--ds-radius-sm);
+      }
+      .ds-inline-qty__picker:focus-within {
+        outline: 2px solid var(--ds-primary);
+        outline-offset: 2px;
+      }
+      .ds-inline-qty__picker .ds-inline-qty__unit {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+      }
       .ds-inline-qty__select {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
         appearance: none;
         border: none;
         outline: none;
         background: transparent;
         padding: 0;
-        max-width: 4.625rem;
+        opacity: 0;
         font-family: inherit;
         font-size: var(--ds-text-xs);
         font-weight: 700;
-        color: var(--ds-text-meta);
         cursor: pointer;
-      }
-      .ds-inline-qty--sm .ds-inline-qty__select {
-        max-width: 3.625rem;
-        font-size: var(--ds-text-xs);
       }
     `,
   ],
@@ -110,6 +128,14 @@ export class InlineQuantityComponent {
 
   @Output() quantityChange = new EventEmitter<number>();
   @Output() unitChange = new EventEmitter<string>();
+
+  get selectedLabel(): string {
+    const selected = this.unitOptions.find(
+      (option) => option.value === this.unit,
+    );
+
+    return (selected?.label ?? this.unitLabel) || this.unit;
+  }
 
   onCommit(event: Event): void {
     const input = event.target as HTMLInputElement;

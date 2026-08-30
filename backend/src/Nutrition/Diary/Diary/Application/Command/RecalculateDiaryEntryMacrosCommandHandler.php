@@ -71,6 +71,7 @@ final readonly class RecalculateDiaryEntryMacrosCommandHandler
                     servings: $diaryEntry->quantity,
                     existingNodes: $diaryEntry->nodes,
                     userId: $diaryEntry->createdByUserId,
+                    productionItemId: $diaryEntry->productionItemId,
                 ),
                 customized: false,
             );

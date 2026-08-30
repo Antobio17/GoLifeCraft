@@ -5,6 +5,7 @@ services:
       $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
       $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
       $treeBuilder: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder'
+      $lotNeedleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\FindDiaryEntryLotNeedleDataQuery'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -103,5 +104,27 @@ services:
     arguments:
       $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\ConsumeDiaryMealNeedleDataQuery'
       $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\AssignDiaryEntryLotCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\AssignDiaryEntryLotCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
+      $treeBuilder: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Command\AssignDiaryEntryNodeLotCommandHandler:
+    class: Nutrition\Diary\Diary\Application\Command\AssignDiaryEntryNodeLotCommandHandler
+    arguments:
+      $diaryEntryRepository: '@Nutrition\Diary\Diary\Domain\Model\DiaryEntryRepository'
+      $snapshotCalculator: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntrySnapshotCalculator'
+      $treeBuilder: '@Nutrition\Diary\Diary\Domain\Service\DiaryEntryTreeBuilder'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

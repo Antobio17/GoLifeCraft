@@ -15,6 +15,9 @@ final readonly class ProductionItemView
         public string $status,
         public float $servingsPlanned,
         public float $servingsCooked,
+        public ?string $code = null,
+        public string $label = '',
+        public bool $customized = false,
         public array $requiredBy = [],
     ) {
     }

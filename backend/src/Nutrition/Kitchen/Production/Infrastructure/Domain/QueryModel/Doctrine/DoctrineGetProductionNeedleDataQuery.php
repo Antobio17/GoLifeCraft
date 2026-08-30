@@ -77,7 +77,10 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
                 'i.servings_planned',
                 'i.servings_cooked',
                 'i.name_snapshot',
-                'i.emoji_snapshot'
+                'i.emoji_snapshot',
+                'i.code',
+                'i.label',
+                'i.customized'
             )
             ->from(table: 'production_item', alias: 'i')
             ->where('i.production_id = :productionId')
@@ -96,6 +99,9 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
             status: $row['status'],
             servingsPlanned: (float) $row['servings_planned'],
             servingsCooked: (float) $row['servings_cooked'],
+            code: $row['code'],
+            label: (string) ($row['label'] ?? ''),
+            customized: (bool) $row['customized'],
             requiredBy: $requiredBy[$row['recipe_id']] ?? [],
         ), array: $rows);
     }

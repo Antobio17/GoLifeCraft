@@ -3,6 +3,7 @@ import { KitchenFormatService } from "@nutrition/kitchen/production/application/
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProposalFormService } from "@nutrition/kitchen/production/application/services/proposal-form.service";
+import { ProductionIngredientFormService } from "@nutrition/kitchen/production/application/services/production-ingredient-form.service";
 import { GetProductionsProviders } from "../providers/get-productions.providers";
 import { GetProductionProviders } from "../providers/get-production.providers";
 import { GetProductionRecipeProviders } from "../providers/get-production-recipe.providers";
@@ -12,6 +13,12 @@ import { CookProductionItemProviders } from "../providers/cook-production-item.p
 import { UncookProductionItemProviders } from "../providers/uncook-production-item.providers";
 import { CheckProductionItemProviders } from "../providers/check-production-item.providers";
 import { DiscardProductionProviders } from "../providers/discard-production.providers";
+import { AdjustProductionItemIngredientsProviders } from "../providers/adjust-production-item-ingredients.providers";
+import { LabelProductionItemProviders } from "../providers/label-production-item.providers";
+import { ServeProductionItemSubRecipeProviders } from "../providers/serve-production-item-sub-recipe.providers";
+import { GetRecipeLotsProviders } from "../providers/get-recipe-lots.providers";
+import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/providers/get-articles.providers";
+import { GetRecipesProviders } from "@nutrition/recipe/recipe/infrastructure/providers/get-recipes.providers";
 import { UpdateRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/update-recipe-stock.providers";
 
 export const KITCHEN_ROUTES: Routes = [
@@ -22,6 +29,7 @@ export const KITCHEN_ROUTES: Routes = [
       ProductionRangeService,
       ProductionViewService,
       ProposalFormService,
+      ProductionIngredientFormService,
       ...GetProductionsProviders.getProviders(),
       ...GetProductionProviders.getProviders(),
       ...GetProductionRecipeProviders.getProviders(),
@@ -31,6 +39,12 @@ export const KITCHEN_ROUTES: Routes = [
       ...UncookProductionItemProviders.getProviders(),
       ...CheckProductionItemProviders.getProviders(),
       ...DiscardProductionProviders.getProviders(),
+      ...AdjustProductionItemIngredientsProviders.getProviders(),
+      ...LabelProductionItemProviders.getProviders(),
+      ...ServeProductionItemSubRecipeProviders.getProviders(),
+      ...GetRecipeLotsProviders.getProviders(),
+      ...GetArticlesProviders.getProviders(),
+      ...GetRecipesProviders.getProviders(),
       ...UpdateRecipeStockProviders.getProviders(),
     ],
     children: [

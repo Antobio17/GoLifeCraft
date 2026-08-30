@@ -7,9 +7,13 @@ use Nutrition\Kitchen\Production\Domain\Event\ProductionDiscarded;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionFinished;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionItemChecked;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionItemCooked;
+use Nutrition\Kitchen\Production\Domain\Event\ProductionItemIngredientsAdjusted;
+use Nutrition\Kitchen\Production\Domain\Event\ProductionItemLabelled;
+use Nutrition\Kitchen\Production\Domain\Event\ProductionItemSubRecipeServed;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionItemUncooked;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionReopened;
 use Nutrition\Kitchen\Production\Domain\Event\ProductionStarted;
+use Nutrition\Kitchen\Production\Domain\Exception\AdjustProductionItemException;
 use Nutrition\Kitchen\Production\Domain\Exception\CookProductionItemException;
 use Nutrition\Kitchen\Production\Domain\Exception\StartProductionException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -70,14 +74,13 @@ class Production extends GenericAggregate
     }
 
     /**
-     * @param array<int, array{articleId: string, quantity: float, unit: string}> $consumedArticles
-     * @param array<int, array{recipeId: string, servings: float}>                $consumedRecipes
+     * @param ProductionCompositionLine[] $composition
      */
     public function cookItem(
         string $itemId,
         float $servingsCooked,
-        array $consumedArticles,
-        array $consumedRecipes,
+        array $composition,
+        ?string $code,
         string $cookedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -99,8 +102,8 @@ class Production extends GenericAggregate
 
         $item->cook(
             servingsCooked: $servingsCooked,
-            consumedArticles: $consumedArticles,
-            consumedRecipes: $consumedRecipes,
+            composition: $composition,
+            code: $code,
             cookedByUserId: $cookedByUserId,
             now: $now,
         );
@@ -117,8 +120,12 @@ class Production extends GenericAggregate
             servingsCooked: $servingsCooked,
             nameSnapshot: $item->nameSnapshot,
             emojiSnapshot: $item->emojiSnapshot,
-            consumedArticles: $consumedArticles,
-            consumedRecipes: $consumedRecipes,
+            code: $item->code,
+            label: $item->label,
+            customized: $item->customized,
+            composition: $item->recordedComposition(),
+            consumedArticles: $item->consumedArticles(),
+            consumedRecipes: $item->consumedRecipes(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -130,6 +137,153 @@ class Production extends GenericAggregate
         }
 
         $this->close(finishedByUserId: $cookedByUserId, now: $now);
+    }
+
+    /**
+     * @param ProductionCompositionLine[] $composition
+     */
+    public function adjustItemIngredients(
+        string $itemId,
+        array $composition,
+        bool $customized,
+        string $adjustedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $item = $this->item(itemId: $itemId);
+
+        if (null === $item) {
+            throw AdjustProductionItemException::itemNotFound(productionId: $this->id, itemId: $itemId);
+        }
+
+        if ($item->isDone()) {
+            throw AdjustProductionItemException::itemAlreadyCooked(productionId: $this->id, itemId: $itemId);
+        }
+
+        if ([] === $composition) {
+            throw AdjustProductionItemException::emptyComposition(productionId: $this->id, itemId: $itemId);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $item->adjustComposition(
+            composition: $composition,
+            customized: $customized,
+            updatedByUserId: $adjustedByUserId,
+            now: $now,
+        );
+        $this->stampUpdate(userId: $adjustedByUserId, now: $now);
+
+        $this->record(event: new ProductionItemIngredientsAdjusted(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            itemId: $item->id,
+            recipeId: $item->recipeId,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            status: $item->status,
+            servingsPlanned: $item->servingsPlanned,
+            servingsCooked: $item->servingsCooked,
+            nameSnapshot: $item->nameSnapshot,
+            emojiSnapshot: $item->emojiSnapshot,
+            code: $item->code,
+            label: $item->label,
+            customized: $item->customized,
+            composition: $item->recordedComposition(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $adjustedByUserId,
+        ));
+    }
+
+    public function serveItemSubRecipeFrom(
+        string $itemId,
+        string $recipeId,
+        ?string $sourceProductionItemId,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $item = $this->item(itemId: $itemId);
+
+        if (null === $item) {
+            throw AdjustProductionItemException::itemNotFound(productionId: $this->id, itemId: $itemId);
+        }
+
+        if ($item->isDone()) {
+            throw AdjustProductionItemException::itemAlreadyCooked(productionId: $this->id, itemId: $itemId);
+        }
+
+        if (!$item->usesSubRecipe(recipeId: $recipeId)) {
+            throw AdjustProductionItemException::subRecipeNotUsed(itemId: $itemId, recipeId: $recipeId);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $item->serveSubRecipeFrom(
+            recipeId: $recipeId,
+            sourceProductionItemId: $sourceProductionItemId,
+            updatedByUserId: $updatedByUserId,
+            now: $now,
+        );
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new ProductionItemSubRecipeServed(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            itemId: $item->id,
+            recipeId: $item->recipeId,
+            subRecipeId: $recipeId,
+            sourceProductionItemId: $sourceProductionItemId,
+            status: $item->status,
+            servingsPlanned: $item->servingsPlanned,
+            servingsCooked: $item->servingsCooked,
+            nameSnapshot: $item->nameSnapshot,
+            emojiSnapshot: $item->emojiSnapshot,
+            code: $item->code,
+            label: $item->label,
+            customized: $item->customized,
+            composition: $item->recordedComposition(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function labelItem(
+        string $itemId,
+        string $label,
+        string $labelledByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $item = $this->item(itemId: $itemId);
+
+        if (null === $item) {
+            throw AdjustProductionItemException::itemNotFound(productionId: $this->id, itemId: $itemId);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $item->labelAs(label: $label, updatedByUserId: $labelledByUserId, now: $now);
+        $this->stampUpdate(userId: $labelledByUserId, now: $now);
+
+        $this->record(event: new ProductionItemLabelled(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            itemId: $item->id,
+            recipeId: $item->recipeId,
+            status: $item->status,
+            servingsPlanned: $item->servingsPlanned,
+            servingsCooked: $item->servingsCooked,
+            nameSnapshot: $item->nameSnapshot,
+            emojiSnapshot: $item->emojiSnapshot,
+            code: $item->code,
+            label: $item->label,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $labelledByUserId,
+        ));
     }
 
     public function uncookItem(
@@ -151,6 +305,7 @@ class Production extends GenericAggregate
         $servingsCooked = $item->servingsCooked;
         $consumedArticles = $item->consumedArticles();
         $consumedRecipes = $item->consumedRecipes();
+        $composition = $item->recordedComposition();
 
         $item->uncook(uncookedByUserId: $uncookedByUserId, now: $now);
         $this->stampUpdate(userId: $uncookedByUserId, now: $now);
@@ -166,6 +321,10 @@ class Production extends GenericAggregate
             servingsCooked: $servingsCooked,
             nameSnapshot: $item->nameSnapshot,
             emojiSnapshot: $item->emojiSnapshot,
+            code: $item->code,
+            label: $item->label,
+            customized: $item->customized,
+            composition: $composition,
             consumedArticles: $consumedArticles,
             consumedRecipes: $consumedRecipes,
             createdAt: $this->createdAt,
@@ -262,7 +421,7 @@ class Production extends GenericAggregate
     }
 
     /**
-     * @return array<int, array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, checkedArticleIds: string[], checkedStepPositions: int[]}>
+     * @return array<int, array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, code: ?string, label: string, customized: bool, checkedArticleIds: string[], checkedStepPositions: int[]}>
      */
     public function recordedItems(): array
     {

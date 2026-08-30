@@ -15,23 +15,26 @@ class ProductionItemConsumption extends GenericAggregate
     public string $refId;
     public float $quantity;
     public ?string $unit = null;
+    public float $displayQuantity = 0.0;
+    public ?string $displayUnit = null;
+    public ?string $sourceProductionItemId = null;
 
     public static function take(
         string $productionItemId,
-        string $kind,
-        string $refId,
-        float $quantity,
-        ?string $unit,
+        ProductionCompositionLine $line,
         string $createdByUserId,
         \DateTime $now,
     ): self {
         $consumption = new self();
         $consumption->id = Uuid::uuid4()->toString();
         $consumption->productionItemId = $productionItemId;
-        $consumption->kind = $kind;
-        $consumption->refId = $refId;
-        $consumption->quantity = $quantity;
-        $consumption->unit = $unit;
+        $consumption->kind = $line->kind;
+        $consumption->refId = $line->refId;
+        $consumption->quantity = $line->quantity;
+        $consumption->unit = $line->unit;
+        $consumption->displayQuantity = $line->displayQuantity;
+        $consumption->displayUnit = $line->displayUnit;
+        $consumption->sourceProductionItemId = $line->sourceProductionItemId;
         $consumption->stampCreation(userId: $createdByUserId, now: $now);
 
         return $consumption;
@@ -40,6 +43,19 @@ class ProductionItemConsumption extends GenericAggregate
     public function isArticle(): bool
     {
         return self::KIND_ARTICLE === $this->kind;
+    }
+
+    public function toLine(): ProductionCompositionLine
+    {
+        return new ProductionCompositionLine(
+            kind: $this->kind,
+            refId: $this->refId,
+            quantity: $this->quantity,
+            unit: $this->unit,
+            displayQuantity: $this->displayQuantity,
+            displayUnit: $this->displayUnit,
+            sourceProductionItemId: $this->sourceProductionItemId,
+        );
     }
 
     /**

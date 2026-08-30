@@ -1,6 +1,10 @@
 import { Injectable, inject } from "@angular/core";
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import { KitchenFormatService } from "./kitchen-format.service";
+import { ProductionLot } from "../../domain/models/production-lot.model";
+import { ProductionLotRow } from "../../domain/models/production-lot-row.model";
+import { ProductionLotLabels } from "../../domain/models/production-lot-labels.model";
+import { ProductionSubRecipe } from "../../domain/models/production-sub-recipe.model";
 
 @Injectable()
 export class ProductionViewService {
@@ -30,6 +34,49 @@ export class ProductionViewService {
 
   progressLabel(checked: number, total: number): string {
     return `${checked} / ${total}`;
+  }
+
+  lotLabel(subRecipe: ProductionSubRecipe, fallback: string): string {
+    if (null === subRecipe.sourceProductionItemId) return fallback;
+
+    const code = subRecipe.lotCode ?? "";
+
+    return "" === subRecipe.lotLabel ? code : `${code} · ${subRecipe.lotLabel}`;
+  }
+
+  lotRows(
+    lots: ProductionLot[],
+    selectedId: string | null,
+    labels: ProductionLotLabels,
+  ): ProductionLotRow[] {
+    return lots.map((lot) => ({
+      productionItemId: lot.id,
+      title: this.lotTitle(lot, labels.untitled),
+      description: this.lotDescription(lot, labels),
+      selected: lot.id === selectedId,
+    }));
+  }
+
+  private lotTitle(lot: ProductionLot, untitled: string): string {
+    const code = lot.attributes.code ?? untitled;
+
+    return "" === lot.attributes.label
+      ? code
+      : `${code} · ${lot.attributes.label}`;
+  }
+
+  private lotDescription(
+    lot: ProductionLot,
+    labels: ProductionLotLabels,
+  ): string {
+    const left = lot.attributes.servingsLeft;
+    const servings = left > 0 ? labels.left(this.servings(left)) : labels.gone;
+
+    if (!lot.attributes.customized) {
+      return `${lot.attributes.cookedOn} · ${servings}`;
+    }
+
+    return `${lot.attributes.cookedOn} · ${servings} · ${labels.changed}`;
   }
 
   servings(value: number): string {

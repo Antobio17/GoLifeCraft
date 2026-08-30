@@ -8,5 +8,8 @@ export interface ProductionItemView {
   status: ProductionItemStatus;
   servingsPlanned: number;
   servingsCooked: number;
+  code: string | null;
+  label: string;
+  customized: boolean;
   requiredBy: string[];
 }

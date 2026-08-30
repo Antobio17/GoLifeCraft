@@ -6,6 +6,7 @@ use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryConsumed;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryCreated;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryDeleted;
+use Nutrition\Diary\Diary\Domain\Event\DiaryEntryLotAssigned;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryMacrosRecalculated;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryQuantityUpdated;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryQuickUpdated;
@@ -60,6 +61,8 @@ class DiaryEntry extends GenericAggregate
 
     public ?string $refId = null;
 
+    public ?string $productionItemId = null;
+
     public float $quantity;
 
     public ?string $unit = null;
@@ -109,6 +112,7 @@ class DiaryEntry extends GenericAggregate
         DateTimeGenerator $dateTimeGenerator,
         array $nodes = [],
         bool $customized = false,
+        ?string $productionItemId = null,
     ): self {
         if (!self::hasValidDate(entryDate: $entryDate)) {
             throw CreateDiaryEntryException::invalidDate(entryDate: $entryDate);
@@ -138,6 +142,7 @@ class DiaryEntry extends GenericAggregate
         $entry->unit = $unit;
         $entry->nodes = $nodes;
         $entry->customized = $customized;
+        $entry->productionItemId = $productionItemId;
         $entry->writeSnapshot(snapshot: $snapshot);
         $entry->stampCreation(userId: $createdByUserId, now: $now);
 
@@ -148,6 +153,7 @@ class DiaryEntry extends GenericAggregate
             meal: $meal,
             kind: $kind,
             refId: $refId,
+            productionItemId: $productionItemId,
             quantity: $quantity,
             tree: $entry->treePayload(),
             name: $snapshot->name,
@@ -212,6 +218,7 @@ class DiaryEntry extends GenericAggregate
             meal: $meal,
             kind: self::KIND_QUICK,
             refId: null,
+            productionItemId: null,
             quantity: $quantity,
             name: $snapshot->name,
             emoji: $snapshot->emoji,
@@ -324,6 +331,7 @@ class DiaryEntry extends GenericAggregate
             occurredOn: $now,
             quantity: $quantity,
             unit: $this->unit,
+            productionItemId: $this->productionItemId,
             name: $snapshot->name,
             emoji: $snapshot->emoji,
             calories: $snapshot->macros->calories,
@@ -353,6 +361,7 @@ class DiaryEntry extends GenericAggregate
             meal: $this->meal,
             kind: $this->kind,
             refId: $this->refId,
+            productionItemId: $this->productionItemId,
             quantity: $this->quantity,
             consumed: $consumed,
             name: $this->nameSnapshot,
@@ -367,6 +376,75 @@ class DiaryEntry extends GenericAggregate
     public function isRecipe(): bool
     {
         return self::KIND_RECIPE === $this->kind;
+    }
+
+    public function assignLot(
+        ?string $productionItemId,
+        DiaryEntrySnapshot $snapshot,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!$this->isRecipe()) {
+            throw UpdateDiaryEntryException::notARecipeEntry(diaryEntryId: $this->id);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        if (null !== $productionItemId) {
+            $this->releaseNodeLots(updatedByUserId: $updatedByUserId, dateTimeGenerator: $dateTimeGenerator);
+        }
+
+        $this->productionItemId = $productionItemId;
+        $this->writeSnapshot(snapshot: $snapshot);
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new DiaryEntryLotAssigned(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            entryDate: $this->entryDate,
+            meal: $this->meal,
+            kind: $this->kind,
+            refId: $this->refId,
+            productionItemId: $productionItemId,
+            quantity: $this->quantity,
+            customized: $this->customized,
+            consumed: $this->consumed,
+            name: $snapshot->name,
+            emoji: $snapshot->emoji,
+            calories: $snapshot->macros->calories,
+            protein: $snapshot->macros->protein,
+            fat: $snapshot->macros->fat,
+            carbs: $snapshot->macros->carbs,
+            tree: $this->treePayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function hasLot(): bool
+    {
+        return null !== $this->productionItemId;
+    }
+
+    /**
+     * Nothing under the entry keeps a batch of its own: what the entry is served from already says
+     * where every sub-recipe came from.
+     */
+    private function releaseNodeLots(string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
+    {
+        foreach ($this->nodes as $node) {
+            if (null === $node->productionItemId) {
+                continue;
+            }
+
+            $node->assignLot(
+                productionItemId: null,
+                updatedByUserId: $updatedByUserId,
+                dateTimeGenerator: $dateTimeGenerator,
+            );
+        }
     }
 
     public function hasTree(): bool
@@ -414,6 +492,32 @@ class DiaryEntry extends GenericAggregate
         $this->customized = true;
     }
 
+    public function findNodeByPath(string $path): ?DiaryEntryNode
+    {
+        foreach ($this->nodes as $node) {
+            if ($node->path === $path) {
+                return $node;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Swaps everything hanging under a node, leaving the rest of the breakdown as the user left it.
+     *
+     * @param DiaryEntryNode[] $nodes
+     */
+    public function replaceSubtree(DiaryEntryNode $parent, array $nodes): void
+    {
+        $kept = array_filter(
+            array: $this->nodes,
+            callback: static fn (DiaryEntryNode $node): bool => !$node->isDescendantOf(other: $parent),
+        );
+
+        $this->nodes = array_values(array: array_merge($kept, array_values(array: $nodes)));
+    }
+
     public function findNode(string $nodeId): ?DiaryEntryNode
     {
         foreach ($this->nodes as $node) {
@@ -455,6 +559,7 @@ class DiaryEntry extends GenericAggregate
             'parentNodeId' => $node->parentNodeId,
             'kind' => $node->kind,
             'refId' => $node->refId,
+            'productionItemId' => $node->productionItemId,
             'quantity' => $node->quantity,
             'unit' => $node->unit,
             'position' => $node->position,
@@ -499,6 +604,7 @@ class DiaryEntry extends GenericAggregate
             meal: $this->meal,
             kind: $this->kind,
             refId: $this->refId,
+            productionItemId: $this->productionItemId,
             quantity: $this->quantity,
             name: $snapshot->name,
             emoji: $snapshot->emoji,
@@ -528,6 +634,7 @@ class DiaryEntry extends GenericAggregate
             meal: $this->meal,
             kind: $this->kind,
             refId: $this->refId,
+            productionItemId: $this->productionItemId,
             quantity: $this->quantity,
             customized: $this->customized,
             name: $snapshot->name,

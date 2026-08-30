@@ -26,6 +26,7 @@ import { HttpResetDiaryEntryTreeAdapter } from "@nutrition/diary/diary/infrastru
 import { UpdateDiaryEntryNodeService } from "@nutrition/diary/diary/application/services/update-diary-entry-node.service";
 import { ResetDiaryEntryTreeService } from "@nutrition/diary/diary/application/services/reset-diary-entry-tree.service";
 import { DiaryTreeViewService } from "@nutrition/diary/diary/application/services/diary-tree-view.service";
+import { DiaryLotViewService } from "@nutrition/diary/diary/application/services/diary-lot-view.service";
 
 export class DiaryWriteProviders {
   static getProviders(): Provider[] {
@@ -74,6 +75,7 @@ export class DiaryWriteProviders {
         deps: [UpdateDiaryEntryPort],
       },
       DiaryTreeViewService,
+      DiaryLotViewService,
       {
         provide: UpdateDiaryEntryNodePort,
         useClass: HttpUpdateDiaryEntryNodeAdapter,

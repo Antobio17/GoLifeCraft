@@ -15,6 +15,7 @@ use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Model\InMemory\InMemoryDiaryEntryRepository;
+use Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\InMemory\InMemoryFindDiaryEntryLotNeedleDataQuery;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntrySnapshotCalculator;
 use Nutrition\Diary\Diary\Infrastructure\Domain\Service\InMemoryDiaryEntryTreeBuilder;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
@@ -93,6 +94,7 @@ final class UpdateDiaryEntryNodeCommandHandlerTest extends TestCase
             diaryEntryRepository: $this->repository,
             snapshotCalculator: $snapshotCalculator,
             treeBuilder: $this->treeBuilder,
+            lotNeedleDataQuery: new InMemoryFindDiaryEntryLotNeedleDataQuery(),
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );

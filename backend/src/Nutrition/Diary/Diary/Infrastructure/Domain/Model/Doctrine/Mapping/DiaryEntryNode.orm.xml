@@ -8,6 +8,7 @@
     <field name="path" type="string" column="path" length="60"/>
     <field name="kind" type="string" column="kind" length="16"/>
     <field name="refId" type="string" column="ref_id" length="36"/>
+    <field name="productionItemId" type="string" column="production_item_id" length="36" nullable="true"/>
     <field name="quantity" type="float" column="quantity"/>
     <field name="unit" type="string" column="unit" length="30" nullable="true"/>
     <field name="depth" type="integer" column="depth"/>
@@ -26,6 +27,7 @@
       <index name="idx_diary_entry_node_entry_id" columns="diary_entry_id"/>
       <index name="idx_diary_entry_node_parent_id" columns="parent_node_id"/>
       <index name="idx_diary_entry_node_ref_id" columns="ref_id"/>
+      <index name="idx_diary_entry_node_production_item_id" columns="production_item_id"/>
     </indexes>
   </entity>
 </doctrine-mapping>

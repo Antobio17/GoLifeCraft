@@ -202,6 +202,23 @@
                     (expandToggled)="toggleEntryTree(row.entry.id)"
                   />
 
+                  @if (row.lotPickable) {
+                    <ds-stack
+                      direction="row"
+                      align="center"
+                      [gap]="'var(--ds-space-2)'"
+                    >
+                      <ds-button
+                        variant="ghost"
+                        size="sm"
+                        icon="package"
+                        (clicked)="openLotPicker(row.entry.id, row.entry.refId)"
+                      >
+                        {{ row.lotLabel }}
+                      </ds-button>
+                    </ds-stack>
+                  }
+
                   @if (row.expanded) {
                     <ds-diary-tree
                       animate.enter="diary-tree--in"
@@ -221,6 +238,7 @@
                       "
                       (unitChanged)="onNodeUnitChange(row.entry.id, $event)"
                       (restored)="onResetTree(row.entry.id)"
+                      (lotPicked)="openNodeLotPicker(row.entry.id, $event)"
                     />
                   }
                 </ds-stack>
@@ -516,6 +534,50 @@
         (nextMonth)="calendarNextMonth()"
         (daySelected)="onCalendarDay($event)"
       />
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <ds-modal-sheet
+    [open]="lotOpen()"
+    [compact]="true"
+    [title]="'getDiary.lot.title' | t"
+    [closeLabel]="'getDiary.lot.close' | t"
+    (closed)="closeLotPicker()"
+  >
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-text variant="meta">{{ "getDiary.lot.hint" | t }}</ds-text>
+
+      @if (lotLoading()) {
+        <ds-text variant="muted">{{ "getDiary.lot.loading" | t }}</ds-text>
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-choice-row
+            icon="restore"
+            [title]="'getDiary.lot.followRecipe' | t"
+            [description]="'getDiary.lot.followRecipeHint' | t"
+            [selectable]="true"
+            [selected]="lotSelectedId() === null"
+            [disabled]="lotSaving()"
+            (activated)="onPickLot(null)"
+          />
+
+          @for (lot of lotRows(); track lot.productionItemId) {
+            <ds-choice-row
+              icon="package"
+              [title]="lot.title"
+              [description]="lot.description"
+              [selectable]="true"
+              [selected]="lot.selected"
+              [disabled]="lotSaving()"
+              (activated)="onPickLot(lot.productionItemId)"
+            />
+          }
+
+          @if (lotRows().length === 0) {
+            <ds-text variant="muted">{{ "getDiary.lot.empty" | t }}</ds-text>
+          }
+        </ds-stack>
+      }
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>
