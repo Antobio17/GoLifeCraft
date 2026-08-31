@@ -12,7 +12,7 @@ fields:
   category:
     writable: true
     required: true
-    enum: [groceries, restaurants, gym, transport, leisure, home, bills, health, beauty, clothing, treats, gifts, travel, pets, subscriptions, other]
+    enum: [groceries, restaurants, gym, transport, leisure, home, bills, health, beauty, clothing, treats, gifts, travel, pets, subscriptions, investments, other]
     description: >-
       Spending category the allocation caps. Each category can only appear once
       per budget.

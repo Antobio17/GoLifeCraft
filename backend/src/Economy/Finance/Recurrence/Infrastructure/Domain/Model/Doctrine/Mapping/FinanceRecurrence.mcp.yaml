@@ -30,7 +30,7 @@ fields:
   category:
     writable: true
     required: false
-    enum: [groceries, restaurants, gym, transport, leisure, home, bills, health, beauty, clothing, treats, gifts, travel, pets, subscriptions, other]
+    enum: [groceries, restaurants, gym, transport, leisure, home, bills, health, beauty, clothing, treats, gifts, travel, pets, subscriptions, investments, other]
     description: >-
       Spending category of the generated expense. Income is always stored as
       "other".

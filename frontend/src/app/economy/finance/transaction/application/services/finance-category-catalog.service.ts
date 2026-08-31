@@ -69,6 +69,10 @@ const CATEGORIES: Record<FinanceCategory, FinanceCategoryEntry> = {
     emoji: "🔁",
     color: "var(--ds-cat-subscriptions)",
   },
+  [FinanceCategory.INVESTMENTS]: {
+    emoji: "📈",
+    color: "var(--ds-cat-investments)",
+  },
   [FinanceCategory.OTHER]: {
     emoji: "📦",
     color: "var(--ds-cat-other)",

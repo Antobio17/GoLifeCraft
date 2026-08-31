@@ -31,6 +31,7 @@ import {
   ChoiceChipsComponent,
 } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
+import { FinancePrivacyToggleComponent } from "@economy/finance/privacy/infrastructure/components/finance-privacy-toggle.component";
 import { GetFinanceAccountsService } from "@economy/finance/account/application/services/get-finance-accounts.service";
 import { CreateFinanceAccountService } from "@economy/finance/account/application/services/create-finance-account.service";
 import { UpdateFinanceAccountService } from "@economy/finance/account/application/services/update-finance-account.service";
@@ -79,6 +80,7 @@ import { FinanceBalanceCheckRow } from "@economy/finance/balance-check/domain/mo
     SwipeToDeleteComponent,
     TransactionRowComponent,
     ChoiceChipsComponent,
+    FinancePrivacyToggleComponent,
   ],
 })
 export class GetFinanceAccountsComponent implements OnInit {
@@ -138,7 +140,9 @@ export class GetFinanceAccountsComponent implements OnInit {
     this.undo.withoutRemoved(this.loadedChecks()),
   );
 
-  totalBalanceLabel = computed(() => this.view.money(this.totalBalance()));
+  totalBalanceLabel = computed(() =>
+    this.view.sensitiveMoney(this.totalBalance()),
+  );
   hasAccounts = computed(() => this.accounts().length > 0);
 
   accountRows = computed<FinanceAccountRow[]>(() => {
@@ -149,7 +153,7 @@ export class GetFinanceAccountsComponent implements OnInit {
       account,
       emoji: this.catalog.emoji(account.type),
       typeLabel: this.catalog.label(account.type),
-      balanceLabel: this.view.money(account.balance),
+      balanceLabel: this.view.sensitiveMoney(account.balance),
       lastCheckLabel: this.lastCheckLabel(account),
       checks: checks
         .filter((check) => check.accountId === account.id)
@@ -399,9 +403,9 @@ export class GetFinanceAccountsComponent implements OnInit {
     return {
       check,
       dateLabel: this.view.dayLong(check.checkDate),
-      amountLabel: this.view.money(check.amount),
+      amountLabel: this.view.sensitiveMoney(check.amount),
       driftLabel: hasDrift
-        ? `${this.t("getFinanceAccounts.check.drift")} ${this.view.signedMoney(check.drift)}`
+        ? `${this.t("getFinanceAccounts.check.drift")} ${this.view.sensitiveSignedMoney(check.drift)}`
         : this.t("getFinanceAccounts.check.noDrift"),
       driftPositive: check.drift >= 0,
       hasDrift,

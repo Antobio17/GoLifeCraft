@@ -55,12 +55,14 @@ export class FinanceMovementGroupingService {
     total: number,
   ): FinanceMovementGroup {
     const [first] = rows;
-    const sign = first.income ? "+" : "−";
+    const totalLabel = first.income
+      ? `+${this.view.sensitiveMoney(total)}`
+      : `−${this.view.money(total)}`;
 
     return {
       key,
       label: `${first.emoji} ${this.labelOf(first)}`,
-      summaryLabel: `${sign}${this.view.money(total)} · ${this.countLabel(rows.length)}`,
+      summaryLabel: `${totalLabel} · ${this.countLabel(rows.length)}`,
       rows,
     };
   }

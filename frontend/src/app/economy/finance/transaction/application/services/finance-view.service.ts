@@ -1,9 +1,11 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
+import { FinanceAmountPrivacyService } from "@economy/finance/privacy/application/services/finance-amount-privacy.service";
 
 @Injectable()
 export class FinanceViewService {
   private translationService = inject(TranslationService);
+  private privacy = inject(FinanceAmountPrivacyService);
 
   todayIso(): string {
     return this.toIso(new Date());
@@ -98,6 +100,22 @@ export class FinanceViewService {
     const sign = amount >= 0 ? "+" : "−";
 
     return `${sign}${this.money(Math.abs(amount))}`;
+  }
+
+  sensitiveMoney(amount: number): string {
+    return this.privacy.mask(this.money(amount));
+  }
+
+  sensitiveMoneyPlain(amount: number): string {
+    return this.privacy.mask(this.moneyPlain(amount));
+  }
+
+  sensitiveMoneyShort(amount: number): string {
+    return this.privacy.mask(this.moneyShort(amount));
+  }
+
+  sensitiveSignedMoney(amount: number): string {
+    return this.privacy.mask(this.signedMoney(amount));
   }
 
   percentage(value: number): string {

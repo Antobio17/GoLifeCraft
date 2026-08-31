@@ -52,6 +52,7 @@ import {
   ChoiceChipOption,
   ChoiceChipsComponent,
 } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
+import { FinancePrivacyToggleComponent } from "@economy/finance/privacy/infrastructure/components/finance-privacy-toggle.component";
 import { GetFinanceOverviewService } from "@economy/finance/transaction/application/services/get-finance-overview.service";
 import { GetFinanceTransactionsService } from "@economy/finance/transaction/application/services/get-finance-transactions.service";
 import { GetFinanceCalendarService } from "@economy/finance/transaction/application/services/get-finance-calendar.service";
@@ -128,6 +129,7 @@ const EVOLUTION_MONTHS = 6;
     CalendarComponent,
     SegmentedToggleComponent,
     ChoiceChipsComponent,
+    FinancePrivacyToggleComponent,
   ],
 })
 export class GetEconomyComponent implements OnInit {
@@ -205,7 +207,7 @@ export class GetEconomyComponent implements OnInit {
     return balances.map((item) => ({
       key: item.accountId,
       label: `${this.accountCatalog.emoji(item.type)} ${item.name}`,
-      amountLabel: this.view.money(item.balance),
+      amountLabel: this.view.sensitiveMoney(item.balance),
       percentageLabel: "",
       emoji: "",
       color: "",
@@ -258,13 +260,13 @@ export class GetEconomyComponent implements OnInit {
   );
 
   balanceValue = computed(() =>
-    this.view.moneyPlain(this.overview()?.balance ?? 0),
+    this.view.sensitiveMoneyPlain(this.overview()?.balance ?? 0),
   );
   balanceCaption = computed(() => {
     this.translationsReady();
     const delta = this.overview()?.balanceDelta ?? 0;
 
-    return `${this.view.signedMoney(delta)} ${this.t("getEconomy.balance.thisMonth")}`;
+    return `${this.view.sensitiveSignedMoney(delta)} ${this.t("getEconomy.balance.thisMonth")}`;
   });
   balanceTrendLabel = computed(() =>
     this.view.percentage(this.overview()?.balanceDeltaPercentage ?? 0),
@@ -275,7 +277,7 @@ export class GetEconomyComponent implements OnInit {
   );
   balanceSeriesLabels = computed(() =>
     (this.overview()?.series ?? []).map((point) =>
-      this.view.moneyShort(point.endBalance),
+      this.view.sensitiveMoneyShort(point.endBalance),
     ),
   );
   balanceSeriesCaptions = computed(() =>
@@ -284,11 +286,15 @@ export class GetEconomyComponent implements OnInit {
     ),
   );
 
-  incomeLabel = computed(() => this.view.money(this.overview()?.income ?? 0));
+  incomeLabel = computed(() =>
+    this.view.sensitiveMoney(this.overview()?.income ?? 0),
+  );
   expenseLabel = computed(() =>
     this.view.negativeMoney(this.overview()?.expense ?? 0),
   );
-  netLabel = computed(() => this.view.signedMoney(this.overview()?.net ?? 0));
+  netLabel = computed(() =>
+    this.view.sensitiveSignedMoney(this.overview()?.net ?? 0),
+  );
 
   evolutionBars = computed<BarChartBar[]>(() =>
     (this.overview()?.series ?? []).slice(-EVOLUTION_MONTHS).map((point) => ({
@@ -422,7 +428,9 @@ export class GetEconomyComponent implements OnInit {
       )
       .reduce((total, transaction) => total + transaction.amount, 0),
   );
-  dayIncomeLabel = computed(() => this.view.money(this.dayIncomeTotal()));
+  dayIncomeLabel = computed(() =>
+    this.view.sensitiveMoney(this.dayIncomeTotal()),
+  );
   dayHasIncome = computed(() => this.dayIncomeTotal() > 0);
 
   kindOptions = computed<SegmentedOption[]>(() => {
@@ -671,7 +679,9 @@ export class GetEconomyComponent implements OnInit {
           : this.categoryCatalog.emoji(transaction.category),
         title: transaction.note || category,
         subtitle: `${origin} · ${this.view.dayShort(transaction.transactionDate)}`,
-        amountLabel: `${income ? "+" : "−"}${this.view.money(transaction.amount)}`,
+        amountLabel: income
+          ? `+${this.view.sensitiveMoney(transaction.amount)}`
+          : `−${this.view.money(transaction.amount)}`,
         income,
         tags: this.tagsFor(transaction),
       };
