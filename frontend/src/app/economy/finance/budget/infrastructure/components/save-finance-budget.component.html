@@ -9,11 +9,7 @@
     [eyebrow]="'saveFinanceBudget.eyebrow' | t"
     [title]="'saveFinanceBudget.title' | t"
     (leadingClick)="goBack()"
-  >
-    <ng-container slot="actions">
-      <app-finance-privacy-toggle [size]="36" [iconSize]="18" />
-    </ng-container>
-  </ds-screen-header>
+  />
 
   @if (loading()) {
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
@@ -27,9 +23,18 @@
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
       <ng-container slot="side">
         <ds-card [padding]="'var(--ds-space-4)'">
-          <ds-text variant="label">{{
-            "saveFinanceBudget.income.title" | t
-          }}</ds-text>
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-text variant="label">{{
+              "saveFinanceBudget.income.title" | t
+            }}</ds-text>
+
+            <app-finance-privacy-toggle [size]="30" [iconSize]="16" />
+          </ds-stack>
 
           <ds-amount-input
             unit="€"

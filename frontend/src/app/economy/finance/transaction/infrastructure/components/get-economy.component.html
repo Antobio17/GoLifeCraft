@@ -8,8 +8,6 @@
     [subtitle]="'getEconomy.subtitle' | t"
   >
     <ng-container slot="actions">
-      <app-finance-privacy-toggle />
-
       <ds-icon-button
         icon="wallet"
         variant="soft"
@@ -179,6 +177,8 @@
               </ds-text>
             </ds-stack>
 
+            <app-finance-privacy-toggle [size]="30" [iconSize]="16" />
+
             <ds-button variant="link" (clicked)="clearDay()">{{
               "getEconomy.day.clear" | t
             }}</ds-button>
@@ -335,7 +335,9 @@
         [pointCaptions]="balanceSeriesCaptions()"
         [scrollable]="true"
         [pointSpacing]="48"
-      />
+      >
+        <app-finance-privacy-toggle slot="action" [size]="30" [iconSize]="16" />
+      </ds-balance-card>
 
       <ds-stack
         direction="row"

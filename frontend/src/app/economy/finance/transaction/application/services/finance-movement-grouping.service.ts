@@ -56,8 +56,8 @@ export class FinanceMovementGroupingService {
   ): FinanceMovementGroup {
     const [first] = rows;
     const totalLabel = first.income
-      ? `+${this.view.sensitiveMoney(total)}`
-      : `−${this.view.money(total)}`;
+      ? this.view.sensitiveSignedMoney(total)
+      : this.view.negativeMoney(total);
 
     return {
       key,

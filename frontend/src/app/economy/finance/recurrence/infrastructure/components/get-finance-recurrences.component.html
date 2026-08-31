@@ -11,8 +11,6 @@
     (leadingClick)="goBack()"
   >
     <ng-container slot="actions">
-      <app-finance-privacy-toggle />
-
       <ds-button
         variant="secondary"
         size="icon-lg"
@@ -73,6 +71,8 @@
                 monthlyNetLabel()
               }}</ds-heading>
             </ds-stack>
+
+            <app-finance-privacy-toggle [size]="30" [iconSize]="16" />
           </ds-stack>
         </ds-card>
 

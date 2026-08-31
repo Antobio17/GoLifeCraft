@@ -8,12 +8,15 @@ import { LineChartComponent } from "../../../line-chart/infrastructure/component
     <div class="ds-balance">
       <div class="ds-balance__top">
         <span class="ds-balance__eyebrow">{{ eyebrow }}</span>
-        @if (trendLabel) {
-          <span class="ds-balance__trend" [class.is-down]="!positive">
-            <span aria-hidden="true">{{ positive ? "↗" : "↘" }}</span>
-            {{ trendLabel }}
-          </span>
-        }
+        <span class="ds-balance__actions">
+          @if (trendLabel) {
+            <span class="ds-balance__trend" [class.is-down]="!positive">
+              <span aria-hidden="true">{{ positive ? "↗" : "↘" }}</span>
+              {{ trendLabel }}
+            </span>
+          }
+          <ng-content select="[slot=action]"></ng-content>
+        </span>
       </div>
 
       <div class="ds-balance__value">
@@ -67,6 +70,11 @@ import { LineChartComponent } from "../../../line-chart/infrastructure/component
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--ds-accent);
+      }
+      .ds-balance__actions {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ds-space-2);
       }
       .ds-balance__trend {
         display: inline-flex;
