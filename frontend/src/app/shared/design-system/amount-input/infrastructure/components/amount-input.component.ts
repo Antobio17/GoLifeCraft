@@ -21,7 +21,8 @@ type AmountInputAlign = "start" | "end";
 
       <input
         class="ds-amount__input"
-        type="text"
+        autocomplete="off"
+        [type]="masked ? 'password' : 'text'"
         [attr.inputmode]="inputmode"
         [value]="value"
         [placeholder]="placeholder"
@@ -123,6 +124,7 @@ export class AmountInputComponent implements ControlValueAccessor {
   @Input() inputmode = "decimal";
   @Input() large = false;
   @Input() grow = false;
+  @Input() masked = false;
   @Input() ariaLabel = "";
 
   value = "";
