@@ -429,10 +429,10 @@ export class GetFinanceRecurrencesComponent implements OnInit {
 
   private amountLabelOf(recurrence: FinanceRecurrence): string {
     if (recurrence.kind === FinanceTransactionKind.INCOME) {
-      return `+${this.view.sensitiveMoney(recurrence.amount)}`;
+      return this.view.sensitiveSignedMoney(recurrence.amount);
     }
 
-    return `−${this.view.money(recurrence.amount)}`;
+    return this.view.negativeMoney(recurrence.amount);
   }
 
   private nextChargeLabelOf(recurrence: FinanceRecurrence): string {

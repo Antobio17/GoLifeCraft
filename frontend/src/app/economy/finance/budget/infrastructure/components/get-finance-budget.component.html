@@ -11,8 +11,6 @@
     (leadingClick)="goBack()"
   >
     <ng-container slot="actions">
-      <app-finance-privacy-toggle [size]="36" [iconSize]="18" />
-
       <ds-icon-button
         icon="chevronLeft"
         variant="soft"
@@ -97,11 +95,19 @@
             <ds-text variant="label">{{
               "getFinanceBudget.savings.title" | t
             }}</ds-text>
-            <ds-chip
-              [tone]="savingsTone() === 'positive' ? 'brand' : 'warning'"
-              [uppercase]="true"
-              >{{ savingsBadgeLabel() }}</ds-chip
+
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-1-5)'"
             >
+              <ds-chip
+                [tone]="savingsTone() === 'positive' ? 'brand' : 'warning'"
+                [uppercase]="true"
+                >{{ savingsBadgeLabel() }}</ds-chip
+              >
+              <app-finance-privacy-toggle [size]="30" [iconSize]="16" />
+            </ds-stack>
           </ds-stack>
 
           <ds-stack

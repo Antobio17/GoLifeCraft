@@ -10,18 +10,15 @@
     [subtitle]="'getFinanceAccounts.subtitle' | t"
     (leadingClick)="goBack()"
   >
-    <ng-container slot="actions">
-      <app-finance-privacy-toggle />
-
-      <ds-button
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [ariaLabel]="'getFinanceAccounts.add' | t"
-        (clicked)="openNewAccountSheet()"
-      />
-    </ng-container>
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="'getFinanceAccounts.add' | t"
+      (clicked)="openNewAccountSheet()"
+    />
   </ds-screen-header>
 
   @if (loading()) {
@@ -96,13 +93,22 @@
     <ds-split-view [columns]="'minmax(0, 0.75fr) minmax(0, 1fr)'">
       <ng-container slot="side">
         <ds-card [padding]="'var(--ds-space-4)'">
-          <ds-stack [gap]="'2px'">
-            <ds-text variant="meta">{{
-              "getFinanceAccounts.total" | t
-            }}</ds-text>
-            <ds-heading [level]="3" size="lg">{{
-              totalBalanceLabel()
-            }}</ds-heading>
+          <ds-stack
+            direction="row"
+            justify="between"
+            align="center"
+            [gap]="'var(--ds-space-3)'"
+          >
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="meta">{{
+                "getFinanceAccounts.total" | t
+              }}</ds-text>
+              <ds-heading [level]="3" size="lg">{{
+                totalBalanceLabel()
+              }}</ds-heading>
+            </ds-stack>
+
+            <app-finance-privacy-toggle [size]="34" [iconSize]="17" />
           </ds-stack>
         </ds-card>
 

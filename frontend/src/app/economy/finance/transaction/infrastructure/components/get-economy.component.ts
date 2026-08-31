@@ -680,8 +680,8 @@ export class GetEconomyComponent implements OnInit {
         title: transaction.note || category,
         subtitle: `${origin} · ${this.view.dayShort(transaction.transactionDate)}`,
         amountLabel: income
-          ? `+${this.view.sensitiveMoney(transaction.amount)}`
-          : `−${this.view.money(transaction.amount)}`,
+          ? this.view.sensitiveSignedMoney(transaction.amount)
+          : this.view.negativeMoney(transaction.amount),
         income,
         tags: this.tagsFor(transaction),
       };

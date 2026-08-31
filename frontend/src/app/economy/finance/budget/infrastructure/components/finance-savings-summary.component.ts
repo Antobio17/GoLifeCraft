@@ -19,7 +19,6 @@ import { BudgetMeterComponent } from "@shared/design-system/budget-meter/infrast
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
-import { FinancePrivacyToggleComponent } from "@economy/finance/privacy/infrastructure/components/finance-privacy-toggle.component";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { GetFinanceBudgetService } from "@economy/finance/budget/application/services/get-finance-budget.service";
 import { FinanceBudgetViewService } from "@economy/finance/budget/application/services/finance-budget-view.service";
@@ -42,7 +41,6 @@ const MODULE_PATH = "economy/finance/budget";
     BudgetMeterComponent,
     SectionHeaderComponent,
     SkeletonPanelComponent,
-    FinancePrivacyToggleComponent,
   ],
 })
 export class FinanceSavingsSummaryComponent implements OnInit {
@@ -61,10 +59,10 @@ export class FinanceSavingsSummaryComponent implements OnInit {
   configured = computed(() => this.budget()?.configured ?? false);
 
   savingsRealLabel = computed(() =>
-    this.view.sensitiveMoney(this.budget()?.savingsReal ?? 0),
+    this.view.money(this.budget()?.savingsReal ?? 0),
   );
   savingsObjectiveLabel = computed(() =>
-    this.view.sensitiveMoney(this.budget()?.savingsObjective ?? 0),
+    this.view.money(this.budget()?.savingsObjective ?? 0),
   );
   savingsRatio = computed(() => this.budget()?.savingsProgress ?? 0);
   monthProgressRatio = computed(() => this.budget()?.monthProgress ?? 0);
@@ -90,7 +88,7 @@ export class FinanceSavingsSummaryComponent implements OnInit {
 
     return this.budgetView.savingsRemainingLabel(
       remaining,
-      this.view.sensitiveMoney(Math.abs(remaining)),
+      this.view.money(Math.abs(remaining)),
     );
   });
 
