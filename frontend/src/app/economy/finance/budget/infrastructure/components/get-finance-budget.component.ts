@@ -22,6 +22,7 @@ import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { TransactionRowComponent } from "@shared/design-system/transaction-row/infrastructure/components/transaction-row.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import { FinancePrivacyToggleComponent } from "@economy/finance/privacy/infrastructure/components/finance-privacy-toggle.component";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
 import { GetFinanceTransactionsService } from "@economy/finance/transaction/application/services/get-finance-transactions.service";
@@ -61,6 +62,7 @@ import { FinanceCategory } from "@economy/finance/transaction/domain/models/fina
     SkeletonRowsComponent,
     SkeletonSectionHeaderComponent,
     TransactionRowComponent,
+    FinancePrivacyToggleComponent,
   ],
 })
 export class GetFinanceBudgetComponent implements OnInit {
@@ -107,10 +109,10 @@ export class GetFinanceBudgetComponent implements OnInit {
   });
 
   savingsRealLabel = computed(() =>
-    this.view.money(this.budget()?.savingsReal ?? 0),
+    this.view.sensitiveMoney(this.budget()?.savingsReal ?? 0),
   );
   savingsObjectiveLabel = computed(() =>
-    this.view.money(this.budget()?.savingsObjective ?? 0),
+    this.view.sensitiveMoney(this.budget()?.savingsObjective ?? 0),
   );
   savingsRatio = computed(() => this.budget()?.savingsProgress ?? 0);
   savingsStatus = computed(
@@ -135,7 +137,7 @@ export class GetFinanceBudgetComponent implements OnInit {
 
     return this.budgetView.savingsRemainingLabel(
       remaining,
-      this.view.money(Math.abs(remaining)),
+      this.view.sensitiveMoney(Math.abs(remaining)),
     );
   });
 

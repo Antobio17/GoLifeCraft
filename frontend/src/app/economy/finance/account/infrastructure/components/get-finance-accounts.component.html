@@ -10,15 +10,18 @@
     [subtitle]="'getFinanceAccounts.subtitle' | t"
     (leadingClick)="goBack()"
   >
-    <ds-button
-      slot="actions"
-      variant="primary"
-      size="icon-lg"
-      icon="plus"
-      [iconSize]="19"
-      [ariaLabel]="'getFinanceAccounts.add' | t"
-      (clicked)="openNewAccountSheet()"
-    />
+    <ng-container slot="actions">
+      <app-finance-privacy-toggle />
+
+      <ds-button
+        variant="primary"
+        size="icon-lg"
+        icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getFinanceAccounts.add' | t"
+        (clicked)="openNewAccountSheet()"
+      />
+    </ng-container>
   </ds-screen-header>
 
   @if (loading()) {

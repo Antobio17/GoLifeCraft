@@ -59,6 +59,7 @@ fields:
         travel,
         pets,
         subscriptions,
+        investments,
         other,
       ]
     description: >-
@@ -66,8 +67,9 @@ fields:
       "other". Defaults to "other" when not specified. Use "bills" for utilities
       (electricity, water, internet, phone), "beauty" for hairdresser, cosmetics and
       body care, "treats" for small impulse purchases the user did not need, "gifts"
-      for money spent on other people, and "travel" for trips and holidays as opposed
-      to daily commuting, which is "transport".
+      for money spent on other people, "travel" for trips and holidays as opposed
+      to daily commuting, which is "transport", and "investments" for money moved
+      into savings or investment products (index funds, pension plans, crypto).
     filterable: true
   note:
     writable: true

@@ -29,12 +29,12 @@
         "appointment": "Cita"
       }
     },
-    "finance": {
-      "title": "Saldo en cuenta",
+    "savings": {
+      "title": "Tu ahorro del mes",
       "seeAll": "Ver más",
-      "eyebrow": "SALDO EN CUENTA",
-      "caption": "{{delta}} este mes",
-      "empty": "Todavía no hay datos de tus cuentas."
+      "eyebrow": "AHORRO DEL MES",
+      "goal": "de",
+      "empty": "Aún no tienes presupuesto. Fíjate un objetivo de ahorro para verlo aquí."
     },
     "gym": {
       "title": "Tu semana en el gimnasio",

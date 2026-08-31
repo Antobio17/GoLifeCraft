@@ -55,6 +55,7 @@ class FinanceTransaction extends GenericAggregate
         'travel',
         'pets',
         'subscriptions',
+        'investments',
         self::CATEGORY_OTHER,
     ];
 

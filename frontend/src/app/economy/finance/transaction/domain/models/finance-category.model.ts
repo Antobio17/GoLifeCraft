@@ -14,5 +14,6 @@ export enum FinanceCategory {
   TRAVEL = "travel",
   PETS = "pets",
   SUBSCRIPTIONS = "subscriptions",
+  INVESTMENTS = "investments",
   OTHER = "other",
 }

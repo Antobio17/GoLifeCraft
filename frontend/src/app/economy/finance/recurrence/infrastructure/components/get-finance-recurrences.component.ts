@@ -45,6 +45,7 @@ import { FinanceRecurrenceForm } from "@economy/finance/recurrence/domain/models
 import { FinanceRecurrenceRow } from "@economy/finance/recurrence/domain/models/finance-recurrence-row.model";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import { FinancePrivacyToggleComponent } from "@economy/finance/privacy/infrastructure/components/finance-privacy-toggle.component";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
 import { FinanceCategory } from "@economy/finance/transaction/domain/models/finance-category.model";
@@ -82,6 +83,7 @@ import { FinanceAccount } from "@economy/finance/account/domain/models/finance-a
     TransactionRowComponent,
     SegmentedToggleComponent,
     ChoiceChipsComponent,
+    FinancePrivacyToggleComponent,
   ],
 })
 export class GetFinanceRecurrencesComponent implements OnInit {
@@ -133,10 +135,14 @@ export class GetFinanceRecurrencesComponent implements OnInit {
 
   hasAccounts = computed(() => this.accounts().length > 0);
   hasRecurrences = computed(() => this.recurrences().length > 0);
-  monthlyIncomeLabel = computed(() => this.view.money(this.monthlyIncome()));
+  monthlyIncomeLabel = computed(() =>
+    this.view.sensitiveMoney(this.monthlyIncome()),
+  );
   monthlyExpenseLabel = computed(() => this.view.money(this.monthlyExpense()));
   monthlyNetLabel = computed(() =>
-    this.view.signedMoney(this.monthlyIncome() - this.monthlyExpense()),
+    this.view.sensitiveSignedMoney(
+      this.monthlyIncome() - this.monthlyExpense(),
+    ),
   );
 
   recurrenceRows = computed<FinanceRecurrenceRow[]>(() => {
@@ -422,9 +428,11 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   }
 
   private amountLabelOf(recurrence: FinanceRecurrence): string {
-    const sign = recurrence.kind === FinanceTransactionKind.INCOME ? "+" : "−";
+    if (recurrence.kind === FinanceTransactionKind.INCOME) {
+      return `+${this.view.sensitiveMoney(recurrence.amount)}`;
+    }
 
-    return `${sign}${this.view.money(recurrence.amount)}`;
+    return `−${this.view.money(recurrence.amount)}`;
   }
 
   private nextChargeLabelOf(recurrence: FinanceRecurrence): string {

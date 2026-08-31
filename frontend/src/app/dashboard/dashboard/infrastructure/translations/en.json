@@ -29,12 +29,12 @@
         "appointment": "Appointment"
       }
     },
-    "finance": {
-      "title": "Account balance",
+    "savings": {
+      "title": "Your savings this month",
       "seeAll": "See more",
-      "eyebrow": "ACCOUNT BALANCE",
-      "caption": "{{delta}} this month",
-      "empty": "No account data yet."
+      "eyebrow": "SAVINGS THIS MONTH",
+      "goal": "of",
+      "empty": "No budget yet. Set a savings goal to see it here."
     },
     "gym": {
       "title": "Your week at the gym",
