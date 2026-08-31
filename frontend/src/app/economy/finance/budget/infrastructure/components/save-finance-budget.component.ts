@@ -26,6 +26,8 @@ import {
   TypeToggleComponent,
   TypeToggleOption,
 } from "@shared/design-system/type-toggle/infrastructure/components/type-toggle.component";
+import { FinanceAmountPrivacyService } from "@economy/finance/privacy/application/services/finance-amount-privacy.service";
+import { FinancePrivacyToggleComponent } from "@economy/finance/privacy/infrastructure/components/finance-privacy-toggle.component";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { FinanceCategoryCatalogService } from "@economy/finance/transaction/application/services/finance-category-catalog.service";
 import { GetFinanceBudgetSettingsService } from "@economy/finance/budget/application/services/get-finance-budget-settings.service";
@@ -62,6 +64,7 @@ const REDIRECT_DELAY_MS = 600;
     SkeletonPanelComponent,
     SkeletonRowsComponent,
     SkeletonSectionHeaderComponent,
+    FinancePrivacyToggleComponent,
   ],
 })
 export class SaveFinanceBudgetComponent implements OnInit {
@@ -74,6 +77,9 @@ export class SaveFinanceBudgetComponent implements OnInit {
   protected view = inject(FinanceViewService);
   protected budgetForm = inject(FinanceBudgetFormService);
   protected categoryCatalog = inject(FinanceCategoryCatalogService);
+  private privacy = inject(FinanceAmountPrivacyService);
+
+  readonly amountsHidden = this.privacy.amountsHidden;
 
   private readonly MODULE_PATH = "economy/finance/budget";
 
@@ -99,14 +105,16 @@ export class SaveFinanceBudgetComponent implements OnInit {
   hasReferenceIncome = computed(() => this.referenceIncome() > 0);
 
   savingsAmount = computed(() => this.budgetForm.savingsAmountOf(this.form()));
-  savingsAmountLabel = computed(() => this.view.money(this.savingsAmount()));
+  savingsAmountLabel = computed(() =>
+    this.view.sensitiveMoney(this.savingsAmount()),
+  );
   savingsPercentageLabel = computed(
     () => `${Math.round(this.form().savingsPercentage)}%`,
   );
 
   unassignedAmount = computed(() => this.budgetForm.unassignedOf(this.form()));
   unassignedAmountLabel = computed(() =>
-    this.view.money(Math.abs(this.unassignedAmount())),
+    this.view.sensitiveMoney(Math.abs(this.unassignedAmount())),
   );
   unassignedPercentageLabel = computed(() =>
     this.percentageLabel(
@@ -131,7 +139,7 @@ export class SaveFinanceBudgetComponent implements OnInit {
 
     return this.t("saveFinanceBudget.income.hint").replace(
       "{amount}",
-      this.view.money(suggested),
+      this.view.sensitiveMoney(suggested),
     );
   });
 

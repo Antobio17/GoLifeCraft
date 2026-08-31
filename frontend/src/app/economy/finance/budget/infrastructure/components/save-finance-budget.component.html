@@ -9,7 +9,11 @@
     [eyebrow]="'saveFinanceBudget.eyebrow' | t"
     [title]="'saveFinanceBudget.title' | t"
     (leadingClick)="goBack()"
-  />
+  >
+    <ng-container slot="actions">
+      <app-finance-privacy-toggle [size]="36" [iconSize]="18" />
+    </ng-container>
+  </ds-screen-header>
 
   @if (loading()) {
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
@@ -31,6 +35,7 @@
             unit="€"
             placeholder="0,00"
             [large]="true"
+            [masked]="amountsHidden()"
             [ariaLabel]="'saveFinanceBudget.income.title' | t"
             [ngModel]="form().referenceIncome"
             [ngModelOptions]="{ standalone: true }"
