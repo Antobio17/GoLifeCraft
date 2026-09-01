@@ -35,6 +35,7 @@
 
 .active-banner__row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ds-space-3);
 }
@@ -95,26 +96,18 @@
 }
 
 .active-banner__rest {
+  flex: 0 0 auto;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ds-space-2);
-  margin-top: var(--ds-space-3);
-  padding: var(--ds-space-2) var(--ds-space-3);
-  border-radius: var(--ds-radius-lg);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  padding: var(--ds-space-1) var(--ds-space-3);
+  border-radius: var(--ds-radius-md);
   background: var(--ds-warning-soft);
   color: var(--ds-warning);
   transition:
     background var(--ds-dur-2) var(--ds-ease-out),
-    color var(--ds-dur-2) var(--ds-ease-out),
-    padding var(--ds-dur-4) var(--ds-ease-in-out),
-    margin-top var(--ds-dur-4) var(--ds-ease-in-out);
-}
-
-.active-banner--collapsed .active-banner__rest {
-  margin-top: var(--ds-space-2);
-  padding: var(--ds-space-1) var(--ds-space-3);
-  border-radius: var(--ds-radius-md);
+    color var(--ds-dur-2) var(--ds-ease-out);
 }
 
 .active-banner__rest--over {
@@ -132,14 +125,40 @@
 .active-banner__rest-value {
   font-family: var(--ds-font-display);
   font-weight: 800;
-  font-size: var(--ds-text-xl);
+  font-size: var(--ds-text-lg);
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  transition: font-size var(--ds-dur-4) var(--ds-ease-in-out);
 }
 
-.active-banner--collapsed .active-banner__rest-value {
-  font-size: var(--ds-text-lg);
+/**
+ * Por debajo de la tablet la fila no da de sí para un bloque más, así que el
+ * descanso rompe línea y pasa a franja. El order lo manda al final del wrap:
+ * sin él la fila rompería antes de tiempo y bajaría también series y botones.
+ */
+@media (max-width: 767px) {
+  .active-banner__rest {
+    order: 1;
+    flex-basis: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-2);
+    padding: var(--ds-space-2) var(--ds-space-3);
+    border-radius: var(--ds-radius-lg);
+  }
+
+  .active-banner__rest-value {
+    font-size: var(--ds-text-xl);
+  }
+
+  .active-banner--collapsed .active-banner__rest {
+    padding: var(--ds-space-1) var(--ds-space-3);
+    border-radius: var(--ds-radius-md);
+  }
+
+  .active-banner--collapsed .active-banner__rest-value {
+    font-size: var(--ds-text-lg);
+  }
 }
 
 .active-banner__count {
@@ -288,7 +307,6 @@
   .active-banner,
   .active-banner__time,
   .active-banner__rest,
-  .active-banner__rest-value,
   .active-banner__actions,
   .active-banner__compact-actions {
     transition-duration: 0.01ms;
