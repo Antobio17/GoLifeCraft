@@ -81,7 +81,9 @@
         </ds-stack>
       </ds-stack>
 
-      <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-stack [gap]="'var(--ds-space-4)'">
+        <app-user-usage [userId]="user()!.id" />
+
         <ds-text variant="label">{{
           "userDetail.section.support" | t
         }}</ds-text>

@@ -1,0 +1,109 @@
+<ds-stack [gap]="'var(--ds-space-3)'">
+  <ds-section-header
+    [title]="'userUsage.title' | t"
+    [staticLabel]="'userUsage.badge' | t"
+  />
+
+  @if (loading()) {
+    <ds-skeleton-metrics [count]="3" [gap]="'var(--ds-space-2)'" />
+    <ds-skeleton-panel content="spark" chartHeight="6.75rem" />
+    <ds-skeleton-panel content="meters" [meters]="4" />
+  } @else if (failed()) {
+    <ds-note icon="alertCircle" tone="warning">{{
+      "userUsage.error" | t
+    }}</ds-note>
+  } @else if (!provisioned()) {
+    <ds-note icon="alertCircle" tone="warning">{{
+      "userUsage.notProvisioned" | t
+    }}</ds-note>
+  } @else if (!hasData()) {
+    <ds-empty-state
+      icon="chart"
+      [title]="'userUsage.empty.title' | t"
+      [text]="'userUsage.empty.text' | t"
+    />
+  } @else {
+    <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+      <ds-stat-tile
+        [value]="totalRecordsLabel()"
+        [label]="'userUsage.stat.records' | t"
+      />
+      <ds-stat-tile
+        [value]="totalEventsLabel()"
+        [label]="'userUsage.stat.events' | t"
+      />
+      <ds-stat-tile
+        [value]="completedWorkoutsLabel()"
+        [label]="'userUsage.stat.workouts' | t"
+      />
+    </ds-stack>
+
+    <ds-panel
+      [title]="'userUsage.daily.title' | t"
+      [subtitle]="'userUsage.daily.subtitle' | t"
+      [figure]="recentEventsLabel()"
+    >
+      <ds-line-chart
+        [points]="dailyPoints()"
+        [captions]="dailyCaptions()"
+      ></ds-line-chart>
+    </ds-panel>
+
+    <ds-panel
+      [title]="'userUsage.monthly.title' | t"
+      [subtitle]="'userUsage.monthly.subtitle' | t"
+    >
+      <ds-bar-chart [bars]="monthlyBars()" [height]="120"></ds-bar-chart>
+    </ds-panel>
+
+    <ds-panel
+      [title]="'userUsage.modules.title' | t"
+      [subtitle]="'userUsage.modules.subtitle' | t"
+    >
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        @for (share of moduleShares(); track share.module) {
+          <ds-meter
+            [label]="share.label"
+            [percent]="share.percent"
+            [color]="share.color"
+          />
+        }
+      </ds-stack>
+    </ds-panel>
+
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-section-header [title]="'userUsage.milestones.title' | t" />
+
+      <ds-readonly-strip
+        [label]="'userUsage.milestone.lastWorkout' | t"
+        [value]="lastWorkoutLabel()"
+      ></ds-readonly-strip>
+      <ds-readonly-strip
+        [label]="'userUsage.milestone.lastActivity' | t"
+        [value]="lastActivityLabel()"
+      ></ds-readonly-strip>
+      <ds-readonly-strip
+        [label]="'userUsage.milestone.firstActivity' | t"
+        [value]="firstActivityLabel()"
+      ></ds-readonly-strip>
+
+      @for (share of moduleShares(); track share.module) {
+        <ds-readonly-strip
+          [label]="share.label"
+          [value]="share.lastActivityLabel"
+          [note]="'userUsage.modules.records' | t: { records: share.records }"
+        ></ds-readonly-strip>
+      }
+    </ds-stack>
+
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-section-header [title]="'userUsage.content.title' | t" />
+
+      <ds-grid minColumn="8rem" [gap]="'var(--ds-space-2)'">
+        @for (tile of metricTiles(); track tile.metric) {
+          <ds-stat-tile [value]="tile.value" [label]="tile.label" />
+        }
+      </ds-grid>
+    </ds-stack>
+  }
+</ds-stack>

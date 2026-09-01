@@ -25,6 +25,7 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list-item.component";
 import { SkeletonNoteComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-note.component";
+import { UserUsageComponent } from "@authorization/user/usage/infrastructure/components/user-usage.component";
 
 @Component({
   selector: "app-user-detail",
@@ -50,6 +51,7 @@ import { SkeletonNoteComponent } from "@shared/design-system/skeleton/infrastruc
     SkeletonListComponent,
     SkeletonListItemComponent,
     SkeletonNoteComponent,
+    UserUsageComponent,
   ],
 })
 export class UserDetailComponent {

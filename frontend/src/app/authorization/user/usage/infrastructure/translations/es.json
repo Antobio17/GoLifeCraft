@@ -1,0 +1,62 @@
+{
+  "userUsage": {
+    "title": "Uso de la cuenta",
+    "badge": "Solo admin",
+    "error": "No se ha podido cargar el uso de este usuario.",
+    "notProvisioned": "Este usuario todavía no tiene base de datos propia: se crea al concederle el acceso.",
+    "never": "Sin datos",
+    "empty": {
+      "title": "Sin actividad todavía",
+      "text": "El usuario tiene acceso pero aún no ha creado ningún dato."
+    },
+    "stat": {
+      "records": "Registros",
+      "events": "Eventos",
+      "workouts": "Entrenos"
+    },
+    "daily": {
+      "title": "Actividad reciente",
+      "subtitle": "Eventos de los últimos 30 días"
+    },
+    "monthly": {
+      "title": "Actividad por mes",
+      "subtitle": "Eventos de los últimos 12 meses"
+    },
+    "modules": {
+      "title": "Reparto por módulo",
+      "subtitle": "Porcentaje de registros sobre el total",
+      "records": "{{records}} registros"
+    },
+    "module": {
+      "nutrition": "Nutrición",
+      "gym": "Gimnasio",
+      "agenda": "Agenda",
+      "finance": "Finanzas"
+    },
+    "milestones": {
+      "title": "Últimos hitos"
+    },
+    "milestone": {
+      "lastWorkout": "Último entreno",
+      "lastActivity": "Última actividad",
+      "firstActivity": "Primera actividad"
+    },
+    "content": {
+      "title": "Contenido"
+    },
+    "metric": {
+      "articles": "Artículos",
+      "recipes": "Recetas",
+      "menus": "Menús",
+      "productions": "Producciones",
+      "shoppingItems": "Compra",
+      "diaryEntries": "Diario",
+      "exercises": "Ejercicios",
+      "sessions": "Sesiones",
+      "workouts": "Entrenos",
+      "agendaEntries": "Agenda",
+      "financeAccounts": "Cuentas",
+      "financeTransactions": "Movimientos"
+    }
+  }
+}

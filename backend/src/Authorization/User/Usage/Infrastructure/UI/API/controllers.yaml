@@ -1,0 +1,7 @@
+services:
+  Authorization\User\Usage\Infrastructure\UI\API\Controller\GetUserUsageController:
+    class: Authorization\User\Usage\Infrastructure\UI\API\Controller\GetUserUsageController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

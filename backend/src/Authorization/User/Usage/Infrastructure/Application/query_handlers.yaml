@@ -1,0 +1,11 @@
+services:
+  Authorization\User\Usage\Application\Query\GetUserUsage\GetUserUsageQueryHandler:
+    class: Authorization\User\Usage\Application\Query\GetUserUsage\GetUserUsageQueryHandler
+    arguments:
+      $needleDataQuery: '@Authorization\User\Usage\Domain\QueryModel\GetUserUsageNeedleDataQuery'
+      $dataTransform: '@Authorization\User\Usage\Application\Query\GetUserUsage\GetUserUsageDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Authorization\User\Usage\Application\Query\GetUserUsage\GetUserUsageDataTransform:
+    class: Authorization\User\Usage\Infrastructure\UI\API\DataTransform\ApiGetUserUsageDataTransform
