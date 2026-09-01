@@ -11,17 +11,6 @@
       <span class="active-banner__state">{{ stateLabel }}</span>
       <span class="active-banner__time">{{ elapsedLabel }}</span>
     </div>
-    @if (restVisible) {
-      <div
-        class="active-banner__rest"
-        [class.active-banner__rest--over]="restOverTarget"
-        role="status"
-      >
-        <span class="active-banner__rest-label">{{ restCaption }}</span>
-        <span class="active-banner__rest-value">{{ restLabel }}</span>
-      </div>
-    }
-
     <div class="active-banner__count">
       <span class="active-banner__count-value"
         >{{ doneCount }}/{{ totalSets }}</span
@@ -62,6 +51,17 @@
       </button>
     </div>
   </div>
+
+  @if (restVisible) {
+    <div
+      class="active-banner__rest"
+      [class.active-banner__rest--over]="restOverTarget"
+      role="status"
+    >
+      <span class="active-banner__rest-label">{{ restCaption }}</span>
+      <span class="active-banner__rest-value">{{ restLabel }}</span>
+    </div>
+  }
 
   <div class="active-banner__actions">
     <button
