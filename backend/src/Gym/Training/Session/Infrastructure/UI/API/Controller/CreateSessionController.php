@@ -5,6 +5,7 @@ namespace Gym\Training\Session\Infrastructure\UI\API\Controller;
 use Gym\Training\Session\Application\Command\CreateSessionCommand;
 use Gym\Training\Session\Application\Command\SessionExerciseData;
 use Gym\Training\Session\Domain\Exception\CreateSessionException;
+use Gym\Training\Session\Domain\Model\Session;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
@@ -31,6 +32,7 @@ final class CreateSessionController
             $this->handle(message: new CreateSessionCommand(
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 estimatedDurationMinutes: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'estimatedDurationMinutes'),
+                restSeconds: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'restSeconds', required: false) ?? Session::DEFAULT_REST_SECONDS,
                 exercises: SessionExerciseData::listFromArray(
                     rawExercises: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'exercises'),
                 ),

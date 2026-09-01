@@ -19,6 +19,7 @@ export interface SessionExerciseView {
 export interface SessionDetailAttributes {
   name: string;
   estimatedDurationMinutes: number;
+  restSeconds: number;
   exercises: SessionExerciseView[];
 }
 

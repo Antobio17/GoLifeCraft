@@ -16,10 +16,27 @@
         />
       </ds-field>
 
-      <ds-field [label]="'createSession.field.duration' | t">
-        <ds-choice-chips
-          [options]="estOptions"
+      <ds-field [label]="durationLabel()">
+        <ds-duration-choice
           formControlName="estimatedDurationMinutes"
+          [options]="durationOptions"
+          [customLabel]="customLabel()"
+          [customAriaLabel]="durationCustomAriaLabel()"
+          [unit]="durationUnit()"
+          [min]="1"
+          [max]="600"
+        />
+      </ds-field>
+
+      <ds-field [label]="restLabel()" [hint]="restHint()" [hintIcon]="true">
+        <ds-duration-choice
+          formControlName="restSeconds"
+          [options]="restOptions"
+          [customLabel]="customLabel()"
+          [customAriaLabel]="restCustomAriaLabel()"
+          [unit]="restUnit()"
+          [min]="0"
+          [max]="3600"
         />
       </ds-field>
 

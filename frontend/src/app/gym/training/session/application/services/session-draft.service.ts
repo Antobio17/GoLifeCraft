@@ -159,11 +159,13 @@ export class SessionDraftService {
   toRequest(
     name: string,
     estimatedDurationMinutes: number,
+    restSeconds: number,
     list: SessionExerciseView[],
   ): CreateSessionRequest {
     return {
       name,
       estimatedDurationMinutes,
+      restSeconds,
       exercises: list.map((exercise, exerciseIndex) => ({
         exerciseId: exercise.exerciseId,
         position: exerciseIndex + 1,

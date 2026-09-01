@@ -454,6 +454,7 @@ export class FreeWorkoutComponent implements OnInit {
         ...this.sessionDraft.toRequest(
           this.name().trim(),
           this.estimatedDurationMinutes(),
+          this.activeWorkout.restTargetSeconds(),
           this.exercises(),
         ),
         sessionId,

@@ -14,6 +14,13 @@ fields:
     type: int
     min: 0
     sortable: true
+  restSeconds:
+    writable: true
+    required: false
+    type: int
+    min: 0
+    max: 3600
+    sortable: true
 
 relations: {}
 

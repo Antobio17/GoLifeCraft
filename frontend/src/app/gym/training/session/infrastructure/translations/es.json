@@ -37,19 +37,26 @@
   },
   "createSession": {
     "title": "Nueva sesión",
-    "description": "Ponle nombre y una duración estimada",
+    "description": "Ponle nombre, duración y descanso entre series",
     "back": "Volver",
     "field": {
       "name": "Nombre",
       "namePlaceholder": "Ej. Empuje A",
-      "duration": "Duración estimada"
+      "duration": "Duración estimada",
+      "durationUnit": "min",
+      "durationCustomAria": "Duración estimada en minutos",
+      "custom": "Otro",
+      "rest": "Descanso entre series",
+      "restUnit": "seg",
+      "restHint": "El cronómetro de descanso se pone en rojo al pasar de este tiempo.",
+      "restCustomAria": "Descanso entre series en segundos"
     },
     "save": "Crear sesión",
     "saving": "Guardando…"
   },
   "updateSession": {
     "title": "Editar sesión",
-    "description": "Modifica el nombre o la duración",
+    "description": "Modifica el nombre, la duración o el descanso",
     "save": "Guardar cambios"
   },
   "getSession": {
@@ -69,7 +76,8 @@
       "pause": "Pausar",
       "resume": "Reanudar",
       "stop": "Parar",
-      "markDone": "Marcar serie como hecha"
+      "markDone": "Marcar serie como hecha",
+      "rest": "Descanso"
     },
     "stopModal": {
       "title": "¿Parar la sesión?",

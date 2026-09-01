@@ -16,6 +16,7 @@ final readonly class SessionExerciseAdded extends DomainEvent
         public string $exerciseId,
         public string $name,
         public int $estimatedDurationMinutes,
+        public int $restSeconds,
         public array $exercises,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,

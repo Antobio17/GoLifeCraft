@@ -54,6 +54,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
         ($createHandler)(new CreateSessionCommand(
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
+            restSeconds: 180,
             exercises: [
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',
@@ -103,12 +104,14 @@ final class SessionExerciseCommandHandlersTest extends TestCase
             sessionId: 'session-1',
             name: 'Empuje B',
             estimatedDurationMinutes: 40,
+            restSeconds: 90,
             updatedByUserId: 'god-user-id',
         ));
 
         $session = $this->sessionRepository->findById(id: 'session-1');
         $this->assertEquals(expected: 'Empuje B', actual: $session->name);
         $this->assertEquals(expected: 40, actual: $session->estimatedDurationMinutes);
+        $this->assertEquals(expected: 90, actual: $session->restSeconds);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises);
         $this->assertEquals(expected: 'exercise-1', actual: $session->exercises[0]->exerciseId);
     }

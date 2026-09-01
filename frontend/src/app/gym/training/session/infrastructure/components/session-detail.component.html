@@ -74,6 +74,10 @@
           ) | t
         "
         [elapsedLabel]="activeWorkout.elapsedLabel()"
+        [restVisible]="activeWorkout.restRunning()"
+        [restLabel]="activeWorkout.restLabel()"
+        [restCaption]="'getSession.active.rest' | t"
+        [restOverTarget]="activeWorkout.restOverTarget()"
         [doneCount]="doneCount"
         [totalSets]="totalSets"
         [setsLabel]="'getSession.active.sets' | t"
@@ -107,6 +111,12 @@
           <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1)'">
             <ds-icon name="clock" [size]="13" />
             ~{{ estimatedDurationMinutes() }} min
+          </ds-stack>
+        </ds-chip>
+        <ds-chip>
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1)'">
+            <ds-icon name="stopwatch" [size]="13" />
+            {{ restLabel() }}
           </ds-stack>
         </ds-chip>
         <ds-save-status

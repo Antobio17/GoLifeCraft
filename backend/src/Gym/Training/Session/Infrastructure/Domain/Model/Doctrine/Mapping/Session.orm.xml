@@ -5,6 +5,11 @@
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255"/>
     <field name="estimatedDurationMinutes" type="integer" column="estimated_duration_minutes"/>
+    <field name="restSeconds" type="integer" column="rest_seconds">
+      <options>
+        <option name="default">180</option>
+      </options>
+    </field>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

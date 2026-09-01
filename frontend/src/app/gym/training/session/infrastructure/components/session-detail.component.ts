@@ -165,6 +165,15 @@ export class SessionDetailComponent implements OnInit {
 
   name = signal("");
   estimatedDurationMinutes = signal(0);
+  restSeconds = signal(0);
+
+  restLabel = computed(() => {
+    const totalSeconds = this.restSeconds();
+    const seconds = totalSeconds % 60;
+
+    return `${Math.floor(totalSeconds / 60)}:${String(seconds).padStart(2, "0")}`;
+  });
+
   loadedExercises = signal<SessionExerciseView[]>([]);
 
   exercises = computed<SessionExerciseView[]>(() => {
@@ -399,6 +408,7 @@ export class SessionDetailComponent implements OnInit {
     this.statsLoading.set(true);
     this.name.set("");
     this.estimatedDurationMinutes.set(0);
+    this.restSeconds.set(0);
     this.loadedExercises.set([]);
     this.persistedExercises.clear();
     this.templateExercises.set([]);
@@ -430,6 +440,7 @@ export class SessionDetailComponent implements OnInit {
           this.estimatedDurationMinutes.set(
             attributes.estimatedDurationMinutes,
           );
+          this.restSeconds.set(attributes.restSeconds);
           this.activeWorkout.ensureRestored().subscribe({
             next: () => this.finalizeLoad(attributes.exercises),
             error: () => this.finalizeLoad(attributes.exercises),
@@ -446,6 +457,7 @@ export class SessionDetailComponent implements OnInit {
     );
     this.templateExercises.set(this.sessionDraft.clone(templateExercises));
     this.seedExercises(templateExercises);
+    this.syncRestTarget();
     this.loading.set(false);
     this.maybeAutoStart();
   }
@@ -730,8 +742,16 @@ export class SessionDetailComponent implements OnInit {
     this.activeWorkout
       .start(this.id(), this.name(), this.toActive())
       .subscribe({
-        next: () => {},
+        next: () => this.syncRestTarget(),
       });
+  }
+
+  private syncRestTarget(): void {
+    if (!this.isActiveHere) {
+      return;
+    }
+
+    this.activeWorkout.restTargetSeconds.set(this.restSeconds());
   }
 
   onFinishWorkout(): void {

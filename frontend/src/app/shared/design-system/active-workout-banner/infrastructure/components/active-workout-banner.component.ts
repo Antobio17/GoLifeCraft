@@ -19,6 +19,10 @@ export class ActiveWorkoutBannerComponent {
   @Input() paused = false;
   @Input() stateLabel = "";
   @Input() elapsedLabel = "";
+  @Input() restVisible = false;
+  @Input() restLabel = "";
+  @Input() restCaption = "";
+  @Input() restOverTarget = false;
   @Input() doneCount = 0;
   @Input() totalSets = 0;
   @Input() setsLabel = "";

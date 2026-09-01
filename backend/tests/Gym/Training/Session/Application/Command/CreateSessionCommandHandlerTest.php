@@ -41,6 +41,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
         ($this->handler)(new CreateSessionCommand(
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
+            restSeconds: 120,
             exercises: [
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',
@@ -58,6 +59,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
         $session = $this->sessionRepository->findById(id: 'session-1');
         $this->assertNotNull(actual: $session);
         $this->assertEquals(expected: 'Empuje A', actual: $session->name);
+        $this->assertEquals(expected: 120, actual: $session->restSeconds);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises);
         $this->assertEquals(expected: 'exercise-1', actual: $session->exercises[0]->exerciseId);
         $this->assertEquals(expected: 'Pausar 1 segundo abajo', actual: $session->exercises[0]->note);
@@ -72,6 +74,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
         ($this->handler)(new CreateSessionCommand(
             name: 'Entrenamiento libre',
             estimatedDurationMinutes: 30,
+            restSeconds: 180,
             exercises: [],
             createdByUserId: 'god-user-id',
             sessionId: 'session-from-free-workout',
@@ -91,6 +94,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
         ($this->handler)(new CreateSessionCommand(
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
+            restSeconds: 180,
             exercises: [],
             createdByUserId: 'god-user-id',
         ));
@@ -103,6 +107,20 @@ final class CreateSessionCommandHandlerTest extends TestCase
         ($this->handler)(new CreateSessionCommand(
             name: 'Empuje A',
             estimatedDurationMinutes: -1,
+            restSeconds: 180,
+            exercises: [],
+            createdByUserId: 'god-user-id',
+        ));
+    }
+
+    public function testItThrowsExceptionForNegativeRest(): void
+    {
+        $this->expectException(exception: CreateSessionException::class);
+
+        ($this->handler)(new CreateSessionCommand(
+            name: 'Empuje A',
+            estimatedDurationMinutes: 55,
+            restSeconds: -1,
             exercises: [],
             createdByUserId: 'god-user-id',
         ));
