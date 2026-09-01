@@ -1,0 +1,4 @@
+get_user_usage:
+  path: /api/v1/authorization/users/{id}/usage
+  methods: [GET]
+  controller: Authorization\User\Usage\Infrastructure\UI\API\Controller\GetUserUsageController

@@ -1,0 +1,6 @@
+services:
+  Authorization\User\Usage\Domain\QueryModel\GetUserUsageNeedleDataQuery:
+    class: Authorization\User\Usage\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetUserUsageNeedleDataQuery
+    arguments:
+      $masterConnection: '@doctrine.dbal.master_connection'
+      $connectionFactory: '@Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\TenantReaderConnectionFactory'

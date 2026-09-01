@@ -1,0 +1,62 @@
+{
+  "userUsage": {
+    "title": "Account usage",
+    "badge": "Admin only",
+    "error": "The usage of this user could not be loaded.",
+    "notProvisioned": "This user has no database yet: it is created when access is granted.",
+    "never": "No data",
+    "empty": {
+      "title": "No activity yet",
+      "text": "The user has access but has not created any data yet."
+    },
+    "stat": {
+      "records": "Records",
+      "events": "Events",
+      "workouts": "Workouts"
+    },
+    "daily": {
+      "title": "Recent activity",
+      "subtitle": "Events over the last 30 days"
+    },
+    "monthly": {
+      "title": "Activity by month",
+      "subtitle": "Events over the last 12 months"
+    },
+    "modules": {
+      "title": "Breakdown by module",
+      "subtitle": "Share of records over the total",
+      "records": "{{records}} records"
+    },
+    "module": {
+      "nutrition": "Nutrition",
+      "gym": "Gym",
+      "agenda": "Agenda",
+      "finance": "Finance"
+    },
+    "milestones": {
+      "title": "Latest milestones"
+    },
+    "milestone": {
+      "lastWorkout": "Last workout",
+      "lastActivity": "Last activity",
+      "firstActivity": "First activity"
+    },
+    "content": {
+      "title": "Content"
+    },
+    "metric": {
+      "articles": "Articles",
+      "recipes": "Recipes",
+      "menus": "Menus",
+      "productions": "Productions",
+      "shoppingItems": "Shopping",
+      "diaryEntries": "Diary",
+      "exercises": "Exercises",
+      "sessions": "Sessions",
+      "workouts": "Workouts",
+      "agendaEntries": "Agenda",
+      "financeAccounts": "Accounts",
+      "financeTransactions": "Transactions"
+    }
+  }
+}

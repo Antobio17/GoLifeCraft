@@ -17,6 +17,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     user: "authorization/user/user",
     users: "authorization/user/user",
     userDetail: "authorization/user/user",
+    userUsage: "authorization/user/usage",
     impersonation: "authorization/user/user",
     profile: "authorization/user/user",
     settings: "authorization/user/user",
