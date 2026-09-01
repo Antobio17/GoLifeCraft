@@ -18,6 +18,7 @@ final readonly class SessionExercisesReordered extends DomainEvent
         public array $currentOrder,
         public string $name,
         public int $estimatedDurationMinutes,
+        public int $restSeconds,
         public array $exercises,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,

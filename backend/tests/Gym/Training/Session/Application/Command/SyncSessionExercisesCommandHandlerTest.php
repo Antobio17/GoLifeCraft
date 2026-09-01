@@ -38,6 +38,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
         ($createHandler)(new CreateSessionCommand(
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
+            restSeconds: 180,
             exercises: [
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',

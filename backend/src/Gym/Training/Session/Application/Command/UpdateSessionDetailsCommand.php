@@ -10,6 +10,7 @@ final readonly class UpdateSessionDetailsCommand implements Command
         public string $sessionId,
         public string $name,
         public int $estimatedDurationMinutes,
+        public int $restSeconds,
         public string $updatedByUserId,
     ) {
     }

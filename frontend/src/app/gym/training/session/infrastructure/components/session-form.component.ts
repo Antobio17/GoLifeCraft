@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, input, signal } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import {
   FormBuilder,
@@ -10,7 +17,8 @@ import { TranslationService } from "@shared/i18n/application/services/translatio
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
-import { ChoiceChipsComponent } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
+import { DurationChoiceComponent } from "@shared/design-system/duration-choice/infrastructure/components/duration-choice.component";
+import { DurationChoiceOption } from "@shared/design-system/duration-choice/domain/models/duration-choice-option.model";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
@@ -30,7 +38,7 @@ import { GetSessionResponse } from "../../domain/models/get-session-response.mod
     PageWrapperComponent,
     ScreenHeaderComponent,
     FieldComponent,
-    ChoiceChipsComponent,
+    DurationChoiceComponent,
     StackComponent,
     TextInputComponent,
     ButtonComponent,
@@ -46,11 +54,34 @@ export class SessionFormComponent implements OnInit {
   private router = inject(Router);
 
   private readonly MODULE_PATH = "gym/training/session";
-  readonly estOptions = [
+  private readonly DEFAULT_REST_SECONDS = 180;
+
+  readonly durationOptions: DurationChoiceOption[] = [
     { value: 45, label: "45 min" },
     { value: 55, label: "55 min" },
     { value: 75, label: "75 min" },
   ];
+
+  readonly restOptions: DurationChoiceOption[] = [
+    { value: 60, label: "1:00" },
+    { value: 90, label: "1:30" },
+    { value: 120, label: "2:00" },
+    { value: 180, label: "3:00" },
+    { value: 240, label: "4:00" },
+  ];
+
+  customLabel = computed(() => this.t("createSession.field.custom"));
+  durationLabel = computed(() => this.t("createSession.field.duration"));
+  durationUnit = computed(() => this.t("createSession.field.durationUnit"));
+  durationCustomAriaLabel = computed(() =>
+    this.t("createSession.field.durationCustomAria"),
+  );
+  restLabel = computed(() => this.t("createSession.field.rest"));
+  restUnit = computed(() => this.t("createSession.field.restUnit"));
+  restHint = computed(() => this.t("createSession.field.restHint"));
+  restCustomAriaLabel = computed(() =>
+    this.t("createSession.field.restCustomAria"),
+  );
 
   form: FormGroup;
   loading = signal(true);
@@ -61,6 +92,7 @@ export class SessionFormComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ["", [Validators.required, Validators.minLength(2)]],
       estimatedDurationMinutes: [55, [Validators.required]],
+      restSeconds: [this.DEFAULT_REST_SECONDS, [Validators.required]],
     });
   }
 
@@ -91,6 +123,7 @@ export class SessionFormComponent implements OnInit {
             this.form.patchValue({
               name: attributes.name,
               estimatedDurationMinutes: attributes.estimatedDurationMinutes,
+              restSeconds: attributes.restSeconds,
             });
             this.loading.set(false);
           },
@@ -114,14 +147,22 @@ export class SessionFormComponent implements OnInit {
     const name = this.form.value.name ?? "";
     const estimatedDurationMinutes =
       this.form.value.estimatedDurationMinutes ?? 0;
+    const restSeconds =
+      this.form.value.restSeconds ?? this.DEFAULT_REST_SECONDS;
 
     const request$ = this.isEdit
       ? this.updateSessionDetailsService.updateSessionDetails(this.id(), {
           name,
           estimatedDurationMinutes,
+          restSeconds,
         })
       : this.createSessionService.createSession(
-          this.sessionDraft.toRequest(name, estimatedDurationMinutes, []),
+          this.sessionDraft.toRequest(
+            name,
+            estimatedDurationMinutes,
+            restSeconds,
+            [],
+          ),
         );
 
     request$.subscribe({

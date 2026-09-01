@@ -15,5 +15,6 @@ export interface CreateSessionRequest {
   sessionId?: string;
   name: string;
   estimatedDurationMinutes: number;
+  restSeconds: number;
   exercises: SessionExerciseRequest[];
 }

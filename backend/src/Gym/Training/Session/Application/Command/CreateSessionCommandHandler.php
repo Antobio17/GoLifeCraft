@@ -32,6 +32,7 @@ final readonly class CreateSessionCommandHandler
             id: $sessionId,
             name: $command->name,
             estimatedDurationMinutes: $command->estimatedDurationMinutes,
+            restSeconds: $command->restSeconds,
             exercises: $this->sessionExerciseAssembler->assemble(
                 sessionId: $sessionId,
                 exercises: $command->exercises,

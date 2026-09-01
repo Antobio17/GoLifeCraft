@@ -94,6 +94,41 @@
   font-size: var(--ds-text-xl);
 }
 
+.active-banner__rest {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  padding: var(--ds-space-1) var(--ds-space-2);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-warning-soft);
+  color: var(--ds-warning);
+  transition:
+    background var(--ds-dur-2) var(--ds-ease-out),
+    color var(--ds-dur-2) var(--ds-ease-out);
+}
+
+.active-banner__rest--over {
+  background: var(--ds-danger-soft);
+  color: var(--ds-danger-soft-text);
+}
+
+.active-banner__rest-label {
+  font-size: var(--ds-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.active-banner__rest-value {
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: var(--ds-text-lg);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
 .active-banner__count {
   flex: 0 0 auto;
   text-align: right;

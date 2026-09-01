@@ -57,7 +57,8 @@
         "pause": "Pause",
         "resume": "Resume",
         "stop": "Discard",
-        "markDone": "Mark set"
+        "markDone": "Mark set",
+        "rest": "Rest"
       },
       "empty": {
         "title": "No exercises yet",

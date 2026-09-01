@@ -19,9 +19,11 @@ class Session extends GenericAggregate
 {
     public const string SYNC_MODE_EXERCISES = 'exercises';
     public const string SYNC_MODE_SETS = 'sets';
+    public const int DEFAULT_REST_SECONDS = 180;
 
     public string $name;
     public int $estimatedDurationMinutes;
+    public int $restSeconds;
 
     /** @var SessionExercise[] */
     public array $exercises = [];
@@ -33,6 +35,7 @@ class Session extends GenericAggregate
         string $id,
         string $name,
         int $estimatedDurationMinutes,
+        int $restSeconds,
         array $exercises,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -41,12 +44,17 @@ class Session extends GenericAggregate
             throw CreateSessionException::durationMustNotBeNegative();
         }
 
+        if (!self::hasValidRest(restSeconds: $restSeconds)) {
+            throw CreateSessionException::restMustNotBeNegative();
+        }
+
         $now = $dateTimeGenerator->now();
 
         $session = new self();
         $session->id = $id;
         $session->name = $name;
         $session->estimatedDurationMinutes = $estimatedDurationMinutes;
+        $session->restSeconds = $restSeconds;
         $session->exercises = $exercises;
         $session->stampCreation(userId: $createdByUserId, now: $now);
 
@@ -127,6 +135,7 @@ class Session extends GenericAggregate
     public function updateDetails(
         string $name,
         int $estimatedDurationMinutes,
+        int $restSeconds,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -134,10 +143,15 @@ class Session extends GenericAggregate
             throw UpdateSessionException::durationMustNotBeNegative();
         }
 
+        if (!self::hasValidRest(restSeconds: $restSeconds)) {
+            throw UpdateSessionException::restMustNotBeNegative();
+        }
+
         $now = $dateTimeGenerator->now();
 
         $this->name = $name;
         $this->estimatedDurationMinutes = $estimatedDurationMinutes;
+        $this->restSeconds = $restSeconds;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new SessionDetailsUpdated(
@@ -145,6 +159,7 @@ class Session extends GenericAggregate
             occurredOn: $now,
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            restSeconds: $this->restSeconds,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -175,6 +190,7 @@ class Session extends GenericAggregate
             exerciseId: $sessionExercise->exerciseId,
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            restSeconds: $this->restSeconds,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -211,6 +227,7 @@ class Session extends GenericAggregate
             exerciseId: $sessionExercise->exerciseId,
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            restSeconds: $this->restSeconds,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -251,6 +268,7 @@ class Session extends GenericAggregate
             currentOrder: $this->exerciseIds(),
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            restSeconds: $this->restSeconds,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -281,6 +299,7 @@ class Session extends GenericAggregate
             exerciseId: $sessionExercise->exerciseId,
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            restSeconds: $this->restSeconds,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -409,5 +428,10 @@ class Session extends GenericAggregate
     private static function hasValidDuration(int $estimatedDurationMinutes): bool
     {
         return $estimatedDurationMinutes >= 0;
+    }
+
+    private static function hasValidRest(int $restSeconds): bool
+    {
+        return $restSeconds >= 0;
     }
 }

@@ -10,6 +10,8 @@ import {
 import { TemplateSyncMode } from "../../domain/models/template-sync-mode.model";
 import { uuidV4 } from "@shared/uuid/uuid";
 
+const DEFAULT_REST_SECONDS = 180;
+
 export interface ActiveExerciseSet {
   reps: number;
   weight: number | null;
@@ -32,11 +34,14 @@ export class ActiveWorkoutService implements OnDestroy {
   readonly activeSessionId = signal<string | null>(null);
   readonly activeName = signal("");
   readonly paused = signal(false);
+  readonly restTargetSeconds = signal(DEFAULT_REST_SECONDS);
 
   private readonly baseSeconds = signal(0);
   private readonly startedAtMs = signal(0);
   private readonly nowMs = signal(Date.now());
   private readonly doneKeys = signal<Set<string>>(new Set());
+  private readonly restStartedAtMs = signal<number | null>(null);
+  private readonly restFrozenSeconds = signal(0);
 
   readonly liveExercises = signal<ActiveExercise[]>([]);
 
@@ -62,6 +67,32 @@ export class ActiveWorkoutService implements OnDestroy {
   readonly elapsedLabel = computed(() =>
     this.formatElapsed(this.elapsedSeconds()),
   );
+
+  readonly restSeconds = computed<number | null>(() => {
+    const startedAtMs = this.restStartedAtMs();
+    if (startedAtMs === null) {
+      return null;
+    }
+
+    if (this.paused()) {
+      return this.restFrozenSeconds();
+    }
+
+    return Math.max(0, Math.floor((this.nowMs() - startedAtMs) / 1000));
+  });
+
+  readonly restRunning = computed(() => this.restSeconds() !== null);
+
+  readonly restLabel = computed(() =>
+    this.formatElapsed(this.restSeconds() ?? 0),
+  );
+
+  readonly restOverTarget = computed(() => {
+    const seconds = this.restSeconds();
+    const target = this.restTargetSeconds();
+
+    return seconds !== null && target > 0 && seconds >= target;
+  });
 
   isActiveFor(sessionId: string): boolean {
     return this.isActive() && this.activeSessionId() === sessionId;
@@ -105,6 +136,7 @@ export class ActiveWorkoutService implements OnDestroy {
       next.delete(key);
     } else {
       next.add(key);
+      this.restartRest();
     }
     this.doneKeys.set(next);
     this.queueProgress(exercises);
@@ -169,6 +201,7 @@ export class ActiveWorkoutService implements OnDestroy {
           this.activeName.set(sessionName);
           this.liveExercises.set(exercises);
           this.doneKeys.set(new Set());
+          this.stopRest();
           this.baseSeconds.set(0);
           this.startedAtMs.set(Date.now());
           this.paused.set(false);
@@ -182,6 +215,7 @@ export class ActiveWorkoutService implements OnDestroy {
   pause(exercises: ActiveExercise[]): void {
     if (this.paused()) {
       this.startedAtMs.set(Date.now());
+      this.resumeRest();
       this.paused.set(false);
       this.startTicker();
       this.queueProgress(exercises);
@@ -189,6 +223,7 @@ export class ActiveWorkoutService implements OnDestroy {
     }
 
     this.baseSeconds.set(this.elapsedSeconds());
+    this.freezeRest();
     this.paused.set(true);
     this.stopTicker();
     this.queueProgress(exercises);
@@ -270,6 +305,7 @@ export class ActiveWorkoutService implements OnDestroy {
     this.activeName.set(active.attributes.sessionName);
     this.liveExercises.set(this.fromDetail(active));
     this.doneKeys.set(doneKeys);
+    this.stopRest();
     this.baseSeconds.set(0);
     this.startedAtMs.set(new Date(active.attributes.startedAt).getTime());
     this.paused.set(false);
@@ -348,7 +384,36 @@ export class ActiveWorkoutService implements OnDestroy {
     this.baseSeconds.set(0);
     this.startedAtMs.set(0);
     this.doneKeys.set(new Set());
+    this.stopRest();
+    this.restTargetSeconds.set(DEFAULT_REST_SECONDS);
     this.restore$ = undefined;
+  }
+
+  private restartRest(): void {
+    this.restFrozenSeconds.set(0);
+    this.restStartedAtMs.set(Date.now());
+    this.nowMs.set(Date.now());
+  }
+
+  private stopRest(): void {
+    this.restStartedAtMs.set(null);
+    this.restFrozenSeconds.set(0);
+  }
+
+  private freezeRest(): void {
+    if (this.restStartedAtMs() === null) {
+      return;
+    }
+
+    this.restFrozenSeconds.set(this.restSeconds() ?? 0);
+  }
+
+  private resumeRest(): void {
+    if (this.restStartedAtMs() === null) {
+      return;
+    }
+
+    this.restStartedAtMs.set(Date.now() - this.restFrozenSeconds() * 1000);
   }
 
   private buildProgress(exercises: ActiveExercise[]): WorkoutProgressRequest {

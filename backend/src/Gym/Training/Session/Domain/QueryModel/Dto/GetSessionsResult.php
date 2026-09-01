@@ -11,6 +11,7 @@ final class GetSessionsResult extends QueryAggregateResult
         string $aggregateName,
         public readonly string $name,
         public readonly int $estimatedDurationMinutes,
+        public readonly int $restSeconds,
         public readonly int $exerciseCount,
         public readonly array $muscleGroups,
         public readonly \DateTime $createdAt,

@@ -12,6 +12,7 @@ final readonly class CreateSessionCommand implements Command
     public function __construct(
         public string $name,
         public int $estimatedDurationMinutes,
+        public int $restSeconds,
         public array $exercises,
         public string $createdByUserId,
         public ?string $sessionId = null,

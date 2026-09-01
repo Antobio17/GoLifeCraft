@@ -57,7 +57,8 @@
         "pause": "Pausar",
         "resume": "Reanudar",
         "stop": "Descartar",
-        "markDone": "Marcar serie"
+        "markDone": "Marcar serie",
+        "rest": "Descanso"
       },
       "empty": {
         "title": "Sin ejercicios todavía",

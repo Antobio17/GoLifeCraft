@@ -37,19 +37,26 @@
   },
   "createSession": {
     "title": "New session",
-    "description": "Give it a name and an estimated duration",
+    "description": "Name it and set its duration and rest between sets",
     "back": "Back",
     "field": {
       "name": "Name",
       "namePlaceholder": "E.g. Push A",
-      "duration": "Estimated duration"
+      "duration": "Estimated duration",
+      "durationUnit": "min",
+      "durationCustomAria": "Estimated duration in minutes",
+      "custom": "Other",
+      "rest": "Rest between sets",
+      "restUnit": "sec",
+      "restHint": "The rest timer turns red once this time is exceeded.",
+      "restCustomAria": "Rest between sets in seconds"
     },
     "save": "Create session",
     "saving": "Saving…"
   },
   "updateSession": {
     "title": "Edit session",
-    "description": "Change the name or duration",
+    "description": "Change the name, the duration or the rest",
     "save": "Save changes"
   },
   "getSession": {
@@ -69,7 +76,8 @@
       "pause": "Pause",
       "resume": "Resume",
       "stop": "Stop",
-      "markDone": "Mark set as done"
+      "markDone": "Mark set as done",
+      "rest": "Rest"
     },
     "stopModal": {
       "title": "Stop the session?",

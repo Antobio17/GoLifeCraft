@@ -23,4 +23,13 @@ final class CreateSessionException extends BaseException
             details: []
         );
     }
+
+    public static function restMustNotBeNegative(): self
+    {
+        return new static(
+            title: 'The rest between sets must not be negative.',
+            keyTranslation: 'session.rest.must.not.be.negative',
+            details: []
+        );
+    }
 }

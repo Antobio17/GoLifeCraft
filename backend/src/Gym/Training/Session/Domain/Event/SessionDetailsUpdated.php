@@ -14,6 +14,7 @@ final readonly class SessionDetailsUpdated extends DomainEvent
         \DateTime $occurredOn,
         public string $name,
         public int $estimatedDurationMinutes,
+        public int $restSeconds,
         public array $exercises,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
