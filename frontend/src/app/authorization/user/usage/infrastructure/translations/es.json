@@ -1,7 +1,6 @@
 {
   "userUsage": {
     "title": "Uso de la cuenta",
-    "badge": "Solo admin",
     "error": "No se ha podido cargar el uso de este usuario.",
     "notProvisioned": "Este usuario todavía no tiene base de datos propia: se crea al concederle el acceso.",
     "never": "Sin datos",

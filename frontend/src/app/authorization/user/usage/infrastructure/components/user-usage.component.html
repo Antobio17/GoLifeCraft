@@ -1,8 +1,5 @@
 <ds-stack [gap]="'var(--ds-space-3)'">
-  <ds-section-header
-    [title]="'userUsage.title' | t"
-    [staticLabel]="'userUsage.badge' | t"
-  />
+  <ds-section-header [title]="'userUsage.title' | t" />
 
   @if (loading()) {
     <ds-skeleton-metrics [count]="3" [gap]="'var(--ds-space-2)'" />
@@ -62,11 +59,7 @@
     >
       <ds-stack [gap]="'var(--ds-space-3)'">
         @for (share of moduleShares(); track share.module) {
-          <ds-meter
-            [label]="share.label"
-            [percent]="share.percent"
-            [color]="share.color"
-          />
+          <ds-meter [label]="share.label" [percent]="share.percent" />
         }
       </ds-stack>
     </ds-panel>
