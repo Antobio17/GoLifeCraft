@@ -1,7 +1,6 @@
 {
   "userUsage": {
     "title": "Account usage",
-    "badge": "Admin only",
     "error": "The usage of this user could not be loaded.",
     "notProvisioned": "This user has no database yet: it is created when access is granted.",
     "never": "No data",

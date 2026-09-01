@@ -24,13 +24,6 @@ import { UserUsage } from "../../domain/models/user-usage.model";
 import { UserUsageMetricTile } from "../../domain/models/user-usage-metric-tile.model";
 import { UserUsageModuleShare } from "../../domain/models/user-usage-module-share.model";
 
-const MODULE_COLORS: Record<string, string> = {
-  nutrition: "var(--ds-data-1)",
-  gym: "var(--ds-data-2)",
-  agenda: "var(--ds-data-3)",
-  finance: "var(--ds-accent)",
-};
-
 const CAPTION_EVERY = 7;
 
 @Component({
@@ -117,7 +110,6 @@ export class UserUsageComponent {
       label: this.t(`userUsage.module.${item.module}`),
       records: item.records,
       percent: total === 0 ? 0 : Math.round((item.records / total) * 100),
-      color: MODULE_COLORS[item.module] ?? "var(--ds-data-1)",
       lastActivityLabel: this.date(item.lastActivityAt),
     }));
   });
