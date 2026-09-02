@@ -49,6 +49,7 @@
       "nameLabel": "Workout name",
       "namePlaceholder": "Give it a name",
       "nameHint": "No template: this workout only lands in your history.",
+      "restoreError": "We could not check whether you have a workout in progress. Please try again.",
       "finish": "Finish",
       "active": {
         "running": "Free workout",

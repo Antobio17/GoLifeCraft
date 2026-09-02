@@ -1,12 +1,20 @@
+import { signal } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { Observable, of } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
+import { AuthSession } from "@shared/auth/domain/models/auth-session.model";
+import { Impersonation } from "@shared/auth/domain/models/impersonation.model";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { ImpersonationService } from "@shared/auth/application/services/impersonation.service";
 import { WorkoutSessionPort } from "../../domain/ports/workout-session.port";
 import { WorkoutDetail } from "../../domain/models/workout-detail.model";
 import { WorkoutProgressRequest } from "../../domain/models/workout-request.model";
+import { TemplateSyncMode } from "../../domain/models/template-sync-mode.model";
 import { ActiveExercise, ActiveWorkoutService } from "./active-workout.service";
 
 class StubWorkoutSessionPort extends WorkoutSessionPort {
   active: WorkoutDetail | null = null;
+  failNextGetActive = false;
+  getActiveCalls = 0;
   readonly savedProgress: WorkoutProgressRequest[] = [];
 
   start(): Observable<void> {
@@ -30,8 +38,53 @@ class StubWorkoutSessionPort extends WorkoutSessionPort {
   }
 
   getActive(): Observable<WorkoutDetail | null> {
+    this.getActiveCalls += 1;
+
+    if (this.failNextGetActive) {
+      this.failNextGetActive = false;
+      return throwError(() => new Error("network down"));
+    }
+
     return of(this.active);
   }
+}
+
+function sessionOf(email: string): AuthSession {
+  return {
+    token: "token",
+    expiresAt: Math.floor(Date.now() / 1000) + 3600,
+    tokenType: "Bearer",
+    user: { username: email, email },
+    email,
+  };
+}
+
+class StubAuthSessionService {
+  readonly sessionSignal = signal<AuthSession | null>(
+    sessionOf("owner@golifecraft.test"),
+  );
+  readonly session = this.sessionSignal.asReadonly();
+}
+
+class StubImpersonationService {
+  readonly impersonationSignal = signal<Impersonation | null>(null);
+  readonly impersonation = this.impersonationSignal.asReadonly();
+}
+
+function authProviders(
+  authSession: StubAuthSessionService,
+  impersonation: StubImpersonationService,
+) {
+  return [
+    {
+      provide: AuthSessionService,
+      useValue: authSession as unknown as AuthSessionService,
+    },
+    {
+      provide: ImpersonationService,
+      useValue: impersonation as unknown as ImpersonationService,
+    },
+  ];
 }
 
 describe("ActiveWorkoutService rest timer", () => {
@@ -60,6 +113,10 @@ describe("ActiveWorkoutService rest timer", () => {
       providers: [
         ActiveWorkoutService,
         { provide: WorkoutSessionPort, useClass: StubWorkoutSessionPort },
+        ...authProviders(
+          new StubAuthSessionService(),
+          new StubImpersonationService(),
+        ),
       ],
     });
 
@@ -189,5 +246,115 @@ describe("ActiveWorkoutService rest timer", () => {
     service.ensureRestored().subscribe();
 
     expect(service.restRunning()).toBeFalse();
+  });
+});
+
+describe("ActiveWorkoutService restoration cache", () => {
+  let service: ActiveWorkoutService;
+  let port: StubWorkoutSessionPort;
+  let impersonation: StubImpersonationService;
+  let authSession: StubAuthSessionService;
+
+  beforeEach(() => {
+    authSession = new StubAuthSessionService();
+    impersonation = new StubImpersonationService();
+
+    TestBed.configureTestingModule({
+      providers: [
+        ActiveWorkoutService,
+        { provide: WorkoutSessionPort, useClass: StubWorkoutSessionPort },
+        ...authProviders(authSession, impersonation),
+      ],
+    });
+
+    service = TestBed.inject(ActiveWorkoutService);
+    port = TestBed.inject(WorkoutSessionPort) as StubWorkoutSessionPort;
+  });
+
+  afterEach(() => service.ngOnDestroy());
+
+  function inProgressWorkout(id: string): WorkoutDetail {
+    return {
+      id,
+      type: "Workout",
+      attributes: {
+        sessionId: "session-1",
+        sessionName: "Empuje A",
+        status: "in_progress",
+        startedAt: new Date().toISOString(),
+        finishedAt: null,
+        durationSeconds: 0,
+        restStartedAt: null,
+        exercises: [],
+      },
+    };
+  }
+
+  it("asks the server only once no matter how many pages check it", () => {
+    service.ensureRestored().subscribe();
+    service.ensureRestored().subscribe();
+    service.ensureRestored().subscribe();
+
+    expect(port.getActiveCalls).toBe(1);
+  });
+
+  it("asks again after a failed check instead of caching the failure", () => {
+    port.failNextGetActive = true;
+    port.active = inProgressWorkout("workout-1");
+
+    service.ensureRestored().subscribe({ error: () => undefined });
+
+    expect(port.getActiveCalls).toBe(1);
+    expect(service.isActive()).toBeFalse();
+
+    service.ensureRestored().subscribe();
+
+    expect(port.getActiveCalls).toBe(2);
+    expect(service.isActive()).toBeTrue();
+  });
+
+  it("does not ask again after finishing the workout", () => {
+    service.start("session-1", "Empuje A", []).subscribe();
+    service.finish([], TemplateSyncMode.None).subscribe();
+
+    service.ensureRestored().subscribe();
+
+    expect(port.getActiveCalls).toBe(0);
+    expect(service.isActive()).toBeFalse();
+  });
+
+  it("drops the restored workout when the identity changes", () => {
+    port.active = inProgressWorkout("workout-1");
+    service.ensureRestored().subscribe();
+
+    expect(service.isActive()).toBeTrue();
+
+    impersonation.impersonationSignal.set({
+      userId: "other-user",
+      email: "other@golifecraft.test",
+      name: "Other",
+      tenantId: "tenant-2",
+      expiresAt: Math.floor(Date.now() / 1000) + 3600,
+    });
+
+    expect(service.isActive()).toBeFalse();
+
+    port.active = null;
+    service.ensureRestored().subscribe();
+
+    expect(port.getActiveCalls).toBe(2);
+    expect(service.isActive()).toBeFalse();
+  });
+
+  it("checks again for the next user after logging out", () => {
+    service.ensureRestored().subscribe();
+    authSession.sessionSignal.set(null);
+    authSession.sessionSignal.set(sessionOf("next@golifecraft.test"));
+
+    port.active = inProgressWorkout("workout-2");
+    service.ensureRestored().subscribe();
+
+    expect(port.getActiveCalls).toBe(2);
+    expect(service.workoutId()).toBe("workout-2");
   });
 });
