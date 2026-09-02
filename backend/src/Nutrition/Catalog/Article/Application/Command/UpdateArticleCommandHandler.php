@@ -54,6 +54,7 @@ final readonly class UpdateArticleCommandHandler
             price: $command->price,
             brand: $command->brand,
             emoji: $command->emoji,
+            imageUrl: $command->imageUrl,
             categoryId: $command->categoryId,
             supermarketId: $command->supermarketId,
             aisleId: $command->aisleId,

@@ -19,6 +19,9 @@ use Nutrition\GlobalCatalog\Article\Infrastructure\Domain\Model\InMemory\InMemor
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
+use Shared\Tool\Tool\Domain\Service\FetchedImage;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Fake\FakeImageStoreService;
+use Shared\Tool\Tool\Infrastructure\Domain\Service\Fake\FakeRemoteImageFetcher;
 
 final class ImportGlobalArticleCommandHandlerTest extends TestCase
 {
@@ -26,6 +29,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
     private InMemoryArticleRepository $articleRepository;
     private InMemoryCategoryRepository $categoryRepository;
     private InMemorySupermarketRepository $supermarketRepository;
+    private FakeRemoteImageFetcher $remoteImageFetcher;
     private ImportGlobalArticleCommandHandler $handler;
 
     protected function setUp(): void
@@ -35,6 +39,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
         $this->articleRepository = new InMemoryArticleRepository();
         $this->categoryRepository = new InMemoryCategoryRepository();
         $this->supermarketRepository = new InMemorySupermarketRepository();
+        $this->remoteImageFetcher = new FakeRemoteImageFetcher();
         $this->handler = new ImportGlobalArticleCommandHandler(
             globalArticleRepository: $this->globalArticleRepository,
             articleRepository: $this->articleRepository,
@@ -42,6 +47,8 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
             supermarketRepository: $this->supermarketRepository,
             nutritionFactsAssembler: new ArticleNutritionFactsAssembler(dateTimeGenerator: $dateTimeGenerator),
             equivalenceAssembler: new ArticleEquivalenceAssembler(dateTimeGenerator: $dateTimeGenerator),
+            remoteImageFetcher: $this->remoteImageFetcher,
+            imageStorageService: new FakeImageStoreService(),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -180,7 +187,31 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
         $this->globalArticleRepository->save(globalArticle: $globalArticle);
     }
 
-    private function seedGlobalArticle(string $quantity = '1 L', string $barcode = '8410000000001'): GlobalArticle
+    public function testItDownloadsTheGlobalArticleImageOnImport(): void
+    {
+        $this->remoteImageFetcher->image = new FetchedImage(path: '/tmp/leche', extension: 'jpg');
+        $globalArticle = $this->seedGlobalArticle(imageUrl: 'https://prod-mercadona.imgix.net/leche.jpg');
+
+        ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
+
+        $article = $this->articleRepository->findByBarcode(barcode: '8410000000001');
+
+        $this->assertSame(['https://prod-mercadona.imgix.net/leche.jpg'], $this->remoteImageFetcher->fetchedUrls);
+        $this->assertSame('/upload/article/leche.jpg', $article->imageUrl);
+    }
+
+    public function testItLeavesTheArticleWithoutImageWhenTheDownloadFails(): void
+    {
+        $globalArticle = $this->seedGlobalArticle(imageUrl: 'https://prod-mercadona.imgix.net/leche.jpg');
+
+        ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
+
+        $article = $this->articleRepository->findByBarcode(barcode: '8410000000001');
+
+        $this->assertNull($article->imageUrl);
+    }
+
+    private function seedGlobalArticle(string $quantity = '1 L', string $barcode = '8410000000001', ?string $imageUrl = null): GlobalArticle
     {
         $globalArticle = GlobalArticle::create(
             id: $this->globalArticleRepository->nextId(),
@@ -188,7 +219,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
             name: 'Leche entera',
             brand: 'Hacendado',
             categoryName: 'Lácteos',
-            imageUrl: null,
+            imageUrl: $imageUrl,
             quantity: $quantity,
             stores: 'Mercadona',
             pricing: new GlobalArticlePricing(price: 1.25, bulkPrice: 1.25, referencePrice: 1.25, referenceFormat: 'L', previousPrice: 1.15),

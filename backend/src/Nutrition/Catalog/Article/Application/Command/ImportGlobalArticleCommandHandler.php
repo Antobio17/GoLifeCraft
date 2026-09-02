@@ -15,10 +15,13 @@ use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticle;
 use Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleRepository;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
+use Shared\Tool\Tool\Domain\Service\ImageStorageService;
+use Shared\Tool\Tool\Domain\Service\RemoteImageFetcher;
 
 final readonly class ImportGlobalArticleCommandHandler
 {
     private const string DEFAULT_SUPERMARKET = 'Mercadona';
+    private const string IMAGE_FOLDER = 'article';
 
     public function __construct(
         private GlobalArticleRepository $globalArticleRepository,
@@ -27,6 +30,8 @@ final readonly class ImportGlobalArticleCommandHandler
         private SupermarketRepository $supermarketRepository,
         private ArticleNutritionFactsAssembler $nutritionFactsAssembler,
         private ArticleEquivalenceAssembler $equivalenceAssembler,
+        private RemoteImageFetcher $remoteImageFetcher,
+        private ImageStorageService $imageStorageService,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -71,6 +76,7 @@ final readonly class ImportGlobalArticleCommandHandler
             price: $globalArticle->price,
             brand: $globalArticle->brand,
             emoji: null,
+            imageUrl: $this->downloadImage(imageUrl: $globalArticle->imageUrl),
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
             aisleId: null,
@@ -110,6 +116,7 @@ final readonly class ImportGlobalArticleCommandHandler
             price: $globalArticle->price,
             brand: $globalArticle->brand,
             emoji: $article->emoji,
+            imageUrl: $article->imageUrl ?? $this->downloadImage(imageUrl: $globalArticle->imageUrl),
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
             aisleId: $article->aisleId,
@@ -130,6 +137,25 @@ final readonly class ImportGlobalArticleCommandHandler
 
         $this->articleRepository->save(article: $article);
         $this->domainEventCollectorService->register(aggregate: $article);
+    }
+
+    private function downloadImage(?string $imageUrl): ?string
+    {
+        if (null === $imageUrl) {
+            return null;
+        }
+
+        $fetchedImage = $this->remoteImageFetcher->fetch(url: $imageUrl);
+
+        if (null === $fetchedImage) {
+            return null;
+        }
+
+        return $this->imageStorageService->storePublicImage(
+            folder: self::IMAGE_FOLDER,
+            imagePath: $fetchedImage->path,
+            extension: $fetchedImage->extension,
+        );
     }
 
     /**

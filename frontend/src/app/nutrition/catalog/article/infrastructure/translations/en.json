@@ -130,7 +130,10 @@
       "deleting": "Deleting…"
     },
     "field": {
-      "icon": "Icon",
+      "icon": "Icon or image",
+      "imageTrigger": "Upload an image",
+      "imageRemove": "Remove the image",
+      "imageHint": "When you upload an image it is used instead of the icon.",
       "name": "Name",
       "namePlaceholder": "e.g. Whole milk 1 L",
       "emojiSheetTitle": "Choose an icon",

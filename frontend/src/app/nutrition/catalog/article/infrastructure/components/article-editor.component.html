@@ -31,16 +31,27 @@
         <ng-container slot="side">
           <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
             <ds-field [label]="'articleEditor.field.icon' | t">
-              <ds-emoji-picker
-                formControlName="emoji"
-                [groups]="emojiGroups"
-                [fallback]="fallbackEmoji"
-                [sheetTitle]="'articleEditor.field.emojiSheetTitle' | t"
-                [closeLabel]="'articleEditor.field.emojiClose' | t"
-                [triggerLabel]="'articleEditor.field.emojiTrigger' | t"
-                [searchPlaceholder]="'articleEditor.field.emojiSearch' | t"
-                [emptyLabel]="'articleEditor.field.emojiEmpty' | t"
-              />
+              <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+                <ds-emoji-picker
+                  formControlName="emoji"
+                  [groups]="emojiGroups"
+                  [fallback]="fallbackEmoji"
+                  [sheetTitle]="'articleEditor.field.emojiSheetTitle' | t"
+                  [closeLabel]="'articleEditor.field.emojiClose' | t"
+                  [triggerLabel]="'articleEditor.field.emojiTrigger' | t"
+                  [searchPlaceholder]="'articleEditor.field.emojiSearch' | t"
+                  [emptyLabel]="'articleEditor.field.emojiEmpty' | t"
+                />
+                <ds-image-picker
+                  [imageUrl]="imageUrl()"
+                  [uploading]="uploadingImage()"
+                  [alt]="articleName()"
+                  [triggerLabel]="'articleEditor.field.imageTrigger' | t"
+                  [removeLabel]="'articleEditor.field.imageRemove' | t"
+                  (picked)="onImagePicked($event)"
+                  (cleared)="onImageCleared()"
+                />
+              </ds-stack>
             </ds-field>
             <ds-field
               [grow]="true"

@@ -83,7 +83,12 @@
     </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
-      <ds-product-hero [emoji]="d.emoji" [price]="d.price" />
+      <ds-product-hero
+        [emoji]="d.emoji"
+        [imageUrl]="d.imageUrl"
+        [alt]="d.name"
+        [price]="d.price"
+      />
 
       @if (d.brand || d.store || d.aisle) {
         <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">

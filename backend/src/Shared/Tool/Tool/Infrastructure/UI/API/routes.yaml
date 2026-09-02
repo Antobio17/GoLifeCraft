@@ -2,3 +2,8 @@ csp_report:
   path: /api/v1/csp-report
   methods: [POST]
   controller: Shared\Tool\Tool\Infrastructure\UI\API\Controller\CspReportController
+
+upload_image:
+  path: /api/v1/shared/image
+  methods: [POST]
+  controller: Shared\Tool\Tool\Infrastructure\UI\API\Controller\UploadImageController

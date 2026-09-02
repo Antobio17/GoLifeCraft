@@ -9,4 +9,10 @@ interface ImageStorageService
         string $aggregateId,
         string $imagePath,
     ): string;
+
+    public function storePublicImage(
+        string $folder,
+        string $imagePath,
+        string $extension,
+    ): string;
 }

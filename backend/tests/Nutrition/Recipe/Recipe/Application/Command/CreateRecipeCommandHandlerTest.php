@@ -44,6 +44,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
         ($this->handler)(new CreateRecipeCommand(
             name: 'Porridge de avena',
             emoji: '🥣',
+            imageUrl: null,
             category: 'Desayuno',
             servings: 1,
             ingredients: [
@@ -69,6 +70,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
         ($this->handler)(new CreateRecipeCommand(
             name: 'Lentejas con chorizo',
             emoji: '🍲',
+            imageUrl: null,
             category: 'Comida',
             servings: 4,
             ingredients: [],
@@ -94,6 +96,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
         ($this->handler)(new CreateRecipeCommand(
             name: 'Tortilla francesa',
             emoji: '🍳',
+            imageUrl: null,
             category: 'Cena',
             servings: 1,
             ingredients: [],
@@ -113,6 +116,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
         ($this->handler)(new CreateRecipeCommand(
             name: 'Porridge de avena',
             emoji: '🥣',
+            imageUrl: null,
             category: 'Desayuno',
             servings: 1,
             ingredients: [],
@@ -128,6 +132,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
         ($this->handler)(new CreateRecipeCommand(
             name: 'Porridge de avena',
             emoji: '🥣',
+            imageUrl: null,
             category: 'Desayuno',
             servings: 0,
             ingredients: [],

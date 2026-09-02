@@ -100,6 +100,7 @@ services:
       - .env.local
     volumes:
       - ./volumes/internal_uploads:/var/www/html/var/uploads
+      - ./volumes/public_uploads:/var/www/html/public/upload
       - ./volumes/jwt_keys:/var/www/html/config/jwt
     depends_on:
       - db

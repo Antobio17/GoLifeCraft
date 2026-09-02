@@ -14,6 +14,7 @@ final readonly class UpdateRecipeCommand implements Command
         public string $recipeId,
         public string $name,
         public string $emoji,
+        public ?string $imageUrl,
         public string $category,
         public int $servings,
         public array $ingredients,

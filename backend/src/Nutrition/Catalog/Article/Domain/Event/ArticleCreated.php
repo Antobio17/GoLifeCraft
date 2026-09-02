@@ -13,6 +13,8 @@ final readonly class ArticleCreated extends DomainEvent
         string $aggregateId,
         \DateTime $occurredOn,
         public string $name,
+        public ?string $emoji,
+        public ?string $imageUrl,
         public string $baseUnit,
         public string $recipeUnit,
         public string $diaryUnit,
