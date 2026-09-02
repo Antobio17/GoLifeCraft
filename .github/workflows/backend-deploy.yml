@@ -127,8 +127,20 @@ jobs:
             echo "==> Logging in to GitHub Container Registry..."
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
+            # A TLS handshake timeout against ghcr.io is enough to abort the whole
+            # deploy halfway through the pull, leaving some images updated and the
+            # schema migration never run. Retry before giving up.
             echo "==> Pulling latest images..."
-            docker compose --env-file .env.local -f docker-compose.prod.yml pull gateway nginx php loki alloy grafana dockerproxy
+            pull_tries=0
+            until docker compose --env-file .env.local -f docker-compose.prod.yml pull gateway nginx php loki alloy grafana dockerproxy; do
+              pull_tries=$((pull_tries + 1))
+              if [ "$pull_tries" -ge 3 ]; then
+                echo "::error::Could not pull the images from the registry"
+                exit 1
+              fi
+              echo "==> Pull failed, retrying in $((pull_tries * 10))s..."
+              sleep $((pull_tries * 10))
+            done
 
             echo "==> Starting services..."
             docker compose --env-file .env.local -f docker-compose.prod.yml up -d --remove-orphans
@@ -193,6 +205,13 @@ jobs:
       # so a deploy that dies between the stop above and the up -d would leave
       # the observability stack and certbot down until someone noticed. Bring
       # them back with whatever config is on disk; the job still fails.
+      #
+      # --no-deps is what keeps this step from deploying: certbot depends on
+      # gateway, which depends on nginx, which depends on php, so without it
+      # compose recreates php with whatever image the failed pull already
+      # downloaded. That ships new backend code without ever running the schema
+      # migration, and the API starts querying columns the tenant databases
+      # still do not have.
       - name: Restart stopped services after a failed deploy
         if: failure()
         uses: appleboy/ssh-action@v1
@@ -204,7 +223,7 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT || 22 }}
           script: |
             cd ${{ secrets.SERVER_PROJECT_PATH }}
-            docker compose --env-file .env.local -f docker-compose.prod.yml up -d certbot loki alloy grafana || true
+            docker compose --env-file .env.local -f docker-compose.prod.yml up -d --no-deps certbot loki alloy grafana || true
 
       - name: Deployment status
         if: failure()
