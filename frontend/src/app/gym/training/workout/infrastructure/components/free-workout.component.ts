@@ -42,6 +42,7 @@ import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/in
 import { SkeletonExerciseComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-exercise.component";
 import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { uuidV4 } from "@shared/uuid/uuid";
 import { GetExercisesService } from "@gym/library/exercise/application/services/get-exercises.service";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
@@ -98,6 +99,7 @@ export class FreeWorkoutComponent implements OnInit {
   private getExercisesService = inject(GetExercisesService);
   private createSessionService = inject(CreateSessionService);
   private sessionDraft = inject(SessionDraftService);
+  private floatingToastService = inject(FloatingToastService);
   protected activeWorkout = inject(ActiveWorkoutService);
   protected sticky = inject(StickyCollapseService);
   private router = inject(Router);
@@ -204,8 +206,17 @@ export class FreeWorkoutComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => this.resume(),
-        error: () => this.resume(),
+        error: () => this.abortBootstrap(),
       });
+  }
+
+  private abortBootstrap(): void {
+    this.floatingToastService.showToast({
+      status: 500,
+      keyTranslation: "workout.free.restoreError",
+      details: [],
+    });
+    this.router.navigate(["/gym"]);
   }
 
   private resume(): void {

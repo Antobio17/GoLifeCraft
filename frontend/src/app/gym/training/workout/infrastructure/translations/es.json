@@ -49,6 +49,7 @@
       "nameLabel": "Nombre del entreno",
       "namePlaceholder": "Ponle un nombre",
       "nameHint": "Sin plantilla: este entreno solo queda en el historial.",
+      "restoreError": "No hemos podido comprobar si tienes un entreno en curso. Inténtalo de nuevo.",
       "finish": "Terminar",
       "active": {
         "running": "Entreno libre",

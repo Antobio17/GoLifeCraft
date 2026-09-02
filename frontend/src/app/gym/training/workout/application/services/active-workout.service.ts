@@ -1,6 +1,22 @@
 import { Injectable, OnDestroy, computed, inject, signal } from "@angular/core";
-import { Observable, Subject, Subscription, interval, of, tap } from "rxjs";
-import { debounceTime, map, shareReplay, switchMap } from "rxjs/operators";
+import {
+  Observable,
+  Subject,
+  Subscription,
+  interval,
+  of,
+  tap,
+  throwError,
+} from "rxjs";
+import {
+  catchError,
+  debounceTime,
+  map,
+  shareReplay,
+  switchMap,
+} from "rxjs/operators";
+import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { ImpersonationService } from "@shared/auth/application/services/impersonation.service";
 import { WorkoutSessionPort } from "../../domain/ports/workout-session.port";
 import { WorkoutDetail } from "../../domain/models/workout-detail.model";
 import {
@@ -29,6 +45,8 @@ export interface ActiveExercise {
 @Injectable()
 export class ActiveWorkoutService implements OnDestroy {
   private port = inject(WorkoutSessionPort);
+  private authSessionService = inject(AuthSessionService);
+  private impersonationService = inject(ImpersonationService);
 
   readonly workoutId = signal<string | null>(null);
   readonly activeSessionId = signal<string | null>(null);
@@ -42,6 +60,7 @@ export class ActiveWorkoutService implements OnDestroy {
   private readonly doneKeys = signal<Set<string>>(new Set());
   private readonly restStartedAtMs = signal<number | null>(null);
   private readonly restFrozenSeconds = signal(0);
+  private readonly hydratedIdentity = signal<string | null>(null);
 
   readonly liveExercises = signal<ActiveExercise[]>([]);
 
@@ -50,7 +69,26 @@ export class ActiveWorkoutService implements OnDestroy {
   private progressSub?: Subscription;
   private restore$?: Observable<void>;
 
-  readonly isActive = computed(() => this.workoutId() !== null);
+  private readonly identity = computed<string | null>(() => {
+    const impersonated = this.impersonationService.impersonation();
+
+    if (impersonated) {
+      return `impersonation:${impersonated.userId}`;
+    }
+
+    const session = this.authSessionService.session();
+
+    if (!session) {
+      return null;
+    }
+
+    return `user:${session.email}`;
+  });
+
+  readonly isActive = computed(
+    () =>
+      this.workoutId() !== null && this.identity() === this.hydratedIdentity(),
+  );
 
   readonly isFree = computed(
     () => this.isActive() && this.activeSessionId() === null,
@@ -197,6 +235,7 @@ export class ActiveWorkoutService implements OnDestroy {
       .pipe(
         tap(() => {
           this.workoutId.set(workoutId);
+          this.hydratedIdentity.set(this.identity());
           this.activeSessionId.set(sessionId);
           this.activeName.set(sessionName);
           this.liveExercises.set(exercises);
@@ -271,23 +310,51 @@ export class ActiveWorkoutService implements OnDestroy {
   }
 
   ensureRestored(): Observable<void> {
+    this.dropForeignWorkout();
+
     if (this.isActive()) {
       return of(undefined);
     }
 
-    if (!this.restore$) {
-      this.restore$ = this.port.getActive().pipe(
-        tap((active) => {
-          if (active) {
-            this.hydrate(active);
-          }
-        }),
-        map(() => undefined),
-        shareReplay(1),
-      );
+    if (this.restore$) {
+      return this.restore$;
     }
 
-    return this.restore$;
+    const request$: Observable<void> = this.port.getActive().pipe(
+      tap((active) => {
+        if (active) {
+          this.hydrate(active);
+        }
+      }),
+      map(() => undefined),
+      catchError((error) => {
+        this.invalidateRestore(request$);
+
+        return throwError(() => error);
+      }),
+      shareReplay(1),
+    );
+
+    this.restore$ = request$;
+
+    return request$;
+  }
+
+  private dropForeignWorkout(): void {
+    if (this.identity() === this.hydratedIdentity()) {
+      return;
+    }
+
+    this.reset();
+    this.restore$ = undefined;
+  }
+
+  private invalidateRestore(request$: Observable<void>): void {
+    if (this.restore$ !== request$) {
+      return;
+    }
+
+    this.restore$ = undefined;
   }
 
   private hydrate(active: WorkoutDetail): void {
@@ -301,6 +368,7 @@ export class ActiveWorkoutService implements OnDestroy {
     );
 
     this.workoutId.set(active.id);
+    this.hydratedIdentity.set(this.identity());
     this.activeSessionId.set(active.attributes.sessionId);
     this.activeName.set(active.attributes.sessionName);
     this.liveExercises.set(this.fromDetail(active));
@@ -377,6 +445,7 @@ export class ActiveWorkoutService implements OnDestroy {
     this.progressSub?.unsubscribe();
     this.progressSub = undefined;
     this.workoutId.set(null);
+    this.hydratedIdentity.set(this.identity());
     this.activeSessionId.set(null);
     this.activeName.set("");
     this.liveExercises.set([]);
@@ -386,7 +455,7 @@ export class ActiveWorkoutService implements OnDestroy {
     this.doneKeys.set(new Set());
     this.stopRest();
     this.restTargetSeconds.set(DEFAULT_REST_SECONDS);
-    this.restore$ = undefined;
+    this.restore$ = of(undefined);
   }
 
   private restartRest(): void {
