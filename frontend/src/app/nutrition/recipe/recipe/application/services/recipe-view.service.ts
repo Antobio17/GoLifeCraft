@@ -16,6 +16,7 @@ export interface MacroShortLabels {
 export interface RecipeCardView {
   id: string;
   emoji: string;
+  imageUrl: string | null;
   name: string;
   category: string;
   meta: string;
@@ -58,6 +59,7 @@ export class RecipeViewService {
     return {
       id: recipe.id,
       emoji: a.emoji || FALLBACK_EMOJI,
+      imageUrl: a.imageUrl || null,
       name: a.name,
       category: a.category,
       meta: `${a.category} · ${this.servingsLabel(a.servings)} · ${this.ingredientsLabel(a.ingredientCount)}`,

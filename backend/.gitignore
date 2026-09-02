@@ -25,5 +25,6 @@
 ###< phpunit/phpunit ###
 
 ###> file uploads ###
-/public/upload/
+/public/upload/*
+!/public/upload/.gitkeep
 ###< file uploads ###

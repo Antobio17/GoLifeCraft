@@ -7,7 +7,20 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
   imports: [MacroBadgesComponent],
   template: `
     <button type="button" class="ds-rcard" (click)="activated.emit()">
-      <span class="ds-rcard__emoji">{{ emoji }}</span>
+      <span class="ds-rcard__emoji">
+        @if (imageUrl && !imageFailed) {
+          <img
+            class="ds-rcard__image"
+            [src]="imageUrl"
+            [alt]="name"
+            loading="lazy"
+            decoding="async"
+            (error)="imageFailed = true"
+          />
+        } @else {
+          {{ emoji }}
+        }
+      </span>
       <span class="ds-rcard__body">
         <span class="ds-rcard__name">{{ name }}</span>
         <span class="ds-rcard__meta">{{ meta }}</span>
@@ -60,6 +73,13 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         align-items: center;
         justify-content: center;
         font-size: var(--ds-text-2xl);
+        overflow: hidden;
+      }
+      .ds-rcard__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
       }
       .ds-rcard__body {
         flex: 1;
@@ -86,6 +106,22 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
 export class RecipeCardComponent {
   @Input() emoji = "";
   @Input() name = "";
+
+  @Input()
+  set imageUrl(value: string | null) {
+    if (value === this.currentImageUrl) return;
+
+    this.currentImageUrl = value;
+    this.imageFailed = false;
+  }
+
+  get imageUrl(): string | null {
+    return this.currentImageUrl;
+  }
+
+  private currentImageUrl: string | null = null;
+  imageFailed = false;
+
   @Input() kcal = "";
   @Input() meta = "";
   @Input() macros: MacroBadge[] = [];

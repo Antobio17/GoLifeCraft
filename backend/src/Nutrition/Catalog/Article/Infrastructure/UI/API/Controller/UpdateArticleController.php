@@ -42,6 +42,7 @@ final class UpdateArticleController
                 price: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'price', required: false),
                 brand: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'brand'),
                 emoji: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'emoji'),
+                imageUrl: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'imageUrl'),
                 categoryId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'categoryId'),
                 supermarketId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'supermarketId'),
                 aisleId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'aisleId'),

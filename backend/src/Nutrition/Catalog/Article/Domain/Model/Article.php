@@ -24,6 +24,7 @@ class Article extends GenericAggregate
     public ?float $price = null;
     public ?string $brand = null;
     public ?string $emoji = null;
+    public ?string $imageUrl = null;
     public ?string $categoryId = null;
     public ?string $supermarketId = null;
     public ?string $aisleId = null;
@@ -46,6 +47,7 @@ class Article extends GenericAggregate
         ?float $price,
         ?string $brand,
         ?string $emoji,
+        ?string $imageUrl,
         ?string $categoryId,
         ?string $supermarketId,
         ?string $aisleId,
@@ -84,6 +86,7 @@ class Article extends GenericAggregate
         $article->price = $price;
         $article->brand = $brand;
         $article->emoji = $emoji;
+        $article->imageUrl = $imageUrl;
         $article->categoryId = $categoryId;
         $article->supermarketId = $supermarketId;
         $article->aisleId = self::resolveAisleId(supermarketId: $supermarketId, aisleId: $aisleId);
@@ -95,6 +98,8 @@ class Article extends GenericAggregate
             aggregateId: $id,
             occurredOn: $now,
             name: $name,
+            emoji: $emoji,
+            imageUrl: $imageUrl,
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
@@ -124,6 +129,7 @@ class Article extends GenericAggregate
         ?float $price,
         ?string $brand,
         ?string $emoji,
+        ?string $imageUrl,
         ?string $categoryId,
         ?string $supermarketId,
         ?string $aisleId,
@@ -165,6 +171,7 @@ class Article extends GenericAggregate
         $this->price = $price;
         $this->brand = $brand;
         $this->emoji = $emoji;
+        $this->imageUrl = $imageUrl;
         $this->categoryId = $categoryId;
         $this->supermarketId = $supermarketId;
         $this->aisleId = self::resolveAisleId(supermarketId: $supermarketId, aisleId: $aisleId);
@@ -177,6 +184,7 @@ class Article extends GenericAggregate
             occurredOn: $now,
             name: $name,
             emoji: $emoji,
+            imageUrl: $imageUrl,
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,

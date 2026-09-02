@@ -33,6 +33,7 @@ final readonly class CreateRecipeCommandHandler
             id: $recipeId,
             name: $command->name,
             emoji: $command->emoji,
+            imageUrl: $command->imageUrl,
             category: $command->category,
             servings: $command->servings,
             ingredients: $this->recipeIngredientAssembler->assemble(

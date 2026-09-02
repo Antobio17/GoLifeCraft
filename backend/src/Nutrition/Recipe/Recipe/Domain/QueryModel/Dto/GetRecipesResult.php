@@ -11,6 +11,7 @@ final class GetRecipesResult extends QueryAggregateResult
         string $aggregateName,
         public readonly string $name,
         public readonly string $emoji,
+        public readonly ?string $imageUrl,
         public readonly string $category,
         public readonly int $servings,
         public readonly int $ingredientCount,

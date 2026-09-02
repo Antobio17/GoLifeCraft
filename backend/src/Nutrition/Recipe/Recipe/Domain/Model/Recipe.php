@@ -14,6 +14,7 @@ class Recipe extends GenericAggregate
 {
     public string $name;
     public string $emoji;
+    public ?string $imageUrl = null;
     public string $category;
     public int $servings;
 
@@ -31,6 +32,7 @@ class Recipe extends GenericAggregate
         string $id,
         string $name,
         string $emoji,
+        ?string $imageUrl,
         string $category,
         int $servings,
         array $ingredients,
@@ -48,6 +50,7 @@ class Recipe extends GenericAggregate
         $recipe->id = $id;
         $recipe->name = $name;
         $recipe->emoji = $emoji;
+        $recipe->imageUrl = $imageUrl;
         $recipe->category = $category;
         $recipe->servings = $servings;
         $recipe->ingredients = $ingredients;
@@ -59,6 +62,7 @@ class Recipe extends GenericAggregate
             occurredOn: $now,
             name: $name,
             emoji: $emoji,
+            imageUrl: $imageUrl,
             category: $category,
             servings: $servings,
             ingredients: $recipe->recordedIngredients(),
@@ -79,6 +83,7 @@ class Recipe extends GenericAggregate
     public function update(
         string $name,
         string $emoji,
+        ?string $imageUrl,
         string $category,
         int $servings,
         array $ingredients,
@@ -94,6 +99,7 @@ class Recipe extends GenericAggregate
 
         $this->name = $name;
         $this->emoji = $emoji;
+        $this->imageUrl = $imageUrl;
         $this->category = $category;
         $this->servings = $servings;
         $this->ingredients = $ingredients;
@@ -105,6 +111,7 @@ class Recipe extends GenericAggregate
             occurredOn: $now,
             name: $name,
             emoji: $emoji,
+            imageUrl: $imageUrl,
             category: $category,
             servings: $servings,
             ingredients: $this->recordedIngredients(),
@@ -128,6 +135,7 @@ class Recipe extends GenericAggregate
             occurredOn: $now,
             name: $this->name,
             emoji: $this->emoji,
+            imageUrl: $this->imageUrl,
             category: $this->category,
             servings: $this->servings,
             ingredients: $this->recordedIngredients(),

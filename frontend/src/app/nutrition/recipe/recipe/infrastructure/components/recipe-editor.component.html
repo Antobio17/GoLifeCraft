@@ -64,16 +64,26 @@
           <ng-container slot="side">
             <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
               <ds-field [label]="'recipeEditor.icon' | t">
-                <ds-emoji-picker
-                  formControlName="emoji"
-                  [groups]="emojiGroups"
-                  [fallback]="fallbackEmoji"
-                  [sheetTitle]="'recipeEditor.emojiTitle' | t"
-                  [triggerLabel]="'recipeEditor.emojiTrigger' | t"
-                  [searchPlaceholder]="'recipeEditor.emojiSearch' | t"
-                  [closeLabel]="'recipeEditor.close' | t"
-                  [emptyLabel]="'recipeEditor.emojiEmpty' | t"
-                />
+                <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+                  <ds-emoji-picker
+                    formControlName="emoji"
+                    [groups]="emojiGroups"
+                    [fallback]="fallbackEmoji"
+                    [sheetTitle]="'recipeEditor.emojiTitle' | t"
+                    [triggerLabel]="'recipeEditor.emojiTrigger' | t"
+                    [searchPlaceholder]="'recipeEditor.emojiSearch' | t"
+                    [closeLabel]="'recipeEditor.close' | t"
+                    [emptyLabel]="'recipeEditor.emojiEmpty' | t"
+                  />
+                  <ds-image-picker
+                    [imageUrl]="imageUrl()"
+                    [uploading]="uploadingImage()"
+                    [triggerLabel]="'recipeEditor.imageTrigger' | t"
+                    [removeLabel]="'recipeEditor.imageRemove' | t"
+                    (picked)="onImagePicked($event)"
+                    (cleared)="onImageCleared()"
+                  />
+                </ds-stack>
               </ds-field>
               <ds-field
                 [grow]="true"

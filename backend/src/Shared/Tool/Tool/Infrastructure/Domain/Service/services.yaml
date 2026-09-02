@@ -4,6 +4,16 @@ services:
 
   Shared\Tool\Tool\Domain\Service\ImageStorageService:
     class: Shared\Tool\Tool\Infrastructure\Domain\Service\Linux\LinuxImageStorageService
+    arguments:
+      $publicUploadDirectory: '%kernel.project_dir%/public/upload'
+      $publicUploadPath: '/upload'
+
+  Shared\Tool\Tool\Domain\Service\RemoteImageFetcher:
+    class: Shared\Tool\Tool\Infrastructure\Domain\Service\Http\HttpRemoteImageFetcher
+    arguments:
+      $httpClient: '@http_client'
+      $maxBytes: 6291456
+      $timeout: 10
 
   Shared\Tool\Tool\Domain\Service\EmojiImageResolver:
     class: Shared\Tool\Tool\Infrastructure\Domain\Service\Twemoji\TwemojiImageResolver

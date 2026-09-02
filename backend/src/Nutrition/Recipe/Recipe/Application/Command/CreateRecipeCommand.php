@@ -13,6 +13,7 @@ final readonly class CreateRecipeCommand implements Command
     public function __construct(
         public string $name,
         public string $emoji,
+        public ?string $imageUrl,
         public string $category,
         public int $servings,
         public array $ingredients,

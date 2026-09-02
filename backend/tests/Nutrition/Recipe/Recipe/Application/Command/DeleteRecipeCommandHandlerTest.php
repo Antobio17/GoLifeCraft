@@ -39,6 +39,7 @@ final class DeleteRecipeCommandHandlerTest extends TestCase
         ($createHandler)(new CreateRecipeCommand(
             name: 'Porridge de avena',
             emoji: '🥣',
+            imageUrl: null,
             category: 'Desayuno',
             servings: 1,
             ingredients: [

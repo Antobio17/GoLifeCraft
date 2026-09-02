@@ -15,6 +15,7 @@ final readonly class RecipeDeleted extends DomainEvent
         \DateTime $occurredOn,
         public string $name,
         public string $emoji,
+        public ?string $imageUrl,
         public string $category,
         public int $servings,
         public array $ingredients,

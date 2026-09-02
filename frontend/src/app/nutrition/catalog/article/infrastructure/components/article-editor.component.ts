@@ -24,6 +24,7 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
+import { ImagePickerComponent } from "@shared/design-system/image-picker/infrastructure/components/image-picker.component";
 import { SelectChipsComponent } from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
 import { PriceInputComponent } from "@shared/design-system/price-input/infrastructure/components/price-input.component";
 import { NutrientInputComponent } from "@shared/design-system/nutrient-input/infrastructure/components/nutrient-input.component";
@@ -37,6 +38,8 @@ import { NoteComponent } from "@shared/design-system/note/infrastructure/compone
 import { ArticleFormSkeletonComponent } from "./article-form-skeleton.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { UploadImageService } from "@shared/image-upload/application/services/upload-image.service";
+import { ImageFolder } from "@shared/image-upload/domain/models/image-folder.enum";
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
 import { GetSupermarketsService } from "@nutrition/catalog/supermarket/application/services/get-supermarkets.service";
 import { AisleCatalogService } from "@nutrition/catalog/supermarket/application/services/aisle-catalog.service";
@@ -100,6 +103,7 @@ function equivalencesValidator(
     FieldComponent,
     TextInputComponent,
     EmojiPickerComponent,
+    ImagePickerComponent,
     SelectChipsComponent,
     PriceInputComponent,
     NutrientInputComponent,
@@ -126,6 +130,7 @@ export class ArticleEditorComponent implements OnInit {
   private unitCatalogService = inject(UnitCatalogService);
   private articleDraftStore = inject(ArticleDraftStoreService);
   private floatingToastService = inject(FloatingToastService);
+  private uploadImageService = inject(UploadImageService);
   private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/catalog/article";
@@ -190,6 +195,8 @@ export class ArticleEditorComponent implements OnInit {
   saving = signal(false);
   articleName = signal("");
   aisleSheetOpen = signal(false);
+  imageUrl = signal<string | null>(null);
+  uploadingImage = signal(false);
 
   readonly id = input<string>("");
 
@@ -298,6 +305,24 @@ export class ArticleEditorComponent implements OnInit {
     this.router.navigate(this.isEdit ? ["/catalog", this.id()] : ["/catalog"]);
   }
 
+  onImagePicked(file: File): void {
+    this.uploadingImage.set(true);
+
+    this.uploadImageService.uploadImage(file, ImageFolder.Article).subscribe({
+      next: (url) => {
+        this.imageUrl.set(url);
+        this.uploadingImage.set(false);
+        this.form.markAsDirty();
+      },
+      error: () => this.uploadingImage.set(false),
+    });
+  }
+
+  onImageCleared(): void {
+    this.imageUrl.set(null);
+    this.form.markAsDirty();
+  }
+
   openAisleSheet(): void {
     this.aisleSheetOpen.set(true);
   }
@@ -402,6 +427,7 @@ export class ArticleEditorComponent implements OnInit {
 
   private patchForm(article: Article): void {
     this.articleName.set(article.attributes.name);
+    this.imageUrl.set(article.attributes.imageUrl ?? null);
     const nutrition = article.relationships?.nutritionFacts?.data.attributes;
     const baseUnit = article.attributes.baseUnit ?? DEFAULT_BASE_UNIT;
 
@@ -471,6 +497,7 @@ export class ArticleEditorComponent implements OnInit {
       price: this.parseDecimal(value.price),
       brand: this.emptyToNull(value.brand),
       emoji: this.emptyToNull(value.emoji),
+      imageUrl: this.imageUrl(),
       categoryId: value.categoryId ?? null,
       supermarketId: value.supermarketId ?? null,
       aisleId: value.supermarketId ? (value.aisleId ?? null) : null,

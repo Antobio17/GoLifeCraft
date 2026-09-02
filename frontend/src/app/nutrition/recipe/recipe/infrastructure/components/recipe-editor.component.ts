@@ -22,6 +22,9 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
+import { ImagePickerComponent } from "@shared/design-system/image-picker/infrastructure/components/image-picker.component";
+import { UploadImageService } from "@shared/image-upload/application/services/upload-image.service";
+import { ImageFolder } from "@shared/image-upload/domain/models/image-folder.enum";
 import { ChoiceChipsComponent } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
@@ -92,6 +95,7 @@ type PickerTab = "product" | "recipe";
     SplitViewComponent,
     ScreenHeaderComponent,
     EmojiPickerComponent,
+    ImagePickerComponent,
     ChoiceChipsComponent,
     ButtonComponent,
     FieldComponent,
@@ -135,6 +139,7 @@ export class RecipeEditorComponent implements OnInit {
   private createRecipeService = inject(CreateRecipeService);
   private updateRecipeService = inject(UpdateRecipeService);
   private floatingToastService = inject(FloatingToastService);
+  private uploadImageService = inject(UploadImageService);
   private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/recipe/recipe";
@@ -144,6 +149,8 @@ export class RecipeEditorComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
+  imageUrl = signal<string | null>(null);
+  uploadingImage = signal(false);
 
   readonly minServings = MIN_SERVINGS;
   readonly maxServings = MAX_SERVINGS;
@@ -408,6 +415,24 @@ export class RecipeEditorComponent implements OnInit {
     this.router.navigate(this.isEdit ? ["/recipes", this.id()] : ["/recipes"]);
   }
 
+  onImagePicked(file: File): void {
+    this.uploadingImage.set(true);
+
+    this.uploadImageService.uploadImage(file, ImageFolder.Recipe).subscribe({
+      next: (url) => {
+        this.imageUrl.set(url);
+        this.uploadingImage.set(false);
+        this.form.markAsDirty();
+      },
+      error: () => this.uploadingImage.set(false),
+    });
+  }
+
+  onImageCleared(): void {
+    this.imageUrl.set(null);
+    this.form.markAsDirty();
+  }
+
   t(key: string, params?: Record<string, unknown>): string {
     return this.translationService.translate(key, this.MODULE_PATH, params);
   }
@@ -428,6 +453,7 @@ export class RecipeEditorComponent implements OnInit {
       emoji: recipe.attributes.emoji || FALLBACK_EMOJI,
       category: recipe.attributes.category,
     });
+    this.imageUrl.set(recipe.attributes.imageUrl ?? null);
     this.servings.set(recipe.attributes.servings);
 
     this.steps.set(
@@ -457,6 +483,7 @@ export class RecipeEditorComponent implements OnInit {
     return {
       name: (value.name ?? "").trim(),
       emoji: value.emoji || FALLBACK_EMOJI,
+      imageUrl: this.imageUrl(),
       category: value.category,
       servings: this.servings(),
       ingredients: this.ingredients().map((ingredient, index) => ({

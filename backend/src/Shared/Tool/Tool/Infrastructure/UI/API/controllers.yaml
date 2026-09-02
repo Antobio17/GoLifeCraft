@@ -6,3 +6,10 @@ services:
       $cspReportLimiter: '@limiter.csp_report'
     tags:
       - { name: controller.service_arguments }
+
+  Shared\Tool\Tool\Infrastructure\UI\API\Controller\UploadImageController:
+    class: Shared\Tool\Tool\Infrastructure\UI\API\Controller\UploadImageController
+    arguments:
+      $imageStorageService: '@Shared\Tool\Tool\Domain\Service\ImageStorageService'
+    tags:
+      - { name: controller.service_arguments }

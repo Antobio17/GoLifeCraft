@@ -10,6 +10,7 @@ import { GetSupermarketsProviders } from "@nutrition/catalog/supermarket/infrast
 import { UpdateSupermarketAislesProviders } from "@nutrition/catalog/supermarket/infrastructure/providers/update-supermarket-aisles.providers";
 import { GetArticleDraftProviders } from "../providers/get-article-draft.providers";
 import { ImportGlobalArticleProviders } from "@nutrition/global-catalog/article/infrastructure/providers/import-global-article.providers";
+import { UploadImageProviders } from "@shared/image-upload/infrastructure/providers/upload-image.providers";
 import { EmojiCatalogService } from "../../application/services/emoji-catalog.service";
 
 export const ARTICLE_ROUTES: Routes = [
@@ -27,6 +28,7 @@ export const ARTICLE_ROUTES: Routes = [
       ...UpdateSupermarketAislesProviders.getProviders(),
       ...GetArticleDraftProviders.getProviders(),
       ...ImportGlobalArticleProviders.getProviders(),
+      ...UploadImageProviders.getProviders(),
       EmojiCatalogService,
     ],
     children: [

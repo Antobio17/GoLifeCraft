@@ -28,4 +28,18 @@ final class FakeImageStoreService implements ImageStorageService
 
         return $destinationPath;
     }
+
+    public function storePublicImage(
+        string $folder,
+        string $imagePath,
+        string $extension,
+    ): string {
+        $this->storedImages[] = [
+            'folder' => $folder,
+            'imagePath' => $imagePath,
+            'extension' => $extension,
+        ];
+
+        return sprintf('/upload/%s/%s.%s', $folder, basename(path: $imagePath), $extension);
+    }
 }
