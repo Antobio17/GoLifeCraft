@@ -18,6 +18,7 @@ final class GetWorkoutResult extends QueryAggregateResult
         public readonly \DateTime $startedAt,
         public readonly ?\DateTime $finishedAt,
         public readonly int $durationSeconds,
+        public readonly ?\DateTime $restStartedAt,
         public readonly array $exercises,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,

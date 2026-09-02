@@ -23,6 +23,7 @@ final class WorkoutResultHydrator
             startedAt: new \DateTime(datetime: $row['started_at'], timezone: $utc),
             finishedAt: null === $row['finished_at'] ? null : new \DateTime(datetime: $row['finished_at'], timezone: $utc),
             durationSeconds: (int) $row['duration_seconds'],
+            restStartedAt: null === $row['rest_started_at'] ? null : new \DateTime(datetime: $row['rest_started_at'], timezone: $utc),
             exercises: self::exercises(connection: $connection, workoutId: $row['id']),
             createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),

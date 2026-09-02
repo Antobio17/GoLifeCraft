@@ -24,6 +24,7 @@ export interface WorkoutDetailAttributes {
   startedAt: string;
   finishedAt: string | null;
   durationSeconds: number;
+  restStartedAt: string | null;
   exercises: WorkoutExerciseView[];
 }
 

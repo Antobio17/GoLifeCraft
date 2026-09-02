@@ -26,6 +26,7 @@ class Workout extends GenericAggregate
     public \DateTime $startedAt;
     public ?\DateTime $finishedAt = null;
     public int $durationSeconds = 0;
+    public ?\DateTime $restStartedAt = null;
 
     /** @var WorkoutExercise[] */
     public array $exercises = [];
@@ -51,6 +52,7 @@ class Workout extends GenericAggregate
         $workout->startedAt = $now;
         $workout->finishedAt = null;
         $workout->durationSeconds = 0;
+        $workout->restStartedAt = null;
         $workout->exercises = $exercises;
         $workout->stampCreation(userId: $startedByUserId, now: $now);
 
@@ -72,6 +74,7 @@ class Workout extends GenericAggregate
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
         ?string $sessionName = null,
+        ?\DateTime $restStartedAt = null,
     ): void {
         if (self::STATUS_COMPLETED === $this->status) {
             throw UpdateWorkoutException::workoutAlreadyFinished(workoutId: $this->id);
@@ -83,6 +86,7 @@ class Workout extends GenericAggregate
 
         $this->exercises = $exercises;
         $this->durationSeconds = max(0, $durationSeconds);
+        $this->restStartedAt = $restStartedAt;
         $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
     }
 
@@ -115,6 +119,7 @@ class Workout extends GenericAggregate
         $this->durationSeconds = max(0, $durationSeconds);
         $this->status = self::STATUS_COMPLETED;
         $this->finishedAt = $now;
+        $this->restStartedAt = null;
         $this->stampUpdate(userId: $finishedByUserId, now: $now);
 
         $this->record(event: new WorkoutFinished(

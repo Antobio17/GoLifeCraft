@@ -2,14 +2,22 @@ import { TestBed } from "@angular/core/testing";
 import { Observable, of } from "rxjs";
 import { WorkoutSessionPort } from "../../domain/ports/workout-session.port";
 import { WorkoutDetail } from "../../domain/models/workout-detail.model";
+import { WorkoutProgressRequest } from "../../domain/models/workout-request.model";
 import { ActiveExercise, ActiveWorkoutService } from "./active-workout.service";
 
 class StubWorkoutSessionPort extends WorkoutSessionPort {
+  active: WorkoutDetail | null = null;
+  readonly savedProgress: WorkoutProgressRequest[] = [];
+
   start(): Observable<void> {
     return of(void 0);
   }
 
-  updateProgress(): Observable<void> {
+  updateProgress(
+    workoutId: string,
+    request: WorkoutProgressRequest,
+  ): Observable<void> {
+    this.savedProgress.push(request);
     return of(void 0);
   }
 
@@ -22,12 +30,13 @@ class StubWorkoutSessionPort extends WorkoutSessionPort {
   }
 
   getActive(): Observable<WorkoutDetail | null> {
-    return of(null);
+    return of(this.active);
   }
 }
 
 describe("ActiveWorkoutService rest timer", () => {
   let service: ActiveWorkoutService;
+  let port: StubWorkoutSessionPort;
 
   const exercises: ActiveExercise[] = [
     {
@@ -55,6 +64,7 @@ describe("ActiveWorkoutService rest timer", () => {
     });
 
     service = TestBed.inject(ActiveWorkoutService);
+    port = TestBed.inject(WorkoutSessionPort) as StubWorkoutSessionPort;
   });
 
   afterEach(() => {
@@ -68,6 +78,23 @@ describe("ActiveWorkoutService rest timer", () => {
 
   function startWorkout(): void {
     service.start("session-1", "Empuje A", exercises).subscribe();
+  }
+
+  function activeWorkout(restStartedAt: string | null): WorkoutDetail {
+    return {
+      id: "workout-1",
+      type: "Workout",
+      attributes: {
+        sessionId: "session-1",
+        sessionName: "Empuje A",
+        status: "in_progress",
+        startedAt: new Date(Date.now() - 600000).toISOString(),
+        finishedAt: null,
+        durationSeconds: 600,
+        restStartedAt,
+        exercises: [],
+      },
+    };
   }
 
   it("stays hidden until a set is marked as done", () => {
@@ -134,5 +161,33 @@ describe("ActiveWorkoutService rest timer", () => {
     tick(1000);
 
     expect(service.restSeconds()).toBe(3);
+  });
+
+  it("saves the moment the rest started along with the progress", () => {
+    startWorkout();
+    const restStartedAt = new Date().toISOString();
+
+    service.toggleDone(0, 0, exercises);
+    tick(1000);
+
+    expect(port.savedProgress.length).toBe(1);
+    expect(port.savedProgress[0].restStartedAt).toBe(restStartedAt);
+  });
+
+  it("restores the rest already running when the workout is recovered", () => {
+    port.active = activeWorkout(new Date(Date.now() - 30000).toISOString());
+
+    service.ensureRestored().subscribe();
+
+    expect(service.restRunning()).toBeTrue();
+    expect(service.restSeconds()).toBe(30);
+  });
+
+  it("keeps the rest hidden when the recovered workout had none running", () => {
+    port.active = activeWorkout(null);
+
+    service.ensureRestored().subscribe();
+
+    expect(service.restRunning()).toBeFalse();
   });
 });

@@ -15,6 +15,7 @@ final readonly class UpdateWorkoutCommand implements Command
         public int $durationSeconds,
         public string $updatedByUserId,
         public ?string $sessionName = null,
+        public ?\DateTime $restStartedAt = null,
     ) {
     }
 
