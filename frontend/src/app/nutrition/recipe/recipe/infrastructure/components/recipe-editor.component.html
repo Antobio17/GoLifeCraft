@@ -36,14 +36,14 @@
         [count]="3"
         [gap]="'var(--ds-space-2)'"
         radius="var(--ds-radius-xl)"
-        padding="var(--ds-space-2) var(--ds-space-3)"
-        [tile]="36"
-        [tileRadius]="10"
-        titleWidth="54%"
-        metaWidth="36%"
-        trailing="pill"
-        pillWidth="4.875rem"
-        pillHeight="2.25rem"
+        padding="var(--ds-space-3)"
+        [alignTop]="true"
+        [tile]="38"
+        [tileRadius]="11"
+        titleWidth="58%"
+        headTrailing="4.25rem"
+        [meta]="false"
+        [footButton]="true"
       />
     </ds-split-view>
   } @else {
@@ -160,36 +160,45 @@
                   [removeLabel]="'recipeEditor.removeIngredient' | t"
                   (remove)="onRemoveIngredient(row.ingredient.key)"
                 >
-                  <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
+                  <ds-card
+                    [padding]="'var(--ds-space-3)'"
+                    [gap]="'var(--ds-space-2)'"
+                  >
+                    <ds-stack
+                      direction="row"
+                      align="start"
+                      [gap]="'var(--ds-space-3)'"
+                    >
+                      <ds-emoji-tile
+                        [emoji]="row.ingredient.emoji"
+                        [size]="38"
+                      />
+                      <ds-stack
+                        direction="row"
+                        align="center"
+                        [wrap]="true"
+                        [gap]="'var(--ds-space-1-5)'"
+                        [grow]="true"
+                      >
+                        <ds-text variant="strong">{{
+                          row.ingredient.name
+                        }}</ds-text>
+                        @if (row.ingredient.kind === "recipe") {
+                          <ds-chip tone="brand">{{
+                            "recipeEditor.subRecipe" | t
+                          }}</ds-chip>
+                        }
+                      </ds-stack>
+                      <ds-macro-badges [kcal]="row.kcal" [shrink]="false" />
+                    </ds-stack>
+
                     <ds-stack
                       direction="row"
                       align="center"
+                      justify="between"
                       [gap]="'var(--ds-space-2)'"
                     >
-                      <ds-stack align="center" [gap]="'var(--ds-space-1)'">
-                        <ds-emoji-tile
-                          [emoji]="row.ingredient.emoji"
-                          [size]="36"
-                        />
-                        <ds-macro-badges [kcal]="row.kcal" />
-                      </ds-stack>
-                      <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                        <ds-stack
-                          direction="row"
-                          align="center"
-                          [gap]="'var(--ds-space-1-5)'"
-                        >
-                          <ds-text variant="strong" [truncate]="true">{{
-                            row.ingredient.name
-                          }}</ds-text>
-                          @if (row.ingredient.kind === "recipe") {
-                            <ds-chip tone="brand">{{
-                              "recipeEditor.subRecipe" | t
-                            }}</ds-chip>
-                          }
-                        </ds-stack>
-                        <ds-macro-badges [macros]="row.macros" />
-                      </ds-stack>
+                      <ds-macro-badges [macros]="row.macros" />
                       <ds-inline-quantity
                         [quantity]="row.ingredient.quantity"
                         [unit]="row.ingredient.unit"

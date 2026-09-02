@@ -26,6 +26,10 @@ import { MacroBadge } from "../../domain/models/macro-badge.model";
         display: block;
         min-width: 0;
       }
+      :host([no-shrink]) {
+        flex-shrink: 0;
+        min-width: auto;
+      }
       .ds-mbadges {
         display: flex;
         flex-wrap: wrap;
@@ -53,11 +57,15 @@ import { MacroBadge } from "../../domain/models/macro-badge.model";
       }
     `,
   ],
+  host: {
+    "[attr.no-shrink]": "shrink ? null : ''",
+  },
 })
 export class MacroBadgesComponent {
   @Input() kcal = "";
   @Input() macros: MacroBadge[] = [];
   @Input() tag = "";
+  @Input() shrink = true;
 
   get visibleMacros(): MacroBadge[] {
     return this.macros.filter((macro) => !!macro.value);
