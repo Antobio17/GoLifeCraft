@@ -36,6 +36,7 @@ final class UpdateWorkoutController
                 durationSeconds: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'durationSeconds'),
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
                 sessionName: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'sessionName'),
+                restStartedAt: RequestExtractor::getDateTimeRequestValue(request: $request, fieldName: 'restStartedAt', required: false),
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_NO_CONTENT);

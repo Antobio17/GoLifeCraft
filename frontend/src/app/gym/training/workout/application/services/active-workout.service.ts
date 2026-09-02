@@ -305,7 +305,7 @@ export class ActiveWorkoutService implements OnDestroy {
     this.activeName.set(active.attributes.sessionName);
     this.liveExercises.set(this.fromDetail(active));
     this.doneKeys.set(doneKeys);
-    this.stopRest();
+    this.restoreRest(active.attributes.restStartedAt);
     this.baseSeconds.set(0);
     this.startedAtMs.set(new Date(active.attributes.startedAt).getTime());
     this.paused.set(false);
@@ -395,6 +395,16 @@ export class ActiveWorkoutService implements OnDestroy {
     this.nowMs.set(Date.now());
   }
 
+  private restoreRest(restStartedAt: string | null): void {
+    if (null === restStartedAt) {
+      this.stopRest();
+      return;
+    }
+
+    this.restFrozenSeconds.set(0);
+    this.restStartedAtMs.set(new Date(restStartedAt).getTime());
+  }
+
   private stopRest(): void {
     this.restStartedAtMs.set(null);
     this.restFrozenSeconds.set(0);
@@ -421,7 +431,18 @@ export class ActiveWorkoutService implements OnDestroy {
       exercises: this.buildExercises(exercises),
       durationSeconds: this.elapsedSeconds(),
       sessionName: this.activeName(),
+      restStartedAt: this.restStartedAtIso(),
     };
+  }
+
+  private restStartedAtIso(): string | null {
+    const startedAtMs = this.restStartedAtMs();
+
+    if (null === startedAtMs) {
+      return null;
+    }
+
+    return new Date(startedAtMs).toISOString();
   }
 
   private buildExercises(

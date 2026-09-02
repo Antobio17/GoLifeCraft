@@ -28,6 +28,7 @@ export interface WorkoutProgressRequest {
   exercises: WorkoutExerciseRequest[];
   durationSeconds: number;
   sessionName?: string;
+  restStartedAt: string | null;
 }
 
 export interface FinishWorkoutRequest extends WorkoutProgressRequest {

@@ -142,6 +142,56 @@ final class UpdateWorkoutCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'Entrenamiento libre', actual: $workout->sessionName);
     }
 
+    public function testItStoresWhenTheRestStarted(): void
+    {
+        $workoutId = 'workout-rest-1';
+        $restStartedAt = new \DateTime(datetime: '2026-01-01 08:00:00');
+
+        ($this->startHandler)(new StartWorkoutCommand(
+            workoutId: $workoutId,
+            sessionId: 'session-1',
+            sessionName: 'Empuje A',
+            exercises: [
+                new WorkoutExerciseData(
+                    exerciseId: 'ex-1',
+                    exerciseName: 'Press banca',
+                    type: 'bilateral',
+                    muscleGroups: ['Pecho'],
+                    position: 1,
+                    note: null,
+                    sets: [
+                        new WorkoutSetData(position: 1, reps: 10, weight: 40.0, done: false),
+                    ],
+                ),
+            ],
+            startedByUserId: 'god-user-id',
+        ));
+
+        $this->assertNull(actual: $this->workoutRepository->findById(id: $workoutId)->restStartedAt);
+
+        ($this->handler)(new UpdateWorkoutCommand(
+            workoutId: $workoutId,
+            exercises: [],
+            durationSeconds: 300,
+            updatedByUserId: 'god-user-id',
+            restStartedAt: $restStartedAt,
+        ));
+
+        $this->assertEquals(
+            expected: $restStartedAt,
+            actual: $this->workoutRepository->findById(id: $workoutId)->restStartedAt,
+        );
+
+        ($this->handler)(new UpdateWorkoutCommand(
+            workoutId: $workoutId,
+            exercises: [],
+            durationSeconds: 360,
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $this->assertNull(actual: $this->workoutRepository->findById(id: $workoutId)->restStartedAt);
+    }
+
     public function testItThrowsExceptionWhenWorkoutDoesNotExist(): void
     {
         $this->expectException(exception: UpdateWorkoutException::class);

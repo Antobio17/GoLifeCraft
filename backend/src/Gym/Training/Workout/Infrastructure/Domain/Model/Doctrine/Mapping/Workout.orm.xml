@@ -9,6 +9,7 @@
     <field name="startedAt" type="datetime" column="started_at"/>
     <field name="finishedAt" type="datetime" column="finished_at" nullable="true"/>
     <field name="durationSeconds" type="integer" column="duration_seconds"/>
+    <field name="restStartedAt" type="datetime" column="rest_started_at" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

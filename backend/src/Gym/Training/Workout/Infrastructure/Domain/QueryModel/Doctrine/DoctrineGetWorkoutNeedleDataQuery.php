@@ -23,6 +23,7 @@ final readonly class DoctrineGetWorkoutNeedleDataQuery implements GetWorkoutNeed
                 'w.started_at',
                 'w.finished_at',
                 'w.duration_seconds',
+                'w.rest_started_at',
                 'w.created_at',
                 'w.updated_at',
                 'w.created_by_user_id',
