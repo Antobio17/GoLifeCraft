@@ -133,7 +133,6 @@
       "icon": "Icono o imagen",
       "imageTrigger": "Subir una imagen",
       "imageRemove": "Quitar la imagen",
-      "imageHint": "Si subes una imagen, se usa en vez del icono.",
       "name": "Nombre",
       "namePlaceholder": "Ej: Leche entera 1 L",
       "emojiSheetTitle": "Elige un icono",

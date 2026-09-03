@@ -189,7 +189,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
 
     public function testItDownloadsTheGlobalArticleImageOnImport(): void
     {
-        $this->remoteImageFetcher->image = new FetchedImage(path: '/tmp/leche', extension: 'jpg');
+        $this->remoteImageFetcher->image = new FetchedImage(path: '/tmp/leche.jpg', extension: 'jpg');
         $globalArticle = $this->seedGlobalArticle(imageUrl: 'https://prod-mercadona.imgix.net/leche.jpg');
 
         ($this->handler)(new ImportGlobalArticleCommand(globalArticleId: $globalArticle->id, importedByUserId: 'user-1'));
@@ -197,7 +197,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
         $article = $this->articleRepository->findByBarcode(barcode: '8410000000001');
 
         $this->assertSame(['https://prod-mercadona.imgix.net/leche.jpg'], $this->remoteImageFetcher->fetchedUrls);
-        $this->assertSame('/upload/article/leche.jpg', $article->imageUrl);
+        $this->assertSame('leche.jpg', $article->image);
     }
 
     public function testItLeavesTheArticleWithoutImageWhenTheDownloadFails(): void
@@ -208,7 +208,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
 
         $article = $this->articleRepository->findByBarcode(barcode: '8410000000001');
 
-        $this->assertNull($article->imageUrl);
+        $this->assertNull($article->image);
     }
 
     private function seedGlobalArticle(string $quantity = '1 L', string $barcode = '8410000000001', ?string $imageUrl = null): GlobalArticle

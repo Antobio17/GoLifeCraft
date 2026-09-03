@@ -27,13 +27,13 @@ final readonly class CreateRecipeCommandHandler
             throw CreateRecipeException::recipeWithNameAlreadyExists(name: $command->name);
         }
 
-        $recipeId = $this->recipeRepository->nextId();
+        $recipeId = $command->recipeId;
 
         $recipe = Recipe::create(
             id: $recipeId,
             name: $command->name,
             emoji: $command->emoji,
-            imageUrl: $command->imageUrl,
+            image: null,
             category: $command->category,
             servings: $command->servings,
             ingredients: $this->recipeIngredientAssembler->assemble(

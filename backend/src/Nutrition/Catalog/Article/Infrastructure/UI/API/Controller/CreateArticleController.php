@@ -33,6 +33,7 @@ final class CreateArticleController
 
         try {
             $this->handle(message: new CreateArticleCommand(
+                articleId: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'id'),
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 recipeUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'recipeUnit') ?? $baseUnit,
                 baseUnit: $baseUnit,
@@ -41,7 +42,6 @@ final class CreateArticleController
                 price: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'price', required: false),
                 brand: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'brand'),
                 emoji: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'emoji'),
-                imageUrl: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'imageUrl'),
                 categoryId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'categoryId'),
                 supermarketId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'supermarketId'),
                 aisleId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'aisleId'),

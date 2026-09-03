@@ -6,7 +6,6 @@ import { GetRecipeProviders } from "../providers/get-recipe.providers";
 import { UpdateRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/update-recipe-stock.providers";
 import { RecipeStockViewService } from "@nutrition/pantry/recipe-stock/application/services/recipe-stock-view.service";
 import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
-import { UploadImageProviders } from "@shared/image-upload/infrastructure/providers/upload-image.providers";
 import { CreateRecipeProviders } from "../providers/create-recipe.providers";
 import { UpdateRecipeProviders } from "../providers/update-recipe.providers";
 import { DeleteRecipeProviders } from "../providers/delete-recipe.providers";
@@ -22,7 +21,6 @@ export const RECIPE_ROUTES: Routes = [
       ...UpdateRecipeStockProviders.getProviders(),
       RecipeStockViewService,
       ...AutosaveProvider.getProviders(),
-      ...UploadImageProviders.getProviders(),
       ...CreateRecipeProviders.getProviders(),
       ...UpdateRecipeProviders.getProviders(),
       ...DeleteRecipeProviders.getProviders(),

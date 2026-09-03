@@ -37,3 +37,13 @@ delete_article:
   path: /api/v1/nutrition/catalog/article/{articleId}
   methods: [DELETE]
   controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\DeleteArticleController
+
+get_article_image:
+  path: /api/v1/nutrition/catalog/article/{articleId}/image
+  methods: [GET]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleImageController
+
+assign_article_image:
+  path: /api/v1/nutrition/catalog/article/{articleId}/image
+  methods: [POST, DELETE]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\AssignArticleImageController

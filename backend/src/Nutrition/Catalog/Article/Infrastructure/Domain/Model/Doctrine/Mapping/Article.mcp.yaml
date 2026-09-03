@@ -37,11 +37,12 @@ fields:
       equivalence of the article. Keys are always stored in English; the UI translates them.
     filterable: true
     sortable: true
-  imageUrl:
+  image:
     writable: false
     description: >-
-      Public path of the article photo, when it has one. It takes precedence over the
-      emoji in the UI. Uploaded from the app or downloaded when importing a global article.
+      File name of the article photo, when it has one. It takes precedence over the emoji
+      in the UI and is only readable through the article image endpoint, never as a public
+      file. Uploaded from the app or downloaded when importing a global article.
   packUnit:
     writable: true
     max: 30

@@ -68,7 +68,7 @@
       <ng-container slot="side">
         <ds-product-hero
           [emoji]="recipe.emoji"
-          [imageUrl]="recipe.imageUrl"
+          [imageUrl]="imageUrl()"
           [alt]="recipe.name"
           [badge]="view.servingsLabel(recipe.servings)"
         />

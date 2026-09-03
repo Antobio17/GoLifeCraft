@@ -5,6 +5,7 @@ namespace Nutrition\Catalog\Article\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Catalog\Article\Domain\Event\ArticleCreated;
 use Nutrition\Catalog\Article\Domain\Event\ArticleDeleted;
+use Nutrition\Catalog\Article\Domain\Event\ArticleImageAssigned;
 use Nutrition\Catalog\Article\Domain\Event\ArticleUpdated;
 use Nutrition\Catalog\Article\Domain\Exception\CreateArticleException;
 use Nutrition\Catalog\Article\Domain\Exception\UpdateArticleException;
@@ -24,7 +25,7 @@ class Article extends GenericAggregate
     public ?float $price = null;
     public ?string $brand = null;
     public ?string $emoji = null;
-    public ?string $imageUrl = null;
+    public ?string $image = null;
     public ?string $categoryId = null;
     public ?string $supermarketId = null;
     public ?string $aisleId = null;
@@ -47,7 +48,7 @@ class Article extends GenericAggregate
         ?float $price,
         ?string $brand,
         ?string $emoji,
-        ?string $imageUrl,
+        ?string $image,
         ?string $categoryId,
         ?string $supermarketId,
         ?string $aisleId,
@@ -86,7 +87,7 @@ class Article extends GenericAggregate
         $article->price = $price;
         $article->brand = $brand;
         $article->emoji = $emoji;
-        $article->imageUrl = $imageUrl;
+        $article->image = $image;
         $article->categoryId = $categoryId;
         $article->supermarketId = $supermarketId;
         $article->aisleId = self::resolveAisleId(supermarketId: $supermarketId, aisleId: $aisleId);
@@ -99,7 +100,7 @@ class Article extends GenericAggregate
             occurredOn: $now,
             name: $name,
             emoji: $emoji,
-            imageUrl: $imageUrl,
+            image: $image,
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
@@ -117,6 +118,27 @@ class Article extends GenericAggregate
         $this->barcode = $barcode;
     }
 
+    public function assignImage(
+        ?string $image,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->image = $image;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new ArticleImageAssigned(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+            emoji: $this->emoji,
+            image: $image,
+            updatedAt: $now,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
     /**
      * @param ArticleEquivalence[] $equivalences
      */
@@ -129,7 +151,7 @@ class Article extends GenericAggregate
         ?float $price,
         ?string $brand,
         ?string $emoji,
-        ?string $imageUrl,
+        ?string $image,
         ?string $categoryId,
         ?string $supermarketId,
         ?string $aisleId,
@@ -171,7 +193,7 @@ class Article extends GenericAggregate
         $this->price = $price;
         $this->brand = $brand;
         $this->emoji = $emoji;
-        $this->imageUrl = $imageUrl;
+        $this->image = $image;
         $this->categoryId = $categoryId;
         $this->supermarketId = $supermarketId;
         $this->aisleId = self::resolveAisleId(supermarketId: $supermarketId, aisleId: $aisleId);
@@ -184,7 +206,7 @@ class Article extends GenericAggregate
             occurredOn: $now,
             name: $name,
             emoji: $emoji,
-            imageUrl: $imageUrl,
+            image: $image,
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,

@@ -25,6 +25,8 @@ import {
 } from "@shared/design-system/list-page/abstract-list-page.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { TextSearchService } from "@shared/search/application/services/text-search.service";
+import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 
 @Component({
   selector: "app-get-recipes",
@@ -49,6 +51,7 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
   private textSearch = inject(TextSearchService);
   private getRecipesService = inject(GetRecipesService);
   protected view = inject(RecipeViewService);
+  private aggregateImageService = inject(AggregateImageService);
 
   protected readonly modulePath = "nutrition/recipe/recipe";
   protected readonly storageKey = "pageSize_recipes";
@@ -75,7 +78,7 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
 
   cards = computed<RecipeCardView[]>(() =>
     this.filteredRecipes().map((recipe) =>
-      this.view.toCard(recipe, this.macroLabels()),
+      this.view.toCard(recipe, this.macroLabels(), this.imageUrl(recipe)),
     ),
   );
 
@@ -115,5 +118,13 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
 
   onCreate(): void {
     this.router.navigate(["/recipes", "create"]);
+  }
+
+  private imageUrl(recipe: RecipeListItem): string | null {
+    return this.aggregateImageService.objectUrl(
+      AggregateImageKind.Recipe,
+      recipe.id,
+      recipe.attributes.image ?? null,
+    )();
   }
 }

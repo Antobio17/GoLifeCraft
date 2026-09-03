@@ -7,39 +7,43 @@ use Shared\Tool\Tool\Domain\Service\ImageStorageService;
 final class FakeImageStoreService implements ImageStorageService
 {
     public array $storedImages = [];
+    public array $deletedImages = [];
 
     public function storeAggregateImage(
         string $aggregate,
         string $aggregateId,
         string $imagePath,
     ): string {
-        $destinationPath = sprintf(
-            '/var/www/html/var/uploads/%s/%s/%s',
-            $aggregate,
-            $aggregateId,
-            basename(path: $imagePath)
-        );
-
         $this->storedImages[] = [
             'aggregate' => $aggregate,
             'aggregateId' => $aggregateId,
             'imagePath' => $imagePath,
         ];
 
-        return $destinationPath;
+        return basename(path: $imagePath);
     }
 
-    public function storePublicImage(
-        string $folder,
-        string $imagePath,
-        string $extension,
-    ): string {
-        $this->storedImages[] = [
-            'folder' => $folder,
-            'imagePath' => $imagePath,
-            'extension' => $extension,
-        ];
+    public function deleteAggregateImage(
+        string $aggregate,
+        string $aggregateId,
+        ?string $image,
+    ): void {
+        if (null === $image) {
+            return;
+        }
 
-        return sprintf('/upload/%s/%s.%s', $folder, basename(path: $imagePath), $extension);
+        $this->deletedImages[] = [
+            'aggregate' => $aggregate,
+            'aggregateId' => $aggregateId,
+            'image' => $image,
+        ];
+    }
+
+    public function aggregateImagePath(
+        string $aggregate,
+        string $aggregateId,
+        string $image,
+    ): ?string {
+        return sprintf('/var/uploads/%s/%s/%s', $aggregate, $aggregateId, $image);
     }
 }

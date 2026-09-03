@@ -57,3 +57,13 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Catalog\Article\Application\Command\AssignArticleImageCommandHandler:
+    class: Nutrition\Catalog\Article\Application\Command\AssignArticleImageCommandHandler
+    arguments:
+      $articleRepository: '@Nutrition\Catalog\Article\Domain\Model\ArticleRepository'
+      $imageStorageService: '@Shared\Tool\Tool\Domain\Service\ImageStorageService'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

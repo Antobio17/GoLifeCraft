@@ -4,6 +4,7 @@ import { TranslationProvider } from "@shared/i18n/infrastructure/providers/trans
 import { AuthSessionProvider } from "@shared/auth/infrastructure/providers/auth-session.provider";
 import { RefreshTokenProvider } from "@shared/auth/infrastructure/providers/refresh-token.provider";
 import { ImpersonationProvider } from "@shared/auth/infrastructure/providers/impersonation.provider";
+import { AggregateImageProviders } from "@shared/aggregate-image/infrastructure/providers/aggregate-image.providers";
 
 export type ProviderModule = {
   getProviders(): Provider[];
@@ -16,6 +17,7 @@ export class GlobalProviders {
     AuthSessionProvider,
     RefreshTokenProvider,
     ImpersonationProvider,
+    AggregateImageProviders,
   ];
 
   static getProviders(): Provider[] {

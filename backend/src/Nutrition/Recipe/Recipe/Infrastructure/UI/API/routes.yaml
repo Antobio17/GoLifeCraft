@@ -22,3 +22,13 @@ get_recipe:
   path: /api/v1/nutrition/recipe/{recipeId}
   methods: [GET]
   controller: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipeController
+
+get_recipe_image:
+  path: /api/v1/nutrition/recipe/{recipeId}/image
+  methods: [GET]
+  controller: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipeImageController
+
+assign_recipe_image:
+  path: /api/v1/nutrition/recipe/{recipeId}/image
+  methods: [POST, DELETE]
+  controller: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\AssignRecipeImageController

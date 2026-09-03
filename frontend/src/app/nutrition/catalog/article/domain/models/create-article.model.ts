@@ -16,6 +16,7 @@ export interface ArticleEquivalenceRequest {
 }
 
 export interface CreateArticleRequest {
+  id: string;
   name: string;
   recipeUnit: string;
   baseUnit: string;
@@ -24,7 +25,6 @@ export interface CreateArticleRequest {
   price: number | null;
   brand: string | null;
   emoji: string | null;
-  imageUrl: string | null;
   categoryId: string | null;
   supermarketId: string | null;
   aisleId: string | null;

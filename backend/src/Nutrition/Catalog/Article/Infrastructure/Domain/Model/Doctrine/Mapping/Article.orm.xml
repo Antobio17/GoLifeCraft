@@ -19,7 +19,7 @@
     <field name="price" type="float" column="price" nullable="true"/>
     <field name="brand" type="string" column="brand" length="120" nullable="true"/>
     <field name="emoji" type="string" column="emoji" length="16" nullable="true"/>
-    <field name="imageUrl" type="string" column="image_url" length="512" nullable="true"/>
+    <field name="image" type="string" column="image" length="255" nullable="true"/>
     <field name="categoryId" type="string" column="category_id" length="36" nullable="true"/>
     <field name="supermarketId" type="string" column="supermarket_id" length="36" nullable="true"/>
     <field name="aisleId" type="string" column="aisle_id" length="36" nullable="true"/>

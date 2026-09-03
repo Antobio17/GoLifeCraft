@@ -23,6 +23,8 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
+import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
   AbstractListPageComponent,
@@ -59,6 +61,7 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   private getArticleFacetsService = inject(GetArticleFacetsService);
   private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
+  private aggregateImageService = inject(AggregateImageService);
 
   canCreate = this.authSession.isAuthenticated();
 
@@ -79,7 +82,9 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   stores = signal<string[]>([]);
 
   cards = computed<ArticleCardView[]>(() =>
-    this.items().map((article) => this.view.toCard(article)),
+    this.items().map((article) =>
+      this.view.toCard(article, this.imageUrl(article)),
+    ),
   );
 
   hasMore = computed(() => this.items().length < this.totalItems());
@@ -209,5 +214,13 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
         this.brands.set(facets.brands);
         this.stores.set(facets.stores);
       });
+  }
+
+  private imageUrl(article: Article): string | null {
+    return this.aggregateImageService.objectUrl(
+      AggregateImageKind.Article,
+      article.id,
+      article.attributes.image ?? null,
+    )();
   }
 }

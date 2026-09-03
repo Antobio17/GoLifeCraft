@@ -14,7 +14,7 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from "@angular/forms";
-import { forkJoin } from "rxjs";
+import { Observable, forkJoin, of, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -23,8 +23,9 @@ import { SplitViewComponent } from "@shared/design-system/split-view/infrastruct
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
 import { ImagePickerComponent } from "@shared/design-system/image-picker/infrastructure/components/image-picker.component";
-import { UploadImageService } from "@shared/image-upload/application/services/upload-image.service";
-import { ImageFolder } from "@shared/image-upload/domain/models/image-folder.enum";
+import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { uuidV4 } from "@shared/uuid/uuid";
 import { ChoiceChipsComponent } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
@@ -139,7 +140,7 @@ export class RecipeEditorComponent implements OnInit {
   private createRecipeService = inject(CreateRecipeService);
   private updateRecipeService = inject(UpdateRecipeService);
   private floatingToastService = inject(FloatingToastService);
-  private uploadImageService = inject(UploadImageService);
+  private aggregateImageService = inject(AggregateImageService);
   private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/recipe/recipe";
@@ -149,8 +150,26 @@ export class RecipeEditorComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
-  imageUrl = signal<string | null>(null);
-  uploadingImage = signal(false);
+  storedImage = signal<string | null>(null);
+  pickedImage = signal<File | null>(null);
+  pickedImagePreview = signal<string | null>(null);
+  imageCleared = signal(false);
+
+  imagePreview = computed(() => {
+    const picked = this.pickedImagePreview();
+
+    if (null !== picked) {
+      return picked;
+    }
+
+    return this.aggregateImageService.objectUrl(
+      AggregateImageKind.Recipe,
+      this.recipeId,
+      this.imageCleared() ? null : this.storedImage(),
+    )();
+  });
+
+  private readonly newRecipeId = uuidV4();
 
   readonly minServings = MIN_SERVINGS;
   readonly maxServings = MAX_SERVINGS;
@@ -402,7 +421,7 @@ export class RecipeEditorComponent implements OnInit {
       ? this.updateRecipeService.updateRecipe(this.id(), payload)
       : this.createRecipeService.createRecipe(payload);
 
-    request$.subscribe({
+    request$.pipe(switchMap(() => this.saveImage())).subscribe({
       next: () => {
         this.saving.set(false);
         this.router.navigate(["/recipes"]);
@@ -416,21 +435,52 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   onImagePicked(file: File): void {
-    this.uploadingImage.set(true);
-
-    this.uploadImageService.uploadImage(file, ImageFolder.Recipe).subscribe({
-      next: (url) => {
-        this.imageUrl.set(url);
-        this.uploadingImage.set(false);
-        this.form.markAsDirty();
-      },
-      error: () => this.uploadingImage.set(false),
-    });
+    this.revokePickedImagePreview();
+    this.pickedImage.set(file);
+    this.pickedImagePreview.set(URL.createObjectURL(file));
+    this.imageCleared.set(false);
+    this.form.markAsDirty();
   }
 
   onImageCleared(): void {
-    this.imageUrl.set(null);
+    this.revokePickedImagePreview();
+    this.pickedImage.set(null);
+    this.pickedImagePreview.set(null);
+    this.imageCleared.set(true);
     this.form.markAsDirty();
+  }
+
+  private get recipeId(): string {
+    return this.isEdit ? this.id() : this.newRecipeId;
+  }
+
+  private revokePickedImagePreview(): void {
+    const preview = this.pickedImagePreview();
+
+    if (null === preview) return;
+
+    URL.revokeObjectURL(preview);
+  }
+
+  private saveImage(): Observable<void> {
+    const picked = this.pickedImage();
+
+    if (null !== picked) {
+      return this.aggregateImageService.upload(
+        AggregateImageKind.Recipe,
+        this.recipeId,
+        picked,
+      );
+    }
+
+    if (this.imageCleared() && null !== this.storedImage()) {
+      return this.aggregateImageService.remove(
+        AggregateImageKind.Recipe,
+        this.recipeId,
+      );
+    }
+
+    return of(undefined);
   }
 
   t(key: string, params?: Record<string, unknown>): string {
@@ -453,7 +503,7 @@ export class RecipeEditorComponent implements OnInit {
       emoji: recipe.attributes.emoji || FALLBACK_EMOJI,
       category: recipe.attributes.category,
     });
-    this.imageUrl.set(recipe.attributes.imageUrl ?? null);
+    this.storedImage.set(recipe.attributes.image ?? null);
     this.servings.set(recipe.attributes.servings);
 
     this.steps.set(
@@ -481,9 +531,9 @@ export class RecipeEditorComponent implements OnInit {
     const value = this.form.value;
 
     return {
+      id: this.recipeId,
       name: (value.name ?? "").trim(),
       emoji: value.emoji || FALLBACK_EMOJI,
-      imageUrl: this.imageUrl(),
       category: value.category,
       servings: this.servings(),
       ingredients: this.ingredients().map((ingredient, index) => ({

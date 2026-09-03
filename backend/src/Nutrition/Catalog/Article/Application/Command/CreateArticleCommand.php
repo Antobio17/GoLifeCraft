@@ -10,6 +10,7 @@ final readonly class CreateArticleCommand implements Command
      * @param ArticleEquivalenceData[] $equivalences
      */
     public function __construct(
+        public string $articleId,
         public string $name,
         public string $recipeUnit,
         public string $baseUnit,
@@ -18,7 +19,6 @@ final readonly class CreateArticleCommand implements Command
         public ?float $price,
         public ?string $brand,
         public ?string $emoji,
-        public ?string $imageUrl,
         public ?string $categoryId,
         public ?string $supermarketId,
         public ?string $aisleId,

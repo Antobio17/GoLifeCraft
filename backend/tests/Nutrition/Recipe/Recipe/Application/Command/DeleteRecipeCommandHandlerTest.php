@@ -37,9 +37,9 @@ final class DeleteRecipeCommandHandlerTest extends TestCase
             dateTimeGenerator: $dateTimeGenerator,
         );
         ($createHandler)(new CreateRecipeCommand(
+            recipeId: 'recipe-1',
             name: 'Porridge de avena',
             emoji: '🥣',
-            imageUrl: null,
             category: 'Desayuno',
             servings: 1,
             ingredients: [

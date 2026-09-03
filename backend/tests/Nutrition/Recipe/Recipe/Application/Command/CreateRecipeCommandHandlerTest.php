@@ -42,9 +42,9 @@ final class CreateRecipeCommandHandlerTest extends TestCase
     public function testItCreatesARecipeWithIngredients(): void
     {
         ($this->handler)(new CreateRecipeCommand(
+            recipeId: 'recipe-1',
             name: 'Porridge de avena',
             emoji: '🥣',
-            imageUrl: null,
             category: 'Desayuno',
             servings: 1,
             ingredients: [
@@ -68,9 +68,9 @@ final class CreateRecipeCommandHandlerTest extends TestCase
     public function testItCreatesARecipeWithOrderedSteps(): void
     {
         ($this->handler)(new CreateRecipeCommand(
+            recipeId: 'recipe-1',
             name: 'Lentejas con chorizo',
             emoji: '🍲',
-            imageUrl: null,
             category: 'Comida',
             servings: 4,
             ingredients: [],
@@ -94,9 +94,9 @@ final class CreateRecipeCommandHandlerTest extends TestCase
     public function testItCreatesARecipeWithoutStepsBecauseStepsAreOptional(): void
     {
         ($this->handler)(new CreateRecipeCommand(
+            recipeId: 'recipe-1',
             name: 'Tortilla francesa',
             emoji: '🍳',
-            imageUrl: null,
             category: 'Cena',
             servings: 1,
             ingredients: [],
@@ -114,9 +114,9 @@ final class CreateRecipeCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateRecipeException::class);
 
         ($this->handler)(new CreateRecipeCommand(
+            recipeId: 'recipe-1',
             name: 'Porridge de avena',
             emoji: '🥣',
-            imageUrl: null,
             category: 'Desayuno',
             servings: 1,
             ingredients: [],
@@ -130,9 +130,9 @@ final class CreateRecipeCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateRecipeException::class);
 
         ($this->handler)(new CreateRecipeCommand(
+            recipeId: 'recipe-1',
             name: 'Porridge de avena',
             emoji: '🥣',
-            imageUrl: null,
             category: 'Desayuno',
             servings: 0,
             ingredients: [],

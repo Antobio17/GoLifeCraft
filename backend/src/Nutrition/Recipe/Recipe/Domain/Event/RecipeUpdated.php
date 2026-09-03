@@ -15,7 +15,7 @@ final readonly class RecipeUpdated extends DomainEvent
         \DateTime $occurredOn,
         public string $name,
         public string $emoji,
-        public ?string $imageUrl,
+        public ?string $image,
         public string $category,
         public int $servings,
         public array $ingredients,

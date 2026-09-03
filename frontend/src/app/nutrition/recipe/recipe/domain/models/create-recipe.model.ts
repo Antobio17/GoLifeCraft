@@ -13,9 +13,9 @@ export interface RecipeStepRequest {
 }
 
 export interface CreateRecipeRequest {
+  id: string;
   name: string;
   emoji: string;
-  imageUrl: string | null;
   category: string;
   servings: number;
   ingredients: RecipeIngredientRequest[];

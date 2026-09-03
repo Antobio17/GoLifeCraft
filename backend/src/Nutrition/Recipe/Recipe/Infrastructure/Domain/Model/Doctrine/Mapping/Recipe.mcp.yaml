@@ -18,11 +18,12 @@ fields:
       Always set exactly one emoji when creating or updating a recipe; do not leave it empty.
       Guidance by category: breakfast 🥣🍳🥐🧇; lunch/dinner 🍲🥘🍝🍚🥗🍔🌮; snack 🍎🥜🧀🍪;
       sauce/base 🥫🧂🫙; dessert 🍰🍮🍫🍩; drink 🥤🧃☕🍵. If nothing fits, use 🍽️.
-  imageUrl:
+  image:
     writable: false
     description: >-
-      Public path of the recipe photo, when it has one. It takes precedence over the
-      emoji in the UI. Uploaded from the app.
+      File name of the recipe photo, when it has one. It takes precedence over the emoji
+      in the UI and is only readable through the recipe image endpoint, never as a public
+      file. Uploaded from the app.
   category:
     writable: true
     required: true

@@ -34,7 +34,7 @@ final readonly class CreateArticleCommandHandler
         );
         $this->articleRepository->saveNutritionFacts(nutritionFacts: $nutritionFacts);
 
-        $articleId = $this->articleRepository->nextId();
+        $articleId = $command->articleId;
 
         $article = Article::create(
             id: $articleId,
@@ -46,7 +46,7 @@ final readonly class CreateArticleCommandHandler
             price: $command->price,
             brand: $command->brand,
             emoji: $command->emoji,
-            imageUrl: $command->imageUrl,
+            image: null,
             categoryId: $command->categoryId,
             supermarketId: $command->supermarketId,
             aisleId: $command->aisleId,

@@ -38,7 +38,7 @@ final readonly class UpdateRecipeCommandHandler
         $recipe->update(
             name: $command->name,
             emoji: $command->emoji,
-            imageUrl: $command->imageUrl,
+            image: $recipe->image,
             category: $command->category,
             servings: $command->servings,
             ingredients: $this->recipeIngredientAssembler->assemble(

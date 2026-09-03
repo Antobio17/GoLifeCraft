@@ -41,3 +41,13 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Recipe\Recipe\Application\Command\AssignRecipeImageCommandHandler:
+    class: Nutrition\Recipe\Recipe\Application\Command\AssignRecipeImageCommandHandler
+    arguments:
+      $recipeRepository: '@Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository'
+      $imageStorageService: '@Shared\Tool\Tool\Domain\Service\ImageStorageService'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
