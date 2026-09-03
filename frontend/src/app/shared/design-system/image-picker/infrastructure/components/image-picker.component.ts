@@ -5,12 +5,14 @@ import {
   Input,
   Output,
   ViewChild,
+  signal,
 } from "@angular/core";
-import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { ImageCropperComponent } from "@shared/design-system/image-cropper/infrastructure/components/image-cropper.component";
 
 @Component({
   selector: "ds-image-picker",
-  imports: [IconComponent],
+  imports: [IconComponent, ImageCropperComponent],
   template: `
     <div class="ds-image-picker">
       <button
@@ -21,11 +23,13 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         [attr.aria-label]="triggerLabel"
         (click)="openPicker()"
       >
-        @if (imageUrl) {
-          <img class="ds-image-picker__image" [src]="imageUrl" [alt]="alt" />
-        } @else {
-          <ds-icon name="camera" [size]="22" [stroke]="1.8" />
-        }
+        <span class="ds-image-picker__frame">
+          @if (imageUrl) {
+            <img class="ds-image-picker__image" [src]="imageUrl" [alt]="alt" />
+          } @else {
+            <ds-icon name="camera" [size]="22" [stroke]="1.8" />
+          }
+        </span>
         <span class="ds-image-picker__badge" aria-hidden="true">
           <ds-icon name="pencil" [size]="12" [stroke]="2.6" />
         </span>
@@ -51,6 +55,19 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         (change)="onFileSelected($event)"
       />
     </div>
+
+    <ds-image-cropper
+      [open]="!!pendingFile()"
+      [file]="pendingFile()"
+      [title]="cropTitle"
+      [hint]="cropHint"
+      [closeLabel]="cropCloseLabel"
+      [cancelLabel]="cropCancelLabel"
+      [confirmLabel]="cropConfirmLabel"
+      [zoomLabel]="cropZoomLabel"
+      (cropped)="onCropped($event)"
+      (cancelled)="onCropCancelled()"
+    />
   `,
   styles: [
     `
@@ -68,15 +85,21 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         background: var(--ds-surface-inset);
         border: 1px dashed var(--ds-border-strong);
         color: var(--ds-text-muted);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
         padding: 0;
-        overflow: hidden;
       }
       .ds-image-picker__trigger.is-filled {
         border-style: solid;
         border-color: var(--ds-border);
+      }
+      .ds-image-picker__frame {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: calc(var(--ds-radius-xl) - 1px);
+        overflow: hidden;
       }
       .ds-image-picker__trigger:disabled {
         opacity: 0.5;
@@ -116,6 +139,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         border-radius: var(--ds-radius-pill);
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
+        z-index: 1;
       }
       .ds-image-picker__remove:disabled {
         opacity: 0.5;
@@ -133,11 +157,19 @@ export class ImagePickerComponent {
   @Input() alt = "";
   @Input() triggerLabel = "Subir una imagen";
   @Input() removeLabel = "Quitar la imagen";
+  @Input() cropTitle = "Recorta la imagen";
+  @Input() cropHint = "Arrastra y haz zoom. Se guardará cuadrada.";
+  @Input() cropCloseLabel = "Cerrar";
+  @Input() cropCancelLabel = "Cancelar";
+  @Input() cropConfirmLabel = "Usar recorte";
+  @Input() cropZoomLabel = "Zoom";
 
   @Output() picked = new EventEmitter<File>();
   @Output() cleared = new EventEmitter<void>();
 
   @ViewChild("fileInput") private fileInput?: ElementRef<HTMLInputElement>;
+
+  readonly pendingFile = signal<File | null>(null);
 
   openPicker(): void {
     if (this.disabled) return;
@@ -153,6 +185,15 @@ export class ImagePickerComponent {
 
     if (undefined === file) return;
 
+    this.pendingFile.set(file);
+  }
+
+  onCropped(file: File): void {
+    this.pendingFile.set(null);
     this.picked.emit(file);
+  }
+
+  onCropCancelled(): void {
+    this.pendingFile.set(null);
   }
 }

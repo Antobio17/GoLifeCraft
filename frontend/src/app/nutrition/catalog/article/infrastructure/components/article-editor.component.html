@@ -47,6 +47,14 @@
                   [alt]="articleName()"
                   [triggerLabel]="'articleEditor.field.imageTrigger' | t"
                   [removeLabel]="'articleEditor.field.imageRemove' | t"
+                  [cropTitle]="'articleEditor.field.imageCropTitle' | t"
+                  [cropHint]="'articleEditor.field.imageCropHint' | t"
+                  [cropCloseLabel]="'articleEditor.field.imageCropClose' | t"
+                  [cropCancelLabel]="'articleEditor.field.imageCropCancel' | t"
+                  [cropConfirmLabel]="
+                    'articleEditor.field.imageCropConfirm' | t
+                  "
+                  [cropZoomLabel]="'articleEditor.field.imageCropZoom' | t"
                   (picked)="onImagePicked($event)"
                   (cleared)="onImageCleared()"
                 />

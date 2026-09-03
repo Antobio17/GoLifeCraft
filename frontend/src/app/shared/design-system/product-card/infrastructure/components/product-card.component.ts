@@ -4,6 +4,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
+import { ImageFit } from "../../domain/models/image-fit.model";
 
 @Component({
   selector: "ds-product-card",
@@ -14,6 +15,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         @if (imageUrl && !imageFailed) {
           <img
             class="ds-pcard__image"
+            [style.object-fit]="imageFit"
             [src]="imageUrl"
             [alt]="name"
             loading="lazy"
@@ -227,7 +229,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       .ds-pcard__image {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
         display: block;
       }
       .ds-pcard__body {
@@ -282,6 +284,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
 export class ProductCardComponent {
   @Input() emoji = "";
   @Input() name = "";
+  @Input() imageFit: ImageFit = "cover";
 
   @Input()
   set imageUrl(value: string | null) {
