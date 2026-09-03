@@ -10,6 +10,8 @@ const HALO_MIN_CHANNEL = 232;
 const HALO_MAX_CHROMA = 14;
 const HALO_DEPTH = 2;
 const MIN_BACKGROUND_RATIO = 0.06;
+const SOLID_RUN = 2;
+const CLOSE_RATIO = 0.016;
 
 @Injectable({ providedIn: "root" })
 export class BackgroundRemoverService {
@@ -37,6 +39,8 @@ export class BackgroundRemoverService {
 
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const mask = this.markBackground(imageData);
+    this.restoreEnclosed(mask, canvas.width, canvas.height);
+    this.closeGaps(mask, canvas.width, canvas.height);
 
     if (this.coverage(mask) < MIN_BACKGROUND_RATIO) {
       return blob;
@@ -229,6 +233,157 @@ export class BackgroundRemoverService {
     const max = Math.max(red, green, blue);
 
     return min >= minChannel && max - min <= maxChroma;
+  }
+
+  private restoreEnclosed(
+    mask: Uint8Array,
+    width: number,
+    height: number,
+  ): void {
+    const rowStart = new Int32Array(height);
+    const rowEnd = new Int32Array(height);
+    const columnStart = new Int32Array(width);
+    const columnEnd = new Int32Array(width);
+
+    for (let y = 0; y < height; y++) {
+      rowStart[y] = this.solidStart(mask, y * width, 1, width);
+      rowEnd[y] = this.solidEnd(mask, y * width, 1, width);
+    }
+
+    for (let x = 0; x < width; x++) {
+      columnStart[x] = this.solidStart(mask, x, width, height);
+      columnEnd[x] = this.solidEnd(mask, x, width, height);
+    }
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = y * width + x;
+
+        if (0 === mask[index]) {
+          continue;
+        }
+
+        if (x <= rowStart[y] || x >= rowEnd[y]) {
+          continue;
+        }
+
+        if (y <= columnStart[x] || y >= columnEnd[x]) {
+          continue;
+        }
+
+        mask[index] = 0;
+      }
+    }
+  }
+
+  private solidStart(
+    mask: Uint8Array,
+    offset: number,
+    step: number,
+    count: number,
+  ): number {
+    let run = 0;
+
+    for (let position = 0; position < count; position++) {
+      run = 0 === mask[offset + position * step] ? run + 1 : 0;
+
+      if (run >= SOLID_RUN) {
+        return position - run + 1;
+      }
+    }
+
+    return count;
+  }
+
+  private solidEnd(
+    mask: Uint8Array,
+    offset: number,
+    step: number,
+    count: number,
+  ): number {
+    let run = 0;
+
+    for (let position = count - 1; position >= 0; position--) {
+      run = 0 === mask[offset + position * step] ? run + 1 : 0;
+
+      if (run >= SOLID_RUN) {
+        return position + run - 1;
+      }
+    }
+
+    return -1;
+  }
+
+  private closeGaps(mask: Uint8Array, width: number, height: number): void {
+    const radius = Math.round(Math.max(width, height) * CLOSE_RATIO);
+
+    if (radius < 1) {
+      return;
+    }
+
+    const solid = new Uint8Array(mask.length);
+
+    for (let index = 0; index < mask.length; index++) {
+      solid[index] = 0 === mask[index] ? 1 : 0;
+    }
+
+    const grown = this.spread(solid, width, height, radius, true);
+    const shrunk = this.spread(grown, width, height, radius, false);
+
+    for (let index = 0; index < mask.length; index++) {
+      if (0 === mask[index] || 0 === shrunk[index]) {
+        continue;
+      }
+
+      mask[index] = 0;
+    }
+  }
+
+  private spread(
+    source: Uint8Array,
+    width: number,
+    height: number,
+    radius: number,
+    grow: boolean,
+  ): Uint8Array {
+    const horizontal = new Uint8Array(source.length);
+    const result = new Uint8Array(source.length);
+
+    for (let y = 0; y < height; y++) {
+      this.spreadLine(source, horizontal, y * width, 1, width, radius, grow);
+    }
+
+    for (let x = 0; x < width; x++) {
+      this.spreadLine(horizontal, result, x, width, height, radius, grow);
+    }
+
+    return result;
+  }
+
+  private spreadLine(
+    source: Uint8Array,
+    target: Uint8Array,
+    offset: number,
+    step: number,
+    count: number,
+    radius: number,
+    grow: boolean,
+  ): void {
+    const prefix = new Int32Array(count + 1);
+
+    for (let position = 0; position < count; position++) {
+      prefix[position + 1] =
+        prefix[position] + source[offset + position * step];
+    }
+
+    for (let position = 0; position < count; position++) {
+      const from = Math.max(0, position - radius);
+      const to = Math.min(count - 1, position + radius);
+      const total = prefix[to + 1] - prefix[from];
+      const covered = grow ? total > 0 : total === to - from + 1;
+
+      target[offset + position * step] = covered ? 1 : 0;
+    }
   }
 
   private coverage(mask: Uint8Array): number {

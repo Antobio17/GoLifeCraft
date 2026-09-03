@@ -47,6 +47,20 @@ describe("BackgroundRemoverService", () => {
     return toBlob(canvas);
   }
 
+  function buildProductWithLeakingHole(): Promise<Blob> {
+    const canvas = buildCanvas();
+    const context = canvas.getContext("2d")!;
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, 200, 200);
+    context.fillStyle = "#2b7a3d";
+    context.fillRect(40, 40, 120, 120);
+    context.fillStyle = "#ffffff";
+    context.fillRect(70, 70, 60, 60);
+    context.fillRect(0, 90, 100, 20);
+
+    return toBlob(canvas);
+  }
+
   function buildPhotoWithoutWhite(): Promise<Blob> {
     const canvas = buildCanvas();
     const context = canvas.getContext("2d")!;
@@ -124,6 +138,17 @@ describe("BackgroundRemoverService", () => {
     expect(await alphaAt(result, 100, 100)).toBe(255);
   });
 
+  it("devuelve el blanco que el fondo alcanza por un canal estrecho", async () => {
+    const source = await buildProductWithLeakingHole();
+
+    const result = await service.removeWhiteBackground(source);
+
+    expect(await alphaAt(result, 4, 4)).toBe(0);
+    expect(await alphaAt(result, 20, 100)).toBe(0);
+    expect(await alphaAt(result, 80, 80)).toBe(255);
+    expect(await alphaAt(result, 120, 120)).toBe(255);
+  });
+
   it("devuelve la imagen original cuando no hay fondo blanco", async () => {
     const source = await buildPhotoWithoutWhite();
 
@@ -170,8 +195,22 @@ describe("BackgroundRemoverService", () => {
     expect(await alphaAtRatio(result, 0.9, 0.87)).toBe(255);
   });
 
+  it("conserva el interior de una bolsa transparente sobre fondo blanco", async () => {
+    const source = await loadPhoto("saladitos");
+
+    const result = await service.removeWhiteBackground(source);
+
+    expect(await alphaAtRatio(result, 0.02, 0.02)).toBe(0);
+    expect(await alphaAtRatio(result, 0.98, 0.5)).toBe(0);
+    expect(await alphaAtRatio(result, 0.5, 0.99)).toBe(0);
+    expect(await alphaAtRatio(result, 0.3, 0.24)).toBe(255);
+    expect(await alphaAtRatio(result, 0.2, 0.33)).toBe(255);
+    expect(await alphaAtRatio(result, 0.5, 0.14)).toBe(255);
+    expect(await alphaAtRatio(result, 0.5, 0.6)).toBe(255);
+  });
+
   it("recorta una porcion razonable de cada foto real", async () => {
-    for (const name of ["burger-meat", "brocoli", "soja"]) {
+    for (const name of ["burger-meat", "brocoli", "soja", "saladitos"]) {
       const result = await service.removeWhiteBackground(await loadPhoto(name));
       const ratio = await clearRatio(result);
 
