@@ -1,6 +1,7 @@
 import { Signal, WritableSignal, signal } from "@angular/core";
 import { Observable, from, switchMap, tap } from "rxjs";
 import { ImageResizerService } from "@shared/design-system/photo-capture/application/services/image-resizer.service";
+import { BackgroundRemoverService } from "@shared/image-background/application/services/background-remover.service";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { AggregateImagePort } from "@shared/aggregate-image/domain/ports/aggregate-image.port";
 
@@ -15,6 +16,7 @@ export class AggregateImageService {
   constructor(
     private aggregateImagePort: AggregateImagePort,
     private imageResizerService: ImageResizerService,
+    private backgroundRemoverService: BackgroundRemoverService,
   ) {}
 
   objectUrl(
@@ -38,7 +40,7 @@ export class AggregateImageService {
     this.evictOldest();
 
     this.aggregateImagePort.download(kind, id, image).subscribe({
-      next: (blob) => objectUrl.set(URL.createObjectURL(blob)),
+      next: (blob) => this.publish(kind, key, objectUrl, blob),
       error: () => this.objectUrls.delete(key),
     });
 
@@ -56,6 +58,36 @@ export class AggregateImageService {
     return this.aggregateImagePort
       .remove(kind, id)
       .pipe(tap(() => this.forget(kind, id)));
+  }
+
+  private publish(
+    kind: AggregateImageKind,
+    key: string,
+    objectUrl: WritableSignal<string | null>,
+    blob: Blob,
+  ): void {
+    if (AggregateImageKind.Article !== kind) {
+      objectUrl.set(URL.createObjectURL(blob));
+
+      return;
+    }
+
+    this.backgroundRemoverService
+      .removeWhiteBackground(blob)
+      .then((cutOut) => this.publishCutOut(key, objectUrl, cutOut))
+      .catch(() => this.publishCutOut(key, objectUrl, blob));
+  }
+
+  private publishCutOut(
+    key: string,
+    objectUrl: WritableSignal<string | null>,
+    blob: Blob,
+  ): void {
+    if (this.objectUrls.get(key) !== objectUrl) {
+      return;
+    }
+
+    objectUrl.set(URL.createObjectURL(blob));
   }
 
   private forget(kind: AggregateImageKind, id: string): void {
