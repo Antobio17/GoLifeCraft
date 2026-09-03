@@ -86,6 +86,7 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               { "glob": "**/*", "input": "src/assets", "output": "assets" },
+              { "glob": "**/*", "input": "src/test-assets", "output": "test-assets" },
               { "glob": "**/*", "input": "node_modules/pdfjs-dist/standard_fonts", "output": "standard_fonts" },
               { "glob": "**/*", "input": "node_modules/pdfjs-dist/cmaps", "output": "cmaps" },
               { "glob": "pdf.worker.min.mjs", "input": "node_modules/pdfjs-dist/build", "output": "" }
