@@ -142,6 +142,8 @@ describe("BackgroundRemoverService", () => {
     expect(await alphaAtRatio(result, 0.5, 0.45)).toBe(255);
     expect(await alphaAtRatio(result, 0.25, 0.6)).toBe(255);
     expect(await alphaAtRatio(result, 0.08, 0.5)).toBe(255);
+    expect(await alphaAtRatio(result, 0.78, 0.14)).toBe(255);
+    expect(await alphaAtRatio(result, 0.7, 0.2)).toBe(255);
   });
 
   it("conserva el blanco del envase de una bolsa sobre fondo blanco", async () => {

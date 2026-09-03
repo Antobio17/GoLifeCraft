@@ -4,7 +4,7 @@ import { DecodedImage } from "@shared/image-decoder/domain/models/decoded-image.
 
 const MAX_SIDE = 640;
 const OUTPUT_TYPE = "image/png";
-const CORE_MIN_CHANNEL = 248;
+const CORE_MIN_CHANNEL = 251;
 const CORE_MAX_CHROMA = 6;
 const HALO_MIN_CHANNEL = 232;
 const HALO_MAX_CHROMA = 14;
