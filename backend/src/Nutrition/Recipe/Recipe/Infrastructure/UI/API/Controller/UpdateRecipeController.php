@@ -33,7 +33,6 @@ final class UpdateRecipeController
                 recipeId: $request->attributes->get(key: 'recipeId'),
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 emoji: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'emoji'),
-                imageUrl: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'imageUrl'),
                 category: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'category'),
                 servings: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'servings'),
                 ingredients: RecipeIngredientData::listFromArray(

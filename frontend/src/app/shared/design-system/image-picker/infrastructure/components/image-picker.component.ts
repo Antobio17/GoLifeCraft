@@ -7,24 +7,21 @@ import {
   ViewChild,
 } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
-import { SpinnerComponent } from "../../../spinner/infrastructure/components/spinner.component";
 
 @Component({
   selector: "ds-image-picker",
-  imports: [IconComponent, SpinnerComponent],
+  imports: [IconComponent],
   template: `
     <div class="ds-image-picker">
       <button
         type="button"
         class="ds-image-picker__trigger"
         [class.is-filled]="!!imageUrl"
-        [disabled]="disabled || uploading"
+        [disabled]="disabled"
         [attr.aria-label]="triggerLabel"
         (click)="openPicker()"
       >
-        @if (uploading) {
-          <ds-spinner size="1.375rem" />
-        } @else if (imageUrl) {
+        @if (imageUrl) {
           <img class="ds-image-picker__image" [src]="imageUrl" [alt]="alt" />
         } @else {
           <ds-icon name="camera" [size]="22" [stroke]="1.8" />
@@ -34,7 +31,7 @@ import { SpinnerComponent } from "../../../spinner/infrastructure/components/spi
         </span>
       </button>
 
-      @if (imageUrl && !uploading) {
+      @if (imageUrl) {
         <button
           type="button"
           class="ds-image-picker__remove"
@@ -132,7 +129,6 @@ import { SpinnerComponent } from "../../../spinner/infrastructure/components/spi
 })
 export class ImagePickerComponent {
   @Input() imageUrl: string | null = null;
-  @Input() uploading = false;
   @Input() disabled = false;
   @Input() alt = "";
   @Input() triggerLabel = "Subir una imagen";
@@ -144,7 +140,7 @@ export class ImagePickerComponent {
   @ViewChild("fileInput") private fileInput?: ElementRef<HTMLInputElement>;
 
   openPicker(): void {
-    if (this.disabled || this.uploading) return;
+    if (this.disabled) return;
 
     this.fileInput?.nativeElement.click();
   }

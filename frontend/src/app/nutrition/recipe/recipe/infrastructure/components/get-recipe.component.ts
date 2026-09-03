@@ -47,6 +47,8 @@ import {
 import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 
 @Component({
   selector: "app-get-recipe",
@@ -91,6 +93,7 @@ export class GetRecipeComponent {
   protected stockView = inject(RecipeStockViewService);
   protected autosave = inject(AutosaveService);
   protected view = inject(RecipeViewService);
+  private aggregateImageService = inject(AggregateImageService);
   private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/recipe/recipe";
@@ -121,6 +124,18 @@ export class GetRecipeComponent {
   readonly id = input.required<string>();
 
   attributes = computed(() => this.recipe()?.attributes ?? null);
+
+  imageUrl = computed(() => {
+    const recipe = this.recipe();
+
+    if (null === recipe) return null;
+
+    return this.aggregateImageService.objectUrl(
+      AggregateImageKind.Recipe,
+      recipe.id,
+      recipe.attributes.image ?? null,
+    )();
+  });
 
   constructor() {
     this.translationService.loadModuleTranslations(this.MODULE_PATH);

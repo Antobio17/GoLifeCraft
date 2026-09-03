@@ -21,7 +21,7 @@ final class GetArticlesResult extends QueryAggregateResult
         public readonly ?float $price,
         public readonly ?string $brand,
         public readonly ?string $emoji,
-        public readonly ?string $imageUrl,
+        public readonly ?string $image,
         public readonly ?string $supermarketId,
         public readonly ?string $aisleId,
         public readonly ?string $categoryId,

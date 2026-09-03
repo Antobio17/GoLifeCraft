@@ -53,13 +53,17 @@ export class RecipeViewService {
     return `${count} ${count === 1 ? "ingrediente" : "ingredientes"}`;
   }
 
-  toCard(recipe: RecipeListItem, labels: MacroShortLabels): RecipeCardView {
+  toCard(
+    recipe: RecipeListItem,
+    labels: MacroShortLabels,
+    imageUrl: string | null,
+  ): RecipeCardView {
     const a = recipe.attributes;
 
     return {
       id: recipe.id,
       emoji: a.emoji || FALLBACK_EMOJI,
-      imageUrl: a.imageUrl || null,
+      imageUrl,
       name: a.name,
       category: a.category,
       meta: `${a.category} · ${this.servingsLabel(a.servings)} · ${this.ingredientsLabel(a.ingredientCount)}`,

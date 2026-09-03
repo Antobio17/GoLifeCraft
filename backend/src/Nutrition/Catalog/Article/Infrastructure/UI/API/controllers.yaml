@@ -54,3 +54,18 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\AssignArticleImageController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\AssignArticleImageController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleImageController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\GetArticleImageController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $imageStorageService: '@Shared\Tool\Tool\Domain\Service\ImageStorageService'
+    tags:
+      - { name: controller.service_arguments }

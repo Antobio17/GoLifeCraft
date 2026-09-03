@@ -21,7 +21,7 @@ export interface RecipeIngredientView {
 export interface RecipeListAttributes {
   name: string;
   emoji: string;
-  imageUrl: string | null;
+  image: string | null;
   category: string;
   servings: number;
   ingredientCount: number;
@@ -35,7 +35,7 @@ export interface RecipeListAttributes {
 export interface RecipeDetailAttributes {
   name: string;
   emoji: string;
-  imageUrl: string | null;
+  image: string | null;
   category: string;
   servings: number;
   ingredients: RecipeIngredientView[];

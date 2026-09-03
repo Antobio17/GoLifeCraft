@@ -1,4 +1,4 @@
-export enum ImageFolder {
+export enum AggregateImageKind {
   Article = "article",
   Recipe = "recipe",
 }

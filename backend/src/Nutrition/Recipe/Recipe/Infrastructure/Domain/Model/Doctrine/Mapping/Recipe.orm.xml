@@ -5,7 +5,7 @@
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255"/>
     <field name="emoji" type="string" column="emoji" length="16"/>
-    <field name="imageUrl" type="string" column="image_url" length="512" nullable="true"/>
+    <field name="image" type="string" column="image" length="255" nullable="true"/>
     <field name="category" type="string" column="category" length="60"/>
     <field name="servings" type="integer" column="servings"/>
     <field name="createdAt" type="datetime" column="created_at"/>

@@ -48,7 +48,6 @@ export interface ArticlePurchaseView {
 
 export interface ArticleDetailView {
   emoji: string;
-  imageUrl: string | null;
   name: string;
   price: string | null;
   brand: string | null;
@@ -82,10 +81,6 @@ export class ArticleViewService {
 
   emoji(article: Article): string {
     return article.attributes.emoji || FALLBACK_EMOJI;
-  }
-
-  imageUrl(article: Article): string | null {
-    return article.attributes.imageUrl || null;
   }
 
   brand(article: Article): string | null {
@@ -155,13 +150,13 @@ export class ArticleViewService {
     return this.number(value);
   }
 
-  toCard(article: Article): ArticleCardView {
+  toCard(article: Article, imageUrl: string | null): ArticleCardView {
     const nutrition = this.nutrition(article);
 
     return {
       id: article.id,
       emoji: this.emoji(article),
-      imageUrl: this.imageUrl(article),
+      imageUrl,
       name: article.attributes.name,
       price: this.price(article),
       brand: this.brand(article),
@@ -180,7 +175,6 @@ export class ArticleViewService {
 
     return {
       emoji: this.emoji(article),
-      imageUrl: this.imageUrl(article),
       name: article.attributes.name,
       price: this.price(article),
       brand: this.brand(article),

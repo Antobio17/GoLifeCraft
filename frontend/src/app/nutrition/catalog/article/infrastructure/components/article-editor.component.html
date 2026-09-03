@@ -43,8 +43,7 @@
                   [emptyLabel]="'articleEditor.field.emojiEmpty' | t"
                 />
                 <ds-image-picker
-                  [imageUrl]="imageUrl()"
-                  [uploading]="uploadingImage()"
+                  [imageUrl]="imagePreview()"
                   [alt]="articleName()"
                   [triggerLabel]="'articleEditor.field.imageTrigger' | t"
                   [removeLabel]="'articleEditor.field.imageRemove' | t"

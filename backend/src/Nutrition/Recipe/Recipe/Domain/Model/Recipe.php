@@ -5,6 +5,7 @@ namespace Nutrition\Recipe\Recipe\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Recipe\Recipe\Domain\Event\RecipeCreated;
 use Nutrition\Recipe\Recipe\Domain\Event\RecipeDeleted;
+use Nutrition\Recipe\Recipe\Domain\Event\RecipeImageAssigned;
 use Nutrition\Recipe\Recipe\Domain\Event\RecipeUpdated;
 use Nutrition\Recipe\Recipe\Domain\Exception\CreateRecipeException;
 use Nutrition\Recipe\Recipe\Domain\Exception\UpdateRecipeException;
@@ -14,7 +15,7 @@ class Recipe extends GenericAggregate
 {
     public string $name;
     public string $emoji;
-    public ?string $imageUrl = null;
+    public ?string $image = null;
     public string $category;
     public int $servings;
 
@@ -32,7 +33,7 @@ class Recipe extends GenericAggregate
         string $id,
         string $name,
         string $emoji,
-        ?string $imageUrl,
+        ?string $image,
         string $category,
         int $servings,
         array $ingredients,
@@ -50,7 +51,7 @@ class Recipe extends GenericAggregate
         $recipe->id = $id;
         $recipe->name = $name;
         $recipe->emoji = $emoji;
-        $recipe->imageUrl = $imageUrl;
+        $recipe->image = $image;
         $recipe->category = $category;
         $recipe->servings = $servings;
         $recipe->ingredients = $ingredients;
@@ -62,7 +63,7 @@ class Recipe extends GenericAggregate
             occurredOn: $now,
             name: $name,
             emoji: $emoji,
-            imageUrl: $imageUrl,
+            image: $image,
             category: $category,
             servings: $servings,
             ingredients: $recipe->recordedIngredients(),
@@ -83,7 +84,7 @@ class Recipe extends GenericAggregate
     public function update(
         string $name,
         string $emoji,
-        ?string $imageUrl,
+        ?string $image,
         string $category,
         int $servings,
         array $ingredients,
@@ -99,7 +100,7 @@ class Recipe extends GenericAggregate
 
         $this->name = $name;
         $this->emoji = $emoji;
-        $this->imageUrl = $imageUrl;
+        $this->image = $image;
         $this->category = $category;
         $this->servings = $servings;
         $this->ingredients = $ingredients;
@@ -111,7 +112,7 @@ class Recipe extends GenericAggregate
             occurredOn: $now,
             name: $name,
             emoji: $emoji,
-            imageUrl: $imageUrl,
+            image: $image,
             category: $category,
             servings: $servings,
             ingredients: $this->recordedIngredients(),
@@ -119,6 +120,27 @@ class Recipe extends GenericAggregate
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function assignImage(
+        ?string $image,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->image = $image;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new RecipeImageAssigned(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+            emoji: $this->emoji,
+            image: $image,
+            updatedAt: $now,
             updatedByUserId: $updatedByUserId,
         ));
     }
@@ -135,7 +157,7 @@ class Recipe extends GenericAggregate
             occurredOn: $now,
             name: $this->name,
             emoji: $this->emoji,
-            imageUrl: $this->imageUrl,
+            image: $this->image,
             category: $this->category,
             servings: $this->servings,
             ingredients: $this->recordedIngredients(),

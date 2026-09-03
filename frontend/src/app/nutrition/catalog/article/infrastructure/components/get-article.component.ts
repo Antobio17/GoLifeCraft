@@ -14,10 +14,13 @@ import { DeleteArticleService } from "@nutrition/catalog/article/application/ser
 import { UpdateArticleStockService } from "@nutrition/pantry/stock/application/services/update-article-stock.service";
 import { StockViewService } from "@nutrition/pantry/stock/application/services/stock-view.service";
 import { ArticleStockView } from "@nutrition/pantry/stock/domain/models/article-stock-view.model";
+import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { StockUnitMode } from "@nutrition/pantry/stock/domain/models/stock-unit-mode.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
+import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -85,10 +88,24 @@ export class GetArticleComponent {
   private updateArticleStockService = inject(UpdateArticleStockService);
   private stockView = inject(StockViewService);
   protected view = inject(ArticleViewService);
+  private aggregateImageService = inject(AggregateImageService);
 
   loading = signal(true);
   notFound = signal(false);
+  article = signal<Article | null>(null);
   detail = signal<ArticleDetailView | null>(null);
+
+  imageUrl = computed(() => {
+    const article = this.article();
+
+    if (null === article) return null;
+
+    return this.aggregateImageService.objectUrl(
+      AggregateImageKind.Article,
+      article.id,
+      article.attributes.image ?? null,
+    )();
+  });
   showDeleteModal = signal(false);
   deleting = signal(false);
   mode = signal<NutritionMode>("per100");
@@ -159,6 +176,7 @@ export class GetArticleComponent {
       )
       .subscribe((response) => {
         const detail = response ? this.view.toDetail(response.data) : null;
+        this.article.set(response?.data ?? null);
         this.detail.set(detail);
         this.stock.set(
           null === detail

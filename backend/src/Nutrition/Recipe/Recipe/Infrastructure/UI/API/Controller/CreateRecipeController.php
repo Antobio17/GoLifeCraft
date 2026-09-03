@@ -30,9 +30,9 @@ final class CreateRecipeController
     {
         try {
             $this->handle(message: new CreateRecipeCommand(
+                recipeId: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'id'),
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 emoji: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'emoji'),
-                imageUrl: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'imageUrl'),
                 category: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'category'),
                 servings: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'servings'),
                 ingredients: RecipeIngredientData::listFromArray(

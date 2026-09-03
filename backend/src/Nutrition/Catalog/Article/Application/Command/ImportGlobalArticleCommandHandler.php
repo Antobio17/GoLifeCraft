@@ -21,7 +21,7 @@ use Shared\Tool\Tool\Domain\Service\RemoteImageFetcher;
 final readonly class ImportGlobalArticleCommandHandler
 {
     private const string DEFAULT_SUPERMARKET = 'Mercadona';
-    private const string IMAGE_FOLDER = 'article';
+    private const string IMAGE_AGGREGATE = 'article';
 
     public function __construct(
         private GlobalArticleRepository $globalArticleRepository,
@@ -76,7 +76,7 @@ final readonly class ImportGlobalArticleCommandHandler
             price: $globalArticle->price,
             brand: $globalArticle->brand,
             emoji: null,
-            imageUrl: $this->downloadImage(imageUrl: $globalArticle->imageUrl),
+            image: $this->downloadImage(articleId: $articleId, imageUrl: $globalArticle->imageUrl),
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
             aisleId: null,
@@ -116,7 +116,7 @@ final readonly class ImportGlobalArticleCommandHandler
             price: $globalArticle->price,
             brand: $globalArticle->brand,
             emoji: $article->emoji,
-            imageUrl: $article->imageUrl ?? $this->downloadImage(imageUrl: $globalArticle->imageUrl),
+            image: $article->image ?? $this->downloadImage(articleId: $article->id, imageUrl: $globalArticle->imageUrl),
             categoryId: $this->resolveCategoryId(globalArticle: $globalArticle, userId: $command->importedByUserId),
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
             aisleId: $article->aisleId,
@@ -139,7 +139,7 @@ final readonly class ImportGlobalArticleCommandHandler
         $this->domainEventCollectorService->register(aggregate: $article);
     }
 
-    private function downloadImage(?string $imageUrl): ?string
+    private function downloadImage(string $articleId, ?string $imageUrl): ?string
     {
         if (null === $imageUrl) {
             return null;
@@ -151,10 +151,10 @@ final readonly class ImportGlobalArticleCommandHandler
             return null;
         }
 
-        return $this->imageStorageService->storePublicImage(
-            folder: self::IMAGE_FOLDER,
+        return $this->imageStorageService->storeAggregateImage(
+            aggregate: self::IMAGE_AGGREGATE,
+            aggregateId: $articleId,
             imagePath: $fetchedImage->path,
-            extension: $fetchedImage->extension,
         );
     }
 

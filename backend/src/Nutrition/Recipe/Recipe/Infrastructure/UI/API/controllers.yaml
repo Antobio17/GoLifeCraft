@@ -33,3 +33,18 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\AssignRecipeImageController:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\AssignRecipeImageController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipeImageController:
+    class: Nutrition\Recipe\Recipe\Infrastructure\UI\API\Controller\GetRecipeImageController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $imageStorageService: '@Shared\Tool\Tool\Domain\Service\ImageStorageService'
+    tags:
+      - { name: controller.service_arguments }

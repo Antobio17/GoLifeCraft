@@ -16,7 +16,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { forkJoin } from "rxjs";
+import { Observable, forkJoin, of, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -38,8 +38,9 @@ import { NoteComponent } from "@shared/design-system/note/infrastructure/compone
 import { ArticleFormSkeletonComponent } from "./article-form-skeleton.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
-import { UploadImageService } from "@shared/image-upload/application/services/upload-image.service";
-import { ImageFolder } from "@shared/image-upload/domain/models/image-folder.enum";
+import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { uuidV4 } from "@shared/uuid/uuid";
 import { GetCategoriesService } from "@nutrition/catalog/category/application/services/get-categories.service";
 import { GetSupermarketsService } from "@nutrition/catalog/supermarket/application/services/get-supermarkets.service";
 import { AisleCatalogService } from "@nutrition/catalog/supermarket/application/services/aisle-catalog.service";
@@ -130,7 +131,7 @@ export class ArticleEditorComponent implements OnInit {
   private unitCatalogService = inject(UnitCatalogService);
   private articleDraftStore = inject(ArticleDraftStoreService);
   private floatingToastService = inject(FloatingToastService);
-  private uploadImageService = inject(UploadImageService);
+  private aggregateImageService = inject(AggregateImageService);
   private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/catalog/article";
@@ -195,10 +196,28 @@ export class ArticleEditorComponent implements OnInit {
   saving = signal(false);
   articleName = signal("");
   aisleSheetOpen = signal(false);
-  imageUrl = signal<string | null>(null);
-  uploadingImage = signal(false);
+  storedImage = signal<string | null>(null);
+  pickedImage = signal<File | null>(null);
+  pickedImagePreview = signal<string | null>(null);
+  imageCleared = signal(false);
 
   readonly id = input<string>("");
+
+  imagePreview = computed(() => {
+    const picked = this.pickedImagePreview();
+
+    if (null !== picked) {
+      return picked;
+    }
+
+    return this.aggregateImageService.objectUrl(
+      AggregateImageKind.Article,
+      this.articleId,
+      this.imageCleared() ? null : this.storedImage(),
+    )();
+  });
+
+  private readonly newArticleId = uuidV4();
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -292,7 +311,7 @@ export class ArticleEditorComponent implements OnInit {
       ? this.updateArticleService.updateArticle(this.id(), payload)
       : this.createArticleService.createArticle(payload);
 
-    request$.subscribe({
+    request$.pipe(switchMap(() => this.saveImage())).subscribe({
       next: () => {
         this.saving.set(false);
         this.router.navigate(["/catalog"]);
@@ -306,21 +325,52 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   onImagePicked(file: File): void {
-    this.uploadingImage.set(true);
-
-    this.uploadImageService.uploadImage(file, ImageFolder.Article).subscribe({
-      next: (url) => {
-        this.imageUrl.set(url);
-        this.uploadingImage.set(false);
-        this.form.markAsDirty();
-      },
-      error: () => this.uploadingImage.set(false),
-    });
+    this.revokePickedImagePreview();
+    this.pickedImage.set(file);
+    this.pickedImagePreview.set(URL.createObjectURL(file));
+    this.imageCleared.set(false);
+    this.form.markAsDirty();
   }
 
   onImageCleared(): void {
-    this.imageUrl.set(null);
+    this.revokePickedImagePreview();
+    this.pickedImage.set(null);
+    this.pickedImagePreview.set(null);
+    this.imageCleared.set(true);
     this.form.markAsDirty();
+  }
+
+  private get articleId(): string {
+    return this.isEdit ? this.id() : this.newArticleId;
+  }
+
+  private revokePickedImagePreview(): void {
+    const preview = this.pickedImagePreview();
+
+    if (null === preview) return;
+
+    URL.revokeObjectURL(preview);
+  }
+
+  private saveImage(): Observable<void> {
+    const picked = this.pickedImage();
+
+    if (null !== picked) {
+      return this.aggregateImageService.upload(
+        AggregateImageKind.Article,
+        this.articleId,
+        picked,
+      );
+    }
+
+    if (this.imageCleared() && null !== this.storedImage()) {
+      return this.aggregateImageService.remove(
+        AggregateImageKind.Article,
+        this.articleId,
+      );
+    }
+
+    return of(undefined);
   }
 
   openAisleSheet(): void {
@@ -427,7 +477,7 @@ export class ArticleEditorComponent implements OnInit {
 
   private patchForm(article: Article): void {
     this.articleName.set(article.attributes.name);
-    this.imageUrl.set(article.attributes.imageUrl ?? null);
+    this.storedImage.set(article.attributes.image ?? null);
     const nutrition = article.relationships?.nutritionFacts?.data.attributes;
     const baseUnit = article.attributes.baseUnit ?? DEFAULT_BASE_UNIT;
 
@@ -487,6 +537,7 @@ export class ArticleEditorComponent implements OnInit {
       );
 
     return {
+      id: this.articleId,
       name: (value.name ?? "").trim(),
       recipeUnit: units.recipeUnit,
       baseUnit: units.baseUnit,
@@ -497,7 +548,6 @@ export class ArticleEditorComponent implements OnInit {
       price: this.parseDecimal(value.price),
       brand: this.emptyToNull(value.brand),
       emoji: this.emptyToNull(value.emoji),
-      imageUrl: this.imageUrl(),
       categoryId: value.categoryId ?? null,
       supermarketId: value.supermarketId ?? null,
       aisleId: value.supermarketId ? (value.aisleId ?? null) : null,

@@ -7,6 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class RequestExtractor
 {
+    public const array IMAGE_EXTENSIONS_BY_MIME_TYPE = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        'image/gif' => 'gif',
+    ];
+
     private static function assertFieldRequired(array $data, string $fieldName, bool $required): void
     {
         if ($required && !isset($data[$fieldName])) {
@@ -343,6 +350,33 @@ final class RequestExtractor
         }
 
         return $tmpPath;
+    }
+
+    public static function getUploadedImagePath(
+        Request $request,
+        string $fieldName,
+        int $maxBytes,
+    ): string {
+        $image = self::getUploadedImages(
+            request: $request,
+            fieldName: $fieldName,
+            maxFiles: 1,
+            allowedMimeTypes: array_keys(self::IMAGE_EXTENSIONS_BY_MIME_TYPE),
+            maxBytes: $maxBytes,
+        )[0];
+
+        $tempPath = sprintf(
+            '%s/%s.%s',
+            sys_get_temp_dir(),
+            uniqid(prefix: 'upload_', more_entropy: true),
+            self::IMAGE_EXTENSIONS_BY_MIME_TYPE[$image->mimeType],
+        );
+
+        if (!copy(from: $image->tempPath, to: $tempPath)) {
+            throw new \RuntimeException('Failed to copy uploaded file to temp directory.');
+        }
+
+        return $tempPath;
     }
 
     public static function getUploadedFile(Request $request): FileUploadedResult

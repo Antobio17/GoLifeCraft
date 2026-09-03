@@ -41,6 +41,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
     public function testItCreatesAnArticleWithNutritionAndRelations(): void
     {
         ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
             name: 'Leche entera 1 L',
             recipeUnit: 'ml',
             baseUnit: 'ml',
@@ -49,7 +50,6 @@ final class CreateArticleCommandHandlerTest extends TestCase
             price: 1.15,
             brand: 'Hacendado',
             emoji: '🥛',
-            imageUrl: null,
             categoryId: 'category-1',
             supermarketId: 'supermarket-1',
             aisleId: null,
@@ -92,6 +92,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
     public function testItCreatesAnArticleWithEquivalences(): void
     {
         ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
             name: 'Huevos M',
             recipeUnit: 'unit',
             baseUnit: 'g',
@@ -100,7 +101,6 @@ final class CreateArticleCommandHandlerTest extends TestCase
             price: null,
             brand: null,
             emoji: '🥚',
-            imageUrl: null,
             categoryId: null,
             supermarketId: null,
             aisleId: null,
@@ -124,6 +124,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
     public function testItCreatesAnArticleWithoutRelations(): void
     {
         ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
             name: 'Producto suelto',
             recipeUnit: 'g',
             baseUnit: 'g',
@@ -132,7 +133,6 @@ final class CreateArticleCommandHandlerTest extends TestCase
             price: null,
             brand: null,
             emoji: null,
-            imageUrl: null,
             categoryId: null,
             supermarketId: null,
             aisleId: null,
@@ -154,6 +154,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateArticleException::class);
 
         ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
             name: 'Macarrones',
             recipeUnit: 'g',
             baseUnit: 'g',
@@ -162,7 +163,6 @@ final class CreateArticleCommandHandlerTest extends TestCase
             price: null,
             brand: null,
             emoji: null,
-            imageUrl: null,
             categoryId: null,
             supermarketId: null,
             aisleId: null,
@@ -179,6 +179,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateArticleException::class);
 
         ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
             name: 'Jamón cocido',
             recipeUnit: 'g',
             baseUnit: 'g',
@@ -187,7 +188,6 @@ final class CreateArticleCommandHandlerTest extends TestCase
             price: null,
             brand: null,
             emoji: null,
-            imageUrl: null,
             categoryId: null,
             supermarketId: null,
             aisleId: null,
@@ -204,6 +204,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateArticleException::class);
 
         ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
             name: 'Arroz redondo',
             recipeUnit: 'g',
             baseUnit: 'g',
@@ -212,7 +213,6 @@ final class CreateArticleCommandHandlerTest extends TestCase
             price: null,
             brand: null,
             emoji: null,
-            imageUrl: null,
             categoryId: null,
             supermarketId: null,
             aisleId: null,
@@ -227,6 +227,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateArticleException::class);
 
         ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
             name: 'Aceite de oliva',
             recipeUnit: 'g',
             baseUnit: 'l',
@@ -235,7 +236,6 @@ final class CreateArticleCommandHandlerTest extends TestCase
             price: null,
             brand: null,
             emoji: null,
-            imageUrl: null,
             categoryId: null,
             supermarketId: null,
             aisleId: null,
@@ -252,6 +252,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->expectException(exception: CreateArticleException::class);
 
         ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
             name: 'Leche entera 1 L',
             recipeUnit: 'g',
             baseUnit: 'g',
@@ -260,7 +261,6 @@ final class CreateArticleCommandHandlerTest extends TestCase
             price: null,
             brand: null,
             emoji: null,
-            imageUrl: null,
             categoryId: null,
             supermarketId: null,
             aisleId: null,

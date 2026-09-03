@@ -10,9 +10,15 @@ interface ImageStorageService
         string $imagePath,
     ): string;
 
-    public function storePublicImage(
-        string $folder,
-        string $imagePath,
-        string $extension,
-    ): string;
+    public function deleteAggregateImage(
+        string $aggregate,
+        string $aggregateId,
+        ?string $image,
+    ): void;
+
+    public function aggregateImagePath(
+        string $aggregate,
+        string $aggregateId,
+        string $image,
+    ): ?string;
 }

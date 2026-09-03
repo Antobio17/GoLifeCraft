@@ -76,8 +76,7 @@
                     [emptyLabel]="'recipeEditor.emojiEmpty' | t"
                   />
                   <ds-image-picker
-                    [imageUrl]="imageUrl()"
-                    [uploading]="uploadingImage()"
+                    [imageUrl]="imagePreview()"
                     [triggerLabel]="'recipeEditor.imageTrigger' | t"
                     [removeLabel]="'recipeEditor.imageRemove' | t"
                     (picked)="onImagePicked($event)"
