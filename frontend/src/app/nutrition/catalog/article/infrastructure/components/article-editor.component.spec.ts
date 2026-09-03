@@ -10,6 +10,7 @@ import { ARTICLE_ROUTES } from "../routes/article.routes";
 import { TranslationProvider } from "@shared/i18n/infrastructure/providers/translation.provider";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { AuthSessionProvider } from "@shared/auth/infrastructure/providers/auth-session.provider";
+import { AggregateImageProviders } from "@shared/aggregate-image/infrastructure/providers/aggregate-image.providers";
 import { ArticleEditorComponent } from "./article-editor.component";
 
 describe("ArticleEditorComponent", () => {
@@ -27,6 +28,7 @@ describe("ArticleEditorComponent", () => {
         ...TranslationProvider.getProviders(),
         FloatingToastService,
         ...AuthSessionProvider.getProviders(),
+        ...AggregateImageProviders.getProviders(),
       ],
     });
 
