@@ -24,7 +24,7 @@ final readonly class ChangeMyVisualPreferenceCommandHandler
         }
 
         $user->changeVisualPreference(
-            surface: $command->surface,
+            surfaces: $command->surfaces,
             mode: $command->mode,
             updatedByUserId: $command->userSessionId,
             dateTimeGenerator: $this->dateTimeGenerator,

@@ -29,7 +29,7 @@ final class ChangeMyVisualPreferenceController
         try {
             $this->handle(message: new ChangeMyVisualPreferenceCommand(
                 userSessionId: RequestExtractor::getUserSessionId(request: $request),
-                surface: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'surface'),
+                surfaces: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'surfaces'),
                 mode: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'mode'),
             ));
 
