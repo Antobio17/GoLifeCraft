@@ -26,6 +26,8 @@ import {
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { TextSearchService } from "@shared/search/application/services/text-search.service";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 
 @Component({
@@ -52,6 +54,7 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
   private getRecipesService = inject(GetRecipesService);
   protected view = inject(RecipeViewService);
   private aggregateImageService = inject(AggregateImageService);
+  private entityVisual = inject(EntityVisualService);
 
   protected readonly modulePath = "nutrition/recipe/recipe";
   protected readonly storageKey = "pageSize_recipes";
@@ -121,10 +124,11 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
   }
 
   private imageUrl(recipe: RecipeListItem): string | null {
-    return this.aggregateImageService.objectUrl(
+    return this.entityVisual.urlOf(
+      VisualSurface.Recipe,
       AggregateImageKind.Recipe,
       recipe.id,
       recipe.attributes.image ?? null,
-    )();
+    );
   }
 }

@@ -80,9 +80,11 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
                 'i.emoji_snapshot',
                 'i.code',
                 'i.label',
-                'i.customized'
+                'i.customized',
+                'r.image'
             )
             ->from(table: 'production_item', alias: 'i')
+            ->leftJoin(fromAlias: 'i', join: 'recipe', alias: 'r', condition: 'r.id = i.recipe_id')
             ->where('i.production_id = :productionId')
             ->setParameter(key: 'productionId', value: $productionId)
             ->orderBy('i.position', 'ASC')
@@ -96,6 +98,7 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
             recipeId: $row['recipe_id'],
             name: $row['name_snapshot'],
             emoji: $row['emoji_snapshot'],
+            image: $row['image'],
             status: $row['status'],
             servingsPlanned: (float) $row['servings_planned'],
             servingsCooked: (float) $row['servings_cooked'],

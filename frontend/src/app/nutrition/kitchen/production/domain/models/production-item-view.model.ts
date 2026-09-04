@@ -5,6 +5,7 @@ export interface ProductionItemView {
   recipeId: string;
   name: string;
   emoji: string;
+  image: string | null;
   status: ProductionItemStatus;
   servingsPlanned: number;
   servingsCooked: number;

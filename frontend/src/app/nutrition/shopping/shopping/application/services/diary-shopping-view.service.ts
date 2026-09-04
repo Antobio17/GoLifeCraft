@@ -4,11 +4,15 @@ import { DiaryShoppingNeed } from "@nutrition/diary/diary/domain/models/diary-sh
 import { DiaryShoppingLabels } from "@nutrition/shopping/shopping/domain/models/diary-shopping-labels.model";
 import { DiaryShoppingRow } from "@nutrition/shopping/shopping/domain/models/diary-shopping-row.model";
 import { ShoppingListViewService } from "@nutrition/shopping/shopping/application/services/shopping-list-view.service";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 
 @Injectable()
 export class DiaryShoppingViewService {
   private unitCatalog = inject(UnitCatalogService);
   private shoppingView = inject(ShoppingListViewService);
+  private entityVisual = inject(EntityVisualService);
 
   todayIso(): string {
     return this.toIso(new Date());
@@ -54,6 +58,12 @@ export class DiaryShoppingViewService {
         articleId: need.articleId,
         name: need.name,
         emoji: need.emoji,
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Shopping,
+          AggregateImageKind.Article,
+          need.articleId,
+          need.image,
+        ),
         brand: need.brand,
         store: need.store,
         priceLabel: this.shoppingView.money((need.price ?? 0) * quantity),

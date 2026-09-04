@@ -12,6 +12,7 @@ final readonly class ProductionItemView
         public string $recipeId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public string $status,
         public float $servingsPlanned,
         public float $servingsCooked,

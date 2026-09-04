@@ -1,4 +1,7 @@
 import { Injectable, inject } from "@angular/core";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { DiaryTreeRow } from "@shared/design-system/diary-tree/domain/models/diary-tree-row.model";
 import { DiaryEntryNodeView } from "../../domain/models/diary.model";
 import { DiaryLotViewService } from "./diary-lot-view.service";
@@ -16,6 +19,7 @@ export class DiaryTreeViewService {
   private view = inject(DiaryViewService);
   private picker = inject(DiaryPickerService);
   private lotView = inject(DiaryLotViewService);
+  private entityVisual = inject(EntityVisualService);
 
   /**
    * A branch served from a batch already carries what that batch was cooked with, sub-recipes
@@ -37,6 +41,12 @@ export class DiaryTreeViewService {
         depth,
         recipe,
         emoji: node.emoji,
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Diary,
+          recipe ? AggregateImageKind.Recipe : AggregateImageKind.Article,
+          node.refId,
+          node.image,
+        ),
         name: node.name,
         kcalLabel: `${this.view.integer(node.macros.calories)} ${labels.kcal}`,
         macros: this.view.macroItems(node.macros, labels),

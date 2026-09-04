@@ -1,4 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
+import { VisualPreferenceService } from "@shared/visual-preference/application/services/visual-preference.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { GlobalArticle } from "../../domain/models/global-article.model";
 import { GlobalArticleDetail } from "../../domain/models/global-article-detail.model";
 import { GlobalArticleDetailAttributes } from "../../domain/models/global-article-detail-attributes.model";
@@ -35,13 +37,17 @@ const DETAIL_IMAGE_SIZE = 400;
 
 @Injectable()
 export class GlobalArticleViewService {
+  private visualPreferenceService = inject(VisualPreferenceService);
+
   toCard(globalArticle: GlobalArticle): GlobalArticleCardView {
     const attributes = globalArticle.attributes;
 
     return {
       id: globalArticle.id,
       emoji: FALLBACK_EMOJI,
-      imageUrl: this.thumbnailUrl(attributes.imageUrl),
+      imageUrl: this.showsImages()
+        ? this.thumbnailUrl(attributes.imageUrl)
+        : null,
       name: attributes.name,
       price: this.price(attributes.price),
       brand: attributes.brand,
@@ -59,7 +65,9 @@ export class GlobalArticleViewService {
     return {
       id: globalArticle.id,
       emoji: FALLBACK_EMOJI,
-      imageUrl: this.sizedUrl(attributes.imageUrl, DETAIL_IMAGE_SIZE),
+      imageUrl: this.showsImages()
+        ? this.sizedUrl(attributes.imageUrl, DETAIL_IMAGE_SIZE)
+        : null,
       name: attributes.name,
       brand: attributes.brand,
       source: this.sourceLabel(attributes.source),
@@ -114,6 +122,12 @@ export class GlobalArticleViewService {
     if (value === null || value === undefined) return null;
 
     return `${this.number(value, 1)} g`;
+  }
+
+  private showsImages(): boolean {
+    return this.visualPreferenceService.showsImages(
+      VisualSurface.GlobalCatalog,
+    );
   }
 
   private thumbnailUrl(imageUrl: string | null): string | null {

@@ -236,6 +236,23 @@
       "dark": "Tema oscuro",
       "light": "Tema claro"
     },
+    "visual": {
+      "title": "Imágenes o iconos",
+      "hint": "Por defecto se muestran las fotos que hayas subido; cuando una receta o un artículo no tiene foto, se cae al icono.",
+      "mode": {
+        "image": "Imágenes",
+        "icon": "Iconos"
+      },
+      "surface": {
+        "catalog": "Catálogo",
+        "globalCatalog": "Catálogo global",
+        "recipe": "Recetas",
+        "diary": "Diario",
+        "menu": "Menús",
+        "shopping": "Lista de la compra",
+        "kitchen": "Cocina"
+      }
+    },
     "password": {
       "title": "Cambiar contraseña",
       "hint": "Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo",

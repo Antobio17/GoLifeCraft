@@ -213,6 +213,7 @@ export class MenuDraftService {
       refId: item.refId,
       name: entry.name,
       emoji: entry.emoji,
+      image: entry.image,
       quantity: item.quantity,
       unit: item.unit,
       baseUnit: entry.baseUnit,

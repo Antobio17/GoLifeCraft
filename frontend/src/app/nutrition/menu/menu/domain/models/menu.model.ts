@@ -30,6 +30,7 @@ export interface MenuItemView {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   quantity: number;
   unit: string | null;
   baseUnit: string;

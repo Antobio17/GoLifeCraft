@@ -68,6 +68,9 @@ import { SubRecipeRow } from "@nutrition/kitchen/production/domain/models/sub-re
 import { EditableIngredient } from "@nutrition/kitchen/production/domain/models/editable-ingredient.model";
 import { EditableIngredientRow } from "@nutrition/kitchen/production/domain/models/editable-ingredient-row.model";
 import { IngredientChoice } from "@nutrition/kitchen/production/domain/models/ingredient-choice.model";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 
 const CHECKLIST_SAVE_DEBOUNCE_MS = 400;
 const LABEL_SAVE_DEBOUNCE_MS = 600;
@@ -113,6 +116,7 @@ const LABEL_SAVE_DEBOUNCE_MS = 600;
 })
 export class GetProductionRecipeComponent {
   private translationService = inject(TranslationService);
+  private entityVisual = inject(EntityVisualService);
   private getProductionRecipeService = inject(GetProductionRecipeService);
   private cookProductionItemService = inject(CookProductionItemService);
   private uncookProductionItemService = inject(UncookProductionItemService);
@@ -199,6 +203,12 @@ export class GetProductionRecipeComponent {
       key: ingredient.articleId,
       name: ingredient.name,
       emoji: ingredient.emoji,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Kitchen,
+        AggregateImageKind.Article,
+        ingredient.articleId,
+        ingredient.image,
+      ),
       meta: this.view.quantityLabel(
         this.view.scale(ingredient.quantity, base, this.servings()),
         ingredient.unit,
@@ -220,6 +230,12 @@ export class GetProductionRecipeComponent {
   subRecipeRows = computed<SubRecipeRow[]>(() =>
     (this.recipe()?.subRecipes ?? []).map((item) => ({
       item,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Kitchen,
+        AggregateImageKind.Recipe,
+        item.recipeId,
+        item.image,
+      ),
       lotLabel: this.view.lotLabel(item, this.t("getProductionRecipe.lotNone")),
       meta:
         item.inStock >= item.servings
@@ -255,10 +271,29 @@ export class GetProductionRecipeComponent {
   draftRows = computed<EditableIngredientRow[]>(() =>
     this.draft().map((ingredient) => ({
       ingredient,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Kitchen,
+        "recipe" === ingredient.kind
+          ? AggregateImageKind.Recipe
+          : AggregateImageKind.Article,
+        ingredient.refId,
+        ingredient.image,
+      ),
       unitLabel: this.ingredientForm.unitLabel(ingredient),
       unitOptions: this.ingredientForm.unitOptions(ingredient),
     })),
   );
+
+  choiceImageUrl(choice: IngredientChoice): string | null {
+    return this.entityVisual.urlOf(
+      VisualSurface.Kitchen,
+      "recipe" === choice.kind
+        ? AggregateImageKind.Recipe
+        : AggregateImageKind.Article,
+      choice.refId,
+      choice.image,
+    );
+  }
 
   pickerTabs = computed<SegmentedOption[]>(() => [
     { value: "product", label: this.t("getProductionRecipe.pickerProducts") },

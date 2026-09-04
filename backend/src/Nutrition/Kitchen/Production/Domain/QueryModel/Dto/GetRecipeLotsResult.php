@@ -13,6 +13,7 @@ final class GetRecipeLotsResult extends QueryAggregateResult
         public readonly string $recipeId,
         public readonly string $name,
         public readonly string $emoji,
+        public readonly ?string $image,
         public readonly ?string $code,
         public readonly string $label,
         public readonly bool $customized,

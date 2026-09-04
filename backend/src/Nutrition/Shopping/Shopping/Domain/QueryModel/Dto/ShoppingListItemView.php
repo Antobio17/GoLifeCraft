@@ -10,6 +10,7 @@ final readonly class ShoppingListItemView
         public bool $custom,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public ?string $brand,
         public ?string $store,
         public string $category,

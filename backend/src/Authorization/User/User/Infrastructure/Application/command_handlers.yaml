@@ -27,6 +27,15 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
+  Authorization\User\User\Application\Command\ChangeMyVisualPreference\ChangeMyVisualPreferenceCommandHandler:
+    class: Authorization\User\User\Application\Command\ChangeMyVisualPreference\ChangeMyVisualPreferenceCommandHandler
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Authorization\User\User\Application\Command\SetUserAccess\SetUserAccessCommandHandler:
     class: Authorization\User\User\Application\Command\SetUserAccess\SetUserAccessCommandHandler
     arguments:

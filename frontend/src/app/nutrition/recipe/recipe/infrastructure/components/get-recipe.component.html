@@ -133,7 +133,11 @@
               align="center"
               [gap]="'var(--ds-space-3)'"
             >
-              <ds-emoji-tile [emoji]="row.ingredient.emoji" />
+              <ds-emoji-tile
+                [emoji]="row.ingredient.emoji"
+                [imageUrl]="row.imageUrl"
+                [alt]="row.ingredient.name"
+              />
               <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
                 <ds-stack
                   direction="row"

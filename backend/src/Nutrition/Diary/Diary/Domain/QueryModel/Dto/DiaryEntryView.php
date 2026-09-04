@@ -21,6 +21,7 @@ final readonly class DiaryEntryView
         public ?string $refId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public float $quantity,
         public string $unit,
         public MacroBreakdown $macros,

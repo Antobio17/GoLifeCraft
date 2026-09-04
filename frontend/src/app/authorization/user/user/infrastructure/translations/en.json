@@ -236,6 +236,23 @@
       "dark": "Dark theme",
       "light": "Light theme"
     },
+    "visual": {
+      "title": "Images or icons",
+      "hint": "Photos you uploaded are shown by default; a recipe or an article without a photo falls back to its icon.",
+      "mode": {
+        "image": "Images",
+        "icon": "Icons"
+      },
+      "surface": {
+        "catalog": "Catalogue",
+        "globalCatalog": "Global catalogue",
+        "recipe": "Recipes",
+        "diary": "Diary",
+        "menu": "Menus",
+        "shopping": "Shopping list",
+        "kitchen": "Kitchen"
+      }
+    },
     "password": {
       "title": "Change password",
       "hint": "At least 8 characters, with uppercase, lowercase, number and symbol",

@@ -40,6 +40,7 @@ final class DoctrineProductionIngredientResolver
                     recipeId: $ingredient['refId'],
                     name: $graph->recipeName(recipeId: $ingredient['refId']) ?? '',
                     emoji: $graph->recipeEmoji(recipeId: $ingredient['refId']),
+                    image: $graph->recipeImage(recipeId: $ingredient['refId']),
                     servings: $quantity,
                 );
 
@@ -70,6 +71,7 @@ final class DoctrineProductionIngredientResolver
             articleId: $articleId,
             name: $graph->articleName(articleId: $articleId) ?? '',
             emoji: $graph->articleEmoji(articleId: $articleId),
+            image: $graph->articleImage(articleId: $articleId),
             quantity: $quantity,
             unit: $unit ?? $baseUnit,
             baseQuantity: round(num: $quantity * $factor, precision: ProductionIngredient::QUANTITY_PRECISION),
@@ -111,6 +113,7 @@ final class DoctrineProductionIngredientResolver
             articleId: $item->refId,
             name: $item->name,
             emoji: $item->emoji,
+            image: $item->image,
             quantity: $item->quantity,
             unit: $item->unit ?? $baseUnit,
             baseQuantity: round(num: $item->quantity * $factor, precision: ProductionIngredient::QUANTITY_PRECISION),

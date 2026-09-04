@@ -169,6 +169,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
                 articleId: $line['ref_id'],
                 name: $articles[$line['ref_id']]['name'] ?? self::DELETED_NAME,
                 emoji: $articles[$line['ref_id']]['emoji'] ?? self::FALLBACK_ARTICLE_EMOJI,
+                image: $articles[$line['ref_id']]['image'] ?? null,
                 quantity: $display > 0.0 ? $display : (float) $line['quantity'],
                 unit: (string) ($line['display_unit'] ?? $line['unit']),
             );
@@ -200,6 +201,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
             recipeId: $line['ref_id'],
             name: $recipes[$line['ref_id']]['name'] ?? self::DELETED_NAME,
             emoji: $recipes[$line['ref_id']]['emoji'] ?? self::FALLBACK_RECIPE_EMOJI,
+            image: $recipes[$line['ref_id']]['image'] ?? null,
             servings: (float) $line['quantity'],
             inStock: $stock[$line['ref_id']] ?? 0.0,
             sourceProductionItemId: $line['source_production_item_id'],
@@ -211,12 +213,12 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
     /**
      * @param string[] $articleIds
      *
-     * @return array<string, array{name: string, emoji: string}>
+     * @return array<string, array{name: string, emoji: string, image: ?string}>
      */
     private function articlesById(array $articleIds): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('a.id', 'a.name', 'a.emoji')
+            ->select('a.id', 'a.name', 'a.emoji', 'a.image')
             ->from(table: 'article', alias: 'a')
             ->where('a.id IN (:articleIds)')
             ->setParameter(key: 'articleIds', value: $articleIds, type: ArrayParameterType::STRING)
@@ -226,7 +228,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
         $articles = [];
 
         foreach ($rows as $row) {
-            $articles[$row['id']] = ['name' => (string) $row['name'], 'emoji' => (string) $row['emoji']];
+            $articles[$row['id']] = ['name' => (string) $row['name'], 'emoji' => (string) $row['emoji'], 'image' => $row['image']];
         }
 
         return $articles;
@@ -265,12 +267,12 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
     /**
      * @param string[] $recipeIds
      *
-     * @return array<string, array{name: string, emoji: string}>
+     * @return array<string, array{name: string, emoji: string, image: ?string}>
      */
     private function recipesById(array $recipeIds): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('r.id', 'r.name', 'r.emoji')
+            ->select('r.id', 'r.name', 'r.emoji', 'r.image')
             ->from(table: 'recipe', alias: 'r')
             ->where('r.id IN (:recipeIds)')
             ->setParameter(key: 'recipeIds', value: $recipeIds, type: ArrayParameterType::STRING)
@@ -280,7 +282,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
         $recipes = [];
 
         foreach ($rows as $row) {
-            $recipes[$row['id']] = ['name' => (string) $row['name'], 'emoji' => (string) $row['emoji']];
+            $recipes[$row['id']] = ['name' => (string) $row['name'], 'emoji' => (string) $row['emoji'], 'image' => $row['image']];
         }
 
         return $recipes;
@@ -306,6 +308,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
                 articleId: $ingredient->articleId,
                 name: $ingredient->name,
                 emoji: $ingredient->emoji,
+                image: $ingredient->image,
                 quantity: $ingredient->quantity,
                 unit: $ingredient->unit,
             ),
@@ -332,6 +335,7 @@ final readonly class DoctrineGetProductionItemNeedleDataQuery implements GetProd
                 recipeId: $subRecipe->recipeId,
                 name: $subRecipe->name,
                 emoji: $subRecipe->emoji,
+                image: $subRecipe->image,
                 servings: $subRecipe->servings,
                 inStock: $stock[$subRecipe->recipeId] ?? 0.0,
             ),

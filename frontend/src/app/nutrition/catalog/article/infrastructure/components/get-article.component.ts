@@ -20,6 +20,8 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
@@ -89,6 +91,7 @@ export class GetArticleComponent {
   private stockView = inject(StockViewService);
   protected view = inject(ArticleViewService);
   private aggregateImageService = inject(AggregateImageService);
+  private entityVisual = inject(EntityVisualService);
 
   loading = signal(true);
   notFound = signal(false);
@@ -100,11 +103,12 @@ export class GetArticleComponent {
 
     if (null === article) return null;
 
-    return this.aggregateImageService.objectUrl(
+    return this.entityVisual.urlOf(
+      VisualSurface.Catalog,
       AggregateImageKind.Article,
       article.id,
       article.attributes.image ?? null,
-    )();
+    );
   });
   showDeleteModal = signal(false);
   deleting = signal(false);

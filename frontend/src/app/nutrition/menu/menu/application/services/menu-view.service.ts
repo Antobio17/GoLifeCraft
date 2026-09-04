@@ -1,4 +1,7 @@
 import { Injectable, inject } from "@angular/core";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { MacroGoal } from "@shared/design-system/macro-panel/domain/models/macro-goal.model";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { WeekDayTab } from "@shared/design-system/week-day-tabs/domain/models/week-day-tab.model";
@@ -30,6 +33,7 @@ export interface MenuShoppingRow {
   articleId: string;
   name: string;
   emoji: string;
+  imageUrl: string | null;
   meta: string;
   packs: number;
   baseQuantity: number;
@@ -49,6 +53,7 @@ const WEEK_DAY_KEYS: MenuWeekDayKey[] = [
 @Injectable()
 export class MenuViewService {
   private unitCatalog = inject(UnitCatalogService);
+  private entityVisual = inject(EntityVisualService);
 
   weekDayKeys(): MenuWeekDayKey[] {
     return [...WEEK_DAY_KEYS];
@@ -63,6 +68,12 @@ export class MenuViewService {
       articleId: need.articleId,
       name: need.name,
       emoji: need.emoji,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Menu,
+        AggregateImageKind.Article,
+        need.articleId,
+        need.image,
+      ),
       meta: this.shoppingMeta(need, labels),
       packs: need.packs,
       baseQuantity: need.quantity,

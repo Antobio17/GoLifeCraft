@@ -1,4 +1,7 @@
 import { Injectable, inject } from "@angular/core";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { DiaryTreeRow } from "@shared/design-system/diary-tree/domain/models/diary-tree-row.model";
 import { MenuItemNodeView } from "../../domain/models/menu-item-node.model";
 import { MenuPickerService } from "./menu-picker.service";
@@ -13,6 +16,7 @@ export interface MenuTreeLabels extends MacroLabels {
 export class MenuTreeViewService {
   private view = inject(MenuViewService);
   private picker = inject(MenuPickerService);
+  private entityVisual = inject(EntityVisualService);
 
   rows(
     nodes: MenuItemNodeView[],
@@ -29,6 +33,12 @@ export class MenuTreeViewService {
         depth,
         recipe,
         emoji: node.emoji,
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Menu,
+          recipe ? AggregateImageKind.Recipe : AggregateImageKind.Article,
+          node.refId,
+          node.image,
+        ),
         name: node.name,
         kcalLabel: `${this.view.integer(node.macros.calories)} ${labels.kcal}`,
         macros: this.view.itemMacros(node.macros, labels),

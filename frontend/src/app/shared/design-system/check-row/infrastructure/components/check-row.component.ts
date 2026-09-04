@@ -17,7 +17,16 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       <span class="ds-checkrow__box" [class.is-on]="checked">
         <ds-icon name="check" [size]="15" [stroke]="3" />
       </span>
-      @if (emoji) {
+      @if (imageUrl && !imageFailed) {
+        <img
+          class="ds-checkrow__emoji ds-checkrow__image"
+          [src]="imageUrl"
+          [alt]="name"
+          loading="lazy"
+          decoding="async"
+          (error)="imageFailed = true"
+        />
+      } @else if (emoji) {
         <span class="ds-checkrow__emoji">{{ emoji }}</span>
       }
       <span class="ds-checkrow__text">
@@ -87,6 +96,10 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         background: var(--ds-primary);
         border-color: var(--ds-primary);
         color: var(--ds-on-primary);
+      }
+      .ds-checkrow__image {
+        object-fit: cover;
+        overflow: hidden;
       }
       .ds-checkrow__emoji {
         flex: 0 0 auto;
@@ -162,6 +175,22 @@ export class CheckRowComponent {
   @Input() meta = "";
   @Input() emoji = "";
   @Input() eyebrow = "";
+
+  @Input()
+  set imageUrl(value: string | null) {
+    if (value === this.currentImageUrl) return;
+
+    this.currentImageUrl = value;
+    this.imageFailed = false;
+  }
+
+  get imageUrl(): string | null {
+    return this.currentImageUrl;
+  }
+
+  private currentImageUrl: string | null = null;
+  imageFailed = false;
+
   @Input() chip = "";
   @Input() wrap = false;
   @Input() dimChecked = false;

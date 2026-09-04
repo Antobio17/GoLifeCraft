@@ -6,6 +6,7 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\GetProductionsResult;
+use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionThumbnailView;
 use Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionsNeedleDataQuery;
 
 final readonly class DoctrineGetProductionsNeedleDataQuery implements GetProductionsNeedleDataQuery
@@ -51,7 +52,7 @@ final readonly class DoctrineGetProductionsNeedleDataQuery implements GetProduct
                 'cookedCount' => 0,
                 'servingsPlanned' => 0.0,
                 'servingsCooked' => 0.0,
-                'emojis' => [],
+                'thumbnails' => [],
             ];
 
             return new GetProductionsResult(
@@ -64,7 +65,7 @@ final readonly class DoctrineGetProductionsNeedleDataQuery implements GetProduct
                 cookedCount: $summary['cookedCount'],
                 servingsPlanned: $summary['servingsPlanned'],
                 servingsCooked: $summary['servingsCooked'],
-                emojis: $summary['emojis'],
+                thumbnails: $summary['thumbnails'],
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
                 createdByUserId: $row['created_by_user_id'],
@@ -85,7 +86,7 @@ final readonly class DoctrineGetProductionsNeedleDataQuery implements GetProduct
     /**
      * @param string[] $productionIds
      *
-     * @return array<string, array{itemCount: int, cookedCount: int, servingsPlanned: float, servingsCooked: float, emojis: string[]}>
+     * @return array<string, array{itemCount: int, cookedCount: int, servingsPlanned: float, servingsCooked: float, thumbnails: ProductionThumbnailView[]}>
      */
     private function summariesOf(array $productionIds): array
     {
@@ -94,8 +95,9 @@ final readonly class DoctrineGetProductionsNeedleDataQuery implements GetProduct
         }
 
         $rows = $this->connection->createQueryBuilder()
-            ->select('i.production_id', 'i.status', 'i.servings_planned', 'i.servings_cooked', 'i.emoji_snapshot')
+            ->select('i.production_id', 'i.status', 'i.servings_planned', 'i.servings_cooked', 'i.emoji_snapshot', 'i.recipe_id', 'r.image')
             ->from(table: 'production_item', alias: 'i')
+            ->leftJoin(fromAlias: 'i', join: 'recipe', alias: 'r', condition: 'r.id = i.recipe_id')
             ->where('i.production_id IN (:productionIds)')
             ->setParameter(key: 'productionIds', value: $productionIds, type: ArrayParameterType::STRING)
             ->orderBy('i.position', 'ASC')
@@ -112,13 +114,17 @@ final readonly class DoctrineGetProductionsNeedleDataQuery implements GetProduct
                 'cookedCount' => 0,
                 'servingsPlanned' => 0.0,
                 'servingsCooked' => 0.0,
-                'emojis' => [],
+                'thumbnails' => [],
             ];
 
             ++$summaries[$productionId]['itemCount'];
             $summaries[$productionId]['servingsPlanned'] += (float) $row['servings_planned'];
             $summaries[$productionId]['servingsCooked'] += (float) $row['servings_cooked'];
-            $summaries[$productionId]['emojis'][] = $row['emoji_snapshot'];
+            $summaries[$productionId]['thumbnails'][] = new ProductionThumbnailView(
+                recipeId: $row['recipe_id'],
+                emoji: $row['emoji_snapshot'],
+                image: $row['image'],
+            );
 
             if (ProductionItem::STATUS_DONE !== $row['status']) {
                 continue;

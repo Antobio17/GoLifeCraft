@@ -8,6 +8,7 @@ final readonly class ProductionIngredientView
         public string $articleId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public float $quantity,
         public string $unit,
     ) {

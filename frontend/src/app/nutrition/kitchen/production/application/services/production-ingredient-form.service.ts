@@ -13,6 +13,7 @@ import { ProductionSubRecipe } from "../../domain/models/production-sub-recipe.m
 interface ProductEntry {
   name: string;
   emoji: string;
+  image: string | null;
   baseUnit: string;
   recipeUnit: string;
   units: string[];
@@ -21,6 +22,7 @@ interface ProductEntry {
 interface RecipeEntry {
   name: string;
   emoji: string;
+  image: string | null;
 }
 
 const FALLBACK_PRODUCT_EMOJI = "🍽️";
@@ -53,6 +55,7 @@ export class ProductionIngredientFormService {
         products.set(article.id, {
           name: article.attributes.name,
           emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
+          image: article.attributes.image,
           baseUnit,
           recipeUnit: article.attributes.recipeUnit || baseUnit,
           units: [baseUnit, ...units],
@@ -71,6 +74,7 @@ export class ProductionIngredientFormService {
         entries.set(recipe.id, {
           name: recipe.attributes.name,
           emoji: recipe.attributes.emoji || FALLBACK_RECIPE_EMOJI,
+          image: recipe.attributes.image,
         });
       },
     );
@@ -91,6 +95,7 @@ export class ProductionIngredientFormService {
         refId: ingredient.articleId,
         name: ingredient.name,
         emoji: ingredient.emoji,
+        image: ingredient.image,
         quantity: ingredient.quantity,
         unit: ingredient.unit,
       };
@@ -105,6 +110,7 @@ export class ProductionIngredientFormService {
         refId: subRecipe.recipeId,
         name: subRecipe.name,
         emoji: subRecipe.emoji,
+        image: subRecipe.image,
         quantity: subRecipe.servings,
         unit: RECIPE_UNIT,
       };
@@ -124,6 +130,7 @@ export class ProductionIngredientFormService {
         refId: choice.refId,
         name: choice.name,
         emoji: choice.emoji,
+        image: choice.image,
         quantity: 1,
         unit: RECIPE_UNIT,
       };
@@ -139,6 +146,7 @@ export class ProductionIngredientFormService {
       refId: choice.refId,
       name: choice.name,
       emoji: choice.emoji,
+      image: choice.image,
       quantity: isBase ? DEFAULT_PRODUCT_QUANTITY : 1,
       unit,
     };
@@ -181,6 +189,7 @@ export class ProductionIngredientFormService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
+        image: entry.image,
         detail: entry.baseUnit,
       }));
   }
@@ -194,6 +203,7 @@ export class ProductionIngredientFormService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
+        image: entry.image,
         detail: this.unitCatalog.label("serving"),
       }));
   }

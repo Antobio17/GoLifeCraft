@@ -21,6 +21,8 @@ import { DiarySummaryComponent } from "@shared/design-system/diary-summary/infra
 import { DiaryEntryComponent } from "@shared/design-system/diary-entry/infrastructure/components/diary-entry.component";
 import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
@@ -166,6 +168,7 @@ export class GetDiaryComponent implements OnInit {
   private deleteDiaryEntryService = inject(DeleteDiaryEntryService);
   private consumeDiaryMealService = inject(ConsumeDiaryMealService);
   private treeView = inject(DiaryTreeViewService);
+  private entityVisual = inject(EntityVisualService);
   private createQuickDiaryEntryService = inject(CreateQuickDiaryEntryService);
   private updateQuickDiaryEntryService = inject(UpdateQuickDiaryEntryService);
   protected quickForms = inject(QuickDiaryEntryFormService);
@@ -235,6 +238,12 @@ export class GetDiaryComponent implements OnInit {
   pickerRows = computed(() =>
     this.pickerChoices().map((choice) => ({
       choice,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Diary,
+        this.entityVisual.kindOf(choice.kind),
+        choice.refId,
+        choice.image,
+      ),
       kcal: this.choiceKcal(choice),
       macros: this.choiceMacros(choice),
     })),
@@ -281,6 +290,12 @@ export class GetDiaryComponent implements OnInit {
       consumeLabel: this.mealConsumeLabel(meal),
       entries: meal.entries.map((entry) => ({
         entry,
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Diary,
+          this.entityVisual.kindOf(entry.kind),
+          entry.refId,
+          entry.image,
+        ),
         badge: this.badgeLabel(entry.kind),
         badgeTone: this.view.entryBadgeTone(entry.kind),
         kcalLabel: `${this.view.integer(entry.macros.calories)} ${this.t("getDiary.kcal")}`,

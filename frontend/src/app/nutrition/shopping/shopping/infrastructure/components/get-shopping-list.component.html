@@ -138,6 +138,7 @@
               @for (item of group.items; track item.id) {
                 <ds-shopping-item
                   [emoji]="item.emoji"
+                  [imageUrl]="item.imageUrl"
                   [name]="item.name"
                   [brand]="item.brand"
                   [store]="item.store"
@@ -274,6 +275,7 @@
           @for (product of sheetProducts(); track product.articleId) {
             <ds-product-card
               [emoji]="product.emoji"
+              [imageUrl]="product.imageUrl"
               [name]="product.name"
               [price]="product.priceLabel"
               [brand]="product.brand"

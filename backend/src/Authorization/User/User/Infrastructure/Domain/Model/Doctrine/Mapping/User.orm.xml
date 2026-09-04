@@ -18,6 +18,7 @@
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
     <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
     <field name="theme" type="string" column="theme" length="10" nullable="false"/>
+    <field name="visualPreferences" type="json" column="visual_preferences" nullable="true"/>
     <unique-constraints>
       <unique-constraint name="uniq_user_username" columns="username"/>
       <unique-constraint name="uniq_user_email" columns="email"/>

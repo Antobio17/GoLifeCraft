@@ -8,6 +8,7 @@ final readonly class ProductionSubRecipeView
         public string $recipeId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public float $servings,
         public float $inStock,
         public ?string $sourceProductionItemId = null,

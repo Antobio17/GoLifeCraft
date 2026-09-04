@@ -9,6 +9,9 @@ import {
 import { ShoppingGroupLabels } from "@nutrition/shopping/shopping/domain/models/shopping-group-labels.model";
 import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/shopping-sort-mode.model";
 import { TextSearchService } from "@shared/search/application/services/text-search.service";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 
 export const ALL_STORES = "all";
 export const ALL_FILTER = "all";
@@ -33,6 +36,7 @@ export interface ShoppingItemRow {
   articleId: string | null;
   custom: boolean;
   emoji: string;
+  imageUrl: string | null;
   name: string;
   brand: string | null;
   store: string | null;
@@ -61,6 +65,7 @@ export interface ShoppingSummary {
 export interface ShoppingSheetProduct {
   articleId: string;
   emoji: string;
+  imageUrl: string | null;
   name: string;
   brand: string | null;
   store: string | null;
@@ -78,6 +83,7 @@ export interface ShoppingFacets {
 export class ShoppingListViewService {
   private textSearch = inject(TextSearchService);
   private articleView = inject(ArticleViewService);
+  private entityVisual = inject(EntityVisualService);
   private unitCatalog = inject(UnitCatalogService);
 
   resolveTab(attributes: ShoppingListAttributes, requested: string): string {
@@ -215,6 +221,12 @@ export class ShoppingListViewService {
       articleId: item.articleId,
       custom: item.custom,
       emoji: item.emoji,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Shopping,
+        AggregateImageKind.Article,
+        item.articleId,
+        item.image,
+      ),
       name: item.name,
       brand: item.brand,
       store: item.store,
@@ -318,6 +330,7 @@ export class ShoppingListViewService {
       custom: false,
       name: article.attributes.name,
       emoji: this.articleView.emoji(article),
+      image: article.attributes.image,
       brand: this.articleView.brand(article),
       store: this.articleView.store(article),
       category: this.articleView.category(article) ?? OTHER_CATEGORY,
@@ -341,6 +354,7 @@ export class ShoppingListViewService {
       custom: true,
       name: customName,
       emoji: "📝",
+      image: null,
       brand: null,
       store: null,
       category: OTHER_CATEGORY,
@@ -468,6 +482,12 @@ export class ShoppingListViewService {
       .map((article) => ({
         articleId: article.id,
         emoji: this.articleView.emoji(article),
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Shopping,
+          AggregateImageKind.Article,
+          article.id,
+          article.attributes.image,
+        ),
         name: article.attributes.name,
         brand: this.articleView.brand(article),
         store: this.articleView.store(article),

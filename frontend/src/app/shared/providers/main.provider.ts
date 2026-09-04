@@ -5,6 +5,8 @@ import { AuthSessionProvider } from "@shared/auth/infrastructure/providers/auth-
 import { RefreshTokenProvider } from "@shared/auth/infrastructure/providers/refresh-token.provider";
 import { ImpersonationProvider } from "@shared/auth/infrastructure/providers/impersonation.provider";
 import { AggregateImageProviders } from "@shared/aggregate-image/infrastructure/providers/aggregate-image.providers";
+import { VisualPreferenceProviders } from "@shared/visual-preference/infrastructure/providers/visual-preference.provider";
+import { EntityVisualProviders } from "@shared/entity-visual/infrastructure/providers/entity-visual.providers";
 
 export type ProviderModule = {
   getProviders(): Provider[];
@@ -18,6 +20,8 @@ export class GlobalProviders {
     RefreshTokenProvider,
     ImpersonationProvider,
     AggregateImageProviders,
+    VisualPreferenceProviders,
+    EntityVisualProviders,
   ];
 
   static getProviders(): Provider[] {

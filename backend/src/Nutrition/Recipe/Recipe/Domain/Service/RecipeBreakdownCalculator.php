@@ -238,6 +238,7 @@ final class RecipeBreakdownCalculator
             unit: $unit ?? $graph->articleBaseUnit(articleId: $refId),
             name: $graph->articleName(articleId: $refId) ?? self::DELETED_NAME,
             emoji: $graph->articleEmoji(articleId: $refId),
+            image: $graph->articleImage(articleId: $refId),
             macros: $this->productMacros(graph: $graph, refId: $refId, quantity: $quantity, unit: $unit),
         );
     }
@@ -263,6 +264,7 @@ final class RecipeBreakdownCalculator
             unit: null,
             name: $graph->recipeName(recipeId: $refId) ?? self::DELETED_NAME,
             emoji: $graph->recipeEmoji(recipeId: $refId),
+            image: $graph->recipeImage(recipeId: $refId),
             macros: $macros,
         );
     }
@@ -272,6 +274,7 @@ final class RecipeBreakdownCalculator
         return $item->withSnapshot(
             name: $graph->articleName(articleId: $item->refId) ?? self::DELETED_NAME,
             emoji: $graph->articleEmoji(articleId: $item->refId),
+            image: $graph->articleImage(articleId: $item->refId),
             unit: $item->unit ?? $graph->articleBaseUnit(articleId: $item->refId),
             macros: $this->productMacros(graph: $graph, refId: $item->refId, quantity: $item->quantity, unit: $item->unit),
         );
@@ -283,6 +286,7 @@ final class RecipeBreakdownCalculator
         return $item->withSnapshot(
             name: $graph->recipeName(recipeId: $item->refId) ?? self::DELETED_NAME,
             emoji: $graph->recipeEmoji(recipeId: $item->refId),
+            image: $graph->recipeImage(recipeId: $item->refId),
             unit: null,
             macros: $this->childrenTotal(parentPath: $item->path, items: array_values($refreshed)),
         );

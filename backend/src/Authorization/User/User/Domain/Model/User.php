@@ -3,6 +3,7 @@
 namespace Authorization\User\User\Domain\Model;
 
 use Authorization\User\User\Domain\Event\MyThemeChanged;
+use Authorization\User\User\Domain\Event\MyVisualPreferenceChanged;
 use Authorization\User\User\Domain\Event\UserAccessGranted;
 use Authorization\User\User\Domain\Event\UserAccessRevoked;
 use Authorization\User\User\Domain\Event\UserEmailVerified;
@@ -10,6 +11,7 @@ use Authorization\User\User\Domain\Event\UserImpersonated;
 use Authorization\User\User\Domain\Event\UserRegistered;
 use Authorization\User\User\Domain\Event\UserUpdated;
 use Authorization\User\User\Domain\Exception\ChangeMyThemeException;
+use Authorization\User\User\Domain\Exception\ChangeMyVisualPreferenceException;
 use Authorization\User\User\Domain\Service\PasswordHasher;
 use Shared\Shared\Shared\Domain\Model\Aggregate;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -29,6 +31,19 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
     public const string THEME_LIGHT = 'light';
     public const string THEME_DARK = 'dark';
 
+    public const string VISUAL_MODE_IMAGE = 'image';
+    public const string VISUAL_MODE_ICON = 'icon';
+
+    public const array VISUAL_SURFACES = [
+        'catalog',
+        'globalCatalog',
+        'recipe',
+        'diary',
+        'menu',
+        'shopping',
+        'kitchen',
+    ];
+
     private int $version;
 
     public function __construct(
@@ -46,6 +61,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         public readonly string $createdByUserId,
         public string $updatedByUserId,
         public string $theme = self::THEME_DARK,
+        public ?array $visualPreferences = null,
         public array $roles = [],
         public bool $emailVerified = false,
     ) {
@@ -279,8 +295,76 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         );
     }
 
+    public function changeVisualPreference(
+        string $surface,
+        string $mode,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!in_array(needle: $surface, haystack: self::VISUAL_SURFACES, strict: true)) {
+            throw ChangeMyVisualPreferenceException::invalidSurface(surface: $surface);
+        }
+
+        if (!in_array(needle: $mode, haystack: self::getValidVisualModes(), strict: true)) {
+            throw ChangeMyVisualPreferenceException::invalidMode(mode: $mode);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->visualPreferences = array_merge($this->resolvedVisualPreferences(), [$surface => $mode]);
+        $this->updatedByUserId = $updatedByUserId;
+        $this->updatedAt = $now;
+
+        $this->record(
+            event: new MyVisualPreferenceChanged(
+                aggregateId: $this->id,
+                occurredOn: $now,
+                surface: $surface,
+                mode: $mode,
+                visualPreferences: $this->visualPreferences,
+                updatedAt: $now,
+                updatedByUserId: $updatedByUserId,
+            )
+        );
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function resolvedVisualPreferences(): array
+    {
+        return self::resolveVisualPreferences(stored: $this->visualPreferences ?? []);
+    }
+
+    /**
+     * @param array<string, mixed> $stored
+     *
+     * @return array<string, string>
+     */
+    public static function resolveVisualPreferences(array $stored): array
+    {
+        $resolved = [];
+
+        foreach (self::VISUAL_SURFACES as $surface) {
+            $mode = $stored[$surface] ?? null;
+            $resolved[$surface] = in_array(needle: $mode, haystack: self::getValidVisualModes(), strict: true)
+                ? $mode
+                : self::VISUAL_MODE_IMAGE;
+        }
+
+        return $resolved;
+    }
+
     public static function getValidThemes(): array
     {
         return [self::THEME_LIGHT, self::THEME_DARK];
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getValidVisualModes(): array
+    {
+        return [self::VISUAL_MODE_IMAGE, self::VISUAL_MODE_ICON];
     }
 }

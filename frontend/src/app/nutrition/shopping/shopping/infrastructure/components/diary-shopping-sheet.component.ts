@@ -104,6 +104,7 @@ const DEFAULT_RANGE_DAYS = 6;
               @for (row of rows(); track row.articleId) {
                 <ds-shopping-item
                   [emoji]="row.emoji"
+                  [imageUrl]="row.imageUrl"
                   [name]="row.name"
                   [brand]="row.brand"
                   [store]="row.store"

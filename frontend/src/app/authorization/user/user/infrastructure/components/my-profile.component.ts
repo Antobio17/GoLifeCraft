@@ -19,6 +19,8 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ThemeService } from "@shared/theme/application/services/theme.service";
+import { VisualPreferenceService } from "@shared/visual-preference/application/services/visual-preference.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { getRoleLabelKey } from "@authorization/domain/utils/role.utils";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -114,6 +116,7 @@ export class MyProfileComponent implements OnInit {
   private floatingToastService = inject(FloatingToastService);
   private translationService = inject(TranslationService);
   private themeService = inject(ThemeService);
+  private visualPreferenceService = inject(VisualPreferenceService);
   private authSessionService = inject(AuthSessionService);
   private router = inject(Router);
   private location = inject(Location);
@@ -133,6 +136,14 @@ export class MyProfileComponent implements OnInit {
   changingPassword = signal(false);
 
   readonly isDark = this.themeService.isDark;
+
+  readonly visualRows = computed(() =>
+    Object.values(VisualSurface).map((surface) => ({
+      surface,
+      titleKey: `settings.visual.surface.${surface}`,
+      images: this.visualPreferenceService.showsImages(surface),
+    })),
+  );
 
   readonly fullName = computed(() => {
     const name = this.profileForm.get("name")?.value ?? "";
@@ -180,6 +191,9 @@ export class MyProfileComponent implements OnInit {
         this.role.set(attrs.role);
         this.isActive.set(attrs.isActive);
         this.tenantId.set(attrs.tenantId);
+        this.visualPreferenceService.applyFromPreferences(
+          attrs.visualPreferences ?? {},
+        );
 
         this.profileForm.patchValue({
           name: attrs.name ?? "",
@@ -198,6 +212,10 @@ export class MyProfileComponent implements OnInit {
 
   toggleTheme(): void {
     this.themeService.toggle();
+  }
+
+  toggleVisual(surface: VisualSurface): void {
+    this.visualPreferenceService.toggle(surface);
   }
 
   logout(): void {

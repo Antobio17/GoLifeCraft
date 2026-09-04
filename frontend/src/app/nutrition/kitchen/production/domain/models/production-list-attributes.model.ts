@@ -1,4 +1,5 @@
 import { ProductionStatus } from "./production-status.model";
+import { ProductionThumbnail } from "./production-thumbnail.model";
 
 export interface ProductionListAttributes {
   fromDate: string;
@@ -8,5 +9,5 @@ export interface ProductionListAttributes {
   cookedCount: number;
   servingsPlanned: number;
   servingsCooked: number;
-  emojis: string[];
+  thumbnails: ProductionThumbnail[];
 }

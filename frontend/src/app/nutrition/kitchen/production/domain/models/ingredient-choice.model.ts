@@ -3,5 +3,6 @@ export interface IngredientChoice {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   detail: string;
 }

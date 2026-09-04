@@ -60,6 +60,7 @@ final readonly class RecipeGraphMenuItemTreeBuilder implements MenuItemTreeBuild
                 unit: $node->unit,
                 name: $node->nameSnapshot,
                 emoji: $node->emojiSnapshot,
+                image: null,
                 macros: $node->macros(),
             ),
             $ordered,

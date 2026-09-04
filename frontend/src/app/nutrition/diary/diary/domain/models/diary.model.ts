@@ -28,6 +28,7 @@ export interface DiaryEntryNodeView {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   quantity: number;
   unit: string;
   macros: DiaryMacros;
@@ -41,6 +42,7 @@ export interface DiaryEntryView {
   refId: string | null;
   name: string;
   emoji: string;
+  image: string | null;
   quantity: number;
   unit: string;
   macros: DiaryMacros;
