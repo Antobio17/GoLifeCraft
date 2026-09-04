@@ -18,19 +18,31 @@ final class DoctrineArticleRepository extends EntityRepository implements Articl
 
     public function findById(string $id): ?Article
     {
-        return $this->getEntityManager()->find(className: Article::class, id: $id);
+        return $this->withEquivalences(
+            article: $this->getEntityManager()->find(className: Article::class, id: $id),
+        );
     }
 
     public function findByBarcode(string $barcode): ?Article
     {
-        return $this->findOneBy(['barcode' => $barcode]);
+        return $this->withEquivalences(article: $this->findOneBy(['barcode' => $barcode]));
     }
 
+    /**
+     * Reconciles the equivalences by id: a command that does not rebuild them keeps the ones it loaded,
+     * so wiping them all would drop the equivalences of every caller that only touches the article itself.
+     */
     public function save(Article $article): void
     {
         $entityManager = $this->getEntityManager();
 
-        $this->removeEquivalences(articleId: $article->id);
+        $this->removeEquivalences(
+            articleId: $article->id,
+            keptEquivalenceIds: array_map(
+                callback: static fn (ArticleEquivalence $equivalence): string => $equivalence->id,
+                array: $article->equivalences,
+            ),
+        );
         $entityManager->persist(object: $article);
 
         foreach ($article->equivalences as $equivalence) {
@@ -42,7 +54,7 @@ final class DoctrineArticleRepository extends EntityRepository implements Articl
     {
         $entityManager = $this->getEntityManager();
 
-        $this->removeEquivalences(articleId: $article->id);
+        $this->removeEquivalences(articleId: $article->id, keptEquivalenceIds: []);
         $entityManager->remove(object: $article);
 
         if (null === $article->nutritionFactsId) {
@@ -55,14 +67,34 @@ final class DoctrineArticleRepository extends EntityRepository implements Articl
         }
     }
 
-    private function removeEquivalences(string $articleId): void
+    private function withEquivalences(?Article $article): ?Article
     {
-        $this->getEntityManager()->createQueryBuilder()
+        if (null === $article) {
+            return null;
+        }
+
+        $article->equivalences = $this->getEntityManager()->getRepository(className: ArticleEquivalence::class)
+            ->findBy(criteria: ['articleId' => $article->id], orderBy: ['position' => 'ASC']);
+
+        return $article;
+    }
+
+    /**
+     * @param array<int, string> $keptEquivalenceIds
+     */
+    private function removeEquivalences(string $articleId, array $keptEquivalenceIds): void
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->delete(delete: ArticleEquivalence::class, alias: 'equivalence')
             ->where('equivalence.articleId = :articleId')
-            ->setParameter(key: 'articleId', value: $articleId)
-            ->getQuery()
-            ->execute();
+            ->setParameter(key: 'articleId', value: $articleId);
+
+        if ([] !== $keptEquivalenceIds) {
+            $queryBuilder->andWhere('equivalence.id NOT IN (:keptEquivalenceIds)')
+                ->setParameter(key: 'keptEquivalenceIds', value: $keptEquivalenceIds);
+        }
+
+        $queryBuilder->getQuery()->execute();
     }
 
     public function findNutritionFactsById(string $nutritionFactsId): ?NutritionFacts

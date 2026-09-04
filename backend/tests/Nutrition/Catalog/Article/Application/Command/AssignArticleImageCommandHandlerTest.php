@@ -6,6 +6,7 @@ use Nutrition\Catalog\Article\Application\Command\AssignArticleImageCommand;
 use Nutrition\Catalog\Article\Application\Command\AssignArticleImageCommandHandler;
 use Nutrition\Catalog\Article\Domain\Exception\AssignArticleImageException;
 use Nutrition\Catalog\Article\Domain\Model\Article;
+use Nutrition\Catalog\Article\Domain\Model\ArticleEquivalence;
 use Nutrition\Catalog\Article\Infrastructure\Domain\Model\InMemory\InMemoryArticleRepository;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -45,7 +46,16 @@ final class AssignArticleImageCommandHandlerTest extends TestCase
             supermarketId: null,
             aisleId: null,
             nutritionFactsId: null,
-            equivalences: [],
+            equivalences: [
+                ArticleEquivalence::create(
+                    articleId: 'article-1',
+                    unit: 'carton',
+                    quantity: 1000.0,
+                    position: 1,
+                    createdByUserId: 'god-user-id',
+                    dateTimeGenerator: $dateTimeGenerator,
+                ),
+            ],
             createdByUserId: 'god-user-id',
             dateTimeGenerator: $dateTimeGenerator,
         ));
@@ -107,6 +117,41 @@ final class AssignArticleImageCommandHandlerTest extends TestCase
 
         $this->assertNull($article->image);
         $this->assertCount(1, $this->imageStorageService->storedImages);
+    }
+
+    public function testItKeepsTheEquivalencesWhenTheImageIsStored(): void
+    {
+        ($this->handler)(new AssignArticleImageCommand(
+            articleId: 'article-1',
+            imagePath: '/tmp/upload_1.jpg',
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $article = $this->articleRepository->findById(id: 'article-1');
+
+        $this->assertCount(1, $article->equivalences);
+        $this->assertSame('carton', $article->equivalences[0]->unit);
+        $this->assertSame(1000.0, $article->equivalences[0]->quantity);
+    }
+
+    public function testItKeepsTheEquivalencesWhenTheImageIsRemoved(): void
+    {
+        ($this->handler)(new AssignArticleImageCommand(
+            articleId: 'article-1',
+            imagePath: '/tmp/upload_1.jpg',
+            updatedByUserId: 'god-user-id',
+        ));
+        ($this->handler)(new AssignArticleImageCommand(
+            articleId: 'article-1',
+            imagePath: null,
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $article = $this->articleRepository->findById(id: 'article-1');
+
+        $this->assertNull($article->image);
+        $this->assertCount(1, $article->equivalences);
+        $this->assertSame('carton', $article->equivalences[0]->unit);
     }
 
     public function testItThrowsWhenTheArticleDoesNotExist(): void

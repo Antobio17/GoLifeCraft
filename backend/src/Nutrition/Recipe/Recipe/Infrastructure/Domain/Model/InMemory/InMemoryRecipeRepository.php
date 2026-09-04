@@ -8,6 +8,8 @@ use Nutrition\Recipe\Recipe\Domain\Model\RecipeRepository;
 final class InMemoryRecipeRepository implements RecipeRepository
 {
     private array $recipes = [];
+    private array $ingredients = [];
+    private array $steps = [];
 
     public function nextId(): string
     {
@@ -18,7 +20,7 @@ final class InMemoryRecipeRepository implements RecipeRepository
     {
         foreach ($this->recipes as $recipe) {
             if ($recipe->id === $id) {
-                return $recipe;
+                return $this->withChildren(recipe: $recipe);
             }
         }
 
@@ -27,6 +29,9 @@ final class InMemoryRecipeRepository implements RecipeRepository
 
     public function save(Recipe $recipe): void
     {
+        $this->ingredients[$recipe->id] = $recipe->ingredients;
+        $this->steps[$recipe->id] = $recipe->steps;
+
         foreach ($this->recipes as $key => $existing) {
             if ($existing->id === $recipe->id) {
                 $this->recipes[$key] = $recipe;
@@ -40,11 +45,21 @@ final class InMemoryRecipeRepository implements RecipeRepository
 
     public function delete(Recipe $recipe): void
     {
+        unset($this->ingredients[$recipe->id], $this->steps[$recipe->id]);
+
         foreach ($this->recipes as $key => $existing) {
             if ($existing->id === $recipe->id) {
                 unset($this->recipes[$key]);
                 break;
             }
         }
+    }
+
+    private function withChildren(Recipe $recipe): Recipe
+    {
+        $recipe->ingredients = $this->ingredients[$recipe->id] ?? [];
+        $recipe->steps = $this->steps[$recipe->id] ?? [];
+
+        return $recipe;
     }
 }
