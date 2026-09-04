@@ -31,6 +31,11 @@ change_my_theme:
   methods: [PUT]
   controller: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyThemeController
 
+change_my_visual_preference:
+  path: /api/v1/authorization/me/visual-preference
+  methods: [PUT]
+  controller: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyVisualPreferenceController
+
 get_user:
   path: /api/v1/authorization/users/{id}
   methods: [GET]

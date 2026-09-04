@@ -197,6 +197,7 @@ final class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeBuilder
                 unit: $node->unit,
                 name: $node->nameSnapshot,
                 emoji: $node->emojiSnapshot,
+                image: null,
                 macros: $node->macros(),
             ),
             $ordered,

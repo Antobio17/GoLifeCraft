@@ -4,6 +4,7 @@ export interface EditableIngredient {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   quantity: number;
   unit: string;
 }

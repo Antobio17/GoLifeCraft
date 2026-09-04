@@ -4,6 +4,7 @@ export interface ShoppingListItemView {
   custom: boolean;
   name: string;
   emoji: string;
+  image: string | null;
   brand: string | null;
   store: string | null;
   category: string;

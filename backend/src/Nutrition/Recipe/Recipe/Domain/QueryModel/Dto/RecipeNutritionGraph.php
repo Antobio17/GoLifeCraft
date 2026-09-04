@@ -5,10 +5,10 @@ namespace Nutrition\Recipe\Recipe\Domain\QueryModel\Dto;
 final readonly class RecipeNutritionGraph
 {
     /**
-     * @param array<string, MacroBreakdown>                                                                                                                                 $articleMacrosPerUnit
-     * @param array<string, array{name: string, emoji: string, baseUnit: string}>                                                                                           $articles
-     * @param array<string, array<string, float>>                                                                                                                           $articleUnitFactors
-     * @param array<string, array{servings: int, name: string, emoji: string, ingredients: array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>}> $recipes
+     * @param array<string, MacroBreakdown>                                                                                                                                                 $articleMacrosPerUnit
+     * @param array<string, array{name: string, emoji: string, image: ?string, baseUnit: string}>                                                                                           $articles
+     * @param array<string, array<string, float>>                                                                                                                                           $articleUnitFactors
+     * @param array<string, array{servings: int, name: string, emoji: string, image: ?string, ingredients: array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>}> $recipes
      */
     public function __construct(
         private array $articleMacrosPerUnit,
@@ -72,6 +72,11 @@ final readonly class RecipeNutritionGraph
         return $this->articles[$articleId]['emoji'] ?? '🍽️';
     }
 
+    public function articleImage(string $articleId): ?string
+    {
+        return $this->articles[$articleId]['image'] ?? null;
+    }
+
     public function articleBaseUnit(string $articleId): string
     {
         return $this->articles[$articleId]['baseUnit'] ?? 'g';
@@ -85,5 +90,19 @@ final readonly class RecipeNutritionGraph
     public function recipeEmoji(string $recipeId): string
     {
         return $this->recipes[$recipeId]['emoji'] ?? '🍲';
+    }
+
+    public function recipeImage(string $recipeId): ?string
+    {
+        return $this->recipes[$recipeId]['image'] ?? null;
+    }
+
+    public function imageFor(string $kind, string $refId): ?string
+    {
+        if (RecipeBreakdownItem::KIND_RECIPE === $kind) {
+            return $this->recipeImage(recipeId: $refId);
+        }
+
+        return $this->articleImage(articleId: $refId);
     }
 }

@@ -35,7 +35,13 @@
 </ds-swipe-to-delete>
 
 <ng-template #content>
-  <ds-emoji-tile [emoji]="emoji" [size]="38" [radius]="10" />
+  <ds-emoji-tile
+    [emoji]="emoji"
+    [imageUrl]="imageUrl"
+    [alt]="name"
+    [size]="38"
+    [radius]="10"
+  />
 
   <ds-stack gap="var(--ds-space-1)" [grow]="true">
     <ds-text variant="strong" class="diary-entry__name">{{ name }}</ds-text>

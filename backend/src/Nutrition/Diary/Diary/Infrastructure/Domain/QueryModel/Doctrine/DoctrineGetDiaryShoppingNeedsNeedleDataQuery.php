@@ -144,6 +144,7 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
                 'a.id',
                 'a.name',
                 'a.emoji',
+                'a.image',
                 'a.brand',
                 'a.base_unit',
                 'a.pack_unit',
@@ -160,7 +161,7 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
             ->leftJoin('a', 'shopping_list_item', 'sli', 'sli.article_id = a.id')
             ->where('a.id IN (:articleIds)')
             ->setParameter(key: 'articleIds', value: array_keys($quantities), type: ArrayParameterType::STRING)
-            ->groupBy('a.id', 'a.name', 'a.emoji', 'a.brand', 'a.base_unit', 'a.pack_unit', 'a.diary_unit', 'a.recipe_unit', 'a.price', 's.name', 'st.quantity')
+            ->groupBy('a.id', 'a.name', 'a.emoji', 'a.image', 'a.brand', 'a.base_unit', 'a.pack_unit', 'a.diary_unit', 'a.recipe_unit', 'a.price', 's.name', 'st.quantity')
             ->orderBy(sort: 'a.name', order: 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
@@ -178,6 +179,7 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
                 articleId: $row['id'],
                 name: $row['name'],
                 emoji: $row['emoji'] ?? '🥫',
+                image: $row['image'] ?? null,
                 brand: $row['brand'],
                 store: $row['store'],
                 price: null !== $row['price'] ? (float) $row['price'] : null,

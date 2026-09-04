@@ -22,6 +22,9 @@ import { ProductionViewService } from "@nutrition/kitchen/production/application
 import { ProductionListItem } from "@nutrition/kitchen/production/domain/models/production-list-item.model";
 import { ProductionListRow } from "@nutrition/kitchen/production/domain/models/production-list-row.model";
 import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/production-status.model";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 
 const FALLBACK_EMOJI = "🍲";
 
@@ -45,6 +48,7 @@ const FALLBACK_EMOJI = "🍲";
 })
 export class GetProductionsComponent extends AbstractListPageComponent<ProductionListItem> {
   private getProductionsService = inject(GetProductionsService);
+  private entityVisual = inject(EntityVisualService);
   protected range = inject(ProductionRangeService);
   protected view = inject(ProductionViewService);
 
@@ -72,7 +76,13 @@ export class GetProductionsComponent extends AbstractListPageComponent<Productio
             })
           : this.t("getProductions.status.done"),
         cooking,
-        emoji: attributes.emojis[0] ?? FALLBACK_EMOJI,
+        emoji: attributes.thumbnails[0]?.emoji ?? FALLBACK_EMOJI,
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Kitchen,
+          AggregateImageKind.Recipe,
+          attributes.thumbnails[0]?.recipeId ?? null,
+          attributes.thumbnails[0]?.image,
+        ),
       };
     }),
   );

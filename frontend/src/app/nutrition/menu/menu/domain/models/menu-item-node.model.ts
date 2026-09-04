@@ -6,6 +6,7 @@ export interface MenuItemNodeView {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   quantity: number;
   unit: string;
   macros: MenuMacros;

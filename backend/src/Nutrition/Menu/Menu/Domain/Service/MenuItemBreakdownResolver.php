@@ -40,7 +40,7 @@ final readonly class MenuItemBreakdownResolver
         $nodes = $item['nodes'] ?? [];
 
         if ([] !== $nodes) {
-            return $this->itemsFromNodes(nodes: $nodes);
+            return $this->itemsFromNodes(graph: $graph, nodes: $nodes);
         }
 
         return $this->breakdownCalculator->expand(
@@ -89,6 +89,7 @@ final readonly class MenuItemBreakdownResolver
                 refId: $item->refId,
                 name: $item->name,
                 emoji: $item->emoji,
+                image: $item->image,
                 quantity: round(num: $item->quantity, precision: 2),
                 unit: $item->isRecipe() ? self::RECIPE_SERVING_UNIT : ($item->unit ?? self::RECIPE_BASE_UNIT),
                 macros: $item->macros->rounded(),
@@ -104,7 +105,7 @@ final readonly class MenuItemBreakdownResolver
      *
      * @return RecipeBreakdownItem[]
      */
-    private function itemsFromNodes(array $nodes): array
+    private function itemsFromNodes(RecipeNutritionGraph $graph, array $nodes): array
     {
         return array_map(static fn (array $node): RecipeBreakdownItem => new RecipeBreakdownItem(
             path: $node['path'],
@@ -117,6 +118,7 @@ final readonly class MenuItemBreakdownResolver
             unit: $node['unit'],
             name: $node['snapshot_name'],
             emoji: $node['snapshot_emoji'],
+            image: $graph->imageFor(kind: $node['kind'], refId: $node['ref_id']),
             macros: new MacroBreakdown(
                 calories: (float) $node['snapshot_calories'],
                 protein: (float) $node['snapshot_protein'],

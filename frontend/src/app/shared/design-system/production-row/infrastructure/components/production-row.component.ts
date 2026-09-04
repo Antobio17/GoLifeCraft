@@ -19,7 +19,13 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
   ],
   template: `
     <ng-template #content>
-      <ds-emoji-tile [emoji]="emoji" [size]="44" [radius]="12" />
+      <ds-emoji-tile
+        [emoji]="emoji"
+        [imageUrl]="imageUrl"
+        [alt]="name"
+        [size]="44"
+        [radius]="12"
+      />
 
       <ds-stack class="ds-prow__body" [gap]="'2px'" [grow]="true">
         <ds-text variant="strong" class="ds-prow__name" [truncate]="true">{{
@@ -162,6 +168,7 @@ export class ProductionRowComponent {
 
   @Input() state: ProductionRowState = ProductionRowState.Deficit;
   @Input() emoji = "";
+  @Input() imageUrl: string | null = null;
   @Input() name = "";
   @Input() meta = "";
   @Input() tag = "";

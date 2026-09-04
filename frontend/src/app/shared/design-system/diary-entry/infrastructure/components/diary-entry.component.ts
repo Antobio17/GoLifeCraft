@@ -31,6 +31,7 @@ type ChipTone = "neutral" | "brand" | "accent" | "warning";
 })
 export class DiaryEntryComponent {
   @Input() emoji = "";
+  @Input() imageUrl: string | null = null;
   @Input() name = "";
   @Input() badge = "";
   @Input() badgeTone: ChipTone = "neutral";

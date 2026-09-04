@@ -2,6 +2,7 @@ export interface MenuShoppingNeed {
   articleId: string;
   name: string;
   emoji: string;
+  image: string | null;
   brand: string | null;
   store: string | null;
   quantity: number;

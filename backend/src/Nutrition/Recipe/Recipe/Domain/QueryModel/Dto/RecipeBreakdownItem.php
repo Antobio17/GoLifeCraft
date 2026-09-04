@@ -21,6 +21,7 @@ final readonly class RecipeBreakdownItem
         public ?string $unit,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public MacroBreakdown $macros,
     ) {
     }
@@ -47,7 +48,7 @@ final readonly class RecipeBreakdownItem
         return self::KIND_RECIPE === $this->kind;
     }
 
-    public function withSnapshot(string $name, string $emoji, ?string $unit, MacroBreakdown $macros): self
+    public function withSnapshot(string $name, string $emoji, ?string $image, ?string $unit, MacroBreakdown $macros): self
     {
         return new self(
             path: $this->path,
@@ -60,6 +61,7 @@ final readonly class RecipeBreakdownItem
             unit: $unit,
             name: $name,
             emoji: $emoji,
+            image: $image,
             macros: $macros,
         );
     }

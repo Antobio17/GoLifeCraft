@@ -278,6 +278,7 @@
                 <ds-stack [gap]="'var(--ds-space-1-5)'">
                   <ds-diary-entry
                     [emoji]="row.item.emoji"
+                    [imageUrl]="row.imageUrl"
                     [name]="row.item.name"
                     [badge]="row.badge"
                     [badgeTone]="row.badgeTone"
@@ -407,6 +408,8 @@
               >
                 <ds-emoji-tile
                   [emoji]="row.choice.emoji"
+                  [imageUrl]="row.imageUrl"
+                  [alt]="row.choice.name"
                   [size]="36"
                   [radius]="10"
                 />

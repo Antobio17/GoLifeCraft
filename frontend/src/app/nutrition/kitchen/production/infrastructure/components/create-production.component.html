@@ -81,6 +81,8 @@
 
               <ds-emoji-tile
                 [emoji]="row.item.emoji"
+                [imageUrl]="row.imageUrl"
+                [alt]="row.item.name"
                 [size]="44"
                 [radius]="12"
               />
@@ -174,6 +176,7 @@
           <ds-production-row
             [state]="ProductionRowState.Expected"
             [emoji]="row.item.emoji"
+            [imageUrl]="row.imageUrl"
             [name]="row.item.name"
             [meta]="row.meta"
             [linkLabel]="'createProduction.covered.clear' | t"

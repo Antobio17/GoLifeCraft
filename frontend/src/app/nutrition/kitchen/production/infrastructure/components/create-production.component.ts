@@ -33,6 +33,9 @@ import { ProposalAttributes } from "@nutrition/kitchen/production/domain/models/
 import { ProposalCovered } from "@nutrition/kitchen/production/domain/models/proposal-covered.model";
 import { ProposalRow } from "@nutrition/kitchen/production/domain/models/proposal-row.model";
 import { ProposalToCook } from "@nutrition/kitchen/production/domain/models/proposal-to-cook.model";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 
 @Component({
   selector: "app-create-production",
@@ -61,6 +64,7 @@ import { ProposalToCook } from "@nutrition/kitchen/production/domain/models/prop
 })
 export class CreateProductionComponent {
   private translationService = inject(TranslationService);
+  private entityVisual = inject(EntityVisualService);
   private getProductionProposalService = inject(GetProductionProposalService);
   private startProductionService = inject(StartProductionService);
   private updateRecipeStockService = inject(UpdateRecipeStockService);
@@ -106,6 +110,12 @@ export class CreateProductionComponent {
   rows = computed<ProposalRow[]>(() =>
     (this.proposal()?.toCook ?? []).map((item) => ({
       item,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Kitchen,
+        AggregateImageKind.Recipe,
+        item.recipeId,
+        item.image,
+      ),
       meta: this.rowMeta(item),
       origin: item.requiredBy.length
         ? this.t("createProduction.row.requiredBy", {
@@ -121,6 +131,12 @@ export class CreateProductionComponent {
   coveredRows = computed(() =>
     (this.proposal()?.covered ?? []).map((item) => ({
       item,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Kitchen,
+        AggregateImageKind.Recipe,
+        item.recipeId,
+        item.image,
+      ),
       meta: this.coveredMeta(item),
     })),
   );

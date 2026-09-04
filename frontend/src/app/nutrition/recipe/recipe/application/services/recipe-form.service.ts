@@ -11,6 +11,7 @@ export interface FormIngredient {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   quantity: number;
   unit: string;
 }
@@ -26,6 +27,7 @@ export interface PickableIngredient {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   detail: string;
   macros: RecipeMacros;
 }
@@ -33,6 +35,7 @@ export interface PickableIngredient {
 interface ProductEntry {
   name: string;
   emoji: string;
+  image: string | null;
   baseUnit: string;
   recipeUnit: string;
   units: string[];
@@ -43,6 +46,7 @@ interface ProductEntry {
 interface RecipeEntry {
   name: string;
   emoji: string;
+  image: string | null;
   perServing: RecipeMacros;
 }
 
@@ -87,6 +91,7 @@ export class RecipeFormService {
       products.set(article.id, {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
+        image: article.attributes.image,
         baseUnit,
         recipeUnit: article.attributes.recipeUnit || baseUnit,
         units: [baseUnit, ...Object.keys(factors)],
@@ -105,6 +110,7 @@ export class RecipeFormService {
       entries.set(recipe.id, {
         name: recipe.attributes.name,
         emoji: recipe.attributes.emoji || FALLBACK_RECIPE_EMOJI,
+        image: recipe.attributes.image,
         perServing: recipe.attributes.perServing,
       });
     });
@@ -120,6 +126,7 @@ export class RecipeFormService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
+        image: entry.image,
         detail: `por 100 ${entry.baseUnit}`,
         macros: this.scale(entry.perUnit, DEFAULT_PRODUCT_QUANTITY),
       }))
@@ -135,6 +142,7 @@ export class RecipeFormService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
+        image: entry.image,
         detail: "por ración",
         macros: entry.perServing,
       }))
@@ -163,6 +171,7 @@ export class RecipeFormService {
         refId,
         name: entry?.name ?? "Receta",
         emoji: entry?.emoji ?? FALLBACK_RECIPE_EMOJI,
+        image: entry?.image ?? null,
         quantity: 1,
         unit: RECIPE_UNIT,
       };
@@ -178,6 +187,7 @@ export class RecipeFormService {
       refId,
       name: entry?.name ?? "Artículo",
       emoji: entry?.emoji ?? FALLBACK_PRODUCT_EMOJI,
+      image: entry?.image ?? null,
       quantity: isBase ? DEFAULT_PRODUCT_QUANTITY : 1,
       unit,
     };

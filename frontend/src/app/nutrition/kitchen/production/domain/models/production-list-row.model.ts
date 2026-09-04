@@ -7,4 +7,5 @@ export interface ProductionListRow {
   statusLabel: string;
   cooking: boolean;
   emoji: string;
+  imageUrl: string | null;
 }

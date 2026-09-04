@@ -106,7 +106,12 @@
                   align="center"
                   [gap]="'var(--ds-space-3)'"
                 >
-                  <ds-emoji-tile [emoji]="row.ingredient.emoji" [size]="34" />
+                  <ds-emoji-tile
+                    [emoji]="row.ingredient.emoji"
+                    [imageUrl]="row.imageUrl"
+                    [alt]="row.ingredient.name"
+                    [size]="34"
+                  />
                   <ds-stack
                     align="start"
                     [gap]="'var(--ds-space-1)'"
@@ -172,6 +177,7 @@
               <ds-check-row
                 [dimChecked]="true"
                 [emoji]="row.item.emoji"
+                [imageUrl]="row.imageUrl"
                 [name]="row.item.name"
                 [meta]="row.meta"
                 [chip]="
@@ -202,6 +208,7 @@
             <ds-check-row
               [dimChecked]="true"
               [emoji]="row.emoji"
+              [imageUrl]="row.imageUrl"
               [name]="row.name"
               [meta]="row.meta"
               [checked]="row.checked"
@@ -341,7 +348,12 @@
                 align="center"
                 [gap]="'var(--ds-space-3)'"
               >
-                <ds-emoji-tile [emoji]="choice.emoji" [size]="34" />
+                <ds-emoji-tile
+                  [emoji]="choice.emoji"
+                  [imageUrl]="choiceImageUrl(choice)"
+                  [alt]="choice.name"
+                  [size]="34"
+                />
                 <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
                   <ds-text variant="strong">{{ choice.name }}</ds-text>
                   <ds-text variant="meta">{{ choice.detail }}</ds-text>

@@ -6,6 +6,7 @@ export interface DiaryTreeRow {
   depth: number;
   recipe: boolean;
   emoji: string;
+  imageUrl: string | null;
   name: string;
   kcalLabel: string;
   macros: MacroBadge[];

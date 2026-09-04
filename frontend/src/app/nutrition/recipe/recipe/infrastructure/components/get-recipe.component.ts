@@ -48,6 +48,8 @@ import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrast
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 
 @Component({
@@ -94,6 +96,7 @@ export class GetRecipeComponent {
   protected autosave = inject(AutosaveService);
   protected view = inject(RecipeViewService);
   private aggregateImageService = inject(AggregateImageService);
+  private entityVisual = inject(EntityVisualService);
   private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/recipe/recipe";
@@ -130,11 +133,12 @@ export class GetRecipeComponent {
 
     if (null === recipe) return null;
 
-    return this.aggregateImageService.objectUrl(
+    return this.entityVisual.urlOf(
+      VisualSurface.Recipe,
       AggregateImageKind.Recipe,
       recipe.id,
       recipe.attributes.image ?? null,
-    )();
+    );
   });
 
   constructor() {
@@ -170,6 +174,12 @@ export class GetRecipeComponent {
   ingredientRows = computed(() =>
     (this.attributes()?.ingredients ?? []).map((ingredient) => ({
       ingredient,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Recipe,
+        this.entityVisual.kindOf(ingredient.kind),
+        ingredient.refId,
+        ingredient.image,
+      ),
       quantityLabel: this.view.ingredientQuantityLabel(ingredient),
       kcal: this.ingredientKcal(ingredient),
       macros: this.ingredientMacros(ingredient),

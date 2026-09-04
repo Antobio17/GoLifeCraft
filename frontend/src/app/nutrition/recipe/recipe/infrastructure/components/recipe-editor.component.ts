@@ -42,6 +42,8 @@ import { InlineQuantityComponent } from "@shared/design-system/inline-quantity/i
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import {
@@ -131,6 +133,7 @@ export class RecipeEditorComponent implements OnInit {
   private translationService = inject(TranslationService);
   private formBuilder = inject(FormBuilder);
   private emojiCatalog = inject(EmojiCatalogService);
+  private entityVisual = inject(EntityVisualService);
   private categoryService = inject(RecipeCategoryService);
   private recipeForm = inject(RecipeFormService);
   private view = inject(RecipeViewService);
@@ -245,6 +248,12 @@ export class RecipeEditorComponent implements OnInit {
   ingredientRows = computed(() =>
     this.ingredients().map((ingredient) => ({
       ingredient,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Recipe,
+        this.entityVisual.kindOf(ingredient.kind),
+        ingredient.refId,
+        ingredient.image,
+      ),
       kcal: this.ingredientKcal(ingredient),
       macros: this.ingredientMacros(ingredient),
       unitLabel: this.ingredientUnitLabel(ingredient),
@@ -255,6 +264,12 @@ export class RecipeEditorComponent implements OnInit {
   pickerRows = computed(() =>
     this.pickerChoices().map((choice) => ({
       choice,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Recipe,
+        this.entityVisual.kindOf(choice.kind),
+        choice.refId,
+        choice.image,
+      ),
       kcal: this.choiceKcal(choice),
       macros: this.choiceMacros(choice),
     })),
@@ -521,6 +536,7 @@ export class RecipeEditorComponent implements OnInit {
         refId: ingredient.refId,
         name: ingredient.name,
         emoji: ingredient.emoji,
+        image: ingredient.image,
         quantity: ingredient.quantity,
         unit: ingredient.unit,
       })),

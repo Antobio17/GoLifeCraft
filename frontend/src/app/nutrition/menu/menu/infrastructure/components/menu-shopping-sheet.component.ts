@@ -56,6 +56,7 @@ const MODULE_PATH = "nutrition/menu/menu";
                 [name]="row.name"
                 [meta]="row.meta"
                 [emoji]="row.emoji"
+                [imageUrl]="row.imageUrl"
                 [checked]="row.checked"
                 (toggled)="toggle(row.articleId)"
               />

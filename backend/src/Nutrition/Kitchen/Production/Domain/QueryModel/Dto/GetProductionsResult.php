@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryAggregateResult;
 final class GetProductionsResult extends QueryAggregateResult
 {
     /**
-     * @param string[] $emojis
+     * @param ProductionThumbnailView[] $thumbnails
      */
     public function __construct(
         string $id,
@@ -19,7 +19,7 @@ final class GetProductionsResult extends QueryAggregateResult
         public readonly int $cookedCount,
         public readonly float $servingsPlanned,
         public readonly float $servingsCooked,
-        public readonly array $emojis,
+        public readonly array $thumbnails,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
         public readonly string $createdByUserId,

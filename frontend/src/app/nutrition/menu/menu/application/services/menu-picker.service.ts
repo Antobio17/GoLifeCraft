@@ -11,6 +11,7 @@ export interface MenuChoice {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   detail: string;
   macros: MenuMacros;
 }
@@ -23,6 +24,7 @@ export interface MenuItemDefaults {
 interface ProductEntry {
   name: string;
   emoji: string;
+  image: string | null;
   detail: string;
   baseUnit: string;
   menuUnit: string;
@@ -34,6 +36,7 @@ interface ProductEntry {
 interface RecipeEntry {
   name: string;
   emoji: string;
+  image: string | null;
   detail: string;
   perServing: MenuMacros;
 }
@@ -41,6 +44,7 @@ interface RecipeEntry {
 export interface MenuEntryView {
   name: string;
   emoji: string;
+  image: string | null;
   baseUnit: string;
 }
 
@@ -80,6 +84,7 @@ export class MenuPickerService {
       map.set(article.id, {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
+        image: article.attributes.image,
         detail: brand
           ? `por 100 ${baseUnit} · ${brand}`
           : `por 100 ${baseUnit}`,
@@ -112,6 +117,7 @@ export class MenuPickerService {
       map.set(recipe.id, {
         name: recipe.attributes.name,
         emoji: recipe.attributes.emoji || FALLBACK_RECIPE_EMOJI,
+        image: recipe.attributes.image,
         detail: `por ración · ${recipe.attributes.category}`,
         perServing: recipe.attributes.perServing,
       });
@@ -179,6 +185,7 @@ export class MenuPickerService {
       return {
         name: recipe?.name ?? MISSING_NAME,
         emoji: recipe?.emoji ?? FALLBACK_RECIPE_EMOJI,
+        image: recipe?.image ?? null,
         baseUnit: RECIPE_BASE_UNIT,
       };
     }
@@ -188,6 +195,7 @@ export class MenuPickerService {
     return {
       name: product?.name ?? MISSING_NAME,
       emoji: product?.emoji ?? FALLBACK_PRODUCT_EMOJI,
+      image: product?.image ?? null,
       baseUnit: product?.baseUnit ?? DEFAULT_BASE_UNIT,
     };
   }
@@ -221,7 +229,14 @@ export class MenuPickerService {
     };
   }
 
-  private choices<T extends { name: string; emoji: string; detail: string }>(
+  private choices<
+    T extends {
+      name: string;
+      emoji: string;
+      image: string | null;
+      detail: string;
+    },
+  >(
     entries: Map<string, T>,
     kind: MenuItemKind,
     query: string,
@@ -234,6 +249,7 @@ export class MenuPickerService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
+        image: entry.image,
         detail: entry.detail,
         macros: macros(entry),
       }))

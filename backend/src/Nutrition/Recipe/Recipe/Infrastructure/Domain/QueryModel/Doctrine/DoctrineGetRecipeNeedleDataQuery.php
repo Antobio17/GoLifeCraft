@@ -116,6 +116,7 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
                 refId: $row['ref_id'],
                 name: ($isSubRecipe ? $graph->recipeName(recipeId: $row['ref_id']) : $graph->articleName(articleId: $row['ref_id'])) ?? 'Desconocido',
                 emoji: $isSubRecipe ? $graph->recipeEmoji(recipeId: $row['ref_id']) : $graph->articleEmoji(articleId: $row['ref_id']),
+                image: $graph->imageFor(kind: $row['kind'], refId: $row['ref_id']),
                 quantity: $quantity,
                 unit: $isSubRecipe ? 'ración' : ($unit ?? $graph->articleBaseUnit(articleId: $row['ref_id'])),
                 position: (int) $row['position'],

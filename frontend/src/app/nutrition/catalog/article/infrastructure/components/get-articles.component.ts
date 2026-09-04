@@ -24,6 +24,8 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import {
@@ -62,6 +64,7 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
   private aggregateImageService = inject(AggregateImageService);
+  private entityVisual = inject(EntityVisualService);
 
   canCreate = this.authSession.isAuthenticated();
 
@@ -217,10 +220,11 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   }
 
   private imageUrl(article: Article): string | null {
-    return this.aggregateImageService.objectUrl(
+    return this.entityVisual.urlOf(
+      VisualSurface.Catalog,
       AggregateImageKind.Article,
       article.id,
       article.attributes.image ?? null,
-    )();
+    );
   }
 }

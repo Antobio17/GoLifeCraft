@@ -26,7 +26,13 @@
       }
     </button>
 
-    <ds-emoji-tile [emoji]="emoji" [size]="44" [radius]="12" />
+    <ds-emoji-tile
+      [emoji]="emoji"
+      [imageUrl]="imageUrl"
+      [alt]="name"
+      [size]="44"
+      [radius]="12"
+    />
 
     <ds-stack class="shopping-item__body" [gap]="'2px'" [grow]="true">
       <ds-text variant="strong" class="shopping-item__name">{{ name }}</ds-text>

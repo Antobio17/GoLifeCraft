@@ -184,6 +184,7 @@ final readonly class DoctrineGetMenuNeedleDataQuery implements GetMenuNeedleData
             refId: $item['refId'],
             name: $name ?? self::MISSING_NAME,
             emoji: $emoji,
+            image: $graph->imageFor(kind: $item['kind'], refId: $item['refId']),
             quantity: $item['quantity'],
             unit: $item['unit'],
             baseUnit: $baseUnit,

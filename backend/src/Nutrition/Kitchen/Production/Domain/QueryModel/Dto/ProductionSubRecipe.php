@@ -8,6 +8,7 @@ final readonly class ProductionSubRecipe
         public string $recipeId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public float $servings,
     ) {
     }

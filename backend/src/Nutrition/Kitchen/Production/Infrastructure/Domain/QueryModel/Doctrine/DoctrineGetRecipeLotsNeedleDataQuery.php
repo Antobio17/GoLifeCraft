@@ -32,9 +32,11 @@ final readonly class DoctrineGetRecipeLotsNeedleDataQuery implements GetRecipeLo
                 'i.created_at',
                 'i.created_by_user_id',
                 'i.updated_by_user_id',
+                'r.image',
                 ProductionLotServings::assigned(itemAlias: 'i').' AS servings_assigned'
             )
             ->from(table: 'production_item', alias: 'i')
+            ->leftJoin(fromAlias: 'i', join: 'recipe', alias: 'r', condition: 'r.id = i.recipe_id')
             ->where('i.recipe_id = :recipeId')
             ->andWhere('i.status = :status')
             ->setParameter(key: 'recipeId', value: $recipeId)
@@ -55,6 +57,7 @@ final readonly class DoctrineGetRecipeLotsNeedleDataQuery implements GetRecipeLo
                 recipeId: $row['recipe_id'],
                 name: $row['name_snapshot'],
                 emoji: $row['emoji_snapshot'],
+                image: $row['image'],
                 code: $row['code'],
                 label: (string) ($row['label'] ?? ''),
                 customized: (bool) $row['customized'],

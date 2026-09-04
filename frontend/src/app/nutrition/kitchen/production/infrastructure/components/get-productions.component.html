@@ -39,7 +39,13 @@
           (activated)="onOpen(row.production)"
         >
           <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-            <ds-emoji-tile [emoji]="row.emoji" [size]="44" [radius]="12" />
+            <ds-emoji-tile
+              [emoji]="row.emoji"
+              [imageUrl]="row.imageUrl"
+              [alt]="row.title"
+              [size]="44"
+              [radius]="12"
+            />
 
             <ds-stack [gap]="'2px'" [grow]="true">
               <ds-text variant="strong">{{ row.title }}</ds-text>

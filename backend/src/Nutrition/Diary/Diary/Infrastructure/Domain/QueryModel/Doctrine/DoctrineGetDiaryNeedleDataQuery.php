@@ -72,6 +72,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                     refId: $row['ref_id'],
                     name: $row['snapshot_name'],
                     emoji: $row['snapshot_emoji'],
+                    image: null === $row['ref_id'] ? null : $this->graph()->imageFor(kind: $row['kind'], refId: $row['ref_id']),
                     quantity: (float) $row['quantity'],
                     unit: $this->unitFor(kind: $row['kind'], storedUnit: $row['unit'] ?? null),
                     macros: $macros->rounded(),
@@ -183,6 +184,8 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
      */
     private function itemsFromNodes(array $nodes): array
     {
+        $graph = $this->graph();
+
         return array_map(static fn (array $node): RecipeBreakdownItem => new RecipeBreakdownItem(
             path: $node['path'],
             parentPath: self::parentPathOf(path: $node['path']),
@@ -194,6 +197,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
             unit: $node['unit'],
             name: $node['snapshot_name'],
             emoji: $node['snapshot_emoji'],
+            image: $graph->imageFor(kind: $node['kind'], refId: $node['ref_id']),
             macros: new MacroBreakdown(
                 calories: (float) $node['snapshot_calories'],
                 protein: (float) $node['snapshot_protein'],
@@ -224,6 +228,7 @@ final class DoctrineGetDiaryNeedleDataQuery implements GetDiaryNeedleDataQuery
                 refId: $item->refId,
                 name: $item->name,
                 emoji: $item->emoji,
+                image: $item->image,
                 quantity: round(num: $item->quantity, precision: 2),
                 unit: $item->isRecipe() ? 'rac.' : ($item->unit ?? 'g'),
                 macros: $item->macros->rounded(),

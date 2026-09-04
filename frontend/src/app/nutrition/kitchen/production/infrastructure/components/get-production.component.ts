@@ -36,6 +36,9 @@ import { ProductionItemStatus } from "@nutrition/kitchen/production/domain/model
 import { ProductionItemView } from "@nutrition/kitchen/production/domain/models/production-item-view.model";
 import { ProductionRecipeRow } from "@nutrition/kitchen/production/domain/models/production-recipe-row.model";
 import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/production-status.model";
+import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 
 @Component({
   selector: "app-get-production",
@@ -60,6 +63,7 @@ import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/pr
 })
 export class GetProductionComponent {
   private translationService = inject(TranslationService);
+  private entityVisual = inject(EntityVisualService);
   private getProductionService = inject(GetProductionService);
   private discardProductionService = inject(DiscardProductionService);
   private destroyRef = inject(DestroyRef);
@@ -102,6 +106,12 @@ export class GetProductionComponent {
 
       return {
         item,
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Kitchen,
+          AggregateImageKind.Recipe,
+          item.recipeId,
+          item.image,
+        ),
         meta: this.rowMeta(item, done),
         done,
         origin: item.requiredBy.length

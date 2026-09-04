@@ -10,6 +10,7 @@ final readonly class ProductionIngredient
         public string $articleId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public float $quantity,
         public string $unit,
         public float $baseQuantity,

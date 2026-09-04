@@ -8,6 +8,7 @@ final readonly class DiaryShoppingNeedView
         public string $articleId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public ?string $brand,
         public ?string $store,
         public ?float $price,

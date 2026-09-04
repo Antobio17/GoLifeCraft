@@ -83,6 +83,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
                     recipeId: $recipeId,
                     name: $recipe['name'],
                     emoji: $recipe['emoji'],
+                    image: $recipe['image'],
                     demand: $servings,
                     inStock: $stock[$recipeId] ?? 0.0,
                     inProduction: $inProduction[$recipeId] ?? 0.0,
@@ -95,6 +96,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
                 recipeId: $recipeId,
                 name: $recipe['name'],
                 emoji: $recipe['emoji'],
+                image: $recipe['image'],
                 demand: $servings,
                 inStock: $stock[$recipeId] ?? 0.0,
                 inProduction: $inProduction[$recipeId] ?? 0.0,
@@ -259,7 +261,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
     /**
      * @param string[] $recipeIds
      *
-     * @return array<string, array{name: string, emoji: string}>
+     * @return array<string, array{name: string, emoji: string, image: ?string}>
      */
     private function recipesById(array $recipeIds): array
     {
@@ -268,7 +270,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         }
 
         $rows = $this->connection->createQueryBuilder()
-            ->select('r.id', 'r.name', 'r.emoji')
+            ->select('r.id', 'r.name', 'r.emoji', 'r.image')
             ->from(table: 'recipe', alias: 'r')
             ->where('r.id IN (:recipeIds)')
             ->setParameter(key: 'recipeIds', value: $recipeIds, type: ArrayParameterType::STRING)
@@ -278,7 +280,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         $recipes = [];
 
         foreach ($rows as $row) {
-            $recipes[$row['id']] = ['name' => $row['name'], 'emoji' => $row['emoji']];
+            $recipes[$row['id']] = ['name' => $row['name'], 'emoji' => $row['emoji'], 'image' => $row['image']];
         }
 
         return $recipes;

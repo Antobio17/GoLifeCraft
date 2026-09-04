@@ -21,6 +21,7 @@ import { ChipComponent } from "../../../chip/infrastructure/components/chip.comp
 })
 export class ShoppingItemComponent {
   @Input() emoji = "";
+  @Input() imageUrl: string | null = null;
   @Input() name = "";
   @Input() brand: string | null = null;
   @Input() store: string | null = null;

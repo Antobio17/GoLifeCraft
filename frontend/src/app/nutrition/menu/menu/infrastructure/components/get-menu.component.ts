@@ -77,6 +77,8 @@ import {
 import { CreateMenuService } from "@nutrition/menu/menu/application/services/create-menu.service";
 import { UpdateMenuItemNodeService } from "@nutrition/menu/menu/application/services/update-menu-item-node.service";
 import { ResetMenuItemTreeService } from "@nutrition/menu/menu/application/services/reset-menu-item-tree.service";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { MenuTreeViewService } from "@nutrition/menu/menu/application/services/menu-tree-view.service";
 import { GetMenusService } from "@nutrition/menu/menu/application/services/get-menus.service";
 import {
@@ -149,6 +151,7 @@ export class GetMenuComponent implements OnInit {
   private updateMenuItemNodeService = inject(UpdateMenuItemNodeService);
   private resetMenuItemTreeService = inject(ResetMenuItemTreeService);
   private treeView = inject(MenuTreeViewService);
+  private entityVisual = inject(EntityVisualService);
   private getArticlesService = inject(GetArticlesService);
   private getRecipesService = inject(GetRecipesService);
   private getDiaryGoalService = inject(GetDiaryGoalService);
@@ -253,6 +256,12 @@ export class GetMenuComponent implements OnInit {
       meta: this.mealMeta(meal.totals.calories, meal.itemCount),
       items: meal.items.map((item) => ({
         item,
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Menu,
+          this.entityVisual.kindOf(item.kind),
+          item.refId,
+          item.image,
+        ),
         badge: this.itemBadge(item),
         badgeTone: this.itemBadgeTone(item),
         kcal: this.itemKcal(item),
@@ -277,6 +286,12 @@ export class GetMenuComponent implements OnInit {
   pickerRows = computed(() =>
     this.pickerChoices().map((choice) => ({
       choice,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Menu,
+        this.entityVisual.kindOf(choice.kind),
+        choice.refId,
+        choice.image,
+      ),
       kcal: this.choiceKcal(choice),
       macros: this.choiceMacros(choice),
     })),

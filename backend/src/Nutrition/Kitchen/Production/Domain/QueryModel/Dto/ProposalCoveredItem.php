@@ -8,6 +8,7 @@ final readonly class ProposalCoveredItem
         public string $recipeId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public float $demand,
         public float $inStock,
         public float $inProduction,

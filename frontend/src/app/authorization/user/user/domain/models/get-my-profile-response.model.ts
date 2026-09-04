@@ -1,3 +1,5 @@
+import { VisualPreferences } from "@shared/visual-preference/domain/models/visual-preferences.model";
+
 export interface GetMyProfileResponse {
   data: {
     id: string;
@@ -10,6 +12,8 @@ export interface GetMyProfileResponse {
       role: string;
       isActive: boolean;
       tenantId: string;
+      theme: string;
+      visualPreferences: Partial<VisualPreferences>;
     };
   };
 }

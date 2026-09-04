@@ -109,7 +109,13 @@
 </ds-stack>
 
 <ng-template #content let-row>
-  <ds-emoji-tile [emoji]="row.emoji" [size]="30" [radius]="9" />
+  <ds-emoji-tile
+    [emoji]="row.emoji"
+    [imageUrl]="row.imageUrl"
+    [alt]="row.name"
+    [size]="30"
+    [radius]="9"
+  />
 
   <ds-stack class="diary-tree__body" gap="var(--ds-space-1)" [grow]="true">
     <ds-text class="diary-tree__name">{{ row.name }}</ds-text>

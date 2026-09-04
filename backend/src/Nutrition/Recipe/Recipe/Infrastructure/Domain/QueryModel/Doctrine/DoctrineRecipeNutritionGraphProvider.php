@@ -21,6 +21,7 @@ final class DoctrineRecipeNutritionGraphProvider
             $articles[$row['id']] = [
                 'name' => $row['name'],
                 'emoji' => $row['emoji'] ?? '🍽️',
+                'image' => $row['image'] ?? null,
                 'baseUnit' => $row['base_unit'] ?? 'g',
             ];
 
@@ -73,6 +74,7 @@ final class DoctrineRecipeNutritionGraphProvider
                 'a.id',
                 'a.name',
                 'a.emoji',
+                'a.image',
                 'a.base_unit',
                 'nf.reference_amount',
                 'nf.calories',
@@ -87,7 +89,7 @@ final class DoctrineRecipeNutritionGraphProvider
     }
 
     /**
-     * @return array<string, array{servings: int, name: string, emoji: string, ingredients: array<int, array{kind: string, refId: string, quantity: float}>}>
+     * @return array<string, array{servings: int, name: string, emoji: string, image: ?string, ingredients: array<int, array{kind: string, refId: string, quantity: float}>}>
      */
     private function loadRecipes(): array
     {
@@ -98,6 +100,7 @@ final class DoctrineRecipeNutritionGraphProvider
                 'servings' => max(1, (int) $row['servings']),
                 'name' => $row['name'],
                 'emoji' => $row['emoji'] ?? '🍲',
+                'image' => $row['image'] ?? null,
                 'ingredients' => [],
             ];
         }
@@ -124,7 +127,7 @@ final class DoctrineRecipeNutritionGraphProvider
     private function fetchRecipes(): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('r.id', 'r.name', 'r.emoji', 'r.servings')
+            ->select('r.id', 'r.name', 'r.emoji', 'r.image', 'r.servings')
             ->from(table: 'recipe', alias: 'r')
             ->executeQuery()
             ->fetchAllAssociative();

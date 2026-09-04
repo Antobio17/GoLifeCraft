@@ -11,6 +11,7 @@ export interface DiaryChoice {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   detail: string;
   macros: DiaryMacros;
 }
@@ -18,6 +19,7 @@ export interface DiaryChoice {
 interface ProductEntry {
   name: string;
   emoji: string;
+  image: string | null;
   detail: string;
   macros: DiaryMacros;
   baseUnit: string;
@@ -36,6 +38,7 @@ const DEFAULT_BASE_QUANTITY = 100;
 interface RecipeEntry {
   name: string;
   emoji: string;
+  image: string | null;
   detail: string;
   macros: DiaryMacros;
 }
@@ -74,6 +77,7 @@ export class DiaryPickerService {
       map.set(article.id, {
         name: article.attributes.name,
         emoji: article.attributes.emoji || FALLBACK_PRODUCT_EMOJI,
+        image: article.attributes.image,
         detail: brand
           ? `por 100 ${baseUnit} · ${brand}`
           : `por 100 ${baseUnit}`,
@@ -99,6 +103,7 @@ export class DiaryPickerService {
       map.set(recipe.id, {
         name: recipe.attributes.name,
         emoji: recipe.attributes.emoji || FALLBACK_RECIPE_EMOJI,
+        image: recipe.attributes.image,
         detail: `por ración · ${recipe.attributes.category}`,
         macros: recipe.attributes.perServing,
       });
@@ -151,6 +156,7 @@ export class DiaryPickerService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
+        image: entry.image,
         detail: entry.detail,
         macros: entry.macros,
       }))
@@ -165,6 +171,7 @@ export class DiaryPickerService {
         refId,
         name: entry.name,
         emoji: entry.emoji,
+        image: entry.image,
         detail: entry.detail,
         macros: entry.macros,
       }))

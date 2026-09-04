@@ -186,6 +186,8 @@
                     >
                       <ds-emoji-tile
                         [emoji]="row.ingredient.emoji"
+                        [imageUrl]="row.imageUrl"
+                        [alt]="row.ingredient.name"
                         [size]="38"
                       />
                       <ds-stack
@@ -356,7 +358,12 @@
                 align="center"
                 [gap]="'var(--ds-space-3)'"
               >
-                <ds-emoji-tile [emoji]="row.choice.emoji" [size]="34" />
+                <ds-emoji-tile
+                  [emoji]="row.choice.emoji"
+                  [imageUrl]="row.imageUrl"
+                  [alt]="row.choice.name"
+                  [size]="34"
+                />
                 <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
                   <ds-text variant="strong">{{ row.choice.name }}</ds-text>
                   <ds-text variant="meta">{{ row.choice.detail }}</ds-text>

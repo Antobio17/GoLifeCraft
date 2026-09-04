@@ -143,6 +143,28 @@
           ></ds-preference-toggle>
         </ds-stack>
 
+        <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
+          <ds-text variant="label">
+            {{ "settings.visual.title" | t }}
+          </ds-text>
+          <ds-text variant="meta">{{ "settings.visual.hint" | t }}</ds-text>
+
+          @for (row of visualRows(); track row.surface) {
+            <ds-preference-toggle
+              [icon]="row.images ? '🖼️' : '🔣'"
+              [title]="row.titleKey | t"
+              [subtitle]="
+                (row.images
+                  ? 'settings.visual.mode.image'
+                  : 'settings.visual.mode.icon'
+                ) | t
+              "
+              [checked]="row.images"
+              (toggled)="toggleVisual(row.surface)"
+            ></ds-preference-toggle>
+          }
+        </ds-stack>
+
         <ds-stack [gap]="'var(--ds-space-3)'">
           <ds-text variant="label">{{
             "settings.section.security" | t

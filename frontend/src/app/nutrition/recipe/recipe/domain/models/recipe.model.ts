@@ -12,6 +12,7 @@ export interface RecipeIngredientView {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   quantity: number;
   unit: string;
   position: number;
