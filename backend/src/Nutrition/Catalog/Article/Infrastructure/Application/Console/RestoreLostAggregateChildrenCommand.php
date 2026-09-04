@@ -13,8 +13,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Assigning or clearing an image used to wipe the equivalences of an article and the ingredients and steps of a
  * recipe, because the repository mirrored an in-memory list that the load never filled. Those rows are gone, but
- * the domain event log kept the whole state of every article and recipe as of its last write, so the last event
- * that still carried children is enough to put them back.
+ * the domain event log kept the whole state of every article and recipe as of its last write.
+ *
+ * The wipe leaves a signature worth reading precisely, because the current rows always win: a parent whose table
+ * is empty while its LAST create/update event still carried children lost them after that write, which is the bug
+ * and nothing else. A parent whose last write carried none was emptied on purpose, or was re-saved from a form
+ * that had already lost them; either way the event log no longer knows the answer, so those are only reported.
+ * Anything already restored by hand has rows again and is never touched. That also makes the command idempotent.
  */
 final class RestoreLostAggregateChildrenCommand extends Command
 {
@@ -28,6 +33,8 @@ final class RestoreLostAggregateChildrenCommand extends Command
         'golifecraft.nutrition.event.1.recipe.updated',
     ];
 
+    private int $ambiguous = 0;
+
     public function __construct(
         private readonly TenantConnectionSwitcher $switcher,
         private readonly Connection $writerTenantConnection,
@@ -38,7 +45,7 @@ final class RestoreLostAggregateChildrenCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(description: 'Rebuild the article equivalences and the recipe ingredients and steps that an image upload wiped, reading them back from the domain event log.')
+            ->setDescription(description: 'Rebuild the article equivalences and the recipe ingredients and steps that an image upload wiped, reading them back from the domain event log. Never overwrites what is already there.')
             ->addOption(name: 'tenant', shortcut: null, mode: InputOption::VALUE_REQUIRED, description: 'Restore a single tenant database by name instead of discovering all GLC% tenants.', default: null)
             ->addOption(name: 'force', shortcut: null, mode: InputOption::VALUE_NONE, description: 'Actually write the rows back. Without it the command only reports what it would restore.');
     }
@@ -65,6 +72,13 @@ final class RestoreLostAggregateChildrenCommand extends Command
             $this->restoreTenant(dbname: $dbname, force: $force, output: $output);
         }
 
+        if ($this->ambiguous > 0) {
+            $output->writeln(messages: sprintf(
+                '<comment>%d parent(s) left untouched because their last write already carried nothing. Check those by hand.</comment>',
+                $this->ambiguous,
+            ));
+        }
+
         return Command::SUCCESS;
     }
 
@@ -73,26 +87,35 @@ final class RestoreLostAggregateChildrenCommand extends Command
         $this->switcher->switch(tenantId: $dbname);
         $output->writeln(messages: sprintf('<info>Tenant %s</info>', $dbname));
 
-        $restored = $this->restoreArticles(force: $force, output: $output)
-            + $this->restoreRecipes(force: $force, output: $output);
+        $restored = $this->restoreEquivalences(force: $force, output: $output)
+            + $this->restoreIngredients(force: $force, output: $output)
+            + $this->restoreSteps(force: $force, output: $output);
 
         if (0 === $restored) {
             $output->writeln(messages: '  <comment>nothing to restore</comment>');
         }
     }
 
-    private function restoreArticles(bool $force, OutputInterface $output): int
+    private function restoreEquivalences(bool $force, OutputInterface $output): int
     {
         $restored = 0;
 
         foreach ($this->childlessParents(table: 'article', childTable: 'article_equivalence', childColumn: 'article_id') as $articleId) {
-            $payload = $this->lastPayloadCarrying(aggregateId: $articleId, eventNames: self::ARTICLE_EVENTS, key: 'equivalences');
+            $payload = $this->lostChildrenOf(aggregateId: $articleId, eventNames: self::ARTICLE_EVENTS, key: 'equivalences', label: 'article', output: $output);
 
             if (null === $payload) {
                 continue;
             }
 
-            $output->writeln(messages: sprintf('  article %s: %d equivalence(s)', $articleId, count($payload['equivalences'])));
+            $output->writeln(messages: sprintf(
+                '  article %s: %d equivalence(s) [%s]',
+                $articleId,
+                count($payload['equivalences']),
+                implode(', ', array_map(
+                    callback: static fn (array $line): string => sprintf('%s=%s', $line['unit'], $line['quantity']),
+                    array: $payload['equivalences'],
+                )),
+            ));
             ++$restored;
 
             if (!$force) {
@@ -105,23 +128,18 @@ final class RestoreLostAggregateChildrenCommand extends Command
         return $restored;
     }
 
-    private function restoreRecipes(bool $force, OutputInterface $output): int
+    private function restoreIngredients(bool $force, OutputInterface $output): int
     {
         $restored = 0;
 
         foreach ($this->childlessParents(table: 'recipe', childTable: 'recipe_ingredient', childColumn: 'recipe_id') as $recipeId) {
-            $payload = $this->lastPayloadCarrying(aggregateId: $recipeId, eventNames: self::RECIPE_EVENTS, key: 'ingredients');
+            $payload = $this->lostChildrenOf(aggregateId: $recipeId, eventNames: self::RECIPE_EVENTS, key: 'ingredients', label: 'recipe', output: $output);
 
             if (null === $payload) {
                 continue;
             }
 
-            $output->writeln(messages: sprintf(
-                '  recipe %s: %d ingredient(s), %d step(s)',
-                $recipeId,
-                count($payload['ingredients']),
-                count($payload['steps'] ?? []),
-            ));
+            $output->writeln(messages: sprintf('  recipe %s: %d ingredient(s)', $recipeId, count($payload['ingredients'])));
             ++$restored;
 
             if (!$force) {
@@ -129,6 +147,29 @@ final class RestoreLostAggregateChildrenCommand extends Command
             }
 
             $this->insertIngredients(recipeId: $recipeId, payload: $payload);
+        }
+
+        return $restored;
+    }
+
+    private function restoreSteps(bool $force, OutputInterface $output): int
+    {
+        $restored = 0;
+
+        foreach ($this->childlessParents(table: 'recipe', childTable: 'recipe_step', childColumn: 'recipe_id') as $recipeId) {
+            $payload = $this->lostChildrenOf(aggregateId: $recipeId, eventNames: self::RECIPE_EVENTS, key: 'steps', label: 'recipe', output: $output);
+
+            if (null === $payload) {
+                continue;
+            }
+
+            $output->writeln(messages: sprintf('  recipe %s: %d step(s)', $recipeId, count($payload['steps'])));
+            ++$restored;
+
+            if (!$force) {
+                continue;
+            }
+
             $this->insertSteps(recipeId: $recipeId, payload: $payload);
         }
 
@@ -151,14 +192,64 @@ final class RestoreLostAggregateChildrenCommand extends Command
     /**
      * @param string[] $eventNames
      *
+     * @return array<string, mixed>|null the last written state, when it still carried children that are gone now
+     */
+    private function lostChildrenOf(string $aggregateId, array $eventNames, string $key, string $label, OutputInterface $output): ?array
+    {
+        $payload = $this->lastWrittenState(aggregateId: $aggregateId, eventNames: $eventNames);
+
+        if (null === $payload) {
+            return null;
+        }
+
+        if (!empty($payload[$key])) {
+            return $payload;
+        }
+
+        if (!$this->everCarried(aggregateId: $aggregateId, eventNames: $eventNames, key: $key)) {
+            return null;
+        }
+
+        $output->writeln(messages: sprintf(
+            '  <comment>%s %s: skipped, its last write already carried no %s</comment>',
+            $label,
+            $aggregateId,
+            $key,
+        ));
+        ++$this->ambiguous;
+
+        return null;
+    }
+
+    /**
+     * @param string[] $eventNames
+     *
      * @return array<string, mixed>|null
      */
-    private function lastPayloadCarrying(string $aggregateId, array $eventNames, string $key): ?array
+    private function lastWrittenState(string $aggregateId, array $eventNames): ?array
+    {
+        $row = $this->writerTenantConnection->fetchOne(
+            query: sprintf(
+                'SELECT payload FROM domain_event_log WHERE aggregate_id = ? AND event_name IN (%s) ORDER BY occurred_on DESC, recorded_at DESC LIMIT 1',
+                $this->placeholdersFor(eventNames: $eventNames),
+            ),
+            params: [$aggregateId, ...$eventNames],
+        );
+
+        $payload = json_decode(json: (string) $row, associative: true);
+
+        return is_array($payload) ? $payload : null;
+    }
+
+    /**
+     * @param string[] $eventNames
+     */
+    private function everCarried(string $aggregateId, array $eventNames, string $key): bool
     {
         $rows = $this->writerTenantConnection->fetchFirstColumn(
             query: sprintf(
-                'SELECT payload FROM domain_event_log WHERE aggregate_id = ? AND event_name IN (%s) ORDER BY occurred_on DESC, recorded_at DESC',
-                implode(',', array_fill(start_index: 0, count: count($eventNames), value: '?')),
+                'SELECT payload FROM domain_event_log WHERE aggregate_id = ? AND event_name IN (%s)',
+                $this->placeholdersFor(eventNames: $eventNames),
             ),
             params: [$aggregateId, ...$eventNames],
         );
@@ -166,14 +257,20 @@ final class RestoreLostAggregateChildrenCommand extends Command
         foreach ($rows as $row) {
             $payload = json_decode(json: (string) $row, associative: true);
 
-            if (!is_array($payload) || empty($payload[$key])) {
-                continue;
+            if (is_array($payload) && !empty($payload[$key])) {
+                return true;
             }
-
-            return $payload;
         }
 
-        return null;
+        return false;
+    }
+
+    /**
+     * @param string[] $eventNames
+     */
+    private function placeholdersFor(array $eventNames): string
+    {
+        return implode(',', array_fill(start_index: 0, count: count($eventNames), value: '?'));
     }
 
     /**
@@ -225,7 +322,7 @@ final class RestoreLostAggregateChildrenCommand extends Command
     {
         $stamp = $this->stampOf(payload: $payload, parentTable: 'recipe', parentId: $recipeId);
 
-        foreach ($payload['steps'] ?? [] as $index => $step) {
+        foreach ($payload['steps'] as $index => $step) {
             $this->writerTenantConnection->insert(table: 'recipe_step', data: [
                 'id' => Uuid::uuid4()->toString(),
                 'version' => 1,
