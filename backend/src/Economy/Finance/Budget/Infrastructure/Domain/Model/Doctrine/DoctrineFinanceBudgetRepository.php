@@ -41,11 +41,21 @@ final class DoctrineFinanceBudgetRepository extends EntityRepository implements 
         return $this->hydrateCategories(financeBudget: $budget);
     }
 
+    /**
+     * Reconciles the categories by id: a command that does not rebuild them keeps the ones it loaded,
+     * so wiping them all would drop the categories of every caller that only touches the budget itself.
+     */
     public function save(FinanceBudget $financeBudget): void
     {
         $entityManager = $this->getEntityManager();
 
-        $this->removeChildren(budgetId: $financeBudget->id);
+        $this->removeChildren(
+            budgetId: $financeBudget->id,
+            keptCategoryIds: array_map(
+                callback: static fn (FinanceBudgetCategory $category): string => $category->id,
+                array: $financeBudget->categories,
+            ),
+        );
         $entityManager->persist(object: $financeBudget);
 
         foreach ($financeBudget->categories as $category) {
@@ -55,7 +65,7 @@ final class DoctrineFinanceBudgetRepository extends EntityRepository implements 
 
     public function delete(FinanceBudget $financeBudget): void
     {
-        $this->removeChildren(budgetId: $financeBudget->id);
+        $this->removeChildren(budgetId: $financeBudget->id, keptCategoryIds: []);
         $this->getEntityManager()->remove(object: $financeBudget);
     }
 
@@ -77,13 +87,21 @@ final class DoctrineFinanceBudgetRepository extends EntityRepository implements 
         return $financeBudget;
     }
 
-    private function removeChildren(string $budgetId): void
+    /**
+     * @param array<int, string> $keptCategoryIds
+     */
+    private function removeChildren(string $budgetId, array $keptCategoryIds): void
     {
-        $this->getEntityManager()->createQueryBuilder()
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->delete(delete: FinanceBudgetCategory::class, alias: 'financeBudgetCategory')
             ->where('financeBudgetCategory.budgetId = :budgetId')
-            ->setParameter(key: 'budgetId', value: $budgetId)
-            ->getQuery()
-            ->execute();
+            ->setParameter(key: 'budgetId', value: $budgetId);
+
+        if ([] !== $keptCategoryIds) {
+            $queryBuilder->andWhere('financeBudgetCategory.id NOT IN (:keptCategoryIds)')
+                ->setParameter(key: 'keptCategoryIds', value: $keptCategoryIds);
+        }
+
+        $queryBuilder->getQuery()->execute();
     }
 }

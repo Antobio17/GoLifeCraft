@@ -9,6 +9,7 @@ use Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts;
 final class InMemoryArticleRepository implements ArticleRepository
 {
     private array $articles = [];
+    private array $equivalences = [];
     private array $nutritionFacts = [];
 
     public function nextId(): string
@@ -20,7 +21,7 @@ final class InMemoryArticleRepository implements ArticleRepository
     {
         foreach ($this->articles as $article) {
             if ($article->id === $id) {
-                return $article;
+                return $this->withEquivalences(article: $article);
             }
         }
 
@@ -31,7 +32,7 @@ final class InMemoryArticleRepository implements ArticleRepository
     {
         foreach ($this->articles as $article) {
             if ($article->barcode === $barcode) {
-                return $article;
+                return $this->withEquivalences(article: $article);
             }
         }
 
@@ -40,6 +41,8 @@ final class InMemoryArticleRepository implements ArticleRepository
 
     public function save(Article $article): void
     {
+        $this->equivalences[$article->id] = $article->equivalences;
+
         foreach ($this->articles as $key => $existing) {
             if ($existing->id === $article->id) {
                 $this->articles[$key] = $article;
@@ -53,6 +56,8 @@ final class InMemoryArticleRepository implements ArticleRepository
 
     public function delete(Article $article): void
     {
+        unset($this->equivalences[$article->id]);
+
         foreach ($this->articles as $key => $existing) {
             if ($existing->id === $article->id) {
                 unset($this->articles[$key]);
@@ -73,5 +78,12 @@ final class InMemoryArticleRepository implements ArticleRepository
     public function saveNutritionFacts(NutritionFacts $nutritionFacts): void
     {
         $this->nutritionFacts[$nutritionFacts->id] = $nutritionFacts;
+    }
+
+    private function withEquivalences(Article $article): Article
+    {
+        $article->equivalences = $this->equivalences[$article->id] ?? [];
+
+        return $article;
     }
 }
