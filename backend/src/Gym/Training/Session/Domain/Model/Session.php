@@ -62,6 +62,13 @@ class Session extends GenericAggregate
             aggregateId: $id,
             occurredOn: $now,
             name: $name,
+            estimatedDurationMinutes: $estimatedDurationMinutes,
+            restSeconds: $restSeconds,
+            exercises: $session->exercisesPayload(),
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $createdByUserId,
+            updatedByUserId: $createdByUserId,
         ));
 
         return $session;
@@ -84,6 +91,13 @@ class Session extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
+            estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            restSeconds: $this->restSeconds,
+            exercises: $this->exercisesPayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
         ));
     }
 
@@ -116,6 +130,13 @@ class Session extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
+            estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            restSeconds: $this->restSeconds,
+            exercises: $this->exercisesPayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
         ));
     }
 
@@ -129,6 +150,14 @@ class Session extends GenericAggregate
         $this->record(event: new SessionDeleted(
             aggregateId: $this->id,
             occurredOn: $now,
+            name: $this->name,
+            estimatedDurationMinutes: $this->estimatedDurationMinutes,
+            restSeconds: $this->restSeconds,
+            exercises: $this->exercisesPayload(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            deletedByUserId: $deletedByUserId,
         ));
     }
 
@@ -351,10 +380,7 @@ class Session extends GenericAggregate
      */
     private function exercisesPayload(): array
     {
-        return array_map(
-            callback: static fn (SessionExercise $sessionExercise): array => $sessionExercise->toPayload(),
-            array: array_values(array: $this->exercises),
-        );
+        return self::snapshotAll(aggregates: $this->exercises);
     }
 
     private function repositionExercises(string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void

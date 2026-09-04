@@ -14,7 +14,10 @@ final readonly class ShoppingListItemAdded extends DomainEvent
         public int $quantity,
         public ?float $baseQuantity,
         public bool $checked,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
         public string $createdByUserId,
+        public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

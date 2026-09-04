@@ -6,6 +6,9 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class DiaryEntryConsumed extends DomainEvent
 {
+    /**
+     * @param array<int, array<string, mixed>> $tree
+     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
@@ -15,9 +18,22 @@ final readonly class DiaryEntryConsumed extends DomainEvent
         public ?string $refId,
         public ?string $productionItemId,
         public float $quantity,
-        public bool $consumed,
+        public ?string $unit,
         public string $name,
         public string $emoji,
+        public float $calories,
+        public float $protein,
+        public float $fat,
+        public float $carbs,
+        public string $quickName,
+        public string $quickEmoji,
+        public float $quickCalories,
+        public float $quickProtein,
+        public float $quickFat,
+        public float $quickCarbs,
+        public bool $customized,
+        public bool $consumed,
+        public array $tree,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

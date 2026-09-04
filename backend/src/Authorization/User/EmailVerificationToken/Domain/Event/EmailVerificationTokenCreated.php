@@ -10,14 +10,16 @@ final readonly class EmailVerificationTokenCreated extends DomainEvent
         string $aggregateId,
         \DateTime $occurredOn,
         public string $userId,
-        public string $rawToken,
+        public string $tokenHash,
+        public \DateTime $createdAt,
         public \DateTime $expiresAt,
+        public ?\DateTime $consumedAt,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }
 
     public function getName(): string
     {
-        return 'golifecraft.authorization.event.1.emailVerificationToken.created';
+        return 'golifecraft.authorization.event.1.email_verification_token.created';
     }
 }

@@ -20,6 +20,9 @@ final readonly class FinanceRecurrenceDeleted extends DomainEvent
         public ?string $endMonth,
         public bool $active,
         public ?string $lastRunMonth,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
         public string $deletedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);

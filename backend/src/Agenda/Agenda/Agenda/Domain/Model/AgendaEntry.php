@@ -234,6 +234,9 @@ class AgendaEntry extends GenericAggregate
             notes: $this->notes,
             done: $this->done,
             seriesId: $this->seriesId,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             deletedByUserId: $deletedByUserId,
         ));
     }

@@ -43,8 +43,10 @@ class EmailVerificationToken extends Aggregate
             aggregateId: $id,
             occurredOn: $now,
             userId: $userId,
-            rawToken: $rawToken,
+            tokenHash: $tokenHash,
+            createdAt: $now,
             expiresAt: $expiresAt,
+            consumedAt: null,
         ));
 
         return $token;
@@ -66,6 +68,10 @@ class EmailVerificationToken extends Aggregate
             aggregateId: $this->id,
             occurredOn: $now,
             userId: $this->userId,
+            tokenHash: $this->tokenHash,
+            createdAt: $this->createdAt,
+            expiresAt: $this->expiresAt,
+            consumedAt: $this->consumedAt,
         ));
     }
 

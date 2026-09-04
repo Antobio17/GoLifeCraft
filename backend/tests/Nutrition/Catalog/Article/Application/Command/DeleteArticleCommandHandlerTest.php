@@ -45,7 +45,9 @@ final class DeleteArticleCommandHandlerTest extends TestCase
             supermarketId: null,
             aisleId: null,
             nutritionFactsId: null,
+            barcode: null,
             equivalences: [],
+            nutritionFacts: null,
             createdByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

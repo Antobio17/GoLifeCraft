@@ -17,6 +17,9 @@ final readonly class FinanceTransactionDeleted extends DomainEvent
         public string $note,
         public ?string $store,
         public string $source,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
         public string $deletedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);

@@ -28,12 +28,18 @@ final readonly class PropagateArticleSnapshotToDiary implements DomainEventSubsc
     public function __invoke(DomainEvent $event): void
     {
         if ($event instanceof ArticleUpdated) {
+            $nutritionFacts = $event->nutritionFacts ?? [];
             $this->propagate(
                 articleId: $event->aggregateId,
                 name: $event->name,
                 emoji: $event->emoji ?? self::DEFAULT_EMOJI,
-                referenceAmount: $event->referenceAmount,
-                raw: $this->macros(calories: $event->calories, protein: $event->protein, fat: $event->fat, carbs: $event->carbs),
+                referenceAmount: (float) ($nutritionFacts['referenceAmount'] ?? 1.0),
+                raw: $this->macros(
+                    calories: $nutritionFacts['calories'] ?? 0.0,
+                    protein: $nutritionFacts['protein'] ?? 0.0,
+                    fat: $nutritionFacts['fat'] ?? 0.0,
+                    carbs: $nutritionFacts['carbs'] ?? 0.0,
+                ),
             );
 
             return;

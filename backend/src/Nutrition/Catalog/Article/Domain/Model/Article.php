@@ -53,7 +53,9 @@ class Article extends GenericAggregate
         ?string $supermarketId,
         ?string $aisleId,
         ?string $nutritionFactsId,
+        ?string $barcode,
         array $equivalences,
+        ?array $nutritionFacts,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
@@ -92,6 +94,7 @@ class Article extends GenericAggregate
         $article->supermarketId = $supermarketId;
         $article->aisleId = self::resolveAisleId(supermarketId: $supermarketId, aisleId: $aisleId);
         $article->nutritionFactsId = $nutritionFactsId;
+        $article->barcode = $barcode;
         $article->equivalences = $equivalences;
         $article->stampCreation(userId: $createdByUserId, now: $now);
 
@@ -99,23 +102,28 @@ class Article extends GenericAggregate
             aggregateId: $id,
             occurredOn: $now,
             name: $name,
+            brand: $brand,
             emoji: $emoji,
             image: $image,
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
             packUnit: $packUnit,
-            equivalences: self::snapshotEquivalences(equivalences: $equivalences),
+            price: $price,
+            categoryId: $categoryId,
             supermarketId: $article->supermarketId,
             aisleId: $article->aisleId,
+            nutritionFactsId: $nutritionFactsId,
+            barcode: $article->barcode,
+            equivalences: self::snapshotAll(aggregates: $equivalences),
+            nutritionFacts: $nutritionFacts,
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $createdByUserId,
+            updatedByUserId: $createdByUserId,
         ));
 
         return $article;
-    }
-
-    public function assignBarcode(?string $barcode): void
-    {
-        $this->barcode = $barcode;
     }
 
     public function assignImage(
@@ -132,9 +140,23 @@ class Article extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
+            brand: $this->brand,
             emoji: $this->emoji,
             image: $image,
+            baseUnit: $this->baseUnit,
+            recipeUnit: $this->recipeUnit,
+            diaryUnit: $this->diaryUnit,
+            packUnit: $this->packUnit,
+            price: $this->price,
+            categoryId: $this->categoryId,
+            supermarketId: $this->supermarketId,
+            aisleId: $this->aisleId,
+            nutritionFactsId: $this->nutritionFactsId,
+            barcode: $this->barcode,
+            equivalences: self::snapshotAll(aggregates: $this->equivalences),
+            createdAt: $this->createdAt,
             updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             updatedByUserId: $updatedByUserId,
         ));
     }
@@ -157,11 +179,7 @@ class Article extends GenericAggregate
         ?string $aisleId,
         ?string $nutritionFactsId,
         array $equivalences,
-        float $referenceAmount,
-        ?float $calories,
-        ?float $protein,
-        ?float $fat,
-        ?float $carbs,
+        ?array $nutritionFacts,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -205,24 +223,30 @@ class Article extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $name,
+            brand: $brand,
             emoji: $emoji,
             image: $image,
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
             packUnit: $packUnit,
-            equivalences: self::snapshotEquivalences(equivalences: $equivalences),
-            referenceAmount: $referenceAmount,
-            calories: $calories,
-            protein: $protein,
-            fat: $fat,
-            carbs: $carbs,
+            price: $price,
+            categoryId: $categoryId,
             supermarketId: $this->supermarketId,
             aisleId: $this->aisleId,
+            nutritionFactsId: $nutritionFactsId,
+            barcode: $this->barcode,
+            equivalences: self::snapshotAll(aggregates: $equivalences),
+            nutritionFacts: $nutritionFacts,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
         ));
     }
 
     public function delete(
+        ?array $nutritionFacts,
         string $deletedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -232,6 +256,25 @@ class Article extends GenericAggregate
         $this->record(event: new ArticleDeleted(
             aggregateId: $this->id,
             occurredOn: $now,
+            name: $this->name,
+            brand: $this->brand,
+            emoji: $this->emoji,
+            image: $this->image,
+            baseUnit: $this->baseUnit,
+            recipeUnit: $this->recipeUnit,
+            diaryUnit: $this->diaryUnit,
+            packUnit: $this->packUnit,
+            price: $this->price,
+            categoryId: $this->categoryId,
+            supermarketId: $this->supermarketId,
+            aisleId: $this->aisleId,
+            nutritionFactsId: $this->nutritionFactsId,
+            barcode: $this->barcode,
+            equivalences: self::snapshotAll(aggregates: $this->equivalences),
+            nutritionFacts: $nutritionFacts,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             deletedByUserId: $deletedByUserId,
         ));
     }
@@ -289,22 +332,5 @@ class Article extends GenericAggregate
         }
 
         return false;
-    }
-
-    /**
-     * @param ArticleEquivalence[] $equivalences
-     *
-     * @return array<int, array{unit: string, quantity: float, position: int}>
-     */
-    private static function snapshotEquivalences(array $equivalences): array
-    {
-        return array_map(
-            callback: static fn (ArticleEquivalence $equivalence): array => [
-                'unit' => $equivalence->unit,
-                'quantity' => $equivalence->quantity,
-                'position' => $equivalence->position,
-            ],
-            array: $equivalences,
-        );
     }
 }

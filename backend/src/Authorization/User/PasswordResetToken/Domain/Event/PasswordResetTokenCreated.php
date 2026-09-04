@@ -10,14 +10,16 @@ final readonly class PasswordResetTokenCreated extends DomainEvent
         string $aggregateId,
         \DateTime $occurredOn,
         public string $userId,
-        public string $rawToken,
+        public string $tokenHash,
+        public \DateTime $createdAt,
         public \DateTime $expiresAt,
+        public ?\DateTime $consumedAt,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }
 
     public function getName(): string
     {
-        return 'golifecraft.authorization.event.1.passwordResetToken.created';
+        return 'golifecraft.authorization.event.1.password_reset_token.created';
     }
 }

@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class ProductionReopened extends DomainEvent
 {
     /**
-     * @param array<int, array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string}> $items
+     * @param array<int, array<string, mixed>> $items
      */
     public function __construct(
         string $aggregateId,

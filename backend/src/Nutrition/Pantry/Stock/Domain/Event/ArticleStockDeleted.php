@@ -11,6 +11,10 @@ final readonly class ArticleStockDeleted extends DomainEvent
         \DateTime $occurredOn,
         public string $articleId,
         public float $quantity,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $deletedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

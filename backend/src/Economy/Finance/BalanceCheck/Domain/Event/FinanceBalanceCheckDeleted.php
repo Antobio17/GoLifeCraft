@@ -13,6 +13,9 @@ final readonly class FinanceBalanceCheckDeleted extends DomainEvent
         public string $checkDate,
         public float $amount,
         public string $note,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
         public string $deletedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);

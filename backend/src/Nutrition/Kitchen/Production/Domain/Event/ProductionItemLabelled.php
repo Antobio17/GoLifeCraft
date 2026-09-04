@@ -6,12 +6,19 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class ProductionItemLabelled extends DomainEvent
 {
+    /**
+     * @param array<int, array<string, mixed>> $items
+     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
         public string $itemId,
         public string $recipeId,
+        public string $fromDate,
+        public string $toDate,
         public string $status,
+        public array $items,
+        public string $itemStatus,
         public float $servingsPlanned,
         public float $servingsCooked,
         public string $nameSnapshot,

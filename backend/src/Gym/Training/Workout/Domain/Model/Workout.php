@@ -3,6 +3,7 @@
 namespace Gym\Training\Workout\Domain\Model;
 
 use Gym\Training\Workout\Domain\Event\WorkoutFinished;
+use Gym\Training\Workout\Domain\Event\WorkoutProgressSaved;
 use Gym\Training\Workout\Domain\Event\WorkoutStarted;
 use Gym\Training\Workout\Domain\Exception\FinishWorkoutException;
 use Gym\Training\Workout\Domain\Exception\UpdateWorkoutException;
@@ -59,7 +60,18 @@ class Workout extends GenericAggregate
         $workout->record(event: new WorkoutStarted(
             aggregateId: $id,
             occurredOn: $now,
+            sessionId: $sessionId,
             sessionName: $sessionName,
+            status: $workout->status,
+            startedAt: $workout->startedAt,
+            finishedAt: $workout->finishedAt,
+            durationSeconds: $workout->durationSeconds,
+            restStartedAt: $workout->restStartedAt,
+            exercises: $workout->exercisesSnapshot(),
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $startedByUserId,
+            startedByUserId: $startedByUserId,
         ));
 
         return $workout;
@@ -84,10 +96,29 @@ class Workout extends GenericAggregate
             $this->sessionName = trim($sessionName);
         }
 
+        $now = $dateTimeGenerator->now();
+
         $this->exercises = $exercises;
         $this->durationSeconds = max(0, $durationSeconds);
         $this->restStartedAt = $restStartedAt;
-        $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new WorkoutProgressSaved(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            sessionId: $this->sessionId,
+            sessionName: $this->sessionName,
+            status: $this->status,
+            startedAt: $this->startedAt,
+            finishedAt: $this->finishedAt,
+            durationSeconds: $this->durationSeconds,
+            restStartedAt: $this->restStartedAt,
+            exercises: $this->exercisesSnapshot(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
     }
 
     /**
@@ -125,37 +156,27 @@ class Workout extends GenericAggregate
         $this->record(event: new WorkoutFinished(
             aggregateId: $this->id,
             occurredOn: $now,
-            durationSeconds: $this->durationSeconds,
             sessionId: $this->sessionId,
-            finishedByUserId: $finishedByUserId,
-            templateSyncMode: $templateSyncMode,
+            sessionName: $this->sessionName,
+            status: $this->status,
+            startedAt: $this->startedAt,
+            finishedAt: $this->finishedAt,
+            durationSeconds: $this->durationSeconds,
+            restStartedAt: $this->restStartedAt,
             exercises: $this->exercisesSnapshot(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            templateSyncMode: $templateSyncMode,
+            finishedByUserId: $finishedByUserId,
         ));
     }
 
     /**
-     * @return array<int, array{exerciseId: string, exerciseName: string, type: string, muscleGroups: string[], position: int, note: string|null, sets: array<int, array{position: int, reps: int, weight: float|null}>}>
+     * @return array<int, array<string, mixed>>
      */
     private function exercisesSnapshot(): array
     {
-        return array_map(
-            callback: fn (WorkoutExercise $exercise): array => [
-                'exerciseId' => $exercise->exerciseId,
-                'exerciseName' => $exercise->exerciseName,
-                'type' => $exercise->type,
-                'muscleGroups' => $exercise->muscleGroups,
-                'position' => $exercise->position,
-                'note' => $exercise->note,
-                'sets' => array_map(
-                    callback: fn (WorkoutSet $set): array => [
-                        'position' => $set->position,
-                        'reps' => $set->reps,
-                        'weight' => $set->weight,
-                    ],
-                    array: $exercise->sets,
-                ),
-            ],
-            array: $this->exercises,
-        );
+        return self::snapshotAll(aggregates: $this->exercises);
     }
 }

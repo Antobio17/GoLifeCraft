@@ -33,17 +33,4 @@ class ExerciseSet extends GenericAggregate
 
         return $exerciseSet;
     }
-
-    /**
-     * @return array{id: string, position: int, reps: int, weight: ?float}
-     */
-    public function toPayload(): array
-    {
-        return [
-            'id' => $this->id,
-            'position' => $this->position,
-            'reps' => $this->reps,
-            'weight' => $this->weight,
-        ];
-    }
 }

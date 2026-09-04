@@ -6,13 +6,23 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class RecipeImageAssigned extends DomainEvent
 {
+    /**
+     * @param array<int, array<string, mixed>> $ingredients
+     * @param array<int, array<string, mixed>> $steps
+     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
         public string $name,
         public string $emoji,
         public ?string $image,
+        public string $category,
+        public int $servings,
+        public array $ingredients,
+        public array $steps,
+        public \DateTime $createdAt,
         public \DateTime $updatedAt,
+        public string $createdByUserId,
         public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);

@@ -4,6 +4,7 @@ namespace Nutrition\Catalog\Supermarket\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Catalog\Supermarket\Domain\Event\SupermarketAislesUpdated;
+use Nutrition\Catalog\Supermarket\Domain\Event\SupermarketCreated;
 use Nutrition\Catalog\Supermarket\Domain\Exception\UpdateSupermarketAislesException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -20,10 +21,23 @@ class Supermarket extends GenericAggregate
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
+        $now = $dateTimeGenerator->now();
+
         $supermarket = new self();
         $supermarket->id = $id;
         $supermarket->name = $name;
-        $supermarket->stampCreation(userId: $createdByUserId, now: $dateTimeGenerator->now());
+        $supermarket->stampCreation(userId: $createdByUserId, now: $now);
+
+        $supermarket->record(event: new SupermarketCreated(
+            aggregateId: $id,
+            occurredOn: $now,
+            name: $name,
+            aisles: [],
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $createdByUserId,
+            updatedByUserId: $createdByUserId,
+        ));
 
         return $supermarket;
     }
@@ -54,7 +68,7 @@ class Supermarket extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
-            aisles: self::snapshotAisles(aisles: $this->aisles),
+            aisles: self::snapshotAll(aggregates: $this->aisles),
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -104,22 +118,5 @@ class Supermarket extends GenericAggregate
         }
 
         return null;
-    }
-
-    /**
-     * @param SupermarketAisle[] $aisles
-     *
-     * @return array<int, array{id: string, name: string, position: int}>
-     */
-    private static function snapshotAisles(array $aisles): array
-    {
-        return array_map(
-            callback: static fn (SupermarketAisle $aisle): array => [
-                'id' => $aisle->id,
-                'name' => $aisle->name,
-                'position' => $aisle->position,
-            ],
-            array: $aisles,
-        );
     }
 }

@@ -64,11 +64,7 @@ final readonly class UpdateArticleCommandHandler
                 equivalences: $command->equivalences,
                 userId: $command->updatedByUserId,
             ),
-            referenceAmount: $nutritionFacts->referenceAmount,
-            calories: $nutritionFacts->calories,
-            protein: $nutritionFacts->protein,
-            fat: $nutritionFacts->fat,
-            carbs: $nutritionFacts->carbs,
+            nutritionFacts: $nutritionFacts->snapshot(),
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

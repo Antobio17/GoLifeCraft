@@ -11,16 +11,24 @@ final readonly class WorkoutFinished extends DomainEvent
     public const string TEMPLATE_SYNC_NONE = 'none';
 
     /**
-     * @param array<int, array{exerciseId: string, exerciseName: string, type: string, muscleGroups: string[], position: int, note: string|null, sets: array<int, array{position: int, reps: int, weight: float|null}>}> $exercises
+     * @param array<int, array<string, mixed>> $exercises
      */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
-        public int $durationSeconds,
         public ?string $sessionId,
-        public string $finishedByUserId,
-        public string $templateSyncMode,
+        public string $sessionName,
+        public string $status,
+        public \DateTime $startedAt,
+        public ?\DateTime $finishedAt,
+        public int $durationSeconds,
+        public ?\DateTime $restStartedAt,
         public array $exercises,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $templateSyncMode,
+        public string $finishedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

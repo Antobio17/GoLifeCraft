@@ -140,7 +140,13 @@ class Recipe extends GenericAggregate
             name: $this->name,
             emoji: $this->emoji,
             image: $image,
+            category: $this->category,
+            servings: $this->servings,
+            ingredients: $this->recordedIngredients(),
+            steps: $this->recordedSteps(),
+            createdAt: $this->createdAt,
             updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             updatedByUserId: $updatedByUserId,
         ));
     }
@@ -170,25 +176,19 @@ class Recipe extends GenericAggregate
     }
 
     /**
-     * @return array<int, array{kind: string, refId: string, quantity: float, unit: ?string, position: int}>
+     * @return array<int, array<string, mixed>>
      */
     private function recordedIngredients(): array
     {
-        return array_map(
-            callback: static fn (RecipeIngredient $ingredient): array => $ingredient->toRecordedIngredient(),
-            array: $this->ingredients,
-        );
+        return self::snapshotAll(aggregates: $this->ingredients);
     }
 
     /**
-     * @return array<int, array{position: int, text: string, minutes: ?int}>
+     * @return array<int, array<string, mixed>>
      */
     private function recordedSteps(): array
     {
-        return array_map(
-            callback: static fn (RecipeStep $step): array => $step->toRecordedStep(),
-            array: $this->steps,
-        );
+        return self::snapshotAll(aggregates: $this->steps);
     }
 
     private static function hasValidServings(int $servings): bool
