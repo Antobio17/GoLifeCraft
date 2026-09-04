@@ -20,10 +20,17 @@ export class ThemeService {
   constructor(private updateThemePort?: UpdateThemePort) {}
 
   toggle(): void {
-    const next: Theme = this.theme() === "light" ? "dark" : "light";
-    this.apply(next);
-    localStorage.setItem(THEME_STORAGE_KEY, next);
-    this.updateThemePort?.update(next).subscribe();
+    this.change(this.theme() === "light" ? "dark" : "light");
+  }
+
+  change(theme: Theme): void {
+    if (theme === this.theme()) {
+      return;
+    }
+
+    this.apply(theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    this.updateThemePort?.update(theme).subscribe();
   }
 
   applyFromPreference(theme: Theme): void {

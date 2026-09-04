@@ -232,16 +232,18 @@
     "save": "Guardar cambios",
     "saving": "Guardando...",
     "theme": {
-      "title": "Modo oscuro",
-      "dark": "Tema oscuro",
-      "light": "Tema claro"
+      "title": "Tema",
+      "dark": "Oscuro",
+      "light": "Claro"
     },
     "visual": {
       "title": "Imágenes o iconos",
       "hint": "Por defecto se muestran las fotos que hayas subido; cuando una receta o un artículo no tiene foto, se cae al icono.",
+      "all": "Todos",
+      "allHint": "Aplica a las siete pantallas",
       "mode": {
-        "image": "Imágenes",
-        "icon": "Iconos"
+        "image": "Imagen",
+        "icon": "Icono"
       },
       "surface": {
         "catalog": "Catálogo",
