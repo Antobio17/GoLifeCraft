@@ -19,7 +19,9 @@ import { FloatingToastService } from "@shared/floating-toasts/application/servic
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ThemeService } from "@shared/theme/application/services/theme.service";
+import { Theme } from "@shared/theme/domain/models/theme.model";
 import { VisualPreferenceService } from "@shared/visual-preference/application/services/visual-preference.service";
+import { VisualMode } from "@shared/visual-preference/domain/models/visual-mode.enum";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { getRoleLabelKey } from "@authorization/domain/utils/role.utils";
@@ -39,7 +41,8 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list-item.component";
 import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
 import { ProfileCardComponent } from "@shared/design-system/profile-card/infrastructure/components/profile-card.component";
-import { PreferenceToggleComponent } from "@shared/design-system/preference-toggle/infrastructure/components/preference-toggle.component";
+import { PreferenceChoiceComponent } from "@shared/design-system/preference-choice/infrastructure/components/preference-choice.component";
+import { PreferenceChoiceOption } from "@shared/design-system/preference-choice/domain/models/preference-choice-option.model";
 import { PasswordStrengthComponent } from "@shared/design-system/password-strength/infrastructure/components/password-strength.component";
 
 function passwordStrengthValidator(
@@ -104,7 +107,7 @@ function passwordMatchValidator(
     SkeletonListItemComponent,
     SkeletonFieldsComponent,
     ProfileCardComponent,
-    PreferenceToggleComponent,
+    PreferenceChoiceComponent,
     PasswordStrengthComponent,
   ],
 })
@@ -135,15 +138,34 @@ export class MyProfileComponent implements OnInit {
   saving = signal(false);
   changingPassword = signal(false);
 
-  readonly isDark = this.themeService.isDark;
+  readonly theme = computed<string>(() =>
+    this.themeService.isDark() ? "dark" : "light",
+  );
+
+  readonly themeOptions = computed<PreferenceChoiceOption[]>(() => [
+    { value: "light", label: this.t("settings.theme.light") },
+    { value: "dark", label: this.t("settings.theme.dark") },
+  ]);
+
+  readonly visualModeOptions = computed<PreferenceChoiceOption[]>(() => [
+    { value: VisualMode.Image, label: this.t("settings.visual.mode.image") },
+    { value: VisualMode.Icon, label: this.t("settings.visual.mode.icon") },
+  ]);
 
   readonly visualRows = computed(() =>
     Object.values(VisualSurface).map((surface) => ({
       surface,
       titleKey: `settings.visual.surface.${surface}`,
-      images: this.visualPreferenceService.showsImages(surface),
+      mode: this.visualPreferenceService.modeOf(surface) as string,
     })),
   );
+
+  readonly sharedVisualMode = computed<string>(() => {
+    const modes = this.visualRows().map((row) => row.mode);
+    const allEqual = modes.every((mode) => mode === modes[0]);
+
+    return allEqual ? modes[0] : "";
+  });
 
   readonly fullName = computed(() => {
     const name = this.profileForm.get("name")?.value ?? "";
@@ -210,12 +232,18 @@ export class MyProfileComponent implements OnInit {
     this.location.back();
   }
 
-  toggleTheme(): void {
-    this.themeService.toggle();
+  changeTheme(theme: string): void {
+    this.themeService.change(theme as Theme);
   }
 
-  toggleVisual(surface: VisualSurface): void {
-    this.visualPreferenceService.toggle(surface);
+  changeVisual(surface: VisualSurface, mode: string): void {
+    this.visualPreferenceService.change(surface, mode as VisualMode);
+  }
+
+  changeAllVisual(mode: string): void {
+    this.visualRows()
+      .filter((row) => row.mode !== mode)
+      .forEach((row) => this.changeVisual(row.surface, mode));
   }
 
   logout(): void {
@@ -281,5 +309,9 @@ export class MyProfileComponent implements OnInit {
           });
         },
       });
+  }
+
+  private t(key: string): string {
+    return this.translationService.translate(key, this.MODULE_PATH);
   }
 }

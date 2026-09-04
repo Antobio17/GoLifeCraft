@@ -232,16 +232,18 @@
     "save": "Save changes",
     "saving": "Saving...",
     "theme": {
-      "title": "Dark mode",
-      "dark": "Dark theme",
-      "light": "Light theme"
+      "title": "Theme",
+      "dark": "Dark",
+      "light": "Light"
     },
     "visual": {
       "title": "Images or icons",
       "hint": "Photos you uploaded are shown by default; a recipe or an article without a photo falls back to its icon.",
+      "all": "All",
+      "allHint": "Applies to the seven screens",
       "mode": {
-        "image": "Images",
-        "icon": "Icons"
+        "image": "Image",
+        "icon": "Icon"
       },
       "surface": {
         "catalog": "Catalogue",

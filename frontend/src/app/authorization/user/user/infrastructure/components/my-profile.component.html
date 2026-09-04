@@ -29,17 +29,13 @@
 
         <ds-stack [gap]="'var(--ds-space-3)'">
           <ds-skeleton-line width="7rem" height="0.75rem" />
-          <ds-skeleton-list-item
-            padding="var(--ds-space-3) var(--ds-space-3)"
-            radius="var(--ds-radius-lg)"
-            [tile]="20"
-            [tileRadius]="6"
-            titleWidth="42%"
-            metaWidth="56%"
-            trailing="pill"
-            pillWidth="2.875rem"
-            pillHeight="1.625rem"
-          />
+          <ds-skeleton height="3.25rem" radius="var(--ds-radius-xl)" />
+        </ds-stack>
+
+        <ds-stack [gap]="'var(--ds-space-3)'">
+          <ds-skeleton-line width="9rem" height="0.75rem" />
+          <ds-skeleton-line width="88%" height="0.75rem" />
+          <ds-skeleton height="25.75rem" radius="var(--ds-radius-xl)" />
         </ds-stack>
 
         <ds-stack [gap]="'var(--ds-space-3)'">
@@ -132,15 +128,14 @@
           <ds-text variant="label">
             {{ "settings.section.preferences" | t }}
           </ds-text>
-          <ds-preference-toggle
-            [icon]="isDark() ? '🌙' : '☀️'"
-            [title]="'settings.theme.title' | t"
-            [subtitle]="
-              (isDark() ? 'settings.theme.dark' : 'settings.theme.light') | t
-            "
-            [checked]="isDark()"
-            (toggled)="toggleTheme()"
-          ></ds-preference-toggle>
+          <ds-card [padding]="'0'" [gap]="'0'">
+            <ds-preference-choice
+              [title]="'settings.theme.title' | t"
+              [options]="themeOptions()"
+              [value]="theme()"
+              (changed)="changeTheme($event)"
+            ></ds-preference-choice>
+          </ds-card>
         </ds-stack>
 
         <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
@@ -149,20 +144,25 @@
           </ds-text>
           <ds-text variant="meta">{{ "settings.visual.hint" | t }}</ds-text>
 
-          @for (row of visualRows(); track row.surface) {
-            <ds-preference-toggle
-              [icon]="row.images ? '🖼️' : '🔣'"
-              [title]="row.titleKey | t"
-              [subtitle]="
-                (row.images
-                  ? 'settings.visual.mode.image'
-                  : 'settings.visual.mode.icon'
-                ) | t
-              "
-              [checked]="row.images"
-              (toggled)="toggleVisual(row.surface)"
-            ></ds-preference-toggle>
-          }
+          <ds-card [padding]="'0'" [gap]="'0'">
+            <ds-preference-choice
+              tone="inset"
+              [title]="'settings.visual.all' | t"
+              [subtitle]="'settings.visual.allHint' | t"
+              [options]="visualModeOptions()"
+              [value]="sharedVisualMode()"
+              (changed)="changeAllVisual($event)"
+            ></ds-preference-choice>
+
+            @for (row of visualRows(); track row.surface) {
+              <ds-preference-choice
+                [title]="row.titleKey | t"
+                [options]="visualModeOptions()"
+                [value]="row.mode"
+                (changed)="changeVisual(row.surface, $event)"
+              ></ds-preference-choice>
+            }
+          </ds-card>
         </ds-stack>
 
         <ds-stack [gap]="'var(--ds-space-3)'">
