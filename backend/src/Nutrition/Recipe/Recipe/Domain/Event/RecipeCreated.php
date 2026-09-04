@@ -7,8 +7,8 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class RecipeCreated extends DomainEvent
 {
     /**
-     * @param array<int, array{kind: string, refId: string, quantity: float, unit: ?string, position: int}> $ingredients
-     * @param array<int, array{position: int, text: string, minutes: ?int}>                                 $steps
+     * @param array<int, array<string, mixed>> $ingredients
+     * @param array<int, array<string, mixed>> $steps
      */
     public function __construct(
         string $aggregateId,

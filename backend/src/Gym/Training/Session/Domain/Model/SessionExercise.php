@@ -87,21 +87,4 @@ class SessionExercise extends GenericAggregate
         $this->position = $position;
         $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
     }
-
-    /**
-     * @return array{id: string, exerciseId: string, position: int, note: ?string, sets: array<int, array<string, mixed>>}
-     */
-    public function toPayload(): array
-    {
-        return [
-            'id' => $this->id,
-            'exerciseId' => $this->exerciseId,
-            'position' => $this->position,
-            'note' => $this->note,
-            'sets' => array_map(
-                callback: static fn (ExerciseSet $set): array => $set->toPayload(),
-                array: array_values(array: $this->sets),
-            ),
-        ];
-    }
 }

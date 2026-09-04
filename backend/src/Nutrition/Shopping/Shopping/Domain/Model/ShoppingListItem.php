@@ -42,7 +42,7 @@ class ShoppingListItem extends GenericAggregate
         $item->checked = false;
         $item->stampCreation(userId: $createdByUserId, now: $now);
 
-        $item->recordAdded(createdByUserId: $createdByUserId, occurredOn: $now);
+        $item->recordAdded(occurredOn: $now);
 
         return $item;
     }
@@ -73,7 +73,7 @@ class ShoppingListItem extends GenericAggregate
         $item->checked = false;
         $item->stampCreation(userId: $createdByUserId, now: $now);
 
-        $item->recordAdded(createdByUserId: $createdByUserId, occurredOn: $now);
+        $item->recordAdded(occurredOn: $now);
 
         return $item;
     }
@@ -129,6 +129,13 @@ class ShoppingListItem extends GenericAggregate
             occurredOn: $now,
             articleId: $this->articleId,
             customName: $this->customName,
+            quantity: $this->quantity,
+            baseQuantity: $this->baseQuantity,
+            checked: $this->checked,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            removedByUserId: $deletedByUserId,
         ));
     }
 
@@ -141,7 +148,7 @@ class ShoppingListItem extends GenericAggregate
         );
     }
 
-    private function recordAdded(string $createdByUserId, \DateTime $occurredOn): void
+    private function recordAdded(\DateTime $occurredOn): void
     {
         $this->record(event: new ShoppingListItemAdded(
             aggregateId: $this->id,
@@ -151,7 +158,10 @@ class ShoppingListItem extends GenericAggregate
             quantity: $this->quantity,
             baseQuantity: $this->baseQuantity,
             checked: $this->checked,
-            createdByUserId: $createdByUserId,
+            createdAt: $this->createdAt,
+            updatedAt: $this->updatedAt,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $this->updatedByUserId,
         ));
     }
 
@@ -165,6 +175,10 @@ class ShoppingListItem extends GenericAggregate
             quantity: $this->quantity,
             baseQuantity: $this->baseQuantity,
             checked: $this->checked,
+            createdAt: $this->createdAt,
+            updatedAt: $this->updatedAt,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $this->updatedByUserId,
         ));
     }
 

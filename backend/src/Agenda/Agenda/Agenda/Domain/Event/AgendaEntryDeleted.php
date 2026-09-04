@@ -17,6 +17,9 @@ final readonly class AgendaEntryDeleted extends DomainEvent
         public string $notes,
         public bool $done,
         public ?string $seriesId,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
         public string $deletedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);

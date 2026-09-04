@@ -51,11 +51,13 @@ final readonly class CreateArticleCommandHandler
             supermarketId: $command->supermarketId,
             aisleId: $command->aisleId,
             nutritionFactsId: $nutritionFacts->id,
+            barcode: null,
             equivalences: $this->equivalenceAssembler->assemble(
                 articleId: $articleId,
                 equivalences: $command->equivalences,
                 userId: $command->createdByUserId,
             ),
+            nutritionFacts: $nutritionFacts->snapshot(),
             createdByUserId: $command->createdByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

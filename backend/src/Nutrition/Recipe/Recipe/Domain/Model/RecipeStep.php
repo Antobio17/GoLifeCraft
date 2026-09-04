@@ -33,16 +33,4 @@ class RecipeStep extends GenericAggregate
 
         return $step;
     }
-
-    /**
-     * @return array{position: int, text: string, minutes: ?int}
-     */
-    public function toRecordedStep(): array
-    {
-        return [
-            'position' => $this->position,
-            'text' => $this->text,
-            'minutes' => $this->minutes,
-        ];
-    }
 }

@@ -121,6 +121,9 @@ class FinanceBalanceCheck extends GenericAggregate
             checkDate: $this->checkDate,
             amount: $this->amount,
             note: $this->note,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             deletedByUserId: $deletedByUserId,
         ));
     }

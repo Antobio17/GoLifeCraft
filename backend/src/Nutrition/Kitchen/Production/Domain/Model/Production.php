@@ -116,6 +116,8 @@ class Production extends GenericAggregate
             recipeId: $item->recipeId,
             fromDate: $this->fromDate,
             toDate: $this->toDate,
+            status: $this->status,
+            items: $this->recordedItems(),
             servingsPlanned: $item->servingsPlanned,
             servingsCooked: $servingsCooked,
             nameSnapshot: $item->nameSnapshot,
@@ -180,7 +182,9 @@ class Production extends GenericAggregate
             recipeId: $item->recipeId,
             fromDate: $this->fromDate,
             toDate: $this->toDate,
-            status: $item->status,
+            status: $this->status,
+            items: $this->recordedItems(),
+            itemStatus: $item->status,
             servingsPlanned: $item->servingsPlanned,
             servingsCooked: $item->servingsCooked,
             nameSnapshot: $item->nameSnapshot,
@@ -234,7 +238,11 @@ class Production extends GenericAggregate
             recipeId: $item->recipeId,
             subRecipeId: $recipeId,
             sourceProductionItemId: $sourceProductionItemId,
-            status: $item->status,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            status: $this->status,
+            items: $this->recordedItems(),
+            itemStatus: $item->status,
             servingsPlanned: $item->servingsPlanned,
             servingsCooked: $item->servingsCooked,
             nameSnapshot: $item->nameSnapshot,
@@ -272,7 +280,11 @@ class Production extends GenericAggregate
             occurredOn: $now,
             itemId: $item->id,
             recipeId: $item->recipeId,
-            status: $item->status,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            status: $this->status,
+            items: $this->recordedItems(),
+            itemStatus: $item->status,
             servingsPlanned: $item->servingsPlanned,
             servingsCooked: $item->servingsCooked,
             nameSnapshot: $item->nameSnapshot,
@@ -317,6 +329,8 @@ class Production extends GenericAggregate
             recipeId: $item->recipeId,
             fromDate: $this->fromDate,
             toDate: $this->toDate,
+            status: $this->status,
+            items: $this->recordedItems(),
             servingsPlanned: $item->servingsPlanned,
             servingsCooked: $servingsCooked,
             nameSnapshot: $item->nameSnapshot,
@@ -376,6 +390,11 @@ class Production extends GenericAggregate
             occurredOn: $now,
             itemId: $item->id,
             recipeId: $item->recipeId,
+            fromDate: $this->fromDate,
+            toDate: $this->toDate,
+            status: $this->status,
+            items: $this->recordedItems(),
+            itemStatus: $item->status,
             checkedArticleIds: $item->checkedArticleIds,
             checkedStepPositions: $item->checkedStepPositions,
             createdAt: $this->createdAt,
@@ -421,14 +440,11 @@ class Production extends GenericAggregate
     }
 
     /**
-     * @return array<int, array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, code: ?string, label: string, customized: bool, checkedArticleIds: string[], checkedStepPositions: int[]}>
+     * @return array<int, array<string, mixed>>
      */
     public function recordedItems(): array
     {
-        return array_map(
-            callback: static fn (ProductionItem $item): array => $item->toRecordedItem(),
-            array: array_values(array: $this->items),
-        );
+        return self::snapshotAll(aggregates: $this->items);
     }
 
     private function reopen(string $reopenedByUserId, \DateTime $now): void

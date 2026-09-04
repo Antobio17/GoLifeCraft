@@ -6,24 +6,37 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class DiaryEntryQuickUpdated extends DomainEvent
 {
+    /**
+     * @param array<int, array<string, mixed>> $tree
+     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
         public string $entryDate,
         public string $meal,
+        public string $kind,
+        public ?string $refId,
+        public ?string $productionItemId,
         public float $quantity,
-        public string $quickName,
-        public string $quickEmoji,
-        public float $quickCalories,
-        public float $quickProtein,
-        public float $quickFat,
-        public float $quickCarbs,
+        public ?string $unit,
         public string $name,
         public string $emoji,
         public float $calories,
         public float $protein,
         public float $fat,
         public float $carbs,
+        public string $quickName,
+        public string $quickEmoji,
+        public float $quickCalories,
+        public float $quickProtein,
+        public float $quickFat,
+        public float $quickCarbs,
+        public bool $customized,
+        public bool $consumed,
+        public array $tree,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
         public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);

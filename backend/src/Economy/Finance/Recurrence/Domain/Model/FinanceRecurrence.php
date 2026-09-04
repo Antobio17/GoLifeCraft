@@ -283,6 +283,9 @@ class FinanceRecurrence extends GenericAggregate
             endMonth: $this->endMonth,
             active: $this->active,
             lastRunMonth: $this->lastRunMonth,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             deletedByUserId: $deletedByUserId,
         ));
     }

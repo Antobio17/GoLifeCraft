@@ -6,11 +6,22 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class MenuDeleted extends DomainEvent
 {
+    /**
+     * @param array<int, array<string, mixed>> $items
+     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
         public string $name,
+        public string $emoji,
+        public string $note,
         public string $type,
+        public string $weekDays,
+        public array $items,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $deletedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

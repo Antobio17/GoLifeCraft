@@ -116,19 +116,11 @@ class FinanceBudget extends GenericAggregate
     }
 
     /**
-     * @return array<int, array{category: string, kind: string, amount: float, position: int}>
+     * @return array<int, array<string, mixed>>
      */
     public function categoriesAsPayload(): array
     {
-        return array_map(
-            callback: static fn (FinanceBudgetCategory $category): array => [
-                'category' => $category->category,
-                'kind' => $category->kind,
-                'amount' => $category->amount,
-                'position' => $category->position,
-            ],
-            array: $this->categories,
-        );
+        return self::snapshotAll(aggregates: $this->categories);
     }
 
     /**

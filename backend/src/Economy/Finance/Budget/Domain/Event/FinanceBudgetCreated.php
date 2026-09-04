@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class FinanceBudgetCreated extends DomainEvent
 {
     /**
-     * @param array<int, array{category: string, kind: string, amount: float, position: int}> $categories
+     * @param array<int, array<string, mixed>> $categories
      */
     public function __construct(
         string $aggregateId,

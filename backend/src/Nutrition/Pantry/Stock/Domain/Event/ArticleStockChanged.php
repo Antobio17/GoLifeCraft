@@ -12,6 +12,10 @@ final readonly class ArticleStockChanged extends DomainEvent
         public string $articleId,
         public float $previousQuantity,
         public float $quantity,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

@@ -214,7 +214,9 @@ final class UpdateArticleCommandHandlerTest extends TestCase
             supermarketId: null,
             aisleId: null,
             nutritionFactsId: null,
+            barcode: null,
             equivalences: $assembler->assemble(articleId: $id, equivalences: $equivalences, userId: 'god-user-id'),
+            nutritionFacts: null,
             createdByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

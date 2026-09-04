@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class MenuItemAdded extends DomainEvent
 {
     /**
-     * @param array<int, array{meal: string, kind: string, refId: string, quantity: float, unit: ?string}> $items
+     * @param array<int, array<string, mixed>> $items
      */
     public function __construct(
         string $aggregateId,

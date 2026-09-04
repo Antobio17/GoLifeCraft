@@ -81,15 +81,16 @@ final readonly class ImportGlobalArticleCommandHandler
             supermarketId: $this->resolveSupermarketId(userId: $command->importedByUserId),
             aisleId: null,
             nutritionFactsId: $nutritionFacts->id,
+            barcode: $globalArticle->barcode,
             equivalences: $this->equivalenceAssembler->assemble(
                 articleId: $articleId,
                 equivalences: $this->buildEquivalences(packaging: $packaging),
                 userId: $command->importedByUserId,
             ),
+            nutritionFacts: $nutritionFacts->snapshot(),
             createdByUserId: $command->importedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
-        $article->assignBarcode(barcode: $globalArticle->barcode);
 
         $this->articleRepository->save(article: $article);
         $this->domainEventCollectorService->register(aggregate: $article);
@@ -126,11 +127,7 @@ final readonly class ImportGlobalArticleCommandHandler
                 equivalences: $this->buildEquivalences(packaging: $packaging),
                 userId: $command->importedByUserId,
             ),
-            referenceAmount: $nutritionFacts->referenceAmount,
-            calories: $nutritionFacts->calories,
-            protein: $nutritionFacts->protein,
-            fat: $nutritionFacts->fat,
-            carbs: $nutritionFacts->carbs,
+            nutritionFacts: $nutritionFacts->snapshot(),
             updatedByUserId: $command->importedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -218,6 +215,7 @@ final readonly class ImportGlobalArticleCommandHandler
             dateTimeGenerator: $this->dateTimeGenerator,
         );
         $this->categoryRepository->save(category: $category);
+        $this->domainEventCollectorService->register(aggregate: $category);
 
         return $category->id;
     }
@@ -236,6 +234,7 @@ final readonly class ImportGlobalArticleCommandHandler
             dateTimeGenerator: $this->dateTimeGenerator,
         );
         $this->supermarketRepository->save(supermarket: $supermarket);
+        $this->domainEventCollectorService->register(aggregate: $supermarket);
 
         return $supermarket->id;
     }

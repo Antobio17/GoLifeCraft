@@ -46,6 +46,7 @@ final class AssignArticleImageCommandHandlerTest extends TestCase
             supermarketId: null,
             aisleId: null,
             nutritionFactsId: null,
+            barcode: null,
             equivalences: [
                 ArticleEquivalence::create(
                     articleId: 'article-1',
@@ -56,6 +57,7 @@ final class AssignArticleImageCommandHandlerTest extends TestCase
                     dateTimeGenerator: $dateTimeGenerator,
                 ),
             ],
+            nutritionFacts: null,
             createdByUserId: 'god-user-id',
             dateTimeGenerator: $dateTimeGenerator,
         ));

@@ -237,6 +237,9 @@ class FinanceTransaction extends GenericAggregate
             note: $this->note,
             store: $this->store,
             source: $this->source,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             deletedByUserId: $deletedByUserId,
         ));
     }

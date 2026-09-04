@@ -77,7 +77,7 @@ class Menu extends GenericAggregate
             note: $note,
             type: $type,
             weekDays: $menu->weekDays,
-            items: $menu->plannedItems(items: $items),
+            items: $menu->recordedItems(),
             createdAt: $now,
             updatedAt: $now,
             createdByUserId: $createdByUserId,
@@ -98,7 +98,15 @@ class Menu extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
+            emoji: $this->emoji,
+            note: $this->note,
             type: $this->type,
+            weekDays: $this->weekDays,
+            items: $this->recordedItems(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            deletedByUserId: $deletedByUserId,
         ));
     }
 
@@ -190,7 +198,7 @@ class Menu extends GenericAggregate
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
-            items: $this->plannedItems(items: $this->items),
+            items: $this->recordedItems(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -220,7 +228,7 @@ class Menu extends GenericAggregate
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
-            items: $this->plannedItems(items: $this->items),
+            items: $this->recordedItems(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -259,7 +267,7 @@ class Menu extends GenericAggregate
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
-            items: $this->plannedItems(items: $this->items),
+            items: $this->recordedItems(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -292,7 +300,7 @@ class Menu extends GenericAggregate
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
-            items: $this->plannedItems(items: $this->items),
+            items: $this->recordedItems(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -374,7 +382,11 @@ class Menu extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
+            emoji: $this->emoji,
+            note: $this->note,
             type: $this->type,
+            weekDays: $this->weekDays,
+            items: $this->recordedItems(),
             menuItemId: $item->id,
             dayKey: $item->dayKey,
             meal: $item->meal,
@@ -389,7 +401,9 @@ class Menu extends GenericAggregate
             protein: $macros->protein,
             fat: $macros->fat,
             carbs: $macros->carbs,
+            createdAt: $this->createdAt,
             updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             updatedByUserId: $updatedByUserId,
         ));
     }
@@ -413,7 +427,11 @@ class Menu extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
+            emoji: $this->emoji,
+            note: $this->note,
             type: $this->type,
+            weekDays: $this->weekDays,
+            items: $this->recordedItems(),
             menuItemId: $item->id,
             dayKey: $item->dayKey,
             meal: $item->meal,
@@ -428,7 +446,9 @@ class Menu extends GenericAggregate
             protein: $macros->protein,
             fat: $macros->fat,
             carbs: $macros->carbs,
+            createdAt: $this->createdAt,
             updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             updatedByUserId: $updatedByUserId,
         ));
     }
@@ -492,9 +512,15 @@ class Menu extends GenericAggregate
             occurredOn: $now,
             name: $this->name,
             emoji: $this->emoji,
+            note: $this->note,
             type: $this->type,
+            weekDays: $this->weekDays,
+            items: $this->recordedItems(),
             dayKey: $dayKey,
             plannedDays: $plannedDays,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             loadedByUserId: $loadedByUserId,
         ));
     }
@@ -590,6 +616,14 @@ class Menu extends GenericAggregate
                     : CreateMenuException::invalidDayKey(dayKey: (string) $item->dayKey);
             }
         }
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function recordedItems(): array
+    {
+        return self::snapshotAll(aggregates: $this->items);
     }
 
     /**

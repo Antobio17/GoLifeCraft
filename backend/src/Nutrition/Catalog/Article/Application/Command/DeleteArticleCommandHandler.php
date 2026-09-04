@@ -23,7 +23,12 @@ final readonly class DeleteArticleCommandHandler
             throw DeleteArticleException::articleNotFound(articleId: $command->articleId);
         }
 
+        $nutritionFacts = null !== $article->nutritionFactsId
+            ? $this->articleRepository->findNutritionFactsById(nutritionFactsId: $article->nutritionFactsId)
+            : null;
+
         $article->delete(
+            nutritionFacts: $nutritionFacts?->snapshot(),
             deletedByUserId: $command->deletedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

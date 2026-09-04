@@ -119,6 +119,9 @@ class FinanceAccount extends GenericAggregate
             occurredOn: $now,
             name: $this->name,
             type: $this->type,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
             deletedByUserId: $deletedByUserId,
         ));
     }

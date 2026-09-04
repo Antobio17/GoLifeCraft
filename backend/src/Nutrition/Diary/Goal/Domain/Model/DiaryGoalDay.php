@@ -3,6 +3,7 @@
 namespace Nutrition\Diary\Goal\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
+use Nutrition\Diary\Goal\Domain\Event\DiaryGoalDayConfigured;
 use Nutrition\Diary\Goal\Domain\Exception\DiaryGoalException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -37,6 +38,20 @@ class DiaryGoalDay extends GenericAggregate
         $goalDay->carbs = $carbs;
         $goalDay->stampCreation(userId: $createdByUserId, now: $now);
 
+        $goalDay->record(event: new DiaryGoalDayConfigured(
+            aggregateId: $id,
+            occurredOn: $now,
+            entryDate: $entryDate,
+            calories: $calories,
+            protein: $protein,
+            fat: $fat,
+            carbs: $carbs,
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $createdByUserId,
+            updatedByUserId: $createdByUserId,
+        ));
+
         return $goalDay;
     }
 
@@ -50,11 +65,27 @@ class DiaryGoalDay extends GenericAggregate
     ): void {
         self::guard(calories: $calories, protein: $protein, fat: $fat, carbs: $carbs);
 
+        $now = $dateTimeGenerator->now();
+
         $this->calories = $calories;
         $this->protein = $protein;
         $this->fat = $fat;
         $this->carbs = $carbs;
-        $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new DiaryGoalDayConfigured(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            entryDate: $this->entryDate,
+            calories: $calories,
+            protein: $protein,
+            fat: $fat,
+            carbs: $carbs,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
     }
 
     private static function guard(float $calories, float $protein, float $fat, float $carbs): void

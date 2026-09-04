@@ -6,9 +6,20 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class SessionDeleted extends DomainEvent
 {
+    /**
+     * @param array<int, array<string, mixed>> $exercises
+     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
+        public string $name,
+        public int $estimatedDurationMinutes,
+        public int $restSeconds,
+        public array $exercises,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $deletedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }

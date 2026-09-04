@@ -42,18 +42,4 @@ class RecipeIngredient extends GenericAggregate
 
         return $ingredient;
     }
-
-    /**
-     * @return array{kind: string, refId: string, quantity: float, unit: ?string, position: int}
-     */
-    public function toRecordedIngredient(): array
-    {
-        return [
-            'kind' => $this->kind,
-            'refId' => $this->refId,
-            'quantity' => $this->quantity,
-            'unit' => $this->unit,
-            'position' => $this->position,
-        ];
-    }
 }

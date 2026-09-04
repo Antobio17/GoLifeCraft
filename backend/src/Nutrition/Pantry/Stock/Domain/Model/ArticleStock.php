@@ -36,6 +36,10 @@ class ArticleStock extends GenericAggregate
             occurredOn: $now,
             articleId: $articleId,
             quantity: $quantity,
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $createdByUserId,
+            updatedByUserId: $createdByUserId,
         ));
 
         return $stock;
@@ -60,6 +64,10 @@ class ArticleStock extends GenericAggregate
             articleId: $this->articleId,
             previousQuantity: $previousQuantity,
             quantity: $quantity,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
         ));
     }
 
@@ -99,6 +107,10 @@ class ArticleStock extends GenericAggregate
             occurredOn: $now,
             articleId: $this->articleId,
             quantity: $this->quantity,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            deletedByUserId: $deletedByUserId,
         ));
     }
 

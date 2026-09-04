@@ -68,15 +68,26 @@ final readonly class DomainEventMiddleware implements MiddlewareInterface
         $payload = [];
 
         foreach ($reflection->getProperties() as $property) {
-            $value = $property->getValue(object: $event);
-
-            if ($value instanceof \DateTime) {
-                $value = $value->format(format: \DateTime::ATOM);
-            }
-
-            $payload[$property->getName()] = $value;
+            $payload[$property->getName()] = $this->normalize(value: $property->getValue(object: $event));
         }
 
         return $payload;
+    }
+
+    private function normalize(mixed $value): mixed
+    {
+        if ($value instanceof \DateTimeInterface) {
+            return $value->format(format: \DateTimeInterface::ATOM);
+        }
+
+        if ($value instanceof \BackedEnum) {
+            return $value->value;
+        }
+
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        return array_map(callback: fn (mixed $item): mixed => $this->normalize(value: $item), array: $value);
     }
 }

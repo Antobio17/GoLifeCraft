@@ -7,14 +7,20 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class ProductionItemChecked extends DomainEvent
 {
     /**
-     * @param string[] $checkedArticleIds
-     * @param int[]    $checkedStepPositions
+     * @param array<int, array<string, mixed>> $items
+     * @param string[]                         $checkedArticleIds
+     * @param int[]                            $checkedStepPositions
      */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
         public string $itemId,
         public string $recipeId,
+        public string $fromDate,
+        public string $toDate,
+        public string $status,
+        public array $items,
+        public string $itemStatus,
         public array $checkedArticleIds,
         public array $checkedStepPositions,
         public \DateTime $createdAt,

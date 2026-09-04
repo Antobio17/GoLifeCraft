@@ -273,28 +273,6 @@ class ProductionItem extends GenericAggregate
         ], array: $this->composition());
     }
 
-    /**
-     * @return array{itemId: string, recipeId: string, position: int, status: string, servingsPlanned: float, servingsCooked: float, nameSnapshot: string, emojiSnapshot: string, code: ?string, label: string, customized: bool, checkedArticleIds: string[], checkedStepPositions: int[]}
-     */
-    public function toRecordedItem(): array
-    {
-        return [
-            'itemId' => $this->id,
-            'recipeId' => $this->recipeId,
-            'position' => $this->position,
-            'status' => $this->status,
-            'servingsPlanned' => $this->servingsPlanned,
-            'servingsCooked' => $this->servingsCooked,
-            'nameSnapshot' => $this->nameSnapshot,
-            'emojiSnapshot' => $this->emojiSnapshot,
-            'code' => $this->code,
-            'label' => $this->label,
-            'customized' => $this->customized,
-            'checkedArticleIds' => $this->checkedArticleIds,
-            'checkedStepPositions' => $this->checkedStepPositions,
-        ];
-    }
-
     private function plannedFactor(): float
     {
         if ($this->servingsCooked <= 0.0 || $this->servingsPlanned <= 0.0) {

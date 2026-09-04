@@ -25,4 +25,54 @@ abstract class GenericAggregate extends Aggregate
         $this->updatedAt = $now;
         $this->updatedByUserId = $userId;
     }
+
+    public function snapshot(): array
+    {
+        $snapshot = [];
+
+        foreach ((new \ReflectionObject(object: $this))->getProperties(filter: \ReflectionProperty::IS_PUBLIC) as $property) {
+            if (!$property->isInitialized(object: $this)) {
+                continue;
+            }
+
+            $snapshot[$property->getName()] = self::normalizeSnapshotValue(value: $property->getValue(object: $this));
+        }
+
+        return $snapshot;
+    }
+
+    /**
+     * @param GenericAggregate[] $aggregates
+     */
+    public static function snapshotAll(array $aggregates): array
+    {
+        return array_values(array: array_map(
+            callback: static fn (GenericAggregate $aggregate): array => $aggregate->snapshot(),
+            array: $aggregates,
+        ));
+    }
+
+    private static function normalizeSnapshotValue(mixed $value): mixed
+    {
+        if ($value instanceof \DateTimeInterface) {
+            return $value->format(format: \DateTimeInterface::ATOM);
+        }
+
+        if ($value instanceof self) {
+            return $value->snapshot();
+        }
+
+        if ($value instanceof \BackedEnum) {
+            return $value->value;
+        }
+
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        return array_map(
+            callback: static fn (mixed $item): mixed => self::normalizeSnapshotValue(value: $item),
+            array: $value,
+        );
+    }
 }
