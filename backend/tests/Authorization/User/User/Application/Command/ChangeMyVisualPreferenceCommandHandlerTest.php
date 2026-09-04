@@ -14,14 +14,16 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class ChangeMyVisualPreferenceCommandHandlerTest extends TestCase
 {
     private InMemoryUserRepository $repository;
+    private DomainEventCollectorService $domainEventCollectorService;
     private ChangeMyVisualPreferenceCommandHandler $handler;
 
     protected function setUp(): void
     {
         $this->repository = new InMemoryUserRepository();
+        $this->domainEventCollectorService = new DomainEventCollectorService();
         $this->handler = new ChangeMyVisualPreferenceCommandHandler(
             userRepository: $this->repository,
-            domainEventCollectorService: new DomainEventCollectorService(),
+            domainEventCollectorService: $this->domainEventCollectorService,
             dateTimeGenerator: new DateTimeGenerator(),
         );
     }
@@ -61,7 +63,7 @@ final class ChangeMyVisualPreferenceCommandHandlerTest extends TestCase
 
         ($this->handler)(new ChangeMyVisualPreferenceCommand(
             userSessionId: 'user-1',
-            surface: 'diary',
+            surfaces: ['diary'],
             mode: User::VISUAL_MODE_ICON,
         ));
 
@@ -69,6 +71,39 @@ final class ChangeMyVisualPreferenceCommandHandlerTest extends TestCase
 
         self::assertSame(User::VISUAL_MODE_ICON, $preferences['diary']);
         self::assertSame(User::VISUAL_MODE_IMAGE, $preferences['menu']);
+    }
+
+    public function testItChangesEverySurfaceInOneGo(): void
+    {
+        $this->repository->save(user: $this->buildUser(id: 'user-1'));
+
+        ($this->handler)(new ChangeMyVisualPreferenceCommand(
+            userSessionId: 'user-1',
+            surfaces: User::VISUAL_SURFACES,
+            mode: User::VISUAL_MODE_ICON,
+        ));
+
+        self::assertSame(
+            array_fill_keys(keys: User::VISUAL_SURFACES, value: User::VISUAL_MODE_ICON),
+            $this->repository->findById(id: 'user-1')?->resolvedVisualPreferences(),
+        );
+    }
+
+    public function testItRecordsASingleEventForTheWholeBatch(): void
+    {
+        $this->repository->save(user: $this->buildUser(id: 'user-1'));
+
+        ($this->handler)(new ChangeMyVisualPreferenceCommand(
+            userSessionId: 'user-1',
+            surfaces: ['diary', 'menu'],
+            mode: User::VISUAL_MODE_ICON,
+        ));
+
+        $events = $this->domainEventCollectorService->pullEvents();
+
+        self::assertCount(1, $events);
+        self::assertSame(['diary', 'menu'], $events[0]->surfaces);
+        self::assertSame(User::VISUAL_MODE_ICON, $events[0]->visualPreferences['menu']);
     }
 
     public function testItRejectsAnUnknownSurface(): void
@@ -79,7 +114,20 @@ final class ChangeMyVisualPreferenceCommandHandlerTest extends TestCase
 
         ($this->handler)(new ChangeMyVisualPreferenceCommand(
             userSessionId: 'user-1',
-            surface: 'unknown',
+            surfaces: ['diary', 'unknown'],
+            mode: User::VISUAL_MODE_ICON,
+        ));
+    }
+
+    public function testItRejectsAnEmptySurfaceList(): void
+    {
+        $this->repository->save(user: $this->buildUser(id: 'user-1'));
+
+        $this->expectException(ChangeMyVisualPreferenceException::class);
+
+        ($this->handler)(new ChangeMyVisualPreferenceCommand(
+            userSessionId: 'user-1',
+            surfaces: [],
             mode: User::VISUAL_MODE_ICON,
         ));
     }
@@ -92,7 +140,7 @@ final class ChangeMyVisualPreferenceCommandHandlerTest extends TestCase
 
         ($this->handler)(new ChangeMyVisualPreferenceCommand(
             userSessionId: 'user-1',
-            surface: 'diary',
+            surfaces: ['diary'],
             mode: 'sticker',
         ));
     }
@@ -103,7 +151,7 @@ final class ChangeMyVisualPreferenceCommandHandlerTest extends TestCase
 
         ($this->handler)(new ChangeMyVisualPreferenceCommand(
             userSessionId: 'missing',
-            surface: 'diary',
+            surfaces: ['diary'],
             mode: User::VISUAL_MODE_ICON,
         ));
     }

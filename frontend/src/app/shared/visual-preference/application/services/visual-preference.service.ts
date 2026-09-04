@@ -1,5 +1,7 @@
 import { Signal, WritableSignal, signal } from "@angular/core";
+import { EMPTY, Subject, catchError, concatMap } from "rxjs";
 import { VisualMode } from "@shared/visual-preference/domain/models/visual-mode.enum";
+import { VisualPreferenceChange } from "@shared/visual-preference/domain/models/visual-preference-change.model";
 import { VisualPreferences } from "@shared/visual-preference/domain/models/visual-preferences.model";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { UpdateVisualPreferencePort } from "@shared/visual-preference/domain/ports/update-visual-preference.port";
@@ -11,11 +13,23 @@ export class VisualPreferenceService {
     this.loadInitialPreferences(),
   );
 
+  private readonly pendingChanges = new Subject<VisualPreferenceChange>();
+
   readonly all: Signal<VisualPreferences> = this.preferences.asReadonly();
 
-  constructor(
-    private updateVisualPreferencePort?: UpdateVisualPreferencePort,
-  ) {}
+  constructor(updateVisualPreferencePort?: UpdateVisualPreferencePort) {
+    if (!updateVisualPreferencePort) return;
+
+    this.pendingChanges
+      .pipe(
+        concatMap((change) =>
+          updateVisualPreferencePort
+            .update(change.surfaces, change.mode)
+            .pipe(catchError(() => EMPTY)),
+        ),
+      )
+      .subscribe();
+  }
 
   modeOf(surface: VisualSurface): VisualMode {
     return this.preferences()[surface];
@@ -26,8 +40,24 @@ export class VisualPreferenceService {
   }
 
   change(surface: VisualSurface, mode: VisualMode): void {
-    this.store({ ...this.preferences(), [surface]: mode });
-    this.updateVisualPreferencePort?.update(surface, mode).subscribe();
+    this.changeMany([surface], mode);
+  }
+
+  changeAll(mode: VisualMode): void {
+    this.changeMany(Object.values(VisualSurface), mode);
+  }
+
+  changeMany(surfaces: VisualSurface[], mode: VisualMode): void {
+    const current = this.preferences();
+    const pending = surfaces.filter((surface) => current[surface] !== mode);
+
+    if (0 === pending.length) return;
+
+    this.store(
+      pending.reduce((all, surface) => ({ ...all, [surface]: mode }), current),
+    );
+
+    this.pendingChanges.next({ surfaces: pending, mode });
   }
 
   toggle(surface: VisualSurface): void {

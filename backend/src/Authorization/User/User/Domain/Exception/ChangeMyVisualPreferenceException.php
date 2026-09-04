@@ -16,6 +16,15 @@ final class ChangeMyVisualPreferenceException extends BaseException
         );
     }
 
+    public static function noSurfaces(): self
+    {
+        return new static(
+            title: 'At least one visual surface is required.',
+            keyTranslation: 'user.empty.visual.surfaces',
+            details: ['validSurfaces' => User::VISUAL_SURFACES]
+        );
+    }
+
     public static function invalidSurface(string $surface): self
     {
         return new static(

@@ -241,9 +241,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   changeAllVisual(mode: string): void {
-    this.visualRows()
-      .filter((row) => row.mode !== mode)
-      .forEach((row) => this.changeVisual(row.surface, mode));
+    this.visualPreferenceService.changeAll(mode as VisualMode);
   }
 
   logout(): void {

@@ -9,9 +9,9 @@ import { UpdateVisualPreferencePort } from "@shared/visual-preference/domain/por
 export class HttpUpdateVisualPreferenceAdapter extends UpdateVisualPreferencePort {
   private http = inject(HttpClient);
 
-  update(surface: VisualSurface, mode: VisualMode): Observable<void> {
+  update(surfaces: VisualSurface[], mode: VisualMode): Observable<void> {
     return this.http.put<void>("/api/v1/authorization/me/visual-preference", {
-      surface,
+      surfaces,
       mode,
     });
   }

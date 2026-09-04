@@ -295,23 +295,39 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         );
     }
 
+    /**
+     * @param string[] $surfaces
+     */
     public function changeVisualPreference(
-        string $surface,
+        array $surfaces,
         string $mode,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
-        if (!in_array(needle: $surface, haystack: self::VISUAL_SURFACES, strict: true)) {
-            throw ChangeMyVisualPreferenceException::invalidSurface(surface: $surface);
+        if ([] === $surfaces) {
+            throw ChangeMyVisualPreferenceException::noSurfaces();
         }
 
         if (!in_array(needle: $mode, haystack: self::getValidVisualModes(), strict: true)) {
             throw ChangeMyVisualPreferenceException::invalidMode(mode: $mode);
         }
 
+        foreach ($surfaces as $surface) {
+            if (!is_string(value: $surface)) {
+                throw ChangeMyVisualPreferenceException::invalidSurface(surface: get_debug_type(value: $surface));
+            }
+
+            if (!in_array(needle: $surface, haystack: self::VISUAL_SURFACES, strict: true)) {
+                throw ChangeMyVisualPreferenceException::invalidSurface(surface: $surface);
+            }
+        }
+
         $now = $dateTimeGenerator->now();
 
-        $this->visualPreferences = array_merge($this->resolvedVisualPreferences(), [$surface => $mode]);
+        $this->visualPreferences = array_merge(
+            $this->resolvedVisualPreferences(),
+            array_fill_keys(keys: $surfaces, value: $mode),
+        );
         $this->updatedByUserId = $updatedByUserId;
         $this->updatedAt = $now;
 
@@ -319,7 +335,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
             event: new MyVisualPreferenceChanged(
                 aggregateId: $this->id,
                 occurredOn: $now,
-                surface: $surface,
+                surfaces: array_values($surfaces),
                 mode: $mode,
                 visualPreferences: $this->visualPreferences,
                 updatedAt: $now,

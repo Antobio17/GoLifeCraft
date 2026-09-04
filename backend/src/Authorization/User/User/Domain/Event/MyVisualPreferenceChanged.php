@@ -7,12 +7,13 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class MyVisualPreferenceChanged extends DomainEvent
 {
     /**
+     * @param string[]              $surfaces
      * @param array<string, string> $visualPreferences
      */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
-        public string $surface,
+        public array $surfaces,
         public string $mode,
         public array $visualPreferences,
         public \DateTime $updatedAt,
