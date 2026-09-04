@@ -1,5 +1,15 @@
 parameters:
     mcp.resources:
+        # Read only on purpose: it is the append-only history the app writes by itself, and the
+        # only place an older state survives. Exposing it lets a client read back a value the
+        # current tables no longer hold; nobody gets to rewrite what happened.
+        domain_event_log:
+            class: 'Shared\Shared\DomainEventLog\Domain\Model\DomainEventLog'
+            sidecar: '%kernel.project_dir%/src/Shared/Shared/DomainEventLog/Infrastructure/Domain/Model/Doctrine/Mapping/DomainEventLog.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
+
         article:
             class: 'Nutrition\Catalog\Article\Domain\Model\Article'
             sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/Article/Infrastructure/Domain/Model/Doctrine/Mapping/Article.mcp.yaml'

@@ -1,0 +1,46 @@
+label: Domain event log
+
+fields:
+  eventName:
+    writable: false
+    required: false
+    description: >-
+      Canonical name of the domain event, shaped as
+      "golifecraft.{context}.event.1.{entity}.{verb}". Filter by it to follow one kind of
+      change, for example "golifecraft.nutrition.event.1.article.updated".
+    filterable: true
+    sortable: true
+  aggregateId:
+    writable: false
+    required: false
+    description: >-
+      Id of the aggregate the event belongs to: the article id, the recipe id, and so on.
+      Filter by it to read the whole history of a single record.
+    filterable: true
+  payload:
+    writable: false
+    required: false
+    description: >-
+      JSON object holding every property the event carried, which is the full state of the
+      aggregate right after the change. This is the only place where an older state survives,
+      so it is what a repair reads to put back a value the current tables no longer hold.
+    filterable: false
+  occurredOn:
+    writable: false
+    required: false
+    type: datetime
+    description: >-
+      When the change happened. Sort descending to get the most recent state first.
+    filterable: true
+    sortable: true
+  recordedAt:
+    writable: false
+    required: false
+    type: datetime
+    description: >-
+      When the event was written to the log, which breaks ties between events that share the
+      same occurredOn.
+    filterable: true
+    sortable: true
+
+relations: {}
