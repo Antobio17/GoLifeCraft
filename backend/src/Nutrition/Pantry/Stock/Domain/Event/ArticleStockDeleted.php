@@ -11,7 +11,6 @@ final readonly class ArticleStockDeleted extends DomainEvent
         \DateTime $occurredOn,
         public string $articleId,
         public float $quantity,
-        public ?string $locationId,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

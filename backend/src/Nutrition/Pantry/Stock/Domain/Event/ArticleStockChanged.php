@@ -12,7 +12,6 @@ final readonly class ArticleStockChanged extends DomainEvent
         public string $articleId,
         public float $previousQuantity,
         public float $quantity,
-        public ?string $locationId,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

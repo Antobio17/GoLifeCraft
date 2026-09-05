@@ -30,7 +30,6 @@ final class StartInventoryController
             $this->handle(message: new StartInventoryCommand(
                 countedOn: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'countedOn'),
                 shift: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'shift'),
-                locationId: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'locationId'),
                 note: (string) RequestExtractor::getStringRequestValue(request: $request, fieldName: 'note', required: false),
                 startedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));

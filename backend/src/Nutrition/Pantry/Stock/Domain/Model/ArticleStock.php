@@ -5,7 +5,6 @@ namespace Nutrition\Pantry\Stock\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Pantry\Stock\Domain\Event\ArticleStockChanged;
 use Nutrition\Pantry\Stock\Domain\Event\ArticleStockDeleted;
-use Nutrition\Pantry\Stock\Domain\Event\ArticleStockMoved;
 use Nutrition\Pantry\Stock\Domain\Event\ArticleStockStarted;
 use Nutrition\Pantry\Stock\Domain\Exception\ArticleStockException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -14,7 +13,6 @@ class ArticleStock extends GenericAggregate
 {
     public string $articleId;
     public float $quantity = 0.0;
-    public ?string $locationId = null;
 
     public static function start(
         string $id,
@@ -22,7 +20,6 @@ class ArticleStock extends GenericAggregate
         float $quantity,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
-        ?string $locationId = null,
     ): self {
         self::assertQuantityIsNotNegative(quantity: $quantity);
 
@@ -32,7 +29,6 @@ class ArticleStock extends GenericAggregate
         $stock->id = $id;
         $stock->articleId = $articleId;
         $stock->quantity = $quantity;
-        $stock->locationId = $locationId;
         $stock->stampCreation(userId: $createdByUserId, now: $now);
 
         $stock->record(event: new ArticleStockStarted(
@@ -40,7 +36,6 @@ class ArticleStock extends GenericAggregate
             occurredOn: $now,
             articleId: $articleId,
             quantity: $quantity,
-            locationId: $locationId,
             createdAt: $now,
             updatedAt: $now,
             createdByUserId: $createdByUserId,
@@ -69,7 +64,6 @@ class ArticleStock extends GenericAggregate
             articleId: $this->articleId,
             previousQuantity: $previousQuantity,
             quantity: $quantity,
-            locationId: $this->locationId,
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -101,31 +95,6 @@ class ArticleStock extends GenericAggregate
         );
     }
 
-    public function moveTo(
-        ?string $locationId,
-        string $updatedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        $now = $dateTimeGenerator->now();
-        $previousLocationId = $this->locationId;
-
-        $this->locationId = $locationId;
-        $this->stampUpdate(userId: $updatedByUserId, now: $now);
-
-        $this->record(event: new ArticleStockMoved(
-            aggregateId: $this->id,
-            occurredOn: $now,
-            articleId: $this->articleId,
-            quantity: $this->quantity,
-            previousLocationId: $previousLocationId,
-            locationId: $locationId,
-            createdAt: $this->createdAt,
-            updatedAt: $now,
-            createdByUserId: $this->createdByUserId,
-            updatedByUserId: $updatedByUserId,
-        ));
-    }
-
     public function delete(
         string $deletedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -138,7 +107,6 @@ class ArticleStock extends GenericAggregate
             occurredOn: $now,
             articleId: $this->articleId,
             quantity: $this->quantity,
-            locationId: $this->locationId,
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,

@@ -4,7 +4,8 @@ namespace Nutrition\Pantry\Inventory\Infrastructure\Domain\Model\Doctrine;
 
 use Doctrine\ORM\EntityRepository;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
-use Nutrition\Pantry\Inventory\Domain\Model\InventoryLine;
+use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocation;
+use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
 use Nutrition\Pantry\Inventory\Domain\Model\InventoryRepository;
 use Ramsey\Uuid\Uuid;
 
@@ -23,7 +24,14 @@ final class DoctrineInventoryRepository extends EntityRepository implements Inve
             return null;
         }
 
-        $inventory->lines = $this->linesOf(inventoryId: $id);
+        $itemsByLocation = $this->itemsOf(inventoryId: $id);
+        $locations = $this->locationsOf(inventoryId: $id);
+
+        foreach ($locations as $location) {
+            $location->items = $itemsByLocation[$location->id] ?? [];
+        }
+
+        $inventory->locations = $locations;
 
         return $inventory;
     }
@@ -34,8 +42,12 @@ final class DoctrineInventoryRepository extends EntityRepository implements Inve
 
         $entityManager->persist(object: $inventory);
 
-        foreach ($inventory->lines as $line) {
-            $entityManager->persist(object: $line);
+        foreach ($inventory->locations as $location) {
+            $entityManager->persist(object: $location);
+
+            foreach ($location->items as $item) {
+                $entityManager->persist(object: $item);
+            }
         }
     }
 
@@ -43,25 +55,52 @@ final class DoctrineInventoryRepository extends EntityRepository implements Inve
     {
         $entityManager = $this->getEntityManager();
 
-        foreach ($inventory->lines as $line) {
-            $entityManager->remove(object: $line);
+        foreach ($inventory->locations as $location) {
+            foreach ($location->items as $item) {
+                $entityManager->remove(object: $item);
+            }
+
+            $entityManager->remove(object: $location);
         }
 
         $entityManager->remove(object: $inventory);
     }
 
     /**
-     * @return InventoryLine[]
+     * @return InventoryLocation[]
      */
-    private function linesOf(string $inventoryId): array
+    private function locationsOf(string $inventoryId): array
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('line')
-            ->from(from: InventoryLine::class, alias: 'line')
-            ->where('line.inventoryId = :inventoryId')
-            ->orderBy('line.position', 'ASC')
+            ->select('location')
+            ->from(from: InventoryLocation::class, alias: 'location')
+            ->where('location.inventoryId = :inventoryId')
+            ->orderBy('location.position', 'ASC')
             ->setParameter(key: 'inventoryId', value: $inventoryId)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @return array<string, InventoryLocationItem[]>
+     */
+    private function itemsOf(string $inventoryId): array
+    {
+        $items = $this->getEntityManager()->createQueryBuilder()
+            ->select('item')
+            ->from(from: InventoryLocationItem::class, alias: 'item')
+            ->where('item.inventoryId = :inventoryId')
+            ->orderBy('item.position', 'ASC')
+            ->setParameter(key: 'inventoryId', value: $inventoryId)
+            ->getQuery()
+            ->getResult();
+
+        $grouped = [];
+
+        foreach ($items as $item) {
+            $grouped[$item->inventoryLocationId][] = $item;
+        }
+
+        return $grouped;
     }
 }

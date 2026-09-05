@@ -19,14 +19,6 @@ final class DoctrineRecipeStockRepository extends EntityRepository implements Re
         return $this->findOneBy(['recipeId' => $recipeId]);
     }
 
-    /**
-     * @return RecipeStock[]
-     */
-    public function findByLocationId(string $locationId): array
-    {
-        return $this->findBy(['locationId' => $locationId]);
-    }
-
     public function save(RecipeStock $recipeStock): void
     {
         $this->getEntityManager()->persist(object: $recipeStock);

@@ -6,7 +6,8 @@ use Nutrition\Pantry\Inventory\Application\Command\StartInventoryCommand;
 use Nutrition\Pantry\Inventory\Application\Command\StartInventoryCommandHandler;
 use Nutrition\Pantry\Inventory\Domain\Exception\StartInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
-use Nutrition\Pantry\Inventory\Domain\Model\InventoryLine;
+use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
+use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationPlan;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryStockLine;
 use Nutrition\Pantry\Inventory\Infrastructure\Domain\Model\InMemory\InMemoryInventoryRepository;
 use Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\InMemory\InMemoryStartInventoryNeedleDataQuery;
@@ -23,40 +24,58 @@ final class StartInventoryCommandHandlerTest extends TestCase
         $this->inventoryRepository = new InMemoryInventoryRepository();
     }
 
-    public function testItSnapshotsTheCurrentStockAsTheLinesToCount(): void
+    public function testItPlansOneCountedLocationPerPantryLocationWithItsItems(): void
     {
         ($this->handlerWith())(new StartInventoryCommand(
             countedOn: '2026-09-05',
             shift: Inventory::SHIFT_MORNING,
-            locationId: null,
             note: '',
             startedByUserId: 'god-user-id',
         ));
 
         $inventory = $this->inventoryRepository->findById(id: 'inventory-1');
 
-        $this->assertCount(expectedCount: 3, haystack: $inventory->lines);
+        $this->assertCount(expectedCount: 2, haystack: $inventory->locations);
         $this->assertSame(expected: Inventory::STATUS_DRAFT, actual: $inventory->status);
-        $this->assertSame(expected: 1000.0, actual: $inventory->lines[0]->expectedQuantity);
-        $this->assertNull(actual: $inventory->lines[0]->countedQuantity);
-        $this->assertSame(expected: InventoryLine::KIND_RECIPE, actual: $inventory->lines[2]->kind);
+        $this->assertSame(expected: 'Nevera', actual: $inventory->locations[0]->nameSnapshot);
+        $this->assertCount(expectedCount: 2, haystack: $inventory->locations[0]->items);
+        $this->assertCount(expectedCount: 1, haystack: $inventory->locations[1]->items);
+        $this->assertCount(expectedCount: 3, haystack: $inventory->items());
     }
 
-    public function testItCountsOnlyTheChosenLocation(): void
+    public function testItSnapshotsWhatEachItemWasExpectedToHold(): void
     {
         ($this->handlerWith())(new StartInventoryCommand(
             countedOn: '2026-09-05',
-            shift: Inventory::SHIFT_NIGHT,
-            locationId: 'location-1',
-            note: 'Solo la nevera',
+            shift: Inventory::SHIFT_MORNING,
+            note: '',
+            startedByUserId: 'god-user-id',
+        ));
+
+        $item = $this->inventoryRepository->findById(id: 'inventory-1')->locations[0]->items[0];
+
+        $this->assertSame(expected: InventoryLocationItem::KIND_ARTICLE, actual: $item->kind);
+        $this->assertSame(expected: 'Arroz', actual: $item->nameSnapshot);
+        $this->assertSame(expected: 1000.0, actual: $item->expectedQuantity);
+        $this->assertNull(actual: $item->countedQuantity);
+    }
+
+    public function testItSkipsALocationHoldingNothing(): void
+    {
+        ($this->handlerWith(locationPlans: [
+            new InventoryLocationPlan(locationId: 'location-1', name: 'Nevera', emoji: '🥶', items: []),
+            self::pantry()[1],
+        ]))(new StartInventoryCommand(
+            countedOn: '2026-09-05',
+            shift: Inventory::SHIFT_MORNING,
+            note: '',
             startedByUserId: 'god-user-id',
         ));
 
         $inventory = $this->inventoryRepository->findById(id: 'inventory-1');
 
-        $this->assertCount(expectedCount: 2, haystack: $inventory->lines);
-        $this->assertSame(expected: 'location-1', actual: $inventory->locationId);
-        $this->assertSame(expected: 'Solo la nevera', actual: $inventory->note);
+        $this->assertCount(expectedCount: 1, haystack: $inventory->locations);
+        $this->assertSame(expected: 'Despensa', actual: $inventory->locations[0]->nameSnapshot);
     }
 
     public function testItRefusesASecondOpenCount(): void
@@ -66,20 +85,6 @@ final class StartInventoryCommandHandlerTest extends TestCase
         ($this->handlerWith(openInventoryId: 'inventory-already-open'))(new StartInventoryCommand(
             countedOn: '2026-09-05',
             shift: Inventory::SHIFT_MORNING,
-            locationId: null,
-            note: '',
-            startedByUserId: 'god-user-id',
-        ));
-    }
-
-    public function testItRefusesAnUnknownLocation(): void
-    {
-        $this->expectException(exception: StartInventoryException::class);
-
-        ($this->handlerWith())(new StartInventoryCommand(
-            countedOn: '2026-09-05',
-            shift: Inventory::SHIFT_MORNING,
-            locationId: 'missing-location',
             note: '',
             startedByUserId: 'god-user-id',
         ));
@@ -92,7 +97,6 @@ final class StartInventoryCommandHandlerTest extends TestCase
         ($this->handlerWith())(new StartInventoryCommand(
             countedOn: '2026-09-05',
             shift: 'madrugada',
-            locationId: null,
             note: '',
             startedByUserId: 'god-user-id',
         ));
@@ -102,25 +106,23 @@ final class StartInventoryCommandHandlerTest extends TestCase
     {
         $this->expectException(exception: StartInventoryException::class);
 
-        ($this->handlerWith(stockLines: []))(new StartInventoryCommand(
+        ($this->handlerWith(locationPlans: []))(new StartInventoryCommand(
             countedOn: '2026-09-05',
             shift: Inventory::SHIFT_MORNING,
-            locationId: null,
             note: '',
             startedByUserId: 'god-user-id',
         ));
     }
 
     /**
-     * @param InventoryStockLine[]|null $stockLines
+     * @param InventoryLocationPlan[]|null $locationPlans
      */
-    private function handlerWith(?array $stockLines = null, ?string $openInventoryId = null): StartInventoryCommandHandler
+    private function handlerWith(?array $locationPlans = null, ?string $openInventoryId = null): StartInventoryCommandHandler
     {
         return new StartInventoryCommandHandler(
             inventoryRepository: $this->inventoryRepository,
             needleDataQuery: new InMemoryStartInventoryNeedleDataQuery(
-                stockLines: $stockLines ?? self::stockLines(),
-                locationIds: ['location-1'],
+                locationPlans: $locationPlans ?? self::pantry(),
                 openInventoryId: $openInventoryId,
             ),
             domainEventCollectorService: new DomainEventCollectorService(),
@@ -129,37 +131,51 @@ final class StartInventoryCommandHandlerTest extends TestCase
     }
 
     /**
-     * @return InventoryStockLine[]
+     * @return InventoryLocationPlan[]
      */
-    private static function stockLines(): array
+    private static function pantry(): array
     {
         return [
-            new InventoryStockLine(
-                kind: InventoryLine::KIND_ARTICLE,
-                refId: 'article-1',
+            new InventoryLocationPlan(
                 locationId: 'location-1',
-                name: 'Arroz',
-                emoji: '🍚',
-                unit: 'g',
-                quantity: 1000.0,
+                name: 'Nevera',
+                emoji: '🥶',
+                items: [
+                    new InventoryStockLine(
+                        locationId: 'location-1',
+                        kind: InventoryLocationItem::KIND_ARTICLE,
+                        refId: 'article-1',
+                        name: 'Arroz',
+                        emoji: '🍚',
+                        unit: 'g',
+                        quantity: 1000.0,
+                    ),
+                    new InventoryStockLine(
+                        locationId: 'location-1',
+                        kind: InventoryLocationItem::KIND_RECIPE,
+                        refId: 'recipe-1',
+                        name: 'Lentejas',
+                        emoji: '🥘',
+                        unit: 'serving',
+                        quantity: 4.0,
+                    ),
+                ],
             ),
-            new InventoryStockLine(
-                kind: InventoryLine::KIND_ARTICLE,
-                refId: 'article-2',
+            new InventoryLocationPlan(
                 locationId: 'location-2',
-                name: 'Leche',
-                emoji: '🥛',
-                unit: 'ml',
-                quantity: 500.0,
-            ),
-            new InventoryStockLine(
-                kind: InventoryLine::KIND_RECIPE,
-                refId: 'recipe-1',
-                locationId: 'location-1',
-                name: 'Lentejas',
-                emoji: '🥘',
-                unit: 'serving',
-                quantity: 4.0,
+                name: 'Despensa',
+                emoji: '🚪',
+                items: [
+                    new InventoryStockLine(
+                        locationId: 'location-2',
+                        kind: InventoryLocationItem::KIND_ARTICLE,
+                        refId: 'article-2',
+                        name: 'Leche',
+                        emoji: '🥛',
+                        unit: 'ml',
+                        quantity: 500.0,
+                    ),
+                ],
             ),
         ];
     }

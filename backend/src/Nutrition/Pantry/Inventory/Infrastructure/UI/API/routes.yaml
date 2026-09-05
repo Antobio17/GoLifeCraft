@@ -29,10 +29,10 @@ validate_inventory:
   requirements:
     inventoryId: '[0-9a-fA-F-]{36}'
 
-count_inventory_line:
-  path: /api/v1/nutrition/pantry/inventories/{inventoryId}/lines/{lineId}
+count_inventory_item:
+  path: /api/v1/nutrition/pantry/inventories/{inventoryId}/items/{itemId}
   methods: [PUT]
-  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\CountInventoryLineController
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\CountInventoryItemController
   requirements:
     inventoryId: '[0-9a-fA-F-]{36}'
-    lineId: '[0-9a-fA-F-]{36}'
+    itemId: '[0-9a-fA-F-]{36}'

@@ -15,12 +15,12 @@ final class CountInventoryException extends BaseException
         );
     }
 
-    public static function lineNotFound(string $inventoryId, string $lineId): self
+    public static function itemNotFound(string $inventoryId, string $itemId): self
     {
         return new static(
-            title: 'The count line does not exist.',
-            keyTranslation: 'inventory.line.not.found',
-            details: ['inventoryId' => $inventoryId, 'lineId' => $lineId]
+            title: 'The counted item does not exist.',
+            keyTranslation: 'inventory.item.not.found',
+            details: ['inventoryId' => $inventoryId, 'itemId' => $itemId]
         );
     }
 

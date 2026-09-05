@@ -2,16 +2,14 @@
 
 namespace Nutrition\Pantry\Inventory\Domain\QueryModel;
 
-use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryStockLine;
+use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationPlan;
 
 interface StartInventoryNeedleDataQuery
 {
     public function openInventoryId(): ?string;
 
-    public function locationExists(string $locationId): bool;
-
     /**
-     * @return InventoryStockLine[]
+     * @return InventoryLocationPlan[]
      */
-    public function findStockLines(?string $locationId): array;
+    public function findLocationPlans(): array;
 }

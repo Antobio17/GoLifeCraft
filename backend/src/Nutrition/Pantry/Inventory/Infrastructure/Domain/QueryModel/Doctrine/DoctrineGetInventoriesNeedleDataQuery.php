@@ -26,18 +26,16 @@ final readonly class DoctrineGetInventoriesNeedleDataQuery implements GetInvento
                 'i.counted_on',
                 'i.shift',
                 'i.status',
-                'i.location_id',
                 'i.note',
                 'i.created_at',
                 'i.updated_at',
                 'i.created_by_user_id',
                 'i.updated_by_user_id',
-                'l.name AS location_name',
-                '(SELECT COUNT(*) FROM inventory_line li WHERE li.inventory_id = i.id) AS total_lines',
-                '(SELECT COUNT(*) FROM inventory_line li WHERE li.inventory_id = i.id AND li.counted_quantity IS NOT NULL) AS counted_lines',
-                '(SELECT COUNT(*) FROM inventory_line li WHERE li.inventory_id = i.id AND li.counted_quantity IS NOT NULL AND li.counted_quantity <> li.expected_quantity) AS adjusted_lines',
-            )
-            ->leftJoin(fromAlias: 'i', join: 'pantry_location', alias: 'l', condition: 'l.id = i.location_id');
+                '(SELECT COUNT(*) FROM inventory_location il WHERE il.inventory_id = i.id) AS total_locations',
+                '(SELECT COUNT(*) FROM inventory_location_item it WHERE it.inventory_id = i.id) AS total_items',
+                '(SELECT COUNT(*) FROM inventory_location_item it WHERE it.inventory_id = i.id AND it.counted_quantity IS NOT NULL) AS counted_items',
+                '(SELECT COUNT(*) FROM inventory_location_item it WHERE it.inventory_id = i.id AND it.counted_quantity IS NOT NULL AND it.counted_quantity <> it.expected_quantity) AS adjusted_items',
+            );
 
         $this->applyOrdering(qb: $qb, orderBy: $orderBy);
 
@@ -55,12 +53,11 @@ final readonly class DoctrineGetInventoriesNeedleDataQuery implements GetInvento
                 countedOn: $row['counted_on'],
                 shift: $row['shift'],
                 status: $row['status'],
-                locationId: $row['location_id'],
-                locationName: $row['location_name'],
                 note: (string) ($row['note'] ?? ''),
-                totalLines: (int) $row['total_lines'],
-                countedLines: (int) $row['counted_lines'],
-                adjustedLines: (int) $row['adjusted_lines'],
+                totalLocations: (int) $row['total_locations'],
+                totalItems: (int) $row['total_items'],
+                countedItems: (int) $row['counted_items'],
+                adjustedItems: (int) $row['adjusted_items'],
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
                 createdByUserId: $row['created_by_user_id'],

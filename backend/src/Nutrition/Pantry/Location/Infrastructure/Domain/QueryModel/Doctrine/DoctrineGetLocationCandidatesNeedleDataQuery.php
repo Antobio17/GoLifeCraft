@@ -9,12 +9,6 @@ use Nutrition\Pantry\Location\Domain\QueryModel\Dto\GetLocationCandidatesResult;
 use Nutrition\Pantry\Location\Domain\QueryModel\GetLocationCandidatesNeedleDataQuery;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Search\SearchFilter;
 
-/**
- * Articles and recipes live in separate tables, so the candidate list is the two searched
- * apart and merged here rather than a UNION: it keeps SearchFilter's matching identical to
- * every other search box in the app, at the price of paging a personal-sized catalogue in
- * PHP instead of in the database.
- */
 final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements GetLocationCandidatesNeedleDataQuery
 {
     private const string RECIPE_UNIT = 'serving';
@@ -38,42 +32,40 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
     }
 
     public function findCandidates(
-        string $locationId,
         int $pageSize,
         int $pageNumber,
         ?string $filterName = null,
         ?string $filterKind = null,
     ): array {
-        $candidates = $this->matching(locationId: $locationId, filterName: $filterName, filterKind: $filterKind);
+        $candidates = $this->matching(filterName: $filterName, filterKind: $filterKind);
 
         return array_slice(array: $candidates, offset: ($pageNumber - 1) * $pageSize, length: $pageSize);
     }
 
     public function totalCandidates(
-        string $locationId,
         ?string $filterName = null,
         ?string $filterKind = null,
     ): int {
-        return count(value: $this->matching(locationId: $locationId, filterName: $filterName, filterKind: $filterKind));
+        return count(value: $this->matching(filterName: $filterName, filterKind: $filterKind));
     }
 
     /**
      * @return GetLocationCandidatesResult[]
      */
-    private function matching(string $locationId, ?string $filterName, ?string $filterKind): array
+    private function matching(?string $filterName, ?string $filterKind): array
     {
         $candidates = [];
 
         if (Location::ITEM_RECIPE !== $filterKind) {
-            $candidates = array_merge($candidates, $this->articles(locationId: $locationId, filterName: $filterName));
+            $candidates = array_merge($candidates, $this->articles(filterName: $filterName));
         }
 
         if (Location::ITEM_ARTICLE !== $filterKind) {
-            $candidates = array_merge($candidates, $this->recipes(locationId: $locationId, filterName: $filterName));
+            $candidates = array_merge($candidates, $this->recipes(filterName: $filterName));
         }
 
         usort(array: $candidates, callback: static function (GetLocationCandidatesResult $a, GetLocationCandidatesResult $b): int {
-            return [null !== $a->locationId, $a->name] <=> [null !== $b->locationId, $b->name];
+            return $a->name <=> $b->name;
         });
 
         return $candidates;
@@ -82,7 +74,7 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
     /**
      * @return GetLocationCandidatesResult[]
      */
-    private function articles(string $locationId, ?string $filterName): array
+    private function articles(?string $filterName): array
     {
         $qb = $this->connection->createQueryBuilder()
             ->select(
@@ -91,14 +83,11 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
                 'a.emoji',
                 'a.base_unit',
                 's.quantity',
-                's.location_id',
-                'pl.name AS location_name',
             )
             ->from(table: 'article', alias: 'a')
-            ->leftJoin(fromAlias: 'a', join: 'article_stock', alias: 's', condition: 's.article_id = a.id')
-            ->leftJoin(fromAlias: 's', join: 'pantry_location', alias: 'pl', condition: 'pl.id = s.location_id');
+            ->leftJoin(fromAlias: 'a', join: 'article_stock', alias: 's', condition: 's.article_id = a.id');
 
-        $this->excludeOwn(qb: $qb, locationId: $locationId, alias: 's');
+        $this->excludePlaced(qb: $qb, kind: Location::ITEM_ARTICLE, referenceColumn: 'a.id');
         SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['a.name']);
 
         return array_map(callback: static function (array $row): GetLocationCandidatesResult {
@@ -111,8 +100,6 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
                 emoji: (string) ($row['emoji'] ?? ''),
                 unit: (string) ($row['base_unit'] ?? 'g'),
                 quantity: (float) ($row['quantity'] ?? 0.0),
-                locationId: $row['location_id'],
-                locationName: $row['location_name'],
             );
         }, array: $qb->executeQuery()->fetchAllAssociative());
     }
@@ -120,7 +107,7 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
     /**
      * @return GetLocationCandidatesResult[]
      */
-    private function recipes(string $locationId, ?string $filterName): array
+    private function recipes(?string $filterName): array
     {
         $qb = $this->connection->createQueryBuilder()
             ->select(
@@ -128,14 +115,11 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
                 'r.name',
                 'r.emoji',
                 's.servings AS quantity',
-                's.location_id',
-                'pl.name AS location_name',
             )
             ->from(table: 'recipe', alias: 'r')
-            ->leftJoin(fromAlias: 'r', join: 'recipe_stock', alias: 's', condition: 's.recipe_id = r.id')
-            ->leftJoin(fromAlias: 's', join: 'pantry_location', alias: 'pl', condition: 'pl.id = s.location_id');
+            ->leftJoin(fromAlias: 'r', join: 'recipe_stock', alias: 's', condition: 's.recipe_id = r.id');
 
-        $this->excludeOwn(qb: $qb, locationId: $locationId, alias: 's');
+        $this->excludePlaced(qb: $qb, kind: Location::ITEM_RECIPE, referenceColumn: 'r.id');
         SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['r.name']);
 
         return array_map(callback: static function (array $row): GetLocationCandidatesResult {
@@ -148,16 +132,17 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
                 emoji: (string) ($row['emoji'] ?? ''),
                 unit: self::RECIPE_UNIT,
                 quantity: (float) ($row['quantity'] ?? 0.0),
-                locationId: $row['location_id'],
-                locationName: $row['location_name'],
             );
         }, array: $qb->executeQuery()->fetchAllAssociative());
     }
 
-    private function excludeOwn(QueryBuilder $qb, string $locationId, string $alias): void
+    private function excludePlaced(QueryBuilder $qb, string $kind, string $referenceColumn): void
     {
         $qb
-            ->andWhere(sprintf('(%s.location_id IS NULL OR %s.location_id != :ownLocationId)', $alias, $alias))
-            ->setParameter(key: 'ownLocationId', value: $locationId);
+            ->andWhere(sprintf(
+                'NOT EXISTS (SELECT 1 FROM location_item i WHERE i.kind = :placedKind AND i.ref_id = %s)',
+                $referenceColumn,
+            ))
+            ->setParameter(key: 'placedKind', value: $kind);
     }
 }

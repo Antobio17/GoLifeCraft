@@ -2,18 +2,16 @@
 
 namespace Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\InMemory;
 
-use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryStockLine;
+use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationPlan;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\StartInventoryNeedleDataQuery;
 
 final class InMemoryStartInventoryNeedleDataQuery implements StartInventoryNeedleDataQuery
 {
     /**
-     * @param InventoryStockLine[] $stockLines
-     * @param string[]             $locationIds
+     * @param InventoryLocationPlan[] $locationPlans
      */
     public function __construct(
-        private array $stockLines = [],
-        private array $locationIds = [],
+        private array $locationPlans = [],
         private ?string $openInventoryId = null,
     ) {
     }
@@ -23,20 +21,8 @@ final class InMemoryStartInventoryNeedleDataQuery implements StartInventoryNeedl
         return $this->openInventoryId;
     }
 
-    public function locationExists(string $locationId): bool
+    public function findLocationPlans(): array
     {
-        return in_array(needle: $locationId, haystack: $this->locationIds, strict: true);
-    }
-
-    public function findStockLines(?string $locationId): array
-    {
-        if (null === $locationId) {
-            return $this->stockLines;
-        }
-
-        return array_values(array: array_filter(
-            array: $this->stockLines,
-            callback: static fn (InventoryStockLine $line): bool => $line->locationId === $locationId,
-        ));
+        return $this->locationPlans;
     }
 }

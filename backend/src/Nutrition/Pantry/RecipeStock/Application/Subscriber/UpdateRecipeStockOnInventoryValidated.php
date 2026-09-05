@@ -3,7 +3,7 @@
 namespace Nutrition\Pantry\RecipeStock\Application\Subscriber;
 
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryValidated;
-use Nutrition\Pantry\Inventory\Domain\Model\InventoryLine;
+use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
 use Nutrition\Pantry\RecipeStock\Application\Command\UpdateRecipeStockCommand;
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 use Shared\Shared\Shared\Domain\Event\DomainEventSubscriber;
@@ -22,15 +22,25 @@ final readonly class UpdateRecipeStockOnInventoryValidated implements DomainEven
             return;
         }
 
-        foreach ($event->lines as $line) {
-            if (InventoryLine::KIND_RECIPE !== ($line['kind'] ?? null) || null === ($line['countedQuantity'] ?? null)) {
+        foreach ($event->locations as $location) {
+            $this->dispatchItems(items: $location['items'] ?? [], updatedByUserId: $event->updatedByUserId);
+        }
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $items
+     */
+    private function dispatchItems(array $items, string $updatedByUserId): void
+    {
+        foreach ($items as $item) {
+            if (InventoryLocationItem::KIND_RECIPE !== ($item['kind'] ?? null) || null === ($item['countedQuantity'] ?? null)) {
                 continue;
             }
 
             $this->messageBus->dispatch(new UpdateRecipeStockCommand(
-                recipeId: $line['refId'],
-                servings: (float) $line['countedQuantity'],
-                updatedByUserId: $event->updatedByUserId,
+                recipeId: $item['refId'],
+                servings: (float) $item['countedQuantity'],
+                updatedByUserId: $updatedByUserId,
             ));
         }
     }
