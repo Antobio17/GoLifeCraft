@@ -131,7 +131,10 @@ export class GetInventoriesComponent extends AbstractListPageComponent<Inventory
       label: this.t("getInventories.table.status"),
       value: (item) =>
         this.t(this.inventoryView.statusKey(item.attributes.status)),
-      badge: (item) => item.attributes.status,
+      badge: (item) =>
+        InventoryStatus.VALIDATED === item.attributes.status
+          ? "status-completed"
+          : "status-pending",
       width: "0.7fr",
       minWidth: "120px",
     },
