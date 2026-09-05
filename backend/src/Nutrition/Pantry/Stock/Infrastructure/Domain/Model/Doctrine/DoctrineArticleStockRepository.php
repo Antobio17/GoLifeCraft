@@ -19,6 +19,14 @@ final class DoctrineArticleStockRepository extends EntityRepository implements A
         return $this->findOneBy(['articleId' => $articleId]);
     }
 
+    /**
+     * @return ArticleStock[]
+     */
+    public function findByLocationId(string $locationId): array
+    {
+        return $this->findBy(['locationId' => $locationId]);
+    }
+
     public function save(ArticleStock $articleStock): void
     {
         $this->getEntityManager()->persist(object: $articleStock);

@@ -11,6 +11,7 @@ final readonly class RecipeStockDeleted extends DomainEvent
         \DateTime $occurredOn,
         public string $recipeId,
         public float $servings,
+        public ?string $locationId,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

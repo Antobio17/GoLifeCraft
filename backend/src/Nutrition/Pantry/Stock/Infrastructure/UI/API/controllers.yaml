@@ -5,3 +5,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\MoveArticleStockController:
+    class: Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\MoveArticleStockController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

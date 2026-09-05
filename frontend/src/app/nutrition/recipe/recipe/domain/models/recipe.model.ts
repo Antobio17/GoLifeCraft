@@ -44,6 +44,8 @@ export interface RecipeDetailAttributes {
   total: RecipeMacros;
   perServing: RecipeMacros;
   stock: number;
+  stockLocationId?: string | null;
+  stockLocationName?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }

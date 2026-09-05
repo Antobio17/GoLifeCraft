@@ -1,0 +1,28 @@
+label: Pantry location
+
+fields:
+  name:
+    writable: true
+    required: true
+    max: 60
+    unique: true
+    description: >-
+      How the user calls the place where food is kept, for example "Nevera", "Congelador"
+      or "Despensa". It is unique across locations.
+    filterable: true
+    sortable: true
+  emoji:
+    writable: true
+    required: false
+    max: 16
+    description: >-
+      Emoji shown next to the location in the app, for example "🧊" for the freezer.
+  description:
+    writable: true
+    required: false
+    max: 255
+    description: >-
+      Free note about what the location holds or where it is, for example "Cajón de abajo
+      de la nevera".
+
+relations: {}

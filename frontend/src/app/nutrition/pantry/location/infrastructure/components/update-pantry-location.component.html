@@ -1,0 +1,55 @@
+<ds-page-wrapper [maxWidth]="'45rem'" [gap]="'var(--ds-space-6)'">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ds-section-page-wrapper
+      [title]="'updatePantryLocation.title' | t"
+      [description]="'updatePantryLocation.description' | t"
+      [loading]="loading()"
+      [skeletonRows]="2"
+      [skeletonFieldsPerRow]="1"
+      [showBackButton]="true"
+      [icon]="'package'"
+      (backClicked)="cancel()"
+    >
+      <ds-form-section
+        [title]="'updatePantryLocation.section.general' | t"
+        [icon]="ICONS['LOCATION']"
+      >
+        <ds-field [label]="'updatePantryLocation.field.emoji' | t">
+          <ds-emoji-picker
+            formControlName="emoji"
+            [groups]="emojiGroups"
+            [fallback]="fallbackEmoji"
+            [sheetTitle]="'updatePantryLocation.field.emojiSheetTitle' | t"
+            [closeLabel]="'updatePantryLocation.field.emojiClose' | t"
+            [triggerLabel]="'updatePantryLocation.field.emojiTrigger' | t"
+            [searchPlaceholder]="'updatePantryLocation.field.emojiSearch' | t"
+            [emptyLabel]="'updatePantryLocation.field.emojiEmpty' | t"
+          />
+        </ds-field>
+
+        <ds-form-input
+          [label]="'updatePantryLocation.field.name' | t"
+          [showRequired]="true"
+          [maxLength]="60"
+          formControlName="name"
+        ></ds-form-input>
+
+        <ds-form-input
+          [label]="'updatePantryLocation.field.locationDescription' | t"
+          [hint]="'updatePantryLocation.field.descriptionHint' | t"
+          [maxLength]="255"
+          formControlName="description"
+        ></ds-form-input>
+      </ds-form-section>
+    </ds-section-page-wrapper>
+
+    <ds-form-actions
+      [cancelLabel]="'updatePantryLocation.cancel' | t"
+      [submitLabel]="'updatePantryLocation.save' | t"
+      [savingLabel]="'updatePantryLocation.saving' | t"
+      [saving]="saving()"
+      [formInvalid]="form.invalid"
+      (cancelled)="cancel()"
+    ></ds-form-actions>
+  </form>
+</ds-page-wrapper>

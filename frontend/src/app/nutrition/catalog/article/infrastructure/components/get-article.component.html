@@ -255,6 +255,15 @@
       <ds-text variant="label">{{ preview }}</ds-text>
     }
 
+    <ds-field [label]="'getArticle.stock.editor.location' | t">
+      <ds-select-chips
+        [options]="locationOptions()"
+        [ngModel]="stockLocationId()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onStockLocationChange($event)"
+      />
+    </ds-field>
+
     <ds-button
       variant="primary"
       icon="check"

@@ -53,9 +53,12 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
                 'nf.fiber AS nf_fiber',
                 'nf.salt AS nf_salt',
                 'st.quantity AS stock_quantity',
+                'st.location_id AS stock_location_id',
+                'pl.name AS stock_location_name',
             )
             ->from(table: 'article', alias: 't')
             ->leftJoin(fromAlias: 't', join: 'article_stock', alias: 'st', condition: 't.id = st.article_id')
+            ->leftJoin(fromAlias: 'st', join: 'pantry_location', alias: 'pl', condition: 'pl.id = st.location_id')
             ->leftJoin(fromAlias: 't', join: 'category', alias: 'c', condition: 't.category_id = c.id')
             ->leftJoin(fromAlias: 't', join: 'supermarket', alias: 's', condition: 't.supermarket_id = s.id')
             ->leftJoin(fromAlias: 't', join: 'supermarket_aisle', alias: 'a', condition: 't.aisle_id = a.id')
@@ -81,6 +84,8 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
             equivalences: $this->findEquivalences(articleId: $result['id']),
             packUnit: $result['pack_unit'],
             stock: (float) ($result['stock_quantity'] ?? 0.0),
+            stockLocationId: $result['stock_location_id'],
+            stockLocationName: $result['stock_location_name'],
             price: null !== $result['price'] ? (float) $result['price'] : null,
             brand: $result['brand'],
             emoji: $result['emoji'],

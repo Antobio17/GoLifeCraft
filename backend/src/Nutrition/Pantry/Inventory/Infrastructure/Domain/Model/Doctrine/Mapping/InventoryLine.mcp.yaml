@@ -1,0 +1,68 @@
+label: Stock count line
+
+fields:
+  inventoryId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the count this line belongs to.
+    filterable: true
+  position:
+    writable: false
+    type: integer
+    description: >-
+      Order of the line inside the count.
+    sortable: true
+  kind:
+    writable: false
+    enum: [article, recipe]
+    description: >-
+      Whether the line counts an article or the cooked servings of a recipe.
+    filterable: true
+  refId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the counted article or recipe, depending on the kind.
+    filterable: true
+  locationId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Location the stock was sitting in when the count started.
+    filterable: true
+  nameSnapshot:
+    writable: false
+    max: 255
+    description: >-
+      Name of the article or recipe as it was when the count started, kept so the history
+      still reads right after a rename.
+  emojiSnapshot:
+    writable: false
+    max: 16
+    description: >-
+      Emoji of the article or recipe when the count started.
+  unit:
+    writable: false
+    max: 30
+    description: >-
+      Unit the quantities are expressed in: the article base unit ("g"/"ml"), or "serving"
+      for a recipe.
+  expectedQuantity:
+    writable: false
+    type: float
+    description: >-
+      What the app believed was there when the count started.
+    sortable: true
+  countedQuantity:
+    writable: false
+    type: float
+    description: >-
+      What was actually found. Empty when the line was never counted, in which case
+      validating leaves that stock untouched.
+    sortable: true
+
+relations: {}

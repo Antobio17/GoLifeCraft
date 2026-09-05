@@ -37,3 +37,22 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\RecipeStock\Application\Command\MoveRecipeStockCommandHandler:
+    class: Nutrition\Pantry\RecipeStock\Application\Command\MoveRecipeStockCommandHandler
+    arguments:
+      $recipeStockRepository: '@Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStockRepository'
+      $needleDataQuery: '@Nutrition\Pantry\RecipeStock\Domain\QueryModel\MoveRecipeStockNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\RecipeStock\Application\Command\ClearRecipeStockLocationCommandHandler:
+    class: Nutrition\Pantry\RecipeStock\Application\Command\ClearRecipeStockLocationCommandHandler
+    arguments:
+      $recipeStockRepository: '@Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStockRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

@@ -64,6 +64,7 @@ export interface ArticleDetailView {
   purchase: ArticlePurchaseView;
   stockContext: ArticleStockContext;
   stock: number;
+  stockLocationId: string | null;
 }
 
 const FALLBACK_EMOJI = "🍽️";
@@ -191,6 +192,7 @@ export class ArticleViewService {
       purchase: this.purchase(article, pack, suffix),
       stockContext: this.stockContext(article, pack, suffix),
       stock: article.attributes.stock ?? 0,
+      stockLocationId: article.attributes.stockLocationId ?? null,
     };
   }
 

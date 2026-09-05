@@ -38,6 +38,30 @@ parameters:
             write_roles: [ROLE_GOD, ROLE_USER]
             delete_roles: [ROLE_GOD, ROLE_USER]
 
+        pantry_location:
+            class: 'Nutrition\Pantry\Location\Domain\Model\Location'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Pantry/Location/Infrastructure/Domain/Model/Doctrine/Mapping/Location.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: [ROLE_GOD, ROLE_USER]
+
+        # Read only on purpose: a stock count is history. Starting, counting and validating it
+        # goes through the inventory commands, which are what overwrite the stock and leave the
+        # trace behind; a client rewriting these rows would forge a count that never happened.
+        inventory:
+            class: 'Nutrition\Pantry\Inventory\Domain\Model\Inventory'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Pantry/Inventory/Infrastructure/Domain/Model/Doctrine/Mapping/Inventory.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
+
+        inventory_line:
+            class: 'Nutrition\Pantry\Inventory\Domain\Model\InventoryLine'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Pantry/Inventory/Infrastructure/Domain/Model/Doctrine/Mapping/InventoryLine.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
+
         nutrition_facts:
             class: 'Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts'
             sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping/NutritionFacts.mcp.yaml'

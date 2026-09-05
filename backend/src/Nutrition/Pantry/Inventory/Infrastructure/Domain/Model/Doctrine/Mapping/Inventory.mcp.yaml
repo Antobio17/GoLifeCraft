@@ -1,0 +1,44 @@
+label: Stock count
+
+fields:
+  countedOn:
+    writable: false
+    max: 10
+    description: >-
+      Day the pantry was walked through, as "YYYY-MM-DD".
+    filterable: true
+    sortable: true
+  shift:
+    writable: false
+    enum: [morning, afternoon, night]
+    description: >-
+      Time of day the count was taken. It says which part of the day the numbers describe:
+      a morning count is what was there before the day was eaten, a night one what is left.
+    filterable: true
+  status:
+    writable: false
+    enum: [draft, validated]
+    description: >-
+      "draft" while the count is being filled in, "validated" once it has been applied and
+      became history. Validating overwrites the stock with the counted quantities.
+    filterable: true
+  locationId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Location the count was limited to. Empty when the whole pantry was counted.
+    filterable: true
+  note:
+    writable: false
+    max: 255
+    description: >-
+      Free note written while counting, for example "faltaba el cajón del congelador".
+
+relations:
+  lines:
+    target: inventory_line
+    kind: many
+    foreign_field: inventoryId
+    writable: false
+    expandable: true

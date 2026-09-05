@@ -80,7 +80,9 @@
         "close": "Cerrar",
         "hint": "Indica cuánto te queda en casa. Usa los gramos para un envase ya empezado.",
         "amount": "Cantidad de stock",
-        "confirm": "Guardar stock"
+        "confirm": "Guardar stock",
+        "location": "Ubicación",
+        "noLocation": "Sin ubicación"
       }
     }
   },

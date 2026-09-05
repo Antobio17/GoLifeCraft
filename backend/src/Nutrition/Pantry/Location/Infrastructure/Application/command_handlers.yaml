@@ -1,0 +1,29 @@
+services:
+  Nutrition\Pantry\Location\Application\Command\CreateLocationCommandHandler:
+    class: Nutrition\Pantry\Location\Application\Command\CreateLocationCommandHandler
+    arguments:
+      $locationRepository: '@Nutrition\Pantry\Location\Domain\Model\LocationRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Location\Domain\QueryModel\CreateLocationNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Location\Application\Command\UpdateLocationCommandHandler:
+    class: Nutrition\Pantry\Location\Application\Command\UpdateLocationCommandHandler
+    arguments:
+      $locationRepository: '@Nutrition\Pantry\Location\Domain\Model\LocationRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Location\Domain\QueryModel\UpdateLocationNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Location\Application\Command\DeleteLocationCommandHandler:
+    class: Nutrition\Pantry\Location\Application\Command\DeleteLocationCommandHandler
+    arguments:
+      $locationRepository: '@Nutrition\Pantry\Location\Domain\Model\LocationRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

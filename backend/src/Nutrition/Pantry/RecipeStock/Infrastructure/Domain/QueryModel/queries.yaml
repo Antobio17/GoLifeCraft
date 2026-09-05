@@ -3,3 +3,8 @@ services:
     class: Nutrition\Pantry\RecipeStock\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateRecipeStockNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\RecipeStock\Domain\QueryModel\MoveRecipeStockNeedleDataQuery:
+    class: Nutrition\Pantry\RecipeStock\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMoveRecipeStockNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

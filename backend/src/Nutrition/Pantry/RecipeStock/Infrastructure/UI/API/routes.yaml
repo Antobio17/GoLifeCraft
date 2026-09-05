@@ -2,3 +2,8 @@ update_recipe_stock:
   path: /api/v1/nutrition/pantry/recipe-stock/{recipeId}
   methods: [PUT]
   controller: Nutrition\Pantry\RecipeStock\Infrastructure\UI\API\Controller\UpdateRecipeStockController
+
+move_recipe_stock:
+  path: /api/v1/nutrition/pantry/recipe-stock/{recipeId}/location
+  methods: [PUT]
+  controller: Nutrition\Pantry\RecipeStock\Infrastructure\UI\API\Controller\MoveRecipeStockController

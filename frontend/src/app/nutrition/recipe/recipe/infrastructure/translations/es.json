@@ -59,7 +59,9 @@
         "title": "Raciones hechas",
         "close": "Cerrar",
         "hint": "Corrige a mano lo que te queda en la nevera de esta receta.",
-        "save": "Guardar"
+        "save": "Guardar",
+        "location": "Ubicación",
+        "noLocation": "Sin ubicación"
       }
     },
     "steps": "Pasos",

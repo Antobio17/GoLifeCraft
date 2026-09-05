@@ -1,0 +1,42 @@
+services:
+  Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\GetInventoriesController:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\GetInventoriesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\GetInventoryController:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\GetInventoryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\StartInventoryController:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\StartInventoryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\CountInventoryLineController:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\CountInventoryLineController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\ValidateInventoryController:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\ValidateInventoryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\DiscardInventoryController:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\DiscardInventoryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

@@ -1,0 +1,22 @@
+services:
+  Nutrition\Pantry\Location\Application\Query\GetLocationsQueryHandler:
+    class: Nutrition\Pantry\Location\Application\Query\GetLocationsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Pantry\Location\Domain\QueryModel\GetLocationsNeedleDataQuery'
+      $dataTransform: '@Nutrition\Pantry\Location\Application\Query\GetLocationsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Location\Application\Query\GetLocationsDataTransform:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\DataTransform\ApiGetLocationsDataTransform
+
+  Nutrition\Pantry\Location\Application\Query\GetLocationQueryHandler:
+    class: Nutrition\Pantry\Location\Application\Query\GetLocationQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Pantry\Location\Domain\QueryModel\GetLocationNeedleDataQuery'
+      $dataTransform: '@Nutrition\Pantry\Location\Application\Query\GetLocationDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Location\Application\Query\GetLocationDataTransform:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\DataTransform\ApiGetLocationDataTransform

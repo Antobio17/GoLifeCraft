@@ -1,0 +1,78 @@
+{
+  "getPantryLocations": {
+    "title": "Ubicaciones",
+    "subtitle": "Dónde guardas cada cosa en casa",
+    "new": "Nueva ubicación",
+    "filter": {
+      "name": "Nombre",
+      "namePlaceholder": "Buscar por nombre..."
+    },
+    "table": {
+      "name": "Ubicación",
+      "description": "Descripción",
+      "content": "Artículos · Recetas",
+      "contentCard": "Artículos · Recetas",
+      "emptyTitle": "No hay ubicaciones",
+      "emptyMessage": "Crea la nevera, el congelador o la despensa para empezar a organizar el inventario"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "deleteTitle": "Eliminar ubicación",
+    "deleteBody": "Vas a eliminar la ubicación",
+    "deleteWarning": "El stock que había en ella se queda sin ubicación, no se borra.",
+    "deleteConfirm": "Eliminar",
+    "deleting": "Eliminando...",
+    "cancel": "Cancelar"
+  },
+  "createPantryLocation": {
+    "title": "Nueva ubicación",
+    "description": "Un sitio de casa donde guardas comida",
+    "section": {
+      "general": "Información general"
+    },
+    "field": {
+      "name": "Nombre",
+      "locationDescription": "Descripción",
+      "descriptionHint": "Opcional: dónde está o qué guardas ahí",
+      "emoji": "Icono",
+      "emojiSheetTitle": "Elige un icono",
+      "emojiClose": "Cerrar",
+      "emojiTrigger": "Elegir icono",
+      "emojiSearch": "Buscar icono...",
+      "emojiEmpty": "Sin resultados."
+    },
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando..."
+  },
+  "updatePantryLocation": {
+    "title": "Editar ubicación",
+    "description": "Modifica los datos de la ubicación",
+    "section": {
+      "general": "Información general"
+    },
+    "field": {
+      "name": "Nombre",
+      "locationDescription": "Descripción",
+      "descriptionHint": "Opcional: dónde está o qué guardas ahí",
+      "emoji": "Icono",
+      "emojiSheetTitle": "Elige un icono",
+      "emojiClose": "Cerrar",
+      "emojiTrigger": "Elegir icono",
+      "emojiSearch": "Buscar icono...",
+      "emojiEmpty": "Sin resultados."
+    },
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando..."
+  },
+  "pantryLocation": {
+    "breadcrumb": {
+      "list": "Ubicaciones",
+      "create": "Nueva ubicación",
+      "edit": "Editar ubicación"
+    }
+  }
+}

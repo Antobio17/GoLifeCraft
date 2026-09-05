@@ -5,6 +5,7 @@ namespace Nutrition\Pantry\RecipeStock\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Pantry\RecipeStock\Domain\Event\RecipeStockChanged;
 use Nutrition\Pantry\RecipeStock\Domain\Event\RecipeStockDeleted;
+use Nutrition\Pantry\RecipeStock\Domain\Event\RecipeStockMoved;
 use Nutrition\Pantry\RecipeStock\Domain\Event\RecipeStockStarted;
 use Nutrition\Pantry\RecipeStock\Domain\Exception\RecipeStockException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -15,6 +16,7 @@ class RecipeStock extends GenericAggregate
 
     public string $recipeId;
     public float $servings = 0.0;
+    public ?string $locationId = null;
 
     public static function start(
         string $id,
@@ -22,6 +24,7 @@ class RecipeStock extends GenericAggregate
         float $servings,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
+        ?string $locationId = null,
     ): self {
         self::assertServingsAreNotNegative(servings: $servings);
 
@@ -31,6 +34,7 @@ class RecipeStock extends GenericAggregate
         $stock->id = $id;
         $stock->recipeId = $recipeId;
         $stock->servings = $servings;
+        $stock->locationId = $locationId;
         $stock->stampCreation(userId: $createdByUserId, now: $now);
 
         $stock->record(event: new RecipeStockStarted(
@@ -38,6 +42,7 @@ class RecipeStock extends GenericAggregate
             occurredOn: $now,
             recipeId: $recipeId,
             servings: $servings,
+            locationId: $locationId,
             createdAt: $now,
             updatedAt: $now,
             createdByUserId: $createdByUserId,
@@ -87,6 +92,31 @@ class RecipeStock extends GenericAggregate
         );
     }
 
+    public function moveTo(
+        ?string $locationId,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+        $previousLocationId = $this->locationId;
+
+        $this->locationId = $locationId;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new RecipeStockMoved(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            recipeId: $this->recipeId,
+            servings: $this->servings,
+            previousLocationId: $previousLocationId,
+            locationId: $locationId,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
     public function delete(
         string $deletedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -99,6 +129,7 @@ class RecipeStock extends GenericAggregate
             occurredOn: $now,
             recipeId: $this->recipeId,
             servings: $this->servings,
+            locationId: $this->locationId,
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -123,6 +154,7 @@ class RecipeStock extends GenericAggregate
             recipeId: $this->recipeId,
             previousServings: $previousServings,
             servings: $this->servings,
+            locationId: $this->locationId,
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,

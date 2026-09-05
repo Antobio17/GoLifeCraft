@@ -11,6 +11,8 @@ export interface ArticleAttributes {
   equivalences: ArticleEquivalence[];
   packUnit: string | null;
   stock?: number;
+  stockLocationId?: string | null;
+  stockLocationName?: string | null;
   price: number | null;
   brand: string | null;
   emoji: string | null;

@@ -19,6 +19,8 @@ final class GetArticleResult extends QueryAggregateResult
         public readonly array $equivalences,
         public readonly ?string $packUnit,
         public readonly float $stock,
+        public readonly ?string $stockLocationId,
+        public readonly ?string $stockLocationName,
         public readonly ?float $price,
         public readonly ?string $brand,
         public readonly ?string $emoji,

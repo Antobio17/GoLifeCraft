@@ -1,0 +1,78 @@
+{
+  "getPantryLocations": {
+    "title": "Locations",
+    "subtitle": "Where you keep each thing at home",
+    "new": "New location",
+    "filter": {
+      "name": "Name",
+      "namePlaceholder": "Search by name..."
+    },
+    "table": {
+      "name": "Location",
+      "description": "Description",
+      "content": "Articles · Recipes",
+      "contentCard": "Articles · Recipes",
+      "emptyTitle": "No locations yet",
+      "emptyMessage": "Create the fridge, the freezer or the pantry to start organising your stock"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "deleteTitle": "Delete location",
+    "deleteBody": "You are about to delete the location",
+    "deleteWarning": "The stock kept there is left without a location, it is not deleted.",
+    "deleteConfirm": "Delete",
+    "deleting": "Deleting...",
+    "cancel": "Cancel"
+  },
+  "createPantryLocation": {
+    "title": "New location",
+    "description": "A place at home where you keep food",
+    "section": {
+      "general": "General information"
+    },
+    "field": {
+      "name": "Name",
+      "locationDescription": "Description",
+      "descriptionHint": "Optional: where it is or what you keep there",
+      "emoji": "Icon",
+      "emojiSheetTitle": "Pick an icon",
+      "emojiClose": "Close",
+      "emojiTrigger": "Pick an icon",
+      "emojiSearch": "Search icon...",
+      "emojiEmpty": "No results."
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
+  "updatePantryLocation": {
+    "title": "Edit location",
+    "description": "Change the location details",
+    "section": {
+      "general": "General information"
+    },
+    "field": {
+      "name": "Name",
+      "locationDescription": "Description",
+      "descriptionHint": "Optional: where it is or what you keep there",
+      "emoji": "Icon",
+      "emojiSheetTitle": "Pick an icon",
+      "emojiClose": "Close",
+      "emojiTrigger": "Pick an icon",
+      "emojiSearch": "Search icon...",
+      "emojiEmpty": "No results."
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
+  "pantryLocation": {
+    "breadcrumb": {
+      "list": "Locations",
+      "create": "New location",
+      "edit": "Edit location"
+    }
+  }
+}

@@ -37,6 +37,8 @@
     "groupAdmin": "Administración",
     "budget": "Presupuesto",
     "accounts": "Cuentas",
-    "recurrences": "Recurrentes"
+    "recurrences": "Recurrentes",
+    "inventory": "Inventario",
+    "locations": "Ubicaciones"
   }
 }

@@ -1,0 +1,54 @@
+<ds-page-wrapper>
+  @if (loading()) {
+    <ds-skeleton-page-header
+      [showIcon]="false"
+      [showTag]="false"
+      [subtitleLines]="1"
+      [showAction]="true"
+    ></ds-skeleton-page-header>
+  }
+
+  @if (!loading()) {
+    <ds-page-header
+      [title]="'getInventories.title' | t"
+      [subtitle]="'getInventories.subtitle' | t"
+    >
+      <ds-button
+        slot="actions"
+        variant="primary"
+        size="icon-lg"
+        icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getInventories.new' | t"
+        (clicked)="onStart()"
+      />
+    </ds-page-header>
+  }
+
+  <ds-list-filters
+    [fields]="filterFields()"
+    [loading]="loading()"
+    (filtersApplied)="onFiltersApplied($event)"
+    (filtersCleared)="onFiltersCleared()"
+  />
+
+  <ds-list-table
+    [items]="items()"
+    [columns]="columns()"
+    [actions]="actions()"
+    [loading]="loading()"
+    [emptyTitle]="'getInventories.table.emptyTitle' | t"
+    [emptyMessage]="'getInventories.table.emptyMessage' | t"
+    (actionClick)="onAction($event)"
+  />
+
+  @if (!loading() && items().length > 0) {
+    <ds-pagination
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      [totalItems]="totalItems()"
+      (pageChange)="goToPage($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    />
+  }
+</ds-page-wrapper>

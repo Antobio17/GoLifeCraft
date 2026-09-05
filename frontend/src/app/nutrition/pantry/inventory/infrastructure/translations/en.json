@@ -1,0 +1,89 @@
+{
+  "getInventories": {
+    "title": "Inventory",
+    "subtitle": "History of your pantry counts",
+    "new": "New count",
+    "filter": {
+      "shift": "Shift",
+      "allShifts": "All shifts",
+      "status": "Status",
+      "allStatuses": "All statuses"
+    },
+    "table": {
+      "countedOn": "Date",
+      "shift": "Shift",
+      "location": "Location",
+      "wholePantry": "Whole pantry",
+      "counted": "Counted",
+      "adjusted": "Adjusted",
+      "status": "Status",
+      "emptyTitle": "No counts yet",
+      "emptyMessage": "Start one to line the stock up with what is really at home"
+    },
+    "actions": {
+      "view": "View"
+    }
+  },
+  "startInventory": {
+    "title": "New count",
+    "description": "The current stock is frozen as the starting point and you correct it as you go",
+    "section": {
+      "when": "When",
+      "scope": "What you count"
+    },
+    "field": {
+      "countedOn": "Date",
+      "shift": "Shift",
+      "shiftHint": "Which part of the day the numbers describe",
+      "location": "Location",
+      "locationHint": "Count a single location or the whole pantry",
+      "wholePantry": "Whole pantry",
+      "note": "Note",
+      "noteHint": "Optional: anything worth remembering about this count"
+    },
+    "explanation": "On validation the stock becomes exactly what you counted. Lines you leave uncounted are left untouched.",
+    "cancel": "Cancel",
+    "save": "Start count",
+    "saving": "Creating..."
+  },
+  "getInventory": {
+    "wholePantry": "Whole pantry",
+    "expected": "Expected: {quantity} {unit}",
+    "stat": {
+      "counted": "Counted",
+      "adjusted": "With a gap"
+    },
+    "draftHint": "Write down what you find. Validating overwrites the stock with these numbers.",
+    "validatedHint": "This count is validated and part of the history.",
+    "validate": "Validate and update stock",
+    "discard": "Discard count",
+    "back": "Back to history",
+    "clear": "Clear the count",
+    "discardTitle": "Discard count",
+    "discardBody": "You are about to discard this count without applying it",
+    "discardWarning": "Everything counted is lost. The stock stays as it is.",
+    "discardConfirm": "Discard",
+    "discarding": "Discarding...",
+    "cancel": "Cancel",
+    "empty": {
+      "title": "Nothing to count",
+      "text": "No stock was found for the chosen scope"
+    }
+  },
+  "inventoryShift": {
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "night": "Night"
+  },
+  "inventoryStatus": {
+    "draft": "In progress",
+    "validated": "Validated"
+  },
+  "inventory": {
+    "breadcrumb": {
+      "list": "Inventory",
+      "start": "New count",
+      "detail": "Count"
+    }
+  }
+}

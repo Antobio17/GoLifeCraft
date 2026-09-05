@@ -1,0 +1,22 @@
+services:
+  Nutrition\Pantry\Inventory\Application\Query\GetInventoriesQueryHandler:
+    class: Nutrition\Pantry\Inventory\Application\Query\GetInventoriesQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Pantry\Inventory\Domain\QueryModel\GetInventoriesNeedleDataQuery'
+      $dataTransform: '@Nutrition\Pantry\Inventory\Application\Query\GetInventoriesDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Inventory\Application\Query\GetInventoriesDataTransform:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\DataTransform\ApiGetInventoriesDataTransform
+
+  Nutrition\Pantry\Inventory\Application\Query\GetInventoryQueryHandler:
+    class: Nutrition\Pantry\Inventory\Application\Query\GetInventoryQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Pantry\Inventory\Domain\QueryModel\GetInventoryNeedleDataQuery'
+      $dataTransform: '@Nutrition\Pantry\Inventory\Application\Query\GetInventoryDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Inventory\Application\Query\GetInventoryDataTransform:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\DataTransform\ApiGetInventoryDataTransform
