@@ -21,18 +21,12 @@ import {
   SegmentedOption,
   SegmentedToggleComponent,
 } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
-import {
-  SelectChipOption,
-  SelectChipsComponent,
-} from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
 import { StartInventoryService } from "@nutrition/pantry/inventory/application/services/start-inventory.service";
 import { PantryLocation } from "@nutrition/pantry/location/domain/models/pantry-location.model";
 import { InventoryShift } from "../../domain/models/inventory-shift.model";
-
-const WHOLE_PANTRY = "";
 
 @Component({
   selector: "app-start-inventory",
@@ -47,7 +41,6 @@ const WHOLE_PANTRY = "";
     StackComponent,
     DateInputComponent,
     SegmentedToggleComponent,
-    SelectChipsComponent,
     NoteComponent,
     PageWrapperComponent,
     SectionPageWrapperComponent,
@@ -78,19 +71,29 @@ export class StartInventoryComponent implements OnInit {
     { value: InventoryShift.NIGHT, label: this.t("inventoryShift.night") },
   ]);
 
-  locationOptions = computed<SelectChipOption[]>(() => [
-    { value: WHOLE_PANTRY, label: this.t("startInventory.field.wholePantry") },
-    ...this.locations().map((location) => ({
-      value: location.id,
-      label: `${location.attributes.emoji} ${location.attributes.name}`.trim(),
-    })),
-  ]);
+  stockedLocations = computed(
+    () =>
+      this.locations().filter(
+        (location) =>
+          location.attributes.articleCount + location.attributes.recipeCount >
+          0,
+      ).length,
+  );
+
+  scopeLabel = computed(() =>
+    this.t("startInventory.scope.willCount")
+      .replace("{count}", String(this.stockedLocations()))
+      .replace("{total}", String(this.locations().length)),
+  );
+
+  hasNothingToCount = computed(
+    () => !this.loading() && 0 === this.stockedLocations(),
+  );
 
   constructor() {
     this.form = this.formBuilder.group({
       countedOn: [this.today(), [Validators.required]],
       shift: [this.suggestedShift(), [Validators.required]],
-      locationId: [WHOLE_PANTRY],
       note: ["", [Validators.maxLength(255)]],
     });
   }
@@ -121,7 +124,6 @@ export class StartInventoryComponent implements OnInit {
       .startInventory({
         countedOn: this.form.value.countedOn ?? this.today(),
         shift: this.form.value.shift ?? InventoryShift.MORNING,
-        locationId: this.form.value.locationId || null,
         note: this.form.value.note ?? "",
       })
       .subscribe({

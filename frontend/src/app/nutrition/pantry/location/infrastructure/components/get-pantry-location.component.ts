@@ -9,7 +9,7 @@ import {
 import { Router } from "@angular/router";
 import { toObservable, takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { distinctUntilChanged, switchMap } from "rxjs";
+import { Observable, distinctUntilChanged, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -18,7 +18,6 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { StatComponent } from "@shared/design-system/stat/infrastructure/components/stat.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
@@ -30,8 +29,8 @@ import { NoteComponent } from "@shared/design-system/note/infrastructure/compone
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
-import { MoveArticleStockService } from "@nutrition/pantry/stock/application/services/move-article-stock.service";
-import { MoveRecipeStockService } from "@nutrition/pantry/recipe-stock/application/services/move-recipe-stock.service";
+import { AssignPantryLocationItemService } from "@nutrition/pantry/location/application/services/assign-pantry-location-item.service";
+import { ReleasePantryLocationItemService } from "@nutrition/pantry/location/application/services/release-pantry-location-item.service";
 import { GetPantryLocationService } from "@nutrition/pantry/location/application/services/get-pantry-location.service";
 import { GetPantryLocationItemsService } from "@nutrition/pantry/location/application/services/get-pantry-location-items.service";
 import { GetPantryLocationCandidatesService } from "@nutrition/pantry/location/application/services/get-pantry-location-candidates.service";
@@ -58,7 +57,6 @@ const ALL_KINDS = "";
     CardComponent,
     HeadingComponent,
     TextComponent,
-    ChipComponent,
     StatComponent,
     ButtonComponent,
     SearchInputComponent,
@@ -74,8 +72,8 @@ export class GetPantryLocationComponent {
   private getPantryLocationService = inject(GetPantryLocationService);
   private getItemsService = inject(GetPantryLocationItemsService);
   private getCandidatesService = inject(GetPantryLocationCandidatesService);
-  private moveArticleStockService = inject(MoveArticleStockService);
-  private moveRecipeStockService = inject(MoveRecipeStockService);
+  private assignItemService = inject(AssignPantryLocationItemService);
+  private releaseItemService = inject(ReleasePantryLocationItemService);
   private locationView = inject(PantryLocationViewService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
@@ -132,18 +130,11 @@ export class GetPantryLocationComponent {
 
   candidateRows = computed<PantryLocationCandidateRow[]>(() =>
     this.candidates().map((candidate) =>
-      this.locationView.candidateRow(
-        candidate,
-        (location) =>
-          this.t("getPantryLocation.candidates.placedIn").replace(
-            "{location}",
-            location,
-          ),
-        this.t("getPantryLocation.candidates.add"),
-        this.t("getPantryLocation.candidates.move"),
-      ),
+      this.locationView.candidateRow(candidate),
     ),
   );
+
+  addLabel = computed(() => this.t("getPantryLocation.candidates.add"));
 
   constructor() {
     toObservable(this.id)
@@ -192,11 +183,22 @@ export class GetPantryLocationComponent {
   }
 
   onPlace(row: PantryLocationCandidateRow): void {
-    this.move(row.candidate.attributes, this.id());
+    const { kind, refId } = row.candidate.attributes;
+
+    this.track(
+      this.assignItemService.assignPantryLocationItem(this.id(), {
+        kind,
+        refId,
+      }),
+    );
   }
 
   onRemove(row: PantryLocationItemRow): void {
-    this.move(row.item.attributes, null);
+    const { kind, refId } = row.item.attributes;
+
+    this.track(
+      this.releaseItemService.releasePantryLocationItem(this.id(), kind, refId),
+    );
   }
 
   onEdit(): void {
@@ -207,24 +209,12 @@ export class GetPantryLocationComponent {
     this.router.navigate(["/locations"]);
   }
 
-  private move(
-    target: { kind: PantryLocationItemKind; refId: string },
-    locationId: string | null,
-  ): void {
+  private track(request: Observable<void>): void {
     if (this.moving()) return;
 
     this.moving.set(true);
 
-    const moved =
-      PantryLocationItemKind.ARTICLE === target.kind
-        ? this.moveArticleStockService.moveArticleStock(target.refId, {
-            locationId,
-          })
-        : this.moveRecipeStockService.moveRecipeStock(target.refId, {
-            locationId,
-          });
-
-    moved.subscribe({
+    request.subscribe({
       next: () => {
         this.moving.set(false);
         this.refreshItems();

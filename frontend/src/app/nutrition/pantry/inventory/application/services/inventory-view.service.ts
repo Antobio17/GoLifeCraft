@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
-import { InventoryLine } from "../../domain/models/inventory-line.model";
-import { InventoryLineRow } from "../../domain/models/inventory-line-row.model";
+import { InventoryLocation } from "../../domain/models/inventory-location.model";
+import { InventoryLocationItem } from "../../domain/models/inventory-location-item.model";
+import { InventoryLocationGroup } from "../../domain/models/inventory-location-group.model";
+import { InventoryItemRow } from "../../domain/models/inventory-item-row.model";
 import { InventoryShift } from "../../domain/models/inventory-shift.model";
 
 @Injectable({ providedIn: "root" })
@@ -13,22 +15,33 @@ export class InventoryViewService {
     return `inventoryStatus.${status}`;
   }
 
-  rowOf(
-    line: InventoryLine,
+  groupOf(
+    location: InventoryLocation,
     expectedLabel: (quantity: string, unit: string) => string,
-  ): InventoryLineRow {
-    const difference = line.difference;
-
+  ): InventoryLocationGroup {
     return {
-      line,
-      title: `${line.emoji} ${line.name}`.trim(),
+      location,
+      title: `${location.emoji} ${location.name}`.trim(),
+      progressLabel: `${location.countedItems}/${location.totalItems}`,
+      gone: null === location.locationId,
+      rows: location.items.map((item) => this.rowOf(item, expectedLabel)),
+    };
+  }
+
+  rowOf(
+    item: InventoryLocationItem,
+    expectedLabel: (quantity: string, unit: string) => string,
+  ): InventoryItemRow {
+    return {
+      item,
+      title: `${item.emoji} ${item.name}`.trim(),
       expectedLabel: expectedLabel(
-        this.format(line.expectedQuantity),
-        line.unit,
+        this.format(item.expectedQuantity),
+        item.unit,
       ),
-      differenceLabel: this.differenceLabel(line),
-      differenceTone: this.tone(difference),
-      counted: null !== line.countedQuantity,
+      differenceLabel: this.differenceLabel(item),
+      differenceTone: this.tone(item.difference),
+      counted: null !== item.countedQuantity,
     };
   }
 
@@ -38,13 +51,13 @@ export class InventoryViewService {
       : quantity.toFixed(2).replace(/0$/, "");
   }
 
-  private differenceLabel(line: InventoryLine): string {
-    if (null === line.countedQuantity) return "";
-    if (0 === line.difference) return "=";
+  private differenceLabel(item: InventoryLocationItem): string {
+    if (null === item.countedQuantity) return "";
+    if (0 === item.difference) return "=";
 
-    const sign = line.difference > 0 ? "+" : "−";
+    const sign = item.difference > 0 ? "+" : "−";
 
-    return `${sign}${this.format(Math.abs(line.difference))} ${line.unit}`;
+    return `${sign}${this.format(Math.abs(item.difference))} ${item.unit}`;
   }
 
   private tone(difference: number): "up" | "down" | "even" {

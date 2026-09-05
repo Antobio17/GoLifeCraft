@@ -35,7 +35,9 @@ import { GetRecipeService } from "@nutrition/recipe/recipe/application/services/
 import { DeleteRecipeService } from "@nutrition/recipe/recipe/application/services/delete-recipe.service";
 import { UpdateRecipeStockService } from "@nutrition/pantry/recipe-stock/application/services/update-recipe-stock.service";
 import { RecipeStockViewService } from "@nutrition/pantry/recipe-stock/application/services/recipe-stock-view.service";
-import { MoveRecipeStockService } from "@nutrition/pantry/recipe-stock/application/services/move-recipe-stock.service";
+import { AssignPantryLocationItemService } from "@nutrition/pantry/location/application/services/assign-pantry-location-item.service";
+import { ReleasePantryLocationItemService } from "@nutrition/pantry/location/application/services/release-pantry-location-item.service";
+import { PantryLocationItemKind } from "@nutrition/pantry/location/domain/models/pantry-location-item-kind.model";
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
 import { PantryLocation } from "@nutrition/pantry/location/domain/models/pantry-location.model";
 import {
@@ -102,7 +104,8 @@ export class GetRecipeComponent {
   private getRecipeService = inject(GetRecipeService);
   private deleteRecipeService = inject(DeleteRecipeService);
   private updateRecipeStockService = inject(UpdateRecipeStockService);
-  private moveRecipeStockService = inject(MoveRecipeStockService);
+  private assignItemService = inject(AssignPantryLocationItemService);
+  private releaseItemService = inject(ReleasePantryLocationItemService);
   private getPantryLocationsService = inject(GetPantryLocationsService);
   protected stockView = inject(RecipeStockViewService);
   protected autosave = inject(AutosaveService);
@@ -257,18 +260,31 @@ export class GetRecipeComponent {
     if (this.movingStock()) return;
 
     const previous = this.stockLocationId();
+
+    if (locationId === previous) return;
+
     this.stockLocationId.set(locationId);
     this.movingStock.set(true);
 
-    this.moveRecipeStockService
-      .moveRecipeStock(this.id(), { locationId: locationId || null })
-      .subscribe({
-        next: () => this.movingStock.set(false),
-        error: () => {
-          this.stockLocationId.set(previous);
-          this.movingStock.set(false);
-        },
-      });
+    const placed =
+      "" === locationId
+        ? this.releaseItemService.releasePantryLocationItem(
+            previous,
+            PantryLocationItemKind.RECIPE,
+            this.id(),
+          )
+        : this.assignItemService.assignPantryLocationItem(locationId, {
+            kind: PantryLocationItemKind.RECIPE,
+            refId: this.id(),
+          });
+
+    placed.subscribe({
+      next: () => this.movingStock.set(false),
+      error: () => {
+        this.stockLocationId.set(previous);
+        this.movingStock.set(false);
+      },
+    });
   }
 
   private loadLocations(): void {

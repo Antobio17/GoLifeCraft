@@ -103,26 +103,24 @@ export class GetInventoriesComponent extends AbstractListPageComponent<Inventory
       minWidth: "110px",
     },
     {
-      key: "location",
-      label: this.t("getInventories.table.location"),
-      value: (item) =>
-        item.attributes.locationName ??
-        this.t("getInventories.table.wholePantry"),
-      width: "1fr",
-      minWidth: "150px",
+      key: "locations",
+      label: this.t("getInventories.table.locations"),
+      value: (item) => item.attributes.totalLocations.toString(),
+      width: "0.7fr",
+      minWidth: "110px",
     },
     {
       key: "counted",
       label: this.t("getInventories.table.counted"),
       value: (item) =>
-        `${item.attributes.countedLines}/${item.attributes.totalLines}`,
+        `${item.attributes.countedItems}/${item.attributes.totalItems}`,
       width: "0.6fr",
       minWidth: "100px",
     },
     {
       key: "adjusted",
       label: this.t("getInventories.table.adjusted"),
-      value: (item) => item.attributes.adjustedLines.toString(),
+      value: (item) => item.attributes.adjustedItems.toString(),
       width: "0.6fr",
       minWidth: "100px",
     },

@@ -1,12 +1,10 @@
-import { InventoryLineKind } from "./inventory-line-kind.model";
+import { InventoryItemKind } from "./inventory-item-kind.model";
 
-export interface InventoryLine {
+export interface InventoryLocationItem {
   id: string;
   position: number;
-  kind: InventoryLineKind;
+  kind: InventoryItemKind;
   refId: string;
-  locationId: string | null;
-  locationName: string | null;
   name: string;
   emoji: string;
   unit: string;

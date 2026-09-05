@@ -1,4 +1,4 @@
-export enum InventoryLineKind {
+export enum InventoryItemKind {
   ARTICLE = "article",
   RECIPE = "recipe",
 }

@@ -137,31 +137,17 @@
                   >
                     <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
                       <ds-text variant="strong">{{ row.title }}</ds-text>
-                      <ds-stack
-                        direction="row"
-                        align="center"
-                        [gap]="'var(--ds-space-2)'"
-                        [wrap]="true"
-                      >
-                        <ds-text variant="meta">{{
-                          row.quantityLabel
-                        }}</ds-text>
-                        @if (row.placed) {
-                          <ds-chip tone="warning">{{
-                            row.placedLabel
-                          }}</ds-chip>
-                        }
-                      </ds-stack>
+                      <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
                     </ds-stack>
 
                     <ds-button
-                      [variant]="row.placed ? 'outline' : 'soft'"
+                      variant="soft"
                       size="sm"
-                      [icon]="row.placed ? 'repeat' : 'plus'"
+                      icon="plus"
                       [disabled]="moving()"
                       (clicked)="onPlace(row)"
                     >
-                      {{ row.actionLabel }}
+                      {{ addLabel() }}
                     </ds-button>
                   </ds-stack>
                 </ds-card>

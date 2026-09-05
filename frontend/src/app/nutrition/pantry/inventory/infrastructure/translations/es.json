@@ -12,10 +12,9 @@
     "table": {
       "countedOn": "Fecha",
       "shift": "Turno",
-      "location": "Ubicación",
-      "wholePantry": "Toda la despensa",
-      "counted": "Contadas",
-      "adjusted": "Ajustadas",
+      "locations": "Ubicaciones",
+      "counted": "Contados",
+      "adjusted": "Ajustados",
       "status": "Estado",
       "emptyTitle": "Todavía no has hecho ningún recuento",
       "emptyMessage": "Empieza uno para cuadrar el stock con lo que hay de verdad en casa"
@@ -35,22 +34,23 @@
       "countedOn": "Fecha",
       "shift": "Turno",
       "shiftHint": "A qué momento del día corresponde lo que estás contando",
-      "location": "Ubicación",
-      "locationHint": "Cuenta solo una ubicación o toda la despensa",
-      "wholePantry": "Toda la despensa",
       "note": "Nota",
       "noteHint": "Opcional: algo que quieras recordar de este recuento"
     },
-    "explanation": "Al validar, el stock pasa a ser exactamente lo que hayas contado. Las líneas que dejes sin contar no se tocan.",
+    "scope": {
+      "willCount": "Se contarán {count} de tus {total} ubicaciones: las que ahora mismo guardan algo."
+    },
+    "explanation": "Al validar, el stock pasa a ser exactamente lo que hayas contado. Lo que dejes sin contar no se toca.",
     "cancel": "Cancelar",
     "save": "Empezar recuento",
     "saving": "Creando..."
   },
   "getInventory": {
-    "wholePantry": "Toda la despensa",
+    "locationGone": "Ya no existe",
+    "locationsCounted": "{count} ubicaciones recorridas",
     "expected": "Esperado: {quantity} {unit}",
     "stat": {
-      "counted": "Contadas",
+      "counted": "Contados",
       "adjusted": "Con diferencia"
     },
     "draftHint": "Ve anotando lo que encuentras. Al validar, el stock se sobrescribe con estos números.",
@@ -67,7 +67,7 @@
     "cancel": "Cancelar",
     "empty": {
       "title": "No hay nada que contar",
-      "text": "No se encontró stock para el alcance elegido"
+      "text": "Ninguna ubicación guardaba nada cuando empezó este recuento"
     }
   },
   "inventoryShift": {

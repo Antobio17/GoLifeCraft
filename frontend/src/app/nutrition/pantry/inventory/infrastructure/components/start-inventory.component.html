@@ -40,15 +40,9 @@
         [icon]="ICONS['LOCATION']"
       >
         <ds-stack [gap]="'var(--ds-space-4)'">
-          <ds-field
-            [label]="'startInventory.field.location' | t"
-            [hint]="'startInventory.field.locationHint' | t"
-          >
-            <ds-select-chips
-              formControlName="locationId"
-              [options]="locationOptions()"
-            />
-          </ds-field>
+          <ds-note [tone]="hasNothingToCount() ? 'warning' : 'info'">{{
+            scopeLabel()
+          }}</ds-note>
 
           <ds-form-input
             [label]="'startInventory.field.note' | t"
@@ -67,7 +61,7 @@
       [submitLabel]="'startInventory.save' | t"
       [savingLabel]="'startInventory.saving' | t"
       [saving]="saving()"
-      [formInvalid]="form.invalid"
+      [formInvalid]="form.invalid || hasNothingToCount()"
       (cancelled)="cancel()"
     ></ds-form-actions>
   </form>

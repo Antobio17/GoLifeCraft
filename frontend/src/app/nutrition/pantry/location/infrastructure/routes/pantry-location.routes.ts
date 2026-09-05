@@ -6,8 +6,8 @@ import { UpdatePantryLocationProviders } from "../providers/update-pantry-locati
 import { DeletePantryLocationProviders } from "../providers/delete-pantry-location.providers";
 import { GetPantryLocationItemsProviders } from "../providers/get-pantry-location-items.providers";
 import { GetPantryLocationCandidatesProviders } from "../providers/get-pantry-location-candidates.providers";
-import { MoveArticleStockProviders } from "@nutrition/pantry/stock/infrastructure/providers/move-article-stock.providers";
-import { MoveRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/move-recipe-stock.providers";
+import { AssignPantryLocationItemProviders } from "@nutrition/pantry/location/infrastructure/providers/assign-pantry-location-item.providers";
+import { ReleasePantryLocationItemProviders } from "@nutrition/pantry/location/infrastructure/providers/release-pantry-location-item.providers";
 
 export const PANTRY_LOCATION_ROUTES: Routes = [
   {
@@ -20,8 +20,8 @@ export const PANTRY_LOCATION_ROUTES: Routes = [
       ...DeletePantryLocationProviders.getProviders(),
       ...GetPantryLocationItemsProviders.getProviders(),
       ...GetPantryLocationCandidatesProviders.getProviders(),
-      ...MoveArticleStockProviders.getProviders(),
-      ...MoveRecipeStockProviders.getProviders(),
+      ...AssignPantryLocationItemProviders.getProviders(),
+      ...ReleasePantryLocationItemProviders.getProviders(),
     ],
     children: [
       {

@@ -16,22 +16,13 @@ export class PantryLocationViewService {
     };
   }
 
-  candidateRow(
-    candidate: PantryLocationCandidate,
-    placedLabel: (location: string) => string,
-    addLabel: string,
-    moveLabel: string,
-  ): PantryLocationCandidateRow {
-    const { emoji, name, quantity, unit, locationName } = candidate.attributes;
-    const placed = null !== candidate.attributes.locationId;
+  candidateRow(candidate: PantryLocationCandidate): PantryLocationCandidateRow {
+    const { emoji, name, quantity, unit } = candidate.attributes;
 
     return {
       candidate,
       title: `${emoji} ${name}`.trim(),
       quantityLabel: `${this.format(quantity)} ${unit}`,
-      placed,
-      placedLabel: placed ? placedLabel(locationName ?? "") : "",
-      actionLabel: placed ? moveLabel : addLabel,
     };
   }
 

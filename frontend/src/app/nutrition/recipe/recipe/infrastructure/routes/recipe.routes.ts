@@ -4,7 +4,8 @@ import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/
 import { GetRecipesProviders } from "../providers/get-recipes.providers";
 import { GetRecipeProviders } from "../providers/get-recipe.providers";
 import { UpdateRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/update-recipe-stock.providers";
-import { MoveRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/move-recipe-stock.providers";
+import { AssignPantryLocationItemProviders } from "@nutrition/pantry/location/infrastructure/providers/assign-pantry-location-item.providers";
+import { ReleasePantryLocationItemProviders } from "@nutrition/pantry/location/infrastructure/providers/release-pantry-location-item.providers";
 import { GetPantryLocationsProviders } from "@nutrition/pantry/location/infrastructure/providers/get-pantry-locations.providers";
 import { RecipeStockViewService } from "@nutrition/pantry/recipe-stock/application/services/recipe-stock-view.service";
 import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
@@ -21,7 +22,8 @@ export const RECIPE_ROUTES: Routes = [
       ...GetRecipesProviders.getProviders(),
       ...GetRecipeProviders.getProviders(),
       ...UpdateRecipeStockProviders.getProviders(),
-      ...MoveRecipeStockProviders.getProviders(),
+      ...AssignPantryLocationItemProviders.getProviders(),
+      ...ReleasePantryLocationItemProviders.getProviders(),
       ...GetPantryLocationsProviders.getProviders(),
       RecipeStockViewService,
       ...AutosaveProvider.getProviders(),

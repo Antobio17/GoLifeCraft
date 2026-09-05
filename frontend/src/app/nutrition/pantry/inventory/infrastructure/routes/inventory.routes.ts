@@ -2,7 +2,7 @@ import { Routes } from "@angular/router";
 import { GetInventoriesProviders } from "../providers/get-inventories.providers";
 import { GetInventoryProviders } from "../providers/get-inventory.providers";
 import { StartInventoryProviders } from "../providers/start-inventory.providers";
-import { CountInventoryLineProviders } from "../providers/count-inventory-line.providers";
+import { CountInventoryItemProviders } from "../providers/count-inventory-item.providers";
 import { ValidateInventoryProviders } from "../providers/validate-inventory.providers";
 import { DiscardInventoryProviders } from "../providers/discard-inventory.providers";
 import { GetPantryLocationsProviders } from "@nutrition/pantry/location/infrastructure/providers/get-pantry-locations.providers";
@@ -14,7 +14,7 @@ export const INVENTORY_ROUTES: Routes = [
       ...GetInventoriesProviders.getProviders(),
       ...GetInventoryProviders.getProviders(),
       ...StartInventoryProviders.getProviders(),
-      ...CountInventoryLineProviders.getProviders(),
+      ...CountInventoryItemProviders.getProviders(),
       ...ValidateInventoryProviders.getProviders(),
       ...DiscardInventoryProviders.getProviders(),
       ...GetPantryLocationsProviders.getProviders(),

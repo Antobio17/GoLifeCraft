@@ -4,7 +4,4 @@ export interface PantryLocationCandidateRow {
   candidate: PantryLocationCandidate;
   title: string;
   quantityLabel: string;
-  placed: boolean;
-  placedLabel: string;
-  actionLabel: string;
 }

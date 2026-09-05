@@ -31,7 +31,7 @@
                 statusLabel()
               }}</ds-chip>
             </ds-stack>
-            <ds-text variant="muted">{{ locationLabel() }}</ds-text>
+            <ds-text variant="muted">{{ locationsLabel() }}</ds-text>
             @if (inventory.note) {
               <ds-text variant="meta">{{ inventory.note }}</ds-text>
             }
@@ -43,7 +43,7 @@
               [label]="'getInventory.stat.counted' | t"
             />
             <ds-stat
-              [value]="inventory.adjustedLines"
+              [value]="inventory.adjustedItems"
               [label]="'getInventory.stat.adjusted' | t"
             />
           </ds-stack>
@@ -81,7 +81,7 @@
         </ds-card>
       </ng-container>
 
-      @if (rows().length === 0) {
+      @if (groups().length === 0) {
         <ds-empty-state
           icon="package"
           [title]="'getInventory.empty.title' | t"
@@ -89,63 +89,88 @@
         />
       }
 
-      @if (rows().length > 0) {
-        <ds-stack [formGroup]="form()" [gap]="'var(--ds-space-2)'">
-          @for (row of rows(); track row.line.id) {
-            <ds-card
-              variant="inset"
-              [padding]="'var(--ds-space-3)'"
-              [gap]="'var(--ds-space-2)'"
-            >
+      @if (groups().length > 0) {
+        <ds-stack [formGroup]="form()" [gap]="'var(--ds-space-4)'">
+          @for (group of groups(); track group.location.id) {
+            <ds-stack [gap]="'var(--ds-space-2)'">
               <ds-stack
                 direction="row"
-                justify="between"
                 align="center"
-                [gap]="'var(--ds-space-3)'"
+                [gap]="'var(--ds-space-2)'"
                 [wrap]="true"
               >
-                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                  <ds-text variant="strong">{{ row.title }}</ds-text>
-                  <ds-text variant="meta">{{ row.expectedLabel }}</ds-text>
+                <ds-stack [grow]="true">
+                  <ds-section-header
+                    [title]="group.title"
+                    [staticLabel]="group.progressLabel"
+                  />
                 </ds-stack>
+                @if (group.gone) {
+                  <ds-chip tone="neutral">{{
+                    "getInventory.locationGone" | t
+                  }}</ds-chip>
+                }
+              </ds-stack>
 
-                <ds-stack
-                  direction="row"
-                  align="center"
+              @for (row of group.rows; track row.item.id) {
+                <ds-card
+                  variant="inset"
+                  [padding]="'var(--ds-space-3)'"
                   [gap]="'var(--ds-space-2)'"
                 >
-                  @if (row.counted) {
-                    <ds-chip
-                      [tone]="
-                        row.differenceTone === 'even' ? 'neutral' : 'warning'
-                      "
+                  <ds-stack
+                    direction="row"
+                    justify="between"
+                    align="center"
+                    [gap]="'var(--ds-space-3)'"
+                    [wrap]="true"
+                  >
+                    <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                      <ds-text variant="strong">{{ row.title }}</ds-text>
+                      <ds-text variant="meta">{{ row.expectedLabel }}</ds-text>
+                    </ds-stack>
+
+                    <ds-stack
+                      direction="row"
+                      align="center"
+                      [gap]="'var(--ds-space-2)'"
                     >
-                      {{ row.differenceLabel }}
-                    </ds-chip>
-                  }
+                      @if (row.counted) {
+                        <ds-chip
+                          [tone]="
+                            row.differenceTone === 'even'
+                              ? 'neutral'
+                              : 'warning'
+                          "
+                        >
+                          {{ row.differenceLabel }}
+                        </ds-chip>
+                      }
 
-                  <ds-number-input
-                    class="count-row__input"
-                    variant="boxed"
-                    [precision]="2"
-                    [step]="1"
-                    [unit]="row.line.unit"
-                    [formControlName]="row.line.id"
-                    [ariaLabel]="row.title"
-                  />
+                      <ds-number-input
+                        class="count-row__input"
+                        variant="boxed"
+                        [precision]="2"
+                        [step]="1"
+                        [unit]="row.item.unit"
+                        [formControlName]="row.item.id"
+                        [ariaLabel]="row.title"
+                      />
 
-                  @if (row.counted && isDraft()) {
-                    <ds-button
-                      variant="ghost"
-                      size="icon-sm"
-                      icon="close"
-                      [ariaLabel]="'getInventory.clear' | t"
-                      (clicked)="onClear(row)"
-                    />
-                  }
-                </ds-stack>
-              </ds-stack>
-            </ds-card>
+                      @if (row.counted && isDraft()) {
+                        <ds-button
+                          variant="ghost"
+                          size="icon-sm"
+                          icon="close"
+                          [ariaLabel]="'getInventory.clear' | t"
+                          (clicked)="onClear(row)"
+                        />
+                      }
+                    </ds-stack>
+                  </ds-stack>
+                </ds-card>
+              }
+            </ds-stack>
           }
         </ds-stack>
       }
