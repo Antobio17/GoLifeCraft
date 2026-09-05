@@ -38,6 +38,7 @@ import { InventoryStatus } from "../../domain/models/inventory-status.model";
 @Component({
   selector: "app-get-inventory",
   templateUrl: "./get-inventory.component.html",
+  styleUrls: ["./get-inventory.component.css"],
   imports: [
     FormsModule,
     ReactiveFormsModule,

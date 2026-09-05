@@ -15,6 +15,7 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
 import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
 import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
 import { CreatePantryLocationService } from "@nutrition/pantry/location/application/services/create-pantry-location.service";
@@ -30,6 +31,7 @@ import { PantryLocationEmojiCatalogService } from "@nutrition/pantry/location/ap
     FormSectionComponent,
     FormInputComponent,
     FieldComponent,
+    StackComponent,
     EmojiPickerComponent,
     PageWrapperComponent,
     SectionPageWrapperComponent,
