@@ -1,0 +1,7 @@
+/* ds-number-input has no intrinsic width without a stepper: its field is width:100% of an
+   auto-sized block, so inside the row's flex it collapses to its padding and the counted
+   quantity becomes invisible. The row is what owns the size here. */
+.count-row__input {
+  flex: 0 0 auto;
+  width: 6.5rem;
+}

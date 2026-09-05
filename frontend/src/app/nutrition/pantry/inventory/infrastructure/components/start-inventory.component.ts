@@ -15,6 +15,7 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
 import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
 import {
   SegmentedOption,
@@ -43,6 +44,7 @@ const WHOLE_PANTRY = "";
     FormSectionComponent,
     FormInputComponent,
     FieldComponent,
+    StackComponent,
     DateInputComponent,
     SegmentedToggleComponent,
     SelectChipsComponent,

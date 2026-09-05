@@ -14,32 +14,34 @@
         [title]="'updatePantryLocation.section.general' | t"
         [icon]="ICONS['LOCATION']"
       >
-        <ds-field [label]="'updatePantryLocation.field.emoji' | t">
-          <ds-emoji-picker
-            formControlName="emoji"
-            [groups]="emojiGroups"
-            [fallback]="fallbackEmoji"
-            [sheetTitle]="'updatePantryLocation.field.emojiSheetTitle' | t"
-            [closeLabel]="'updatePantryLocation.field.emojiClose' | t"
-            [triggerLabel]="'updatePantryLocation.field.emojiTrigger' | t"
-            [searchPlaceholder]="'updatePantryLocation.field.emojiSearch' | t"
-            [emptyLabel]="'updatePantryLocation.field.emojiEmpty' | t"
-          />
-        </ds-field>
+        <ds-stack [gap]="'var(--ds-space-4)'">
+          <ds-field [label]="'updatePantryLocation.field.emoji' | t">
+            <ds-emoji-picker
+              formControlName="emoji"
+              [groups]="emojiGroups"
+              [fallback]="fallbackEmoji"
+              [sheetTitle]="'updatePantryLocation.field.emojiSheetTitle' | t"
+              [closeLabel]="'updatePantryLocation.field.emojiClose' | t"
+              [triggerLabel]="'updatePantryLocation.field.emojiTrigger' | t"
+              [searchPlaceholder]="'updatePantryLocation.field.emojiSearch' | t"
+              [emptyLabel]="'updatePantryLocation.field.emojiEmpty' | t"
+            />
+          </ds-field>
 
-        <ds-form-input
-          [label]="'updatePantryLocation.field.name' | t"
-          [showRequired]="true"
-          [maxLength]="60"
-          formControlName="name"
-        ></ds-form-input>
+          <ds-form-input
+            [label]="'updatePantryLocation.field.name' | t"
+            [showRequired]="true"
+            [maxLength]="60"
+            formControlName="name"
+          ></ds-form-input>
 
-        <ds-form-input
-          [label]="'updatePantryLocation.field.locationDescription' | t"
-          [hint]="'updatePantryLocation.field.descriptionHint' | t"
-          [maxLength]="255"
-          formControlName="description"
-        ></ds-form-input>
+          <ds-form-input
+            [label]="'updatePantryLocation.field.locationDescription' | t"
+            [hint]="'updatePantryLocation.field.descriptionHint' | t"
+            [maxLength]="255"
+            formControlName="description"
+          ></ds-form-input>
+        </ds-stack>
       </ds-form-section>
     </ds-section-page-wrapper>
 
