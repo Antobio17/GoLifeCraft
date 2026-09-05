@@ -1,0 +1,69 @@
+<ds-page-wrapper>
+  @if (loading()) {
+    <ds-skeleton-page-header
+      [showIcon]="false"
+      [showTag]="false"
+      [subtitleLines]="1"
+      [showAction]="true"
+    ></ds-skeleton-page-header>
+  }
+
+  @if (!loading()) {
+    <ds-page-header
+      [title]="'getPantryLocations.title' | t"
+      [subtitle]="'getPantryLocations.subtitle' | t"
+    >
+      <ds-button
+        slot="actions"
+        variant="primary"
+        size="icon-lg"
+        icon="plus"
+        [iconSize]="19"
+        [ariaLabel]="'getPantryLocations.new' | t"
+        (clicked)="onCreate()"
+      />
+    </ds-page-header>
+  }
+
+  <ds-list-filters
+    [fields]="filterFields()"
+    [loading]="loading()"
+    (filtersApplied)="onFiltersApplied($event)"
+    (filtersCleared)="onFiltersCleared()"
+  />
+
+  <ds-list-table
+    [items]="items()"
+    [columns]="columns()"
+    [actions]="actions()"
+    [loading]="loading()"
+    [emptyTitle]="'getPantryLocations.table.emptyTitle' | t"
+    [emptyMessage]="'getPantryLocations.table.emptyMessage' | t"
+    (actionClick)="onAction($event)"
+    (cellClick)="onCell($event)"
+  />
+
+  @if (!loading() && items().length > 0) {
+    <ds-pagination
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      [totalItems]="totalItems()"
+      (pageChange)="goToPage($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    />
+  }
+
+  <ds-confirm-action-modal
+    [show]="showDeleteModal()"
+    [title]="'getPantryLocations.deleteTitle' | t"
+    [body]="'getPantryLocations.deleteBody' | t"
+    [itemName]="locationToDeleteName()"
+    [warningText]="'getPantryLocations.deleteWarning' | t"
+    [isDeleting]="deleting()"
+    [cancelLabel]="'getPantryLocations.cancel' | t"
+    [confirmLabel]="'getPantryLocations.deleteConfirm' | t"
+    [deletingLabel]="'getPantryLocations.deleting' | t"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()"
+  />
+</ds-page-wrapper>

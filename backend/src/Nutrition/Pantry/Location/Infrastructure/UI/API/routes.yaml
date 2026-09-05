@@ -1,0 +1,44 @@
+get_pantry_locations:
+  path: /api/v1/nutrition/pantry/locations
+  methods: [GET]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationsController
+
+create_pantry_location:
+  path: /api/v1/nutrition/pantry/locations
+  methods: [POST]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\CreateLocationController
+
+get_pantry_location:
+  path: /api/v1/nutrition/pantry/locations/{locationId}
+  methods: [GET]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationController
+  requirements:
+    locationId: '[0-9a-fA-F-]{36}'
+
+update_pantry_location:
+  path: /api/v1/nutrition/pantry/locations/{locationId}
+  methods: [PUT]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\UpdateLocationController
+  requirements:
+    locationId: '[0-9a-fA-F-]{36}'
+
+delete_pantry_location:
+  path: /api/v1/nutrition/pantry/locations/{locationId}
+  methods: [DELETE]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\DeleteLocationController
+  requirements:
+    locationId: '[0-9a-fA-F-]{36}'
+
+get_pantry_location_items:
+  path: /api/v1/nutrition/pantry/locations/{locationId}/items
+  methods: [GET]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationItemsController
+  requirements:
+    locationId: '[0-9a-fA-F-]{36}'
+
+get_pantry_location_candidates:
+  path: /api/v1/nutrition/pantry/locations/{locationId}/candidates
+  methods: [GET]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationCandidatesController
+  requirements:
+    locationId: '[0-9a-fA-F-]{36}'

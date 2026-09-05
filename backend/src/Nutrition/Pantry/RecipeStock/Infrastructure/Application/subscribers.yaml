@@ -28,3 +28,17 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.diary_entry.consumed' }
+
+  Nutrition\Pantry\RecipeStock\Application\Subscriber\ClearRecipeStockLocationOnLocationDeleted:
+    class: Nutrition\Pantry\RecipeStock\Application\Subscriber\ClearRecipeStockLocationOnLocationDeleted
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.pantry_location.deleted' }
+
+  Nutrition\Pantry\RecipeStock\Application\Subscriber\UpdateRecipeStockOnInventoryValidated:
+    class: Nutrition\Pantry\RecipeStock\Application\Subscriber\UpdateRecipeStockOnInventoryValidated
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.inventory.validated' }

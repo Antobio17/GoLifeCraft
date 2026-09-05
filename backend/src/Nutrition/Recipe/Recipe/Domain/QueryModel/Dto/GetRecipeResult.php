@@ -23,6 +23,8 @@ final class GetRecipeResult extends QueryAggregateResult
         public readonly MacroBreakdown $total,
         public readonly MacroBreakdown $perServing,
         public readonly float $stock,
+        public readonly ?string $stockLocationId,
+        public readonly ?string $stockLocationName,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
         public readonly string $createdByUserId,

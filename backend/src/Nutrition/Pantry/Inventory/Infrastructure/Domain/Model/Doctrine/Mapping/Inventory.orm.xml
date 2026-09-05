@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="Nutrition\Pantry\Inventory\Infrastructure\Domain\Model\Doctrine\DoctrineInventoryRepository" name="Nutrition\Pantry\Inventory\Domain\Model\Inventory" table="inventory">
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="countedOn" type="string" column="counted_on" length="10"/>
+    <field name="shift" type="string" column="shift" length="16"/>
+    <field name="status" type="string" column="status" length="16"/>
+    <field name="locationId" type="string" column="location_id" length="36" nullable="true"/>
+    <field name="note" type="string" column="note" length="255" options="{&quot;default&quot;: &quot;&quot;}"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+    <indexes>
+      <index name="idx_inventory_counted_on" columns="counted_on"/>
+      <index name="idx_inventory_status" columns="status"/>
+      <index name="idx_inventory_location_id" columns="location_id"/>
+    </indexes>
+  </entity>
+</doctrine-mapping>

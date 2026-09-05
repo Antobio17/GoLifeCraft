@@ -1,0 +1,37 @@
+services:
+  Nutrition\Pantry\Inventory\Application\Command\StartInventoryCommandHandler:
+    class: Nutrition\Pantry\Inventory\Application\Command\StartInventoryCommandHandler
+    arguments:
+      $inventoryRepository: '@Nutrition\Pantry\Inventory\Domain\Model\InventoryRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Inventory\Domain\QueryModel\StartInventoryNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Inventory\Application\Command\CountInventoryLineCommandHandler:
+    class: Nutrition\Pantry\Inventory\Application\Command\CountInventoryLineCommandHandler
+    arguments:
+      $inventoryRepository: '@Nutrition\Pantry\Inventory\Domain\Model\InventoryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Inventory\Application\Command\ValidateInventoryCommandHandler:
+    class: Nutrition\Pantry\Inventory\Application\Command\ValidateInventoryCommandHandler
+    arguments:
+      $inventoryRepository: '@Nutrition\Pantry\Inventory\Domain\Model\InventoryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Inventory\Application\Command\DiscardInventoryCommandHandler:
+    class: Nutrition\Pantry\Inventory\Application\Command\DiscardInventoryCommandHandler
+    arguments:
+      $inventoryRepository: '@Nutrition\Pantry\Inventory\Domain\Model\InventoryRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

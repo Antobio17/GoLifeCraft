@@ -1,0 +1,167 @@
+<ds-page-wrapper>
+  @if (loading()) {
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
+      <ng-container slot="side">
+        <ds-skeleton height="18rem" />
+      </ng-container>
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-skeleton height="4.5rem" />
+        <ds-skeleton height="4.5rem" delay="0.1s" />
+        <ds-skeleton height="4.5rem" delay="0.2s" />
+      </ds-stack>
+    </ds-split-view>
+  }
+
+  @if (!loading() && attributes(); as inventory) {
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
+      <ng-container slot="side">
+        <ds-card [gap]="'var(--ds-space-4)'">
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-2)'"
+              [wrap]="true"
+            >
+              <ds-heading [level]="2" size="lg">{{
+                inventory.countedOn
+              }}</ds-heading>
+              <ds-chip tone="brand">{{ shiftLabel() }}</ds-chip>
+              <ds-chip [tone]="isDraft() ? 'warning' : 'accent'">{{
+                statusLabel()
+              }}</ds-chip>
+            </ds-stack>
+            <ds-text variant="muted">{{ locationLabel() }}</ds-text>
+            @if (inventory.note) {
+              <ds-text variant="meta">{{ inventory.note }}</ds-text>
+            }
+          </ds-stack>
+
+          <ds-stack direction="row" [gap]="'var(--ds-space-4)'" [wrap]="true">
+            <ds-stat
+              [value]="progressLabel()"
+              [label]="'getInventory.stat.counted' | t"
+            />
+            <ds-stat
+              [value]="inventory.adjustedLines"
+              [label]="'getInventory.stat.adjusted' | t"
+            />
+          </ds-stack>
+
+          @if (isDraft()) {
+            <ds-note>{{ "getInventory.draftHint" | t }}</ds-note>
+
+            <ds-stack [gap]="'var(--ds-space-2)'">
+              <ds-button
+                variant="primary"
+                [fullWidth]="true"
+                [loading]="validating()"
+                (clicked)="onValidate()"
+              >
+                {{ "getInventory.validate" | t }}
+              </ds-button>
+              <ds-button
+                variant="outline-danger"
+                [fullWidth]="true"
+                (clicked)="onDiscard()"
+              >
+                {{ "getInventory.discard" | t }}
+              </ds-button>
+            </ds-stack>
+          }
+
+          @if (!isDraft()) {
+            <ds-note tone="info">{{
+              "getInventory.validatedHint" | t
+            }}</ds-note>
+            <ds-button variant="soft" [fullWidth]="true" (clicked)="back()">
+              {{ "getInventory.back" | t }}
+            </ds-button>
+          }
+        </ds-card>
+      </ng-container>
+
+      @if (rows().length === 0) {
+        <ds-empty-state
+          icon="package"
+          [title]="'getInventory.empty.title' | t"
+          [text]="'getInventory.empty.text' | t"
+        />
+      }
+
+      @if (rows().length > 0) {
+        <ds-stack [formGroup]="form()" [gap]="'var(--ds-space-2)'">
+          @for (row of rows(); track row.line.id) {
+            <ds-card
+              variant="inset"
+              [padding]="'var(--ds-space-3)'"
+              [gap]="'var(--ds-space-2)'"
+            >
+              <ds-stack
+                direction="row"
+                justify="between"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+                [wrap]="true"
+              >
+                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                  <ds-text variant="strong">{{ row.title }}</ds-text>
+                  <ds-text variant="meta">{{ row.expectedLabel }}</ds-text>
+                </ds-stack>
+
+                <ds-stack
+                  direction="row"
+                  align="center"
+                  [gap]="'var(--ds-space-2)'"
+                >
+                  @if (row.counted) {
+                    <ds-chip
+                      [tone]="
+                        row.differenceTone === 'even' ? 'neutral' : 'warning'
+                      "
+                    >
+                      {{ row.differenceLabel }}
+                    </ds-chip>
+                  }
+
+                  <ds-number-input
+                    class="count-row__input"
+                    variant="boxed"
+                    [precision]="2"
+                    [step]="1"
+                    [unit]="row.line.unit"
+                    [formControlName]="row.line.id"
+                    [ariaLabel]="row.title"
+                  />
+
+                  @if (row.counted && isDraft()) {
+                    <ds-button
+                      variant="ghost"
+                      size="icon-sm"
+                      icon="close"
+                      [ariaLabel]="'getInventory.clear' | t"
+                      (clicked)="onClear(row)"
+                    />
+                  }
+                </ds-stack>
+              </ds-stack>
+            </ds-card>
+          }
+        </ds-stack>
+      }
+    </ds-split-view>
+  }
+
+  <ds-confirm-action-modal
+    [show]="showDiscardModal()"
+    [title]="'getInventory.discardTitle' | t"
+    [body]="'getInventory.discardBody' | t"
+    [warningText]="'getInventory.discardWarning' | t"
+    [isDeleting]="discarding()"
+    [cancelLabel]="'getInventory.cancel' | t"
+    [confirmLabel]="'getInventory.discardConfirm' | t"
+    [deletingLabel]="'getInventory.discarding' | t"
+    (confirmed)="onConfirmDiscard()"
+    (cancelled)="onCancelDiscard()"
+  />
+</ds-page-wrapper>

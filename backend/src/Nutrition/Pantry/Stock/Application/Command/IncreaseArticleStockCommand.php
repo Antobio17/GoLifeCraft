@@ -10,6 +10,7 @@ final readonly class IncreaseArticleStockCommand implements Command
         public string $articleId,
         public float $quantity,
         public string $updatedByUserId,
+        public ?string $unit = null,
     ) {
     }
 

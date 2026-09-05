@@ -1,0 +1,49 @@
+services:
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationsController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\CreateLocationController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\CreateLocationController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\UpdateLocationController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\UpdateLocationController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\DeleteLocationController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\DeleteLocationController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationItemsController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationItemsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationCandidatesController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationCandidatesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

@@ -122,6 +122,22 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "inventory",
+        data: { breadcrumb: "inventory.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/pantry/inventory/infrastructure/routes/inventory.routes").then(
+            (m) => m.INVENTORY_ROUTES,
+          ),
+      },
+      {
+        path: "locations",
+        data: { breadcrumb: "pantryLocation.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/pantry/location/infrastructure/routes/pantry-location.routes").then(
+            (m) => m.PANTRY_LOCATION_ROUTES,
+          ),
+      },
+      {
         path: "recipes",
         data: { breadcrumb: "recipe.breadcrumb.list" },
         loadChildren: () =>

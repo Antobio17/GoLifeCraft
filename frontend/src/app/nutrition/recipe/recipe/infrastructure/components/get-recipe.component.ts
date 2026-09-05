@@ -35,6 +35,14 @@ import { GetRecipeService } from "@nutrition/recipe/recipe/application/services/
 import { DeleteRecipeService } from "@nutrition/recipe/recipe/application/services/delete-recipe.service";
 import { UpdateRecipeStockService } from "@nutrition/pantry/recipe-stock/application/services/update-recipe-stock.service";
 import { RecipeStockViewService } from "@nutrition/pantry/recipe-stock/application/services/recipe-stock-view.service";
+import { MoveRecipeStockService } from "@nutrition/pantry/recipe-stock/application/services/move-recipe-stock.service";
+import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
+import { PantryLocation } from "@nutrition/pantry/location/domain/models/pantry-location.model";
+import {
+  SelectChipOption,
+  SelectChipsComponent,
+} from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
+import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import {
   MacroShortLabels,
@@ -84,6 +92,8 @@ import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggreg
     ModalSheetComponent,
     SaveStatusComponent,
     NumberInputComponent,
+    SelectChipsComponent,
+    FieldComponent,
     FormsModule,
   ],
 })
@@ -92,6 +102,8 @@ export class GetRecipeComponent {
   private getRecipeService = inject(GetRecipeService);
   private deleteRecipeService = inject(DeleteRecipeService);
   private updateRecipeStockService = inject(UpdateRecipeStockService);
+  private moveRecipeStockService = inject(MoveRecipeStockService);
+  private getPantryLocationsService = inject(GetPantryLocationsService);
   protected stockView = inject(RecipeStockViewService);
   protected autosave = inject(AutosaveService);
   protected view = inject(RecipeViewService);
@@ -106,6 +118,16 @@ export class GetRecipeComponent {
   showDeleteModal = signal(false);
   stock = signal(0);
   showStockEditor = signal(false);
+  locations = signal<PantryLocation[]>([]);
+  stockLocationId = signal<string>("");
+  movingStock = signal(false);
+  locationOptions = computed<SelectChipOption[]>(() => [
+    { value: "", label: this.t("getRecipe.stock.editor.noLocation") },
+    ...this.locations().map((location) => ({
+      value: location.id,
+      label: `${location.attributes.emoji} ${location.attributes.name}`.trim(),
+    })),
+  ]);
   stockDraft = signal(0);
 
   stepsLabel = computed(() => {
@@ -157,6 +179,9 @@ export class GetRecipeComponent {
       .subscribe((response) => {
         this.recipe.set(response?.data ?? null);
         this.stock.set(response?.data.attributes.stock ?? 0);
+        this.stockLocationId.set(
+          response?.data.attributes.stockLocationId ?? "",
+        );
         this.loading.set(false);
       });
   }
@@ -225,6 +250,33 @@ export class GetRecipeComponent {
   onOpenStockEditor(): void {
     this.stockDraft.set(this.stock());
     this.showStockEditor.set(true);
+    this.loadLocations();
+  }
+
+  onStockLocationChange(locationId: string): void {
+    if (this.movingStock()) return;
+
+    const previous = this.stockLocationId();
+    this.stockLocationId.set(locationId);
+    this.movingStock.set(true);
+
+    this.moveRecipeStockService
+      .moveRecipeStock(this.id(), { locationId: locationId || null })
+      .subscribe({
+        next: () => this.movingStock.set(false),
+        error: () => {
+          this.stockLocationId.set(previous);
+          this.movingStock.set(false);
+        },
+      });
+  }
+
+  private loadLocations(): void {
+    if (this.locations().length > 0) return;
+
+    this.getPantryLocationsService.getPantryLocations(1, 100).subscribe({
+      next: (response) => this.locations.set(response.data),
+    });
   }
 
   onCloseStockEditor(): void {

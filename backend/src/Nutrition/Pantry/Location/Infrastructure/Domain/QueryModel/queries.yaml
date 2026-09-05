@@ -1,0 +1,30 @@
+services:
+  Nutrition\Pantry\Location\Domain\QueryModel\CreateLocationNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCreateLocationNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Location\Domain\QueryModel\UpdateLocationNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateLocationNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Location\Domain\QueryModel\GetLocationsNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetLocationsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Location\Domain\QueryModel\GetLocationNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetLocationNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Location\Domain\QueryModel\GetLocationItemsNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetLocationItemsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Location\Domain\QueryModel\GetLocationCandidatesNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetLocationCandidatesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

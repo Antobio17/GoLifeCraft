@@ -1,0 +1,5 @@
+services:
+  Nutrition\Pantry\Stock\Domain\Service\ArticleStockUnitConverter:
+    class: Nutrition\Pantry\Stock\Infrastructure\Domain\Service\Doctrine\DoctrineArticleStockUnitConverter
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
