@@ -1,0 +1,6 @@
+services:
+  Nutrition\Pantry\Location\Domain\Model\LocationRepository:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\Model\Doctrine\DoctrineLocationRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Pantry\Location\Domain\Model\Location

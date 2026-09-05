@@ -1,0 +1,89 @@
+{
+  "getInventories": {
+    "title": "Inventario",
+    "subtitle": "Historial de recuentos de la despensa",
+    "new": "Nuevo recuento",
+    "filter": {
+      "shift": "Turno",
+      "allShifts": "Todos los turnos",
+      "status": "Estado",
+      "allStatuses": "Todos los estados"
+    },
+    "table": {
+      "countedOn": "Fecha",
+      "shift": "Turno",
+      "location": "Ubicación",
+      "wholePantry": "Toda la despensa",
+      "counted": "Contadas",
+      "adjusted": "Ajustadas",
+      "status": "Estado",
+      "emptyTitle": "Todavía no has hecho ningún recuento",
+      "emptyMessage": "Empieza uno para cuadrar el stock con lo que hay de verdad en casa"
+    },
+    "actions": {
+      "view": "Ver"
+    }
+  },
+  "startInventory": {
+    "title": "Nuevo recuento",
+    "description": "Se congela el stock actual como punto de partida y lo vas corrigiendo",
+    "section": {
+      "when": "Cuándo",
+      "scope": "Qué cuentas"
+    },
+    "field": {
+      "countedOn": "Fecha",
+      "shift": "Turno",
+      "shiftHint": "A qué momento del día corresponde lo que estás contando",
+      "location": "Ubicación",
+      "locationHint": "Cuenta solo una ubicación o toda la despensa",
+      "wholePantry": "Toda la despensa",
+      "note": "Nota",
+      "noteHint": "Opcional: algo que quieras recordar de este recuento"
+    },
+    "explanation": "Al validar, el stock pasa a ser exactamente lo que hayas contado. Las líneas que dejes sin contar no se tocan.",
+    "cancel": "Cancelar",
+    "save": "Empezar recuento",
+    "saving": "Creando..."
+  },
+  "getInventory": {
+    "wholePantry": "Toda la despensa",
+    "expected": "Esperado: {quantity} {unit}",
+    "stat": {
+      "counted": "Contadas",
+      "adjusted": "Con diferencia"
+    },
+    "draftHint": "Ve anotando lo que encuentras. Al validar, el stock se sobrescribe con estos números.",
+    "validatedHint": "Este recuento ya está validado y forma parte del historial.",
+    "validate": "Validar y actualizar stock",
+    "discard": "Descartar recuento",
+    "back": "Volver al historial",
+    "clear": "Quitar el conteo",
+    "discardTitle": "Descartar recuento",
+    "discardBody": "Vas a descartar este recuento sin aplicarlo",
+    "discardWarning": "Se pierde todo lo contado. El stock se queda como está.",
+    "discardConfirm": "Descartar",
+    "discarding": "Descartando...",
+    "cancel": "Cancelar",
+    "empty": {
+      "title": "No hay nada que contar",
+      "text": "No se encontró stock para el alcance elegido"
+    }
+  },
+  "inventoryShift": {
+    "morning": "Mañana",
+    "afternoon": "Tarde",
+    "night": "Noche"
+  },
+  "inventoryStatus": {
+    "draft": "En curso",
+    "validated": "Validado"
+  },
+  "inventory": {
+    "breadcrumb": {
+      "list": "Inventario",
+      "start": "Nuevo recuento",
+      "detail": "Recuento"
+    }
+  }
+}

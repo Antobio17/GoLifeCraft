@@ -11,6 +11,7 @@ final readonly class ArticleStockStarted extends DomainEvent
         \DateTime $occurredOn,
         public string $articleId,
         public float $quantity,
+        public ?string $locationId,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

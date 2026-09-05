@@ -22,4 +22,15 @@ fields:
     filterable: true
     sortable: true
 
+  locationId:
+    writable: true
+    required: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the pantry location where the recipe is kept: the fridge, the freezer, a given
+      cupboard. Empty when it has not been placed anywhere yet. Each stock row sits in one
+      location at a time.
+    filterable: true
+
 relations: {}

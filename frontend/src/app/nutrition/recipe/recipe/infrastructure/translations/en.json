@@ -59,7 +59,9 @@
         "title": "Cooked servings",
         "close": "Close",
         "hint": "Correct by hand what is left in the fridge of this recipe.",
-        "save": "Save"
+        "save": "Save",
+        "location": "Location",
+        "noLocation": "No location"
       }
     },
     "steps": "Steps",

@@ -1,0 +1,70 @@
+<ds-page-wrapper [maxWidth]="'45rem'" [gap]="'var(--ds-space-6)'">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ds-section-page-wrapper
+      [title]="'startInventory.title' | t"
+      [description]="'startInventory.description' | t"
+      [loading]="loading()"
+      [skeletonRows]="3"
+      [skeletonFieldsPerRow]="1"
+      [showBackButton]="true"
+      [icon]="'package'"
+      (backClicked)="cancel()"
+    >
+      <ds-form-section
+        [title]="'startInventory.section.when' | t"
+        [icon]="ICONS['CALENDAR']"
+      >
+        <ds-field
+          [label]="'startInventory.field.countedOn' | t"
+          [required]="true"
+        >
+          <ds-date-input formControlName="countedOn" />
+        </ds-field>
+
+        <ds-field
+          [label]="'startInventory.field.shift' | t"
+          [hint]="'startInventory.field.shiftHint' | t"
+          [required]="true"
+        >
+          <ds-segmented-toggle
+            formControlName="shift"
+            [options]="shiftOptions()"
+          />
+        </ds-field>
+      </ds-form-section>
+
+      <ds-form-section
+        [title]="'startInventory.section.scope' | t"
+        [icon]="ICONS['LOCATION']"
+      >
+        <ds-field
+          [label]="'startInventory.field.location' | t"
+          [hint]="'startInventory.field.locationHint' | t"
+        >
+          <ds-select-chips
+            formControlName="locationId"
+            [options]="locationOptions()"
+          />
+        </ds-field>
+
+        <ds-form-input
+          [label]="'startInventory.field.note' | t"
+          [hint]="'startInventory.field.noteHint' | t"
+          [maxLength]="255"
+          formControlName="note"
+        ></ds-form-input>
+
+        <ds-note>{{ "startInventory.explanation" | t }}</ds-note>
+      </ds-form-section>
+    </ds-section-page-wrapper>
+
+    <ds-form-actions
+      [cancelLabel]="'startInventory.cancel' | t"
+      [submitLabel]="'startInventory.save' | t"
+      [savingLabel]="'startInventory.saving' | t"
+      [saving]="saving()"
+      [formInvalid]="form.invalid"
+      (cancelled)="cancel()"
+    ></ds-form-actions>
+  </form>
+</ds-page-wrapper>

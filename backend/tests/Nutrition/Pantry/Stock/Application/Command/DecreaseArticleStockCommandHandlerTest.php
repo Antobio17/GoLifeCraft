@@ -6,6 +6,7 @@ use Nutrition\Pantry\Stock\Application\Command\DecreaseArticleStockCommand;
 use Nutrition\Pantry\Stock\Application\Command\DecreaseArticleStockCommandHandler;
 use Nutrition\Pantry\Stock\Domain\Model\ArticleStock;
 use Nutrition\Pantry\Stock\Infrastructure\Domain\Model\InMemory\InMemoryArticleStockRepository;
+use Nutrition\Pantry\Stock\Infrastructure\Domain\Service\InMemory\InMemoryArticleStockUnitConverter;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -22,6 +23,7 @@ final class DecreaseArticleStockCommandHandlerTest extends TestCase
         $this->articleStockRepository = new InMemoryArticleStockRepository();
         $this->handler = new DecreaseArticleStockCommandHandler(
             articleStockRepository: $this->articleStockRepository,
+            unitConverter: new InMemoryArticleStockUnitConverter(factors: ['article-1' => ['pack' => 500.0]]),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -86,6 +88,40 @@ final class DecreaseArticleStockCommandHandlerTest extends TestCase
         ));
 
         $this->assertNull(actual: $this->articleStockRepository->findByArticleId(articleId: 'article-without-stock'));
+    }
+
+    public function testItTurnsTheDiaryUnitIntoBaseUnitsBeforeSubtracting(): void
+    {
+        $this->givenStock(quantity: 1000.0);
+
+        ($this->handler)(new DecreaseArticleStockCommand(
+            articleId: 'article-1',
+            quantity: 1.0,
+            updatedByUserId: 'god-user-id',
+            unit: 'pack',
+        ));
+
+        $this->assertSame(
+            expected: 500.0,
+            actual: $this->articleStockRepository->findByArticleId(articleId: 'article-1')->quantity,
+        );
+    }
+
+    public function testItLeavesTheQuantityAloneWhenTheUnitIsUnknown(): void
+    {
+        $this->givenStock(quantity: 1000.0);
+
+        ($this->handler)(new DecreaseArticleStockCommand(
+            articleId: 'article-1',
+            quantity: 240.0,
+            updatedByUserId: 'god-user-id',
+            unit: 'loncha',
+        ));
+
+        $this->assertSame(
+            expected: 760.0,
+            actual: $this->articleStockRepository->findByArticleId(articleId: 'article-1')->quantity,
+        );
     }
 
     private function givenStock(float $quantity): void

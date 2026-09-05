@@ -26,6 +26,17 @@ final class InMemoryRecipeStockRepository implements RecipeStockRepository
         return null;
     }
 
+    /**
+     * @return RecipeStock[]
+     */
+    public function findByLocationId(string $locationId): array
+    {
+        return array_values(array: array_filter(
+            array: $this->stocks,
+            callback: static fn (RecipeStock $stock): bool => $stock->locationId === $locationId,
+        ));
+    }
+
     public function save(RecipeStock $recipeStock): void
     {
         foreach ($this->stocks as $key => $existing) {

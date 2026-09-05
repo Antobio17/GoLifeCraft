@@ -245,6 +245,15 @@
       (ngModelChange)="onStockDraft($event)"
     />
 
+    <ds-field [label]="'getRecipe.stock.editor.location' | t">
+      <ds-select-chips
+        [options]="locationOptions()"
+        [ngModel]="stockLocationId()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onStockLocationChange($event)"
+      />
+    </ds-field>
+
     <ds-button
       variant="primary"
       size="lg"

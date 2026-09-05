@@ -1,0 +1,15 @@
+services:
+  Nutrition\Pantry\Inventory\Domain\QueryModel\StartInventoryNeedleDataQuery:
+    class: Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\Doctrine\DoctrineStartInventoryNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Inventory\Domain\QueryModel\GetInventoriesNeedleDataQuery:
+    class: Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetInventoriesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Inventory\Domain\QueryModel\GetInventoryNeedleDataQuery:
+    class: Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetInventoryNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

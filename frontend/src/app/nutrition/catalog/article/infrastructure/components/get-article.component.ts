@@ -12,11 +12,15 @@ import {
 import { GetArticleService } from "@nutrition/catalog/article/application/services/get-article.service";
 import { DeleteArticleService } from "@nutrition/catalog/article/application/services/delete-article.service";
 import { UpdateArticleStockService } from "@nutrition/pantry/stock/application/services/update-article-stock.service";
+import { MoveArticleStockService } from "@nutrition/pantry/stock/application/services/move-article-stock.service";
+import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
+import { PantryLocation } from "@nutrition/pantry/location/domain/models/pantry-location.model";
 import { StockViewService } from "@nutrition/pantry/stock/application/services/stock-view.service";
 import { ArticleStockView } from "@nutrition/pantry/stock/domain/models/article-stock-view.model";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { StockUnitMode } from "@nutrition/pantry/stock/domain/models/stock-unit-mode.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
+import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
@@ -40,6 +44,11 @@ import { ProductHeroComponent } from "@shared/design-system/product-hero/infrast
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
 import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import {
+  SelectChipOption,
+  SelectChipsComponent,
+} from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
+import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { EquivalenceSummaryComponent } from "@shared/design-system/equivalence-summary/infrastructure/components/equivalence-summary.component";
 import { PurchaseSummaryComponent } from "@shared/design-system/purchase-summary/infrastructure/components/purchase-summary.component";
 import { StockControlComponent } from "@shared/design-system/stock-control/infrastructure/components/stock-control.component";
@@ -75,6 +84,8 @@ type NutritionMode = "pack" | "per100";
     MacroBarsComponent,
     NutritionFactsComponent,
     SegmentedToggleComponent,
+    SelectChipsComponent,
+    FieldComponent,
     EquivalenceSummaryComponent,
     PurchaseSummaryComponent,
     StockControlComponent,
@@ -88,6 +99,9 @@ export class GetArticleComponent {
   private getArticleService = inject(GetArticleService);
   private deleteArticleService = inject(DeleteArticleService);
   private updateArticleStockService = inject(UpdateArticleStockService);
+  private moveArticleStockService = inject(MoveArticleStockService);
+  private getPantryLocationsService = inject(GetPantryLocationsService);
+  private translationService = inject(TranslationService);
   private stockView = inject(StockViewService);
   protected view = inject(ArticleViewService);
   private aggregateImageService = inject(AggregateImageService);
@@ -124,6 +138,22 @@ export class GetArticleComponent {
   stock = signal<ArticleStockView | null>(null);
   savingStock = signal(false);
   showStockEditor = signal(false);
+  locations = signal<PantryLocation[]>([]);
+  stockLocationId = signal<string>("");
+  movingStock = signal(false);
+  locationOptions = computed<SelectChipOption[]>(() => [
+    {
+      value: "",
+      label: this.translationService.translate(
+        "getArticle.stock.editor.noLocation",
+        "nutrition/catalog/article",
+      ),
+    },
+    ...this.locations().map((location) => ({
+      value: location.id,
+      label: `${location.attributes.emoji} ${location.attributes.name}`.trim(),
+    })),
+  ]);
   stockDraft = signal("");
   stockDraftMode = signal<StockUnitMode>(StockUnitMode.Pack);
   stockModeOptions = computed<SegmentedOption[]>(() => {
@@ -222,7 +252,27 @@ export class GetArticleComponent {
 
     this.stockDraftMode.set(StockUnitMode.Pack);
     this.stockDraft.set(this.draftText(stock.packs));
+    this.stockLocationId.set(this.detail()?.stockLocationId ?? "");
     this.showStockEditor.set(true);
+    this.loadLocations();
+  }
+
+  onStockLocationChange(locationId: string): void {
+    if (this.movingStock()) return;
+
+    const previous = this.stockLocationId();
+    this.stockLocationId.set(locationId);
+    this.movingStock.set(true);
+
+    this.moveArticleStockService
+      .moveArticleStock(this.id(), { locationId: locationId || null })
+      .subscribe({
+        next: () => this.movingStock.set(false),
+        error: () => {
+          this.stockLocationId.set(previous);
+          this.movingStock.set(false);
+        },
+      });
   }
 
   onCloseStockEditor(): void {
@@ -306,6 +356,14 @@ export class GetArticleComponent {
         },
         error: () => this.savingStock.set(false),
       });
+  }
+
+  private loadLocations(): void {
+    if (this.locations().length > 0) return;
+
+    this.getPantryLocationsService.getPantryLocations(1, 100).subscribe({
+      next: (response) => this.locations.set(response.data),
+    });
   }
 
   private draftText(value: number): string {

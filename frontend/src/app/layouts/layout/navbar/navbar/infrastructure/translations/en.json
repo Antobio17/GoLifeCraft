@@ -37,6 +37,8 @@
     "groupAdmin": "Administration",
     "budget": "Budget",
     "accounts": "Accounts",
-    "recurrences": "Recurring"
+    "recurrences": "Recurring",
+    "inventory": "Inventory",
+    "locations": "Locations"
   }
 }

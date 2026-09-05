@@ -1,0 +1,38 @@
+get_inventories:
+  path: /api/v1/nutrition/pantry/inventories
+  methods: [GET]
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\GetInventoriesController
+
+start_inventory:
+  path: /api/v1/nutrition/pantry/inventories
+  methods: [POST]
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\StartInventoryController
+
+get_inventory:
+  path: /api/v1/nutrition/pantry/inventories/{inventoryId}
+  methods: [GET]
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\GetInventoryController
+  requirements:
+    inventoryId: '[0-9a-fA-F-]{36}'
+
+discard_inventory:
+  path: /api/v1/nutrition/pantry/inventories/{inventoryId}
+  methods: [DELETE]
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\DiscardInventoryController
+  requirements:
+    inventoryId: '[0-9a-fA-F-]{36}'
+
+validate_inventory:
+  path: /api/v1/nutrition/pantry/inventories/{inventoryId}/validate
+  methods: [PUT]
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\ValidateInventoryController
+  requirements:
+    inventoryId: '[0-9a-fA-F-]{36}'
+
+count_inventory_line:
+  path: /api/v1/nutrition/pantry/inventories/{inventoryId}/lines/{lineId}
+  methods: [PUT]
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\CountInventoryLineController
+  requirements:
+    inventoryId: '[0-9a-fA-F-]{36}'
+    lineId: '[0-9a-fA-F-]{36}'
