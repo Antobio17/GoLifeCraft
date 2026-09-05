@@ -4,6 +4,10 @@ import { GetPantryLocationProviders } from "../providers/get-pantry-location.pro
 import { CreatePantryLocationProviders } from "../providers/create-pantry-location.providers";
 import { UpdatePantryLocationProviders } from "../providers/update-pantry-location.providers";
 import { DeletePantryLocationProviders } from "../providers/delete-pantry-location.providers";
+import { GetPantryLocationItemsProviders } from "../providers/get-pantry-location-items.providers";
+import { GetPantryLocationCandidatesProviders } from "../providers/get-pantry-location-candidates.providers";
+import { MoveArticleStockProviders } from "@nutrition/pantry/stock/infrastructure/providers/move-article-stock.providers";
+import { MoveRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/move-recipe-stock.providers";
 
 export const PANTRY_LOCATION_ROUTES: Routes = [
   {
@@ -14,6 +18,10 @@ export const PANTRY_LOCATION_ROUTES: Routes = [
       ...CreatePantryLocationProviders.getProviders(),
       ...UpdatePantryLocationProviders.getProviders(),
       ...DeletePantryLocationProviders.getProviders(),
+      ...GetPantryLocationItemsProviders.getProviders(),
+      ...GetPantryLocationCandidatesProviders.getProviders(),
+      ...MoveArticleStockProviders.getProviders(),
+      ...MoveRecipeStockProviders.getProviders(),
     ],
     children: [
       {
@@ -29,6 +37,14 @@ export const PANTRY_LOCATION_ROUTES: Routes = [
         loadComponent: () =>
           import("../components/create-pantry-location.component").then(
             (m) => m.CreatePantryLocationComponent,
+          ),
+      },
+      {
+        path: ":id",
+        data: { breadcrumb: "pantryLocation.breadcrumb.detail" },
+        loadComponent: () =>
+          import("../components/get-pantry-location.component").then(
+            (m) => m.GetPantryLocationComponent,
           ),
       },
       {

@@ -1,0 +1,7 @@
+/* The candidate list is a scrolling panel so a long catalogue never pushes the location's
+   own contents off the screen. */
+.candidates {
+  max-height: 26rem;
+  overflow-y: auto;
+  padding-right: var(--ds-space-1);
+}

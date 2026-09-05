@@ -40,6 +40,7 @@
     [emptyTitle]="'getPantryLocations.table.emptyTitle' | t"
     [emptyMessage]="'getPantryLocations.table.emptyMessage' | t"
     (actionClick)="onAction($event)"
+    (cellClick)="onCell($event)"
   />
 
   @if (!loading() && items().length > 0) {

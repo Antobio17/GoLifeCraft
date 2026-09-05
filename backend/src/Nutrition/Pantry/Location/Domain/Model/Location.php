@@ -13,6 +13,16 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 class Location extends GenericAggregate
 {
     public const int NAME_MAX_LENGTH = 60;
+
+    /** What a location can hold: an article's stock or a recipe's cooked servings. */
+    public const string ITEM_ARTICLE = 'article';
+    public const string ITEM_RECIPE = 'recipe';
+
+    /** @var array<int, string> */
+    public const array ITEM_KINDS = [
+        self::ITEM_ARTICLE,
+        self::ITEM_RECIPE,
+    ];
     public const int EMOJI_MAX_LENGTH = 16;
     public const int DESCRIPTION_MAX_LENGTH = 255;
 

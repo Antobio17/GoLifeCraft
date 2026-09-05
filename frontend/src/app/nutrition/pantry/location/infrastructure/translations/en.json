@@ -17,7 +17,8 @@
     },
     "actions": {
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "view": "View"
     },
     "deleteTitle": "Delete location",
     "deleteBody": "You are about to delete the location",
@@ -72,7 +73,38 @@
     "breadcrumb": {
       "list": "Locations",
       "create": "New location",
-      "edit": "Edit location"
+      "edit": "Edit location",
+      "detail": "Location"
+    }
+  },
+  "getPantryLocation": {
+    "stat": {
+      "articles": "Articles",
+      "recipes": "Recipes"
+    },
+    "hint": "An article or a recipe can only sit in one location. Bringing one over moves it.",
+    "edit": "Edit location",
+    "back": "Back to locations",
+    "kind": {
+      "all": "All",
+      "articles": "Articles",
+      "recipes": "Recipes"
+    },
+    "contents": {
+      "title": "Contents",
+      "remove": "Remove",
+      "emptyTitle": "Nothing here yet",
+      "emptyText": "Search below for what you keep in this place and add it"
+    },
+    "candidates": {
+      "title": "Add to this location",
+      "search": "Search article or recipe...",
+      "clear": "Clear",
+      "add": "Add",
+      "move": "Move here",
+      "placedIn": "In {location}",
+      "emptyTitle": "No results",
+      "emptyText": "No article or recipe matches the search"
     }
   }
 }

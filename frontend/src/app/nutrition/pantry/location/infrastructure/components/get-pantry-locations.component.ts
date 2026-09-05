@@ -6,6 +6,7 @@ import { ListTableComponent } from "@shared/design-system/list-table/infrastruct
 import {
   ListAction,
   ListActionEvent,
+  ListCellClickEvent,
   ListColumn,
 } from "@shared/design-system/list-table/domain/models/list-table.model";
 import { ListFiltersComponent } from "@shared/design-system/list-filters/infrastructure/components/list-filters.component";
@@ -73,6 +74,7 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
       width: "1.4fr",
       minWidth: "200px",
       cardPrimary: true,
+      link: () => true,
     },
     {
       key: "description",
@@ -93,6 +95,11 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
   ]);
 
   actions = computed<ListAction<PantryLocation>[]>(() => [
+    {
+      key: "view",
+      label: this.t("getPantryLocations.actions.view"),
+      icon: "view",
+    },
     {
       key: "edit",
       label: this.t("getPantryLocations.actions.edit"),
@@ -141,7 +148,16 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
     this.router.navigate(["/locations", "create"]);
   }
 
+  onCell({ row }: ListCellClickEvent<PantryLocation>): void {
+    this.router.navigate(["/locations", row.id]);
+  }
+
   onAction({ key, row }: ListActionEvent<PantryLocation>): void {
+    if (key === "view") {
+      this.router.navigate(["/locations", row.id]);
+      return;
+    }
+
     if (key === "edit") {
       this.router.navigate(["/locations", row.id, "edit"]);
       return;

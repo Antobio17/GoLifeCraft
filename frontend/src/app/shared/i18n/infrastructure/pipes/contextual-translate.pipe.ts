@@ -74,6 +74,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     getFinanceRecurrences: "economy/finance/recurrence",
     financePrivacy: "economy/finance/privacy",
     getPantryLocations: "nutrition/pantry/location",
+    getPantryLocation: "nutrition/pantry/location",
     createPantryLocation: "nutrition/pantry/location",
     updatePantryLocation: "nutrition/pantry/location",
     pantryLocation: "nutrition/pantry/location",

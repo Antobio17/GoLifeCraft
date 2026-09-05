@@ -20,3 +20,25 @@ services:
 
   Nutrition\Pantry\Location\Application\Query\GetLocationDataTransform:
     class: Nutrition\Pantry\Location\Infrastructure\UI\API\DataTransform\ApiGetLocationDataTransform
+
+  Nutrition\Pantry\Location\Application\Query\GetLocationItemsQueryHandler:
+    class: Nutrition\Pantry\Location\Application\Query\GetLocationItemsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Pantry\Location\Domain\QueryModel\GetLocationItemsNeedleDataQuery'
+      $dataTransform: '@Nutrition\Pantry\Location\Application\Query\GetLocationItemsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Location\Application\Query\GetLocationItemsDataTransform:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\DataTransform\ApiGetLocationItemsDataTransform
+
+  Nutrition\Pantry\Location\Application\Query\GetLocationCandidatesQueryHandler:
+    class: Nutrition\Pantry\Location\Application\Query\GetLocationCandidatesQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Pantry\Location\Domain\QueryModel\GetLocationCandidatesNeedleDataQuery'
+      $dataTransform: '@Nutrition\Pantry\Location\Application\Query\GetLocationCandidatesDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Location\Application\Query\GetLocationCandidatesDataTransform:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\DataTransform\ApiGetLocationCandidatesDataTransform
