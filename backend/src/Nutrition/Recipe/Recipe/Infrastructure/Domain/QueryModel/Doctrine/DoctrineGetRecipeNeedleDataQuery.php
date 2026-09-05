@@ -35,12 +35,13 @@ final readonly class DoctrineGetRecipeNeedleDataQuery implements GetRecipeNeedle
                 'r.created_by_user_id',
                 'r.updated_by_user_id',
                 's.servings AS stock',
-                's.location_id AS stock_location_id',
+                'li.location_id AS stock_location_id',
                 'pl.name AS stock_location_name'
             )
             ->from(table: 'recipe', alias: 'r')
             ->leftJoin(fromAlias: 'r', join: 'recipe_stock', alias: 's', condition: 's.recipe_id = r.id')
-            ->leftJoin(fromAlias: 's', join: 'pantry_location', alias: 'pl', condition: 'pl.id = s.location_id')
+            ->leftJoin(fromAlias: 'r', join: 'location_item', alias: 'li', condition: "li.ref_id = r.id AND li.kind = 'recipe'")
+            ->leftJoin(fromAlias: 'li', join: 'pantry_location', alias: 'pl', condition: 'pl.id = li.location_id')
             ->where('r.id = :id')
             ->setParameter(key: 'id', value: $recipeId)
             ->executeQuery()

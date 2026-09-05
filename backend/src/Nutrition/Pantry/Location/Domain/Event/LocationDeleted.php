@@ -12,6 +12,8 @@ final readonly class LocationDeleted extends DomainEvent
         public string $name,
         public string $emoji,
         public string $description,
+        /** @var array<int, array<string, mixed>> */
+        public array $items,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

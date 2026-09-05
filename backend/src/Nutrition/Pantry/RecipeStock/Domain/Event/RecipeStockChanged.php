@@ -12,7 +12,6 @@ final readonly class RecipeStockChanged extends DomainEvent
         public string $recipeId,
         public float $previousServings,
         public float $servings,
-        public ?string $locationId,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

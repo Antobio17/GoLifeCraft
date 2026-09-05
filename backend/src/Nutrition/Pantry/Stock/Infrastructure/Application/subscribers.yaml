@@ -14,13 +14,6 @@ services:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_cooked' }
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_uncooked' }
 
-  Nutrition\Pantry\Stock\Application\Subscriber\ClearArticleStockLocationOnLocationDeleted:
-    class: Nutrition\Pantry\Stock\Application\Subscriber\ClearArticleStockLocationOnLocationDeleted
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.pantry_location.deleted' }
-
   Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnDiaryEntryConsumed:
     class: Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnDiaryEntryConsumed
     arguments:

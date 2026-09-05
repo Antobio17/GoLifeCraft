@@ -7,7 +7,7 @@ use Nutrition\Pantry\Inventory\Application\Command\ValidateInventoryCommandHandl
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryValidated;
 use Nutrition\Pantry\Inventory\Domain\Exception\ValidateInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
-use Nutrition\Pantry\Inventory\Domain\Model\InventoryLine;
+use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
 use Nutrition\Pantry\Inventory\Infrastructure\Domain\Model\InMemory\InMemoryInventoryRepository;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -45,7 +45,7 @@ final class ValidateInventoryCommandHandlerTest extends TestCase
         );
     }
 
-    public function testItRecordsEveryLineSoTheStockCanBeOverwritten(): void
+    public function testItRecordsEveryItemSoTheStockCanBeOverwritten(): void
     {
         $inventory = $this->givenCountedInventory();
 
@@ -62,9 +62,11 @@ final class ValidateInventoryCommandHandlerTest extends TestCase
         /** @var InventoryValidated $validated */
         $validated = array_values(array: $events)[0];
 
-        $this->assertCount(expectedCount: 2, haystack: $validated->lines);
-        $this->assertSame(expected: 780.0, actual: $validated->lines[0]['countedQuantity']);
-        $this->assertNull(actual: $validated->lines[1]['countedQuantity']);
+        $this->assertCount(expectedCount: 1, haystack: $validated->locations);
+        $this->assertSame(expected: 'Nevera', actual: $validated->locations[0]['nameSnapshot']);
+        $this->assertCount(expectedCount: 2, haystack: $validated->locations[0]['items']);
+        $this->assertSame(expected: 780.0, actual: $validated->locations[0]['items'][0]['countedQuantity']);
+        $this->assertNull(actual: $validated->locations[0]['items'][1]['countedQuantity']);
     }
 
     public function testItRefusesToValidateTwice(): void
@@ -110,8 +112,8 @@ final class ValidateInventoryCommandHandlerTest extends TestCase
     {
         $inventory = $this->givenInventory();
 
-        $inventory->countLine(
-            lineId: $inventory->lines[0]->id,
+        $inventory->countItem(
+            itemId: $inventory->locations[0]->items[0]->id,
             countedQuantity: 780.0,
             countedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
@@ -122,34 +124,23 @@ final class ValidateInventoryCommandHandlerTest extends TestCase
 
     private function givenInventory(): Inventory
     {
-        $lines = [];
-        $position = 0;
-
-        foreach ([['article-1', InventoryLine::KIND_ARTICLE, 'g', 1000.0], ['recipe-1', InventoryLine::KIND_RECIPE, 'serving', 4.0]] as [$refId, $kind, $unit, $quantity]) {
-            ++$position;
-
-            $lines[] = InventoryLine::plan(
-                inventoryId: 'inventory-1',
-                position: $position,
-                kind: $kind,
-                refId: $refId,
-                locationId: null,
-                nameSnapshot: $refId,
-                emojiSnapshot: '🍚',
-                unit: $unit,
-                expectedQuantity: $quantity,
-                createdByUserId: 'god-user-id',
-                dateTimeGenerator: $this->dateTimeGenerator,
-            );
-        }
-
         $inventory = Inventory::start(
             id: 'inventory-1',
             countedOn: '2026-09-05',
             shift: Inventory::SHIFT_NIGHT,
-            locationId: null,
             note: '',
-            lines: $lines,
+            locations: [
+                InventoryTestPantry::location(
+                    position: 1,
+                    locationId: 'location-1',
+                    name: 'Nevera',
+                    items: [
+                        ['article-1', InventoryLocationItem::KIND_ARTICLE, 'Arroz', 'g', 1000.0],
+                        ['recipe-1', InventoryLocationItem::KIND_RECIPE, 'Lentejas', 'serving', 4.0],
+                    ],
+                    dateTimeGenerator: $this->dateTimeGenerator,
+                ),
+            ],
             startedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

@@ -3,9 +3,9 @@
 namespace Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
-use Nutrition\Pantry\Inventory\Domain\Model\InventoryLine;
+use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
+use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationPlan;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryStockLine;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\StartInventoryNeedleDataQuery;
 
@@ -31,99 +31,118 @@ final readonly class DoctrineStartInventoryNeedleDataQuery implements StartInven
         return false === $result ? null : (string) $result;
     }
 
-    public function locationExists(string $locationId): bool
+    public function findLocationPlans(): array
     {
-        $result = $this->connection->createQueryBuilder()
-            ->select('l.id')
-            ->from(table: 'pantry_location', alias: 'l')
-            ->where('l.id = :locationId')
-            ->setParameter(key: 'locationId', value: $locationId)
-            ->setMaxResults(maxResults: 1)
-            ->executeQuery()
-            ->fetchOne();
+        $itemsByLocation = $this->itemsByLocation();
 
-        return false !== $result;
+        return array_map(callback: static function (array $row) use ($itemsByLocation): InventoryLocationPlan {
+            return new InventoryLocationPlan(
+                locationId: $row['id'],
+                name: $row['name'],
+                emoji: (string) ($row['emoji'] ?? ''),
+                items: $itemsByLocation[$row['id']] ?? [],
+            );
+        }, array: $this->locations());
     }
 
-    public function findStockLines(?string $locationId): array
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function locations(): array
     {
-        return array_merge(
-            $this->articleLines(locationId: $locationId),
-            $this->recipeLines(locationId: $locationId),
-        );
+        return $this->connection->createQueryBuilder()
+            ->select('l.id', 'l.name', 'l.emoji')
+            ->from(table: 'pantry_location', alias: 'l')
+            ->orderBy(sort: 'l.name', order: 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+    }
+
+    /**
+     * @return array<string, InventoryStockLine[]>
+     */
+    private function itemsByLocation(): array
+    {
+        $grouped = [];
+
+        foreach (array_merge($this->articleItems(), $this->recipeItems()) as $item) {
+            $grouped[$item->locationId][] = $item;
+        }
+
+        foreach ($grouped as $locationId => $items) {
+            usort(array: $items, callback: static fn (InventoryStockLine $a, InventoryStockLine $b): int => $a->name <=> $b->name);
+            $grouped[$locationId] = $items;
+        }
+
+        return $grouped;
     }
 
     /**
      * @return InventoryStockLine[]
      */
-    private function articleLines(?string $locationId): array
+    private function articleItems(): array
     {
-        $qb = $this->connection->createQueryBuilder()
+        $rows = $this->connection->createQueryBuilder()
             ->select(
-                's.article_id AS ref_id',
-                's.quantity',
-                's.location_id',
+                'i.location_id',
+                'i.ref_id',
                 'a.name',
                 'a.emoji',
                 'a.base_unit',
+                's.quantity',
             )
-            ->from(table: 'article_stock', alias: 's')
-            ->innerJoin(fromAlias: 's', join: 'article', alias: 'a', condition: 'a.id = s.article_id')
-            ->orderBy(sort: 'a.name', order: 'ASC');
-
-        $this->applyLocation(qb: $qb, locationId: $locationId);
+            ->from(table: 'location_item', alias: 'i')
+            ->innerJoin(fromAlias: 'i', join: 'article', alias: 'a', condition: 'a.id = i.ref_id')
+            ->leftJoin(fromAlias: 'i', join: 'article_stock', alias: 's', condition: 's.article_id = i.ref_id')
+            ->where('i.kind = :kind')
+            ->setParameter(key: 'kind', value: InventoryLocationItem::KIND_ARTICLE)
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         return array_map(callback: static function (array $row): InventoryStockLine {
             return new InventoryStockLine(
-                kind: InventoryLine::KIND_ARTICLE,
-                refId: $row['ref_id'],
                 locationId: $row['location_id'],
+                kind: InventoryLocationItem::KIND_ARTICLE,
+                refId: $row['ref_id'],
                 name: $row['name'],
                 emoji: (string) ($row['emoji'] ?? ''),
                 unit: (string) ($row['base_unit'] ?? 'g'),
-                quantity: (float) $row['quantity'],
+                quantity: (float) ($row['quantity'] ?? 0.0),
             );
-        }, array: $qb->executeQuery()->fetchAllAssociative());
+        }, array: $rows);
     }
 
     /**
      * @return InventoryStockLine[]
      */
-    private function recipeLines(?string $locationId): array
+    private function recipeItems(): array
     {
-        $qb = $this->connection->createQueryBuilder()
+        $rows = $this->connection->createQueryBuilder()
             ->select(
-                's.recipe_id AS ref_id',
-                's.servings AS quantity',
-                's.location_id',
+                'i.location_id',
+                'i.ref_id',
                 'r.name',
                 'r.emoji',
+                's.servings AS quantity',
             )
-            ->from(table: 'recipe_stock', alias: 's')
-            ->innerJoin(fromAlias: 's', join: 'recipe', alias: 'r', condition: 'r.id = s.recipe_id')
-            ->orderBy(sort: 'r.name', order: 'ASC');
-
-        $this->applyLocation(qb: $qb, locationId: $locationId);
+            ->from(table: 'location_item', alias: 'i')
+            ->innerJoin(fromAlias: 'i', join: 'recipe', alias: 'r', condition: 'r.id = i.ref_id')
+            ->leftJoin(fromAlias: 'i', join: 'recipe_stock', alias: 's', condition: 's.recipe_id = i.ref_id')
+            ->where('i.kind = :kind')
+            ->setParameter(key: 'kind', value: InventoryLocationItem::KIND_RECIPE)
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         return array_map(callback: static function (array $row): InventoryStockLine {
             return new InventoryStockLine(
-                kind: InventoryLine::KIND_RECIPE,
-                refId: $row['ref_id'],
                 locationId: $row['location_id'],
+                kind: InventoryLocationItem::KIND_RECIPE,
+                refId: $row['ref_id'],
                 name: $row['name'],
                 emoji: (string) ($row['emoji'] ?? ''),
                 unit: self::RECIPE_UNIT,
-                quantity: (float) $row['quantity'],
+                quantity: (float) ($row['quantity'] ?? 0.0),
             );
-        }, array: $qb->executeQuery()->fetchAllAssociative());
-    }
-
-    private function applyLocation(QueryBuilder $qb, ?string $locationId): void
-    {
-        if (null === $locationId) {
-            return;
-        }
-
-        $qb->andWhere('s.location_id = :locationId')->setParameter(key: 'locationId', value: $locationId);
+        }, array: $rows);
     }
 }

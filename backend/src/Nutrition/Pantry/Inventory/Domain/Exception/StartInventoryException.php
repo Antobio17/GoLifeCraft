@@ -36,7 +36,7 @@ final class StartInventoryException extends BaseException
     public static function nothingToCount(): self
     {
         return new static(
-            title: 'There is nothing to count: no stock was found for the chosen scope.',
+            title: 'There is nothing to count: no location holds any article or recipe yet.',
             keyTranslation: 'inventory.nothing.to.count',
             details: []
         );
@@ -48,15 +48,6 @@ final class StartInventoryException extends BaseException
             title: 'There is already an open count. Validate or discard it before starting a new one.',
             keyTranslation: 'inventory.already.open',
             details: ['inventoryId' => $inventoryId]
-        );
-    }
-
-    public static function locationNotFound(string $locationId): self
-    {
-        return new static(
-            title: 'The location does not exist.',
-            keyTranslation: 'pantry.location.not.found',
-            details: ['locationId' => $locationId]
         );
     }
 }

@@ -28,3 +28,8 @@ services:
     class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetLocationCandidatesNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Location\Domain\QueryModel\AssignLocationItemNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineAssignLocationItemNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

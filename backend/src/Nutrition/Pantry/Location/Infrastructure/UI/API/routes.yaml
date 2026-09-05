@@ -42,3 +42,19 @@ get_pantry_location_candidates:
   controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationCandidatesController
   requirements:
     locationId: '[0-9a-fA-F-]{36}'
+
+assign_pantry_location_item:
+  path: /api/v1/nutrition/pantry/locations/{locationId}/items
+  methods: [POST]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\AssignLocationItemController
+  requirements:
+    locationId: '[0-9a-fA-F-]{36}'
+
+release_pantry_location_item:
+  path: /api/v1/nutrition/pantry/locations/{locationId}/items/{kind}/{refId}
+  methods: [DELETE]
+  controller: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\ReleaseLocationItemController
+  requirements:
+    locationId: '[0-9a-fA-F-]{36}'
+    kind: 'article|recipe'
+    refId: '[0-9a-fA-F-]{36}'

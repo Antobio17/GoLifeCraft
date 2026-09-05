@@ -9,7 +9,6 @@ final readonly class StartInventoryCommand implements Command
     public function __construct(
         public string $countedOn,
         public string $shift,
-        public ?string $locationId,
         public string $note,
         public string $startedByUserId,
     ) {

@@ -1,0 +1,26 @@
+label: Pantry location item
+
+fields:
+  locationId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the location holding this article or recipe.
+    filterable: true
+  kind:
+    writable: false
+    enum: [article, recipe]
+    description: >-
+      Whether the placed thing is an article or the cooked servings of a recipe.
+    filterable: true
+  refId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the placed article or recipe, depending on the kind. An article or a recipe sits
+      in a single location, so this appears at most once across every location.
+    filterable: true
+
+relations: {}

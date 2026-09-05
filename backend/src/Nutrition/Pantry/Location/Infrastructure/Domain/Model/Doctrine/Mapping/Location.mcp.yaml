@@ -25,4 +25,11 @@ fields:
       Free note about what the location holds or where it is, for example "Cajón de abajo
       de la nevera".
 
-relations: {}
+relations:
+  items:
+    target: pantry_location_item
+    kind: many
+    foreign_field: locationId
+    writable: false
+    expandable: true
+

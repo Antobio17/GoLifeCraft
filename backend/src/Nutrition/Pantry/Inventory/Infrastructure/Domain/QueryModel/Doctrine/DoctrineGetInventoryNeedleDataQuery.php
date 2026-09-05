@@ -3,9 +3,10 @@
 namespace Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
-use Nutrition\Pantry\Inventory\Domain\Model\InventoryLine;
+use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\GetInventoryResult;
-use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLineView;
+use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationItemView;
+use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationView;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\GetInventoryNeedleDataQuery;
 
 final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventoryNeedleDataQuery
@@ -22,16 +23,13 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 'i.counted_on',
                 'i.shift',
                 'i.status',
-                'i.location_id',
                 'i.note',
                 'i.created_at',
                 'i.updated_at',
                 'i.created_by_user_id',
                 'i.updated_by_user_id',
-                'l.name AS location_name',
             )
             ->from(table: 'inventory', alias: 'i')
-            ->leftJoin(fromAlias: 'i', join: 'pantry_location', alias: 'l', condition: 'l.id = i.location_id')
             ->where('i.id = :inventoryId')
             ->setParameter(key: 'inventoryId', value: $inventoryId)
             ->executeQuery()
@@ -41,7 +39,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
             return null;
         }
 
-        $lines = $this->linesOf(inventoryId: $inventoryId);
+        $locations = $this->locationsOf(inventoryId: $inventoryId);
         $utc = new \DateTimeZone(timezone: 'UTC');
 
         return new GetInventoryResult(
@@ -50,19 +48,12 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
             countedOn: $row['counted_on'],
             shift: $row['shift'],
             status: $row['status'],
-            locationId: $row['location_id'],
-            locationName: $row['location_name'],
             note: (string) ($row['note'] ?? ''),
-            totalLines: count(value: $lines),
-            countedLines: count(value: array_filter(
-                array: $lines,
-                callback: static fn (InventoryLineView $line): bool => null !== $line->countedQuantity,
-            )),
-            adjustedLines: count(value: array_filter(
-                array: $lines,
-                callback: static fn (InventoryLineView $line): bool => null !== $line->countedQuantity && 0.0 !== $line->difference,
-            )),
-            lines: $lines,
+            totalLocations: count(value: $locations),
+            totalItems: self::sum(locations: $locations, field: 'totalItems'),
+            countedItems: self::sum(locations: $locations, field: 'countedItems'),
+            adjustedItems: self::sum(locations: $locations, field: 'adjustedItems'),
+            locations: $locations,
             createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
             createdByUserId: $row['created_by_user_id'],
@@ -71,43 +62,88 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
     }
 
     /**
-     * @return InventoryLineView[]
+     * @return InventoryLocationView[]
      */
-    private function linesOf(string $inventoryId): array
+    private function locationsOf(string $inventoryId): array
     {
+        $itemsByLocation = $this->itemsOf(inventoryId: $inventoryId);
+
         $rows = $this->connection->createQueryBuilder()
             ->select(
-                'li.id',
-                'li.position',
-                'li.kind',
-                'li.ref_id',
-                'li.location_id',
-                'li.name_snapshot',
-                'li.emoji_snapshot',
-                'li.unit',
-                'li.expected_quantity',
-                'li.counted_quantity',
-                'l.name AS location_name',
+                'il.id',
+                'il.position',
+                'il.location_id',
+                'il.name_snapshot',
+                'il.emoji_snapshot',
+                'l.id AS live_location_id',
             )
-            ->from(table: 'inventory_line', alias: 'li')
-            ->leftJoin(fromAlias: 'li', join: 'pantry_location', alias: 'l', condition: 'l.id = li.location_id')
-            ->where('li.inventory_id = :inventoryId')
-            ->orderBy(sort: 'li.position', order: 'ASC')
+            ->from(table: 'inventory_location', alias: 'il')
+            ->leftJoin(fromAlias: 'il', join: 'pantry_location', alias: 'l', condition: 'l.id = il.location_id')
+            ->where('il.inventory_id = :inventoryId')
+            ->orderBy(sort: 'il.position', order: 'ASC')
             ->setParameter(key: 'inventoryId', value: $inventoryId)
             ->executeQuery()
             ->fetchAllAssociative();
 
-        return array_map(callback: static function (array $row): InventoryLineView {
+        return array_map(callback: static function (array $row) use ($itemsByLocation): InventoryLocationView {
+            $items = $itemsByLocation[$row['id']] ?? [];
+
+            return new InventoryLocationView(
+                id: $row['id'],
+                position: (int) $row['position'],
+                locationId: $row['live_location_id'],
+                name: $row['name_snapshot'],
+                emoji: (string) ($row['emoji_snapshot'] ?? ''),
+                totalItems: count(value: $items),
+                countedItems: count(value: array_filter(
+                    array: $items,
+                    callback: static fn (InventoryLocationItemView $item): bool => null !== $item->countedQuantity,
+                )),
+                adjustedItems: count(value: array_filter(
+                    array: $items,
+                    callback: static fn (InventoryLocationItemView $item): bool => null !== $item->countedQuantity && 0.0 !== $item->difference,
+                )),
+                items: $items,
+            );
+        }, array: $rows);
+    }
+
+    /**
+     * @return array<string, InventoryLocationItemView[]>
+     */
+    private function itemsOf(string $inventoryId): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select(
+                'it.id',
+                'it.inventory_location_id',
+                'it.position',
+                'it.kind',
+                'it.ref_id',
+                'it.name_snapshot',
+                'it.emoji_snapshot',
+                'it.unit',
+                'it.expected_quantity',
+                'it.counted_quantity',
+            )
+            ->from(table: 'inventory_location_item', alias: 'it')
+            ->where('it.inventory_id = :inventoryId')
+            ->orderBy(sort: 'it.position', order: 'ASC')
+            ->setParameter(key: 'inventoryId', value: $inventoryId)
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $grouped = [];
+
+        foreach ($rows as $row) {
             $expectedQuantity = (float) $row['expected_quantity'];
             $countedQuantity = null === $row['counted_quantity'] ? null : (float) $row['counted_quantity'];
 
-            return new InventoryLineView(
+            $grouped[$row['inventory_location_id']][] = new InventoryLocationItemView(
                 id: $row['id'],
                 position: (int) $row['position'],
                 kind: $row['kind'],
                 refId: $row['ref_id'],
-                locationId: $row['location_id'],
-                locationName: $row['location_name'],
                 name: $row['name_snapshot'],
                 emoji: (string) ($row['emoji_snapshot'] ?? ''),
                 unit: $row['unit'],
@@ -115,8 +151,21 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 countedQuantity: $countedQuantity,
                 difference: null === $countedQuantity
                     ? 0.0
-                    : round(num: $countedQuantity - $expectedQuantity, precision: InventoryLine::QUANTITY_PRECISION),
+                    : round(num: $countedQuantity - $expectedQuantity, precision: InventoryLocationItem::QUANTITY_PRECISION),
             );
-        }, array: $rows);
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @param InventoryLocationView[] $locations
+     */
+    private static function sum(array $locations, string $field): int
+    {
+        return array_sum(array: array_map(
+            callback: static fn (InventoryLocationView $location): int => $location->{$field},
+            array: $locations,
+        ));
     }
 }

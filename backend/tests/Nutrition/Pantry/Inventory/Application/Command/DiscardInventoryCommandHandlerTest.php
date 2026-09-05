@@ -6,7 +6,7 @@ use Nutrition\Pantry\Inventory\Application\Command\DiscardInventoryCommand;
 use Nutrition\Pantry\Inventory\Application\Command\DiscardInventoryCommandHandler;
 use Nutrition\Pantry\Inventory\Domain\Exception\DiscardInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
-use Nutrition\Pantry\Inventory\Domain\Model\InventoryLine;
+use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
 use Nutrition\Pantry\Inventory\Infrastructure\Domain\Model\InMemory\InMemoryInventoryRepository;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -44,8 +44,8 @@ final class DiscardInventoryCommandHandlerTest extends TestCase
     public function testItKeepsAValidatedCount(): void
     {
         $inventory = $this->givenInventory();
-        $inventory->countLine(
-            lineId: $inventory->lines[0]->id,
+        $inventory->countItem(
+            itemId: $inventory->locations[0]->items[0]->id,
             countedQuantity: 780.0,
             countedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
@@ -76,20 +76,13 @@ final class DiscardInventoryCommandHandlerTest extends TestCase
             id: 'inventory-1',
             countedOn: '2026-09-05',
             shift: Inventory::SHIFT_AFTERNOON,
-            locationId: null,
             note: '',
-            lines: [
-                InventoryLine::plan(
-                    inventoryId: 'inventory-1',
+            locations: [
+                InventoryTestPantry::location(
                     position: 1,
-                    kind: InventoryLine::KIND_ARTICLE,
-                    refId: 'article-1',
-                    locationId: null,
-                    nameSnapshot: 'Arroz',
-                    emojiSnapshot: '🍚',
-                    unit: 'g',
-                    expectedQuantity: 1000.0,
-                    createdByUserId: 'god-user-id',
+                    locationId: 'location-1',
+                    name: 'Nevera',
+                    items: [['article-1', InventoryLocationItem::KIND_ARTICLE, 'Arroz', 'g', 1000.0]],
                     dateTimeGenerator: $this->dateTimeGenerator,
                 ),
             ],

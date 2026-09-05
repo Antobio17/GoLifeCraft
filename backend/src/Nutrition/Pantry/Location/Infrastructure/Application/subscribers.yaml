@@ -1,0 +1,7 @@
+services:
+  Nutrition\Pantry\Location\Application\Subscriber\ReleaseLocationItemOnLocationItemAssigned:
+    class: Nutrition\Pantry\Location\Application\Subscriber\ReleaseLocationItemOnLocationItemAssigned
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.pantry_location.item_assigned' }

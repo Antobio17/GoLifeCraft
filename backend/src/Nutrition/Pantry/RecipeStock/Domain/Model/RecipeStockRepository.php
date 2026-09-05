@@ -8,11 +8,6 @@ interface RecipeStockRepository
 
     public function findByRecipeId(string $recipeId): ?RecipeStock;
 
-    /**
-     * @return RecipeStock[]
-     */
-    public function findByLocationId(string $locationId): array;
-
     public function save(RecipeStock $recipeStock): void;
 
     public function delete(RecipeStock $recipeStock): void;

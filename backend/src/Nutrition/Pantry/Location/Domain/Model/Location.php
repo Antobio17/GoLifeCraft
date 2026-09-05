@@ -5,8 +5,12 @@ namespace Nutrition\Pantry\Location\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Pantry\Location\Domain\Event\LocationCreated;
 use Nutrition\Pantry\Location\Domain\Event\LocationDeleted;
+use Nutrition\Pantry\Location\Domain\Event\LocationItemAssigned;
+use Nutrition\Pantry\Location\Domain\Event\LocationItemReleased;
 use Nutrition\Pantry\Location\Domain\Event\LocationUpdated;
+use Nutrition\Pantry\Location\Domain\Exception\AssignLocationItemException;
 use Nutrition\Pantry\Location\Domain\Exception\CreateLocationException;
+use Nutrition\Pantry\Location\Domain\Exception\ReleaseLocationItemException;
 use Nutrition\Pantry\Location\Domain\Exception\UpdateLocationException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -14,7 +18,6 @@ class Location extends GenericAggregate
 {
     public const int NAME_MAX_LENGTH = 60;
 
-    /** What a location can hold: an article's stock or a recipe's cooked servings. */
     public const string ITEM_ARTICLE = 'article';
     public const string ITEM_RECIPE = 'recipe';
 
@@ -29,6 +32,9 @@ class Location extends GenericAggregate
     public string $name;
     public string $emoji = '';
     public string $description = '';
+
+    /** @var LocationItem[] */
+    public array $items = [];
 
     public static function create(
         string $id,
@@ -109,6 +115,108 @@ class Location extends GenericAggregate
         ));
     }
 
+    public function assign(
+        string $kind,
+        string $refId,
+        ?string $previousLocationId,
+        string $assignedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!in_array(needle: $kind, haystack: self::ITEM_KINDS, strict: true)) {
+            throw AssignLocationItemException::invalidKind(kind: $kind);
+        }
+
+        if (null !== $this->item(kind: $kind, refId: $refId)) {
+            throw AssignLocationItemException::alreadyHere(locationId: $this->id, refId: $refId);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $item = LocationItem::place(
+            locationId: $this->id,
+            kind: $kind,
+            refId: $refId,
+            createdByUserId: $assignedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+
+        $this->items[] = $item;
+        $this->stampUpdate(userId: $assignedByUserId, now: $now);
+
+        $this->record(event: new LocationItemAssigned(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            itemId: $item->id,
+            kind: $kind,
+            refId: $refId,
+            previousLocationId: $previousLocationId,
+            name: $this->name,
+            emoji: $this->emoji,
+            description: $this->description,
+            items: $this->recordedItems(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $assignedByUserId,
+        ));
+    }
+
+    public function release(
+        string $kind,
+        string $refId,
+        string $releasedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $item = $this->item(kind: $kind, refId: $refId);
+
+        if (null === $item) {
+            throw ReleaseLocationItemException::notHere(locationId: $this->id, refId: $refId);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->items = array_values(array: array_filter(
+            array: $this->items,
+            callback: static fn (LocationItem $kept): bool => $kept->id !== $item->id,
+        ));
+        $this->stampUpdate(userId: $releasedByUserId, now: $now);
+
+        $this->record(event: new LocationItemReleased(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            itemId: $item->id,
+            kind: $kind,
+            refId: $refId,
+            name: $this->name,
+            emoji: $this->emoji,
+            description: $this->description,
+            items: $this->recordedItems(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $releasedByUserId,
+        ));
+    }
+
+    public function item(string $kind, string $refId): ?LocationItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->is(kind: $kind, refId: $refId)) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function recordedItems(): array
+    {
+        return LocationItem::snapshotAll(aggregates: $this->items);
+    }
+
     public function delete(
         string $deletedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -122,6 +230,7 @@ class Location extends GenericAggregate
             name: $this->name,
             emoji: $this->emoji,
             description: $this->description,
+            items: $this->recordedItems(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,

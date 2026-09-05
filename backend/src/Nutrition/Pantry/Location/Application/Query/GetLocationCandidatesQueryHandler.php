@@ -22,14 +22,12 @@ final readonly class GetLocationCandidatesQueryHandler
 
         return $this->dataTransform->transform(
             candidates: $this->needleDataQuery->findCandidates(
-                locationId: $query->locationId,
                 pageSize: $query->pageSize,
                 pageNumber: $query->pageNumber,
                 filterName: $query->filterName,
                 filterKind: $query->filterKind,
             ),
             total: $this->needleDataQuery->totalCandidates(
-                locationId: $query->locationId,
                 filterName: $query->filterName,
                 filterKind: $query->filterKind,
             ),

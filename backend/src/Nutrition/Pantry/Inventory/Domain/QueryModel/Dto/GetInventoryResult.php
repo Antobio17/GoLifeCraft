@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryAggregateResult;
 final class GetInventoryResult extends QueryAggregateResult
 {
     /**
-     * @param InventoryLineView[] $lines
+     * @param InventoryLocationView[] $locations
      */
     public function __construct(
         string $id,
@@ -15,13 +15,12 @@ final class GetInventoryResult extends QueryAggregateResult
         public readonly string $countedOn,
         public readonly string $shift,
         public readonly string $status,
-        public readonly ?string $locationId,
-        public readonly ?string $locationName,
         public readonly string $note,
-        public readonly int $totalLines,
-        public readonly int $countedLines,
-        public readonly int $adjustedLines,
-        public readonly array $lines,
+        public readonly int $totalLocations,
+        public readonly int $totalItems,
+        public readonly int $countedItems,
+        public readonly int $adjustedItems,
+        public readonly array $locations,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
         public readonly string $createdByUserId,

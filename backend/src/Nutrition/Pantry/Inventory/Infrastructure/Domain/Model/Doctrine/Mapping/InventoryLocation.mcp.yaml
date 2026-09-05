@@ -1,0 +1,43 @@
+label: Stock count location
+
+fields:
+  inventoryId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the count this location belongs to.
+    filterable: true
+  position:
+    writable: false
+    type: integer
+    description: >-
+      Order of the location inside the count.
+    sortable: true
+  locationId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the pantry location that was walked through. The location itself may have been
+      deleted since; the count keeps its own copy of the name and the emoji.
+    filterable: true
+  nameSnapshot:
+    writable: false
+    max: 255
+    description: >-
+      Name of the location as it was when the count started, kept so the history still reads
+      right after a rename or a deletion.
+  emojiSnapshot:
+    writable: false
+    max: 16
+    description: >-
+      Emoji of the location when the count started.
+
+relations:
+  items:
+    target: inventory_location_item
+    kind: many
+    foreign_field: inventoryLocationId
+    writable: false
+    expandable: true

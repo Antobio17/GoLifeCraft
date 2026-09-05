@@ -4,7 +4,7 @@ namespace Nutrition\Pantry\Inventory\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryDiscarded;
-use Nutrition\Pantry\Inventory\Domain\Event\InventoryLineCounted;
+use Nutrition\Pantry\Inventory\Domain\Event\InventoryItemCounted;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryStarted;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryValidated;
 use Nutrition\Pantry\Inventory\Domain\Exception\CountInventoryException;
@@ -34,22 +34,20 @@ class Inventory extends GenericAggregate
     public string $countedOn;
     public string $shift;
     public string $status;
-    public ?string $locationId = null;
     public string $note = '';
 
-    /** @var InventoryLine[] */
-    public array $lines = [];
+    /** @var InventoryLocation[] */
+    public array $locations = [];
 
     /**
-     * @param InventoryLine[] $lines
+     * @param InventoryLocation[] $locations
      */
     public static function start(
         string $id,
         string $countedOn,
         string $shift,
-        ?string $locationId,
         string $note,
-        array $lines,
+        array $locations,
         string $startedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
@@ -65,7 +63,7 @@ class Inventory extends GenericAggregate
             throw StartInventoryException::invalidNote(maxLength: self::NOTE_MAX_LENGTH);
         }
 
-        if ([] === $lines) {
+        if (!self::holdsSomething(locations: $locations)) {
             throw StartInventoryException::nothingToCount();
         }
 
@@ -76,9 +74,8 @@ class Inventory extends GenericAggregate
         $inventory->countedOn = $countedOn;
         $inventory->shift = $shift;
         $inventory->status = self::STATUS_DRAFT;
-        $inventory->locationId = $locationId;
         $inventory->note = trim(string: $note);
-        $inventory->lines = $lines;
+        $inventory->locations = $locations;
         $inventory->stampCreation(userId: $startedByUserId, now: $now);
 
         $inventory->record(event: new InventoryStarted(
@@ -87,9 +84,8 @@ class Inventory extends GenericAggregate
             countedOn: $inventory->countedOn,
             shift: $inventory->shift,
             status: $inventory->status,
-            locationId: $inventory->locationId,
             note: $inventory->note,
-            lines: $inventory->recordedLines(),
+            locations: $inventory->recordedLocations(),
             createdAt: $inventory->createdAt,
             updatedAt: $inventory->updatedAt,
             createdByUserId: $inventory->createdByUserId,
@@ -99,8 +95,8 @@ class Inventory extends GenericAggregate
         return $inventory;
     }
 
-    public function countLine(
-        string $lineId,
+    public function countItem(
+        string $itemId,
         ?float $countedQuantity,
         string $countedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -109,10 +105,10 @@ class Inventory extends GenericAggregate
             throw CountInventoryException::alreadyValidated(inventoryId: $this->id);
         }
 
-        $line = $this->line(lineId: $lineId);
+        $location = $this->locationHolding(itemId: $itemId);
 
-        if (null === $line) {
-            throw CountInventoryException::lineNotFound(inventoryId: $this->id, lineId: $lineId);
+        if (null === $location) {
+            throw CountInventoryException::itemNotFound(inventoryId: $this->id, itemId: $itemId);
         }
 
         if (null !== $countedQuantity && $countedQuantity < 0.0) {
@@ -120,24 +116,27 @@ class Inventory extends GenericAggregate
         }
 
         $now = $dateTimeGenerator->now();
+        $item = $location->item(itemId: $itemId);
 
-        $line->count(countedQuantity: $countedQuantity, countedByUserId: $countedByUserId, now: $now);
+        $item->count(countedQuantity: $countedQuantity, countedByUserId: $countedByUserId, now: $now);
+        $location->stampUpdate(userId: $countedByUserId, now: $now);
         $this->stampUpdate(userId: $countedByUserId, now: $now);
 
-        $this->record(event: new InventoryLineCounted(
+        $this->record(event: new InventoryItemCounted(
             aggregateId: $this->id,
             occurredOn: $now,
-            lineId: $line->id,
-            kind: $line->kind,
-            refId: $line->refId,
-            expectedQuantity: $line->expectedQuantity,
-            countedQuantity: $line->countedQuantity,
+            itemId: $item->id,
+            inventoryLocationId: $location->id,
+            locationId: $location->locationId,
+            kind: $item->kind,
+            refId: $item->refId,
+            expectedQuantity: $item->expectedQuantity,
+            countedQuantity: $item->countedQuantity,
             countedOn: $this->countedOn,
             shift: $this->shift,
             status: $this->status,
-            locationId: $this->locationId,
             note: $this->note,
-            lines: $this->recordedLines(),
+            locations: $this->recordedLocations(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -153,7 +152,7 @@ class Inventory extends GenericAggregate
             throw ValidateInventoryException::alreadyValidated(inventoryId: $this->id);
         }
 
-        if (!$this->hasCountedLines()) {
+        if (!$this->hasCountedItems()) {
             throw ValidateInventoryException::nothingCounted(inventoryId: $this->id);
         }
 
@@ -168,9 +167,8 @@ class Inventory extends GenericAggregate
             countedOn: $this->countedOn,
             shift: $this->shift,
             status: $this->status,
-            locationId: $this->locationId,
             note: $this->note,
-            lines: $this->recordedLines(),
+            locations: $this->recordedLocations(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -195,9 +193,8 @@ class Inventory extends GenericAggregate
             countedOn: $this->countedOn,
             shift: $this->shift,
             status: $this->status,
-            locationId: $this->locationId,
             note: $this->note,
-            lines: $this->recordedLines(),
+            locations: $this->recordedLocations(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
@@ -213,26 +210,51 @@ class Inventory extends GenericAggregate
     /**
      * @return array<int, array<string, mixed>>
      */
-    public function recordedLines(): array
+    public function recordedLocations(): array
     {
-        return InventoryLine::snapshotAll(aggregates: $this->lines);
+        return InventoryLocation::snapshotAll(aggregates: $this->locations);
     }
 
-    private function line(string $lineId): ?InventoryLine
+    /**
+     * @return InventoryLocationItem[]
+     */
+    public function items(): array
     {
-        foreach ($this->lines as $line) {
-            if ($line->id === $lineId) {
-                return $line;
+        return array_merge(...array_map(
+            callback: static fn (InventoryLocation $location): array => $location->items,
+            array: $this->locations,
+        ));
+    }
+
+    private function locationHolding(string $itemId): ?InventoryLocation
+    {
+        foreach ($this->locations as $location) {
+            if (null !== $location->item(itemId: $itemId)) {
+                return $location;
             }
         }
 
         return null;
     }
 
-    private function hasCountedLines(): bool
+    private function hasCountedItems(): bool
     {
-        foreach ($this->lines as $line) {
-            if ($line->isCounted()) {
+        foreach ($this->locations as $location) {
+            if ($location->hasCountedItems()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param InventoryLocation[] $locations
+     */
+    private static function holdsSomething(array $locations): bool
+    {
+        foreach ($locations as $location) {
+            if ([] !== $location->items) {
                 return true;
             }
         }

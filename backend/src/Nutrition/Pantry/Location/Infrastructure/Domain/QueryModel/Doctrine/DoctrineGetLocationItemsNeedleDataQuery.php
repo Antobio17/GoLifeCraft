@@ -44,18 +44,21 @@ final readonly class DoctrineGetLocationItemsNeedleDataQuery implements GetLocat
     {
         $rows = $this->connection->createQueryBuilder()
             ->select(
-                's.id',
-                's.article_id AS ref_id',
-                's.quantity',
+                'i.id',
+                'i.ref_id',
                 'a.name',
                 'a.emoji',
                 'a.base_unit',
+                's.quantity',
             )
-            ->from(table: 'article_stock', alias: 's')
-            ->innerJoin(fromAlias: 's', join: 'article', alias: 'a', condition: 'a.id = s.article_id')
-            ->where('s.location_id = :locationId')
+            ->from(table: 'location_item', alias: 'i')
+            ->innerJoin(fromAlias: 'i', join: 'article', alias: 'a', condition: 'a.id = i.ref_id')
+            ->leftJoin(fromAlias: 'i', join: 'article_stock', alias: 's', condition: 's.article_id = i.ref_id')
+            ->where('i.location_id = :locationId')
+            ->andWhere('i.kind = :kind')
             ->orderBy(sort: 'a.name', order: 'ASC')
             ->setParameter(key: 'locationId', value: $locationId)
+            ->setParameter(key: 'kind', value: Location::ITEM_ARTICLE)
             ->executeQuery()
             ->fetchAllAssociative();
 
@@ -68,7 +71,7 @@ final readonly class DoctrineGetLocationItemsNeedleDataQuery implements GetLocat
                 name: $row['name'],
                 emoji: (string) ($row['emoji'] ?? ''),
                 unit: (string) ($row['base_unit'] ?? 'g'),
-                quantity: (float) $row['quantity'],
+                quantity: (float) ($row['quantity'] ?? 0.0),
             );
         }, array: $rows);
     }
@@ -80,17 +83,20 @@ final readonly class DoctrineGetLocationItemsNeedleDataQuery implements GetLocat
     {
         $rows = $this->connection->createQueryBuilder()
             ->select(
-                's.id',
-                's.recipe_id AS ref_id',
-                's.servings AS quantity',
+                'i.id',
+                'i.ref_id',
                 'r.name',
                 'r.emoji',
+                's.servings AS quantity',
             )
-            ->from(table: 'recipe_stock', alias: 's')
-            ->innerJoin(fromAlias: 's', join: 'recipe', alias: 'r', condition: 'r.id = s.recipe_id')
-            ->where('s.location_id = :locationId')
+            ->from(table: 'location_item', alias: 'i')
+            ->innerJoin(fromAlias: 'i', join: 'recipe', alias: 'r', condition: 'r.id = i.ref_id')
+            ->leftJoin(fromAlias: 'i', join: 'recipe_stock', alias: 's', condition: 's.recipe_id = i.ref_id')
+            ->where('i.location_id = :locationId')
+            ->andWhere('i.kind = :kind')
             ->orderBy(sort: 'r.name', order: 'ASC')
             ->setParameter(key: 'locationId', value: $locationId)
+            ->setParameter(key: 'kind', value: Location::ITEM_RECIPE)
             ->executeQuery()
             ->fetchAllAssociative();
 
@@ -103,7 +109,7 @@ final readonly class DoctrineGetLocationItemsNeedleDataQuery implements GetLocat
                 name: $row['name'],
                 emoji: (string) ($row['emoji'] ?? ''),
                 unit: self::RECIPE_UNIT,
-                quantity: (float) $row['quantity'],
+                quantity: (float) ($row['quantity'] ?? 0.0),
             );
         }, array: $rows);
     }

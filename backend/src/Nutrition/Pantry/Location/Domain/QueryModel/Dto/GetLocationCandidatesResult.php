@@ -15,8 +15,6 @@ final class GetLocationCandidatesResult extends QueryAggregateResult
         public readonly string $emoji,
         public readonly string $unit,
         public readonly float $quantity,
-        public readonly ?string $locationId,
-        public readonly ?string $locationName,
     ) {
         parent::__construct(id: $id, aggregateName: $aggregateName);
     }

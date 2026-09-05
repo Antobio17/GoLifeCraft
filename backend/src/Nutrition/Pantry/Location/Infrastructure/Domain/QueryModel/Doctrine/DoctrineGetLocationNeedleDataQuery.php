@@ -24,8 +24,8 @@ final readonly class DoctrineGetLocationNeedleDataQuery implements GetLocationNe
                 'l.updated_at',
                 'l.created_by_user_id',
                 'l.updated_by_user_id',
-                '(SELECT COUNT(*) FROM article_stock s WHERE s.location_id = l.id) AS article_count',
-                '(SELECT COUNT(*) FROM recipe_stock r WHERE r.location_id = l.id) AS recipe_count',
+                "(SELECT COUNT(*) FROM location_item i WHERE i.location_id = l.id AND i.kind = 'article') AS article_count",
+                "(SELECT COUNT(*) FROM location_item i WHERE i.location_id = l.id AND i.kind = 'recipe') AS recipe_count",
             )
             ->from(table: 'pantry_location', alias: 'l')
             ->where('l.id = :locationId')

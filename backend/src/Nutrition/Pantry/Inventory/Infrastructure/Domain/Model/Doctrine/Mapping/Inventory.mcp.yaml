@@ -22,13 +22,6 @@ fields:
       "draft" while the count is being filled in, "validated" once it has been applied and
       became history. Validating overwrites the stock with the counted quantities.
     filterable: true
-  locationId:
-    writable: false
-    min: 36
-    max: 36
-    description: >-
-      Location the count was limited to. Empty when the whole pantry was counted.
-    filterable: true
   note:
     writable: false
     max: 255
@@ -36,8 +29,8 @@ fields:
       Free note written while counting, for example "faltaba el cajón del congelador".
 
 relations:
-  lines:
-    target: inventory_line
+  locations:
+    target: inventory_location
     kind: many
     foreign_field: inventoryId
     writable: false

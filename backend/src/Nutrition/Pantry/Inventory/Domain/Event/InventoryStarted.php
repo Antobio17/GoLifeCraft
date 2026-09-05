@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class InventoryStarted extends DomainEvent
 {
     /**
-     * @param array<int, array<string, mixed>> $lines
+     * @param array<int, array<string, mixed>> $locations
      */
     public function __construct(
         string $aggregateId,
@@ -15,9 +15,8 @@ final readonly class InventoryStarted extends DomainEvent
         public string $countedOn,
         public string $shift,
         public string $status,
-        public ?string $locationId,
         public string $note,
-        public array $lines,
+        public array $locations,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,
