@@ -82,7 +82,7 @@
       "articles": "Articles",
       "recipes": "Recipes"
     },
-    "hint": "An article or a recipe can only sit in one location. Bringing one over moves it.",
+    "hint": "An article or a recipe can only sit in one location. The search only lists what is not placed yet.",
     "edit": "Edit location",
     "back": "Back to locations",
     "kind": {
@@ -101,10 +101,8 @@
       "search": "Search article or recipe...",
       "clear": "Clear",
       "add": "Add",
-      "move": "Move here",
-      "placedIn": "In {location}",
       "emptyTitle": "No results",
-      "emptyText": "No article or recipe matches the search"
+      "emptyText": "Nothing unplaced matches the search. What already sits elsewhere has to be removed from there first"
     }
   }
 }

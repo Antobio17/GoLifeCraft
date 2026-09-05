@@ -5,12 +5,11 @@ export interface InventoryAttributes {
   countedOn: string;
   shift: InventoryShift;
   status: InventoryStatus;
-  locationId: string | null;
-  locationName: string | null;
   note: string;
-  totalLines: number;
-  countedLines: number;
-  adjustedLines: number;
+  totalLocations: number;
+  totalItems: number;
+  countedItems: number;
+  adjustedItems: number;
   createdAt: string;
   updatedAt: string;
   createdByUserId: string;

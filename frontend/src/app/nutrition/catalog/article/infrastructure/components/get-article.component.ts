@@ -12,7 +12,9 @@ import {
 import { GetArticleService } from "@nutrition/catalog/article/application/services/get-article.service";
 import { DeleteArticleService } from "@nutrition/catalog/article/application/services/delete-article.service";
 import { UpdateArticleStockService } from "@nutrition/pantry/stock/application/services/update-article-stock.service";
-import { MoveArticleStockService } from "@nutrition/pantry/stock/application/services/move-article-stock.service";
+import { AssignPantryLocationItemService } from "@nutrition/pantry/location/application/services/assign-pantry-location-item.service";
+import { ReleasePantryLocationItemService } from "@nutrition/pantry/location/application/services/release-pantry-location-item.service";
+import { PantryLocationItemKind } from "@nutrition/pantry/location/domain/models/pantry-location-item-kind.model";
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
 import { PantryLocation } from "@nutrition/pantry/location/domain/models/pantry-location.model";
 import { StockViewService } from "@nutrition/pantry/stock/application/services/stock-view.service";
@@ -99,7 +101,8 @@ export class GetArticleComponent {
   private getArticleService = inject(GetArticleService);
   private deleteArticleService = inject(DeleteArticleService);
   private updateArticleStockService = inject(UpdateArticleStockService);
-  private moveArticleStockService = inject(MoveArticleStockService);
+  private assignItemService = inject(AssignPantryLocationItemService);
+  private releaseItemService = inject(ReleasePantryLocationItemService);
   private getPantryLocationsService = inject(GetPantryLocationsService);
   private translationService = inject(TranslationService);
   private stockView = inject(StockViewService);
@@ -212,6 +215,7 @@ export class GetArticleComponent {
         const detail = response ? this.view.toDetail(response.data) : null;
         this.article.set(response?.data ?? null);
         this.detail.set(detail);
+        this.stockLocationId.set(detail?.stockLocationId ?? "");
         this.stock.set(
           null === detail
             ? null
@@ -252,7 +256,6 @@ export class GetArticleComponent {
 
     this.stockDraftMode.set(StockUnitMode.Pack);
     this.stockDraft.set(this.draftText(stock.packs));
-    this.stockLocationId.set(this.detail()?.stockLocationId ?? "");
     this.showStockEditor.set(true);
     this.loadLocations();
   }
@@ -261,18 +264,31 @@ export class GetArticleComponent {
     if (this.movingStock()) return;
 
     const previous = this.stockLocationId();
+
+    if (locationId === previous) return;
+
     this.stockLocationId.set(locationId);
     this.movingStock.set(true);
 
-    this.moveArticleStockService
-      .moveArticleStock(this.id(), { locationId: locationId || null })
-      .subscribe({
-        next: () => this.movingStock.set(false),
-        error: () => {
-          this.stockLocationId.set(previous);
-          this.movingStock.set(false);
-        },
-      });
+    const placed =
+      "" === locationId
+        ? this.releaseItemService.releasePantryLocationItem(
+            previous,
+            PantryLocationItemKind.ARTICLE,
+            this.id(),
+          )
+        : this.assignItemService.assignPantryLocationItem(locationId, {
+            kind: PantryLocationItemKind.ARTICLE,
+            refId: this.id(),
+          });
+
+    placed.subscribe({
+      next: () => this.movingStock.set(false),
+      error: () => {
+        this.stockLocationId.set(previous);
+        this.movingStock.set(false);
+      },
+    });
   }
 
   onCloseStockEditor(): void {

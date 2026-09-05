@@ -24,15 +24,17 @@ import { NumberInputComponent } from "@shared/design-system/number-input/infrast
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { GetInventoryService } from "@nutrition/pantry/inventory/application/services/get-inventory.service";
-import { CountInventoryLineService } from "@nutrition/pantry/inventory/application/services/count-inventory-line.service";
+import { CountInventoryItemService } from "@nutrition/pantry/inventory/application/services/count-inventory-item.service";
 import { ValidateInventoryService } from "@nutrition/pantry/inventory/application/services/validate-inventory.service";
 import { DiscardInventoryService } from "@nutrition/pantry/inventory/application/services/discard-inventory.service";
 import { InventoryViewService } from "@nutrition/pantry/inventory/application/services/inventory-view.service";
 import { InventoryDetailAttributes } from "../../domain/models/inventory-detail-attributes.model";
-import { InventoryLine } from "../../domain/models/inventory-line.model";
-import { InventoryLineRow } from "../../domain/models/inventory-line-row.model";
+import { InventoryLocation } from "../../domain/models/inventory-location.model";
+import { InventoryLocationGroup } from "../../domain/models/inventory-location-group.model";
+import { InventoryItemRow } from "../../domain/models/inventory-item-row.model";
 import { InventoryStatus } from "../../domain/models/inventory-status.model";
 
 @Component({
@@ -56,13 +58,14 @@ import { InventoryStatus } from "../../domain/models/inventory-status.model";
     NoteComponent,
     EmptyStateComponent,
     SkeletonComponent,
+    SectionHeaderComponent,
     ConfirmActionModalComponent,
   ],
 })
 export class GetInventoryComponent {
   private translationService = inject(TranslationService);
   private getInventoryService = inject(GetInventoryService);
-  private countInventoryLineService = inject(CountInventoryLineService);
+  private countInventoryItemService = inject(CountInventoryItemService);
   private validateInventoryService = inject(ValidateInventoryService);
   private discardInventoryService = inject(DiscardInventoryService);
   private inventoryView = inject(InventoryViewService);
@@ -98,8 +101,11 @@ export class GetInventoryComponent {
     return this.t(this.inventoryView.statusKey(attributes.status));
   });
 
-  locationLabel = computed(
-    () => this.attributes()?.locationName ?? this.t("getInventory.wholePantry"),
+  locationsLabel = computed(() =>
+    this.t("getInventory.locationsCounted").replace(
+      "{count}",
+      String(this.attributes()?.totalLocations ?? 0),
+    ),
   );
 
   progressLabel = computed(() => {
@@ -107,12 +113,12 @@ export class GetInventoryComponent {
 
     if (null === attributes) return "";
 
-    return `${attributes.countedLines}/${attributes.totalLines}`;
+    return `${attributes.countedItems}/${attributes.totalItems}`;
   });
 
-  rows = computed<InventoryLineRow[]>(() =>
-    (this.attributes()?.lines ?? []).map((line) =>
-      this.inventoryView.rowOf(line, (quantity, unit) =>
+  groups = computed<InventoryLocationGroup[]>(() =>
+    (this.attributes()?.locations ?? []).map((location) =>
+      this.inventoryView.groupOf(location, (quantity, unit) =>
         this.t("getInventory.expected")
           .replace("{quantity}", quantity)
           .replace("{unit}", unit),
@@ -136,7 +142,7 @@ export class GetInventoryComponent {
             .loadModuleTranslations(this.MODULE_PATH)
             .then(() => {
               this.attributes.set(response.data.attributes);
-              this.buildForm(response.data.attributes.lines);
+              this.buildForm(response.data.attributes.locations);
               this.loading.set(false);
             });
         },
@@ -148,11 +154,11 @@ export class GetInventoryComponent {
     return this.translationService.translate(key, this.MODULE_PATH);
   }
 
-  onClear(row: InventoryLineRow): void {
-    this.form().controls[row.line.id]?.setValue(row.line.expectedQuantity, {
+  onClear(row: InventoryItemRow): void {
+    this.form().controls[row.item.id]?.setValue(row.item.expectedQuantity, {
       emitEvent: false,
     });
-    this.save(row.line.id, null);
+    this.save(row.item.id, null);
   }
 
   onValidate(): void {
@@ -195,12 +201,12 @@ export class GetInventoryComponent {
     this.router.navigate(["/inventory"]);
   }
 
-  private buildForm(lines: InventoryLine[]): void {
+  private buildForm(locations: InventoryLocation[]): void {
     const group = new FormGroup({});
 
-    for (const line of lines) {
+    for (const item of locations.flatMap((location) => location.items)) {
       const control = new FormControl<number>(
-        line.countedQuantity ?? line.expectedQuantity,
+        item.countedQuantity ?? item.expectedQuantity,
         { nonNullable: true },
       );
 
@@ -214,17 +220,17 @@ export class GetInventoryComponent {
           distinctUntilChanged(),
           takeUntilDestroyed(this.destroyRef),
         )
-        .subscribe((value) => this.save(line.id, value));
+        .subscribe((value) => this.save(item.id, value));
 
-      group.addControl(line.id, control);
+      group.addControl(item.id, control);
     }
 
     this.form.set(group);
   }
 
-  private save(lineId: string, countedQuantity: number | null): void {
-    this.countInventoryLineService
-      .countInventoryLine(this.id(), lineId, { countedQuantity })
+  private save(itemId: string, countedQuantity: number | null): void {
+    this.countInventoryItemService
+      .countInventoryItem(this.id(), itemId, { countedQuantity })
       .subscribe({
         next: () => this.refresh(),
       });

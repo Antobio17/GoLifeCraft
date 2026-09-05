@@ -82,7 +82,7 @@
       "articles": "Artículos",
       "recipes": "Recetas"
     },
-    "hint": "Un artículo o una receta solo puede estar en una ubicación. Si lo traes de otra, se mueve.",
+    "hint": "Un artículo o una receta solo puede estar en una ubicación. El buscador solo muestra lo que aún no está en ninguna.",
     "edit": "Editar ubicación",
     "back": "Volver a ubicaciones",
     "kind": {
@@ -101,10 +101,8 @@
       "search": "Buscar artículo o receta...",
       "clear": "Limpiar",
       "add": "Añadir",
-      "move": "Reubicar aquí",
-      "placedIn": "En {location}",
       "emptyTitle": "Sin resultados",
-      "emptyText": "No hay artículos ni recetas que encajen con la búsqueda"
+      "emptyText": "Nada sin ubicar encaja con la búsqueda. Lo que ya está en otro sitio hay que quitarlo de allí antes"
     }
   }
 }

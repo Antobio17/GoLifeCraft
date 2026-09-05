@@ -5,7 +5,8 @@ import { CreateArticleProviders } from "../providers/create-article.providers";
 import { UpdateArticleProviders } from "../providers/update-article.providers";
 import { DeleteArticleProviders } from "../providers/delete-article.providers";
 import { UpdateArticleStockProviders } from "@nutrition/pantry/stock/infrastructure/providers/update-article-stock.providers";
-import { MoveArticleStockProviders } from "@nutrition/pantry/stock/infrastructure/providers/move-article-stock.providers";
+import { AssignPantryLocationItemProviders } from "@nutrition/pantry/location/infrastructure/providers/assign-pantry-location-item.providers";
+import { ReleasePantryLocationItemProviders } from "@nutrition/pantry/location/infrastructure/providers/release-pantry-location-item.providers";
 import { GetPantryLocationsProviders } from "@nutrition/pantry/location/infrastructure/providers/get-pantry-locations.providers";
 import { GetCategoriesProviders } from "@nutrition/catalog/category/infrastructure/providers/get-categories.providers";
 import { GetSupermarketsProviders } from "@nutrition/catalog/supermarket/infrastructure/providers/get-supermarkets.providers";
@@ -24,7 +25,8 @@ export const ARTICLE_ROUTES: Routes = [
       ...UpdateArticleProviders.getProviders(),
       ...DeleteArticleProviders.getProviders(),
       ...UpdateArticleStockProviders.getProviders(),
-      ...MoveArticleStockProviders.getProviders(),
+      ...AssignPantryLocationItemProviders.getProviders(),
+      ...ReleasePantryLocationItemProviders.getProviders(),
       ...GetPantryLocationsProviders.getProviders(),
       ...GetCategoriesProviders.getProviders(),
       ...GetSupermarketsProviders.getProviders(),
