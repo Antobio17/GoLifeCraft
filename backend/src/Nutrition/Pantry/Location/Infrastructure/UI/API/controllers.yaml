@@ -33,3 +33,17 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationItemsController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationItemsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationCandidatesController:
+    class: Nutrition\Pantry\Location\Infrastructure\UI\API\Controller\GetLocationCandidatesController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

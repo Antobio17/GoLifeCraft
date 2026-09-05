@@ -17,7 +17,8 @@
     },
     "actions": {
       "edit": "Editar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "view": "Ver"
     },
     "deleteTitle": "Eliminar ubicación",
     "deleteBody": "Vas a eliminar la ubicación",
@@ -72,7 +73,38 @@
     "breadcrumb": {
       "list": "Ubicaciones",
       "create": "Nueva ubicación",
-      "edit": "Editar ubicación"
+      "edit": "Editar ubicación",
+      "detail": "Ubicación"
+    }
+  },
+  "getPantryLocation": {
+    "stat": {
+      "articles": "Artículos",
+      "recipes": "Recetas"
+    },
+    "hint": "Un artículo o una receta solo puede estar en una ubicación. Si lo traes de otra, se mueve.",
+    "edit": "Editar ubicación",
+    "back": "Volver a ubicaciones",
+    "kind": {
+      "all": "Todo",
+      "articles": "Artículos",
+      "recipes": "Recetas"
+    },
+    "contents": {
+      "title": "Contenido",
+      "remove": "Quitar",
+      "emptyTitle": "Aquí no hay nada todavía",
+      "emptyText": "Busca abajo lo que guardas en este sitio y añádelo"
+    },
+    "candidates": {
+      "title": "Añadir a esta ubicación",
+      "search": "Buscar artículo o receta...",
+      "clear": "Limpiar",
+      "add": "Añadir",
+      "move": "Reubicar aquí",
+      "placedIn": "En {location}",
+      "emptyTitle": "Sin resultados",
+      "emptyText": "No hay artículos ni recetas que encajen con la búsqueda"
     }
   }
 }

@@ -1,0 +1,175 @@
+<ds-page-wrapper>
+  @if (loading()) {
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
+      <ng-container slot="side">
+        <ds-skeleton height="16rem" />
+      </ng-container>
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-skeleton height="4rem" />
+        <ds-skeleton height="4rem" delay="0.1s" />
+        <ds-skeleton height="4rem" delay="0.2s" />
+      </ds-stack>
+    </ds-split-view>
+  }
+
+  @if (!loading() && attributes(); as location) {
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
+      <ng-container slot="side">
+        <ds-card [gap]="'var(--ds-space-4)'">
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            <ds-heading [level]="2" size="lg">{{ title() }}</ds-heading>
+            @if (location.description) {
+              <ds-text variant="muted">{{ location.description }}</ds-text>
+            }
+          </ds-stack>
+
+          <ds-stack direction="row" [gap]="'var(--ds-space-4)'" [wrap]="true">
+            <ds-stat
+              [value]="articleCount()"
+              [label]="'getPantryLocation.stat.articles' | t"
+            />
+            <ds-stat
+              [value]="recipeCount()"
+              [label]="'getPantryLocation.stat.recipes' | t"
+            />
+          </ds-stack>
+
+          <ds-note>{{ "getPantryLocation.hint" | t }}</ds-note>
+
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            <ds-button variant="soft" [fullWidth]="true" (clicked)="onEdit()">
+              {{ "getPantryLocation.edit" | t }}
+            </ds-button>
+            <ds-button variant="ghost" [fullWidth]="true" (clicked)="back()">
+              {{ "getPantryLocation.back" | t }}
+            </ds-button>
+          </ds-stack>
+        </ds-card>
+      </ng-container>
+
+      <ds-stack [gap]="'var(--ds-space-4)'">
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="'getPantryLocation.contents.title' | t"
+            [staticLabel]="itemRows().length.toString()"
+          />
+
+          @if (itemRows().length === 0) {
+            <ds-empty-state
+              icon="package"
+              [title]="'getPantryLocation.contents.emptyTitle' | t"
+              [text]="'getPantryLocation.contents.emptyText' | t"
+            />
+          }
+
+          @for (row of itemRows(); track row.item.id) {
+            <ds-card
+              variant="inset"
+              [padding]="'var(--ds-space-3)'"
+              [gap]="'var(--ds-space-2)'"
+            >
+              <ds-stack
+                direction="row"
+                justify="between"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+                [wrap]="true"
+              >
+                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                  <ds-text variant="strong">{{ row.title }}</ds-text>
+                  <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
+                </ds-stack>
+
+                <ds-button
+                  variant="ghost"
+                  size="sm"
+                  icon="close"
+                  [disabled]="moving()"
+                  (clicked)="onRemove(row)"
+                >
+                  {{ "getPantryLocation.contents.remove" | t }}
+                </ds-button>
+              </ds-stack>
+            </ds-card>
+          }
+        </ds-stack>
+
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="'getPantryLocation.candidates.title' | t"
+          />
+
+          <ds-search-input
+            [placeholder]="'getPantryLocation.candidates.search' | t"
+            [clearLabel]="'getPantryLocation.candidates.clear' | t"
+            (searched)="onSearch($event)"
+          />
+
+          <ds-segmented-toggle
+            [options]="kindOptions()"
+            [ngModel]="kind()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onKind($event)"
+          />
+
+          @if (candidateRows().length === 0) {
+            <ds-empty-state
+              icon="search"
+              [title]="'getPantryLocation.candidates.emptyTitle' | t"
+              [text]="'getPantryLocation.candidates.emptyText' | t"
+            />
+          }
+
+          @if (candidateRows().length > 0) {
+            <ds-stack class="candidates" [gap]="'var(--ds-space-2)'">
+              @for (row of candidateRows(); track row.candidate.id) {
+                <ds-card
+                  variant="inset"
+                  [padding]="'var(--ds-space-3)'"
+                  [gap]="'var(--ds-space-2)'"
+                >
+                  <ds-stack
+                    direction="row"
+                    justify="between"
+                    align="center"
+                    [gap]="'var(--ds-space-3)'"
+                    [wrap]="true"
+                  >
+                    <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                      <ds-text variant="strong">{{ row.title }}</ds-text>
+                      <ds-stack
+                        direction="row"
+                        align="center"
+                        [gap]="'var(--ds-space-2)'"
+                        [wrap]="true"
+                      >
+                        <ds-text variant="meta">{{
+                          row.quantityLabel
+                        }}</ds-text>
+                        @if (row.placed) {
+                          <ds-chip tone="warning">{{
+                            row.placedLabel
+                          }}</ds-chip>
+                        }
+                      </ds-stack>
+                    </ds-stack>
+
+                    <ds-button
+                      [variant]="row.placed ? 'outline' : 'soft'"
+                      size="sm"
+                      [icon]="row.placed ? 'repeat' : 'plus'"
+                      [disabled]="moving()"
+                      (clicked)="onPlace(row)"
+                    >
+                      {{ row.actionLabel }}
+                    </ds-button>
+                  </ds-stack>
+                </ds-card>
+              }
+            </ds-stack>
+          }
+        </ds-stack>
+      </ds-stack>
+    </ds-split-view>
+  }
+</ds-page-wrapper>

@@ -18,3 +18,13 @@ services:
     class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetLocationNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Location\Domain\QueryModel\GetLocationItemsNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetLocationItemsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Location\Domain\QueryModel\GetLocationCandidatesNeedleDataQuery:
+    class: Nutrition\Pantry\Location\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetLocationCandidatesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
