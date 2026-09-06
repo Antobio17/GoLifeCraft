@@ -30,13 +30,12 @@
   "createPantryLocation": {
     "title": "New location",
     "description": "A place at home where you keep food",
-    "section": {
-      "general": "General information"
-    },
     "field": {
       "name": "Name",
+      "namePlaceholder": "Fridge, freezer, pantry...",
       "locationDescription": "Description",
       "descriptionHint": "Optional: where it is or what you keep there",
+      "descriptionPlaceholder": "In the kitchen, under the sink...",
       "emoji": "Icon",
       "emojiSheetTitle": "Pick an icon",
       "emojiClose": "Close",
@@ -44,20 +43,19 @@
       "emojiSearch": "Search icon...",
       "emojiEmpty": "No results."
     },
-    "cancel": "Cancel",
     "save": "Save",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "back": "Back to locations"
   },
   "updatePantryLocation": {
     "title": "Edit location",
     "description": "Change the location details",
-    "section": {
-      "general": "General information"
-    },
     "field": {
       "name": "Name",
+      "namePlaceholder": "Fridge, freezer, pantry...",
       "locationDescription": "Description",
       "descriptionHint": "Optional: where it is or what you keep there",
+      "descriptionPlaceholder": "In the kitchen, under the sink...",
       "emoji": "Icon",
       "emojiSheetTitle": "Pick an icon",
       "emojiClose": "Close",
@@ -65,9 +63,9 @@
       "emojiSearch": "Search icon...",
       "emojiEmpty": "No results."
     },
-    "cancel": "Cancel",
     "save": "Save",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "back": "Back to locations"
   },
   "pantryLocation": {
     "breadcrumb": {

@@ -23,24 +23,21 @@
   "startInventory": {
     "title": "Nuevo recuento",
     "description": "Se congela el stock actual como punto de partida y lo vas corrigiendo",
-    "section": {
-      "when": "Cuándo",
-      "scope": "Qué cuentas"
-    },
     "field": {
       "countedOn": "Fecha",
       "shift": "Turno",
       "shiftHint": "A qué momento del día corresponde lo que estás contando",
       "note": "Nota",
-      "noteHint": "Opcional: algo que quieras recordar de este recuento"
+      "noteHint": "Opcional: algo que quieras recordar de este recuento",
+      "notePlaceholder": "Recuento del sábado, tras la compra..."
     },
     "scope": {
       "willCount": "Se contarán {count} de tus {total} ubicaciones: las que ahora mismo guardan algo."
     },
     "explanation": "Al validar, el stock pasa a ser exactamente lo que hayas contado. Lo que dejes sin contar no se toca.",
-    "cancel": "Cancelar",
     "save": "Empezar recuento",
-    "saving": "Creando..."
+    "saving": "Creando...",
+    "back": "Volver al inventario"
   },
   "getInventory": {
     "locationGone": "Ya no existe",

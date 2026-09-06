@@ -1,68 +1,72 @@
-<ds-page-wrapper [maxWidth]="'45rem'" [gap]="'var(--ds-space-6)'">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <ds-section-page-wrapper
-      [title]="'startInventory.title' | t"
-      [description]="'startInventory.description' | t"
-      [loading]="loading()"
-      [skeletonRows]="3"
-      [skeletonFieldsPerRow]="1"
-      [showBackButton]="true"
-      [icon]="'package'"
-      (backClicked)="cancel()"
-    >
-      <ds-form-section
-        [title]="'startInventory.section.when' | t"
-        [icon]="ICONS['CALENDAR']"
-      >
-        <ds-stack [gap]="'var(--ds-space-4)'">
-          <ds-field
-            [label]="'startInventory.field.countedOn' | t"
-            [required]="true"
-          >
-            <ds-date-input formControlName="countedOn" />
-          </ds-field>
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-5)'">
+  <ds-screen-header
+    [leading]="'close'"
+    [leadingLabel]="'startInventory.back' | t"
+    [title]="'startInventory.title' | t"
+    [subtitle]="'startInventory.description' | t"
+    (leadingClick)="cancel()"
+  />
 
-          <ds-field
-            [label]="'startInventory.field.shift' | t"
-            [hint]="'startInventory.field.shiftHint' | t"
-            [required]="true"
-          >
-            <ds-segmented-toggle
-              formControlName="shift"
-              [options]="shiftOptions()"
-            />
-          </ds-field>
-        </ds-stack>
-      </ds-form-section>
+  @if (loading()) {
+    <ds-skeleton-fields [rows]="[1, 1, 1]" />
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <ds-stack [gap]="'var(--ds-space-5)'">
+        <ds-field
+          [label]="'startInventory.field.countedOn' | t"
+          [required]="true"
+        >
+          <ds-date-input formControlName="countedOn" />
+        </ds-field>
 
-      <ds-form-section
-        [title]="'startInventory.section.scope' | t"
-        [icon]="ICONS['LOCATION']"
-      >
-        <ds-stack [gap]="'var(--ds-space-4)'">
-          <ds-note [tone]="hasNothingToCount() ? 'warning' : 'info'">{{
-            scopeLabel()
-          }}</ds-note>
+        <ds-field
+          [label]="'startInventory.field.shift' | t"
+          [hint]="'startInventory.field.shiftHint' | t"
+          [hintIcon]="true"
+          [required]="true"
+        >
+          <ds-segmented-toggle
+            formControlName="shift"
+            [options]="shiftOptions()"
+          />
+        </ds-field>
 
-          <ds-form-input
-            [label]="'startInventory.field.note' | t"
-            [hint]="'startInventory.field.noteHint' | t"
-            [maxLength]="255"
+        <ds-note
+          [icon]="hasNothingToCount() ? 'alertCircle' : 'package'"
+          [tone]="hasNothingToCount() ? 'warning' : 'info'"
+        >
+          {{ scopeLabel() }}
+        </ds-note>
+
+        <ds-field
+          [label]="'startInventory.field.note' | t"
+          [hint]="'startInventory.field.noteHint' | t"
+          [hintIcon]="true"
+        >
+          <ds-text-input
+            variant="outlined"
             formControlName="note"
-          ></ds-form-input>
+            [maxLength]="255"
+            [placeholder]="'startInventory.field.notePlaceholder' | t"
+          />
+        </ds-field>
 
-          <ds-note>{{ "startInventory.explanation" | t }}</ds-note>
-        </ds-stack>
-      </ds-form-section>
-    </ds-section-page-wrapper>
+        <ds-note>{{ "startInventory.explanation" | t }}</ds-note>
 
-    <ds-form-actions
-      [cancelLabel]="'startInventory.cancel' | t"
-      [submitLabel]="'startInventory.save' | t"
-      [savingLabel]="'startInventory.saving' | t"
-      [saving]="saving()"
-      [formInvalid]="form.invalid || hasNothingToCount()"
-      (cancelled)="cancel()"
-    ></ds-form-actions>
-  </form>
+        <ds-button
+          type="submit"
+          variant="soft"
+          [fullWidth]="true"
+          [loading]="saving()"
+          [disabled]="saving() || hasNothingToCount()"
+        >
+          {{
+            saving()
+              ? ("startInventory.saving" | t)
+              : ("startInventory.save" | t)
+          }}
+        </ds-button>
+      </ds-stack>
+    </form>
+  }
 </ds-page-wrapper>

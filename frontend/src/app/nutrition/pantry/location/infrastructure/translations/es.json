@@ -30,13 +30,12 @@
   "createPantryLocation": {
     "title": "Nueva ubicación",
     "description": "Un sitio de casa donde guardas comida",
-    "section": {
-      "general": "Información general"
-    },
     "field": {
       "name": "Nombre",
+      "namePlaceholder": "Nevera, congelador, despensa...",
       "locationDescription": "Descripción",
       "descriptionHint": "Opcional: dónde está o qué guardas ahí",
+      "descriptionPlaceholder": "En la cocina, debajo del fregadero...",
       "emoji": "Icono",
       "emojiSheetTitle": "Elige un icono",
       "emojiClose": "Cerrar",
@@ -44,20 +43,19 @@
       "emojiSearch": "Buscar icono...",
       "emojiEmpty": "Sin resultados."
     },
-    "cancel": "Cancelar",
     "save": "Guardar",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "back": "Volver a ubicaciones"
   },
   "updatePantryLocation": {
     "title": "Editar ubicación",
     "description": "Modifica los datos de la ubicación",
-    "section": {
-      "general": "Información general"
-    },
     "field": {
       "name": "Nombre",
+      "namePlaceholder": "Nevera, congelador, despensa...",
       "locationDescription": "Descripción",
       "descriptionHint": "Opcional: dónde está o qué guardas ahí",
+      "descriptionPlaceholder": "En la cocina, debajo del fregadero...",
       "emoji": "Icono",
       "emojiSheetTitle": "Elige un icono",
       "emojiClose": "Cerrar",
@@ -65,9 +63,9 @@
       "emojiSearch": "Buscar icono...",
       "emojiEmpty": "Sin resultados."
     },
-    "cancel": "Cancelar",
     "save": "Guardar",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "back": "Volver a ubicaciones"
   },
   "pantryLocation": {
     "breadcrumb": {

@@ -1,20 +1,18 @@
-<ds-page-wrapper [maxWidth]="'45rem'" [gap]="'var(--ds-space-6)'">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <ds-section-page-wrapper
-      [title]="'updatePantryLocation.title' | t"
-      [description]="'updatePantryLocation.description' | t"
-      [loading]="loading()"
-      [skeletonRows]="2"
-      [skeletonFieldsPerRow]="1"
-      [showBackButton]="true"
-      [icon]="'package'"
-      (backClicked)="cancel()"
-    >
-      <ds-form-section
-        [title]="'updatePantryLocation.section.general' | t"
-        [icon]="ICONS['LOCATION']"
-      >
-        <ds-stack [gap]="'var(--ds-space-4)'">
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-5)'">
+  <ds-screen-header
+    [leading]="'close'"
+    [leadingLabel]="'updatePantryLocation.back' | t"
+    [title]="'updatePantryLocation.title' | t"
+    [subtitle]="'updatePantryLocation.description' | t"
+    (leadingClick)="cancel()"
+  />
+
+  @if (loading()) {
+    <ds-skeleton-fields [rows]="[1, 1, 1]" />
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <ds-stack [gap]="'var(--ds-space-5)'">
+        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
           <ds-field [label]="'updatePantryLocation.field.emoji' | t">
             <ds-emoji-picker
               formControlName="emoji"
@@ -28,30 +26,49 @@
             />
           </ds-field>
 
-          <ds-form-input
+          <ds-field
+            [grow]="true"
             [label]="'updatePantryLocation.field.name' | t"
-            [showRequired]="true"
-            [maxLength]="60"
-            formControlName="name"
-          ></ds-form-input>
-
-          <ds-form-input
-            [label]="'updatePantryLocation.field.locationDescription' | t"
-            [hint]="'updatePantryLocation.field.descriptionHint' | t"
-            [maxLength]="255"
-            formControlName="description"
-          ></ds-form-input>
+            [required]="true"
+          >
+            <ds-text-input
+              variant="outlined"
+              formControlName="name"
+              [maxLength]="60"
+              [placeholder]="'updatePantryLocation.field.namePlaceholder' | t"
+            />
+          </ds-field>
         </ds-stack>
-      </ds-form-section>
-    </ds-section-page-wrapper>
 
-    <ds-form-actions
-      [cancelLabel]="'updatePantryLocation.cancel' | t"
-      [submitLabel]="'updatePantryLocation.save' | t"
-      [savingLabel]="'updatePantryLocation.saving' | t"
-      [saving]="saving()"
-      [formInvalid]="form.invalid"
-      (cancelled)="cancel()"
-    ></ds-form-actions>
-  </form>
+        <ds-field
+          [label]="'updatePantryLocation.field.locationDescription' | t"
+          [hint]="'updatePantryLocation.field.descriptionHint' | t"
+          [hintIcon]="true"
+        >
+          <ds-text-input
+            variant="outlined"
+            formControlName="description"
+            [maxLength]="255"
+            [placeholder]="
+              'updatePantryLocation.field.descriptionPlaceholder' | t
+            "
+          />
+        </ds-field>
+
+        <ds-button
+          type="submit"
+          variant="soft"
+          [fullWidth]="true"
+          [loading]="saving()"
+          [disabled]="saving()"
+        >
+          {{
+            saving()
+              ? ("updatePantryLocation.saving" | t)
+              : ("updatePantryLocation.save" | t)
+          }}
+        </ds-button>
+      </ds-stack>
+    </form>
+  }
 </ds-page-wrapper>

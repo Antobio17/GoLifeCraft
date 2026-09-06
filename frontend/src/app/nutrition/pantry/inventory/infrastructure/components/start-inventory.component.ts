@@ -4,25 +4,23 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  FormsModule,
   ReactiveFormsModule,
 } from "@angular/forms";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
-import { SectionPageWrapperComponent } from "@shared/design-system/section-page-wrapper/infrastructure/components/section-page-wrapper.component";
-import { FormActionsComponent } from "@shared/design-system/form-actions/infrastructure/components/form-actions.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { FormSectionComponent } from "@shared/design-system/form-section/infrastructure/components/form-section.component";
-import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
 import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
 import {
   SegmentedOption,
   SegmentedToggleComponent,
 } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
-import { FORM_SECTION_ICONS } from "@shared/design-system/form-section/constants/form-section-icons.constants";
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
 import { StartInventoryService } from "@nutrition/pantry/inventory/application/services/start-inventory.service";
 import { PantryLocation } from "@nutrition/pantry/location/domain/models/pantry-location.model";
@@ -32,19 +30,18 @@ import { InventoryShift } from "../../domain/models/inventory-shift.model";
   selector: "app-start-inventory",
   templateUrl: "./start-inventory.component.html",
   imports: [
-    FormsModule,
     ReactiveFormsModule,
     ContextualTranslatePipe,
-    FormSectionComponent,
-    FormInputComponent,
+    PageWrapperComponent,
+    ScreenHeaderComponent,
     FieldComponent,
     StackComponent,
+    TextInputComponent,
+    ButtonComponent,
     DateInputComponent,
     SegmentedToggleComponent,
     NoteComponent,
-    PageWrapperComponent,
-    SectionPageWrapperComponent,
-    FormActionsComponent,
+    SkeletonFieldsComponent,
   ],
 })
 export class StartInventoryComponent implements OnInit {
@@ -55,7 +52,6 @@ export class StartInventoryComponent implements OnInit {
   private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/pantry/inventory";
-  readonly ICONS = FORM_SECTION_ICONS;
 
   form: FormGroup;
   loading = signal(true);
