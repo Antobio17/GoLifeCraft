@@ -23,9 +23,7 @@
               [gap]="'var(--ds-space-2)'"
               [wrap]="true"
             >
-              <ds-heading [level]="2" size="lg">{{
-                inventory.countedOn
-              }}</ds-heading>
+              <ds-heading [level]="2" size="lg">{{ dateLabel() }}</ds-heading>
               <ds-chip tone="brand">{{ shiftLabel() }}</ds-chip>
               <ds-chip [tone]="isDraft() ? 'warning' : 'accent'">{{
                 statusLabel()

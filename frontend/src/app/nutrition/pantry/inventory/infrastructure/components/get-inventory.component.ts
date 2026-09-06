@@ -85,6 +85,14 @@ export class GetInventoryComponent {
 
   isDraft = computed(() => InventoryStatus.DRAFT === this.attributes()?.status);
 
+  dateLabel = computed(() => {
+    const attributes = this.attributes();
+
+    if (null === attributes) return "";
+
+    return this.inventoryView.dateLabel(attributes.countedOn);
+  });
+
   shiftLabel = computed(() => {
     const attributes = this.attributes();
 

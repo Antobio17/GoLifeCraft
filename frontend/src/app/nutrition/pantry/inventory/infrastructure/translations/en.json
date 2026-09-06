@@ -23,24 +23,21 @@
   "startInventory": {
     "title": "New count",
     "description": "The current stock is frozen as the starting point and you correct it as you go",
-    "section": {
-      "when": "When",
-      "scope": "What you count"
-    },
     "field": {
       "countedOn": "Date",
       "shift": "Shift",
       "shiftHint": "Which part of the day the numbers describe",
       "note": "Note",
-      "noteHint": "Optional: anything worth remembering about this count"
+      "noteHint": "Optional: anything worth remembering about this count",
+      "notePlaceholder": "Saturday count, after the shop..."
     },
     "scope": {
       "willCount": "{count} of your {total} locations will be counted: the ones holding something right now."
     },
     "explanation": "On validation the stock becomes exactly what you counted. Whatever you leave uncounted is left untouched.",
-    "cancel": "Cancel",
     "save": "Start count",
-    "saving": "Creating..."
+    "saving": "Creating...",
+    "back": "Back to inventory"
   },
   "getInventory": {
     "locationGone": "No longer exists",
