@@ -1,54 +1,133 @@
-<ds-page-wrapper>
-  @if (loading()) {
-    <ds-skeleton-page-header
-      [showIcon]="false"
-      [showTag]="false"
-      [subtitleLines]="1"
-      [showAction]="true"
-    ></ds-skeleton-page-header>
-  }
-
-  @if (!loading()) {
-    <ds-page-header
-      [title]="'getInventories.title' | t"
-      [subtitle]="'getInventories.subtitle' | t"
-    >
-      <ds-button
-        slot="actions"
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [ariaLabel]="'getInventories.new' | t"
-        (clicked)="onStart()"
-      />
-    </ds-page-header>
-  }
-
-  <ds-list-filters
-    [fields]="filterFields()"
-    [loading]="loading()"
-    (filtersApplied)="onFiltersApplied($event)"
-    (filtersCleared)="onFiltersCleared()"
-  />
-
-  <ds-list-table
-    [items]="items()"
-    [columns]="columns()"
-    [actions]="actions()"
-    [loading]="loading()"
-    [emptyTitle]="'getInventories.table.emptyTitle' | t"
-    [emptyMessage]="'getInventories.table.emptyMessage' | t"
-    (actionClick)="onAction($event)"
-  />
-
-  @if (!loading() && items().length > 0) {
-    <ds-pagination
-      [currentPage]="currentPage()"
-      [pageSize]="pageSize()"
-      [totalItems]="totalItems()"
-      (pageChange)="goToPage($event)"
-      (pageSizeChange)="onPageSizeChange($event)"
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+  <ds-screen-header
+    [title]="'getInventories.title' | t"
+    [subtitle]="headerSubtitle()"
+  >
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="'getInventories.new' | t"
+      (clicked)="onStart()"
     />
+  </ds-screen-header>
+
+  @if (loading()) {
+    <ds-skeleton-filters [search]="false" [selects]="2" />
+    <ng-container
+      [ngTemplateOutlet]="inventorySkeleton"
+      [ngTemplateOutletContext]="{ $implicit: 4 }"
+    />
+  } @else {
+    <ds-stack direction="row" [gap]="'var(--ds-space-1-5)'">
+      <ds-select
+        [fluid]="true"
+        [placeholder]="'getInventories.filter.allShifts' | t"
+        [options]="shiftOptions()"
+        [ngModel]="selectedShift()"
+        (ngModelChange)="onShiftChange($event)"
+      />
+      <ds-select
+        [fluid]="true"
+        [placeholder]="'getInventories.filter.allStatuses' | t"
+        [options]="statusOptions()"
+        [ngModel]="selectedStatus()"
+        (ngModelChange)="onStatusChange($event)"
+      />
+    </ds-stack>
+
+    @if (reloading()) {
+      <ng-container
+        [ngTemplateOutlet]="inventorySkeleton"
+        [ngTemplateOutletContext]="{ $implicit: 4 }"
+      />
+    } @else if (rows().length === 0) {
+      @if (selectedShift() || selectedStatus()) {
+        <ds-text variant="muted">
+          {{ "getInventories.noResultsFilters" | t }}
+        </ds-text>
+      } @else {
+        <ds-empty-state
+          icon="history"
+          [title]="'getInventories.empty.title' | t"
+          [text]="'getInventories.empty.text' | t"
+        />
+      }
+    } @else {
+      <ds-grid
+        dsReveal="children"
+        [minColumn]="'16.25rem'"
+        [tabletColumns]="2"
+        [gap]="'var(--ds-space-2)'"
+      >
+        @for (row of rows(); track row.id) {
+          <ds-card
+            [interactive]="true"
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'var(--ds-space-3)'"
+            (activated)="onOpen(row.id)"
+          >
+            <ds-stack
+              direction="row"
+              align="start"
+              justify="between"
+              [gap]="'var(--ds-space-2)'"
+            >
+              <ds-stack [gap]="'2px'">
+                <ds-heading [level]="3" size="md">
+                  {{ row.dateLabel }}
+                </ds-heading>
+                <ds-text variant="meta">{{ row.metaLabel }}</ds-text>
+              </ds-stack>
+
+              <ds-chip [tone]="row.validated ? 'brand' : 'warning'">
+                {{ row.statusLabel }}
+              </ds-chip>
+            </ds-stack>
+
+            <ds-progress-bar [value]="row.progressPercent" />
+
+            <ds-stack direction="row" [gap]="'var(--ds-space-3)'" [wrap]="true">
+              <ds-meta-item icon="check">{{ row.countedLabel }}</ds-meta-item>
+              <ds-meta-item icon="alertCircle">
+                {{ row.adjustedLabel }}
+              </ds-meta-item>
+            </ds-stack>
+          </ds-card>
+        }
+      </ds-grid>
+
+      @if (loadingMore()) {
+        <ng-container
+          [ngTemplateOutlet]="inventorySkeleton"
+          [ngTemplateOutletContext]="{ $implicit: 2 }"
+        />
+      }
+
+      <ds-infinite-scroll
+        [disabled]="loadingMore() || !hasMore()"
+        (reached)="loadMore()"
+      />
+    }
   }
 </ds-page-wrapper>
+
+<ng-template #inventorySkeleton let-count>
+  <ds-skeleton-list
+    [count]="count"
+    [columns]="null"
+    minColumn="16.25rem"
+    [tabletColumns]="2"
+    [gap]="'var(--ds-space-2)'"
+    radius="var(--ds-radius-xl)"
+    padding="var(--ds-space-3)"
+    [alignTop]="true"
+    titleWidth="52%"
+    metaWidth="44%"
+    headTrailing="4.5rem"
+    [progress]="true"
+    [footItems]="2"
+  />
+</ng-template>

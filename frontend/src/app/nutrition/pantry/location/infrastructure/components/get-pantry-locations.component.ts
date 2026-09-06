@@ -1,21 +1,27 @@
 import { Component, computed, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { NgTemplateOutlet } from "@angular/common";
 import { Observable } from "rxjs";
-import { SkeletonPageHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-page-header.component";
-import { PaginationComponent } from "@shared/design-system/pagination/infrastructure/components/pagination.component";
-import { ListTableComponent } from "@shared/design-system/list-table/infrastructure/components/list-table.component";
-import {
-  ListAction,
-  ListActionEvent,
-  ListCellClickEvent,
-  ListColumn,
-} from "@shared/design-system/list-table/domain/models/list-table.model";
-import { ListFiltersComponent } from "@shared/design-system/list-filters/infrastructure/components/list-filters.component";
-import { FilterField } from "@shared/design-system/list-filters/domain/models/list-filters.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
-import { PageHeaderComponent } from "@shared/design-system/page-header/infrastructure/components/page-header.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
+import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
+import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { MetaItemComponent } from "@shared/design-system/meta-item/infrastructure/components/meta-item.component";
+import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
+import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -23,30 +29,49 @@ import {
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
 import { DeletePantryLocationService } from "@nutrition/pantry/location/application/services/delete-pantry-location.service";
 import { PantryLocation } from "../../domain/models/pantry-location.model";
+import { PantryLocationRow } from "../../domain/models/pantry-location-row.model";
 
 @Component({
   selector: "app-get-pantry-locations",
   templateUrl: "./get-pantry-locations.component.html",
   imports: [
-    PaginationComponent,
-    ListTableComponent,
-    ListFiltersComponent,
+    NgTemplateOutlet,
+    RevealDirective,
     ContextualTranslatePipe,
-    ButtonComponent,
-    SkeletonPageHeaderComponent,
     PageWrapperComponent,
-    PageHeaderComponent,
+    ScreenHeaderComponent,
+    SearchInputComponent,
+    StackComponent,
+    GridComponent,
+    CardComponent,
+    HeadingComponent,
+    TextComponent,
+    ButtonComponent,
+    IconButtonComponent,
+    PressableComponent,
+    EmojiTileComponent,
+    MetaItemComponent,
+    EmptyStateComponent,
+    SkeletonListComponent,
+    SkeletonFiltersComponent,
+    InfiniteScrollComponent,
     ConfirmActionModalComponent,
   ],
 })
 export class GetPantryLocationsComponent extends AbstractListPageComponent<PantryLocation> {
+  private static readonly PAGE_SIZE = 20;
+
   private getPantryLocationsService = inject(GetPantryLocationsService);
   private deletePantryLocationService = inject(DeletePantryLocationService);
 
   protected readonly modulePath = "nutrition/pantry/location";
   protected readonly storageKey = "pageSize_pantryLocations";
+  protected override readonly appendsPages = true;
 
-  filterName = "";
+  searchQuery = signal("");
+
+  reloading = signal(false);
+  loadingMore = signal(false);
 
   showDeleteModal = signal(false);
   deleting = signal(false);
@@ -56,64 +81,21 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
     () => this.locationToDelete()?.attributes.name ?? "",
   );
 
-  filterFields = computed<FilterField[]>(() => [
-    {
-      key: "name",
-      label: this.t("getPantryLocations.filter.name"),
-      type: "text",
-      placeholder: this.t("getPantryLocations.filter.namePlaceholder"),
-    },
-  ]);
+  hasMore = computed(() => this.items().length < this.totalItems());
 
-  columns = computed<ListColumn<PantryLocation>[]>(() => [
-    {
-      key: "name",
-      label: this.t("getPantryLocations.table.name"),
-      value: (item) =>
-        `${item.attributes.emoji} ${item.attributes.name}`.trim(),
-      width: "1.4fr",
-      minWidth: "200px",
-      cardPrimary: true,
-      link: () => true,
-    },
-    {
-      key: "description",
-      label: this.t("getPantryLocations.table.description"),
-      value: (item) => item.attributes.description,
-      width: "1.6fr",
-      minWidth: "200px",
-    },
-    {
-      key: "content",
-      label: this.t("getPantryLocations.table.content"),
-      value: (item) =>
-        `${item.attributes.articleCount} · ${item.attributes.recipeCount}`,
-      width: "0.8fr",
-      minWidth: "120px",
-      cardLabel: this.t("getPantryLocations.table.contentCard"),
-    },
-  ]);
+  headerSubtitle = computed(
+    () =>
+      `${this.totalItems()} ${this.t("getPantryLocations.stats.locations")}`,
+  );
 
-  actions = computed<ListAction<PantryLocation>[]>(() => [
-    {
-      key: "view",
-      label: this.t("getPantryLocations.actions.view"),
-      icon: "view",
-    },
-    {
-      key: "edit",
-      label: this.t("getPantryLocations.actions.edit"),
-      icon: "edit",
-    },
-    {
-      key: "delete",
-      label: this.t("getPantryLocations.actions.delete"),
-      icon: "delete",
-      danger: true,
-    },
-  ]);
+  rows = computed<PantryLocationRow[]>(() =>
+    this.items().map((location) => this.toRow(location)),
+  );
 
-  protected configureList(): void {}
+  protected configureList(): void {
+    this.currentPage.set(1);
+    this.pageSize.set(GetPantryLocationsComponent.PAGE_SIZE);
+  }
 
   protected fetch(
     page: number,
@@ -122,48 +104,62 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
     return this.getPantryLocationsService.getPantryLocations(
       page,
       pageSize,
-      this.filterName || undefined,
+      this.searchQuery().trim() || undefined,
     );
   }
 
-  protected override applyFilters(
-    values: Record<string, string | boolean>,
-  ): void {
-    this.filterName = (values["name"] as string) || "";
-  }
-
-  protected override clearFilters(): void {
-    this.filterName = "";
-  }
-
   protected override captureFilters(): Record<string, string> {
-    return { name: this.filterName };
+    return { search: this.searchQuery() };
   }
 
   protected override restoreFilters(filters: Record<string, string>): void {
-    this.filterName = filters["name"] ?? "";
+    this.searchQuery.set(filters["search"] ?? "");
+  }
+
+  loadMore(): void {
+    if (
+      this.loading() ||
+      this.loadingMore() ||
+      this.reloading() ||
+      !this.hasMore()
+    )
+      return;
+
+    const nextPage = this.currentPage() + 1;
+    this.loadingMore.set(true);
+
+    this.fetch(nextPage, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.currentPage.set(nextPage);
+          this.items.update((current) => [...current, ...response.data]);
+          this.totalItems.set(response.meta.total);
+          this.loadingMore.set(false);
+        },
+        error: () => this.loadingMore.set(false),
+      });
+  }
+
+  onSearch(query: string): void {
+    this.searchQuery.set(query);
+    this.reload();
   }
 
   onCreate(): void {
     this.router.navigate(["/locations", "create"]);
   }
 
-  onCell({ row }: ListCellClickEvent<PantryLocation>): void {
-    this.router.navigate(["/locations", row.id]);
+  onOpen(id: string): void {
+    this.router.navigate(["/locations", id]);
   }
 
-  onAction({ key, row }: ListActionEvent<PantryLocation>): void {
-    if (key === "view") {
-      this.router.navigate(["/locations", row.id]);
-      return;
-    }
+  onEdit(id: string): void {
+    this.router.navigate(["/locations", id, "edit"]);
+  }
 
-    if (key === "edit") {
-      this.router.navigate(["/locations", row.id, "edit"]);
-      return;
-    }
-
-    this.locationToDelete.set(row);
+  onDelete(location: PantryLocation): void {
+    this.locationToDelete.set(location);
     this.showDeleteModal.set(true);
   }
 
@@ -186,12 +182,43 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
           this.deleting.set(false);
           this.showDeleteModal.set(false);
           this.locationToDelete.set(null);
-          this.load();
+          this.reload();
         },
         error: () => {
           this.deleting.set(false);
           this.showDeleteModal.set(false);
         },
       });
+  }
+
+  private reload(): void {
+    this.currentPage.set(1);
+    this.reloading.set(true);
+
+    this.fetch(1, this.pageSize())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.items.set(response.data);
+          this.totalItems.set(response.meta.total);
+          this.reloading.set(false);
+        },
+        error: () => this.reloading.set(false),
+      });
+  }
+
+  private toRow(location: PantryLocation): PantryLocationRow {
+    const { name, emoji, description, articleCount, recipeCount } =
+      location.attributes;
+
+    return {
+      location,
+      id: location.id,
+      name,
+      emoji,
+      description,
+      articlesLabel: `${articleCount} ${this.t("getPantryLocations.card.articles")}`,
+      recipesLabel: `${recipeCount} ${this.t("getPantryLocations.card.recipes")}`,
+    };
   }
 }

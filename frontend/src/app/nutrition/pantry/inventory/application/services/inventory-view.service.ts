@@ -15,6 +15,19 @@ export class InventoryViewService {
     return `inventoryStatus.${status}`;
   }
 
+  dateLabel(countedOn: string): string {
+    const [year, month, day] = countedOn.slice(0, 10).split("-").map(Number);
+    const date = new Date(year, month - 1, day);
+
+    if (Number.isNaN(date.getTime())) return countedOn;
+
+    return date.toLocaleDateString(undefined, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    });
+  }
+
   groupOf(
     location: InventoryLocation,
     expectedLabel: (quantity: string, unit: string) => string,

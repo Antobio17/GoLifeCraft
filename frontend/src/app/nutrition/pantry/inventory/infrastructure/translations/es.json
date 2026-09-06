@@ -1,26 +1,23 @@
 {
   "getInventories": {
     "title": "Inventario",
-    "subtitle": "Historial de recuentos de la despensa",
     "new": "Nuevo recuento",
+    "stats": {
+      "counts": "recuentos"
+    },
     "filter": {
-      "shift": "Turno",
       "allShifts": "Todos los turnos",
-      "status": "Estado",
       "allStatuses": "Todos los estados"
     },
-    "table": {
-      "countedOn": "Fecha",
-      "shift": "Turno",
-      "locations": "Ubicaciones",
-      "counted": "Contados",
-      "adjusted": "Ajustados",
-      "status": "Estado",
-      "emptyTitle": "Todavía no has hecho ningún recuento",
-      "emptyMessage": "Empieza uno para cuadrar el stock con lo que hay de verdad en casa"
+    "noResultsFilters": "Ningún recuento coincide con los filtros",
+    "card": {
+      "locations": "{{count}} ubicaciones",
+      "counted": "{{counted}}/{{total}} contados",
+      "adjusted": "{{count}} con diferencia"
     },
-    "actions": {
-      "view": "Ver"
+    "empty": {
+      "title": "Todavía no has hecho ningún recuento",
+      "text": "Empieza uno para cuadrar el stock con lo que hay de verdad en casa"
     }
   },
   "startInventory": {

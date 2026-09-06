@@ -1,24 +1,24 @@
 {
   "getPantryLocations": {
     "title": "Locations",
-    "subtitle": "Where you keep each thing at home",
     "new": "New location",
-    "filter": {
-      "name": "Name",
-      "namePlaceholder": "Search by name..."
+    "stats": {
+      "locations": "locations"
     },
-    "table": {
-      "name": "Location",
-      "description": "Description",
-      "content": "Articles · Recipes",
-      "contentCard": "Articles · Recipes",
-      "emptyTitle": "No locations yet",
-      "emptyMessage": "Create the fridge, the freezer or the pantry to start organising your stock"
+    "searchPlaceholder": "Search location...",
+    "searchClear": "Clear",
+    "noResults": "No location matches",
+    "card": {
+      "articles": "articles",
+      "recipes": "recipes"
+    },
+    "empty": {
+      "title": "No locations yet",
+      "text": "Create the fridge, the freezer or the pantry to start organising your stock"
     },
     "actions": {
       "edit": "Edit",
-      "delete": "Delete",
-      "view": "View"
+      "delete": "Delete"
     },
     "deleteTitle": "Delete location",
     "deleteBody": "You are about to delete the location",
