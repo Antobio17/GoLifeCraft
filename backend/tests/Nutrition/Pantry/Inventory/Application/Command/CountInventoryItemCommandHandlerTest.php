@@ -4,6 +4,7 @@ namespace App\Tests\Nutrition\Pantry\Inventory\Application\Command;
 
 use Nutrition\Pantry\Inventory\Application\Command\CountInventoryItemCommand;
 use Nutrition\Pantry\Inventory\Application\Command\CountInventoryItemCommandHandler;
+use Nutrition\Pantry\Inventory\Domain\Event\InventoryItemCounted;
 use Nutrition\Pantry\Inventory\Domain\Exception\CountInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
 use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
@@ -63,6 +64,48 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             expected: 6.0,
             actual: $this->inventoryRepository->findById(id: 'inventory-1')->locations[1]->items[0]->countedQuantity,
         );
+    }
+
+    public function testItRecordsOnlyTheCountedItemAndItsLocation(): void
+    {
+        $inventory = $this->inventoryRepository->findById(id: 'inventory-1');
+
+        ($this->handler)(new CountInventoryItemCommand(
+            inventoryId: 'inventory-1',
+            itemId: $this->itemId,
+            countedQuantity: 780.0,
+            countedByUserId: 'god-user-id',
+        ));
+
+        $events = array_values(array: array_filter(
+            array: $inventory->pullDomainEvents(),
+            callback: static fn (object $event): bool => $event instanceof InventoryItemCounted,
+        ));
+
+        $this->assertSame(expected: $this->itemId, actual: $events[0]->itemId);
+        $this->assertSame(expected: 'Arroz', actual: $events[0]->nameSnapshot);
+        $this->assertSame(expected: 1000.0, actual: $events[0]->expectedQuantity);
+        $this->assertSame(expected: 780.0, actual: $events[0]->countedQuantity);
+        $this->assertSame(expected: 'location-1', actual: $events[0]->locationId);
+        $this->assertSame(expected: 'Nevera', actual: $events[0]->locationNameSnapshot);
+        $this->assertSame(expected: Inventory::STATUS_DRAFT, actual: $events[0]->status);
+    }
+
+    public function testItLeavesEveryOtherItemAlone(): void
+    {
+        ($this->handler)(new CountInventoryItemCommand(
+            inventoryId: 'inventory-1',
+            itemId: $this->itemId,
+            countedQuantity: 780.0,
+            countedByUserId: 'god-user-id',
+        ));
+
+        $inventory = $this->inventoryRepository->findById(id: 'inventory-1');
+
+        $this->assertCount(expectedCount: 3, haystack: $inventory->items());
+        $this->assertSame(expected: 780.0, actual: $inventory->locations[0]->items[0]->countedQuantity);
+        $this->assertNull(actual: $inventory->locations[0]->items[1]->countedQuantity);
+        $this->assertNull(actual: $inventory->locations[1]->items[0]->countedQuantity);
     }
 
     public function testItClearsACountWhenTheQuantityIsDroppedAgain(): void
@@ -143,7 +186,10 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
                     position: 1,
                     locationId: 'location-1',
                     name: 'Nevera',
-                    items: [['article-1', InventoryLocationItem::KIND_ARTICLE, 'Arroz', 'g', 1000.0]],
+                    items: [
+                        ['article-1', InventoryLocationItem::KIND_ARTICLE, 'Arroz', 'g', 1000.0],
+                        ['article-2', InventoryLocationItem::KIND_ARTICLE, 'Leche', 'ml', 500.0],
+                    ],
                     dateTimeGenerator: $this->dateTimeGenerator,
                 ),
                 InventoryTestPantry::location(

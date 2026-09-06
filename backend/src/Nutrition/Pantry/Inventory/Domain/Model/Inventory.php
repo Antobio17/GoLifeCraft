@@ -119,24 +119,29 @@ class Inventory extends GenericAggregate
         $item = $location->item(itemId: $itemId);
 
         $item->count(countedQuantity: $countedQuantity, countedByUserId: $countedByUserId, now: $now);
-        $location->stampUpdate(userId: $countedByUserId, now: $now);
         $this->stampUpdate(userId: $countedByUserId, now: $now);
 
         $this->record(event: new InventoryItemCounted(
             aggregateId: $this->id,
             occurredOn: $now,
             itemId: $item->id,
-            inventoryLocationId: $location->id,
-            locationId: $location->locationId,
+            itemPosition: $item->position,
             kind: $item->kind,
             refId: $item->refId,
+            nameSnapshot: $item->nameSnapshot,
+            emojiSnapshot: $item->emojiSnapshot,
+            unit: $item->unit,
             expectedQuantity: $item->expectedQuantity,
             countedQuantity: $item->countedQuantity,
+            inventoryLocationId: $location->id,
+            locationPosition: $location->position,
+            locationId: $location->locationId,
+            locationNameSnapshot: $location->nameSnapshot,
+            locationEmojiSnapshot: $location->emojiSnapshot,
             countedOn: $this->countedOn,
             shift: $this->shift,
             status: $this->status,
             note: $this->note,
-            locations: $this->recordedLocations(),
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,

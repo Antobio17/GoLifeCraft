@@ -6,24 +6,27 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
 final readonly class InventoryItemCounted extends DomainEvent
 {
-    /**
-     * @param array<int, array<string, mixed>> $locations
-     */
     public function __construct(
         string $aggregateId,
         \DateTime $occurredOn,
         public string $itemId,
-        public string $inventoryLocationId,
-        public string $locationId,
+        public int $itemPosition,
         public string $kind,
         public string $refId,
+        public string $nameSnapshot,
+        public string $emojiSnapshot,
+        public string $unit,
         public float $expectedQuantity,
         public ?float $countedQuantity,
+        public string $inventoryLocationId,
+        public int $locationPosition,
+        public string $locationId,
+        public string $locationNameSnapshot,
+        public string $locationEmojiSnapshot,
         public string $countedOn,
         public string $shift,
         public string $status,
         public string $note,
-        public array $locations,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,
