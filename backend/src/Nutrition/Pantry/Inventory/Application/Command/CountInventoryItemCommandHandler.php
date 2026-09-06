@@ -18,7 +18,10 @@ final readonly class CountInventoryItemCommandHandler
 
     public function __invoke(CountInventoryItemCommand $command): void
     {
-        $inventory = $this->inventoryRepository->findById(id: $command->inventoryId);
+        $inventory = $this->inventoryRepository->findByIdWithItem(
+            id: $command->inventoryId,
+            itemId: $command->itemId,
+        );
 
         if (null === $inventory) {
             throw CountInventoryException::notFound(inventoryId: $command->inventoryId);

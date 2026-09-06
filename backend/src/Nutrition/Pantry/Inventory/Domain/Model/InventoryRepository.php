@@ -8,6 +8,8 @@ interface InventoryRepository
 
     public function findById(string $id): ?Inventory;
 
+    public function findByIdWithItem(string $id, string $itemId): ?Inventory;
+
     public function save(Inventory $inventory): void;
 
     public function delete(Inventory $inventory): void;

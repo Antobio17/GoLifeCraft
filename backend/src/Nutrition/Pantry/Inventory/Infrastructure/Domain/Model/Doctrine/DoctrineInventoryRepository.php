@@ -36,6 +36,19 @@ final class DoctrineInventoryRepository extends EntityRepository implements Inve
         return $inventory;
     }
 
+    public function findByIdWithItem(string $id, string $itemId): ?Inventory
+    {
+        $inventory = $this->find($id);
+
+        if (null === $inventory) {
+            return null;
+        }
+
+        $inventory->locations = $this->locationHoldingItem(inventoryId: $id, itemId: $itemId);
+
+        return $inventory;
+    }
+
     public function save(Inventory $inventory): void
     {
         $entityManager = $this->getEntityManager();
@@ -64,6 +77,39 @@ final class DoctrineInventoryRepository extends EntityRepository implements Inve
         }
 
         $entityManager->remove(object: $inventory);
+    }
+
+    /**
+     * @return InventoryLocation[]
+     */
+    private function locationHoldingItem(string $inventoryId, string $itemId): array
+    {
+        $item = $this->getEntityManager()->createQueryBuilder()
+            ->select('item')
+            ->from(from: InventoryLocationItem::class, alias: 'item')
+            ->where('item.id = :itemId')
+            ->andWhere('item.inventoryId = :inventoryId')
+            ->setParameter(key: 'itemId', value: $itemId)
+            ->setParameter(key: 'inventoryId', value: $inventoryId)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (null === $item) {
+            return [];
+        }
+
+        $location = $this->getEntityManager()->find(
+            className: InventoryLocation::class,
+            id: $item->inventoryLocationId,
+        );
+
+        if (null === $location) {
+            return [];
+        }
+
+        $location->items = [$item];
+
+        return [$location];
     }
 
     /**

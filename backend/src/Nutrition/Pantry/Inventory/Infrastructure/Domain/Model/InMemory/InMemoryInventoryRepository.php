@@ -28,6 +28,11 @@ final class InMemoryInventoryRepository implements InventoryRepository
         return null;
     }
 
+    public function findByIdWithItem(string $id, string $itemId): ?Inventory
+    {
+        return $this->findById(id: $id);
+    }
+
     public function save(Inventory $inventory): void
     {
         foreach ($this->inventories as $key => $existing) {
