@@ -1,26 +1,23 @@
 {
   "getInventories": {
     "title": "Inventory",
-    "subtitle": "History of your pantry counts",
     "new": "New count",
+    "stats": {
+      "counts": "counts"
+    },
     "filter": {
-      "shift": "Shift",
       "allShifts": "All shifts",
-      "status": "Status",
       "allStatuses": "All statuses"
     },
-    "table": {
-      "countedOn": "Date",
-      "shift": "Shift",
-      "locations": "Locations",
-      "counted": "Counted",
-      "adjusted": "Adjusted",
-      "status": "Status",
-      "emptyTitle": "No counts yet",
-      "emptyMessage": "Start one to line the stock up with what is really at home"
+    "noResultsFilters": "No count matches the filters",
+    "card": {
+      "locations": "{{count}} locations",
+      "counted": "{{counted}}/{{total}} counted",
+      "adjusted": "{{count}} with a gap"
     },
-    "actions": {
-      "view": "View"
+    "empty": {
+      "title": "No counts yet",
+      "text": "Start one to line the stock up with what is really at home"
     }
   },
   "startInventory": {

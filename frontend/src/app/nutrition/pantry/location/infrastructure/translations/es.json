@@ -1,24 +1,24 @@
 {
   "getPantryLocations": {
     "title": "Ubicaciones",
-    "subtitle": "Dónde guardas cada cosa en casa",
     "new": "Nueva ubicación",
-    "filter": {
-      "name": "Nombre",
-      "namePlaceholder": "Buscar por nombre..."
+    "stats": {
+      "locations": "ubicaciones"
     },
-    "table": {
-      "name": "Ubicación",
-      "description": "Descripción",
-      "content": "Artículos · Recetas",
-      "contentCard": "Artículos · Recetas",
-      "emptyTitle": "No hay ubicaciones",
-      "emptyMessage": "Crea la nevera, el congelador o la despensa para empezar a organizar el inventario"
+    "searchPlaceholder": "Buscar ubicación...",
+    "searchClear": "Limpiar",
+    "noResults": "Ninguna ubicación coincide con",
+    "card": {
+      "articles": "artículos",
+      "recipes": "recetas"
+    },
+    "empty": {
+      "title": "No hay ubicaciones",
+      "text": "Crea la nevera, el congelador o la despensa para empezar a organizar el inventario"
     },
     "actions": {
       "edit": "Editar",
-      "delete": "Eliminar",
-      "view": "Ver"
+      "delete": "Eliminar"
     },
     "deleteTitle": "Eliminar ubicación",
     "deleteBody": "Vas a eliminar la ubicación",

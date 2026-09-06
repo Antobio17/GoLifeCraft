@@ -1,69 +1,155 @@
-<ds-page-wrapper>
-  @if (loading()) {
-    <ds-skeleton-page-header
-      [showIcon]="false"
-      [showTag]="false"
-      [subtitleLines]="1"
-      [showAction]="true"
-    ></ds-skeleton-page-header>
-  }
-
-  @if (!loading()) {
-    <ds-page-header
-      [title]="'getPantryLocations.title' | t"
-      [subtitle]="'getPantryLocations.subtitle' | t"
-    >
-      <ds-button
-        slot="actions"
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [ariaLabel]="'getPantryLocations.new' | t"
-        (clicked)="onCreate()"
-      />
-    </ds-page-header>
-  }
-
-  <ds-list-filters
-    [fields]="filterFields()"
-    [loading]="loading()"
-    (filtersApplied)="onFiltersApplied($event)"
-    (filtersCleared)="onFiltersCleared()"
-  />
-
-  <ds-list-table
-    [items]="items()"
-    [columns]="columns()"
-    [actions]="actions()"
-    [loading]="loading()"
-    [emptyTitle]="'getPantryLocations.table.emptyTitle' | t"
-    [emptyMessage]="'getPantryLocations.table.emptyMessage' | t"
-    (actionClick)="onAction($event)"
-    (cellClick)="onCell($event)"
-  />
-
-  @if (!loading() && items().length > 0) {
-    <ds-pagination
-      [currentPage]="currentPage()"
-      [pageSize]="pageSize()"
-      [totalItems]="totalItems()"
-      (pageChange)="goToPage($event)"
-      (pageSizeChange)="onPageSizeChange($event)"
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+  <ds-screen-header
+    [title]="'getPantryLocations.title' | t"
+    [subtitle]="headerSubtitle()"
+  >
+    <ds-button
+      slot="actions"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="'getPantryLocations.new' | t"
+      (clicked)="onCreate()"
     />
-  }
+  </ds-screen-header>
 
-  <ds-confirm-action-modal
-    [show]="showDeleteModal()"
-    [title]="'getPantryLocations.deleteTitle' | t"
-    [body]="'getPantryLocations.deleteBody' | t"
-    [itemName]="locationToDeleteName()"
-    [warningText]="'getPantryLocations.deleteWarning' | t"
-    [isDeleting]="deleting()"
-    [cancelLabel]="'getPantryLocations.cancel' | t"
-    [confirmLabel]="'getPantryLocations.deleteConfirm' | t"
-    [deletingLabel]="'getPantryLocations.deleting' | t"
-    (confirmed)="onConfirmDelete()"
-    (cancelled)="onCancelDelete()"
-  />
+  @if (loading()) {
+    <ds-skeleton-filters [search]="true" />
+    <ng-container
+      [ngTemplateOutlet]="locationSkeleton"
+      [ngTemplateOutletContext]="{ $implicit: 6 }"
+    />
+  } @else {
+    <ds-search-input
+      [placeholder]="'getPantryLocations.searchPlaceholder' | t"
+      [clearLabel]="'getPantryLocations.searchClear' | t"
+      [value]="searchQuery()"
+      (searched)="onSearch($event)"
+    />
+
+    @if (reloading()) {
+      <ng-container
+        [ngTemplateOutlet]="locationSkeleton"
+        [ngTemplateOutletContext]="{ $implicit: 6 }"
+      />
+    } @else if (rows().length === 0) {
+      @if (searchQuery()) {
+        <ds-text variant="muted">
+          {{ "getPantryLocations.noResults" | t }} “{{ searchQuery() }}”
+        </ds-text>
+      } @else {
+        <ds-empty-state
+          icon="home"
+          [title]="'getPantryLocations.empty.title' | t"
+          [text]="'getPantryLocations.empty.text' | t"
+        />
+      }
+    } @else {
+      <ds-grid
+        dsReveal="children"
+        [minColumn]="'18.75rem'"
+        [tabletColumns]="2"
+        [gap]="'var(--ds-space-2)'"
+      >
+        @for (row of rows(); track row.id) {
+          <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-2)'">
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+            >
+              <ds-emoji-tile
+                [emoji]="row.emoji"
+                [alt]="row.name"
+                [size]="44"
+                [radius]="12"
+              />
+
+              <ds-pressable
+                [grow]="true"
+                [ariaLabel]="row.name"
+                (press)="onOpen(row.id)"
+              >
+                <ds-stack [gap]="'1px'" [grow]="true">
+                  <ds-heading [level]="3" size="sm">{{ row.name }}</ds-heading>
+                  @if (row.description) {
+                    <ds-text variant="meta" [truncate]="true">
+                      {{ row.description }}
+                    </ds-text>
+                  }
+                </ds-stack>
+              </ds-pressable>
+
+              <ds-icon-button
+                icon="pencil"
+                color="var(--ds-text-meta)"
+                [ariaLabel]="'getPantryLocations.actions.edit' | t"
+                (clicked)="onEdit(row.id)"
+              />
+              <ds-icon-button
+                icon="trash"
+                color="var(--ds-danger)"
+                [ariaLabel]="'getPantryLocations.actions.delete' | t"
+                (clicked)="onDelete(row.location)"
+              />
+            </ds-stack>
+
+            <ds-stack direction="row" [gap]="'var(--ds-space-3)'" [wrap]="true">
+              <ds-meta-item icon="package">{{
+                row.articlesLabel
+              }}</ds-meta-item>
+              <ds-meta-item icon="chefHat">{{ row.recipesLabel }}</ds-meta-item>
+            </ds-stack>
+          </ds-card>
+        }
+      </ds-grid>
+
+      @if (loadingMore()) {
+        <ng-container
+          [ngTemplateOutlet]="locationSkeleton"
+          [ngTemplateOutletContext]="{ $implicit: 2 }"
+        />
+      }
+
+      <ds-infinite-scroll
+        [disabled]="loadingMore() || !hasMore()"
+        (reached)="loadMore()"
+      />
+    }
+  }
 </ds-page-wrapper>
+
+<ng-template #locationSkeleton let-count>
+  <ds-skeleton-list
+    [count]="count"
+    [columns]="null"
+    minColumn="18.75rem"
+    [tabletColumns]="2"
+    [gap]="'var(--ds-space-2)'"
+    radius="var(--ds-radius-xl)"
+    padding="var(--ds-space-3)"
+    [alignTop]="true"
+    [tile]="44"
+    [tileRadius]="12"
+    titleWidth="52%"
+    metaWidth="66%"
+    trailing="actions"
+    [actions]="2"
+    [footItems]="2"
+  />
+</ng-template>
+
+<ds-confirm-action-modal
+  [show]="showDeleteModal()"
+  [title]="'getPantryLocations.deleteTitle' | t"
+  [body]="'getPantryLocations.deleteBody' | t"
+  [itemName]="locationToDeleteName()"
+  [warningText]="'getPantryLocations.deleteWarning' | t"
+  [isDeleting]="deleting()"
+  [cancelLabel]="'getPantryLocations.cancel' | t"
+  [confirmLabel]="'getPantryLocations.deleteConfirm' | t"
+  [deletingLabel]="'getPantryLocations.deleting' | t"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()"
+/>
