@@ -180,6 +180,10 @@ export class GetInventoriesComponent extends AbstractListPageComponent<Inventory
     this.router.navigate(["/inventory", id]);
   }
 
+  onLocations(): void {
+    this.router.navigate(["/locations"]);
+  }
+
   private reload(): void {
     this.currentPage.set(1);
     this.reloading.set(true);

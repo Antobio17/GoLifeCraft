@@ -2,6 +2,7 @@
   "getInventories": {
     "title": "Inventario",
     "new": "Nuevo recuento",
+    "locations": "Ubicaciones",
     "stats": {
       "counts": "recuentos"
     },
