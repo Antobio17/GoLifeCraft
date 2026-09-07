@@ -15,17 +15,7 @@
     "empty": {
       "title": "No locations yet",
       "text": "Create the fridge, the freezer or the pantry to start organising your stock"
-    },
-    "actions": {
-      "edit": "Edit",
-      "delete": "Delete"
-    },
-    "deleteTitle": "Delete location",
-    "deleteBody": "You are about to delete the location",
-    "deleteWarning": "The stock kept there is left without a location, it is not deleted.",
-    "deleteConfirm": "Delete",
-    "deleting": "Deleting...",
-    "cancel": "Cancel"
+    }
   },
   "createPantryLocation": {
     "title": "New location",
@@ -84,6 +74,7 @@
     "hint": "An article or a recipe can only sit in one location. The search only lists what is not placed yet.",
     "edit": "Edit location",
     "delete": "Delete location",
+    "add": "Add to the location",
     "deleteTitle": "Delete location",
     "deleteBody": "You are about to delete the location",
     "deleteWarning": "The stock kept there is left without a location, it is not deleted.",
@@ -100,12 +91,13 @@
       "title": "Contents",
       "remove": "Remove",
       "emptyTitle": "Nothing here yet",
-      "emptyText": "Search below for what you keep in this place and add it"
+      "emptyText": "Use the + button in the header to place here what you keep in this spot"
     },
     "candidates": {
       "title": "Add to this location",
       "search": "Search article or recipe...",
       "clear": "Clear",
+      "close": "Close",
       "add": "Add",
       "emptyTitle": "No results",
       "emptyText": "Nothing unplaced matches the search. What already sits elsewhere has to be removed from there first"

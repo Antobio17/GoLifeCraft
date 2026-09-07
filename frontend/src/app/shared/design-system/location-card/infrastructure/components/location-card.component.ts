@@ -6,36 +6,30 @@ import { LocationCardBadge } from "../../domain/models/location-card-badge.model
   selector: "ds-location-card",
   imports: [IconComponent],
   template: `
-    <div class="ds-loccard">
-      <button type="button" class="ds-loccard__main" (click)="activated.emit()">
-        <span class="ds-loccard__emoji">{{ emoji }}</span>
-        <span class="ds-loccard__body">
-          <span class="ds-loccard__name">{{ name }}</span>
-          @if (description) {
-            <span class="ds-loccard__meta">{{ description }}</span>
-          }
-          @if (badges.length) {
-            <span class="ds-loccard__badges">
-              @for (badge of badges; track badge.label) {
-                <span class="ds-loccard__badge">
-                  <ds-icon
-                    class="ds-loccard__badgeIcon"
-                    [name]="badge.icon"
-                    [size]="13"
-                    [stroke]="2.2"
-                  />
-                  {{ badge.label }}
-                </span>
-              }
-            </span>
-          }
-        </span>
-      </button>
-
-      <span class="ds-loccard__actions">
-        <ng-content select="[slot=actions]"></ng-content>
+    <button type="button" class="ds-loccard" (click)="activated.emit()">
+      <span class="ds-loccard__emoji">{{ emoji }}</span>
+      <span class="ds-loccard__body">
+        <span class="ds-loccard__name">{{ name }}</span>
+        @if (description) {
+          <span class="ds-loccard__meta">{{ description }}</span>
+        }
+        @if (badges.length) {
+          <span class="ds-loccard__badges">
+            @for (badge of badges; track badge.label) {
+              <span class="ds-loccard__badge">
+                <ds-icon
+                  class="ds-loccard__badgeIcon"
+                  [name]="badge.icon"
+                  [size]="13"
+                  [stroke]="2.2"
+                />
+                {{ badge.label }}
+              </span>
+            }
+          </span>
+        }
       </span>
-    </div>
+    </button>
   `,
   styles: [
     `
@@ -45,10 +39,14 @@ import { LocationCardBadge } from "../../domain/models/location-card-badge.model
       }
       .ds-loccard {
         display: flex;
-        align-items: flex-start;
-        gap: var(--ds-space-1);
+        gap: var(--ds-space-3);
         width: 100%;
         height: 100%;
+        text-align: left;
+        appearance: none;
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-xl);
@@ -65,20 +63,6 @@ import { LocationCardBadge } from "../../domain/models/location-card-badge.model
         background: var(--ds-surface-hover);
         box-shadow: var(--ds-elev-lg);
         transform: translateY(-2px);
-      }
-      .ds-loccard__main {
-        flex: 1 1 auto;
-        min-width: 0;
-        display: flex;
-        gap: var(--ds-space-3);
-        text-align: left;
-        appearance: none;
-        border: none;
-        background: transparent;
-        padding: 0;
-        font: inherit;
-        color: inherit;
-        cursor: pointer;
       }
       .ds-loccard__emoji {
         width: 3.5rem;
@@ -135,15 +119,6 @@ import { LocationCardBadge } from "../../domain/models/location-card-badge.model
       .ds-loccard__badgeIcon {
         color: var(--ds-primary);
         flex: 0 0 auto;
-      }
-      .ds-loccard__actions {
-        flex: 0 0 auto;
-        display: flex;
-        align-items: center;
-        gap: var(--ds-space-1);
-      }
-      .ds-loccard__actions:empty {
-        display: none;
       }
     `,
   ],

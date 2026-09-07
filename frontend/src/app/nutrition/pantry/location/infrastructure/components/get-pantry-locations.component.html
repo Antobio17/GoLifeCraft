@@ -54,22 +54,7 @@
             [description]="row.description"
             [badges]="row.badges"
             (activated)="onOpen(row.id)"
-          >
-            <ds-icon-button
-              slot="actions"
-              icon="pencil"
-              color="var(--ds-text-meta)"
-              [ariaLabel]="'getPantryLocations.actions.edit' | t"
-              (clicked)="onEdit(row.id)"
-            />
-            <ds-icon-button
-              slot="actions"
-              icon="trash"
-              color="var(--ds-danger)"
-              [ariaLabel]="'getPantryLocations.actions.delete' | t"
-              (clicked)="onDelete(row.location)"
-            />
-          </ds-location-card>
+          />
         }
       </ds-grid>
 
@@ -101,22 +86,6 @@
     [tileRadius]="12"
     titleWidth="54%"
     metaWidth="48%"
-    trailing="actions"
-    [actions]="2"
     [chips]="2"
   />
 </ng-template>
-
-<ds-confirm-action-modal
-  [show]="showDeleteModal()"
-  [title]="'getPantryLocations.deleteTitle' | t"
-  [body]="'getPantryLocations.deleteBody' | t"
-  [itemName]="locationToDeleteName()"
-  [warningText]="'getPantryLocations.deleteWarning' | t"
-  [isDeleting]="deleting()"
-  [cancelLabel]="'getPantryLocations.cancel' | t"
-  [confirmLabel]="'getPantryLocations.deleteConfirm' | t"
-  [deletingLabel]="'getPantryLocations.deleting' | t"
-  (confirmed)="onConfirmDelete()"
-  (cancelled)="onCancelDelete()"
-/>

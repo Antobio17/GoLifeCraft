@@ -5,7 +5,7 @@
       [eyebrow]="true"
       [subtitle]="true"
       titleWidth="52%"
-      [actions]="2"
+      [actions]="3"
     />
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
@@ -39,12 +39,20 @@
           (clicked)="onEdit()"
         />
         <ds-button
-          variant="danger"
+          variant="secondary"
           size="icon-lg"
           icon="trash"
           [iconSize]="19"
           [ariaLabel]="'getPantryLocation.delete' | t"
           (clicked)="onDelete()"
+        />
+        <ds-button
+          variant="primary"
+          size="icon-lg"
+          icon="plus"
+          [iconSize]="19"
+          [ariaLabel]="'getPantryLocation.add' | t"
+          (clicked)="onOpenAddSheet()"
         />
       </ds-stack>
     </ds-screen-header>
@@ -67,118 +75,108 @@
         </ds-card>
       </ng-container>
 
-      <ds-stack [gap]="'var(--ds-space-4)'">
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-section-header
-            [title]="'getPantryLocation.contents.title' | t"
-            [staticLabel]="itemRows().length.toString()"
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-section-header
+          [title]="'getPantryLocation.contents.title' | t"
+          [staticLabel]="itemRows().length.toString()"
+        />
+
+        @if (itemRows().length === 0) {
+          <ds-empty-state
+            icon="package"
+            [title]="'getPantryLocation.contents.emptyTitle' | t"
+            [text]="'getPantryLocation.contents.emptyText' | t"
           />
+        }
 
-          @if (itemRows().length === 0) {
-            <ds-empty-state
-              icon="package"
-              [title]="'getPantryLocation.contents.emptyTitle' | t"
-              [text]="'getPantryLocation.contents.emptyText' | t"
-            />
-          }
-
-          @for (row of itemRows(); track row.item.id) {
+        @for (row of itemRows(); track row.item.id) {
+          <ds-swipe-to-delete
+            radius="var(--ds-radius-lg)"
+            [disabled]="moving()"
+            [removeLabel]="removeLabel()"
+            (remove)="onRemove(row)"
+          >
             <ds-card
               variant="inset"
               [padding]="'var(--ds-space-3)'"
               [gap]="'var(--ds-space-2)'"
             >
-              <ds-stack
-                direction="row"
-                justify="between"
-                align="center"
-                [gap]="'var(--ds-space-3)'"
-                [wrap]="true"
-              >
-                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                  <ds-text variant="strong">{{ row.title }}</ds-text>
-                  <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
-                </ds-stack>
-
-                <ds-button
-                  variant="ghost"
-                  size="sm"
-                  icon="close"
-                  [disabled]="moving()"
-                  (clicked)="onRemove(row)"
-                >
-                  {{ "getPantryLocation.contents.remove" | t }}
-                </ds-button>
+              <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                <ds-text variant="strong">{{ row.title }}</ds-text>
+                <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
               </ds-stack>
             </ds-card>
-          }
-        </ds-stack>
-
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-section-header
-            [title]="'getPantryLocation.candidates.title' | t"
-          />
-
-          <ds-search-input
-            [placeholder]="'getPantryLocation.candidates.search' | t"
-            [clearLabel]="'getPantryLocation.candidates.clear' | t"
-            (searched)="onSearch($event)"
-          />
-
-          <ds-segmented-toggle
-            [options]="kindOptions()"
-            [ngModel]="kind()"
-            [ngModelOptions]="{ standalone: true }"
-            (ngModelChange)="onKind($event)"
-          />
-
-          @if (candidateRows().length === 0) {
-            <ds-empty-state
-              icon="search"
-              [title]="'getPantryLocation.candidates.emptyTitle' | t"
-              [text]="'getPantryLocation.candidates.emptyText' | t"
-            />
-          }
-
-          @if (candidateRows().length > 0) {
-            <ds-stack class="candidates" [gap]="'var(--ds-space-2)'">
-              @for (row of candidateRows(); track row.candidate.id) {
-                <ds-card
-                  variant="inset"
-                  [padding]="'var(--ds-space-3)'"
-                  [gap]="'var(--ds-space-2)'"
-                >
-                  <ds-stack
-                    direction="row"
-                    justify="between"
-                    align="center"
-                    [gap]="'var(--ds-space-3)'"
-                    [wrap]="true"
-                  >
-                    <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                      <ds-text variant="strong">{{ row.title }}</ds-text>
-                      <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
-                    </ds-stack>
-
-                    <ds-button
-                      variant="soft"
-                      size="sm"
-                      icon="plus"
-                      [disabled]="moving()"
-                      (clicked)="onPlace(row)"
-                    >
-                      {{ addLabel() }}
-                    </ds-button>
-                  </ds-stack>
-                </ds-card>
-              }
-            </ds-stack>
-          }
-        </ds-stack>
+          </ds-swipe-to-delete>
+        }
       </ds-stack>
     </ds-split-view>
   }
 </ds-page-wrapper>
+
+<ds-modal-sheet
+  [open]="showAddSheet()"
+  [tall]="true"
+  [title]="'getPantryLocation.candidates.title' | t"
+  [closeLabel]="'getPantryLocation.candidates.close' | t"
+  (closed)="onCloseAddSheet()"
+>
+  <ds-stack [gap]="'var(--ds-space-3)'">
+    <ds-search-input
+      [placeholder]="'getPantryLocation.candidates.search' | t"
+      [clearLabel]="'getPantryLocation.candidates.clear' | t"
+      [value]="search()"
+      (searched)="onSearch($event)"
+    />
+
+    <ds-segmented-toggle
+      [options]="kindOptions()"
+      [ngModel]="kind()"
+      [ngModelOptions]="{ standalone: true }"
+      (ngModelChange)="onKind($event)"
+    />
+
+    @if (candidateRows().length === 0) {
+      <ds-empty-state
+        icon="search"
+        [title]="'getPantryLocation.candidates.emptyTitle' | t"
+        [text]="'getPantryLocation.candidates.emptyText' | t"
+      />
+    } @else {
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (row of candidateRows(); track row.candidate.id) {
+          <ds-card
+            variant="inset"
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-stack
+              direction="row"
+              justify="between"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+              [wrap]="true"
+            >
+              <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                <ds-text variant="strong">{{ row.title }}</ds-text>
+                <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
+              </ds-stack>
+
+              <ds-button
+                variant="soft"
+                size="sm"
+                icon="plus"
+                [disabled]="moving()"
+                (clicked)="onPlace(row)"
+              >
+                {{ addLabel() }}
+              </ds-button>
+            </ds-stack>
+          </ds-card>
+        }
+      </ds-stack>
+    }
+  </ds-stack>
+</ds-modal-sheet>
 
 <ds-confirm-action-modal
   [show]="showDeleteModal()"

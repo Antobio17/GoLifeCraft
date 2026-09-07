@@ -9,20 +9,17 @@ import { SearchInputComponent } from "@shared/design-system/search-input/infrast
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { LocationCardComponent } from "@shared/design-system/location-card/infrastructure/components/location-card.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
-import { DeletePantryLocationService } from "@nutrition/pantry/location/application/services/delete-pantry-location.service";
 import { PantryLocation } from "../../domain/models/pantry-location.model";
 import { PantryLocationRow } from "../../domain/models/pantry-location-row.model";
 
@@ -39,20 +36,17 @@ import { PantryLocationRow } from "../../domain/models/pantry-location-row.model
     GridComponent,
     TextComponent,
     ButtonComponent,
-    IconButtonComponent,
     LocationCardComponent,
     EmptyStateComponent,
     SkeletonListComponent,
     SkeletonFiltersComponent,
     InfiniteScrollComponent,
-    ConfirmActionModalComponent,
   ],
 })
 export class GetPantryLocationsComponent extends AbstractListPageComponent<PantryLocation> {
   private static readonly PAGE_SIZE = 20;
 
   private getPantryLocationsService = inject(GetPantryLocationsService);
-  private deletePantryLocationService = inject(DeletePantryLocationService);
 
   protected readonly modulePath = "nutrition/pantry/location";
   protected readonly storageKey = "pageSize_pantryLocations";
@@ -62,14 +56,6 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
 
   reloading = signal(false);
   loadingMore = signal(false);
-
-  showDeleteModal = signal(false);
-  deleting = signal(false);
-  locationToDelete = signal<PantryLocation | null>(null);
-
-  locationToDeleteName = computed(
-    () => this.locationToDelete()?.attributes.name ?? "",
-  );
 
   hasMore = computed(() => this.items().length < this.totalItems());
 
@@ -144,43 +130,6 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
     this.router.navigate(["/locations", id]);
   }
 
-  onEdit(id: string): void {
-    this.router.navigate(["/locations", id, "edit"]);
-  }
-
-  onDelete(location: PantryLocation): void {
-    this.locationToDelete.set(location);
-    this.showDeleteModal.set(true);
-  }
-
-  onCancelDelete(): void {
-    this.showDeleteModal.set(false);
-    this.locationToDelete.set(null);
-  }
-
-  onConfirmDelete(): void {
-    const location = this.locationToDelete();
-
-    if (null === location) return;
-
-    this.deleting.set(true);
-
-    this.deletePantryLocationService
-      .deletePantryLocation(location.id)
-      .subscribe({
-        next: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-          this.locationToDelete.set(null);
-          this.reload();
-        },
-        error: () => {
-          this.deleting.set(false);
-          this.showDeleteModal.set(false);
-        },
-      });
-  }
-
   private reload(): void {
     this.currentPage.set(1);
     this.reloading.set(true);
@@ -202,7 +151,6 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
       location.attributes;
 
     return {
-      location,
       id: location.id,
       name,
       emoji,
