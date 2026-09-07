@@ -5,6 +5,15 @@
   >
     <ds-button
       slot="actions"
+      variant="secondary"
+      size="icon-lg"
+      icon="aisles"
+      [iconSize]="19"
+      [ariaLabel]="'getInventories.locations' | t"
+      (clicked)="onLocations()"
+    />
+    <ds-button
+      slot="actions"
       variant="primary"
       size="icon-lg"
       icon="plus"
