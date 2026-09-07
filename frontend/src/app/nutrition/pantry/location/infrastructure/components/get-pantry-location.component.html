@@ -1,5 +1,13 @@
-<ds-page-wrapper>
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
   @if (loading()) {
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="true"
+      titleWidth="52%"
+      [actions]="2"
+    />
+
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
       <ng-container slot="side">
         <ds-skeleton height="16rem" />
@@ -13,16 +21,37 @@
   }
 
   @if (!loading() && attributes(); as location) {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getPantryLocation.back' | t"
+      [eyebrow]="'getPantryLocation.eyebrow' | t"
+      [title]="title()"
+      [subtitle]="location.description"
+      (leadingClick)="back()"
+    >
+      <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
+        <ds-button
+          variant="secondary"
+          size="icon-lg"
+          icon="pencil"
+          [iconSize]="19"
+          [ariaLabel]="'getPantryLocation.edit' | t"
+          (clicked)="onEdit()"
+        />
+        <ds-button
+          variant="danger"
+          size="icon-lg"
+          icon="trash"
+          [iconSize]="19"
+          [ariaLabel]="'getPantryLocation.delete' | t"
+          (clicked)="onDelete()"
+        />
+      </ds-stack>
+    </ds-screen-header>
+
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
       <ng-container slot="side">
         <ds-card [gap]="'var(--ds-space-4)'">
-          <ds-stack [gap]="'var(--ds-space-2)'">
-            <ds-heading [level]="2" size="lg">{{ title() }}</ds-heading>
-            @if (location.description) {
-              <ds-text variant="muted">{{ location.description }}</ds-text>
-            }
-          </ds-stack>
-
           <ds-stack direction="row" [gap]="'var(--ds-space-4)'" [wrap]="true">
             <ds-stat
               [value]="articleCount()"
@@ -35,15 +64,6 @@
           </ds-stack>
 
           <ds-note>{{ "getPantryLocation.hint" | t }}</ds-note>
-
-          <ds-stack [gap]="'var(--ds-space-2)'">
-            <ds-button variant="soft" [fullWidth]="true" (clicked)="onEdit()">
-              {{ "getPantryLocation.edit" | t }}
-            </ds-button>
-            <ds-button variant="ghost" [fullWidth]="true" (clicked)="back()">
-              {{ "getPantryLocation.back" | t }}
-            </ds-button>
-          </ds-stack>
         </ds-card>
       </ng-container>
 
@@ -159,3 +179,17 @@
     </ds-split-view>
   }
 </ds-page-wrapper>
+
+<ds-confirm-action-modal
+  [show]="showDeleteModal()"
+  [title]="'getPantryLocation.deleteTitle' | t"
+  [body]="'getPantryLocation.deleteBody' | t"
+  [itemName]="locationName()"
+  [warningText]="'getPantryLocation.deleteWarning' | t"
+  [isDeleting]="deleting()"
+  [cancelLabel]="'getPantryLocation.cancel' | t"
+  [confirmLabel]="'getPantryLocation.deleteConfirm' | t"
+  [deletingLabel]="'getPantryLocation.deleting' | t"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()"
+/>

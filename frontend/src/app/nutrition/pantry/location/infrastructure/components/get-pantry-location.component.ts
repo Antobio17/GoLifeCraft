@@ -13,10 +13,10 @@ import { Observable, distinctUntilChanged, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { StatComponent } from "@shared/design-system/stat/infrastructure/components/stat.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
@@ -28,9 +28,12 @@ import {
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { AssignPantryLocationItemService } from "@nutrition/pantry/location/application/services/assign-pantry-location-item.service";
 import { ReleasePantryLocationItemService } from "@nutrition/pantry/location/application/services/release-pantry-location-item.service";
+import { DeletePantryLocationService } from "@nutrition/pantry/location/application/services/delete-pantry-location.service";
 import { GetPantryLocationService } from "@nutrition/pantry/location/application/services/get-pantry-location.service";
 import { GetPantryLocationItemsService } from "@nutrition/pantry/location/application/services/get-pantry-location-items.service";
 import { GetPantryLocationCandidatesService } from "@nutrition/pantry/location/application/services/get-pantry-location-candidates.service";
@@ -52,10 +55,10 @@ const ALL_KINDS = "";
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
+    ScreenHeaderComponent,
     SplitViewComponent,
     StackComponent,
     CardComponent,
-    HeadingComponent,
     TextComponent,
     StatComponent,
     ButtonComponent,
@@ -64,7 +67,9 @@ const ALL_KINDS = "";
     NoteComponent,
     EmptyStateComponent,
     SkeletonComponent,
+    SkeletonScreenHeaderComponent,
     SectionHeaderComponent,
+    ConfirmActionModalComponent,
   ],
 })
 export class GetPantryLocationComponent {
@@ -72,6 +77,7 @@ export class GetPantryLocationComponent {
   private getPantryLocationService = inject(GetPantryLocationService);
   private getItemsService = inject(GetPantryLocationItemsService);
   private getCandidatesService = inject(GetPantryLocationCandidatesService);
+  private deletePantryLocationService = inject(DeletePantryLocationService);
   private assignItemService = inject(AssignPantryLocationItemService);
   private releaseItemService = inject(ReleasePantryLocationItemService);
   private locationView = inject(PantryLocationViewService);
@@ -87,6 +93,8 @@ export class GetPantryLocationComponent {
   candidates = signal<PantryLocationCandidate[]>([]);
   loading = signal(true);
   moving = signal(false);
+  deleting = signal(false);
+  showDeleteModal = signal(false);
   search = signal("");
   kind = signal<string>(ALL_KINDS);
 
@@ -103,6 +111,8 @@ export class GetPantryLocationComponent {
         (item) => PantryLocationItemKind.RECIPE === item.attributes.kind,
       ).length,
   );
+
+  locationName = computed(() => this.attributes()?.name ?? "");
 
   title = computed(() => {
     const attributes = this.attributes();
@@ -203,6 +213,30 @@ export class GetPantryLocationComponent {
 
   onEdit(): void {
     this.router.navigate(["/locations", this.id(), "edit"]);
+  }
+
+  onDelete(): void {
+    this.showDeleteModal.set(true);
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteModal.set(false);
+  }
+
+  onConfirmDelete(): void {
+    this.deleting.set(true);
+
+    this.deletePantryLocationService.deletePantryLocation(this.id()).subscribe({
+      next: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+        this.back();
+      },
+      error: () => {
+        this.deleting.set(false);
+        this.showDeleteModal.set(false);
+      },
+    });
   }
 
   back(): void {

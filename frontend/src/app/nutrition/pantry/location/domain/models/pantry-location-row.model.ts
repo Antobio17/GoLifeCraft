@@ -1,3 +1,4 @@
+import { LocationCardBadge } from "@shared/design-system/location-card/domain/models/location-card-badge.model";
 import { PantryLocation } from "./pantry-location.model";
 
 export interface PantryLocationRow {
@@ -6,6 +7,5 @@ export interface PantryLocationRow {
   name: string;
   emoji: string;
   description: string;
-  articlesLabel: string;
-  recipesLabel: string;
+  badges: LocationCardBadge[];
 }

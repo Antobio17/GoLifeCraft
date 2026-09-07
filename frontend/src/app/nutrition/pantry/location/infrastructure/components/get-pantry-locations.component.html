@@ -46,62 +46,30 @@
         />
       }
     } @else {
-      <ds-grid
-        dsReveal="children"
-        [minColumn]="'18.75rem'"
-        [tabletColumns]="2"
-        [gap]="'var(--ds-space-2)'"
-      >
+      <ds-grid dsReveal="children" [minColumn]="'18.75rem'">
         @for (row of rows(); track row.id) {
-          <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-2)'">
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-3)'"
-            >
-              <ds-emoji-tile
-                [emoji]="row.emoji"
-                [alt]="row.name"
-                [size]="44"
-                [radius]="12"
-              />
-
-              <ds-pressable
-                [grow]="true"
-                [ariaLabel]="row.name"
-                (press)="onOpen(row.id)"
-              >
-                <ds-stack [gap]="'1px'" [grow]="true">
-                  <ds-heading [level]="3" size="sm">{{ row.name }}</ds-heading>
-                  @if (row.description) {
-                    <ds-text variant="meta" [truncate]="true">
-                      {{ row.description }}
-                    </ds-text>
-                  }
-                </ds-stack>
-              </ds-pressable>
-
-              <ds-icon-button
-                icon="pencil"
-                color="var(--ds-text-meta)"
-                [ariaLabel]="'getPantryLocations.actions.edit' | t"
-                (clicked)="onEdit(row.id)"
-              />
-              <ds-icon-button
-                icon="trash"
-                color="var(--ds-danger)"
-                [ariaLabel]="'getPantryLocations.actions.delete' | t"
-                (clicked)="onDelete(row.location)"
-              />
-            </ds-stack>
-
-            <ds-stack direction="row" [gap]="'var(--ds-space-3)'" [wrap]="true">
-              <ds-meta-item icon="package">{{
-                row.articlesLabel
-              }}</ds-meta-item>
-              <ds-meta-item icon="chefHat">{{ row.recipesLabel }}</ds-meta-item>
-            </ds-stack>
-          </ds-card>
+          <ds-location-card
+            [emoji]="row.emoji"
+            [name]="row.name"
+            [description]="row.description"
+            [badges]="row.badges"
+            (activated)="onOpen(row.id)"
+          >
+            <ds-icon-button
+              slot="actions"
+              icon="pencil"
+              color="var(--ds-text-meta)"
+              [ariaLabel]="'getPantryLocations.actions.edit' | t"
+              (clicked)="onEdit(row.id)"
+            />
+            <ds-icon-button
+              slot="actions"
+              icon="trash"
+              color="var(--ds-danger)"
+              [ariaLabel]="'getPantryLocations.actions.delete' | t"
+              (clicked)="onDelete(row.location)"
+            />
+          </ds-location-card>
         }
       </ds-grid>
 
@@ -125,18 +93,17 @@
     [count]="count"
     [columns]="null"
     minColumn="18.75rem"
-    [tabletColumns]="2"
-    [gap]="'var(--ds-space-2)'"
+    [gap]="'var(--ds-space-3)'"
     radius="var(--ds-radius-xl)"
-    padding="var(--ds-space-3)"
+    padding="var(--ds-space-2)"
     [alignTop]="true"
-    [tile]="44"
+    [tile]="56"
     [tileRadius]="12"
-    titleWidth="52%"
-    metaWidth="66%"
+    titleWidth="54%"
+    metaWidth="48%"
     trailing="actions"
     [actions]="2"
-    [footItems]="2"
+    [chips]="2"
   />
 </ng-template>
 
