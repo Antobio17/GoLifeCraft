@@ -30,6 +30,8 @@ import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastru
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
+import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { AssignPantryLocationItemService } from "@nutrition/pantry/location/application/services/assign-pantry-location-item.service";
 import { ReleasePantryLocationItemService } from "@nutrition/pantry/location/application/services/release-pantry-location-item.service";
@@ -50,7 +52,6 @@ const ALL_KINDS = "";
 @Component({
   selector: "app-get-pantry-location",
   templateUrl: "./get-pantry-location.component.html",
-  styleUrls: ["./get-pantry-location.component.css"],
   imports: [
     FormsModule,
     ContextualTranslatePipe,
@@ -69,6 +70,8 @@ const ALL_KINDS = "";
     SkeletonComponent,
     SkeletonScreenHeaderComponent,
     SectionHeaderComponent,
+    ModalSheetComponent,
+    SwipeToDeleteComponent,
     ConfirmActionModalComponent,
   ],
 })
@@ -95,6 +98,7 @@ export class GetPantryLocationComponent {
   moving = signal(false);
   deleting = signal(false);
   showDeleteModal = signal(false);
+  showAddSheet = signal(false);
   search = signal("");
   kind = signal<string>(ALL_KINDS);
 
@@ -146,6 +150,8 @@ export class GetPantryLocationComponent {
 
   addLabel = computed(() => this.t("getPantryLocation.candidates.add"));
 
+  removeLabel = computed(() => this.t("getPantryLocation.contents.remove"));
+
   constructor() {
     toObservable(this.id)
       .pipe(
@@ -190,6 +196,14 @@ export class GetPantryLocationComponent {
 
   onKind(value: string): void {
     this.kind.set(value);
+  }
+
+  onOpenAddSheet(): void {
+    this.showAddSheet.set(true);
+  }
+
+  onCloseAddSheet(): void {
+    this.showAddSheet.set(false);
   }
 
   onPlace(row: PantryLocationCandidateRow): void {

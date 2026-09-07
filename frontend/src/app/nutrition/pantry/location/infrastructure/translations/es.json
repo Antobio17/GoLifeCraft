@@ -15,17 +15,7 @@
     "empty": {
       "title": "No hay ubicaciones",
       "text": "Crea la nevera, el congelador o la despensa para empezar a organizar el inventario"
-    },
-    "actions": {
-      "edit": "Editar",
-      "delete": "Eliminar"
-    },
-    "deleteTitle": "Eliminar ubicación",
-    "deleteBody": "Vas a eliminar la ubicación",
-    "deleteWarning": "El stock que había en ella se queda sin ubicación, no se borra.",
-    "deleteConfirm": "Eliminar",
-    "deleting": "Eliminando...",
-    "cancel": "Cancelar"
+    }
   },
   "createPantryLocation": {
     "title": "Nueva ubicación",
@@ -84,6 +74,7 @@
     "hint": "Un artículo o una receta solo puede estar en una ubicación. El buscador solo muestra lo que aún no está en ninguna.",
     "edit": "Editar ubicación",
     "delete": "Eliminar ubicación",
+    "add": "Añadir a la ubicación",
     "deleteTitle": "Eliminar ubicación",
     "deleteBody": "Vas a eliminar la ubicación",
     "deleteWarning": "El stock que había en ella se queda sin ubicación, no se borra.",
@@ -100,12 +91,13 @@
       "title": "Contenido",
       "remove": "Quitar",
       "emptyTitle": "Aquí no hay nada todavía",
-      "emptyText": "Busca abajo lo que guardas en este sitio y añádelo"
+      "emptyText": "Usa el botón + de la cabecera para colocar aquí lo que guardas en este sitio"
     },
     "candidates": {
       "title": "Añadir a esta ubicación",
       "search": "Buscar artículo o receta...",
       "clear": "Limpiar",
+      "close": "Cerrar",
       "add": "Añadir",
       "emptyTitle": "Sin resultados",
       "emptyText": "Nada sin ubicar encaja con la búsqueda. Lo que ya está en otro sitio hay que quitarlo de allí antes"
