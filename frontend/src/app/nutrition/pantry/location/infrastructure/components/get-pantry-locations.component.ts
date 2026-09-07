@@ -6,16 +6,11 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
-import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
-import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
-import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
-import { MetaItemComponent } from "@shared/design-system/meta-item/infrastructure/components/meta-item.component";
+import { LocationCardComponent } from "@shared/design-system/location-card/infrastructure/components/location-card.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
@@ -41,16 +36,11 @@ import { PantryLocationRow } from "../../domain/models/pantry-location-row.model
     PageWrapperComponent,
     ScreenHeaderComponent,
     SearchInputComponent,
-    StackComponent,
     GridComponent,
-    CardComponent,
-    HeadingComponent,
     TextComponent,
     ButtonComponent,
     IconButtonComponent,
-    PressableComponent,
-    EmojiTileComponent,
-    MetaItemComponent,
+    LocationCardComponent,
     EmptyStateComponent,
     SkeletonListComponent,
     SkeletonFiltersComponent,
@@ -217,8 +207,16 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
       name,
       emoji,
       description,
-      articlesLabel: `${articleCount} ${this.t("getPantryLocations.card.articles")}`,
-      recipesLabel: `${recipeCount} ${this.t("getPantryLocations.card.recipes")}`,
+      badges: [
+        {
+          icon: "package",
+          label: `${articleCount} ${this.t("getPantryLocations.card.articles")}`,
+        },
+        {
+          icon: "chefHat",
+          label: `${recipeCount} ${this.t("getPantryLocations.card.recipes")}`,
+        },
+      ],
     };
   }
 }

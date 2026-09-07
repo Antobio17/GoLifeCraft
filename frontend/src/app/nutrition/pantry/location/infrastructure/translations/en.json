@@ -76,12 +76,20 @@
     }
   },
   "getPantryLocation": {
+    "eyebrow": "Location",
     "stat": {
       "articles": "Articles",
       "recipes": "Recipes"
     },
     "hint": "An article or a recipe can only sit in one location. The search only lists what is not placed yet.",
     "edit": "Edit location",
+    "delete": "Delete location",
+    "deleteTitle": "Delete location",
+    "deleteBody": "You are about to delete the location",
+    "deleteWarning": "The stock kept there is left without a location, it is not deleted.",
+    "deleteConfirm": "Delete",
+    "deleting": "Deleting...",
+    "cancel": "Cancel",
     "back": "Back to locations",
     "kind": {
       "all": "All",
