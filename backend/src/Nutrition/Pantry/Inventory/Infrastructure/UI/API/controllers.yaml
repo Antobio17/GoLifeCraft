@@ -40,3 +40,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\ReopenInventoryController:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\ReopenInventoryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

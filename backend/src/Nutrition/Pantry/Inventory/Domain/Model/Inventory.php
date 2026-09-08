@@ -5,10 +5,12 @@ namespace Nutrition\Pantry\Inventory\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryDiscarded;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryItemCounted;
+use Nutrition\Pantry\Inventory\Domain\Event\InventoryReopened;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryStarted;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryValidated;
 use Nutrition\Pantry\Inventory\Domain\Exception\CountInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Exception\DiscardInventoryException;
+use Nutrition\Pantry\Inventory\Domain\Exception\ReopenInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Exception\StartInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Exception\ValidateInventoryException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -185,6 +187,34 @@ class Inventory extends GenericAggregate
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
             updatedByUserId: $validatedByUserId,
+        ));
+    }
+
+    public function reopen(
+        string $reopenedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if ($this->isDraft()) {
+            throw ReopenInventoryException::stillOpen(inventoryId: $this->id);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $this->status = self::STATUS_DRAFT;
+        $this->stampUpdate(userId: $reopenedByUserId, now: $now);
+
+        $this->record(event: new InventoryReopened(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            countedOn: $this->countedOn,
+            shift: $this->shift,
+            status: $this->status,
+            note: $this->note,
+            locations: $this->recordedLocations(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $reopenedByUserId,
         ));
     }
 

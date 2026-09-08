@@ -36,3 +36,13 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Inventory\Application\Command\ReopenInventoryCommandHandler:
+    class: Nutrition\Pantry\Inventory\Application\Command\ReopenInventoryCommandHandler
+    arguments:
+      $inventoryRepository: '@Nutrition\Pantry\Inventory\Domain\Model\InventoryRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Inventory\Domain\QueryModel\ReopenInventoryNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

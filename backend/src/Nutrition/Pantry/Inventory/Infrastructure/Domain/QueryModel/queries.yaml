@@ -18,3 +18,8 @@ services:
     class: Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\Doctrine\DoctrineCountInventoryItemNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Pantry\Inventory\Domain\QueryModel\ReopenInventoryNeedleDataQuery:
+    class: Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\Doctrine\DoctrineReopenInventoryNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

@@ -59,7 +59,7 @@
       "adjusted": "with a difference"
     },
     "draftHint": "Walk into each location and write down what you find. Validating overwrites the stock with these numbers.",
-    "validatedHint": "This count is already validated and part of the history.",
+    "validatedHint": "This count is already validated. If you closed it by mistake, reopen it: everything counted is still there and the stock is written again when you validate.",
     "validate": "Validate and update stock",
     "discard": "Discard count",
     "discardTitle": "Discard count",
@@ -71,7 +71,8 @@
     "empty": {
       "title": "Nothing to count",
       "text": "No location was holding anything when this count started"
-    }
+    },
+    "reopen": "Reopen the count"
   },
   "inventoryShift": {
     "morning": "Morning",
@@ -118,6 +119,9 @@
       "date": "The date of the count is not valid",
       "shift": "The shift of the count is not valid",
       "note": "The note is too long"
+    },
+    "still": {
+      "open": "That count is already in progress"
     }
   },
   "getInventoryLocation": {

@@ -39,6 +39,17 @@
           [ariaLabel]="'getInventory.discard' | t"
           (clicked)="onDiscard()"
         />
+      } @else {
+        <ds-button
+          slot="actions"
+          variant="secondary"
+          size="icon-lg"
+          icon="restore"
+          [iconSize]="19"
+          [disabled]="reopening()"
+          [ariaLabel]="'getInventory.reopen' | t"
+          (clicked)="onReopen()"
+        />
       }
     </ds-screen-header>
 

@@ -59,7 +59,7 @@
       "adjusted": "con diferencia"
     },
     "draftHint": "Entra en cada ubicación y anota lo que encuentres. Al validar, el stock se sobrescribe con estos números.",
-    "validatedHint": "Este recuento ya está validado y forma parte del historial.",
+    "validatedHint": "Este recuento ya está validado. Si lo cerraste sin querer, vuelve a abrirlo: lo contado sigue ahí y el stock se reescribe al validarlo de nuevo.",
     "validate": "Validar y actualizar stock",
     "discard": "Descartar recuento",
     "discardTitle": "Descartar recuento",
@@ -71,7 +71,8 @@
     "empty": {
       "title": "No hay nada que contar",
       "text": "Ninguna ubicación guardaba nada cuando empezó este recuento"
-    }
+    },
+    "reopen": "Volver a abrir el recuento"
   },
   "inventoryShift": {
     "morning": "Mañana",
@@ -118,6 +119,9 @@
       "date": "La fecha del recuento no es válida",
       "shift": "El turno del recuento no es válido",
       "note": "La nota es demasiado larga"
+    },
+    "still": {
+      "open": "Ese recuento ya está en curso"
     }
   },
   "getInventoryLocation": {

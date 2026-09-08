@@ -32,6 +32,7 @@ import { RevealDirective } from "@shared/design-system/reveal/infrastructure/dir
 import { GetInventoryService } from "@nutrition/pantry/inventory/application/services/get-inventory.service";
 import { ValidateInventoryService } from "@nutrition/pantry/inventory/application/services/validate-inventory.service";
 import { DiscardInventoryService } from "@nutrition/pantry/inventory/application/services/discard-inventory.service";
+import { ReopenInventoryService } from "@nutrition/pantry/inventory/application/services/reopen-inventory.service";
 import { InventoryViewService } from "@nutrition/pantry/inventory/application/services/inventory-view.service";
 import { InventoryDetailAttributes } from "../../domain/models/inventory-detail-attributes.model";
 import { InventoryLocationRow } from "../../domain/models/inventory-location-row.model";
@@ -66,6 +67,7 @@ export class GetInventoryComponent {
   private getInventoryService = inject(GetInventoryService);
   private validateInventoryService = inject(ValidateInventoryService);
   private discardInventoryService = inject(DiscardInventoryService);
+  private reopenInventoryService = inject(ReopenInventoryService);
   private inventoryView = inject(InventoryViewService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
@@ -77,6 +79,7 @@ export class GetInventoryComponent {
   attributes = signal<InventoryDetailAttributes | null>(null);
   loading = signal(true);
   validating = signal(false);
+  reopening = signal(false);
   discarding = signal(false);
   showDiscardModal = signal(false);
 
@@ -190,6 +193,15 @@ export class GetInventoryComponent {
     });
   }
 
+  onReopen(): void {
+    this.reopening.set(true);
+
+    this.reopenInventoryService.reopenInventory(this.id()).subscribe({
+      next: () => this.refresh(),
+      error: () => this.reopening.set(false),
+    });
+  }
+
   onDiscard(): void {
     this.showDiscardModal.set(true);
   }
@@ -216,5 +228,15 @@ export class GetInventoryComponent {
 
   back(): void {
     this.router.navigate(["/inventory"]);
+  }
+
+  private refresh(): void {
+    this.getInventoryService.getInventory(this.id()).subscribe({
+      next: (response) => {
+        this.attributes.set(response.data.attributes);
+        this.reopening.set(false);
+      },
+      error: () => this.reopening.set(false),
+    });
   }
 }

@@ -36,3 +36,10 @@ count_inventory_item:
   requirements:
     inventoryId: '[0-9a-fA-F-]{36}'
     itemId: '[0-9a-fA-F-]{36}'
+
+reopen_inventory:
+  path: /api/v1/nutrition/pantry/inventories/{inventoryId}/reopen
+  methods: [PUT]
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\ReopenInventoryController
+  requirements:
+    inventoryId: '[0-9a-fA-F-]{36}'
