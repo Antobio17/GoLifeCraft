@@ -45,7 +45,6 @@
     "back": "Back to the history",
     "locationsCounted": "{count} locations",
     "locationGone": "No longer there",
-    "expected": "Expected: {quantity} {unit}",
     "notCounted": "Not counted",
     "stat": {
       "counted": "counted",
@@ -89,6 +88,36 @@
       "start": "New count",
       "detail": "Count",
       "location": "Location"
+    },
+    "not": {
+      "found": "That count no longer exists"
+    },
+    "item": {
+      "not": {
+        "found": "That line is no longer in the count"
+      }
+    },
+    "already": {
+      "validated": "This count is already validated",
+      "open": "You already have a count in progress"
+    },
+    "quantity": {
+      "cannot": {
+        "be": {
+          "negative": "The quantity cannot be negative"
+        }
+      }
+    },
+    "nothing": {
+      "counted": "Write down at least one thing before validating",
+      "to": {
+        "count": "There is nothing stored to count"
+      }
+    },
+    "invalid": {
+      "date": "The date of the count is not valid",
+      "shift": "The shift of the count is not valid",
+      "note": "The note is too long"
     }
   },
   "getInventoryLocation": {
@@ -103,6 +132,7 @@
     "empty": {
       "title": "This location was empty",
       "text": "It was holding nothing when the count started"
-    }
+    },
+    "confirm": "Take what is shown as counted"
   }
 }

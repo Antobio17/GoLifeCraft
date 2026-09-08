@@ -183,6 +183,10 @@ export class GetInventoryLocationComponent {
     this.unitByItem.update((units) => ({ ...units, [row.item.id]: unit }));
   }
 
+  onConfirm(row: InventoryItemRow): void {
+    this.save(row, row.quantity);
+  }
+
   onClear(row: InventoryItemRow): void {
     this.save(row, null);
   }

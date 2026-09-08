@@ -83,10 +83,6 @@ export class InventoryViewService {
       unit: selected.unit,
       unitLabel: this.unitLabel(selected.unit),
       unitOptions: this.unitOptions(item),
-      expectedLabel: this.fill(t("getInventory.expected"), {
-        quantity: this.format(this.inUnit(item.expectedQuantity, selected)),
-        unit: this.unitLabel(selected.unit),
-      }),
       countedLabel: counted
         ? `${this.format(this.inUnit(item.countedQuantity ?? 0, selected))} ${this.unitLabel(selected.unit)}`
         : t("getInventory.notCounted"),

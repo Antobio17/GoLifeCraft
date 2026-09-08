@@ -45,7 +45,6 @@
     "back": "Volver al historial",
     "locationsCounted": "{count} ubicaciones",
     "locationGone": "Ya no existe",
-    "expected": "Esperado: {quantity} {unit}",
     "notCounted": "Sin contar",
     "stat": {
       "counted": "contados",
@@ -89,6 +88,36 @@
       "start": "Nuevo recuento",
       "detail": "Recuento",
       "location": "Ubicación"
+    },
+    "not": {
+      "found": "Ese recuento ya no existe"
+    },
+    "item": {
+      "not": {
+        "found": "Esa línea ya no está en el recuento"
+      }
+    },
+    "already": {
+      "validated": "Este recuento ya está validado",
+      "open": "Ya tienes un recuento en curso"
+    },
+    "quantity": {
+      "cannot": {
+        "be": {
+          "negative": "La cantidad no puede ser negativa"
+        }
+      }
+    },
+    "nothing": {
+      "counted": "Anota al menos una cosa antes de validar",
+      "to": {
+        "count": "No hay nada guardado que contar"
+      }
+    },
+    "invalid": {
+      "date": "La fecha del recuento no es válida",
+      "shift": "El turno del recuento no es válido",
+      "note": "La nota es demasiado larga"
     }
   },
   "getInventoryLocation": {
@@ -103,6 +132,7 @@
     "empty": {
       "title": "Esta ubicación estaba vacía",
       "text": "No guardaba nada cuando empezó el recuento"
-    }
+    },
+    "confirm": "Dar por contado lo que se ve"
   }
 }

@@ -71,9 +71,8 @@
                 [radius]="11"
               />
 
-              <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+              <ds-stack [grow]="true">
                 <ds-text variant="strong">{{ row.name }}</ds-text>
-                <ds-text variant="meta">{{ row.expectedLabel }}</ds-text>
               </ds-stack>
 
               <ds-stack
@@ -103,6 +102,13 @@
                       variant="ghost"
                       [ariaLabel]="'getInventoryLocation.clear' | t"
                       (clicked)="onClear(row)"
+                    />
+                  } @else {
+                    <ds-icon-button
+                      icon="check"
+                      variant="soft"
+                      [ariaLabel]="'getInventoryLocation.confirm' | t"
+                      (clicked)="onConfirm(row)"
                     />
                   }
                 } @else {

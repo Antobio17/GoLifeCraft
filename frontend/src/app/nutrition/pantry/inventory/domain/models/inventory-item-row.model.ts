@@ -10,7 +10,6 @@ export interface InventoryItemRow {
   unit: string;
   unitLabel: string;
   unitOptions: SelectOption[];
-  expectedLabel: string;
   countedLabel: string;
   counted: boolean;
 }
