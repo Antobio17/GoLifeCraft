@@ -17,6 +17,7 @@
       </options>
     </field>
     <field name="countedQuantity" type="float" column="counted_quantity" nullable="true"/>
+    <field name="countedUnit" type="string" column="counted_unit" length="30" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

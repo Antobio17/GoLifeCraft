@@ -29,6 +29,7 @@ class InventoryLocationItem extends GenericAggregate
     public string $unit;
     public float $expectedQuantity;
     public ?float $countedQuantity = null;
+    public ?string $countedUnit = null;
 
     public static function plan(
         string $inventoryId,
@@ -61,11 +62,12 @@ class InventoryLocationItem extends GenericAggregate
         return $item;
     }
 
-    public function count(?float $countedQuantity, string $countedByUserId, \DateTime $now): void
+    public function count(?float $countedQuantity, ?string $countedUnit, string $countedByUserId, \DateTime $now): void
     {
         $this->countedQuantity = null === $countedQuantity
             ? null
             : round(num: $countedQuantity, precision: self::QUANTITY_PRECISION);
+        $this->countedUnit = null === $countedQuantity ? null : ($countedUnit ?? $this->unit);
         $this->stampUpdate(userId: $countedByUserId, now: $now);
     }
 

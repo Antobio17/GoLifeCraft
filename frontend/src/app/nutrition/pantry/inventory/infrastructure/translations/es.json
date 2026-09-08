@@ -41,19 +41,28 @@
     "back": "Volver al inventario"
   },
   "getInventory": {
+    "eyebrow": "Recuento",
+    "back": "Volver al historial",
+    "locationsCounted": "{count} ubicaciones",
     "locationGone": "Ya no existe",
-    "locationsCounted": "{count} ubicaciones recorridas",
     "expected": "Esperado: {quantity} {unit}",
+    "notCounted": "Sin contar",
     "stat": {
-      "counted": "Contados",
-      "adjusted": "Con diferencia"
+      "counted": "contados",
+      "adjusted": "con diferencia"
     },
-    "draftHint": "Ve anotando lo que encuentras. Al validar, el stock se sobrescribe con estos números.",
+    "locations": {
+      "title": "Ubicaciones"
+    },
+    "location": {
+      "items": "{count} cosas guardadas",
+      "counted": "contados",
+      "adjusted": "con diferencia"
+    },
+    "draftHint": "Entra en cada ubicación y anota lo que encuentres. Al validar, el stock se sobrescribe con estos números.",
     "validatedHint": "Este recuento ya está validado y forma parte del historial.",
     "validate": "Validar y actualizar stock",
     "discard": "Descartar recuento",
-    "back": "Volver al historial",
-    "clear": "Quitar el conteo",
     "discardTitle": "Descartar recuento",
     "discardBody": "Vas a descartar este recuento sin aplicarlo",
     "discardWarning": "Se pierde todo lo contado. El stock se queda como está.",
@@ -78,7 +87,22 @@
     "breadcrumb": {
       "list": "Inventario",
       "start": "Nuevo recuento",
-      "detail": "Recuento"
+      "detail": "Recuento",
+      "location": "Ubicación"
+    }
+  },
+  "getInventoryLocation": {
+    "back": "Volver al recuento",
+    "counted": "{counted}/{total} contados",
+    "items": {
+      "title": "Qué hay aquí"
+    },
+    "hint": "Escribe lo que encuentres. Puedes contar en la unidad mínima o en cualquier equivalencia del artículo.",
+    "unit": "Unidad del recuento",
+    "clear": "Quitar el conteo",
+    "empty": {
+      "title": "Esta ubicación estaba vacía",
+      "text": "No guardaba nada cuando empezó el recuento"
     }
   }
 }

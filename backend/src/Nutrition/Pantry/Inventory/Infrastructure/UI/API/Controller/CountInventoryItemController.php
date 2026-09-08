@@ -31,6 +31,7 @@ final class CountInventoryItemController
                 inventoryId: $inventoryId,
                 itemId: $itemId,
                 countedQuantity: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'countedQuantity', required: false),
+                countedUnit: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'countedUnit', required: false),
                 countedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 

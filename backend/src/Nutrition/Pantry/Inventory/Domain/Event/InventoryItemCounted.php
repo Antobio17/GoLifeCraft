@@ -18,6 +18,7 @@ final readonly class InventoryItemCounted extends DomainEvent
         public string $unit,
         public float $expectedQuantity,
         public ?float $countedQuantity,
+        public ?string $countedUnit,
         public string $inventoryLocationId,
         public int $locationPosition,
         public string $locationId,

@@ -43,6 +43,14 @@ export const INVENTORY_ROUTES: Routes = [
             (m) => m.GetInventoryComponent,
           ),
       },
+      {
+        path: ":id/locations/:locationId",
+        data: { breadcrumb: "inventory.breadcrumb.location" },
+        loadComponent: () =>
+          import("../components/get-inventory-location.component").then(
+            (m) => m.GetInventoryLocationComponent,
+          ),
+      },
     ],
   },
 ];

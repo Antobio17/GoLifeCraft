@@ -80,6 +80,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     pantryLocation: "nutrition/pantry/location",
     getInventories: "nutrition/pantry/inventory",
     getInventory: "nutrition/pantry/inventory",
+    getInventoryLocation: "nutrition/pantry/inventory",
     startInventory: "nutrition/pantry/inventory",
     inventory: "nutrition/pantry/inventory",
     inventoryShift: "nutrition/pantry/inventory",

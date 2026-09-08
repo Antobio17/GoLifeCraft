@@ -13,6 +13,7 @@ services:
     class: Nutrition\Pantry\Inventory\Application\Command\CountInventoryItemCommandHandler
     arguments:
       $inventoryRepository: '@Nutrition\Pantry\Inventory\Domain\Model\InventoryRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Inventory\Domain\QueryModel\CountInventoryItemNeedleDataQuery'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

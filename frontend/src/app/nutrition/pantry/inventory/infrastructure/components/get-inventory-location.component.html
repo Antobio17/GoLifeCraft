@@ -1,0 +1,118 @@
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+  @if (loading()) {
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="true"
+      titleWidth="46%"
+    />
+
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
+      <ng-container slot="side">
+        <ds-skeleton height="8rem" />
+      </ng-container>
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-skeleton height="4.5rem" />
+        <ds-skeleton height="4.5rem" delay="0.1s" />
+        <ds-skeleton height="4.5rem" delay="0.2s" />
+      </ds-stack>
+    </ds-split-view>
+  }
+
+  @if (!loading() && location(); as inventoryLocation) {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getInventoryLocation.back' | t"
+      [eyebrow]="eyebrow()"
+      [title]="inventoryLocation.name"
+      [subtitle]="headerSubtitle()"
+      (leadingClick)="back()"
+    />
+
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
+      <ng-container slot="side">
+        <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-2)'">
+          <ds-macro-badges [macros]="summaryBadges()" />
+          <ds-progress-bar [value]="progressPercent()" />
+          <ds-text variant="meta">{{ hint() }}</ds-text>
+        </ds-card>
+      </ng-container>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-section-header
+          [title]="'getInventoryLocation.items.title' | t"
+          [staticLabel]="rows().length.toString()"
+        />
+
+        @if (rows().length === 0) {
+          <ds-empty-state
+            icon="package"
+            [title]="'getInventoryLocation.empty.title' | t"
+            [text]="'getInventoryLocation.empty.text' | t"
+          />
+        }
+
+        @for (row of rows(); track row.item.id) {
+          <ds-card
+            variant="inset"
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+            >
+              <ds-emoji-tile
+                [emoji]="row.emoji"
+                [imageUrl]="row.imageUrl"
+                [alt]="row.name"
+                [size]="40"
+                [radius]="11"
+              />
+
+              <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                <ds-text variant="strong">{{ row.name }}</ds-text>
+                <ds-text variant="meta">{{ row.expectedLabel }}</ds-text>
+              </ds-stack>
+
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-2)'"
+                [shrink]="false"
+              >
+                @if (isDraft()) {
+                  <ds-inline-quantity
+                    size="sm"
+                    [allowZero]="true"
+                    [field]="true"
+                    [quantity]="row.quantity"
+                    [unit]="row.unit"
+                    [unitLabel]="row.unitLabel"
+                    [unitOptions]="row.unitOptions"
+                    [ariaLabel]="row.name"
+                    [unitAriaLabel]="'getInventoryLocation.unit' | t"
+                    (quantityChange)="onQuantity(row, $event)"
+                    (unitChange)="onUnit(row, $event)"
+                  />
+
+                  @if (row.counted) {
+                    <ds-icon-button
+                      icon="close"
+                      variant="ghost"
+                      [ariaLabel]="'getInventoryLocation.clear' | t"
+                      (clicked)="onClear(row)"
+                    />
+                  }
+                } @else {
+                  <ds-text variant="strong">{{ row.countedLabel }}</ds-text>
+                }
+              </ds-stack>
+            </ds-stack>
+          </ds-card>
+        }
+      </ds-stack>
+    </ds-split-view>
+  }
+</ds-page-wrapper>

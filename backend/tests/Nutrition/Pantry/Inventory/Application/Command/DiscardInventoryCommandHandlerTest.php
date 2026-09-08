@@ -47,6 +47,7 @@ final class DiscardInventoryCommandHandlerTest extends TestCase
         $inventory->countItem(
             itemId: $inventory->locations[0]->items[0]->id,
             countedQuantity: 780.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

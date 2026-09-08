@@ -1,3 +1,4 @@
+import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { InventoryLocationItem } from "./inventory-location-item.model";
 
 export interface InventoryItemRow {
@@ -5,8 +6,11 @@ export interface InventoryItemRow {
   emoji: string;
   name: string;
   imageUrl: string | null;
+  quantity: number;
+  unit: string;
+  unitLabel: string;
+  unitOptions: SelectOption[];
   expectedLabel: string;
-  differenceLabel: string;
-  differenceTone: "up" | "down" | "even";
+  countedLabel: string;
   counted: boolean;
 }

@@ -2,9 +2,11 @@
 
 namespace Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\Doctrine;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\GetInventoryResult;
+use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryItemUnitView;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationItemView;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationView;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\GetInventoryNeedleDataQuery;
@@ -76,6 +78,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 'il.name_snapshot',
                 'il.emoji_snapshot',
                 'l.id AS live_location_id',
+                'l.emoji AS live_emoji',
             )
             ->from(table: 'inventory_location', alias: 'il')
             ->leftJoin(fromAlias: 'il', join: 'pantry_location', alias: 'l', condition: 'l.id = il.location_id')
@@ -93,7 +96,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 position: (int) $row['position'],
                 locationId: $row['live_location_id'],
                 name: $row['name_snapshot'],
-                emoji: (string) ($row['emoji_snapshot'] ?? ''),
+                emoji: (string) ($row['live_emoji'] ?: ($row['emoji_snapshot'] ?? '')),
                 totalItems: count(value: $items),
                 countedItems: count(value: array_filter(
                     array: $items,
@@ -125,6 +128,9 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 'it.unit',
                 'it.expected_quantity',
                 'it.counted_quantity',
+                'it.counted_unit',
+                'a.emoji AS article_emoji',
+                'r.emoji AS recipe_emoji',
                 'a.image AS article_image',
                 'r.image AS recipe_image',
             )
@@ -150,6 +156,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
             ->fetchAllAssociative();
 
         $grouped = [];
+        $equivalences = $this->equivalencesOf(rows: $rows);
 
         foreach ($rows as $row) {
             $expectedQuantity = (float) $row['expected_quantity'];
@@ -161,11 +168,13 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 kind: $row['kind'],
                 refId: $row['ref_id'],
                 name: $row['name_snapshot'],
-                emoji: (string) ($row['emoji_snapshot'] ?? ''),
+                emoji: (string) ($row['article_emoji'] ?: ($row['recipe_emoji'] ?: ($row['emoji_snapshot'] ?? ''))),
                 image: $row['article_image'] ?? $row['recipe_image'] ?? null,
                 unit: $row['unit'],
+                units: self::unitsOf(unit: $row['unit'], equivalences: $equivalences[$row['ref_id']] ?? []),
                 expectedQuantity: $expectedQuantity,
                 countedQuantity: $countedQuantity,
+                countedUnit: $row['counted_unit'] ?? null,
                 difference: null === $countedQuantity
                     ? 0.0
                     : round(num: $countedQuantity - $expectedQuantity, precision: InventoryLocationItem::QUANTITY_PRECISION),
@@ -173,6 +182,63 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
         }
 
         return $grouped;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $rows
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    private function equivalencesOf(array $rows): array
+    {
+        $articleIds = array_values(array: array_unique(array: array_map(
+            callback: static fn (array $row): string => $row['ref_id'],
+            array: array_filter(
+                array: $rows,
+                callback: static fn (array $row): bool => InventoryLocationItem::KIND_ARTICLE === $row['kind'],
+            ),
+        )));
+
+        if ([] === $articleIds) {
+            return [];
+        }
+
+        $equivalences = $this->connection->createQueryBuilder()
+            ->select('e.article_id', 'e.unit', 'e.quantity')
+            ->from(table: 'article_equivalence', alias: 'e')
+            ->where('e.article_id IN (:articleIds)')
+            ->andWhere('e.quantity > 0')
+            ->orderBy(sort: 'e.quantity', order: 'ASC')
+            ->setParameter(key: 'articleIds', value: $articleIds, type: ArrayParameterType::STRING)
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $grouped = [];
+
+        foreach ($equivalences as $equivalence) {
+            $grouped[$equivalence['article_id']][] = $equivalence;
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $equivalences
+     *
+     * @return InventoryItemUnitView[]
+     */
+    private static function unitsOf(string $unit, array $equivalences): array
+    {
+        $units = [new InventoryItemUnitView(unit: $unit, factor: 1.0)];
+
+        foreach ($equivalences as $equivalence) {
+            $units[] = new InventoryItemUnitView(
+                unit: $equivalence['unit'],
+                factor: (float) $equivalence['quantity'],
+            );
+        }
+
+        return $units;
     }
 
     /**

@@ -10,6 +10,7 @@ final readonly class CountInventoryItemCommand implements Command
         public string $inventoryId,
         public string $itemId,
         public ?float $countedQuantity,
+        public ?string $countedUnit,
         public string $countedByUserId,
     ) {
     }

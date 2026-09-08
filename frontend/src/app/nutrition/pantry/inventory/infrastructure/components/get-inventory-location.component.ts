@@ -15,57 +15,52 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { LocationCardComponent } from "@shared/design-system/location-card/infrastructure/components/location-card.component";
+import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { InlineQuantityComponent } from "@shared/design-system/inline-quantity/infrastructure/components/inline-quantity.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
-import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetInventoryService } from "@nutrition/pantry/inventory/application/services/get-inventory.service";
-import { ValidateInventoryService } from "@nutrition/pantry/inventory/application/services/validate-inventory.service";
-import { DiscardInventoryService } from "@nutrition/pantry/inventory/application/services/discard-inventory.service";
+import { CountInventoryItemService } from "@nutrition/pantry/inventory/application/services/count-inventory-item.service";
 import { InventoryViewService } from "@nutrition/pantry/inventory/application/services/inventory-view.service";
 import { InventoryDetailAttributes } from "../../domain/models/inventory-detail-attributes.model";
-import { InventoryLocationRow } from "../../domain/models/inventory-location-row.model";
+import { InventoryLocation } from "../../domain/models/inventory-location.model";
+import { InventoryItemRow } from "../../domain/models/inventory-item-row.model";
 import { InventoryStatus } from "../../domain/models/inventory-status.model";
 
 @Component({
-  selector: "app-get-inventory",
-  templateUrl: "./get-inventory.component.html",
+  selector: "app-get-inventory-location",
+  templateUrl: "./get-inventory-location.component.html",
   imports: [
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
     SplitViewComponent,
     StackComponent,
-    GridComponent,
     CardComponent,
     TextComponent,
     MacroBadgesComponent,
     ProgressBarComponent,
-    ButtonComponent,
-    LocationCardComponent,
+    EmojiTileComponent,
+    InlineQuantityComponent,
+    IconButtonComponent,
     EmptyStateComponent,
     SkeletonComponent,
     SkeletonScreenHeaderComponent,
     SectionHeaderComponent,
-    ConfirmActionModalComponent,
-    RevealDirective,
   ],
 })
-export class GetInventoryComponent {
+export class GetInventoryLocationComponent {
   private translationService = inject(TranslationService);
   private getInventoryService = inject(GetInventoryService);
-  private validateInventoryService = inject(ValidateInventoryService);
-  private discardInventoryService = inject(DiscardInventoryService);
+  private countInventoryItemService = inject(CountInventoryItemService);
   private inventoryView = inject(InventoryViewService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
@@ -73,16 +68,22 @@ export class GetInventoryComponent {
   private readonly MODULE_PATH = "nutrition/pantry/inventory";
 
   readonly id = input.required<string>();
+  readonly locationId = input.required<string>();
 
   attributes = signal<InventoryDetailAttributes | null>(null);
+  unitByItem = signal<Record<string, string>>({});
   loading = signal(true);
-  validating = signal(false);
-  discarding = signal(false);
-  showDiscardModal = signal(false);
 
   isDraft = computed(() => InventoryStatus.DRAFT === this.attributes()?.status);
 
-  dateLabel = computed(() => {
+  location = computed<InventoryLocation | null>(
+    () =>
+      (this.attributes()?.locations ?? []).find(
+        (location) => location.id === this.locationId(),
+      ) ?? null,
+  );
+
+  eyebrow = computed(() => {
     const attributes = this.attributes();
 
     if (null === attributes) return "";
@@ -91,56 +92,61 @@ export class GetInventoryComponent {
   });
 
   headerSubtitle = computed(() => {
-    const attributes = this.attributes();
+    const location = this.location();
 
-    if (null === attributes) return "";
+    if (null === location) return "";
 
-    return [
-      this.t(this.inventoryView.shiftKey(attributes.shift)),
-      this.t(this.inventoryView.statusKey(attributes.status)),
-      this.t("getInventory.locationsCounted").replace(
-        "{count}",
-        String(attributes.totalLocations),
-      ),
-    ].join(" · ");
+    const counted = this.t("getInventoryLocation.counted")
+      .replace("{counted}", String(location.countedItems))
+      .replace("{total}", String(location.totalItems));
+
+    if (null !== location.locationId) return counted;
+
+    return `${this.t("getInventory.locationGone")} · ${counted}`;
   });
 
   summaryBadges = computed<MacroBadge[]>(() => {
-    const attributes = this.attributes();
+    const location = this.location();
 
-    if (null === attributes) return [];
+    if (null === location) return [];
 
     return [
       {
-        label: `${attributes.countedItems}/${attributes.totalItems}`,
-        value: this.t("getInventory.stat.counted"),
+        label: `${location.countedItems}/${location.totalItems}`,
+        value: this.t("getInventory.location.counted"),
       },
       {
-        label: `${attributes.adjustedItems}`,
-        value: this.t("getInventory.stat.adjusted"),
+        label: `${location.adjustedItems}`,
+        value: this.t("getInventory.location.adjusted"),
       },
     ];
   });
 
   progressPercent = computed(() => {
-    const attributes = this.attributes();
+    const location = this.location();
 
-    if (null === attributes || 0 === attributes.totalItems) return 0;
+    if (null === location || 0 === location.totalItems) return 0;
 
-    return Math.round((attributes.countedItems / attributes.totalItems) * 100);
+    return Math.round((location.countedItems / location.totalItems) * 100);
   });
 
   hint = computed(() =>
     this.isDraft()
-      ? this.t("getInventory.draftHint")
+      ? this.t("getInventoryLocation.hint")
       : this.t("getInventory.validatedHint"),
   );
 
-  locationRows = computed<InventoryLocationRow[]>(() =>
-    (this.attributes()?.locations ?? []).map((location) =>
-      this.inventoryView.locationRowOf(location, (key) => this.t(key)),
-    ),
-  );
+  rows = computed<InventoryItemRow[]>(() => {
+    const units = this.unitByItem();
+
+    return (this.location()?.items ?? []).map((item) =>
+      this.inventoryView.rowOf(
+        item,
+        units[item.id] ?? this.inventoryView.selectedUnit(item),
+        (key) => this.t(key),
+      ),
+    );
+  });
 
   constructor() {
     toObservable(this.id)
@@ -169,52 +175,36 @@ export class GetInventoryComponent {
     return this.translationService.translate(key, this.MODULE_PATH);
   }
 
-  onOpen(row: InventoryLocationRow): void {
-    this.router.navigate([
-      "/inventory",
-      this.id(),
-      "locations",
-      row.location.id,
-    ]);
+  onQuantity(row: InventoryItemRow, quantity: number): void {
+    this.save(row, quantity);
   }
 
-  onValidate(): void {
-    this.validating.set(true);
-
-    this.validateInventoryService.validateInventory(this.id()).subscribe({
-      next: () => {
-        this.validating.set(false);
-        this.router.navigate(["/inventory"]);
-      },
-      error: () => this.validating.set(false),
-    });
+  onUnit(row: InventoryItemRow, unit: string): void {
+    this.unitByItem.update((units) => ({ ...units, [row.item.id]: unit }));
   }
 
-  onDiscard(): void {
-    this.showDiscardModal.set(true);
-  }
-
-  onCancelDiscard(): void {
-    this.showDiscardModal.set(false);
-  }
-
-  onConfirmDiscard(): void {
-    this.discarding.set(true);
-
-    this.discardInventoryService.discardInventory(this.id()).subscribe({
-      next: () => {
-        this.discarding.set(false);
-        this.showDiscardModal.set(false);
-        this.router.navigate(["/inventory"]);
-      },
-      error: () => {
-        this.discarding.set(false);
-        this.showDiscardModal.set(false);
-      },
-    });
+  onClear(row: InventoryItemRow): void {
+    this.save(row, null);
   }
 
   back(): void {
-    this.router.navigate(["/inventory"]);
+    this.router.navigate(["/inventory", this.id()]);
+  }
+
+  private save(row: InventoryItemRow, countedQuantity: number | null): void {
+    this.countInventoryItemService
+      .countInventoryItem(this.id(), row.item.id, {
+        countedQuantity,
+        countedUnit: null === countedQuantity ? null : row.unit,
+      })
+      .subscribe({
+        next: () => this.refresh(),
+      });
+  }
+
+  private refresh(): void {
+    this.getInventoryService.getInventory(this.id()).subscribe({
+      next: (response) => this.attributes.set(response.data.attributes),
+    });
   }
 }

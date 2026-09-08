@@ -98,6 +98,7 @@ class Inventory extends GenericAggregate
     public function countItem(
         string $itemId,
         ?float $countedQuantity,
+        ?string $countedUnit,
         string $countedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -118,7 +119,12 @@ class Inventory extends GenericAggregate
         $now = $dateTimeGenerator->now();
         $item = $location->item(itemId: $itemId);
 
-        $item->count(countedQuantity: $countedQuantity, countedByUserId: $countedByUserId, now: $now);
+        $item->count(
+            countedQuantity: $countedQuantity,
+            countedUnit: $countedUnit,
+            countedByUserId: $countedByUserId,
+            now: $now,
+        );
         $this->stampUpdate(userId: $countedByUserId, now: $now);
 
         $this->record(event: new InventoryItemCounted(
@@ -133,6 +139,7 @@ class Inventory extends GenericAggregate
             unit: $item->unit,
             expectedQuantity: $item->expectedQuantity,
             countedQuantity: $item->countedQuantity,
+            countedUnit: $item->countedUnit,
             inventoryLocationId: $location->id,
             locationPosition: $location->position,
             locationId: $location->locationId,
@@ -229,6 +236,13 @@ class Inventory extends GenericAggregate
             callback: static fn (InventoryLocation $location): array => $location->items,
             array: $this->locations,
         ));
+    }
+
+    public function item(string $itemId): ?InventoryLocationItem
+    {
+        $location = $this->locationHolding(itemId: $itemId);
+
+        return null === $location ? null : $location->item(itemId: $itemId);
     }
 
     private function locationHolding(string $itemId): ?InventoryLocation

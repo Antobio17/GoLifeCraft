@@ -41,19 +41,28 @@
     "back": "Back to inventory"
   },
   "getInventory": {
-    "locationGone": "No longer exists",
-    "locationsCounted": "{count} locations walked through",
+    "eyebrow": "Stock count",
+    "back": "Back to the history",
+    "locationsCounted": "{count} locations",
+    "locationGone": "No longer there",
     "expected": "Expected: {quantity} {unit}",
+    "notCounted": "Not counted",
     "stat": {
-      "counted": "Counted",
-      "adjusted": "With a gap"
+      "counted": "counted",
+      "adjusted": "with a difference"
     },
-    "draftHint": "Write down what you find. Validating overwrites the stock with these numbers.",
-    "validatedHint": "This count is validated and part of the history.",
+    "locations": {
+      "title": "Locations"
+    },
+    "location": {
+      "items": "{count} things stored",
+      "counted": "counted",
+      "adjusted": "with a difference"
+    },
+    "draftHint": "Walk into each location and write down what you find. Validating overwrites the stock with these numbers.",
+    "validatedHint": "This count is already validated and part of the history.",
     "validate": "Validate and update stock",
     "discard": "Discard count",
-    "back": "Back to history",
-    "clear": "Clear the count",
     "discardTitle": "Discard count",
     "discardBody": "You are about to discard this count without applying it",
     "discardWarning": "Everything counted is lost. The stock stays as it is.",
@@ -78,7 +87,22 @@
     "breadcrumb": {
       "list": "Inventory",
       "start": "New count",
-      "detail": "Count"
+      "detail": "Count",
+      "location": "Location"
+    }
+  },
+  "getInventoryLocation": {
+    "back": "Back to the count",
+    "counted": "{counted}/{total} counted",
+    "items": {
+      "title": "What is here"
+    },
+    "hint": "Write down what you find. You can count in the base unit or in any equivalence of the article.",
+    "unit": "Count unit",
+    "clear": "Clear the count",
+    "empty": {
+      "title": "This location was empty",
+      "text": "It was holding nothing when the count started"
     }
   }
 }

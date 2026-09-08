@@ -9,6 +9,7 @@ use Nutrition\Pantry\Inventory\Domain\Exception\CountInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
 use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
 use Nutrition\Pantry\Inventory\Infrastructure\Domain\Model\InMemory\InMemoryInventoryRepository;
+use Nutrition\Pantry\Inventory\Infrastructure\Domain\QueryModel\InMemory\InMemoryCountInventoryItemNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -16,6 +17,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class CountInventoryItemCommandHandlerTest extends TestCase
 {
     private InMemoryInventoryRepository $inventoryRepository;
+    private InMemoryCountInventoryItemNeedleDataQuery $needleDataQuery;
     private DateTimeGenerator $dateTimeGenerator;
     private CountInventoryItemCommandHandler $handler;
     private string $itemId;
@@ -24,8 +26,11 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
     {
         $this->dateTimeGenerator = new DateTimeGenerator();
         $this->inventoryRepository = new InMemoryInventoryRepository();
+        $this->needleDataQuery = new InMemoryCountInventoryItemNeedleDataQuery();
+        $this->needleDataQuery->withFactor(articleId: 'article-1', unit: 'pack', factor: 500.0);
         $this->handler = new CountInventoryItemCommandHandler(
             inventoryRepository: $this->inventoryRepository,
+            needleDataQuery: $this->needleDataQuery,
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -40,6 +45,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $this->itemId,
             countedQuantity: 780.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
 
@@ -47,6 +53,61 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
 
         $this->assertSame(expected: 780.0, actual: $item->countedQuantity);
         $this->assertSame(expected: -220.0, actual: $item->difference());
+    }
+
+    public function testItStoresTheCountInBaseUnitsWhenAnAliasIsUsed(): void
+    {
+        ($this->handler)(new CountInventoryItemCommand(
+            inventoryId: 'inventory-1',
+            itemId: $this->itemId,
+            countedQuantity: 1.5,
+            countedUnit: 'pack',
+            countedByUserId: 'god-user-id',
+        ));
+
+        $item = $this->inventoryRepository->findById(id: 'inventory-1')->locations[0]->items[0];
+
+        $this->assertSame(expected: 750.0, actual: $item->countedQuantity);
+        $this->assertSame(expected: 'pack', actual: $item->countedUnit);
+    }
+
+    public function testItKeepsTheQuantityWhenTheAliasIsNotConfigured(): void
+    {
+        ($this->handler)(new CountInventoryItemCommand(
+            inventoryId: 'inventory-1',
+            itemId: $this->itemId,
+            countedQuantity: 3.0,
+            countedUnit: 'jar',
+            countedByUserId: 'god-user-id',
+        ));
+
+        $this->assertSame(
+            expected: 3.0,
+            actual: $this->inventoryRepository->findById(id: 'inventory-1')->locations[0]->items[0]->countedQuantity,
+        );
+    }
+
+    public function testItDropsTheUnitWhenTheCountIsCleared(): void
+    {
+        ($this->handler)(new CountInventoryItemCommand(
+            inventoryId: 'inventory-1',
+            itemId: $this->itemId,
+            countedQuantity: 1.0,
+            countedUnit: 'pack',
+            countedByUserId: 'god-user-id',
+        ));
+
+        ($this->handler)(new CountInventoryItemCommand(
+            inventoryId: 'inventory-1',
+            itemId: $this->itemId,
+            countedQuantity: null,
+            countedUnit: null,
+            countedByUserId: 'god-user-id',
+        ));
+
+        $this->assertNull(
+            actual: $this->inventoryRepository->findById(id: 'inventory-1')->locations[0]->items[0]->countedUnit,
+        );
     }
 
     public function testItFindsAnItemHeldByASecondLocation(): void
@@ -57,6 +118,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $inventory->locations[1]->items[0]->id,
             countedQuantity: 6.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
 
@@ -74,6 +136,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $this->itemId,
             countedQuantity: 780.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
 
@@ -97,6 +160,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $this->itemId,
             countedQuantity: 780.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
 
@@ -114,6 +178,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $this->itemId,
             countedQuantity: 780.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
 
@@ -121,6 +186,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $this->itemId,
             countedQuantity: null,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
 
@@ -137,6 +203,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $this->itemId,
             countedQuantity: -1.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
     }
@@ -149,6 +216,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: 'missing-item',
             countedQuantity: 10.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
     }
@@ -159,6 +227,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
         $inventory->countItem(
             itemId: $this->itemId,
             countedQuantity: 780.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -170,6 +239,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $this->itemId,
             countedQuantity: 500.0,
+            countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
     }

@@ -1,12 +1,18 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { SelectOption } from "../../../select/domain/models/select-option.model";
 
 type InlineQuantitySize = "md" | "sm";
 
 @Component({
   selector: "ds-inline-quantity",
+  imports: [IconComponent],
   template: `
-    <span class="ds-inline-qty" [class.ds-inline-qty--sm]="size === 'sm'">
+    <span
+      class="ds-inline-qty"
+      [class.ds-inline-qty--sm]="size === 'sm'"
+      [class.ds-inline-qty--field]="field"
+    >
       <input
         class="ds-inline-qty__input"
         type="text"
@@ -19,6 +25,14 @@ type InlineQuantitySize = "md" | "sm";
       @if (unitOptions.length > 1) {
         <span class="ds-inline-qty__picker">
           <span class="ds-inline-qty__unit">{{ selectedLabel }}</span>
+          @if (field) {
+            <ds-icon
+              class="ds-inline-qty__caret"
+              name="chevronDown"
+              [size]="12"
+              [stroke]="2.4"
+            />
+          }
           <select
             class="ds-inline-qty__select"
             [attr.aria-label]="unitAriaLabel || null"
@@ -54,6 +68,25 @@ type InlineQuantitySize = "md" | "sm";
       .ds-inline-qty--sm {
         gap: var(--ds-space-1);
         border-radius: var(--ds-radius-md);
+      }
+      .ds-inline-qty--field {
+        gap: var(--ds-space-1-5);
+        background: var(--ds-surface);
+        border: 1px solid var(--ds-border-input);
+        padding: var(--ds-space-1-5) var(--ds-space-2);
+      }
+      .ds-inline-qty--field:focus-within {
+        border-color: var(--ds-border-focus);
+        box-shadow: var(--ds-focus-ring);
+      }
+      .ds-inline-qty--field .ds-inline-qty__picker {
+        gap: 2px;
+        background: var(--ds-surface-inset);
+        border-radius: var(--ds-radius-sm);
+        padding: 2px var(--ds-space-1);
+      }
+      .ds-inline-qty--field .ds-inline-qty__caret {
+        color: var(--ds-text-meta);
       }
       .ds-inline-qty__input {
         width: 3.25rem;
@@ -125,6 +158,8 @@ export class InlineQuantityComponent {
   @Input() ariaLabel = "";
   @Input() unitAriaLabel = "";
   @Input() size: InlineQuantitySize = "md";
+  @Input() allowZero = false;
+  @Input() field = false;
 
   @Output() quantityChange = new EventEmitter<number>();
   @Output() unitChange = new EventEmitter<string>();
@@ -141,7 +176,11 @@ export class InlineQuantityComponent {
     const input = event.target as HTMLInputElement;
     const parsed = Number.parseFloat(input.value.replace(",", "."));
 
-    if (!Number.isFinite(parsed) || parsed <= 0) {
+    if (
+      !Number.isFinite(parsed) ||
+      parsed < 0 ||
+      (0 === parsed && !this.allowZero)
+    ) {
       input.value = String(this.quantity);
 
       return;
