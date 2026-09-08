@@ -130,6 +130,10 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
     this.router.navigate(["/locations", id]);
   }
 
+  back(): void {
+    this.router.navigate(["/inventory"]);
+  }
+
   private reload(): void {
     this.currentPage.set(1);
     this.reloading.set(true);
@@ -157,12 +161,12 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
       description,
       badges: [
         {
-          icon: "package",
-          label: `${articleCount} ${this.t("getPantryLocations.card.articles")}`,
+          label: `${articleCount}`,
+          value: this.t("getPantryLocations.card.articles"),
         },
         {
-          icon: "chefHat",
-          label: `${recipeCount} ${this.t("getPantryLocations.card.recipes")}`,
+          label: `${recipeCount}`,
+          value: this.t("getPantryLocations.card.recipes"),
         },
       ],
     };

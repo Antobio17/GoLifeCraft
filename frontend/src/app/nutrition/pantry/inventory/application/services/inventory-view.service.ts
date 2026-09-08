@@ -1,4 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { InventoryLocation } from "../../domain/models/inventory-location.model";
 import { InventoryLocationItem } from "../../domain/models/inventory-location-item.model";
 import { InventoryLocationGroup } from "../../domain/models/inventory-location-group.model";
@@ -7,6 +9,8 @@ import { InventoryShift } from "../../domain/models/inventory-shift.model";
 
 @Injectable({ providedIn: "root" })
 export class InventoryViewService {
+  private entityVisual = inject(EntityVisualService);
+
   shiftKey(shift: InventoryShift | string): string {
     return `inventoryShift.${shift}`;
   }
@@ -47,7 +51,14 @@ export class InventoryViewService {
   ): InventoryItemRow {
     return {
       item,
-      title: `${item.emoji} ${item.name}`.trim(),
+      emoji: item.emoji,
+      name: item.name,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Pantry,
+        this.entityVisual.kindOf(item.kind),
+        item.refId,
+        item.image,
+      ),
       expectedLabel: expectedLabel(
         this.format(item.expectedQuantity),
         item.unit,

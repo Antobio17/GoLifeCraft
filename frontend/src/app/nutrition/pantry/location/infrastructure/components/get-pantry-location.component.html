@@ -10,7 +10,7 @@
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
       <ng-container slot="side">
-        <ds-skeleton height="16rem" />
+        <ds-skeleton height="7rem" />
       </ng-container>
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-skeleton height="4rem" />
@@ -25,11 +25,19 @@
       [leading]="'back'"
       [leadingLabel]="'getPantryLocation.back' | t"
       [eyebrow]="'getPantryLocation.eyebrow' | t"
-      [title]="title()"
+      [title]="locationName()"
       [subtitle]="location.description"
       (leadingClick)="back()"
     >
       <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
+        <ds-button
+          variant="primary"
+          size="icon-lg"
+          icon="plus"
+          [iconSize]="19"
+          [ariaLabel]="'getPantryLocation.add' | t"
+          (clicked)="onOpenAddSheet()"
+        />
         <ds-button
           variant="secondary"
           size="icon-lg"
@@ -39,39 +47,21 @@
           (clicked)="onEdit()"
         />
         <ds-button
-          variant="secondary"
+          variant="danger"
           size="icon-lg"
           icon="trash"
           [iconSize]="19"
           [ariaLabel]="'getPantryLocation.delete' | t"
           (clicked)="onDelete()"
         />
-        <ds-button
-          variant="primary"
-          size="icon-lg"
-          icon="plus"
-          [iconSize]="19"
-          [ariaLabel]="'getPantryLocation.add' | t"
-          (clicked)="onOpenAddSheet()"
-        />
       </ds-stack>
     </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
       <ng-container slot="side">
-        <ds-card [gap]="'var(--ds-space-4)'">
-          <ds-stack direction="row" [gap]="'var(--ds-space-4)'" [wrap]="true">
-            <ds-stat
-              [value]="articleCount()"
-              [label]="'getPantryLocation.stat.articles' | t"
-            />
-            <ds-stat
-              [value]="recipeCount()"
-              [label]="'getPantryLocation.stat.recipes' | t"
-            />
-          </ds-stack>
-
-          <ds-note>{{ "getPantryLocation.hint" | t }}</ds-note>
+        <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-2)'">
+          <ds-macro-badges [macros]="summaryBadges()" />
+          <ds-text variant="meta">{{ "getPantryLocation.hint" | t }}</ds-text>
         </ds-card>
       </ng-container>
 
@@ -101,9 +91,30 @@
               [padding]="'var(--ds-space-3)'"
               [gap]="'var(--ds-space-2)'"
             >
-              <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                <ds-text variant="strong">{{ row.title }}</ds-text>
-                <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+              >
+                <ds-emoji-tile
+                  [emoji]="row.emoji"
+                  [imageUrl]="row.imageUrl"
+                  [alt]="row.name"
+                  [size]="40"
+                  [radius]="11"
+                />
+
+                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                  <ds-text variant="strong" [truncate]="true">{{
+                    row.name
+                  }}</ds-text>
+                </ds-stack>
+
+                <ds-stack [gap]="'var(--ds-space-1)'" [shrink]="false">
+                  <ds-text variant="meta" align="end">{{
+                    row.quantityLabel
+                  }}</ds-text>
+                </ds-stack>
               </ds-stack>
             </ds-card>
           </ds-swipe-to-delete>
@@ -144,32 +155,32 @@
     } @else {
       <ds-stack [gap]="'var(--ds-space-2)'">
         @for (row of candidateRows(); track row.candidate.id) {
-          <ds-card
-            variant="inset"
-            [padding]="'var(--ds-space-3)'"
-            [gap]="'var(--ds-space-2)'"
-          >
+          <ds-card [padding]="'var(--ds-space-2)'">
             <ds-stack
               direction="row"
-              justify="between"
               align="center"
               [gap]="'var(--ds-space-3)'"
-              [wrap]="true"
             >
+              <ds-emoji-tile
+                [emoji]="row.emoji"
+                [imageUrl]="row.imageUrl"
+                [alt]="row.name"
+                [size]="40"
+                [radius]="11"
+              />
               <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                <ds-text variant="strong">{{ row.title }}</ds-text>
+                <ds-text variant="strong" [truncate]="true">{{
+                  row.name
+                }}</ds-text>
                 <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
               </ds-stack>
 
-              <ds-button
-                variant="soft"
-                size="sm"
+              <ds-icon-button
                 icon="plus"
-                [disabled]="moving()"
+                variant="soft"
+                [ariaLabel]="addLabel()"
                 (clicked)="onPlace(row)"
-              >
-                {{ addLabel() }}
-              </ds-button>
+              />
             </ds-stack>
           </ds-card>
         }

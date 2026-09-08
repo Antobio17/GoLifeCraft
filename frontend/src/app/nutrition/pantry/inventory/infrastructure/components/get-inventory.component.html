@@ -123,9 +123,27 @@
                     [gap]="'var(--ds-space-3)'"
                     [wrap]="true"
                   >
-                    <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                      <ds-text variant="strong">{{ row.title }}</ds-text>
-                      <ds-text variant="meta">{{ row.expectedLabel }}</ds-text>
+                    <ds-stack
+                      direction="row"
+                      align="center"
+                      [gap]="'var(--ds-space-2)'"
+                      [grow]="true"
+                    >
+                      <ds-emoji-tile
+                        [emoji]="row.emoji"
+                        [imageUrl]="row.imageUrl"
+                        [alt]="row.name"
+                        [size]="40"
+                        [radius]="11"
+                      />
+                      <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                        <ds-text variant="strong" [truncate]="true">{{
+                          row.name
+                        }}</ds-text>
+                        <ds-text variant="meta">{{
+                          row.expectedLabel
+                        }}</ds-text>
+                      </ds-stack>
                     </ds-stack>
 
                     <ds-stack
@@ -152,7 +170,7 @@
                         [step]="1"
                         [unit]="row.item.unit"
                         [formControlName]="row.item.id"
-                        [ariaLabel]="row.title"
+                        [ariaLabel]="row.name"
                       />
 
                       @if (row.counted && isDraft()) {

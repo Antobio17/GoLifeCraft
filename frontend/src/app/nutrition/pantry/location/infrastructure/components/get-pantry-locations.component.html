@@ -1,7 +1,10 @@
 <ds-page-wrapper [gap]="'var(--ds-space-3)'">
   <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getPantryLocations.back' | t"
     [title]="'getPantryLocations.title' | t"
     [subtitle]="headerSubtitle()"
+    (leadingClick)="back()"
   >
     <ds-button
       slot="actions"

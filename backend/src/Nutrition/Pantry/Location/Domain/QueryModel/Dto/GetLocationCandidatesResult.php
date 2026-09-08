@@ -13,6 +13,7 @@ final class GetLocationCandidatesResult extends QueryAggregateResult
         public readonly string $refId,
         public readonly string $name,
         public readonly string $emoji,
+        public readonly ?string $image,
         public readonly string $unit,
         public readonly float $quantity,
     ) {

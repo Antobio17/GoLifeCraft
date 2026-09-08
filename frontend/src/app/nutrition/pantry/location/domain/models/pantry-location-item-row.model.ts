@@ -2,6 +2,8 @@ import { PantryLocationItem } from "./pantry-location-item.model";
 
 export interface PantryLocationItemRow {
   item: PantryLocationItem;
-  title: string;
+  emoji: string;
+  name: string;
+  imageUrl: string | null;
   quantityLabel: string;
 }

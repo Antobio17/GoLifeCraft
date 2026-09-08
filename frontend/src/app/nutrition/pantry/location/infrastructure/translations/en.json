@@ -1,6 +1,7 @@
 {
   "getPantryLocations": {
     "title": "Locations",
+    "back": "Back to inventories",
     "new": "New location",
     "stats": {
       "locations": "locations"
@@ -67,10 +68,6 @@
   },
   "getPantryLocation": {
     "eyebrow": "Location",
-    "stat": {
-      "articles": "Articles",
-      "recipes": "Recipes"
-    },
     "hint": "An article or a recipe can only sit in one location. The search only lists what is not placed yet.",
     "edit": "Edit location",
     "delete": "Delete location",

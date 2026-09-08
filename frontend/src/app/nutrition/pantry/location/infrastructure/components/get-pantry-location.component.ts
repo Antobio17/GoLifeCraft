@@ -18,14 +18,16 @@ import { SplitViewComponent } from "@shared/design-system/split-view/infrastruct
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { StatComponent } from "@shared/design-system/stat/infrastructure/components/stat.component";
+import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
+import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import {
   SegmentedOption,
   SegmentedToggleComponent,
 } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
-import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
@@ -61,11 +63,12 @@ const ALL_KINDS = "";
     StackComponent,
     CardComponent,
     TextComponent,
-    StatComponent,
+    MacroBadgesComponent,
     ButtonComponent,
+    IconButtonComponent,
+    EmojiTileComponent,
     SearchInputComponent,
     SegmentedToggleComponent,
-    NoteComponent,
     EmptyStateComponent,
     SkeletonComponent,
     SkeletonScreenHeaderComponent,
@@ -118,13 +121,16 @@ export class GetPantryLocationComponent {
 
   locationName = computed(() => this.attributes()?.name ?? "");
 
-  title = computed(() => {
-    const attributes = this.attributes();
-
-    if (null === attributes) return "";
-
-    return `${attributes.emoji} ${attributes.name}`.trim();
-  });
+  summaryBadges = computed<MacroBadge[]>(() => [
+    {
+      label: `${this.articleCount()}`,
+      value: this.t("getPantryLocations.card.articles"),
+    },
+    {
+      label: `${this.recipeCount()}`,
+      value: this.t("getPantryLocations.card.recipes"),
+    },
+  ]);
 
   kindOptions = computed<SegmentedOption[]>(() => [
     { value: ALL_KINDS, label: this.t("getPantryLocation.kind.all") },
@@ -209,12 +215,16 @@ export class GetPantryLocationComponent {
   onPlace(row: PantryLocationCandidateRow): void {
     const { kind, refId } = row.candidate.attributes;
 
-    this.track(
-      this.assignItemService.assignPantryLocationItem(this.id(), {
-        kind,
-        refId,
-      }),
+    this.candidates.update((current) =>
+      current.filter((candidate) => candidate.id !== row.candidate.id),
     );
+
+    this.assignItemService
+      .assignPantryLocationItem(this.id(), { kind, refId })
+      .subscribe({
+        next: () => this.refreshItems(),
+        error: () => this.refreshCandidates(),
+      });
   }
 
   onRemove(row: PantryLocationItemRow): void {

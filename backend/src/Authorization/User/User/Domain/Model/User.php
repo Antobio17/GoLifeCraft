@@ -42,6 +42,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         'menu',
         'shopping',
         'kitchen',
+        'pantry',
     ];
 
     private int $version;

@@ -240,7 +240,7 @@
       "title": "Images or icons",
       "hint": "Photos you uploaded are shown by default; a recipe or an article without a photo falls back to its icon.",
       "all": "All",
-      "allHint": "Applies to the seven screens",
+      "allHint": "Applies to the eight screens",
       "mode": {
         "image": "Image",
         "icon": "Icon"
@@ -252,7 +252,8 @@
         "diary": "Diary",
         "menu": "Menus",
         "shopping": "Shopping list",
-        "kitchen": "Kitchen"
+        "kitchen": "Kitchen",
+        "pantry": "Contents of locations and inventories"
       }
     },
     "password": {

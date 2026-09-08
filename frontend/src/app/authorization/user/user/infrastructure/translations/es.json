@@ -240,7 +240,7 @@
       "title": "Imágenes o iconos",
       "hint": "Por defecto se muestran las fotos que hayas subido; cuando una receta o un artículo no tiene foto, se cae al icono.",
       "all": "Todos",
-      "allHint": "Aplica a las siete pantallas",
+      "allHint": "Aplica a las ocho pantallas",
       "mode": {
         "image": "Imagen",
         "icon": "Icono"
@@ -252,7 +252,8 @@
         "diary": "Diario",
         "menu": "Menús",
         "shopping": "Lista de la compra",
-        "kitchen": "Cocina"
+        "kitchen": "Cocina",
+        "pantry": "Contenido de ubicaciones e inventarios"
       }
     },
     "password": {

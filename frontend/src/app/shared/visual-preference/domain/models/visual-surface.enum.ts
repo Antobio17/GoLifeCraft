@@ -6,4 +6,5 @@ export enum VisualSurface {
   Menu = "menu",
   Shopping = "shopping",
   Kitchen = "kitchen",
+  Pantry = "pantry",
 }

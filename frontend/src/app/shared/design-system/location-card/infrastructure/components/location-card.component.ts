@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
-import { LocationCardBadge } from "../../domain/models/location-card-badge.model";
+import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
+import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
 
 @Component({
   selector: "ds-location-card",
-  imports: [IconComponent],
+  imports: [MacroBadgesComponent],
   template: `
     <button type="button" class="ds-loccard" (click)="activated.emit()">
       <span class="ds-loccard__emoji">{{ emoji }}</span>
@@ -14,19 +14,7 @@ import { LocationCardBadge } from "../../domain/models/location-card-badge.model
           <span class="ds-loccard__meta">{{ description }}</span>
         }
         @if (badges.length) {
-          <span class="ds-loccard__badges">
-            @for (badge of badges; track badge.label) {
-              <span class="ds-loccard__badge">
-                <ds-icon
-                  class="ds-loccard__badgeIcon"
-                  [name]="badge.icon"
-                  [size]="13"
-                  [stroke]="2.2"
-                />
-                {{ badge.label }}
-              </span>
-            }
-          </span>
+          <ds-macro-badges class="ds-loccard__badges" [macros]="badges" />
         }
       </span>
     </button>
@@ -98,27 +86,8 @@ import { LocationCardBadge } from "../../domain/models/location-card-badge.model
         white-space: nowrap;
       }
       .ds-loccard__badges {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: var(--ds-space-1);
+        display: block;
         margin-top: var(--ds-space-2);
-      }
-      .ds-loccard__badge {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ds-space-1);
-        background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-sm);
-        padding: var(--ds-space-1) var(--ds-space-1-5);
-        font-size: var(--ds-text-xs);
-        font-weight: 600;
-        color: var(--ds-text-muted);
-        white-space: nowrap;
-      }
-      .ds-loccard__badgeIcon {
-        color: var(--ds-primary);
-        flex: 0 0 auto;
       }
     `,
   ],
@@ -127,7 +96,7 @@ export class LocationCardComponent {
   @Input() emoji = "";
   @Input() name = "";
   @Input() description = "";
-  @Input() badges: LocationCardBadge[] = [];
+  @Input() badges: MacroBadge[] = [];
 
   @Output() activated = new EventEmitter<void>();
 }

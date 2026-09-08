@@ -7,6 +7,7 @@ export interface InventoryLocationItem {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   unit: string;
   expectedQuantity: number;
   countedQuantity: number | null;

@@ -11,6 +11,7 @@ final readonly class InventoryLocationItemView
         public string $refId,
         public string $name,
         public string $emoji,
+        public ?string $image,
         public string $unit,
         public float $expectedQuantity,
         public ?float $countedQuantity,

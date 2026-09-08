@@ -21,6 +21,7 @@ import { ChipComponent } from "@shared/design-system/chip/infrastructure/compone
 import { StatComponent } from "@shared/design-system/stat/infrastructure/components/stat.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
+import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -55,6 +56,7 @@ import { InventoryStatus } from "../../domain/models/inventory-status.model";
     StatComponent,
     ButtonComponent,
     NumberInputComponent,
+    EmojiTileComponent,
     NoteComponent,
     EmptyStateComponent,
     SkeletonComponent,

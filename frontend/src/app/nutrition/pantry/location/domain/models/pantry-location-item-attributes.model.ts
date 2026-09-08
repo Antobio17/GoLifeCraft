@@ -5,6 +5,7 @@ export interface PantryLocationItemAttributes {
   refId: string;
   name: string;
   emoji: string;
+  image: string | null;
   unit: string;
   quantity: number;
 }

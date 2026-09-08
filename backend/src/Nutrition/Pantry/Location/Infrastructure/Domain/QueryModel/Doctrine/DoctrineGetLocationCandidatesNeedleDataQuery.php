@@ -81,6 +81,7 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
                 'a.id AS ref_id',
                 'a.name',
                 'a.emoji',
+                'a.image',
                 'a.base_unit',
                 's.quantity',
             )
@@ -98,6 +99,7 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
                 refId: $row['ref_id'],
                 name: $row['name'],
                 emoji: (string) ($row['emoji'] ?? ''),
+                image: $row['image'] ?? null,
                 unit: (string) ($row['base_unit'] ?? 'g'),
                 quantity: (float) ($row['quantity'] ?? 0.0),
             );
@@ -114,6 +116,7 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
                 'r.id AS ref_id',
                 'r.name',
                 'r.emoji',
+                'r.image',
                 's.servings AS quantity',
             )
             ->from(table: 'recipe', alias: 'r')
@@ -130,6 +133,7 @@ final readonly class DoctrineGetLocationCandidatesNeedleDataQuery implements Get
                 refId: $row['ref_id'],
                 name: $row['name'],
                 emoji: (string) ($row['emoji'] ?? ''),
+                image: $row['image'] ?? null,
                 unit: self::RECIPE_UNIT,
                 quantity: (float) ($row['quantity'] ?? 0.0),
             );

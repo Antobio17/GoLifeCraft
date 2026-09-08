@@ -1,4 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
+import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
+import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { PantryLocationItem } from "../../domain/models/pantry-location-item.model";
 import { PantryLocationItemRow } from "../../domain/models/pantry-location-item-row.model";
 import { PantryLocationCandidate } from "../../domain/models/pantry-location-candidate.model";
@@ -6,22 +8,39 @@ import { PantryLocationCandidateRow } from "../../domain/models/pantry-location-
 
 @Injectable({ providedIn: "root" })
 export class PantryLocationViewService {
+  private entityVisual = inject(EntityVisualService);
+
   itemRow(item: PantryLocationItem): PantryLocationItemRow {
-    const { emoji, name, quantity, unit } = item.attributes;
+    const { kind, refId, emoji, name, image, quantity, unit } = item.attributes;
 
     return {
       item,
-      title: `${emoji} ${name}`.trim(),
+      emoji,
+      name,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Pantry,
+        this.entityVisual.kindOf(kind),
+        refId,
+        image,
+      ),
       quantityLabel: `${this.format(quantity)} ${unit}`,
     };
   }
 
   candidateRow(candidate: PantryLocationCandidate): PantryLocationCandidateRow {
-    const { emoji, name, quantity, unit } = candidate.attributes;
+    const { kind, refId, emoji, name, image, quantity, unit } =
+      candidate.attributes;
 
     return {
       candidate,
-      title: `${emoji} ${name}`.trim(),
+      emoji,
+      name,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Pantry,
+        this.entityVisual.kindOf(kind),
+        refId,
+        image,
+      ),
       quantityLabel: `${this.format(quantity)} ${unit}`,
     };
   }

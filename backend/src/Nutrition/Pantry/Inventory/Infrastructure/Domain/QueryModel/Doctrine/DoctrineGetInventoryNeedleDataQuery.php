@@ -125,11 +125,27 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 'it.unit',
                 'it.expected_quantity',
                 'it.counted_quantity',
+                'a.image AS article_image',
+                'r.image AS recipe_image',
             )
             ->from(table: 'inventory_location_item', alias: 'it')
+            ->leftJoin(
+                fromAlias: 'it',
+                join: 'article',
+                alias: 'a',
+                condition: 'a.id = it.ref_id AND it.kind = :articleKind',
+            )
+            ->leftJoin(
+                fromAlias: 'it',
+                join: 'recipe',
+                alias: 'r',
+                condition: 'r.id = it.ref_id AND it.kind = :recipeKind',
+            )
             ->where('it.inventory_id = :inventoryId')
             ->orderBy(sort: 'it.position', order: 'ASC')
             ->setParameter(key: 'inventoryId', value: $inventoryId)
+            ->setParameter(key: 'articleKind', value: InventoryLocationItem::KIND_ARTICLE)
+            ->setParameter(key: 'recipeKind', value: InventoryLocationItem::KIND_RECIPE)
             ->executeQuery()
             ->fetchAllAssociative();
 
@@ -146,6 +162,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 refId: $row['ref_id'],
                 name: $row['name_snapshot'],
                 emoji: (string) ($row['emoji_snapshot'] ?? ''),
+                image: $row['article_image'] ?? $row['recipe_image'] ?? null,
                 unit: $row['unit'],
                 expectedQuantity: $expectedQuantity,
                 countedQuantity: $countedQuantity,
