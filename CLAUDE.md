@@ -6,6 +6,7 @@
 GoLifeCraft/
 ├── backend/    # API Symfony (PHP)
 ├── frontend/   # Aplicación Angular
+├── e2e/        # Pruebas end to end y de diseño (Playwright)
 └── docs/       # Documentación y tickets
 ```
 
@@ -39,6 +40,111 @@ refactor(gym): move the session nutrition calc into a domain service
 | `!` o `BREAKING CHANGE:` | Obligatorio cuando cambia un contrato de API o el esquema de base de datos de forma incompatible. |
 
 > No hacer commit ni push salvo que se pida explícitamente.
+
+---
+
+# E2E (Playwright)
+
+Suite que comprueba dos cosas con la misma infraestructura: que la app funciona y
+que **el diseño no se rompe**. Vive en `e2e/`, con su propio `package.json`.
+Los detalles operativos están en `e2e/README.md` — leerlo antes de tocar nada.
+
+## Cuatro capas
+
+| Capa | Qué vigila |
+|---|---|
+| Flujos | Login, catálogo, recetario, diario y lista de la compra, en escritorio y móvil |
+| Layout | Sin píxeles: cero scroll horizontal, barra lateral a 768px, `ds-split-view` a 1000px, lateral sticky, contenido no tapado por la barra inferior |
+| Design system | Ni una etiqueta HTML nativa nueva fuera de `shared/design-system`, ni claves i18n sin traducir, tokens `--ds-*` resueltos en claro y oscuro |
+| Regresión visual | Captura pixel a pixel de cada pantalla, móvil y escritorio, claro y oscuro |
+| Accesibilidad | Que no aparezca una clase nueva de fallo WCAG 2.1 AA |
+
+## Estructura
+
+`e2e/src/` **espeja el árbol `context/subcontext/module` del frontend**, para que
+la prueba de una pantalla esté en la misma ruta que la pantalla:
+
+```
+frontend/src/app/nutrition/catalog/article/   →   e2e/src/nutrition/catalog/article/
+```
+
+Dentro de cada módulo conviven el page object y el spec, en plano. `design/`
+(guards transversales), `setup/` y `support/` quedan fuera del árbol de módulos:
+no pertenecen a ningún bounded context.
+
+Se espeja el **frontend** y no el backend porque los dos no coinciden en
+`authorization` (el back agrupa bajo `User`, el front separa por pantalla) y
+estos tests conducen la UI.
+
+> **Aquí no se hace hexagonal, y es deliberado.** Los puertos existen para poder
+> cambiar la implementación sin tocar el dominio; en una suite end to end no hay
+> nada que sustituir: el navegador, la API y la base de datos reales *son* el
+> objeto de la prueba. La separación que sí se respeta es `*.spec.ts` (qué se
+> comprueba, sin selectores) / `*.page.ts` (cómo se opera, sin asserts de
+> negocio) / `support/` (infraestructura, sin saber de pantallas).
+
+## Reglas al tocar el frontend
+
+- **Todo `data-testid` va en el host `<ds-*>`**, nunca en una etiqueta nativa.
+  Los helpers de `e2e/src/support/ds.ts` bajan de ahí al control real.
+- **Pantalla nueva del núcleo** → crear su módulo espejo en `e2e/src/` y darla de
+  alta en `e2e/src/support/routes.ts`; entra sola en regresión visual, guards de
+  layout y accesibilidad.
+- **Los snapshots se generan SIEMPRE en Docker** (`npm run update-snapshots`).
+  Sacarlos en el host los ata a las fuentes de esa máquina.
+- **Deuda congelada con trinquete**: `e2e/fixtures/native-tags-baseline.json` y
+  `e2e/fixtures/a11y-baseline.json`. Los tests fallan si la deuda sube **y
+  también si baja** sin actualizar el baseline (`npm run baseline:native-tags`,
+  `npm run baseline:a11y`). Es a propósito: así el listón no vuelve a subir.
+- **Datos**: tenant aislado `GLCE2E000001`, nunca la base de desarrollo. El
+  esquema lo genera Doctrine; `e2e/fixtures/sql/` sólo mete filas y
+  `e2e/src/support/seed-data.ts` es su espejo en TypeScript.
+
+## Antes de dar por terminado cualquier cambio de frontend
+
+Obligatorio, igual que los comandos del backend. Lo hace cumplir un hook `Stop`
+(`.claude/hooks/require-e2e-check.sh`): si quedan cambios sin commitear bajo
+`frontend/src/app/**`, no deja cerrar el turno sin haber pasado por la skill
+**`/e2e`**, que comprueba el entorno, decide qué correr y sabe interpretar los
+fallos. El hook avisa una vez por turno y se aparta; no bloquea en bucle.
+
+No se cierra un cambio de `frontend/src/app/**` sin esto:
+
+```bash
+cd e2e
+npm test                    # flujos + guards de layout/design system + a11y
+npm run test:visual         # regresión visual (Docker); falla si cambió el pixel
+```
+
+Si `test:visual` falla, **mirar el diff antes de tocar nada** (`npm run report`):
+
+- El cambio visual **es el que se buscaba** → `npm run update-snapshots` y los PNG
+  entran en el mismo commit que el código. Decirle al usuario qué pantallas
+  cambiaron.
+- El cambio visual **no se esperaba** → es una regresión. Arreglarla; no
+  regenerar las capturas para taparla.
+
+> Regenerar snapshots para silenciar un fallo que no se ha entendido destruye lo
+> único que hace útil esta capa. Ante la duda, preguntar al usuario enseñándole
+> qué capturas cambiaron.
+
+Si falla el guard de etiquetas nativas, **no se toca el baseline**: se crea el
+componente `<ds-*>` que falta. Ese baseline sólo baja, nunca sube.
+
+## Checklist e2e — cambio en una pantalla que ya existe
+
+- [ ] ¿El cambio añade o quita una acción/campo? → `data-testid` en el host `<ds-*>`, y ajustar su page object
+- [ ] `npm test` en verde
+- [ ] `npm run test:visual`; si falla, revisar el diff y decidir (regenerar o arreglar)
+- [ ] Los PNG regenerados van en el mismo commit que el código
+
+## Checklist e2e — pantalla nueva
+
+- [ ] `data-testid` en los hosts `<ds-*>` de las acciones y los campos
+- [ ] Alta en `e2e/src/support/routes.ts` (`CORE_SCREENS`, y `SPLIT_VIEW_SCREENS` si usa `ds-split-view`)
+- [ ] `{Pantalla}.page.ts` y `{pantalla}.spec.ts` en `e2e/src/{context}/{subcontext}/{module}/`, misma ruta que en el frontend
+- [ ] Filas de semilla en `e2e/fixtures/sql/` + espejo en `seed-data.ts` si la pantalla necesita datos
+- [ ] `cd e2e && npm run adopt` (adopta los tres baselines de golpe) y revisar los PNG antes de commitear
 
 ---
 

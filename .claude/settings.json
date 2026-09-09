@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/require-e2e-check.sh\"",
+            "timeout": 15,
+            "statusMessage": "Comprobando si el frontend queda sin verificar..."
+          }
+        ]
+      }
+    ]
+  }
+}
