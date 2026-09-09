@@ -1,5 +1,6 @@
 <ds-dashboard-layout>
   <ds-greeting-header
+    data-testid="dashboard-greeting"
     slot="header"
     [date]="today | date: 'EEEE, d MMM'"
     [greeting]="'dashboard.greeting' | t"
@@ -19,6 +20,7 @@
       <ds-skeleton-summary macros="bars" />
     } @else if (summary(); as diary) {
       <ds-diary-summary
+        data-testid="dashboard-summary"
         [eyebrow]="'dashboard.summary.total' | t"
         [countLabel]="view.countLabel(diary.entryCount)"
         [percent]="diary.percent"
@@ -49,24 +51,28 @@
     />
     <ds-grid [columns]="2" [gap]="'var(--ds-space-2)'">
       <ds-action-tile
+        data-testid="dashboard-tile-catalog"
         icon="leaf"
         [name]="'dashboard.explore.catalog' | t"
         [meta]="'dashboard.explore.catalogMeta' | t"
         (clicked)="goToCatalog()"
       />
       <ds-action-tile
+        data-testid="dashboard-tile-gym"
         icon="dumbbell"
         [name]="'dashboard.explore.gym' | t"
         [meta]="'dashboard.explore.gymMeta' | t"
         (clicked)="goToGym()"
       />
       <ds-action-tile
+        data-testid="dashboard-tile-recipes"
         icon="chefHat"
         [name]="'dashboard.explore.recipes' | t"
         [meta]="'dashboard.explore.recipesMeta' | t"
         (clicked)="goToRecipes()"
       />
       <ds-action-tile
+        data-testid="dashboard-tile-shopping"
         icon="cart"
         [name]="'dashboard.explore.list' | t"
         [meta]="'dashboard.explore.listMeta' | t"

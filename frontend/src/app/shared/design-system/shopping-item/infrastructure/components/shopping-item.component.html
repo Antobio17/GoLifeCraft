@@ -14,6 +14,7 @@
     [class.shopping-item--slid]="swipe.slid"
   >
     <button
+      data-testid="shopping-item-toggle"
       type="button"
       class="shopping-item__check"
       [class.is-checked]="checked"
@@ -80,6 +81,7 @@
 
     <ds-stack class="shopping-item__stepper" align="center">
       <button
+        data-testid="shopping-item-increment"
         type="button"
         class="shopping-item__step"
         [attr.aria-label]="incrementLabel"
@@ -88,6 +90,7 @@
         +
       </button>
       <button
+        data-testid="shopping-item-decrement"
         type="button"
         class="shopping-item__step"
         [attr.aria-label]="decrementLabel"

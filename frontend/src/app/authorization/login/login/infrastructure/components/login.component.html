@@ -11,6 +11,7 @@
     <ds-stack [gap]="'var(--ds-space-3)'">
       <ds-field [label]="'login.email.label' | t">
         <ds-text-input
+          data-testid="login-email"
           name="email"
           type="email"
           leadingIcon="mail"
@@ -24,6 +25,7 @@
 
       <ds-field [label]="'login.password.label' | t">
         <ds-text-input
+          data-testid="login-password"
           name="password"
           leadingIcon="lock"
           autocomplete="current-password"
@@ -36,12 +38,17 @@
       </ds-field>
 
       <ds-stack direction="row" justify="end">
-        <ds-button variant="link" (clicked)="onForgot()">
+        <ds-button
+          data-testid="login-forgot"
+          variant="link"
+          (clicked)="onForgot()"
+        >
           {{ "login.forgotPassword" | t }}
         </ds-button>
       </ds-stack>
 
       <ds-button
+        data-testid="login-submit"
         type="submit"
         variant="primary"
         size="lg"

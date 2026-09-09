@@ -30,6 +30,7 @@
 
     <ds-stack gap="var(--ds-space-2)">
       <ds-button
+        data-testid="confirm-accept"
         [variant]="confirmVariant"
         size="md"
         [fullWidth]="true"
@@ -39,6 +40,7 @@
         {{ isDeleting ? (deletingLabel | t) : (confirmLabel | t) }}
       </ds-button>
       <ds-button
+        data-testid="confirm-cancel"
         variant="ghost"
         size="md"
         [fullWidth]="true"

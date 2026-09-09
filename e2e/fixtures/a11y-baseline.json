@@ -1,0 +1,23 @@
+{
+  "dashboard": [
+    "color-contrast",
+    "meta-viewport"
+  ],
+  "catalog": [
+    "color-contrast",
+    "meta-viewport"
+  ],
+  "recipes": [
+    "color-contrast",
+    "meta-viewport"
+  ],
+  "diary": [
+    "color-contrast",
+    "meta-viewport"
+  ],
+  "shopping": [
+    "aria-progressbar-name",
+    "color-contrast",
+    "meta-viewport"
+  ]
+}

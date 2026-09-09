@@ -24,6 +24,7 @@
       [shrink]="false"
     >
       <ds-button
+        data-testid="shopping-aisles"
         variant="secondary"
         size="icon-lg"
         icon="aisles"
@@ -32,6 +33,7 @@
         (clicked)="openAisleSheet()"
       />
       <ds-button
+        data-testid="shopping-from-diary"
         variant="secondary"
         size="icon-lg"
         icon="diary"
@@ -40,6 +42,7 @@
         (clicked)="openDiarySheet()"
       />
       <ds-button
+        data-testid="shopping-add"
         variant="primary"
         size="icon-lg"
         icon="plus"
@@ -92,6 +95,7 @@
       <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
         <ng-container slot="side">
           <ds-segmented-toggle
+            data-testid="shopping-sort"
             [options]="sortOptions()"
             [ngModel]="sortMode()"
             [ngModelOptions]="{ standalone: true }"
@@ -100,6 +104,7 @@
 
           @if (showTabs()) {
             <ds-store-tabs
+              data-testid="shopping-tabs"
               [tabs]="storeTabs()"
               [active]="effectiveTab()"
               (selected)="onTab($event)"
@@ -107,6 +112,7 @@
           }
 
           <ds-shopping-summary
+            data-testid="shopping-summary"
             [eyebrow]="'getShopping.summary.total' | t"
             [totalLabel]="summary().totalLabel"
             [boughtLabel]="summary().boughtLabel"
@@ -137,6 +143,8 @@
 
               @for (item of group.items; track item.id) {
                 <ds-shopping-item
+                  data-testid="shopping-item"
+                  [attr.data-id]="item.id"
                   [emoji]="item.emoji"
                   [imageUrl]="item.imageUrl"
                   [name]="item.name"
@@ -162,6 +170,7 @@
 
           @if (hasChecked()) {
             <ds-button
+              data-testid="shopping-clear-checked"
               variant="outline"
               [fullWidth]="true"
               icon="trash"
@@ -174,6 +183,7 @@
       </ds-split-view>
     } @else {
       <ds-empty-state
+        data-testid="shopping-empty"
         icon="cart"
         [title]="'getShopping.empty.title' | t"
         [text]="'getShopping.empty.text' | t"
@@ -199,6 +209,7 @@
         <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
           <ds-stack [grow]="true">
             <ds-text-input
+              data-testid="shopping-custom-name"
               [placeholder]="customPlaceholder()"
               [ariaLabel]="customPlaceholder()"
               [maxLength]="customNameMaxLength"
@@ -209,6 +220,7 @@
             />
           </ds-stack>
           <ds-button
+            data-testid="shopping-custom-add"
             variant="primary"
             size="icon-lg"
             icon="plus"

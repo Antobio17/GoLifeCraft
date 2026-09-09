@@ -56,6 +56,7 @@
     />
   } @else if (detail(); as d) {
     <ds-screen-header
+      data-testid="article-header"
       [leading]="'back'"
       [leadingLabel]="'getArticle.back' | t"
       [eyebrow]="d.category"
@@ -64,6 +65,7 @@
     >
       <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
         <ds-button
+          data-testid="article-edit"
           variant="secondary"
           size="icon-lg"
           icon="pencil"
@@ -72,6 +74,7 @@
           (clicked)="onEdit()"
         />
         <ds-button
+          data-testid="article-delete"
           variant="danger"
           size="icon-lg"
           icon="trash"
@@ -84,6 +87,7 @@
 
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
       <ds-product-hero
+        data-testid="article-hero"
         [emoji]="d.emoji"
         [imageUrl]="imageUrl()"
         [alt]="d.name"
@@ -125,6 +129,7 @@
           </ds-text>
 
           <ds-macro-bars
+            data-testid="article-macros"
             [kcal]="m.kcal ?? '—'"
             [kcalUnit]="'getArticle.macro.kcal' | t"
             [macros]="[
@@ -147,6 +152,7 @@
           />
 
           <ds-nutrition-facts
+            data-testid="article-nutrition"
             [rows]="[
               { label: 'getArticle.table.fat' | t, value: m.fatG ?? '—' },
               {
@@ -178,6 +184,7 @@
       }
 
       <ds-equivalence-summary
+        data-testid="article-units"
         slot="side"
         [title]="'getArticle.units.heading' | t"
         [baseBadge]="('getArticle.units.base' | t) + ' ' + d.units.baseUnit"
@@ -190,6 +197,7 @@
       />
 
       <ds-purchase-summary
+        data-testid="article-purchase"
         slot="side"
         [title]="'getArticle.purchase.heading' | t"
         [priceBadge]="d.purchase.pricePerPack"
@@ -278,6 +286,7 @@
 </ds-modal-sheet>
 
 <ds-confirm-action-modal
+  data-testid="article-delete-modal"
   [show]="showDeleteModal()"
   [title]="'articleEditor.deleteModal.title' | t"
   [body]="'articleEditor.deleteModal.body' | t"

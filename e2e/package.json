@@ -1,0 +1,31 @@
+{
+  "name": "golifecraft-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end and visual-regression suite for the GoLifeCraft monorepo.",
+  "scripts": {
+    "seed": "./scripts/seed.sh",
+    "seed:reset": "./scripts/seed.sh --reset",
+    "test": "playwright test --project=functional-desktop --project=functional-mobile --project=design-guards --project=a11y",
+    "test:functional": "playwright test --project=functional-desktop --project=functional-mobile",
+    "test:guards": "playwright test --project=design-guards",
+    "test:a11y": "playwright test --project=a11y",
+    "test:visual": "./scripts/docker-test.sh --project=visual-light --project=visual-dark",
+    "test:all": "npm test && npm run test:visual",
+    "test:docker": "./scripts/docker-test.sh",
+    "update-snapshots": "./scripts/docker-test.sh --update-snapshots --project=visual-light --project=visual-dark",
+    "adopt": "./scripts/adopt.sh",
+    "baseline:native-tags": "node scripts/baseline-native-tags.mjs",
+    "baseline:a11y": "E2E_WRITE_A11Y_BASELINE=1 playwright test --project=a11y --workers=1",
+    "report": "playwright show-report",
+    "codegen": "playwright codegen http://localhost:4200",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "1.62.1",
+    "@types/node": "^22.10.2",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,6 +1,11 @@
 <ng-template #drawerBody>
   <div class="drawer__profile">
-    <a class="drawer__user" routerLink="/me" (click)="close()">
+    <a
+      data-testid="drawer-profile"
+      class="drawer__user"
+      routerLink="/me"
+      (click)="close()"
+    >
       <ds-avatar [initial]="initial()" [size]="46" />
       <span class="drawer__user-text">
         <span class="drawer__user-name">{{ displayName() }}</span>
@@ -34,6 +39,7 @@
           @for (item of section.items; track item.labelKey) {
             @if (item.route) {
               <ds-nav-item
+                [attr.data-testid]="'drawer-' + item.route"
                 [routerLink]="item.route"
                 routerLinkActive="is-active"
                 [routerLinkActiveOptions]="item.activeOptions"
@@ -61,6 +67,7 @@
     <ds-divider class="drawer__rule drawer__rule--bottom" />
 
     <button
+      data-testid="drawer-theme"
       type="button"
       class="drawer__theme"
       role="switch"
@@ -81,7 +88,12 @@
       </span>
     </button>
 
-    <button type="button" class="drawer__logout" (click)="logout()">
+    <button
+      data-testid="drawer-logout"
+      type="button"
+      class="drawer__logout"
+      (click)="logout()"
+    >
       <ds-icon name="logout" [size]="17" [stroke]="2.2" />
       <span>{{ "navbar.logout" | t }}</span>
     </button>
@@ -89,7 +101,7 @@
 </ng-template>
 
 @if (isDocked()) {
-  <aside class="drawer">
+  <aside data-testid="drawer-docked" class="drawer">
     <header class="drawer__brand">
       <ds-brand-logo [markSize]="34" [wordmarkSize]="17"></ds-brand-logo>
     </header>

@@ -6,6 +6,7 @@
     @if (canCreate) {
       <ng-container slot="actions">
         <ds-button
+          data-testid="articles-global-catalog"
           variant="secondary"
           size="icon-lg"
           icon="globe"
@@ -14,6 +15,7 @@
           (clicked)="onImportCatalog()"
         />
         <ds-button
+          data-testid="articles-scan"
           variant="secondary"
           size="icon-lg"
           icon="camera"
@@ -22,6 +24,7 @@
           (clicked)="onScan()"
         />
         <ds-button
+          data-testid="articles-create"
           variant="primary"
           size="icon-lg"
           icon="plus"
@@ -52,6 +55,7 @@
     />
   } @else {
     <ds-search-input
+      data-testid="articles-search"
       [placeholder]="'getArticles.searchPlaceholder' | t"
       [clearLabel]="'getArticles.searchClear' | t"
       [value]="searchQuery()"
@@ -60,6 +64,7 @@
 
     <ds-stack direction="row" [gap]="'var(--ds-space-1-5)'">
       <ds-select
+        data-testid="articles-filter-category"
         [fluid]="true"
         [placeholder]="'getArticles.filter.category' | t"
         [options]="categories()"
@@ -67,6 +72,7 @@
         (ngModelChange)="onCategoryChange($event)"
       />
       <ds-select
+        data-testid="articles-filter-brand"
         [fluid]="true"
         [placeholder]="'getArticles.filter.brand' | t"
         [options]="brands()"
@@ -74,6 +80,7 @@
         (ngModelChange)="onBrandChange($event)"
       />
       <ds-select
+        data-testid="articles-filter-store"
         [fluid]="true"
         [placeholder]="'getArticles.filter.store' | t"
         [options]="stores()"
@@ -111,6 +118,7 @@
         </ds-text>
       } @else {
         <ds-empty-state
+          data-testid="articles-empty"
           icon="search"
           [title]="'getArticles.empty.title' | t"
           [text]="'getArticles.empty.text' | t"
@@ -120,6 +128,8 @@
       <ds-grid dsReveal="children" [minColumn]="'18.75rem'">
         @for (card of cards(); track card.id) {
           <ds-product-card
+            data-testid="article-card"
+            [attr.data-id]="card.id"
             [emoji]="card.emoji"
             [imageUrl]="card.imageUrl"
             [name]="card.name"

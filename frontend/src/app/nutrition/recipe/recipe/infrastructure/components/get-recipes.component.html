@@ -4,6 +4,7 @@
     [subtitle]="headerSubtitle()"
   >
     <ds-button
+      data-testid="recipes-create"
       slot="actions"
       variant="primary"
       size="icon-lg"
@@ -33,12 +34,14 @@
     />
   } @else if (items().length === 0) {
     <ds-empty-state
+      data-testid="recipes-empty"
       icon="leaf"
       [title]="'getRecipes.empty.title' | t"
       [text]="'getRecipes.empty.text' | t"
     />
   } @else {
     <ds-search-input
+      data-testid="recipes-search"
       [placeholder]="'getRecipes.searchPlaceholder' | t"
       [clearLabel]="'getRecipes.searchClear' | t"
       [value]="searchQuery()"
@@ -55,6 +58,8 @@
       <ds-grid dsReveal="children" [minColumn]="'20rem'">
         @for (card of cards(); track card.id) {
           <ds-recipe-card
+            data-testid="recipe-card"
+            [attr.data-id]="card.id"
             [emoji]="card.emoji"
             [imageUrl]="card.imageUrl"
             [name]="card.name"

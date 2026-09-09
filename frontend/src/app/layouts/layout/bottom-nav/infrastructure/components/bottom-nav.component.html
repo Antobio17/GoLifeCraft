@@ -1,4 +1,5 @@
 <nav
+  data-testid="bottom-nav"
   class="tabbar"
   aria-label="Principal"
   [class.tabbar--drawer-open]="isDrawerOpen()"
@@ -18,6 +19,7 @@
     >
       @for (item of items; track item.route) {
         <ds-tab-item
+          [attr.data-testid]="'nav-' + item.route"
           [routerLink]="item.route"
           [class.is-active]="activeRoute() === item.route"
           [icon]="item.icon"
@@ -29,6 +31,7 @@
     </ds-scroll-row>
 
     <ds-tab-item
+      data-testid="nav-menu"
       class="tabbar__pinned"
       icon="menu"
       [label]="'navbar.menu' | t"

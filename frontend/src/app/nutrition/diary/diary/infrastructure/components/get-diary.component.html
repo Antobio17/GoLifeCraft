@@ -43,6 +43,7 @@
 
     <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
       <ds-button
+        data-testid="diary-calendar"
         variant="secondary"
         size="icon-lg"
         icon="calendar"
@@ -51,6 +52,7 @@
         (clicked)="openCalendar()"
       />
       <ds-button
+        data-testid="diary-goal"
         variant="secondary"
         size="icon-lg"
         icon="settings"
@@ -59,6 +61,7 @@
         (clicked)="openGoalSheet()"
       />
       <ds-icon-button
+        data-testid="diary-prev"
         icon="chevronLeft"
         variant="soft"
         [size]="32"
@@ -68,10 +71,11 @@
         [ariaLabel]="'getDiary.nav.previous' | t"
         (clicked)="previousDay()"
       />
-      <ds-button variant="link" (clicked)="goToday()">
+      <ds-button data-testid="diary-today" variant="link" (clicked)="goToday()">
         {{ view.navLabel(date()) }}
       </ds-button>
       <ds-icon-button
+        data-testid="diary-next"
         icon="chevronRight"
         variant="soft"
         [size]="32"
@@ -115,6 +119,7 @@
   } @else if (attributes(); as diary) {
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ds-diary-summary
+        data-testid="diary-summary"
         slot="side"
         [eyebrow]="summaryEyebrowKey() | t"
         [countLabel]="view.countLabel(diary.entryCount, planningDay())"
@@ -160,6 +165,7 @@
               <ds-text variant="meta">{{ meal.meta }}</ds-text>
             </ds-stack>
             <ds-button
+              [attr.data-testid]="'diary-add-' + meal.key"
               variant="outline"
               size="sm"
               icon="plus"
@@ -174,6 +180,8 @@
               @for (row of meal.entries; track row.entry.id) {
                 <ds-stack [gap]="'var(--ds-space-1-5)'">
                   <ds-diary-entry
+                    data-testid="diary-entry"
+                    [attr.data-id]="row.entry.id"
                     [emoji]="row.entry.emoji"
                     [imageUrl]="row.imageUrl"
                     [name]="row.entry.name"
@@ -269,6 +277,7 @@
 
       @if (!quickEditing()) {
         <ds-segmented-toggle
+          data-testid="diary-picker-tabs"
           [options]="pickerTabs()"
           [ngModel]="pickerTab()"
           [ngModelOptions]="{ standalone: true }"
@@ -297,6 +306,7 @@
             "getDiary.quick.nameLabel" | t
           }}</ds-text>
           <ds-text-input
+            data-testid="diary-quick-name"
             [emojiPrefix]="quickForm().emoji"
             [strong]="true"
             [placeholder]="'getDiary.quick.namePlaceholder' | t"
@@ -312,6 +322,7 @@
             "getDiary.quick.caloriesLabel" | t
           }}</ds-text>
           <ds-amount-input
+            data-testid="diary-quick-calories"
             emoji="🔥"
             [large]="true"
             inputmode="numeric"
@@ -356,6 +367,7 @@
         </ds-stack>
 
         <ds-button
+          data-testid="diary-quick-submit"
           variant="primary"
           icon="plus"
           [fullWidth]="true"
@@ -367,6 +379,7 @@
         </ds-button>
       } @else {
         <ds-search-input
+          data-testid="diary-picker-search"
           [placeholder]="'getDiary.picker.search' | t"
           [clearLabel]="'getDiary.picker.close' | t"
           [debounce]="120"
@@ -378,7 +391,11 @@
         } @else {
           <ds-stack [gap]="'var(--ds-space-2)'">
             @for (row of pickerRows(); track row.choice.refId) {
-              <ds-card [padding]="'var(--ds-space-3)'">
+              <ds-card
+                data-testid="diary-picker-row"
+                [attr.data-id]="row.choice.refId"
+                [padding]="'var(--ds-space-3)'"
+              >
                 <ds-stack
                   direction="row"
                   align="center"
@@ -399,6 +416,7 @@
                     <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
                   </ds-stack>
                   <ds-icon-button
+                    data-testid="diary-picker-add"
                     icon="plus"
                     variant="soft"
                     [ariaLabel]="'getDiary.add' | t"
