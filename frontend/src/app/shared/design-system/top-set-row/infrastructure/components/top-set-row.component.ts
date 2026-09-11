@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 
 @Component({
   selector: "ds-top-set-row",
-  imports: [IconComponent, SkeletonLineComponent],
+  imports: [IconComponent, IconButtonComponent, SkeletonLineComponent],
   template: `
     <div class="ds-tsr">
       <span class="ds-tsr__badge">
@@ -27,16 +28,15 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
         }
       </span>
 
-      @if (actionLabel) {
-        <button
-          type="button"
+      @if (showAction) {
+        <ds-icon-button
           class="ds-tsr__action"
-          [attr.aria-label]="actionAriaLabel || actionLabel"
-          (click)="actionClicked.emit()"
-        >
-          {{ actionLabel }}
-          <ds-icon name="chevronRight" [size]="15" [stroke]="2.4" />
-        </button>
+          icon="externalLink"
+          [size]="32"
+          [iconSize]="16"
+          [ariaLabel]="actionAriaLabel"
+          (clicked)="actionClicked.emit()"
+        />
       }
     </div>
   `,
@@ -94,22 +94,7 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
       }
       .ds-tsr__action {
         flex: 0 0 auto;
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ds-space-1);
-        background: transparent;
-        border: none;
-        border-radius: var(--ds-radius-sm);
-        padding: var(--ds-space-1) var(--ds-space-1-5);
-        cursor: pointer;
-        font-family: var(--ds-font-body);
-        font-size: var(--ds-text-sm);
-        font-weight: var(--ds-weight-bold);
-        color: var(--ds-primary-soft-text);
-        white-space: nowrap;
-      }
-      .ds-tsr__action:active {
-        transform: scale(0.97);
+        --icon-btn-color: var(--ds-primary-soft-text);
       }
     `,
   ],
@@ -119,7 +104,7 @@ export class TopSetRowComponent {
   @Input() value = "";
   @Input() caption = "";
   @Input() emptyText = "";
-  @Input() actionLabel = "";
+  @Input() showAction = false;
   @Input() actionAriaLabel = "";
   @Input() loading = false;
 

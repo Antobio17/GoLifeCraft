@@ -243,7 +243,7 @@
                 [value]="exercise.topSetValue"
                 [caption]="exercise.topSetCaption"
                 [emptyText]="topSetEmpty()"
-                [actionLabel]="exercise.topSetAction"
+                [showAction]="exercise.topSetHasAction"
                 [actionAriaLabel]="exercise.topSetActionAria"
                 [loading]="topSetsLoading()"
                 (actionClicked)="onOpenExercise(exercise.exerciseId)"

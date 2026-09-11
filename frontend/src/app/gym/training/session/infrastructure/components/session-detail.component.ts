@@ -213,9 +213,7 @@ export class SessionDetailComponent implements OnInit {
         modeLabel: this.modeLabel(exercise.type),
         topSetValue: this.topSetFormat.valueLabel(topSet),
         topSetCaption: this.topSetFormat.dateLabel(topSet),
-        topSetAction: exercise.exerciseId
-          ? this.t("getSession.topSet.action")
-          : "",
+        topSetHasAction: !!exercise.exerciseId,
         topSetActionAria: this.t("getSession.topSet.actionAria", {
           name: exercise.exerciseName,
         }),
