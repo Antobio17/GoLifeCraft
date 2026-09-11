@@ -95,6 +95,7 @@ export class GetExerciseComponent {
   });
 
   readonly id = input.required<string>();
+  readonly from = input<string | undefined>(undefined);
 
   loading = signal(true);
   exercise = signal<Exercise | null>(null);
@@ -240,8 +241,19 @@ export class GetExerciseComponent {
       });
   }
 
+  /**
+   * Al entrar desde una sesión o un entreno, `from` trae la ruta de vuelta: sin él
+   * la pantalla siempre caería en el listado y se perdería el sitio donde se estaba.
+   */
   goBack(): void {
-    this.router.navigate(["/gym/exercises"]);
+    const origin = this.from();
+
+    if (!origin || !origin.startsWith("/") || origin.startsWith("//")) {
+      this.router.navigate(["/gym/exercises"]);
+      return;
+    }
+
+    this.router.navigateByUrl(origin);
   }
 
   onEdit(): void {

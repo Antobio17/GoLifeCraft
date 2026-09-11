@@ -9,6 +9,7 @@ import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/auto
 import { UndoProvider } from "@shared/undo/infrastructure/providers/undo.provider";
 import { DeleteSessionProviders } from "../providers/delete-session.providers";
 import { GetExercisesProviders } from "@gym/library/exercise/infrastructure/providers/get-exercises.providers";
+import { GetExerciseTopSetsProviders } from "@gym/library/exercise/infrastructure/providers/get-exercise-top-sets.providers";
 
 export const SESSION_ROUTES: Routes = [
   {
@@ -22,6 +23,7 @@ export const SESSION_ROUTES: Routes = [
       ...SaveSessionExerciseProviders.getProviders(),
       ...DeleteSessionProviders.getProviders(),
       ...GetExercisesProviders.getProviders(),
+      ...GetExerciseTopSetsProviders.getProviders(),
     ],
     children: [
       {

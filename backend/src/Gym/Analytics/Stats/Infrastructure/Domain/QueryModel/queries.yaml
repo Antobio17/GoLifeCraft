@@ -13,3 +13,8 @@ services:
     class: Gym\Analytics\Stats\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetSessionStatsNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gym\Analytics\Stats\Domain\QueryModel\GetExerciseTopSetsNeedleDataQuery:
+    class: Gym\Analytics\Stats\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetExerciseTopSetsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
