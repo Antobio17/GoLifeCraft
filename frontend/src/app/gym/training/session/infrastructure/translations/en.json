@@ -145,6 +145,11 @@
       "noteLabel": "Exercise note",
       "notePlaceholder": "Comment…"
     },
+    "topSet": {
+      "label": "Last heaviest set",
+      "empty": "No completed sets yet",
+      "actionAria": "View the {{name}} exercise"
+    },
     "set": {
       "number": "Set",
       "reps": "Reps",

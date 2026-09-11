@@ -31,3 +31,14 @@ services:
 
   Gym\Analytics\Stats\Application\Query\GetSessionStatsDataTransform:
     class: Gym\Analytics\Stats\Infrastructure\UI\API\DataTransform\ApiGetSessionStatsDataTransform
+
+  Gym\Analytics\Stats\Application\Query\GetExerciseTopSetsQueryHandler:
+    class: Gym\Analytics\Stats\Application\Query\GetExerciseTopSetsQueryHandler
+    arguments:
+      $needleDataQuery: '@Gym\Analytics\Stats\Domain\QueryModel\GetExerciseTopSetsNeedleDataQuery'
+      $dataTransform: '@Gym\Analytics\Stats\Application\Query\GetExerciseTopSetsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Analytics\Stats\Application\Query\GetExerciseTopSetsDataTransform:
+    class: Gym\Analytics\Stats\Infrastructure\UI\API\DataTransform\ApiGetExerciseTopSetsDataTransform

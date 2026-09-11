@@ -75,6 +75,11 @@
         "notePlaceholder": "Notas del ejercicio",
         "noteLabel": "Notas del ejercicio"
       },
+      "topSet": {
+        "label": "Última más pesada",
+        "empty": "Sin series completadas",
+        "actionAria": "Ver el ejercicio {{name}}"
+      },
       "set": {
         "number": "Serie",
         "reps": "Reps",

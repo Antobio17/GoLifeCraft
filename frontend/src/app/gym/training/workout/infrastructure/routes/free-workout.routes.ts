@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { GetExercisesProviders } from "@gym/library/exercise/infrastructure/providers/get-exercises.providers";
+import { GetExerciseTopSetsProviders } from "@gym/library/exercise/infrastructure/providers/get-exercise-top-sets.providers";
 import { CreateSessionProviders } from "@gym/training/session/infrastructure/providers/create-session.providers";
 
 export const FREE_WORKOUT_ROUTES: Routes = [
@@ -7,6 +8,7 @@ export const FREE_WORKOUT_ROUTES: Routes = [
     path: "",
     providers: [
       ...GetExercisesProviders.getProviders(),
+      ...GetExerciseTopSetsProviders.getProviders(),
       ...CreateSessionProviders.getProviders(),
     ],
     loadComponent: () =>
