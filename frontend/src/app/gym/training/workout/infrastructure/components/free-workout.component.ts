@@ -36,6 +36,7 @@ import { ActiveWorkoutBannerComponent } from "@shared/design-system/active-worko
 import { StickyCollapseService } from "@shared/design-system/active-workout-banner/application/services/sticky-collapse.service";
 import { SetHeaderComponent } from "@shared/design-system/set-header/infrastructure/components/set-header.component";
 import { SetRowComponent } from "@shared/design-system/set-row/infrastructure/components/set-row.component";
+import { TopSetRowComponent } from "@shared/design-system/top-set-row/infrastructure/components/top-set-row.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
@@ -45,6 +46,9 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { uuidV4 } from "@shared/uuid/uuid";
 import { GetExercisesService } from "@gym/library/exercise/application/services/get-exercises.service";
+import { GetExerciseTopSetsService } from "@gym/library/exercise/application/services/get-exercise-top-sets.service";
+import { ExerciseTopSetFormatService } from "@gym/library/exercise/application/services/exercise-top-set-format.service";
+import { ExerciseTopSet } from "@gym/library/exercise/domain/models/exercise-top-set.model";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
 import { SessionDraftService } from "@gym/training/session/application/services/session-draft.service";
@@ -86,6 +90,7 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
     ActiveWorkoutBannerComponent,
     SetHeaderComponent,
     SetRowComponent,
+    TopSetRowComponent,
     AddTileComponent,
     EmptyStateComponent,
     SkeletonScreenHeaderComponent,
@@ -97,6 +102,8 @@ export class FreeWorkoutComponent implements OnInit {
   private textSearch = inject(TextSearchService);
   private translationService = inject(TranslationService);
   private getExercisesService = inject(GetExercisesService);
+  private getExerciseTopSetsService = inject(GetExerciseTopSetsService);
+  private topSetFormat = inject(ExerciseTopSetFormatService);
   private createSessionService = inject(CreateSessionService);
   private sessionDraft = inject(SessionDraftService);
   private floatingToastService = inject(FloatingToastService);
@@ -113,13 +120,41 @@ export class FreeWorkoutComponent implements OnInit {
   name = signal("");
   exercises = signal<SessionExerciseView[]>([]);
 
-  exerciseRows = computed(() =>
-    this.exercises().map((exercise) => ({
-      ...exercise,
-      muscleLabel: exercise.muscleGroups.join(" · "),
-      modeLabel: this.modeLabel(exercise.type),
-    })),
+  private readonly requestedTopSets = new Set<string>();
+
+  topSetsLoading = signal(false);
+  topSets = signal<ExerciseTopSet[]>([]);
+
+  private topSetsByExerciseId = computed(() =>
+    this.topSetFormat.byExerciseId(this.topSets()),
   );
+
+  exerciseRows = computed(() => {
+    const topSets = this.topSetsByExerciseId();
+
+    return this.exercises().map((exercise) => {
+      const topSet = exercise.exerciseId
+        ? (topSets[exercise.exerciseId] ?? null)
+        : null;
+
+      return {
+        ...exercise,
+        muscleLabel: exercise.muscleGroups.join(" · "),
+        modeLabel: this.modeLabel(exercise.type),
+        topSetValue: this.topSetFormat.valueLabel(topSet),
+        topSetCaption: this.topSetFormat.dateLabel(topSet),
+        topSetAction: exercise.exerciseId
+          ? this.t("workout.free.topSet.action")
+          : "",
+        topSetActionAria: this.t("workout.free.topSet.actionAria", {
+          name: exercise.exerciseName,
+        }),
+      };
+    });
+  });
+
+  topSetLabel = computed(() => this.t("workout.free.topSet.label"));
+  topSetEmpty = computed(() => this.t("workout.free.topSet.empty"));
 
   reorderExerciseId = signal<string | null>(null);
 
@@ -234,6 +269,7 @@ export class FreeWorkoutComponent implements OnInit {
         this.sessionDraft.fromActive(this.activeWorkout.liveExercises()),
       );
       this.loading.set(false);
+      this.loadTopSets();
       return;
     }
 
@@ -253,6 +289,34 @@ export class FreeWorkoutComponent implements OnInit {
           this.loading.set(false);
         },
         error: () => this.goBack(),
+      });
+  }
+
+  private loadTopSets(): void {
+    const missing = this.exercises()
+      .map((exercise) => exercise.exerciseId)
+      .filter(
+        (exerciseId): exerciseId is string =>
+          !!exerciseId && !this.requestedTopSets.has(exerciseId),
+      );
+
+    if (missing.length === 0) {
+      this.topSetsLoading.set(false);
+      return;
+    }
+
+    missing.forEach((exerciseId) => this.requestedTopSets.add(exerciseId));
+    this.topSetsLoading.set(true);
+
+    this.getExerciseTopSetsService
+      .getExerciseTopSets(missing)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (topSets) => {
+          this.topSets.update((current) => [...current, ...topSets]);
+          this.topSetsLoading.set(false);
+        },
+        error: () => this.topSetsLoading.set(false),
       });
   }
 
@@ -345,6 +409,7 @@ export class FreeWorkoutComponent implements OnInit {
       this.sessionDraft.fromLibrary(list, exercise, uuidV4()),
     );
     this.pickerOpen.set(false);
+    this.loadTopSets();
     this.syncProgress();
   }
 
@@ -514,6 +579,16 @@ export class FreeWorkoutComponent implements OnInit {
         },
         error: () => this.showStopModal.set(false),
       });
+  }
+
+  onOpenExercise(exerciseId: string | null): void {
+    if (!exerciseId) {
+      return;
+    }
+
+    this.router.navigate(["/gym/exercises", exerciseId], {
+      queryParams: { from: this.router.url },
+    });
   }
 
   goBack(): void {

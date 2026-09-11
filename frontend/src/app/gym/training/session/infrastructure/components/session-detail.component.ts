@@ -40,6 +40,7 @@ import { ActiveWorkoutBannerComponent } from "@shared/design-system/active-worko
 import { StickyCollapseService } from "@shared/design-system/active-workout-banner/application/services/sticky-collapse.service";
 import { SetHeaderComponent } from "@shared/design-system/set-header/infrastructure/components/set-header.component";
 import { SetRowComponent } from "@shared/design-system/set-row/infrastructure/components/set-row.component";
+import { TopSetRowComponent } from "@shared/design-system/top-set-row/infrastructure/components/top-set-row.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
@@ -78,6 +79,9 @@ import { SessionProgressMetric } from "../../domain/models/session-progress-metr
 import { SessionProgressRange } from "../../domain/models/session-progress-range.model";
 import { SessionWorkoutStats } from "../../domain/models/session-stats.model";
 import { GetExercisesService } from "@gym/library/exercise/application/services/get-exercises.service";
+import { GetExerciseTopSetsService } from "@gym/library/exercise/application/services/get-exercise-top-sets.service";
+import { ExerciseTopSetFormatService } from "@gym/library/exercise/application/services/exercise-top-set-format.service";
+import { ExerciseTopSet } from "@gym/library/exercise/domain/models/exercise-top-set.model";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
 import { GetSessionResponse } from "../../domain/models/get-session-response.model";
@@ -119,6 +123,7 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
     ActiveWorkoutBannerComponent,
     SetHeaderComponent,
     SetRowComponent,
+    TopSetRowComponent,
     AddTileComponent,
     EmptyStateComponent,
     SkeletonChipsComponent,
@@ -147,6 +152,8 @@ export class SessionDetailComponent implements OnInit {
   private sessionDraft = inject(SessionDraftService);
   private sessionProgress = inject(SessionProgressService);
   private getExercisesService = inject(GetExercisesService);
+  private getExerciseTopSetsService = inject(GetExerciseTopSetsService);
+  private topSetFormat = inject(ExerciseTopSetFormatService);
   protected activeWorkout = inject(ActiveWorkoutService);
   protected sticky = inject(StickyCollapseService);
   private router = inject(Router);
@@ -162,6 +169,7 @@ export class SessionDetailComponent implements OnInit {
   loading = signal(true);
   private readonly ORDER_KEY = "exercises-order";
   private readonly persistedExercises = new Set<string>();
+  private readonly requestedTopSets = new Set<string>();
 
   name = signal("");
   estimatedDurationMinutes = signal(0);
@@ -184,13 +192,39 @@ export class SessionDetailComponent implements OnInit {
     return this.sessionDraft.removeExercise(loadedExercises, removedId);
   });
 
-  exerciseRows = computed(() =>
-    this.exercises().map((exercise) => ({
-      ...exercise,
-      muscleLabel: this.muscleText(exercise),
-      modeLabel: this.modeLabel(exercise.type),
-    })),
+  topSetsLoading = signal(true);
+  topSets = signal<ExerciseTopSet[]>([]);
+
+  private topSetsByExerciseId = computed(() =>
+    this.topSetFormat.byExerciseId(this.topSets()),
   );
+
+  exerciseRows = computed(() => {
+    const topSets = this.topSetsByExerciseId();
+
+    return this.exercises().map((exercise) => {
+      const topSet = exercise.exerciseId
+        ? (topSets[exercise.exerciseId] ?? null)
+        : null;
+
+      return {
+        ...exercise,
+        muscleLabel: this.muscleText(exercise),
+        modeLabel: this.modeLabel(exercise.type),
+        topSetValue: this.topSetFormat.valueLabel(topSet),
+        topSetCaption: this.topSetFormat.dateLabel(topSet),
+        topSetAction: exercise.exerciseId
+          ? this.t("getSession.topSet.action")
+          : "",
+        topSetActionAria: this.t("getSession.topSet.actionAria", {
+          name: exercise.exerciseName,
+        }),
+      };
+    });
+  });
+
+  topSetLabel = computed(() => this.t("getSession.topSet.label"));
+  topSetEmpty = computed(() => this.t("getSession.topSet.empty"));
 
   reorderExerciseId = signal<string | null>(null);
 
@@ -413,6 +447,9 @@ export class SessionDetailComponent implements OnInit {
     this.persistedExercises.clear();
     this.templateExercises.set([]);
     this.workouts.set([]);
+    this.topSets.set([]);
+    this.topSetsLoading.set(true);
+    this.requestedTopSets.clear();
   }
 
   private toActive(): ActiveExercise[] {
@@ -459,6 +496,7 @@ export class SessionDetailComponent implements OnInit {
     this.seedExercises(templateExercises);
     this.syncRestTarget();
     this.loading.set(false);
+    this.loadTopSets();
     this.maybeAutoStart();
   }
 
@@ -498,6 +536,34 @@ export class SessionDetailComponent implements OnInit {
           this.statsLoading.set(false);
         },
         error: () => this.statsLoading.set(false),
+      });
+  }
+
+  private loadTopSets(): void {
+    const missing = this.exercises()
+      .map((exercise) => exercise.exerciseId)
+      .filter(
+        (exerciseId): exerciseId is string =>
+          !!exerciseId && !this.requestedTopSets.has(exerciseId),
+      );
+
+    if (missing.length === 0) {
+      this.topSetsLoading.set(false);
+      return;
+    }
+
+    missing.forEach((exerciseId) => this.requestedTopSets.add(exerciseId));
+    this.topSetsLoading.set(true);
+
+    this.getExerciseTopSetsService
+      .getExerciseTopSets(missing)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (topSets) => {
+          this.topSets.update((current) => [...current, ...topSets]);
+          this.topSetsLoading.set(false);
+        },
+        error: () => this.topSetsLoading.set(false),
       });
   }
 
@@ -590,6 +656,7 @@ export class SessionDetailComponent implements OnInit {
       this.sessionDraft.fromLibrary(list, exercise, sessionExerciseId),
     );
     this.pickerOpen.set(false);
+    this.loadTopSets();
     this.afterEdit(sessionExerciseId);
   }
 
@@ -908,6 +975,16 @@ export class SessionDetailComponent implements OnInit {
 
   onCancelDelete(): void {
     this.showDeleteModal.set(false);
+  }
+
+  onOpenExercise(exerciseId: string | null): void {
+    if (!exerciseId) {
+      return;
+    }
+
+    this.router.navigate(["/gym/exercises", exerciseId], {
+      queryParams: { from: this.router.url },
+    });
   }
 
   goBack(): void {

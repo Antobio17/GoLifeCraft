@@ -12,3 +12,8 @@ get_session_stats:
   path: /api/v1/gym/session/{sessionId}/stats
   methods: [GET]
   controller: Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetSessionStatsController
+
+get_exercise_top_sets:
+  path: /api/v1/gym/exercises/top-sets
+  methods: [GET]
+  controller: Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetExerciseTopSetsController

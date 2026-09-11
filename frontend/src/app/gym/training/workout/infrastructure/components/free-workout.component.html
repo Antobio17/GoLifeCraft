@@ -140,6 +140,18 @@
                 (valueChange)="setNote(exercise.id, $event)"
               />
 
+              <ds-top-set-row
+                data-testid="free-workout-top-set"
+                [label]="topSetLabel()"
+                [value]="exercise.topSetValue"
+                [caption]="exercise.topSetCaption"
+                [emptyText]="topSetEmpty()"
+                [actionLabel]="exercise.topSetAction"
+                [actionAriaLabel]="exercise.topSetActionAria"
+                [loading]="topSetsLoading()"
+                (actionClicked)="onOpenExercise(exercise.exerciseId)"
+              />
+
               @for (set of exercise.sets; track set.id; let j = $index) {
                 <ds-set-row
                   [displayIndex]="j + 1"

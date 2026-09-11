@@ -75,6 +75,12 @@
         "notePlaceholder": "Exercise notes",
         "noteLabel": "Exercise notes"
       },
+      "topSet": {
+        "label": "Last heaviest set",
+        "empty": "No completed sets yet",
+        "action": "View",
+        "actionAria": "View the {{name}} exercise"
+      },
       "set": {
         "number": "Set",
         "reps": "Reps",

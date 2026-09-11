@@ -19,3 +19,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetExerciseTopSetsController:
+    class: Gym\Analytics\Stats\Infrastructure\UI\API\Controller\GetExerciseTopSetsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
