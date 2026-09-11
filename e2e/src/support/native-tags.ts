@@ -8,14 +8,6 @@ export const APP_DIR = resolve(HERE, "../../../frontend/src/app");
 
 export const BASELINE_PATH = resolve(HERE, "../../fixtures/native-tags-baseline.json");
 
-/**
- * `<form>` es la única etiqueta nativa que se permite: Angular Reactive Forms
- * necesita el elemento real para engancharle el `formGroup` y el design system
- * no tiene (ni debería tener) un `<ds-form>` que lo envuelva.
- *
- * Todo lo demás — `<div>`, `<span>`, `<button>`, `<h1>`… — está prohibido por
- * CLAUDE.md fuera de shared/design-system, que es donde viven las primitivas.
- */
 const ALLOWED = new Set(["form"]);
 
 const HTML_TAGS = new Set(
@@ -51,15 +43,12 @@ function templates(dir: string, found: string[] = []): string[] {
   return found;
 }
 
-/** Cuántas etiquetas nativas prohibidas tiene cada template, por ruta relativa. */
 export function countNativeTags(): Record<string, number> {
   const counts: Record<string, number> = {};
 
   for (const file of templates(APP_DIR)) {
     const path = relative(APP_DIR, file).split("\\").join("/");
 
-    // Las primitivas del design system son, por definición, las que sí pueden
-    // usar etiquetas nativas: son ellas las que las encapsulan.
     if (path.startsWith("shared/design-system/")) {
       continue;
     }

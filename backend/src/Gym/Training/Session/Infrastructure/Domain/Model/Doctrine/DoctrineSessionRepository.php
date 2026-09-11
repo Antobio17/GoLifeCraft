@@ -71,10 +71,6 @@ final class DoctrineSessionRepository extends EntityRepository implements Sessio
             ->getResult();
     }
 
-    /**
-     * Reconciles children by id: a granular command mutates rows that Doctrine already manages,
-     * so wiping them all would leave the managed entities without a row to update.
-     */
     public function save(Session $session): void
     {
         $entityManager = $this->getEntityManager();

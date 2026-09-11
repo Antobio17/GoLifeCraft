@@ -5,15 +5,6 @@ const ANIMATION_NAME = "ds-reveal-in";
 const REVEAL_CLASS = "ds-reveal";
 const DELAY_PROPERTY = "--ds-reveal-delay";
 
-/**
- * Revela el contenido que entra en un host: lo que llega después del
- * primer render (el @else que sustituye a un skeleton, una página nueva
- * de scroll infinito) aparece con la entrada del design system en vez
- * de aparecer de golpe.
- *
- * Se provee a nivel de componente: cada host tiene su propia instancia
- * y su propio observer, que se desconecta al destruirse.
- */
 @Injectable()
 export class ContentRevealService {
   private zone = inject(NgZone);

@@ -26,11 +26,6 @@ export class ArticlesPage {
     return this.ds.host("articles-empty");
   }
 
-  /**
-   * La búsqueda es server-side y va con debounce: escribir y comprobar en el
-   * mismo tick devuelve la lista anterior. Esperamos a la respuesta real en
-   * vez de meter un timeout fijo.
-   */
   async search(term: string): Promise<void> {
     const response = this.page.waitForResponse(
       (res) => res.url().includes("/api/v1/nutrition/catalog/articles") && res.ok(),
@@ -39,7 +34,6 @@ export class ArticlesPage {
     await response;
   }
 
-  /** El `<select>` de categorías lleva el nombre como value, no el id. */
   async filterByCategory(name: string): Promise<void> {
     const response = this.page.waitForResponse(
       (res) => res.url().includes("/api/v1/nutrition/catalog/articles") && res.ok(),

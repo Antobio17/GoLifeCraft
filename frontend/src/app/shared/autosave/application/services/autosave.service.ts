@@ -77,10 +77,6 @@ export class AutosaveService {
     pending.forEach(([key]) => this.dispatch(key));
   }
 
-  /**
-   * Al salir de la pantalla se envía lo que el debounce aún no había mandado, y las
-   * peticiones en vuelo se dejan terminar: cancelarlas tiraría un cambio ya hecho.
-   */
   dispose(): void {
     this.flush();
 

@@ -4,16 +4,6 @@ import { freezeMotion } from "../support/motion";
 import { CORE_SCREENS, SPLIT_VIEW_SCREENS } from "../support/routes";
 import { DESKTOP, MOBILE, RESPONSIVE_MATRIX, TABLET } from "../support/viewports";
 
-/**
- * Invariantes de layout que no dependen de un solo pixel. A diferencia de la
- * regresión visual, estos tests no hay que regenerarlos cuando cambia un color
- * o una sombra, y cuando fallan dicen QUÉ se ha roto en vez de "hay 4000
- * pixeles distintos".
- *
- * Los umbrales (768px para la barra lateral, 1000px para el split view) no se
- * inventan aquí: son los mismos que declaran side-drawer.component.css y
- * split-view.component.ts.
- */
 
 const DOCKED_FROM = 768;
 const TWO_COLUMNS_FROM = 1000;
@@ -49,11 +39,6 @@ test.describe("layout responsive", () => {
         await page.setViewportSize(viewport);
         await visit(page, screen.path, screen.ready);
 
-        // Sólo miramos componentes del design system: son los que definen la
-        // caja. Y se perdona lo que viva dentro de un contenedor que scrollea
-        // en horizontal a propósito (`ds-scroll-row` de la barra inferior, una
-        // tabla ancha): ahí salirse del viewport es el comportamiento querido,
-        // que es justo la vía de escape que da CLAUDE.md.
         const escaped = await page.evaluate((width) => {
           const offenders: string[] = [];
           const scrollsSideways = (element: Element): boolean => {

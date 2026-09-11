@@ -67,10 +67,6 @@ export class FinanceBudgetFormService {
     return referenceIncome > 0 ? (amount / referenceIncome) * 100 : 0;
   }
 
-  /**
-   * El tope al que puede llegar el deslizador de una categoría: lo que ya tiene
-   * asignado más lo que queda libre, para que nunca reparta más que el ingreso.
-   */
   sliderMaxOf(form: FinanceBudgetForm, index: number): number {
     const current = this.amountOf(form.categories[index]);
     const available = Math.max(0, this.unassignedOf(form));

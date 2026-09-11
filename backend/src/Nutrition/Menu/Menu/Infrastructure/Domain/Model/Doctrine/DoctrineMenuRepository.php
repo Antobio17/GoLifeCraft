@@ -118,8 +118,6 @@ final class DoctrineMenuRepository extends EntityRepository implements MenuRepos
     }
 
     /**
-     * The breakdown of an item that no longer belongs to the menu has nothing left to hang from.
-     *
      * @param array<int, string> $keptItemIds
      */
     private function removeOrphanNodes(string $menuId, array $keptItemIds): void

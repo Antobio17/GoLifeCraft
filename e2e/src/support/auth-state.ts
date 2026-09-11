@@ -10,12 +10,6 @@ interface StorageState {
   origins: { origin: string; localStorage: { name: string; value: string }[] }[];
 }
 
-/**
- * El token del usuario semilla se emite una sola vez, en el proyecto `setup`.
- * Los tests que necesitan hablar con la API directamente (preparar o limpiar
- * datos) lo releen de ahí en vez de volver a hacer login: el firewall
- * `api_login` tiene throttling y varios workers en paralelo lo disparan.
- */
 export function seededAuthToken(): string {
   const state = JSON.parse(readFileSync(AUTH_STATE_PATH, "utf8")) as StorageState;
   const token = state.origins

@@ -104,9 +104,6 @@ class MenuItem extends GenericAggregate
         return $item;
     }
 
-    /**
-     * Keeps the item identity — and therefore its breakdown — while the menu is rewritten.
-     */
     public function reassign(
         ?string $dayKey,
         string $meal,

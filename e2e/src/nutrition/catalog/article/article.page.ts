@@ -43,10 +43,6 @@ export class ArticlePage {
     await expect(this.page).toHaveURL(/\/catalog\/[0-9a-f-]{36}\/edit$/);
   }
 
-  /**
-   * El borrado pasa por `ds-confirm-action-modal`, que es del design system:
-   * el mismo par de testids sirve para cualquier borrado de la app.
-   */
   async deleteAndConfirm(): Promise<void> {
     await this.ds.click("article-delete");
     await expect(this.ds.button("confirm-accept")).toBeVisible();

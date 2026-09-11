@@ -639,9 +639,6 @@ class Menu extends GenericAggregate
         );
     }
 
-    /**
-     * A weekly menu plans exactly the days that hold food: emptying a day drops it from the plan.
-     */
     private function packWeekDays(): string
     {
         return implode(separator: ',', array: $this->enabledWeekDays());

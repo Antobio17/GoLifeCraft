@@ -4,12 +4,6 @@ import { AggregateImageService } from "@shared/aggregate-image/application/servi
 import { VisualPreferenceService } from "@shared/visual-preference/application/services/visual-preference.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 
-/**
- * Resolves the picture a screen should paint for an article or a recipe. Returns null whenever the
- * surface is set to icons, the aggregate carries no picture, or the picture has not been downloaded
- * yet, so every caller falls back to its emoji on its own. Reads signals, so calling it from a
- * computed re-runs that computed when the preference changes or the picture lands.
- */
 export class EntityVisualService {
   private aggregateImageService = inject(AggregateImageService);
   private visualPreferenceService = inject(VisualPreferenceService);

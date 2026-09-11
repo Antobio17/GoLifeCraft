@@ -192,10 +192,6 @@ export class ActiveWorkoutService implements OnDestroy {
     this.queueProgress(exercises);
   }
 
-  /**
-   * Las series hechas se guardan por índice de ejercicio, así que al recolocar la lista
-   * hay que moverlas con ella o los checks se quedan en el ejercicio equivocado.
-   */
   private remapDoneKeys(originalIndexes: number[]): void {
     const movedTo = new Map<number, number>();
     originalIndexes.forEach((originalIndex, index) =>

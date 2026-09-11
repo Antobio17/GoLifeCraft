@@ -4,11 +4,6 @@ import { Observable, mergeMap, of } from "rxjs";
 import { IdleSchedulerService } from "../../application/services/idle-scheduler.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 
-/**
- * Descarga los chunks lazy cuando el navegador está ocioso, de modo que
- * al pulsar una pestaña el código ya está en memoria y la transición
- * arranca sin el frame en blanco del import().
- */
 @Injectable({ providedIn: "root" })
 export class IdlePreloadStrategy implements PreloadingStrategy {
   private idleScheduler = inject(IdleSchedulerService);

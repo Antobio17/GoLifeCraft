@@ -36,8 +36,6 @@ final class FinanceRecurrenceCalendar
     }
 
     /**
-     * Months whose charge day has already arrived and that were never generated.
-     *
      * @return array<int, string>
      */
     public static function pendingMonths(

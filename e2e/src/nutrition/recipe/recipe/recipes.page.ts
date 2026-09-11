@@ -22,7 +22,6 @@ export class RecipesPage {
     return this.cards.filter({ hasText: name });
   }
 
-  /** El listado de recetas filtra en cliente: no hay respuesta que esperar. */
   async search(term: string): Promise<void> {
     await this.ds.input("recipes-search").fill(term);
   }

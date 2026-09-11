@@ -8,12 +8,6 @@ use Economy\Finance\BalanceCheck\Domain\QueryModel\SetFinanceAccountBalanceNeedl
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
-/**
- * Counts the money an account holds right now and stores it as the balance
- * check of that day. A check anchors the balance at the start of its day, so
- * the movements already booked on that same date are taken out of the counted
- * figure: the app rebuilds them on top and lands back on what was counted.
- */
 final readonly class SetFinanceAccountBalanceCommandHandler
 {
     public function __construct(

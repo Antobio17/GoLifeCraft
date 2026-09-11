@@ -73,10 +73,6 @@ export class ReorderSheetComponent {
     return this.draft().map((item) => item.id);
   }
 
-  /**
-   * La fila arrastrada sigue al dedo y las que quedan entre su origen y el destino se
-   * desplazan un hueco, así que el orden que se ve durante el gesto ya es el resultado.
-   */
   rowTransform(index: number): string {
     const from = this.dragIndex();
 

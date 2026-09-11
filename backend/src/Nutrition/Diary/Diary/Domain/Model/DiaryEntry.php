@@ -498,10 +498,6 @@ class DiaryEntry extends GenericAggregate
         return null !== $this->productionItemId;
     }
 
-    /**
-     * Nothing under the entry keeps a batch of its own: what the entry is served from already says
-     * where every sub-recipe came from.
-     */
     private function releaseNodeLots(string $updatedByUserId, DateTimeGenerator $dateTimeGenerator): void
     {
         foreach ($this->nodes as $node) {
@@ -574,8 +570,6 @@ class DiaryEntry extends GenericAggregate
     }
 
     /**
-     * Swaps everything hanging under a node, leaving the rest of the breakdown as the user left it.
-     *
      * @param DiaryEntryNode[] $nodes
      */
     public function replaceSubtree(DiaryEntryNode $parent, array $nodes): void

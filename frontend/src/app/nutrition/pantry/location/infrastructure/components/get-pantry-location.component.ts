@@ -182,7 +182,6 @@ export class GetPantryLocationComponent {
         error: () => this.loading.set(false),
       });
 
-    // ds-search-input already debounces what it emits, so this only drops repeats.
     toObservable(this.search)
       .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.refreshCandidates());

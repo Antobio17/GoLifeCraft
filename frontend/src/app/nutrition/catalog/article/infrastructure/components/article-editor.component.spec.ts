@@ -17,8 +17,6 @@ describe("ArticleEditorComponent", () => {
   async function navigateTo(url: string) {
     TestBed.configureTestingModule({
       providers: [
-        // withComponentInputBinding() es lo que usa main.ts: sin el, el input
-        // `id` no se enlaza y el test no reproduce la app real.
         provideRouter(
           [{ path: "catalog", children: ARTICLE_ROUTES }],
           withComponentInputBinding(),
@@ -43,8 +41,6 @@ describe("ArticleEditorComponent", () => {
   it("en /catalog/create abre el formulario de alta", async () => {
     const { component } = await navigateTo("/catalog/create");
 
-    // El router enlaza `id` a undefined al no haber parametro de ruta, asi que
-    // comparar contra "" daria isEdit=true y pediria un articulo inexistente.
     expect(component.isEdit).toBe(false);
   });
 

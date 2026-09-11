@@ -20,10 +20,6 @@ final readonly class GenericModelHydrator
         $this->writeRelations(entity: $entity, descriptor: $descriptor, data: $data);
     }
 
-    /**
-     * Starts from the whole row so the event log keeps every column, not only the ones the sidecar exposes:
-     * a snapshot that follows the descriptor alone leaves the record unrebuildable.
-     */
     public function snapshot(GenericAggregate $entity, ModelDescriptor $descriptor): array
     {
         $snapshot = $entity->snapshot();

@@ -31,10 +31,6 @@ export class FinanceBudgetViewService {
     return this.translate(`getFinanceBudget.savingsStatus.${status}`);
   }
 
-  /**
-   * "Te sobran 40 €" cuando se va por debajo del ritmo del mes y "te has pasado
-   * 40 €" cuando se va por encima: el signo ya lo cuenta el color de la barra.
-   */
   differenceLabel(difference: number, money: string): string {
     const key =
       difference >= 0

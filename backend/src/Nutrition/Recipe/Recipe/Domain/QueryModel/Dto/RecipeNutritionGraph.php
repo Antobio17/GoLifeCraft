@@ -23,10 +23,6 @@ final readonly class RecipeNutritionGraph
         return $this->articleMacrosPerUnit[$articleId] ?? null;
     }
 
-    /**
-     * How many base units (g/ml) one unit of the given alias represents. Base unit or unknown
-     * alias resolve to 1.0, so quantities already expressed in the base unit are unchanged.
-     */
     public function articleUnitFactor(string $articleId, ?string $unit): float
     {
         if (null === $unit || '' === $unit) {

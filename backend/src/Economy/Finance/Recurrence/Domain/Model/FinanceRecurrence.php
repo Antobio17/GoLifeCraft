@@ -316,10 +316,6 @@ class FinanceRecurrence extends GenericAggregate
         return FinanceRecurrenceCalendar::chargeDate(month: $month, dayOfMonth: $this->dayOfMonth);
     }
 
-    /**
-     * Resuming a paused recurrence never books the months it slept through: it
-     * picks up from the month it is resumed in.
-     */
     private function monthsSkippedWhilePaused(\DateTime $now): ?string
     {
         $previousMonth = FinanceRecurrenceCalendar::shiftMonth(

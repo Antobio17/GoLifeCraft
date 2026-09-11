@@ -21,10 +21,6 @@ export class DiaryTreeViewService {
   private lotView = inject(DiaryLotViewService);
   private entityVisual = inject(EntityVisualService);
 
-  /**
-   * A branch served from a batch already carries what that batch was cooked with, sub-recipes
-   * included, so nothing under it is picked again: it is only shown.
-   */
   rows(
     nodes: DiaryEntryNodeView[],
     collapsed: ReadonlySet<string>,

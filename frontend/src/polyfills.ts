@@ -1,4 +1,3 @@
-// Zone.js is required by Angular
 import "zone.js";
 
 if (!("getOrInsertComputed" in Map.prototype)) {

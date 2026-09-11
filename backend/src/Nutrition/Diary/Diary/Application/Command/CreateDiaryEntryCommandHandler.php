@@ -57,11 +57,6 @@ final readonly class CreateDiaryEntryCommandHandler
         $this->domainEventCollectorService->register(aggregate: $diaryEntry);
     }
 
-    /**
-     * A plate of a recipe eats from the batch that has been waiting the longest, so what it counts
-     * is what that batch was actually cooked with. An entry that comes with its own breakdown, or
-     * one with nothing cooked to eat from, keeps following the recipe.
-     */
     private function lotFor(CreateDiaryEntryCommand $command): ?string
     {
         if (DiaryEntry::KIND_RECIPE !== $command->kind || [] !== $command->tree) {
@@ -76,8 +71,6 @@ final readonly class CreateDiaryEntryCommandHandler
     }
 
     /**
-     * An entry planned from an adjusted menu is born with that same breakdown.
-     *
      * @return DiaryEntryNode[]
      */
     private function nodesFor(CreateDiaryEntryCommand $command, string $diaryEntryId, ?string $productionItemId): array

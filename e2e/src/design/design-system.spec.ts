@@ -4,11 +4,6 @@ import { CORE_SCREENS } from "../support/routes";
 import { countNativeTags, readBaseline } from "../support/native-tags";
 import { withTheme } from "../support/theme";
 
-/**
- * Guards del design system. No miran pixeles: miran que las reglas de
- * CLAUDE.md se sigan cumpliendo y que la app no esté enseñando andamios
- * (claves de traducción crudas, tokens sin resolver).
- */
 
 test.describe("etiquetas nativas fuera del design system", () => {
   test("ningún template estrena una etiqueta HTML nativa", async () => {
@@ -47,9 +42,6 @@ test.describe("nada de andamios a la vista", () => {
       await page.waitForSelector(screen.ready, { timeout: 20_000 });
       await waitForAppReady(page);
 
-      // Una clave sin traducir se pinta tal cual: "getDiary.goal.open". Nada de
-      // lo que la app enseña de verdad tiene esa forma (sin espacios, en
-      // notación de puntos y empezando por minúscula).
       const raw = await page.evaluate(() => {
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
         const suspicious = new Set<string>();

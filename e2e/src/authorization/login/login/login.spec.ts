@@ -2,11 +2,6 @@ import { test, expect } from "../../../support/test";
 import { LoginPage } from "./login.page";
 import { SEED } from "../../../support/seed-data";
 
-/**
- * El único fichero que arranca sin sesión. El resto de la suite entra con el
- * storageState del proyecto `setup`, así que si el login se rompiera nadie más
- * se enteraría: estos tests son el que lo vigila.
- */
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("login", () => {
@@ -30,8 +25,6 @@ test.describe("login", () => {
     const login = new LoginPage(page);
     await login.goto();
 
-    // Un email que no existe: el throttling del firewall cuenta por usuario, así
-    // que gastar intentos aquí nunca bloquea al usuario semilla.
     await login.signIn("no-existe@golifecraft.test", "contraseña-incorrecta");
 
     await expect(page.locator("ds-toast")).toBeVisible();

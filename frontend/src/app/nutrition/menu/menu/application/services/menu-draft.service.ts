@@ -127,10 +127,6 @@ export class MenuDraftService {
     };
   }
 
-  /**
-   * Renders the draft with the same shape the API returns, so the editor screen
-   * does not care whether the menu is already persisted.
-   */
   toDetail(draft: MenuDraft): MenuDetailAttributes {
     const dayKeys: (MenuWeekDayKey | null)[] =
       draft.type === "week" ? WEEK_DAY_KEYS : [null];

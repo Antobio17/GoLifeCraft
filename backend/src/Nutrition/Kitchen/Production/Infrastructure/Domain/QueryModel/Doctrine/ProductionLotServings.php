@@ -2,11 +2,6 @@
 
 namespace Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine;
 
-/**
- * How much of a cooked batch is already spoken for: what the diary eats from it plus what other
- * batches took from it as a sub-recipe. It lives in one place so the kitchen and the diary can
- * never disagree on the room a batch has left.
- */
 final class ProductionLotServings
 {
     public static function assigned(string $itemAlias): string

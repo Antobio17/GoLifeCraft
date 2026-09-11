@@ -113,10 +113,6 @@ final readonly class DoctrineGetFinanceBudgetSettingsNeedleDataQuery implements 
         return $categories;
     }
 
-    /**
-     * Average of the three latest months that booked income, which for most users
-     * is the average of their last three payslips.
-     */
     private function buildSuggestedIncome(string $month): float
     {
         $firstMonth = (new \DateTimeImmutable(datetime: $month.'-01'))

@@ -55,8 +55,6 @@ final readonly class DoctrineGetMenuShoppingNeedsNeedleDataQuery implements GetM
     }
 
     /**
-     * An item with its own breakdown buys exactly what that breakdown holds, not what the recipe says.
-     *
      * @param array<int, array<string, mixed>> $items
      *
      * @return array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>

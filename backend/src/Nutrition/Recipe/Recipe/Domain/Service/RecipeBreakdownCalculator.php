@@ -11,12 +11,6 @@ final class RecipeBreakdownCalculator
     private const string DELETED_NAME = '(eliminado)';
 
     /**
-     * Compositions given from the outside, keyed by the path of the recipe node they replace: a
-     * sub-recipe pinned to a cooked batch is expanded with what that batch went in with, per
-     * serving, instead of with what its recipe declares. A sub-recipe ingredient that carries its
-     * own "composition" key does the same without being pinned by hand: it is the batch the
-     * kitchen already recorded as its source.
-     *
      * @param array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>> $compositionByPath
      *
      * @return RecipeBreakdownItem[]
@@ -35,9 +29,6 @@ final class RecipeBreakdownCalculator
     }
 
     /**
-     * Same breakdown, but from an ingredient list given from the outside instead of the one the
-     * recipe declares: what a cooked batch actually went in with.
-     *
      * @param array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>                $ingredients
      * @param array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>> $compositionByPath
      *

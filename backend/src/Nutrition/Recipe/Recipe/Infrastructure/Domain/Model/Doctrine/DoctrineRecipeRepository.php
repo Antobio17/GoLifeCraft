@@ -36,10 +36,6 @@ final class DoctrineRecipeRepository extends EntityRepository implements RecipeR
         return $recipe;
     }
 
-    /**
-     * Reconciles the children by id: a command that does not rebuild them keeps the ones it loaded,
-     * so wiping them all would drop the ingredients and the steps of every caller that only touches the recipe itself.
-     */
     public function save(Recipe $recipe): void
     {
         $entityManager = $this->getEntityManager();

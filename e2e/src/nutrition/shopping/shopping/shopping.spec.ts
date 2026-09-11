@@ -13,8 +13,6 @@ test.describe("lista de la compra", () => {
     await shopping.toggle(name);
     await shopping.expectChecked(name, true);
 
-    // La lista se guarda sola: recargar es la única forma de comprobar que el
-    // check viajó al servidor y no se quedó en la señal del componente.
     await shopping.goto();
     await shopping.expectChecked(name, true);
   });

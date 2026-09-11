@@ -35,10 +35,6 @@ final class DoctrineWorkoutRepository extends EntityRepository implements Workou
         return $workout;
     }
 
-    /**
-     * Reconciles the children by id: a command that does not rebuild them keeps the ones it loaded,
-     * so wiping them all would drop the exercises of every caller that only touches the workout itself.
-     */
     public function save(Workout $workout): void
     {
         $entityManager = $this->getEntityManager();

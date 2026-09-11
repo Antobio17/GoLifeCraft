@@ -41,10 +41,6 @@ final class DoctrineFinanceBudgetRepository extends EntityRepository implements 
         return $this->hydrateCategories(financeBudget: $budget);
     }
 
-    /**
-     * Reconciles the categories by id: a command that does not rebuild them keeps the ones it loaded,
-     * so wiping them all would drop the categories of every caller that only touches the budget itself.
-     */
     public function save(FinanceBudget $financeBudget): void
     {
         $entityManager = $this->getEntityManager();

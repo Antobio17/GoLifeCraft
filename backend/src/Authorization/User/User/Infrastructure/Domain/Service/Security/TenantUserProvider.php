@@ -28,8 +28,6 @@ final readonly class TenantUserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user): UserInterface
     {
-        // Implement the logic to refresh the user
-        // This is a placeholder implementation
         throw new \RuntimeException('Method not implemented.');
     }
 

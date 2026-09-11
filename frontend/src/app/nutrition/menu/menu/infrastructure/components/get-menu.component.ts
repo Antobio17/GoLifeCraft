@@ -830,10 +830,6 @@ export class GetMenuComponent implements OnInit {
     );
   }
 
-  /**
-   * An item edited before its creating PUT has landed must carry the edit in that PUT,
-   * not only in a follow-up PATCH the server would reject for a row that does not exist yet.
-   */
   private patchPendingItem(
     menuItemId: string,
     patch: Partial<AddMenuItemRequest>,
@@ -850,10 +846,6 @@ export class GetMenuComponent implements OnInit {
     );
   }
 
-  /**
-   * Resolved when the task runs: an item edited right after being picked coalesces
-   * onto the same key and must still land as the creating PUT.
-   */
   private persistItem(menuItemId: string): Observable<unknown> {
     const pending = this.pendingItems.get(menuItemId);
 

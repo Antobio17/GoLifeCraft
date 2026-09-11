@@ -4,10 +4,6 @@ namespace Shared\Tool\Tool\Infrastructure\Domain\Service\Twemoji;
 
 use Shared\Tool\Tool\Domain\Service\EmojiImageResolver;
 
-/**
- * PDF renderers cannot draw emoji from a font: dompdf drops every codepoint above U+FFFF, which
- * is where emoji live. Each emoji is resolved to its Twemoji artwork and inlined as an image.
- */
 final class TwemojiImageResolver implements EmojiImageResolver
 {
     private const VARIATION_SELECTOR = 0xFE0F;

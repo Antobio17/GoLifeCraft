@@ -27,12 +27,6 @@ export class ShoppingPage {
     return this.ds.host("shopping-summary");
   }
 
-  /**
-   * La fila aparece al instante con un id optimista (`pending-<nombre>`) y sólo
-   * se cambia por el real cuando el POST vuelve. Tocarla antes — subir la
-   * cantidad, marcarla — manda la escritura contra un id que no existe y el
-   * cambio se pierde sin ruido, así que aquí se espera al id de verdad.
-   */
   async addCustomItem(name: string): Promise<void> {
     await this.ds.click("shopping-add");
     await expect(this.ds.input("shopping-custom-name")).toBeVisible();
@@ -57,10 +51,6 @@ export class ShoppingPage {
     await waitForAutosave(this.page);
   }
 
-  /**
-   * El check se guarda solo (autosave): comprobarlo con `getAttribute` leería
-   * el DOM antes de que la señal se propague. `toHaveAttribute` reintenta.
-   */
   async expectChecked(name: string, checked: boolean): Promise<void> {
     await expect(
       this.itemNamed(name).first().getByTestId("shopping-item-toggle"),

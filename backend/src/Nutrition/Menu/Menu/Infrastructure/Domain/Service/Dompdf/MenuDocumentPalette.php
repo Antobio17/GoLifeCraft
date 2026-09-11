@@ -4,11 +4,6 @@ namespace Nutrition\Menu\Menu\Infrastructure\Domain\Service\Dompdf;
 
 use Nutrition\Menu\Menu\Domain\Service\DocumentTheme;
 
-/**
- * Colores del design system aplanados a hexadecimal: dompdf no resuelve
- * custom properties ni color-mix, así que las capas translúcidas de los
- * tokens se precalculan aquí sobre la superficie sobre la que se pintan.
- */
 final readonly class MenuDocumentPalette
 {
     public function __construct(

@@ -10,11 +10,6 @@ use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\RecipeNutritionGraph;
 use Nutrition\Recipe\Recipe\Domain\Service\RecipeBreakdownCalculator;
 use Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator;
 
-/**
- * Single source of truth for what a menu item is made of: the stored node tree when the item has
- * one, the recipe expanded on the fly when it does not. Every read model must go through here so
- * the screen and the exported document never disagree.
- */
 final readonly class MenuItemBreakdownResolver
 {
     private const RECIPE_BASE_UNIT = 'g';

@@ -82,10 +82,6 @@ final readonly class DoctrineGetFinanceBalanceChecksNeedleDataQuery implements G
     }
 
     /**
-     * What the app believed the account held at the start of each check day: the
-     * previous check of that account plus the movements booked in between. The
-     * first check of an account is compared against every earlier movement.
-     *
      * @param array<int, string> $accountIds
      *
      * @return array<string, float> check id indexed expectations

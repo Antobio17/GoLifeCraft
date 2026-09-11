@@ -68,7 +68,6 @@ describe("TranslationService", () => {
       await service.loadModuleTranslations("auth/login");
       service.setLanguage(SupportedLanguages.EN);
       await service.loadModuleTranslations("auth/login");
-      // Called twice because cache was cleared on language change
       expect(mockPort.loadTranslations).toHaveBeenCalledTimes(2);
     });
   });

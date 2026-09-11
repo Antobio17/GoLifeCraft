@@ -55,9 +55,6 @@ final class InMemoryDiaryEntryTreeBuilder implements DiaryEntryTreeBuilder
     }
 
     /**
-     * A seeded set may describe the whole tree at once, with absolute parent paths, or only one
-     * level and leave each sub-recipe seeded under its own key. Both are expanded.
-     *
      * @param DiaryEntryNode[] $existingNodes
      *
      * @return DiaryEntryNode[]

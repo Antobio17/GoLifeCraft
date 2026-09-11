@@ -4,7 +4,6 @@ export type Theme = "light" | "dark";
 
 const THEME_STORAGE_KEY = "app-theme";
 
-/** Deja el tema fijado antes del primer render, sin pasar por los Ajustes. */
 export async function withTheme(page: Page, theme: Theme): Promise<void> {
   await page.addInitScript(
     ([key, value]) => window.localStorage.setItem(key, value),

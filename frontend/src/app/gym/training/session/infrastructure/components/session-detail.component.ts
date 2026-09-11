@@ -813,10 +813,6 @@ export class SessionDetailComponent implements OnInit {
     );
   }
 
-  /**
-   * Decided at run time, not when queued: a set edited right after adding the exercise
-   * coalesces onto the same key and must still land as the creating PUT.
-   */
   private persistExercise(sessionExerciseId: string): Observable<unknown> {
     const exercise = this.exercises().find(
       (candidate) => candidate.id === sessionExerciseId,
@@ -847,10 +843,6 @@ export class SessionDetailComponent implements OnInit {
       .pipe(tap(() => this.persistedExercises.add(sessionExerciseId)));
   }
 
-  /**
-   * El servidor valida que el orden traiga exactamente sus ejercicios, así que los que
-   * aún no se hayan creado (recién añadidos, con el guardado en cola) van antes.
-   */
   private persistOrder(orderedIds: string[]): Observable<unknown> {
     const missing = orderedIds.filter(
       (sessionExerciseId) => !this.persistedExercises.has(sessionExerciseId),

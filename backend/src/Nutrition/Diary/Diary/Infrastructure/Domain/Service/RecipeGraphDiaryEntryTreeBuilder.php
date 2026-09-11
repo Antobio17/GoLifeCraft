@@ -75,9 +75,6 @@ final class RecipeGraphDiaryEntryTreeBuilder implements DiaryEntryTreeBuilder
     }
 
     /**
-     * A batch already carries the whole chain of what was cooked, its sub-recipes included, so a
-     * batch pinned to a single node only has a say while the entry itself follows its recipe.
-     *
      * @param array<string, array<int, array{kind: string, refId: string, quantity: float, unit: ?string}>> $compositionByPath
      *
      * @return RecipeBreakdownItem[]

@@ -86,8 +86,6 @@ class ProductionItem extends GenericAggregate
     }
 
     /**
-     * Changing the ingredients does not forget which batch each sub-recipe was being served from.
-     *
      * @param ProductionCompositionLine[] $composition
      *
      * @return ProductionCompositionLine[]
@@ -113,10 +111,6 @@ class ProductionItem extends GenericAggregate
         }, array: array_values(array: $composition));
     }
 
-    /**
-     * Says which cooked batch of a sub-recipe this one is made with, so the diary can follow the
-     * chain down to what was really put in the pot.
-     */
     public function serveSubRecipeFrom(
         string $recipeId,
         ?string $sourceProductionItemId,
@@ -221,9 +215,6 @@ class ProductionItem extends GenericAggregate
         ));
     }
 
-    /**
-     * Servings the stored composition is expressed in: what was cooked once done, what was planned otherwise.
-     */
     public function compositionServings(): float
     {
         return $this->isDone() ? $this->servingsCooked : $this->servingsPlanned;

@@ -94,10 +94,6 @@ final readonly class DoctrineGetFinanceBudgetNeedleDataQuery implements GetFinan
         );
     }
 
-    /**
-     * The category closest to burning its cap goes first; ties are broken by the
-     * one holding more money, which is the one worth reacting to.
-     */
     private static function byUrgency(
         FinanceBudgetCategoryProgress $first,
         FinanceBudgetCategoryProgress $second,

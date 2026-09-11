@@ -91,8 +91,6 @@ final readonly class DoctrineGetMenusNeedleDataQuery implements GetMenusNeedleDa
     }
 
     /**
-     * A stored breakdown wins over the recipe: it is what the menu detail shows.
-     *
      * @param array<string, mixed> $item
      */
     private function itemMacros(RecipeNutritionGraph $graph, array $item): MacroBreakdown
@@ -126,8 +124,6 @@ final readonly class DoctrineGetMenusNeedleDataQuery implements GetMenusNeedleDa
     }
 
     /**
-     * A weekly menu plans exactly the days that hold food.
-     *
      * @param array<int, array<string, mixed>> $items
      *
      * @return array<int, string>

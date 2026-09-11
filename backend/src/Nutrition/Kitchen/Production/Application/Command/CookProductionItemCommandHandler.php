@@ -53,9 +53,6 @@ final readonly class CookProductionItemCommandHandler
     }
 
     /**
-     * What the cook actually put in, scaled from what was planned to what came out of the pot.
-     * Batches planned before the composition was stored fall back to the recipe.
-     *
      * @return ProductionCompositionLine[]
      */
     private function compositionFor(ProductionItem $item, float $servingsCooked): array
@@ -83,9 +80,6 @@ final readonly class CookProductionItemCommandHandler
     }
 
     /**
-     * A sub-recipe nobody picked a batch for eats the one that has been waiting the longest, the
-     * same rule the diary follows.
-     *
      * @param ProductionCompositionLine[] $lines
      *
      * @return ProductionCompositionLine[]

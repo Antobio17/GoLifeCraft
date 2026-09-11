@@ -62,10 +62,6 @@ final readonly class DoctrineGetFinanceAccountsNeedleDataQuery implements GetFin
     }
 
     /**
-     * The checked amount is the balance at the start of the check day, so the
-     * movements of that same day are applied on top of it. Accounts that were
-     * never counted fall back to the sum of every movement they hold.
-     *
      * @param array{date: string, amount: float}|null $lastCheck
      * @param array<string, float>                    $movements
      */

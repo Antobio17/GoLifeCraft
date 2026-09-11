@@ -30,10 +30,6 @@ export class ArticleEditorPage {
     return this.ds.button("editor-submit");
   }
 
-  /**
-   * `ds-select-chips` no es un `<select>`: pinta un botón por opción, así que
-   * se elige por el texto visible y no por el valor del option.
-   */
   private async chooseChip(testId: string, label: string): Promise<void> {
     await this.ds.host(testId).getByRole("button", { name: label, exact: true }).click();
   }

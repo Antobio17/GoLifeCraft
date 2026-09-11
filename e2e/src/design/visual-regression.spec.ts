@@ -8,23 +8,6 @@ import { CORE_SCREENS } from "../support/routes";
 import { DESKTOP, MOBILE } from "../support/viewports";
 import { SEED } from "../support/seed-data";
 
-/**
- * Regresión visual pixel a pixel. El tema sale del nombre del proyecto
- * (`visual-light` / `visual-dark`), así que una misma prueba cubre los dos sin
- * duplicar el fichero y sin que los snapshots se pisen: van a carpetas
- * distintas por el `snapshotPathTemplate`.
- *
- * Las capturas se generan y se comparan dentro del contenedor oficial de
- * Playwright (`npm run test:visual`). Sacarlas en el host las ataría a las
- * fuentes de esa máquina y fallarían en cualquier otra.
- *
- * Va en dos tandas por una limitación de las capturas de página completa: los
- * elementos `position: fixed` se pintan una sola vez, donde estaban en el
- * viewport inicial, así que la barra inferior aparecía incrustada a media
- * página tapando contenido que entonces no se comprobaba nunca.
- *   - "pantallas del núcleo" captura la página entera SIN el armazón fijo.
- *   - "armazón" captura sólo el viewport, sin scroll, CON todo a la vista.
- */
 
 const VIEWPORTS = [
   { name: "mobile", viewport: MOBILE },
