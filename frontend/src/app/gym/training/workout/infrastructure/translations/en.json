@@ -78,7 +78,6 @@
       "topSet": {
         "label": "Last heaviest set",
         "empty": "No completed sets yet",
-        "action": "View",
         "actionAria": "View the {{name}} exercise"
       },
       "set": {

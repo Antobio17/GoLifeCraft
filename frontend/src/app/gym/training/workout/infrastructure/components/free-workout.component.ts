@@ -143,9 +143,7 @@ export class FreeWorkoutComponent implements OnInit {
         modeLabel: this.modeLabel(exercise.type),
         topSetValue: this.topSetFormat.valueLabel(topSet),
         topSetCaption: this.topSetFormat.dateLabel(topSet),
-        topSetAction: exercise.exerciseId
-          ? this.t("workout.free.topSet.action")
-          : "",
+        topSetHasAction: !!exercise.exerciseId,
         topSetActionAria: this.t("workout.free.topSet.actionAria", {
           name: exercise.exerciseName,
         }),

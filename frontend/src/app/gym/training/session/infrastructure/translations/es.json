@@ -148,7 +148,6 @@
     "topSet": {
       "label": "Última más pesada",
       "empty": "Sin series completadas",
-      "action": "Ver",
       "actionAria": "Ver el ejercicio {{name}}"
     },
     "set": {
