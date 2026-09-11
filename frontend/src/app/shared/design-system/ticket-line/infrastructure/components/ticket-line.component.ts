@@ -30,7 +30,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
         direction="row"
         align="stretch"
         [class.ds-tline--slid]="swipe.slid"
-        [gap]="'var(--ds-space-2-5)'"
+        [gap]="'var(--ds-space-2)'"
       >
         <ds-stack
           class="ds-tline__main"
