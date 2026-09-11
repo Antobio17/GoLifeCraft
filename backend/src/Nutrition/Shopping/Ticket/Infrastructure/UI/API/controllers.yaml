@@ -1,0 +1,63 @@
+services:
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketsController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\LinkTicketItemController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\LinkTicketItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UnlinkTicketItemController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UnlinkTicketItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\RemoveTicketItemController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\RemoveTicketItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UpdateTicketItemController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UpdateTicketItemController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\ReceiveTicketController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\ReceiveTicketController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\DeleteTicketController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\DeleteTicketController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UnreceiveTicketController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UnreceiveTicketController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

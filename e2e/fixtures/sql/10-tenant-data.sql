@@ -54,7 +54,8 @@ INSERT INTO `article` (`id`, `version`, `name`, `brand`, `emoji`, `barcode`, `pr
 INSERT INTO `article_equivalence` (`id`, `version`, `article_id`, `unit`, `quantity`, `position`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
   ('e2e70000-0000-4000-8000-000000000001', 1, 'e2e30000-0000-4000-8000-000000000001', 'unit',       125, 0, @now, @now, @actor, @actor),
   ('e2e70000-0000-4000-8000-000000000002', 1, 'e2e30000-0000-4000-8000-000000000001', 'pack',       500, 1, @now, @now, @actor, @actor),
-  ('e2e70000-0000-4000-8000-000000000003', 1, 'e2e30000-0000-4000-8000-000000000005', 'tablespoon',  10, 0, @now, @now, @actor, @actor);
+  ('e2e70000-0000-4000-8000-000000000003', 1, 'e2e30000-0000-4000-8000-000000000005', 'tablespoon',  10, 0, @now, @now, @actor, @actor),
+  ('e2e70000-0000-4000-8000-000000000004', 1, 'e2e30000-0000-4000-8000-000000000003', 'bag',       1000, 0, @now, @now, @actor, @actor);
 
 -- Stock de despensa --------------------------------------------------------
 INSERT INTO `article_stock` (`id`, `version`, `article_id`, `quantity`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
@@ -120,3 +121,37 @@ INSERT INTO `diary_entry` (
    NULL, NULL, 1, NULL,
    'E2E Café con leche', '☕', 90, 4.5, 3.5, 9,
    'E2E Café con leche', '☕', 90, 4.5, 3.5, 9, 0, 0, @now, @now, @actor, @actor);
+
+-- Tickets de compra ----------------------------------------------------------
+-- Un ticket llega del MCP con las líneas tal cual las imprime la caja. Una línea
+-- sólo puede estar de dos maneras: vinculada —porque la memoria la conocía o
+-- porque el catálogo reconoció el nombre— o esperando a que alguien diga qué es.
+--
+-- La memoria son estas mismas líneas: `normalized_name` —minúsculas, sin acentos,
+-- espacios ni signos— es la clave por la que se busca, y la última línea con esa
+-- clave que alguien vinculó a mano hace llegar vinculada a la siguiente.
+--
+-- `showcase` no lo toca ningún test: es el que fotografía la regresión visual.
+-- Los `scratch` son de usar y tirar, uno por proyecto funcional, para que el
+-- móvil y el escritorio no se pisen recepcionando el mismo ticket a la vez.
+INSERT INTO `shopping_ticket` (`id`, `version`, `store_name`, `supermarket_id`, `purchased_on`, `total`, `note`, `status`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2eb0000-0000-4000-8000-000000000001', 1, 'E2E MERCADONA S.A.', 'e2e10000-0000-4000-8000-000000000001', '2026-01-14', 2.40, 'E2E compra semanal', 'draft', @now, @now, @actor, @actor),
+  ('e2eb0000-0000-4000-8000-000000000002', 1, 'E2E MERCADONA S.A.', 'e2e10000-0000-4000-8000-000000000001', '2026-01-13', 2.40, '', 'draft', @now, @now, @actor, @actor),
+  ('e2eb0000-0000-4000-8000-000000000003', 1, 'E2E MERCADONA S.A.', 'e2e10000-0000-4000-8000-000000000001', '2026-01-12', 2.40, '', 'draft', @now, @now, @actor, @actor),
+  ('e2eb0000-0000-4000-8000-000000000004', 1, 'E2E MERCADONA S.A.', 'e2e10000-0000-4000-8000-000000000001', '2026-01-11', 2.40, '', 'draft', @now, @now, @actor, @actor),
+  ('e2eb0000-0000-4000-8000-000000000005', 1, 'E2E MERCADONA S.A.', 'e2e10000-0000-4000-8000-000000000001', '2026-01-10', 2.40, '', 'draft', @now, @now, @actor, @actor);
+
+INSERT INTO `shopping_ticket_item` (`id`, `version`, `ticket_id`, `position`, `raw_name`, `normalized_name`, `quantity`, `raw_unit`, `unit_price`, `total_price`, `article_id`, `link_source`, `article_name_snapshot`, `article_emoji_snapshot`, `pack_unit`, `pack_size`, `base_unit`, `base_quantity`, `received_at`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2ec0000-0000-4000-8000-000000000011', 1, 'e2eb0000-0000-4000-8000-000000000001', 1, 'E2E YOGUR NAT. PACK', 'e2eyogurnatpack',  2, NULL, 0.45, 0.90, 'e2e30000-0000-4000-8000-000000000001', 'memory',  'E2E Yogur natural', '🥛', 'pack', 500, 'g', 1000, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000012', 1, 'e2eb0000-0000-4000-8000-000000000001', 2, 'E2E ARROZ RED. 1KG',  'e2earrozred1kg',   1, NULL, 1.35, 1.35, 'e2e30000-0000-4000-8000-000000000003', 'catalog', 'E2E Arroz redondo', '🍚', 'bag',  1000, 'g', 1000, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000013', 1, 'e2eb0000-0000-4000-8000-000000000001', 3, 'E2E BOLSA PLASTICO',  'e2ebolsaplastico', 1, NULL, 0.15, 0.15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000021', 1, 'e2eb0000-0000-4000-8000-000000000002', 1, 'E2E YOGUR NAT. PACK', 'e2eyogurnatpack',  2, NULL, 0.45, 0.90, 'e2e30000-0000-4000-8000-000000000001', 'memory',  'E2E Yogur natural', '🥛', 'pack', 500, 'g', 1000, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000022', 1, 'e2eb0000-0000-4000-8000-000000000002', 2, 'E2E ARROZ RED. 1KG',  'e2earrozred1kg',   1, NULL, 1.35, 1.35, 'e2e30000-0000-4000-8000-000000000003', 'catalog', 'E2E Arroz redondo', '🍚', 'bag',  1000, 'g', 1000, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000023', 1, 'e2eb0000-0000-4000-8000-000000000002', 3, 'E2E BOLSA PLASTICO',  'e2ebolsaplastico', 1, NULL, 0.15, 0.15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000031', 1, 'e2eb0000-0000-4000-8000-000000000003', 1, 'E2E YOGUR NAT. PACK', 'e2eyogurnatpack',  2, NULL, 0.45, 0.90, 'e2e30000-0000-4000-8000-000000000001', 'memory',  'E2E Yogur natural', '🥛', 'pack', 500, 'g', 1000, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000032', 1, 'e2eb0000-0000-4000-8000-000000000003', 2, 'E2E ARROZ RED. 1KG',  'e2earrozred1kg',   1, NULL, 1.35, 1.35, 'e2e30000-0000-4000-8000-000000000003', 'catalog', 'E2E Arroz redondo', '🍚', 'bag',  1000, 'g', 1000, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000033', 1, 'e2eb0000-0000-4000-8000-000000000003', 3, 'E2E BOLSA PLASTICO',  'e2ebolsaplastico', 1, NULL, 0.15, 0.15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000041', 1, 'e2eb0000-0000-4000-8000-000000000004', 1, 'E2E YOGUR NAT. PACK', 'e2eyogurnatpack',  2, NULL, 0.45, 0.90, 'e2e30000-0000-4000-8000-000000000001', 'memory',  'E2E Yogur natural', '🥛', 'pack', 500, 'g', 1000, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000042', 1, 'e2eb0000-0000-4000-8000-000000000004', 2, 'E2E BOLSA PLASTICO',  'e2ebolsaplastico', 1, NULL, 0.15, 0.15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000051', 1, 'e2eb0000-0000-4000-8000-000000000005', 1, 'E2E YOGUR NAT. PACK', 'e2eyogurnatpack',  2, NULL, 0.45, 0.90, 'e2e30000-0000-4000-8000-000000000001', 'memory',  'E2E Yogur natural', '🥛', 'pack', 500, 'g', 1000, NULL, @now, @now, @actor, @actor),
+  ('e2ec0000-0000-4000-8000-000000000052', 1, 'e2eb0000-0000-4000-8000-000000000005', 2, 'E2E BOLSA PLASTICO',  'e2ebolsaplastico', 1, NULL, 0.15, 0.15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @now, @now, @actor, @actor);

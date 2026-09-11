@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Nutrition\Shopping\Ticket\Domain\Model\TicketItem" table="shopping_ticket_item">
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="ticketId" type="string" column="ticket_id" length="36"/>
+    <field name="position" type="integer" column="position"/>
+    <field name="rawName" type="string" column="raw_name" length="255"/>
+    <field name="normalizedName" type="string" column="normalized_name" length="255"/>
+    <field name="quantity" type="float" column="quantity">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="rawUnit" type="string" column="raw_unit" length="30" nullable="true"/>
+    <field name="unitPrice" type="float" column="unit_price" nullable="true"/>
+    <field name="totalPrice" type="float" column="total_price" nullable="true"/>
+    <field name="articleId" type="string" column="article_id" length="36" nullable="true"/>
+    <field name="linkSource" type="string" column="link_source" length="16" nullable="true"/>
+    <field name="articleNameSnapshot" type="string" column="article_name_snapshot" length="255" nullable="true"/>
+    <field name="articleEmojiSnapshot" type="string" column="article_emoji_snapshot" length="16" nullable="true"/>
+    <field name="packUnit" type="string" column="pack_unit" length="30" nullable="true"/>
+    <field name="packSize" type="float" column="pack_size" nullable="true"/>
+    <field name="baseUnit" type="string" column="base_unit" length="10" nullable="true"/>
+    <field name="baseQuantity" type="float" column="base_quantity" nullable="true"/>
+    <field name="receivedAt" type="datetime" column="received_at" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+    <indexes>
+      <index name="idx_shopping_ticket_item_ticket_id" columns="ticket_id"/>
+      <index name="idx_shopping_ticket_item_article_id" columns="article_id"/>
+      <index name="idx_shopping_ticket_item_normalized_name" columns="normalized_name"/>
+    </indexes>
+  </entity>
+</doctrine-mapping>

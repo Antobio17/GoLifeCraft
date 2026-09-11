@@ -6,6 +6,7 @@ use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Catalog\Article\Domain\Event\ArticleCreated;
 use Nutrition\Catalog\Article\Domain\Event\ArticleDeleted;
 use Nutrition\Catalog\Article\Domain\Event\ArticleImageAssigned;
+use Nutrition\Catalog\Article\Domain\Event\ArticlePriceChanged;
 use Nutrition\Catalog\Article\Domain\Event\ArticleUpdated;
 use Nutrition\Catalog\Article\Domain\Exception\CreateArticleException;
 use Nutrition\Catalog\Article\Domain\Exception\UpdateArticleException;
@@ -124,6 +125,43 @@ class Article extends GenericAggregate
         ));
 
         return $article;
+    }
+
+    public function changePrice(
+        ?float $price,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+        $previousPrice = $this->price;
+
+        $this->price = $price;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new ArticlePriceChanged(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+            brand: $this->brand,
+            emoji: $this->emoji,
+            image: $this->image,
+            baseUnit: $this->baseUnit,
+            recipeUnit: $this->recipeUnit,
+            diaryUnit: $this->diaryUnit,
+            packUnit: $this->packUnit,
+            previousPrice: $previousPrice,
+            price: $this->price,
+            categoryId: $this->categoryId,
+            supermarketId: $this->supermarketId,
+            aisleId: $this->aisleId,
+            nutritionFactsId: $this->nutritionFactsId,
+            barcode: $this->barcode,
+            equivalences: self::snapshotAll(aggregates: $this->equivalences),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
     }
 
     public function assignImage(

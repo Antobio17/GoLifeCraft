@@ -1,0 +1,20 @@
+services:
+  Nutrition\Shopping\Ticket\Domain\QueryModel\AddTicketLinesNeedleDataQuery:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\QueryModel\Doctrine\DoctrineAddTicketLinesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Shopping\Ticket\Domain\QueryModel\LinkTicketItemNeedleDataQuery:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\QueryModel\Doctrine\DoctrineLinkTicketItemNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Shopping\Ticket\Domain\QueryModel\GetTicketsNeedleDataQuery:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetTicketsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Shopping\Ticket\Domain\QueryModel\GetTicketNeedleDataQuery:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetTicketNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

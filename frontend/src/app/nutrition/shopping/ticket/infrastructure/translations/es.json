@@ -1,0 +1,81 @@
+{
+  "ticket": {
+    "breadcrumb": {
+      "list": "Tickets",
+      "detail": "Ticket"
+    }
+  },
+  "ticketStatus": {
+    "draft": "Por recepcionar",
+    "received": "Recepcionado"
+  },
+  "getTickets": {
+    "title": "Tickets",
+    "stats": {
+      "tickets": "tickets"
+    },
+    "filter": {
+      "search": "Buscar por súper o nota",
+      "clear": "Limpiar",
+      "allStatuses": "Todos los estados"
+    },
+    "card": {
+      "linked": "{{linked}}/{{total}} vinculadas",
+      "pending": "{{count}} sin vincular"
+    },
+    "noResultsFilters": "Ningún ticket con esos filtros.",
+    "empty": {
+      "title": "Todavía no hay tickets",
+      "text": "Manda la compra desde el MCP y aparecerá aquí lista para vincular."
+    }
+  },
+  "getTicket": {
+    "back": "Volver a tickets",
+    "eyebrow": "Ticket",
+    "delete": "Borrar ticket",
+    "receive": "Completar",
+    "unreceive": "Deshacer la recepción",
+    "draftHint": "Todo vinculado. Al completar sumará el stock y actualizará los precios del catálogo.",
+    "receivedHint": "Recepcionado: el stock ya está sumado y los precios del catálogo actualizados. Si te equivocaste, deshaz la recepción y se devolverá lo que entró.",
+    "pendingHint": "{{count}} sin vincular. Un ticket entra entero en la despensa, así que hasta que no esté todo vinculado no se puede completar.",
+    "stat": {
+      "linked": "vinculadas",
+      "pending": "sin vincular",
+      "amount": "vinculado"
+    },
+    "lines": {
+      "title": "Líneas del ticket"
+    },
+    "empty": {
+      "title": "Este ticket no tiene líneas",
+      "text": "Llegó sin líneas legibles."
+    },
+    "line": {
+      "link": "Vincular",
+      "change": "Cambiar",
+      "remove": "Quitar la línea",
+      "pending": "Sin vincular",
+      "adds": "Suma",
+      "added": "Sumó",
+      "quantity": "Cantidad",
+      "more": "Subir la cantidad",
+      "less": "Bajar la cantidad"
+    },
+    "picker": {
+      "title": "Vincular con un artículo",
+      "subtitle": "Lo que elijas queda en memoria: el próximo ticket con esta misma línea llegará ya vinculado.",
+      "search": "Buscar en el catálogo",
+      "close": "Cerrar",
+      "pick": "Vincular",
+      "empty": "Ningún artículo con esa búsqueda."
+    },
+    "deleteModal": {
+      "title": "Borrar el ticket",
+      "body": "Se borrará el ticket y todas sus líneas.",
+      "warning": "Lo que ya hayas aprendido en la memoria se queda.",
+      "cancel": "Cancelar",
+      "confirm": "Borrar",
+      "deleting": "Borrando..."
+    }
+  }
+}

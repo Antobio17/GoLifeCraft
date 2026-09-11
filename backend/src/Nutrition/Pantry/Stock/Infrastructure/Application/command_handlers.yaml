@@ -22,6 +22,7 @@ services:
     class: Nutrition\Pantry\Stock\Application\Command\IncreaseArticleStockCommandHandler
     arguments:
       $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery'
       $unitConverter: '@Nutrition\Pantry\Stock\Domain\Service\ArticleStockUnitConverter'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'

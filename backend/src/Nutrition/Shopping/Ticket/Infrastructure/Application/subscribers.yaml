@@ -1,0 +1,7 @@
+services:
+  Nutrition\Shopping\Ticket\Application\Subscriber\AddTicketLinesOnModelWritten:
+    class: Nutrition\Shopping\Ticket\Application\Subscriber\AddTicketLinesOnModelWritten
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.mcp.event.1.model.written' }

@@ -88,6 +88,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         border: none;
         background: transparent;
         padding: var(--ds-space-1-5) 2px;
+        /* Sin base fija el campo es lo primero que cede cuando la fila aprieta:
+           se queda en cuatro pixeles y el número desaparece sin más aviso. */
+        flex: 0 0 2.75rem;
         width: 2.75rem;
       }
       .ds-num__field:focus {

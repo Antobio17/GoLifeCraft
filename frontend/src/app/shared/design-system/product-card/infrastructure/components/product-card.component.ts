@@ -65,6 +65,8 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         class="ds-pcard__action"
         [class.ds-pcard__action--footer]="footerAction"
         [class.ds-pcard__action--added]="added"
+        [class.ds-pcard__action--icon]="actionIconOnly"
+        [attr.aria-label]="actionIconOnly ? actionCaption : null"
         [disabled]="pending || added"
         (click)="action.emit()"
       >
@@ -74,7 +76,7 @@ import { ImageFit } from "../../domain/models/image-fit.model";
           [size]="footerAction ? 15 : 14"
           [stroke]="2.4"
         />
-        @if (actionCaption) {
+        @if (actionCaption && !actionIconOnly) {
           <span>{{ actionCaption }}</span>
         }
       </button>
@@ -194,6 +196,20 @@ import { ImageFit } from "../../domain/models/image-fit.model";
       .ds-pcard__action:disabled:not(.ds-pcard__action--added) {
         opacity: 0.55;
       }
+      /* Mismo botón que el "+" del selector de ejercicios: <ds-icon-button variant="soft">. */
+      .ds-pcard__action--icon {
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
+        justify-content: center;
+        border-radius: var(--ds-radius-md);
+        color: var(--ds-text-muted);
+        background: var(--ds-surface-inset);
+      }
+      .ds-pcard__action--icon:hover:not(:disabled) {
+        color: var(--ds-text);
+        background: var(--ds-surface-hover);
+      }
       .ds-pcard__action--footer {
         width: 100%;
         margin-top: auto;
@@ -312,6 +328,7 @@ export class ProductCardComponent {
   @Input() added = false;
   @Input() pending = false;
   @Input() actionIcon: DsIconName = "download";
+  @Input() actionIconOnly = false;
   @Input() actionLabel = "";
   @Input() addedLabel = "";
 

@@ -1,0 +1,64 @@
+get_tickets:
+  path: /api/v1/nutrition/shopping/tickets
+  methods: [GET]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketsController
+
+get_ticket:
+  path: /api/v1/nutrition/shopping/tickets/{ticketId}
+  methods: [GET]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketController
+  requirements:
+    ticketId: '[0-9a-fA-F-]{36}'
+
+delete_ticket:
+  path: /api/v1/nutrition/shopping/tickets/{ticketId}
+  methods: [DELETE]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\DeleteTicketController
+  requirements:
+    ticketId: '[0-9a-fA-F-]{36}'
+
+receive_ticket:
+  path: /api/v1/nutrition/shopping/tickets/{ticketId}/receive
+  methods: [PUT]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\ReceiveTicketController
+  requirements:
+    ticketId: '[0-9a-fA-F-]{36}'
+
+unreceive_ticket:
+  path: /api/v1/nutrition/shopping/tickets/{ticketId}/receive
+  methods: [DELETE]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UnreceiveTicketController
+  requirements:
+    ticketId: '[0-9a-fA-F-]{36}'
+
+update_ticket_item:
+  path: /api/v1/nutrition/shopping/tickets/{ticketId}/items/{itemId}
+  methods: [PUT]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UpdateTicketItemController
+  requirements:
+    ticketId: '[0-9a-fA-F-]{36}'
+    itemId: '[0-9a-fA-F-]{36}'
+
+link_ticket_item:
+  path: /api/v1/nutrition/shopping/tickets/{ticketId}/items/{itemId}/link
+  methods: [PUT]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\LinkTicketItemController
+  requirements:
+    ticketId: '[0-9a-fA-F-]{36}'
+    itemId: '[0-9a-fA-F-]{36}'
+
+unlink_ticket_item:
+  path: /api/v1/nutrition/shopping/tickets/{ticketId}/items/{itemId}/link
+  methods: [DELETE]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\UnlinkTicketItemController
+  requirements:
+    ticketId: '[0-9a-fA-F-]{36}'
+    itemId: '[0-9a-fA-F-]{36}'
+
+remove_ticket_item:
+  path: /api/v1/nutrition/shopping/tickets/{ticketId}/items/{itemId}
+  methods: [DELETE]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\RemoveTicketItemController
+  requirements:
+    ticketId: '[0-9a-fA-F-]{36}'
+    itemId: '[0-9a-fA-F-]{36}'

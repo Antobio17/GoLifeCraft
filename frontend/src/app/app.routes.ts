@@ -122,6 +122,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "tickets",
+        data: { breadcrumb: "ticket.breadcrumb.list" },
+        loadChildren: () =>
+          import("./nutrition/shopping/ticket/infrastructure/routes/ticket.routes").then(
+            (m) => m.TICKET_ROUTES,
+          ),
+      },
+      {
         path: "inventory",
         data: { breadcrumb: "inventory.breadcrumb.list" },
         loadChildren: () =>

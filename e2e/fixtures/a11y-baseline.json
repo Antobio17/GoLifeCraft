@@ -19,5 +19,13 @@
     "aria-progressbar-name",
     "color-contrast",
     "meta-viewport"
+  ],
+  "tickets": [
+    "color-contrast",
+    "meta-viewport"
+  ],
+  "ticket": [
+    "color-contrast",
+    "meta-viewport"
   ]
 }

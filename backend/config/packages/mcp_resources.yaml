@@ -76,6 +76,24 @@ parameters:
             write_roles: []
             delete_roles: []
 
+        # The header is writable so a client can drop a whole ticket in one call, lines included.
+        # The lines themselves are not: they are turned into items, matched against the memory and
+        # the catalog, and from there only the app moves them, because linking a line is what
+        # teaches the memory and what later moves the pantry.
+        shopping_ticket:
+            class: 'Nutrition\Shopping\Ticket\Domain\Model\Ticket'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Shopping/Ticket/Infrastructure/Domain/Model/Doctrine/Mapping/Ticket.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: [ROLE_GOD, ROLE_USER]
+            delete_roles: []
+
+        shopping_ticket_item:
+            class: 'Nutrition\Shopping\Ticket\Domain\Model\TicketItem'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Shopping/Ticket/Infrastructure/Domain/Model/Doctrine/Mapping/TicketItem.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
+
         nutrition_facts:
             class: 'Nutrition\Catalog\NutritionFacts\Domain\Model\NutritionFacts'
             sidecar: '%kernel.project_dir%/src/Nutrition/Catalog/NutritionFacts/Infrastructure/Domain/Model/Doctrine/Mapping/NutritionFacts.mcp.yaml'

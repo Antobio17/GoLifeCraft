@@ -171,6 +171,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Nutrition/Shopping/Shopping/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Nutrition\Shopping\Shopping\Domain\Model'
                         alias: shopping_list_item
+                    Ticket:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Nutrition/Shopping/Ticket/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Nutrition\Shopping\Ticket\Domain\Model'
+                        alias: shopping_ticket
                     AgendaEntry:
                         is_bundle: false
                         type: xml

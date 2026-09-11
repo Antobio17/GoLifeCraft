@@ -1,0 +1,3 @@
+services:
+  Nutrition\Shopping\Ticket\Domain\Service\TicketLineMatcher:
+    class: Nutrition\Shopping\Ticket\Domain\Service\TicketLineMatcher

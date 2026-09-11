@@ -1,0 +1,105 @@
+label: Shopping ticket line
+
+fields:
+  ticketId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Ticket this line was printed on.
+    filterable: true
+  position:
+    writable: false
+    type: integer
+    description: >-
+      Order of the line in the ticket.
+    sortable: true
+  rawName:
+    writable: false
+    max: 255
+    description: >-
+      The line exactly as the till printed it.
+    filterable: true
+  normalizedName:
+    writable: false
+    max: 255
+    description: >-
+      The same line lowercased and stripped of accents, spaces and punctuation. This is the key
+      the memory is looked up by, so "LECHE DESNAT." and "leche desnat" are the same line: a new
+      ticket arrives linked to whatever the last line with this key was tied to by a human.
+    filterable: true
+  quantity:
+    writable: false
+    type: float
+    description: >-
+      How many packages were bought, as the ticket counts them.
+    sortable: true
+  rawUnit:
+    writable: false
+    max: 30
+    description: >-
+      Unit printed next to the quantity, when there was one ("ud", "kg").
+  unitPrice:
+    writable: false
+    type: float
+    description: >-
+      Price of one package. Receiving the ticket copies it onto the catalog article.
+    sortable: true
+  totalPrice:
+    writable: false
+    type: float
+    description: >-
+      What the line cost.
+    sortable: true
+  articleId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Catalog article the line ended up tied to. Empty while nobody has decided.
+    filterable: true
+  linkSource:
+    writable: false
+    enum: [memory, catalog, manual]
+    description: >-
+      Where the link came from: "memory" if it was learnt on an earlier ticket, "catalog" if the
+      name was recognised in the catalog, "manual" if a human picked the article in the app. A
+      line is either linked or not; the app is where a wrong guess gets corrected.
+    filterable: true
+  articleNameSnapshot:
+    writable: false
+    max: 255
+    description: >-
+      Name of the article when the line was linked, so an old ticket still reads right after a
+      rename.
+  packUnit:
+    writable: false
+    max: 30
+    description: >-
+      Pack equivalence of the linked article ("brik", "bote"): the bridge between the packages
+      the ticket counts and the base units the pantry keeps.
+  packSize:
+    writable: false
+    type: float
+    description: >-
+      Base units one package holds.
+  baseUnit:
+    writable: false
+    max: 10
+    description: >-
+      Base unit of the linked article, "g" or "ml".
+  baseQuantity:
+    writable: false
+    type: float
+    description: >-
+      What the line adds to the pantry once received: quantity multiplied by the pack size.
+    sortable: true
+  receivedAt:
+    writable: false
+    type: datetime
+    description: >-
+      When this line was added to the pantry. Empty while it has not been received; a line is
+      only ever received once, so receiving a ticket again only picks up what was linked later.
+    sortable: true
+
+relations: {}

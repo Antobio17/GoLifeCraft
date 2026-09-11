@@ -1,0 +1,75 @@
+services:
+  Nutrition\Shopping\Ticket\Application\Command\AddTicketLinesCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\AddTicketLinesCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $needleDataQuery: '@Nutrition\Shopping\Ticket\Domain\QueryModel\AddTicketLinesNeedleDataQuery'
+      $ticketLineMatcher: '@Nutrition\Shopping\Ticket\Domain\Service\TicketLineMatcher'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Command\LinkTicketItemCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\LinkTicketItemCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $needleDataQuery: '@Nutrition\Shopping\Ticket\Domain\QueryModel\LinkTicketItemNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Command\UnlinkTicketItemCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\UnlinkTicketItemCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Command\RemoveTicketItemCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\RemoveTicketItemCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Command\UpdateTicketItemCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\UpdateTicketItemCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Command\ReceiveTicketCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\ReceiveTicketCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Command\DeleteTicketCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\DeleteTicketCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Command\UnreceiveTicketCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\UnreceiveTicketCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

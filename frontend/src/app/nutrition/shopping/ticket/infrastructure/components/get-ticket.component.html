@@ -1,0 +1,192 @@
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+  @if (loading()) {
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="true"
+      titleWidth="46%"
+      [actions]="1"
+    />
+
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
+      <ng-container slot="side">
+        <ds-skeleton height="12rem" />
+      </ng-container>
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-skeleton height="6rem" />
+        <ds-skeleton height="6rem" delay="0.1s" />
+        <ds-skeleton height="6rem" delay="0.2s" />
+      </ds-stack>
+    </ds-split-view>
+  }
+
+  @if (!loading() && attributes(); as ticket) {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'getTicket.back' | t"
+      [eyebrow]="'getTicket.eyebrow' | t"
+      [title]="storeLabel()"
+      [subtitle]="headerSubtitle()"
+      (leadingClick)="back()"
+    >
+      @if (receivableCount() > 0) {
+        <ds-button
+          slot="actions"
+          data-testid="ticket-receive"
+          variant="soft"
+          size="icon-lg"
+          icon="check"
+          [iconSize]="19"
+          [loading]="receiving()"
+          [disabled]="pendingCount() > 0"
+          [ariaLabel]="'getTicket.receive' | t"
+          (clicked)="onReceive()"
+        />
+      }
+
+      @if (isReceived()) {
+        <ds-button
+          slot="actions"
+          data-testid="ticket-unreceive"
+          variant="secondary"
+          size="icon-lg"
+          icon="restore"
+          [iconSize]="19"
+          [loading]="unreceiving()"
+          [ariaLabel]="'getTicket.unreceive' | t"
+          (clicked)="onUnreceive()"
+        />
+      }
+
+      @if (canDelete()) {
+        <ds-button
+          slot="actions"
+          data-testid="ticket-delete"
+          variant="danger"
+          size="icon-lg"
+          icon="trash"
+          [iconSize]="19"
+          [ariaLabel]="'getTicket.delete' | t"
+          (clicked)="onDelete()"
+        />
+      }
+    </ds-screen-header>
+
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
+      <ng-container slot="side">
+        <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-2)'">
+          <ds-macro-badges [macros]="summaryBadges()" />
+          <ds-progress-bar
+            [value]="progressPercent()"
+            [ariaLabel]="'getTicket.stat.linked' | t"
+          />
+
+          @if (ticket.note) {
+            <ds-text variant="meta">{{ ticket.note }}</ds-text>
+          }
+
+          <ds-text variant="meta">{{ hint() }}</ds-text>
+        </ds-card>
+      </ng-container>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-section-header
+          [title]="'getTicket.lines.title' | t"
+          [staticLabel]="lineRows().length.toString()"
+        />
+
+        @if (lineRows().length === 0) {
+          <ds-empty-state
+            icon="cart"
+            [title]="'getTicket.empty.title' | t"
+            [text]="'getTicket.empty.text' | t"
+          />
+        }
+
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+          @for (row of lineRows(); track row.key) {
+            <ds-ticket-line
+              data-testid="ticket-line"
+              [emoji]="row.articleEmoji"
+              [imageUrl]="row.articleImageUrl"
+              [rawName]="row.item.rawName"
+              [articleLabel]="row.articleLabel"
+              [quantity]="row.item.quantity"
+              [quantityLabel]="row.quantityLabel"
+              [unitLabel]="row.unitLabel"
+              [priceLabel]="row.priceLabel"
+              [totalPriceLabel]="row.totalPriceLabel"
+              [linked]="row.linked"
+              [received]="row.received"
+              [stockLabel]="row.stockLabel"
+              [incrementLabel]="'getTicket.line.more' | t"
+              [decrementLabel]="'getTicket.line.less' | t"
+              [linkLabel]="'getTicket.line.link' | t"
+              [changeLabel]="'getTicket.line.change' | t"
+              [removeLabel]="'getTicket.line.remove' | t"
+              (quantityChanged)="onQuantityChange(row, $event)"
+              (searched)="openPicker(row.item.id)"
+              (removed)="onRemove(row)"
+            />
+          }
+        </ds-stack>
+      </ds-stack>
+    </ds-split-view>
+  }
+
+  <ds-modal-sheet
+    [open]="pickerOpen()"
+    [compact]="true"
+    [title]="'getTicket.picker.title' | t"
+    [closeLabel]="'getTicket.picker.close' | t"
+    (closed)="closePicker()"
+  >
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-text variant="meta">{{ "getTicket.picker.subtitle" | t }}</ds-text>
+
+      <ds-search-input
+        data-testid="ticket-picker-search"
+        [placeholder]="'getTicket.picker.search' | t"
+        [clearLabel]="'getTicket.picker.close' | t"
+        [debounce]="300"
+        (searched)="onPickerSearch($event)"
+      />
+
+      @if (pickerCards().length === 0) {
+        <ds-text variant="muted">{{ "getTicket.picker.empty" | t }}</ds-text>
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          @for (card of pickerCards(); track card.id) {
+            <ds-product-card
+              data-testid="ticket-picker-article"
+              [emoji]="card.emoji"
+              [imageUrl]="card.imageUrl"
+              [name]="card.name"
+              [price]="card.price"
+              [brand]="card.brand"
+              [store]="card.store"
+              [actionable]="true"
+              [actionIcon]="'plus'"
+              [actionIconOnly]="true"
+              [actionLabel]="'getTicket.picker.pick' | t"
+              (action)="onPick(card.id)"
+            />
+          }
+        </ds-stack>
+      }
+    </ds-stack>
+  </ds-modal-sheet>
+
+  <ds-confirm-action-modal
+    [show]="showDeleteModal()"
+    [title]="'getTicket.deleteModal.title' | t"
+    [body]="'getTicket.deleteModal.body' | t"
+    [warningText]="'getTicket.deleteModal.warning' | t"
+    [isDeleting]="deleting()"
+    [cancelLabel]="'getTicket.deleteModal.cancel' | t"
+    [confirmLabel]="'getTicket.deleteModal.confirm' | t"
+    [deletingLabel]="'getTicket.deleteModal.deleting' | t"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()"
+  />
+</ds-page-wrapper>

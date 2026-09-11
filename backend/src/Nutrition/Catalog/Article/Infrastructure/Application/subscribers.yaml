@@ -1,0 +1,7 @@
+services:
+  Nutrition\Catalog\Article\Application\Subscriber\UpdateArticlePriceOnTicketReceived:
+    class: Nutrition\Catalog\Article\Application\Subscriber\UpdateArticlePriceOnTicketReceived
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.received' }

@@ -1,0 +1,6 @@
+services:
+  Nutrition\Shopping\Ticket\Domain\Model\TicketRepository:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\Model\Doctrine\DoctrineTicketRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Shopping\Ticket\Domain\Model\Ticket

@@ -1,0 +1,133 @@
+<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+  <ds-screen-header
+    [title]="'getTickets.title' | t"
+    [subtitle]="headerSubtitle()"
+  />
+
+  @if (loading()) {
+    <ds-skeleton-filters [search]="true" [selects]="1" />
+    <ng-container
+      [ngTemplateOutlet]="ticketSkeleton"
+      [ngTemplateOutletContext]="{ $implicit: 4 }"
+    />
+  } @else {
+    <ds-search-input
+      data-testid="tickets-search"
+      [placeholder]="'getTickets.filter.search' | t"
+      [clearLabel]="'getTickets.filter.clear' | t"
+      [debounce]="300"
+      [value]="search()"
+      (searched)="onSearch($event)"
+    />
+
+    <ds-stack direction="row" [gap]="'var(--ds-space-1-5)'">
+      <ds-select
+        data-testid="tickets-status"
+        [placeholder]="'getTickets.filter.allStatuses' | t"
+        [options]="statusOptions()"
+        [ngModel]="selectedStatus()"
+        (ngModelChange)="onStatusChange($event)"
+      />
+    </ds-stack>
+
+    @if (reloading()) {
+      <ng-container
+        [ngTemplateOutlet]="ticketSkeleton"
+        [ngTemplateOutletContext]="{ $implicit: 4 }"
+      />
+    } @else if (rows().length === 0) {
+      @if (selectedStatus() || search()) {
+        <ds-text variant="muted">
+          {{ "getTickets.noResultsFilters" | t }}
+        </ds-text>
+      } @else {
+        <ds-empty-state
+          icon="cart"
+          [title]="'getTickets.empty.title' | t"
+          [text]="'getTickets.empty.text' | t"
+        />
+      }
+    } @else {
+      <ds-grid
+        dsReveal="children"
+        [minColumn]="'16.25rem'"
+        [tabletColumns]="2"
+        [gap]="'var(--ds-space-2)'"
+      >
+        @for (row of rows(); track row.id) {
+          <ds-card
+            data-testid="ticket-card"
+            [interactive]="true"
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'var(--ds-space-3)'"
+            (activated)="onOpen(row.id)"
+          >
+            <ds-stack
+              direction="row"
+              align="start"
+              justify="between"
+              [gap]="'var(--ds-space-2)'"
+            >
+              <ds-stack [gap]="'2px'">
+                <ds-heading [level]="3" size="md">
+                  {{ row.storeLabel }}
+                </ds-heading>
+                <ds-text variant="meta">
+                  {{ row.dateLabel }} · {{ row.totalLabel }}
+                </ds-text>
+              </ds-stack>
+
+              <ds-chip [tone]="row.received ? 'brand' : 'warning'">
+                {{ row.statusLabel }}
+              </ds-chip>
+            </ds-stack>
+
+            <ds-progress-bar
+              [value]="row.progressPercent"
+              [ariaLabel]="row.linkedLabel"
+            />
+
+            <ds-stack direction="row" [gap]="'var(--ds-space-3)'" [wrap]="true">
+              <ds-meta-item icon="checkCircle">{{
+                row.linkedLabel
+              }}</ds-meta-item>
+              <ds-meta-item icon="alertCircle">{{
+                row.pendingLabel
+              }}</ds-meta-item>
+            </ds-stack>
+          </ds-card>
+        }
+      </ds-grid>
+
+      @if (loadingMore()) {
+        <ng-container
+          [ngTemplateOutlet]="ticketSkeleton"
+          [ngTemplateOutletContext]="{ $implicit: 2 }"
+        />
+      }
+
+      <ds-infinite-scroll
+        [disabled]="loadingMore() || !hasMore()"
+        (reached)="loadMore()"
+      />
+    }
+  }
+</ds-page-wrapper>
+
+<ng-template #ticketSkeleton let-count>
+  <ds-skeleton-list
+    [count]="count"
+    [columns]="null"
+    minColumn="16.25rem"
+    [tabletColumns]="2"
+    [gap]="'var(--ds-space-2)'"
+    radius="var(--ds-radius-xl)"
+    padding="var(--ds-space-3)"
+    [alignTop]="true"
+    titleWidth="52%"
+    metaWidth="44%"
+    headTrailing="4.5rem"
+    [progress]="true"
+    [footItems]="2"
+  />
+</ng-template>

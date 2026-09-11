@@ -1,0 +1,81 @@
+{
+  "ticket": {
+    "breadcrumb": {
+      "list": "Tickets",
+      "detail": "Ticket"
+    }
+  },
+  "ticketStatus": {
+    "draft": "To receive",
+    "received": "Received"
+  },
+  "getTickets": {
+    "title": "Tickets",
+    "stats": {
+      "tickets": "tickets"
+    },
+    "filter": {
+      "search": "Search by shop or note",
+      "clear": "Clear",
+      "allStatuses": "All statuses"
+    },
+    "card": {
+      "linked": "{{linked}}/{{total}} linked",
+      "pending": "{{count}} to link"
+    },
+    "noResultsFilters": "No ticket matches those filters.",
+    "empty": {
+      "title": "No tickets yet",
+      "text": "Send the shopping in from the MCP and it will land here ready to link."
+    }
+  },
+  "getTicket": {
+    "back": "Back to tickets",
+    "eyebrow": "Ticket",
+    "delete": "Delete ticket",
+    "receive": "Complete",
+    "unreceive": "Undo the reception",
+    "draftHint": "Everything is linked. Completing it adds the stock and refreshes the catalog prices.",
+    "receivedHint": "Received: the stock is already added and the catalog prices updated. If it was a mistake, undo the reception and what went in comes back out.",
+    "pendingHint": "{{count}} not linked. A ticket goes into the pantry whole, so it cannot be completed until every line is linked.",
+    "stat": {
+      "linked": "linked",
+      "pending": "to link",
+      "amount": "linked"
+    },
+    "lines": {
+      "title": "Ticket lines"
+    },
+    "empty": {
+      "title": "This ticket has no lines",
+      "text": "It arrived with nothing readable on it."
+    },
+    "line": {
+      "link": "Link",
+      "change": "Change",
+      "remove": "Remove the line",
+      "pending": "Not linked",
+      "adds": "Adds",
+      "added": "Added",
+      "quantity": "Quantity",
+      "more": "More",
+      "less": "Less"
+    },
+    "picker": {
+      "title": "Link to an article",
+      "subtitle": "What you pick is remembered: the next ticket with this same line arrives already linked.",
+      "search": "Search the catalog",
+      "close": "Close",
+      "pick": "Link",
+      "empty": "No article matches that search."
+    },
+    "deleteModal": {
+      "title": "Delete the ticket",
+      "body": "The ticket and all its lines will be deleted.",
+      "warning": "Whatever the memory already learnt stays.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "deleting": "Deleting..."
+    }
+  }
+}

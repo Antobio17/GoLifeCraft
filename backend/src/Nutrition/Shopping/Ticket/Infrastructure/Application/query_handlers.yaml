@@ -1,0 +1,22 @@
+services:
+  Nutrition\Shopping\Ticket\Application\Query\GetTicketsQueryHandler:
+    class: Nutrition\Shopping\Ticket\Application\Query\GetTicketsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Shopping\Ticket\Domain\QueryModel\GetTicketsNeedleDataQuery'
+      $dataTransform: '@Nutrition\Shopping\Ticket\Application\Query\GetTicketsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Query\GetTicketsDataTransform:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\DataTransform\ApiGetTicketsDataTransform
+
+  Nutrition\Shopping\Ticket\Application\Query\GetTicketQueryHandler:
+    class: Nutrition\Shopping\Ticket\Application\Query\GetTicketQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Shopping\Ticket\Domain\QueryModel\GetTicketNeedleDataQuery'
+      $dataTransform: '@Nutrition\Shopping\Ticket\Application\Query\GetTicketDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Shopping\Ticket\Application\Query\GetTicketDataTransform:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\DataTransform\ApiGetTicketDataTransform

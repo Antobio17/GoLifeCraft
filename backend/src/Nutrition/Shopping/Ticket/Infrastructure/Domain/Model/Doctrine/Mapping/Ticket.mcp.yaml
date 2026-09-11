@@ -1,0 +1,63 @@
+label: Shopping ticket
+
+fields:
+  storeName:
+    writable: true
+    required: true
+    max: 255
+    description: >-
+      Shop as printed on the ticket ("MERCADONA S.A."). Kept even when the supermarket is
+      identified, because it is what the paper says.
+    filterable: true
+  supermarketId:
+    writable: true
+    min: 36
+    max: 36
+    description: >-
+      Supermarket of the catalog this ticket belongs to, when it can be told. Worth filling in:
+      the line memory is kept per supermarket, so the same printed name can mean a different
+      article in another chain.
+    filterable: true
+  purchasedOn:
+    writable: true
+    required: true
+    max: 10
+    regex: '^\d{4}-\d{2}-\d{2}$'
+    description: >-
+      Day of the purchase, as "YYYY-MM-DD".
+    filterable: true
+    sortable: true
+  total:
+    writable: true
+    type: float
+    description: >-
+      Total printed at the foot of the ticket. It is not worked out from the lines: it is kept as
+      read so a bad reading shows up as a difference.
+    sortable: true
+  note:
+    writable: true
+    max: 255
+    description: >-
+      Free note about the purchase.
+  status:
+    writable: false
+    enum: [draft, received]
+    description: >-
+      "draft" until the ticket is received, "received" once its linked lines have been added to
+      the pantry. Receiving happens from the app, never from here.
+    filterable: true
+  lines:
+    writable: true
+    type: json
+    description: >-
+      The lines read off the paper, sent with the ticket in the same call and ONLY read when the
+      ticket is created: writing them again on an existing ticket does nothing. Each line is
+      {"rawName": "LECHE DESNAT BRIK 1L", "quantity": 6, "unit": "ud", "unitPrice": 0.95,
+      "totalPrice": 5.70}; only rawName and quantity are needed, and the missing one of
+      unitPrice/totalPrice is worked out from the other. rawName goes in exactly as printed,
+      abbreviations included: that text is the key of the memory that links the line to an
+      article, so tidying it up loses what was learnt. The quantity counts packages, not grams.
+      Every line becomes an item, linked already when the memory knew it or the catalog recognises
+      the name, and waiting for a human when neither does.
+
+relations: {}

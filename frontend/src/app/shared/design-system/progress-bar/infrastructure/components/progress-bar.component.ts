@@ -6,6 +6,7 @@ import { Component, Input } from "@angular/core";
     <div
       class="ds-pbar"
       role="progressbar"
+      [attr.aria-label]="ariaLabel || null"
       [attr.aria-valuenow]="value"
       aria-valuemin="0"
       aria-valuemax="100"
@@ -35,4 +36,5 @@ import { Component, Input } from "@angular/core";
 })
 export class ProgressBarComponent {
   @Input() value = 0;
+  @Input() ariaLabel = "";
 }

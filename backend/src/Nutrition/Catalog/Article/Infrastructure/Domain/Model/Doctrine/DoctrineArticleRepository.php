@@ -28,10 +28,6 @@ final class DoctrineArticleRepository extends EntityRepository implements Articl
         return $this->withEquivalences(article: $this->findOneBy(['barcode' => $barcode]));
     }
 
-    /**
-     * Reconciles the equivalences by id: a command that does not rebuild them keeps the ones it loaded,
-     * so wiping them all would drop the equivalences of every caller that only touches the article itself.
-     */
     public function save(Article $article): void
     {
         $entityManager = $this->getEntityManager();

@@ -27,3 +27,17 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.inventory.validated' }
+
+  Nutrition\Pantry\Stock\Application\Subscriber\IncreaseArticleStockOnTicketReceived:
+    class: Nutrition\Pantry\Stock\Application\Subscriber\IncreaseArticleStockOnTicketReceived
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.received' }
+
+  Nutrition\Pantry\Stock\Application\Subscriber\DecreaseArticleStockOnTicketUnreceived:
+    class: Nutrition\Pantry\Stock\Application\Subscriber\DecreaseArticleStockOnTicketUnreceived
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.unreceived' }

@@ -1,7 +1,3 @@
-/**
- * Espejo en TypeScript de e2e/fixtures/sql. Los tests nunca escriben un UUID
- * ni un nombre a mano: si el seed cambia, sólo cambia este fichero.
- */
 export const SEED = {
   user: {
     id: "e2e00000-0000-4000-8000-000000000001",
@@ -40,7 +36,25 @@ export const SEED = {
     custom: { id: "e2e90000-0000-4000-8000-000000000004", name: "E2E Papel de cocina" },
     itemCount: 4,
   },
-  /** El mismo día que fija src/support/clock.ts: es el "hoy" del diario. */
+  tickets: {
+    showcase: {
+      id: "e2eb0000-0000-4000-8000-000000000001",
+      printedName: "E2E MERCADONA S.A.",
+      total: 2.4,
+      lineCount: 3,
+      remembered: { id: "e2ec0000-0000-4000-8000-000000000011", rawName: "E2E YOGUR NAT. PACK" },
+      catalogLinked: { id: "e2ec0000-0000-4000-8000-000000000012", rawName: "E2E ARROZ RED. 1KG" },
+      pending: { id: "e2ec0000-0000-4000-8000-000000000013", rawName: "E2E BOLSA PLASTICO" },
+    },
+    scratch: {
+      "functional-desktop": "e2eb0000-0000-4000-8000-000000000002",
+      "functional-mobile": "e2eb0000-0000-4000-8000-000000000003",
+    } as Record<string, string>,
+    removable: {
+      "functional-desktop": "e2eb0000-0000-4000-8000-000000000004",
+      "functional-mobile": "e2eb0000-0000-4000-8000-000000000005",
+    } as Record<string, string>,
+  },
   today: "2026-01-15",
   diary: {
     yogur: { id: "e2ea0000-0000-4000-8000-000000000001", meal: "breakfast", calories: 76.25 },

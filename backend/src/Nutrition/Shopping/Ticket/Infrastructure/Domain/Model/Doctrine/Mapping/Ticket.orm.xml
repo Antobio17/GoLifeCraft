@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="Nutrition\Shopping\Ticket\Infrastructure\Domain\Model\Doctrine\DoctrineTicketRepository" name="Nutrition\Shopping\Ticket\Domain\Model\Ticket" table="shopping_ticket">
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="storeName" type="string" column="store_name" length="255"/>
+    <field name="supermarketId" type="string" column="supermarket_id" length="36" nullable="true"/>
+    <field name="purchasedOn" type="string" column="purchased_on" length="10"/>
+    <field name="total" type="float" column="total" nullable="true"/>
+    <field name="note" type="string" column="note" length="255" options="{&quot;default&quot;: &quot;&quot;}"/>
+    <field name="status" type="string" column="status" length="16"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+    <indexes>
+      <index name="idx_shopping_ticket_purchased_on" columns="purchased_on"/>
+      <index name="idx_shopping_ticket_status" columns="status"/>
+      <index name="idx_shopping_ticket_supermarket_id" columns="supermarket_id"/>
+    </indexes>
+  </entity>
+</doctrine-mapping>
