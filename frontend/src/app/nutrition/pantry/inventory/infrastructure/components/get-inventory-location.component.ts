@@ -27,6 +27,7 @@ import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastru
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetInventoryService } from "@nutrition/pantry/inventory/application/services/get-inventory.service";
 import { CountInventoryItemService } from "@nutrition/pantry/inventory/application/services/count-inventory-item.service";
 import { InventoryViewService } from "@nutrition/pantry/inventory/application/services/inventory-view.service";
@@ -55,6 +56,7 @@ import { InventoryStatus } from "../../domain/models/inventory-status.model";
     SkeletonComponent,
     SkeletonScreenHeaderComponent,
     SectionHeaderComponent,
+    RevealDirective,
   ],
 })
 export class GetInventoryLocationComponent {

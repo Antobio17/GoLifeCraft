@@ -32,6 +32,21 @@
       @if (isDraft()) {
         <ds-button
           slot="actions"
+          data-testid="inventory-validate"
+          variant="soft"
+          size="icon-lg"
+          icon="check"
+          [iconSize]="19"
+          [loading]="validating()"
+          [ariaLabel]="'getInventory.validate' | t"
+          (clicked)="onValidate()"
+        />
+      }
+
+      @if (isDraft()) {
+        <ds-button
+          slot="actions"
+          data-testid="inventory-discard"
           variant="danger"
           size="icon-lg"
           icon="trash"
@@ -39,9 +54,12 @@
           [ariaLabel]="'getInventory.discard' | t"
           (clicked)="onDiscard()"
         />
-      } @else {
+      }
+
+      @if (!isDraft()) {
         <ds-button
           slot="actions"
+          data-testid="inventory-reopen"
           variant="secondary"
           size="icon-lg"
           icon="restore"
@@ -64,17 +82,6 @@
           }
 
           <ds-text variant="meta">{{ hint() }}</ds-text>
-
-          @if (isDraft()) {
-            <ds-button
-              variant="primary"
-              [fullWidth]="true"
-              [loading]="validating()"
-              (clicked)="onValidate()"
-            >
-              {{ "getInventory.validate" | t }}
-            </ds-button>
-          }
         </ds-card>
       </ng-container>
 

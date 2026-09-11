@@ -74,6 +74,9 @@ type InlineQuantitySize = "md" | "sm";
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
         padding: var(--ds-space-1-5) var(--ds-space-2);
+        transition:
+          border-color var(--ds-transition-fast),
+          box-shadow var(--ds-transition-fast);
       }
       .ds-inline-qty--field:focus-within {
         border-color: var(--ds-border-focus);

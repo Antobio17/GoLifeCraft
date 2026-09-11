@@ -52,72 +52,74 @@
           />
         }
 
-        @for (row of rows(); track row.item.id) {
-          <ds-card
-            variant="inset"
-            [padding]="'var(--ds-space-3)'"
-            [gap]="'var(--ds-space-2)'"
-          >
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-3)'"
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+          @for (row of rows(); track row.item.id) {
+            <ds-card
+              variant="inset"
+              [padding]="'var(--ds-space-3)'"
+              [gap]="'var(--ds-space-2)'"
             >
-              <ds-emoji-tile
-                [emoji]="row.emoji"
-                [imageUrl]="row.imageUrl"
-                [alt]="row.name"
-                [size]="40"
-                [radius]="11"
-              />
-
-              <ds-stack [grow]="true">
-                <ds-text variant="strong">{{ row.name }}</ds-text>
-              </ds-stack>
-
               <ds-stack
                 direction="row"
                 align="center"
-                [gap]="'var(--ds-space-2)'"
-                [shrink]="false"
+                [gap]="'var(--ds-space-3)'"
               >
-                @if (isDraft()) {
-                  <ds-inline-quantity
-                    size="sm"
-                    [allowZero]="true"
-                    [field]="true"
-                    [quantity]="row.quantity"
-                    [unit]="row.unit"
-                    [unitLabel]="row.unitLabel"
-                    [unitOptions]="row.unitOptions"
-                    [ariaLabel]="row.name"
-                    [unitAriaLabel]="'getInventoryLocation.unit' | t"
-                    (quantityChange)="onQuantity(row, $event)"
-                    (unitChange)="onUnit(row, $event)"
-                  />
+                <ds-emoji-tile
+                  [emoji]="row.emoji"
+                  [imageUrl]="row.imageUrl"
+                  [alt]="row.name"
+                  [size]="40"
+                  [radius]="11"
+                />
 
-                  @if (row.counted) {
-                    <ds-icon-button
-                      icon="close"
-                      variant="ghost"
-                      [ariaLabel]="'getInventoryLocation.clear' | t"
-                      (clicked)="onClear(row)"
+                <ds-stack [grow]="true">
+                  <ds-text variant="strong">{{ row.name }}</ds-text>
+                </ds-stack>
+
+                <ds-stack
+                  direction="row"
+                  align="center"
+                  [gap]="'var(--ds-space-2)'"
+                  [shrink]="false"
+                >
+                  @if (isDraft()) {
+                    <ds-inline-quantity
+                      size="sm"
+                      [allowZero]="true"
+                      [field]="true"
+                      [quantity]="row.quantity"
+                      [unit]="row.unit"
+                      [unitLabel]="row.unitLabel"
+                      [unitOptions]="row.unitOptions"
+                      [ariaLabel]="row.name"
+                      [unitAriaLabel]="'getInventoryLocation.unit' | t"
+                      (quantityChange)="onQuantity(row, $event)"
+                      (unitChange)="onUnit(row, $event)"
                     />
+
+                    @if (row.counted) {
+                      <ds-icon-button
+                        icon="close"
+                        variant="ghost"
+                        [ariaLabel]="'getInventoryLocation.clear' | t"
+                        (clicked)="onClear(row)"
+                      />
+                    } @else {
+                      <ds-icon-button
+                        icon="check"
+                        variant="soft"
+                        [ariaLabel]="'getInventoryLocation.confirm' | t"
+                        (clicked)="onConfirm(row)"
+                      />
+                    }
                   } @else {
-                    <ds-icon-button
-                      icon="check"
-                      variant="soft"
-                      [ariaLabel]="'getInventoryLocation.confirm' | t"
-                      (clicked)="onConfirm(row)"
-                    />
+                    <ds-text variant="strong">{{ row.countedLabel }}</ds-text>
                   }
-                } @else {
-                  <ds-text variant="strong">{{ row.countedLabel }}</ds-text>
-                }
+                </ds-stack>
               </ds-stack>
-            </ds-stack>
-          </ds-card>
-        }
+            </ds-card>
+          }
+        </ds-stack>
       </ds-stack>
     </ds-split-view>
   }
