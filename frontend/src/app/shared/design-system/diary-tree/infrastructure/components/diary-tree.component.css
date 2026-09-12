@@ -111,3 +111,13 @@ ds-text.diary-tree__name {
   font-weight: 700;
   color: var(--ds-text-meta);
 }
+
+ds-pressable.diary-tree__open {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+ds-pressable.diary-tree__open:hover ds-text.diary-tree__name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

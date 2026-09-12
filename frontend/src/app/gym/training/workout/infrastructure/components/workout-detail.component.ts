@@ -1,6 +1,5 @@
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
-import { Router } from "@angular/router";
 import { of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
@@ -18,6 +17,7 @@ import {
   WorkoutDetailAttributes,
   WorkoutExerciseView,
 } from "../../domain/models/workout-detail.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-workout-detail",
@@ -36,8 +36,8 @@ import {
 })
 export class WorkoutDetailComponent {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
   private getWorkoutService = inject(GetWorkoutService);
-  private router = inject(Router);
 
   private readonly MODULE_PATH = "gym/training/workout";
 
@@ -148,6 +148,6 @@ export class WorkoutDetailComponent {
   }
 
   goBack(): void {
-    this.router.navigate(["/gym/history"]);
+    this.backNavigation.back(["/gym/history"]);
   }
 }

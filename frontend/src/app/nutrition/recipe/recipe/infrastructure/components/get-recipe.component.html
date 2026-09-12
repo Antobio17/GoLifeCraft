@@ -152,9 +152,21 @@
                     [gap]="'var(--ds-space-1-5)'"
                     [grow]="true"
                   >
-                    <ds-text variant="strong" [truncate]="true">{{
-                      row.ingredient.name
-                    }}</ds-text>
+                    @if (row.openable) {
+                      <ds-pressable
+                        class="ingredient__open"
+                        [ariaLabel]="'getRecipe.openIngredient' | t"
+                        (press)="onOpenIngredient(row.ingredient)"
+                      >
+                        <ds-text variant="strong" [truncate]="true">{{
+                          row.ingredient.name
+                        }}</ds-text>
+                      </ds-pressable>
+                    } @else {
+                      <ds-text variant="strong" [truncate]="true">{{
+                        row.ingredient.name
+                      }}</ds-text>
+                    }
                     @if (row.ingredient.kind === "recipe") {
                       <ds-chip tone="brand">{{
                         "getRecipe.subRecipe" | t

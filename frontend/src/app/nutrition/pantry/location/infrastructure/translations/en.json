@@ -88,7 +88,8 @@
       "title": "Contents",
       "remove": "Remove",
       "emptyTitle": "Nothing here yet",
-      "emptyText": "Use the + button in the header to place here what you keep in this spot"
+      "emptyText": "Use the + button in the header to place here what you keep in this spot",
+      "open": "Open the record"
     },
     "candidates": {
       "title": "Add to this location",

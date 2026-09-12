@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { InventoryLocation } from "../../domain/models/inventory-location.model";
@@ -13,6 +14,7 @@ import { InventoryShift } from "../../domain/models/inventory-shift.model";
 @Injectable({ providedIn: "root" })
 export class InventoryViewService {
   private entityVisual = inject(EntityVisualService);
+  private aggregateNavigation = inject(AggregateNavigationService);
   private unitCatalog = inject(UnitCatalogService);
 
   shiftKey(shift: InventoryShift | string): string {
@@ -87,6 +89,7 @@ export class InventoryViewService {
         ? `${this.format(this.inUnit(item.countedQuantity ?? 0, selected))} ${this.unitLabel(selected.unit)}`
         : t("getInventory.notCounted"),
       counted,
+      openable: this.aggregateNavigation.canOpen(item.kind, item.refId),
     };
   }
 

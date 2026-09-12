@@ -48,6 +48,9 @@ import { PantryLocationItemRow } from "../../domain/models/pantry-location-item-
 import { PantryLocationCandidate } from "../../domain/models/pantry-location-candidate.model";
 import { PantryLocationCandidateRow } from "../../domain/models/pantry-location-candidate-row.model";
 import { PantryLocationItemKind } from "../../domain/models/pantry-location-item-kind.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 
 const ALL_KINDS = "";
 
@@ -55,6 +58,7 @@ const ALL_KINDS = "";
   selector: "app-get-pantry-location",
   templateUrl: "./get-pantry-location.component.html",
   imports: [
+    PressableComponent,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -80,6 +84,8 @@ const ALL_KINDS = "";
 })
 export class GetPantryLocationComponent {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
+  private aggregateNavigation = inject(AggregateNavigationService);
   private getPantryLocationService = inject(GetPantryLocationService);
   private getItemsService = inject(GetPantryLocationItemsService);
   private getCandidatesService = inject(GetPantryLocationCandidatesService);
@@ -262,8 +268,14 @@ export class GetPantryLocationComponent {
     });
   }
 
+  onOpenItem(row: PantryLocationItemRow): void {
+    const { kind, refId } = row.item.attributes;
+
+    this.aggregateNavigation.open(kind, refId);
+  }
+
   back(): void {
-    this.router.navigate(["/locations"]);
+    this.backNavigation.back(["/locations"]);
   }
 
   private track(request: Observable<void>): void {

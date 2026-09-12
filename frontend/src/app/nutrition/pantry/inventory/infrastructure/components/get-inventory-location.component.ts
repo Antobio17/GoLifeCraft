@@ -6,7 +6,6 @@ import {
   input,
   signal,
 } from "@angular/core";
-import { Router } from "@angular/router";
 import { toObservable, takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
@@ -35,11 +34,15 @@ import { InventoryDetailAttributes } from "../../domain/models/inventory-detail-
 import { InventoryLocation } from "../../domain/models/inventory-location.model";
 import { InventoryItemRow } from "../../domain/models/inventory-item-row.model";
 import { InventoryStatus } from "../../domain/models/inventory-status.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 
 @Component({
   selector: "app-get-inventory-location",
   templateUrl: "./get-inventory-location.component.html",
   imports: [
+    PressableComponent,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
@@ -61,11 +64,12 @@ import { InventoryStatus } from "../../domain/models/inventory-status.model";
 })
 export class GetInventoryLocationComponent {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
+  private aggregateNavigation = inject(AggregateNavigationService);
   private getInventoryService = inject(GetInventoryService);
   private countInventoryItemService = inject(CountInventoryItemService);
   private inventoryView = inject(InventoryViewService);
   private destroyRef = inject(DestroyRef);
-  private router = inject(Router);
 
   private readonly MODULE_PATH = "nutrition/pantry/inventory";
 
@@ -193,8 +197,12 @@ export class GetInventoryLocationComponent {
     this.save(row, null);
   }
 
+  onOpenItem(row: InventoryItemRow): void {
+    this.aggregateNavigation.open(row.item.kind, row.item.refId);
+  }
+
   back(): void {
-    this.router.navigate(["/inventory", this.id()]);
+    this.backNavigation.back(["/inventory", this.id()]);
   }
 
   private save(row: InventoryItemRow, countedQuantity: number | null): void {

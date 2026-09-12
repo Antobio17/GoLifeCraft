@@ -37,22 +37,43 @@
         align="center"
         gap="var(--ds-space-2)"
       >
+        <ds-emoji-tile
+          [emoji]="row.emoji"
+          [imageUrl]="row.imageUrl"
+          [alt]="row.name"
+          [size]="30"
+          [radius]="9"
+        />
+
+        <ds-stack
+          class="diary-tree__body"
+          gap="var(--ds-space-1)"
+          [grow]="true"
+        >
+          @if (row.openable) {
+            <ds-pressable
+              class="diary-tree__open"
+              [ariaLabel]="openLabel"
+              (press)="opened.emit(row.path)"
+            >
+              <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
+            </ds-pressable>
+          } @else {
+            <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
+          }
+          <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
+        </ds-stack>
+
         @if (row.expandable) {
-          <ds-pressable
-            [grow]="true"
-            gap="var(--ds-space-2)"
+          <ds-icon-button
+            [icon]="row.expanded ? 'chevronUp' : 'chevronDown'"
+            variant="soft"
+            [size]="24"
+            [iconSize]="12"
+            [radius]="'var(--ds-radius-sm)'"
             [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
-            (press)="toggled.emit(row.path)"
-          >
-            <ng-container
-              [ngTemplateOutlet]="content"
-              [ngTemplateOutletContext]="{ $implicit: row }"
-            />
-          </ds-pressable>
-        } @else {
-          <ng-container
-            [ngTemplateOutlet]="content"
-            [ngTemplateOutletContext]="{ $implicit: row }"
+            [expanded]="row.expanded"
+            (clicked)="toggled.emit(row.path)"
           />
         }
 
@@ -107,18 +128,3 @@
     }
   </ds-stack>
 </ds-stack>
-
-<ng-template #content let-row>
-  <ds-emoji-tile
-    [emoji]="row.emoji"
-    [imageUrl]="row.imageUrl"
-    [alt]="row.name"
-    [size]="30"
-    [radius]="9"
-  />
-
-  <ds-stack class="diary-tree__body" gap="var(--ds-space-1)" [grow]="true">
-    <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
-    <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
-  </ds-stack>
-</ng-template>

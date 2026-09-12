@@ -21,6 +21,7 @@
   },
   "getRecipe": {
     "back": "Back",
+    "openIngredient": "Open the record",
     "edit": "Edit recipe",
     "delete": "Delete recipe",
     "perServing": "kcal · per serving",

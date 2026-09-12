@@ -109,6 +109,7 @@ import {
   DiaryGoalForm,
   DiaryGoalFormService,
 } from "@nutrition/diary/goal/application/services/diary-goal-form.service";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 
 type PickerTab = "product" | "recipe" | "quick";
 
@@ -169,6 +170,7 @@ export class GetDiaryComponent implements OnInit {
   private consumeDiaryMealService = inject(ConsumeDiaryMealService);
   private treeView = inject(DiaryTreeViewService);
   private entityVisual = inject(EntityVisualService);
+  private aggregateNavigation = inject(AggregateNavigationService);
   private createQuickDiaryEntryService = inject(CreateQuickDiaryEntryService);
   private updateQuickDiaryEntryService = inject(UpdateQuickDiaryEntryService);
   protected quickForms = inject(QuickDiaryEntryFormService);
@@ -306,7 +308,10 @@ export class GetDiaryComponent implements OnInit {
           "product" === entry.kind && entry.refId
             ? this.picker.unitOptions(entry.refId)
             : [],
-        openable: "quick" === entry.kind,
+        openable:
+          "quick" === entry.kind ||
+          this.aggregateNavigation.canOpen(entry.kind, entry.refId),
+        openLabel: this.entryOpenLabel(entry),
         expandable: entry.tree.length > 0,
         expanded: this.expandedEntries().has(entry.id),
         treeRows: this.expandedEntries().has(entry.id)
@@ -557,6 +562,31 @@ export class GetDiaryComponent implements OnInit {
     this.pickerQuery.set("");
     this.resetQuickForm();
     this.pickerOpen.set(true);
+  }
+
+  onOpenTreeNode(entryId: string, path: string): void {
+    const entry = this.entryOf(entryId);
+    const node = entry ? this.treeView.findNode(entry.tree, path) : null;
+
+    if (null === node) return;
+
+    this.aggregateNavigation.open(node.kind, node.refId);
+  }
+
+  onOpenEntry(mealKey: string, entry: DiaryEntryView): void {
+    if ("quick" === entry.kind) {
+      this.openQuickEditor(mealKey, entry);
+
+      return;
+    }
+
+    this.aggregateNavigation.open(entry.kind, entry.refId);
+  }
+
+  private entryOpenLabel(entry: DiaryEntryView): string {
+    if ("quick" === entry.kind) return this.t("getDiary.quick.edit");
+
+    return this.t("getDiary.openEntry");
   }
 
   openQuickEditor(mealKey: string, entry: DiaryEntryView): void {

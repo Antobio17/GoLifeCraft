@@ -53,6 +53,9 @@ import { TicketDetailAttributes } from "../../domain/models/ticket-detail-attrib
 import { TicketItem } from "../../domain/models/ticket-item.model";
 import { TicketLineRow } from "../../domain/models/ticket-line-row.model";
 import { TicketStatus } from "../../domain/models/ticket-status.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
+import { AggregateKind } from "@shared/routing/domain/models/aggregate-kind.enum";
 
 @Component({
   selector: "app-get-ticket",
@@ -84,6 +87,8 @@ export class GetTicketComponent {
   private static readonly PICKER_SIZE = 20;
 
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
+  private aggregateNavigation = inject(AggregateNavigationService);
   private getTicketService = inject(GetTicketService);
   private linkTicketItemService = inject(LinkTicketItemService);
   private unlinkTicketItemService = inject(UnlinkTicketItemService);
@@ -258,7 +263,11 @@ export class GetTicketComponent {
   }
 
   back(): void {
-    this.router.navigate(["/tickets"]);
+    this.backNavigation.back(["/tickets"]);
+  }
+
+  onOpenArticle(articleId: string | null): void {
+    this.aggregateNavigation.open(AggregateKind.Product, articleId);
   }
 
   openPicker(itemId: string): void {

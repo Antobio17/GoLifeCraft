@@ -1,4 +1,9 @@
-import { provideZoneChangeDetection, LOCALE_ID } from "@angular/core";
+import {
+  provideZoneChangeDetection,
+  provideAppInitializer,
+  inject,
+  LOCALE_ID,
+} from "@angular/core";
 import { registerLocaleData } from "@angular/common";
 import localeEs from "@angular/common/locales/es";
 registerLocaleData(localeEs);
@@ -14,6 +19,7 @@ import {
   withViewTransitions,
 } from "@angular/router";
 import { IdlePreloadStrategy } from "./app/shared/routing/infrastructure/strategies/idle-preload.strategy";
+import { BackNavigationService } from "./app/shared/routing/application/services/back-navigation.service";
 import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/components/main.component";
 import { APP_ROUTES } from "./app/app.routes";
 import { GlobalProviders } from "@shared/providers/main.provider";
@@ -24,6 +30,9 @@ import { provideAnimationsAsync } from "@angular/platform-browser/animations/asy
 bootstrapApplication(MainLayoutComponent, {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideAppInitializer(() => {
+      inject(BackNavigationService);
+    }),
     provideRouter(
       APP_ROUTES,
       withComponentInputBinding(),

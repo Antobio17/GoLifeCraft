@@ -105,9 +105,21 @@
                 />
 
                 <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                  <ds-text variant="strong" [truncate]="true">{{
-                    row.name
-                  }}</ds-text>
+                  @if (row.openable) {
+                    <ds-pressable
+                      class="item__open"
+                      [ariaLabel]="'getPantryLocation.contents.open' | t"
+                      (press)="onOpenItem(row)"
+                    >
+                      <ds-text variant="strong" [truncate]="true">{{
+                        row.name
+                      }}</ds-text>
+                    </ds-pressable>
+                  } @else {
+                    <ds-text variant="strong" [truncate]="true">{{
+                      row.name
+                    }}</ds-text>
+                  }
                 </ds-stack>
 
                 <ds-stack [gap]="'var(--ds-space-1)'" [shrink]="false">

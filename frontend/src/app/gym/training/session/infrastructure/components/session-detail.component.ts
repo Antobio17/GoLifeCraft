@@ -92,6 +92,7 @@ import {
 } from "@gym/training/workout/application/services/active-workout.service";
 import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-sync-mode.model";
 import { TextSearchService } from "@shared/search/application/services/text-search.service";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-session-detail",
@@ -142,6 +143,7 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
 })
 export class SessionDetailComponent implements OnInit {
   private textSearch = inject(TextSearchService);
+  private backNavigation = inject(BackNavigationService);
   private translationService = inject(TranslationService);
   private getSessionService = inject(GetSessionService);
   private getSessionStatsService = inject(GetSessionStatsService);
@@ -978,6 +980,6 @@ export class SessionDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(["/gym/sessions"]);
+    this.backNavigation.back(["/gym/sessions"]);
   }
 }

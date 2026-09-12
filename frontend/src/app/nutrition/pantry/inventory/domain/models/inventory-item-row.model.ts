@@ -12,4 +12,5 @@ export interface InventoryItemRow {
   unitOptions: SelectOption[];
   countedLabel: string;
   counted: boolean;
+  openable: boolean;
 }

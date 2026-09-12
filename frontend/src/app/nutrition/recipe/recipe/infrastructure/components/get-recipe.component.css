@@ -1,0 +1,9 @@
+ds-pressable.ingredient__open {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+ds-pressable.ingredient__open:hover ds-text {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

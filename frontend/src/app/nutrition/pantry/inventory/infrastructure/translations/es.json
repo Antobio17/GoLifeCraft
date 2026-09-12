@@ -136,6 +136,7 @@
       "title": "Esta ubicación estaba vacía",
       "text": "No guardaba nada cuando empezó el recuento"
     },
-    "confirm": "Dar por contado lo que se ve"
+    "confirm": "Dar por contado lo que se ve",
+    "open": "Abrir la ficha"
   }
 }

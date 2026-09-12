@@ -61,6 +61,7 @@ import {
 import { TemplateSyncMode } from "@gym/training/workout/domain/models/template-sync-mode.model";
 import { FreeWorkoutFinishMode } from "@gym/training/workout/domain/models/free-workout-finish-mode.model";
 import { TextSearchService } from "@shared/search/application/services/text-search.service";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-free-workout",
@@ -100,6 +101,7 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
 })
 export class FreeWorkoutComponent implements OnInit {
   private textSearch = inject(TextSearchService);
+  private backNavigation = inject(BackNavigationService);
   private translationService = inject(TranslationService);
   private getExercisesService = inject(GetExercisesService);
   private getExerciseTopSetsService = inject(GetExerciseTopSetsService);
@@ -590,6 +592,6 @@ export class FreeWorkoutComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(["/gym/sessions"]);
+    this.backNavigation.back(["/gym/sessions"]);
   }
 }

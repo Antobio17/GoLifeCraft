@@ -1,6 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
 import { Observable, forkJoin } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
@@ -53,6 +52,7 @@ import { FinanceTransactionKind } from "@economy/finance/transaction/domain/mode
 import { GetFinanceAccountsService } from "@economy/finance/account/application/services/get-finance-accounts.service";
 import { FinanceAccountCatalogService } from "@economy/finance/account/application/services/finance-account-catalog.service";
 import { FinanceAccount } from "@economy/finance/account/domain/models/finance-account.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-finance-recurrences",
@@ -88,7 +88,7 @@ import { FinanceAccount } from "@economy/finance/account/domain/models/finance-a
 })
 export class GetFinanceRecurrencesComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
   private getFinanceRecurrencesService = inject(GetFinanceRecurrencesService);
   private createFinanceRecurrenceService = inject(
     CreateFinanceRecurrenceService,
@@ -238,7 +238,7 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(["/economy"]);
+    this.backNavigation.back(["/economy"]);
   }
 
   runPending(): void {

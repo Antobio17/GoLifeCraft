@@ -34,6 +34,7 @@ import {
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-global-articles",
@@ -60,6 +61,7 @@ import { RevealDirective } from "@shared/design-system/reveal/infrastructure/dir
 })
 export class GetGlobalArticlesComponent extends AbstractListPageComponent<GlobalArticle> {
   private getGlobalArticlesService = inject(GetGlobalArticlesService);
+  private backNavigation = inject(BackNavigationService);
   private getGlobalArticleFacetsService = inject(GetGlobalArticleFacetsService);
   private importGlobalArticleService = inject(ImportGlobalArticleService);
   private floatingToastService = inject(FloatingToastService);
@@ -211,7 +213,7 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
   }
 
   back(): void {
-    this.router.navigate(["/catalog"]);
+    this.backNavigation.back(["/catalog"]);
   }
 
   openDetail(id: string): void {

@@ -36,7 +36,21 @@
     />
 
     <ds-stack class="shopping-item__body" [gap]="'2px'" [grow]="true">
-      <ds-text variant="strong" class="shopping-item__name">{{ name }}</ds-text>
+      @if (openable) {
+        <ds-pressable
+          class="shopping-item__open"
+          [ariaLabel]="openLabel"
+          (press)="opened.emit()"
+        >
+          <ds-text variant="strong" class="shopping-item__name">{{
+            name
+          }}</ds-text>
+        </ds-pressable>
+      } @else {
+        <ds-text variant="strong" class="shopping-item__name">{{
+          name
+        }}</ds-text>
+      }
 
       <ds-stack
         direction="row"

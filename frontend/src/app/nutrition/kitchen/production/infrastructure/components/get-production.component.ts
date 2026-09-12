@@ -39,6 +39,7 @@ import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/pr
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-production",
@@ -63,6 +64,7 @@ import { VisualSurface } from "@shared/visual-preference/domain/models/visual-su
 })
 export class GetProductionComponent {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
   private entityVisual = inject(EntityVisualService);
   private getProductionService = inject(GetProductionService);
   private discardProductionService = inject(DiscardProductionService);
@@ -179,7 +181,7 @@ export class GetProductionComponent {
   }
 
   onBack(): void {
-    this.router.navigate(["/cocina"]);
+    this.backNavigation.back(["/cocina"]);
   }
 
   onOpen(item: ProductionItemView): void {

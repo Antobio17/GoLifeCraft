@@ -26,6 +26,7 @@ import {
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 interface WorkoutRow {
   id: string;
@@ -63,6 +64,7 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
   private static readonly PAGE_SIZE = 20;
 
   private getWorkoutsService = inject(GetWorkoutsService);
+  private backNavigation = inject(BackNavigationService);
 
   protected readonly modulePath = "gym/training/workout";
   protected readonly storageKey = "pageSize_workouts";
@@ -157,7 +159,7 @@ export class GetWorkoutsComponent extends AbstractListPageComponent<Workout> {
   }
 
   goBack(): void {
-    this.router.navigate(["/gym"]);
+    this.backNavigation.back(["/gym"]);
   }
 
   onOpen(id: string): void {

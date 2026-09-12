@@ -54,6 +54,8 @@ import { ShoppingGroupLabels } from "@nutrition/shopping/shopping/domain/models/
 import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/shopping-sort-mode.model";
 import { ShoppingListAttributes } from "@nutrition/shopping/shopping/domain/models/shopping-list.model";
 import { DiaryShoppingSheetComponent } from "./diary-shopping-sheet.component";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
+import { AggregateKind } from "@shared/routing/domain/models/aggregate-kind.enum";
 
 type FilterKind = "store" | "cat" | "brand";
 
@@ -96,6 +98,7 @@ type FilterKind = "store" | "cat" | "brand";
 })
 export class GetShoppingListComponent implements OnInit {
   private translationService = inject(TranslationService);
+  private aggregateNavigation = inject(AggregateNavigationService);
   protected autosave = inject(AutosaveService);
   protected undo = inject(UndoService);
   private getShoppingListService = inject(GetShoppingListService);
@@ -428,6 +431,10 @@ export class GetShoppingListComponent implements OnInit {
         this.view.optimisticCustomItem(customName, `pending-${customName}`),
       );
     });
+  }
+
+  onOpenItem(item: ShoppingItemRow): void {
+    this.aggregateNavigation.open(AggregateKind.Product, item.articleId);
   }
 
   toggleChecked(item: ShoppingItemRow): void {

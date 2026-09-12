@@ -99,7 +99,8 @@
       "added": "Added",
       "quantity": "Quantity",
       "more": "More",
-      "less": "Less"
+      "less": "Less",
+      "open": "Open the record"
     },
     "picker": {
       "title": "Link to an article",

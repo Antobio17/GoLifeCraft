@@ -21,6 +21,7 @@
   },
   "getRecipe": {
     "back": "Volver",
+    "openIngredient": "Abrir la ficha",
     "edit": "Editar receta",
     "delete": "Borrar receta",
     "perServing": "kcal · por ración",

@@ -37,6 +37,7 @@ import { InventoryViewService } from "@nutrition/pantry/inventory/application/se
 import { InventoryDetailAttributes } from "../../domain/models/inventory-detail-attributes.model";
 import { InventoryLocationRow } from "../../domain/models/inventory-location-row.model";
 import { InventoryStatus } from "../../domain/models/inventory-status.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-inventory",
@@ -64,6 +65,7 @@ import { InventoryStatus } from "../../domain/models/inventory-status.model";
 })
 export class GetInventoryComponent {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
   private getInventoryService = inject(GetInventoryService);
   private validateInventoryService = inject(ValidateInventoryService);
   private discardInventoryService = inject(DiscardInventoryService);
@@ -227,7 +229,7 @@ export class GetInventoryComponent {
   }
 
   back(): void {
-    this.router.navigate(["/inventory"]);
+    this.backNavigation.back(["/inventory"]);
   }
 
   private refresh(): void {

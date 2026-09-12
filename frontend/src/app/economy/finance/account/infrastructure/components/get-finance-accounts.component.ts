@@ -1,6 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
 import { Observable, forkJoin, of, switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
@@ -51,6 +50,7 @@ import { FinanceBalanceCheckFormService } from "@economy/finance/balance-check/a
 import { FinanceBalanceCheck } from "@economy/finance/balance-check/domain/models/finance-balance-check.model";
 import { FinanceBalanceCheckForm } from "@economy/finance/balance-check/domain/models/finance-balance-check-form.model";
 import { FinanceBalanceCheckRow } from "@economy/finance/balance-check/domain/models/finance-balance-check-row.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-finance-accounts",
@@ -85,7 +85,7 @@ import { FinanceBalanceCheckRow } from "@economy/finance/balance-check/domain/mo
 })
 export class GetFinanceAccountsComponent implements OnInit {
   private translationService = inject(TranslationService);
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
   private getFinanceAccountsService = inject(GetFinanceAccountsService);
   private createFinanceAccountService = inject(CreateFinanceAccountService);
   private updateFinanceAccountService = inject(UpdateFinanceAccountService);
@@ -207,7 +207,7 @@ export class GetFinanceAccountsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(["/economy"]);
+    this.backNavigation.back(["/economy"]);
   }
 
   openNewAccountSheet(): void {

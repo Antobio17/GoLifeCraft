@@ -36,6 +36,7 @@ import { FinanceBudgetFormService } from "@economy/finance/budget/application/se
 import { FinanceBudgetForm } from "@economy/finance/budget/domain/models/finance-budget-form.model";
 import { FinanceBudgetCategoryKind } from "@economy/finance/budget/domain/models/finance-budget-category-kind.model";
 import { FinanceBudgetSettingsRow } from "@economy/finance/budget/domain/models/finance-budget-settings-row.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 const SAVINGS_MAX_PERCENTAGE = 60;
 const REDIRECT_DELAY_MS = 600;
@@ -69,6 +70,7 @@ const REDIRECT_DELAY_MS = 600;
 })
 export class SaveFinanceBudgetComponent implements OnInit {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
   private router = inject(Router);
   private getFinanceBudgetSettingsService = inject(
     GetFinanceBudgetSettingsService,
@@ -230,7 +232,7 @@ export class SaveFinanceBudgetComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(["/economy/budget"]);
+    this.backNavigation.back(["/economy/budget"]);
   }
 
   onReferenceIncome(referenceIncome: string): void {

@@ -96,6 +96,8 @@ import {
 import { MenuLoadSheetComponent } from "./menu-load-sheet.component";
 import { MenuApplyWeekSheetComponent } from "./menu-apply-week-sheet.component";
 import { MenuShoppingSheetComponent } from "./menu-shopping-sheet.component";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 
 type PickerTab = "product" | "recipe";
 
@@ -141,6 +143,7 @@ type PickerTab = "product" | "recipe";
 })
 export class GetMenuComponent implements OnInit {
   private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
   private translationService = inject(TranslationService);
   private getMenuService = inject(GetMenuService);
   private getMenusService = inject(GetMenusService);
@@ -152,6 +155,7 @@ export class GetMenuComponent implements OnInit {
   private resetMenuItemTreeService = inject(ResetMenuItemTreeService);
   private treeView = inject(MenuTreeViewService);
   private entityVisual = inject(EntityVisualService);
+  private aggregateNavigation = inject(AggregateNavigationService);
   private getArticlesService = inject(GetArticlesService);
   private getRecipesService = inject(GetRecipesService);
   private getDiaryGoalService = inject(GetDiaryGoalService);
@@ -269,6 +273,7 @@ export class GetMenuComponent implements OnInit {
         unitLabel: this.itemUnitLabel(item),
         unitValue: item.unit ?? item.baseUnit,
         unitOptions: item.kind === "product" ? this.itemUnitOptions(item) : [],
+        openable: this.aggregateNavigation.canOpen(item.kind, item.refId),
         expandable: item.tree.length > 0,
         expanded: this.expandedItems().has(item.id),
         treeRows: this.expandedItems().has(item.id)
@@ -482,7 +487,7 @@ export class GetMenuComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(["/menus"]);
+    this.backNavigation.back(["/menus"]);
   }
 
   onName(value: string): void {
@@ -624,6 +629,18 @@ export class GetMenuComponent implements OnInit {
 
   toggleItemTree(itemId: string): void {
     this.expandedItems.update((expanded) => this.toggled(expanded, itemId));
+  }
+
+  onOpenItem(item: MenuItemView): void {
+    this.aggregateNavigation.open(item.kind, item.refId);
+  }
+
+  onOpenTreeNode(item: MenuItemView, path: string): void {
+    const node = this.treeView.findNode(item.tree, path);
+
+    if (null === node) return;
+
+    this.aggregateNavigation.open(node.kind, node.refId);
   }
 
   toggleTreeNode(path: string): void {

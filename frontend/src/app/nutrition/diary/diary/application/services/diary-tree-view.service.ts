@@ -3,6 +3,7 @@ import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggreg
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { DiaryTreeRow } from "@shared/design-system/diary-tree/domain/models/diary-tree-row.model";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 import { DiaryEntryNodeView } from "../../domain/models/diary.model";
 import { DiaryLotViewService } from "./diary-lot-view.service";
 import { DiaryPickerService } from "./diary-picker.service";
@@ -20,6 +21,7 @@ export class DiaryTreeViewService {
   private picker = inject(DiaryPickerService);
   private lotView = inject(DiaryLotViewService);
   private entityVisual = inject(EntityVisualService);
+  private aggregateNavigation = inject(AggregateNavigationService);
 
   rows(
     nodes: DiaryEntryNodeView[],
@@ -50,6 +52,7 @@ export class DiaryTreeViewService {
         unit: node.unit,
         unitLabel: recipe ? labels.servings : this.picker.unitLabel(node.unit),
         unitOptions: recipe ? [] : this.picker.unitOptions(node.refId),
+        openable: this.aggregateNavigation.canOpen(node.kind, node.refId),
         expandable,
         expanded,
         lotPickable: recipe && !served,

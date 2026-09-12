@@ -29,6 +29,10 @@ export class DiaryPage {
     return this.entries.filter({ hasText: name });
   }
 
+  async openRecord(name: string): Promise<void> {
+    await this.entryNamed(name).locator("ds-pressable button").first().click();
+  }
+
   async consumedCalories(): Promise<number> {
     const text = (await this.summary.innerText()).replace(/\s+/g, " ");
     const match = text.match(/([\d.,]+)\s*\/\s*[\d.,]+\s*kcal/i);
@@ -65,13 +69,13 @@ export class DiaryPage {
     await expect(this.page.locator(SHEET)).toBeVisible();
   }
 
-  async addQuickEntry(meal: Meal, name: string, calories: string): Promise<void> {
+  async addQuickEntry(
+    meal: Meal,
+    name: string,
+    calories: string,
+  ): Promise<void> {
     await this.openPicker(meal);
-    await this.ds
-      .host("diary-picker-tabs")
-      .locator("button")
-      .last()
-      .click();
+    await this.ds.host("diary-picker-tabs").locator("button").last().click();
     await this.ds.fill("diary-quick-name", name);
     await this.ds.fill("diary-quick-calories", calories);
     await this.ds.click("diary-quick-submit");

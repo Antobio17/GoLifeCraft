@@ -5,6 +5,7 @@ import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { ChipComponent } from "../../../chip/infrastructure/components/chip.component";
+import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
 
 @Component({
   selector: "ds-shopping-item",
@@ -15,6 +16,7 @@ import { ChipComponent } from "../../../chip/infrastructure/components/chip.comp
     StackComponent,
     TextComponent,
     ChipComponent,
+    PressableComponent,
   ],
   templateUrl: "./shopping-item.component.html",
   styleUrls: ["./shopping-item.component.css"],
@@ -36,9 +38,12 @@ export class ShoppingItemComponent {
   @Input() incrementLabel = "";
   @Input() decrementLabel = "";
   @Input() removeLabel = "";
+  @Input() openable = false;
+  @Input() openLabel = "";
 
   @Output() toggled = new EventEmitter<void>();
   @Output() increment = new EventEmitter<void>();
   @Output() decrement = new EventEmitter<void>();
   @Output() remove = new EventEmitter<void>();
+  @Output() opened = new EventEmitter<void>();
 }

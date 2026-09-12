@@ -3,6 +3,7 @@ import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggreg
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { DiaryTreeRow } from "@shared/design-system/diary-tree/domain/models/diary-tree-row.model";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 import { MenuItemNodeView } from "../../domain/models/menu-item-node.model";
 import { MenuPickerService } from "./menu-picker.service";
 import { MacroLabels, MenuViewService } from "./menu-view.service";
@@ -17,6 +18,7 @@ export class MenuTreeViewService {
   private view = inject(MenuViewService);
   private picker = inject(MenuPickerService);
   private entityVisual = inject(EntityVisualService);
+  private aggregateNavigation = inject(AggregateNavigationService);
 
   rows(
     nodes: MenuItemNodeView[],
@@ -48,6 +50,7 @@ export class MenuTreeViewService {
         unitOptions: recipe
           ? []
           : this.picker.unitOptions(node.refId, node.unit),
+        openable: this.aggregateNavigation.canOpen(node.kind, node.refId),
         expandable,
         expanded,
       };
@@ -56,5 +59,16 @@ export class MenuTreeViewService {
 
       return [row, ...this.rows(node.children, collapsed, labels, depth + 1)];
     });
+  }
+
+  findNode(nodes: MenuItemNodeView[], path: string): MenuItemNodeView | null {
+    for (const node of nodes) {
+      if (node.path === path) return node;
+
+      const found = this.findNode(node.children, path);
+      if (null !== found) return found;
+    }
+
+    return null;
   }
 }

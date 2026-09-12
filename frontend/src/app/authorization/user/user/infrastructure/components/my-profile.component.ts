@@ -1,5 +1,4 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
-import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import {
   FormBuilder,
@@ -44,6 +43,7 @@ import { ProfileCardComponent } from "@shared/design-system/profile-card/infrast
 import { PreferenceChoiceComponent } from "@shared/design-system/preference-choice/infrastructure/components/preference-choice.component";
 import { PreferenceChoiceOption } from "@shared/design-system/preference-choice/domain/models/preference-choice-option.model";
 import { PasswordStrengthComponent } from "@shared/design-system/password-strength/infrastructure/components/password-strength.component";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 function passwordStrengthValidator(
   control: AbstractControl,
@@ -113,6 +113,7 @@ function passwordMatchValidator(
 })
 export class MyProfileComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
+  private backNavigation = inject(BackNavigationService);
   private getMyProfileService = inject(GetMyProfileService);
   private updateMyProfileService = inject(UpdateMyProfileService);
   private changeMyPasswordService = inject(ChangeMyPasswordService);
@@ -122,7 +123,6 @@ export class MyProfileComponent implements OnInit {
   private visualPreferenceService = inject(VisualPreferenceService);
   private authSessionService = inject(AuthSessionService);
   private router = inject(Router);
-  private location = inject(Location);
 
   private readonly MODULE_PATH = "authorization/user/user";
 
@@ -229,7 +229,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   back(): void {
-    this.location.back();
+    this.backNavigation.back(["/dashboard"]);
   }
 
   changeTheme(theme: string): void {

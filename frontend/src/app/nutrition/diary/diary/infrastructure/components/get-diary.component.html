@@ -186,7 +186,7 @@
                     [imageUrl]="row.imageUrl"
                     [name]="row.entry.name"
                     [openable]="row.openable"
-                    [openLabel]="'getDiary.quick.edit' | t"
+                    [openLabel]="row.openLabel"
                     [badge]="row.badge"
                     [badgeTone]="row.badgeTone"
                     [tag]="row.stockLabel"
@@ -207,7 +207,7 @@
                     (quantityChange)="onQuantityChange(row.entry.id, $event)"
                     (unitChange)="onEntryUnitChange(row.entry, $event)"
                     (remove)="onRemove(row.entry.id)"
-                    (opened)="openQuickEditor(meal.key, row.entry)"
+                    (opened)="onOpenEntry(meal.key, row.entry)"
                     (expandToggled)="toggleEntryTree(row.entry.id)"
                   />
 
@@ -239,9 +239,11 @@
                       [resetLabel]="'getDiary.tree.reset' | t"
                       [expandLabel]="'getDiary.tree.expand' | t"
                       [collapseLabel]="'getDiary.tree.collapse' | t"
+                      [openLabel]="'getDiary.openEntry' | t"
                       [quantityAriaLabel]="'getDiary.quantity' | t"
                       [unitAriaLabel]="'getDiary.unit' | t"
                       (toggled)="toggleTreeNode($event)"
+                      (opened)="onOpenTreeNode(row.entry.id, $event)"
                       (quantityChanged)="
                         onNodeQuantityChange(row.entry.id, $event)
                       "

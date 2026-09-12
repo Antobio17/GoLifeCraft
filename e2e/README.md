@@ -44,13 +44,14 @@ en una tanda rápida: `E2E_SKIP_SEED=1 npm test`.
 
 ## Las cuatro capas
 
-| Capa | Fichero | Qué vigila |
-|---|---|---|
-| **Flujos** | junto a cada módulo (`src/nutrition/catalog/article/`…) | Que login, catálogo, recetario, diario y lista de la compra hacen lo que dicen, en escritorio y en móvil |
-| **Layout** | `src/design/layout.spec.ts` | Sin píxeles: cero scroll horizontal, la barra lateral entra a 768px y la inferior se va, el `ds-split-view` pasa de una a dos columnas a 1000px y su lateral es sticky, el contenido no queda tapado por la barra inferior |
-| **Design system** | `src/design/design-system.spec.ts` | Que no aparezcan etiquetas HTML nativas fuera de `shared/design-system`, que no se cuelen claves de traducción sin traducir, y que los tokens `--ds-*` resuelvan en claro y en oscuro |
-| **Regresión visual** | `src/design/visual-regression.spec.ts` | Captura pixel a pixel de cada pantalla en móvil y escritorio, en tema claro y oscuro |
-| **Accesibilidad** | `src/design/accessibility.spec.ts` | Que no aparezca una clase nueva de fallo WCAG 2.1 AA |
+| Capa                 | Fichero                                                 | Qué vigila                                                                                                                                                                                                                 |
+| -------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Flujos**           | junto a cada módulo (`src/nutrition/catalog/article/`…) | Que login, catálogo, recetario, diario y lista de la compra hacen lo que dicen, en escritorio y en móvil                                                                                                                   |
+| **Navegación**       | `src/navigation/back-navigation.spec.ts`                | Que el botón de atrás devuelve a la pantalla de la que se vino, y que con un enlace directo cae en su listado en vez de salirse de la app                                                                                  |
+| **Layout**           | `src/design/layout.spec.ts`                             | Sin píxeles: cero scroll horizontal, la barra lateral entra a 768px y la inferior se va, el `ds-split-view` pasa de una a dos columnas a 1000px y su lateral es sticky, el contenido no queda tapado por la barra inferior |
+| **Design system**    | `src/design/design-system.spec.ts`                      | Que no aparezcan etiquetas HTML nativas fuera de `shared/design-system`, que no se cuelen claves de traducción sin traducir, y que los tokens `--ds-*` resuelvan en claro y en oscuro                                      |
+| **Regresión visual** | `src/design/visual-regression.spec.ts`                  | Captura pixel a pixel de cada pantalla en móvil y escritorio, en tema claro y oscuro                                                                                                                                       |
+| **Accesibilidad**    | `src/design/accessibility.spec.ts`                      | Que no aparezca una clase nueva de fallo WCAG 2.1 AA                                                                                                                                                                       |
 
 Layout y design system son los que de verdad te van a servir en el día a día: no
 hay que regenerarlos cuando cambia un color y, cuando fallan, dicen **qué** se ha
@@ -139,28 +140,30 @@ src/
 ├── nutrition/diary/diary/
 ├── nutrition/shopping/shopping/
 ├── design/                          ← transversal: no es de ningún módulo
+├── navigation/                      ← transversal: abrir fichas y volver atrás
 ├── setup/                           ← emite la sesión semilla
 └── support/                         ← reloj, gestos, autosave, ds, semilla
 ```
 
 **Aquí no se hace hexagonal, y es deliberado.** Los puertos existen para poder
 cambiar la implementación sin tocar el dominio; en una suite end to end no hay
-nada que sustituir — el navegador, la API y la base de datos reales *son* el
+nada que sustituir — el navegador, la API y la base de datos reales _son_ el
 objeto de la prueba. Un puerto con una única implementación que nunca tendrá
 otra es ceremonia sin contrapartida.
 
 Lo que sí hay es separación de responsabilidades:
 
-| Pieza | Papel | Regla |
-|---|---|---|
-| `*.spec.ts` | Qué se comprueba | No sabe de selectores |
-| `*.page.ts` | Cómo se opera la pantalla | No lleva asserts de negocio |
-| `support/` | Infraestructura compartida | No sabe de pantallas concretas |
+| Pieza                        | Papel                        | Regla                              |
+| ---------------------------- | ---------------------------- | ---------------------------------- |
+| `*.spec.ts`                  | Qué se comprueba             | No sabe de selectores              |
+| `*.page.ts`                  | Cómo se opera la pantalla    | No lleva asserts de negocio        |
+| `support/`                   | Infraestructura compartida   | No sabe de pantallas concretas     |
 | `fixtures/` + `seed-data.ts` | Los datos y su espejo tipado | Ningún test escribe un UUID a mano |
 
-`design/` y `setup/` quedan fuera del árbol de módulos a propósito: los guards de
-layout no pertenecen a ningún bounded context, comprueban el armazón que los
-cruza todos.
+`design/`, `navigation/` y `setup/` quedan fuera del árbol de módulos a
+propósito: los guards de layout no pertenecen a ningún bounded context, y saltar
+de una pantalla a la ficha de otra tampoco — comprueban el armazón que los cruza
+todos.
 
 ## Selectores
 

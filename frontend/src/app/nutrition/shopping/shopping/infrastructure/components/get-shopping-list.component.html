@@ -159,10 +159,13 @@
                   [incrementLabel]="'getShopping.increment' | t"
                   [decrementLabel]="'getShopping.decrement' | t"
                   [removeLabel]="'getShopping.remove' | t"
+                  [openable]="!item.custom && !!item.articleId"
+                  [openLabel]="'getShopping.openArticle' | t"
                   (toggled)="toggleChecked(item)"
                   (increment)="increment(item)"
                   (decrement)="decrement(item)"
                   (remove)="removeItem(item)"
+                  (opened)="onOpenItem(item)"
                 />
               }
             </ds-stack>

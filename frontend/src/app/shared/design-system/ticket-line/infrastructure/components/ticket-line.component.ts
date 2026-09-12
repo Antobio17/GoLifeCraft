@@ -6,6 +6,7 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 
 @Component({
   selector: "ds-ticket-line",
@@ -17,6 +18,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
     StackComponent,
     SwipeToDeleteComponent,
     TextComponent,
+    PressableComponent,
   ],
   template: `
     <ds-swipe-to-delete
@@ -48,9 +50,21 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
           />
 
           <ds-stack class="ds-tline__body" [gap]="'2px'" [grow]="true">
-            <ds-text variant="strong" class="ds-tline__name">{{
-              title
-            }}</ds-text>
+            @if (openable) {
+              <ds-pressable
+                class="ds-tline__open"
+                [ariaLabel]="openLabel"
+                (press)="opened.emit()"
+              >
+                <ds-text variant="strong" class="ds-tline__name">{{
+                  title
+                }}</ds-text>
+              </ds-pressable>
+            } @else {
+              <ds-text variant="strong" class="ds-tline__name">{{
+                title
+              }}</ds-text>
+            }
 
             <ds-stack
               direction="row"
@@ -176,6 +190,14 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
         line-height: 1.25;
         overflow-wrap: anywhere;
       }
+      ds-pressable.ds-tline__open {
+        align-self: flex-start;
+        max-width: 100%;
+      }
+      ds-pressable.ds-tline__open:hover .ds-tline__name {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
       .ds-tline__price {
         font-size: var(--ds-text-sm);
       }
@@ -269,10 +291,13 @@ export class TicketLineComponent {
   @Input() linkLabel = "";
   @Input() changeLabel = "";
   @Input() removeLabel = "";
+  @Input() openable = false;
+  @Input() openLabel = "";
 
   @Output() quantityChanged = new EventEmitter<number>();
   @Output() searched = new EventEmitter<void>();
   @Output() removed = new EventEmitter<void>();
+  @Output() opened = new EventEmitter<void>();
 
   get title(): string {
     return this.articleLabel ?? this.rawName;

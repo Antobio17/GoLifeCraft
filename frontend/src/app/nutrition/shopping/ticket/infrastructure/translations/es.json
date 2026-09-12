@@ -99,7 +99,8 @@
       "added": "Sumó",
       "quantity": "Cantidad",
       "more": "Subir la cantidad",
-      "less": "Bajar la cantidad"
+      "less": "Bajar la cantidad",
+      "open": "Abrir la ficha"
     },
     "picker": {
       "title": "Vincular con un artículo",

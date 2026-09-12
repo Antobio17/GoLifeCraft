@@ -1,6 +1,5 @@
 import { Component, inject, input, signal } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
-import { Router } from "@angular/router";
 import { of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import { GlobalArticleDetailView } from "@nutrition/global-catalog/article/domain/models/global-article-detail-view.model";
@@ -29,6 +28,7 @@ import { ProductHeroComponent } from "@shared/design-system/product-hero/infrast
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
 import { PanelComponent } from "@shared/design-system/panel/infrastructure/components/panel.component";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-global-article",
@@ -58,7 +58,7 @@ import { PanelComponent } from "@shared/design-system/panel/infrastructure/compo
   ],
 })
 export class GetGlobalArticleComponent {
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
   private getGlobalArticleService = inject(GetGlobalArticleService);
   private importGlobalArticleService = inject(ImportGlobalArticleService);
   private floatingToastService = inject(FloatingToastService);
@@ -95,7 +95,7 @@ export class GetGlobalArticleComponent {
   }
 
   goBack(): void {
-    this.router.navigate(["/global-catalog"]);
+    this.backNavigation.back(["/global-catalog"]);
   }
 
   onImport(): void {

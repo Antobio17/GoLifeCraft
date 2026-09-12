@@ -58,6 +58,7 @@ import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastru
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SegmentedOption } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 type NutritionMode = "pack" | "per100";
 
@@ -98,6 +99,7 @@ type NutritionMode = "pack" | "per100";
 })
 export class GetArticleComponent {
   private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
   private getArticleService = inject(GetArticleService);
   private deleteArticleService = inject(DeleteArticleService);
   private updateArticleStockService = inject(UpdateArticleStockService);
@@ -227,7 +229,7 @@ export class GetArticleComponent {
   }
 
   goBack(): void {
-    this.router.navigate(["/catalog"]);
+    this.backNavigation.back(["/catalog"]);
   }
 
   setMode(value: string): void {

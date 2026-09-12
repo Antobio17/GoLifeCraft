@@ -13,12 +13,55 @@
     [class.diary-entry__row--slid]="swipe.slid"
     [class.diary-entry__row--expanded]="expandable && expanded"
   >
-    @if (pressable) {
-      <ds-pressable [grow]="true" [ariaLabel]="pressLabel" (press)="onPress()">
-        <ng-container [ngTemplateOutlet]="content" />
-      </ds-pressable>
-    } @else {
-      <ng-container [ngTemplateOutlet]="content" />
+    <ds-emoji-tile
+      [emoji]="emoji"
+      [imageUrl]="imageUrl"
+      [alt]="name"
+      [size]="38"
+      [radius]="10"
+    />
+
+    <ds-stack gap="var(--ds-space-1)" [grow]="true">
+      @if (openable) {
+        <ds-pressable
+          class="diary-entry__open"
+          [ariaLabel]="openLabel"
+          (press)="opened.emit()"
+        >
+          <ds-text variant="strong" class="diary-entry__name">{{
+            name
+          }}</ds-text>
+        </ds-pressable>
+      } @else {
+        <ds-text variant="strong" class="diary-entry__name">{{ name }}</ds-text>
+      }
+
+      <ds-stack
+        direction="row"
+        align="center"
+        gap="var(--ds-space-1-5)"
+        [wrap]="true"
+      >
+        <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
+        @if (tag) {
+          <ds-chip [tone]="tagTone">{{ tag }}</ds-chip>
+        }
+        <ds-macro-badges [kcal]="kcalLabel" />
+      </ds-stack>
+      <ds-macro-badges [macros]="macros" />
+    </ds-stack>
+
+    @if (expandable) {
+      <ds-icon-button
+        [icon]="expanded ? 'chevronUp' : 'chevronDown'"
+        variant="soft"
+        [size]="28"
+        [iconSize]="14"
+        [radius]="'var(--ds-radius-md)'"
+        [ariaLabel]="expanded ? collapseLabel : expandLabel"
+        [expanded]="expanded"
+        (clicked)="expandToggled.emit()"
+      />
     }
 
     <ds-inline-quantity
@@ -33,30 +76,3 @@
     />
   </ds-stack>
 </ds-swipe-to-delete>
-
-<ng-template #content>
-  <ds-emoji-tile
-    [emoji]="emoji"
-    [imageUrl]="imageUrl"
-    [alt]="name"
-    [size]="38"
-    [radius]="10"
-  />
-
-  <ds-stack gap="var(--ds-space-1)" [grow]="true">
-    <ds-text variant="strong" class="diary-entry__name">{{ name }}</ds-text>
-    <ds-stack
-      direction="row"
-      align="center"
-      gap="var(--ds-space-1-5)"
-      [wrap]="true"
-    >
-      <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
-      @if (tag) {
-        <ds-chip [tone]="tagTone">{{ tag }}</ds-chip>
-      }
-      <ds-macro-badges [kcal]="kcalLabel" />
-    </ds-stack>
-    <ds-macro-badges [macros]="macros" />
-  </ds-stack>
-</ng-template>

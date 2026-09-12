@@ -22,6 +22,7 @@ import {
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
 import { PantryLocation } from "../../domain/models/pantry-location.model";
 import { PantryLocationRow } from "../../domain/models/pantry-location-row.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-pantry-locations",
@@ -47,6 +48,7 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
   private static readonly PAGE_SIZE = 20;
 
   private getPantryLocationsService = inject(GetPantryLocationsService);
+  private backNavigation = inject(BackNavigationService);
 
   protected readonly modulePath = "nutrition/pantry/location";
   protected readonly storageKey = "pageSize_pantryLocations";
@@ -131,7 +133,7 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
   }
 
   back(): void {
-    this.router.navigate(["/inventory"]);
+    this.backNavigation.back(["/inventory"]);
   }
 
   private reload(): void {

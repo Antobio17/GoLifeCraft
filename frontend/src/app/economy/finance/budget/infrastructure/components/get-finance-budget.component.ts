@@ -36,6 +36,7 @@ import { FinanceBudgetCategoryRow } from "@economy/finance/budget/domain/models/
 import { FinanceBudgetFixedRow } from "@economy/finance/budget/domain/models/finance-budget-fixed-row.model";
 import { FinanceBudgetStatus } from "@economy/finance/budget/domain/models/finance-budget-status.model";
 import { FinanceCategory } from "@economy/finance/transaction/domain/models/finance-category.model";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-finance-budget",
@@ -67,6 +68,7 @@ import { FinanceCategory } from "@economy/finance/transaction/domain/models/fina
 })
 export class GetFinanceBudgetComponent implements OnInit {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
   private router = inject(Router);
   private getFinanceBudgetService = inject(GetFinanceBudgetService);
   private getFinanceTransactionsService = inject(GetFinanceTransactionsService);
@@ -267,7 +269,7 @@ export class GetFinanceBudgetComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(["/economy"]);
+    this.backNavigation.back(["/economy"]);
   }
 
   goToSettings(): void {

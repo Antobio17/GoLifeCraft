@@ -15,6 +15,7 @@ import { CardComponent } from "@shared/design-system/card/infrastructure/compone
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
@@ -61,10 +62,13 @@ import { AggregateImageService } from "@shared/aggregate-image/application/servi
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
+import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 
 @Component({
   selector: "app-get-recipe",
   templateUrl: "./get-recipe.component.html",
+  styleUrls: ["./get-recipe.component.css"],
   imports: [
     RevealDirective,
     ContextualTranslatePipe,
@@ -79,6 +83,7 @@ import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggreg
     StackComponent,
     ChipComponent,
     TextComponent,
+    PressableComponent,
     ButtonComponent,
     EmojiTileComponent,
     NoteComponent,
@@ -101,6 +106,8 @@ import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggreg
 })
 export class GetRecipeComponent {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
+  private aggregateNavigation = inject(AggregateNavigationService);
   private getRecipeService = inject(GetRecipeService);
   private deleteRecipeService = inject(DeleteRecipeService);
   private updateRecipeStockService = inject(UpdateRecipeStockService);
@@ -208,11 +215,19 @@ export class GetRecipeComponent {
         ingredient.refId,
         ingredient.image,
       ),
+      openable: this.aggregateNavigation.canOpen(
+        ingredient.kind,
+        ingredient.refId,
+      ),
       quantityLabel: this.view.ingredientQuantityLabel(ingredient),
       kcal: this.ingredientKcal(ingredient),
       macros: this.ingredientMacros(ingredient),
     })),
   );
+
+  onOpenIngredient(ingredient: RecipeIngredientView): void {
+    this.aggregateNavigation.open(ingredient.kind, ingredient.refId);
+  }
 
   ingredientKcal(ingredient: RecipeIngredientView): string {
     return `${this.view.integer(ingredient.macros.calories)} ${this.t("getRecipe.macro.kcal")}`;
@@ -227,7 +242,7 @@ export class GetRecipeComponent {
   }
 
   back(): void {
-    this.router.navigate(["/recipes"]);
+    this.backNavigation.back(["/recipes"]);
   }
 
   onEdit(): void {

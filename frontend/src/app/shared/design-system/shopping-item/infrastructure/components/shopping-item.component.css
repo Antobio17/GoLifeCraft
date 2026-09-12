@@ -125,3 +125,13 @@
   line-height: 1;
   color: var(--ds-primary);
 }
+
+ds-pressable.shopping-item__open {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+ds-pressable.shopping-item__open:hover ds-text.shopping-item__name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

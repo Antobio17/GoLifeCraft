@@ -1,6 +1,7 @@
 {
   "getShopping": {
     "removed": "{{name}} removed",
+    "openArticle": "Open the record",
     "title": "Shopping list",
     "subtitle": "Add items from your catalog or type your own",
     "add": "Add",

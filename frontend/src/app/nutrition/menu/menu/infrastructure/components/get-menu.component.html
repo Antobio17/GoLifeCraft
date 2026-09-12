@@ -280,6 +280,8 @@
                     [emoji]="row.item.emoji"
                     [imageUrl]="row.imageUrl"
                     [name]="row.item.name"
+                    [openable]="row.openable"
+                    [openLabel]="'getMenu.openItem' | t"
                     [badge]="row.badge"
                     [badgeTone]="row.badgeTone"
                     [kcalLabel]="row.kcal"
@@ -298,6 +300,7 @@
                     (quantityChange)="onQuantity(row.item, $event)"
                     (unitChange)="onUnit(row.item, $event)"
                     (remove)="onRemoveItem(row.item)"
+                    (opened)="onOpenItem(row.item)"
                     (expandToggled)="toggleItemTree(row.item.id)"
                   />
 
@@ -310,9 +313,11 @@
                       [resetLabel]="'getMenu.tree.reset' | t"
                       [expandLabel]="'getMenu.tree.expand' | t"
                       [collapseLabel]="'getMenu.tree.collapse' | t"
+                      [openLabel]="'getMenu.openItem' | t"
                       [quantityAriaLabel]="'getMenu.quantity' | t"
                       [unitAriaLabel]="'getMenu.unit' | t"
                       (toggled)="toggleTreeNode($event)"
+                      (opened)="onOpenTreeNode(row.item, $event)"
                       (quantityChanged)="onNodeQuantityChange(row.item, $event)"
                       (unitChanged)="onNodeUnitChange(row.item, $event)"
                       (restored)="onResetTree(row.item)"

@@ -88,7 +88,8 @@
       "title": "Contenido",
       "remove": "Quitar",
       "emptyTitle": "Aquí no hay nada todavía",
-      "emptyText": "Usa el botón + de la cabecera para colocar aquí lo que guardas en este sitio"
+      "emptyText": "Usa el botón + de la cabecera para colocar aquí lo que guardas en este sitio",
+      "open": "Abrir la ficha"
     },
     "candidates": {
       "title": "Añadir a esta ubicación",

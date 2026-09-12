@@ -124,9 +124,12 @@
               [linkLabel]="'getTicket.line.link' | t"
               [changeLabel]="'getTicket.line.change' | t"
               [removeLabel]="'getTicket.line.remove' | t"
+              [openable]="row.linked"
+              [openLabel]="'getTicket.line.open' | t"
               (quantityChanged)="onQuantityChange(row, $event)"
               (searched)="openPicker(row.item.id)"
               (removed)="onRemove(row)"
+              (opened)="onOpenArticle(row.item.articleId)"
             />
           }
         </ds-stack>

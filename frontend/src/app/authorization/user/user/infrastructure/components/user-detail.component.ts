@@ -26,6 +26,7 @@ import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list-item.component";
 import { SkeletonNoteComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-note.component";
 import { UserUsageComponent } from "@authorization/user/usage/infrastructure/components/user-usage.component";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-user-detail",
@@ -56,6 +57,7 @@ import { UserUsageComponent } from "@authorization/user/usage/infrastructure/com
 })
 export class UserDetailComponent {
   private getUserService = inject(GetUserService);
+  private backNavigation = inject(BackNavigationService);
   private impersonateUserService = inject(ImpersonateUserService);
   private floatingToastService = inject(FloatingToastService);
   private translationService = inject(TranslationService);
@@ -133,7 +135,7 @@ export class UserDetailComponent {
   }
 
   back(): void {
-    this.router.navigate(["/users"]);
+    this.backNavigation.back(["/users"]);
   }
 
   askForImpersonation(): void {

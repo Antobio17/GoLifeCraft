@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { NgTemplateOutlet } from "@angular/common";
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
@@ -8,6 +7,7 @@ import { PressableComponent } from "../../../pressable/infrastructure/components
 import { EmojiTileComponent } from "../../../emoji-tile/infrastructure/components/emoji-tile.component";
 import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
 import { InlineQuantityComponent } from "../../../inline-quantity/infrastructure/components/inline-quantity.component";
+import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
 import { DiaryTreeRow } from "../../domain/models/diary-tree-row.model";
 import {
   DiaryTreeQuantityChange,
@@ -19,7 +19,6 @@ const INDENT_PER_LEVEL_REM = 0.9375;
 @Component({
   selector: "ds-diary-tree",
   imports: [
-    NgTemplateOutlet,
     StackComponent,
     TextComponent,
     IconComponent,
@@ -28,6 +27,7 @@ const INDENT_PER_LEVEL_REM = 0.9375;
     EmojiTileComponent,
     MacroBadgesComponent,
     InlineQuantityComponent,
+    IconButtonComponent,
   ],
   templateUrl: "./diary-tree.component.html",
   styleUrls: ["./diary-tree.component.css"],
@@ -40,10 +40,12 @@ export class DiaryTreeComponent {
   @Input() resetLabel = "";
   @Input() expandLabel = "";
   @Input() collapseLabel = "";
+  @Input() openLabel = "";
   @Input() quantityAriaLabel = "";
   @Input() unitAriaLabel = "";
 
   @Output() toggled = new EventEmitter<string>();
+  @Output() opened = new EventEmitter<string>();
   @Output() quantityChanged = new EventEmitter<DiaryTreeQuantityChange>();
   @Output() unitChanged = new EventEmitter<DiaryTreeUnitChange>();
   @Output() restored = new EventEmitter<void>();

@@ -136,6 +136,7 @@
       "title": "This location was empty",
       "text": "It was holding nothing when the count started"
     },
-    "confirm": "Take what is shown as counted"
+    "confirm": "Take what is shown as counted",
+    "open": "Open the record"
   }
 }

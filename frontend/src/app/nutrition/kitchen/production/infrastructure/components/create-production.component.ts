@@ -36,6 +36,7 @@ import { ProposalToCook } from "@nutrition/kitchen/production/domain/models/prop
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-create-production",
@@ -64,6 +65,7 @@ import { VisualSurface } from "@shared/visual-preference/domain/models/visual-su
 })
 export class CreateProductionComponent {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
   private entityVisual = inject(EntityVisualService);
   private getProductionProposalService = inject(GetProductionProposalService);
   private startProductionService = inject(StartProductionService);
@@ -220,7 +222,7 @@ export class CreateProductionComponent {
   }
 
   onBack(): void {
-    this.router.navigate(["/cocina"]);
+    this.backNavigation.back(["/cocina"]);
   }
 
   onSubmit(): void {

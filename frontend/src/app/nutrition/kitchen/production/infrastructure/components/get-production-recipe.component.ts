@@ -71,6 +71,7 @@ import { IngredientChoice } from "@nutrition/kitchen/production/domain/models/in
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 const CHECKLIST_SAVE_DEBOUNCE_MS = 400;
 const LABEL_SAVE_DEBOUNCE_MS = 600;
@@ -116,6 +117,7 @@ const LABEL_SAVE_DEBOUNCE_MS = 600;
 })
 export class GetProductionRecipeComponent {
   private translationService = inject(TranslationService);
+  private backNavigation = inject(BackNavigationService);
   private entityVisual = inject(EntityVisualService);
   private getProductionRecipeService = inject(GetProductionRecipeService);
   private cookProductionItemService = inject(CookProductionItemService);
@@ -618,7 +620,7 @@ export class GetProductionRecipeComponent {
   }
 
   onBack(): void {
-    this.router.navigate(["/cocina", this.id()]);
+    this.backNavigation.back(["/cocina", this.id()]);
   }
 
   onOpenRecipe(): void {
