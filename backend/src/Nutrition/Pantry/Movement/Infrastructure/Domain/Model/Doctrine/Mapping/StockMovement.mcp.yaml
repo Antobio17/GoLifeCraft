@@ -1,0 +1,71 @@
+label: Stock movement
+
+fields:
+  kind:
+    writable: false
+    enum: [article, recipe]
+    description: >-
+      Whether the movement moves an article of the pantry or cooked servings of a recipe.
+    filterable: true
+  refId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of the article or recipe the movement belongs to, depending on kind.
+    filterable: true
+  type:
+    writable: false
+    enum: [count, delta]
+    description: >-
+      "count" is a measured truth: somebody looked and said how much there was, and it wipes
+      out everything dated before it. "delta" is a change on top of that truth, positive when
+      stock comes in and negative when it goes out.
+    filterable: true
+  effectiveAt:
+    writable: false
+    type: datetime
+    description: >-
+      When the movement counts for the stock, which is its business date and not when it was
+      typed in. Deltas sit at 12:00 of their own day; a morning count sits at 00:00 and an
+      afternoon one at 23:59, so a morning count is beaten by that day's movements and an
+      afternoon count beats them. A movement dated before the last count changes nothing.
+    filterable: true
+    sortable: true
+  quantity:
+    writable: false
+    type: float
+    description: >-
+      The movement in base units ("g"/"ml") for articles and in servings for recipes, already
+      converted. Negative on a delta means stock leaving the house.
+    filterable: true
+    sortable: true
+  originalQuantity:
+    writable: false
+    type: float
+    description: >-
+      The quantity as it was declared before converting it, kept so that changing an article's
+      unit equivalences later does not rewrite history.
+  originalUnit:
+    writable: false
+    max: 32
+    description: >-
+      The unit the movement was declared in, null when it was already in base units.
+  sourceKind:
+    writable: false
+    enum: [inventory, manual, ticket_item, diary_entry, production_output, production_article, production_recipe]
+    description: >-
+      What caused the movement: a validated stock count, a hand-made correction, a received
+      ticket line, a diary entry eaten, a cooked batch (its servings produced, the articles it
+      ate, or the sub-recipes it ate).
+    filterable: true
+  sourceId:
+    writable: false
+    min: 36
+    max: 36
+    description: >-
+      Id of whatever caused it, so undoing that cause removes exactly this movement. There is
+      at most one movement per kind, refId, sourceKind and sourceId.
+    filterable: true
+
+relations: {}

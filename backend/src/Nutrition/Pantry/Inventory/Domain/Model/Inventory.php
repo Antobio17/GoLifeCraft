@@ -19,13 +19,11 @@ class Inventory extends GenericAggregate
 {
     public const string SHIFT_MORNING = 'morning';
     public const string SHIFT_AFTERNOON = 'afternoon';
-    public const string SHIFT_NIGHT = 'night';
 
     /** @var array<int, string> */
     public const array SHIFTS = [
         self::SHIFT_MORNING,
         self::SHIFT_AFTERNOON,
-        self::SHIFT_NIGHT,
     ];
 
     public const string STATUS_DRAFT = 'draft';

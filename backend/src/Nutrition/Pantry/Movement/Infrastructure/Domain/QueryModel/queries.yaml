@@ -1,0 +1,5 @@
+services:
+  Nutrition\Pantry\Movement\Domain\QueryModel\RegisterStockMovementNeedleDataQuery:
+    class: Nutrition\Pantry\Movement\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRegisterStockMovementNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

@@ -27,7 +27,7 @@
     "field": {
       "countedOn": "Date",
       "shift": "Shift",
-      "shiftHint": "Which part of the day the numbers describe",
+      "shiftHint": "A morning count comes before that day's movements; an afternoon one, after",
       "note": "Note",
       "noteHint": "Optional: anything worth remembering about this count",
       "notePlaceholder": "Saturday count, after the shop..."
@@ -76,8 +76,7 @@
   },
   "inventoryShift": {
     "morning": "Morning",
-    "afternoon": "Afternoon",
-    "night": "Night"
+    "afternoon": "Afternoon"
   },
   "inventoryStatus": {
     "draft": "In progress",

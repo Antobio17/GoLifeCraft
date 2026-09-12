@@ -28,15 +28,22 @@ parameters:
             class: 'Nutrition\Pantry\Stock\Domain\Model\ArticleStock'
             sidecar: '%kernel.project_dir%/src/Nutrition/Pantry/Stock/Infrastructure/Domain/Model/Doctrine/Mapping/ArticleStock.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
-            write_roles: [ROLE_GOD, ROLE_USER]
-            delete_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
 
         recipe_stock:
             class: 'Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStock'
             sidecar: '%kernel.project_dir%/src/Nutrition/Pantry/RecipeStock/Infrastructure/Domain/Model/Doctrine/Mapping/RecipeStock.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
-            write_roles: [ROLE_GOD, ROLE_USER]
-            delete_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
+
+        stock_movement:
+            class: 'Nutrition\Pantry\Movement\Domain\Model\StockMovement'
+            sidecar: '%kernel.project_dir%/src/Nutrition/Pantry/Movement/Infrastructure/Domain/Model/Doctrine/Mapping/StockMovement.mcp.yaml'
+            read_roles: [ROLE_GOD, ROLE_USER]
+            write_roles: []
+            delete_roles: []
 
         pantry_location:
             class: 'Nutrition\Pantry\Location\Domain\Model\Location'

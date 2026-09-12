@@ -2,8 +2,7 @@ label: Recipe stock
 
 fields:
   recipeId:
-    writable: true
-    required: true
+    writable: false
     min: 36
     max: 36
     unique: true
@@ -11,14 +10,14 @@ fields:
       Id of the recipe this stock belongs to. There is at most one stock row per recipe.
     filterable: true
   servings:
-    writable: true
-    required: true
+    writable: false
     type: float
-    min: 0
     description: >-
       How many cooked servings of the recipe are left at home, in the recipe's own servings,
-      never in grams. Cooking a batch adds to it and it is an expectation, not a fact: correct
-      it by hand whenever the fridge says otherwise, and set it to 0 when nothing is left.
+      never in grams. Read only: it is recomputed from the stock ledger as the last stock
+      count of the recipe plus every movement dated after it, so writing it would be
+      overwritten by the next recalculation. It can be negative, which means more has been
+      eaten than was ever cooked. To correct it, take a stock count.
     filterable: true
     sortable: true
 

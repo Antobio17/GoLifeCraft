@@ -1,0 +1,6 @@
+services:
+  Nutrition\Pantry\Movement\Domain\Model\StockMovementRepository:
+    class: Nutrition\Pantry\Movement\Infrastructure\Domain\Model\Doctrine\DoctrineStockMovementRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Nutrition\Pantry\Movement\Domain\Model\StockMovement

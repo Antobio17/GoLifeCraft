@@ -1,0 +1,67 @@
+services:
+  Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockMovementsOnTicketReceived:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockMovementsOnTicketReceived
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.received' }
+
+  Nutrition\Pantry\Movement\Application\Subscriber\RevokeStockMovementsOnTicketItemDropped:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\RevokeStockMovementsOnTicketItemDropped
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.unreceived' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.item_removed' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.deleted' }
+
+  Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockMovementOnDiaryEntryConsumed:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockMovementOnDiaryEntryConsumed
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.diary_entry.consumed' }
+
+  Nutrition\Pantry\Movement\Application\Subscriber\RevokeStockMovementsOnDiaryEntryDeleted:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\RevokeStockMovementsOnDiaryEntryDeleted
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.diary_entry.deleted' }
+
+  Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockMovementsOnProductionItemCooked:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockMovementsOnProductionItemCooked
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_cooked' }
+
+  Nutrition\Pantry\Movement\Application\Subscriber\RevokeStockMovementsOnProductionItemUncooked:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\RevokeStockMovementsOnProductionItemUncooked
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_uncooked' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.discarded' }
+
+  Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockCountsOnInventoryValidated:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockCountsOnInventoryValidated
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.inventory.validated' }
+
+  Nutrition\Pantry\Movement\Application\Subscriber\RevokeStockCountsOnInventoryReopened:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\RevokeStockCountsOnInventoryReopened
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.inventory.reopened' }
+
+  Nutrition\Pantry\Movement\Application\Subscriber\PurgeStockMovementsOnReferenceDeleted:
+    class: Nutrition\Pantry\Movement\Application\Subscriber\PurgeStockMovementsOnReferenceDeleted
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.article.deleted' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.recipe.deleted' }

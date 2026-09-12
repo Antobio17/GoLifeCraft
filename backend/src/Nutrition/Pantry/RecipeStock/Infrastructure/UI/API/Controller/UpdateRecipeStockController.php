@@ -2,10 +2,11 @@
 
 namespace Nutrition\Pantry\RecipeStock\Infrastructure\UI\API\Controller;
 
-use Nutrition\Pantry\RecipeStock\Application\Command\UpdateRecipeStockCommand;
-use Nutrition\Pantry\RecipeStock\Domain\Exception\RecipeStockException;
-use Nutrition\Pantry\RecipeStock\Domain\Exception\UpdateRecipeStockException;
+use Nutrition\Pantry\Movement\Application\Command\RegisterStockMovementCommand;
+use Nutrition\Pantry\Movement\Domain\Exception\StockMovementException;
+use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
+use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,6 +22,7 @@ final class UpdateRecipeStockController
 
     public function __construct(
         MessageBusInterface $messageBus,
+        private readonly DateTimeGenerator $dateTimeGenerator,
     ) {
         $this->messageBus = $messageBus;
     }
@@ -28,10 +30,19 @@ final class UpdateRecipeStockController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $this->handle(message: new UpdateRecipeStockCommand(
-                recipeId: $request->attributes->get(key: 'recipeId'),
-                servings: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'servings'),
-                updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
+            $recipeId = $request->attributes->get(key: 'recipeId');
+
+            $this->handle(message: new RegisterStockMovementCommand(
+                kind: StockMovement::KIND_RECIPE,
+                refId: $recipeId,
+                type: StockMovement::TYPE_COUNT,
+                effectiveAt: $this->dateTimeGenerator->now()->format(format: 'Y-m-d H:i:s'),
+                entries: RegisterStockMovementCommand::singleEntry(
+                    quantity: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'servings'),
+                ),
+                sourceKind: StockMovement::SOURCE_MANUAL,
+                sourceId: $recipeId,
+                registeredByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 
             return new JsonResponse(data: null, status: Response::HTTP_NO_CONTENT);
@@ -39,8 +50,7 @@ final class UpdateRecipeStockController
             return JsonResponseBuilder::buildResponseFromBaseHandlerFailedException(
                 exception: $e,
                 exceptionStatusMap: [
-                    UpdateRecipeStockException::class => Response::HTTP_NOT_FOUND,
-                    RecipeStockException::class => Response::HTTP_BAD_REQUEST,
+                    StockMovementException::class => Response::HTTP_BAD_REQUEST,
                 ]
             );
         } catch (ArgumentRequestException $e) {

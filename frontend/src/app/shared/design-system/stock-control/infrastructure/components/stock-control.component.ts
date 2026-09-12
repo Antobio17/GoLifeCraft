@@ -15,7 +15,7 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
           (click)="editRequested.emit()"
         >
           <span class="ds-stk__label">{{ stockLabel }}</span>
-          <span class="ds-stk__main">
+          <span class="ds-stk__main" [class.ds-stk__main--negative]="negative">
             {{ mainText }}
             @if (!readonly) {
               <ds-icon name="pencil" [size]="13" class="ds-stk__pencil" />
@@ -115,6 +115,9 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
         line-height: 1.05;
         color: var(--ds-text);
       }
+      .ds-stk__main--negative {
+        color: var(--ds-danger);
+      }
       .ds-stk__pencil {
         color: var(--ds-text-meta);
       }
@@ -196,6 +199,7 @@ export class StockControlComponent {
   @Input() editLabel = "";
   @Input() disabled = false;
   @Input() readonly = false;
+  @Input() negative = false;
 
   @Output() incremented = new EventEmitter<void>();
   @Output() decremented = new EventEmitter<void>();

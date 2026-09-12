@@ -62,6 +62,11 @@ INSERT INTO `article_stock` (`id`, `version`, `article_id`, `quantity`, `created
   ('e2e61000-0000-4000-8000-000000000001', 1, 'e2e30000-0000-4000-8000-000000000002', 800, @now, @now, @actor, @actor),
   ('e2e61000-0000-4000-8000-000000000002', 1, 'e2e30000-0000-4000-8000-000000000003', 2000, @now, @now, @actor, @actor);
 
+-- Recuentos de apertura del libro de movimientos ---------------------------
+INSERT INTO `stock_movement` (`id`, `version`, `kind`, `ref_id`, `type`, `effective_at`, `quantity`, `original_quantity`, `original_unit`, `source_kind`, `source_id`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2e62000-0000-4000-8000-000000000001', 1, 'article', 'e2e30000-0000-4000-8000-000000000002', 'count', '2020-01-01 00:00:00', 800, 800, NULL, 'manual', 'e2e30000-0000-4000-8000-000000000002', @now, @now, @actor, @actor),
+  ('e2e62000-0000-4000-8000-000000000002', 1, 'article', 'e2e30000-0000-4000-8000-000000000003', 'count', '2020-01-01 00:00:00', 2000, 2000, NULL, 'manual', 'e2e30000-0000-4000-8000-000000000003', @now, @now, @actor, @actor);
+
 -- Receta con ingredientes y pasos ------------------------------------------
 INSERT INTO `recipe` (`id`, `version`, `name`, `emoji`, `category`, `servings`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
   ('e2e40000-0000-4000-8000-000000000001', 1, 'E2E Pollo con arroz', '🍛', 'Comida', 4, @now, @now, @actor, @actor);

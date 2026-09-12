@@ -128,7 +128,7 @@ final class ValidateInventoryCommandHandlerTest extends TestCase
         $inventory = Inventory::start(
             id: 'inventory-1',
             countedOn: '2026-09-05',
-            shift: Inventory::SHIFT_NIGHT,
+            shift: Inventory::SHIFT_AFTERNOON,
             note: '',
             locations: [
                 InventoryTestPantry::location(

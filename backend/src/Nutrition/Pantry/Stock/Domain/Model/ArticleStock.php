@@ -6,11 +6,12 @@ use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Pantry\Stock\Domain\Event\ArticleStockChanged;
 use Nutrition\Pantry\Stock\Domain\Event\ArticleStockDeleted;
 use Nutrition\Pantry\Stock\Domain\Event\ArticleStockStarted;
-use Nutrition\Pantry\Stock\Domain\Exception\ArticleStockException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class ArticleStock extends GenericAggregate
 {
+    public const int QUANTITY_PRECISION = 4;
+
     public string $articleId;
     public float $quantity = 0.0;
 
@@ -21,21 +22,19 @@ class ArticleStock extends GenericAggregate
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
-        self::assertQuantityIsNotNegative(quantity: $quantity);
-
         $now = $dateTimeGenerator->now();
 
         $stock = new self();
         $stock->id = $id;
         $stock->articleId = $articleId;
-        $stock->quantity = $quantity;
+        $stock->quantity = round(num: $quantity, precision: self::QUANTITY_PRECISION);
         $stock->stampCreation(userId: $createdByUserId, now: $now);
 
         $stock->record(event: new ArticleStockStarted(
             aggregateId: $id,
             occurredOn: $now,
             articleId: $articleId,
-            quantity: $quantity,
+            quantity: $stock->quantity,
             createdAt: $now,
             updatedAt: $now,
             createdByUserId: $createdByUserId,
@@ -50,12 +49,10 @@ class ArticleStock extends GenericAggregate
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
-        self::assertQuantityIsNotNegative(quantity: $quantity);
-
         $now = $dateTimeGenerator->now();
         $previousQuantity = $this->quantity;
 
-        $this->quantity = $quantity;
+        $this->quantity = round(num: $quantity, precision: self::QUANTITY_PRECISION);
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new ArticleStockChanged(
@@ -63,36 +60,12 @@ class ArticleStock extends GenericAggregate
             occurredOn: $now,
             articleId: $this->articleId,
             previousQuantity: $previousQuantity,
-            quantity: $quantity,
+            quantity: $this->quantity,
             createdAt: $this->createdAt,
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
             updatedByUserId: $updatedByUserId,
         ));
-    }
-
-    public function decrease(
-        float $quantity,
-        string $updatedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        $this->change(
-            quantity: max(0.0, $this->quantity - $quantity),
-            updatedByUserId: $updatedByUserId,
-            dateTimeGenerator: $dateTimeGenerator,
-        );
-    }
-
-    public function increase(
-        float $quantity,
-        string $updatedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        $this->change(
-            quantity: $this->quantity + $quantity,
-            updatedByUserId: $updatedByUserId,
-            dateTimeGenerator: $dateTimeGenerator,
-        );
     }
 
     public function delete(
@@ -112,12 +85,5 @@ class ArticleStock extends GenericAggregate
             createdByUserId: $this->createdByUserId,
             deletedByUserId: $deletedByUserId,
         ));
-    }
-
-    private static function assertQuantityIsNotNegative(float $quantity): void
-    {
-        if ($quantity < 0.0) {
-            throw ArticleStockException::quantityCannotBeNegative(quantity: $quantity);
-        }
     }
 }

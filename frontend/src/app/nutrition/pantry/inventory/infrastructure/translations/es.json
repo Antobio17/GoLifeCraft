@@ -27,7 +27,7 @@
     "field": {
       "countedOn": "Fecha",
       "shift": "Turno",
-      "shiftHint": "A qué momento del día corresponde lo que estás contando",
+      "shiftHint": "De mañana cuenta antes de lo que pase ese día; de tarde, después",
       "note": "Nota",
       "noteHint": "Opcional: algo que quieras recordar de este recuento",
       "notePlaceholder": "Recuento del sábado, tras la compra..."
@@ -76,8 +76,7 @@
   },
   "inventoryShift": {
     "morning": "Mañana",
-    "afternoon": "Tarde",
-    "night": "Noche"
+    "afternoon": "Tarde"
   },
   "inventoryStatus": {
     "draft": "En curso",

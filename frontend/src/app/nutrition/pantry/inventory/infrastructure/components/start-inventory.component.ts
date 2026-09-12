@@ -64,7 +64,6 @@ export class StartInventoryComponent implements OnInit {
       value: InventoryShift.AFTERNOON,
       label: this.t("inventoryShift.afternoon"),
     },
-    { value: InventoryShift.NIGHT, label: this.t("inventoryShift.night") },
   ]);
 
   stockedLocations = computed(
@@ -151,8 +150,7 @@ export class StartInventoryComponent implements OnInit {
     const hour = new Date().getHours();
 
     if (hour < 13) return InventoryShift.MORNING;
-    if (hour < 20) return InventoryShift.AFTERNOON;
 
-    return InventoryShift.NIGHT;
+    return InventoryShift.AFTERNOON;
   }
 }

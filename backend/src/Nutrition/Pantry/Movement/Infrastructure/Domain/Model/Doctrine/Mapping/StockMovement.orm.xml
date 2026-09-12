@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="Nutrition\Pantry\Movement\Infrastructure\Domain\Model\Doctrine\DoctrineStockMovementRepository" name="Nutrition\Pantry\Movement\Domain\Model\StockMovement" table="stock_movement">
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="kind" type="string" column="kind" length="16"/>
+    <field name="refId" type="string" column="ref_id" length="36"/>
+    <field name="type" type="string" column="type" length="16"/>
+    <field name="effectiveAt" type="datetime" column="effective_at"/>
+    <field name="quantity" type="float" column="quantity">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="originalQuantity" type="float" column="original_quantity">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="originalUnit" type="string" column="original_unit" length="32" nullable="true"/>
+    <field name="sourceKind" type="string" column="source_kind" length="32"/>
+    <field name="sourceId" type="string" column="source_id" length="36"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+    <unique-constraints>
+      <unique-constraint name="uniq_stock_movement_source" columns="kind,ref_id,source_kind,source_id"/>
+    </unique-constraints>
+    <indexes>
+      <index name="idx_stock_movement_balance" columns="kind,ref_id,type,effective_at"/>
+      <index name="idx_stock_movement_source" columns="source_kind,source_id"/>
+    </indexes>
+  </entity>
+</doctrine-mapping>

@@ -1,29 +1,10 @@
 services:
-  Nutrition\Pantry\RecipeStock\Application\Command\UpdateRecipeStockCommandHandler:
-    class: Nutrition\Pantry\RecipeStock\Application\Command\UpdateRecipeStockCommandHandler
+  Nutrition\Pantry\RecipeStock\Application\Command\RecalculateRecipeStockCommandHandler:
+    class: Nutrition\Pantry\RecipeStock\Application\Command\RecalculateRecipeStockCommandHandler
     arguments:
       $recipeStockRepository: '@Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStockRepository'
       $needleDataQuery: '@Nutrition\Pantry\RecipeStock\Domain\QueryModel\UpdateRecipeStockNeedleDataQuery'
-      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
-      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
-    tags:
-      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
-
-  Nutrition\Pantry\RecipeStock\Application\Command\IncreaseRecipeStockCommandHandler:
-    class: Nutrition\Pantry\RecipeStock\Application\Command\IncreaseRecipeStockCommandHandler
-    arguments:
-      $recipeStockRepository: '@Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStockRepository'
-      $needleDataQuery: '@Nutrition\Pantry\RecipeStock\Domain\QueryModel\UpdateRecipeStockNeedleDataQuery'
-      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
-      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
-    tags:
-      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
-
-  Nutrition\Pantry\RecipeStock\Application\Command\DecreaseRecipeStockCommandHandler:
-    class: Nutrition\Pantry\RecipeStock\Application\Command\DecreaseRecipeStockCommandHandler
-    arguments:
-      $recipeStockRepository: '@Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStockRepository'
-      $needleDataQuery: '@Nutrition\Pantry\RecipeStock\Domain\QueryModel\UpdateRecipeStockNeedleDataQuery'
+      $balanceCalculator: '@Nutrition\Pantry\Movement\Domain\Service\StockBalanceCalculator'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

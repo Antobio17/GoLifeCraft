@@ -84,10 +84,6 @@ export class GetInventoriesComponent extends AbstractListPageComponent<Inventory
       value: InventoryShift.AFTERNOON,
       label: this.t(this.inventoryView.shiftKey(InventoryShift.AFTERNOON)),
     },
-    {
-      value: InventoryShift.NIGHT,
-      label: this.t(this.inventoryView.shiftKey(InventoryShift.NIGHT)),
-    },
   ]);
 
   statusOptions = computed<SelectOption[]>(() => [

@@ -2,8 +2,7 @@ label: Article stock
 
 fields:
   articleId:
-    writable: true
-    required: true
+    writable: false
     min: 36
     max: 36
     unique: true
@@ -11,16 +10,14 @@ fields:
       Id of the article this stock belongs to. There is at most one stock row per article.
     filterable: true
   quantity:
-    writable: true
-    required: true
+    writable: false
     type: float
-    min: 0
     description: >-
       How much of the article is currently at home, always expressed in the article's base
-      units ("g"/"ml"), never in packs. A full pack adds the quantity of the packUnit
-      equivalence, so an article whose pack holds 500 g and of which two packs are stored
-      has a stock of 1000. Use it for partially used packs too, for example 240 when a
-      500 g pack is half empty.
+      units ("g"/"ml"), never in packs. Read only: it is recomputed from the stock ledger as
+      the last stock count of the article plus every movement dated after it, so writing it
+      would be overwritten by the next recalculation. It can be negative, which means more
+      has been eaten or cooked than was ever received. To correct it, take a stock count.
     filterable: true
     sortable: true
 

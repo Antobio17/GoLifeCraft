@@ -3,5 +3,6 @@ services:
     class: Nutrition\Pantry\RecipeStock\Infrastructure\UI\API\Controller\UpdateRecipeStockController
     arguments:
       $messageBus: '@messenger.bus.default'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: controller.service_arguments }

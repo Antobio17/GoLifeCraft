@@ -86,6 +86,7 @@
           [stepLabel]="'getRecipe.stock.step' | t"
           [clearLabel]="'getRecipe.stock.clear' | t"
           [editLabel]="'getRecipe.stock.edit' | t"
+          [negative]="stock() < 0"
           (incremented)="onIncrementStock()"
           (decremented)="onDecrementStock()"
           (cleared)="onClearStock()"

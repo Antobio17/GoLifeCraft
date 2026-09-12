@@ -6,12 +6,11 @@ use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Pantry\RecipeStock\Domain\Event\RecipeStockChanged;
 use Nutrition\Pantry\RecipeStock\Domain\Event\RecipeStockDeleted;
 use Nutrition\Pantry\RecipeStock\Domain\Event\RecipeStockStarted;
-use Nutrition\Pantry\RecipeStock\Domain\Exception\RecipeStockException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class RecipeStock extends GenericAggregate
 {
-    private const int SERVINGS_PRECISION = 2;
+    public const int SERVINGS_PRECISION = 2;
 
     public string $recipeId;
     public float $servings = 0.0;
@@ -23,21 +22,19 @@ class RecipeStock extends GenericAggregate
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
-        self::assertServingsAreNotNegative(servings: $servings);
-
         $now = $dateTimeGenerator->now();
 
         $stock = new self();
         $stock->id = $id;
         $stock->recipeId = $recipeId;
-        $stock->servings = $servings;
+        $stock->servings = round(num: $servings, precision: self::SERVINGS_PRECISION);
         $stock->stampCreation(userId: $createdByUserId, now: $now);
 
         $stock->record(event: new RecipeStockStarted(
             aggregateId: $id,
             occurredOn: $now,
             recipeId: $recipeId,
-            servings: $servings,
+            servings: $stock->servings,
             createdAt: $now,
             updatedAt: $now,
             createdByUserId: $createdByUserId,
@@ -48,65 +45,6 @@ class RecipeStock extends GenericAggregate
     }
 
     public function change(
-        float $servings,
-        string $updatedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        self::assertServingsAreNotNegative(servings: $servings);
-
-        $this->applyServings(
-            servings: $servings,
-            updatedByUserId: $updatedByUserId,
-            dateTimeGenerator: $dateTimeGenerator,
-        );
-    }
-
-    public function increase(
-        float $servings,
-        string $updatedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        self::assertServingsAreNotNegative(servings: $this->servings + $servings);
-
-        $this->applyServings(
-            servings: $this->servings + $servings,
-            updatedByUserId: $updatedByUserId,
-            dateTimeGenerator: $dateTimeGenerator,
-        );
-    }
-
-    public function decrease(
-        float $servings,
-        string $updatedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        $this->applyServings(
-            servings: $this->servings - $servings,
-            updatedByUserId: $updatedByUserId,
-            dateTimeGenerator: $dateTimeGenerator,
-        );
-    }
-
-    public function delete(
-        string $deletedByUserId,
-        DateTimeGenerator $dateTimeGenerator,
-    ): void {
-        $now = $dateTimeGenerator->now();
-        $this->stampUpdate(userId: $deletedByUserId, now: $now);
-
-        $this->record(event: new RecipeStockDeleted(
-            aggregateId: $this->id,
-            occurredOn: $now,
-            recipeId: $this->recipeId,
-            servings: $this->servings,
-            createdAt: $this->createdAt,
-            updatedAt: $now,
-            createdByUserId: $this->createdByUserId,
-            deletedByUserId: $deletedByUserId,
-        ));
-    }
-
-    private function applyServings(
         float $servings,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -130,10 +68,22 @@ class RecipeStock extends GenericAggregate
         ));
     }
 
-    private static function assertServingsAreNotNegative(float $servings): void
-    {
-        if ($servings < 0.0) {
-            throw RecipeStockException::servingsCannotBeNegative(servings: $servings);
-        }
+    public function delete(
+        string $deletedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+        $this->stampUpdate(userId: $deletedByUserId, now: $now);
+
+        $this->record(event: new RecipeStockDeleted(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            recipeId: $this->recipeId,
+            servings: $this->servings,
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            deletedByUserId: $deletedByUserId,
+        ));
     }
 }

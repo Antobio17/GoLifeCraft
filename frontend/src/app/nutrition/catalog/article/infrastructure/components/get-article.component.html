@@ -219,6 +219,7 @@
               [stepLabel]="'getArticle.stock.step' | t"
               [clearLabel]="'getArticle.stock.clear' | t"
               [editLabel]="'getArticle.stock.edit' | t"
+              [negative]="s.stock < 0"
               [disabled]="savingStock()"
               (incremented)="onIncrementStock()"
               (decremented)="onDecrementStock()"

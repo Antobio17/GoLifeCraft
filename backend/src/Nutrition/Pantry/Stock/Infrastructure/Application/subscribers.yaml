@@ -6,38 +6,10 @@ services:
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.article.deleted' }
 
-  Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnProductionItemCookChanged:
-    class: Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnProductionItemCookChanged
+  Nutrition\Pantry\Stock\Application\Subscriber\RecalculateArticleStockOnStockMovementChanged:
+    class: Nutrition\Pantry\Stock\Application\Subscriber\RecalculateArticleStockOnStockMovementChanged
     arguments:
       $messageBus: '@messenger.bus.default'
     tags:
-      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_cooked' }
-      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_uncooked' }
-
-  Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnDiaryEntryConsumed:
-    class: Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnDiaryEntryConsumed
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.diary_entry.consumed' }
-
-  Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnInventoryValidated:
-    class: Nutrition\Pantry\Stock\Application\Subscriber\UpdateArticleStockOnInventoryValidated
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.inventory.validated' }
-
-  Nutrition\Pantry\Stock\Application\Subscriber\IncreaseArticleStockOnTicketReceived:
-    class: Nutrition\Pantry\Stock\Application\Subscriber\IncreaseArticleStockOnTicketReceived
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.received' }
-
-  Nutrition\Pantry\Stock\Application\Subscriber\DecreaseArticleStockOnTicketUnreceived:
-    class: Nutrition\Pantry\Stock\Application\Subscriber\DecreaseArticleStockOnTicketUnreceived
-    arguments:
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.unreceived' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.stock_movement.registered' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.stock_movement.revoked' }

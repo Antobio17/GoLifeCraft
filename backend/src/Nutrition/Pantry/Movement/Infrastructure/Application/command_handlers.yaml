@@ -1,0 +1,29 @@
+services:
+  Nutrition\Pantry\Movement\Application\Command\RegisterStockMovementCommandHandler:
+    class: Nutrition\Pantry\Movement\Application\Command\RegisterStockMovementCommandHandler
+    arguments:
+      $stockMovementRepository: '@Nutrition\Pantry\Movement\Domain\Model\StockMovementRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Movement\Domain\QueryModel\RegisterStockMovementNeedleDataQuery'
+      $unitConverter: '@Nutrition\Pantry\Movement\Domain\Service\StockMovementUnitConverter'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Movement\Application\Command\RevokeStockMovementsCommandHandler:
+    class: Nutrition\Pantry\Movement\Application\Command\RevokeStockMovementsCommandHandler
+    arguments:
+      $stockMovementRepository: '@Nutrition\Pantry\Movement\Domain\Model\StockMovementRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Movement\Application\Command\PurgeStockMovementsCommandHandler:
+    class: Nutrition\Pantry\Movement\Application\Command\PurgeStockMovementsCommandHandler
+    arguments:
+      $stockMovementRepository: '@Nutrition\Pantry\Movement\Domain\Model\StockMovementRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

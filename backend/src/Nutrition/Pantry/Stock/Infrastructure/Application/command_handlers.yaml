@@ -1,9 +1,10 @@
 services:
-  Nutrition\Pantry\Stock\Application\Command\UpdateArticleStockCommandHandler:
-    class: Nutrition\Pantry\Stock\Application\Command\UpdateArticleStockCommandHandler
+  Nutrition\Pantry\Stock\Application\Command\RecalculateArticleStockCommandHandler:
+    class: Nutrition\Pantry\Stock\Application\Command\RecalculateArticleStockCommandHandler
     arguments:
       $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
       $needleDataQuery: '@Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery'
+      $balanceCalculator: '@Nutrition\Pantry\Movement\Domain\Service\StockBalanceCalculator'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -13,27 +14,6 @@ services:
     class: Nutrition\Pantry\Stock\Application\Command\DeleteArticleStockCommandHandler
     arguments:
       $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
-      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
-      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
-    tags:
-      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
-
-  Nutrition\Pantry\Stock\Application\Command\IncreaseArticleStockCommandHandler:
-    class: Nutrition\Pantry\Stock\Application\Command\IncreaseArticleStockCommandHandler
-    arguments:
-      $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
-      $needleDataQuery: '@Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery'
-      $unitConverter: '@Nutrition\Pantry\Stock\Domain\Service\ArticleStockUnitConverter'
-      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
-      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
-    tags:
-      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
-
-  Nutrition\Pantry\Stock\Application\Command\DecreaseArticleStockCommandHandler:
-    class: Nutrition\Pantry\Stock\Application\Command\DecreaseArticleStockCommandHandler
-    arguments:
-      $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
-      $unitConverter: '@Nutrition\Pantry\Stock\Domain\Service\ArticleStockUnitConverter'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
