@@ -37,13 +37,23 @@
         align="center"
         gap="var(--ds-space-2)"
       >
-        <ds-emoji-tile
-          [emoji]="row.emoji"
-          [imageUrl]="row.imageUrl"
-          [alt]="row.name"
-          [size]="30"
-          [radius]="9"
-        />
+        @if (row.expandable) {
+          <ds-pressable
+            class="diary-tree__expand diary-tree__expand--tile"
+            [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
+            (press)="toggled.emit(row.path)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="tile"
+              [ngTemplateOutletContext]="{ $implicit: row }"
+            />
+          </ds-pressable>
+        } @else {
+          <ng-container
+            [ngTemplateOutlet]="tile"
+            [ngTemplateOutletContext]="{ $implicit: row }"
+          />
+        }
 
         <ds-stack
           class="diary-tree__body"
@@ -61,21 +71,19 @@
           } @else {
             <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
           }
-          <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
-        </ds-stack>
 
-        @if (row.expandable) {
-          <ds-icon-button
-            [icon]="row.expanded ? 'chevronUp' : 'chevronDown'"
-            variant="soft"
-            [size]="24"
-            [iconSize]="12"
-            [radius]="'var(--ds-radius-sm)'"
-            [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
-            [expanded]="row.expanded"
-            (clicked)="toggled.emit(row.path)"
-          />
-        }
+          @if (row.expandable) {
+            <ds-pressable
+              class="diary-tree__expand"
+              [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
+              (press)="toggled.emit(row.path)"
+            >
+              <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
+            </ds-pressable>
+          } @else {
+            <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
+          }
+        </ds-stack>
 
         <ds-inline-quantity
           size="sm"
@@ -128,3 +136,13 @@
     }
   </ds-stack>
 </ds-stack>
+
+<ng-template #tile let-row>
+  <ds-emoji-tile
+    [emoji]="row.emoji"
+    [imageUrl]="row.imageUrl"
+    [alt]="row.name"
+    [size]="30"
+    [radius]="9"
+  />
+</ng-template>

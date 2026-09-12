@@ -39,3 +39,7 @@ ds-pressable.diary-entry__open:hover ds-text.diary-entry__name {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+ds-pressable.diary-entry__expand--tile {
+  flex: 0 0 auto;
+}

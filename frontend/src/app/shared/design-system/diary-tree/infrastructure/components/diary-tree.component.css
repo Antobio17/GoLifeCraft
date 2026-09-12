@@ -121,3 +121,7 @@ ds-pressable.diary-tree__open:hover ds-text.diary-tree__name {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+ds-pressable.diary-tree__expand--tile {
+  flex: 0 0 auto;
+}

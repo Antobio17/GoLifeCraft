@@ -4,7 +4,7 @@ import { DiaryPage } from "../nutrition/diary/diary/diary.page";
 import { Ds } from "../support/ds";
 
 test.describe("abrir la ficha", () => {
-  test("el desglose de una receta se abre con el chevron y sus hijos enlazan", async ({
+  test("el desglose de una receta se abre pulsando la tarjeta y sus hijos enlazan", async ({
     page,
   }, testInfo) => {
     const diary = new DiaryPage(page);
@@ -23,15 +23,13 @@ test.describe("abrir la ficha", () => {
     const entry = diary.entryNamed(SEED.recipes.polloConArroz.name).first();
     await expect(entry).toBeVisible();
 
-    const chevron = entry.locator("ds-icon-button button");
-    await expect(chevron).toHaveCount(1);
     await expect(page.locator("ds-diary-tree")).toHaveCount(0);
 
-    await chevron.click();
+    await diary.expandBreakdown(SEED.recipes.polloConArroz.name);
     await expect(page.locator("ds-diary-tree")).toHaveCount(1);
 
     const child = page
-      .locator("ds-diary-tree ds-pressable button")
+      .locator("ds-diary-tree ds-pressable.diary-tree__open button")
       .filter({ hasText: SEED.articles.arroz.name })
       .first();
     await expect(child).toBeVisible();

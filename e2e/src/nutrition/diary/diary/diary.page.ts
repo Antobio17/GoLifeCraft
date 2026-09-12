@@ -30,7 +30,17 @@ export class DiaryPage {
   }
 
   async openRecord(name: string): Promise<void> {
-    await this.entryNamed(name).locator("ds-pressable button").first().click();
+    await this.entryNamed(name)
+      .locator("ds-pressable.diary-entry__open button")
+      .first()
+      .click();
+  }
+
+  async expandBreakdown(name: string): Promise<void> {
+    await this.entryNamed(name)
+      .locator("ds-pressable.diary-entry__expand button")
+      .first()
+      .click();
   }
 
   async consumedCalories(): Promise<number> {

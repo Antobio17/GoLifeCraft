@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
 import { EmojiTileComponent } from "../../../emoji-tile/infrastructure/components/emoji-tile.component";
 import { ChipComponent } from "../../../chip/infrastructure/components/chip.component";
 import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
-import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
 import { InlineQuantityComponent } from "../../../inline-quantity/infrastructure/components/inline-quantity.component";
 import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
@@ -16,13 +16,13 @@ type ChipTone = "neutral" | "brand" | "accent" | "warning";
 @Component({
   selector: "ds-diary-entry",
   imports: [
+    NgTemplateOutlet,
     EmojiTileComponent,
     ChipComponent,
     SwipeToDeleteComponent,
     StackComponent,
     TextComponent,
     PressableComponent,
-    IconButtonComponent,
     InlineQuantityComponent,
     MacroBadgesComponent,
   ],
