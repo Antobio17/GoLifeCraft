@@ -27,5 +27,9 @@
   "ticket": [
     "color-contrast",
     "meta-viewport"
+  ],
+  "scan-ticket": [
+    "color-contrast",
+    "meta-viewport"
   ]
 }

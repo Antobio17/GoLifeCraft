@@ -82,6 +82,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     getTicket: "nutrition/shopping/ticket",
     ticket: "nutrition/shopping/ticket",
     ticketStatus: "nutrition/shopping/ticket",
+    scanTicket: "nutrition/shopping/ticket",
     getInventories: "nutrition/pantry/inventory",
     getInventory: "nutrition/pantry/inventory",
     getInventoryLocation: "nutrition/pantry/inventory",

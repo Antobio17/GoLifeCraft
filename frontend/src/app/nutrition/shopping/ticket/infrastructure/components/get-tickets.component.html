@@ -2,7 +2,19 @@
   <ds-screen-header
     [title]="'getTickets.title' | t"
     [subtitle]="headerSubtitle()"
-  />
+  >
+    <ng-container slot="actions">
+      <ds-button
+        data-testid="tickets-scan"
+        variant="primary"
+        size="icon-lg"
+        icon="camera"
+        [iconSize]="19"
+        [ariaLabel]="'getTickets.scan' | t"
+        (clicked)="onScan()"
+      />
+    </ng-container>
+  </ds-screen-header>
 
   @if (loading()) {
     <ds-skeleton-filters [search]="true" [selects]="1" />
@@ -45,7 +57,11 @@
           icon="cart"
           [title]="'getTickets.empty.title' | t"
           [text]="'getTickets.empty.text' | t"
-        />
+        >
+          <ds-button icon="camera" (clicked)="onScan()">
+            {{ "getTickets.scan" | t }}
+          </ds-button>
+        </ds-empty-state>
       }
     } @else {
       <ds-grid

@@ -1,3 +1,29 @@
+parameters:
+  env(TICKET_DRAFT_DAILY_LIMIT): '10'
+
 services:
   Nutrition\Shopping\Ticket\Domain\Service\TicketLineMatcher:
     class: Nutrition\Shopping\Ticket\Domain\Service\TicketLineMatcher
+
+  Nutrition\Shopping\Ticket\Domain\Service\TicketLineDrafter:
+    class: Nutrition\Shopping\Ticket\Domain\Service\TicketLineDrafter
+    arguments:
+      $needleDataQuery: '@Nutrition\Shopping\Ticket\Domain\QueryModel\AddTicketLinesNeedleDataQuery'
+      $ticketLineMatcher: '@Nutrition\Shopping\Ticket\Domain\Service\TicketLineMatcher'
+
+  Nutrition\Shopping\Ticket\Domain\Service\TicketDraftExtractor:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\Service\Gemini\GeminiTicketDraftExtractor
+    arguments:
+      $geminiClient: '@Integration\Gemini\Client\Domain\Service\GeminiClient'
+
+  Nutrition\Shopping\Ticket\Domain\Service\TicketDraftQuotaGuard:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\Service\Cache\CacheTicketDraftQuotaGuard
+    arguments:
+      $cache: '@cache.app'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+      $dailyLimit: '%env(int:TICKET_DRAFT_DAILY_LIMIT)%'
+
+  Nutrition\Shopping\Ticket\Domain\Service\TicketDraftStore:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\Service\Cache\CacheTicketDraftStore
+    arguments:
+      $cache: '@cache.app'

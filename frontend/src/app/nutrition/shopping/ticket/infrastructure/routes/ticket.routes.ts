@@ -9,6 +9,9 @@ import { ReceiveTicketProviders } from "../providers/receive-ticket.providers";
 import { UnreceiveTicketProviders } from "../providers/unreceive-ticket.providers";
 import { DeleteTicketProviders } from "../providers/delete-ticket.providers";
 import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/providers/get-articles.providers";
+import { GetSupermarketsProviders } from "@nutrition/catalog/supermarket/infrastructure/providers/get-supermarkets.providers";
+import { GetTicketDraftProviders } from "../providers/get-ticket-draft.providers";
+import { CreateTicketProviders } from "../providers/create-ticket.providers";
 
 export const TICKET_ROUTES: Routes = [
   {
@@ -24,6 +27,9 @@ export const TICKET_ROUTES: Routes = [
       ...UnreceiveTicketProviders.getProviders(),
       ...DeleteTicketProviders.getProviders(),
       ...GetArticlesProviders.getProviders(),
+      ...GetSupermarketsProviders.getProviders(),
+      ...GetTicketDraftProviders.getProviders(),
+      ...CreateTicketProviders.getProviders(),
     ],
     children: [
       {
@@ -31,6 +37,14 @@ export const TICKET_ROUTES: Routes = [
         loadComponent: () =>
           import("../components/get-tickets.component").then(
             (m) => m.GetTicketsComponent,
+          ),
+      },
+      {
+        path: "scan",
+        data: { breadcrumb: "ticket.breadcrumb.scan" },
+        loadComponent: () =>
+          import("../components/scan-ticket.component").then(
+            (m) => m.ScanTicketComponent,
           ),
       },
       {

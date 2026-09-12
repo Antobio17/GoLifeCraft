@@ -12,6 +12,7 @@ import { CardComponent } from "@shared/design-system/card/infrastructure/compone
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
@@ -48,6 +49,7 @@ import { TicketStatus } from "../../domain/models/ticket-status.model";
     HeadingComponent,
     TextComponent,
     ChipComponent,
+    ButtonComponent,
     SelectComponent,
     SearchInputComponent,
     MetaItemComponent,
@@ -165,6 +167,10 @@ export class GetTicketsComponent extends AbstractListPageComponent<Ticket> {
 
   onOpen(id: string): void {
     this.router.navigate(["/tickets", id]);
+  }
+
+  onScan(): void {
+    this.router.navigate(["/tickets", "scan"]);
   }
 
   private reload(): void {

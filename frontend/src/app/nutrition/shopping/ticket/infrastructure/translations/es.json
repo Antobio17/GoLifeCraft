@@ -2,7 +2,46 @@
   "ticket": {
     "breadcrumb": {
       "list": "Tickets",
-      "detail": "Ticket"
+      "detail": "Ticket",
+      "scan": "Escanear un ticket"
+    },
+    "draft": {
+      "not": {
+        "recognized": "No hemos podido leer el ticket en las fotos. Prueba con más luz o con el papel más estirado."
+      },
+      "extractor": {
+        "unavailable": "El lector de tickets no está disponible ahora mismo."
+      },
+      "daily": {
+        "limit": {
+          "reached": "Has llegado al límite de tickets escaneados de hoy."
+        }
+      }
+    },
+    "already": {
+      "exists": "Ese ticket ya estaba guardado."
+    },
+    "store": {
+      "name": {
+        "required": "Pon el nombre del comercio del ticket."
+      }
+    },
+    "purchased": {
+      "on": {
+        "invalid": "El día de la compra no es una fecha válida."
+      }
+    },
+    "total": {
+      "negative": "El total del ticket no puede ser negativo."
+    },
+    "without": {
+      "lines": "El ticket necesita al menos una línea."
+    },
+    "line": {
+      "without": {
+        "name": "Hay una línea sin nombre. Quítala antes de guardar.",
+        "quantity": "Hay una línea sin cantidad. Quítala antes de guardar."
+      }
     }
   },
   "ticketStatus": {
@@ -26,8 +65,9 @@
     "noResultsFilters": "Ningún ticket con esos filtros.",
     "empty": {
       "title": "Todavía no hay tickets",
-      "text": "Manda la compra desde el MCP y aparecerá aquí lista para vincular."
-    }
+      "text": "Escanea un ticket o mándalo desde el MCP y aparecerá aquí listo para vincular."
+    },
+    "scan": "Escanear un ticket"
   },
   "getTicket": {
     "back": "Volver a tickets",
@@ -76,6 +116,35 @@
       "cancel": "Cancelar",
       "confirm": "Borrar",
       "deleting": "Borrando..."
+    }
+  },
+  "scanTicket": {
+    "back": "Volver a tickets",
+    "eyebrow": "Ticket",
+    "title": "Escanear un ticket",
+    "subtitle": "Haz una foto del ticket y lo leemos por ti.",
+    "note": "Si el ticket es largo, hazle varias fotos seguidas de arriba abajo: se leen todas juntas en una sola pasada.",
+    "analyze": "Leer el ticket",
+    "analyzing": "Leyendo el ticket...",
+    "capture": {
+      "add": "Añadir foto",
+      "hint": "Hasta 4 fotos del mismo ticket, en orden. Ponlo estirado y con buena luz.",
+      "remove": "Quitar la foto"
+    },
+    "field": {
+      "storeName": "Comercio",
+      "supermarketId": "Supermercado del catálogo",
+      "supermarketPlaceholder": "Sin supermercado",
+      "purchasedOn": "Día de la compra",
+      "total": "Total"
+    },
+    "review": {
+      "lines": "Líneas leídas",
+      "remove": "Quitar la línea",
+      "save": "Guardar el ticket",
+      "retake": "Volver a hacer las fotos",
+      "difference": "La suma de las líneas no cuadra con el total impreso: {{amount}} € de diferencia. Repasa las líneas antes de guardar.",
+      "lowConfidence": "Revisa estos campos, no se leían del todo bien: {{fields}}."
     }
   }
 }

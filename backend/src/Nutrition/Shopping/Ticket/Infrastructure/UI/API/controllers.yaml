@@ -61,3 +61,17 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\CreateTicketController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\CreateTicketController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketDraftController:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketDraftController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

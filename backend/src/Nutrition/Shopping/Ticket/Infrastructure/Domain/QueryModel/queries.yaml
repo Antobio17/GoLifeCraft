@@ -18,3 +18,8 @@ services:
     class: Nutrition\Shopping\Ticket\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetTicketNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Nutrition\Shopping\Ticket\Domain\QueryModel\TicketDraftGroundingNeedleDataQuery:
+    class: Nutrition\Shopping\Ticket\Infrastructure\Domain\QueryModel\Doctrine\DoctrineTicketDraftGroundingNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

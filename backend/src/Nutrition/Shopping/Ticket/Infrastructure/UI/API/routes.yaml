@@ -1,3 +1,13 @@
+create_ticket:
+  path: /api/v1/nutrition/shopping/tickets
+  methods: [POST]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\CreateTicketController
+
+get_ticket_draft:
+  path: /api/v1/nutrition/shopping/tickets/draft
+  methods: [POST]
+  controller: Nutrition\Shopping\Ticket\Infrastructure\UI\API\Controller\GetTicketDraftController
+
 get_tickets:
   path: /api/v1/nutrition/shopping/tickets
   methods: [GET]

@@ -151,6 +151,7 @@ export class PhotoCaptureComponent {
   private destroyRef = inject(DestroyRef);
 
   @Input() max = 3;
+  @Input() maxSide = 1024;
   @Input() addLabel = "";
   @Input() hint = "";
   @Input() removeLabel = "";
@@ -187,7 +188,7 @@ export class PhotoCaptureComponent {
     const prepared: CapturedPhoto[] = [];
 
     for (const file of selected.slice(0, room)) {
-      const resized = await this.imageResizer.resize(file);
+      const resized = await this.imageResizer.resize(file, this.maxSide);
       prepared.push({ file: resized, url: URL.createObjectURL(resized) });
     }
 

@@ -1,10 +1,19 @@
 services:
+  Nutrition\Shopping\Ticket\Application\Command\CreateTicketCommandHandler:
+    class: Nutrition\Shopping\Ticket\Application\Command\CreateTicketCommandHandler
+    arguments:
+      $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
+      $ticketLineDrafter: '@Nutrition\Shopping\Ticket\Domain\Service\TicketLineDrafter'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Nutrition\Shopping\Ticket\Application\Command\AddTicketLinesCommandHandler:
     class: Nutrition\Shopping\Ticket\Application\Command\AddTicketLinesCommandHandler
     arguments:
       $ticketRepository: '@Nutrition\Shopping\Ticket\Domain\Model\TicketRepository'
-      $needleDataQuery: '@Nutrition\Shopping\Ticket\Domain\QueryModel\AddTicketLinesNeedleDataQuery'
-      $ticketLineMatcher: '@Nutrition\Shopping\Ticket\Domain\Service\TicketLineMatcher'
+      $ticketLineDrafter: '@Nutrition\Shopping\Ticket\Domain\Service\TicketLineDrafter'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

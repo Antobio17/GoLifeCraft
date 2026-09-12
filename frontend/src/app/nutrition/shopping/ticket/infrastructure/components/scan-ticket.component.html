@@ -1,0 +1,173 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-5)'"
+>
+  <ds-screen-header
+    [leading]="'close'"
+    [leadingLabel]="'scanTicket.back' | t"
+    [eyebrow]="'scanTicket.eyebrow' | t"
+    [title]="title()"
+    [subtitle]="'scanTicket.subtitle' | t"
+    (leadingClick)="cancel()"
+  />
+
+  @if (analyzing()) {
+    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+      <ds-spinner [ariaLabel]="'scanTicket.analyzing' | t" />
+      <ds-text variant="strong">{{ "scanTicket.analyzing" | t }}</ds-text>
+    </ds-stack>
+
+    <ds-skeleton-list
+      [count]="6"
+      [columns]="1"
+      [gap]="'var(--ds-space-1-5)'"
+      padding="var(--ds-space-2) var(--ds-space-3)"
+      titleWidth="62%"
+      metaWidth="34%"
+      headTrailing="3rem"
+    />
+  } @else if (reviewing()) {
+    <ds-card>
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-field [label]="'scanTicket.field.storeName' | t">
+          <ds-text-input
+            data-testid="scan-ticket-store"
+            [ngModel]="storeName()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="storeName.set($event)"
+          />
+        </ds-field>
+
+        <ds-stack direction="row" [gap]="'var(--ds-space-2)'" [wrap]="true">
+          <ds-field [grow]="true" [label]="'scanTicket.field.purchasedOn' | t">
+            <ds-date-input
+              data-testid="scan-ticket-date"
+              type="date"
+              [ariaLabel]="'scanTicket.field.purchasedOn' | t"
+              [ngModel]="purchasedOn()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="purchasedOn.set($event)"
+            />
+          </ds-field>
+
+          <ds-field [width]="'8rem'" [label]="'scanTicket.field.total' | t">
+            <ds-price-input
+              data-testid="scan-ticket-total"
+              [ngModel]="total()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="total.set($event)"
+            />
+          </ds-field>
+        </ds-stack>
+
+        <ds-field [label]="'scanTicket.field.supermarketId' | t">
+          <ds-select
+            data-testid="scan-ticket-supermarket"
+            [fluid]="true"
+            [options]="supermarketOptions()"
+            [placeholder]="'scanTicket.field.supermarketPlaceholder' | t"
+            [ngModel]="supermarketId()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="supermarketId.set($event)"
+          />
+        </ds-field>
+      </ds-stack>
+    </ds-card>
+
+    @if (lowConfidenceLabel()) {
+      <ds-note icon="alertCircle" tone="warning">
+        {{ lowConfidenceLabel() }}
+      </ds-note>
+    }
+
+    @if (difference()) {
+      <ds-note icon="alertCircle" tone="warning">
+        {{ differenceLabel() }}
+      </ds-note>
+    }
+
+    <ds-stack
+      direction="row"
+      align="center"
+      justify="between"
+      [gap]="'var(--ds-space-2)'"
+    >
+      <ds-heading [level]="2" size="md">
+        {{ "scanTicket.review.lines" | t }}
+      </ds-heading>
+      <ds-text variant="meta">{{ linesTotalLabel() }}</ds-text>
+    </ds-stack>
+
+    <ds-stack [gap]="'var(--ds-space-1-5)'">
+      @for (row of rows(); track row.index) {
+        <ds-card
+          data-testid="scan-ticket-line"
+          [padding]="'var(--ds-space-2) var(--ds-space-3)'"
+        >
+          <ds-stack
+            direction="row"
+            align="center"
+            justify="between"
+            [gap]="'var(--ds-space-2)'"
+          >
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="strong">{{ row.rawName }}</ds-text>
+              <ds-text variant="meta">
+                {{ row.quantityLabel }} · {{ row.priceLabel }}
+              </ds-text>
+            </ds-stack>
+
+            <ds-icon-button
+              icon="trash"
+              [ariaLabel]="'scanTicket.review.remove' | t"
+              (clicked)="onRemoveLine(row.index)"
+            />
+          </ds-stack>
+        </ds-card>
+      }
+    </ds-stack>
+
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-button
+        data-testid="scan-ticket-save"
+        [fullWidth]="true"
+        [loading]="saving()"
+        [disabled]="!canSave()"
+        icon="check"
+        (clicked)="onSave()"
+      >
+        {{ "scanTicket.review.save" | t }}
+      </ds-button>
+      <ds-button
+        variant="ghost"
+        [fullWidth]="true"
+        [disabled]="saving()"
+        (clicked)="onRetake()"
+      >
+        {{ "scanTicket.review.retake" | t }}
+      </ds-button>
+    </ds-stack>
+  } @else {
+    <ds-photo-capture
+      [max]="maxPhotos"
+      [maxSide]="photoMaxSide"
+      [addLabel]="'scanTicket.capture.add' | t"
+      [hint]="'scanTicket.capture.hint' | t"
+      [removeLabel]="'scanTicket.capture.remove' | t"
+      (photosChange)="onPhotosChange($event)"
+    />
+
+    <ds-note icon="sparkles">{{ "scanTicket.note" | t }}</ds-note>
+
+    <ds-button
+      data-testid="scan-ticket-analyze"
+      [fullWidth]="true"
+      [disabled]="!hasPhotos()"
+      icon="sparkles"
+      (clicked)="onAnalyze()"
+    >
+      {{ "scanTicket.analyze" | t }}
+    </ds-button>
+  }
+</ds-page-wrapper>

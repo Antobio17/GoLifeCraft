@@ -3,6 +3,7 @@
 namespace Nutrition\Shopping\Ticket\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
+use Nutrition\Shopping\Ticket\Domain\Event\TicketCreated;
 use Nutrition\Shopping\Ticket\Domain\Event\TicketDeleted;
 use Nutrition\Shopping\Ticket\Domain\Event\TicketItemLinked;
 use Nutrition\Shopping\Ticket\Domain\Event\TicketItemRemoved;
@@ -12,6 +13,7 @@ use Nutrition\Shopping\Ticket\Domain\Event\TicketLinesAdded;
 use Nutrition\Shopping\Ticket\Domain\Event\TicketReceived;
 use Nutrition\Shopping\Ticket\Domain\Event\TicketUnreceived;
 use Nutrition\Shopping\Ticket\Domain\Exception\AddTicketLinesException;
+use Nutrition\Shopping\Ticket\Domain\Exception\CreateTicketException;
 use Nutrition\Shopping\Ticket\Domain\Exception\DeleteTicketException;
 use Nutrition\Shopping\Ticket\Domain\Exception\LinkTicketItemException;
 use Nutrition\Shopping\Ticket\Domain\Exception\ReceiveTicketException;
@@ -46,6 +48,76 @@ class Ticket extends GenericAggregate
     /**
      * @param TicketLineDraft[] $drafts
      */
+    public static function open(
+        string $id,
+        string $storeName,
+        ?string $supermarketId,
+        string $purchasedOn,
+        ?float $total,
+        string $note,
+        array $drafts,
+        string $createdByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): self {
+        $trimmedStoreName = trim(string: $storeName);
+
+        if ('' === $trimmedStoreName) {
+            throw CreateTicketException::storeNameIsRequired();
+        }
+
+        if (!self::isADay(value: $purchasedOn)) {
+            throw CreateTicketException::purchasedOnIsNotADate(purchasedOn: $purchasedOn);
+        }
+
+        if (null !== $total && $total < 0.0) {
+            throw CreateTicketException::totalCannotBeNegative(total: $total);
+        }
+
+        if ([] === $drafts) {
+            throw CreateTicketException::withoutLines();
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $ticket = new self();
+        $ticket->id = $id;
+        $ticket->storeName = mb_substr(string: $trimmedStoreName, start: 0, length: self::STORE_NAME_MAX_LENGTH);
+        $ticket->supermarketId = $supermarketId;
+        $ticket->purchasedOn = $purchasedOn;
+        $ticket->total = $total;
+        $ticket->note = mb_substr(string: trim(string: $note), start: 0, length: self::NOTE_MAX_LENGTH);
+        $ticket->status = self::STATUS_DRAFT;
+        $ticket->stampCreation(userId: $createdByUserId, now: $now);
+
+        $addedItemIds = $ticket->appendLines(
+            drafts: $drafts,
+            addedByUserId: $createdByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
+
+        $ticket->record(event: new TicketCreated(
+            aggregateId: $ticket->id,
+            occurredOn: $now,
+            storeName: $ticket->storeName,
+            supermarketId: $ticket->supermarketId,
+            purchasedOn: $ticket->purchasedOn,
+            total: $ticket->total,
+            note: $ticket->note,
+            status: $ticket->status,
+            addedItemIds: $addedItemIds,
+            items: $ticket->recordedItems(),
+            createdAt: $now,
+            updatedAt: $now,
+            createdByUserId: $createdByUserId,
+            updatedByUserId: $createdByUserId,
+        ));
+
+        return $ticket;
+    }
+
+    /**
+     * @param TicketLineDraft[] $drafts
+     */
     public function addLines(
         array $drafts,
         string $addedByUserId,
@@ -56,21 +128,11 @@ class Ticket extends GenericAggregate
         }
 
         $now = $dateTimeGenerator->now();
-        $position = $this->lastPosition();
-        $addedItemIds = [];
-
-        foreach ($drafts as $draft) {
-            $item = TicketItem::read(
-                ticketId: $this->id,
-                position: ++$position,
-                draft: $draft,
-                createdByUserId: $addedByUserId,
-                dateTimeGenerator: $dateTimeGenerator,
-            );
-
-            $this->items[] = $item;
-            $addedItemIds[] = $item->id;
-        }
+        $addedItemIds = $this->appendLines(
+            drafts: $drafts,
+            addedByUserId: $addedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
 
         $this->stampUpdate(userId: $addedByUserId, now: $now);
 
@@ -457,6 +519,35 @@ class Ticket extends GenericAggregate
         return $names;
     }
 
+    /**
+     * @param TicketLineDraft[] $drafts
+     *
+     * @return array<int, string>
+     */
+    private function appendLines(
+        array $drafts,
+        string $addedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): array {
+        $position = $this->lastPosition();
+        $addedItemIds = [];
+
+        foreach ($drafts as $draft) {
+            $item = TicketItem::read(
+                ticketId: $this->id,
+                position: ++$position,
+                draft: $draft,
+                createdByUserId: $addedByUserId,
+                dateTimeGenerator: $dateTimeGenerator,
+            );
+
+            $this->items[] = $item;
+            $addedItemIds[] = $item->id;
+        }
+
+        return $addedItemIds;
+    }
+
     private function lastPosition(): int
     {
         $position = 0;
@@ -466,5 +557,12 @@ class Ticket extends GenericAggregate
         }
 
         return $position;
+    }
+
+    private static function isADay(string $value): bool
+    {
+        $day = \DateTime::createFromFormat(format: '!Y-m-d', datetime: $value);
+
+        return false !== $day && $day->format(format: 'Y-m-d') === $value;
     }
 }

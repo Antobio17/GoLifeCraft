@@ -2,7 +2,46 @@
   "ticket": {
     "breadcrumb": {
       "list": "Tickets",
-      "detail": "Ticket"
+      "detail": "Ticket",
+      "scan": "Scan a ticket"
+    },
+    "draft": {
+      "not": {
+        "recognized": "The ticket could not be read from the photos. Try again with more light or the paper laid flatter."
+      },
+      "extractor": {
+        "unavailable": "The ticket reader is not available right now."
+      },
+      "daily": {
+        "limit": {
+          "reached": "You have reached today's limit of scanned tickets."
+        }
+      }
+    },
+    "already": {
+      "exists": "That ticket was already saved."
+    },
+    "store": {
+      "name": {
+        "required": "Fill in the name of the shop on the ticket."
+      }
+    },
+    "purchased": {
+      "on": {
+        "invalid": "The purchase day is not a valid date."
+      }
+    },
+    "total": {
+      "negative": "The total of the ticket cannot be negative."
+    },
+    "without": {
+      "lines": "The ticket needs at least one line."
+    },
+    "line": {
+      "without": {
+        "name": "There is a line without a name. Remove it before saving.",
+        "quantity": "There is a line without a quantity. Remove it before saving."
+      }
     }
   },
   "ticketStatus": {
@@ -26,8 +65,9 @@
     "noResultsFilters": "No ticket matches those filters.",
     "empty": {
       "title": "No tickets yet",
-      "text": "Send the shopping in from the MCP and it will land here ready to link."
-    }
+      "text": "Scan a ticket or send it from the MCP and it will show up here ready to link."
+    },
+    "scan": "Scan a ticket"
   },
   "getTicket": {
     "back": "Back to tickets",
@@ -76,6 +116,35 @@
       "cancel": "Cancel",
       "confirm": "Delete",
       "deleting": "Deleting..."
+    }
+  },
+  "scanTicket": {
+    "back": "Back to tickets",
+    "eyebrow": "Ticket",
+    "title": "Scan a ticket",
+    "subtitle": "Take a photo of the ticket and we read it for you.",
+    "note": "If the ticket is long, take several photos from top to bottom: they are all read together in a single pass.",
+    "analyze": "Read the ticket",
+    "analyzing": "Reading the ticket...",
+    "capture": {
+      "add": "Add photo",
+      "hint": "Up to 4 photos of the same ticket, in order. Lay it flat and in good light.",
+      "remove": "Remove the photo"
+    },
+    "field": {
+      "storeName": "Shop",
+      "supermarketId": "Supermarket in the catalog",
+      "supermarketPlaceholder": "No supermarket",
+      "purchasedOn": "Purchase day",
+      "total": "Total"
+    },
+    "review": {
+      "lines": "Lines read",
+      "remove": "Remove the line",
+      "save": "Save the ticket",
+      "retake": "Take the photos again",
+      "difference": "The sum of the lines does not match the printed total: {{amount}} € apart. Check the lines before saving.",
+      "lowConfidence": "Check these fields, they were not fully legible: {{fields}}."
     }
   }
 }

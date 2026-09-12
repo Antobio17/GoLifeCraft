@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { ImageDecoderService } from "@shared/image-decoder/application/services/image-decoder.service";
 
-const MAX_SIDE = 1024;
+const DEFAULT_MAX_SIDE = 1024;
 const QUALITY = 0.82;
 const OUTPUT_TYPE = "image/jpeg";
 
@@ -9,14 +9,14 @@ const OUTPUT_TYPE = "image/jpeg";
 export class ImageResizerService {
   private imageDecoderService = inject(ImageDecoderService);
 
-  async resize(file: File): Promise<File> {
+  async resize(file: File, maxSide = DEFAULT_MAX_SIDE): Promise<File> {
     const source = await this.imageDecoderService.decode(file);
 
     if (null === source) {
       return file;
     }
 
-    const scale = Math.min(1, MAX_SIDE / Math.max(source.width, source.height));
+    const scale = Math.min(1, maxSide / Math.max(source.width, source.height));
     const canvas = document.createElement("canvas");
     canvas.width = Math.round(source.width * scale);
     canvas.height = Math.round(source.height * scale);

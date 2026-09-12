@@ -7,6 +7,7 @@ use Nutrition\Shopping\Ticket\Application\Command\AddTicketLinesCommandHandler;
 use Nutrition\Shopping\Ticket\Domain\Exception\AddTicketLinesException;
 use Nutrition\Shopping\Ticket\Domain\Model\Ticket;
 use Nutrition\Shopping\Ticket\Domain\Model\TicketItem;
+use Nutrition\Shopping\Ticket\Domain\Service\TicketLineDrafter;
 use Nutrition\Shopping\Ticket\Domain\Service\TicketLineMatcher;
 use Nutrition\Shopping\Ticket\Infrastructure\Domain\Model\InMemory\InMemoryTicketRepository;
 use Nutrition\Shopping\Ticket\Infrastructure\Domain\QueryModel\InMemory\InMemoryAddTicketLinesNeedleDataQuery;
@@ -28,8 +29,10 @@ final class AddTicketLinesCommandHandlerTest extends TestCase
         $this->needleDataQuery = new InMemoryAddTicketLinesNeedleDataQuery();
         $this->handler = new AddTicketLinesCommandHandler(
             ticketRepository: $this->ticketRepository,
-            needleDataQuery: $this->needleDataQuery,
-            ticketLineMatcher: new TicketLineMatcher(),
+            ticketLineDrafter: new TicketLineDrafter(
+                needleDataQuery: $this->needleDataQuery,
+                ticketLineMatcher: new TicketLineMatcher(),
+            ),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );

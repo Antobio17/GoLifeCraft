@@ -20,3 +20,13 @@ services:
 
   Nutrition\Shopping\Ticket\Application\Query\GetTicketDataTransform:
     class: Nutrition\Shopping\Ticket\Infrastructure\UI\API\DataTransform\ApiGetTicketDataTransform
+
+  Nutrition\Shopping\Ticket\Application\Query\GetTicketDraftQueryHandler:
+    class: Nutrition\Shopping\Ticket\Application\Query\GetTicketDraftQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Shopping\Ticket\Domain\QueryModel\TicketDraftGroundingNeedleDataQuery'
+      $ticketDraftExtractor: '@Nutrition\Shopping\Ticket\Domain\Service\TicketDraftExtractor'
+      $quotaGuard: '@Nutrition\Shopping\Ticket\Domain\Service\TicketDraftQuotaGuard'
+      $ticketDraftStore: '@Nutrition\Shopping\Ticket\Domain\Service\TicketDraftStore'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

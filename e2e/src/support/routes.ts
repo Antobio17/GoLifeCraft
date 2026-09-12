@@ -14,6 +14,7 @@ export const CORE_SCREENS: readonly CoreScreen[] = [
   { name: "shopping", path: "/shopping-list", ready: "ds-page-wrapper ds-heading" },
   { name: "tickets", path: "/tickets", ready: "[data-testid='ticket-card']" },
   { name: "ticket", path: `/tickets/${SEED.tickets.showcase.id}`, ready: "[data-testid='ticket-line']" },
+  { name: "scan-ticket", path: "/tickets/scan", ready: "[data-testid='scan-ticket-analyze']" },
 ] as const;
 
 export const SPLIT_VIEW_SCREENS = CORE_SCREENS.filter((screen) =>
