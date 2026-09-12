@@ -2,11 +2,11 @@ parameters:
   mcp.allowed_hosts: '%env(csv:MCP_ALLOWED_HOSTS)%'
 
 services:
-  mcp.server.controller:
+  mcp.server.golifecraft.controller:
     class: Integration\Mcp\Server\Infrastructure\UI\Mcp\Controller\McpEndpointController
     public: true
     arguments:
-      $server: '@mcp.server'
+      $server: '@mcp.server.golifecraft'
       $httpMessageFactory: '@mcp.psr_http_factory'
       $httpFoundationFactory: '@mcp.http_foundation_factory'
       $responseFactory: '@mcp.psr17_factory'

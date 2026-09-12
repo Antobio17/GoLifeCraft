@@ -5,6 +5,11 @@ services:
       $cache: '@cache.app'
       $ttl: 300
 
+  Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\RedirectUriValidator:
+    class: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\RedirectUriValidator
+    arguments:
+      $allowedHosts: '%env(csv:MCP_OAUTH_ALLOWED_REDIRECT_HOSTS)%'
+
   Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\CredentialsVerifier:
     class: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\CredentialsVerifier
     arguments:

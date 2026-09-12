@@ -12,6 +12,8 @@ final readonly class DoctrineModelReadQuery implements ModelReadQuery
 {
     private const string KIND_ONE = 'one';
 
+    private const string IDENTIFIER = '/^[a-zA-Z_][a-zA-Z0-9_]*$/';
+
     public function __construct(
         private EntityManagerInterface $entityManager,
     ) {
@@ -37,13 +39,17 @@ final readonly class DoctrineModelReadQuery implements ModelReadQuery
             ->setMaxResults(maxResults: $pageSize);
 
         foreach ($joined as $relationName) {
-            $queryBuilder->leftJoin(sprintf('e.%s', $relationName), $relationName)->addSelect($relationName);
+            $alias = $this->identifier(name: $relationName);
+            $queryBuilder->leftJoin(sprintf('e.%s', $alias), $alias)->addSelect($alias);
         }
 
         $this->applyFilters(queryBuilder: $queryBuilder, filters: $filters);
 
         foreach ($sort as $clause) {
-            $queryBuilder->addOrderBy(sprintf('e.%s', $clause['field']), 'desc' === ($clause['dir'] ?? 'asc') ? 'DESC' : 'ASC');
+            $queryBuilder->addOrderBy(
+                sprintf('e.%s', $this->identifier(name: $clause['field'])),
+                'desc' === ($clause['dir'] ?? 'asc') ? 'DESC' : 'ASC',
+            );
         }
 
         $records = array_map(
@@ -79,14 +85,15 @@ final readonly class DoctrineModelReadQuery implements ModelReadQuery
 
         foreach ($filters as $field => $condition) {
             $parameter = sprintf('filter_%d', $index++);
+            $column = $this->identifier(name: (string) $field);
 
             if (is_array($condition) && array_key_exists('contains', $condition)) {
-                $queryBuilder->andWhere(sprintf('e.%s LIKE :%s', $field, $parameter))
+                $queryBuilder->andWhere(sprintf('e.%s LIKE :%s', $column, $parameter))
                     ->setParameter(key: $parameter, value: '%'.$condition['contains'].'%');
                 continue;
             }
 
-            $queryBuilder->andWhere(sprintf('e.%s = :%s', $field, $parameter))
+            $queryBuilder->andWhere(sprintf('e.%s = :%s', $column, $parameter))
                 ->setParameter(key: $parameter, value: $condition);
         }
     }
@@ -142,7 +149,7 @@ final readonly class DoctrineModelReadQuery implements ModelReadQuery
         $children = $this->entityManager->createQueryBuilder()
             ->select('c')
             ->from(from: $childDescriptor->class, alias: 'c')
-            ->where(sprintf('c.%s IN (:ownerIds)', $relation->foreignField))
+            ->where(sprintf('c.%s IN (:ownerIds)', $this->identifier(name: (string) $relation->foreignField)))
             ->setParameter(key: 'ownerIds', value: $ownerIds)
             ->addOrderBy('c.createdAt', 'ASC')
             ->addOrderBy('c.id', 'ASC')
@@ -189,6 +196,15 @@ final readonly class DoctrineModelReadQuery implements ModelReadQuery
         }
 
         return $related;
+    }
+
+    private function identifier(string $name): string
+    {
+        if (1 !== preg_match(self::IDENTIFIER, $name)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a field name this query can build a DQL fragment from.', $name));
+        }
+
+        return $name;
     }
 
     private function readValue(object $entity, string $name): mixed

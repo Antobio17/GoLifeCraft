@@ -1,5 +1,6 @@
 <?php
 
+use Integration\Mcp\Server\Infrastructure\Application\CompilerPass\McpSensitiveFieldCompilerPass;
 use Shared\Shared\Shared\Infrastructure\Application\CompilerPass\DomainEventSubscriberCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -34,6 +35,7 @@ class Kernel extends BaseKernel
     protected function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(pass: new DomainEventSubscriberCompilerPass());
+        $container->addCompilerPass(pass: new McpSensitiveFieldCompilerPass());
     }
 
     private function loadServicesHexagonalInfrastructure(LoaderInterface $loader): void

@@ -22,6 +22,7 @@ security:
             pattern:   ^/_mcp
             stateless: true
             provider: tenant_user
+            user_checker: Authorization\User\User\Infrastructure\Domain\Service\Security\ActiveUserChecker
             entry_point: Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\McpAuthenticationEntryPoint
             custom_authenticators:
                 - Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\McpTokenAuthenticator

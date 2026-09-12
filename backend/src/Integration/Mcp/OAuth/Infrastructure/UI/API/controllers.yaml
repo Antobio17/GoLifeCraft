@@ -3,7 +3,9 @@ services:
     class: Integration\Mcp\OAuth\Infrastructure\UI\API\Controller\AuthorizeController
     arguments:
       $credentialsVerifier: '@Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\CredentialsVerifier'
+      $redirectUriValidator: '@Integration\Mcp\OAuth\Infrastructure\Domain\Service\Security\RedirectUriValidator'
       $codeStore: '@Integration\Mcp\OAuth\Infrastructure\Domain\Service\Store\AuthorizationCodeStore'
+      $loginLimiter: '@limiter.mcp_oauth_login'
     tags:
       - { name: controller.service_arguments }
 

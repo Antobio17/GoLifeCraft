@@ -20,7 +20,7 @@
         "symfony/framework-bundle": "7.4.*",
         "symfony/http-client": "7.4.*",
         "symfony/mailer": "7.4.*",
-        "symfony/mcp-bundle": "^0.10",
+        "symfony/mcp-bundle": "^0.13",
         "symfony/messenger": "7.4.*",
         "symfony/monolog-bundle": "^3.11",
         "symfony/process": "7.4.*",

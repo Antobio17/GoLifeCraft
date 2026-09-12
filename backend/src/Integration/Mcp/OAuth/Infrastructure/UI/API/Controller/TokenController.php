@@ -111,6 +111,10 @@ final class TokenController
             throw TokenException::invalidGrant();
         }
 
+        if (!$user->isActive) {
+            throw TokenException::invalidGrant();
+        }
+
         return $user;
     }
 

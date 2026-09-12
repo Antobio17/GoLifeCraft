@@ -3,12 +3,11 @@
 namespace Integration\Mcp\Server\Infrastructure\UI\Mcp\Controller;
 
 use Mcp\Server;
-use Mcp\Server\Transport\Http\Middleware\CorsMiddleware;
 use Mcp\Server\Transport\Http\Middleware\DnsRebindingProtectionMiddleware;
-use Mcp\Server\Transport\Http\Middleware\ProtocolVersionMiddleware;
 use Mcp\Server\Transport\StreamableHttpTransport;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
@@ -48,7 +47,7 @@ final readonly class McpEndpointController
     }
 
     /**
-     * @return list<\Psr\Http\Server\MiddlewareInterface>
+     * @return list<MiddlewareInterface>
      */
     private function buildMiddleware(): array
     {
@@ -56,14 +55,15 @@ final readonly class McpEndpointController
             [...$this->allowedHosts, 'localhost', '127.0.0.1', '[::1]']
         )));
 
-        return [
-            new CorsMiddleware(),
-            new DnsRebindingProtectionMiddleware(
-                allowedHosts: $allowedHosts,
-                responseFactory: $this->responseFactory,
-                streamFactory: $this->streamFactory,
-            ),
-            new ProtocolVersionMiddleware(),
-        ];
+        return array_map(
+            fn (MiddlewareInterface $middleware): MiddlewareInterface => $middleware instanceof DnsRebindingProtectionMiddleware
+                ? new DnsRebindingProtectionMiddleware(
+                    allowedHosts: $allowedHosts,
+                    responseFactory: $this->responseFactory,
+                    streamFactory: $this->streamFactory,
+                )
+                : $middleware,
+            StreamableHttpTransport::defaultMiddleware(),
+        );
     }
 }

@@ -17,6 +17,10 @@ framework:
             policy: 'fixed_window'
             limit: 60
             interval: '1 minute'
+        mcp_oauth_login:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '5 minutes'
 
 when@test:
     framework:

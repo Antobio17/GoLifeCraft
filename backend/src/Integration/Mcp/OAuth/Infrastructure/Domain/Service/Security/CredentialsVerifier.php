@@ -26,6 +26,10 @@ final readonly class CredentialsVerifier
             return null;
         }
 
+        if (!$user->isActive) {
+            return null;
+        }
+
         return $user;
     }
 }
