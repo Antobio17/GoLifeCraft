@@ -1,5 +1,6 @@
 parameters:
   mcp.allowed_hosts: '%env(csv:MCP_ALLOWED_HOSTS)%'
+  mcp.allowed_client_origins: '%env(csv:MCP_ALLOWED_CLIENT_ORIGINS)%'
 
 services:
   mcp.server.golifecraft.controller:
@@ -12,6 +13,7 @@ services:
       $responseFactory: '@mcp.psr17_factory'
       $streamFactory: '@mcp.psr17_factory'
       $allowedHosts: '%mcp.allowed_hosts%'
+      $allowedClientOrigins: '%mcp.allowed_client_origins%'
       $logger: '@logger'
     tags:
       - { name: 'controller.service_arguments' }
