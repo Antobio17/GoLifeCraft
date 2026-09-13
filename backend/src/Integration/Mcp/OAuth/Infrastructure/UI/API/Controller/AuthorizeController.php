@@ -86,7 +86,7 @@ final class AuthorizeController
         $redirectUri = $this->required(request: $request, key: 'redirect_uri');
 
         if (!$this->redirectUriValidator->isAllowed(redirectUri: $redirectUri)) {
-            throw AuthorizeException::unregisteredRedirectUri(redirectUri: $redirectUri);
+            throw AuthorizeException::unregisteredRedirectUri();
         }
 
         return $redirectUri;

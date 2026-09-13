@@ -7,10 +7,7 @@ use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 
-#[McpTool(
-    name: 'write_model',
-    description: 'Creates one record of an exposed resource, or updates the one whose id is given. Only the fields the resource reports as writable are accepted, so call describe_models first to learn them and the rules each value has to satisfy.',
-)]
+#[McpTool(name: 'write_model')]
 final class WriteModelTool extends McpMessengerTool
 {
     /**
