@@ -70,7 +70,7 @@ final class McpTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        return JsonResponseBuilder::buildResponseFromBaseException(
+        $response = JsonResponseBuilder::buildResponseFromBaseException(
             exception: new BaseException(
                 title: $exception->getMessage(),
                 keyTranslation: 'mcp.authentication.failed',
@@ -78,6 +78,13 @@ final class McpTokenAuthenticator extends AbstractAuthenticator
             ),
             status: Response::HTTP_UNAUTHORIZED
         );
+
+        $response->headers->set(
+            key: 'WWW-Authenticate',
+            values: ProtectedResourceChallenge::header(request: $request, error: 'invalid_token')
+        );
+
+        return $response;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response

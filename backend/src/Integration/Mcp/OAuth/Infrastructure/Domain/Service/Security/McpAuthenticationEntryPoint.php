@@ -12,12 +12,10 @@ final class McpAuthenticationEntryPoint implements AuthenticationEntryPointInter
 {
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
-        $resourceMetadata = sprintf('%s/.well-known/oauth-protected-resource', $request->getSchemeAndHttpHost());
-
         return new JsonResponse(
             data: ['error' => 'unauthorized'],
             status: Response::HTTP_UNAUTHORIZED,
-            headers: ['WWW-Authenticate' => sprintf('Bearer resource_metadata="%s"', $resourceMetadata)]
+            headers: ['WWW-Authenticate' => ProtectedResourceChallenge::header(request: $request)]
         );
     }
 }

@@ -7,7 +7,10 @@ use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 
-#[McpTool(name: 'query_model')]
+#[McpTool(
+    name: 'query_model',
+    description: 'Reads the records of one exposed resource, with optional filters, expanded relations, sorting and pagination. Call describe_models first to learn the alias and which of its fields are filterable or sortable and which relations can be expanded.',
+)]
 final class QueryModelTool extends McpMessengerTool
 {
     /**
