@@ -19,11 +19,11 @@ final class AuthorizeException extends \RuntimeException
         );
     }
 
-    public static function unregisteredRedirectUri(): self
+    public static function unregisteredRedirectUri(string $redirectUri): self
     {
         return new self(
             error: 'invalid_request',
-            description: 'The redirect_uri is not allowed by this authorization server.',
+            description: sprintf('The redirect_uri "%s" is not allowed by this authorization server.', $redirectUri),
         );
     }
 }
