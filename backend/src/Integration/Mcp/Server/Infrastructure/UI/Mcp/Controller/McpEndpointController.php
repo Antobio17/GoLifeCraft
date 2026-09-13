@@ -18,6 +18,7 @@ final readonly class McpEndpointController
 {
     /**
      * @param list<string> $allowedHosts
+     * @param list<string> $allowedClientOrigins
      */
     public function __construct(
         private Server $server,
@@ -26,6 +27,7 @@ final readonly class McpEndpointController
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
         private array $allowedHosts,
+        private array $allowedClientOrigins,
         private ?LoggerInterface $logger = null,
     ) {
     }
@@ -52,7 +54,7 @@ final readonly class McpEndpointController
     private function buildMiddleware(): array
     {
         $allowedHosts = array_values(array_unique(array_filter(
-            [...$this->allowedHosts, 'localhost', '127.0.0.1', '[::1]']
+            [...$this->allowedHosts, ...$this->allowedClientOrigins, 'localhost', '127.0.0.1', '[::1]']
         )));
 
         return array_map(
