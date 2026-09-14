@@ -51,6 +51,7 @@ export class MenuTreeViewService {
           ? []
           : this.picker.unitOptions(node.refId, node.unit),
         openable: this.aggregateNavigation.canOpen(node.kind, node.refId),
+        removable: false,
         expandable,
         expanded,
       };

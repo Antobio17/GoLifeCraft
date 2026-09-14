@@ -49,6 +49,11 @@ ds-text.diary-tree__reset-text {
   padding: var(--ds-space-1-5) var(--ds-space-2);
 }
 
+.diary-tree__row--slid {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .diary-tree__row--recipe {
   background: var(--ds-primary-soft);
 }

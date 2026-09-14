@@ -242,6 +242,7 @@
                       [openLabel]="'getDiary.openEntry' | t"
                       [quantityAriaLabel]="'getDiary.quantity' | t"
                       [unitAriaLabel]="'getDiary.unit' | t"
+                      [removeLabel]="'getDiary.tree.remove' | t"
                       (toggled)="toggleTreeNode($event)"
                       (opened)="onOpenTreeNode(row.entry.id, $event)"
                       (quantityChanged)="
@@ -250,6 +251,7 @@
                       (unitChanged)="onNodeUnitChange(row.entry.id, $event)"
                       (restored)="onResetTree(row.entry.id)"
                       (lotPicked)="openNodeLotPicker(row.entry.id, $event)"
+                      (removed)="onNodeRemove(row.entry.id, $event)"
                     />
                   }
                 </ds-stack>

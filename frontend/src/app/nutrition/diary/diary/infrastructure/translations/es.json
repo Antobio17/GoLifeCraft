@@ -98,7 +98,8 @@
       "collapse": "Ocultar desglose",
       "customized": "Ajustado a mano · solo en este registro",
       "reset": "Restablecer",
-      "servings": "rac."
+      "servings": "rac.",
+      "remove": "Quitar del desglose"
     },
     "unit": "Unidad",
     "stock": {

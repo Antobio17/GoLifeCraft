@@ -15,6 +15,7 @@ export interface DiaryTreeRow {
   unitLabel: string;
   unitOptions: SelectOption[];
   openable: boolean;
+  removable: boolean;
   expandable: boolean;
   expanded: boolean;
   lotPickable?: boolean;

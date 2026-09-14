@@ -24,6 +24,9 @@ import { ResetDiaryEntryTreePort } from "@nutrition/diary/diary/domain/ports/res
 import { HttpUpdateDiaryEntryNodeAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-update-diary-entry-node.adapter";
 import { HttpResetDiaryEntryTreeAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-reset-diary-entry-tree.adapter";
 import { UpdateDiaryEntryNodeService } from "@nutrition/diary/diary/application/services/update-diary-entry-node.service";
+import { DeleteDiaryEntryNodePort } from "@nutrition/diary/diary/domain/ports/delete-diary-entry-node.port";
+import { HttpDeleteDiaryEntryNodeAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-delete-diary-entry-node.adapter";
+import { DeleteDiaryEntryNodeService } from "@nutrition/diary/diary/application/services/delete-diary-entry-node.service";
 import { ResetDiaryEntryTreeService } from "@nutrition/diary/diary/application/services/reset-diary-entry-tree.service";
 import { DiaryTreeViewService } from "@nutrition/diary/diary/application/services/diary-tree-view.service";
 import { DiaryLotViewService } from "@nutrition/diary/diary/application/services/diary-lot-view.service";
@@ -85,6 +88,16 @@ export class DiaryWriteProviders {
         useFactory: (port: UpdateDiaryEntryNodePort) =>
           new UpdateDiaryEntryNodeService(port),
         deps: [UpdateDiaryEntryNodePort],
+      },
+      {
+        provide: DeleteDiaryEntryNodePort,
+        useClass: HttpDeleteDiaryEntryNodeAdapter,
+      },
+      {
+        provide: DeleteDiaryEntryNodeService,
+        useFactory: (port: DeleteDiaryEntryNodePort) =>
+          new DeleteDiaryEntryNodeService(port),
+        deps: [DeleteDiaryEntryNodePort],
       },
       {
         provide: ResetDiaryEntryTreePort,

@@ -53,6 +53,7 @@ export class DiaryTreeViewService {
         unitLabel: recipe ? labels.servings : this.picker.unitLabel(node.unit),
         unitOptions: recipe ? [] : this.picker.unitOptions(node.refId),
         openable: this.aggregateNavigation.canOpen(node.kind, node.refId),
+        removable: 0 !== depth || nodes.length > 1,
         expandable,
         expanded,
         lotPickable: recipe && !served,

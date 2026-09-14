@@ -26,85 +26,95 @@
     }
 
     @for (row of rows; track row.path) {
-      <ds-stack
-        class="diary-tree__row"
+      <ds-swipe-to-delete
+        #swipe
         animate.enter="diary-tree__row--in"
         animate.leave="diary-tree__row--out"
-        [class.diary-tree__row--recipe]="row.recipe"
-        [class.diary-tree__row--expanded]="row.expandable && row.expanded"
         [style.margin-left]="indentOf(row)"
-        direction="row"
-        align="center"
-        gap="var(--ds-space-2)"
+        [disabled]="!row.removable"
+        [reveal]="56"
+        radius="var(--ds-radius-lg)"
+        [removeLabel]="removeLabel"
+        (remove)="removed.emit(row.path)"
       >
-        @if (row.expandable) {
-          <ds-pressable
-            class="diary-tree__expand diary-tree__expand--tile"
-            [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
-            (press)="toggled.emit(row.path)"
-          >
+        <ds-stack
+          class="diary-tree__row"
+          [class.diary-tree__row--recipe]="row.recipe"
+          [class.diary-tree__row--expanded]="row.expandable && row.expanded"
+          [class.diary-tree__row--slid]="swipe.slid"
+          direction="row"
+          align="center"
+          gap="var(--ds-space-2)"
+        >
+          @if (row.expandable) {
+            <ds-pressable
+              class="diary-tree__expand diary-tree__expand--tile"
+              [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
+              (press)="toggled.emit(row.path)"
+            >
+              <ng-container
+                [ngTemplateOutlet]="tile"
+                [ngTemplateOutletContext]="{ $implicit: row }"
+              />
+            </ds-pressable>
+          } @else {
             <ng-container
               [ngTemplateOutlet]="tile"
               [ngTemplateOutletContext]="{ $implicit: row }"
             />
-          </ds-pressable>
-        } @else {
-          <ng-container
-            [ngTemplateOutlet]="tile"
-            [ngTemplateOutletContext]="{ $implicit: row }"
-          />
-        }
+          }
 
-        <ds-stack
-          class="diary-tree__body"
-          gap="var(--ds-space-1)"
-          [grow]="true"
-        >
-          @if (row.openable) {
-            <ds-pressable
-              class="diary-tree__open"
-              [ariaLabel]="openLabel"
-              (press)="opened.emit(row.path)"
-            >
+          <ds-stack
+            class="diary-tree__body"
+            gap="var(--ds-space-1)"
+            [grow]="true"
+          >
+            @if (row.openable) {
+              <ds-pressable
+                class="diary-tree__open"
+                [ariaLabel]="openLabel"
+                (press)="opened.emit(row.path)"
+              >
+                <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
+              </ds-pressable>
+            } @else {
               <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
-            </ds-pressable>
-          } @else {
-            <ds-text class="diary-tree__name">{{ row.name }}</ds-text>
-          }
+            }
 
-          @if (row.expandable) {
-            <ds-pressable
-              class="diary-tree__expand"
-              [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
-              (press)="toggled.emit(row.path)"
-            >
+            @if (row.expandable) {
+              <ds-pressable
+                class="diary-tree__expand"
+                [ariaLabel]="row.expanded ? collapseLabel : expandLabel"
+                (press)="toggled.emit(row.path)"
+              >
+                <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
+              </ds-pressable>
+            } @else {
               <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
-            </ds-pressable>
-          } @else {
-            <ds-macro-badges [kcal]="row.kcalLabel" [macros]="row.macros" />
-          }
-        </ds-stack>
+            }
+          </ds-stack>
 
-        <ds-inline-quantity
-          size="sm"
-          [quantity]="row.quantity"
-          [unit]="row.unit"
-          [unitLabel]="row.unitLabel"
-          [unitOptions]="row.unitOptions"
-          [ariaLabel]="quantityAriaLabel"
-          [unitAriaLabel]="unitAriaLabel"
-          (quantityChange)="
-            quantityChanged.emit({ path: row.path, quantity: $event })
-          "
-          (unitChange)="
-            unitChanged.emit({
-              path: row.path,
-              unit: $event,
-              quantity: row.quantity,
-            })
-          "
-        />
-      </ds-stack>
+          <ds-inline-quantity
+            size="sm"
+            [quantity]="row.quantity"
+            [unit]="row.unit"
+            [unitLabel]="row.unitLabel"
+            [unitOptions]="row.unitOptions"
+            [ariaLabel]="quantityAriaLabel"
+            [unitAriaLabel]="unitAriaLabel"
+            (quantityChange)="
+              quantityChanged.emit({ path: row.path, quantity: $event })
+            "
+            (unitChange)="
+              unitChanged.emit({
+                path: row.path,
+                unit: $event,
+                quantity: row.quantity,
+              })
+            "
+          />
+        </ds-stack>
+      </ds-swipe-to-delete>
 
       @if (row.lotPickable) {
         <ds-stack

@@ -8,6 +8,7 @@ import { PressableComponent } from "../../../pressable/infrastructure/components
 import { EmojiTileComponent } from "../../../emoji-tile/infrastructure/components/emoji-tile.component";
 import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
 import { InlineQuantityComponent } from "../../../inline-quantity/infrastructure/components/inline-quantity.component";
+import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { DiaryTreeRow } from "../../domain/models/diary-tree-row.model";
 import {
   DiaryTreeQuantityChange,
@@ -28,6 +29,7 @@ const INDENT_PER_LEVEL_REM = 0.9375;
     EmojiTileComponent,
     MacroBadgesComponent,
     InlineQuantityComponent,
+    SwipeToDeleteComponent,
   ],
   templateUrl: "./diary-tree.component.html",
   styleUrls: ["./diary-tree.component.css"],
@@ -43,6 +45,7 @@ export class DiaryTreeComponent {
   @Input() openLabel = "";
   @Input() quantityAriaLabel = "";
   @Input() unitAriaLabel = "";
+  @Input() removeLabel = "";
 
   @Output() toggled = new EventEmitter<string>();
   @Output() opened = new EventEmitter<string>();
@@ -50,6 +53,7 @@ export class DiaryTreeComponent {
   @Output() unitChanged = new EventEmitter<DiaryTreeUnitChange>();
   @Output() restored = new EventEmitter<void>();
   @Output() lotPicked = new EventEmitter<string>();
+  @Output() removed = new EventEmitter<string>();
 
   indentOf(row: DiaryTreeRow): string {
     return `${row.depth * INDENT_PER_LEVEL_REM}rem`;
