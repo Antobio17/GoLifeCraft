@@ -51,7 +51,7 @@ final class StartProductionController
     }
 
     /**
-     * @return array<int, array{recipeId: string, servings: float}>
+     * @return array<int, array{recipeId: string, servings: float, dueDate: ?string}>
      */
     private function items(Request $request): array
     {
@@ -65,6 +65,7 @@ final class StartProductionController
             $items[] = [
                 'recipeId' => (string) ($item['recipeId'] ?? ''),
                 'servings' => (float) ($item['servings'] ?? 0),
+                'dueDate' => isset($item['dueDate']) && '' !== $item['dueDate'] ? (string) $item['dueDate'] : null,
             ];
         }
 

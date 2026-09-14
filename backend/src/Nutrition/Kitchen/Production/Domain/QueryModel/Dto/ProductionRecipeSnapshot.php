@@ -9,6 +9,7 @@ final readonly class ProductionRecipeSnapshot
         public string $name,
         public string $emoji,
         public int $servings,
+        public string $prepMode,
     ) {
     }
 }

@@ -15,7 +15,7 @@ final readonly class DoctrineStartProductionNeedleDataQuery implements StartProd
     public function findRecipeSnapshot(string $recipeId): ?ProductionRecipeSnapshot
     {
         $row = $this->connection->createQueryBuilder()
-            ->select('r.id', 'r.name', 'r.emoji', 'r.servings')
+            ->select('r.id', 'r.name', 'r.emoji', 'r.servings', 'r.prep_mode')
             ->from(table: 'recipe', alias: 'r')
             ->where('r.id = :recipeId')
             ->setParameter(key: 'recipeId', value: $recipeId)
@@ -32,6 +32,7 @@ final readonly class DoctrineStartProductionNeedleDataQuery implements StartProd
             name: $row['name'],
             emoji: $row['emoji'],
             servings: (int) $row['servings'],
+            prepMode: (string) $row['prep_mode'],
         );
     }
 }

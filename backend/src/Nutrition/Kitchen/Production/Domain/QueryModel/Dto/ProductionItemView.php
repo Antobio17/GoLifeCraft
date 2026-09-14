@@ -14,6 +14,8 @@ final readonly class ProductionItemView
         public string $emoji,
         public ?string $image,
         public string $status,
+        public string $prepMode,
+        public ?string $dueDate,
         public float $servingsPlanned,
         public float $servingsCooked,
         public ?string $code = null,

@@ -44,6 +44,8 @@ final class CheckProductionItemCommandHandlerTest extends TestCase
                     servingsPlanned: 2.0,
                     nameSnapshot: 'Lentejas con chorizo',
                     emojiSnapshot: '🍲',
+                    prepMode: ProductionItem::PREP_MODE_BATCH,
+                    dueDate: null,
                     composition: [],
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $this->dateTimeGenerator,

@@ -60,6 +60,8 @@ final class LabelProductionItemCommandHandlerTest extends TestCase
                     servingsPlanned: 2.0,
                     nameSnapshot: 'Lentejas con chorizo',
                     emojiSnapshot: '🍲',
+                    prepMode: ProductionItem::PREP_MODE_BATCH,
+                    dueDate: null,
                     composition: $compositionResolver->fromRecipe(recipeId: 'recipe-1', servings: 2.0),
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $dateTimeGenerator,

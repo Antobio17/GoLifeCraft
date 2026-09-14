@@ -1,7 +1,9 @@
 import { ProposalToCook } from "./proposal-to-cook.model";
 
 export interface ProposalRow {
+  slot: string;
   item: ProposalToCook;
+  dueLabel: string;
   imageUrl: string | null;
   meta: string;
   hint: string;

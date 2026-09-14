@@ -31,6 +31,7 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProposalAttributes } from "@nutrition/kitchen/production/domain/models/proposal-attributes.model";
 import { ProposalCovered } from "@nutrition/kitchen/production/domain/models/proposal-covered.model";
+import { ProposalGroup } from "@nutrition/kitchen/production/domain/models/proposal-group.model";
 import { ProposalRow } from "@nutrition/kitchen/production/domain/models/proposal-row.model";
 import { ProposalToCook } from "@nutrition/kitchen/production/domain/models/proposal-to-cook.model";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
@@ -111,7 +112,9 @@ export class CreateProductionComponent {
 
   rows = computed<ProposalRow[]>(() =>
     (this.proposal()?.toCook ?? []).map((item) => ({
+      slot: this.form.slotOf(item),
       item,
+      dueLabel: this.dueLabel(item),
       imageUrl: this.entityVisual.urlOf(
         VisualSurface.Kitchen,
         AggregateImageKind.Recipe,
@@ -125,9 +128,24 @@ export class CreateProductionComponent {
           })
         : this.t("createProduction.row.fromDiary"),
       hint: this.rowHint(item),
-      servings: this.servings().get(item.recipeId) ?? item.deficit,
-      selected: this.selected().has(item.recipeId),
+      servings: this.servings().get(this.form.slotOf(item)) ?? item.deficit,
+      selected: this.selected().has(this.form.slotOf(item)),
     })),
+  );
+
+  groups = computed<ProposalGroup[]>(() =>
+    [
+      {
+        key: "batch",
+        title: this.t("createProduction.toCookBatch"),
+        rows: this.rows().filter((row) => !row.item.dueDate),
+      },
+      {
+        key: "sameDay",
+        title: this.t("createProduction.toCookSameDay"),
+        rows: this.rows().filter((row) => !!row.item.dueDate),
+      },
+    ].filter((group) => group.rows.length > 0),
   );
 
   coveredRows = computed(() =>
@@ -198,12 +216,14 @@ export class CreateProductionComponent {
   }
 
   onToggle(item: ProposalToCook): void {
-    this.selected.set(this.view.toggle(this.selected(), item.recipeId));
+    this.selected.set(
+      this.view.toggle(this.selected(), this.form.slotOf(item)),
+    );
   }
 
   onServings(item: ProposalToCook, value: number): void {
     const next = new Map(this.servings());
-    next.set(item.recipeId, Math.max(0, value));
+    next.set(this.form.slotOf(item), Math.max(0, value));
 
     this.servings.set(next);
   }
@@ -244,6 +264,14 @@ export class CreateProductionComponent {
         },
         error: () => this.saving.set(false),
       });
+  }
+
+  private dueLabel(item: ProposalToCook): string {
+    if (!item.dueDate) return this.t("createProduction.row.cookNow");
+
+    return this.t("createProduction.row.dueOn", {
+      day: this.range.dayLabel(item.dueDate),
+    });
   }
 
   private rowMeta(item: ProposalToCook): string {

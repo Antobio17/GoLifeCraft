@@ -41,7 +41,9 @@
       "less": "Una ración menos",
       "more": "Una ración más",
       "requiredBy": "Para {{parents}}",
-      "fromDiary": "Del diario"
+      "fromDiary": "Del diario",
+      "dueOn": "Para el {{day}}",
+      "cookNow": "Cocinar ahora"
     },
     "covered": {
       "title": "Ya lo tienes cubierto",
@@ -53,7 +55,9 @@
       "title": "No hay nada que producir",
       "text": "El diario de esos días ya está cubierto con lo que tienes hecho. Prueba con un rango más largo."
     },
-    "hint2": "Si una receta lleva otra dentro, la sub-receta entra en el lote y se cocina primero."
+    "hint2": "Si una receta lleva otra dentro, la sub-receta entra en el lote y se cocina primero.",
+    "toCookBatch": "Cocinar ahora para toda la semana",
+    "toCookSameDay": "Se cocina el día"
   },
   "getProduction": {
     "back": "Volver a producciones",
@@ -72,7 +76,9 @@
       "requiredBy": "Para {{parents}}",
       "fromDiary": "Del diario",
       "done": "Listo",
-      "changed": "modificado"
+      "changed": "modificado",
+      "dueOn": "Para el {{day}}",
+      "cookNow": "Cocinar ahora"
     },
     "discardModal": {
       "title": "Descartar producción",

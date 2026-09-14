@@ -74,6 +74,8 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
                 'i.id',
                 'i.recipe_id',
                 'i.status',
+                'i.prep_mode',
+                'i.due_date',
                 'i.servings_planned',
                 'i.servings_cooked',
                 'i.name_snapshot',
@@ -87,7 +89,8 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
             ->leftJoin(fromAlias: 'i', join: 'recipe', alias: 'r', condition: 'r.id = i.recipe_id')
             ->where('i.production_id = :productionId')
             ->setParameter(key: 'productionId', value: $productionId)
-            ->orderBy('i.position', 'ASC')
+            ->orderBy('i.due_date', 'ASC')
+            ->addOrderBy('i.position', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
 
@@ -100,6 +103,8 @@ final readonly class DoctrineGetProductionNeedleDataQuery implements GetProducti
             emoji: $row['emoji_snapshot'],
             image: $row['image'],
             status: $row['status'],
+            prepMode: (string) $row['prep_mode'],
+            dueDate: $row['due_date'],
             servingsPlanned: (float) $row['servings_planned'],
             servingsCooked: (float) $row['servings_cooked'],
             code: $row['code'],

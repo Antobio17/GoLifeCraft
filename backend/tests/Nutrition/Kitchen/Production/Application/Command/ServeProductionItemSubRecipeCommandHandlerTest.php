@@ -75,6 +75,8 @@ final class ServeProductionItemSubRecipeCommandHandlerTest extends TestCase
                     servingsPlanned: 2.0,
                     nameSnapshot: 'Desayuno completo',
                     emojiSnapshot: '🍳',
+                    prepMode: ProductionItem::PREP_MODE_BATCH,
+                    dueDate: null,
                     composition: $compositionResolver->fromRecipe(recipeId: 'recipe-breakfast', servings: 2.0),
                     createdByUserId: 'god-user-id',
                     dateTimeGenerator: $dateTimeGenerator,

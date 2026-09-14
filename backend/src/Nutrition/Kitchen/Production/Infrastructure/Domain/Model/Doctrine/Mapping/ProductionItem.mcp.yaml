@@ -50,6 +50,22 @@ fields:
     writable: false
     max: 16
     description: Emoji of the recipe as it was when the batch was planned.
+  prepMode:
+    writable: false
+    enum: [batch, same_day]
+    description: >-
+      Copied from the recipe when the batch was planned. "batch" is cooked ahead in one go for the
+      whole range; "same_day" only works cooked the day it is eaten, so it sits in the same batch
+      but carries the day it is due and is cooked then.
+    filterable: true
+  dueDate:
+    writable: false
+    max: 10
+    description: >-
+      The day this line has to be cooked, as "YYYY-MM-DD". Only same_day lines have one: a batch
+      line covers the whole range and leaves it empty.
+    filterable: true
+    sortable: true
   code:
     writable: false
     max: 16

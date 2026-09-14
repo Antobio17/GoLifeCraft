@@ -15,6 +15,9 @@ class ProductionItem extends GenericAggregate
 
     public const int LABEL_MAX_LENGTH = 120;
 
+    public const string PREP_MODE_BATCH = 'batch';
+    public const string PREP_MODE_SAME_DAY = 'same_day';
+
     public string $productionId;
     public int $position;
     public string $recipeId;
@@ -23,6 +26,8 @@ class ProductionItem extends GenericAggregate
     public float $servingsCooked = 0.0;
     public string $nameSnapshot;
     public string $emojiSnapshot;
+    public string $prepMode = self::PREP_MODE_BATCH;
+    public ?string $dueDate = null;
     public ?string $code = null;
     public string $label = '';
     public bool $customized = false;
@@ -46,6 +51,8 @@ class ProductionItem extends GenericAggregate
         float $servingsPlanned,
         string $nameSnapshot,
         string $emojiSnapshot,
+        string $prepMode,
+        ?string $dueDate,
         array $composition,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -61,6 +68,8 @@ class ProductionItem extends GenericAggregate
         $item->servingsPlanned = $servingsPlanned;
         $item->nameSnapshot = $nameSnapshot;
         $item->emojiSnapshot = $emojiSnapshot;
+        $item->prepMode = $prepMode;
+        $item->dueDate = $dueDate;
         $item->stampCreation(userId: $createdByUserId, now: $now);
         $item->writeComposition(composition: $composition, userId: $createdByUserId, now: $now);
 

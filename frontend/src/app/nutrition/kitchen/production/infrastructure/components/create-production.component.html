@@ -52,95 +52,99 @@
         trailing="pill"
       />
     } @else if (rows().length) {
-      <ds-section-header
-        [title]="'createProduction.toCook' | t"
-        [staticLabel]="rangeLabel()"
-      />
+      @for (group of groups(); track group.key) {
+        <ds-section-header [title]="group.title" [staticLabel]="rangeLabel()" />
 
-      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-        @for (row of rows(); track row.item.recipeId) {
-          <ds-stack
-            class="proposal-row"
-            [class.is-off]="!row.selected"
-            [gap]="'var(--ds-space-2)'"
-          >
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+          @for (row of group.rows; track row.slot) {
             <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-3)'"
+              class="proposal-row"
+              [class.is-off]="!row.selected"
+              [gap]="'var(--ds-space-2)'"
             >
-              <ds-button
-                class="proposal-row__check"
-                [variant]="row.selected ? 'primary' : 'secondary'"
-                size="icon-sm"
-                [icon]="row.selected ? 'check' : 'plus'"
-                [iconSize]="15"
-                [ariaLabel]="'createProduction.row.toggle' | t"
-                (clicked)="onToggle(row.item)"
-              />
-
-              <ds-emoji-tile
-                [emoji]="row.item.emoji"
-                [imageUrl]="row.imageUrl"
-                [alt]="row.item.name"
-                [size]="44"
-                [radius]="12"
-              />
-
-              <ds-stack [gap]="'2px'" [grow]="true">
-                <ds-text variant="strong">{{ row.item.name }}</ds-text>
-                <ds-text variant="meta">{{ row.meta }}</ds-text>
-                <ds-text class="proposal-row__origin" variant="meta">{{
-                  row.origin
-                }}</ds-text>
-              </ds-stack>
-            </ds-stack>
-
-            <ds-stack
-              class="proposal-row__amount"
-              direction="row"
-              align="center"
-              justify="between"
-              [gap]="'var(--ds-space-3)'"
-            >
-              <ds-text variant="label">{{
-                "createProduction.row.servings" | t
-              }}</ds-text>
-
-              <ds-number-input
-                class="proposal-row__servings"
-                [stepper]="true"
-                [min]="0"
-                [ariaLabel]="'createProduction.row.servings' | t"
-                [decrementLabel]="'createProduction.row.less' | t"
-                [incrementLabel]="'createProduction.row.more' | t"
-                [ngModel]="row.servings"
-                [ngModelOptions]="{ standalone: true }"
-                (ngModelChange)="onServings(row.item, $event)"
-              />
-            </ds-stack>
-
-            @if (row.hint) {
               <ds-stack
                 direction="row"
                 align="center"
-                [wrap]="true"
-                [gap]="'var(--ds-space-2)'"
+                [gap]="'var(--ds-space-3)'"
               >
-                <ds-text class="proposal-row__hint" variant="meta">{{
-                  row.hint
-                }}</ds-text>
                 <ds-button
-                  variant="link"
-                  size="sm"
-                  (clicked)="onUsePack(row.item)"
-                  >{{ "createProduction.row.usePack" | t }}</ds-button
-                >
+                  class="proposal-row__check"
+                  [variant]="row.selected ? 'primary' : 'secondary'"
+                  size="icon-sm"
+                  [icon]="row.selected ? 'check' : 'plus'"
+                  [iconSize]="15"
+                  [ariaLabel]="'createProduction.row.toggle' | t"
+                  (clicked)="onToggle(row.item)"
+                />
+
+                <ds-emoji-tile
+                  [emoji]="row.item.emoji"
+                  [imageUrl]="row.imageUrl"
+                  [alt]="row.item.name"
+                  [size]="44"
+                  [radius]="12"
+                />
+
+                <ds-stack [gap]="'2px'" [grow]="true">
+                  <ds-text variant="strong">{{ row.item.name }}</ds-text>
+                  <ds-text variant="meta">{{ row.meta }}</ds-text>
+                  <ds-text class="proposal-row__origin" variant="meta">{{
+                    row.origin
+                  }}</ds-text>
+                  @if (row.dueLabel) {
+                    <ds-text class="proposal-row__due" variant="meta">{{
+                      row.dueLabel
+                    }}</ds-text>
+                  }
+                </ds-stack>
               </ds-stack>
-            }
-          </ds-stack>
-        }
-      </ds-stack>
+
+              <ds-stack
+                class="proposal-row__amount"
+                direction="row"
+                align="center"
+                justify="between"
+                [gap]="'var(--ds-space-3)'"
+              >
+                <ds-text variant="label">{{
+                  "createProduction.row.servings" | t
+                }}</ds-text>
+
+                <ds-number-input
+                  class="proposal-row__servings"
+                  [stepper]="true"
+                  [min]="0"
+                  [ariaLabel]="'createProduction.row.servings' | t"
+                  [decrementLabel]="'createProduction.row.less' | t"
+                  [incrementLabel]="'createProduction.row.more' | t"
+                  [ngModel]="row.servings"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="onServings(row.item, $event)"
+                />
+              </ds-stack>
+
+              @if (row.hint) {
+                <ds-stack
+                  direction="row"
+                  align="center"
+                  [wrap]="true"
+                  [gap]="'var(--ds-space-2)'"
+                >
+                  <ds-text class="proposal-row__hint" variant="meta">{{
+                    row.hint
+                  }}</ds-text>
+                  <ds-button
+                    variant="link"
+                    size="sm"
+                    (clicked)="onUsePack(row.item)"
+                    >{{ "createProduction.row.usePack" | t }}</ds-button
+                  >
+                </ds-stack>
+              }
+            </ds-stack>
+          }
+        </ds-stack>
+      }
 
       <ds-stack
         class="summary"

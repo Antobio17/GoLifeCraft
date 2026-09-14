@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Application\Command\Command;
 final readonly class StartProductionCommand implements Command
 {
     /**
-     * @param array<int, array{recipeId: string, servings: float}> $items
+     * @param array<int, array{recipeId: string, servings: float, dueDate?: ?string}> $items
      */
     public function __construct(
         public string $fromDate,

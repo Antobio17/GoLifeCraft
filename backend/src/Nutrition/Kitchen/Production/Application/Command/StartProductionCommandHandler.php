@@ -49,8 +49,10 @@ final readonly class StartProductionCommandHandler
 
         foreach ($command->items as $item) {
             $recipeId = $item['recipeId'];
+            $dueDate = $item['dueDate'] ?? null;
+            $slot = sprintf('%s|%s', $recipeId, $dueDate ?? '');
 
-            if (isset($items[$recipeId])) {
+            if (isset($items[$slot])) {
                 throw StartProductionException::duplicatedRecipe(recipeId: $recipeId);
             }
 
@@ -66,13 +68,15 @@ final readonly class StartProductionCommandHandler
 
             ++$position;
 
-            $items[$recipeId] = ProductionItem::plan(
+            $items[$slot] = ProductionItem::plan(
                 productionId: $productionId,
                 position: $position,
                 recipeId: $recipeId,
                 servingsPlanned: $servings,
                 nameSnapshot: $recipe->name,
                 emojiSnapshot: $recipe->emoji,
+                prepMode: $recipe->prepMode,
+                dueDate: ProductionItem::PREP_MODE_SAME_DAY === $recipe->prepMode ? $dueDate : null,
                 composition: $this->compositionResolver->fromRecipe(recipeId: $recipeId, servings: $servings),
                 createdByUserId: $command->startedByUserId,
                 dateTimeGenerator: $this->dateTimeGenerator,

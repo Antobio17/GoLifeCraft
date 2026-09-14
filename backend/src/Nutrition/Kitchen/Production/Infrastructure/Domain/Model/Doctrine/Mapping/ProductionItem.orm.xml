@@ -19,6 +19,12 @@
     </field>
     <field name="nameSnapshot" type="string" column="name_snapshot" length="255"/>
     <field name="emojiSnapshot" type="string" column="emoji_snapshot" length="16"/>
+    <field name="prepMode" type="string" column="prep_mode" length="16">
+      <options>
+        <option name="default">batch</option>
+      </options>
+    </field>
+    <field name="dueDate" type="string" column="due_date" length="10" nullable="true"/>
     <field name="code" type="string" column="code" length="16" nullable="true"/>
     <field name="label" type="string" column="label" length="120" options="{&quot;default&quot;: &quot;&quot;}"/>
     <field name="customized" type="boolean" column="customized" options="{&quot;default&quot;: false}"/>

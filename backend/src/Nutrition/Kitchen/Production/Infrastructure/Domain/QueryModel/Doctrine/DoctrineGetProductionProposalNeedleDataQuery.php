@@ -4,6 +4,7 @@ namespace Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\Doctrine
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
@@ -13,6 +14,7 @@ use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalPackCandidate;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalPackHint;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalToCookItem;
 use Nutrition\Kitchen\Production\Domain\QueryModel\GetProductionProposalNeedleDataQuery;
+use Nutrition\Recipe\Recipe\Domain\Model\Recipe;
 
 final readonly class DoctrineGetProductionProposalNeedleDataQuery implements GetProductionProposalNeedleDataQuery
 {
@@ -26,11 +28,12 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
 
     public function findProposal(string $fromDate, string $toDate): GetProductionProposalResult
     {
-        $demand = $this->demandByRecipe(fromDate: $fromDate, toDate: $toDate);
+        $demandByDate = $this->demandByRecipeAndDate(fromDate: $fromDate, toDate: $toDate);
+        $demand = self::totalsOf(byDate: $demandByDate);
         $order = $this->cookingOrder(recipeIds: array_keys($demand));
         $recipes = $this->recipesById(recipeIds: $order);
         $stock = $this->stockByRecipe(recipeIds: $order);
-        $inProduction = $this->plannedByRecipe(recipeIds: $order);
+        $inProduction = $this->plannedByRecipe(recipeIds: $order, fromDate: $fromDate);
 
         $requiredBy = [];
 
@@ -92,23 +95,34 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
                 continue;
             }
 
-            $toCook[] = new ProposalToCookItem(
-                recipeId: $recipeId,
-                name: $recipe['name'],
-                emoji: $recipe['emoji'],
-                image: $recipe['image'],
-                demand: $servings,
-                inStock: $stock[$recipeId] ?? 0.0,
-                inProduction: $inProduction[$recipeId] ?? 0.0,
-                deficit: $deficit,
-                requiredBy: array_values(array: array_unique(array: $requiredBy[$recipeId] ?? [])),
-                packHint: $this->packHint(
+            $packs ??= $this->packsByArticle();
+            $origin = array_values(array: array_unique(array: $requiredBy[$recipeId] ?? []));
+
+            foreach ($this->dueRows(recipe: $recipe, recipeId: $recipeId, deficit: $deficit, demandByDate: $demandByDate, stock: $stock, inProduction: $inProduction) as $dueDate => $dueDeficit) {
+                $toCook[] = new ProposalToCookItem(
                     recipeId: $recipeId,
-                    deficit: $deficit,
-                    packs: $packs ??= $this->packsByArticle(),
-                ),
-            );
+                    name: $recipe['name'],
+                    emoji: $recipe['emoji'],
+                    image: $recipe['image'],
+                    prepMode: $recipe['prepMode'],
+                    dueDate: '' === $dueDate ? null : (string) $dueDate,
+                    demand: '' === $dueDate ? $servings : $dueDeficit,
+                    inStock: $stock[$recipeId] ?? 0.0,
+                    inProduction: $inProduction[$recipeId] ?? 0.0,
+                    deficit: $dueDeficit,
+                    requiredBy: $origin,
+                    packHint: $this->packHint(recipeId: $recipeId, deficit: $dueDeficit, packs: $packs),
+                );
+            }
         }
+
+        usort(array: $toCook, callback: static function (ProposalToCookItem $a, ProposalToCookItem $b): int {
+            if ((null === $a->dueDate) !== (null === $b->dueDate)) {
+                return null === $a->dueDate ? -1 : 1;
+            }
+
+            return ($a->dueDate ?? '') <=> ($b->dueDate ?? '');
+        });
 
         return new GetProductionProposalResult(
             id: sprintf('%s_%s', $fromDate, $toDate),
@@ -119,6 +133,37 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
             toCook: $toCook,
             covered: $covered,
         );
+    }
+
+    /**
+     * A batch dish is one line for the whole range. A same-day dish is one line per day it is
+     * eaten, so the lot says which day each portion is due.
+     *
+     * @param array{name: string, emoji: string, image: ?string, prepMode: string} $recipe
+     * @param array<string, array<string, float>>                                  $demandByDate
+     * @param array<string, float>                                                 $stock
+     * @param array<string, float>                                                 $inProduction
+     *
+     * @return array<string, float>
+     */
+    private function dueRows(
+        array $recipe,
+        string $recipeId,
+        float $deficit,
+        array $demandByDate,
+        array $stock,
+        array $inProduction,
+    ): array {
+        $dates = $demandByDate[$recipeId] ?? [];
+
+        if (Recipe::PREP_MODE_SAME_DAY !== $recipe['prepMode'] || [] === $dates) {
+            return ['' => $deficit];
+        }
+
+        $available = ($stock[$recipeId] ?? 0.0) + ($inProduction[$recipeId] ?? 0.0);
+        $shortfall = self::shortfallByDate(dates: $dates, available: $available);
+
+        return [] === $shortfall ? ['' => $deficit] : $shortfall;
     }
 
     /**
@@ -170,30 +215,77 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
     }
 
     /**
-     * @return array<string, float>
+     * @return array<string, array<string, float>>
      */
-    private function demandByRecipe(string $fromDate, string $toDate): array
+    private function demandByRecipeAndDate(string $fromDate, string $toDate): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('d.ref_id', 'SUM(d.quantity) AS servings')
+            ->select('d.ref_id', 'd.entry_date', 'SUM(d.quantity) AS servings')
             ->from(table: 'diary_entry', alias: 'd')
             ->where('d.entry_date BETWEEN :fromDate AND :toDate')
             ->andWhere('d.kind = :kind')
             ->andWhere('d.ref_id IS NOT NULL')
+            ->andWhere('d.consumed = :consumed')
             ->setParameter(key: 'fromDate', value: $fromDate)
             ->setParameter(key: 'toDate', value: $toDate)
             ->setParameter(key: 'kind', value: DiaryEntry::KIND_RECIPE)
-            ->groupBy('d.ref_id')
+            ->setParameter(key: 'consumed', value: false, type: ParameterType::BOOLEAN)
+            ->groupBy('d.ref_id', 'd.entry_date')
+            ->orderBy(sort: 'd.entry_date', order: 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
 
-        $demand = [];
+        $byDate = [];
 
         foreach ($rows as $row) {
-            $demand[$row['ref_id']] = round(num: (float) $row['servings'], precision: ProductionItem::SERVINGS_PRECISION);
+            $byDate[$row['ref_id']][$row['entry_date']] = round(
+                num: (float) $row['servings'],
+                precision: ProductionItem::SERVINGS_PRECISION,
+            );
         }
 
-        return $demand;
+        return $byDate;
+    }
+
+    /**
+     * @param array<string, array<string, float>> $byDate
+     *
+     * @return array<string, float>
+     */
+    private static function totalsOf(array $byDate): array
+    {
+        return array_map(callback: static fn (array $dates): float => round(
+            num: array_sum($dates),
+            precision: ProductionItem::SERVINGS_PRECISION,
+        ), array: $byDate);
+    }
+
+    /**
+     * Spends what is already available on the earliest days first, and returns what is still
+     * missing on each remaining day.
+     *
+     * @param array<string, float> $dates
+     *
+     * @return array<string, float>
+     */
+    private static function shortfallByDate(array $dates, float $available): array
+    {
+        ksort($dates);
+        $shortfall = [];
+
+        foreach ($dates as $date => $servings) {
+            $taken = min($available, $servings);
+            $available -= $taken;
+            $missing = round(num: $servings - $taken, precision: ProductionItem::SERVINGS_PRECISION);
+
+            if ($missing <= 0.0) {
+                continue;
+            }
+
+            $shortfall[$date] = $missing;
+        }
+
+        return $shortfall;
     }
 
     /**
@@ -225,11 +317,15 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
     }
 
     /**
+     * Only lots whose range still reaches the days being planned count as already in the pan. A
+     * lot left open after its range is over is not going to materialise, so it must not keep
+     * suppressing demand.
+     *
      * @param string[] $recipeIds
      *
      * @return array<string, float>
      */
-    private function plannedByRecipe(array $recipeIds): array
+    private function plannedByRecipe(array $recipeIds, string $fromDate): array
     {
         if ([] === $recipeIds) {
             return [];
@@ -242,9 +338,11 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
             ->where('i.recipe_id IN (:recipeIds)')
             ->andWhere('i.status = :itemStatus')
             ->andWhere('p.status = :productionStatus')
+            ->andWhere('p.to_date >= :fromDate')
             ->setParameter(key: 'recipeIds', value: $recipeIds, type: ArrayParameterType::STRING)
             ->setParameter(key: 'itemStatus', value: ProductionItem::STATUS_PENDING)
             ->setParameter(key: 'productionStatus', value: Production::STATUS_COOKING)
+            ->setParameter(key: 'fromDate', value: $fromDate)
             ->groupBy('i.recipe_id')
             ->executeQuery()
             ->fetchAllAssociative();
@@ -261,7 +359,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
     /**
      * @param string[] $recipeIds
      *
-     * @return array<string, array{name: string, emoji: string, image: ?string}>
+     * @return array<string, array{name: string, emoji: string, image: ?string, prepMode: string}>
      */
     private function recipesById(array $recipeIds): array
     {
@@ -270,7 +368,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         }
 
         $rows = $this->connection->createQueryBuilder()
-            ->select('r.id', 'r.name', 'r.emoji', 'r.image')
+            ->select('r.id', 'r.name', 'r.emoji', 'r.image', 'r.prep_mode')
             ->from(table: 'recipe', alias: 'r')
             ->where('r.id IN (:recipeIds)')
             ->setParameter(key: 'recipeIds', value: $recipeIds, type: ArrayParameterType::STRING)
@@ -280,7 +378,12 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         $recipes = [];
 
         foreach ($rows as $row) {
-            $recipes[$row['id']] = ['name' => $row['name'], 'emoji' => $row['emoji'], 'image' => $row['image']];
+            $recipes[$row['id']] = [
+                'name' => $row['name'],
+                'emoji' => $row['emoji'],
+                'image' => $row['image'],
+                'prepMode' => (string) $row['prep_mode'],
+            ];
         }
 
         return $recipes;

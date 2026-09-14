@@ -4,12 +4,16 @@ import { StartProductionItem } from "../../domain/models/start-production-item.m
 
 @Injectable()
 export class ProposalFormService {
+  slotOf(item: ProposalToCook): string {
+    return `${item.recipeId}|${item.dueDate ?? ""}`;
+  }
+
   seed(items: ProposalToCook[]): Map<string, number> {
     const servings = new Map<string, number>();
 
     items.forEach((item) =>
       servings.set(
-        item.recipeId,
+        this.slotOf(item),
         item.packHint?.suggestedServings ?? item.deficit,
       ),
     );
@@ -18,7 +22,7 @@ export class ProposalFormService {
   }
 
   selection(items: ProposalToCook[]): ReadonlySet<string> {
-    return new Set(items.map((item) => item.recipeId));
+    return new Set(items.map((item) => this.slotOf(item)));
   }
 
   toItems(
@@ -27,11 +31,12 @@ export class ProposalFormService {
   ): StartProductionItem[] {
     const items: StartProductionItem[] = [];
 
-    selected.forEach((recipeId) => {
-      const amount = servings.get(recipeId) ?? 0;
+    selected.forEach((slot) => {
+      const amount = servings.get(slot) ?? 0;
       if (amount <= 0) return;
 
-      items.push({ recipeId, servings: amount });
+      const [recipeId, dueDate] = slot.split("|");
+      items.push({ recipeId, servings: amount, dueDate: dueDate || null });
     });
 
     return items;
@@ -43,8 +48,8 @@ export class ProposalFormService {
   ): number {
     let total = 0;
 
-    selected.forEach((recipeId) => {
-      total += servings.get(recipeId) ?? 0;
+    selected.forEach((slot) => {
+      total += servings.get(slot) ?? 0;
     });
 
     return Math.round(total * 100) / 100;

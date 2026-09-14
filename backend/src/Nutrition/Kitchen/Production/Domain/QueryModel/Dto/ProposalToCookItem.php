@@ -12,6 +12,8 @@ final readonly class ProposalToCookItem
         public string $name,
         public string $emoji,
         public ?string $image,
+        public string $prepMode,
+        public ?string $dueDate,
         public float $demand,
         public float $inStock,
         public float $inProduction,

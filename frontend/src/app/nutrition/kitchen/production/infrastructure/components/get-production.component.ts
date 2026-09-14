@@ -116,16 +116,34 @@ export class GetProductionComponent {
         ),
         meta: this.rowMeta(item, done),
         done,
-        origin: item.requiredBy.length
-          ? this.t("getProduction.row.requiredBy", {
-              parents: this.view.joinNames(item.requiredBy),
-            })
-          : this.t("getProduction.row.fromDiary"),
+        origin: this.rowTag(item, done),
       };
     }),
   );
 
   pendingCount = computed(() => this.rows().filter((row) => !row.done).length);
+
+  private rowTag(item: ProductionItemView, done: boolean): string {
+    if (done) return this.originTag(item);
+
+    if (item.dueDate) {
+      return this.t("getProduction.row.dueOn", {
+        day: this.range.dayLabel(item.dueDate),
+      });
+    }
+
+    return this.t("getProduction.row.cookNow");
+  }
+
+  private originTag(item: ProductionItemView): string {
+    if (item.requiredBy.length) {
+      return this.t("getProduction.row.requiredBy", {
+        parents: this.view.joinNames(item.requiredBy),
+      });
+    }
+
+    return this.t("getProduction.row.fromDiary");
+  }
 
   private rowMeta(item: ProductionItemView, done: boolean): string {
     const servings = done

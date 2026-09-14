@@ -34,6 +34,15 @@ export class ProductionRangeService {
     return `${this.dayMonth(from)} – ${this.dayMonth(to)}`;
   }
 
+  dayLabel(iso: string): string {
+    return this.capitalize(
+      new Intl.DateTimeFormat(this.format.locale(), {
+        weekday: "long",
+        day: "numeric",
+      }).format(this.parse(iso)),
+    );
+  }
+
   dayCount(fromDate: string, toDate: string): number {
     const from = this.parse(fromDate).getTime();
     const to = this.parse(toDate).getTime();

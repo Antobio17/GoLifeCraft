@@ -41,7 +41,9 @@
       "less": "One serving less",
       "more": "One serving more",
       "requiredBy": "For {{parents}}",
-      "fromDiary": "From the diary"
+      "fromDiary": "From the diary",
+      "dueOn": "For {{day}}",
+      "cookNow": "Cook now"
     },
     "covered": {
       "title": "Already covered",
@@ -53,7 +55,9 @@
       "title": "Nothing to produce",
       "text": "The diary for those days is already covered by what you have cooked. Try a longer range."
     },
-    "hint2": "If a recipe contains another one, the sub-recipe joins the batch and is cooked first."
+    "hint2": "If a recipe contains another one, the sub-recipe joins the batch and is cooked first.",
+    "toCookBatch": "Cook now for the whole week",
+    "toCookSameDay": "Cooked on the day"
   },
   "getProduction": {
     "back": "Back to productions",
@@ -72,7 +76,9 @@
       "requiredBy": "For {{parents}}",
       "fromDiary": "From the diary",
       "done": "Done",
-      "changed": "changed"
+      "changed": "changed",
+      "dueOn": "For {{day}}",
+      "cookNow": "Cook now"
     },
     "discardModal": {
       "title": "Discard production",

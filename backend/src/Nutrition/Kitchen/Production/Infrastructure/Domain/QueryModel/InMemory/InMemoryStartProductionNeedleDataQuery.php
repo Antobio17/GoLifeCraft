@@ -2,6 +2,7 @@
 
 namespace Nutrition\Kitchen\Production\Infrastructure\Domain\QueryModel\InMemory;
 
+use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProductionRecipeSnapshot;
 use Nutrition\Kitchen\Production\Domain\QueryModel\StartProductionNeedleDataQuery;
 
@@ -10,13 +11,14 @@ final class InMemoryStartProductionNeedleDataQuery implements StartProductionNee
     /** @var array<string, ProductionRecipeSnapshot> */
     private array $recipes = [];
 
-    public function addRecipe(string $recipeId, string $name, string $emoji, int $servings): void
+    public function addRecipe(string $recipeId, string $name, string $emoji, int $servings, string $prepMode = ProductionItem::PREP_MODE_BATCH): void
     {
         $this->recipes[$recipeId] = new ProductionRecipeSnapshot(
             recipeId: $recipeId,
             name: $name,
             emoji: $emoji,
             servings: $servings,
+            prepMode: $prepMode,
         );
     }
 

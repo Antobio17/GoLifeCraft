@@ -66,3 +66,7 @@
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
+
+.proposal-row__due {
+  color: var(--ds-color-accent);
+}
