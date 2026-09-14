@@ -1,0 +1,8 @@
+services:
+  Nutrition\Shopping\Ticket\Infrastructure\UI\Mcp\Tool\ReceiveTicketTool:
+    class: Nutrition\Shopping\Ticket\Infrastructure\UI\Mcp\Tool\ReceiveTicketTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

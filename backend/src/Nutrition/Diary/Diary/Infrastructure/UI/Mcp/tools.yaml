@@ -1,0 +1,8 @@
+services:
+  Nutrition\Diary\Diary\Infrastructure\UI\Mcp\Tool\ConsumeDiaryMealTool:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\Mcp\Tool\ConsumeDiaryMealTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

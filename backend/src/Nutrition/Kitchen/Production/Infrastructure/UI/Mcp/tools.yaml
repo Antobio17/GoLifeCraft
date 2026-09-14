@@ -1,0 +1,16 @@
+services:
+  Nutrition\Kitchen\Production\Infrastructure\UI\Mcp\Tool\StartProductionTool:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\Mcp\Tool\StartProductionTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
+
+  Nutrition\Kitchen\Production\Infrastructure\UI\Mcp\Tool\CookProductionItemTool:
+    class: Nutrition\Kitchen\Production\Infrastructure\UI\Mcp\Tool\CookProductionItemTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

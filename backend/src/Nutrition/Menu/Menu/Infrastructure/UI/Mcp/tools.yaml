@@ -1,0 +1,8 @@
+services:
+  Nutrition\Menu\Menu\Infrastructure\UI\Mcp\Tool\ApplyWeekMenuTool:
+    class: Nutrition\Menu\Menu\Infrastructure\UI\Mcp\Tool\ApplyWeekMenuTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

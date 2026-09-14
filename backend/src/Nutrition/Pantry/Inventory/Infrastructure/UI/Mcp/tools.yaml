@@ -6,3 +6,19 @@ services:
       $requestStack: '@request_stack'
     tags:
       - { name: 'mcp.tool' }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\Mcp\Tool\CountInventoryItemTool:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\Mcp\Tool\CountInventoryItemTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\Mcp\Tool\ValidateInventoryTool:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\Mcp\Tool\ValidateInventoryTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
