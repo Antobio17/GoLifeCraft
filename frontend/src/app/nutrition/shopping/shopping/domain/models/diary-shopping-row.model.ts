@@ -10,5 +10,6 @@ export interface DiaryShoppingRow {
   quantity: number;
   baseQuantity: number;
   covered: boolean;
+  unknownFormat: boolean;
   checked: boolean;
 }

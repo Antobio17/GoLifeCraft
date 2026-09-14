@@ -15,7 +15,7 @@ final readonly class MenuShoppingNeedView
         public string $baseUnit,
         public ?string $packUnit,
         public ?float $packSize,
-        public int $packs,
+        public ?int $packs,
         public bool $inShoppingList,
     ) {
     }

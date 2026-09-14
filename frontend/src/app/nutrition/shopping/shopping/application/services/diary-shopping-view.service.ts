@@ -27,7 +27,7 @@ export class DiaryShoppingViewService {
 
   defaultQuantities(needs: DiaryShoppingNeed[]): Record<string, number> {
     return needs.reduce<Record<string, number>>((quantities, need) => {
-      quantities[need.articleId] = Math.max(1, need.packs);
+      quantities[need.articleId] = Math.max(1, need.packs ?? 1);
 
       return quantities;
     }, {});
@@ -52,7 +52,8 @@ export class DiaryShoppingViewService {
     labels: DiaryShoppingLabels,
   ): DiaryShoppingRow[] {
     return needs.map((need) => {
-      const quantity = quantities[need.articleId] ?? Math.max(1, need.packs);
+      const quantity =
+        quantities[need.articleId] ?? Math.max(1, need.packs ?? 1);
 
       return {
         articleId: need.articleId,
@@ -71,6 +72,7 @@ export class DiaryShoppingViewService {
         quantity,
         baseQuantity: this.baseQuantity(need),
         covered: need.missingQuantity <= 0,
+        unknownFormat: need.packs === null,
         checked: !unchecked.includes(need.articleId),
       };
     });
@@ -88,6 +90,7 @@ export class DiaryShoppingViewService {
     labels: DiaryShoppingLabels,
   ): string | null {
     const parts = [
+      ...this.unknownFormatParts(need, labels),
       ...this.packSizeParts(need, labels),
       labels.need.replace("{amount}", this.amount(need.quantity, need)),
       ...this.stockParts(need, labels),
@@ -96,6 +99,20 @@ export class DiaryShoppingViewService {
     ];
 
     return parts.join(" · ");
+  }
+
+  private unknownFormatParts(
+    need: DiaryShoppingNeed,
+    labels: DiaryShoppingLabels,
+  ): string[] {
+    if (need.packs !== null) return [];
+
+    return [
+      labels.unknownFormat.replace(
+        "{amount}",
+        this.amount(this.baseQuantity(need), need),
+      ),
+    ];
   }
 
   private packSizeParts(

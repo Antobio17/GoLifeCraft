@@ -25,6 +25,7 @@ export interface MacroLabels {
 export interface MenuShoppingLabels {
   need: string;
   packs: string;
+  unknownFormat: string;
   leftover: string;
   inList: string;
 }
@@ -75,7 +76,7 @@ export class MenuViewService {
         need.image,
       ),
       meta: this.shoppingMeta(need, labels),
-      packs: need.packs,
+      packs: Math.max(1, need.packs ?? 1),
       baseQuantity: need.quantity,
       checked: !unchecked.includes(need.articleId),
     }));
@@ -94,6 +95,7 @@ export class MenuViewService {
         this.unitCatalog.amountLabel(need.quantity, need.baseUnit),
       ),
       ...this.packParts(need, labels),
+      ...(null === need.packs ? [labels.unknownFormat] : []),
       ...(need.inShoppingList ? [labels.inList] : []),
     ].join(" · ");
   }
@@ -102,7 +104,7 @@ export class MenuViewService {
     need: MenuShoppingNeed,
     labels: MenuShoppingLabels,
   ): string[] {
-    if (!need.packUnit || !need.packSize) return [];
+    if (!need.packUnit || !need.packSize || null === need.packs) return [];
 
     const parts = [
       labels.packs

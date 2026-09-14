@@ -24,10 +24,14 @@ final readonly class ArticlePack
         return null !== $this->unit && null !== $this->size;
     }
 
-    public function packsFor(float $baseQuantity): int
+    public function packsFor(float $baseQuantity): ?int
     {
-        if (!$this->isDefined() || $baseQuantity <= 0.0) {
-            return 1;
+        if (!$this->isDefined()) {
+            return null;
+        }
+
+        if ($baseQuantity <= 0.0) {
+            return 0;
         }
 
         return max(1, (int) ceil($baseQuantity / $this->size));

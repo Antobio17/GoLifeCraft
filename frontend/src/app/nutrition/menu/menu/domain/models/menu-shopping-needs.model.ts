@@ -9,7 +9,7 @@ export interface MenuShoppingNeed {
   baseUnit: string;
   packUnit: string | null;
   packSize: number | null;
-  packs: number;
+  packs: number | null;
   inShoppingList: boolean;
 }
 

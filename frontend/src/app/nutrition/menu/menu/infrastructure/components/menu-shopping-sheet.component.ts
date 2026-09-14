@@ -109,6 +109,7 @@ export class MenuShoppingSheetComponent {
   shoppingLabels = computed<MenuShoppingLabels>(() => ({
     need: this.t("getMenu.shopping.need"),
     packs: this.t("getMenu.shopping.packs"),
+    unknownFormat: this.t("getMenu.shopping.unknownFormat"),
     leftover: this.t("getMenu.shopping.leftover"),
     inList: this.t("getMenu.shopping.inList"),
   }));

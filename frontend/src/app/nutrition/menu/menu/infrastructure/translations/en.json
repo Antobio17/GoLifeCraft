@@ -186,7 +186,8 @@
       "items": {
         "one": "1 article",
         "many": "{{count}} articles"
-      }
+      },
+      "unknownFormat": "no purchase format"
     },
     "days": {
       "mon": "Mon",

@@ -179,6 +179,7 @@ export class DiaryShoppingSheetComponent {
     covered: this.t("getShopping.diary.covered"),
     leftover: this.t("getShopping.pack.leftover"),
     inList: this.t("getShopping.diary.inList"),
+    unknownFormat: this.t("getShopping.diary.unknownFormat"),
   }));
 
   rows = computed(() =>

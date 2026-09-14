@@ -6,4 +6,5 @@ export interface DiaryShoppingLabels {
   covered: string;
   leftover: string;
   inList: string;
+  unknownFormat: string;
 }

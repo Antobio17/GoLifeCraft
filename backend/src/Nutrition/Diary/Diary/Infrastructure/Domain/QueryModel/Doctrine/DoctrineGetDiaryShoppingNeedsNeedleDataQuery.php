@@ -192,7 +192,7 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
                 baseUnit: $row['base_unit'] ?? 'g',
                 packUnit: $pack->unit,
                 packSize: $pack->size,
-                packs: $missing > 0.0 ? $pack->packsFor(baseQuantity: $missing) : 0,
+                packs: $pack->packsFor(baseQuantity: $missing),
                 inShoppingList: null !== $row['shopping_list_item_id'],
             );
         }

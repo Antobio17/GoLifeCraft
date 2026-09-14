@@ -65,7 +65,8 @@
       "items": {
         "one": "1 item",
         "many": "{{count}} items"
-      }
+      },
+      "unknownFormat": "no purchase format · ask for {amount}"
     },
     "clearModal": {
       "title": "Remove bought",
