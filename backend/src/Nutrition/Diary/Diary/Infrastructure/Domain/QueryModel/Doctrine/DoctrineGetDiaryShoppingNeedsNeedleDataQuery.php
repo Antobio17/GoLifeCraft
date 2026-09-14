@@ -4,6 +4,7 @@ namespace Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Nutrition\Catalog\Article\Domain\Model\ArticlePack;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntryNode;
@@ -58,9 +59,11 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
             ->andWhere('e.entry_date <= :toDate')
             ->andWhere('e.kind IN (:kinds)')
             ->andWhere('e.ref_id IS NOT NULL')
+            ->andWhere('e.consumed = :consumed')
             ->setParameter(key: 'fromDate', value: $fromDate)
             ->setParameter(key: 'toDate', value: $toDate)
             ->setParameter(key: 'kinds', value: [DiaryEntry::KIND_PRODUCT, DiaryEntry::KIND_RECIPE], type: ArrayParameterType::STRING)
+            ->setParameter(key: 'consumed', value: false, type: ParameterType::BOOLEAN)
             ->executeQuery()
             ->fetchAllAssociative();
     }
