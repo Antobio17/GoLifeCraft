@@ -24,6 +24,8 @@ fields:
       "draft" while the count is being filled in, "validated" once it has been applied and
       became history. Validating writes the counted quantities into the stock ledger as the
       new truth for every article and recipe it counted; reopening it takes them back out.
+      These rows are never written from here: a count is opened with the "start_inventory"
+      tool, and counting and validating happen from the app.
     filterable: true
   note:
     writable: false

@@ -36,6 +36,9 @@ class Location extends GenericAggregate
     /** @var LocationItem[] */
     public array $items = [];
 
+    /** @var array<int, array<string, mixed>>|null */
+    public ?array $contents = null;
+
     public static function create(
         string $id,
         string $name,

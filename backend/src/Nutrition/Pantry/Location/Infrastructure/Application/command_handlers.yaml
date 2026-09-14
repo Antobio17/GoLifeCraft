@@ -46,3 +46,13 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Location\Application\Command\PlaceLocationContentsCommandHandler:
+    class: Nutrition\Pantry\Location\Application\Command\PlaceLocationContentsCommandHandler
+    arguments:
+      $locationRepository: '@Nutrition\Pantry\Location\Domain\Model\LocationRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Location\Domain\QueryModel\PlaceLocationContentsNeedleDataQuery'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

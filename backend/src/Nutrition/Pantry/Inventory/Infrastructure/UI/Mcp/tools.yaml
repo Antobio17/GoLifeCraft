@@ -1,0 +1,8 @@
+services:
+  Nutrition\Pantry\Inventory\Infrastructure\UI\Mcp\Tool\StartInventoryTool:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\Mcp\Tool\StartInventoryTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

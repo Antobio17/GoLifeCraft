@@ -57,7 +57,7 @@ parameters:
             sidecar: '%kernel.project_dir%/src/Nutrition/Pantry/Location/Infrastructure/Domain/Model/Doctrine/Mapping/LocationItem.mcp.yaml'
             read_roles: [ROLE_GOD, ROLE_USER]
             write_roles: []
-            delete_roles: []
+            delete_roles: [ROLE_GOD, ROLE_USER]
 
         # Read only on purpose: a stock count is history. Starting, counting and validating it
         # goes through the inventory commands, which are what overwrite the stock and leave the

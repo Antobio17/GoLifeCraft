@@ -5,3 +5,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.pantry_location.item_assigned' }
+
+  Nutrition\Pantry\Location\Application\Subscriber\PlaceLocationContentsOnModelWritten:
+    class: Nutrition\Pantry\Location\Application\Subscriber\PlaceLocationContentsOnModelWritten
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.mcp.event.1.model.written' }

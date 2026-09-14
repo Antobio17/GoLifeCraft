@@ -24,6 +24,17 @@ fields:
     description: >-
       Free note about what the location holds or where it is, for example "Cajón de abajo
       de la nevera".
+  contents:
+    writable: true
+    type: json
+    description: >-
+      What is kept in this location, sent with the location in the same call. Each entry is
+      {"kind": "article"|"recipe", "refId": "<id of the article or the recipe>"}. It adds up:
+      what is already in the location and is not listed stays where it is, and listing
+      something that is already here changes nothing. An article or a recipe is kept in a
+      single location, so listing one here takes it out of the location that used to hold it.
+      To take something out of the pantry without moving it elsewhere, delete its
+      pantry_location_item row.
 
 relations:
   items:
@@ -32,4 +43,7 @@ relations:
     foreign_field: locationId
     writable: false
     expandable: true
+
+cascade_delete:
+  - { resource: pantry_location_item, foreign_field: locationId }
 

@@ -6,7 +6,10 @@ fields:
     min: 36
     max: 36
     description: >-
-      Id of the location holding this article or recipe.
+      Id of the location holding this article or recipe. These rows are not written one by
+      one: putting something in a location is done by writing the location itself with its
+      "contents". Deleting one of these rows is what takes the article or the recipe out of
+      the pantry without putting it anywhere else.
     filterable: true
   kind:
     writable: false
