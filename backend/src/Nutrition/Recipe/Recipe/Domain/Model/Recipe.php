@@ -13,11 +13,21 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class Recipe extends GenericAggregate
 {
+    public const string PREP_MODE_BATCH = 'batch';
+    public const string PREP_MODE_SAME_DAY = 'same_day';
+
+    /** @var array<int, string> */
+    public const array PREP_MODES = [
+        self::PREP_MODE_BATCH,
+        self::PREP_MODE_SAME_DAY,
+    ];
+
     public string $name;
     public string $emoji;
     public ?string $image = null;
     public string $category;
     public int $servings;
+    public string $prepMode = self::PREP_MODE_BATCH;
 
     /** @var RecipeIngredient[] */
     public array $ingredients = [];
@@ -36,6 +46,7 @@ class Recipe extends GenericAggregate
         ?string $image,
         string $category,
         int $servings,
+        string $prepMode,
         array $ingredients,
         array $steps,
         string $createdByUserId,
@@ -43,6 +54,10 @@ class Recipe extends GenericAggregate
     ): self {
         if (!self::hasValidServings(servings: $servings)) {
             throw CreateRecipeException::servingsMustBePositive();
+        }
+
+        if (!self::hasValidPrepMode(prepMode: $prepMode)) {
+            throw CreateRecipeException::invalidPrepMode(prepMode: $prepMode);
         }
 
         $now = $dateTimeGenerator->now();
@@ -54,6 +69,7 @@ class Recipe extends GenericAggregate
         $recipe->image = $image;
         $recipe->category = $category;
         $recipe->servings = $servings;
+        $recipe->prepMode = $prepMode;
         $recipe->ingredients = $ingredients;
         $recipe->steps = $steps;
         $recipe->stampCreation(userId: $createdByUserId, now: $now);
@@ -66,6 +82,7 @@ class Recipe extends GenericAggregate
             image: $image,
             category: $category,
             servings: $servings,
+            prepMode: $prepMode,
             ingredients: $recipe->recordedIngredients(),
             steps: $recipe->recordedSteps(),
             createdAt: $now,
@@ -87,6 +104,7 @@ class Recipe extends GenericAggregate
         ?string $image,
         string $category,
         int $servings,
+        string $prepMode,
         array $ingredients,
         array $steps,
         string $updatedByUserId,
@@ -96,6 +114,10 @@ class Recipe extends GenericAggregate
             throw UpdateRecipeException::servingsMustBePositive();
         }
 
+        if (!self::hasValidPrepMode(prepMode: $prepMode)) {
+            throw UpdateRecipeException::invalidPrepMode(prepMode: $prepMode);
+        }
+
         $now = $dateTimeGenerator->now();
 
         $this->name = $name;
@@ -103,6 +125,7 @@ class Recipe extends GenericAggregate
         $this->image = $image;
         $this->category = $category;
         $this->servings = $servings;
+        $this->prepMode = $prepMode;
         $this->ingredients = $ingredients;
         $this->steps = $steps;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
@@ -115,6 +138,7 @@ class Recipe extends GenericAggregate
             image: $image,
             category: $category,
             servings: $servings,
+            prepMode: $prepMode,
             ingredients: $this->recordedIngredients(),
             steps: $this->recordedSteps(),
             createdAt: $this->createdAt,
@@ -142,6 +166,7 @@ class Recipe extends GenericAggregate
             image: $image,
             category: $this->category,
             servings: $this->servings,
+            prepMode: $this->prepMode,
             ingredients: $this->recordedIngredients(),
             steps: $this->recordedSteps(),
             createdAt: $this->createdAt,
@@ -166,6 +191,7 @@ class Recipe extends GenericAggregate
             image: $this->image,
             category: $this->category,
             servings: $this->servings,
+            prepMode: $this->prepMode,
             ingredients: $this->recordedIngredients(),
             steps: $this->recordedSteps(),
             createdAt: $this->createdAt,
@@ -194,5 +220,10 @@ class Recipe extends GenericAggregate
     private static function hasValidServings(int $servings): bool
     {
         return $servings >= 1;
+    }
+
+    private static function hasValidPrepMode(string $prepMode): bool
+    {
+        return in_array(needle: $prepMode, haystack: self::PREP_MODES, strict: true);
     }
 }

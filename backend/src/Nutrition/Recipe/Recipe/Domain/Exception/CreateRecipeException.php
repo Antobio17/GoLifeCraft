@@ -23,4 +23,13 @@ final class CreateRecipeException extends BaseException
             details: []
         );
     }
+
+    public static function invalidPrepMode(string $prepMode): self
+    {
+        return new static(
+            title: 'The preparation mode must be either batch or same_day.',
+            keyTranslation: 'recipe.prep.mode.is.invalid',
+            details: ['prepMode' => $prepMode]
+        );
+    }
 }

@@ -11,6 +11,7 @@ use Nutrition\Recipe\Recipe\Application\Command\RecipeStepData;
 use Nutrition\Recipe\Recipe\Application\Command\UpdateRecipeCommand;
 use Nutrition\Recipe\Recipe\Application\Command\UpdateRecipeCommandHandler;
 use Nutrition\Recipe\Recipe\Domain\Exception\UpdateRecipeException;
+use Nutrition\Recipe\Recipe\Domain\Model\Recipe;
 use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\Model\InMemory\InMemoryRecipeRepository;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\InMemory\InMemoryCreateRecipeNeedleDataQuery;
@@ -48,6 +49,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [
                 new RecipeIngredientData(kind: RecipeIngredient::KIND_PRODUCT, refId: 'article-1', quantity: 60.0, position: 1),
             ],
@@ -75,6 +77,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥘',
             category: 'Comida',
             servings: 2,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [
                 new RecipeIngredientData(kind: RecipeIngredient::KIND_PRODUCT, refId: 'article-4', quantity: 300.0, position: 1),
                 new RecipeIngredientData(kind: RecipeIngredient::KIND_PRODUCT, refId: 'article-5', quantity: 150.0, position: 2),
@@ -98,6 +101,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [
                 new RecipeStepData(text: 'Calienta la leche', position: 1, minutes: 3),
@@ -111,6 +115,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [
                 new RecipeStepData(text: 'Hierve el agua', position: 1),
@@ -134,6 +139,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [
                 new RecipeStepData(text: 'Calienta la leche', position: 1),
@@ -147,6 +153,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [],
             updatedByUserId: 'god-user-id',
@@ -167,6 +174,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: null,
             updatedByUserId: 'god-user-id',
@@ -191,6 +199,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥗',
             category: 'Comida',
             servings: 2,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [],
             updatedByUserId: 'god-user-id',
@@ -207,6 +216,7 @@ final class UpdateRecipeCommandHandlerTest extends TestCase
             emoji: '🥘',
             category: 'Comida',
             servings: 2,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [],
             updatedByUserId: 'god-user-id',

@@ -18,6 +18,7 @@ final class GetRecipeResult extends QueryAggregateResult
         public readonly ?string $image,
         public readonly string $category,
         public readonly int $servings,
+        public readonly string $prepMode,
         public readonly array $ingredients,
         public readonly array $steps,
         public readonly MacroBreakdown $total,

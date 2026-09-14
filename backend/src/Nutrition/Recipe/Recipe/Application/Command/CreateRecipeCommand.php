@@ -16,6 +16,7 @@ final readonly class CreateRecipeCommand implements Command
         public string $emoji,
         public string $category,
         public int $servings,
+        public string $prepMode,
         public array $ingredients,
         public ?array $steps,
         public string $createdByUserId,

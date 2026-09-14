@@ -37,6 +37,18 @@ fields:
     min: 1
     max: 20
     sortable: true
+  prepMode:
+    writable: true
+    required: false
+    type: string
+    enum: [batch, same_day]
+    filterable: true
+    description: >-
+      How the dish reaches the plate. "batch" is the default: it can be cooked days ahead in one
+      go and kept in the fridge or the freezer, so the kitchen groups it into the weekly batch and
+      adds up everything the diary asks for across the whole range. "same_day" is a dish that only
+      works cooked the day it is eaten, so the kitchen keeps it in the same production but lists it
+      once per day, marked with the day it is due, instead of merging it into the batch.
 
 relations: {}
 

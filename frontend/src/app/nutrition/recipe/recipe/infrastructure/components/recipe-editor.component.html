@@ -111,6 +111,17 @@
               />
             </ds-field>
 
+            <ds-field
+              [label]="'recipeEditor.prepMode.label' | t"
+              [hint]="'recipeEditor.prepMode.hint' | t"
+            >
+              <ds-choice-chips
+                formControlName="prepMode"
+                [wrap]="true"
+                [options]="prepModeOptions()"
+              />
+            </ds-field>
+
             <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
               <ds-stack
                 direction="row"

@@ -1,3 +1,5 @@
+import { RecipePrepMode } from "./recipe-prep-mode.enum";
+
 export interface RecipeIngredientRequest {
   kind: "product" | "recipe";
   refId: string;
@@ -18,6 +20,7 @@ export interface CreateRecipeRequest {
   emoji: string;
   category: string;
   servings: number;
+  prepMode: RecipePrepMode;
   ingredients: RecipeIngredientRequest[];
   steps: RecipeStepRequest[];
 }

@@ -148,6 +148,12 @@
     "stepPlaceholder": "Sofríe la cebolla hasta que esté blanda…",
     "stepMinutes": "Minutos del paso",
     "addStep": "Añadir paso",
-    "removeStep": "Quitar paso"
+    "removeStep": "Quitar paso",
+    "prepMode": {
+      "label": "Cómo se cocina",
+      "hint": "Decide si entra en el lote semanal o hay que hacerla el día",
+      "batch": "Se cocina por adelantado",
+      "sameDay": "Se cocina el día"
+    }
   }
 }

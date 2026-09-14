@@ -41,6 +41,7 @@ final readonly class UpdateRecipeCommandHandler
             image: $recipe->image,
             category: $command->category,
             servings: $command->servings,
+            prepMode: $command->prepMode,
             ingredients: $this->recipeIngredientAssembler->assemble(
                 recipeId: $recipe->id,
                 ingredients: $command->ingredients,

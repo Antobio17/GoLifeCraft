@@ -6,6 +6,7 @@ use Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientData;
 use Nutrition\Recipe\Recipe\Application\Command\RecipeStepData;
 use Nutrition\Recipe\Recipe\Application\Command\UpdateRecipeCommand;
 use Nutrition\Recipe\Recipe\Domain\Exception\UpdateRecipeException;
+use Nutrition\Recipe\Recipe\Domain\Model\Recipe;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
@@ -35,6 +36,7 @@ final class UpdateRecipeController
                 emoji: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'emoji'),
                 category: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'category'),
                 servings: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'servings'),
+                prepMode: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'prepMode', required: false) ?: Recipe::PREP_MODE_BATCH,
                 ingredients: RecipeIngredientData::listFromArray(
                     rawIngredients: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'ingredients'),
                 ),

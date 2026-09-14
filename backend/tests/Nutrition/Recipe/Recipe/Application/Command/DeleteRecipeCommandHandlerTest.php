@@ -10,6 +10,7 @@ use Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientAssembler;
 use Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientData;
 use Nutrition\Recipe\Recipe\Application\Command\RecipeStepAssembler;
 use Nutrition\Recipe\Recipe\Domain\Exception\DeleteRecipeException;
+use Nutrition\Recipe\Recipe\Domain\Model\Recipe;
 use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\Model\InMemory\InMemoryRecipeRepository;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\InMemory\InMemoryCreateRecipeNeedleDataQuery;
@@ -42,6 +43,7 @@ final class DeleteRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [
                 new RecipeIngredientData(kind: RecipeIngredient::KIND_PRODUCT, refId: 'article-1', quantity: 60.0, position: 1),
             ],

@@ -148,6 +148,12 @@
     "stepPlaceholder": "Fry the onion until soft…",
     "stepMinutes": "Minutes for this step",
     "addStep": "Add step",
-    "removeStep": "Remove step"
+    "removeStep": "Remove step",
+    "prepMode": {
+      "label": "How it is cooked",
+      "hint": "Decides whether it joins the weekly batch or has to be made on the day",
+      "batch": "Cooked ahead",
+      "sameDay": "Cooked on the day"
+    }
   }
 }

@@ -39,6 +39,7 @@ final class AssignRecipeImageCommandHandlerTest extends TestCase
             image: null,
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [
                 RecipeIngredient::create(
                     recipeId: 'recipe-1',

@@ -1,3 +1,4 @@
+import { RecipePrepMode } from "./recipe-prep-mode.enum";
 import { RecipeStepView } from "./recipe-step.model";
 export interface RecipeMacros {
   calories: number;
@@ -25,6 +26,7 @@ export interface RecipeListAttributes {
   image: string | null;
   category: string;
   servings: number;
+  prepMode: RecipePrepMode;
   ingredientCount: number;
   hasSubRecipe: boolean;
   total: RecipeMacros;
@@ -39,6 +41,7 @@ export interface RecipeDetailAttributes {
   image: string | null;
   category: string;
   servings: number;
+  prepMode: RecipePrepMode;
   ingredients: RecipeIngredientView[];
   steps: RecipeStepView[];
   total: RecipeMacros;

@@ -9,6 +9,7 @@ use Nutrition\Recipe\Recipe\Application\Command\RecipeIngredientData;
 use Nutrition\Recipe\Recipe\Application\Command\RecipeStepAssembler;
 use Nutrition\Recipe\Recipe\Application\Command\RecipeStepData;
 use Nutrition\Recipe\Recipe\Domain\Exception\CreateRecipeException;
+use Nutrition\Recipe\Recipe\Domain\Model\Recipe;
 use Nutrition\Recipe\Recipe\Domain\Model\RecipeIngredient;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\Model\InMemory\InMemoryRecipeRepository;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\InMemory\InMemoryCreateRecipeNeedleDataQuery;
@@ -47,6 +48,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [
                 new RecipeIngredientData(kind: RecipeIngredient::KIND_PRODUCT, refId: 'article-1', quantity: 60.0, position: 1),
                 new RecipeIngredientData(kind: RecipeIngredient::KIND_RECIPE, refId: 'recipe-9', quantity: 1.0, position: 2),
@@ -73,6 +75,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
             emoji: '🍲',
             category: 'Comida',
             servings: 4,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [
                 new RecipeStepData(text: 'Pon las lentejas en remojo', position: 1),
@@ -99,6 +102,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
             emoji: '🍳',
             category: 'Cena',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [],
             createdByUserId: 'god-user-id',
@@ -119,6 +123,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 1,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [],
             createdByUserId: 'god-user-id',
@@ -135,6 +140,7 @@ final class CreateRecipeCommandHandlerTest extends TestCase
             emoji: '🥣',
             category: 'Desayuno',
             servings: 0,
+            prepMode: Recipe::PREP_MODE_BATCH,
             ingredients: [],
             steps: [],
             createdByUserId: 'god-user-id',

@@ -8,6 +8,11 @@
     <field name="image" type="string" column="image" length="255" nullable="true"/>
     <field name="category" type="string" column="category" length="60"/>
     <field name="servings" type="integer" column="servings"/>
+    <field name="prepMode" type="string" column="prep_mode" length="16">
+      <options>
+        <option name="default">batch</option>
+      </options>
+    </field>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

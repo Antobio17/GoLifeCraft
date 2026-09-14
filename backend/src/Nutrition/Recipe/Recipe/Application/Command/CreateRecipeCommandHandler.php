@@ -36,6 +36,7 @@ final readonly class CreateRecipeCommandHandler
             image: null,
             category: $command->category,
             servings: $command->servings,
+            prepMode: $command->prepMode,
             ingredients: $this->recipeIngredientAssembler->assemble(
                 recipeId: $recipeId,
                 ingredients: $command->ingredients,

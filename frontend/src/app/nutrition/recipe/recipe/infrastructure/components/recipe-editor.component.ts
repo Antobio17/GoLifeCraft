@@ -78,6 +78,7 @@ import {
 } from "@nutrition/recipe/recipe/application/services/recipe-view.service";
 import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
+import { RecipePrepMode } from "@nutrition/recipe/recipe/domain/models/recipe-prep-mode.enum";
 import { RecipeDetail } from "@nutrition/recipe/recipe/domain/models/recipe.model";
 import { CreateRecipeRequest } from "@nutrition/recipe/recipe/domain/models/create-recipe.model";
 
@@ -189,6 +190,17 @@ export class RecipeEditorComponent implements OnInit {
     .categories()
     .map((category) => ({ value: category, label: category }));
 
+  prepModeOptions = computed<ChoiceChipOption[]>(() => [
+    {
+      value: RecipePrepMode.Batch,
+      label: this.t("recipeEditor.prepMode.batch"),
+    },
+    {
+      value: RecipePrepMode.SameDay,
+      label: this.t("recipeEditor.prepMode.sameDay"),
+    },
+  ]);
+
   pickerTabs = computed<SegmentedOption[]>(() => [
     { value: "product", label: this.t("recipeEditor.tabProducts") },
     { value: "recipe", label: this.t("recipeEditor.tabRecipes") },
@@ -222,6 +234,7 @@ export class RecipeEditorComponent implements OnInit {
       name: ["", [Validators.required, Validators.minLength(2)]],
       emoji: [FALLBACK_EMOJI],
       category: ["Comida", [Validators.required]],
+      prepMode: [RecipePrepMode.Batch, [Validators.required]],
     });
   }
 
@@ -517,6 +530,7 @@ export class RecipeEditorComponent implements OnInit {
       name: recipe.attributes.name,
       emoji: recipe.attributes.emoji || FALLBACK_EMOJI,
       category: recipe.attributes.category,
+      prepMode: recipe.attributes.prepMode ?? RecipePrepMode.Batch,
     });
     this.storedImage.set(recipe.attributes.image ?? null);
     this.servings.set(recipe.attributes.servings);
@@ -552,6 +566,7 @@ export class RecipeEditorComponent implements OnInit {
       emoji: value.emoji || FALLBACK_EMOJI,
       category: value.category,
       servings: this.servings(),
+      prepMode: value.prepMode ?? RecipePrepMode.Batch,
       ingredients: this.ingredients().map((ingredient, index) => ({
         kind: ingredient.kind,
         refId: ingredient.refId,
