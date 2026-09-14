@@ -5,7 +5,7 @@
     <field name="version" type="integer" version="true"/>
     <field name="inventoryId" type="string" column="inventory_id" length="36"/>
     <field name="position" type="integer" column="position"/>
-    <field name="locationId" type="string" column="location_id" length="36"/>
+    <field name="locationId" type="string" column="location_id" length="36" nullable="true"/>
     <field name="nameSnapshot" type="string" column="name_snapshot" length="255"/>
     <field name="emojiSnapshot" type="string" column="emoji_snapshot" length="16"/>
     <field name="createdAt" type="datetime" column="created_at"/>

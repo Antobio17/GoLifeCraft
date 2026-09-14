@@ -8,7 +8,7 @@ final readonly class InventoryLocationPlan
      * @param InventoryStockLine[] $items
      */
     public function __construct(
-        public string $locationId,
+        public ?string $locationId,
         public string $name,
         public string $emoji,
         public array $items,

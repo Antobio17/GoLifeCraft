@@ -10,7 +10,7 @@ class InventoryLocation extends GenericAggregate
 {
     public string $inventoryId;
     public int $position;
-    public string $locationId;
+    public ?string $locationId;
     public string $nameSnapshot;
     public string $emojiSnapshot;
 
@@ -20,7 +20,7 @@ class InventoryLocation extends GenericAggregate
     public static function plan(
         string $inventoryId,
         int $position,
-        string $locationId,
+        ?string $locationId,
         string $nameSnapshot,
         string $emojiSnapshot,
         string $createdByUserId,
