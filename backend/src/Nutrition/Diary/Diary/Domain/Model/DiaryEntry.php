@@ -12,6 +12,7 @@ use Nutrition\Diary\Diary\Domain\Event\DiaryEntryQuantityUpdated;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryQuickUpdated;
 use Nutrition\Diary\Diary\Domain\Event\DiaryEntryTreeAdjusted;
 use Nutrition\Diary\Diary\Domain\Exception\CreateDiaryEntryException;
+use Nutrition\Diary\Diary\Domain\Exception\DeleteDiaryEntryException;
 use Nutrition\Diary\Diary\Domain\Exception\UpdateDiaryEntryException;
 use Nutrition\Recipe\Recipe\Domain\QueryModel\Dto\MacroBreakdown;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -558,6 +559,26 @@ class DiaryEntry extends GenericAggregate
         $this->customized = true;
     }
 
+    public function removeNode(string $nodeId): void
+    {
+        $node = $this->findNode(nodeId: $nodeId);
+        if (null === $node) {
+            throw DeleteDiaryEntryException::treeNodeNotFound(diaryEntryId: $this->id, nodeId: $nodeId);
+        }
+
+        if (null === $node->parentNodeId && 1 === $this->rootNodeCount()) {
+            throw DeleteDiaryEntryException::lastTreeNode(diaryEntryId: $this->id);
+        }
+
+        $this->nodes = array_values(array: array_filter(
+            array: $this->nodes,
+            callback: static fn (DiaryEntryNode $candidate): bool => $candidate->id !== $node->id
+                && !$candidate->isDescendantOf(other: $node),
+        ));
+
+        $this->customized = true;
+    }
+
     public function findNodeByPath(string $path): ?DiaryEntryNode
     {
         foreach ($this->nodes as $node) {
@@ -618,6 +639,16 @@ class DiaryEntry extends GenericAggregate
     public function treePayload(): array
     {
         return self::snapshotAll(aggregates: $this->nodes);
+    }
+
+    private function rootNodeCount(): int
+    {
+        $roots = array_filter(
+            array: $this->nodes,
+            callback: static fn (DiaryEntryNode $node): bool => null === $node->parentNodeId,
+        );
+
+        return count(value: $roots);
     }
 
     private function scaleDescendants(

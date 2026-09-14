@@ -75,6 +75,7 @@ import { CreateDiaryEntryService } from "@nutrition/diary/diary/application/serv
 import { UpdateDiaryEntryService } from "@nutrition/diary/diary/application/services/update-diary-entry.service";
 import { UpdateDiaryEntryNodeService } from "@nutrition/diary/diary/application/services/update-diary-entry-node.service";
 import { ResetDiaryEntryTreeService } from "@nutrition/diary/diary/application/services/reset-diary-entry-tree.service";
+import { DeleteDiaryEntryNodeService } from "@nutrition/diary/diary/application/services/delete-diary-entry-node.service";
 import { AssignDiaryEntryLotService } from "@nutrition/diary/diary/application/services/assign-diary-entry-lot.service";
 import {
   DiaryLotLabels,
@@ -163,6 +164,7 @@ export class GetDiaryComponent implements OnInit {
   private updateDiaryEntryService = inject(UpdateDiaryEntryService);
   private updateDiaryEntryNodeService = inject(UpdateDiaryEntryNodeService);
   private resetDiaryEntryTreeService = inject(ResetDiaryEntryTreeService);
+  private deleteDiaryEntryNodeService = inject(DeleteDiaryEntryNodeService);
   private assignDiaryEntryLotService = inject(AssignDiaryEntryLotService);
   private getRecipeLotsService = inject(GetRecipeLotsService);
   private lotView = inject(DiaryLotViewService);
@@ -712,6 +714,14 @@ export class GetDiaryComponent implements OnInit {
     this.updateDiaryEntryNodeService
       .updateDiaryEntryNode(entryId, change.path, change.quantity, change.unit)
       .subscribe({ next: () => this.load(this.date(), true) });
+  }
+
+  onNodeRemove(entryId: string, path: string): void {
+    this.autosave.push(`node:${entryId}:${path}`, () =>
+      this.deleteDiaryEntryNodeService
+        .deleteDiaryEntryNode(entryId, path)
+        .pipe(tap(() => this.load(this.date(), true))),
+    );
   }
 
   onResetTree(entryId: string): void {

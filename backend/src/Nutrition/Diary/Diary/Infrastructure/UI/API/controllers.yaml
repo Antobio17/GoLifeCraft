@@ -55,6 +55,13 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\DeleteDiaryEntryNodeController:
+    class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\DeleteDiaryEntryNodeController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\ResetDiaryEntryTreeController:
     class: Nutrition\Diary\Diary\Infrastructure\UI\API\Controller\ResetDiaryEntryTreeController
     arguments:

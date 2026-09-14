@@ -98,7 +98,8 @@
       "collapse": "Hide breakdown",
       "customized": "Adjusted by hand · only in this entry",
       "reset": "Restore",
-      "servings": "srv."
+      "servings": "srv.",
+      "remove": "Remove from breakdown"
     },
     "unit": "Unit",
     "stock": {

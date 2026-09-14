@@ -14,4 +14,31 @@ final class DeleteDiaryEntryException extends BaseException
             details: ['diaryEntryId' => $diaryEntryId]
         );
     }
+
+    public static function notARecipeEntry(string $diaryEntryId): self
+    {
+        return new static(
+            title: 'Only recipe entries have a breakdown.',
+            keyTranslation: 'diary.entry.not.recipe',
+            details: ['diaryEntryId' => $diaryEntryId]
+        );
+    }
+
+    public static function treeNodeNotFound(string $diaryEntryId, string $nodeId): self
+    {
+        return new static(
+            title: 'Breakdown item not found.',
+            keyTranslation: 'diary.entry.tree.node.not.found',
+            details: ['diaryEntryId' => $diaryEntryId, 'nodeId' => $nodeId]
+        );
+    }
+
+    public static function lastTreeNode(string $diaryEntryId): self
+    {
+        return new static(
+            title: 'The breakdown needs at least one ingredient.',
+            keyTranslation: 'diary.entry.tree.last.node',
+            details: ['diaryEntryId' => $diaryEntryId]
+        );
+    }
 }
