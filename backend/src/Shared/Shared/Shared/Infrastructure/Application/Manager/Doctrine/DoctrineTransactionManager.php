@@ -30,6 +30,12 @@ final class DoctrineTransactionManager implements TransactionManager
         $this->isTransactionActive = true;
     }
 
+    public function flushChanges(): void
+    {
+        $this->masterEntityManager->flush();
+        $this->tenantEntityManager->flush();
+    }
+
     public function flush(): void
     {
         if (!$this->isTransactionActive) {

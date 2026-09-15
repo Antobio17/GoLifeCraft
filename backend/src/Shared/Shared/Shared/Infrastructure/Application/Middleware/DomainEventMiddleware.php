@@ -4,6 +4,7 @@ namespace Shared\Shared\Shared\Infrastructure\Application\Middleware;
 
 use Shared\Shared\DomainEventLog\Domain\Model\DomainEventLog;
 use Shared\Shared\DomainEventLog\Domain\Model\DomainEventLogRepository;
+use Shared\Shared\Shared\Application\Manager\TransactionManager;
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tenant\Tenant\Domain\Service\TenantContext;
@@ -17,6 +18,7 @@ final readonly class DomainEventMiddleware implements MiddlewareInterface
     public function __construct(
         private DomainEventCollectorService $domainEventCollector,
         private DomainEventLogRepository $domainEventLogRepository,
+        private TransactionManager $transactionManager,
         private DateTimeGenerator $dateTimeGenerator,
         private TenantContext $tenantContext,
         private array $subscribers,
@@ -28,20 +30,33 @@ final readonly class DomainEventMiddleware implements MiddlewareInterface
         $envelope = $stack->next()->handle(envelope: $envelope, stack: $stack);
 
         $events = $this->domainEventCollector->pullEvents();
+        if ([] === $events) {
+            return $envelope;
+        }
+
         foreach ($events as $event) {
             $this->logEvent(event: $event);
+        }
 
-            $eventName = $event->getName();
-            if (!isset($this->subscribers[$eventName])) {
-                continue;
-            }
+        $this->transactionManager->flushChanges();
 
-            foreach ($this->subscribers[$eventName] as $subscriber) {
-                $subscriber($event);
-            }
+        foreach ($events as $event) {
+            $this->notifySubscribers(event: $event);
         }
 
         return $envelope;
+    }
+
+    private function notifySubscribers(DomainEvent $event): void
+    {
+        $eventName = $event->getName();
+        if (!isset($this->subscribers[$eventName])) {
+            return;
+        }
+
+        foreach ($this->subscribers[$eventName] as $subscriber) {
+            $subscriber($event);
+        }
     }
 
     private function logEvent(DomainEvent $event): void

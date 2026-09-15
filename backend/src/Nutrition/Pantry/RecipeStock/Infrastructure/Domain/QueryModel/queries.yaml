@@ -2,4 +2,4 @@ services:
   Nutrition\Pantry\RecipeStock\Domain\QueryModel\UpdateRecipeStockNeedleDataQuery:
     class: Nutrition\Pantry\RecipeStock\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateRecipeStockNeedleDataQuery
     arguments:
-      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $connection: '@doctrine.dbal.writer_tenant_connection'
