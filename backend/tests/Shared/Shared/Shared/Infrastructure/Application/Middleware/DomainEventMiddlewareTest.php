@@ -41,6 +41,24 @@ final class DomainEventMiddlewareTest extends TestCase
         $this->assertSame(expected: ['log', 'flushChanges', 'subscriber'], actual: $this->trace->steps);
     }
 
+    public function testAFailingSubscriberLeavesTheTransactionUncommitted(): void
+    {
+        $event = new DomainEventMiddlewareTestEvent(aggregateId: 'aggregate-1', occurredOn: new \DateTime());
+        $this->registerAggregate(event: $event);
+
+        $middleware = $this->middleware(subscribers: [
+            $event->getName() => [static fn (DomainEvent $notified): never => throw new \RuntimeException(message: 'subscriber failed')],
+        ]);
+
+        $this->expectException(exception: \RuntimeException::class);
+
+        try {
+            $middleware->handle(envelope: new Envelope(message: new \stdClass()), stack: $this->stack());
+        } finally {
+            $this->assertSame(expected: ['log', 'flushChanges'], actual: $this->trace->steps);
+        }
+    }
+
     public function testItDoesNotFlushWhenTheHandlerRecordedNoEvents(): void
     {
         $middleware = $this->middleware(subscribers: []);
