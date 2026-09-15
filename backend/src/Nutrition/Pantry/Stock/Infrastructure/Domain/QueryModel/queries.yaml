@@ -2,4 +2,4 @@ services:
   Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery:
     class: Nutrition\Pantry\Stock\Infrastructure\Domain\QueryModel\Doctrine\DoctrineUpdateArticleStockNeedleDataQuery
     arguments:
-      $connection: '@doctrine.dbal.reader_tenant_connection'
+      $connection: '@doctrine.dbal.writer_tenant_connection'

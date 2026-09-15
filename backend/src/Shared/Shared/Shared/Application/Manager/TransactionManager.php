@@ -8,6 +8,8 @@ interface TransactionManager
 
     public function beginTransaction(): void;
 
+    public function flushChanges(): void;
+
     public function flush(): void;
 
     public function rollback(): void;

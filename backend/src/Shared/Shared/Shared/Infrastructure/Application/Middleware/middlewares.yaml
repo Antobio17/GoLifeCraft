@@ -18,6 +18,7 @@ services:
     arguments:
       $domainEventCollector: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $domainEventLogRepository: '@Shared\Shared\DomainEventLog\Domain\Model\DomainEventLogRepository'
+      $transactionManager: '@Shared\Shared\Shared\Application\Manager\TransactionManager'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
       $tenantContext: '@Shared\Tenant\Tenant\Domain\Service\TenantContext'
       $subscribers: []
