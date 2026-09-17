@@ -7,6 +7,18 @@
     <field name="exerciseId" type="string" column="exercise_id" length="36"/>
     <field name="position" type="integer" column="position"/>
     <field name="note" type="text" column="note" nullable="true"/>
+    <field name="progressionMode" type="string" column="progression_mode" length="20">
+      <options>
+        <option name="default">none</option>
+      </options>
+    </field>
+    <field name="repTargets" type="json" column="rep_targets"/>
+    <field name="repTolerance" type="integer" column="rep_tolerance">
+      <options>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="incrementKg" type="float" column="increment_kg" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

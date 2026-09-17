@@ -10,6 +10,11 @@
         <option name="default">180</option>
       </options>
     </field>
+    <field name="progressionEnabled" type="boolean" column="progression_enabled">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

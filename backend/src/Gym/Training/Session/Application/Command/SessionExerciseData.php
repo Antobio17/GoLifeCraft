@@ -12,6 +12,7 @@ final readonly class SessionExerciseData
         public int $position,
         public array $sets,
         public ?string $note = null,
+        public ProgressionData $progression = new ProgressionData(),
     ) {
     }
 
@@ -22,6 +23,7 @@ final readonly class SessionExerciseData
             position: (int) ($rawExercise['position'] ?? $position),
             note: self::nullableString(value: $rawExercise['note'] ?? null),
             sets: ExerciseSetData::listFromArray(rawSets: $rawExercise['sets'] ?? []),
+            progression: ProgressionData::fromArray(rawProgression: $rawExercise['progression'] ?? null),
         );
     }
 

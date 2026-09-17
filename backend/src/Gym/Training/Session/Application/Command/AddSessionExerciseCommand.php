@@ -15,6 +15,7 @@ final readonly class AddSessionExerciseCommand implements Command
         public string $exerciseId,
         public array $sets,
         public ?string $note,
+        public ProgressionData $progression,
         public string $addedByUserId,
     ) {
     }

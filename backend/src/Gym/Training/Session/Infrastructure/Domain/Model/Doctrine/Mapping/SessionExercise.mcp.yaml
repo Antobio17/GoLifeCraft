@@ -19,6 +19,25 @@ fields:
     type: int
     min: 1
     sortable: true
+  progressionMode:
+    writable: true
+    enum: [none, block, cascade]
+    filterable: true
+    description: >-
+      How the weight progresses once the rep targets are met. `block` raises every effective
+      set at once, `cascade` raises one set per workout, `none` leaves the exercise alone.
+  repTolerance:
+    writable: true
+    type: int
+    min: 0
+    description: >-
+      Reps below the target that a set may lose and still count as held. The floor of a set
+      is its rep target minus this tolerance.
+  incrementKg:
+    writable: true
+    type: float
+    min: 0
+    description: Weight step added when the exercise progresses, in kilograms.
 
 relations: {}
 

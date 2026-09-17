@@ -14,6 +14,7 @@ final readonly class UpdateSessionExerciseCommand implements Command
         public string $sessionExerciseId,
         public array $sets,
         public ?string $note,
+        public ProgressionData $progression,
         public string $updatedByUserId,
     ) {
     }

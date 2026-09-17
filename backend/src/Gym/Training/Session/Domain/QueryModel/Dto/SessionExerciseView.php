@@ -16,6 +16,7 @@ final readonly class SessionExerciseView
         public int $position,
         public ?string $note,
         public array $sets,
+        public ProgressionView $progression,
     ) {
     }
 }

@@ -7,18 +7,31 @@ import {
 } from "../../domain/models/session-detail.model";
 import { CreateSessionRequest } from "../../domain/models/session-request.model";
 import { SessionExerciseDiff } from "../../domain/models/session-exercise-diff.model";
+import { Progression } from "../../domain/models/progression.model";
+import { ProgressionMode } from "../../domain/models/progression-mode.model";
 import { SetKind } from "../../domain/models/set-kind.model";
 
 @Injectable({ providedIn: "root" })
 export class SessionDraftService {
+  private readonly defaultRepTolerance = 2;
+
   clone(list: SessionExerciseView[]): SessionExerciseView[] {
     return list.map((exercise) => ({
       ...exercise,
       sets: exercise.sets.map((set) => ({ ...set })),
+      progression: this.cloneProgression(exercise.progression),
     }));
   }
 
-  fromActive(list: ActiveExercise[]): SessionExerciseView[] {
+  /**
+   * El entreno no lleva configuración de progresión, así que se recupera del
+   * ejercicio de plantilla que la tenía. Es el espejo de lo que hace el backend
+   * al sincronizar.
+   */
+  fromActive(
+    list: ActiveExercise[],
+    template: SessionExerciseView[] = [],
+  ): SessionExerciseView[] {
     return list.map((exercise, index) => ({
       id: this.uid("x"),
       exerciseId: exercise.exerciseId,
@@ -34,6 +47,7 @@ export class SessionDraftService {
         weight: set.weight,
         kind: set.kind,
       })),
+      progression: this.progressionOf(template, exercise.exerciseId),
     }));
   }
 
@@ -59,6 +73,7 @@ export class SessionDraftService {
           kind: SetKind.Effective,
         },
       ],
+      progression: this.noProgression(),
     };
     return [...list, added];
   }
@@ -177,16 +192,30 @@ export class SessionDraftService {
     };
   }
 
+  setProgression(
+    list: SessionExerciseView[],
+    exerciseId: string,
+    progression: Progression,
+  ): SessionExerciseView[] {
+    return list.map((exercise) =>
+      exercise.id !== exerciseId
+        ? exercise
+        : { ...exercise, progression: this.cloneProgression(progression) },
+    );
+  }
+
   toRequest(
     name: string,
     estimatedDurationMinutes: number,
     restSeconds: number,
+    progressionEnabled: boolean,
     list: SessionExerciseView[],
   ): CreateSessionRequest {
     return {
       name,
       estimatedDurationMinutes,
       restSeconds,
+      progressionEnabled,
       exercises: list.map((exercise, exerciseIndex) => ({
         exerciseId: exercise.exerciseId,
         position: exerciseIndex + 1,
@@ -197,6 +226,7 @@ export class SessionDraftService {
           weight: set.weight,
           kind: set.kind,
         })),
+        progression: this.cloneProgression(exercise.progression),
       })),
     };
   }
@@ -215,6 +245,34 @@ export class SessionDraftService {
 
   private oppositeKind(kind: SetKind): SetKind {
     return kind === SetKind.Warmup ? SetKind.Effective : SetKind.Warmup;
+  }
+
+  private noProgression(): Progression {
+    return {
+      mode: ProgressionMode.None,
+      repTargets: [],
+      repTolerance: this.defaultRepTolerance,
+      incrementKg: null,
+    };
+  }
+
+  private cloneProgression(progression: Progression): Progression {
+    return { ...progression, repTargets: [...progression.repTargets] };
+  }
+
+  private progressionOf(
+    template: SessionExerciseView[],
+    exerciseId: string | null,
+  ): Progression {
+    const match = template.find(
+      (exercise) => exerciseId !== null && exercise.exerciseId === exerciseId,
+    );
+
+    if (!match) {
+      return this.noProgression();
+    }
+
+    return this.cloneProgression(match.progression);
   }
 
   private toNullableText(note: string): string | null {

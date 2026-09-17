@@ -22,6 +22,7 @@ import { DurationChoiceOption } from "@shared/design-system/duration-choice/doma
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import { PreferenceToggleComponent } from "@shared/design-system/preference-toggle/infrastructure/components/preference-toggle.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { CreateSessionService } from "../../application/services/create-session.service";
 import { UpdateSessionDetailsService } from "../../application/services/update-session-details.service";
@@ -42,6 +43,7 @@ import { GetSessionResponse } from "../../domain/models/get-session-response.mod
     StackComponent,
     TextInputComponent,
     ButtonComponent,
+    PreferenceToggleComponent,
   ],
 })
 export class SessionFormComponent implements OnInit {
@@ -82,6 +84,10 @@ export class SessionFormComponent implements OnInit {
   restCustomAriaLabel = computed(() =>
     this.t("createSession.field.restCustomAria"),
   );
+  progressionLabel = computed(() => this.t("createSession.field.progression"));
+  progressionHint = computed(() =>
+    this.t("createSession.field.progressionHint"),
+  );
 
   form: FormGroup;
   loading = signal(true);
@@ -93,6 +99,7 @@ export class SessionFormComponent implements OnInit {
       name: ["", [Validators.required, Validators.minLength(2)]],
       estimatedDurationMinutes: [55, [Validators.required]],
       restSeconds: [this.DEFAULT_REST_SECONDS, [Validators.required]],
+      progressionEnabled: [true],
     });
   }
 
@@ -124,6 +131,7 @@ export class SessionFormComponent implements OnInit {
               name: attributes.name,
               estimatedDurationMinutes: attributes.estimatedDurationMinutes,
               restSeconds: attributes.restSeconds,
+              progressionEnabled: attributes.progressionEnabled,
             });
             this.loading.set(false);
           },
@@ -149,18 +157,21 @@ export class SessionFormComponent implements OnInit {
       this.form.value.estimatedDurationMinutes ?? 0;
     const restSeconds =
       this.form.value.restSeconds ?? this.DEFAULT_REST_SECONDS;
+    const progressionEnabled = this.form.value.progressionEnabled ?? true;
 
     const request$ = this.isEdit
       ? this.updateSessionDetailsService.updateSessionDetails(this.id(), {
           name,
           estimatedDurationMinutes,
           restSeconds,
+          progressionEnabled,
         })
       : this.createSessionService.createSession(
           this.sessionDraft.toRequest(
             name,
             estimatedDurationMinutes,
             restSeconds,
+            progressionEnabled,
             [],
           ),
         );
@@ -180,6 +191,12 @@ export class SessionFormComponent implements OnInit {
       return;
     }
     this.router.navigate(["/gym/sessions"]);
+  }
+
+  toggleProgressionEnabled(): void {
+    this.form.patchValue({
+      progressionEnabled: !this.form.value.progressionEnabled,
+    });
   }
 
   cancel(): void {

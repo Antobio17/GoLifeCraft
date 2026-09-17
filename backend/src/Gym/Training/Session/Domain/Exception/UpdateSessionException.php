@@ -69,6 +69,60 @@ final class UpdateSessionException extends BaseException
         );
     }
 
+    public static function invalidProgressionMode(string $mode): self
+    {
+        return new static(
+            title: 'The progression mode is not supported.',
+            keyTranslation: 'session.progression.mode.invalid',
+            details: ['mode' => $mode]
+        );
+    }
+
+    public static function repToleranceMustNotBeNegative(): self
+    {
+        return new static(
+            title: 'The rep tolerance must not be negative.',
+            keyTranslation: 'session.progression.tolerance.must.not.be.negative',
+            details: []
+        );
+    }
+
+    public static function incrementMustBePositive(): self
+    {
+        return new static(
+            title: 'The weight increment must be greater than zero.',
+            keyTranslation: 'session.progression.increment.must.be.positive',
+            details: []
+        );
+    }
+
+    public static function repTargetMustBePositive(int $repTarget): self
+    {
+        return new static(
+            title: 'Every rep target must be greater than zero.',
+            keyTranslation: 'session.progression.rep.target.must.be.positive',
+            details: ['repTarget' => $repTarget]
+        );
+    }
+
+    public static function progressionNeedsRepTargets(): self
+    {
+        return new static(
+            title: 'A progressing exercise needs a rep target for each effective set.',
+            keyTranslation: 'session.progression.needs.rep.targets',
+            details: []
+        );
+    }
+
+    public static function progressionNeedsIncrement(): self
+    {
+        return new static(
+            title: 'A progressing exercise needs a weight increment.',
+            keyTranslation: 'session.progression.needs.increment',
+            details: []
+        );
+    }
+
     public static function invalidSetKind(string $kind): self
     {
         return new static(

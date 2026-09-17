@@ -6,6 +6,7 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Gym\Training\Session\Domain\QueryModel\Dto\ExerciseSetView;
 use Gym\Training\Session\Domain\QueryModel\Dto\GetSessionResult;
+use Gym\Training\Session\Domain\QueryModel\Dto\ProgressionView;
 use Gym\Training\Session\Domain\QueryModel\Dto\SessionExerciseView;
 use Gym\Training\Session\Domain\QueryModel\GetSessionNeedleDataQuery;
 
@@ -23,6 +24,7 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
                 's.name',
                 's.estimated_duration_minutes',
                 's.rest_seconds',
+                's.progression_enabled',
                 's.created_at',
                 's.updated_at',
                 's.created_by_user_id',
@@ -46,6 +48,7 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
             name: $row['name'],
             estimatedDurationMinutes: (int) $row['estimated_duration_minutes'],
             restSeconds: (int) $row['rest_seconds'],
+            progressionEnabled: (bool) $row['progression_enabled'],
             exercises: $this->exercises(sessionId: $sessionId),
             createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
@@ -64,7 +67,11 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
                 'e.muscle_groups',
                 'e.type',
                 'se.position',
-                'se.note'
+                'se.note',
+                'se.progression_mode',
+                'se.rep_targets',
+                'se.rep_tolerance',
+                'se.increment_kg'
             )
             ->from(table: 'session_exercise', alias: 'se')
             ->leftJoin('se', 'exercise', 'e', 'e.id = se.exercise_id')
@@ -92,6 +99,12 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
                 position: (int) $row['position'],
                 note: $row['note'],
                 sets: $setsByExercise[$row['id']] ?? [],
+                progression: new ProgressionView(
+                    mode: $row['progression_mode'],
+                    repTargets: json_decode(json: $row['rep_targets'] ?? '[]', associative: true) ?? [],
+                    repTolerance: (int) $row['rep_tolerance'],
+                    incrementKg: null === $row['increment_kg'] ? null : (float) $row['increment_kg'],
+                ),
             );
         }, array: $exerciseRows);
     }

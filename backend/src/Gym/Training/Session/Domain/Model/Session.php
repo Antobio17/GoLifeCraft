@@ -24,6 +24,7 @@ class Session extends GenericAggregate
     public string $name;
     public int $estimatedDurationMinutes;
     public int $restSeconds;
+    public bool $progressionEnabled = true;
 
     /** @var SessionExercise[] */
     public array $exercises = [];
@@ -64,6 +65,7 @@ class Session extends GenericAggregate
             name: $name,
             estimatedDurationMinutes: $estimatedDurationMinutes,
             restSeconds: $restSeconds,
+            progressionEnabled: $session->progressionEnabled,
             exercises: $session->exercisesPayload(),
             createdAt: $now,
             updatedAt: $now,
@@ -84,7 +86,10 @@ class Session extends GenericAggregate
     ): void {
         $now = $dateTimeGenerator->now();
 
-        $this->exercises = $exercises;
+        $this->exercises = self::withAdoptedProgression(
+            exercises: $exercises,
+            previous: $this->exercises,
+        );
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new SessionUpdated(
@@ -93,6 +98,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -132,6 +138,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -153,6 +160,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -165,6 +173,7 @@ class Session extends GenericAggregate
         string $name,
         int $estimatedDurationMinutes,
         int $restSeconds,
+        bool $progressionEnabled,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -181,6 +190,7 @@ class Session extends GenericAggregate
         $this->name = $name;
         $this->estimatedDurationMinutes = $estimatedDurationMinutes;
         $this->restSeconds = $restSeconds;
+        $this->progressionEnabled = $progressionEnabled;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new SessionDetailsUpdated(
@@ -189,6 +199,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -220,6 +231,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -231,15 +243,31 @@ class Session extends GenericAggregate
     /**
      * @param ExerciseSet[] $sets
      */
+    /**
+     * @param int[] $repTargets
+     */
     public function updateExercise(
         string $sessionExerciseId,
         ?string $note,
         array $sets,
+        string $progressionMode,
+        array $repTargets,
+        int $repTolerance,
+        ?float $incrementKg,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
         $sessionExercise = $this->exercise(sessionExerciseId: $sessionExerciseId);
         $now = $dateTimeGenerator->now();
+
+        $sessionExercise->configureProgression(
+            mode: $progressionMode,
+            repTargets: $repTargets,
+            repTolerance: $repTolerance,
+            incrementKg: $incrementKg,
+            updatedByUserId: $updatedByUserId,
+            dateTimeGenerator: $dateTimeGenerator,
+        );
 
         $sessionExercise->replaceSets(
             sets: $sets,
@@ -257,6 +285,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -298,6 +327,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -329,6 +359,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -409,6 +440,8 @@ class Session extends GenericAggregate
             dateTimeGenerator: $dateTimeGenerator,
         );
 
+        $sessionExercise->adoptProgressionFrom(previous: $templateExercise);
+
         $sets = null === $performedExercise ? $templateExercise->sets : $performedExercise->sets;
 
         foreach (array_values($sets) as $index => $set) {
@@ -424,6 +457,30 @@ class Session extends GenericAggregate
         }
 
         return $sessionExercise;
+    }
+
+    /**
+     * @param SessionExercise[] $exercises
+     * @param SessionExercise[] $previous
+     *
+     * @return SessionExercise[]
+     */
+    private static function withAdoptedProgression(array $exercises, array $previous): array
+    {
+        foreach ($exercises as $exercise) {
+            $previousExercise = self::findByExerciseId(
+                exercises: $previous,
+                exerciseId: $exercise->exerciseId,
+            );
+
+            if (null === $previousExercise) {
+                continue;
+            }
+
+            $exercise->adoptProgressionFrom(previous: $previousExercise);
+        }
+
+        return $exercises;
     }
 
     /**
