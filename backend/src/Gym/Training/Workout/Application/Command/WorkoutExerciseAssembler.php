@@ -53,6 +53,7 @@ final readonly class WorkoutExerciseAssembler
                 done: $setData->done,
                 createdByUserId: $userId,
                 dateTimeGenerator: $this->dateTimeGenerator,
+                kind: $setData->kind,
             ));
         }
 

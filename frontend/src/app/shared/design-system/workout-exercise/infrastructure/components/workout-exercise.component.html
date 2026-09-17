@@ -19,13 +19,14 @@
     [doneCol]="true"
   />
 
-  @for (set of sets; track $index; let j = $index) {
+  @for (set of sets; track $index) {
     <div
       class="wset-row"
       [class.wset-row--done]="set.done"
       [class.wset-row--skipped]="!set.done"
+      [class.wset-row--warmup]="set.warmup"
     >
-      <span class="wset-row__num">{{ j + 1 }}</span>
+      <span class="wset-row__num">{{ set.displayLabel }}</span>
       <span class="wset-row__col">{{ set.reps }}</span>
       <span class="wset-row__col">{{ set.weight ?? 0 }}</span>
       <span

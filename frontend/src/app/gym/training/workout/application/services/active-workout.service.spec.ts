@@ -9,6 +9,7 @@ import { WorkoutSessionPort } from "../../domain/ports/workout-session.port";
 import { WorkoutDetail } from "../../domain/models/workout-detail.model";
 import { WorkoutProgressRequest } from "../../domain/models/workout-request.model";
 import { TemplateSyncMode } from "../../domain/models/template-sync-mode.model";
+import { SetKind } from "@gym/training/session/domain/models/set-kind.model";
 import { ActiveExercise, ActiveWorkoutService } from "./active-workout.service";
 
 class StubWorkoutSessionPort extends WorkoutSessionPort {
@@ -99,8 +100,8 @@ describe("ActiveWorkoutService rest timer", () => {
       type: "bilateral",
       note: null,
       sets: [
-        { reps: 10, weight: 40 },
-        { reps: 8, weight: 45 },
+        { reps: 10, weight: 40, kind: SetKind.Warmup },
+        { reps: 8, weight: 45, kind: SetKind.Effective },
       ],
     },
   ];

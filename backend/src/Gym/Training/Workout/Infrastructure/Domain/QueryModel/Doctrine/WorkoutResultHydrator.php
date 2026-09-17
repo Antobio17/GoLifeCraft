@@ -83,7 +83,7 @@ final class WorkoutResultHydrator
     private static function setsByExercise(Connection $connection, array $workoutExerciseIds): array
     {
         $rows = $connection->createQueryBuilder()
-            ->select('ws.id', 'ws.workout_exercise_id', 'ws.position', 'ws.reps', 'ws.weight', 'ws.done')
+            ->select('ws.id', 'ws.workout_exercise_id', 'ws.position', 'ws.reps', 'ws.weight', 'ws.done', 'ws.kind')
             ->from(table: 'workout_set', alias: 'ws')
             ->where('ws.workout_exercise_id IN (:ids)')
             ->setParameter(
@@ -104,6 +104,7 @@ final class WorkoutResultHydrator
                 reps: (int) $row['reps'],
                 weight: null === $row['weight'] ? null : (float) $row['weight'],
                 done: (bool) $row['done'],
+                kind: (string) $row['kind'],
             );
         }
 

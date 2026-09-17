@@ -32,5 +32,12 @@ fields:
     description: >-
       Whether the set was actually completed. Sets left as false in a finished workout are
       the ones the user skipped.
+  kind:
+    writable: true
+    enum: [warmup, effective]
+    filterable: true
+    description: >-
+      Whether the set is a warmup ramp set or an effective working set. Only effective sets
+      count towards volume and drive the weight progression.
 
 relations: {}

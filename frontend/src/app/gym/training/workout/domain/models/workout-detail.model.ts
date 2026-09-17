@@ -1,9 +1,12 @@
+import { SetKind } from "@gym/training/session/domain/models/set-kind.model";
+
 export interface WorkoutSetView {
   id: string;
   position: number;
   reps: number;
   weight: number | null;
   done: boolean;
+  kind: SetKind;
 }
 
 export interface WorkoutExerciseView {

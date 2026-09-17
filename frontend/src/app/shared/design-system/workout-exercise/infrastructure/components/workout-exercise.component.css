@@ -56,6 +56,10 @@
   text-decoration-thickness: 1.5px;
 }
 
+.wset-row--warmup .wset-row__num {
+  color: var(--ds-text-meta);
+}
+
 .wset-row__num {
   width: 2.125rem;
   flex: 0 0 auto;

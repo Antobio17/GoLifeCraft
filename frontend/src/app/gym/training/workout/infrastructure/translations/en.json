@@ -89,7 +89,8 @@
         "repsUp": "Increase reps",
         "repsDown": "Decrease reps",
         "weightUp": "Increase weight",
-        "weightDown": "Decrease weight"
+        "weightDown": "Decrease weight",
+        "toggleKind": "Switch between warmup set and effective set"
       },
       "picker": {
         "title": "Exercise library",

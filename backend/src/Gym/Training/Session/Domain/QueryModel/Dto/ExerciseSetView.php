@@ -9,6 +9,7 @@ final readonly class ExerciseSetView
         public int $position,
         public int $reps,
         public ?float $weight,
+        public string $kind,
     ) {
     }
 }

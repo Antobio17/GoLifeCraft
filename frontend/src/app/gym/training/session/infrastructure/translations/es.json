@@ -159,7 +159,8 @@
       "weightDown": "Restar 2,5 kg",
       "weightUp": "Sumar 2,5 kg",
       "add": "Añadir serie",
-      "remove": "Quitar serie"
+      "remove": "Quitar serie",
+      "toggleKind": "Cambiar entre serie de aproximación y serie efectiva"
     },
     "picker": {
       "title": "Añadir ejercicio",

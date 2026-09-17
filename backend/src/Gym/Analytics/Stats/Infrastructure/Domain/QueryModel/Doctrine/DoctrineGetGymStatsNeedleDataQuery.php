@@ -10,6 +10,7 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
 {
     private const int ACTIVITY_DAYS = 371;
     private const string COMPLETED_STATUS = 'completed';
+    private const string EFFECTIVE_KIND = 'effective';
 
     public function __construct(private Connection $connection)
     {
@@ -27,7 +28,9 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
             ->innerJoin('we', 'training_workout', 'tw', 'tw.id = we.workout_id')
             ->where('tw.status = :status')
             ->andWhere('ws.done = 1')
+            ->andWhere('ws.kind = :kind')
             ->setParameter('status', self::COMPLETED_STATUS)
+            ->setParameter('kind', self::EFFECTIVE_KIND)
             ->executeQuery()
             ->fetchAssociative();
 
@@ -123,10 +126,11 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
             )
             ->from(table: 'training_workout', alias: 'tw')
             ->innerJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')
-            ->innerJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
+            ->innerJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1 AND ws.kind = :kind')
             ->where('tw.status = :status')
             ->andWhere('tw.finished_at >= :from')
             ->setParameter('status', self::COMPLETED_STATUS)
+            ->setParameter('kind', self::EFFECTIVE_KIND)
             ->setParameter('from', $from)
             ->groupBy('day')
             ->executeQuery()
@@ -153,9 +157,10 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
             )
             ->from(table: 'training_workout', alias: 'tw')
             ->leftJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')
-            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
+            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1 AND ws.kind = :kind')
             ->where('tw.status = :status')
             ->setParameter('status', self::COMPLETED_STATUS)
+            ->setParameter('kind', self::EFFECTIVE_KIND)
             ->groupBy('tw.id')
             ->addGroupBy('tw.session_name')
             ->addGroupBy('tw.finished_at')
@@ -184,9 +189,10 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
             ->from(table: 'workout_exercise', alias: 'we')
             ->innerJoin('we', 'training_workout', 'tw', 'tw.id = we.workout_id')
             ->leftJoin('we', 'exercise', 'e', 'e.id = we.exercise_id')
-            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
+            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1 AND ws.kind = :kind')
             ->where('tw.status = :status')
             ->setParameter('status', self::COMPLETED_STATUS)
+            ->setParameter('kind', self::EFFECTIVE_KIND)
             ->groupBy('we.id')
             ->addGroupBy('e.muscle_groups')
             ->executeQuery()

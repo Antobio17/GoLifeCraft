@@ -10,6 +10,7 @@ use Gym\Analytics\Stats\Domain\QueryModel\GetExerciseTopSetsNeedleDataQuery;
 final readonly class DoctrineGetExerciseTopSetsNeedleDataQuery implements GetExerciseTopSetsNeedleDataQuery
 {
     private const string COMPLETED_STATUS = 'completed';
+    private const string EFFECTIVE_KIND = 'effective';
 
     public function __construct(private Connection $connection)
     {
@@ -40,8 +41,10 @@ final readonly class DoctrineGetExerciseTopSetsNeedleDataQuery implements GetExe
             ->andWhere('tw.status = :status')
             ->andWhere('tw.finished_at IS NOT NULL')
             ->andWhere('ws.done = 1')
+            ->andWhere('ws.kind = :kind')
             ->setParameter(key: 'exerciseIds', value: $exerciseIds, type: ArrayParameterType::STRING)
             ->setParameter(key: 'status', value: self::COMPLETED_STATUS)
+            ->setParameter(key: 'kind', value: self::EFFECTIVE_KIND)
             ->orderBy(sort: 'we.exercise_id', order: 'ASC')
             ->addOrderBy(sort: 'tw.finished_at', order: 'DESC')
             ->addOrderBy(sort: 'weight', order: 'DESC')

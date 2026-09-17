@@ -9,6 +9,7 @@ use Gym\Analytics\Stats\Domain\QueryModel\GetSessionStatsNeedleDataQuery;
 final readonly class DoctrineGetSessionStatsNeedleDataQuery implements GetSessionStatsNeedleDataQuery
 {
     private const string COMPLETED_STATUS = 'completed';
+    private const string EFFECTIVE_KIND = 'effective';
 
     public function __construct(private Connection $connection)
     {
@@ -26,7 +27,7 @@ final readonly class DoctrineGetSessionStatsNeedleDataQuery implements GetSessio
             )
             ->from(table: 'training_workout', alias: 'tw')
             ->leftJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')
-            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1')
+            ->leftJoin('we', 'workout_set', 'ws', 'ws.workout_exercise_id = we.id AND ws.done = 1 AND ws.kind = :kind')
             ->where('tw.session_id = :sessionId')
             ->andWhere('tw.status = :status')
             ->andWhere('tw.finished_at IS NOT NULL')
@@ -35,6 +36,7 @@ final readonly class DoctrineGetSessionStatsNeedleDataQuery implements GetSessio
             ->addGroupBy('tw.duration_seconds')
             ->setParameter('sessionId', $sessionId)
             ->setParameter('status', self::COMPLETED_STATUS)
+            ->setParameter('kind', self::EFFECTIVE_KIND)
             ->orderBy(sort: 'tw.finished_at', order: 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();

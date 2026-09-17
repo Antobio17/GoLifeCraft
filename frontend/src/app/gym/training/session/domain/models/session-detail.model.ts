@@ -1,8 +1,11 @@
+import { SetKind } from "./set-kind.model";
+
 export interface ExerciseSetView {
   id: string;
   position: number;
   reps: number;
   weight: number | null;
+  kind: SetKind;
 }
 
 export interface SessionExerciseView {

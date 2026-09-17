@@ -20,6 +20,10 @@
   background: color-mix(in srgb, var(--ds-accent) 16%, var(--ds-bg));
 }
 
+.set-row--warmup {
+  background: color-mix(in srgb, var(--ds-text-meta) 10%, var(--ds-bg));
+}
+
 .set-row__num {
   width: 2.125rem;
   flex: 0 0 auto;
@@ -28,6 +32,23 @@
   font-weight: 800;
   font-size: var(--ds-text-base);
   color: var(--ds-primary);
+}
+
+.set-row__num--toggle {
+  padding: var(--ds-space-1) 0;
+  border: 1.5px solid transparent;
+  border-radius: var(--ds-radius-sm);
+  background: transparent;
+  cursor: pointer;
+  transition: var(--ds-dur-2) var(--ds-ease-out);
+}
+
+.set-row__num--toggle:hover {
+  border-color: var(--ds-border-strong);
+}
+
+.set-row--warmup .set-row__num {
+  color: var(--ds-text-meta);
 }
 
 .set-row ds-number-input {

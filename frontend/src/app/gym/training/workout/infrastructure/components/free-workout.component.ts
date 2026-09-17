@@ -52,6 +52,7 @@ import { ExerciseTopSet } from "@gym/library/exercise/domain/models/exercise-top
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
 import { SessionDraftService } from "@gym/training/session/application/services/session-draft.service";
+import { SetNumberingService } from "@gym/training/session/application/services/set-numbering.service";
 import { SessionExerciseView } from "@gym/training/session/domain/models/session-detail.model";
 import { CreateSessionService } from "@gym/training/session/application/services/create-session.service";
 import {
@@ -108,6 +109,7 @@ export class FreeWorkoutComponent implements OnInit {
   private topSetFormat = inject(ExerciseTopSetFormatService);
   private createSessionService = inject(CreateSessionService);
   private sessionDraft = inject(SessionDraftService);
+  private setNumbering = inject(SetNumberingService);
   private floatingToastService = inject(FloatingToastService);
   protected activeWorkout = inject(ActiveWorkoutService);
   protected sticky = inject(StickyCollapseService);
@@ -141,6 +143,7 @@ export class FreeWorkoutComponent implements OnInit {
 
       return {
         ...exercise,
+        sets: this.setNumbering.rows(exercise.sets),
         muscleLabel: exercise.muscleGroups.join(" · "),
         modeLabel: this.modeLabel(exercise.type),
         topSetValue: this.topSetFormat.valueLabel(topSet),
@@ -340,6 +343,7 @@ export class FreeWorkoutComponent implements OnInit {
       sets: exercise.sets.map((set) => ({
         reps: set.reps,
         weight: set.weight,
+        kind: set.kind,
       })),
     }));
   }
@@ -476,6 +480,13 @@ export class FreeWorkoutComponent implements OnInit {
   setWeight(exerciseId: string, setId: string, value: number): void {
     this.exercises.update((list) =>
       this.sessionDraft.setWeight(list, exerciseId, setId, value),
+    );
+    this.syncProgress();
+  }
+
+  toggleSetKind(exerciseId: string, setId: string): void {
+    this.exercises.update((list) =>
+      this.sessionDraft.toggleSetKind(list, exerciseId, setId),
     );
     this.syncProgress();
   }

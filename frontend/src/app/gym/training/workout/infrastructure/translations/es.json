@@ -89,7 +89,8 @@
         "repsUp": "Subir repeticiones",
         "repsDown": "Bajar repeticiones",
         "weightUp": "Subir peso",
-        "weightDown": "Bajar peso"
+        "weightDown": "Bajar peso",
+        "toggleKind": "Cambiar entre serie de aproximación y serie efectiva"
       },
       "picker": {
         "title": "Biblioteca de ejercicios",

@@ -16,11 +16,13 @@ import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/
   styleUrls: ["./set-row.component.css"],
 })
 export class SetRowComponent {
-  @Input() displayIndex = 0;
+  @Input() displayLabel = "";
   @Input() reps = 0;
   @Input() weight = 0;
   @Input() done = false;
   @Input() showCheck = false;
+  @Input() warmup = false;
+  @Input() showKindToggle = false;
 
   @Input() repsAriaLabel = "";
   @Input() weightAriaLabel = "";
@@ -30,9 +32,11 @@ export class SetRowComponent {
   @Input() weightDownLabel = "";
   @Input() removeLabel = "";
   @Input() markDoneLabel = "";
+  @Input() toggleKindLabel = "";
 
   @Output() repsChange = new EventEmitter<number>();
   @Output() weightChange = new EventEmitter<number>();
   @Output() toggleDone = new EventEmitter<void>();
+  @Output() toggleKind = new EventEmitter<void>();
   @Output() remove = new EventEmitter<void>();
 }

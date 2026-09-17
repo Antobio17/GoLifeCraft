@@ -1,3 +1,4 @@
+import { SetKind } from "@gym/training/session/domain/models/set-kind.model";
 import { TemplateSyncMode } from "./template-sync-mode.model";
 
 export interface WorkoutSetRequest {
@@ -5,6 +6,7 @@ export interface WorkoutSetRequest {
   reps: number;
   weight: number | null;
   done: boolean;
+  kind: SetKind;
 }
 
 export interface WorkoutExerciseRequest {

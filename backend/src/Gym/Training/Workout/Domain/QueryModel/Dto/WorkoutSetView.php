@@ -10,6 +10,7 @@ final readonly class WorkoutSetView
         public int $reps,
         public ?float $weight,
         public bool $done,
+        public string $kind,
     ) {
     }
 }

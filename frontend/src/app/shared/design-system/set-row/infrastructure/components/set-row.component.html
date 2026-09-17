@@ -9,6 +9,7 @@
     class="set-row"
     [class.set-row--slid]="swipe.slid"
     [class.set-row--done]="done"
+    [class.set-row--warmup]="warmup"
   >
     @if (showCheck) {
       <button
@@ -23,7 +24,19 @@
         }
       </button>
     }
-    <span class="set-row__num">{{ displayIndex }}</span>
+    @if (showKindToggle) {
+      <button
+        type="button"
+        class="set-row__num set-row__num--toggle"
+        [attr.aria-label]="toggleKindLabel"
+        [attr.aria-pressed]="warmup"
+        (click)="toggleKind.emit()"
+      >
+        {{ displayLabel }}
+      </button>
+    } @else {
+      <span class="set-row__num">{{ displayLabel }}</span>
+    }
     <ds-number-input
       variant="boxed"
       [stepper]="true"

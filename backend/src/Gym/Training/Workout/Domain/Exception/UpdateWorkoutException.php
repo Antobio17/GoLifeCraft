@@ -23,4 +23,13 @@ final class UpdateWorkoutException extends BaseException
             details: ['workoutId' => $workoutId]
         );
     }
+
+    public static function invalidSetKind(string $kind): self
+    {
+        return new static(
+            title: 'The kind of the set is not supported.',
+            keyTranslation: 'workout.set.kind.invalid',
+            details: ['kind' => $kind]
+        );
+    }
 }

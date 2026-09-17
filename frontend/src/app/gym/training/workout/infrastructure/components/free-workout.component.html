@@ -154,7 +154,11 @@
 
               @for (set of exercise.sets; track set.id; let j = $index) {
                 <ds-set-row
-                  [displayIndex]="j + 1"
+                  data-testid="free-workout-set-row"
+                  [displayLabel]="set.displayLabel"
+                  [warmup]="set.warmup"
+                  [showKindToggle]="true"
+                  [toggleKindLabel]="'workout.free.set.toggleKind' | t"
                   [reps]="set.reps"
                   [weight]="set.weight ?? 0"
                   [done]="isSetDone(i, j)"
@@ -170,6 +174,7 @@
                   (repsChange)="setReps(exercise.id, set.id, $event)"
                   (weightChange)="setWeight(exercise.id, set.id, $event)"
                   (toggleDone)="toggleSetDone(i, j)"
+                  (toggleKind)="toggleSetKind(exercise.id, set.id)"
                   (remove)="removeSet(exercise.id, set.id)"
                 />
               }

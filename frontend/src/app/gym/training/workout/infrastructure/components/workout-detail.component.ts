@@ -18,6 +18,7 @@ import {
   WorkoutExerciseView,
 } from "../../domain/models/workout-detail.model";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
+import { SetNumberingService } from "@gym/training/session/application/services/set-numbering.service";
 
 @Component({
   selector: "app-workout-detail",
@@ -38,6 +39,7 @@ export class WorkoutDetailComponent {
   private translationService = inject(TranslationService);
   private backNavigation = inject(BackNavigationService);
   private getWorkoutService = inject(GetWorkoutService);
+  private setNumbering = inject(SetNumberingService);
 
   private readonly MODULE_PATH = "gym/training/workout";
 
@@ -65,7 +67,7 @@ export class WorkoutDetailComponent {
         muscleLabel: this.muscleText(exercise),
         ratio: this.exerciseRatio(exercise),
         note: exercise.note,
-        sets: exercise.sets,
+        sets: this.setNumbering.rows(exercise.sets),
       })),
     };
   });
