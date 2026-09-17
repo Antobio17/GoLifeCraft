@@ -7,6 +7,7 @@ import {
 } from "../../../segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
+import { HeadingComponent } from "../../../heading/infrastructure/components/heading.component";
 
 export interface ProgressionTargetRow {
   index: number;
@@ -22,6 +23,7 @@ export interface ProgressionTargetRow {
     SegmentedToggleComponent,
     TextComponent,
     StackComponent,
+    HeadingComponent,
   ],
   templateUrl: "./progression-editor.component.html",
   styleUrls: ["./progression-editor.component.css"],
