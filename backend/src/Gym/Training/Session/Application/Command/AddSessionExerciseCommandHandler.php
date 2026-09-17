@@ -39,6 +39,15 @@ final readonly class AddSessionExerciseCommandHandler
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 
+        $sessionExercise->configureProgression(
+            mode: $command->progression->mode,
+            repTargets: $command->progression->repTargets,
+            repTolerance: $command->progression->repTolerance,
+            incrementKg: $command->progression->incrementKg,
+            updatedByUserId: $command->addedByUserId,
+            dateTimeGenerator: $this->dateTimeGenerator,
+        );
+
         foreach ($this->exerciseSetAssembler->assemble(
             sessionExerciseId: $sessionExercise->id,
             sets: $command->sets,

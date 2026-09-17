@@ -40,6 +40,15 @@
         />
       </ds-field>
 
+      <ds-preference-toggle
+        data-testid="session-progression-enabled"
+        icon="📈"
+        [title]="progressionLabel()"
+        [subtitle]="progressionHint()"
+        [checked]="!!form.value.progressionEnabled"
+        (toggled)="toggleProgressionEnabled()"
+      />
+
       <ds-button
         type="submit"
         variant="soft"

@@ -75,6 +75,13 @@ import { SaveSessionExerciseService } from "../../application/services/save-sess
 import { DeleteSessionService } from "../../application/services/delete-session.service";
 import { SessionDraftService } from "../../application/services/session-draft.service";
 import { SetNumberingService } from "../../application/services/set-numbering.service";
+import { ProgressionEditorService } from "../../application/services/progression-editor.service";
+import { Progression } from "../../domain/models/progression.model";
+import { ProgressionMode } from "../../domain/models/progression-mode.model";
+import {
+  ProgressionEditorComponent,
+  ProgressionTargetRow,
+} from "@shared/design-system/progression-editor/infrastructure/components/progression-editor.component";
 import { SessionProgressService } from "../../application/services/session-progress.service";
 import { SessionProgressMetric } from "../../domain/models/session-progress-metric.model";
 import { SessionProgressRange } from "../../domain/models/session-progress-range.model";
@@ -86,7 +93,10 @@ import { ExerciseTopSet } from "@gym/library/exercise/domain/models/exercise-top
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
 import { GetSessionResponse } from "../../domain/models/get-session-response.model";
-import { SessionExerciseView } from "../../domain/models/session-detail.model";
+import {
+  ExerciseSetView,
+  SessionExerciseView,
+} from "../../domain/models/session-detail.model";
 import {
   ActiveExercise,
   ActiveWorkoutService,
@@ -125,6 +135,7 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ActiveWorkoutBannerComponent,
     SetHeaderComponent,
     SetRowComponent,
+    ProgressionEditorComponent,
     TopSetRowComponent,
     AddTileComponent,
     EmptyStateComponent,
@@ -154,6 +165,7 @@ export class SessionDetailComponent implements OnInit {
   private deleteSessionService = inject(DeleteSessionService);
   private sessionDraft = inject(SessionDraftService);
   private setNumbering = inject(SetNumberingService);
+  private progressionEditor = inject(ProgressionEditorService);
   private sessionProgress = inject(SessionProgressService);
   private getExercisesService = inject(GetExercisesService);
   private getExerciseTopSetsService = inject(GetExerciseTopSetsService);
@@ -214,6 +226,12 @@ export class SessionDetailComponent implements OnInit {
       return {
         ...exercise,
         sets: this.setNumbering.rows(exercise.sets),
+        progressionTargets: this.progressionEditor.targetRows(
+          exercise.sets,
+          exercise.progression,
+        ),
+        progressionConfigured:
+          exercise.progression.mode !== ProgressionMode.None,
         muscleLabel: this.muscleText(exercise),
         modeLabel: this.modeLabel(exercise.type),
         topSetValue: this.topSetFormat.valueLabel(topSet),
@@ -455,6 +473,28 @@ export class SessionDetailComponent implements OnInit {
     this.requestedTopSets.clear();
   }
 
+  private changeProgression(
+    exerciseId: string,
+    change: (sets: ExerciseSetView[], progression: Progression) => Progression,
+  ): void {
+    const exercise = this.exercises().find(
+      (candidate) => candidate.id === exerciseId,
+    );
+
+    if (!exercise) {
+      return;
+    }
+
+    this.loadedExercises.update((list) =>
+      this.sessionDraft.setProgression(
+        list,
+        exerciseId,
+        change(exercise.sets, exercise.progression),
+      ),
+    );
+    this.afterEdit(exerciseId);
+  }
+
   private toActive(): ActiveExercise[] {
     return this.exercises().map((exercise) => ({
       exerciseId: exercise.exerciseId,
@@ -507,7 +547,10 @@ export class SessionDetailComponent implements OnInit {
   private seedExercises(templateExercises: SessionExerciseView[]): void {
     if (this.isActiveHere) {
       this.loadedExercises.set(
-        this.sessionDraft.fromActive(this.activeWorkout.liveExercises()),
+        this.sessionDraft.fromActive(
+          this.activeWorkout.liveExercises(),
+          templateExercises,
+        ),
       );
       return;
     }
@@ -749,6 +792,75 @@ export class SessionDetailComponent implements OnInit {
     this.afterEdit(exerciseId);
   }
 
+  progressionModeOptions = computed<SegmentedOption[]>(() => [
+    {
+      value: ProgressionMode.None,
+      label: this.t("getSession.progression.modeNone"),
+    },
+    {
+      value: ProgressionMode.Block,
+      label: this.t("getSession.progression.modeBlock"),
+    },
+    {
+      value: ProgressionMode.Cascade,
+      label: this.t("getSession.progression.modeCascade"),
+    },
+  ]);
+
+  progressionLabel = computed(() => this.t("getSession.progression.label"));
+  progressionModeHint = computed(() =>
+    this.t("getSession.progression.modeHint"),
+  );
+  progressionTargetsLabel = computed(() =>
+    this.t("getSession.progression.targets"),
+  );
+  progressionTargetsHint = computed(() =>
+    this.t("getSession.progression.targetsHint"),
+  );
+  progressionToleranceLabel = computed(() =>
+    this.t("getSession.progression.tolerance"),
+  );
+  progressionToleranceHint = computed(() =>
+    this.t("getSession.progression.toleranceHint"),
+  );
+  progressionIncrementLabel = computed(() =>
+    this.t("getSession.progression.increment"),
+  );
+  progressionIncrementHint = computed(() =>
+    this.t("getSession.progression.incrementHint"),
+  );
+  progressionNoTargets = computed(() =>
+    this.t("getSession.progression.noTargets"),
+  );
+
+  setProgressionMode(exerciseId: string, mode: string): void {
+    this.changeProgression(exerciseId, (sets, progression) =>
+      this.progressionEditor.withMode(
+        sets,
+        progression,
+        mode as ProgressionMode,
+      ),
+    );
+  }
+
+  setProgressionTarget(exerciseId: string, row: ProgressionTargetRow): void {
+    this.changeProgression(exerciseId, (sets, progression) =>
+      this.progressionEditor.withTarget(sets, progression, row.index, row.reps),
+    );
+  }
+
+  setProgressionTolerance(exerciseId: string, tolerance: number): void {
+    this.changeProgression(exerciseId, (_sets, progression) =>
+      this.progressionEditor.withTolerance(progression, tolerance),
+    );
+  }
+
+  setProgressionIncrement(exerciseId: string, increment: number): void {
+    this.changeProgression(exerciseId, (_sets, progression) =>
+      this.progressionEditor.withIncrement(progression, increment),
+    );
+  }
+
   toggleSetKind(exerciseId: string, setId: string): void {
     this.loadedExercises.update((list) =>
       this.sessionDraft.toggleSetKind(list, exerciseId, setId),
@@ -907,6 +1019,7 @@ export class SessionDetailComponent implements OnInit {
         weight: set.weight,
         kind: set.kind,
       })),
+      progression: exercise.progression,
     };
 
     if (this.persistedExercises.has(sessionExerciseId)) {

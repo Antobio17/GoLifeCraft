@@ -37,6 +37,7 @@ final readonly class UpdateSessionDetailsCommandHandler
             name: $command->name,
             estimatedDurationMinutes: $command->estimatedDurationMinutes,
             restSeconds: $command->restSeconds,
+            progressionEnabled: $command->progressionEnabled,
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

@@ -11,6 +11,7 @@ use Gym\Training\Session\Application\Command\SyncSessionExercisesCommand;
 use Gym\Training\Session\Application\Command\SyncSessionExercisesCommandHandler;
 use Gym\Training\Session\Domain\Model\ExerciseSet;
 use Gym\Training\Session\Domain\Model\Session;
+use Gym\Training\Session\Domain\Model\SessionExercise;
 use Gym\Training\Session\Infrastructure\Domain\Model\InMemory\InMemorySessionRepository;
 use Gym\Training\Session\Infrastructure\Domain\QueryModel\InMemory\InMemoryCreateSessionNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
@@ -91,6 +92,80 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'exercise-2', actual: $session->exercises[0]->exerciseId);
         $this->assertEquals(expected: 'No bloquear codos', actual: $session->exercises[0]->note);
         $this->assertCount(expectedCount: 2, haystack: $session->exercises[0]->sets);
+    }
+
+    public function testItKeepsTheProgressionConfigurationWhenTheWorkoutReplacesTheExercises(): void
+    {
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $session->exercises[0]->configureProgression(
+            mode: SessionExercise::PROGRESSION_CASCADE,
+            repTargets: [12, 11, 10],
+            repTolerance: 2,
+            incrementKg: 2.5,
+            updatedByUserId: 'god-user-id',
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
+        $this->sessionRepository->save(session: $session);
+
+        ($this->handler)(new SyncSessionExercisesCommand(
+            sessionId: 'session-1',
+            exercises: [
+                new SessionExerciseData(
+                    exerciseId: 'exercise-1',
+                    position: 1,
+                    note: null,
+                    sets: [new ExerciseSetData(position: 1, reps: 12, weight: 100.0)],
+                ),
+                new SessionExerciseData(
+                    exerciseId: 'exercise-9',
+                    position: 2,
+                    note: null,
+                    sets: [new ExerciseSetData(position: 1, reps: 10, weight: 30.0)],
+                ),
+            ],
+            mode: Session::SYNC_MODE_EXERCISES,
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $exercises = $this->sessionRepository->findById(id: 'session-1')->exercises;
+        $this->assertEquals(expected: SessionExercise::PROGRESSION_CASCADE, actual: $exercises[0]->progressionMode);
+        $this->assertEquals(expected: [12, 11, 10], actual: $exercises[0]->repTargets);
+        $this->assertEquals(expected: 2.5, actual: $exercises[0]->incrementKg);
+        $this->assertEquals(expected: SessionExercise::PROGRESSION_NONE, actual: $exercises[1]->progressionMode);
+    }
+
+    public function testItKeepsTheProgressionConfigurationWhenOnlyTheSetsAreSynced(): void
+    {
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $session->exercises[0]->configureProgression(
+            mode: SessionExercise::PROGRESSION_BLOCK,
+            repTargets: [8, 8, 8],
+            repTolerance: 1,
+            incrementKg: 5.0,
+            updatedByUserId: 'god-user-id',
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
+        $this->sessionRepository->save(session: $session);
+
+        ($this->handler)(new SyncSessionExercisesCommand(
+            sessionId: 'session-1',
+            exercises: [
+                new SessionExerciseData(
+                    exerciseId: 'exercise-1',
+                    position: 1,
+                    note: null,
+                    sets: [new ExerciseSetData(position: 1, reps: 8, weight: 80.0)],
+                ),
+            ],
+            mode: Session::SYNC_MODE_SETS,
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $exercise = $this->sessionRepository->findById(id: 'session-1')->exercises[0];
+        $this->assertEquals(expected: SessionExercise::PROGRESSION_BLOCK, actual: $exercise->progressionMode);
+        $this->assertEquals(expected: [8, 8, 8], actual: $exercise->repTargets);
+        $this->assertEquals(expected: 1, actual: $exercise->repTolerance);
+        $this->assertEquals(expected: 5.0, actual: $exercise->incrementKg);
     }
 
     public function testItPreservesTheKindOfEachSetWhenSyncing(): void

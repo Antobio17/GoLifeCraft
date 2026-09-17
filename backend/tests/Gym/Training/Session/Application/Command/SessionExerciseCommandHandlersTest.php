@@ -8,6 +8,7 @@ use Gym\Training\Session\Application\Command\CreateSessionCommand;
 use Gym\Training\Session\Application\Command\CreateSessionCommandHandler;
 use Gym\Training\Session\Application\Command\ExerciseSetAssembler;
 use Gym\Training\Session\Application\Command\ExerciseSetData;
+use Gym\Training\Session\Application\Command\ProgressionData;
 use Gym\Training\Session\Application\Command\RemoveSessionExerciseCommand;
 use Gym\Training\Session\Application\Command\RemoveSessionExerciseCommandHandler;
 use Gym\Training\Session\Application\Command\ReorderSessionExercisesCommand;
@@ -105,6 +106,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
             name: 'Empuje B',
             estimatedDurationMinutes: 40,
             restSeconds: 90,
+            progressionEnabled: true,
             updatedByUserId: 'god-user-id',
         ));
 
@@ -151,6 +153,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
                 new ExerciseSetData(position: 2, reps: 6, weight: 65.0),
             ],
             note: 'Baja despacio',
+            progression: new ProgressionData(),
             updatedByUserId: 'god-user-id',
         ));
 
@@ -170,6 +173,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
             sessionExerciseId: 'missing-exercise',
             sets: [],
             note: null,
+            progression: new ProgressionData(),
             updatedByUserId: 'god-user-id',
         ));
     }
@@ -308,6 +312,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
             exerciseId: $exerciseId,
             sets: [new ExerciseSetData(position: 1, reps: 12, weight: 20.0)],
             note: null,
+            progression: new ProgressionData(),
             addedByUserId: 'god-user-id',
         );
     }

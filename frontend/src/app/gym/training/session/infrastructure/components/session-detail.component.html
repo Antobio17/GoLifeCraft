@@ -281,6 +281,29 @@
                 [label]="'getSession.set.add' | t"
                 (clicked)="addSet(exercise.id)"
               />
+
+              <ds-progression-editor
+                data-testid="session-progression"
+                [modeLabel]="progressionLabel()"
+                [modeOptions]="progressionModeOptions()"
+                [mode]="exercise.progression.mode"
+                [modeHint]="progressionModeHint()"
+                [configured]="exercise.progressionConfigured"
+                [targetsLabel]="progressionTargetsLabel()"
+                [targetsHint]="progressionTargetsHint()"
+                [targets]="exercise.progressionTargets"
+                [toleranceLabel]="progressionToleranceLabel()"
+                [toleranceHint]="progressionToleranceHint()"
+                [tolerance]="exercise.progression.repTolerance"
+                [incrementLabel]="progressionIncrementLabel()"
+                [incrementHint]="progressionIncrementHint()"
+                [increment]="exercise.progression.incrementKg ?? 2.5"
+                [noTargetsText]="progressionNoTargets()"
+                (modeChange)="setProgressionMode(exercise.id, $event)"
+                (targetChange)="setProgressionTarget(exercise.id, $event)"
+                (toleranceChange)="setProgressionTolerance(exercise.id, $event)"
+                (incrementChange)="setProgressionIncrement(exercise.id, $event)"
+              />
             </ds-card>
           }
         </ds-stack>
