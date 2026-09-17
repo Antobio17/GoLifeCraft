@@ -16,6 +16,11 @@
   gap: var(--ds-space-1-5);
 }
 
+.pe-target ds-number-input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .pe-target__num {
   flex: 0 0 auto;
   font-family: var(--ds-font-display);

@@ -184,14 +184,12 @@
       "modeNone": "Ninguna",
       "modeBlock": "En bloque",
       "modeCascade": "En cascada",
-      "modeHint": "En bloque suben las tres series a la vez. En cascada sube una por entreno, así no se desploma el volumen.",
       "targets": "Objetivo por serie efectiva",
-      "targetsHint": "Cuando alcanzas estas repeticiones en todas, toca subir peso.",
-      "tolerance": "Tolerancia",
-      "toleranceHint": "Repeticiones que puede perder una serie sin dar el peso por fallado.",
+      "tolerance": "Tolerancia (reps)",
       "increment": "Incremento (kg)",
-      "incrementHint": "Unos 2,5 kg en barra; con mancuernas ligeras hace falta micro-carga.",
-      "noTargets": "Marca alguna serie como efectiva para fijar objetivos."
+      "noTargets": "Marca alguna serie como efectiva para fijar objetivos.",
+      "hintBlock": "Las tres series suben a la vez.",
+      "hintCascade": "Sube una serie por entreno."
     }
   },
   "session": {

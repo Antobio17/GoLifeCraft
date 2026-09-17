@@ -8,14 +8,14 @@
     (ngModelChange)="modeChange.emit($event)"
   />
 
-  <ds-text variant="meta">{{ modeHint }}</ds-text>
-
   @if (configured) {
-    <ds-text variant="meta">{{ targetsLabel }}</ds-text>
+    <ds-text variant="meta">{{ modeHint }}</ds-text>
 
     @if (targets.length === 0) {
       <ds-text variant="meta">{{ noTargetsText }}</ds-text>
     } @else {
+      <ds-text variant="meta">{{ targetsLabel }}</ds-text>
+
       <div class="pe-targets">
         @for (row of targets; track row.index) {
           <div class="pe-target">
@@ -32,7 +32,6 @@
           </div>
         }
       </div>
-      <ds-text variant="meta">{{ targetsHint }}</ds-text>
     }
 
     <div class="pe-pair">
@@ -62,8 +61,5 @@
         />
       </div>
     </div>
-
-    <ds-text variant="meta">{{ toleranceHint }}</ds-text>
-    <ds-text variant="meta">{{ incrementHint }}</ds-text>
   }
 </ds-stack>
