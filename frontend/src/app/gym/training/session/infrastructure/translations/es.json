@@ -49,7 +49,9 @@
       "rest": "Descanso entre series",
       "restUnit": "seg",
       "restHint": "El cronómetro de descanso se pone en rojo al pasar de este tiempo.",
-      "restCustomAria": "Descanso entre series en segundos"
+      "restCustomAria": "Descanso entre series en segundos",
+      "progression": "Progresión automática",
+      "progressionHint": "Al terminar un entreno, la plantilla se queda con el peso de la próxima vez."
     },
     "save": "Crear sesión",
     "saving": "Guardando…"
@@ -176,6 +178,20 @@
       "cancel": "Cancelar",
       "drag": "Arrastrar para recolocar",
       "trigger": "Ordenar ejercicios, ahora {{name}}"
+    },
+    "progression": {
+      "label": "Progresión",
+      "modeNone": "Ninguna",
+      "modeBlock": "En bloque",
+      "modeCascade": "En cascada",
+      "modeHint": "En bloque suben las tres series a la vez. En cascada sube una por entreno, así no se desploma el volumen.",
+      "targets": "Objetivo por serie efectiva",
+      "targetsHint": "Cuando alcanzas estas repeticiones en todas, toca subir peso.",
+      "tolerance": "Tolerancia",
+      "toleranceHint": "Repeticiones que puede perder una serie sin dar el peso por fallado.",
+      "increment": "Incremento (kg)",
+      "incrementHint": "Unos 2,5 kg en barra; con mancuernas ligeras hace falta micro-carga.",
+      "noTargets": "Marca alguna serie como efectiva para fijar objetivos."
     }
   },
   "session": {

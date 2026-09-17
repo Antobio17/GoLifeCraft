@@ -1,3 +1,4 @@
+import { Progression } from "./progression.model";
 import { SetKind } from "./set-kind.model";
 
 export interface ExerciseSetView {
@@ -17,12 +18,14 @@ export interface SessionExerciseView {
   position: number;
   note: string | null;
   sets: ExerciseSetView[];
+  progression: Progression;
 }
 
 export interface SessionDetailAttributes {
   name: string;
   estimatedDurationMinutes: number;
   restSeconds: number;
+  progressionEnabled: boolean;
   exercises: SessionExerciseView[];
 }
 

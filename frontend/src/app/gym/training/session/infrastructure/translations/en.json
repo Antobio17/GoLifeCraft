@@ -49,7 +49,9 @@
       "rest": "Rest between sets",
       "restUnit": "sec",
       "restHint": "The rest timer turns red once this time is exceeded.",
-      "restCustomAria": "Rest between sets in seconds"
+      "restCustomAria": "Rest between sets in seconds",
+      "progression": "Automatic progression",
+      "progressionHint": "When a workout finishes, the template keeps next time’s weight."
     },
     "save": "Create session",
     "saving": "Saving…"
@@ -176,6 +178,20 @@
       "cancel": "Cancel",
       "drag": "Drag to reorder",
       "trigger": "Reorder exercises, currently {{name}}"
+    },
+    "progression": {
+      "label": "Progression",
+      "modeNone": "None",
+      "modeBlock": "Block",
+      "modeCascade": "Cascade",
+      "modeHint": "Block raises all three sets at once. Cascade raises one per workout, so volume does not collapse.",
+      "targets": "Target per effective set",
+      "targetsHint": "Once you hit these reps on every set, the weight goes up.",
+      "tolerance": "Tolerance",
+      "toleranceHint": "Reps a set may lose before the weight counts as failed.",
+      "increment": "Increment (kg)",
+      "incrementHint": "Around 2.5 kg on a barbell; light dumbbells need micro-loading.",
+      "noTargets": "Mark a set as effective to set targets."
     }
   },
   "session": {

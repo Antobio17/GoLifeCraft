@@ -1,3 +1,4 @@
+import { Progression } from "./progression.model";
 import { SetKind } from "./set-kind.model";
 
 export interface ExerciseSetRequest {
@@ -12,6 +13,7 @@ export interface SessionExerciseRequest {
   position: number;
   note: string | null;
   sets: ExerciseSetRequest[];
+  progression: Progression;
 }
 
 export interface CreateSessionRequest {
@@ -19,5 +21,6 @@ export interface CreateSessionRequest {
   name: string;
   estimatedDurationMinutes: number;
   restSeconds: number;
+  progressionEnabled: boolean;
   exercises: SessionExerciseRequest[];
 }

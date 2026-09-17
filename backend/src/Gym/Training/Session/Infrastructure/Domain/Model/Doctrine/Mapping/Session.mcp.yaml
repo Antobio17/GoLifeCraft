@@ -21,6 +21,13 @@ fields:
     min: 0
     max: 3600
     sortable: true
+  progressionEnabled:
+    writable: true
+    type: bool
+    filterable: true
+    description: >-
+      Whether the session writes weight predictions back to its exercises when a workout
+      finishes. Turning it off keeps every exercise configuration untouched.
 
 relations: {}
 

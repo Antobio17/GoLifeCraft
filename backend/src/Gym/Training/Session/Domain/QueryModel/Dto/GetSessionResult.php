@@ -15,6 +15,7 @@ final class GetSessionResult extends QueryAggregateResult
         public readonly string $name,
         public readonly int $estimatedDurationMinutes,
         public readonly int $restSeconds,
+        public readonly bool $progressionEnabled,
         public readonly array $exercises,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,

@@ -1,0 +1,69 @@
+<ds-stack [gap]="'var(--ds-space-2)'">
+  <ds-text variant="meta">{{ modeLabel }}</ds-text>
+
+  <ds-segmented-toggle
+    [options]="modeOptions"
+    [stretch]="true"
+    [ngModel]="mode"
+    (ngModelChange)="modeChange.emit($event)"
+  />
+
+  <ds-text variant="meta">{{ modeHint }}</ds-text>
+
+  @if (configured) {
+    <ds-text variant="meta">{{ targetsLabel }}</ds-text>
+
+    @if (targets.length === 0) {
+      <ds-text variant="meta">{{ noTargetsText }}</ds-text>
+    } @else {
+      <div class="pe-targets">
+        @for (row of targets; track row.index) {
+          <div class="pe-target">
+            <span class="pe-target__num">{{ row.label }}</span>
+            <ds-number-input
+              variant="boxed"
+              [stepper]="false"
+              [step]="1"
+              [min]="1"
+              [ngModel]="row.reps"
+              (ngModelChange)="onTargetChange(row, $event)"
+              [ariaLabel]="targetsLabel + ' ' + row.label"
+            />
+          </div>
+        }
+      </div>
+      <ds-text variant="meta">{{ targetsHint }}</ds-text>
+    }
+
+    <div class="pe-pair">
+      <div class="pe-pair__item">
+        <ds-text variant="meta">{{ toleranceLabel }}</ds-text>
+        <ds-number-input
+          variant="boxed"
+          [stepper]="true"
+          [step]="1"
+          [min]="0"
+          [ngModel]="tolerance"
+          (ngModelChange)="toleranceChange.emit($event)"
+          [ariaLabel]="toleranceLabel"
+        />
+      </div>
+      <div class="pe-pair__item">
+        <ds-text variant="meta">{{ incrementLabel }}</ds-text>
+        <ds-number-input
+          variant="boxed"
+          [stepper]="true"
+          [step]="0.25"
+          [precision]="2"
+          [min]="0.25"
+          [ngModel]="increment"
+          (ngModelChange)="incrementChange.emit($event)"
+          [ariaLabel]="incrementLabel"
+        />
+      </div>
+    </div>
+
+    <ds-text variant="meta">{{ toleranceHint }}</ds-text>
+    <ds-text variant="meta">{{ incrementHint }}</ds-text>
+  }
+</ds-stack>

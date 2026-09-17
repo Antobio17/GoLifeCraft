@@ -32,6 +32,10 @@ final readonly class UpdateSessionExerciseCommandHandler
                 sets: $command->sets,
                 userId: $command->updatedByUserId,
             ),
+            progressionMode: $command->progression->mode,
+            repTargets: $command->progression->repTargets,
+            repTolerance: $command->progression->repTolerance,
+            incrementKg: $command->progression->incrementKg,
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

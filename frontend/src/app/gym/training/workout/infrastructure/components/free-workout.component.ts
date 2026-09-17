@@ -542,6 +542,7 @@ export class FreeWorkoutComponent implements OnInit {
           this.name().trim(),
           this.estimatedDurationMinutes(),
           this.activeWorkout.restTargetSeconds(),
+          true,
           this.exercises(),
         ),
         sessionId,

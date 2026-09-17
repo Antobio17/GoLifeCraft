@@ -41,6 +41,15 @@ final readonly class SessionExerciseAssembler
             dateTimeGenerator: $this->dateTimeGenerator,
         );
 
+        $sessionExercise->configureProgression(
+            mode: $exerciseData->progression->mode,
+            repTargets: $exerciseData->progression->repTargets,
+            repTolerance: $exerciseData->progression->repTolerance,
+            incrementKg: $exerciseData->progression->incrementKg,
+            updatedByUserId: $userId,
+            dateTimeGenerator: $this->dateTimeGenerator,
+        );
+
         foreach ($exerciseData->sets as $setData) {
             $sessionExercise->addSet(exerciseSet: ExerciseSet::create(
                 sessionExerciseId: $sessionExercise->id,

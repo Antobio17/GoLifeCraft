@@ -4,6 +4,7 @@ namespace Gym\Training\Session\Infrastructure\UI\API\Controller;
 
 use Gym\Training\Session\Application\Command\AddSessionExerciseCommand;
 use Gym\Training\Session\Application\Command\ExerciseSetData;
+use Gym\Training\Session\Application\Command\ProgressionData;
 use Gym\Training\Session\Domain\Exception\UpdateSessionException;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
@@ -36,6 +37,7 @@ final class AddSessionExerciseController
                     rawSets: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'sets'),
                 ),
                 note: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'note'),
+                progression: ProgressionData::fromArray(rawProgression: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'progression', required: false)),
                 addedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 
