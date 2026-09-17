@@ -34,13 +34,10 @@ export class ProgressionEditorComponent {
 
   @Input() configured = false;
   @Input() targetsLabel = "";
-  @Input() targetsHint = "";
   @Input() targets: ProgressionTargetRow[] = [];
   @Input() toleranceLabel = "";
-  @Input() toleranceHint = "";
   @Input() tolerance = 2;
   @Input() incrementLabel = "";
-  @Input() incrementHint = "";
   @Input() increment = 2.5;
   @Input() noTargetsText = "";
 

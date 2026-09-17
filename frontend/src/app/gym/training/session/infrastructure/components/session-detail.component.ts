@@ -232,6 +232,7 @@ export class SessionDetailComponent implements OnInit {
         ),
         progressionConfigured:
           exercise.progression.mode !== ProgressionMode.None,
+        progressionHint: this.progressionHint(exercise.progression.mode),
         muscleLabel: this.muscleText(exercise),
         modeLabel: this.modeLabel(exercise.type),
         topSetValue: this.topSetFormat.valueLabel(topSet),
@@ -808,30 +809,30 @@ export class SessionDetailComponent implements OnInit {
   ]);
 
   progressionLabel = computed(() => this.t("getSession.progression.label"));
-  progressionModeHint = computed(() =>
-    this.t("getSession.progression.modeHint"),
-  );
   progressionTargetsLabel = computed(() =>
     this.t("getSession.progression.targets"),
-  );
-  progressionTargetsHint = computed(() =>
-    this.t("getSession.progression.targetsHint"),
   );
   progressionToleranceLabel = computed(() =>
     this.t("getSession.progression.tolerance"),
   );
-  progressionToleranceHint = computed(() =>
-    this.t("getSession.progression.toleranceHint"),
-  );
   progressionIncrementLabel = computed(() =>
     this.t("getSession.progression.increment"),
-  );
-  progressionIncrementHint = computed(() =>
-    this.t("getSession.progression.incrementHint"),
   );
   progressionNoTargets = computed(() =>
     this.t("getSession.progression.noTargets"),
   );
+
+  private progressionHint(mode: ProgressionMode): string {
+    if (mode === ProgressionMode.Cascade) {
+      return this.t("getSession.progression.hintCascade");
+    }
+
+    if (mode === ProgressionMode.Block) {
+      return this.t("getSession.progression.hintBlock");
+    }
+
+    return "";
+  }
 
   setProgressionMode(exerciseId: string, mode: string): void {
     this.changeProgression(exerciseId, (sets, progression) =>

@@ -184,14 +184,12 @@
       "modeNone": "None",
       "modeBlock": "Block",
       "modeCascade": "Cascade",
-      "modeHint": "Block raises all three sets at once. Cascade raises one per workout, so volume does not collapse.",
       "targets": "Target per effective set",
-      "targetsHint": "Once you hit these reps on every set, the weight goes up.",
-      "tolerance": "Tolerance",
-      "toleranceHint": "Reps a set may lose before the weight counts as failed.",
+      "tolerance": "Tolerance (reps)",
       "increment": "Increment (kg)",
-      "incrementHint": "Around 2.5 kg on a barbell; light dumbbells need micro-loading.",
-      "noTargets": "Mark a set as effective to set targets."
+      "noTargets": "Mark a set as effective to set targets.",
+      "hintBlock": "All three sets go up at once.",
+      "hintCascade": "One set goes up per workout."
     }
   },
   "session": {
