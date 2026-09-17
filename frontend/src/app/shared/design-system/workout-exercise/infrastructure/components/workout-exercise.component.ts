@@ -10,6 +10,8 @@ export interface WorkoutExerciseSet {
   reps: number;
   weight: number | null;
   done: boolean;
+  warmup: boolean;
+  displayLabel: string;
 }
 
 @Component({

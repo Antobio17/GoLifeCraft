@@ -99,7 +99,7 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
     private function setsByExercise(array $sessionExerciseIds): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('es.id', 'es.session_exercise_id', 'es.position', 'es.reps', 'es.weight')
+            ->select('es.id', 'es.session_exercise_id', 'es.position', 'es.reps', 'es.weight', 'es.kind')
             ->from(table: 'exercise_set', alias: 'es')
             ->where('es.session_exercise_id IN (:ids)')
             ->setParameter(
@@ -119,6 +119,7 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
                 position: (int) $row['position'],
                 reps: (int) $row['reps'],
                 weight: null === $row['weight'] ? null : (float) $row['weight'],
+                kind: (string) $row['kind'],
             );
         }
 

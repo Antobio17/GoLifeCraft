@@ -9,6 +9,7 @@ use Gym\Training\Session\Application\Command\SessionExerciseAssembler;
 use Gym\Training\Session\Application\Command\SessionExerciseData;
 use Gym\Training\Session\Application\Command\SyncSessionExercisesCommand;
 use Gym\Training\Session\Application\Command\SyncSessionExercisesCommandHandler;
+use Gym\Training\Session\Domain\Model\ExerciseSet;
 use Gym\Training\Session\Domain\Model\Session;
 use Gym\Training\Session\Infrastructure\Domain\Model\InMemory\InMemorySessionRepository;
 use Gym\Training\Session\Infrastructure\Domain\QueryModel\InMemory\InMemoryCreateSessionNeedleDataQuery;
@@ -90,6 +91,32 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'exercise-2', actual: $session->exercises[0]->exerciseId);
         $this->assertEquals(expected: 'No bloquear codos', actual: $session->exercises[0]->note);
         $this->assertCount(expectedCount: 2, haystack: $session->exercises[0]->sets);
+    }
+
+    public function testItPreservesTheKindOfEachSetWhenSyncing(): void
+    {
+        ($this->handler)(new SyncSessionExercisesCommand(
+            sessionId: 'session-1',
+            exercises: [
+                new SessionExerciseData(
+                    exerciseId: 'exercise-1',
+                    position: 1,
+                    note: null,
+                    sets: [
+                        new ExerciseSetData(position: 1, reps: 12, weight: 50.0, kind: ExerciseSet::KIND_WARMUP),
+                        new ExerciseSetData(position: 2, reps: 4, weight: 85.0, kind: ExerciseSet::KIND_WARMUP),
+                        new ExerciseSetData(position: 3, reps: 12, weight: 100.0),
+                    ],
+                ),
+            ],
+            mode: Session::SYNC_MODE_SETS,
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $sets = $this->sessionRepository->findById(id: 'session-1')->exercises[0]->sets;
+        $this->assertEquals(expected: ExerciseSet::KIND_WARMUP, actual: $sets[0]->kind);
+        $this->assertEquals(expected: ExerciseSet::KIND_WARMUP, actual: $sets[1]->kind);
+        $this->assertEquals(expected: ExerciseSet::KIND_EFFECTIVE, actual: $sets[2]->kind);
     }
 
     public function testItOnlySyncsSetsWhenModeIsSets(): void

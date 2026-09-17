@@ -24,6 +24,7 @@ import {
   WorkoutProgressRequest,
 } from "../../domain/models/workout-request.model";
 import { TemplateSyncMode } from "../../domain/models/template-sync-mode.model";
+import { SetKind } from "@gym/training/session/domain/models/set-kind.model";
 import { uuidV4 } from "@shared/uuid/uuid";
 
 const DEFAULT_REST_SECONDS = 180;
@@ -31,6 +32,7 @@ const DEFAULT_REST_SECONDS = 180;
 export interface ActiveExerciseSet {
   reps: number;
   weight: number | null;
+  kind: SetKind;
 }
 
 export interface ActiveExercise {
@@ -387,6 +389,7 @@ export class ActiveWorkoutService implements OnDestroy {
       sets: exercise.sets.map((set) => ({
         reps: set.reps,
         weight: set.weight,
+        kind: set.kind,
       })),
     }));
   }
@@ -525,6 +528,7 @@ export class ActiveWorkoutService implements OnDestroy {
         reps: set.reps,
         weight: set.weight,
         done: this.isDone(i, j),
+        kind: set.kind,
       })),
     }));
   }

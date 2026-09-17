@@ -159,7 +159,8 @@
       "weightDown": "Decrease 2.5 kg",
       "weightUp": "Increase 2.5 kg",
       "add": "Add set",
-      "remove": "Remove set"
+      "remove": "Remove set",
+      "toggleKind": "Switch between warmup set and effective set"
     },
     "picker": {
       "title": "Add exercise",

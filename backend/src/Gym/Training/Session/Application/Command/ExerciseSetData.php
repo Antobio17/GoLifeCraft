@@ -2,12 +2,15 @@
 
 namespace Gym\Training\Session\Application\Command;
 
+use Gym\Training\Session\Domain\Model\ExerciseSet;
+
 final readonly class ExerciseSetData
 {
     public function __construct(
         public int $position,
         public int $reps,
         public ?float $weight,
+        public string $kind = ExerciseSet::KIND_EFFECTIVE,
     ) {
     }
 
@@ -17,6 +20,7 @@ final readonly class ExerciseSetData
             position: (int) ($rawSet['position'] ?? $position),
             reps: (int) ($rawSet['reps'] ?? 0),
             weight: self::nullableFloat(value: $rawSet['weight'] ?? null),
+            kind: self::kind(value: $rawSet['kind'] ?? null),
         );
     }
 
@@ -41,5 +45,14 @@ final readonly class ExerciseSetData
         }
 
         return (float) $value;
+    }
+
+    private static function kind(mixed $value): string
+    {
+        if (!is_string($value) || '' === $value) {
+            return ExerciseSet::KIND_EFFECTIVE;
+        }
+
+        return $value;
     }
 }

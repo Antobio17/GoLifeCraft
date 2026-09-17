@@ -7,6 +7,7 @@ import {
 } from "../../domain/models/session-detail.model";
 import { CreateSessionRequest } from "../../domain/models/session-request.model";
 import { SessionExerciseDiff } from "../../domain/models/session-exercise-diff.model";
+import { SetKind } from "../../domain/models/set-kind.model";
 
 @Injectable({ providedIn: "root" })
 export class SessionDraftService {
@@ -31,6 +32,7 @@ export class SessionDraftService {
         position: setIndex + 1,
         reps: set.reps,
         weight: set.weight,
+        kind: set.kind,
       })),
     }));
   }
@@ -48,7 +50,15 @@ export class SessionDraftService {
       type: exercise.attributes.type,
       position: list.length + 1,
       note: null,
-      sets: [{ id: this.uid("s"), position: 1, reps: 10, weight: null }],
+      sets: [
+        {
+          id: this.uid("s"),
+          position: 1,
+          reps: 10,
+          weight: null,
+          kind: SetKind.Effective,
+        },
+      ],
     };
     return [...list, added];
   }
@@ -128,6 +138,17 @@ export class SessionDraftService {
     }));
   }
 
+  toggleSetKind(
+    list: SessionExerciseView[],
+    exerciseId: string,
+    setId: string,
+  ): SessionExerciseView[] {
+    return this.mutateSet(list, exerciseId, setId, (set) => ({
+      ...set,
+      kind: this.oppositeKind(set.kind),
+    }));
+  }
+
   setNote(
     list: SessionExerciseView[],
     exerciseId: string,
@@ -174,6 +195,7 @@ export class SessionDraftService {
           position: setIndex + 1,
           reps: set.reps,
           weight: set.weight,
+          kind: set.kind,
         })),
       })),
     };
@@ -186,8 +208,13 @@ export class SessionDraftService {
       position: exercise.sets.length + 1,
       reps: last ? last.reps : 10,
       weight: last ? last.weight : null,
+      kind: last ? last.kind : SetKind.Effective,
     };
     return { ...exercise, sets: [...exercise.sets, set] };
+  }
+
+  private oppositeKind(kind: SetKind): SetKind {
+    return kind === SetKind.Warmup ? SetKind.Effective : SetKind.Warmup;
   }
 
   private toNullableText(note: string): string | null {

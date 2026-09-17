@@ -49,6 +49,7 @@ final readonly class SessionExerciseAssembler
                 weight: $setData->weight,
                 createdByUserId: $userId,
                 dateTimeGenerator: $this->dateTimeGenerator,
+                kind: $setData->kind,
             ));
         }
 

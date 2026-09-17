@@ -419,6 +419,7 @@ class Session extends GenericAggregate
                 weight: $set->weight,
                 createdByUserId: $updatedByUserId,
                 dateTimeGenerator: $dateTimeGenerator,
+                kind: $set->kind,
             ));
         }
 

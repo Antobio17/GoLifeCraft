@@ -74,6 +74,7 @@ import { GetSessionStatsService } from "../../application/services/get-session-s
 import { SaveSessionExerciseService } from "../../application/services/save-session-exercise.service";
 import { DeleteSessionService } from "../../application/services/delete-session.service";
 import { SessionDraftService } from "../../application/services/session-draft.service";
+import { SetNumberingService } from "../../application/services/set-numbering.service";
 import { SessionProgressService } from "../../application/services/session-progress.service";
 import { SessionProgressMetric } from "../../domain/models/session-progress-metric.model";
 import { SessionProgressRange } from "../../domain/models/session-progress-range.model";
@@ -152,6 +153,7 @@ export class SessionDetailComponent implements OnInit {
   protected undo = inject(UndoService);
   private deleteSessionService = inject(DeleteSessionService);
   private sessionDraft = inject(SessionDraftService);
+  private setNumbering = inject(SetNumberingService);
   private sessionProgress = inject(SessionProgressService);
   private getExercisesService = inject(GetExercisesService);
   private getExerciseTopSetsService = inject(GetExerciseTopSetsService);
@@ -211,6 +213,7 @@ export class SessionDetailComponent implements OnInit {
 
       return {
         ...exercise,
+        sets: this.setNumbering.rows(exercise.sets),
         muscleLabel: this.muscleText(exercise),
         modeLabel: this.modeLabel(exercise.type),
         topSetValue: this.topSetFormat.valueLabel(topSet),
@@ -462,6 +465,7 @@ export class SessionDetailComponent implements OnInit {
       sets: exercise.sets.map((set) => ({
         reps: set.reps,
         weight: set.weight,
+        kind: set.kind,
       })),
     }));
   }
@@ -745,6 +749,13 @@ export class SessionDetailComponent implements OnInit {
     this.afterEdit(exerciseId);
   }
 
+  toggleSetKind(exerciseId: string, setId: string): void {
+    this.loadedExercises.update((list) =>
+      this.sessionDraft.toggleSetKind(list, exerciseId, setId),
+    );
+    this.afterEdit(exerciseId);
+  }
+
   setWeight(exerciseId: string, setId: string, value: number): void {
     this.loadedExercises.update((list) =>
       this.sessionDraft.setWeight(list, exerciseId, setId, value),
@@ -894,6 +905,7 @@ export class SessionDetailComponent implements OnInit {
         position: index + 1,
         reps: set.reps,
         weight: set.weight,
+        kind: set.kind,
       })),
     };
 

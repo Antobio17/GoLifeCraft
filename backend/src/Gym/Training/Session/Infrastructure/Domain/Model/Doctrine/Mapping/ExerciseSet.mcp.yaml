@@ -22,5 +22,12 @@ fields:
     writable: true
     type: float
     min: 0
+  kind:
+    writable: true
+    enum: [warmup, effective]
+    filterable: true
+    description: >-
+      Whether the set is a warmup ramp set or an effective working set. Only effective sets
+      count towards volume and drive the weight progression.
 
 relations: {}

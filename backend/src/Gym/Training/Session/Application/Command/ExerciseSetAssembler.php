@@ -27,6 +27,7 @@ final readonly class ExerciseSetAssembler
                 weight: $setData->weight,
                 createdByUserId: $userId,
                 dateTimeGenerator: $this->dateTimeGenerator,
+                kind: $setData->kind,
             ),
             array: $sets,
         );

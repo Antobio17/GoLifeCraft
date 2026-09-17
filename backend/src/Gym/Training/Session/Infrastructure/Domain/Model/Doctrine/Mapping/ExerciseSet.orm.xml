@@ -7,6 +7,11 @@
     <field name="position" type="integer" column="position"/>
     <field name="reps" type="integer" column="reps"/>
     <field name="weight" type="float" column="weight" nullable="true"/>
+    <field name="kind" type="string" column="kind" length="20">
+      <options>
+        <option name="default">effective</option>
+      </options>
+    </field>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

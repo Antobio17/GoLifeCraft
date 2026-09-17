@@ -9,6 +9,7 @@ use Gym\Analytics\Stats\Domain\QueryModel\GetExerciseStatsNeedleDataQuery;
 final readonly class DoctrineGetExerciseStatsNeedleDataQuery implements GetExerciseStatsNeedleDataQuery
 {
     private const string COMPLETED_STATUS = 'completed';
+    private const string EFFECTIVE_KIND = 'effective';
 
     public function __construct(private Connection $connection)
     {
@@ -29,8 +30,10 @@ final readonly class DoctrineGetExerciseStatsNeedleDataQuery implements GetExerc
             ->where('we.exercise_id = :exerciseId')
             ->andWhere('tw.status = :status')
             ->andWhere('ws.done = 1')
+            ->andWhere('ws.kind = :kind')
             ->setParameter('exerciseId', $exerciseId)
             ->setParameter('status', self::COMPLETED_STATUS)
+            ->setParameter('kind', self::EFFECTIVE_KIND)
             ->orderBy(sort: 'tw.finished_at', order: 'ASC')
             ->addOrderBy(sort: 'ws.position', order: 'ASC')
             ->executeQuery()
