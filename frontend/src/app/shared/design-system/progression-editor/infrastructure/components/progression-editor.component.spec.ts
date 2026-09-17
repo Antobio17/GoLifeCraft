@@ -38,6 +38,32 @@ describe("ProgressionEditorComponent", () => {
     );
   });
 
+  it("titles the block with a heading that nests under the exercise name", () => {
+    component.modeLabel = "Progresión";
+    fixture.detectChanges();
+
+    const title: HTMLElement = fixture.nativeElement.querySelector("h4");
+
+    expect(title.textContent?.trim()).toBe("Progresión");
+    expect(fixture.nativeElement.querySelector("h2")).toBeNull();
+    expect(fixture.nativeElement.querySelector("h3")).toBeNull();
+  });
+
+  it("makes the block title heavier than the field labels under it", () => {
+    component.modeLabel = "Progresión";
+    configure();
+
+    const title = fixture.nativeElement.querySelector("h4") as HTMLElement;
+    const label = fixture.nativeElement.querySelector(
+      "ds-text[variant='meta']",
+    ) as HTMLElement;
+
+    const titleSize = parseFloat(getComputedStyle(title).fontSize);
+    const labelSize = parseFloat(getComputedStyle(label).fontSize);
+
+    expect(titleSize).toBeGreaterThan(labelSize);
+  });
+
   it("hides everything but the mode selector while progression is off", () => {
     component.configured = false;
     fixture.detectChanges();
