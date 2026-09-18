@@ -56,6 +56,8 @@ final readonly class AddSessionExerciseCommandHandler
             $sessionExercise->addSet(exerciseSet: $exerciseSet);
         }
 
+        $sessionExercise->captureWarmupRamp();
+
         $session->addExercise(
             sessionExercise: $sessionExercise,
             addedByUserId: $command->addedByUserId,
