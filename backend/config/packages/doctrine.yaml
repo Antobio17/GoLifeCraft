@@ -1,5 +1,7 @@
 doctrine:
     dbal:
+        types:
+            json_list: Shared\Shared\Shared\Infrastructure\Domain\Model\Doctrine\Type\JsonListType
         default_connection: master
         connections:
             master:
