@@ -236,12 +236,6 @@
               }
 
               @if (!exercise.showProgressionTab) {
-                <ds-set-header
-                  [numLabel]="'getSession.set.number' | t"
-                  [repsLabel]="'getSession.set.reps' | t"
-                  [weightLabel]="'getSession.set.weight' | t"
-                />
-
                 <ds-textarea
                   [value]="exercise.note ?? ''"
                   [placeholder]="'getSession.exercise.notePlaceholder' | t"
@@ -261,6 +255,12 @@
                   [actionAriaLabel]="exercise.topSetActionAria"
                   [loading]="topSetsLoading()"
                   (actionClicked)="onOpenExercise(exercise.exerciseId)"
+                />
+
+                <ds-set-header
+                  [numLabel]="'getSession.set.number' | t"
+                  [repsLabel]="'getSession.set.reps' | t"
+                  [weightLabel]="'getSession.set.weight' | t"
                 />
 
                 @for (set of exercise.sets; track set.id; let j = $index) {
