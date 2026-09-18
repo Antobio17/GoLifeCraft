@@ -12,6 +12,7 @@
         <option name="default">effective</option>
       </options>
     </field>
+    <field name="warmupPercent" type="float" column="warmup_percent" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

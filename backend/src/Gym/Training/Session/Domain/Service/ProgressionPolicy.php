@@ -16,8 +16,8 @@ use Gym\Training\Session\Domain\Model\SessionExercise;
  */
 final readonly class ProgressionPolicy
 {
-    private const float DELOAD_FACTOR = 0.93;
     private const int HOLDS_BEFORE_RETREAT = 2;
+    private const int HOLDS_BEFORE_STEPPING_DOWN = 3;
 
     public function apply(SessionExercise $sessionExercise): void
     {
@@ -73,6 +73,39 @@ final readonly class ProgressionPolicy
     ): void {
         $sessionExercise->holdOnce();
 
+        if ($advanced > 0) {
+            $this->undoStep(
+                sessionExercise: $sessionExercise,
+                performed: $performed,
+                baseWeight: $baseWeight,
+                advanced: $advanced,
+                increment: $increment,
+            );
+
+            return;
+        }
+
+        $this->stepDown(
+            sessionExercise: $sessionExercise,
+            performed: $performed,
+            baseWeight: $baseWeight,
+            increment: $increment,
+        );
+    }
+
+    /**
+     * A medio escalón se deshace lo último que se subió: la serie que llevaba el
+     * peso nuevo vuelve al de siempre.
+     *
+     * @param ExerciseSet[] $performed
+     */
+    private function undoStep(
+        SessionExercise $sessionExercise,
+        array $performed,
+        float $baseWeight,
+        int $advanced,
+        float $increment,
+    ): void {
         if ($sessionExercise->consecutiveHolds < self::HOLDS_BEFORE_RETREAT) {
             self::writeTargets(sessionExercise: $sessionExercise, performed: $performed);
 
@@ -80,23 +113,39 @@ final readonly class ProgressionPolicy
         }
 
         $sessionExercise->clearHolds();
+        self::writePlan(
+            sessionExercise: $sessionExercise,
+            performed: $performed,
+            baseWeight: $baseWeight,
+            advanced: $advanced - 1,
+            increment: $increment,
+        );
+    }
 
-        if ($advanced > 0) {
-            self::writePlan(
-                sessionExercise: $sessionExercise,
-                performed: $performed,
-                baseWeight: $baseWeight,
-                advanced: $advanced - 1,
-                increment: $increment,
-            );
+    /**
+     * Con el bloque entero al mismo peso no hay escalón que deshacer, así que
+     * primero se insiste. Sólo si se falla tres veces seguidas se baja, y se baja
+     * un incremento: se subió de escalón en escalón y se baja igual.
+     *
+     * @param ExerciseSet[] $performed
+     */
+    private function stepDown(
+        SessionExercise $sessionExercise,
+        array $performed,
+        float $baseWeight,
+        float $increment,
+    ): void {
+        if ($sessionExercise->consecutiveHolds < self::HOLDS_BEFORE_STEPPING_DOWN) {
+            self::writeTargets(sessionExercise: $sessionExercise, performed: $performed);
 
             return;
         }
 
+        $sessionExercise->clearHolds();
         self::writePlan(
             sessionExercise: $sessionExercise,
             performed: $performed,
-            baseWeight: self::deloaded(weight: $baseWeight, increment: $increment),
+            baseWeight: max($increment, $baseWeight - $increment),
             advanced: 0,
             increment: $increment,
         );
@@ -169,6 +218,21 @@ final readonly class ProgressionPolicy
                 reps: self::targetAt(sessionExercise: $sessionExercise, index: $index, fallback: $set->reps),
                 weight: $index < $advanced ? $topWeight : $baseWeight,
             );
+        }
+
+        self::followWithWarmups(sessionExercise: $sessionExercise, increment: $increment);
+    }
+
+    /**
+     * La rampa persigue al peso de trabajo en los dos sentidos: si el escalón
+     * sube, calienta más; si hay retroceso o deload, calienta menos.
+     */
+    private static function followWithWarmups(SessionExercise $sessionExercise, float $increment): void
+    {
+        $workingWeight = $sessionExercise->workingWeight();
+
+        foreach ($sessionExercise->sets as $set) {
+            $set->followWorkingWeight(workingWeight: $workingWeight, increment: $increment);
         }
     }
 
@@ -265,13 +329,6 @@ final readonly class ProgressionPolicy
     private static function floorAt(SessionExercise $sessionExercise, int $index, int $fallback): int
     {
         return max(1, self::targetAt(sessionExercise: $sessionExercise, index: $index, fallback: $fallback) - $sessionExercise->repTolerance);
-    }
-
-    private static function deloaded(float $weight, float $increment): float
-    {
-        $steps = floor($weight * self::DELOAD_FACTOR / $increment);
-
-        return max($increment, $steps * $increment);
     }
 
     /**

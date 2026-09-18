@@ -117,6 +117,34 @@ class SessionExercise extends GenericAggregate
         $this->consecutiveHolds = $previous->consecutiveHolds;
     }
 
+    /**
+     * Se llama cada vez que las series llegan de fuera: lo que escriba el usuario
+     * en la plantilla es lo que fija la forma de la rampa.
+     */
+    public function captureWarmupRamp(): void
+    {
+        $workingWeight = $this->workingWeight();
+
+        foreach ($this->sets as $set) {
+            $set->captureWarmupPercent(workingWeight: $workingWeight);
+        }
+    }
+
+    public function workingWeight(): float
+    {
+        $weights = [0.0];
+
+        foreach ($this->sets as $set) {
+            if (!$set->isEffective()) {
+                continue;
+            }
+
+            $weights[] = $set->weight ?? 0.0;
+        }
+
+        return max($weights);
+    }
+
     public function holdOnce(): void
     {
         ++$this->consecutiveHolds;
@@ -148,6 +176,7 @@ class SessionExercise extends GenericAggregate
     ): void {
         $this->note = $note;
         $this->sets = array_values(array: $sets);
+        $this->captureWarmupRamp();
         $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
     }
 

@@ -107,13 +107,23 @@ final class ProgressionPolicyTest extends TestCase
         $this->assertEquals(expected: 0, actual: $exercise->consecutiveHolds);
     }
 
-    public function testItDeloadsWhenTheWholeBlockFallsTwiceInARow(): void
+    public function testAUniformBlockKeepsItsWeightAfterTwoFailures(): void
     {
         $exercise = $this->exercise(performed: [[8, 100.0], [8, 100.0], [7, 100.0]], holds: 1);
 
         $this->policy->apply(sessionExercise: $exercise);
 
-        $this->assertEquals(expected: [92.5, 92.5, 92.5], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: [100.0, 100.0, 100.0], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: 2, actual: $exercise->consecutiveHolds);
+    }
+
+    public function testAUniformBlockStepsDownOneIncrementAfterThreeFailures(): void
+    {
+        $exercise = $this->exercise(performed: [[8, 100.0], [8, 100.0], [7, 100.0]], holds: 2);
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [97.5, 97.5, 97.5], actual: $this->weightsOf(exercise: $exercise));
         $this->assertEquals(expected: 0, actual: $exercise->consecutiveHolds);
     }
 
@@ -135,17 +145,66 @@ final class ProgressionPolicyTest extends TestCase
         $this->assertEquals(expected: [102.5, 100.0, 100.0], actual: $this->weightsOf(exercise: $exercise));
     }
 
-    public function testItIgnoresTheWarmupRamp(): void
+    public function testTheWarmupRampFollowsTheWeightUp(): void
     {
         $exercise = $this->exercise(
             performed: [[12, 100.0], [11, 100.0], [10, 100.0]],
-            warmups: [[12, 50.0], [4, 85.0]],
+            warmups: [[12, 50.0], [4, 80.0]],
         );
 
         $this->policy->apply(sessionExercise: $exercise);
 
-        $weights = array_map(static fn (ExerciseSet $set): ?float => $set->weight, $exercise->sets);
-        $this->assertEquals(expected: [50.0, 85.0, 102.5, 100.0, 100.0], actual: $weights);
+        $this->assertEquals(expected: [102.5, 100.0, 100.0], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: [52.5, 82.5], actual: $this->warmupsOf(exercise: $exercise));
+    }
+
+    public function testTheWarmupRampFollowsTheWeightDownWhenTheBlockStepsDown(): void
+    {
+        $exercise = $this->exercise(
+            performed: [[8, 100.0], [8, 100.0], [7, 100.0]],
+            warmups: [[12, 50.0], [4, 80.0]],
+            holds: 2,
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [97.5, 97.5, 97.5], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: [50.0, 77.5], actual: $this->warmupsOf(exercise: $exercise));
+    }
+
+    public function testTheWarmupRampFollowsTheWeightDownOnAStepBack(): void
+    {
+        $exercise = $this->exercise(
+            performed: [[9, 102.5], [11, 100.0], [10, 100.0]],
+            warmups: [[12, 51.25], [4, 82.0]],
+            holds: 1,
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [100.0, 100.0, 100.0], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: [50.0, 80.0], actual: $this->warmupsOf(exercise: $exercise));
+    }
+
+    /**
+     * El porcentaje se guarda una vez y no se recalcula desde el kilaje ya redondeado:
+     * así la rampa no se comprime contra el peso de trabajo escalón tras escalón.
+     */
+    public function testTheWarmupRampKeepsItsShapeOverManySteps(): void
+    {
+        $exercise = $this->exercise(
+            performed: [[12, 100.0], [11, 100.0], [10, 100.0]],
+            warmups: [[12, 50.0]],
+        );
+
+        for ($step = 0; $step < 4; ++$step) {
+            $this->policy->apply(sessionExercise: $exercise);
+            $this->perform(exercise: $exercise, reps: [12, 11, 10]);
+            $this->settleStep(exercise: $exercise);
+        }
+
+        $this->assertEquals(expected: 110.0, actual: $exercise->workingWeight());
+        $this->assertEquals(expected: [55.0], actual: $this->warmupsOf(exercise: $exercise));
     }
 
     /**
@@ -225,6 +284,8 @@ final class ProgressionPolicyTest extends TestCase
             $exercise->addSet(exerciseSet: $this->set(reps: $set[0], weight: $set[1]));
         }
 
+        $exercise->captureWarmupRamp();
+
         for ($hold = 0; $hold < $holds; ++$hold) {
             $exercise->holdOnce();
         }
@@ -255,6 +316,34 @@ final class ProgressionPolicyTest extends TestCase
         foreach ($effective as $index => $set) {
             $set->planFor(reps: $reps[$index], weight: $set->weight);
         }
+    }
+
+    /**
+     * Lleva todas las efectivas al peso de la primera, que es como acaba un
+     * escalón de cascada cuando no se falla ninguna.
+     */
+    private function settleStep(SessionExercise $exercise): void
+    {
+        $top = $exercise->workingWeight();
+
+        foreach ($exercise->sets as $set) {
+            if (!$set->isEffective()) {
+                continue;
+            }
+
+            $set->planFor(reps: $set->reps, weight: $top);
+        }
+    }
+
+    /**
+     * @return float[]
+     */
+    private function warmupsOf(SessionExercise $exercise): array
+    {
+        return array_values(array_map(
+            static fn (ExerciseSet $set): ?float => $set->weight,
+            array_filter($exercise->sets, static fn (ExerciseSet $set): bool => !$set->isEffective()),
+        ));
     }
 
     /**

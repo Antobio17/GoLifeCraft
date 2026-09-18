@@ -62,6 +62,8 @@ final readonly class SessionExerciseAssembler
             ));
         }
 
+        $sessionExercise->captureWarmupRamp();
+
         return $sessionExercise;
     }
 }

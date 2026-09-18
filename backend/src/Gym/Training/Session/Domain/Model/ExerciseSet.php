@@ -22,6 +22,7 @@ class ExerciseSet extends GenericAggregate
     public int $reps;
     public ?float $weight = null;
     public string $kind = self::KIND_EFFECTIVE;
+    public ?float $warmupPercent = null;
 
     public static function create(
         string $sessionExerciseId,
@@ -63,5 +64,35 @@ class ExerciseSet extends GenericAggregate
     {
         $this->reps = $reps;
         $this->weight = $weight;
+    }
+
+    /**
+     * Guarda qué fracción del peso de trabajo es esta aproximación. Es la
+     * referencia estable de la rampa: reescalar el kilaje guardado en cada
+     * escalón arrastra el error del redondeo a discos y la rampa acaba
+     * comprimiéndose contra el peso de trabajo.
+     */
+    public function captureWarmupPercent(float $workingWeight): void
+    {
+        if ($this->isEffective()) {
+            $this->warmupPercent = null;
+
+            return;
+        }
+
+        if ($workingWeight <= 0.0 || null === $this->weight) {
+            return;
+        }
+
+        $this->warmupPercent = $this->weight / $workingWeight;
+    }
+
+    public function followWorkingWeight(float $workingWeight, float $increment): void
+    {
+        if (null === $this->warmupPercent || $increment <= 0.0) {
+            return;
+        }
+
+        $this->weight = max($increment, round($this->warmupPercent * $workingWeight / $increment) * $increment);
     }
 }
