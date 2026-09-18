@@ -56,22 +56,12 @@ class ExerciseSet extends GenericAggregate
         return self::KIND_EFFECTIVE === $this->kind;
     }
 
-    /**
-     * Con progresión activa la serie de plantilla deja de ser el registro de lo
-     * entrenado y pasa a ser lo que toca la próxima vez.
-     */
     public function planFor(int $reps, ?float $weight): void
     {
         $this->reps = $reps;
         $this->weight = $weight;
     }
 
-    /**
-     * Guarda qué fracción del peso de trabajo es esta aproximación. Es la
-     * referencia estable de la rampa: reescalar el kilaje guardado en cada
-     * escalón arrastra el error del redondeo a discos y la rampa acaba
-     * comprimiéndose contra el peso de trabajo.
-     */
     public function captureWarmupPercent(float $workingWeight): void
     {
         if ($this->isEffective()) {

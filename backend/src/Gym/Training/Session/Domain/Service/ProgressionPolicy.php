@@ -5,15 +5,6 @@ namespace Gym\Training\Session\Domain\Service;
 use Gym\Training\Session\Domain\Model\ExerciseSet;
 use Gym\Training\Session\Domain\Model\SessionExercise;
 
-/**
- * Decide qué peso toca la próxima vez a partir de lo que se acaba de entrenar.
- *
- * Lee dos umbrales por serie efectiva: el objetivo (`repTargets`) dispara el
- * siguiente escalón, y el suelo (objetivo menos la tolerancia) marca a partir de
- * dónde una serie se considera fallada. Trabaja sólo sobre los pesos: las
- * repeticiones de la plantilla pasan a ser el objetivo, porque a partir de aquí
- * la plantilla es el plan y no el registro de lo hecho.
- */
 final readonly class ProgressionPolicy
 {
     private const int HOLDS_BEFORE_RETREAT = 2;
@@ -94,9 +85,6 @@ final readonly class ProgressionPolicy
     }
 
     /**
-     * A medio escalón se deshace lo último que se subió: la serie que llevaba el
-     * peso nuevo vuelve al de siempre.
-     *
      * @param ExerciseSet[] $performed
      */
     private function undoStep(
@@ -123,10 +111,6 @@ final readonly class ProgressionPolicy
     }
 
     /**
-     * Con el bloque entero al mismo peso no hay escalón que deshacer, así que
-     * primero se insiste. Sólo si se falla tres veces seguidas se baja, y se baja
-     * un incremento: se subió de escalón en escalón y se baja igual.
-     *
      * @param ExerciseSet[] $performed
      */
     private function stepDown(
@@ -199,9 +183,6 @@ final readonly class ProgressionPolicy
     }
 
     /**
-     * Las series que ya llevan el peso nuevo van al principio: es la primera la
-     * que carga con el escalón y las de después esperan su turno.
-     *
      * @param ExerciseSet[] $performed
      */
     private static function writePlan(
@@ -223,10 +204,6 @@ final readonly class ProgressionPolicy
         self::followWithWarmups(sessionExercise: $sessionExercise, increment: $increment);
     }
 
-    /**
-     * La rampa persigue al peso de trabajo en los dos sentidos: si el escalón
-     * sube, calienta más; si hay retroceso o deload, calienta menos.
-     */
     private static function followWithWarmups(SessionExercise $sessionExercise, float $increment): void
     {
         $workingWeight = $sessionExercise->workingWeight();
