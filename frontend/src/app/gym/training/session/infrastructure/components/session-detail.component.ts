@@ -82,6 +82,11 @@ import {
   ProgressionEditorComponent,
   ProgressionTargetRow,
 } from "@shared/design-system/progression-editor/infrastructure/components/progression-editor.component";
+import { ProgressionSummaryComponent } from "@shared/design-system/progression-summary/infrastructure/components/progression-summary.component";
+import {
+  TypeToggleComponent,
+  TypeToggleOption,
+} from "@shared/design-system/type-toggle/infrastructure/components/type-toggle.component";
 import { SessionProgressService } from "../../application/services/session-progress.service";
 import { SessionProgressMetric } from "../../domain/models/session-progress-metric.model";
 import { SessionProgressRange } from "../../domain/models/session-progress-range.model";
@@ -136,6 +141,8 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     SetHeaderComponent,
     SetRowComponent,
     ProgressionEditorComponent,
+    ProgressionSummaryComponent,
+    TypeToggleComponent,
     TopSetRowComponent,
     AddTileComponent,
     EmptyStateComponent,
@@ -215,13 +222,18 @@ export class SessionDetailComponent implements OnInit {
     this.topSetFormat.byExerciseId(this.topSets()),
   );
 
+  private openTabs = signal<Record<string, string>>({});
+
   exerciseRows = computed(() => {
     const topSets = this.topSetsByExerciseId();
+    const openTabs = this.openTabs();
 
     return this.exercises().map((exercise) => {
       const topSet = exercise.exerciseId
         ? (topSets[exercise.exerciseId] ?? null)
         : null;
+
+      const configured = exercise.progression.mode !== ProgressionMode.None;
 
       return {
         ...exercise,
@@ -230,9 +242,10 @@ export class SessionDetailComponent implements OnInit {
           exercise.sets,
           exercise.progression,
         ),
-        progressionConfigured:
-          exercise.progression.mode !== ProgressionMode.None,
+        progressionConfigured: configured,
         progressionHint: this.progressionHint(exercise.progression.mode),
+        progressionSummary: this.progressionSummary(exercise),
+        showProgressionTab: openTabs[exercise.id] === "progression",
         muscleLabel: this.muscleText(exercise),
         modeLabel: this.modeLabel(exercise.type),
         topSetValue: this.topSetFormat.valueLabel(topSet),
@@ -793,7 +806,23 @@ export class SessionDetailComponent implements OnInit {
     this.afterEdit(exerciseId);
   }
 
-  progressionModeOptions = computed<SegmentedOption[]>(() => [
+  progressionLabel = computed(() => this.t("getSession.progression.label"));
+  progressionSetLabel = computed(() => this.t("getSession.progression.set"));
+  progressionNowLabel = computed(() => this.t("getSession.progression.now"));
+  progressionTargetLabel = computed(() =>
+    this.t("getSession.progression.target"),
+  );
+  progressionToleranceLabel = computed(() =>
+    this.t("getSession.progression.tolerance"),
+  );
+  progressionIncrementLabel = computed(() =>
+    this.t("getSession.progression.increment"),
+  );
+  progressionNoTargets = computed(() =>
+    this.t("getSession.progression.noTargets"),
+  );
+
+  progressionModeOptions = computed<SelectOption[]>(() => [
     {
       value: ProgressionMode.None,
       label: this.t("getSession.progression.modeNone"),
@@ -808,19 +837,36 @@ export class SessionDetailComponent implements OnInit {
     },
   ]);
 
-  progressionLabel = computed(() => this.t("getSession.progression.label"));
-  progressionTargetsLabel = computed(() =>
-    this.t("getSession.progression.targets"),
-  );
-  progressionToleranceLabel = computed(() =>
-    this.t("getSession.progression.tolerance"),
-  );
-  progressionIncrementLabel = computed(() =>
-    this.t("getSession.progression.increment"),
-  );
-  progressionNoTargets = computed(() =>
-    this.t("getSession.progression.noTargets"),
-  );
+  exerciseTabs = computed<TypeToggleOption[]>(() => [
+    { value: "sets", label: this.t("getSession.tab.sets") },
+    { value: "progression", label: this.t("getSession.tab.progression") },
+  ]);
+
+  openTab(exerciseId: string, tab: string): void {
+    this.openTabs.update((tabs) => ({ ...tabs, [exerciseId]: tab }));
+  }
+
+  private progressionSummary(exercise: SessionExerciseView): string {
+    if (exercise.progression.mode === ProgressionMode.None) {
+      return "";
+    }
+
+    return this.t("getSession.progression.summary", {
+      mode: this.progressionModeName(exercise.progression.mode),
+      targets: this.progressionEditor
+        .repTargetsFor(exercise.sets, exercise.progression)
+        .join("/"),
+      increment: exercise.progression.incrementKg ?? 0,
+    });
+  }
+
+  private progressionModeName(mode: ProgressionMode): string {
+    if (mode === ProgressionMode.Cascade) {
+      return this.t("getSession.progression.modeCascade");
+    }
+
+    return this.t("getSession.progression.modeBlock");
+  }
 
   private progressionHint(mode: ProgressionMode): string {
     if (mode === ProgressionMode.Cascade) {

@@ -21,6 +21,7 @@ export class ProgressionEditorService {
     return this.effectiveSets(sets).map((set, index) => ({
       index,
       label: `${index + 1}`,
+      now: set.reps,
       reps: progression.repTargets[index] ?? set.reps,
     }));
   }

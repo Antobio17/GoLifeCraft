@@ -222,85 +222,113 @@
                 />
               </ds-stack>
 
-              <ds-set-header
-                [numLabel]="'getSession.set.number' | t"
-                [repsLabel]="'getSession.set.reps' | t"
-                [weightLabel]="'getSession.set.weight' | t"
-              />
-
-              <ds-textarea
-                [value]="exercise.note ?? ''"
-                [placeholder]="'getSession.exercise.notePlaceholder' | t"
-                [ariaLabel]="'getSession.exercise.noteLabel' | t"
-                [rows]="2"
-                [compact]="true"
-                (valueChange)="setNote(exercise.id, $event)"
-              />
-
-              <ds-top-set-row
-                data-testid="session-top-set"
-                [label]="topSetLabel()"
-                [value]="exercise.topSetValue"
-                [caption]="exercise.topSetCaption"
-                [emptyText]="topSetEmpty()"
-                [showAction]="exercise.topSetHasAction"
-                [actionAriaLabel]="exercise.topSetActionAria"
-                [loading]="topSetsLoading()"
-                (actionClicked)="onOpenExercise(exercise.exerciseId)"
-              />
-
-              @for (set of exercise.sets; track set.id; let j = $index) {
-                <ds-set-row
-                  data-testid="session-set-row"
-                  [displayLabel]="set.displayLabel"
-                  [warmup]="set.warmup"
-                  [showKindToggle]="true"
-                  [toggleKindLabel]="'getSession.set.toggleKind' | t"
-                  [reps]="set.reps"
-                  [weight]="set.weight ?? 0"
-                  [done]="isSetDone(i, j)"
-                  [showCheck]="isActiveHere"
-                  [repsAriaLabel]="'getSession.set.reps' | t"
-                  [weightAriaLabel]="'getSession.set.weight' | t"
-                  [repsUpLabel]="'getSession.set.repsUp' | t"
-                  [repsDownLabel]="'getSession.set.repsDown' | t"
-                  [weightUpLabel]="'getSession.set.weightUp' | t"
-                  [weightDownLabel]="'getSession.set.weightDown' | t"
-                  [removeLabel]="'getSession.set.remove' | t"
-                  [markDoneLabel]="'getSession.active.markDone' | t"
-                  (repsChange)="setReps(exercise.id, set.id, $event)"
-                  (weightChange)="setWeight(exercise.id, set.id, $event)"
-                  (toggleDone)="toggleSetDone(i, j)"
-                  (toggleKind)="toggleSetKind(exercise.id, set.id)"
-                  (remove)="removeSet(exercise.id, set.id)"
-                />
+              @if (!isActiveHere) {
+                <ds-stack direction="row" justify="center">
+                  <ds-type-toggle
+                    data-testid="session-exercise-tabs"
+                    [options]="exerciseTabs()"
+                    [ngModel]="
+                      exercise.showProgressionTab ? 'progression' : 'sets'
+                    "
+                    (ngModelChange)="openTab(exercise.id, $event)"
+                  />
+                </ds-stack>
               }
 
-              <ds-add-tile
-                variant="inline"
-                [label]="'getSession.set.add' | t"
-                (clicked)="addSet(exercise.id)"
-              />
+              @if (!exercise.showProgressionTab) {
+                <ds-set-header
+                  [numLabel]="'getSession.set.number' | t"
+                  [repsLabel]="'getSession.set.reps' | t"
+                  [weightLabel]="'getSession.set.weight' | t"
+                />
 
-              <ds-progression-editor
-                data-testid="session-progression"
-                [modeLabel]="progressionLabel()"
-                [modeOptions]="progressionModeOptions()"
-                [mode]="exercise.progression.mode"
-                [modeHint]="exercise.progressionHint"
-                [configured]="exercise.progressionConfigured"
-                [targetsLabel]="progressionTargetsLabel()"
-                [targets]="exercise.progressionTargets"
-                [toleranceLabel]="progressionToleranceLabel()"
-                [tolerance]="exercise.progression.repTolerance"
-                [incrementLabel]="progressionIncrementLabel()"
-                [increment]="exercise.progression.incrementKg ?? 2.5"
-                [noTargetsText]="progressionNoTargets()"
-                (modeChange)="setProgressionMode(exercise.id, $event)"
-                (targetChange)="setProgressionTarget(exercise.id, $event)"
-                (toleranceChange)="setProgressionTolerance(exercise.id, $event)"
-                (incrementChange)="setProgressionIncrement(exercise.id, $event)"
-              />
+                <ds-textarea
+                  [value]="exercise.note ?? ''"
+                  [placeholder]="'getSession.exercise.notePlaceholder' | t"
+                  [ariaLabel]="'getSession.exercise.noteLabel' | t"
+                  [rows]="2"
+                  [compact]="true"
+                  (valueChange)="setNote(exercise.id, $event)"
+                />
+
+                <ds-top-set-row
+                  data-testid="session-top-set"
+                  [label]="topSetLabel()"
+                  [value]="exercise.topSetValue"
+                  [caption]="exercise.topSetCaption"
+                  [emptyText]="topSetEmpty()"
+                  [showAction]="exercise.topSetHasAction"
+                  [actionAriaLabel]="exercise.topSetActionAria"
+                  [loading]="topSetsLoading()"
+                  (actionClicked)="onOpenExercise(exercise.exerciseId)"
+                />
+
+                @for (set of exercise.sets; track set.id; let j = $index) {
+                  <ds-set-row
+                    data-testid="session-set-row"
+                    [displayLabel]="set.displayLabel"
+                    [warmup]="set.warmup"
+                    [showKindToggle]="true"
+                    [toggleKindLabel]="'getSession.set.toggleKind' | t"
+                    [reps]="set.reps"
+                    [weight]="set.weight ?? 0"
+                    [done]="isSetDone(i, j)"
+                    [showCheck]="isActiveHere"
+                    [repsAriaLabel]="'getSession.set.reps' | t"
+                    [weightAriaLabel]="'getSession.set.weight' | t"
+                    [repsUpLabel]="'getSession.set.repsUp' | t"
+                    [repsDownLabel]="'getSession.set.repsDown' | t"
+                    [weightUpLabel]="'getSession.set.weightUp' | t"
+                    [weightDownLabel]="'getSession.set.weightDown' | t"
+                    [removeLabel]="'getSession.set.remove' | t"
+                    [markDoneLabel]="'getSession.active.markDone' | t"
+                    (repsChange)="setReps(exercise.id, set.id, $event)"
+                    (weightChange)="setWeight(exercise.id, set.id, $event)"
+                    (toggleDone)="toggleSetDone(i, j)"
+                    (toggleKind)="toggleSetKind(exercise.id, set.id)"
+                    (remove)="removeSet(exercise.id, set.id)"
+                  />
+                }
+
+                <ds-add-tile
+                  variant="inline"
+                  [label]="'getSession.set.add' | t"
+                  (clicked)="addSet(exercise.id)"
+                />
+
+                @if (!isActiveHere && exercise.progressionConfigured) {
+                  <ds-progression-summary
+                    data-testid="session-progression-summary"
+                    [text]="exercise.progressionSummary"
+                  />
+                }
+              } @else {
+                <ds-progression-editor
+                  data-testid="session-progression"
+                  [modeLabel]="progressionLabel()"
+                  [modeOptions]="progressionModeOptions()"
+                  [mode]="exercise.progression.mode"
+                  [modeHint]="exercise.progressionHint"
+                  [configured]="exercise.progressionConfigured"
+                  [setLabel]="progressionSetLabel()"
+                  [nowLabel]="progressionNowLabel()"
+                  [targetLabel]="progressionTargetLabel()"
+                  [targets]="exercise.progressionTargets"
+                  [toleranceLabel]="progressionToleranceLabel()"
+                  [tolerance]="exercise.progression.repTolerance"
+                  [incrementLabel]="progressionIncrementLabel()"
+                  [increment]="exercise.progression.incrementKg ?? 2.5"
+                  [noTargetsText]="progressionNoTargets()"
+                  (modeChange)="setProgressionMode(exercise.id, $event)"
+                  (targetChange)="setProgressionTarget(exercise.id, $event)"
+                  (toleranceChange)="
+                    setProgressionTolerance(exercise.id, $event)
+                  "
+                  (incrementChange)="
+                    setProgressionIncrement(exercise.id, $event)
+                  "
+                />
+              }
             </ds-card>
           }
         </ds-stack>

@@ -15,21 +15,25 @@ describe("ProgressionEditorComponent", () => {
     fixture.nativeElement.style.width = "360px";
   });
 
-  function configure(): void {
+  function configure(rows = 3): void {
     component.configured = true;
-    component.targets = [
-      { index: 0, label: "1", reps: 12 },
-      { index: 1, label: "2", reps: 11 },
-      { index: 2, label: "3", reps: 10 },
-    ];
+    component.setLabel = "Serie";
+    component.nowLabel = "Hoy";
+    component.targetLabel = "Objetivo";
+    component.targets = Array.from({ length: rows }, (_, index) => ({
+      index,
+      label: `${index + 1}`,
+      now: 12 - index,
+      reps: 12 - index,
+    }));
     fixture.detectChanges();
   }
 
-  it("gives every rep target input a usable width", () => {
+  it("gives every target input a usable width", () => {
     configure();
 
     const inputs: HTMLElement[] = Array.from(
-      fixture.nativeElement.querySelectorAll(".pe-target .ds-num__field"),
+      fixture.nativeElement.querySelectorAll(".pe-tbl .ds-num__field"),
     );
 
     expect(inputs.length).toBe(3);
@@ -38,37 +42,39 @@ describe("ProgressionEditorComponent", () => {
     );
   });
 
-  it("titles the block with a heading that nests under the exercise name", () => {
-    component.modeLabel = "Progresión";
-    fixture.detectChanges();
+  it("grows a row per effective set without squeezing the inputs", () => {
+    configure(6);
 
-    const title: HTMLElement = fixture.nativeElement.querySelector("h4");
+    const inputs: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll(".pe-tbl .ds-num__field"),
+    );
 
-    expect(title.textContent?.trim()).toBe("Progresión");
-    expect(fixture.nativeElement.querySelector("h2")).toBeNull();
-    expect(fixture.nativeElement.querySelector("h3")).toBeNull();
+    expect(inputs.length).toBe(6);
+    inputs.forEach((input) =>
+      expect(input.getBoundingClientRect().width).toBeGreaterThan(40),
+    );
   });
 
-  it("makes the block title heavier than the field labels under it", () => {
-    component.modeLabel = "Progresión";
+  it("shows what each set does today next to the target being set", () => {
     configure();
 
-    const title = fixture.nativeElement.querySelector("h4") as HTMLElement;
-    const label = fixture.nativeElement.querySelector(
-      "ds-text[variant='meta']",
-    ) as HTMLElement;
+    const now: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll(".pe-tbl__now"),
+    );
 
-    const titleSize = parseFloat(getComputedStyle(title).fontSize);
-    const labelSize = parseFloat(getComputedStyle(label).fontSize);
-
-    expect(titleSize).toBeGreaterThan(labelSize);
+    expect(now.map((cell) => cell.textContent?.trim())).toEqual([
+      "12",
+      "11",
+      "10",
+    ]);
   });
 
-  it("hides everything but the mode selector while progression is off", () => {
+  it("leaves only the mode selector while progression is off", () => {
     component.configured = false;
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector(".pe-targets")).toBeNull();
+    expect(fixture.nativeElement.querySelector("ds-select")).not.toBeNull();
+    expect(fixture.nativeElement.querySelector(".pe-tbl")).toBeNull();
     expect(fixture.nativeElement.querySelector(".pe-pair")).toBeNull();
   });
 

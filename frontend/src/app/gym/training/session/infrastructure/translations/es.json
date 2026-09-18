@@ -181,15 +181,22 @@
     },
     "progression": {
       "label": "Progresión",
-      "modeNone": "Ninguna",
+      "modeNone": "Sin progresión",
       "modeBlock": "En bloque",
       "modeCascade": "En cascada",
-      "targets": "Objetivo por serie efectiva",
       "tolerance": "Tolerancia (reps)",
       "increment": "Incremento (kg)",
       "noTargets": "Marca alguna serie como efectiva para fijar objetivos.",
       "hintBlock": "Las tres series suben a la vez.",
-      "hintCascade": "Sube una serie por entreno."
+      "hintCascade": "Sube una serie por entreno.",
+      "set": "Serie",
+      "now": "Hoy",
+      "target": "Objetivo",
+      "summary": "{{mode}} · objetivo {{targets}} · +{{increment}} kg"
+    },
+    "tab": {
+      "sets": "Series",
+      "progression": "Progresión"
     }
   },
   "session": {
