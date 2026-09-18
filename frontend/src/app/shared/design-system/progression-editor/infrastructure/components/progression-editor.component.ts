@@ -1,17 +1,15 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { NumberInputComponent } from "../../../number-input/infrastructure/components/number-input.component";
-import {
-  SegmentedOption,
-  SegmentedToggleComponent,
-} from "../../../segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { SelectComponent } from "../../../select/infrastructure/components/select.component";
+import { SelectOption } from "../../../select/domain/models/select-option.model";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
-import { HeadingComponent } from "../../../heading/infrastructure/components/heading.component";
 
 export interface ProgressionTargetRow {
   index: number;
   label: string;
+  now: number;
   reps: number;
 }
 
@@ -20,22 +18,23 @@ export interface ProgressionTargetRow {
   imports: [
     FormsModule,
     NumberInputComponent,
-    SegmentedToggleComponent,
+    SelectComponent,
     TextComponent,
     StackComponent,
-    HeadingComponent,
   ],
   templateUrl: "./progression-editor.component.html",
   styleUrls: ["./progression-editor.component.css"],
 })
 export class ProgressionEditorComponent {
   @Input() modeLabel = "";
-  @Input() modeOptions: SegmentedOption[] = [];
+  @Input() modeOptions: SelectOption[] = [];
   @Input() mode = "none";
   @Input() modeHint = "";
 
   @Input() configured = false;
-  @Input() targetsLabel = "";
+  @Input() setLabel = "";
+  @Input() nowLabel = "";
+  @Input() targetLabel = "";
   @Input() targets: ProgressionTargetRow[] = [];
   @Input() toleranceLabel = "";
   @Input() tolerance = 2;

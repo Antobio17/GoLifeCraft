@@ -49,6 +49,19 @@ describe("ProgressionEditorService", () => {
     expect(rows.map((row) => row.reps)).toEqual([12, 11, 10]);
   });
 
+  it("carries what each effective set does today", () => {
+    const stored: Progression = {
+      ...none,
+      mode: ProgressionMode.Cascade,
+      repTargets: [12, 12, 12],
+    };
+
+    const rows = service.targetRows(ramp, stored);
+
+    expect(rows.map((row) => row.now)).toEqual([12, 11, 10]);
+    expect(rows.map((row) => row.reps)).toEqual([12, 12, 12]);
+  });
+
   it("drops the stored targets that no longer have an effective set", () => {
     const stored: Progression = {
       ...none,

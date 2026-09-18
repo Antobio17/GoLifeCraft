@@ -1,11 +1,11 @@
-<ds-stack [gap]="'var(--ds-space-2)'">
-  <ds-heading [level]="4" size="sm">{{ modeLabel }}</ds-heading>
-
-  <ds-segmented-toggle
+<ds-stack [gap]="'var(--ds-space-3)'">
+  <ds-select
+    variant="soft"
+    [fluid]="true"
     [options]="modeOptions"
-    [stretch]="true"
     [ngModel]="mode"
     (ngModelChange)="modeChange.emit($event)"
+    [ariaLabel]="modeLabel"
   />
 
   @if (configured) {
@@ -14,21 +14,28 @@
     @if (targets.length === 0) {
       <ds-text variant="meta">{{ noTargetsText }}</ds-text>
     } @else {
-      <ds-text variant="meta">{{ targetsLabel }}</ds-text>
+      <div class="pe-tbl">
+        <div class="pe-tbl__head">
+          <span class="pe-tbl__cell pe-tbl__cell--set">{{ setLabel }}</span>
+          <span class="pe-tbl__cell">{{ nowLabel }}</span>
+          <span class="pe-tbl__cell">{{ targetLabel }}</span>
+        </div>
 
-      <div class="pe-targets">
         @for (row of targets; track row.index) {
-          <div class="pe-target">
-            <span class="pe-target__num">{{ row.label }}</span>
-            <ds-number-input
-              variant="boxed"
-              [stepper]="false"
-              [step]="1"
-              [min]="1"
-              [ngModel]="row.reps"
-              (ngModelChange)="onTargetChange(row, $event)"
-              [ariaLabel]="targetsLabel + ' ' + row.label"
-            />
+          <div class="pe-tbl__row">
+            <span class="pe-tbl__cell pe-tbl__cell--set">{{ row.label }}</span>
+            <span class="pe-tbl__cell pe-tbl__now">{{ row.now }}</span>
+            <div class="pe-tbl__cell">
+              <ds-number-input
+                variant="boxed"
+                [stepper]="false"
+                [step]="1"
+                [min]="1"
+                [ngModel]="row.reps"
+                (ngModelChange)="onTargetChange(row, $event)"
+                [ariaLabel]="targetLabel + ' ' + row.label"
+              />
+            </div>
           </div>
         }
       </div>

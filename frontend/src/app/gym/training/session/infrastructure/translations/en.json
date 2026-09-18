@@ -181,15 +181,22 @@
     },
     "progression": {
       "label": "Progression",
-      "modeNone": "None",
+      "modeNone": "No progression",
       "modeBlock": "Block",
       "modeCascade": "Cascade",
-      "targets": "Target per effective set",
       "tolerance": "Tolerance (reps)",
       "increment": "Increment (kg)",
       "noTargets": "Mark a set as effective to set targets.",
       "hintBlock": "All three sets go up at once.",
-      "hintCascade": "One set goes up per workout."
+      "hintCascade": "One set goes up per workout.",
+      "set": "Set",
+      "now": "Today",
+      "target": "Target",
+      "summary": "{{mode}} · target {{targets}} · +{{increment}} kg"
+    },
+    "tab": {
+      "sets": "Sets",
+      "progression": "Progression"
     }
   },
   "session": {
