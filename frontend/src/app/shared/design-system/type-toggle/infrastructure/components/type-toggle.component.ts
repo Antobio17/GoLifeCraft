@@ -31,6 +31,16 @@ export interface TypeToggleOption {
         display: inline-flex;
         flex: 0 0 auto;
       }
+      :host([stretch]) {
+        display: flex;
+        flex: 1 1 100%;
+      }
+      :host([stretch]) .ds-type-toggle {
+        flex: 1 1 auto;
+      }
+      :host([stretch]) .ds-type-toggle__option {
+        flex: 1 1 0;
+      }
       .ds-type-toggle {
         display: inline-flex;
         gap: 2px;
@@ -75,6 +85,9 @@ export interface TypeToggleOption {
       }
     `,
   ],
+  host: {
+    "[attr.stretch]": "stretch ? '' : null",
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -85,6 +98,7 @@ export interface TypeToggleOption {
 })
 export class TypeToggleComponent implements ControlValueAccessor {
   @Input() options: TypeToggleOption[] = [];
+  @Input() stretch = false;
 
   value = "";
   disabled = false;

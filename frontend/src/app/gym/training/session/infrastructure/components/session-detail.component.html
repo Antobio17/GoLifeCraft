@@ -223,9 +223,10 @@
               </ds-stack>
 
               @if (!isActiveHere) {
-                <ds-stack direction="row" justify="center">
+                <ds-stack direction="row">
                   <ds-type-toggle
                     data-testid="session-exercise-tabs"
+                    [stretch]="true"
                     [options]="exerciseTabs()"
                     [ngModel]="
                       exercise.showProgressionTab ? 'progression' : 'sets'
