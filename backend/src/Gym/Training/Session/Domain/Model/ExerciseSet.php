@@ -54,4 +54,14 @@ class ExerciseSet extends GenericAggregate
     {
         return self::KIND_EFFECTIVE === $this->kind;
     }
+
+    /**
+     * Con progresión activa la serie de plantilla deja de ser el registro de lo
+     * entrenado y pasa a ser lo que toca la próxima vez.
+     */
+    public function planFor(int $reps, ?float $weight): void
+    {
+        $this->reps = $reps;
+        $this->weight = $weight;
+    }
 }

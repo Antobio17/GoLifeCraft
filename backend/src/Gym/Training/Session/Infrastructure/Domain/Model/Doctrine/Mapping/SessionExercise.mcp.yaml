@@ -38,6 +38,12 @@ fields:
     type: float
     min: 0
     description: Weight step added when the exercise progresses, in kilograms.
+  consecutiveHolds:
+    type: int
+    min: 0
+    description: >-
+      Workouts in a row where a set landed below its floor. At two the progression steps
+      back; any workout that holds or advances resets it.
 
 relations: {}
 

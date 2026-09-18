@@ -19,6 +19,11 @@
       </options>
     </field>
     <field name="incrementKg" type="float" column="increment_kg" nullable="true"/>
+    <field name="consecutiveHolds" type="integer" column="consecutive_holds">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

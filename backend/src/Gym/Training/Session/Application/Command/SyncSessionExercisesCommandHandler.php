@@ -5,6 +5,7 @@ namespace Gym\Training\Session\Application\Command;
 use Gym\Training\Session\Domain\Model\Session;
 use Gym\Training\Session\Domain\Model\SessionExercise;
 use Gym\Training\Session\Domain\Model\SessionRepository;
+use Gym\Training\Session\Domain\Service\ProgressionPolicy;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -13,6 +14,7 @@ final readonly class SyncSessionExercisesCommandHandler
     public function __construct(
         private SessionRepository $sessionRepository,
         private SessionExerciseAssembler $sessionExerciseAssembler,
+        private ProgressionPolicy $progressionPolicy,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -54,6 +56,7 @@ final readonly class SyncSessionExercisesCommandHandler
         if (Session::SYNC_MODE_SETS === $mode) {
             $session->syncExerciseSets(
                 exercises: $exercises,
+                progressionPolicy: $this->progressionPolicy,
                 updatedByUserId: $updatedByUserId,
                 dateTimeGenerator: $this->dateTimeGenerator,
             );
@@ -63,6 +66,7 @@ final readonly class SyncSessionExercisesCommandHandler
 
         $session->syncExercises(
             exercises: $exercises,
+            progressionPolicy: $this->progressionPolicy,
             updatedByUserId: $updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

@@ -1,0 +1,3 @@
+services:
+  Gym\Training\Session\Domain\Service\ProgressionPolicy:
+    class: Gym\Training\Session\Domain\Service\ProgressionPolicy

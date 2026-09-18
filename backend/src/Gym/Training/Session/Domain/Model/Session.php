@@ -12,6 +12,7 @@ use Gym\Training\Session\Domain\Event\SessionExerciseUpdated;
 use Gym\Training\Session\Domain\Event\SessionUpdated;
 use Gym\Training\Session\Domain\Exception\CreateSessionException;
 use Gym\Training\Session\Domain\Exception\UpdateSessionException;
+use Gym\Training\Session\Domain\Service\ProgressionPolicy;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -81,6 +82,7 @@ class Session extends GenericAggregate
      */
     public function syncExercises(
         array $exercises,
+        ProgressionPolicy $progressionPolicy,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -90,6 +92,7 @@ class Session extends GenericAggregate
             exercises: $exercises,
             previous: $this->exercises,
         );
+        $this->predictNextSession(progressionPolicy: $progressionPolicy);
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new SessionUpdated(
@@ -112,6 +115,7 @@ class Session extends GenericAggregate
      */
     public function syncExerciseSets(
         array $exercises,
+        ProgressionPolicy $progressionPolicy,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -130,6 +134,7 @@ class Session extends GenericAggregate
             array: $this->exercises,
         );
 
+        $this->predictNextSession(progressionPolicy: $progressionPolicy);
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new SessionUpdated(
@@ -457,6 +462,22 @@ class Session extends GenericAggregate
         }
 
         return $sessionExercise;
+    }
+
+    /**
+     * El interruptor de la sesión no toca la configuración de ningún ejercicio:
+     * sólo decide si se escribe la predicción o la plantilla se queda con lo
+     * que se acaba de entrenar.
+     */
+    private function predictNextSession(ProgressionPolicy $progressionPolicy): void
+    {
+        if (!$this->progressionEnabled) {
+            return;
+        }
+
+        foreach ($this->exercises as $sessionExercise) {
+            $progressionPolicy->apply(sessionExercise: $sessionExercise);
+        }
     }
 
     /**
