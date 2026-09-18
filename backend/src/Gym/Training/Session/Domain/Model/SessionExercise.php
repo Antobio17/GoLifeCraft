@@ -104,10 +104,6 @@ class SessionExercise extends GenericAggregate
         $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
     }
 
-    /**
-     * El entreno no lleva la configuración de progresión, así que al sincronizar
-     * la plantilla con lo entrenado hay que recuperarla del ejercicio que ya estaba.
-     */
     public function adoptProgressionFrom(self $previous): void
     {
         $this->progressionMode = $previous->progressionMode;
@@ -117,10 +113,6 @@ class SessionExercise extends GenericAggregate
         $this->consecutiveHolds = $previous->consecutiveHolds;
     }
 
-    /**
-     * Se llama cada vez que las series llegan de fuera: lo que escriba el usuario
-     * en la plantilla es lo que fija la forma de la rampa.
-     */
     public function captureWarmupRamp(): void
     {
         $workingWeight = $this->workingWeight();

@@ -186,10 +186,6 @@ final class ProgressionPolicyTest extends TestCase
         $this->assertEquals(expected: [50.0, 80.0], actual: $this->warmupsOf(exercise: $exercise));
     }
 
-    /**
-     * El porcentaje se guarda una vez y no se recalcula desde el kilaje ya redondeado:
-     * así la rampa no se comprime contra el peso de trabajo escalón tras escalón.
-     */
     public function testTheWarmupRampKeepsItsShapeOverManySteps(): void
     {
         $exercise = $this->exercise(
@@ -207,10 +203,6 @@ final class ProgressionPolicyTest extends TestCase
         $this->assertEquals(expected: [55.0], actual: $this->warmupsOf(exercise: $exercise));
     }
 
-    /**
-     * `configureProgression` no deja llegar aquí, pero el sidecar MCP expone el modo
-     * y el incremento por separado, así que la fila puede acabar en este estado.
-     */
     public function testItDoesNothingWithoutAnIncrement(): void
     {
         $exercise = $this->exercise(performed: [[12, 100.0], [11, 100.0], [10, 100.0]]);
@@ -221,9 +213,6 @@ final class ProgressionPolicyTest extends TestCase
         $this->assertEquals(expected: [100.0, 100.0, 100.0], actual: $this->weightsOf(exercise: $exercise));
     }
 
-    /**
-     * Un escalón completo de cascada, entreno a entreno, con un tropiezo por medio.
-     */
     public function testItWalksAWholeCascadeStep(): void
     {
         $exercise = $this->exercise(performed: [[12, 100.0], [11, 100.0], [10, 100.0]]);
@@ -318,10 +307,6 @@ final class ProgressionPolicyTest extends TestCase
         }
     }
 
-    /**
-     * Lleva todas las efectivas al peso de la primera, que es como acaba un
-     * escalón de cascada cuando no se falla ninguna.
-     */
     private function settleStep(SessionExercise $exercise): void
     {
         $top = $exercise->workingWeight();

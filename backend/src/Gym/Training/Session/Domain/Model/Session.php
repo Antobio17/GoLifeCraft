@@ -464,11 +464,6 @@ class Session extends GenericAggregate
         return $sessionExercise;
     }
 
-    /**
-     * El interruptor de la sesión no toca la configuración de ningún ejercicio:
-     * sólo decide si se escribe la predicción o la plantilla se queda con lo
-     * que se acaba de entrenar.
-     */
     private function predictNextSession(ProgressionPolicy $progressionPolicy): void
     {
         if (!$this->progressionEnabled) {
