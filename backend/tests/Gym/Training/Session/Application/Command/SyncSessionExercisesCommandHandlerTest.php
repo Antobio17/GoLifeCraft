@@ -12,6 +12,7 @@ use Gym\Training\Session\Application\Command\SyncSessionExercisesCommandHandler;
 use Gym\Training\Session\Domain\Model\ExerciseSet;
 use Gym\Training\Session\Domain\Model\Session;
 use Gym\Training\Session\Domain\Model\SessionExercise;
+use Gym\Training\Session\Domain\Service\ProgressionPolicy;
 use Gym\Training\Session\Infrastructure\Domain\Model\InMemory\InMemorySessionRepository;
 use Gym\Training\Session\Infrastructure\Domain\QueryModel\InMemory\InMemoryCreateSessionNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
@@ -61,6 +62,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
         $this->handler = new SyncSessionExercisesCommandHandler(
             sessionRepository: $this->sessionRepository,
             sessionExerciseAssembler: $assembler,
+            progressionPolicy: new ProgressionPolicy(),
             domainEventCollectorService: $domainEventCollectorService,
             dateTimeGenerator: $dateTimeGenerator,
         );
@@ -166,6 +168,85 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
         $this->assertEquals(expected: [8, 8, 8], actual: $exercise->repTargets);
         $this->assertEquals(expected: 1, actual: $exercise->repTolerance);
         $this->assertEquals(expected: 5.0, actual: $exercise->incrementKg);
+    }
+
+    public function testItWritesThePredictionInsteadOfWhatWasTrained(): void
+    {
+        $this->configureCascade(exerciseId: 'exercise-1');
+
+        ($this->handler)($this->finishedWorkout(reps: [12, 11, 10], weight: 100.0));
+
+        $sets = $this->sessionRepository->findById(id: 'session-1')->exercises[0]->sets;
+        $this->assertEquals(expected: [102.5, 100.0, 100.0], actual: array_map(
+            static fn (ExerciseSet $set): ?float => $set->weight,
+            $sets,
+        ));
+    }
+
+    public function testItKeepsWhatWasTrainedWhenTheSessionHasProgressionOff(): void
+    {
+        $this->configureCascade(exerciseId: 'exercise-1');
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $session->updateDetails(
+            name: 'Empuje A',
+            estimatedDurationMinutes: 55,
+            restSeconds: 180,
+            progressionEnabled: false,
+            updatedByUserId: 'god-user-id',
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
+        $this->sessionRepository->save(session: $session);
+
+        ($this->handler)($this->finishedWorkout(reps: [12, 11, 10], weight: 100.0));
+
+        $exercise = $this->sessionRepository->findById(id: 'session-1')->exercises[0];
+        $this->assertEquals(expected: [100.0, 100.0, 100.0], actual: array_map(
+            static fn (ExerciseSet $set): ?float => $set->weight,
+            $exercise->sets,
+        ));
+        $this->assertEquals(expected: SessionExercise::PROGRESSION_CASCADE, actual: $exercise->progressionMode);
+    }
+
+    private function configureCascade(string $exerciseId): void
+    {
+        $session = $this->sessionRepository->findById(id: 'session-1');
+        $session->exercises[0]->configureProgression(
+            mode: SessionExercise::PROGRESSION_CASCADE,
+            repTargets: [12, 11, 10],
+            repTolerance: 2,
+            incrementKg: 2.5,
+            updatedByUserId: 'god-user-id',
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
+        $this->sessionRepository->save(session: $session);
+    }
+
+    /**
+     * @param int[] $reps
+     */
+    private function finishedWorkout(array $reps, float $weight): SyncSessionExercisesCommand
+    {
+        return new SyncSessionExercisesCommand(
+            sessionId: 'session-1',
+            exercises: [
+                new SessionExerciseData(
+                    exerciseId: 'exercise-1',
+                    position: 1,
+                    note: null,
+                    sets: array_map(
+                        static fn (int $setReps, int $index): ExerciseSetData => new ExerciseSetData(
+                            position: $index + 1,
+                            reps: $setReps,
+                            weight: $weight,
+                        ),
+                        $reps,
+                        array_keys($reps),
+                    ),
+                ),
+            ],
+            mode: Session::SYNC_MODE_SETS,
+            updatedByUserId: 'god-user-id',
+        );
     }
 
     public function testItPreservesTheKindOfEachSetWhenSyncing(): void

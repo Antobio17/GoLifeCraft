@@ -28,6 +28,7 @@ class SessionExercise extends GenericAggregate
     public string $progressionMode = self::PROGRESSION_NONE;
     public int $repTolerance = self::DEFAULT_REP_TOLERANCE;
     public ?float $incrementKg = null;
+    public int $consecutiveHolds = 0;
 
     /** @var int[] */
     public array $repTargets = [];
@@ -113,6 +114,17 @@ class SessionExercise extends GenericAggregate
         $this->repTargets = $previous->repTargets;
         $this->repTolerance = $previous->repTolerance;
         $this->incrementKg = $previous->incrementKg;
+        $this->consecutiveHolds = $previous->consecutiveHolds;
+    }
+
+    public function holdOnce(): void
+    {
+        ++$this->consecutiveHolds;
+    }
+
+    public function clearHolds(): void
+    {
+        $this->consecutiveHolds = 0;
     }
 
     public function progresses(): bool
