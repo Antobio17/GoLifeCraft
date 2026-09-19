@@ -297,7 +297,7 @@
                   (clicked)="addSet(exercise.id)"
                 />
 
-                @if (!isActiveHere && exercise.progressionConfigured) {
+                @if (exercise.progressionConfigured) {
                   <ds-progression-summary
                     data-testid="session-progression-summary"
                     [text]="exercise.progressionSummary"
