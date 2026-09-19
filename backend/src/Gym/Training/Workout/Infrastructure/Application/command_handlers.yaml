@@ -40,3 +40,12 @@ services:
       $workoutRepository: '@Gym\Training\Workout\Domain\Model\WorkoutRepository'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gym\Training\Workout\Application\Command\MarkWorkoutSetDoneCommandHandler:
+    class: Gym\Training\Workout\Application\Command\MarkWorkoutSetDoneCommandHandler
+    arguments:
+      $workoutRepository: '@Gym\Training\Workout\Domain\Model\WorkoutRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

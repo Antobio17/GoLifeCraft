@@ -4,8 +4,10 @@ namespace Gym\Training\Workout\Domain\Model;
 
 use Gym\Training\Workout\Domain\Event\WorkoutFinished;
 use Gym\Training\Workout\Domain\Event\WorkoutProgressSaved;
+use Gym\Training\Workout\Domain\Event\WorkoutSetMarkedDone;
 use Gym\Training\Workout\Domain\Event\WorkoutStarted;
 use Gym\Training\Workout\Domain\Exception\FinishWorkoutException;
+use Gym\Training\Workout\Domain\Exception\MarkWorkoutSetDoneException;
 use Gym\Training\Workout\Domain\Exception\UpdateWorkoutException;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -170,6 +172,60 @@ class Workout extends GenericAggregate
             templateSyncMode: $templateSyncMode,
             finishedByUserId: $finishedByUserId,
         ));
+    }
+
+    public function markSetDone(
+        string $setId,
+        bool $done,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (self::STATUS_COMPLETED !== $this->status) {
+            throw MarkWorkoutSetDoneException::workoutStillInProgress(workoutId: $this->id);
+        }
+
+        $workoutSet = $this->findSet(setId: $setId);
+        if (null === $workoutSet) {
+            throw MarkWorkoutSetDoneException::setNotFound(workoutId: $this->id, setId: $setId);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        $workoutSet->done = $done;
+        $workoutSet->stampUpdate(userId: $updatedByUserId, now: $now);
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new WorkoutSetMarkedDone(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            setId: $setId,
+            done: $done,
+            sessionId: $this->sessionId,
+            sessionName: $this->sessionName,
+            status: $this->status,
+            startedAt: $this->startedAt,
+            finishedAt: $this->finishedAt,
+            durationSeconds: $this->durationSeconds,
+            restStartedAt: $this->restStartedAt,
+            exercises: $this->exercisesSnapshot(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    private function findSet(string $setId): ?WorkoutSet
+    {
+        foreach ($this->exercises as $workoutExercise) {
+            foreach ($workoutExercise->sets as $workoutSet) {
+                if ($setId === $workoutSet->id) {
+                    return $workoutSet;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

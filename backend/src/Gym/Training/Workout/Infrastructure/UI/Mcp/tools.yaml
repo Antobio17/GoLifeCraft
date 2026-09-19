@@ -1,0 +1,8 @@
+services:
+  Gym\Training\Workout\Infrastructure\UI\Mcp\Tool\MarkWorkoutSetDoneTool:
+    class: Gym\Training\Workout\Infrastructure\UI\Mcp\Tool\MarkWorkoutSetDoneTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

@@ -29,9 +29,13 @@ fields:
   done:
     writable: true
     type: bool
+    filterable: true
     description: >-
-      Whether the set was actually completed. Sets left as false in a finished workout are
-      the ones the user skipped.
+      Whether the set was actually completed. Only ticked sets count towards the volume, the
+      top sets and the rest of the stats, so a set left as false in a finished workout is one
+      the user skipped. To repair a set that was lifted but never ticked before closing the
+      workout, use the "mark_workout_set_done" tool instead of writing this field: it checks
+      the set really belongs to that workout and leaves the correction in the event log.
   kind:
     writable: true
     enum: [warmup, effective]
