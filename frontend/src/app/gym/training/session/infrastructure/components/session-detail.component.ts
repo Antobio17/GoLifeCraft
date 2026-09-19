@@ -227,6 +227,7 @@ export class SessionDetailComponent implements OnInit {
   exerciseRows = computed(() => {
     const topSets = this.topSetsByExerciseId();
     const openTabs = this.openTabs();
+    const active = this.isActiveHere;
 
     return this.exercises().map((exercise) => {
       const topSet = exercise.exerciseId
@@ -245,7 +246,7 @@ export class SessionDetailComponent implements OnInit {
         progressionConfigured: configured,
         progressionHint: this.progressionHint(exercise.progression.mode),
         progressionSummary: this.progressionSummary(exercise),
-        showProgressionTab: openTabs[exercise.id] === "progression",
+        showProgressionTab: !active && openTabs[exercise.id] === "progression",
         muscleLabel: this.muscleText(exercise),
         modeLabel: this.modeLabel(exercise.type),
         topSetValue: this.topSetFormat.valueLabel(topSet),
