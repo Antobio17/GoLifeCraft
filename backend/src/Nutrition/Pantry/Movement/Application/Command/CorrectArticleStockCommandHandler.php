@@ -46,7 +46,7 @@ final readonly class CorrectArticleStockCommandHandler
             id: $movementId,
             kind: StockMovement::KIND_ARTICLE,
             refId: $command->articleId,
-            type: StockMovement::TYPE_COUNT,
+            type: $correction->movementType(),
             effectiveAt: $this->effectiveAt(command: $command),
             quantity: $this->unitConverter->toBaseUnits(
                 articleId: $command->articleId,

@@ -1,11 +1,23 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import {
+  ChipComponent,
+  ChipTone,
+} from "@shared/design-system/chip/infrastructure/components/chip.component";
 
 @Component({
   selector: "ds-stock-control",
-  imports: [IconComponent],
+  imports: [IconComponent, ChipComponent],
   template: `
     <section class="ds-stk">
+      @if (levelLabel) {
+        <div class="ds-stk__level">
+          <ds-chip [tone]="levelTone" [uppercase]="true">{{
+            levelLabel
+          }}</ds-chip>
+        </div>
+      }
+
       <div class="ds-stk__top">
         <button
           class="ds-stk__amount"
@@ -32,26 +44,68 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
         }
       </div>
 
+      @if (bandText) {
+        <div class="ds-stk__band">
+          <ds-icon name="info" [size]="13" />
+          <span>{{ bandText }}</span>
+        </div>
+      }
+
+      @if (null !== confidencePercent) {
+        <div class="ds-stk__trust">
+          <div class="ds-stk__trust-row">
+            <span class="ds-stk__label">{{ confidenceLabel }}</span>
+            <span class="ds-stk__trust-pct">{{ confidencePercent }}%</span>
+          </div>
+          <div
+            class="ds-stk__trust-track"
+            role="progressbar"
+            [attr.aria-valuenow]="confidencePercent"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [attr.aria-label]="confidenceLabel"
+          >
+            <div
+              class="ds-stk__trust-fill"
+              [class.ds-stk__trust-fill--weak]="confidencePercent < 50"
+              [style.width.%]="confidencePercent"
+            ></div>
+          </div>
+        </div>
+      }
+
       @if (!readonly) {
         <div class="ds-stk__actions">
-          <button
-            class="ds-stk__step ds-stk__step--minus"
-            type="button"
-            [disabled]="disabled"
-            (click)="decremented.emit()"
-          >
-            <ds-icon name="minus" [size]="15" [stroke]="2.6" />
-            {{ stepLabel }}
-          </button>
-          <button
-            class="ds-stk__step ds-stk__step--plus"
-            type="button"
-            [disabled]="disabled"
-            (click)="incremented.emit()"
-          >
-            <ds-icon name="plus" [size]="15" [stroke]="2.6" />
-            {{ stepLabel }}
-          </button>
+          @if (showSteps) {
+            <button
+              class="ds-stk__step ds-stk__step--minus"
+              type="button"
+              [disabled]="disabled"
+              (click)="decremented.emit()"
+            >
+              <ds-icon name="minus" [size]="15" [stroke]="2.6" />
+              {{ stepLabel }}
+            </button>
+            <button
+              class="ds-stk__step ds-stk__step--plus"
+              type="button"
+              [disabled]="disabled"
+              (click)="incremented.emit()"
+            >
+              <ds-icon name="plus" [size]="15" [stroke]="2.6" />
+              {{ stepLabel }}
+            </button>
+          } @else {
+            <button
+              class="ds-stk__step ds-stk__step--plus"
+              type="button"
+              [disabled]="disabled"
+              (click)="editRequested.emit()"
+            >
+              <ds-icon name="pencil" [size]="15" [stroke]="2.6" />
+              {{ editLabel }}
+            </button>
+          }
           <button
             class="ds-stk__clear"
             type="button"
@@ -73,6 +127,50 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
       }
       .ds-stk {
         padding: var(--ds-space-3);
+      }
+      .ds-stk__level {
+        display: flex;
+        margin-bottom: var(--ds-space-2);
+      }
+      .ds-stk__band {
+        display: flex;
+        align-items: center;
+        gap: var(--ds-space-1-5);
+        margin-top: var(--ds-space-2);
+        font-size: var(--ds-text-sm);
+        font-weight: var(--ds-weight-semibold);
+        color: var(--ds-text-meta);
+      }
+      .ds-stk__trust {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ds-space-1-5);
+        margin-top: var(--ds-space-3);
+      }
+      .ds-stk__trust-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--ds-space-2);
+      }
+      .ds-stk__trust-pct {
+        font-size: var(--ds-text-xs);
+        font-weight: 800;
+        color: var(--ds-text-meta);
+      }
+      .ds-stk__trust-track {
+        height: 0.375rem;
+        border-radius: var(--ds-radius-pill);
+        background: var(--ds-surface-inset);
+        overflow: hidden;
+      }
+      .ds-stk__trust-fill {
+        height: 100%;
+        border-radius: var(--ds-radius-pill);
+        background: var(--ds-primary);
+      }
+      .ds-stk__trust-fill--weak {
+        background: var(--ds-warning);
       }
       .ds-stk__top {
         display: flex;
@@ -200,6 +298,12 @@ export class StockControlComponent {
   @Input() disabled = false;
   @Input() readonly = false;
   @Input() negative = false;
+  @Input() levelLabel = "";
+  @Input() levelTone: ChipTone = "neutral";
+  @Input() bandText: string | null = null;
+  @Input() confidenceLabel = "";
+  @Input() confidencePercent: number | null = null;
+  @Input() showSteps = true;
 
   @Output() incremented = new EventEmitter<void>();
   @Output() decremented = new EventEmitter<void>();

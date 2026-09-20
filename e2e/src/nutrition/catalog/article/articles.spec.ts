@@ -59,6 +59,64 @@ test.describe("catálogo", () => {
     await expect(article.purchase).toBeVisible();
   });
 
+  test("el detalle enseña el nivel y la fiabilidad del stock estimado", async ({ page }) => {
+    const articles = new ArticlesPage(page);
+    const article = new ArticlePage(page);
+
+    await articles.goto();
+    await articles.open(SEED.articles.yogur.name);
+
+    await expect(article.stock).toBeVisible();
+    await expect(article.stockLevel).toBeVisible();
+    await expect(article.stockConfidence).toBeVisible();
+  });
+
+  test("decir que queda poco corrige el stock sin pesar nada", async ({ page }) => {
+    const articles = new ArticlesPage(page);
+    const article = new ArticlePage(page);
+
+    await articles.goto();
+    await articles.open(SEED.articles.yogur.name);
+
+    await article.openStockEditor();
+    await article.chooseCorrectionKind("A ojo");
+    await article.chooseLevel("Queda poco");
+    await article.confirmStock();
+
+    await expect(article.stockLevel).toHaveText("Queda poco");
+  });
+
+  test("media caja se convierte en cantidad usando el envase", async ({ page }) => {
+    const articles = new ArticlesPage(page);
+    const article = new ArticlePage(page);
+
+    await articles.goto();
+    await articles.open(SEED.articles.yogur.name);
+
+    await article.openStockEditor();
+    await article.chooseCorrectionKind("Parte");
+    await article.chooseFraction("La mitad");
+    await article.confirmStock();
+
+    await expect(article.stockLevel).toHaveText("A media");
+  });
+
+  test("marcar un artículo como exacto deja de estimar su stock", async ({ page }) => {
+    const articles = new ArticlesPage(page);
+    const article = new ArticlePage(page);
+
+    await articles.goto();
+    await articles.open(SEED.articles.yogur.name);
+
+    await article.openStockEditor();
+    await article.chooseTracking("Exacto");
+
+    await expect(article.stockConfidence).toHaveCount(0);
+
+    await article.chooseTracking("Aproximado");
+    await expect(article.stockConfidence).toBeVisible();
+  });
+
   test("crear y borrar un artículo deja el catálogo como estaba", async ({ page }) => {
     const articles = new ArticlesPage(page);
     const editor = new ArticleEditorPage(page);

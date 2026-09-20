@@ -7,12 +7,14 @@ use Nutrition\Pantry\Movement\Domain\Exception\CorrectArticleStockException;
 final readonly class StockCorrection
 {
     public const string KIND_MEASURED = 'measured';
+    public const string KIND_DELTA = 'delta';
     public const string KIND_FRACTION = 'fraction';
     public const string KIND_LEVEL = 'level';
 
     /** @var array<int, string> */
     public const array KINDS = [
         self::KIND_MEASURED,
+        self::KIND_DELTA,
         self::KIND_FRACTION,
         self::KIND_LEVEL,
     ];
@@ -29,7 +31,7 @@ final readonly class StockCorrection
         public float $amount,
         public ?string $unit,
         public ?StockLevel $level,
-        public float $confidence,
+        public ?float $confidence,
     ) {
     }
 
@@ -37,6 +39,10 @@ final readonly class StockCorrection
     {
         if (self::KIND_MEASURED === $kind) {
             return self::measured(quantity: $quantity, unit: $unit);
+        }
+
+        if (self::KIND_DELTA === $kind) {
+            return self::delta(quantity: $quantity, unit: $unit);
         }
 
         if (self::KIND_FRACTION === $kind) {
@@ -66,6 +72,21 @@ final readonly class StockCorrection
             unit: '' !== $unit ? $unit : null,
             level: null,
             confidence: 0.0 === $quantity ? self::CONFIDENCE_COUNTED : self::CONFIDENCE_MEASURED,
+        );
+    }
+
+    public static function delta(?float $quantity, ?string $unit): self
+    {
+        if (null === $quantity) {
+            throw CorrectArticleStockException::quantityIsRequired(kind: self::KIND_DELTA);
+        }
+
+        return new self(
+            kind: self::KIND_DELTA,
+            amount: $quantity,
+            unit: '' !== $unit ? $unit : null,
+            level: null,
+            confidence: null,
         );
     }
 
@@ -105,9 +126,16 @@ final readonly class StockCorrection
         );
     }
 
+    public function movementType(): string
+    {
+        return self::KIND_DELTA === $this->kind
+            ? StockMovement::TYPE_DELTA
+            : StockMovement::TYPE_COUNT;
+    }
+
     public function needsReference(): bool
     {
-        if (self::KIND_MEASURED === $this->kind) {
+        if (self::KIND_MEASURED === $this->kind || self::KIND_DELTA === $this->kind) {
             return false;
         }
 
@@ -120,12 +148,10 @@ final readonly class StockCorrection
 
     public function declaredQuantity(ArticleStockReference $reference): float
     {
-        if (self::KIND_MEASURED === $this->kind) {
-            return $this->amount;
-        }
-
         if (!$this->needsReference()) {
-            return 0.0;
+            return self::KIND_LEVEL === $this->kind || self::KIND_FRACTION === $this->kind
+                ? 0.0
+                : $this->amount;
         }
 
         if ($reference->hasPack()) {
@@ -143,7 +169,7 @@ final readonly class StockCorrection
 
     public function declaredUnit(ArticleStockReference $reference): ?string
     {
-        if (self::KIND_MEASURED === $this->kind) {
+        if (self::KIND_MEASURED === $this->kind || self::KIND_DELTA === $this->kind) {
             return $this->unit;
         }
 

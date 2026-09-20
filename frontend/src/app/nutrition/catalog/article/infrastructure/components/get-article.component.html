@@ -209,24 +209,29 @@
         [emptyText]="'getArticle.purchase.empty' | t"
       >
         @if (stock(); as s) {
-          @if (s.hasPack) {
-            <ds-stock-control
-              [stockLabel]="'getArticle.stock.heading' | t"
-              [mainText]="s.packsText"
-              [subText]="s.baseText"
-              [valueLabel]="'getArticle.stock.value' | t"
-              [valueText]="s.valueText"
-              [stepLabel]="'getArticle.stock.step' | t"
-              [clearLabel]="'getArticle.stock.clear' | t"
-              [editLabel]="'getArticle.stock.edit' | t"
-              [negative]="s.stock < 0"
-              [disabled]="savingStock()"
-              (incremented)="onIncrementStock()"
-              (decremented)="onDecrementStock()"
-              (cleared)="onClearStock()"
-              (editRequested)="onOpenStockEditor()"
-            />
-          }
+          <ds-stock-control
+            data-testid="article-stock"
+            [stockLabel]="'getArticle.stock.heading' | t"
+            [mainText]="s.mainText"
+            [subText]="s.subText"
+            [valueLabel]="'getArticle.stock.value' | t"
+            [valueText]="s.valueText"
+            [stepLabel]="'getArticle.stock.step' | t"
+            [clearLabel]="'getArticle.stock.clear' | t"
+            [editLabel]="'getArticle.stock.edit' | t"
+            [levelLabel]="stockLevelLabel()"
+            [levelTone]="s.levelTone"
+            [bandText]="s.bandText"
+            [confidenceLabel]="stockConfidenceLabel()"
+            [confidencePercent]="stockConfidencePercent()"
+            [showSteps]="s.hasPack"
+            [negative]="s.stock < 0"
+            [disabled]="savingStock()"
+            (incremented)="onIncrementStock()"
+            (decremented)="onDecrementStock()"
+            (cleared)="onClearStock()"
+            (editRequested)="onOpenStockEditor()"
+          />
         }
       </ds-purchase-summary>
     </ds-split-view>
@@ -243,26 +248,98 @@
   <ds-stack [gap]="'var(--ds-space-3)'">
     <ds-text variant="muted">{{ "getArticle.stock.editor.hint" | t }}</ds-text>
 
-    <ds-segmented-toggle
-      [options]="stockModeOptions()"
-      [ngModel]="stockDraftMode()"
-      [ngModelOptions]="{ standalone: true }"
-      (ngModelChange)="onStockDraftModeChange($event)"
-    />
-
-    <ds-amount-input
-      [large]="true"
-      inputmode="decimal"
-      [unit]="stockModeUnitLabel()"
-      [ariaLabel]="'getArticle.stock.editor.amount' | t"
-      [ngModel]="stockDraft()"
-      [ngModelOptions]="{ standalone: true }"
-      (ngModelChange)="onStockDraftChange($event)"
-    />
-
-    @if (stockDraftPreview(); as preview) {
-      <ds-text variant="label">{{ preview }}</ds-text>
+    @if (correctionKindOptions().length > 1) {
+      <ds-segmented-toggle
+        data-testid="stock-correction-kind"
+        [options]="correctionKindOptions()"
+        [ngModel]="correctionKind()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onCorrectionKindChange($event)"
+      />
     }
+
+    @switch (correctionKind()) {
+      @case ("measured") {
+        @if (stockModeOptions().length > 1) {
+          <ds-segmented-toggle
+            [options]="stockModeOptions()"
+            [ngModel]="stockDraftMode()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onStockDraftModeChange($event)"
+          />
+        }
+
+        <ds-amount-input
+          data-testid="stock-amount"
+          [large]="true"
+          inputmode="decimal"
+          [unit]="stockModeUnitLabel()"
+          [ariaLabel]="'getArticle.stock.editor.amount' | t"
+          [ngModel]="stockDraft()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onStockDraftChange($event)"
+        />
+
+        @if (stockDraftPreview(); as preview) {
+          <ds-text variant="label">{{ preview }}</ds-text>
+        }
+      }
+      @case ("fraction") {
+        <ds-choice-chips
+          data-testid="stock-fraction"
+          [options]="fractionOptions()"
+          [wrap]="true"
+          [ngModel]="correctionFraction()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onCorrectionFractionChange($event)"
+        />
+
+        @if (correctionPreview(); as preview) {
+          <ds-text variant="label">{{ preview }}</ds-text>
+        }
+      }
+      @case ("level") {
+        <ds-choice-chips
+          data-testid="stock-level"
+          [options]="levelOptions()"
+          [wrap]="true"
+          [ngModel]="correctionLevel()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onCorrectionLevelChange($event)"
+        />
+
+        @if (correctionPreview(); as preview) {
+          <ds-text variant="label">{{ preview }}</ds-text>
+        }
+      }
+    }
+
+    <ds-button
+      data-testid="stock-confirm"
+      variant="primary"
+      icon="check"
+      [fullWidth]="true"
+      [disabled]="!canConfirmCorrection()"
+      [loading]="savingStock()"
+      (clicked)="onConfirmStockEditor()"
+    >
+      {{ "getArticle.stock.editor.confirm" | t }}
+    </ds-button>
+
+    <ds-divider />
+
+    <ds-field
+      [label]="'getArticle.stock.tracking.heading' | t"
+      [hint]="trackingHint()"
+    >
+      <ds-segmented-toggle
+        data-testid="stock-tracking"
+        [options]="trackingOptions()"
+        [ngModel]="trackingMode()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onTrackingModeChange($event)"
+      />
+    </ds-field>
 
     <ds-field [label]="'getArticle.stock.editor.location' | t">
       <ds-select-chips
@@ -272,17 +349,6 @@
         (ngModelChange)="onStockLocationChange($event)"
       />
     </ds-field>
-
-    <ds-button
-      variant="primary"
-      icon="check"
-      [fullWidth]="true"
-      [disabled]="stockDraftBase() === null"
-      [loading]="savingStock()"
-      (clicked)="onConfirmStockEditor()"
-    >
-      {{ "getArticle.stock.editor.confirm" | t }}
-    </ds-button>
   </ds-stack>
 </ds-modal-sheet>
 

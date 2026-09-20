@@ -2,7 +2,7 @@ import { Component, computed, inject, input, signal } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import {
   ArticleDetailView,
@@ -11,7 +11,8 @@ import {
 } from "@nutrition/catalog/article/application/services/article-view.service";
 import { GetArticleService } from "@nutrition/catalog/article/application/services/get-article.service";
 import { DeleteArticleService } from "@nutrition/catalog/article/application/services/delete-article.service";
-import { UpdateArticleStockService } from "@nutrition/pantry/stock/application/services/update-article-stock.service";
+import { CorrectArticleStockService } from "@nutrition/pantry/stock/application/services/correct-article-stock.service";
+import { SetArticleStockTrackingService } from "@nutrition/pantry/stock/application/services/set-article-stock-tracking.service";
 import { AssignPantryLocationItemService } from "@nutrition/pantry/location/application/services/assign-pantry-location-item.service";
 import { ReleasePantryLocationItemService } from "@nutrition/pantry/location/application/services/release-pantry-location-item.service";
 import { PantryLocationItemKind } from "@nutrition/pantry/location/domain/models/pantry-location-item-kind.model";
@@ -21,6 +22,9 @@ import { StockViewService } from "@nutrition/pantry/stock/application/services/s
 import { ArticleStockView } from "@nutrition/pantry/stock/domain/models/article-stock-view.model";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { StockUnitMode } from "@nutrition/pantry/stock/domain/models/stock-unit-mode.model";
+import { StockCorrectionKind } from "@nutrition/pantry/stock/domain/models/stock-correction-kind.model";
+import { StockLevel } from "@nutrition/pantry/stock/domain/models/stock-level.model";
+import { StockTrackingMode } from "@nutrition/pantry/stock/domain/models/stock-tracking-mode.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -50,7 +54,12 @@ import {
   SelectChipOption,
   SelectChipsComponent,
 } from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
+import {
+  ChoiceChipOption,
+  ChoiceChipsComponent,
+} from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
 import { EquivalenceSummaryComponent } from "@shared/design-system/equivalence-summary/infrastructure/components/equivalence-summary.component";
 import { PurchaseSummaryComponent } from "@shared/design-system/purchase-summary/infrastructure/components/purchase-summary.component";
 import { StockControlComponent } from "@shared/design-system/stock-control/infrastructure/components/stock-control.component";
@@ -61,6 +70,31 @@ import { SegmentedOption } from "@shared/design-system/segmented-toggle/infrastr
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 type NutritionMode = "pack" | "per100";
+
+const FRACTIONS = [0.25, 0.5, 0.75, 1] as const;
+
+const FRACTION_KEYS: Record<number, string> = {
+  0.25: "quarter",
+  0.5: "half",
+  0.75: "threeQuarters",
+  1: "full",
+};
+
+const CORRECTABLE_LEVELS = [
+  StockLevel.Empty,
+  StockLevel.Low,
+  StockLevel.Medium,
+  StockLevel.High,
+  StockLevel.Full,
+] as const;
+
+const LEVEL_FACTORS: Record<string, number> = {
+  [StockLevel.Empty]: 0,
+  [StockLevel.Low]: 0.2,
+  [StockLevel.Medium]: 0.5,
+  [StockLevel.High]: 0.8,
+  [StockLevel.Full]: 1,
+};
 
 @Component({
   selector: "app-get-article",
@@ -88,7 +122,9 @@ type NutritionMode = "pack" | "per100";
     NutritionFactsComponent,
     SegmentedToggleComponent,
     SelectChipsComponent,
+    ChoiceChipsComponent,
     FieldComponent,
+    DividerComponent,
     EquivalenceSummaryComponent,
     PurchaseSummaryComponent,
     StockControlComponent,
@@ -102,7 +138,10 @@ export class GetArticleComponent {
   private backNavigation = inject(BackNavigationService);
   private getArticleService = inject(GetArticleService);
   private deleteArticleService = inject(DeleteArticleService);
-  private updateArticleStockService = inject(UpdateArticleStockService);
+  private correctArticleStockService = inject(CorrectArticleStockService);
+  private setArticleStockTrackingService = inject(
+    SetArticleStockTrackingService,
+  );
   private assignItemService = inject(AssignPantryLocationItemService);
   private releaseItemService = inject(ReleasePantryLocationItemService);
   private getPantryLocationsService = inject(GetPantryLocationsService);
@@ -142,7 +181,12 @@ export class GetArticleComponent {
 
   stock = signal<ArticleStockView | null>(null);
   savingStock = signal(false);
+  savingTracking = signal(false);
   showStockEditor = signal(false);
+  correctionKind = signal<StockCorrectionKind>(StockCorrectionKind.Measured);
+  correctionFraction = signal<number | null>(null);
+  correctionLevel = signal<StockLevel | null>(null);
+  trackingMode = signal<StockTrackingMode>(StockTrackingMode.Approximate);
   locations = signal<PantryLocation[]>([]);
   stockLocationId = signal<string>("");
   movingStock = signal(false);
@@ -165,9 +209,13 @@ export class GetArticleComponent {
     const stock = this.stock();
     if (null === stock) return [];
 
+    const base = { value: StockUnitMode.Base, label: stock.baseUnit };
+
+    if (!stock.hasPack) return [base];
+
     return [
       { value: StockUnitMode.Pack, label: this.stockView.packLabel(stock) },
-      { value: StockUnitMode.Base, label: stock.baseUnit },
+      base,
     ];
   });
   stockModeUnitLabel = computed<string>(() => {
@@ -189,16 +237,95 @@ export class GetArticleComponent {
       ? parsed * stock.packSize
       : parsed;
   });
+  hasReference = computed<boolean>(() => {
+    const stock = this.stock();
+
+    return null !== stock && null !== stock.referenceQuantity;
+  });
+  correctionKindOptions = computed<SegmentedOption[]>(() => {
+    const measured: SegmentedOption = {
+      value: StockCorrectionKind.Measured,
+      label: this.t("getArticle.stock.editor.kind.measured"),
+    };
+
+    if (!this.hasReference()) return [measured];
+
+    return [
+      measured,
+      {
+        value: StockCorrectionKind.Fraction,
+        label: this.t("getArticle.stock.editor.kind.fraction"),
+      },
+      {
+        value: StockCorrectionKind.Level,
+        label: this.t("getArticle.stock.editor.kind.level"),
+      },
+    ];
+  });
+  fractionOptions = computed<ChoiceChipOption[]>(() =>
+    FRACTIONS.map((fraction) => ({
+      value: fraction,
+      label: this.t(
+        `getArticle.stock.editor.fraction.${FRACTION_KEYS[fraction]}`,
+      ),
+    })),
+  );
+  levelOptions = computed<ChoiceChipOption[]>(() =>
+    CORRECTABLE_LEVELS.map((level) => ({
+      value: level,
+      label: this.t(`getArticle.stock.level.${level}`),
+    })),
+  );
+  trackingOptions = computed<SegmentedOption[]>(() =>
+    Object.values(StockTrackingMode).map((mode) => ({
+      value: mode,
+      label: this.t(`getArticle.stock.tracking.${mode}`),
+    })),
+  );
+  trackingHint = computed<string>(() =>
+    this.t(`getArticle.stock.tracking.hint.${this.trackingMode()}`),
+  );
+  stockLevelLabel = computed<string>(() => {
+    const stock = this.stock();
+
+    if (null === stock || !stock.tracked) return "";
+
+    return this.t(`getArticle.stock.level.${stock.level}`);
+  });
+  stockConfidenceLabel = computed<string>(() =>
+    this.t("getArticle.stock.confidence"),
+  );
+  stockConfidencePercent = computed<number | null>(() => {
+    const stock = this.stock();
+
+    if (null === stock || !stock.estimated) return null;
+
+    return stock.confidencePercent;
+  });
+  correctionPreview = computed<string | null>(() => {
+    const stock = this.stock();
+    const reference = stock?.referenceQuantity ?? null;
+    const factor = this.correctionFactor();
+
+    if (null === stock || null === reference || null === factor) return null;
+
+    return this.stockView.amountText(stock, reference * factor);
+  });
+  canConfirmCorrection = computed<boolean>(() => {
+    if (StockCorrectionKind.Measured === this.correctionKind()) {
+      return null !== this.stockDraftBase();
+    }
+
+    return null !== this.correctionFactor();
+  });
   stockDraftPreview = computed<string | null>(() => {
     const stock = this.stock();
     const base = this.stockDraftBase();
     if (null === stock || null === base) return null;
 
-    const preview = this.stockView.build(stock, base);
-
     return StockUnitMode.Pack === this.stockDraftMode()
-      ? preview.baseText
-      : preview.packsText;
+      ? this.stockView.amountText(stock, base)
+      : this.stockView.packsTextOf(stock, base);
   });
 
   constructor() {
@@ -214,15 +341,7 @@ export class GetArticleComponent {
         takeUntilDestroyed(),
       )
       .subscribe((response) => {
-        const detail = response ? this.view.toDetail(response.data) : null;
-        this.article.set(response?.data ?? null);
-        this.detail.set(detail);
-        this.stockLocationId.set(detail?.stockLocationId ?? "");
-        this.stock.set(
-          null === detail
-            ? null
-            : this.stockView.build(detail.stockContext, detail.stock),
-        );
+        this.applyArticle(response?.data ?? null);
         this.notFound.set(null === response);
         this.loading.set(false);
       });
@@ -249,17 +368,64 @@ export class GetArticleComponent {
   }
 
   onClearStock(): void {
-    this.saveStock(0);
+    if (this.savingStock()) return;
+
+    this.runCorrection(
+      this.correctArticleStockService.level(this.id(), StockLevel.Empty),
+    );
   }
 
   onOpenStockEditor(): void {
     const stock = this.stock();
     if (null === stock) return;
 
-    this.stockDraftMode.set(StockUnitMode.Pack);
-    this.stockDraft.set(this.draftText(stock.packs));
+    this.correctionKind.set(StockCorrectionKind.Measured);
+    this.correctionFraction.set(null);
+    this.correctionLevel.set(null);
+    this.trackingMode.set(stock.trackingMode);
+    this.stockDraftMode.set(
+      stock.hasPack ? StockUnitMode.Pack : StockUnitMode.Base,
+    );
+    this.stockDraft.set(
+      this.draftText(stock.hasPack ? stock.packs : stock.stock),
+    );
     this.showStockEditor.set(true);
     this.loadLocations();
+  }
+
+  onCorrectionKindChange(value: string): void {
+    this.correctionKind.set(value as StockCorrectionKind);
+  }
+
+  onCorrectionFractionChange(value: string | number): void {
+    this.correctionFraction.set(Number(value));
+  }
+
+  onCorrectionLevelChange(value: string | number): void {
+    this.correctionLevel.set(String(value) as StockLevel);
+  }
+
+  onTrackingModeChange(value: string): void {
+    const mode = value as StockTrackingMode;
+
+    if (mode === this.trackingMode() || this.savingTracking()) return;
+
+    const previous = this.trackingMode();
+    this.trackingMode.set(mode);
+    this.savingTracking.set(true);
+
+    this.setArticleStockTrackingService
+      .setArticleStockTracking(this.id(), mode)
+      .subscribe({
+        next: () => {
+          this.savingTracking.set(false);
+          this.reloadArticle();
+        },
+        error: () => {
+          this.trackingMode.set(previous);
+          this.savingTracking.set(false);
+        },
+      });
   }
 
   onStockLocationChange(locationId: string): void {
@@ -321,10 +487,12 @@ export class GetArticleComponent {
   }
 
   onConfirmStockEditor(): void {
-    const base = this.stockDraftBase();
-    if (null === base) return;
+    if (this.savingStock()) return;
 
-    this.saveStock(base);
+    const correction = this.buildCorrection();
+    if (null === correction) return;
+
+    this.runCorrection(correction);
   }
 
   onDelete(): void {
@@ -351,29 +519,94 @@ export class GetArticleComponent {
     });
   }
 
-  private shiftStockByPacks(packs: number): void {
-    const stock = this.stock();
-    if (null === stock) return;
+  private applyArticle(article: Article | null): void {
+    const detail = article ? this.view.toDetail(article) : null;
 
-    this.saveStock(Math.max(0, stock.stock + packs * stock.packSize));
+    this.article.set(article);
+    this.detail.set(detail);
+    this.stockLocationId.set(detail?.stockLocationId ?? "");
+    this.stock.set(
+      null === detail
+        ? null
+        : this.stockView.build(detail.stockContext, detail.stockEstimate),
+    );
+    this.trackingMode.set(
+      detail?.stockEstimate.trackingMode ?? StockTrackingMode.Approximate,
+    );
   }
 
-  private saveStock(value: number): void {
+  private correctionFactor(): number | null {
+    if (StockCorrectionKind.Fraction === this.correctionKind()) {
+      return this.correctionFraction();
+    }
+
+    const level = this.correctionLevel();
+
+    return null === level ? null : LEVEL_FACTORS[level];
+  }
+
+  private buildCorrection(): Observable<void> | null {
+    const kind = this.correctionKind();
+
+    if (StockCorrectionKind.Measured === kind) {
+      const base = this.stockDraftBase();
+
+      return null === base
+        ? null
+        : this.correctArticleStockService.measured(this.id(), base);
+    }
+
+    if (StockCorrectionKind.Fraction === kind) {
+      const fraction = this.correctionFraction();
+
+      return null === fraction
+        ? null
+        : this.correctArticleStockService.fraction(this.id(), fraction);
+    }
+
+    const level = this.correctionLevel();
+
+    return null === level
+      ? null
+      : this.correctArticleStockService.level(this.id(), level);
+  }
+
+  private shiftStockByPacks(packs: number): void {
     const stock = this.stock();
     if (null === stock || this.savingStock()) return;
 
+    const change = packs * stock.packSize;
+    const bounded = Math.max(change, -stock.stock);
+
+    this.runCorrection(
+      this.correctArticleStockService.delta(this.id(), bounded),
+    );
+  }
+
+  private runCorrection(correction: Observable<void>): void {
     this.savingStock.set(true);
 
-    this.updateArticleStockService
-      .updateArticleStock(this.id(), value)
-      .subscribe({
-        next: () => {
-          this.stock.set(this.stockView.build(stock, value));
-          this.savingStock.set(false);
-          this.showStockEditor.set(false);
-        },
-        error: () => this.savingStock.set(false),
+    correction.subscribe({
+      next: () => {
+        this.showStockEditor.set(false);
+        this.reloadArticle();
+      },
+      error: () => this.savingStock.set(false),
+    });
+  }
+
+  private reloadArticle(): void {
+    this.getArticleService
+      .getArticle(this.id())
+      .pipe(catchError(() => of(null)))
+      .subscribe((response) => {
+        this.applyArticle(response?.data ?? null);
+        this.savingStock.set(false);
       });
+  }
+
+  private t(key: string): string {
+    return this.translationService.translate(key, "nutrition/catalog/article");
   }
 
   private loadLocations(): void {
