@@ -20,6 +20,14 @@ final readonly class DiaryShoppingNeedView
         public ?float $packSize,
         public ?int $packs,
         public bool $inShoppingList,
+        public string $trackingMode,
+        public float $stockConfidence,
+        public ?float $stockMinQuantity,
+        public ?float $stockMaxQuantity,
+        public string $stockLevel,
+        public string $sufficiency,
+        public float $safeMissingQuantity,
+        public ?int $safePacks,
     ) {
     }
 }

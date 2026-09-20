@@ -4,7 +4,20 @@ services:
     arguments:
       $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
       $needleDataQuery: '@Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery'
-      $balanceCalculator: '@Nutrition\Pantry\Movement\Domain\Service\StockBalanceCalculator'
+      $ledgerSummarizer: '@Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer'
+      $stockEstimator: '@Nutrition\Pantry\Stock\Domain\Service\StockEstimator'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Stock\Application\Command\SetArticleStockTrackingCommandHandler:
+    class: Nutrition\Pantry\Stock\Application\Command\SetArticleStockTrackingCommandHandler
+    arguments:
+      $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery'
+      $ledgerSummarizer: '@Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer'
+      $stockEstimator: '@Nutrition\Pantry\Stock\Domain\Service\StockEstimator'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

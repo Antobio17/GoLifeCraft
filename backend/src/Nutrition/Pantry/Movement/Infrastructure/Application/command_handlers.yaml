@@ -27,3 +27,14 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Pantry\Movement\Application\Command\CorrectArticleStockCommandHandler:
+    class: Nutrition\Pantry\Movement\Application\Command\CorrectArticleStockCommandHandler
+    arguments:
+      $stockMovementRepository: '@Nutrition\Pantry\Movement\Domain\Model\StockMovementRepository'
+      $needleDataQuery: '@Nutrition\Pantry\Movement\Domain\QueryModel\CorrectArticleStockNeedleDataQuery'
+      $unitConverter: '@Nutrition\Pantry\Movement\Domain\Service\StockMovementUnitConverter'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

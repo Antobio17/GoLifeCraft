@@ -67,5 +67,16 @@ fields:
       Id of whatever caused it, so undoing that cause removes exactly this movement. There is
       at most one movement per kind, refId, sourceKind and sourceId.
     filterable: true
+  confidence:
+    writable: false
+    type: float
+    description: >-
+      How sure the person was when they stated this count, from 0 to 1, and null on a delta,
+      where it means nothing. A weighed inventory line is 1, an amount typed by hand is 0.85,
+      "half a pack" is 0.7 and "running low" is 0.5; saying it has run out is 1, because an
+      empty shelf is the one thing nobody misreads. It is what the stock estimate starts from:
+      a count with a low confidence opens a wide band around the number instead of a narrow one.
+    filterable: true
+    sortable: true
 
 relations: {}

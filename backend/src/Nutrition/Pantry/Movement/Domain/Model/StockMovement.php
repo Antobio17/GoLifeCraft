@@ -48,6 +48,8 @@ class StockMovement extends GenericAggregate
     ];
 
     public const int QUANTITY_PRECISION = 4;
+    public const int CONFIDENCE_PRECISION = 2;
+    public const float CONFIDENCE_OF_LEGACY_COUNT = 0.85;
 
     public const string DELTA_TIME_OF_DAY = '12:00:00';
     public const string DAY_OPENS_AT = '00:00:00';
@@ -62,6 +64,36 @@ class StockMovement extends GenericAggregate
     public ?string $originalUnit = null;
     public string $sourceKind;
     public string $sourceId;
+    public ?float $confidence = null;
+
+    public static function confidenceOrDefault(?float $confidence, string $type, string $sourceKind): float
+    {
+        if (null !== $confidence) {
+            return $confidence;
+        }
+
+        if (self::TYPE_COUNT !== $type) {
+            return StockCorrection::CONFIDENCE_COUNTED;
+        }
+
+        return self::SOURCE_INVENTORY === $sourceKind
+            ? StockCorrection::CONFIDENCE_COUNTED
+            : self::CONFIDENCE_OF_LEGACY_COUNT;
+    }
+
+    public function evidence(): StockEvidence
+    {
+        return StockEvidence::of(type: $this->type, sourceKind: $this->sourceKind);
+    }
+
+    public function statedConfidence(): float
+    {
+        return self::confidenceOrDefault(
+            confidence: $this->confidence,
+            type: $this->type,
+            sourceKind: $this->sourceKind,
+        );
+    }
 
     public static function deltaMomentOf(string $businessDate): string
     {
@@ -87,6 +119,7 @@ class StockMovement extends GenericAggregate
         ?string $originalUnit,
         string $sourceKind,
         string $sourceId,
+        ?float $confidence,
         string $registeredByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): self {
@@ -108,6 +141,7 @@ class StockMovement extends GenericAggregate
         $movement->originalUnit = $originalUnit;
         $movement->sourceKind = $sourceKind;
         $movement->sourceId = $sourceId;
+        $movement->confidence = self::normalizeConfidence(confidence: $confidence);
         $movement->stampCreation(userId: $registeredByUserId, now: $now);
 
         $movement->record(event: new StockMovementRegistered(
@@ -122,6 +156,7 @@ class StockMovement extends GenericAggregate
             originalUnit: $movement->originalUnit,
             sourceKind: $movement->sourceKind,
             sourceId: $movement->sourceId,
+            confidence: $movement->confidence,
             createdAt: $movement->createdAt,
             updatedAt: $movement->updatedAt,
             createdByUserId: $movement->createdByUserId,
@@ -136,6 +171,7 @@ class StockMovement extends GenericAggregate
         float $quantity,
         float $originalQuantity,
         ?string $originalUnit,
+        ?float $confidence,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -147,6 +183,7 @@ class StockMovement extends GenericAggregate
         $this->quantity = round(num: $quantity, precision: self::QUANTITY_PRECISION);
         $this->originalQuantity = round(num: $originalQuantity, precision: self::QUANTITY_PRECISION);
         $this->originalUnit = $originalUnit;
+        $this->confidence = self::normalizeConfidence(confidence: $confidence);
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
         $this->record(event: new StockMovementRegistered(
@@ -161,6 +198,7 @@ class StockMovement extends GenericAggregate
             originalUnit: $this->originalUnit,
             sourceKind: $this->sourceKind,
             sourceId: $this->sourceId,
+            confidence: $this->confidence,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -187,11 +225,21 @@ class StockMovement extends GenericAggregate
             originalUnit: $this->originalUnit,
             sourceKind: $this->sourceKind,
             sourceId: $this->sourceId,
+            confidence: $this->confidence,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
             revokedByUserId: $revokedByUserId,
         ));
+    }
+
+    private static function normalizeConfidence(?float $confidence): ?float
+    {
+        if (null === $confidence) {
+            return null;
+        }
+
+        return round(num: max(0.0, min(1.0, $confidence)), precision: self::CONFIDENCE_PRECISION);
     }
 
     private static function momentOf(string $businessDate, string $timeOfDay): string

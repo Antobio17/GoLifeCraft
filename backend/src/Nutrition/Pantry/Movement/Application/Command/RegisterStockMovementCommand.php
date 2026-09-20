@@ -18,6 +18,7 @@ final readonly class RegisterStockMovementCommand implements Command
         public string $sourceKind,
         public string $sourceId,
         public string $registeredByUserId,
+        public ?float $confidence = null,
     ) {
     }
 

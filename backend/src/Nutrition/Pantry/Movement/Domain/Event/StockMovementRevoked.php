@@ -18,6 +18,7 @@ final readonly class StockMovementRevoked extends DomainEvent
         public ?string $originalUnit,
         public string $sourceKind,
         public string $sourceId,
+        public ?float $confidence,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

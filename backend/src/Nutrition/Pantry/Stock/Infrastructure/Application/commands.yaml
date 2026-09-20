@@ -1,0 +1,11 @@
+services:
+  Nutrition\Pantry\Stock\Infrastructure\Application\Console\RebuildStockEstimatesCommand:
+    class: Nutrition\Pantry\Stock\Infrastructure\Application\Console\RebuildStockEstimatesCommand
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
+      $ledgerSummarizer: '@Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer'
+      $stockEstimator: '@Nutrition\Pantry\Stock\Domain\Service\StockEstimator'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'console.command' }
