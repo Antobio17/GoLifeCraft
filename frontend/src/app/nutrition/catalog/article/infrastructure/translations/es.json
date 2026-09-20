@@ -70,19 +70,50 @@
       "equivalences": "EQUIVALENCIAS"
     },
     "stock": {
-      "heading": "STOCK ACTUAL",
+      "heading": "STOCK ESTIMADO",
       "value": "VALOR",
       "step": "1 envase",
-      "clear": "Vaciar stock",
-      "edit": "Ajustar el stock exacto",
+      "clear": "Se ha acabado",
+      "edit": "Corregir",
+      "confidence": "FIABILIDAD",
+      "level": {
+        "unknown": "Sin control",
+        "empty": "Vacío",
+        "low": "Queda poco",
+        "medium": "A media",
+        "high": "Queda bastante",
+        "full": "Lleno"
+      },
+      "tracking": {
+        "heading": "Cómo se controla",
+        "exact": "Exacto",
+        "approximate": "Aproximado",
+        "none": "Sin control",
+        "hint": {
+          "exact": "Para lo que se cuenta de uno en uno: huevos, yogures, latas. El número se toma al pie de la letra.",
+          "approximate": "Para lo que nadie pesa: arroz, pasta, carne, verdura. Se guarda el número, pero con un margen que se ensancha según pasan los días y las comidas.",
+          "none": "No se controla. Se sigue guardando la cantidad, pero no se dice ni el nivel ni si hay suficiente."
+        }
+      },
       "editor": {
-        "title": "Ajustar stock",
+        "title": "Corregir stock",
         "close": "Cerrar",
-        "hint": "Indica cuánto te queda en casa. Usa los gramos para un envase ya empezado.",
+        "hint": "Dime lo que queda como te salga: una cantidad, media caja o simplemente que queda poco.",
         "amount": "Cantidad de stock",
-        "confirm": "Guardar stock",
+        "confirm": "Guardar",
         "location": "Ubicación",
-        "noLocation": "Sin ubicación"
+        "noLocation": "Sin ubicación",
+        "kind": {
+          "measured": "Cantidad",
+          "fraction": "Parte",
+          "level": "A ojo"
+        },
+        "fraction": {
+          "quarter": "Un cuarto",
+          "half": "La mitad",
+          "threeQuarters": "Tres cuartos",
+          "full": "Entero"
+        }
       }
     }
   },

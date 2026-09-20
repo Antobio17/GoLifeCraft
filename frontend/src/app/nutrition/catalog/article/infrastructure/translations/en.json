@@ -70,19 +70,50 @@
       "equivalences": "EQUIVALENCES"
     },
     "stock": {
-      "heading": "CURRENT STOCK",
+      "heading": "ESTIMATED STOCK",
       "value": "VALUE",
       "step": "1 pack",
-      "clear": "Empty stock",
-      "edit": "Set the exact stock",
+      "clear": "It has run out",
+      "edit": "Correct",
+      "confidence": "CONFIDENCE",
+      "level": {
+        "unknown": "Not tracked",
+        "empty": "Empty",
+        "low": "Running low",
+        "medium": "Half way",
+        "high": "Plenty left",
+        "full": "Full"
+      },
+      "tracking": {
+        "heading": "How closely to track it",
+        "exact": "Exact",
+        "approximate": "Approximate",
+        "none": "Not tracked",
+        "hint": {
+          "exact": "For things counted one by one: eggs, yoghurts, cans. The number is taken at face value.",
+          "approximate": "For things nobody weighs: rice, pasta, meat, vegetables. The number is kept, inside a margin that widens as days and meals go by.",
+          "none": "Not tracked. The amount is still kept, but no level is claimed and nothing is said about having enough."
+        }
+      },
       "editor": {
-        "title": "Adjust stock",
+        "title": "Correct stock",
         "close": "Close",
-        "hint": "Set how much you have left at home. Use the base unit for a pack you already opened.",
+        "hint": "Say what is left however you like: an amount, half a box, or simply that it is running low.",
         "amount": "Stock amount",
-        "confirm": "Save stock",
+        "confirm": "Save",
         "location": "Location",
-        "noLocation": "No location"
+        "noLocation": "No location",
+        "kind": {
+          "measured": "Amount",
+          "fraction": "Part",
+          "level": "Roughly"
+        },
+        "fraction": {
+          "quarter": "A quarter",
+          "half": "Half",
+          "threeQuarters": "Three quarters",
+          "full": "A whole one"
+        }
       }
     }
   },

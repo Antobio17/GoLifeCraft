@@ -38,6 +38,50 @@ export class ArticlePage {
     return this.ds.host("article-purchase");
   }
 
+  get stock(): Locator {
+    return this.ds.host("article-stock");
+  }
+
+  get stockLevel(): Locator {
+    return this.stock.locator("ds-chip");
+  }
+
+  get stockConfidence(): Locator {
+    return this.stock.locator('[role="progressbar"]');
+  }
+
+  async openStockEditor(): Promise<void> {
+    await this.ds.click("article-stock");
+    await expect(this.ds.host("stock-confirm")).toBeVisible();
+  }
+
+  async chooseCorrectionKind(label: string): Promise<void> {
+    await this.chooseOption("stock-correction-kind", label);
+  }
+
+  async chooseLevel(label: string): Promise<void> {
+    await this.chooseOption("stock-level", label);
+  }
+
+  async chooseFraction(label: string): Promise<void> {
+    await this.chooseOption("stock-fraction", label);
+  }
+
+  async chooseTracking(label: string): Promise<void> {
+    await this.chooseOption("stock-tracking", label);
+  }
+
+  async confirmStock(): Promise<void> {
+    await this.ds.click("stock-confirm");
+  }
+
+  private async chooseOption(testId: string, label: string): Promise<void> {
+    await this.ds
+      .host(testId)
+      .getByRole("radio", { name: label, exact: true })
+      .click();
+  }
+
   async edit(): Promise<void> {
     await this.ds.click("article-edit");
     await expect(this.page).toHaveURL(/\/catalog\/[0-9a-f-]{36}\/edit$/);

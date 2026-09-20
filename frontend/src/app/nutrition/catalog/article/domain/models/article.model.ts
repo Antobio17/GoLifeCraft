@@ -11,6 +11,14 @@ export interface ArticleAttributes {
   equivalences: ArticleEquivalence[];
   packUnit: string | null;
   stock?: number;
+  trackingMode?: string;
+  stockConfidence?: number;
+  stockUncertainty?: number | null;
+  stockMinQuantity?: number | null;
+  stockMaxQuantity?: number | null;
+  stockLevel?: string;
+  stockReferenceQuantity?: number | null;
+  stockObservedAt?: string | null;
   stockLocationId?: string | null;
   stockLocationName?: string | null;
   price: number | null;

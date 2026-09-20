@@ -107,6 +107,24 @@ final class CorrectArticleStockCommandHandlerTest extends TestCase
         $this->assertSame(expected: StockCorrection::CONFIDENCE_COUNTED, actual: $movement->confidence);
     }
 
+    public function testAddingAPackIsADeltaThatDoesNotPretendAnybodyLooked(): void
+    {
+        $this->correct(kind: StockCorrection::KIND_DELTA, quantity: 1000.0);
+
+        $movement = $this->lastMovement();
+
+        $this->assertSame(expected: StockMovement::TYPE_DELTA, actual: $movement->type);
+        $this->assertSame(expected: 1000.0, actual: $movement->quantity);
+        $this->assertNull(actual: $movement->confidence);
+    }
+
+    public function testTakingAPackOutIsANegativeDelta(): void
+    {
+        $this->correct(kind: StockCorrection::KIND_DELTA, quantity: -1000.0);
+
+        $this->assertSame(expected: -1000.0, actual: $this->lastMovement()->quantity);
+    }
+
     public function testEveryCorrectionLandsAsItsOwnLineOfTheLedger(): void
     {
         $this->correct(kind: StockCorrection::KIND_MEASURED, quantity: 300.0);

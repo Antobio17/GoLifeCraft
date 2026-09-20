@@ -4,7 +4,10 @@ import {
   ArticleEquivalence,
   ArticleNutritionFacts,
 } from "../../domain/models/article.model";
-import { ArticleStockContext } from "../../domain/models/article-stock-context.model";
+import { ArticleStockContext } from "@nutrition/pantry/stock/domain/models/article-stock-context.model";
+import { ArticleStockEstimate } from "@nutrition/pantry/stock/domain/models/article-stock-estimate.model";
+import { StockLevel } from "@nutrition/pantry/stock/domain/models/stock-level.model";
+import { StockTrackingMode } from "@nutrition/pantry/stock/domain/models/stock-tracking-mode.model";
 import { UnitCatalogService } from "./unit-catalog.service";
 
 export interface ArticleCardView {
@@ -63,7 +66,7 @@ export interface ArticleDetailView {
   units: ArticleUnitsView;
   purchase: ArticlePurchaseView;
   stockContext: ArticleStockContext;
-  stock: number;
+  stockEstimate: ArticleStockEstimate;
   stockLocationId: string | null;
 }
 
@@ -191,9 +194,40 @@ export class ArticleViewService {
       units: this.units(article, suffix),
       purchase: this.purchase(article, pack, suffix),
       stockContext: this.stockContext(article, pack, suffix),
-      stock: article.attributes.stock ?? 0,
+      stockEstimate: this.stockEstimate(article),
       stockLocationId: article.attributes.stockLocationId ?? null,
     };
+  }
+
+  private stockEstimate(article: Article): ArticleStockEstimate {
+    const attributes = article.attributes;
+
+    return {
+      quantity: attributes.stock ?? 0,
+      trackingMode: this.trackingMode(attributes.trackingMode),
+      confidence: attributes.stockConfidence ?? 0,
+      uncertainty: attributes.stockUncertainty ?? null,
+      minQuantity: attributes.stockMinQuantity ?? null,
+      maxQuantity: attributes.stockMaxQuantity ?? null,
+      level: this.stockLevel(attributes.stockLevel),
+      referenceQuantity: attributes.stockReferenceQuantity ?? null,
+    };
+  }
+
+  private trackingMode(value: string | undefined): StockTrackingMode {
+    const modes = Object.values(StockTrackingMode);
+
+    return modes.includes(value as StockTrackingMode)
+      ? (value as StockTrackingMode)
+      : StockTrackingMode.Approximate;
+  }
+
+  private stockLevel(value: string | undefined): StockLevel {
+    const levels = Object.values(StockLevel);
+
+    return levels.includes(value as StockLevel)
+      ? (value as StockLevel)
+      : StockLevel.Unknown;
   }
 
   private stockContext(
