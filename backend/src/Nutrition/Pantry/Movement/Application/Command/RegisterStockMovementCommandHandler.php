@@ -52,6 +52,7 @@ final readonly class RegisterStockMovementCommandHandler
                 originalUnit: $this->declaredUnit(command: $command),
                 sourceKind: $command->sourceKind,
                 sourceId: $command->sourceId,
+                confidence: $command->confidence,
                 registeredByUserId: $command->registeredByUserId,
                 dateTimeGenerator: $this->dateTimeGenerator,
             );
@@ -67,6 +68,7 @@ final readonly class RegisterStockMovementCommandHandler
             quantity: $quantity,
             originalQuantity: $this->declaredQuantity(command: $command),
             originalUnit: $this->declaredUnit(command: $command),
+            confidence: $command->confidence,
             updatedByUserId: $command->registeredByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

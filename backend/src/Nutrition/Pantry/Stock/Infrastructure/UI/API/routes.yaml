@@ -1,4 +1,13 @@
-update_article_stock:
+correct_article_stock:
   path: /api/v1/nutrition/pantry/stock/{articleId}
   methods: [PUT]
-  controller: Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\UpdateArticleStockController
+  controller: Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\CorrectArticleStockController
+  requirements:
+    articleId: '[0-9a-fA-F-]{36}'
+
+set_article_stock_tracking:
+  path: /api/v1/nutrition/pantry/stock/{articleId}/tracking
+  methods: [PUT]
+  controller: Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\SetArticleStockTrackingController
+  requirements:
+    articleId: '[0-9a-fA-F-]{36}'

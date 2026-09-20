@@ -1,0 +1,16 @@
+services:
+  Nutrition\Pantry\Stock\Infrastructure\UI\Mcp\Tool\CorrectArticleStockTool:
+    class: Nutrition\Pantry\Stock\Infrastructure\UI\Mcp\Tool\CorrectArticleStockTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
+
+  Nutrition\Pantry\Stock\Infrastructure\UI\Mcp\Tool\SetArticleStockTrackingTool:
+    class: Nutrition\Pantry\Stock\Infrastructure\UI\Mcp\Tool\SetArticleStockTrackingTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }

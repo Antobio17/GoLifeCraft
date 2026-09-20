@@ -2,11 +2,14 @@
 
 namespace App\Tests\Nutrition\Pantry\Stock\Application\Command;
 
+use Nutrition\Pantry\Movement\Domain\Model\StockLevel;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Nutrition\Pantry\Movement\Infrastructure\Domain\Model\InMemory\InMemoryStockMovementRepository;
-use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockBalanceCalculator;
+use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockLedgerSummarizer;
 use Nutrition\Pantry\Stock\Application\Command\RecalculateArticleStockCommand;
 use Nutrition\Pantry\Stock\Application\Command\RecalculateArticleStockCommandHandler;
+use Nutrition\Pantry\Stock\Domain\Model\StockTrackingMode;
+use Nutrition\Pantry\Stock\Domain\Service\StockEstimator;
 use Nutrition\Pantry\Stock\Infrastructure\Domain\Model\InMemory\InMemoryArticleStockRepository;
 use Nutrition\Pantry\Stock\Infrastructure\Domain\QueryModel\InMemory\InMemoryUpdateArticleStockNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
@@ -27,10 +30,14 @@ final class RecalculateArticleStockCommandHandlerTest extends TestCase
         $this->stockMovementRepository = new InMemoryStockMovementRepository();
         $this->handler = new RecalculateArticleStockCommandHandler(
             articleStockRepository: $this->articleStockRepository,
-            needleDataQuery: new InMemoryUpdateArticleStockNeedleDataQuery(articleIds: ['article-1']),
-            balanceCalculator: new InMemoryStockBalanceCalculator(
+            needleDataQuery: new InMemoryUpdateArticleStockNeedleDataQuery(
+                articleIds: ['article-1'],
+                packSizes: ['article-1' => 1000.0],
+            ),
+            ledgerSummarizer: new InMemoryStockLedgerSummarizer(
                 stockMovementRepository: $this->stockMovementRepository,
             ),
+            stockEstimator: new StockEstimator(),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -38,43 +45,35 @@ final class RecalculateArticleStockCommandHandlerTest extends TestCase
 
     public function testItProjectsTheLedgerBalanceOntoTheStock(): void
     {
-        $this->givenMovement(type: StockMovement::TYPE_COUNT, effectiveAt: '2026-01-30 00:00:00', quantity: 300.0, sourceId: 'inventory-1');
-        $this->givenMovement(type: StockMovement::TYPE_DELTA, effectiveAt: '2026-01-31 12:00:00', quantity: 1000.0, sourceId: 'ticket-item-1');
+        $this->givenCount(effectiveAt: '2026-01-30 00:00:00', quantity: 300.0, sourceId: 'inventory-1');
+        $this->givenTicket(effectiveAt: '2026-01-31 12:00:00', quantity: 1000.0, sourceId: 'ticket-item-1');
 
-        ($this->handler)(new RecalculateArticleStockCommand(articleId: 'article-1', updatedByUserId: 'god-user-id'));
+        $this->recalculate();
 
-        $this->assertSame(
-            expected: 1300.0,
-            actual: $this->articleStockRepository->findByArticleId(articleId: 'article-1')->quantity,
-        );
+        $this->assertSame(expected: 1300.0, actual: $this->stock()->quantity);
     }
 
     public function testItKeepsTheSameAggregateAcrossRecalculations(): void
     {
-        $this->givenMovement(type: StockMovement::TYPE_DELTA, effectiveAt: '2026-01-31 12:00:00', quantity: 1000.0, sourceId: 'ticket-item-1');
+        $this->givenTicket(effectiveAt: '2026-01-31 12:00:00', quantity: 1000.0, sourceId: 'ticket-item-1');
 
-        ($this->handler)(new RecalculateArticleStockCommand(articleId: 'article-1', updatedByUserId: 'god-user-id'));
-        $startedId = $this->articleStockRepository->findByArticleId(articleId: 'article-1')->id;
+        $this->recalculate();
+        $startedId = $this->stock()->id;
 
-        $this->givenMovement(type: StockMovement::TYPE_DELTA, effectiveAt: '2026-02-01 12:00:00', quantity: -250.0, sourceId: 'diary-entry-1');
-        ($this->handler)(new RecalculateArticleStockCommand(articleId: 'article-1', updatedByUserId: 'god-user-id'));
+        $this->givenMeal(effectiveAt: '2026-02-01 12:00:00', quantity: -250.0, sourceId: 'diary-entry-1');
+        $this->recalculate();
 
-        $stock = $this->articleStockRepository->findByArticleId(articleId: 'article-1');
-
-        $this->assertSame(expected: $startedId, actual: $stock->id);
-        $this->assertSame(expected: 750.0, actual: $stock->quantity);
+        $this->assertSame(expected: $startedId, actual: $this->stock()->id);
+        $this->assertSame(expected: 750.0, actual: $this->stock()->quantity);
     }
 
     public function testItStoresANegativeBalanceInsteadOfClampingItToZero(): void
     {
-        $this->givenMovement(type: StockMovement::TYPE_DELTA, effectiveAt: '2026-02-01 12:00:00', quantity: -250.0, sourceId: 'diary-entry-1');
+        $this->givenMeal(effectiveAt: '2026-02-01 12:00:00', quantity: -250.0, sourceId: 'diary-entry-1');
 
-        ($this->handler)(new RecalculateArticleStockCommand(articleId: 'article-1', updatedByUserId: 'god-user-id'));
+        $this->recalculate();
 
-        $this->assertSame(
-            expected: -250.0,
-            actual: $this->articleStockRepository->findByArticleId(articleId: 'article-1')->quantity,
-        );
+        $this->assertSame(expected: -250.0, actual: $this->stock()->quantity);
     }
 
     public function testItIgnoresAnArticleThatNoLongerExists(): void
@@ -84,8 +83,181 @@ final class RecalculateArticleStockCommandHandlerTest extends TestCase
         $this->assertNull(actual: $this->articleStockRepository->findByArticleId(articleId: 'missing-article'));
     }
 
-    private function givenMovement(string $type, string $effectiveAt, float $quantity, string $sourceId): void
+    public function testAFreshInventoryCountLeavesNoDoubtAtAll(): void
     {
+        $this->givenCount(effectiveAt: $this->today(), quantity: 500.0, sourceId: 'inventory-1');
+
+        $this->recalculate();
+
+        $stock = $this->stock();
+
+        $this->assertSame(expected: 1.0, actual: $stock->confidence);
+        $this->assertSame(expected: 0.0, actual: $stock->uncertainty);
+        $this->assertSame(expected: 500.0, actual: $stock->minQuantity);
+        $this->assertSame(expected: 500.0, actual: $stock->maxQuantity);
+    }
+
+    public function testAMealLoggedOnTopOfACountMovesTheQuantityWithoutRaisingTheConfidence(): void
+    {
+        $this->givenCount(effectiveAt: $this->today(), quantity: 500.0, sourceId: 'inventory-1');
+        $this->recalculate();
+        $observedConfidence = $this->stock()->confidence;
+
+        $this->givenMeal(effectiveAt: $this->laterToday(), quantity: -100.0, sourceId: 'diary-entry-1');
+        $this->recalculate();
+
+        $stock = $this->stock();
+
+        $this->assertSame(expected: 400.0, actual: $stock->quantity);
+        $this->assertLessThan(maximum: $observedConfidence, actual: $stock->confidence);
+        $this->assertGreaterThan(minimum: 0.0, actual: $stock->uncertainty);
+        $this->assertSame(expected: 1, actual: $stock->inferredCount);
+        $this->assertSame(expected: 100.0, actual: $stock->inferredFlow);
+    }
+
+    public function testABuiltUpDoubtIsWipedOutByLookingAtTheShelfAgain(): void
+    {
+        $this->givenCount(effectiveAt: '2026-01-01 23:59:59', quantity: 800.0, sourceId: 'inventory-1');
+        $this->givenMeal(effectiveAt: '2026-01-05 12:00:00', quantity: -150.0, sourceId: 'diary-entry-1');
+        $this->givenMeal(effectiveAt: '2026-01-08 12:00:00', quantity: -150.0, sourceId: 'diary-entry-2');
+        $this->recalculate();
+        $driftedConfidence = $this->stock()->confidence;
+
+        $this->givenCount(effectiveAt: $this->today(), quantity: 300.0, sourceId: 'correction-1', confidence: 0.85);
+        $this->recalculate();
+
+        $stock = $this->stock();
+
+        $this->assertSame(expected: 300.0, actual: $stock->quantity);
+        $this->assertGreaterThan(minimum: $driftedConfidence, actual: $stock->confidence);
+        $this->assertSame(expected: 0, actual: $stock->inferredCount);
+    }
+
+    public function testAnExactArticleCarriesNoDoubtHoweverManyMealsAreLogged(): void
+    {
+        $this->givenCount(effectiveAt: '2026-01-01 23:59:59', quantity: 12.0, sourceId: 'inventory-1');
+        $this->givenMeal(effectiveAt: '2026-01-05 12:00:00', quantity: -2.0, sourceId: 'diary-entry-1');
+        $this->recalculate();
+
+        $this->stock()->retrack(
+            trackingMode: StockTrackingMode::EXACT,
+            referenceQuantity: null,
+            updatedByUserId: 'god-user-id',
+            dateTimeGenerator: $this->dateTimeGenerator,
+        );
+        $this->recalculate();
+
+        $stock = $this->stock();
+
+        $this->assertSame(expected: 10.0, actual: $stock->quantity);
+        $this->assertSame(expected: 1.0, actual: $stock->confidence);
+        $this->assertSame(expected: 0.0, actual: $stock->uncertainty);
+    }
+
+    public function testAnUntrackedArticleClaimsNothing(): void
+    {
+        $this->givenTicket(effectiveAt: '2026-01-31 12:00:00', quantity: 1000.0, sourceId: 'ticket-item-1');
+        $this->recalculate();
+
+        $this->stock()->retrack(
+            trackingMode: StockTrackingMode::NONE,
+            referenceQuantity: null,
+            updatedByUserId: 'god-user-id',
+            dateTimeGenerator: $this->dateTimeGenerator,
+        );
+        $this->recalculate();
+
+        $stock = $this->stock();
+
+        $this->assertSame(expected: 1000.0, actual: $stock->quantity);
+        $this->assertSame(expected: 0.0, actual: $stock->confidence);
+        $this->assertNull(actual: $stock->minQuantity);
+        $this->assertSame(expected: StockLevel::UNKNOWN->value, actual: $stock->level);
+    }
+
+    public function testTheLevelReadsTheQuantityAgainstThePackSize(): void
+    {
+        $this->givenCount(effectiveAt: $this->today(), quantity: 150.0, sourceId: 'inventory-1');
+
+        $this->recalculate();
+
+        $this->assertSame(expected: StockLevel::LOW->value, actual: $this->stock()->level);
+        $this->assertSame(expected: 1000.0, actual: $this->stock()->referenceQuantity);
+    }
+
+    public function testAnEmptiedArticleReadsAsEmpty(): void
+    {
+        $this->givenCount(effectiveAt: $this->today(), quantity: 0.0, sourceId: 'inventory-1');
+
+        $this->recalculate();
+
+        $this->assertSame(expected: StockLevel::EMPTY_LEVEL->value, actual: $this->stock()->level);
+    }
+
+    private function recalculate(): void
+    {
+        ($this->handler)(new RecalculateArticleStockCommand(articleId: 'article-1', updatedByUserId: 'god-user-id'));
+    }
+
+    private function stock(): \Nutrition\Pantry\Stock\Domain\Model\ArticleStock
+    {
+        return $this->articleStockRepository->findByArticleId(articleId: 'article-1');
+    }
+
+    private function today(): string
+    {
+        return $this->dateTimeGenerator->now()->format(format: 'Y-m-d H:i:s');
+    }
+
+    private function laterToday(): string
+    {
+        return $this->dateTimeGenerator->now()->modify(modifier: '+1 hour')->format(format: 'Y-m-d H:i:s');
+    }
+
+    private function givenCount(string $effectiveAt, float $quantity, string $sourceId, ?float $confidence = null): void
+    {
+        $this->givenMovement(
+            type: StockMovement::TYPE_COUNT,
+            sourceKind: StockMovement::SOURCE_INVENTORY,
+            effectiveAt: $effectiveAt,
+            quantity: $quantity,
+            sourceId: $sourceId,
+            confidence: $confidence,
+        );
+    }
+
+    private function givenTicket(string $effectiveAt, float $quantity, string $sourceId): void
+    {
+        $this->givenMovement(
+            type: StockMovement::TYPE_DELTA,
+            sourceKind: StockMovement::SOURCE_TICKET_ITEM,
+            effectiveAt: $effectiveAt,
+            quantity: $quantity,
+            sourceId: $sourceId,
+            confidence: null,
+        );
+    }
+
+    private function givenMeal(string $effectiveAt, float $quantity, string $sourceId): void
+    {
+        $this->givenMovement(
+            type: StockMovement::TYPE_DELTA,
+            sourceKind: StockMovement::SOURCE_DIARY_ENTRY,
+            effectiveAt: $effectiveAt,
+            quantity: $quantity,
+            sourceId: $sourceId,
+            confidence: null,
+        );
+    }
+
+    private function givenMovement(
+        string $type,
+        string $sourceKind,
+        string $effectiveAt,
+        float $quantity,
+        string $sourceId,
+        ?float $confidence,
+    ): void {
         $this->stockMovementRepository->save(stockMovement: StockMovement::register(
             id: $this->stockMovementRepository->nextId(),
             kind: StockMovement::KIND_ARTICLE,
@@ -95,10 +267,9 @@ final class RecalculateArticleStockCommandHandlerTest extends TestCase
             quantity: $quantity,
             originalQuantity: $quantity,
             originalUnit: null,
-            sourceKind: StockMovement::TYPE_COUNT === $type
-                ? StockMovement::SOURCE_INVENTORY
-                : StockMovement::SOURCE_TICKET_ITEM,
+            sourceKind: $sourceKind,
             sourceId: $sourceId,
+            confidence: $confidence,
             registeredByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         ));

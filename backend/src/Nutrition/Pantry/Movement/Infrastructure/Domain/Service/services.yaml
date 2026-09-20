@@ -8,3 +8,8 @@ services:
     class: Nutrition\Pantry\Movement\Infrastructure\Domain\Service\Doctrine\DoctrineStockMovementUnitConverter
     arguments:
       $connection: '@doctrine.dbal.writer_tenant_connection'
+
+  Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer:
+    class: Nutrition\Pantry\Movement\Infrastructure\Domain\Service\Doctrine\DoctrineStockLedgerSummarizer
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'

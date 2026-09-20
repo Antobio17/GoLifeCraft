@@ -20,6 +20,7 @@
     <field name="originalUnit" type="string" column="original_unit" length="32" nullable="true"/>
     <field name="sourceKind" type="string" column="source_kind" length="32"/>
     <field name="sourceId" type="string" column="source_id" length="36"/>
+    <field name="confidence" type="float" column="confidence" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

@@ -69,6 +69,7 @@ final class RecalculateRecipeStockCommandHandlerTest extends TestCase
             originalUnit: null,
             sourceKind: $sourceKind,
             sourceId: $sourceId,
+            confidence: null,
             registeredByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,
         ));
