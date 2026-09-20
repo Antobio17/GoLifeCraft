@@ -75,7 +75,8 @@ fields:
     enum: [unknown, empty, low, medium, high, full]
     description: >-
       The quantity read as a word, against referenceQuantity: empty under 2% of it, low under
-      25%, medium under 65%, high under 100% and full at or over it. It is there to be shown
+      30%, medium under 65%, high under 100% and full at or over it. A quarter of a pack reads
+      as low and half of one as medium, so the words a person taps come back as the same words. It is there to be shown
       and spoken, and it never replaces the quantity. "unknown" means the article is not
       tracked or nothing is known about what a full one looks like. The same five words are
       accepted back as a correction.

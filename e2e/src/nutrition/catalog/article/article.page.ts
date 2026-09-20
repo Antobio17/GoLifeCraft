@@ -55,16 +55,20 @@ export class ArticlePage {
     await expect(this.ds.host("stock-confirm")).toBeVisible();
   }
 
-  async chooseCorrectionKind(label: string): Promise<void> {
-    await this.chooseOption("stock-correction-kind", label);
+  get stockAmount(): Locator {
+    return this.ds.input("stock-amount");
   }
 
-  async chooseLevel(label: string): Promise<void> {
-    await this.chooseOption("stock-level", label);
+  async chooseQuickAmount(label: string): Promise<void> {
+    await this.chooseOption("stock-quick", label);
   }
 
-  async chooseFraction(label: string): Promise<void> {
-    await this.chooseOption("stock-fraction", label);
+  async typeAmount(value: string): Promise<void> {
+    await this.ds.fill("stock-amount", value);
+  }
+
+  async swapAmountUnit(): Promise<void> {
+    await this.ds.host("stock-amount").locator("button").first().click();
   }
 
   async chooseTracking(label: string): Promise<void> {

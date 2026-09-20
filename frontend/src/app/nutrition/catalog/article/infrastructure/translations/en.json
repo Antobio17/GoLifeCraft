@@ -98,22 +98,19 @@
       "editor": {
         "title": "Correct stock",
         "close": "Close",
-        "hint": "Say what is left however you like: an amount, half a box, or simply that it is running low.",
+        "hint": "Tap what is left or type the amount. Not knowing it exactly is fine.",
         "amount": "Stock amount",
         "confirm": "Save",
         "location": "Location",
         "noLocation": "No location",
-        "kind": {
-          "measured": "Amount",
-          "fraction": "Part",
-          "level": "Roughly"
-        },
         "fraction": {
+          "empty": "Empty",
           "quarter": "A quarter",
           "half": "Half",
           "threeQuarters": "Three quarters",
           "full": "A whole one"
-        }
+        },
+        "swapUnit": "Switch unit"
       }
     }
   },

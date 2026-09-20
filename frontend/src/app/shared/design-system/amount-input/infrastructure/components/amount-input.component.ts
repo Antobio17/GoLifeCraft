@@ -1,11 +1,13 @@
-import { Component, Input, inject } from "@angular/core";
+import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 
 type AmountInputLayout = "row" | "stacked";
 type AmountInputAlign = "start" | "end";
 
 @Component({
   selector: "ds-amount-input",
+  imports: [IconComponent],
   template: `
     <label
       class="ds-amount"
@@ -33,7 +35,20 @@ type AmountInputAlign = "start" | "end";
       />
 
       @if (layout === "row" && unit) {
-        <span class="ds-amount__unit">{{ unit }}</span>
+        @if (unitToggle) {
+          <button
+            type="button"
+            class="ds-amount__unit ds-amount__unit--toggle"
+            [disabled]="disabled"
+            [attr.aria-label]="unitToggleLabel || null"
+            (click)="onUnitToggle($event)"
+          >
+            {{ unit }}
+            <ds-icon name="repeat" [size]="13" [stroke]="2.4" />
+          </button>
+        } @else {
+          <span class="ds-amount__unit">{{ unit }}</span>
+        }
       }
     </label>
   `,
@@ -106,6 +121,25 @@ type AmountInputAlign = "start" | "end";
         font-weight: 700;
         color: var(--ds-text-muted);
       }
+      .ds-amount__unit--toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ds-space-1-5);
+        margin: 0;
+        padding: var(--ds-space-1) var(--ds-space-2);
+        border: 1px solid var(--ds-border-strong);
+        border-radius: var(--ds-radius-pill);
+        background: var(--ds-surface);
+        font: inherit;
+        font-size: var(--ds-text-sm);
+        font-weight: 700;
+        color: var(--ds-text-muted);
+        cursor: pointer;
+      }
+      .ds-amount__unit--toggle:disabled {
+        opacity: 0.55;
+        cursor: default;
+      }
     `,
   ],
   host: {
@@ -126,6 +160,10 @@ export class AmountInputComponent implements ControlValueAccessor {
   @Input() grow = false;
   @Input() masked = false;
   @Input() ariaLabel = "";
+  @Input() unitToggle = false;
+  @Input() unitToggleLabel = "";
+
+  @Output() unitToggled = new EventEmitter<void>();
 
   value = "";
   disabled = false;
@@ -153,6 +191,12 @@ export class AmountInputComponent implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  onUnitToggle(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.unitToggled.emit();
   }
 
   onInput(event: Event): void {

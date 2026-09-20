@@ -28,7 +28,8 @@ export class ArticlesPage {
 
   async search(term: string): Promise<void> {
     const response = this.page.waitForResponse(
-      (res) => res.url().includes("/api/v1/nutrition/catalog/articles") && res.ok(),
+      (res) =>
+        res.url().includes("/api/v1/nutrition/catalog/articles") && res.ok(),
     );
     await this.ds.input("articles-search").fill(term);
     await response;
@@ -36,7 +37,8 @@ export class ArticlesPage {
 
   async filterByCategory(name: string): Promise<void> {
     const response = this.page.waitForResponse(
-      (res) => res.url().includes("/api/v1/nutrition/catalog/articles") && res.ok(),
+      (res) =>
+        res.url().includes("/api/v1/nutrition/catalog/articles") && res.ok(),
     );
     await this.ds.choose("articles-filter-category", name);
     await response;
