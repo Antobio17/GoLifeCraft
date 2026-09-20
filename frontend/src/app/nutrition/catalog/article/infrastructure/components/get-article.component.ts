@@ -66,35 +66,17 @@ import { StockControlComponent } from "@shared/design-system/stock-control/infra
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { SegmentedOption } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 type NutritionMode = "pack" | "per100";
 
-const FRACTIONS = [0.25, 0.5, 0.75, 1] as const;
-
-const FRACTION_KEYS: Record<number, string> = {
-  0.25: "quarter",
-  0.5: "half",
-  0.75: "threeQuarters",
-  1: "full",
-};
-
-const CORRECTABLE_LEVELS = [
-  StockLevel.Empty,
-  StockLevel.Low,
-  StockLevel.Medium,
-  StockLevel.High,
-  StockLevel.Full,
+const QUICK_AMOUNTS = [
+  { fraction: 0, key: "empty" },
+  { fraction: 0.25, key: "quarter" },
+  { fraction: 0.5, key: "half" },
+  { fraction: 0.75, key: "threeQuarters" },
+  { fraction: 1, key: "full" },
 ] as const;
-
-const LEVEL_FACTORS: Record<string, number> = {
-  [StockLevel.Empty]: 0,
-  [StockLevel.Low]: 0.2,
-  [StockLevel.Medium]: 0.5,
-  [StockLevel.High]: 0.8,
-  [StockLevel.Full]: 1,
-};
 
 @Component({
   selector: "app-get-article",
@@ -185,7 +167,6 @@ export class GetArticleComponent {
   showStockEditor = signal(false);
   correctionKind = signal<StockCorrectionKind>(StockCorrectionKind.Measured);
   correctionFraction = signal<number | null>(null);
-  correctionLevel = signal<StockLevel | null>(null);
   trackingMode = signal<StockTrackingMode>(StockTrackingMode.Approximate);
   locations = signal<PantryLocation[]>([]);
   stockLocationId = signal<string>("");
@@ -205,19 +186,6 @@ export class GetArticleComponent {
   ]);
   stockDraft = signal("");
   stockDraftMode = signal<StockUnitMode>(StockUnitMode.Pack);
-  stockModeOptions = computed<SegmentedOption[]>(() => {
-    const stock = this.stock();
-    if (null === stock) return [];
-
-    const base = { value: StockUnitMode.Base, label: stock.baseUnit };
-
-    if (!stock.hasPack) return [base];
-
-    return [
-      { value: StockUnitMode.Pack, label: this.stockView.packLabel(stock) },
-      base,
-    ];
-  });
   stockModeUnitLabel = computed<string>(() => {
     const stock = this.stock();
     if (null === stock) return "";
@@ -242,41 +210,16 @@ export class GetArticleComponent {
 
     return null !== stock && null !== stock.referenceQuantity;
   });
-  correctionKindOptions = computed<SegmentedOption[]>(() => {
-    const measured: SegmentedOption = {
-      value: StockCorrectionKind.Measured,
-      label: this.t("getArticle.stock.editor.kind.measured"),
-    };
+  quickAmountOptions = computed<ChoiceChipOption[]>(() => {
+    if (!this.hasReference()) return [];
 
-    if (!this.hasReference()) return [measured];
-
-    return [
-      measured,
-      {
-        value: StockCorrectionKind.Fraction,
-        label: this.t("getArticle.stock.editor.kind.fraction"),
-      },
-      {
-        value: StockCorrectionKind.Level,
-        label: this.t("getArticle.stock.editor.kind.level"),
-      },
-    ];
+    return QUICK_AMOUNTS.map((quick) => ({
+      value: quick.fraction,
+      label: this.t(`getArticle.stock.editor.fraction.${quick.key}`),
+    }));
   });
-  fractionOptions = computed<ChoiceChipOption[]>(() =>
-    FRACTIONS.map((fraction) => ({
-      value: fraction,
-      label: this.t(
-        `getArticle.stock.editor.fraction.${FRACTION_KEYS[fraction]}`,
-      ),
-    })),
-  );
-  levelOptions = computed<ChoiceChipOption[]>(() =>
-    CORRECTABLE_LEVELS.map((level) => ({
-      value: level,
-      label: this.t(`getArticle.stock.level.${level}`),
-    })),
-  );
-  trackingOptions = computed<SegmentedOption[]>(() =>
+  canSwapStockUnit = computed<boolean>(() => this.stock()?.hasPack ?? false);
+  trackingOptions = computed<ChoiceChipOption[]>(() =>
     Object.values(StockTrackingMode).map((mode) => ({
       value: mode,
       label: this.t(`getArticle.stock.tracking.${mode}`),
@@ -302,21 +245,12 @@ export class GetArticleComponent {
 
     return stock.confidencePercent;
   });
-  correctionPreview = computed<string | null>(() => {
-    const stock = this.stock();
-    const reference = stock?.referenceQuantity ?? null;
-    const factor = this.correctionFactor();
-
-    if (null === stock || null === reference || null === factor) return null;
-
-    return this.stockView.amountText(stock, reference * factor);
-  });
   canConfirmCorrection = computed<boolean>(() => {
-    if (StockCorrectionKind.Measured === this.correctionKind()) {
-      return null !== this.stockDraftBase();
+    if (StockCorrectionKind.Fraction === this.correctionKind()) {
+      return null !== this.correctionFraction();
     }
 
-    return null !== this.correctionFactor();
+    return null !== this.stockDraftBase();
   });
   stockDraftPreview = computed<string | null>(() => {
     const stock = this.stock();
@@ -381,7 +315,6 @@ export class GetArticleComponent {
 
     this.correctionKind.set(StockCorrectionKind.Measured);
     this.correctionFraction.set(null);
-    this.correctionLevel.set(null);
     this.trackingMode.set(stock.trackingMode);
     this.stockDraftMode.set(
       stock.hasPack ? StockUnitMode.Pack : StockUnitMode.Base,
@@ -393,16 +326,26 @@ export class GetArticleComponent {
     this.loadLocations();
   }
 
-  onCorrectionKindChange(value: string): void {
-    this.correctionKind.set(value as StockCorrectionKind);
+  onQuickAmountChange(value: string | number): void {
+    const stock = this.stock();
+    const reference = stock?.referenceQuantity ?? null;
+    const fraction = Number(value);
+
+    if (null === stock || null === reference) return;
+
+    this.correctionKind.set(StockCorrectionKind.Fraction);
+    this.correctionFraction.set(fraction);
+    this.stockDraft.set(
+      this.draftText(this.inDraftUnit(stock, reference * fraction)),
+    );
   }
 
-  onCorrectionFractionChange(value: string | number): void {
-    this.correctionFraction.set(Number(value));
-  }
-
-  onCorrectionLevelChange(value: string | number): void {
-    this.correctionLevel.set(String(value) as StockLevel);
+  onSwapStockUnit(): void {
+    this.onStockDraftModeChange(
+      StockUnitMode.Pack === this.stockDraftMode()
+        ? StockUnitMode.Base
+        : StockUnitMode.Pack,
+    );
   }
 
   onTrackingModeChange(value: string): void {
@@ -465,9 +408,11 @@ export class GetArticleComponent {
 
   onStockDraftChange(value: string): void {
     this.stockDraft.set(value);
+    this.correctionKind.set(StockCorrectionKind.Measured);
+    this.correctionFraction.set(null);
   }
 
-  onStockDraftModeChange(mode: string): void {
+  onStockDraftModeChange(mode: StockUnitMode | string): void {
     const stock = this.stock();
     const base = this.stockDraftBase();
     if (null === stock) return;
@@ -535,28 +480,8 @@ export class GetArticleComponent {
     );
   }
 
-  private correctionFactor(): number | null {
-    if (StockCorrectionKind.Fraction === this.correctionKind()) {
-      return this.correctionFraction();
-    }
-
-    const level = this.correctionLevel();
-
-    return null === level ? null : LEVEL_FACTORS[level];
-  }
-
   private buildCorrection(): Observable<void> | null {
-    const kind = this.correctionKind();
-
-    if (StockCorrectionKind.Measured === kind) {
-      const base = this.stockDraftBase();
-
-      return null === base
-        ? null
-        : this.correctArticleStockService.measured(this.id(), base);
-    }
-
-    if (StockCorrectionKind.Fraction === kind) {
+    if (StockCorrectionKind.Fraction === this.correctionKind()) {
       const fraction = this.correctionFraction();
 
       return null === fraction
@@ -564,11 +489,17 @@ export class GetArticleComponent {
         : this.correctArticleStockService.fraction(this.id(), fraction);
     }
 
-    const level = this.correctionLevel();
+    const base = this.stockDraftBase();
 
-    return null === level
+    return null === base
       ? null
-      : this.correctArticleStockService.level(this.id(), level);
+      : this.correctArticleStockService.measured(this.id(), base);
+  }
+
+  private inDraftUnit(stock: ArticleStockView, base: number): number {
+    return StockUnitMode.Pack === this.stockDraftMode() && stock.packSize > 0
+      ? base / stock.packSize
+      : base;
   }
 
   private shiftStockByPacks(packs: number): void {

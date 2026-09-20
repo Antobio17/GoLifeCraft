@@ -98,22 +98,19 @@
       "editor": {
         "title": "Corregir stock",
         "close": "Cerrar",
-        "hint": "Dime lo que queda como te salga: una cantidad, media caja o simplemente que queda poco.",
+        "hint": "Toca lo que queda o escribe la cantidad. Si no lo sabes exacto, no pasa nada.",
         "amount": "Cantidad de stock",
         "confirm": "Guardar",
         "location": "Ubicación",
         "noLocation": "Sin ubicación",
-        "kind": {
-          "measured": "Cantidad",
-          "fraction": "Parte",
-          "level": "A ojo"
-        },
         "fraction": {
+          "empty": "Vacío",
           "quarter": "Un cuarto",
           "half": "La mitad",
           "threeQuarters": "Tres cuartos",
           "full": "Entero"
-        }
+        },
+        "swapUnit": "Cambiar de unidad"
       }
     }
   },

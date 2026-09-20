@@ -31,7 +31,10 @@ export class ArticleEditorPage {
   }
 
   private async chooseChip(testId: string, label: string): Promise<void> {
-    await this.ds.host(testId).getByRole("button", { name: label, exact: true }).click();
+    await this.ds
+      .host(testId)
+      .getByRole("button", { name: label, exact: true })
+      .click();
   }
 
   async fill(draft: ArticleDraft): Promise<void> {

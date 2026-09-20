@@ -185,6 +185,23 @@ final class RecalculateArticleStockCommandHandlerTest extends TestCase
         $this->assertSame(expected: 1000.0, actual: $this->stock()->referenceQuantity);
     }
 
+    public function testTheQuickFractionsReadBackAsTheWordsTheyWereTappedAs(): void
+    {
+        $expected = [
+            250.0 => StockLevel::LOW,
+            500.0 => StockLevel::MEDIUM,
+            750.0 => StockLevel::HIGH,
+            1000.0 => StockLevel::FULL,
+        ];
+
+        foreach ($expected as $quantity => $level) {
+            $this->givenCount(effectiveAt: $this->today(), quantity: (float) $quantity, sourceId: 'correction-'.$quantity);
+            $this->recalculate();
+
+            $this->assertSame(expected: $level->value, actual: $this->stock()->level);
+        }
+    }
+
     public function testAnEmptiedArticleReadsAsEmpty(): void
     {
         $this->givenCount(effectiveAt: $this->today(), quantity: 0.0, sourceId: 'inventory-1');

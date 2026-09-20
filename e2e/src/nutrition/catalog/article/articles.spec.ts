@@ -13,7 +13,9 @@ test.describe("catálogo", () => {
     await expect(articles.cardNamed(SEED.articles.yogur.name)).toBeVisible();
   });
 
-  test("la búsqueda filtra contra el servidor y se recupera al vaciarla", async ({ page }) => {
+  test("la búsqueda filtra contra el servidor y se recupera al vaciarla", async ({
+    page,
+  }) => {
     const articles = new ArticlesPage(page);
     await articles.goto();
 
@@ -34,7 +36,9 @@ test.describe("catálogo", () => {
     await expect(articles.cardNamed(SEED.articles.brocoli.name)).toBeVisible();
   });
 
-  test("el filtro por categoría deja sólo los artículos de esa categoría", async ({ page }) => {
+  test("el filtro por categoría deja sólo los artículos de esa categoría", async ({
+    page,
+  }) => {
     const articles = new ArticlesPage(page);
     await articles.goto();
 
@@ -59,7 +63,9 @@ test.describe("catálogo", () => {
     await expect(article.purchase).toBeVisible();
   });
 
-  test("el detalle enseña el nivel y la fiabilidad del stock estimado", async ({ page }) => {
+  test("el detalle enseña el nivel y la fiabilidad del stock estimado", async ({
+    page,
+  }) => {
     const articles = new ArticlesPage(page);
     const article = new ArticlePage(page);
 
@@ -71,7 +77,9 @@ test.describe("catálogo", () => {
     await expect(article.stockConfidence).toBeVisible();
   });
 
-  test("decir que queda poco corrige el stock sin pesar nada", async ({ page }) => {
+  test("tocar media caja la convierte en cantidad usando el envase", async ({
+    page,
+  }) => {
     const articles = new ArticlesPage(page);
     const article = new ArticlePage(page);
 
@@ -79,29 +87,50 @@ test.describe("catálogo", () => {
     await articles.open(SEED.articles.yogur.name);
 
     await article.openStockEditor();
-    await article.chooseCorrectionKind("A ojo");
-    await article.chooseLevel("Queda poco");
-    await article.confirmStock();
+    await article.chooseQuickAmount("La mitad");
 
-    await expect(article.stockLevel).toHaveText("Queda poco");
-  });
+    await expect(article.stockAmount).toHaveValue("0.5");
 
-  test("media caja se convierte en cantidad usando el envase", async ({ page }) => {
-    const articles = new ArticlesPage(page);
-    const article = new ArticlePage(page);
-
-    await articles.goto();
-    await articles.open(SEED.articles.yogur.name);
-
-    await article.openStockEditor();
-    await article.chooseCorrectionKind("Parte");
-    await article.chooseFraction("La mitad");
     await article.confirmStock();
 
     await expect(article.stockLevel).toHaveText("A media");
   });
 
-  test("marcar un artículo como exacto deja de estimar su stock", async ({ page }) => {
+  test("tocar un cuarto deja el stock en el nivel bajo", async ({ page }) => {
+    const articles = new ArticlesPage(page);
+    const article = new ArticlePage(page);
+
+    await articles.goto();
+    await articles.open(SEED.articles.yogur.name);
+
+    await article.openStockEditor();
+    await article.chooseQuickAmount("Un cuarto");
+    await article.confirmStock();
+
+    await expect(article.stockLevel).toHaveText("Queda poco");
+  });
+
+  test("la unidad del campo se cambia desde el propio campo", async ({
+    page,
+  }) => {
+    const articles = new ArticlesPage(page);
+    const article = new ArticlePage(page);
+
+    await articles.goto();
+    await articles.open(SEED.articles.yogur.name);
+
+    await article.openStockEditor();
+    await article.chooseQuickAmount("Entero");
+    await expect(article.stockAmount).toHaveValue("1");
+
+    await article.swapAmountUnit();
+
+    await expect(article.stockAmount).not.toHaveValue("1");
+  });
+
+  test("marcar un artículo como exacto deja de estimar su stock", async ({
+    page,
+  }) => {
     const articles = new ArticlesPage(page);
     const article = new ArticlePage(page);
 
@@ -117,7 +146,9 @@ test.describe("catálogo", () => {
     await expect(article.stockConfidence).toBeVisible();
   });
 
-  test("crear y borrar un artículo deja el catálogo como estaba", async ({ page }) => {
+  test("crear y borrar un artículo deja el catálogo como estaba", async ({
+    page,
+  }) => {
     const articles = new ArticlesPage(page);
     const editor = new ArticleEditorPage(page);
     const article = new ArticlePage(page);

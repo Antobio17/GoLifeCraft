@@ -12,7 +12,7 @@ enum StockLevel: string
     case FULL = 'full';
 
     private const float EMPTY_BELOW = 0.02;
-    private const float LOW_BELOW = 0.25;
+    private const float LOW_BELOW = 0.30;
     private const float MEDIUM_BELOW = 0.65;
     private const float HIGH_BELOW = 1.0;
 
