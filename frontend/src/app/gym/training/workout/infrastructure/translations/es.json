@@ -36,13 +36,15 @@
       "unilateral": "unilateral",
       "perSide": "peso por lado",
       "totalWeight": "peso total"
-    }
+    },
+    "edit": "Editar el entreno"
   },
   "workout": {
     "breadcrumb": {
       "list": "Historial",
       "detail": "Entreno",
-      "free": "Entrenamiento libre"
+      "free": "Entrenamiento libre",
+      "edit": "Editar"
     },
     "banner": {
       "active": "Sesión activa",
@@ -147,6 +149,53 @@
     "copy": {
       "done": "Rutina copiada, ya puedes pegarla",
       "failed": "No hemos podido copiar la rutina"
+    },
+    "edit": {
+      "saved": "Entreno actualizado",
+      "not": {
+        "finished": "Solo se puede editar un entreno terminado"
+      },
+      "name": {
+        "empty": "El entreno necesita un nombre"
+      },
+      "started": {
+        "future": "Un entreno del historial no puede empezar en el futuro"
+      },
+      "duration": {
+        "invalid": "La duración tiene que estar entre 0 y 24 horas"
+      }
+    }
+  },
+  "editWorkout": {
+    "back": "Entreno",
+    "eyebrow": "Histórico",
+    "title": "Editar entreno",
+    "field": {
+      "name": "Nombre",
+      "date": "Fecha",
+      "time": "Hora de inicio",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "hoursUp": "Sumar una hora",
+      "hoursDown": "Restar una hora",
+      "minutesUp": "Sumar un minuto",
+      "minutesDown": "Restar un minuto"
+    },
+    "hint": "La hora de fin se recalcula con el inicio y la duración.",
+    "save": "Guardar cambios",
+    "saving": "Guardando…",
+    "error": {
+      "missingStart": "Indica la fecha y la hora de inicio.",
+      "futureStart": "El entreno no puede empezar en el futuro.",
+      "duration": "La duración tiene que estar entre 0 y 24 horas."
+    },
+    "empty": {
+      "title": "Sin ejercicios",
+      "text": "Añade los ejercicios que hiciste en este entreno."
+    },
+    "notFound": {
+      "title": "No encontramos este entreno",
+      "text": "Puede que se haya borrado o que el enlace no sea correcto."
     }
   }
 }

@@ -1,0 +1,273 @@
+<ds-page-wrapper
+  [maxWidth]="'42.5rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-3)'"
+>
+  @if (loading()) {
+    <ds-skeleton-screen-header
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="52%"
+      [actions]="0"
+    />
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-card slot="side" [padding]="'var(--ds-space-3)'">
+        <ds-skeleton-fields [rows]="[1, 2, 2]" [gap]="'var(--ds-space-3)'" />
+      </ds-card>
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (sets of skeletonExercises; track $index) {
+          <ds-skeleton-exercise
+            badge="4.5rem"
+            [action]="true"
+            [note]="true"
+            [sets]="sets"
+            [addTile]="true"
+          />
+        }
+      </ds-stack>
+    </ds-split-view>
+  } @else if (notFound()) {
+    <ds-empty-state
+      icon="history"
+      [title]="'editWorkout.notFound.title' | t"
+      [text]="'editWorkout.notFound.text' | t"
+    >
+      <ds-button variant="secondary" (clicked)="goBack()">
+        {{ "editWorkout.back" | t }}
+      </ds-button>
+    </ds-empty-state>
+  } @else {
+    <ds-screen-header
+      [leading]="'back'"
+      [leadingLabel]="'editWorkout.back' | t"
+      [eyebrow]="'editWorkout.eyebrow' | t"
+      [title]="'editWorkout.title' | t"
+      (leadingClick)="goBack()"
+    />
+
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-card
+        slot="side"
+        [gap]="'var(--ds-space-3)'"
+        [padding]="'var(--ds-space-3)'"
+      >
+        <ds-field [label]="'editWorkout.field.name' | t">
+          <ds-text-input
+            data-testid="edit-workout-name"
+            variant="outlined"
+            [strong]="true"
+            [maxLength]="255"
+            [placeholder]="'workout.free.namePlaceholder' | t"
+            [ariaLabel]="'editWorkout.field.name' | t"
+            [ngModel]="name()"
+            (ngModelChange)="onRename($event)"
+          />
+        </ds-field>
+
+        <ds-grid [columns]="2" [gap]="'var(--ds-space-2)'">
+          <ds-field [label]="'editWorkout.field.date' | t">
+            <ds-date-input
+              data-testid="edit-workout-date"
+              type="date"
+              [max]="today"
+              [ariaLabel]="'editWorkout.field.date' | t"
+              [ngModel]="time().date"
+              (ngModelChange)="onDateChange($event)"
+            />
+          </ds-field>
+          <ds-field [label]="'editWorkout.field.time' | t">
+            <ds-date-input
+              data-testid="edit-workout-time"
+              type="time"
+              [ariaLabel]="'editWorkout.field.time' | t"
+              [ngModel]="time().time"
+              (ngModelChange)="onTimeChange($event)"
+            />
+          </ds-field>
+        </ds-grid>
+
+        <ds-grid [columns]="2" [gap]="'var(--ds-space-2)'">
+          <ds-field [label]="'editWorkout.field.hours' | t">
+            <ds-number-input
+              data-testid="edit-workout-hours"
+              [min]="0"
+              [max]="24"
+              [ariaLabel]="'editWorkout.field.hours' | t"
+              [incrementLabel]="'editWorkout.field.hoursUp' | t"
+              [decrementLabel]="'editWorkout.field.hoursDown' | t"
+              [ngModel]="time().hours"
+              (ngModelChange)="onHoursChange($event)"
+            />
+          </ds-field>
+          <ds-field [label]="'editWorkout.field.minutes' | t">
+            <ds-number-input
+              data-testid="edit-workout-minutes"
+              [min]="0"
+              [max]="59"
+              [ariaLabel]="'editWorkout.field.minutes' | t"
+              [incrementLabel]="'editWorkout.field.minutesUp' | t"
+              [decrementLabel]="'editWorkout.field.minutesDown' | t"
+              [ngModel]="time().minutes"
+              (ngModelChange)="onMinutesChange($event)"
+            />
+          </ds-field>
+        </ds-grid>
+
+        @if (timeError()) {
+          <ds-text variant="danger">{{ timeError() }}</ds-text>
+        } @else {
+          <ds-text variant="muted">{{ "editWorkout.hint" | t }}</ds-text>
+        }
+
+        <ds-button
+          data-testid="edit-workout-save"
+          icon="check"
+          [fullWidth]="true"
+          [loading]="saving()"
+          [disabled]="!canSave()"
+          (clicked)="onSave()"
+        >
+          {{ (saving() ? "editWorkout.saving" : "editWorkout.save") | t }}
+        </ds-button>
+      </ds-card>
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @if (!hasExercises()) {
+          <ds-empty-state
+            icon="dumbbell"
+            [title]="'editWorkout.empty.title' | t"
+            [text]="'editWorkout.empty.text' | t"
+          />
+        }
+
+        @for (exercise of exerciseRows(); track exercise.id) {
+          <ds-card [gap]="'var(--ds-space-2)'" [padding]="'var(--ds-space-3)'">
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+            >
+              <ds-icon-badge icon="dumbbell" />
+              <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-heading [level]="3" size="sm">
+                  {{ exercise.exerciseName }}
+                </ds-heading>
+                <ds-text variant="meta">{{ exercise.muscleLabel }}</ds-text>
+              </ds-stack>
+              <ds-stack align="end" [gap]="'var(--ds-space-1)'">
+                <ds-chip tone="brand">{{ exercise.modeLabel }}</ds-chip>
+                <ds-chip tone="neutral">{{ exercise.weightModeLabel }}</ds-chip>
+              </ds-stack>
+              <ds-icon-button
+                data-testid="edit-workout-remove-exercise"
+                icon="close"
+                [ariaLabel]="'workout.free.exercise.remove' | t"
+                (clicked)="removeExercise(exercise.id)"
+              />
+            </ds-stack>
+
+            <ds-set-header
+              [numLabel]="'workout.free.set.number' | t"
+              [repsLabel]="'workout.free.set.reps' | t"
+              [weightLabel]="'workout.free.set.weight' | t"
+            />
+
+            <ds-textarea
+              [value]="exercise.note ?? ''"
+              [placeholder]="'workout.free.exercise.notePlaceholder' | t"
+              [ariaLabel]="'workout.free.exercise.noteLabel' | t"
+              [rows]="2"
+              [compact]="true"
+              (valueChange)="setNote(exercise.id, $event)"
+            />
+
+            @for (set of exercise.sets; track set.id) {
+              <ds-set-row
+                data-testid="edit-workout-set-row"
+                [displayLabel]="set.displayLabel"
+                [warmup]="set.warmup"
+                [showKindToggle]="true"
+                [toggleKindLabel]="'workout.free.set.toggleKind' | t"
+                [reps]="set.reps"
+                [weight]="set.weight ?? 0"
+                [done]="set.done"
+                [showCheck]="true"
+                [repsAriaLabel]="'workout.free.set.reps' | t"
+                [weightAriaLabel]="'workout.free.set.weight' | t"
+                [repsUpLabel]="'workout.free.set.repsUp' | t"
+                [repsDownLabel]="'workout.free.set.repsDown' | t"
+                [weightUpLabel]="'workout.free.set.weightUp' | t"
+                [weightDownLabel]="'workout.free.set.weightDown' | t"
+                [removeLabel]="'workout.free.set.remove' | t"
+                [markDoneLabel]="'workout.free.active.markDone' | t"
+                (repsChange)="setReps(exercise.id, set.id, $event)"
+                (weightChange)="setWeight(exercise.id, set.id, $event)"
+                (toggleDone)="toggleSetDone(exercise.id, set.id)"
+                (toggleKind)="toggleSetKind(exercise.id, set.id)"
+                (remove)="removeSet(exercise.id, set.id)"
+              />
+            }
+
+            <ds-add-tile
+              variant="inline"
+              [label]="'workout.free.set.add' | t"
+              (clicked)="addSet(exercise.id)"
+            />
+          </ds-card>
+        }
+
+        <ds-add-tile
+          data-testid="edit-workout-add-exercise"
+          variant="dashed"
+          [label]="'workout.free.exercise.add' | t"
+          (clicked)="openPicker()"
+        />
+      </ds-stack>
+    </ds-split-view>
+  }
+</ds-page-wrapper>
+
+<ds-modal-sheet
+  [open]="pickerOpen()"
+  [compact]="true"
+  [title]="'workout.free.picker.title' | t"
+  [closeLabel]="'workout.free.picker.close' | t"
+  (closed)="closePicker()"
+>
+  <ds-stack [gap]="'var(--ds-space-4)'">
+    <ds-search-input
+      [placeholder]="'workout.free.picker.search' | t"
+      [clearLabel]="'workout.free.picker.clear' | t"
+      (searched)="onLibrarySearch($event)"
+    />
+
+    @if (libraryRows().length === 0) {
+      <ds-text variant="muted">{{ "workout.free.picker.empty" | t }}</ds-text>
+    } @else {
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        @for (row of libraryRows(); track row.id) {
+          <ds-card [padding]="'var(--ds-space-2)'">
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+            >
+              <ds-icon-badge icon="dumbbell" />
+              <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-text variant="strong">{{ row.name }}</ds-text>
+                <ds-text variant="meta">{{ row.muscleLabel }}</ds-text>
+              </ds-stack>
+              <ds-icon-button
+                icon="plus"
+                variant="soft"
+                [ariaLabel]="'workout.free.exercise.add' | t"
+                (clicked)="addFromLibrary(row.exercise)"
+              />
+            </ds-stack>
+          </ds-card>
+        }
+      </ds-stack>
+    }
+  </ds-stack>
+</ds-modal-sheet>

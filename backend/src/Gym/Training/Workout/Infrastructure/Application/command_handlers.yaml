@@ -34,6 +34,16 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
+  Gym\Training\Workout\Application\Command\EditWorkoutCommandHandler:
+    class: Gym\Training\Workout\Application\Command\EditWorkoutCommandHandler
+    arguments:
+      $workoutRepository: '@Gym\Training\Workout\Domain\Model\WorkoutRepository'
+      $workoutExerciseAssembler: '@Gym\Training\Workout\Application\Command\WorkoutExerciseAssembler'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Gym\Training\Workout\Application\Command\DiscardWorkoutCommandHandler:
     class: Gym\Training\Workout\Application\Command\DiscardWorkoutCommandHandler
     arguments:

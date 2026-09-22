@@ -1,4 +1,5 @@
 import { Component, computed, inject, input, signal } from "@angular/core";
+import { Router } from "@angular/router";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
@@ -48,6 +49,7 @@ export class WorkoutDetailComponent {
   private workoutShareText = inject(WorkoutShareTextService);
   private clipboardService = inject(ClipboardService);
   private floatingToastService = inject(FloatingToastService);
+  private router = inject(Router);
 
   private readonly MODULE_PATH = "gym/training/workout";
 
@@ -159,6 +161,10 @@ export class WorkoutDetailComponent {
 
   goBack(): void {
     this.backNavigation.back(["/gym/history"]);
+  }
+
+  onEdit(): void {
+    this.router.navigate(["/gym/history", this.id(), "edit"]);
   }
 
   async onCopy(): Promise<void> {
