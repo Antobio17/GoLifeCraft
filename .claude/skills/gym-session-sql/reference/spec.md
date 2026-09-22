@@ -42,6 +42,7 @@ happens while writing it.
 | `masterDatabase` | no | defaults to `master` |
 | `exercises[].name` | yes | full name in Spanish; reuse key against the library |
 | `exercises[].type` | yes | `unilateral` \| `bilateral` |
+| `exercises[].weightMode` | no | `total` (default) \| `perSide` when the logged weight is the load of one side only |
 | `exercises[].muscleGroups` | yes | >= 1, from the catalog in `schema.md` |
 | `exercises[].icon` | no | from the catalog in `schema.md`; `null` makes the app draw `dumbbell` |
 | `exercises[].description` | no | description of the exercise if the client gave cues |

@@ -20,6 +20,10 @@
       "bilateral": "Bilateral",
       "unilateral": "Unilateral"
     },
+    "weightMode": {
+      "total": "Total weight",
+      "perSide": "Weight per side"
+    },
     "table": {
       "emptyTitle": "No exercises",
       "emptyMessage": "You haven't added any exercises to the library yet"
@@ -50,6 +54,11 @@
       "bilateral": "Bilateral · one record for both sides",
       "unilateral": "Unilateral · performed per side"
     },
+    "weightModeLabel": "Recorded weight",
+    "weightMode": {
+      "total": "Total weight · the number is the whole load",
+      "perSide": "Weight per side · the number is the load on one side"
+    },
     "metric": {
       "e1rm": "Est. 1RM",
       "max": "Max weight",
@@ -78,6 +87,7 @@
       "name": "Name",
       "namePlaceholder": "E.g. Incline press",
       "type": "Record type",
+      "weightMode": "Recorded weight",
       "muscleGroups": "Muscles",
       "icon": "Icon",
       "iconSheetTitle": "Pick an icon",
@@ -89,6 +99,12 @@
     "mode": {
       "bilateralHint": "A single weight and reps record for both sides at once.",
       "unilateralHint": "A single weight and reps are recorded, but the exercise is marked as unilateral (performed per side)."
+    },
+    "weightMode": {
+      "total": "Total",
+      "perSide": "Per side",
+      "totalHint": "The weight you log is the whole load you move.",
+      "perSideHint": "The weight you log is the one on a single side (plates per side of the bar, or one dumbbell)."
     },
     "save": "Create exercise",
     "saving": "Saving…"

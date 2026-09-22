@@ -12,6 +12,7 @@ final readonly class ExerciseCreated extends DomainEvent
         public string $name,
         public ?string $description,
         public string $type,
+        public string $weightMode,
         public array $muscleGroups,
         public ?string $icon,
         public bool $deleted,

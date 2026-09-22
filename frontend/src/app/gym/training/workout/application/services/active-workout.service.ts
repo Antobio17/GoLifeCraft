@@ -40,6 +40,7 @@ export interface ActiveExercise {
   exerciseName: string;
   muscleGroups: string[];
   type: string;
+  weightMode: string;
   note: string | null;
   sets: ActiveExerciseSet[];
 }
@@ -385,6 +386,7 @@ export class ActiveWorkoutService implements OnDestroy {
       exerciseName: exercise.exerciseName,
       muscleGroups: [...exercise.muscleGroups],
       type: exercise.type,
+      weightMode: exercise.weightMode,
       note: exercise.note,
       sets: exercise.sets.map((set) => ({
         reps: set.reps,
@@ -520,6 +522,7 @@ export class ActiveWorkoutService implements OnDestroy {
       exerciseId: exercise.exerciseId,
       exerciseName: exercise.exerciseName,
       type: exercise.type,
+      weightMode: exercise.weightMode,
       muscleGroups: [...exercise.muscleGroups],
       position: i + 1,
       note: exercise.note,

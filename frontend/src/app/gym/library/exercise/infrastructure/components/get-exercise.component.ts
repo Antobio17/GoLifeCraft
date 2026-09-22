@@ -9,6 +9,7 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { GetExerciseService } from "../../application/services/get-exercise.service";
 import { GetExerciseStatsService } from "../../application/services/get-exercise-stats.service";
 import { Exercise } from "../../domain/models/exercise.model";
+import { ExerciseWeightMode } from "../../domain/models/exercise-weight-mode.model";
 import {
   ExerciseStats,
   ExerciseStatsSession,
@@ -120,6 +121,14 @@ export class GetExerciseComponent {
     const exercise = this.exercise();
     if (!exercise) return "";
     return this.t(`getExercise.mode.${exercise.attributes.type.toLowerCase()}`);
+  });
+
+  weightModeLabel = computed<string>(() => {
+    const exercise = this.exercise();
+    if (!exercise) return "";
+    return this.t(
+      `getExercise.weightMode.${exercise.attributes.weightMode ?? ExerciseWeightMode.Total}`,
+    );
   });
 
   hasData = computed<boolean>(() => this.sessions().length > 0);

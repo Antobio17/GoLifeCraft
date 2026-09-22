@@ -20,6 +20,10 @@
       "bilateral": "Bilateral",
       "unilateral": "Unilateral"
     },
+    "weightMode": {
+      "total": "Peso total",
+      "perSide": "Peso por lado"
+    },
     "table": {
       "emptyTitle": "No hay ejercicios",
       "emptyMessage": "Aún no has añadido ejercicios a la biblioteca"
@@ -50,6 +54,11 @@
       "bilateral": "Bilateral · un registro para ambos lados",
       "unilateral": "Unilateral · se ejecuta por lado"
     },
+    "weightModeLabel": "Peso registrado",
+    "weightMode": {
+      "total": "Peso total · el número es la carga completa",
+      "perSide": "Peso por lado · el número es la carga de un lado"
+    },
     "metric": {
       "e1rm": "1RM est.",
       "max": "Peso máx.",
@@ -78,6 +87,7 @@
       "name": "Nombre",
       "namePlaceholder": "Ej: Press inclinado",
       "type": "Tipo de registro",
+      "weightMode": "Peso registrado",
       "muscleGroups": "Músculos",
       "icon": "Icono",
       "iconSheetTitle": "Elige un icono",
@@ -89,6 +99,12 @@
     "mode": {
       "bilateralHint": "Un solo registro de peso y reps para ambos lados a la vez.",
       "unilateralHint": "Se registra un solo peso y reps, pero el ejercicio se marca como unilateral (se ejecuta por lado)."
+    },
+    "weightMode": {
+      "total": "Total",
+      "perSide": "Por lado",
+      "totalHint": "El peso que anotas es la carga completa que mueves.",
+      "perSideHint": "El peso que anotas es el de un solo lado (discos por lado de la barra, o una mancuerna)."
     },
     "save": "Crear ejercicio",
     "saving": "Guardando…"

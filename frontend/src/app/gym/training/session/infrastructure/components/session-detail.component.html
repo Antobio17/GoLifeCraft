@@ -212,9 +212,14 @@
                   </ds-heading>
                   <ds-text variant="meta">{{ exercise.muscleLabel }}</ds-text>
                 </ds-stack>
-                <ds-chip tone="brand">
-                  {{ exercise.modeLabel }}
-                </ds-chip>
+                <ds-stack align="end" [gap]="'var(--ds-space-1)'">
+                  <ds-chip tone="brand">
+                    {{ exercise.modeLabel }}
+                  </ds-chip>
+                  <ds-chip tone="neutral">
+                    {{ exercise.weightModeLabel }}
+                  </ds-chip>
+                </ds-stack>
                 <ds-icon-button
                   icon="close"
                   [ariaLabel]="'getSession.exercise.remove' | t"

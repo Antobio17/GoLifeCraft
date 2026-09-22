@@ -69,6 +69,10 @@
         "bilateral": "Bilateral",
         "unilateral": "Unilateral"
       },
+      "weightMode": {
+        "total": "Total",
+        "perSide": "Per side"
+      },
       "exercise": {
         "add": "Add exercise",
         "remove": "Remove exercise",

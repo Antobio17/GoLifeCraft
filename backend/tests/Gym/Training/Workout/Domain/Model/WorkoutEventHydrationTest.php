@@ -95,6 +95,7 @@ final class WorkoutEventHydrationTest extends TestCase
             exerciseId: 'exercise-1',
             exerciseName: 'Press banca',
             type: 'strength',
+            weightMode: WorkoutExercise::WEIGHT_MODE_TOTAL,
             muscleGroups: ['chest'],
             position: 1,
             note: null,

@@ -8,6 +8,7 @@ use Gym\Training\Workout\Application\Command\StartWorkoutCommand;
 use Gym\Training\Workout\Application\Command\StartWorkoutCommandHandler;
 use Gym\Training\Workout\Application\Command\WorkoutExerciseAssembler;
 use Gym\Training\Workout\Application\Command\WorkoutExerciseData;
+use Gym\Training\Workout\Domain\Model\WorkoutExercise;
 use Gym\Training\Workout\Application\Command\WorkoutSetData;
 use Gym\Training\Workout\Domain\Event\WorkoutFinished;
 use Gym\Training\Workout\Domain\Exception\FinishWorkoutException;
@@ -56,6 +57,7 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
                     exerciseId: 'ex-1',
                     exerciseName: 'Press banca',
                     type: 'bilateral',
+                    weightMode: WorkoutExercise::WEIGHT_MODE_TOTAL,
                     muscleGroups: ['Pecho', 'Tríceps'],
                     position: 1,
                     note: null,
@@ -95,6 +97,7 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
                     exerciseId: 'ex-1',
                     exerciseName: 'Press banca',
                     type: 'bilateral',
+                    weightMode: WorkoutExercise::WEIGHT_MODE_TOTAL,
                     muscleGroups: ['Pecho'],
                     position: 1,
                     note: null,
@@ -198,6 +201,7 @@ final class FinishWorkoutCommandHandlerTest extends TestCase
                     exerciseId: 'ex-1',
                     exerciseName: 'Press banca',
                     type: 'bilateral',
+                    weightMode: WorkoutExercise::WEIGHT_MODE_TOTAL,
                     muscleGroups: ['Pecho', 'Tríceps'],
                     position: 1,
                     note: null,

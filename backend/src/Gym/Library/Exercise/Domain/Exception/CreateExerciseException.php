@@ -28,6 +28,18 @@ final class CreateExerciseException extends BaseException
         );
     }
 
+    public static function weightModeIsNotAvailable(string $weightMode): self
+    {
+        return new static(
+            title: 'The exercise weight mode does not exist.',
+            keyTranslation: 'exercise.weight.mode.does.not.exist',
+            details: [
+                'weightMode' => $weightMode,
+                'availableWeightModes' => Exercise::AVAILABLE_WEIGHT_MODES,
+            ]
+        );
+    }
+
     public static function atLeastOneMuscleGroupRequired(): self
     {
         return new static(

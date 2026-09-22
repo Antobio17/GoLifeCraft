@@ -38,6 +38,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
             name: 'Press banca',
             description: 'Empuje horizontal con barra.',
             type: Exercise::TYPE_BILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_TOTAL,
             muscleGroups: ['Pecho', 'Tríceps'],
             icon: 'benchIncline',
             createdByUserId: 'god-user-id',
@@ -47,9 +48,57 @@ final class CreateExerciseCommandHandlerTest extends TestCase
         $this->assertNotNull(actual: $created);
         $this->assertEquals(expected: 'Press banca', actual: $created->name);
         $this->assertEquals(expected: Exercise::TYPE_BILATERAL, actual: $created->type);
+        $this->assertEquals(expected: Exercise::WEIGHT_MODE_TOTAL, actual: $created->weightMode);
         $this->assertEquals(expected: ['Pecho', 'Tríceps'], actual: $created->muscleGroups);
         $this->assertEquals(expected: 'benchIncline', actual: $created->icon);
         $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());
+    }
+
+    public function testItCreatesAnExerciseWithPerSideWeightMode(): void
+    {
+        ($this->handler)(new CreateExerciseCommand(
+            name: 'Curl martillo',
+            description: null,
+            type: Exercise::TYPE_UNILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_PER_SIDE,
+            muscleGroups: ['Bíceps'],
+            icon: 'dumbbell',
+            createdByUserId: 'god-user-id',
+        ));
+
+        $created = $this->repository->findById(id: '1');
+        $this->assertEquals(expected: Exercise::WEIGHT_MODE_PER_SIDE, actual: $created->weightMode);
+    }
+
+    public function testItFallsBackToTotalWeightModeWhenNotProvided(): void
+    {
+        ($this->handler)(new CreateExerciseCommand(
+            name: 'Sentadilla',
+            description: null,
+            type: Exercise::TYPE_BILATERAL,
+            weightMode: null,
+            muscleGroups: ['Cuádriceps'],
+            icon: null,
+            createdByUserId: 'god-user-id',
+        ));
+
+        $created = $this->repository->findById(id: '1');
+        $this->assertEquals(expected: Exercise::WEIGHT_MODE_TOTAL, actual: $created->weightMode);
+    }
+
+    public function testItThrowsExceptionForInvalidWeightMode(): void
+    {
+        $this->expectException(exception: CreateExerciseException::class);
+
+        ($this->handler)(new CreateExerciseCommand(
+            name: 'Curl',
+            description: null,
+            type: Exercise::TYPE_BILATERAL,
+            weightMode: 'invalid-weight-mode',
+            muscleGroups: ['Bíceps'],
+            icon: null,
+            createdByUserId: 'god-user-id',
+        ));
     }
 
     public function testItThrowsExceptionWhenNameAlreadyExists(): void
@@ -62,6 +111,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
             name: 'Press banca',
             description: null,
             type: Exercise::TYPE_BILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_TOTAL,
             muscleGroups: ['Pecho'],
             icon: null,
             createdByUserId: 'god-user-id',
@@ -76,6 +126,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
             name: 'Curl',
             description: null,
             type: 'invalid-type',
+            weightMode: Exercise::WEIGHT_MODE_TOTAL,
             muscleGroups: ['Bíceps'],
             icon: null,
             createdByUserId: 'god-user-id',
@@ -90,6 +141,7 @@ final class CreateExerciseCommandHandlerTest extends TestCase
             name: 'Plancha',
             description: null,
             type: Exercise::TYPE_BILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_TOTAL,
             muscleGroups: [],
             icon: null,
             createdByUserId: 'god-user-id',

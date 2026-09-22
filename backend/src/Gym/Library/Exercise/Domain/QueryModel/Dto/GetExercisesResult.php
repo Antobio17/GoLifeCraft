@@ -12,6 +12,7 @@ final class GetExercisesResult extends QueryAggregateResult
         public readonly string $name,
         public readonly ?string $description,
         public readonly string $type,
+        public readonly string $weightMode,
         public readonly array $muscleGroups,
         public readonly ?string $icon,
         public readonly \DateTime $createdAt,

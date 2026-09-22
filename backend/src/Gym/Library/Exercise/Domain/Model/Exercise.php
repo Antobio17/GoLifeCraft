@@ -20,9 +20,18 @@ class Exercise extends GenericAggregate
         self::TYPE_BILATERAL,
     ];
 
+    public const string WEIGHT_MODE_TOTAL = 'total';
+    public const string WEIGHT_MODE_PER_SIDE = 'perSide';
+
+    public const array AVAILABLE_WEIGHT_MODES = [
+        self::WEIGHT_MODE_TOTAL,
+        self::WEIGHT_MODE_PER_SIDE,
+    ];
+
     public string $name;
     public ?string $description = null;
     public string $type;
+    public string $weightMode = self::WEIGHT_MODE_TOTAL;
     public array $muscleGroups = [];
     public ?string $icon = null;
     public bool $deleted = false;
@@ -32,6 +41,7 @@ class Exercise extends GenericAggregate
         string $name,
         ?string $description,
         string $type,
+        ?string $weightMode,
         array $muscleGroups,
         ?string $icon,
         string $createdByUserId,
@@ -39,6 +49,12 @@ class Exercise extends GenericAggregate
     ): self {
         if (!self::isTypeAvailable(type: $type)) {
             throw CreateExerciseException::typeIsNotAvailable(type: $type);
+        }
+
+        $weightMode ??= self::WEIGHT_MODE_TOTAL;
+
+        if (!self::isWeightModeAvailable(weightMode: $weightMode)) {
+            throw CreateExerciseException::weightModeIsNotAvailable(weightMode: $weightMode);
         }
 
         if (!self::hasMuscleGroups(muscleGroups: $muscleGroups)) {
@@ -52,6 +68,7 @@ class Exercise extends GenericAggregate
         $exercise->name = $name;
         $exercise->description = $description;
         $exercise->type = $type;
+        $exercise->weightMode = $weightMode;
         $exercise->muscleGroups = array_values(array: $muscleGroups);
         $exercise->icon = $icon;
         $exercise->deleted = false;
@@ -63,6 +80,7 @@ class Exercise extends GenericAggregate
             name: $name,
             description: $exercise->description,
             type: $type,
+            weightMode: $weightMode,
             muscleGroups: $exercise->muscleGroups,
             icon: $exercise->icon,
             deleted: $exercise->deleted,
@@ -79,6 +97,7 @@ class Exercise extends GenericAggregate
         string $name,
         ?string $description,
         string $type,
+        ?string $weightMode,
         array $muscleGroups,
         ?string $icon,
         string $updatedByUserId,
@@ -86,6 +105,12 @@ class Exercise extends GenericAggregate
     ): void {
         if (!self::isTypeAvailable(type: $type)) {
             throw UpdateExerciseException::typeIsNotAvailable(type: $type);
+        }
+
+        $weightMode ??= self::WEIGHT_MODE_TOTAL;
+
+        if (!self::isWeightModeAvailable(weightMode: $weightMode)) {
+            throw UpdateExerciseException::weightModeIsNotAvailable(weightMode: $weightMode);
         }
 
         if (!self::hasMuscleGroups(muscleGroups: $muscleGroups)) {
@@ -97,6 +122,7 @@ class Exercise extends GenericAggregate
         $this->name = $name;
         $this->description = $description;
         $this->type = $type;
+        $this->weightMode = $weightMode;
         $this->muscleGroups = array_values(array: $muscleGroups);
         $this->icon = $icon;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
@@ -107,6 +133,7 @@ class Exercise extends GenericAggregate
             name: $name,
             description: $this->description,
             type: $type,
+            weightMode: $weightMode,
             muscleGroups: $this->muscleGroups,
             icon: $this->icon,
             deleted: $this->deleted,
@@ -138,6 +165,7 @@ class Exercise extends GenericAggregate
             name: $this->name,
             description: $this->description,
             type: $this->type,
+            weightMode: $this->weightMode,
             muscleGroups: $this->muscleGroups,
             icon: $this->icon,
             deleted: $this->deleted,
@@ -151,6 +179,11 @@ class Exercise extends GenericAggregate
     private static function isTypeAvailable(string $type): bool
     {
         return in_array(needle: $type, haystack: self::AVAILABLE_TYPES, strict: true);
+    }
+
+    private static function isWeightModeAvailable(string $weightMode): bool
+    {
+        return in_array(needle: $weightMode, haystack: self::AVAILABLE_WEIGHT_MODES, strict: true);
     }
 
     private static function hasMuscleGroups(array $muscleGroups): bool

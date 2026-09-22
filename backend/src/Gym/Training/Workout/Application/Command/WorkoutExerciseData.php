@@ -2,6 +2,8 @@
 
 namespace Gym\Training\Workout\Application\Command;
 
+use Gym\Training\Workout\Domain\Model\WorkoutExercise;
+
 final readonly class WorkoutExerciseData
 {
     /**
@@ -11,6 +13,7 @@ final readonly class WorkoutExerciseData
         public string $exerciseId,
         public string $exerciseName,
         public string $type,
+        public string $weightMode,
         public array $muscleGroups,
         public int $position,
         public ?string $note,
@@ -24,6 +27,7 @@ final readonly class WorkoutExerciseData
             exerciseId: (string) ($rawExercise['exerciseId'] ?? ''),
             exerciseName: (string) ($rawExercise['exerciseName'] ?? ''),
             type: (string) ($rawExercise['type'] ?? ''),
+            weightMode: (string) ($rawExercise['weightMode'] ?? WorkoutExercise::WEIGHT_MODE_TOTAL),
             muscleGroups: self::stringList(value: $rawExercise['muscleGroups'] ?? []),
             position: (int) ($rawExercise['position'] ?? $position),
             note: self::nullableString(value: $rawExercise['note'] ?? null),

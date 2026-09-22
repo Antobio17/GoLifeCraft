@@ -1,4 +1,13 @@
-import { Component, OnInit, inject, input, signal } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Signal,
+  computed,
+  inject,
+  input,
+  signal,
+} from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import {
   AbstractControl,
@@ -27,6 +36,7 @@ import { MuscleCatalogService } from "../../application/services/muscle-catalog.
 import { ExerciseIconCatalogService } from "../../application/services/exercise-icon-catalog.service";
 import { GetExerciseResponse } from "../../domain/models/get-exercise-response.model";
 import { ExerciseType } from "../../domain/models/exercise-type.model";
+import { ExerciseWeightMode } from "../../domain/models/exercise-weight-mode.model";
 
 @Component({
   selector: "app-exercise-editor",
@@ -69,12 +79,38 @@ export class ExerciseEditorComponent implements OnInit {
   saving = signal(false);
   readonly id = input<string>("");
 
+  private readonly weightMode: Signal<string>;
+
+  weightModeOptions = computed(() => [
+    {
+      value: ExerciseWeightMode.Total,
+      label: this.t("createExercise.weightMode.total"),
+    },
+    {
+      value: ExerciseWeightMode.PerSide,
+      label: this.t("createExercise.weightMode.perSide"),
+    },
+  ]);
+
+  weightModeHint = computed(() =>
+    this.t(
+      this.weightMode() === ExerciseWeightMode.PerSide
+        ? "createExercise.weightMode.perSideHint"
+        : "createExercise.weightMode.totalHint",
+    ),
+  );
+
   constructor() {
     this.form = this.formBuilder.group({
       name: ["", [Validators.required, Validators.minLength(2)]],
       type: [ExerciseType.Bilateral, [Validators.required]],
+      weightMode: [ExerciseWeightMode.Total, [Validators.required]],
       muscleGroups: [[] as string[], [this.atLeastOneMuscle]],
       icon: [null as string | null],
+    });
+
+    this.weightMode = toSignal(this.form.get("weightMode")!.valueChanges, {
+      initialValue: ExerciseWeightMode.Total as string,
     });
   }
 
@@ -114,6 +150,8 @@ export class ExerciseEditorComponent implements OnInit {
             this.form.patchValue({
               name: response.data.attributes.name,
               type: response.data.attributes.type,
+              weightMode:
+                response.data.attributes.weightMode ?? ExerciseWeightMode.Total,
               muscleGroups: response.data.attributes.muscleGroups ?? [],
               icon: response.data.attributes.icon ?? null,
             });
@@ -152,6 +190,7 @@ export class ExerciseEditorComponent implements OnInit {
     const payload = {
       name: this.form.value.name ?? "",
       type: this.form.value.type ?? ExerciseType.Bilateral,
+      weightMode: this.form.value.weightMode ?? ExerciseWeightMode.Total,
       muscleGroups: this.form.value.muscleGroups ?? [],
       icon: this.form.value.icon ?? null,
     };

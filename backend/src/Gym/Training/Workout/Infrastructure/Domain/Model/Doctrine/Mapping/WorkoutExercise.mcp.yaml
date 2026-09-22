@@ -29,6 +29,12 @@ fields:
     required: true
     enum: [unilateral, bilateral]
     description: Snapshot of the exercise laterality at the moment the workout was performed.
+  weightMode:
+    writable: true
+    enum: [total, perSide]
+    description: >-
+      Snapshot of how the weights of this exercise are to be read at the moment the workout
+      was performed: "total" for the whole load, "perSide" for the load on one side only.
   muscleGroups:
     writable: true
     type: array

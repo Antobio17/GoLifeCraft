@@ -14,6 +14,7 @@ the user.
 | `name` | varchar(255) | unique by domain rule (no DB constraint) |
 | `description` | text NULL | |
 | `type` | varchar(20) | `unilateral` \| `bilateral` |
+| `weight_mode` | varchar(20) | `total` \| `perSide`; how to read the logged weight, defaults to `total` |
 | `muscle_groups` | json | array of strings, >= 1 |
 | `icon` | varchar(40) NULL | key from the icon catalog |
 | `deleted` | tinyint | soft delete; `0` |
