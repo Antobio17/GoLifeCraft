@@ -28,7 +28,8 @@ fields:
       How to read the weight recorded for this exercise: "total" means the number is the
       whole load being moved, "perSide" means it is the load on one side only (plates per
       side of the bar, or one dumbbell/one limb), so the real load is twice that number.
-      Defaults to "total".
+      Defaults to "total". It applies to the workouts logged from now on: each workout
+      freezes its own copy in workout_exercise, which is what the stats read.
   muscleGroups:
     writable: true
     type: array
