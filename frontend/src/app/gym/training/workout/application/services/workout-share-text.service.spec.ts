@@ -10,7 +10,10 @@ describe("WorkoutShareTextService", () => {
   const labels: WorkoutShareLabels = {
     sets: "series",
     reps: "reps",
-    perSide: "por lado",
+    bilateral: "bilateral",
+    unilateral: "unilateral",
+    perSide: "peso por lado",
+    totalWeight: "peso total",
   };
 
   const workout: WorkoutDetailAttributes = {
@@ -93,11 +96,15 @@ describe("WorkoutShareTextService", () => {
     expect(lines[2]).toBe("⏱️ 1h 4min · ✅ 3/4 series");
   });
 
-  it("numbers exercises and lists their muscle groups", () => {
+  it("numbers exercises and lists their muscle groups, laterality and weight mode", () => {
     const text = service.build(workout, labels);
 
-    expect(text).toContain("1. Press banca (Pecho · Tríceps)");
-    expect(text).toContain("2. Curl con mancuerna (Bíceps · por lado)");
+    expect(text).toContain(
+      "1. Press banca (Pecho · Tríceps · bilateral · peso total)",
+    );
+    expect(text).toContain(
+      "2. Curl con mancuerna (Bíceps · unilateral · peso por lado)",
+    );
   });
 
   it("marks warmup, completed and pending sets apart", () => {

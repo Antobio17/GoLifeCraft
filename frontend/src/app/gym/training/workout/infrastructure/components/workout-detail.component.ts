@@ -169,7 +169,10 @@ export class WorkoutDetailComponent {
       this.workoutShareText.build(detail, {
         sets: this.t("getWorkout.copy.sets"),
         reps: this.t("getWorkout.copy.reps"),
+        bilateral: this.t("getWorkout.copy.bilateral"),
+        unilateral: this.t("getWorkout.copy.unilateral"),
         perSide: this.t("getWorkout.copy.perSide"),
+        totalWeight: this.t("getWorkout.copy.totalWeight"),
       }),
     );
 

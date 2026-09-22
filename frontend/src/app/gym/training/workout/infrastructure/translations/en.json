@@ -32,7 +32,10 @@
       "action": "Copy the routine as text",
       "sets": "sets",
       "reps": "reps",
-      "perSide": "per side"
+      "bilateral": "bilateral",
+      "unilateral": "unilateral",
+      "perSide": "weight per side",
+      "totalWeight": "total weight"
     }
   },
   "workout": {

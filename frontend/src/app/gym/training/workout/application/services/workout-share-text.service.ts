@@ -1,4 +1,5 @@
 import { Injectable, inject } from "@angular/core";
+import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
 import { ExerciseWeightMode } from "@gym/library/exercise/domain/models/exercise-weight-mode.model";
 import { SetNumberingService } from "@gym/training/session/application/services/set-numbering.service";
 import { SetRowView } from "@gym/training/session/domain/models/set-row-view.model";
@@ -64,13 +65,11 @@ export class WorkoutShareTextService {
     exercise: WorkoutExerciseView,
     labels: WorkoutShareLabels,
   ): string {
-    const tags = [...exercise.muscleGroups];
-
-    if (this.isPerSide(exercise)) {
-      tags.push(labels.perSide);
-    }
-
-    if (!tags.length) return "";
+    const tags = [
+      ...exercise.muscleGroups,
+      this.typeText(exercise, labels),
+      this.weightModeText(exercise, labels),
+    ];
 
     return ` (${tags.join(" · ")})`;
   }
@@ -101,8 +100,24 @@ export class WorkoutShareTextService {
     return `${row.reps} × ${row.weight} kg`;
   }
 
-  private isPerSide(exercise: WorkoutExerciseView): boolean {
-    return ExerciseWeightMode.PerSide === exercise.weightMode;
+  private typeText(
+    exercise: WorkoutExerciseView,
+    labels: WorkoutShareLabels,
+  ): string {
+    if (ExerciseType.Unilateral === exercise.type) return labels.unilateral;
+
+    return labels.bilateral;
+  }
+
+  private weightModeText(
+    exercise: WorkoutExerciseView,
+    labels: WorkoutShareLabels,
+  ): string {
+    if (ExerciseWeightMode.PerSide === exercise.weightMode) {
+      return labels.perSide;
+    }
+
+    return labels.totalWeight;
   }
 
   private completedSets(workout: WorkoutDetailAttributes): number {
