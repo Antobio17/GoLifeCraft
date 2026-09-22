@@ -27,6 +27,12 @@
       "number": "Set",
       "reps": "Reps",
       "weight": "Weight (kg)"
+    },
+    "copy": {
+      "action": "Copy the routine as text",
+      "sets": "sets",
+      "reps": "reps",
+      "perSide": "per side"
     }
   },
   "workout": {
@@ -134,6 +140,10 @@
         "drag": "Drag to reorder",
         "trigger": "Reorder exercises, currently {{name}}"
       }
+    },
+    "copy": {
+      "done": "Routine copied, paste it anywhere",
+      "failed": "We could not copy the routine"
     }
   }
 }

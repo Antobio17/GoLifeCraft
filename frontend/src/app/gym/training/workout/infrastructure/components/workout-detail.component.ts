@@ -7,6 +7,7 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
 import { SkeletonExerciseComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-exercise.component";
@@ -19,6 +20,9 @@ import {
 } from "../../domain/models/workout-detail.model";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import { SetNumberingService } from "@gym/training/session/application/services/set-numbering.service";
+import { ClipboardService } from "@shared/clipboard/application/services/clipboard.service";
+import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
+import { WorkoutShareTextService } from "../../application/services/workout-share-text.service";
 
 @Component({
   selector: "app-workout-detail",
@@ -28,6 +32,7 @@ import { SetNumberingService } from "@gym/training/session/application/services/
     PageWrapperComponent,
     ScreenHeaderComponent,
     StackComponent,
+    ButtonComponent,
     SkeletonScreenHeaderComponent,
     SkeletonSummaryComponent,
     SkeletonExerciseComponent,
@@ -40,6 +45,9 @@ export class WorkoutDetailComponent {
   private backNavigation = inject(BackNavigationService);
   private getWorkoutService = inject(GetWorkoutService);
   private setNumbering = inject(SetNumberingService);
+  private workoutShareText = inject(WorkoutShareTextService);
+  private clipboardService = inject(ClipboardService);
+  private floatingToastService = inject(FloatingToastService);
 
   private readonly MODULE_PATH = "gym/training/workout";
 
@@ -151,5 +159,24 @@ export class WorkoutDetailComponent {
 
   goBack(): void {
     this.backNavigation.back(["/gym/history"]);
+  }
+
+  async onCopy(): Promise<void> {
+    const detail = this.workout();
+    if (!detail) return;
+
+    const copied = await this.clipboardService.copy(
+      this.workoutShareText.build(detail, {
+        sets: this.t("getWorkout.copy.sets"),
+        reps: this.t("getWorkout.copy.reps"),
+        perSide: this.t("getWorkout.copy.perSide"),
+      }),
+    );
+
+    this.floatingToastService.showToast({
+      status: copied ? 200 : 500,
+      keyTranslation: copied ? "workout.copy.done" : "workout.copy.failed",
+      details: [],
+    });
   }
 }

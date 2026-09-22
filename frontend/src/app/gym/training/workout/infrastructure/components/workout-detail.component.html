@@ -32,7 +32,18 @@
       [eyebrow]="'getWorkout.eyebrow' | t"
       [title]="detail.sessionName"
       (leadingClick)="goBack()"
-    />
+    >
+      <ds-button
+        slot="actions"
+        data-testid="workout-copy"
+        variant="secondary"
+        size="icon-lg"
+        icon="copy"
+        [iconSize]="19"
+        [ariaLabel]="'getWorkout.copy.action' | t"
+        (clicked)="onCopy()"
+      />
+    </ds-screen-header>
 
     <ds-workout-summary
       [eyebrow]="'getWorkout.completed' | t"

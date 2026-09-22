@@ -27,6 +27,12 @@
       "number": "Serie",
       "reps": "Reps",
       "weight": "Peso (kg)"
+    },
+    "copy": {
+      "action": "Copiar la rutina como texto",
+      "sets": "series",
+      "reps": "reps",
+      "perSide": "por lado"
     }
   },
   "workout": {
@@ -134,6 +140,10 @@
         "drag": "Arrastrar para recolocar",
         "trigger": "Ordenar ejercicios, ahora {{name}}"
       }
+    },
+    "copy": {
+      "done": "Rutina copiada, ya puedes pegarla",
+      "failed": "No hemos podido copiar la rutina"
     }
   }
 }
