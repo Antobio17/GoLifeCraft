@@ -96,6 +96,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     getWorkouts: "gym/training/workout",
     getWorkout: "gym/training/workout",
     workout: "gym/training/workout",
+    editWorkout: "gym/training/workout",
     role: "authorization/user/user",
     creating: "authorization/user/user",
     cannot: "authorization/user/user",
