@@ -69,7 +69,7 @@ final readonly class DoctrineGetExerciseTopSetsNeedleDataQuery implements GetExe
             $topSets[$exerciseId] ??= [
                 'exerciseId' => $exerciseId,
                 'reps' => (int) $row['reps'],
-                'weightKg' => round(num: (float) $row['weight'], precision: 1),
+                'weightKg' => round(num: (float) $row['weight'], precision: 2),
                 'date' => (string) $row['finished_at'],
             ];
         }

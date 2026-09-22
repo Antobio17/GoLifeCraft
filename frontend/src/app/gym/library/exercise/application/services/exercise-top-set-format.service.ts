@@ -35,6 +35,6 @@ export class ExerciseTopSetFormatService {
   }
 
   private weightText(weightKg: number): string {
-    return weightKg.toLocaleString(undefined, { maximumFractionDigits: 1 });
+    return weightKg.toLocaleString(undefined, { maximumFractionDigits: 2 });
   }
 }
