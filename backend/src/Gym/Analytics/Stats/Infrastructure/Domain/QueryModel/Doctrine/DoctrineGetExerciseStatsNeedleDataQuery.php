@@ -84,7 +84,7 @@ final readonly class DoctrineGetExerciseStatsNeedleDataQuery implements GetExerc
 
                 return [
                     'date' => $group['date'],
-                    'maxWeightKg' => round($maxWeight, 1),
+                    'maxWeightKg' => round($maxWeight, 2),
                     'estimatedOneRepMaxKg' => round($estimatedOneRepMax, 1),
                     'volumeKg' => round($volume, 1),
                     'sets' => $group['loggedSets'],
