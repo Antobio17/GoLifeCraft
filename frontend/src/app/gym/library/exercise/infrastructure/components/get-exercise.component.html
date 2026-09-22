@@ -113,6 +113,10 @@
             (ngModelChange)="onMetricChange($event)"
           />
 
+          @if (metricsUsePerSideWeight()) {
+            <ds-text variant="meta">{{ perSideMetricsNote() }}</ds-text>
+          }
+
           <ds-progression-card
             [metricLabel]="metricName()"
             [value]="currentLabel()"

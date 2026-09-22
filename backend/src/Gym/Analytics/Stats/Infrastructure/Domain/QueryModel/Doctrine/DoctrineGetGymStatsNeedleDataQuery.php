@@ -21,7 +21,7 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
         $setAggregates = $this->connection->createQueryBuilder()
             ->select(
                 'COUNT(ws.id) AS total_sets',
-                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS total_volume',
+                EffectiveWeightExpression::volumeSql(setAlias: 'ws', exerciseAlias: 'we').' AS total_volume',
             )
             ->from(table: 'workout_set', alias: 'ws')
             ->innerJoin('ws', 'workout_exercise', 'we', 'we.id = ws.workout_exercise_id')
@@ -122,7 +122,7 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
         $rows = $this->connection->createQueryBuilder()
             ->select(
                 'DATE(tw.finished_at) AS day',
-                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS volume',
+                EffectiveWeightExpression::volumeSql(setAlias: 'ws', exerciseAlias: 'we').' AS volume',
             )
             ->from(table: 'training_workout', alias: 'tw')
             ->innerJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')
@@ -153,7 +153,7 @@ final readonly class DoctrineGetGymStatsNeedleDataQuery implements GetGymStatsNe
         $rows = $this->connection->createQueryBuilder()
             ->select(
                 'tw.session_name AS name',
-                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS volume',
+                EffectiveWeightExpression::volumeSql(setAlias: 'ws', exerciseAlias: 'we').' AS volume',
             )
             ->from(table: 'training_workout', alias: 'tw')
             ->leftJoin('tw', 'workout_exercise', 'we', 'we.workout_id = tw.id')

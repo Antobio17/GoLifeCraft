@@ -54,6 +54,7 @@
       "bilateral": "Bilateral · un registro para ambos lados",
       "unilateral": "Unilateral · se ejecuta por lado"
     },
+    "weightModeMetricsNote": "Peso por lado: las métricas usan la carga total (peso × 2).",
     "weightModeLabel": "Peso registrado",
     "weightMode": {
       "total": "Peso total · el número es la carga completa",

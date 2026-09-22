@@ -54,6 +54,7 @@
       "bilateral": "Bilateral · one record for both sides",
       "unilateral": "Unilateral · performed per side"
     },
+    "weightModeMetricsNote": "Weight per side: the metrics use the total load (weight × 2).",
     "weightModeLabel": "Recorded weight",
     "weightMode": {
       "total": "Total weight · the number is the whole load",

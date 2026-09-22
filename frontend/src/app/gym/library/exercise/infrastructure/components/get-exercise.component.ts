@@ -131,6 +131,14 @@ export class GetExerciseComponent {
     );
   });
 
+  metricsUsePerSideWeight = computed<boolean>(
+    () => this.exercise()?.attributes.weightMode === ExerciseWeightMode.PerSide,
+  );
+
+  perSideMetricsNote = computed<string>(() =>
+    this.t("getExercise.weightModeMetricsNote"),
+  );
+
   hasData = computed<boolean>(() => this.sessions().length > 0);
 
   timesDone = computed<number>(() => this.sessions().length);

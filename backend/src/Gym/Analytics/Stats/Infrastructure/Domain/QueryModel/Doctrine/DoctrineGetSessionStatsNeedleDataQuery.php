@@ -21,7 +21,7 @@ final readonly class DoctrineGetSessionStatsNeedleDataQuery implements GetSessio
             ->select(
                 'tw.finished_at AS finished_at',
                 'tw.duration_seconds AS duration_seconds',
-                'COALESCE(SUM(ws.reps * COALESCE(ws.weight, 0)), 0) AS volume',
+                EffectiveWeightExpression::volumeSql(setAlias: 'ws', exerciseAlias: 'we').' AS volume',
                 'COALESCE(SUM(ws.reps), 0) AS reps',
                 'COUNT(ws.id) AS sets',
             )
