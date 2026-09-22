@@ -18,6 +18,11 @@ finish_workout:
   methods: [PUT]
   controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\FinishWorkoutController
 
+edit_workout:
+  path: /api/v1/gym/workouts/{workoutId}/edit
+  methods: [PUT]
+  controller: Gym\Training\Workout\Infrastructure\UI\API\Controller\EditWorkoutController
+
 update_workout:
   path: /api/v1/gym/workouts/{workoutId}
   methods: [PUT]

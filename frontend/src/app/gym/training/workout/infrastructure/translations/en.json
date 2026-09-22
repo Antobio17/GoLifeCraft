@@ -36,13 +36,15 @@
       "unilateral": "unilateral",
       "perSide": "weight per side",
       "totalWeight": "total weight"
-    }
+    },
+    "edit": "Edit workout"
   },
   "workout": {
     "breadcrumb": {
       "list": "History",
       "detail": "Workout",
-      "free": "Free workout"
+      "free": "Free workout",
+      "edit": "Edit"
     },
     "banner": {
       "active": "Active session",
@@ -147,6 +149,53 @@
     "copy": {
       "done": "Routine copied, paste it anywhere",
       "failed": "We could not copy the routine"
+    },
+    "edit": {
+      "saved": "Workout updated",
+      "not": {
+        "finished": "Only a finished workout can be edited"
+      },
+      "name": {
+        "empty": "The workout needs a name"
+      },
+      "started": {
+        "future": "A workout in the history cannot start in the future"
+      },
+      "duration": {
+        "invalid": "The duration must be between 0 and 24 hours"
+      }
+    }
+  },
+  "editWorkout": {
+    "back": "Workout",
+    "eyebrow": "History",
+    "title": "Edit workout",
+    "field": {
+      "name": "Name",
+      "date": "Date",
+      "time": "Start time",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "hoursUp": "Add one hour",
+      "hoursDown": "Remove one hour",
+      "minutesUp": "Add one minute",
+      "minutesDown": "Remove one minute"
+    },
+    "hint": "The end time is recalculated from the start and the duration.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "error": {
+      "missingStart": "Set the start date and time.",
+      "futureStart": "The workout cannot start in the future.",
+      "duration": "The duration must be between 0 and 24 hours."
+    },
+    "empty": {
+      "title": "No exercises",
+      "text": "Add the exercises you did in this workout."
+    },
+    "notFound": {
+      "title": "We could not find this workout",
+      "text": "It may have been deleted or the link is wrong."
     }
   }
 }

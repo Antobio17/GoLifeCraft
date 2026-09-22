@@ -35,6 +35,16 @@
     >
       <ds-button
         slot="actions"
+        data-testid="workout-edit"
+        variant="secondary"
+        size="icon-lg"
+        icon="pencil"
+        [iconSize]="19"
+        [ariaLabel]="'getWorkout.edit' | t"
+        (clicked)="onEdit()"
+      />
+      <ds-button
+        slot="actions"
         data-testid="workout-copy"
         variant="secondary"
         size="icon-lg"

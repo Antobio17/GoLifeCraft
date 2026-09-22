@@ -20,6 +20,13 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Gym\Training\Workout\Infrastructure\UI\API\Controller\EditWorkoutController:
+    class: Gym\Training\Workout\Infrastructure\UI\API\Controller\EditWorkoutController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Gym\Training\Workout\Infrastructure\UI\API\Controller\GetWorkoutsController:
     class: Gym\Training\Workout\Infrastructure\UI\API\Controller\GetWorkoutsController
     arguments:

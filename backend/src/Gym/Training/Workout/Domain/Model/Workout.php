@@ -2,9 +2,11 @@
 
 namespace Gym\Training\Workout\Domain\Model;
 
+use Gym\Training\Workout\Domain\Event\WorkoutEdited;
 use Gym\Training\Workout\Domain\Event\WorkoutFinished;
 use Gym\Training\Workout\Domain\Event\WorkoutProgressSaved;
 use Gym\Training\Workout\Domain\Event\WorkoutStarted;
+use Gym\Training\Workout\Domain\Exception\EditWorkoutException;
 use Gym\Training\Workout\Domain\Exception\FinishWorkoutException;
 use Gym\Training\Workout\Domain\Exception\UpdateWorkoutException;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
@@ -14,6 +16,8 @@ class Workout extends GenericAggregate
 {
     public const string STATUS_IN_PROGRESS = 'in_progress';
     public const string STATUS_COMPLETED = 'completed';
+
+    public const int MAX_DURATION_SECONDS = 86400;
 
     public const array TEMPLATE_SYNC_MODES = [
         WorkoutFinished::TEMPLATE_SYNC_EXERCISES,
@@ -169,6 +173,65 @@ class Workout extends GenericAggregate
             createdByUserId: $this->createdByUserId,
             templateSyncMode: $templateSyncMode,
             finishedByUserId: $finishedByUserId,
+        ));
+    }
+
+    /**
+     * @param WorkoutExercise[] $exercises
+     */
+    public function edit(
+        string $sessionName,
+        \DateTime $startedAt,
+        int $durationSeconds,
+        array $exercises,
+        string $editedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (self::STATUS_COMPLETED !== $this->status) {
+            throw EditWorkoutException::workoutNotFinished(workoutId: $this->id);
+        }
+
+        if ('' === trim($sessionName)) {
+            throw EditWorkoutException::emptySessionName(workoutId: $this->id);
+        }
+
+        if ($durationSeconds < 0 || $durationSeconds > self::MAX_DURATION_SECONDS) {
+            throw EditWorkoutException::invalidDuration(workoutId: $this->id, durationSeconds: $durationSeconds);
+        }
+
+        $now = $dateTimeGenerator->now();
+
+        if ($startedAt > $now) {
+            throw EditWorkoutException::startedInTheFuture(
+                workoutId: $this->id,
+                startedAt: $startedAt->format(format: \DateTimeInterface::ATOM),
+            );
+        }
+
+        $utcStartedAt = (clone $startedAt)->setTimezone(timezone: new \DateTimeZone(timezone: 'UTC'));
+
+        $this->sessionName = trim($sessionName);
+        $this->startedAt = $utcStartedAt;
+        $this->durationSeconds = $durationSeconds;
+        $this->finishedAt = (clone $utcStartedAt)->modify(modifier: sprintf('+%d seconds', $durationSeconds));
+        $this->exercises = $exercises;
+        $this->stampUpdate(userId: $editedByUserId, now: $now);
+
+        $this->record(event: new WorkoutEdited(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            sessionId: $this->sessionId,
+            sessionName: $this->sessionName,
+            status: $this->status,
+            startedAt: $this->startedAt,
+            finishedAt: $this->finishedAt,
+            durationSeconds: $this->durationSeconds,
+            restStartedAt: $this->restStartedAt,
+            exercises: $this->exercisesSnapshot(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $editedByUserId,
         ));
     }
 
