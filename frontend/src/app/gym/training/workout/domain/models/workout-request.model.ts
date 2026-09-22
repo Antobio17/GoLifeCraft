@@ -13,6 +13,7 @@ export interface WorkoutExerciseRequest {
   exerciseId: string | null;
   exerciseName: string;
   type: string;
+  weightMode: string;
   muscleGroups: string[];
   position: number;
   note: string | null;

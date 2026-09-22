@@ -7,6 +7,11 @@
     <field name="exerciseId" type="string" column="exercise_id" length="36"/>
     <field name="exerciseName" type="string" column="exercise_name" length="255"/>
     <field name="type" type="string" column="type" length="20"/>
+    <field name="weightMode" type="string" column="weight_mode" length="20">
+      <options>
+        <option name="default">total</option>
+      </options>
+    </field>
     <field name="muscleGroups" type="json" column="muscle_groups"/>
     <field name="position" type="integer" column="position"/>
     <field name="note" type="text" column="note" nullable="true"/>

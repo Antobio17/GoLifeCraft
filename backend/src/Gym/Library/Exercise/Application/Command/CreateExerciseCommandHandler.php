@@ -30,6 +30,7 @@ final readonly class CreateExerciseCommandHandler
             name: $command->name,
             description: $command->description,
             type: $command->type,
+            weightMode: $command->weightMode,
             muscleGroups: $command->muscleGroups,
             icon: $command->icon,
             createdByUserId: $command->createdByUserId,

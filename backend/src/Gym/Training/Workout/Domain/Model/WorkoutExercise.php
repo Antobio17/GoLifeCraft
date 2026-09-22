@@ -8,10 +8,13 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class WorkoutExercise extends GenericAggregate
 {
+    public const string WEIGHT_MODE_TOTAL = 'total';
+
     public string $workoutId;
     public string $exerciseId;
     public string $exerciseName;
     public string $type;
+    public string $weightMode = self::WEIGHT_MODE_TOTAL;
     public array $muscleGroups = [];
     public int $position;
     public ?string $note = null;
@@ -24,6 +27,7 @@ class WorkoutExercise extends GenericAggregate
         string $exerciseId,
         string $exerciseName,
         string $type,
+        string $weightMode,
         array $muscleGroups,
         int $position,
         ?string $note,
@@ -38,6 +42,7 @@ class WorkoutExercise extends GenericAggregate
         $workoutExercise->exerciseId = $exerciseId;
         $workoutExercise->exerciseName = $exerciseName;
         $workoutExercise->type = $type;
+        $workoutExercise->weightMode = $weightMode;
         $workoutExercise->muscleGroups = array_values(array: $muscleGroups);
         $workoutExercise->position = $position;
         $workoutExercise->note = $note;

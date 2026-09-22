@@ -39,6 +39,7 @@ final class DeleteExerciseCommandHandlerTest extends TestCase
             name: 'Press banca',
             description: null,
             type: Exercise::TYPE_BILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_TOTAL,
             muscleGroups: ['Pecho'],
             icon: null,
             createdByUserId: 'god-user-id',

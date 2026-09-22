@@ -31,6 +31,7 @@ final class CreateExerciseController
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 description: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'description'),
                 type: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'type'),
+                weightMode: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'weightMode'),
                 muscleGroups: RequestExtractor::getArrayRequestValue(request: $request, fieldName: 'muscleGroups'),
                 icon: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'icon'),
                 createdByUserId: RequestExtractor::getUserSessionId(request: $request),

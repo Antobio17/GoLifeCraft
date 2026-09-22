@@ -44,6 +44,7 @@ final class WorkoutResultHydrator
                 'we.exercise_name',
                 'we.muscle_groups',
                 'we.type',
+                'we.weight_mode',
                 'we.position',
                 'we.note'
             )
@@ -70,6 +71,7 @@ final class WorkoutResultHydrator
                 exerciseName: $row['exercise_name'] ?? '',
                 muscleGroups: json_decode(json: $row['muscle_groups'] ?? '[]', associative: true) ?? [],
                 type: $row['type'] ?? '',
+                weightMode: $row['weight_mode'] ?? '',
                 position: (int) $row['position'],
                 note: $row['note'],
                 sets: $setsByExercise[$row['id']] ?? [],

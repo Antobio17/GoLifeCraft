@@ -98,6 +98,7 @@ describe("ActiveWorkoutService rest timer", () => {
       exerciseName: "Press banca",
       muscleGroups: ["Pecho"],
       type: "bilateral",
+      weightMode: "total",
       note: null,
       sets: [
         { reps: 10, weight: 40, kind: SetKind.Warmup },

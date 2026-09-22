@@ -23,6 +23,7 @@ final readonly class DoctrineGetExerciseStatsNeedleDataQuery implements GetExerc
                 'tw.finished_at AS finished_at',
                 'ws.reps AS reps',
                 'ws.weight AS weight',
+                EffectiveWeightExpression::sql(setAlias: 'ws', exerciseAlias: 'we').' AS effective_weight',
             )
             ->from(table: 'workout_set', alias: 'ws')
             ->innerJoin('ws', 'workout_exercise', 'we', 'we.id = ws.workout_exercise_id')
@@ -46,7 +47,7 @@ final readonly class DoctrineGetExerciseStatsNeedleDataQuery implements GetExerc
     }
 
     /**
-     * @param array<int, array{workout_id: string, finished_at: string, reps: int|string, weight: float|string|null}> $rows
+     * @param array<int, array{workout_id: string, finished_at: string, reps: int|string, weight: float|string|null, effective_weight: float|string|null}> $rows
      *
      * @return array<int, array{date: string, maxWeightKg: float, estimatedOneRepMaxKg: float, volumeKg: float, sets: array<int, array{reps: int, weightKg: float}>}>
      */
@@ -56,10 +57,14 @@ final readonly class DoctrineGetExerciseStatsNeedleDataQuery implements GetExerc
 
         foreach ($rows as $row) {
             $workoutId = $row['workout_id'];
-            $grouped[$workoutId] ??= ['date' => $row['finished_at'], 'sets' => []];
-            $grouped[$workoutId]['sets'][] = [
+            $grouped[$workoutId] ??= ['date' => $row['finished_at'], 'loggedSets' => [], 'effectiveSets' => []];
+            $grouped[$workoutId]['loggedSets'][] = [
                 'reps' => (int) $row['reps'],
                 'weightKg' => (float) ($row['weight'] ?? 0),
+            ];
+            $grouped[$workoutId]['effectiveSets'][] = [
+                'reps' => (int) $row['reps'],
+                'weightKg' => (float) ($row['effective_weight'] ?? 0),
             ];
         }
 
@@ -69,7 +74,7 @@ final readonly class DoctrineGetExerciseStatsNeedleDataQuery implements GetExerc
                 $estimatedOneRepMax = 0.0;
                 $volume = 0.0;
 
-                foreach ($group['sets'] as $set) {
+                foreach ($group['effectiveSets'] as $set) {
                     $weight = $set['weightKg'];
                     $reps = $set['reps'];
                     $volume += $weight * $reps;
@@ -82,7 +87,7 @@ final readonly class DoctrineGetExerciseStatsNeedleDataQuery implements GetExerc
                     'maxWeightKg' => round($maxWeight, 1),
                     'estimatedOneRepMaxKg' => round($estimatedOneRepMax, 1),
                     'volumeKg' => round($volume, 1),
-                    'sets' => $group['sets'],
+                    'sets' => $group['loggedSets'],
                 ];
             },
             array: $grouped,

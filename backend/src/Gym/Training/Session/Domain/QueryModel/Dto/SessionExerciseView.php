@@ -13,6 +13,7 @@ final readonly class SessionExerciseView
         public string $exerciseName,
         public array $muscleGroups,
         public string $type,
+        public string $weightMode,
         public int $position,
         public ?string $note,
         public array $sets,

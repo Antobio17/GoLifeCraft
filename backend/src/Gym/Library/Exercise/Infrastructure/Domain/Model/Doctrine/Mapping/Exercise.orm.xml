@@ -6,6 +6,11 @@
     <field name="name" type="string" column="name" length="255"/>
     <field name="description" type="text" column="description" nullable="true"/>
     <field name="type" type="string" column="type" length="20"/>
+    <field name="weightMode" type="string" column="weight_mode" length="20">
+      <options>
+        <option name="default">total</option>
+      </options>
+    </field>
     <field name="muscleGroups" type="json" column="muscle_groups"/>
     <field name="icon" type="string" column="icon" length="40" nullable="true"/>
     <field name="deleted" type="boolean" column="deleted"/>

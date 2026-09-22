@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
+import { ExerciseWeightMode } from "@gym/library/exercise/domain/models/exercise-weight-mode.model";
 import { ActiveExercise } from "@gym/training/workout/application/services/active-workout.service";
 import {
   SessionExerciseView,
@@ -38,6 +39,7 @@ export class SessionDraftService {
       exerciseName: exercise.exerciseName,
       muscleGroups: [...exercise.muscleGroups],
       type: exercise.type,
+      weightMode: exercise.weightMode,
       position: index + 1,
       note: exercise.note,
       sets: exercise.sets.map((set, setIndex) => ({
@@ -62,6 +64,7 @@ export class SessionDraftService {
       exerciseName: exercise.attributes.name,
       muscleGroups: [...exercise.attributes.muscleGroups],
       type: exercise.attributes.type,
+      weightMode: exercise.attributes.weightMode ?? ExerciseWeightMode.Total,
       position: list.length + 1,
       note: null,
       sets: [

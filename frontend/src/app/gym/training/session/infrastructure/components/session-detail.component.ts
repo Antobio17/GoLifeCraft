@@ -97,6 +97,7 @@ import { ExerciseTopSetFormatService } from "@gym/library/exercise/application/s
 import { ExerciseTopSet } from "@gym/library/exercise/domain/models/exercise-top-set.model";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
+import { ExerciseWeightMode } from "@gym/library/exercise/domain/models/exercise-weight-mode.model";
 import { GetSessionResponse } from "../../domain/models/get-session-response.model";
 import {
   ExerciseSetView,
@@ -249,6 +250,7 @@ export class SessionDetailComponent implements OnInit {
         showProgressionTab: !active && openTabs[exercise.id] === "progression",
         muscleLabel: this.muscleText(exercise),
         modeLabel: this.modeLabel(exercise.type),
+        weightModeLabel: this.weightModeLabel(exercise.weightMode),
         topSetValue: this.topSetFormat.valueLabel(topSet),
         topSetCaption: this.topSetFormat.dateLabel(topSet),
         topSetHasAction: !!exercise.exerciseId,
@@ -516,6 +518,7 @@ export class SessionDetailComponent implements OnInit {
       exerciseName: exercise.exerciseName,
       muscleGroups: exercise.muscleGroups,
       type: exercise.type,
+      weightMode: exercise.weightMode,
       note: exercise.note,
       sets: exercise.sets.map((set) => ({
         reps: set.reps,
@@ -652,6 +655,14 @@ export class SessionDetailComponent implements OnInit {
       type === ExerciseType.Unilateral
         ? "getSession.mode.unilateral"
         : "getSession.mode.bilateral",
+    );
+  }
+
+  private weightModeLabel(weightMode: string): string {
+    return this.t(
+      weightMode === ExerciseWeightMode.PerSide
+        ? "getSession.weightMode.perSide"
+        : "getSession.weightMode.total",
     );
   }
 

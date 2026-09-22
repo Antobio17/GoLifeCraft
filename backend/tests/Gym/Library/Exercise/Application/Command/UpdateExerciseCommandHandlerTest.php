@@ -41,6 +41,7 @@ final class UpdateExerciseCommandHandlerTest extends TestCase
             name: 'Press banca',
             description: null,
             type: Exercise::TYPE_BILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_TOTAL,
             muscleGroups: ['Pecho'],
             icon: 'benchFlat',
             createdByUserId: 'god-user-id',
@@ -61,6 +62,7 @@ final class UpdateExerciseCommandHandlerTest extends TestCase
             name: 'Press inclinado',
             description: 'Empuje en banco inclinado a 30°.',
             type: Exercise::TYPE_BILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_TOTAL,
             muscleGroups: ['Pecho', 'Hombro'],
             icon: 'benchIncline',
             updatedByUserId: 'god-user-id',
@@ -72,6 +74,39 @@ final class UpdateExerciseCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'benchIncline', actual: $updated->icon);
     }
 
+    public function testItUpdatesTheWeightMode(): void
+    {
+        ($this->handler)(new UpdateExerciseCommand(
+            exerciseId: '1',
+            name: 'Press banca',
+            description: null,
+            type: Exercise::TYPE_BILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_PER_SIDE,
+            muscleGroups: ['Pecho'],
+            icon: 'benchFlat',
+            updatedByUserId: 'god-user-id',
+        ));
+
+        $updated = $this->repository->findById(id: '1');
+        $this->assertEquals(expected: Exercise::WEIGHT_MODE_PER_SIDE, actual: $updated->weightMode);
+    }
+
+    public function testItThrowsExceptionForInvalidWeightMode(): void
+    {
+        $this->expectException(exception: UpdateExerciseException::class);
+
+        ($this->handler)(new UpdateExerciseCommand(
+            exerciseId: '1',
+            name: 'Press banca',
+            description: null,
+            type: Exercise::TYPE_BILATERAL,
+            weightMode: 'invalid-weight-mode',
+            muscleGroups: ['Pecho'],
+            icon: null,
+            updatedByUserId: 'god-user-id',
+        ));
+    }
+
     public function testItThrowsExceptionWhenExerciseNotFound(): void
     {
         $this->expectException(exception: UpdateExerciseException::class);
@@ -81,6 +116,7 @@ final class UpdateExerciseCommandHandlerTest extends TestCase
             name: 'Press inclinado',
             description: null,
             type: Exercise::TYPE_BILATERAL,
+            weightMode: Exercise::WEIGHT_MODE_TOTAL,
             muscleGroups: ['Pecho'],
             icon: null,
             updatedByUserId: 'god-user-id',

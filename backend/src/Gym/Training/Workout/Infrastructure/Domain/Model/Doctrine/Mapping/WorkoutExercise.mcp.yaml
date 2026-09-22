@@ -29,6 +29,15 @@ fields:
     required: true
     enum: [unilateral, bilateral]
     description: Snapshot of the exercise laterality at the moment the workout was performed.
+  weightMode:
+    writable: true
+    enum: [total, perSide]
+    filterable: true
+    description: >-
+      Snapshot of how the weights of this exercise are to be read at the moment the workout
+      was performed: "total" for the whole load, "perSide" for the load on one side only.
+      The stats read this snapshot, not the library exercise, so a set logged here counts
+      twice towards volume, max weight and estimated 1RM while it says "perSide".
   muscleGroups:
     writable: true
     type: array

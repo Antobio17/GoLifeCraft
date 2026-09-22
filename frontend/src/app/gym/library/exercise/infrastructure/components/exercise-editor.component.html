@@ -47,6 +47,17 @@
         <ds-segmented-toggle [options]="typeOptions" formControlName="type" />
       </ds-field>
 
+      <ds-field
+        [label]="'createExercise.field.weightMode' | t"
+        [hint]="weightModeHint()"
+        [hintIcon]="true"
+      >
+        <ds-segmented-toggle
+          [options]="weightModeOptions()"
+          formControlName="weightMode"
+        />
+      </ds-field>
+
       <ds-button
         type="submit"
         variant="soft"

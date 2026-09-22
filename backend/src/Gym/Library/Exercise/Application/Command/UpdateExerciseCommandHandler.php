@@ -38,6 +38,7 @@ final readonly class UpdateExerciseCommandHandler
             name: $command->name,
             description: $command->description,
             type: $command->type,
+            weightMode: $command->weightMode,
             muscleGroups: $command->muscleGroups,
             icon: $command->icon,
             updatedByUserId: $command->updatedByUserId,

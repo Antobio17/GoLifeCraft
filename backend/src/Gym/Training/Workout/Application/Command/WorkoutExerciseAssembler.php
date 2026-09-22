@@ -37,6 +37,7 @@ final readonly class WorkoutExerciseAssembler
             exerciseId: $exerciseData->exerciseId,
             exerciseName: $exerciseData->exerciseName,
             type: $exerciseData->type,
+            weightMode: $exerciseData->weightMode,
             muscleGroups: $exerciseData->muscleGroups,
             position: $exerciseData->position,
             note: $exerciseData->note,

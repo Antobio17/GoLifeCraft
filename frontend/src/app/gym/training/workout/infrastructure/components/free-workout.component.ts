@@ -51,6 +51,7 @@ import { ExerciseTopSetFormatService } from "@gym/library/exercise/application/s
 import { ExerciseTopSet } from "@gym/library/exercise/domain/models/exercise-top-set.model";
 import { Exercise } from "@gym/library/exercise/domain/models/exercise.model";
 import { ExerciseType } from "@gym/library/exercise/domain/models/exercise-type.model";
+import { ExerciseWeightMode } from "@gym/library/exercise/domain/models/exercise-weight-mode.model";
 import { SessionDraftService } from "@gym/training/session/application/services/session-draft.service";
 import { SetNumberingService } from "@gym/training/session/application/services/set-numbering.service";
 import { SessionExerciseView } from "@gym/training/session/domain/models/session-detail.model";
@@ -146,6 +147,7 @@ export class FreeWorkoutComponent implements OnInit {
         sets: this.setNumbering.rows(exercise.sets),
         muscleLabel: exercise.muscleGroups.join(" · "),
         modeLabel: this.modeLabel(exercise.type),
+        weightModeLabel: this.weightModeLabel(exercise.weightMode),
         topSetValue: this.topSetFormat.valueLabel(topSet),
         topSetCaption: this.topSetFormat.dateLabel(topSet),
         topSetHasAction: !!exercise.exerciseId,
@@ -339,6 +341,7 @@ export class FreeWorkoutComponent implements OnInit {
       exerciseName: exercise.exerciseName,
       muscleGroups: exercise.muscleGroups,
       type: exercise.type,
+      weightMode: exercise.weightMode,
       note: exercise.note,
       sets: exercise.sets.map((set) => ({
         reps: set.reps,
@@ -353,6 +356,14 @@ export class FreeWorkoutComponent implements OnInit {
       type === ExerciseType.Unilateral
         ? "workout.free.mode.unilateral"
         : "workout.free.mode.bilateral",
+    );
+  }
+
+  private weightModeLabel(weightMode: string): string {
+    return this.t(
+      weightMode === ExerciseWeightMode.PerSide
+        ? "workout.free.weightMode.perSide"
+        : "workout.free.weightMode.total",
     );
   }
 

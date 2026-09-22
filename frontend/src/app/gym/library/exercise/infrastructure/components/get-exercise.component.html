@@ -82,6 +82,7 @@
                 }
               </ds-stack>
               <ds-text variant="meta">{{ modeLabel() }}</ds-text>
+              <ds-text variant="meta">{{ weightModeLabel() }}</ds-text>
             </ds-stack>
           </ds-stack>
         </ds-card>
@@ -111,6 +112,10 @@
             [ngModel]="metric()"
             (ngModelChange)="onMetricChange($event)"
           />
+
+          @if (metricsUsePerSideWeight()) {
+            <ds-text variant="meta">{{ perSideMetricsNote() }}</ds-text>
+          }
 
           <ds-progression-card
             [metricLabel]="metricName()"

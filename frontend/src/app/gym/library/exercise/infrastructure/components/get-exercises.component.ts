@@ -7,6 +7,7 @@ import { GetExercisesService } from "@gym/library/exercise/application/services/
 import { DeleteExerciseService } from "@gym/library/exercise/application/services/delete-exercise.service";
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { Exercise } from "../../domain/models/exercise.model";
+import { ExerciseWeightMode } from "../../domain/models/exercise-weight-mode.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -244,7 +245,10 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
     const mode = this.t(
       `getExercises.type.${exercise.attributes.type.toLowerCase()}`,
     );
-    return `${exercise.attributes.muscleGroups.join(" · ")} · ${mode}`;
+    const weightMode = this.t(
+      `getExercises.weightMode.${exercise.attributes.weightMode ?? ExerciseWeightMode.Total}`,
+    );
+    return `${exercise.attributes.muscleGroups.join(" · ")} · ${mode} · ${weightMode}`;
   }
 
   goBack(): void {

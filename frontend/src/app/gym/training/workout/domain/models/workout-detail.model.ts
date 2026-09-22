@@ -15,6 +15,7 @@ export interface WorkoutExerciseView {
   exerciseName: string;
   muscleGroups: string[];
   type: string;
+  weightMode: string;
   position: number;
   note: string | null;
   sets: WorkoutSetView[];
