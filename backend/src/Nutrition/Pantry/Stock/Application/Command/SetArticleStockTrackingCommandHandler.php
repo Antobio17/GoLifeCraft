@@ -27,9 +27,9 @@ final readonly class SetArticleStockTrackingCommandHandler
 
     public function __invoke(SetArticleStockTrackingCommand $command): void
     {
-        $policy = $this->needleDataQuery->findArticlePolicy(articleId: $command->articleId);
+        $pack = $this->needleDataQuery->findArticlePack(articleId: $command->articleId);
 
-        if (null === $policy) {
+        if (null === $pack) {
             throw SetArticleStockTrackingException::articleNotFound(articleId: $command->articleId);
         }
 
@@ -65,7 +65,7 @@ final readonly class SetArticleStockTrackingCommandHandler
                     refId: $command->articleId,
                 ),
                 trackingMode: $trackingMode,
-                packSize: $policy->packSize,
+                packSize: $pack->size,
                 previousReference: $articleStock->referenceQuantity,
                 now: $this->dateTimeGenerator->now(),
             ),

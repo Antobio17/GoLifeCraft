@@ -2,9 +2,9 @@
 
 namespace Nutrition\Pantry\Movement\Domain\QueryModel;
 
-use Nutrition\Pantry\Movement\Domain\Model\ArticleStockReference;
+use Nutrition\Catalog\Article\Domain\Model\ArticlePack;
 
 interface CorrectArticleStockNeedleDataQuery
 {
-    public function findArticleReference(string $articleId): ?ArticleStockReference;
+    public function findArticlePack(string $articleId): ?ArticlePack;
 }

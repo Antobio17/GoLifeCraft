@@ -205,20 +205,15 @@ export class GetArticleComponent {
       ? parsed * stock.packSize
       : parsed;
   });
-  hasReference = computed<boolean>(() => {
-    const stock = this.stock();
-
-    return null !== stock && null !== stock.referenceQuantity;
-  });
+  canSwapStockUnit = computed<boolean>(() => this.stock()?.hasPack ?? false);
   quickAmountOptions = computed<ChoiceChipOption[]>(() => {
-    if (!this.hasReference()) return [];
+    if (!this.canSwapStockUnit()) return [];
 
     return QUICK_AMOUNTS.map((quick) => ({
       value: quick.fraction,
       label: this.t(`getArticle.stock.editor.fraction.${quick.key}`),
     }));
   });
-  canSwapStockUnit = computed<boolean>(() => this.stock()?.hasPack ?? false);
   trackingOptions = computed<ChoiceChipOption[]>(() =>
     Object.values(StockTrackingMode).map((mode) => ({
       value: mode,
@@ -328,15 +323,14 @@ export class GetArticleComponent {
 
   onQuickAmountChange(value: string | number): void {
     const stock = this.stock();
-    const reference = stock?.referenceQuantity ?? null;
     const fraction = Number(value);
 
-    if (null === stock || null === reference) return;
+    if (null === stock || !stock.hasPack) return;
 
     this.correctionKind.set(StockCorrectionKind.Fraction);
     this.correctionFraction.set(fraction);
     this.stockDraft.set(
-      this.draftText(this.inDraftUnit(stock, reference * fraction)),
+      this.draftText(this.inDraftUnit(stock, stock.packSize * fraction)),
     );
   }
 

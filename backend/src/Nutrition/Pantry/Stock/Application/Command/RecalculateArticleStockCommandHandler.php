@@ -25,9 +25,9 @@ final readonly class RecalculateArticleStockCommandHandler
 
     public function __invoke(RecalculateArticleStockCommand $command): void
     {
-        $policy = $this->needleDataQuery->findArticlePolicy(articleId: $command->articleId);
+        $pack = $this->needleDataQuery->findArticlePack(articleId: $command->articleId);
 
-        if (null === $policy) {
+        if (null === $pack) {
             return;
         }
 
@@ -47,7 +47,7 @@ final readonly class RecalculateArticleStockCommandHandler
                     refId: $command->articleId,
                 ),
                 trackingMode: $articleStock->tracking(),
-                packSize: $policy->packSize,
+                packSize: $pack->size,
                 previousReference: $articleStock->referenceQuantity,
                 now: $this->dateTimeGenerator->now(),
             ),

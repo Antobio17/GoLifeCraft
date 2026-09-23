@@ -54,6 +54,11 @@ fields:
       (for example "pack" when a pack of pasta holds 500 g). It must match the unit of one
       of the article's equivalences, whose quantity is then how much the pack holds in base units.
       Leave it empty when the article is not bought in a fixed pack.
+      Setting it without also creating that equivalence on "article_equivalence" leaves it
+      orphaned: the app then has no idea how much a pack holds, so "half a pack" cannot be
+      turned into grams and the stock level has nothing to be read against. Write the
+      equivalence first, or in the same breath, and never delete the equivalence a packUnit
+      points at without clearing or repointing packUnit too.
   price:
     writable: true
     type: float
