@@ -35,13 +35,21 @@ type CardVariant = "plain" | "brand" | "inset";
           --ds-card-br-radius,
           var(--ds-radius-xl)
         );
-        background: var(--card-bg, var(--ds-surface));
-        border: 1px solid var(--card-border, var(--ds-border-hairline));
+        background:
+          var(--card-sheen, var(--ds-sheen)) padding-box,
+          linear-gradient(
+              var(--card-bg, var(--ds-surface)),
+              var(--card-bg, var(--ds-surface))
+            )
+            padding-box,
+          var(--card-bevel, var(--ds-bevel-hairline)) border-box,
+          var(--card-bg, var(--ds-surface));
+        border: 1px solid transparent;
         box-shadow: var(--ds-shadow-card);
       }
       :host([variant="brand"]) .ds-card {
         --card-bg: var(--ds-surface-brand);
-        --card-border: transparent;
+        --card-bevel: var(--ds-bevel-brand);
         --ds-accent: var(--ds-accent-on-brand);
         --ds-on-accent: var(--ds-on-accent-on-brand);
         --ds-primary: var(--ds-accent-on-brand);
@@ -51,8 +59,9 @@ type CardVariant = "plain" | "brand" | "inset";
       }
       :host([variant="inset"]) .ds-card {
         --card-bg: var(--ds-surface-inset);
-        --card-border: transparent;
-        box-shadow: none;
+        --card-bevel: linear-gradient(transparent, transparent);
+        --card-sheen: linear-gradient(transparent, transparent);
+        box-shadow: var(--ds-carve);
       }
       .ds-card--interactive {
         cursor: pointer;

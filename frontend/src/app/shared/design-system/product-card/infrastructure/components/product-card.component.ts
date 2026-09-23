@@ -122,8 +122,8 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         appearance: none;
         font: inherit;
         color: inherit;
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-2);
         cursor: pointer;
@@ -134,11 +134,13 @@ import { ImageFit } from "../../domain/models/image-fit.model";
           box-shadow var(--ds-dur-3) var(--ds-ease-in-out),
           transform var(--ds-dur-3) var(--ds-ease-in-out);
       }
-      button.ds-pcard:hover {
-        border-color: var(--ds-border-strong);
-        background: var(--ds-surface-hover);
-        box-shadow: var(--ds-elev-lg);
-        transform: translateY(-2px);
+      @media (hover: hover) {
+        button.ds-pcard:hover {
+          border-color: var(--ds-border-strong);
+          background: var(--ds-surface-hover);
+          box-shadow: var(--ds-elev-lg);
+          transform: translateY(-2px);
+        }
       }
       .ds-pcard--static {
         cursor: default;

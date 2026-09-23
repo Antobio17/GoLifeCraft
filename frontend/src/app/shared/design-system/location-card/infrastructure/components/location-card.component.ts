@@ -35,8 +35,8 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         font: inherit;
         color: inherit;
         cursor: pointer;
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-2);
         box-shadow: var(--ds-elev);
@@ -46,11 +46,13 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
           box-shadow var(--ds-dur-3) var(--ds-ease-in-out),
           transform var(--ds-dur-3) var(--ds-ease-in-out);
       }
-      .ds-loccard:hover {
-        border-color: var(--ds-border-strong);
-        background: var(--ds-surface-hover);
-        box-shadow: var(--ds-elev-lg);
-        transform: translateY(-2px);
+      @media (hover: hover) {
+        .ds-loccard:hover {
+          border-color: var(--ds-border-strong);
+          background: var(--ds-surface-hover);
+          box-shadow: var(--ds-elev-lg);
+          transform: translateY(-2px);
+        }
       }
       .ds-loccard__emoji {
         width: 3.5rem;

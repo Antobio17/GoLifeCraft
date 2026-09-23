@@ -28,10 +28,12 @@
   flex-direction: column;
   gap: var(--ds-space-1-5);
   padding: var(--ds-space-2) var(--ds-space-1-5);
-  background: color-mix(in srgb, var(--ds-surface) 86%, transparent);
+  background:
+    var(--ds-sheen) padding-box,
+    color-mix(in srgb, var(--ds-surface) 86%, transparent);
   border: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-2xl);
-  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.16);
+  box-shadow: var(--ds-shadow-dock);
   backdrop-filter: blur(1rem);
   -webkit-backdrop-filter: blur(1rem);
 }

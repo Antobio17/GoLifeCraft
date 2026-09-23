@@ -48,8 +48,8 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         font: inherit;
         color: inherit;
         cursor: pointer;
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-3);
         box-shadow: var(--ds-elev);

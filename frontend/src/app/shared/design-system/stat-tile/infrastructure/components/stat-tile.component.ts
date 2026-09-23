@@ -25,8 +25,8 @@ import { Component, Input } from "@angular/core";
         flex-direction: column;
         height: 100%;
         box-sizing: border-box;
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-3);
       }

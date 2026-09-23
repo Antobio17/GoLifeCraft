@@ -60,8 +60,8 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         flex-direction: column;
         gap: var(--ds-space-2);
         height: 100%;
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-3);
         box-shadow: var(--ds-elev);

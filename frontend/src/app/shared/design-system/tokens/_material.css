@@ -1,0 +1,88 @@
+/* ============================================================
+   DESIGN SYSTEM — MATERIAL
+   Claro: la profundidad la da la sombra sobre el lienzo gris, así
+   que el material es el de siempre: color plano y borde de hilo.
+   Oscuro: la sombra no se ve sobre negro, así que el volumen sale
+   de la luz cenital: bisel que brilla arriba, relleno que se oscurece
+   hacia abajo, huecos tallados y un halo tenue en el lienzo.
+   Los materiales van con `border: 1px solid transparent`: el bisel
+   se pinta en el border-box.
+   ============================================================ */
+
+:root {
+  --ds-bevel: linear-gradient(var(--ds-border), var(--ds-border));
+  --ds-bevel-hairline: linear-gradient(
+    var(--ds-border-hairline),
+    var(--ds-border-hairline)
+  );
+  --ds-bevel-brand: linear-gradient(transparent, transparent);
+  --ds-sheen: linear-gradient(transparent, transparent);
+  --ds-sheen-cta: linear-gradient(transparent, transparent);
+  --ds-carve: inset 0 0 0 0 transparent;
+  --ds-canvas-glow: none;
+  --ds-canvas-isolation: auto;
+  --ds-shadow-dock: 0 0.75rem 2rem rgba(0, 0, 0, 0.16);
+
+  --ds-material-surface:
+    var(--ds-sheen) padding-box,
+    linear-gradient(var(--ds-surface), var(--ds-surface)) padding-box,
+    var(--ds-bevel) border-box, var(--ds-surface);
+  --ds-material-raised:
+    var(--ds-sheen) padding-box,
+    linear-gradient(var(--ds-surface-raised), var(--ds-surface-raised))
+      padding-box,
+    var(--ds-bevel) border-box, var(--ds-surface-raised);
+  --ds-material-surface-soft:
+    var(--ds-sheen) padding-box,
+    linear-gradient(var(--ds-surface), var(--ds-surface)) padding-box,
+    var(--ds-bevel-hairline) border-box, var(--ds-surface);
+  --ds-material-raised-soft:
+    var(--ds-sheen) padding-box,
+    linear-gradient(var(--ds-surface-raised), var(--ds-surface-raised))
+      padding-box,
+    var(--ds-bevel-hairline) border-box, var(--ds-surface-raised);
+}
+
+[data-theme="dark"] {
+  --ds-bevel: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.28),
+    rgba(255, 255, 255, 0.07) 2.5rem,
+    rgba(255, 255, 255, 0.02)
+  );
+  --ds-bevel-hairline: var(--ds-bevel);
+  --ds-bevel-brand: linear-gradient(
+    180deg,
+    rgba(143, 250, 152, 0.7),
+    rgba(143, 250, 152, 0.12) 2.5rem,
+    rgba(143, 250, 152, 0.04)
+  );
+  --ds-sheen: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.015) 4rem,
+    rgba(0, 0, 0, 0.22)
+  );
+  --ds-sheen-cta: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.28),
+    rgba(0, 0, 0, 0.1)
+  );
+  --ds-carve:
+    inset 0 2px 4px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.07);
+  --ds-canvas-isolation: isolate;
+  --ds-shadow-dock:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 1rem 2.25rem -0.5rem #000;
+  --ds-canvas-glow:
+    radial-gradient(
+      150% 55% at 50% -12%,
+      rgba(38, 181, 90, 0.2),
+      transparent 64%
+    ),
+    radial-gradient(
+      100% 40% at 110% 108%,
+      rgba(38, 181, 90, 0.08),
+      transparent 60%
+    );
+}

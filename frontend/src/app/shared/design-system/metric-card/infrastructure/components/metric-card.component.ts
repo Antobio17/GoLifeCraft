@@ -22,8 +22,8 @@ export type MetricCardVariant = "plain" | "feature";
         min-width: 0;
       }
       .ds-metric {
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-md);
         padding: var(--ds-space-3);
         height: 100%;

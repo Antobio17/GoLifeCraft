@@ -71,6 +71,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
         border-radius: var(--ds-radius-lg);
+        box-shadow: var(--ds-carve);
         padding: var(--ds-space-3);
         transition:
           border-color var(--ds-dur-2) var(--ds-ease-out),

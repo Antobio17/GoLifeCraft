@@ -69,8 +69,8 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         display: flex;
         align-items: center;
         gap: var(--ds-space-2);
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-2) var(--ds-space-3);
       }

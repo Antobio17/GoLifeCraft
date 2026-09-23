@@ -59,9 +59,9 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         display: flex;
         flex-direction: column;
         gap: var(--ds-space-2);
-        background: var(--ds-surface);
+        background: var(--ds-material-surface);
         color: var(--ds-text);
-        border: 1px solid var(--ds-border);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-3);
         box-shadow: var(--ds-elev);
@@ -120,6 +120,7 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         overflow: hidden;
+        box-shadow: var(--ds-carve);
       }
       .ds-mpanel__fill {
         display: block;

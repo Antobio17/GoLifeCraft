@@ -19,10 +19,10 @@ import { Component, Input } from "@angular/core";
         display: block;
       }
       .ds-nedit {
-        border: 1px solid var(--ds-border);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         overflow: hidden;
-        background: var(--ds-surface);
+        background: var(--ds-material-surface);
       }
       .ds-nedit__head {
         display: flex;

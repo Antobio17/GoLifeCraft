@@ -82,8 +82,8 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
         gap: var(--ds-space-3);
         width: 100%;
         box-sizing: border-box;
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-2) var(--ds-space-3);
       }
@@ -111,6 +111,7 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
       :host([state="expected"]) .ds-prow,
       :host([state="done"]) .ds-prow {
         background: var(--ds-surface-subtle);
+        border-color: var(--ds-border);
       }
       :host([state="expected"]) ds-emoji-tile,
       :host([state="expected"]) .ds-prow__body,

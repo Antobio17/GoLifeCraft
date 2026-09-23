@@ -75,9 +75,9 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         display: block;
       }
       .daysum {
-        background: var(--ds-surface);
+        background: var(--ds-material-surface);
         color: var(--ds-text);
-        border: 1px solid var(--ds-border);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-4);
         box-shadow: var(--ds-elev);
@@ -181,6 +181,7 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         overflow: hidden;
+        box-shadow: var(--ds-carve);
       }
       .macro__fill {
         display: block;

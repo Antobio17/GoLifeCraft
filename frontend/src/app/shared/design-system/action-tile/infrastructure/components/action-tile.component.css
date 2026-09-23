@@ -9,8 +9,8 @@
   flex-direction: column;
   justify-content: space-between;
   gap: var(--ds-space-3);
-  background: var(--ds-surface-raised);
-  border: 1px solid var(--ds-border);
+  background: var(--ds-material-raised);
+  border: 1px solid transparent;
   border-radius: var(--ds-radius-xl);
   padding: var(--ds-space-3);
   box-shadow: var(--ds-shadow-card);
@@ -37,6 +37,7 @@
   height: 2.375rem;
   border-radius: var(--ds-radius-lg);
   background: var(--ds-surface-inset);
+  box-shadow: var(--ds-carve);
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -44,6 +44,7 @@
   background: var(--ds-surface-inset);
   border-radius: var(--ds-radius-md);
   padding: var(--ds-space-2) var(--ds-space-1-5);
+  box-shadow: var(--ds-carve);
 }
 
 .wset-row--done {

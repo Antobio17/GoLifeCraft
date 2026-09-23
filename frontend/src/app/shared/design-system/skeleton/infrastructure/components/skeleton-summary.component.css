@@ -4,8 +4,8 @@
 
 /* Espeja la tarjeta real: superficie neutra elevada. */
 .sksum {
-  background: var(--ds-surface);
-  border: 1px solid var(--ds-border);
+  background: var(--ds-material-surface);
+  border: 1px solid transparent;
   border-radius: var(--ds-radius-2xl);
   padding: var(--ds-space-4);
   box-shadow: var(--ds-elev);

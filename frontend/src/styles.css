@@ -5,6 +5,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+body {
+  isolation: var(--ds-canvas-isolation);
+}
+
 html {
   transition: background-color 0.24s ease;
 }

@@ -40,9 +40,9 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
         display: block;
       }
       .ds-eqs {
-        border: 1px solid var(--ds-border);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-lg);
-        background: var(--ds-surface);
+        background: var(--ds-material-surface);
         overflow: hidden;
       }
       .ds-eqs__head {

@@ -1,7 +1,7 @@
 /* ── Desktop table card ──────────────────── */
 .skt-desktop {
-  background: var(--ds-surface-raised);
-  border: 1px solid var(--ds-border);
+  background: var(--ds-material-raised);
+  border: 1px solid transparent;
   border-radius: var(--ds-radius-lg);
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
@@ -121,9 +121,9 @@
 }
 
 .skt-card {
-  background: var(--ds-surface-raised);
+  background: var(--ds-material-raised);
   border-radius: var(--ds-radius-lg);
-  border: 1px solid var(--ds-border);
+  border: 1px solid transparent;
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
 }
@@ -218,8 +218,8 @@
   align-items: center;
   padding: var(--ds-space-3) var(--ds-space-5);
   margin-top: var(--ds-space-3);
-  background: var(--ds-surface-raised);
-  border: 1px solid var(--ds-border);
+  background: var(--ds-material-raised);
+  border: 1px solid transparent;
   border-radius: var(--ds-radius-lg);
   box-shadow: var(--ds-shadow-card);
   gap: var(--ds-space-4);

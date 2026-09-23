@@ -156,9 +156,9 @@ const BASE_UNITS = ["g", "ml"];
         display: block;
       }
       .ds-eq {
-        border: 1px solid var(--ds-border);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-lg);
-        background: var(--ds-surface);
+        background: var(--ds-material-surface);
         overflow: hidden;
       }
       .ds-eq--disabled {

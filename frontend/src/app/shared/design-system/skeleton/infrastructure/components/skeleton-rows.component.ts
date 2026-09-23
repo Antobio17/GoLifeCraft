@@ -36,8 +36,8 @@ import { Component, Input } from "@angular/core";
       }
       .skrow--card {
         box-sizing: border-box;
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         overflow: hidden;
         --skrow-pad: var(--ds-space-3) var(--ds-space-4);

@@ -51,9 +51,9 @@ import { LineChartComponent } from "../../../line-chart/infrastructure/component
         --ds-on-accent: var(--ds-on-accent-on-chart);
         --ds-primary: var(--ds-accent-on-chart);
         --ds-on-primary: var(--ds-on-accent-on-chart);
-        background: var(--ds-surface-chart);
+        background: var(--ds-material-surface);
         color: var(--ds-on-surface-chart);
-        border: 1px solid var(--ds-border);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-lg);
         padding: var(--ds-space-4);
         overflow: hidden;

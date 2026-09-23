@@ -25,8 +25,8 @@ import { Component, Input } from "@angular/core";
         display: block;
       }
       .ds-panel {
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-3);
         display: flex;
@@ -37,7 +37,7 @@ import { Component, Input } from "@angular/core";
         --ds-on-accent: var(--ds-on-accent-on-chart);
         --ds-primary: var(--ds-accent-on-chart);
         --ds-on-primary: var(--ds-on-accent-on-chart);
-        background: var(--ds-surface-chart);
+        background: var(--ds-material-surface);
         color: var(--ds-on-surface-chart);
         overflow: hidden;
       }

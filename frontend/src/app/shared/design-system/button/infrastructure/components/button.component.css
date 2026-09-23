@@ -115,6 +115,10 @@
   box-shadow: var(--ds-shadow-xs);
 }
 
+.ds-btn.ds-btn--primary:not(:disabled) {
+  background-image: var(--ds-sheen-cta);
+}
+
 .ds-btn--primary ds-icon {
   color: var(--ds-on-primary);
 }
@@ -126,14 +130,16 @@
 
 /* ---- Variante: secondary ---- */
 .ds-btn--secondary {
-  background: var(--ds-surface-raised);
+  background: var(--ds-material-raised);
   color: var(--ds-text-muted);
-  border-color: var(--ds-border);
+  border-color: transparent;
 }
 
-.ds-btn--secondary:hover:not(:disabled) {
-  background: var(--ds-surface-hover);
-  border-color: var(--ds-border-strong);
+@media (hover: hover) {
+  .ds-btn--secondary:hover:not(:disabled) {
+    background: var(--ds-surface-hover);
+    border-color: var(--ds-border-strong);
+  }
 }
 
 .ds-btn--secondary:focus-visible {

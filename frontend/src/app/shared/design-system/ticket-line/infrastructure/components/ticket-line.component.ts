@@ -166,14 +166,15 @@ import { PressableComponent } from "@shared/design-system/pressable/infrastructu
       .ds-tline {
         width: 100%;
         box-sizing: border-box;
-        background: var(--ds-surface);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-surface);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-2) var(--ds-space-3);
         transition: var(--ds-motion-tint);
       }
       :host([received="true"]) .ds-tline {
         background: var(--ds-surface-subtle);
+        border-color: var(--ds-border);
       }
       :host([linked="false"]) .ds-tline {
         border-color: var(--ds-warning);

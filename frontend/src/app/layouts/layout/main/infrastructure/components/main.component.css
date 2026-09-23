@@ -5,7 +5,15 @@
   width: 100%;
   max-width: var(--ds-app-frame-width, 30rem);
   margin: 0 auto;
-  background: var(--ds-bg);
+}
+
+.app-frame::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--ds-canvas-glow);
+  pointer-events: none;
 }
 
 /* Subtle side rules only where the frame is narrower than the viewport

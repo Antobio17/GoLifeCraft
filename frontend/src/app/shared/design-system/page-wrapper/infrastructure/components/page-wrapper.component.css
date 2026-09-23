@@ -31,8 +31,8 @@
 
 /* Unified list card: groups filters + table + pagination behind one shell. */
 :host ::ng-deep .pw-container > .list-card {
-  background: var(--ds-surface-raised);
-  border: 1px solid var(--ds-border);
+  background: var(--ds-material-raised);
+  border: 1px solid transparent;
   border-radius: var(--ds-radius-lg);
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;

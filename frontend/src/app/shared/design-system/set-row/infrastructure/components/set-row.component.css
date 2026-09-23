@@ -9,6 +9,7 @@
   background: var(--ds-surface-inset);
   padding: var(--ds-space-1) var(--ds-space-1-5);
   border-radius: var(--ds-radius-md);
+  box-shadow: var(--ds-carve);
 }
 
 .set-row--slid {

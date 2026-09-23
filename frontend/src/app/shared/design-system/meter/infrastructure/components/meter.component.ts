@@ -56,6 +56,7 @@ import { Component, Input } from "@angular/core";
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
         overflow: hidden;
+        box-shadow: var(--ds-carve);
       }
       .ds-meter__fill {
         height: 100%;

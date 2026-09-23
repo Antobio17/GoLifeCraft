@@ -36,8 +36,8 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
         display: flex;
         align-items: center;
         gap: var(--ds-space-3);
-        background: var(--ds-surface-raised);
-        border: 1px solid var(--ds-border);
+        background: var(--ds-material-raised);
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-xl);
         padding: var(--ds-space-4);
         cursor: pointer;
