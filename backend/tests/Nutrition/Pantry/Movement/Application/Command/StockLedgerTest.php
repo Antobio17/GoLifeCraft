@@ -9,7 +9,7 @@ use Nutrition\Pantry\Movement\Application\Command\RevokeStockMovementsCommandHan
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Nutrition\Pantry\Movement\Infrastructure\Domain\Model\InMemory\InMemoryStockMovementRepository;
 use Nutrition\Pantry\Movement\Infrastructure\Domain\QueryModel\InMemory\InMemoryRegisterStockMovementNeedleDataQuery;
-use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockBalanceCalculator;
+use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockLedger;
 use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockMovementUnitConverter;
 use PHPUnit\Framework\TestCase;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
@@ -18,7 +18,7 @@ use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 final class StockLedgerTest extends TestCase
 {
     private InMemoryStockMovementRepository $stockMovementRepository;
-    private InMemoryStockBalanceCalculator $balanceCalculator;
+    private InMemoryStockLedger $stockLedger;
     private InMemoryStockMovementUnitConverter $unitConverter;
     private RegisterStockMovementCommandHandler $register;
     private RevokeStockMovementsCommandHandler $revoke;
@@ -27,7 +27,7 @@ final class StockLedgerTest extends TestCase
     {
         $dateTimeGenerator = new DateTimeGenerator();
         $this->stockMovementRepository = new InMemoryStockMovementRepository();
-        $this->balanceCalculator = new InMemoryStockBalanceCalculator(
+        $this->stockLedger = new InMemoryStockLedger(
             stockMovementRepository: $this->stockMovementRepository,
         );
         $this->unitConverter = new InMemoryStockMovementUnitConverter();
@@ -234,9 +234,9 @@ final class StockLedgerTest extends TestCase
 
     private function articleBalance(): float
     {
-        return $this->balanceCalculator->balanceFor(
+        return $this->stockLedger->summaryOf(
             kind: StockMovement::KIND_ARTICLE,
             refId: 'article-1',
-        );
+        )->balance;
     }
 }

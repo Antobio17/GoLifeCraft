@@ -1,3 +1,0 @@
-services:
-  Nutrition\Pantry\Stock\Domain\Service\StockEstimator:
-    class: Nutrition\Pantry\Stock\Domain\Service\StockEstimator

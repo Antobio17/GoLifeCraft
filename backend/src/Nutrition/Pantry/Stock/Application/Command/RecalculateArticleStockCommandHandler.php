@@ -3,11 +3,11 @@
 namespace Nutrition\Pantry\Stock\Application\Command;
 
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
-use Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer;
+use Nutrition\Pantry\Movement\Domain\Service\StockLedger;
 use Nutrition\Pantry\Stock\Domain\Model\ArticleStock;
 use Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository;
+use Nutrition\Pantry\Stock\Domain\Model\StockEstimate;
 use Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery;
-use Nutrition\Pantry\Stock\Domain\Service\StockEstimator;
 use Shared\Shared\Shared\Domain\Service\DomainEventCollectorService;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
@@ -16,8 +16,7 @@ final readonly class RecalculateArticleStockCommandHandler
     public function __construct(
         private ArticleStockRepository $articleStockRepository,
         private UpdateArticleStockNeedleDataQuery $needleDataQuery,
-        private StockLedgerSummarizer $ledgerSummarizer,
-        private StockEstimator $stockEstimator,
+        private StockLedger $stockLedger,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -41,8 +40,8 @@ final readonly class RecalculateArticleStockCommandHandler
             );
 
         $articleStock->change(
-            estimate: $this->stockEstimator->estimate(
-                summary: $this->ledgerSummarizer->summarize(
+            estimate: StockEstimate::from(
+                summary: $this->stockLedger->summaryOf(
                     kind: StockMovement::KIND_ARTICLE,
                     refId: $command->articleId,
                 ),

@@ -4,10 +4,9 @@ namespace Nutrition\Pantry\Stock\Infrastructure\Application\Console;
 
 use Doctrine\DBAL\Connection;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
-use Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer;
+use Nutrition\Pantry\Movement\Domain\Service\StockLedger;
 use Nutrition\Pantry\Stock\Domain\Model\StockEstimate;
 use Nutrition\Pantry\Stock\Domain\Model\StockTrackingMode;
-use Nutrition\Pantry\Stock\Domain\Service\StockEstimator;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 use Symfony\Component\Console\Command\Command;
@@ -20,8 +19,7 @@ final class RebuildStockEstimatesCommand extends Command
     public function __construct(
         private readonly TenantConnectionSwitcher $switcher,
         private readonly Connection $writerTenantConnection,
-        private readonly StockLedgerSummarizer $ledgerSummarizer,
-        private readonly StockEstimator $stockEstimator,
+        private readonly StockLedger $stockLedger,
         private readonly DateTimeGenerator $dateTimeGenerator,
     ) {
         parent::__construct(name: 'app:pantry:rebuild-stock-estimates');
@@ -74,8 +72,8 @@ final class RebuildStockEstimatesCommand extends Command
      */
     private function rebuildRow(array $row, \DateTime $now): void
     {
-        $estimate = $this->stockEstimator->estimate(
-            summary: $this->ledgerSummarizer->summarize(
+        $estimate = StockEstimate::from(
+            summary: $this->stockLedger->summaryOf(
                 kind: StockMovement::KIND_ARTICLE,
                 refId: (string) $row['article_id'],
             ),

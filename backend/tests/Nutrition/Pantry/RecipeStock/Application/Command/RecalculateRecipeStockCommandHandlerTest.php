@@ -4,7 +4,7 @@ namespace App\Tests\Nutrition\Pantry\RecipeStock\Application\Command;
 
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Nutrition\Pantry\Movement\Infrastructure\Domain\Model\InMemory\InMemoryStockMovementRepository;
-use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockBalanceCalculator;
+use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockLedger;
 use Nutrition\Pantry\RecipeStock\Application\Command\RecalculateRecipeStockCommand;
 use Nutrition\Pantry\RecipeStock\Application\Command\RecalculateRecipeStockCommandHandler;
 use Nutrition\Pantry\RecipeStock\Infrastructure\Domain\Model\InMemory\InMemoryRecipeStockRepository;
@@ -28,7 +28,7 @@ final class RecalculateRecipeStockCommandHandlerTest extends TestCase
         $this->handler = new RecalculateRecipeStockCommandHandler(
             recipeStockRepository: $this->recipeStockRepository,
             needleDataQuery: new InMemoryUpdateRecipeStockNeedleDataQuery(recipeIds: ['recipe-1']),
-            balanceCalculator: new InMemoryStockBalanceCalculator(
+            stockLedger: new InMemoryStockLedger(
                 stockMovementRepository: $this->stockMovementRepository,
             ),
             domainEventCollectorService: new DomainEventCollectorService(),

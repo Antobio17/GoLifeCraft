@@ -4,7 +4,7 @@ namespace Nutrition\Pantry\Movement\Domain\Service;
 
 use Nutrition\Pantry\Movement\Domain\Model\StockLedgerSummary;
 
-interface StockLedgerSummarizer
+interface StockLedger
 {
-    public function summarize(string $kind, string $refId): StockLedgerSummary;
+    public function summaryOf(string $kind, string $refId): StockLedgerSummary;
 }

@@ -5,15 +5,15 @@ namespace Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory;
 use Nutrition\Pantry\Movement\Domain\Model\StockLedgerSummary;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovementRepository;
-use Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer;
+use Nutrition\Pantry\Movement\Domain\Service\StockLedger;
 
-final readonly class InMemoryStockLedgerSummarizer implements StockLedgerSummarizer
+final readonly class InMemoryStockLedger implements StockLedger
 {
     public function __construct(private StockMovementRepository $stockMovementRepository)
     {
     }
 
-    public function summarize(string $kind, string $refId): StockLedgerSummary
+    public function summaryOf(string $kind, string $refId): StockLedgerSummary
     {
         $movements = $this->stockMovementRepository->findAllByReference(kind: $kind, refId: $refId);
         $anchor = self::lastCount(movements: $movements);
