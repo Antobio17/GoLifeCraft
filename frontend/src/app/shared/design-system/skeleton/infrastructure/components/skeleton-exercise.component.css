@@ -99,7 +99,7 @@
   display: flex;
   align-items: center;
   gap: var(--ds-space-1-5);
-  background: var(--ds-bg);
+  background: var(--ds-surface-inset);
   border-radius: var(--ds-radius-md);
   padding: var(--skex-set-padding, var(--ds-space-1) var(--ds-space-1-5));
 }

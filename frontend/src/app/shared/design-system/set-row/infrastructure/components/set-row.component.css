@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   gap: var(--ds-space-1-5);
-  background: var(--ds-bg);
+  background: var(--ds-surface-inset);
   padding: var(--ds-space-1) var(--ds-space-1-5);
   border-radius: var(--ds-radius-md);
 }
@@ -17,11 +17,15 @@
 }
 
 .set-row--done {
-  background: color-mix(in srgb, var(--ds-accent) 16%, var(--ds-bg));
+  background: color-mix(in srgb, var(--ds-accent) 16%, var(--ds-surface-inset));
 }
 
 .set-row--warmup {
-  background: color-mix(in srgb, var(--ds-text-meta) 10%, var(--ds-bg));
+  background: color-mix(
+    in srgb,
+    var(--ds-text-meta) 10%,
+    var(--ds-surface-inset)
+  );
 }
 
 .set-row__num {

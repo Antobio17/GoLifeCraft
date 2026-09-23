@@ -2,6 +2,7 @@ html,
 body {
   background-color: var(--ds-bg);
   touch-action: pan-x pan-y;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {

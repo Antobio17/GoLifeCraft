@@ -56,15 +56,24 @@ type CardVariant = "plain" | "brand" | "inset";
       }
       .ds-card--interactive {
         cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
         transition:
-          transform var(--ds-transition-fast),
+          var(--ds-motion-release),
           box-shadow var(--ds-transition-fast),
           border-color var(--ds-transition-fast);
       }
-      .ds-card--interactive:hover {
-        border-color: var(--ds-primary-soft-border);
-        box-shadow: var(--ds-elev-lg);
-        transform: translateY(-2px);
+      .ds-card--interactive:active {
+        transform: scale(var(--ds-press-scale));
+        transition:
+          var(--ds-motion-press),
+          box-shadow var(--ds-transition-fast),
+          border-color var(--ds-transition-fast);
+      }
+      @media (hover: hover) {
+        .ds-card--interactive:hover {
+          border-color: var(--ds-primary-soft-border);
+          box-shadow: var(--ds-elev-lg);
+        }
       }
       .ds-card--interactive:focus-visible {
         outline: none;

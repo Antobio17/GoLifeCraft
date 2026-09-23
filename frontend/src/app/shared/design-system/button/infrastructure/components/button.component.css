@@ -15,12 +15,20 @@
   position: relative;
   border: 1.5px solid transparent;
   flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
   transition:
+    var(--ds-motion-release),
     filter var(--ds-transition-fast),
     background var(--ds-transition-fast),
     border-color var(--ds-transition-fast),
     box-shadow var(--ds-transition-fast),
     color var(--ds-transition-fast);
+}
+
+.ds-btn:active:not(:disabled) {
+  transform: scale(var(--ds-press-scale));
+  transition-duration: var(--ds-dur-1);
+  transition-timing-function: var(--ds-ease-out);
 }
 
 .ds-btn__content {

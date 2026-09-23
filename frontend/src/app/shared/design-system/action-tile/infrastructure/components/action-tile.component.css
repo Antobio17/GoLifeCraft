@@ -13,14 +13,17 @@
   border: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-xl);
   padding: var(--ds-space-3);
+  box-shadow: var(--ds-shadow-card);
   cursor: pointer;
   text-align: left;
-  transition: transform var(--ds-transition-base);
+  -webkit-tap-highlight-color: transparent;
+  transition: var(--ds-motion-release);
   font-family: var(--ds-font-body);
 }
 
 .tile:active {
-  transform: scale(0.98);
+  transform: scale(var(--ds-press-scale));
+  transition: var(--ds-motion-press);
 }
 
 .tile__top {
