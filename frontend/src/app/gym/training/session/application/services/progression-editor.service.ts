@@ -7,7 +7,7 @@ import { SetKind } from "../../domain/models/set-kind.model";
 
 @Injectable({ providedIn: "root" })
 export class ProgressionEditorService {
-  private readonly defaultIncrementKg = 2.5;
+  private readonly defaultIncrementKg = 1.25;
 
   /**
    * Hay un objetivo por serie efectiva. Si la configuración guardada no coincide

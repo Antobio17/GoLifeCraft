@@ -323,7 +323,7 @@
                   [toleranceLabel]="progressionToleranceLabel()"
                   [tolerance]="exercise.progression.repTolerance"
                   [incrementLabel]="progressionIncrementLabel()"
-                  [increment]="exercise.progression.incrementKg ?? 2.5"
+                  [increment]="exercise.progression.incrementKg ?? 1.25"
                   [noTargetsText]="progressionNoTargets()"
                   (modeChange)="setProgressionMode(exercise.id, $event)"
                   (targetChange)="setProgressionTarget(exercise.id, $event)"

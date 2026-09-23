@@ -78,7 +78,7 @@ describe("ProgressionEditorService", () => {
     const progression = service.withMode(ramp, none, ProgressionMode.Cascade);
 
     expect(progression.repTargets).toEqual([12, 11, 10]);
-    expect(progression.incrementKg).toBe(2.5);
+    expect(progression.incrementKg).toBe(1.25);
   });
 
   it("keeps the increment already chosen when switching mode", () => {
