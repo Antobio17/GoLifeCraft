@@ -5,7 +5,7 @@ namespace Nutrition\Pantry\Movement\Infrastructure\Application\Console;
 use Doctrine\DBAL\Connection;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
-use Nutrition\Pantry\Movement\Domain\Service\StockBalanceCalculator;
+use Nutrition\Pantry\Movement\Domain\Service\StockLedger;
 use Ramsey\Uuid\Uuid;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -21,7 +21,7 @@ final class RebuildStockLedgerCommand extends Command
     public function __construct(
         private readonly TenantConnectionSwitcher $switcher,
         private readonly Connection $writerTenantConnection,
-        private readonly StockBalanceCalculator $balanceCalculator,
+        private readonly StockLedger $stockLedger,
         private readonly DateTimeGenerator $dateTimeGenerator,
     ) {
         parent::__construct(name: 'app:pantry:rebuild-stock');
@@ -134,7 +134,7 @@ final class RebuildStockLedgerCommand extends Command
             $this->writerTenantConnection->update(
                 table: $table,
                 data: [
-                    $quantityColumn => $this->balanceCalculator->balanceFor(kind: $kind, refId: $row['ref_id']),
+                    $quantityColumn => $this->stockLedger->summaryOf(kind: $kind, refId: $row['ref_id'])->balance,
                     'updated_at' => $now->format(format: 'Y-m-d H:i:s'),
                 ],
                 criteria: ['id' => $row['id']],

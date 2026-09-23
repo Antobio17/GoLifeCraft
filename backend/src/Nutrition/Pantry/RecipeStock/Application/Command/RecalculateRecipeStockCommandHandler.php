@@ -3,7 +3,7 @@
 namespace Nutrition\Pantry\RecipeStock\Application\Command;
 
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
-use Nutrition\Pantry\Movement\Domain\Service\StockBalanceCalculator;
+use Nutrition\Pantry\Movement\Domain\Service\StockLedger;
 use Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStock;
 use Nutrition\Pantry\RecipeStock\Domain\Model\RecipeStockRepository;
 use Nutrition\Pantry\RecipeStock\Domain\QueryModel\UpdateRecipeStockNeedleDataQuery;
@@ -15,7 +15,7 @@ final readonly class RecalculateRecipeStockCommandHandler
     public function __construct(
         private RecipeStockRepository $recipeStockRepository,
         private UpdateRecipeStockNeedleDataQuery $needleDataQuery,
-        private StockBalanceCalculator $balanceCalculator,
+        private StockLedger $stockLedger,
         private DomainEventCollectorService $domainEventCollectorService,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -27,10 +27,10 @@ final readonly class RecalculateRecipeStockCommandHandler
             return;
         }
 
-        $servings = $this->balanceCalculator->balanceFor(
+        $servings = $this->stockLedger->summaryOf(
             kind: StockMovement::KIND_RECIPE,
             refId: $command->recipeId,
-        );
+        )->balance;
 
         $recipeStock = $this->recipeStockRepository->findByRecipeId(recipeId: $command->recipeId)
             ?? RecipeStock::start(

@@ -4,8 +4,7 @@ services:
     arguments:
       $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
       $needleDataQuery: '@Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery'
-      $ledgerSummarizer: '@Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer'
-      $stockEstimator: '@Nutrition\Pantry\Stock\Domain\Service\StockEstimator'
+      $stockLedger: '@Nutrition\Pantry\Movement\Domain\Service\StockLedger'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
@@ -16,8 +15,7 @@ services:
     arguments:
       $articleStockRepository: '@Nutrition\Pantry\Stock\Domain\Model\ArticleStockRepository'
       $needleDataQuery: '@Nutrition\Pantry\Stock\Domain\QueryModel\UpdateArticleStockNeedleDataQuery'
-      $ledgerSummarizer: '@Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer'
-      $stockEstimator: '@Nutrition\Pantry\Stock\Domain\Service\StockEstimator'
+      $stockLedger: '@Nutrition\Pantry\Movement\Domain\Service\StockLedger'
       $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:

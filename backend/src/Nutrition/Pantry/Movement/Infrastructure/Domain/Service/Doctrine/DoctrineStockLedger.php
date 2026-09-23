@@ -7,15 +7,15 @@ use Doctrine\DBAL\Connection;
 use Nutrition\Pantry\Movement\Domain\Model\StockEvidence;
 use Nutrition\Pantry\Movement\Domain\Model\StockLedgerSummary;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
-use Nutrition\Pantry\Movement\Domain\Service\StockLedgerSummarizer;
+use Nutrition\Pantry\Movement\Domain\Service\StockLedger;
 
-final readonly class DoctrineStockLedgerSummarizer implements StockLedgerSummarizer
+final readonly class DoctrineStockLedger implements StockLedger
 {
     public function __construct(private Connection $connection)
     {
     }
 
-    public function summarize(string $kind, string $refId): StockLedgerSummary
+    public function summaryOf(string $kind, string $refId): StockLedgerSummary
     {
         $anchor = $this->lastCount(kind: $kind, refId: $refId);
         $deltas = $this->deltasAfter(kind: $kind, refId: $refId, cutOff: $anchor['effective_at'] ?? null);

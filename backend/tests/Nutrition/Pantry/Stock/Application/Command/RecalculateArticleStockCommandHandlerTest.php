@@ -5,11 +5,10 @@ namespace App\Tests\Nutrition\Pantry\Stock\Application\Command;
 use Nutrition\Pantry\Movement\Domain\Model\StockLevel;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Nutrition\Pantry\Movement\Infrastructure\Domain\Model\InMemory\InMemoryStockMovementRepository;
-use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockLedgerSummarizer;
+use Nutrition\Pantry\Movement\Infrastructure\Domain\Service\InMemory\InMemoryStockLedger;
 use Nutrition\Pantry\Stock\Application\Command\RecalculateArticleStockCommand;
 use Nutrition\Pantry\Stock\Application\Command\RecalculateArticleStockCommandHandler;
 use Nutrition\Pantry\Stock\Domain\Model\StockTrackingMode;
-use Nutrition\Pantry\Stock\Domain\Service\StockEstimator;
 use Nutrition\Pantry\Stock\Infrastructure\Domain\Model\InMemory\InMemoryArticleStockRepository;
 use Nutrition\Pantry\Stock\Infrastructure\Domain\QueryModel\InMemory\InMemoryUpdateArticleStockNeedleDataQuery;
 use PHPUnit\Framework\TestCase;
@@ -34,10 +33,9 @@ final class RecalculateArticleStockCommandHandlerTest extends TestCase
                 articleIds: ['article-1'],
                 packSizes: ['article-1' => 1000.0],
             ),
-            ledgerSummarizer: new InMemoryStockLedgerSummarizer(
+            stockLedger: new InMemoryStockLedger(
                 stockMovementRepository: $this->stockMovementRepository,
             ),
-            stockEstimator: new StockEstimator(),
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: $this->dateTimeGenerator,
         );
