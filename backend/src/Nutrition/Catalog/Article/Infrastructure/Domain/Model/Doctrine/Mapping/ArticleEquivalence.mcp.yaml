@@ -28,6 +28,10 @@ fields:
     description: >-
       How many base units (grams or millilitres, per the article's baseUnit) one unit of
       the alias represents. Example: for "1 unidad = 60 g" set unit "unidad" and quantity 60.
+      When this equivalence is the one the article's packUnit points at, this number is what
+      a full pack holds, and everything the pantry says in packs rests on it: "half a pack"
+      becomes grams through it, and the stock level is read against it. Deleting it, or
+      dropping it to zero, leaves that packUnit orphaned.
   position:
     writable: true
     required: true

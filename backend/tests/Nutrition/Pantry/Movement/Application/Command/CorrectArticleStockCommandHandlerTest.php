@@ -2,10 +2,10 @@
 
 namespace App\Tests\Nutrition\Pantry\Movement\Application\Command;
 
+use Nutrition\Catalog\Article\Domain\Model\ArticlePack;
 use Nutrition\Pantry\Movement\Application\Command\CorrectArticleStockCommand;
 use Nutrition\Pantry\Movement\Application\Command\CorrectArticleStockCommandHandler;
 use Nutrition\Pantry\Movement\Domain\Exception\CorrectArticleStockException;
-use Nutrition\Pantry\Movement\Domain\Model\ArticleStockReference;
 use Nutrition\Pantry\Movement\Domain\Model\StockCorrection;
 use Nutrition\Pantry\Movement\Domain\Model\StockLevel;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
@@ -29,19 +29,9 @@ final class CorrectArticleStockCommandHandlerTest extends TestCase
         $this->stockMovementRepository = new InMemoryStockMovementRepository();
         $this->handler = new CorrectArticleStockCommandHandler(
             stockMovementRepository: $this->stockMovementRepository,
-            needleDataQuery: new InMemoryCorrectArticleStockNeedleDataQuery(references: [
-                'article-1' => new ArticleStockReference(
-                    articleId: 'article-1',
-                    packUnit: 'pack',
-                    packSize: 1000.0,
-                    referenceQuantity: 1000.0,
-                ),
-                'article-loose' => new ArticleStockReference(
-                    articleId: 'article-loose',
-                    packUnit: null,
-                    packSize: null,
-                    referenceQuantity: null,
-                ),
+            needleDataQuery: new InMemoryCorrectArticleStockNeedleDataQuery(packs: [
+                'article-1' => ArticlePack::fromEquivalence(unit: 'pack', size: 1000.0),
+                'article-loose' => ArticlePack::fromEquivalence(unit: null, size: null),
             ]),
             unitConverter: $unitConverter,
             domainEventCollectorService: new DomainEventCollectorService(),
@@ -139,14 +129,14 @@ final class CorrectArticleStockCommandHandlerTest extends TestCase
         );
     }
 
-    public function testAFractionIsRefusedWhenNothingSaysWhatAFullOneLooksLike(): void
+    public function testAFractionIsRefusedOnAnArticleWithNoPackEquivalence(): void
     {
         $this->expectException(exception: CorrectArticleStockException::class);
 
         $this->correct(kind: StockCorrection::KIND_FRACTION, quantity: 0.5, articleId: 'article-loose');
     }
 
-    public function testRunningOutIsAcceptedEvenWithoutAPackSize(): void
+    public function testRunningOutIsAcceptedEvenWithoutAPackEquivalence(): void
     {
         $this->correct(kind: StockCorrection::KIND_LEVEL, level: StockLevel::EMPTY_LEVEL->value, articleId: 'article-loose');
 

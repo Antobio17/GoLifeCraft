@@ -2,6 +2,7 @@
 
 namespace Nutrition\Pantry\Movement\Domain\Model;
 
+use Nutrition\Catalog\Article\Domain\Model\ArticlePack;
 use Nutrition\Pantry\Movement\Domain\Exception\CorrectArticleStockException;
 
 final readonly class StockCorrection
@@ -146,37 +147,21 @@ final readonly class StockCorrection
         return $this->amount > 0.0;
     }
 
-    public function declaredQuantity(ArticleStockReference $reference): float
+    public function declaredQuantity(ArticlePack $pack): float
     {
-        if (!$this->needsReference()) {
-            return self::KIND_LEVEL === $this->kind || self::KIND_FRACTION === $this->kind
-                ? 0.0
-                : $this->amount;
+        if ($this->needsReference() && !$pack->isDefined()) {
+            throw CorrectArticleStockException::packIsUnknown(kind: $this->kind);
         }
 
-        if ($reference->hasPack()) {
-            return $this->amount;
-        }
-
-        $resolved = $reference->resolve();
-
-        if (null === $resolved) {
-            throw CorrectArticleStockException::referenceIsUnknown(kind: $this->kind);
-        }
-
-        return $this->amount * $resolved;
+        return $this->amount;
     }
 
-    public function declaredUnit(ArticleStockReference $reference): ?string
+    public function declaredUnit(ArticlePack $pack): ?string
     {
         if (self::KIND_MEASURED === $this->kind || self::KIND_DELTA === $this->kind) {
             return $this->unit;
         }
 
-        if (!$this->needsReference()) {
-            return null;
-        }
-
-        return $reference->hasPack() ? $reference->packUnit : null;
+        return $this->needsReference() ? $pack->unit : null;
     }
 }

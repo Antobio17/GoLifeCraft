@@ -2,20 +2,20 @@
 
 namespace Nutrition\Pantry\Movement\Infrastructure\Domain\QueryModel\InMemory;
 
-use Nutrition\Pantry\Movement\Domain\Model\ArticleStockReference;
+use Nutrition\Catalog\Article\Domain\Model\ArticlePack;
 use Nutrition\Pantry\Movement\Domain\QueryModel\CorrectArticleStockNeedleDataQuery;
 
 final class InMemoryCorrectArticleStockNeedleDataQuery implements CorrectArticleStockNeedleDataQuery
 {
     /**
-     * @param array<string, ArticleStockReference> $references
+     * @param array<string, ArticlePack> $packs
      */
-    public function __construct(private array $references = [])
+    public function __construct(private array $packs = [])
     {
     }
 
-    public function findArticleReference(string $articleId): ?ArticleStockReference
+    public function findArticlePack(string $articleId): ?ArticlePack
     {
-        return $this->references[$articleId] ?? null;
+        return $this->packs[$articleId] ?? null;
     }
 }

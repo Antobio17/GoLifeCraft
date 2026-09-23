@@ -24,9 +24,9 @@ final readonly class CorrectArticleStockCommandHandler
 
     public function __invoke(CorrectArticleStockCommand $command): void
     {
-        $reference = $this->needleDataQuery->findArticleReference(articleId: $command->articleId);
+        $pack = $this->needleDataQuery->findArticlePack(articleId: $command->articleId);
 
-        if (null === $reference) {
+        if (null === $pack) {
             throw CorrectArticleStockException::articleNotFound(articleId: $command->articleId);
         }
 
@@ -37,8 +37,8 @@ final readonly class CorrectArticleStockCommandHandler
             level: $command->level,
         );
 
-        $declaredQuantity = $correction->declaredQuantity(reference: $reference);
-        $declaredUnit = $correction->declaredUnit(reference: $reference);
+        $declaredQuantity = $correction->declaredQuantity(pack: $pack);
+        $declaredUnit = $correction->declaredUnit(pack: $pack);
 
         $movementId = $this->stockMovementRepository->nextId();
 

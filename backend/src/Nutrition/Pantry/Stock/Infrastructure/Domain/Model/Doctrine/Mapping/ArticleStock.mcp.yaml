@@ -86,9 +86,10 @@ fields:
     type: float
     description: >-
       What "a full one" means for this article, in base units: the size of its pack when it has
-      one, otherwise the largest amount ever counted. It is what turns "half a pack" or "running
-      low" into grams and what the level is measured against. Pin it with the
-      "set_article_stock_tracking" tool when it has been learnt wrong.
+      one, otherwise the largest amount ever counted. It is what the level is read against, so
+      an article with neither a pack nor a single count has no level to show. Turning "half a
+      pack" into grams does not go through here: that is the pack equivalence's job. Pin it with
+      the "set_article_stock_tracking" tool when it has been learnt wrong.
     filterable: true
     sortable: true
   observedAt:

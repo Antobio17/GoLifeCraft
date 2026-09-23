@@ -51,11 +51,11 @@ final class CorrectArticleStockException extends BaseException
         );
     }
 
-    public static function referenceIsUnknown(string $kind): self
+    public static function packIsUnknown(string $kind): self
     {
         return new static(
-            title: 'This article has no pack size or earlier count to measure the correction against.',
-            keyTranslation: 'stock.correction.reference.unknown',
+            title: 'This article has no pack equivalence to measure a part of a pack against.',
+            keyTranslation: 'stock.correction.pack.unknown',
             details: ['kind' => $kind]
         );
     }

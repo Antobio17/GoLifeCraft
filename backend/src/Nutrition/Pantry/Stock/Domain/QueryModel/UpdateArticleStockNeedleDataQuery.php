@@ -2,9 +2,9 @@
 
 namespace Nutrition\Pantry\Stock\Domain\QueryModel;
 
-use Nutrition\Pantry\Stock\Domain\QueryModel\Dto\ArticleStockPolicy;
+use Nutrition\Catalog\Article\Domain\Model\ArticlePack;
 
 interface UpdateArticleStockNeedleDataQuery
 {
-    public function findArticlePolicy(string $articleId): ?ArticleStockPolicy;
+    public function findArticlePack(string $articleId): ?ArticlePack;
 }
