@@ -39,7 +39,7 @@ export class ProgressionEditorComponent {
   @Input() toleranceLabel = "";
   @Input() tolerance = 2;
   @Input() incrementLabel = "";
-  @Input() increment = 2.5;
+  @Input() increment = 1.25;
   @Input() noTargetsText = "";
 
   @Output() modeChange = new EventEmitter<string>();
