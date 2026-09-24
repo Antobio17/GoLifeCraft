@@ -120,6 +120,7 @@ export class BottomNavComponent {
   }
 
   toggleDrawer(): void {
+    this.expand();
     this.sideDrawerService.toggle();
   }
 

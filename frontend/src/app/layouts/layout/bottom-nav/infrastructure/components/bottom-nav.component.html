@@ -4,7 +4,6 @@
   aria-label="Principal"
   [class.tabbar--drawer-open]="isDrawerOpen()"
   [class.tabbar--minimized]="minimized()"
-  (click)="expand()"
 >
   <ng-content></ng-content>
 
@@ -29,6 +28,7 @@
           [active]="activeRoute() === item.route && !isDrawerOpen()"
           [compact]="minimized()"
           [attr.aria-label]="item.labelKey | t"
+          (click)="expand()"
         />
       }
     </ds-scroll-row>
