@@ -5,8 +5,9 @@
    Claro: lienzo gris verdoso y tarjetas blancas encima; la marca
    es el bosque y la menta entra como acento sobre superficies de
    marca y fondos suaves.
-   Oscuro: lienzo negro puro y tarjetas un escalón claramente más
-   claras; la menta pasa a ser el foco visual y el bosque baja a
+   Oscuro: lienzo negro puro y tarjetas apenas un escalón por
+   encima; el volumen lo pone la luz del material (_material.css).
+   La menta pasa a ser el foco visual y el bosque baja a
    superficie/contenedor.
    Las primitivas son una escala única, independiente del tema;
    cada tema elige de ella con los tokens semánticos.
@@ -25,7 +26,6 @@
   --ds-gray-600: #646b66;
   --ds-gray-700: #414742;
   --ds-gray-800: #252b26;
-  --ds-gray-825: #1b221d;
   --ds-gray-850: #131915;
   --ds-gray-875: #0a100c;
   --ds-gray-900: #040805;
@@ -202,11 +202,11 @@
 [data-theme="dark"] {
   /* ---- Superficies: negro puro de lienzo, cada nivel sube un escalón ---- */
   --ds-bg: var(--ds-gray-950);
-  --ds-surface: var(--ds-gray-825);
-  --ds-surface-raised: var(--ds-gray-800);
-  --ds-surface-hover: #252d27;
+  --ds-surface: #0c120e;
+  --ds-surface-raised: #141a16;
+  --ds-surface-hover: #161d18;
   --ds-surface-subtle: var(--ds-gray-900);
-  --ds-surface-inset: #182019;
+  --ds-surface-inset: #050806;
   --ds-surface-nav: var(--ds-gray-900);
   --ds-surface-sheet: var(--ds-surface);
   --ds-surface-brand: var(--ds-green-800);

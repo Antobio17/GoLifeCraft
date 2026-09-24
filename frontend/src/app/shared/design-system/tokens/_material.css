@@ -46,8 +46,8 @@
 [data-theme="dark"] {
   --ds-bevel: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.28),
-    rgba(255, 255, 255, 0.07) 2.5rem,
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 255, 255, 0.055) 2.5rem,
     rgba(255, 255, 255, 0.02)
   );
   --ds-bevel-hairline: var(--ds-bevel);
@@ -59,9 +59,9 @@
   );
   --ds-sheen: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.06),
-    rgba(255, 255, 255, 0.015) 4rem,
-    rgba(0, 0, 0, 0.22)
+    rgba(255, 255, 255, 0.025),
+    rgba(255, 255, 255, 0.008) 4rem,
+    rgba(0, 0, 0, 0.3)
   );
   --ds-sheen-cta: linear-gradient(
     180deg,
