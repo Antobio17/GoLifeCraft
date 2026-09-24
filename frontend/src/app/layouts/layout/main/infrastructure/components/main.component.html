@@ -20,7 +20,7 @@
   </div>
 
   @if (showTabBar()) {
-    <app-bottom-nav>
+    <app-bottom-nav [holdExpanded]="workoutTagVisible()">
       <app-active-workout-banner></app-active-workout-banner>
     </app-bottom-nav>
     <app-side-drawer></app-side-drawer>

@@ -6,7 +6,11 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
   selector: "ds-tab-item",
   imports: [IconComponent],
   template: `
-    <span class="tab" [class.tab--active]="active">
+    <span
+      class="tab"
+      [class.tab--active]="active"
+      [class.tab--compact]="compact"
+    >
       <span class="tab__icon">
         <ds-icon [name]="icon" [size]="20" [stroke]="2.2" />
       </span>
@@ -59,13 +63,27 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       }
       .tab--active {
         color: var(--ds-text);
-        background: var(--ds-surface-inset);
+        background: var(--ds-tab-lens);
+        box-shadow: var(--ds-tab-lens-edge);
         padding: var(--ds-space-2) var(--ds-space-3);
+        view-transition-name: ds-vt-tab-lens;
+      }
+      .tab--active .tab__icon {
+        color: var(--ds-primary);
       }
       .tab--active .tab__label {
         max-width: 10rem;
         opacity: 1;
         padding-left: var(--ds-space-1-5);
+      }
+      .tab--compact.tab--active {
+        padding: var(--ds-space-2) var(--ds-space-2);
+      }
+      .tab--compact .tab__label,
+      .tab--compact.tab--active .tab__label {
+        max-width: 0;
+        opacity: 0;
+        padding-left: 0;
       }
     `,
   ],
@@ -74,4 +92,5 @@ export class TabItemComponent {
   @Input({ required: true }) icon!: DsIconName;
   @Input() label = "";
   @Input() active = false;
+  @Input() compact = false;
 }

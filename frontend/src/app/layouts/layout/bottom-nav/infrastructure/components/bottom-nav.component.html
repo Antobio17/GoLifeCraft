@@ -3,6 +3,8 @@
   class="tabbar"
   aria-label="Principal"
   [class.tabbar--drawer-open]="isDrawerOpen()"
+  [class.tabbar--minimized]="minimized()"
+  (click)="expand()"
 >
   <ng-content></ng-content>
 
@@ -25,6 +27,7 @@
           [icon]="item.icon"
           [label]="item.labelKey | t"
           [active]="activeRoute() === item.route && !isDrawerOpen()"
+          [compact]="minimized()"
           [attr.aria-label]="item.labelKey | t"
         />
       }
@@ -36,6 +39,7 @@
       icon="menu"
       [label]="'navbar.menu' | t"
       [active]="isDrawerOpen()"
+      [compact]="minimized()"
       [attr.aria-label]="'navbar.openMenu' | t"
       (click)="toggleDrawer()"
     />

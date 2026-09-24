@@ -270,6 +270,11 @@ input:-webkit-autofill::first-line {
   animation: ds-page-in var(--ds-dur-3) var(--ds-ease-out) both;
 }
 
+::view-transition-group(ds-vt-tab-lens) {
+  animation-duration: var(--ds-dur-4);
+  animation-timing-function: var(--ds-ease-spring);
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),

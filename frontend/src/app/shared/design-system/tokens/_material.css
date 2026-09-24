@@ -22,6 +22,10 @@
   --ds-canvas-glow: none;
   --ds-canvas-isolation: auto;
   --ds-shadow-dock: 0 0.75rem 2rem rgba(0, 0, 0, 0.16);
+  --ds-glass-dock: blur(1.25rem) saturate(180%);
+  --ds-tab-lens: color-mix(in srgb, var(--ds-text) 7%, transparent);
+  --ds-tab-lens-edge: inset 0 0 0 1px
+    color-mix(in srgb, var(--ds-text) 5%, transparent);
 
   --ds-material-surface:
     var(--ds-sheen) padding-box,
@@ -72,6 +76,14 @@
     inset 0 2px 4px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(0, 0, 0, 0.3),
     0 1px 0 rgba(255, 255, 255, 0.07);
   --ds-canvas-isolation: isolate;
+  --ds-tab-lens: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.13),
+    rgba(255, 255, 255, 0.05)
+  );
+  --ds-tab-lens-edge:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   --ds-shadow-dock:
     inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 1rem 2.25rem -0.5rem #000;
   --ds-canvas-glow:

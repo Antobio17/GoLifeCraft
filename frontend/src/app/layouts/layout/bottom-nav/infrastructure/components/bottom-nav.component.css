@@ -23,7 +23,10 @@
 .tabbar {
   pointer-events: auto;
   width: 100%;
-  max-width: var(--ds-app-frame-width, 30rem);
+  max-width: min(
+    var(--ds-app-frame-width, 30rem),
+    calc(100vw - var(--ds-space-6))
+  );
   display: flex;
   flex-direction: column;
   gap: var(--ds-space-1-5);
@@ -34,8 +37,11 @@
   border: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-2xl);
   box-shadow: var(--ds-shadow-dock);
-  backdrop-filter: blur(1rem);
-  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: var(--ds-glass-dock);
+  -webkit-backdrop-filter: var(--ds-glass-dock);
+  transition:
+    max-width var(--ds-dur-4) var(--ds-ease-spring),
+    padding var(--ds-dur-3) var(--ds-ease-out);
 }
 
 .tabbar__row {
@@ -50,7 +56,33 @@
 .tabbar__track ds-tab-item {
   flex: 1 0 auto;
   min-width: 3.25rem;
+  max-width: 12rem;
   scroll-snap-align: center;
+  transition:
+    max-width var(--ds-dur-4) var(--ds-ease-spring),
+    min-width var(--ds-dur-4) var(--ds-ease-spring),
+    opacity var(--ds-dur-2) var(--ds-ease-out);
+}
+
+@media (max-width: 767.98px) {
+  .tabbar--minimized {
+    max-width: 7.75rem;
+    padding: var(--ds-space-1-5) var(--ds-space-1);
+  }
+
+  .tabbar--minimized .tabbar__track ds-tab-item:not(.is-active) {
+    min-width: 0;
+    max-width: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabbar,
+  .tabbar__track ds-tab-item {
+    transition: none;
+  }
 }
 
 .tabbar__pinned {
