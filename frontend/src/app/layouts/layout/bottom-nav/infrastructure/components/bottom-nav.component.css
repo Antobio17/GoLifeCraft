@@ -31,6 +31,7 @@
   flex-direction: column;
   gap: var(--ds-space-1-5);
   padding: var(--ds-space-2) var(--ds-space-1-5);
+  --ds-tab-radius: calc(var(--ds-radius-2xl) - var(--ds-space-2));
   background:
     var(--ds-sheen) padding-box,
     color-mix(in srgb, var(--ds-surface) 86%, transparent);
@@ -68,6 +69,7 @@
   .tabbar--minimized {
     max-width: 7.75rem;
     padding: var(--ds-space-1-5) var(--ds-space-1);
+    --ds-tab-radius: calc(var(--ds-radius-2xl) - var(--ds-space-1-5));
   }
 
   .tabbar--minimized .tabbar__track ds-tab-item:not(.is-active) {

@@ -30,13 +30,14 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         justify-content: center;
         gap: 0;
         padding: var(--ds-space-2) var(--ds-space-1-5);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-tab-radius, var(--ds-radius-lg));
         color: var(--ds-text-meta);
         text-decoration: none;
         transition:
           background var(--ds-dur-3) var(--ds-ease-out),
           color var(--ds-dur-2) var(--ds-ease-out),
           padding var(--ds-dur-3) var(--ds-ease-spring),
+          border-radius var(--ds-dur-3) var(--ds-ease-out),
           transform var(--ds-dur-1) var(--ds-ease-out);
       }
       :host(:active) .tab {
