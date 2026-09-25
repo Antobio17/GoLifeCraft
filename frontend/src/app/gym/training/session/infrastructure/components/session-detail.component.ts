@@ -77,6 +77,7 @@ import { SessionDraftService } from "../../application/services/session-draft.se
 import { SetNumberingService } from "../../application/services/set-numbering.service";
 import { ProgressionEditorService } from "../../application/services/progression-editor.service";
 import { Progression } from "../../domain/models/progression.model";
+import { SaveSessionExerciseRequest } from "../../domain/models/session-exercise-request.model";
 import { ProgressionMode } from "../../domain/models/progression-mode.model";
 import {
   ProgressionEditorComponent,
@@ -236,6 +237,8 @@ export class SessionDetailComponent implements OnInit {
         : null;
 
       const configured = exercise.progression.mode !== ProgressionMode.None;
+      const progressionAvailable =
+        !active || !!this.templateExerciseFor(exercise.exerciseId);
 
       return {
         ...exercise,
@@ -247,7 +250,9 @@ export class SessionDetailComponent implements OnInit {
         progressionConfigured: configured,
         progressionHint: this.progressionHint(exercise.progression.mode),
         progressionSummary: this.progressionSummary(exercise),
-        showProgressionTab: !active && openTabs[exercise.id] === "progression",
+        progressionAvailable,
+        showProgressionTab:
+          progressionAvailable && openTabs[exercise.id] === "progression",
         muscleLabel: this.muscleText(exercise),
         modeLabel: this.modeLabel(exercise.type),
         weightModeLabel: this.weightModeLabel(exercise.weightMode),
@@ -502,14 +507,61 @@ export class SessionDetailComponent implements OnInit {
       return;
     }
 
+    const progression = change(exercise.sets, exercise.progression);
+
     this.loadedExercises.update((list) =>
-      this.sessionDraft.setProgression(
-        list,
-        exerciseId,
-        change(exercise.sets, exercise.progression),
-      ),
+      this.sessionDraft.setProgression(list, exerciseId, progression),
     );
-    this.afterEdit(exerciseId);
+
+    if (this.isActiveHere) {
+      this.persistTemplateProgression(exercise.exerciseId, progression);
+      return;
+    }
+
+    this.queuePersist(exerciseId);
+  }
+
+  private templateExerciseFor(
+    exerciseId: string | null,
+  ): SessionExerciseView | undefined {
+    return this.templateExercises().find(
+      (candidate) => exerciseId !== null && candidate.exerciseId === exerciseId,
+    );
+  }
+
+  private persistTemplateProgression(
+    exerciseId: string | null,
+    progression: Progression,
+  ): void {
+    const templateExercise = this.templateExerciseFor(exerciseId);
+
+    if (!templateExercise) {
+      return;
+    }
+
+    this.templateExercises.update((list) =>
+      this.sessionDraft.setProgression(list, templateExercise.id, progression),
+    );
+
+    this.autosave.push(this.exerciseKey(templateExercise.id), () =>
+      this.persistTemplateExercise(templateExercise.id),
+    );
+  }
+
+  private persistTemplateExercise(
+    sessionExerciseId: string,
+  ): Observable<unknown> {
+    const templateExercise = this.templateExercises().find(
+      (candidate) => candidate.id === sessionExerciseId,
+    );
+
+    if (!templateExercise || !templateExercise.exerciseId) return of(void 0);
+
+    return this.saveSessionExerciseService.updateSessionExercise(
+      this.id(),
+      sessionExerciseId,
+      this.exerciseRequest(templateExercise, templateExercise.exerciseId),
+    );
   }
 
   private toActive(): ActiveExercise[] {
@@ -1018,8 +1070,16 @@ export class SessionDetailComponent implements OnInit {
 
     this.finishing.set(true);
 
-    this.activeWorkout
-      .finish(this.toActive(), templateSyncMode as TemplateSyncMode)
+    this.autosave
+      .flush()
+      .pipe(
+        switchMap(() =>
+          this.activeWorkout.finish(
+            this.toActive(),
+            templateSyncMode as TemplateSyncMode,
+          ),
+        ),
+      )
       .subscribe({
         next: () => {
           this.finishing.set(false);
@@ -1069,17 +1129,7 @@ export class SessionDetailComponent implements OnInit {
 
     if (!exercise || !exercise.exerciseId) return of(void 0);
 
-    const request = {
-      exerciseId: exercise.exerciseId,
-      note: exercise.note,
-      sets: exercise.sets.map((set, index) => ({
-        position: index + 1,
-        reps: set.reps,
-        weight: set.weight,
-        kind: set.kind,
-      })),
-      progression: exercise.progression,
-    };
+    const request = this.exerciseRequest(exercise, exercise.exerciseId);
 
     if (this.persistedExercises.has(sessionExerciseId)) {
       return this.saveSessionExerciseService.updateSessionExercise(
@@ -1092,6 +1142,23 @@ export class SessionDetailComponent implements OnInit {
     return this.saveSessionExerciseService
       .addSessionExercise(this.id(), sessionExerciseId, request)
       .pipe(tap(() => this.persistedExercises.add(sessionExerciseId)));
+  }
+
+  private exerciseRequest(
+    exercise: SessionExerciseView,
+    exerciseId: string,
+  ): SaveSessionExerciseRequest {
+    return {
+      exerciseId,
+      note: exercise.note,
+      sets: exercise.sets.map((set, index) => ({
+        position: index + 1,
+        reps: set.reps,
+        weight: set.weight,
+        kind: set.kind,
+      })),
+      progression: exercise.progression,
+    };
   }
 
   private persistOrder(orderedIds: string[]): Observable<unknown> {
