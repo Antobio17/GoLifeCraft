@@ -227,7 +227,7 @@
                 />
               </ds-stack>
 
-              @if (!isActiveHere) {
+              @if (exercise.progressionAvailable) {
                 <ds-stack direction="row">
                   <ds-type-toggle
                     data-testid="session-exercise-tabs"
