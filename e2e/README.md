@@ -16,11 +16,17 @@ npm ci
 npx playwright install chromium     # sólo la primera vez
 ```
 
-Hace falta tener levantados los contenedores (`make up` en la raíz) y el front:
+Hace falta tener levantados los contenedores (`make up` en la raíz) y el front
+**en build de producción**, que no es el `npm start` de desarrollo:
 
 ```bash
-cd frontend && npm start            # http://localhost:4200
+cd frontend && npm run start:e2e    # http://localhost:4300
 ```
+
+Si no está levantado, Playwright lo arranca solo (~20 s) y lo apaga al acabar.
+Dejarlo abierto en una terminal ahorra esos 20 s en cada tanda; sigue en modo
+watch, así que recompila al tocar el código. Convive con el `npm start` del
+4200: son puertos distintos.
 
 ## Lanzar las pruebas
 
@@ -41,6 +47,30 @@ antialiasing de las fuentes.
 
 La semilla se recarga sola antes de cada ejecución (`globalSetup`). Para saltártela
 en una tanda rápida: `E2E_SKIP_SEED=1 npm test`.
+
+## Por qué tarda lo que tarda
+
+La suite está limitada por la CPU del equipo, no por la red: cada test abre un
+navegador limpio y carga la app desde cero. Tres decisiones la mantienen en
+~1,5 min en vez de ~4:
+
+- **El front de la suite es la build de producción** (`start:e2e`). En
+  desarrollo Vite sirve ~270 módulos sin minificar (6 MB) que Chromium parsea
+  en cada test. Las capturas salen idénticas pixel a pixel con las dos builds.
+- **La precarga de rutas en idle está apagada** (`support/preload.ts`). En la
+  app real adelanta los chunks lazy; aquí sólo obligaba a bajar y compilar los
+  ~360 chunks en cada test y a que `networkidle` los esperase.
+- **Una visita, varias comprobaciones.** Cada carga de página cuesta segundos;
+  lo que se comprueba sobre ella, milisegundos. Si dos checks miran la misma
+  pantalla en el mismo viewport van en el mismo test con `expect.soft`, que
+  sigue informando de los dos.
+
+Del lado del backend, PHP-FPM local lleva OPcache activo con
+`validate_timestamps=1` y `revalidate_freq=0`: los cambios de código se ven al
+momento y cada petición a la API pasa de ~140 ms a ~40 ms.
+
+Subir `--workers` por encima del valor por defecto gana poco (~10 %) y hace más
+probables las carreras entre escritorio y móvil sobre los mismos datos.
 
 ## Las cuatro capas
 

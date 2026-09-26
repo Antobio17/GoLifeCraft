@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 import { DESKTOP, MOBILE, TABLET } from "./src/support/viewports";
 
-const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:4200";
+const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:4300";
 const API_URL = process.env.E2E_API_URL ?? "http://localhost:8083";
 const IS_CI = !!process.env.CI;
 const AUTH_STATE = "./.auth/user.json";
@@ -136,7 +136,7 @@ export default defineConfig({
   webServer: process.env.E2E_NO_WEBSERVER
     ? undefined
     : {
-        command: "npm start",
+        command: "npm run start:e2e",
         cwd: "../frontend",
         url: BASE_URL,
         reuseExistingServer: !IS_CI,

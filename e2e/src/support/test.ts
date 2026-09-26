@@ -2,6 +2,7 @@ import { APIRequestContext, test as base, request } from "@playwright/test";
 import { API_URL } from "./env";
 import { Ds } from "./ds";
 import { startClockAt } from "./clock";
+import { disableRoutePreloading } from "./preload";
 import { seededAuthToken } from "./auth-state";
 
 interface Fixtures {
@@ -19,6 +20,7 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
 
   page: async ({ page }, use) => {
     await startClockAt(page);
+    await disableRoutePreloading(page);
     await use(page);
   },
 

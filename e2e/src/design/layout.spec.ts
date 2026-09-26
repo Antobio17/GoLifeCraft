@@ -18,7 +18,7 @@ async function visit(page: import("@playwright/test").Page, path: string, ready:
 test.describe("layout responsive", () => {
   for (const screen of CORE_SCREENS) {
     for (const { name, viewport } of RESPONSIVE_MATRIX) {
-      test(`${screen.name} no genera scroll horizontal en ${name}`, async ({ page }) => {
+      test(`${screen.name} cabe a lo ancho en ${name}`, async ({ page }) => {
         await page.setViewportSize(viewport);
         await visit(page, screen.path, screen.ready);
 
@@ -27,17 +27,12 @@ test.describe("layout responsive", () => {
           clientWidth: document.documentElement.clientWidth,
         }));
 
-        expect(
-          overflow.scrollWidth,
-          `${screen.path} desborda ${overflow.scrollWidth - overflow.clientWidth}px a lo ancho`,
-        ).toBeLessThanOrEqual(overflow.clientWidth + 1);
-      });
-
-      test(`${screen.name} no deja ningún elemento fuera del viewport en ${name}`, async ({
-        page,
-      }) => {
-        await page.setViewportSize(viewport);
-        await visit(page, screen.path, screen.ready);
+        expect
+          .soft(
+            overflow.scrollWidth,
+            `${screen.path} desborda ${overflow.scrollWidth - overflow.clientWidth}px a lo ancho`,
+          )
+          .toBeLessThanOrEqual(overflow.clientWidth + 1);
 
         const escaped = await page.evaluate((width) => {
           const offenders: string[] = [];
@@ -86,7 +81,7 @@ test.describe("layout responsive", () => {
           return offenders.slice(0, 5);
         }, viewport.width);
 
-        expect(escaped, `elementos fuera del viewport en ${screen.path}`).toEqual([]);
+        expect.soft(escaped, `elementos fuera del viewport en ${screen.path}`).toEqual([]);
       });
     }
   }
