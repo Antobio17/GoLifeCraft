@@ -78,9 +78,12 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         padding-block: var(--ds-space-2);
         margin-block: calc(-1 * var(--ds-space-2));
         background: var(--ds-bg);
-        box-shadow: 0 0 0 var(--screen-head-bleed) var(--ds-bg);
+        box-shadow:
+          0 0 0 var(--screen-head-bleed) var(--ds-bg),
+          0 calc(-1 * env(safe-area-inset-top)) 0 var(--screen-head-bleed)
+            var(--ds-bg);
         clip-path: inset(
-          calc(-1 * var(--screen-head-bleed))
+          calc(-1 * (var(--screen-head-bleed) + env(safe-area-inset-top)))
             calc(-1 * var(--screen-head-bleed)) -1px
         );
       }
