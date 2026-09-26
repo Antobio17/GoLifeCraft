@@ -30,6 +30,7 @@ const mockProfileResponse: GetMyProfileResponse = {
       tenantId: "GLC0000000001",
       theme: "dark",
       visualPreferences: {},
+      avatar: null,
     },
   },
 };

@@ -4,9 +4,11 @@ import { Observable } from "rxjs";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { AggregateImagePort } from "@shared/aggregate-image/domain/ports/aggregate-image.port";
 
-const API_URL_BY_KIND: Record<AggregateImageKind, string> = {
-  [AggregateImageKind.Article]: "/api/v1/nutrition/catalog/article",
-  [AggregateImageKind.Recipe]: "/api/v1/nutrition/recipe",
+const API_URL_BY_KIND: Record<AggregateImageKind, (id: string) => string> = {
+  [AggregateImageKind.Article]: (id) =>
+    `/api/v1/nutrition/catalog/article/${id}/image`,
+  [AggregateImageKind.Recipe]: (id) => `/api/v1/nutrition/recipe/${id}/image`,
+  [AggregateImageKind.User]: () => "/api/v1/authorization/me/avatar",
 };
 
 @Injectable()
@@ -36,6 +38,6 @@ export class HttpAggregateImageAdapter extends AggregateImagePort {
   }
 
   private apiUrl(kind: AggregateImageKind, id: string): string {
-    return `${API_URL_BY_KIND[kind]}/${id}/image`;
+    return API_URL_BY_KIND[kind](id);
   }
 }

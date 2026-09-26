@@ -6,7 +6,7 @@
       routerLink="/me"
       (click)="close()"
     >
-      <ds-avatar [initial]="initial()" [size]="46" />
+      <ds-avatar [initial]="initial()" [imageUrl]="avatarUrl()" [size]="46" />
       <span class="drawer__user-text">
         <span class="drawer__user-name">{{ displayName() }}</span>
         <span class="drawer__user-email">{{ email() }}</span>

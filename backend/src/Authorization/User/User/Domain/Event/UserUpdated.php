@@ -24,6 +24,7 @@ final readonly class UserUpdated extends DomainEvent
         public bool $emailVerified,
         public string $theme,
         public ?array $visualPreferences,
+        public ?string $avatar,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,

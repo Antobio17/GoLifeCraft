@@ -14,6 +14,7 @@ export interface GetMyProfileResponse {
       tenantId: string;
       theme: string;
       visualPreferences: Partial<VisualPreferences>;
+      avatar: string | null;
     };
   };
 }

@@ -19,6 +19,8 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         type="button"
         class="ds-image-picker__trigger"
         [class.is-filled]="!!imageUrl"
+        [class.is-circle]="'circle' === shape"
+        [class.is-placeholder]="!imageUrl && !!placeholder"
         [disabled]="disabled"
         [attr.aria-label]="triggerLabel"
         (click)="openPicker()"
@@ -26,6 +28,8 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         <span class="ds-image-picker__frame">
           @if (imageUrl) {
             <img class="ds-image-picker__image" [src]="imageUrl" [alt]="alt" />
+          } @else if (placeholder) {
+            <span class="ds-image-picker__placeholder">{{ placeholder }}</span>
           } @else {
             <ds-icon name="camera" [size]="22" [stroke]="1.8" />
           }
@@ -39,6 +43,7 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         <button
           type="button"
           class="ds-image-picker__remove"
+          [class.is-circle]="'circle' === shape"
           [disabled]="disabled"
           [attr.aria-label]="removeLabel"
           (click)="cleared.emit()"
@@ -79,8 +84,8 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         position: relative;
         appearance: none;
         cursor: pointer;
-        width: 4rem;
-        height: 4rem;
+        width: var(--ds-image-picker-size, 4rem);
+        height: var(--ds-image-picker-size, 4rem);
         border-radius: var(--ds-radius-xl);
         background: var(--ds-surface-inset);
         border: 1px dashed var(--ds-border-strong);
@@ -91,6 +96,27 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
       .ds-image-picker__trigger.is-filled {
         border-style: solid;
         border-color: var(--ds-border);
+      }
+      .ds-image-picker__trigger.is-circle {
+        border-radius: 50%;
+      }
+      .ds-image-picker__trigger.is-circle .ds-image-picker__frame {
+        border-radius: 50%;
+      }
+      .ds-image-picker__trigger.is-circle .ds-image-picker__badge {
+        right: -0.125rem;
+        bottom: -0.125rem;
+        border-radius: var(--ds-radius-pill);
+      }
+      .ds-image-picker__trigger.is-placeholder {
+        border: none;
+        background: var(--ds-primary);
+        color: var(--ds-on-primary);
+      }
+      .ds-image-picker__placeholder {
+        font-family: var(--ds-font-display);
+        font-weight: var(--ds-weight-extrabold);
+        font-size: var(--ds-text-2xl);
       }
       .ds-image-picker__frame {
         position: absolute;
@@ -141,6 +167,10 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         color: #fff;
         z-index: 1;
       }
+      .ds-image-picker__remove.is-circle {
+        top: -0.25rem;
+        right: -0.25rem;
+      }
       .ds-image-picker__remove:disabled {
         opacity: 0.5;
         cursor: default;
@@ -150,9 +180,15 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
       }
     `,
   ],
+  host: {
+    "[style.--ds-image-picker-size.px]": "size",
+  },
 })
 export class ImagePickerComponent {
   @Input() imageUrl: string | null = null;
+  @Input() shape: "square" | "circle" = "square";
+  @Input() size: number | null = null;
+  @Input() placeholder = "";
   @Input() disabled = false;
   @Input() alt = "";
   @Input() triggerLabel = "Subir una imagen";

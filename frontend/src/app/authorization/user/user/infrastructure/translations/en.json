@@ -201,6 +201,9 @@
         "error": "Error changing password"
       },
       "weak": "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number and a special character"
+    },
+    "avatar": {
+      "error": "Could not update the profile photo"
     }
   },
   "settings": {
@@ -270,7 +273,17 @@
       "strong": "Strong"
     },
     "manageUsers": "User management",
-    "logout": "Log out"
+    "logout": "Log out",
+    "avatar": {
+      "change": "Change profile photo",
+      "remove": "Remove profile photo",
+      "cropTitle": "Crop your photo",
+      "cropHint": "Drag and zoom. It will be saved square.",
+      "cropClose": "Close",
+      "cropCancel": "Cancel",
+      "cropConfirm": "Use crop",
+      "cropZoom": "Zoom"
+    }
   },
   "users": {
     "breadcrumb": "Users",

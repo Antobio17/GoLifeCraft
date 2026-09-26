@@ -59,10 +59,21 @@ export class AuthSessionService {
     return this._session()?.user?.lastname?.trim() ?? "";
   }
 
-  setUserIdentity(name: string | null, lastname: string | null): void {
+  getAvatar(): string | null {
+    return this._session()?.user?.avatar ?? null;
+  }
+
+  setUserIdentity(
+    name: string | null,
+    lastname: string | null,
+    avatar: string | null,
+  ): void {
     const session = this._session();
     if (!session) return;
-    this.saveSession({ ...session, user: { ...session.user, name, lastname } });
+    this.saveSession({
+      ...session,
+      user: { ...session.user, name, lastname, avatar },
+    });
   }
 
   isGod(): boolean {

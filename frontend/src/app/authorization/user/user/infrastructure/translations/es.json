@@ -201,6 +201,9 @@
         "error": "Error al cambiar la contraseña"
       },
       "weak": "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial"
+    },
+    "avatar": {
+      "error": "No se ha podido actualizar la foto de perfil"
     }
   },
   "settings": {
@@ -270,7 +273,17 @@
       "strong": "Fuerte"
     },
     "manageUsers": "Gestión de usuarios",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "avatar": {
+      "change": "Cambiar la foto de perfil",
+      "remove": "Quitar la foto de perfil",
+      "cropTitle": "Recorta tu foto",
+      "cropHint": "Arrastra y haz zoom. Se guardará cuadrada.",
+      "cropClose": "Cerrar",
+      "cropCancel": "Cancelar",
+      "cropConfirm": "Usar recorte",
+      "cropZoom": "Zoom"
+    }
   },
   "users": {
     "breadcrumb": "Usuarios",

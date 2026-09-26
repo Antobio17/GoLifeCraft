@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
+import { Observable, switchMap } from "rxjs";
 import {
   FormBuilder,
   FormGroup,
@@ -23,6 +24,7 @@ import { VisualPreferenceService } from "@shared/visual-preference/application/s
 import { VisualMode } from "@shared/visual-preference/domain/models/visual-mode.enum";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { MyAvatarService } from "@shared/my-avatar/application/services/my-avatar.service";
 import { getRoleLabelKey } from "@authorization/domain/utils/role.utils";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -122,6 +124,7 @@ export class MyProfileComponent implements OnInit {
   private themeService = inject(ThemeService);
   private visualPreferenceService = inject(VisualPreferenceService);
   private authSessionService = inject(AuthSessionService);
+  private myAvatarService = inject(MyAvatarService);
   private router = inject(Router);
 
   private readonly MODULE_PATH = "authorization/user/user";
@@ -137,6 +140,9 @@ export class MyProfileComponent implements OnInit {
   loading = signal(true);
   saving = signal(false);
   changingPassword = signal(false);
+  savingAvatar = signal(false);
+
+  readonly avatarUrl = this.myAvatarService.url;
 
   readonly theme = computed<string>(() =>
     this.themeService.isDark() ? "dark" : "light",
@@ -213,6 +219,11 @@ export class MyProfileComponent implements OnInit {
         this.role.set(attrs.role);
         this.isActive.set(attrs.isActive);
         this.tenantId.set(attrs.tenantId);
+        this.authSessionService.setUserIdentity(
+          attrs.name,
+          attrs.lastname,
+          attrs.avatar,
+        );
         this.visualPreferenceService.applyFromPreferences(
           attrs.visualPreferences ?? {},
         );
@@ -269,6 +280,40 @@ export class MyProfileComponent implements OnInit {
           this.floatingToastService.showToast({
             status: 400,
             keyTranslation: "profile.update.error",
+            details: [],
+          });
+        },
+      });
+  }
+
+  onAvatarPicked(file: File): void {
+    this.changeAvatar(this.myAvatarService.upload(file));
+  }
+
+  onAvatarCleared(): void {
+    this.changeAvatar(this.myAvatarService.remove());
+  }
+
+  private changeAvatar(change: Observable<void>): void {
+    this.savingAvatar.set(true);
+
+    change
+      .pipe(switchMap(() => this.getMyProfileService.getMyProfile()))
+      .subscribe({
+        next: (profile) => {
+          const attrs = profile.data.attributes;
+          this.authSessionService.setUserIdentity(
+            attrs.name,
+            attrs.lastname,
+            attrs.avatar,
+          );
+          this.savingAvatar.set(false);
+        },
+        error: () => {
+          this.savingAvatar.set(false);
+          this.floatingToastService.showToast({
+            status: 400,
+            keyTranslation: "profile.avatar.error",
             details: [],
           });
         },
