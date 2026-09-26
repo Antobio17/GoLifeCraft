@@ -18,6 +18,7 @@ export class SkeletonSummaryComponent {
   @Input() macros: SkeletonSummaryMacros = "bars";
   @Input() progress = false;
   @Input() compact = false;
+  @Input() dense = false;
   readonly stats = input(0);
 
   readonly macroArray: number[] = [0, 1, 2];
