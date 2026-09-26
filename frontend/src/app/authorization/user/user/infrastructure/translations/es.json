@@ -190,7 +190,8 @@
       "confirmPassword": "Confirmar contraseña"
     },
     "update": {
-      "error": "Error al actualizar el perfil"
+      "error": "Error al actualizar el perfil",
+      "success": "Cambios guardados"
     },
     "timezone": {
       "nextLoginWarning": "El cambio de zona horaria se aplicará en tu próxima sesión."
@@ -233,7 +234,6 @@
       "managed": "gestionado por tu admin"
     },
     "save": "Guardar cambios",
-    "saving": "Guardando...",
     "theme": {
       "title": "Tema",
       "dark": "Oscuro",
@@ -261,11 +261,9 @@
     },
     "password": {
       "title": "Cambiar contraseña",
-      "hint": "Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo",
+      "hint": "Déjala en blanco para mantener la actual. Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo",
       "weak": "La contraseña no cumple los requisitos mínimos de seguridad",
-      "mismatch": "Las contraseñas no coinciden",
-      "update": "Actualizar contraseña",
-      "updating": "Actualizando..."
+      "mismatch": "Las contraseñas no coinciden"
     },
     "strength": {
       "weak": "Débil",
