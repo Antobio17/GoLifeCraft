@@ -190,7 +190,8 @@
       "confirmPassword": "Confirm password"
     },
     "update": {
-      "error": "Error updating profile"
+      "error": "Error updating profile",
+      "success": "Changes saved"
     },
     "timezone": {
       "nextLoginWarning": "The timezone change will take effect on your next login."
@@ -233,7 +234,6 @@
       "managed": "managed by your admin"
     },
     "save": "Save changes",
-    "saving": "Saving...",
     "theme": {
       "title": "Theme",
       "dark": "Dark",
@@ -261,11 +261,9 @@
     },
     "password": {
       "title": "Change password",
-      "hint": "At least 8 characters, with uppercase, lowercase, number and symbol",
+      "hint": "Leave it blank to keep the current one. At least 8 characters, with uppercase, lowercase, number and symbol",
       "weak": "The password does not meet the minimum security requirements",
-      "mismatch": "Passwords do not match",
-      "update": "Update password",
-      "updating": "Updating..."
+      "mismatch": "Passwords do not match"
     },
     "strength": {
       "weak": "Weak",

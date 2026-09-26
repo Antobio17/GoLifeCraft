@@ -1,9 +1,17 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable, switchMap } from "rxjs";
+import { toSignal } from "@angular/core/rxjs-interop";
+import {
+  EMPTY,
+  Observable,
+  catchError,
+  finalize,
+  forkJoin,
+  switchMap,
+  tap,
+} from "rxjs";
 import {
   FormBuilder,
-  FormGroup,
   Validators,
   ReactiveFormsModule,
   AbstractControl,
@@ -61,6 +69,23 @@ function passwordStrengthValidator(
     /[^a-zA-Z0-9]/.test(value);
 
   return valid ? null : { weakPassword: true };
+}
+
+function passwordCompletenessValidator(
+  form: AbstractControl,
+): ValidationErrors | null {
+  const controls = ["currentPassword", "newPassword", "confirmPassword"]
+    .map((name) => form.get(name))
+    .filter((control): control is AbstractControl => null !== control);
+  const anyFilled = controls.some((control) => !!control.value);
+
+  controls
+    .filter((control) => !control.value)
+    .forEach((control) =>
+      control.setErrors(anyFilled ? { required: true } : null),
+    );
+
+  return null;
 }
 
 function passwordMatchValidator(
@@ -129,8 +154,29 @@ export class MyProfileComponent implements OnInit {
 
   private readonly MODULE_PATH = "authorization/user/user";
 
-  profileForm: FormGroup;
-  passwordForm: FormGroup;
+  readonly profileForm = this.formBuilder.nonNullable.group({
+    name: ["", [Validators.required, Validators.minLength(2)]],
+    lastname: ["", [Validators.required, Validators.minLength(2)]],
+  });
+
+  readonly passwordForm = this.formBuilder.nonNullable.group(
+    {
+      currentPassword: ["", [Validators.minLength(8)]],
+      newPassword: ["", [passwordStrengthValidator]],
+      confirmPassword: [""],
+    },
+    { validators: [passwordCompletenessValidator, passwordMatchValidator] },
+  );
+
+  private readonly profileValue = toSignal(this.profileForm.valueChanges, {
+    initialValue: this.profileForm.getRawValue(),
+  });
+
+  private readonly passwordValue = toSignal(this.passwordForm.valueChanges, {
+    initialValue: this.passwordForm.getRawValue(),
+  });
+
+  private readonly savedProfile = signal<string | null>(null);
 
   username = signal("");
   email = signal("");
@@ -139,7 +185,6 @@ export class MyProfileComponent implements OnInit {
   tenantId = signal("");
   loading = signal(true);
   saving = signal(false);
-  changingPassword = signal(false);
   savingAvatar = signal(false);
 
   readonly avatarUrl = this.myAvatarService.url;
@@ -173,9 +218,25 @@ export class MyProfileComponent implements OnInit {
     return allEqual ? modes[0] : "";
   });
 
+  readonly profileChanged = computed(() => {
+    const saved = this.savedProfile();
+
+    return null !== saved && saved !== JSON.stringify(this.profileValue());
+  });
+
+  readonly passwordChanged = computed(() =>
+    Object.values(this.passwordValue()).some((value) => !!value),
+  );
+
+  readonly hasChanges = computed(
+    () => this.profileChanged() || this.passwordChanged(),
+  );
+
+  readonly newPassword = computed(() => this.passwordValue().newPassword ?? "");
+
   readonly fullName = computed(() => {
-    const name = this.profileForm.get("name")?.value ?? "";
-    const lastname = this.profileForm.get("lastname")?.value ?? "";
+    const name = this.profileValue().name ?? "";
+    const lastname = this.profileValue().lastname ?? "";
     const composed = `${name} ${lastname}`.trim();
     if (composed) return composed;
     return this.username() || this.email().split("@")[0];
@@ -187,22 +248,6 @@ export class MyProfileComponent implements OnInit {
   });
 
   readonly roleLabelKey = computed(() => getRoleLabelKey(this.role()));
-
-  constructor() {
-    this.profileForm = this.formBuilder.group({
-      name: ["", [Validators.required, Validators.minLength(2)]],
-      lastname: ["", [Validators.required, Validators.minLength(2)]],
-    });
-
-    this.passwordForm = this.formBuilder.group(
-      {
-        currentPassword: ["", [Validators.required, Validators.minLength(8)]],
-        newPassword: ["", [Validators.required, passwordStrengthValidator]],
-        confirmPassword: ["", [Validators.required]],
-      },
-      { validators: passwordMatchValidator },
-    );
-  }
 
   ngOnInit(): void {
     this.translationService
@@ -228,10 +273,11 @@ export class MyProfileComponent implements OnInit {
           attrs.visualPreferences ?? {},
         );
 
-        this.profileForm.patchValue({
+        this.profileForm.reset({
           name: attrs.name ?? "",
           lastname: attrs.lastname ?? "",
         });
+        this.markProfileSaved();
 
         this.loading.set(false);
       },
@@ -260,30 +306,83 @@ export class MyProfileComponent implements OnInit {
     this.router.navigate(["/login"]);
   }
 
-  onSubmitProfile(): void {
-    if (this.profileForm.invalid) {
-      this.profileForm.markAllAsTouched();
+  save(): void {
+    if (!this.hasChanges() || this.saving()) {
       return;
     }
 
+    if (this.profileForm.invalid || this.passwordForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      this.passwordForm.markAllAsTouched();
+      return;
+    }
+
+    const operations = [
+      ...(this.profileChanged() ? [this.saveProfile()] : []),
+      ...(this.passwordChanged() ? [this.savePassword()] : []),
+    ];
+
     this.saving.set(true);
 
-    this.updateMyProfileService
-      .updateMyProfile(this.profileForm.value)
-      .subscribe({
-        next: () => {
-          this.saving.set(false);
-          window.location.reload();
-        },
-        error: () => {
-          this.saving.set(false);
+    forkJoin(operations)
+      .pipe(finalize(() => this.saving.set(false)))
+      .subscribe(() =>
+        this.floatingToastService.showToast({
+          status: 200,
+          keyTranslation: "profile.update.success",
+          details: [],
+        }),
+      );
+  }
+
+  private saveProfile(): Observable<unknown> {
+    return this.updateMyProfileService
+      .updateMyProfile(this.profileForm.getRawValue())
+      .pipe(
+        switchMap(() => this.getMyProfileService.getMyProfile()),
+        tap((profile) => {
+          const attrs = profile.data.attributes;
+          this.authSessionService.setUserIdentity(
+            attrs.name,
+            attrs.lastname,
+            attrs.avatar,
+          );
+          this.markProfileSaved();
+        }),
+        catchError(() => {
           this.floatingToastService.showToast({
             status: 400,
             keyTranslation: "profile.update.error",
             details: [],
           });
-        },
-      });
+
+          return EMPTY;
+        }),
+      );
+  }
+
+  private savePassword(): Observable<unknown> {
+    const { currentPassword, newPassword } = this.passwordForm.getRawValue();
+
+    return this.changeMyPasswordService
+      .changeMyPassword({ currentPassword, newPassword })
+      .pipe(
+        tap(() => this.passwordForm.reset()),
+        catchError((err) => {
+          this.floatingToastService.showToast({
+            status: 400,
+            keyTranslation:
+              err?.error?.keyTranslation ?? "profile.password.change.error",
+            details: err?.error?.details ?? [],
+          });
+
+          return EMPTY;
+        }),
+      );
+  }
+
+  private markProfileSaved(): void {
+    this.savedProfile.set(JSON.stringify(this.profileForm.getRawValue()));
   }
 
   onAvatarPicked(file: File): void {
@@ -315,40 +414,6 @@ export class MyProfileComponent implements OnInit {
             status: 400,
             keyTranslation: "profile.avatar.error",
             details: [],
-          });
-        },
-      });
-  }
-
-  onSubmitPassword(): void {
-    if (this.passwordForm.invalid) {
-      this.passwordForm.markAllAsTouched();
-      return;
-    }
-
-    this.changingPassword.set(true);
-
-    const { currentPassword, newPassword } = this.passwordForm.value;
-
-    this.changeMyPasswordService
-      .changeMyPassword({ currentPassword, newPassword })
-      .subscribe({
-        next: () => {
-          this.passwordForm.reset();
-          this.changingPassword.set(false);
-          this.floatingToastService.showToast({
-            status: 200,
-            keyTranslation: "profile.password.change.success",
-            details: [],
-          });
-        },
-        error: (err) => {
-          this.changingPassword.set(false);
-          this.floatingToastService.showToast({
-            status: 400,
-            keyTranslation:
-              err?.error?.keyTranslation ?? "profile.password.change.error",
-            details: err?.error?.details ?? [],
           });
         },
       });
