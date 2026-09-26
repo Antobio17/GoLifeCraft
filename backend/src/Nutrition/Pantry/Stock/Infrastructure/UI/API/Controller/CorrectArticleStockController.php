@@ -28,19 +28,12 @@ final class CorrectArticleStockController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $kind = RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'kind')
-                ?? StockCorrection::KIND_MEASURED;
-
             $this->handle(message: new CorrectArticleStockCommand(
                 articleId: $request->attributes->get(key: 'articleId'),
-                kind: $kind,
-                quantity: RequestExtractor::getFloatRequestValue(
-                    request: $request,
-                    fieldName: 'quantity',
-                    required: StockCorrection::KIND_LEVEL !== $kind,
-                ),
+                kind: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'kind')
+                    ?? StockCorrection::KIND_MEASURED,
+                quantity: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'quantity'),
                 unit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'unit'),
-                level: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'level'),
                 effectiveAt: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'effectiveAt'),
                 correctedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));

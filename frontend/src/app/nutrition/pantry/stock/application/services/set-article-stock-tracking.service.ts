@@ -10,12 +10,10 @@ export class SetArticleStockTrackingService {
   setArticleStockTracking(
     articleId: string,
     trackingMode: StockTrackingMode,
-    referenceQuantity?: number,
   ): Observable<void> {
     return this.setArticleStockTrackingPort.setArticleStockTracking(
       articleId,
       trackingMode,
-      referenceQuantity,
     );
   }
 }

@@ -47,6 +47,14 @@ class StockMovement extends GenericAggregate
         self::SOURCE_PRODUCTION_RECIPE,
     ];
 
+    /** @var array<int, string> */
+    public const array INFERRED_SOURCES = [
+        self::SOURCE_DIARY_ENTRY,
+        self::SOURCE_PRODUCTION_OUTPUT,
+        self::SOURCE_PRODUCTION_ARTICLE,
+        self::SOURCE_PRODUCTION_RECIPE,
+    ];
+
     public const int QUANTITY_PRECISION = 4;
     public const int CONFIDENCE_PRECISION = 2;
     public const float CONFIDENCE_OF_LEGACY_COUNT = 0.85;
@@ -66,14 +74,10 @@ class StockMovement extends GenericAggregate
     public string $sourceId;
     public ?float $confidence = null;
 
-    public static function confidenceOrDefault(?float $confidence, string $type, string $sourceKind): float
+    public static function countConfidence(?float $confidence, string $sourceKind): float
     {
         if (null !== $confidence) {
             return $confidence;
-        }
-
-        if (self::TYPE_COUNT !== $type) {
-            return StockCorrection::CONFIDENCE_COUNTED;
         }
 
         return self::SOURCE_INVENTORY === $sourceKind
@@ -81,18 +85,14 @@ class StockMovement extends GenericAggregate
             : self::CONFIDENCE_OF_LEGACY_COUNT;
     }
 
-    public function evidence(): StockEvidence
+    public function isInferred(): bool
     {
-        return StockEvidence::of(type: $this->type, sourceKind: $this->sourceKind);
+        return in_array(needle: $this->sourceKind, haystack: self::INFERRED_SOURCES, strict: true);
     }
 
     public function statedConfidence(): float
     {
-        return self::confidenceOrDefault(
-            confidence: $this->confidence,
-            type: $this->type,
-            sourceKind: $this->sourceKind,
-        );
+        return self::countConfidence(confidence: $this->confidence, sourceKind: $this->sourceKind);
     }
 
     public static function deltaMomentOf(string $businessDate): string

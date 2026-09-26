@@ -25,31 +25,25 @@ export class StockViewService {
     estimate: ArticleStockEstimate,
   ): ArticleStockView {
     const stock = estimate.quantity;
-    const packs = context.packSize > 0 ? stock / context.packSize : 0;
-    const packsText = `${this.number(packs, 2)} ${this.unitCatalog.pluralLabel(context.packUnit, packs)}`;
-    const baseText = `${this.number(stock)} ${context.baseUnit}`;
-    const tracked = StockTrackingMode.None !== estimate.trackingMode;
     const estimated = StockTrackingMode.Approximate === estimate.trackingMode;
     const bandText = estimated ? this.bandText(context, estimate) : null;
+    const packsText = this.packsTextOf(context, stock);
+    const baseText = this.amountText(context, stock);
 
     return {
       ...context,
       stock,
-      packs,
-      packsText,
-      baseText,
+      packs: context.packSize > 0 ? stock / context.packSize : 0,
       valueText: this.valueText(context, stock),
       mainText: context.hasPack ? packsText : baseText,
       subText: context.hasPack ? baseText : (bandText ?? baseText),
+      bandText: context.hasPack ? bandText : null,
       trackingMode: estimate.trackingMode,
-      tracked,
-      estimated,
       level: estimate.level,
       levelTone: LEVEL_TONES[estimate.level],
-      confidence: estimate.confidence,
-      confidencePercent: Math.round(estimate.confidence * 100),
-      bandText: context.hasPack ? bandText : null,
-      referenceQuantity: estimate.referenceQuantity,
+      confidencePercent: estimated
+        ? Math.round(estimate.confidence * 100)
+        : null,
     };
   }
 

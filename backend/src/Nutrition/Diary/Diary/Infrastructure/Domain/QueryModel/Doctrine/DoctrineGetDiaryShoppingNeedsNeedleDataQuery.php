@@ -12,10 +12,6 @@ use Nutrition\Diary\Diary\Domain\QueryModel\Dto\DiaryShoppingNeedView;
 use Nutrition\Diary\Diary\Domain\QueryModel\Dto\GetDiaryShoppingNeedsResult;
 use Nutrition\Diary\Diary\Domain\QueryModel\GetDiaryShoppingNeedsNeedleDataQuery;
 use Nutrition\Diary\Diary\Domain\Service\DiaryArticleNeedsCalculator;
-use Nutrition\Pantry\Movement\Domain\Model\StockLevel;
-use Nutrition\Pantry\Stock\Domain\Model\StockEstimate;
-use Nutrition\Pantry\Stock\Domain\Model\StockNeed;
-use Nutrition\Pantry\Stock\Domain\Model\StockTrackingMode;
 use Nutrition\Recipe\Recipe\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRecipeNutritionGraphProvider;
 
 final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements GetDiaryShoppingNeedsNeedleDataQuery
@@ -160,17 +156,6 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
                 'a.price',
                 's.name AS store',
                 'st.quantity AS stock_quantity',
-                'st.tracking_mode AS stock_tracking_mode',
-                'st.confidence AS stock_confidence',
-                'st.uncertainty AS stock_uncertainty',
-                'st.min_quantity AS stock_min_quantity',
-                'st.max_quantity AS stock_max_quantity',
-                'st.level AS stock_level',
-                'st.reference_quantity AS stock_reference_quantity',
-                'st.observed_at AS stock_observed_at',
-                'st.observed_quantity AS stock_observed_quantity',
-                'st.inferred_count AS stock_inferred_count',
-                'st.inferred_flow AS stock_inferred_flow',
                 'MIN(sli.id) AS shopping_list_item_id',
             )
             ->from(table: 'article', alias: 'a')
@@ -179,31 +164,7 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
             ->leftJoin('a', 'shopping_list_item', 'sli', 'sli.article_id = a.id')
             ->where('a.id IN (:articleIds)')
             ->setParameter(key: 'articleIds', value: array_keys($quantities), type: ArrayParameterType::STRING)
-            ->groupBy(
-                'a.id',
-                'a.name',
-                'a.emoji',
-                'a.image',
-                'a.brand',
-                'a.base_unit',
-                'a.pack_unit',
-                'a.diary_unit',
-                'a.recipe_unit',
-                'a.price',
-                's.name',
-                'st.quantity',
-                'st.tracking_mode',
-                'st.confidence',
-                'st.uncertainty',
-                'st.min_quantity',
-                'st.max_quantity',
-                'st.level',
-                'st.reference_quantity',
-                'st.observed_at',
-                'st.observed_quantity',
-                'st.inferred_count',
-                'st.inferred_flow',
-            )
+            ->groupBy('a.id', 'a.name', 'a.emoji', 'a.image', 'a.brand', 'a.base_unit', 'a.pack_unit', 'a.diary_unit', 'a.recipe_unit', 'a.price', 's.name', 'st.quantity')
             ->orderBy(sort: 'a.name', order: 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
@@ -213,12 +174,9 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
 
         foreach ($rows as $row) {
             $pack = $this->resolvePurchaseUnit(row: $row, equivalences: $equivalences[$row['id']] ?? []);
-            $estimate = self::estimateOf(row: $row);
-            $need = StockNeed::assess(
-                estimate: $estimate,
-                neededQuantity: $quantities[$row['id']],
-                packSize: $pack->size,
-            );
+
+            $stock = null !== $row['stock_quantity'] ? (float) $row['stock_quantity'] : 0.0;
+            $missing = max(0.0, $quantities[$row['id']] - $stock);
 
             $needs[] = new DiaryShoppingNeedView(
                 articleId: $row['id'],
@@ -228,47 +186,18 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
                 brand: $row['brand'],
                 store: $row['store'],
                 price: null !== $row['price'] ? (float) $row['price'] : null,
-                quantity: round(num: $need->neededQuantity, precision: 1),
-                stockQuantity: round(num: $estimate->quantity, precision: 1),
-                missingQuantity: round(num: $need->deficit, precision: 1),
+                quantity: round(num: $quantities[$row['id']], precision: 1),
+                stockQuantity: round(num: $stock, precision: 1),
+                missingQuantity: round(num: $missing, precision: 1),
                 baseUnit: $row['base_unit'] ?? 'g',
                 packUnit: $pack->unit,
                 packSize: $pack->size,
-                packs: $need->packs,
+                packs: $pack->packsFor(baseQuantity: $missing),
                 inShoppingList: null !== $row['shopping_list_item_id'],
-                trackingMode: $estimate->trackingMode->value,
-                stockConfidence: $estimate->confidence,
-                stockMinQuantity: null !== $estimate->minQuantity ? round(num: $estimate->minQuantity, precision: 1) : null,
-                stockMaxQuantity: null !== $estimate->maxQuantity ? round(num: $estimate->maxQuantity, precision: 1) : null,
-                stockLevel: $estimate->level->value,
-                sufficiency: $need->sufficiency->value,
-                safeMissingQuantity: round(num: $need->safeDeficit, precision: 1),
-                safePacks: $need->safePacks,
             );
         }
 
         return $needs;
-    }
-
-    /**
-     * @param array<string, mixed> $row
-     */
-    private static function estimateOf(array $row): StockEstimate
-    {
-        return new StockEstimate(
-            quantity: null !== $row['stock_quantity'] ? (float) $row['stock_quantity'] : 0.0,
-            trackingMode: StockTrackingMode::fromValue(value: $row['stock_tracking_mode'] ?? null),
-            confidence: null !== $row['stock_confidence'] ? (float) $row['stock_confidence'] : 0.0,
-            uncertainty: null !== $row['stock_uncertainty'] ? (float) $row['stock_uncertainty'] : null,
-            minQuantity: null !== $row['stock_min_quantity'] ? (float) $row['stock_min_quantity'] : null,
-            maxQuantity: null !== $row['stock_max_quantity'] ? (float) $row['stock_max_quantity'] : null,
-            level: StockLevel::tryFrom(value: (string) ($row['stock_level'] ?? '')) ?? StockLevel::UNKNOWN,
-            referenceQuantity: null !== $row['stock_reference_quantity'] ? (float) $row['stock_reference_quantity'] : null,
-            observedAt: null !== $row['stock_observed_at'] ? new \DateTime(datetime: (string) $row['stock_observed_at']) : null,
-            observedQuantity: null !== $row['stock_observed_quantity'] ? (float) $row['stock_observed_quantity'] : null,
-            inferredCount: (int) ($row['stock_inferred_count'] ?? 0),
-            inferredFlow: (float) ($row['stock_inferred_flow'] ?? 0.0),
-        );
     }
 
     /**

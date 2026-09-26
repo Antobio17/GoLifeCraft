@@ -22,7 +22,6 @@ import { StockViewService } from "@nutrition/pantry/stock/application/services/s
 import { ArticleStockView } from "@nutrition/pantry/stock/domain/models/article-stock-view.model";
 import { Article } from "@nutrition/catalog/article/domain/models/article.model";
 import { StockUnitMode } from "@nutrition/pantry/stock/domain/models/stock-unit-mode.model";
-import { StockCorrectionKind } from "@nutrition/pantry/stock/domain/models/stock-correction-kind.model";
 import { StockLevel } from "@nutrition/pantry/stock/domain/models/stock-level.model";
 import { StockTrackingMode } from "@nutrition/pantry/stock/domain/models/stock-tracking-mode.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -165,7 +164,6 @@ export class GetArticleComponent {
   savingStock = signal(false);
   savingTracking = signal(false);
   showStockEditor = signal(false);
-  correctionKind = signal<StockCorrectionKind>(StockCorrectionKind.Measured);
   correctionFraction = signal<number | null>(null);
   trackingMode = signal<StockTrackingMode>(StockTrackingMode.Approximate);
   locations = signal<PantryLocation[]>([]);
@@ -226,26 +224,9 @@ export class GetArticleComponent {
   stockLevelLabel = computed<string>(() => {
     const stock = this.stock();
 
-    if (null === stock || !stock.tracked) return "";
+    if (null === stock || StockLevel.Unknown === stock.level) return "";
 
     return this.t(`getArticle.stock.level.${stock.level}`);
-  });
-  stockConfidenceLabel = computed<string>(() =>
-    this.t("getArticle.stock.confidence"),
-  );
-  stockConfidencePercent = computed<number | null>(() => {
-    const stock = this.stock();
-
-    if (null === stock || !stock.estimated) return null;
-
-    return stock.confidencePercent;
-  });
-  canConfirmCorrection = computed<boolean>(() => {
-    if (StockCorrectionKind.Fraction === this.correctionKind()) {
-      return null !== this.correctionFraction();
-    }
-
-    return null !== this.stockDraftBase();
   });
   stockDraftPreview = computed<string | null>(() => {
     const stock = this.stock();
@@ -299,16 +280,13 @@ export class GetArticleComponent {
   onClearStock(): void {
     if (this.savingStock()) return;
 
-    this.runCorrection(
-      this.correctArticleStockService.level(this.id(), StockLevel.Empty),
-    );
+    this.runCorrection(this.correctArticleStockService.measured(this.id(), 0));
   }
 
   onOpenStockEditor(): void {
     const stock = this.stock();
     if (null === stock) return;
 
-    this.correctionKind.set(StockCorrectionKind.Measured);
     this.correctionFraction.set(null);
     this.trackingMode.set(stock.trackingMode);
     this.stockDraftMode.set(
@@ -327,7 +305,6 @@ export class GetArticleComponent {
 
     if (null === stock || !stock.hasPack) return;
 
-    this.correctionKind.set(StockCorrectionKind.Fraction);
     this.correctionFraction.set(fraction);
     this.stockDraft.set(
       this.draftText(this.inDraftUnit(stock, stock.packSize * fraction)),
@@ -402,7 +379,6 @@ export class GetArticleComponent {
 
   onStockDraftChange(value: string): void {
     this.stockDraft.set(value);
-    this.correctionKind.set(StockCorrectionKind.Measured);
     this.correctionFraction.set(null);
   }
 
@@ -475,12 +451,10 @@ export class GetArticleComponent {
   }
 
   private buildCorrection(): Observable<void> | null {
-    if (StockCorrectionKind.Fraction === this.correctionKind()) {
-      const fraction = this.correctionFraction();
+    const fraction = this.correctionFraction();
 
-      return null === fraction
-        ? null
-        : this.correctArticleStockService.fraction(this.id(), fraction);
+    if (null !== fraction) {
+      return this.correctArticleStockService.fraction(this.id(), fraction);
     }
 
     const base = this.stockDraftBase();

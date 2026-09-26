@@ -63,87 +63,83 @@ test.describe("catálogo", () => {
     await expect(article.purchase).toBeVisible();
   });
 
-  test("el detalle enseña el nivel y la fiabilidad del stock estimado", async ({
-    page,
-  }) => {
-    const articles = new ArticlesPage(page);
-    const article = new ArticlePage(page);
+  test.describe("stock del artículo", () => {
+    test.describe.configure({ mode: "serial" });
+    test.beforeEach(({}, testInfo) => {
+      test.skip(
+        "functional-desktop" !== testInfo.project.name,
+        "corrigen el stock del mismo artículo de la semilla y chocarían entre proyectos",
+      );
+    });
 
-    await articles.goto();
-    await articles.open(SEED.articles.yogur.name);
+    test("tocar media caja la convierte en cantidad usando el envase", async ({
+      page,
+    }) => {
+      const articles = new ArticlesPage(page);
+      const article = new ArticlePage(page);
 
-    await expect(article.stock).toBeVisible();
-    await expect(article.stockLevel).toBeVisible();
-    await expect(article.stockConfidence).toBeVisible();
-  });
+      await articles.goto();
+      await articles.open(SEED.articles.yogur.name);
 
-  test("tocar media caja la convierte en cantidad usando el envase", async ({
-    page,
-  }) => {
-    const articles = new ArticlesPage(page);
-    const article = new ArticlePage(page);
+      await article.openStockEditor();
+      await article.chooseQuickAmount("La mitad");
 
-    await articles.goto();
-    await articles.open(SEED.articles.yogur.name);
+      await expect(article.stockAmount).toHaveValue("0.5");
 
-    await article.openStockEditor();
-    await article.chooseQuickAmount("La mitad");
+      await article.confirmStock();
 
-    await expect(article.stockAmount).toHaveValue("0.5");
+      await expect(article.stockLevel).toHaveText("A media");
+    });
 
-    await article.confirmStock();
+    test("tocar un cuarto deja el stock en el nivel bajo", async ({ page }) => {
+      const articles = new ArticlesPage(page);
+      const article = new ArticlePage(page);
 
-    await expect(article.stockLevel).toHaveText("A media");
-  });
+      await articles.goto();
+      await articles.open(SEED.articles.yogur.name);
 
-  test("tocar un cuarto deja el stock en el nivel bajo", async ({ page }) => {
-    const articles = new ArticlesPage(page);
-    const article = new ArticlePage(page);
+      await article.openStockEditor();
+      await article.chooseQuickAmount("Un cuarto");
+      await article.confirmStock();
 
-    await articles.goto();
-    await articles.open(SEED.articles.yogur.name);
+      await expect(article.stockLevel).toHaveText("Queda poco");
+    });
 
-    await article.openStockEditor();
-    await article.chooseQuickAmount("Un cuarto");
-    await article.confirmStock();
+    test("la unidad del campo se cambia desde el propio campo", async ({
+      page,
+    }) => {
+      const articles = new ArticlesPage(page);
+      const article = new ArticlePage(page);
 
-    await expect(article.stockLevel).toHaveText("Queda poco");
-  });
+      await articles.goto();
+      await articles.open(SEED.articles.yogur.name);
 
-  test("la unidad del campo se cambia desde el propio campo", async ({
-    page,
-  }) => {
-    const articles = new ArticlesPage(page);
-    const article = new ArticlePage(page);
+      await article.openStockEditor();
+      await article.chooseQuickAmount("Entero");
+      await expect(article.stockAmount).toHaveValue("1");
 
-    await articles.goto();
-    await articles.open(SEED.articles.yogur.name);
+      await article.swapAmountUnit();
 
-    await article.openStockEditor();
-    await article.chooseQuickAmount("Entero");
-    await expect(article.stockAmount).toHaveValue("1");
+      await expect(article.stockAmount).not.toHaveValue("1");
+    });
 
-    await article.swapAmountUnit();
+    test("marcar un artículo como exacto deja de estimar su stock", async ({
+      page,
+    }) => {
+      const articles = new ArticlesPage(page);
+      const article = new ArticlePage(page);
 
-    await expect(article.stockAmount).not.toHaveValue("1");
-  });
+      await articles.goto();
+      await articles.open(SEED.articles.yogur.name);
 
-  test("marcar un artículo como exacto deja de estimar su stock", async ({
-    page,
-  }) => {
-    const articles = new ArticlesPage(page);
-    const article = new ArticlePage(page);
+      await article.openStockEditor();
+      await article.chooseTracking("Exacto");
 
-    await articles.goto();
-    await articles.open(SEED.articles.yogur.name);
+      await expect(article.stockConfidence).toHaveCount(0);
 
-    await article.openStockEditor();
-    await article.chooseTracking("Exacto");
-
-    await expect(article.stockConfidence).toHaveCount(0);
-
-    await article.chooseTracking("Aproximado");
-    await expect(article.stockConfidence).toBeVisible();
+      await article.chooseTracking("Aproximado");
+      await expect(article.stockConfidence).toBeVisible();
+    });
   });
 
   test("crear y borrar un artículo deja el catálogo como estaba", async ({

@@ -19,10 +19,7 @@ final readonly class InMemoryStockLedger implements StockLedger
         $anchor = self::lastCount(movements: $movements);
 
         $balance = null === $anchor ? 0.0 : $anchor->quantity;
-        $inferredFlow = 0.0;
         $inferredSquaredFlow = 0.0;
-        $inferredCount = 0;
-        $firstUnanchoredAt = null;
 
         foreach ($movements as $movement) {
             if (!self::countsAfterAnchor(movement: $movement, anchor: $anchor)) {
@@ -30,26 +27,19 @@ final readonly class InMemoryStockLedger implements StockLedger
             }
 
             $balance += $movement->quantity;
-            $firstUnanchoredAt = self::earliest(current: $firstUnanchoredAt, candidate: $movement->effectiveAt);
 
-            if (!$movement->evidence()->blursQuantity()) {
+            if (!$movement->isInferred()) {
                 continue;
             }
 
-            $inferredFlow += abs($movement->quantity);
             $inferredSquaredFlow += $movement->quantity * $movement->quantity;
-            ++$inferredCount;
         }
 
         return new StockLedgerSummary(
             balance: round(num: $balance, precision: StockMovement::QUANTITY_PRECISION),
             observedQuantity: $anchor?->quantity,
-            observedAt: $anchor?->effectiveAt,
             observedConfidence: $anchor?->statedConfidence(),
-            inferredFlow: $inferredFlow,
             inferredSquaredFlow: $inferredSquaredFlow,
-            inferredCount: $inferredCount,
-            firstUnanchoredAt: $firstUnanchoredAt,
         );
     }
 
@@ -82,15 +72,6 @@ final readonly class InMemoryStockLedger implements StockLedger
         }
 
         return null === $anchor || $movement->effectiveAt > $anchor->effectiveAt;
-    }
-
-    private static function earliest(?\DateTime $current, \DateTime $candidate): \DateTime
-    {
-        if (null === $current) {
-            return $candidate;
-        }
-
-        return $candidate < $current ? $candidate : $current;
     }
 
     private static function isLaterThan(StockMovement $movement, StockMovement $other): bool

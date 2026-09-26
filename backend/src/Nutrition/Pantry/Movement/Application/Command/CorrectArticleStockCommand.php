@@ -9,9 +9,8 @@ final readonly class CorrectArticleStockCommand implements Command
     public function __construct(
         public string $articleId,
         public string $kind,
-        public ?float $quantity,
+        public float $quantity,
         public ?string $unit,
-        public ?string $level,
         public ?string $effectiveAt,
         public string $correctedByUserId,
     ) {

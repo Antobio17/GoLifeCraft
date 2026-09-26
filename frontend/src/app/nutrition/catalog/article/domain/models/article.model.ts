@@ -1,3 +1,6 @@
+import { StockLevel } from "@nutrition/pantry/stock/domain/models/stock-level.model";
+import { StockTrackingMode } from "@nutrition/pantry/stock/domain/models/stock-tracking-mode.model";
+
 export interface ArticleEquivalence {
   unit: string;
   quantity: number;
@@ -11,14 +14,11 @@ export interface ArticleAttributes {
   equivalences: ArticleEquivalence[];
   packUnit: string | null;
   stock?: number;
-  trackingMode?: string;
+  trackingMode?: StockTrackingMode;
   stockConfidence?: number;
-  stockUncertainty?: number | null;
   stockMinQuantity?: number | null;
   stockMaxQuantity?: number | null;
-  stockLevel?: string;
-  stockReferenceQuantity?: number | null;
-  stockObservedAt?: string | null;
+  stockLevel?: StockLevel;
   stockLocationId?: string | null;
   stockLocationName?: string | null;
   price: number | null;

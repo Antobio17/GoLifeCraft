@@ -29,11 +29,6 @@ final class SetArticleStockTrackingController
             $this->handle(message: new SetArticleStockTrackingCommand(
                 articleId: $request->attributes->get(key: 'articleId'),
                 trackingMode: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'trackingMode'),
-                referenceQuantity: RequestExtractor::getFloatRequestValue(
-                    request: $request,
-                    fieldName: 'referenceQuantity',
-                    required: false,
-                ),
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
 

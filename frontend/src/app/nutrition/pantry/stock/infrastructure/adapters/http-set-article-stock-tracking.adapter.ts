@@ -13,13 +13,9 @@ export class HttpSetArticleStockTrackingAdapter extends SetArticleStockTrackingP
   setArticleStockTracking(
     articleId: string,
     trackingMode: StockTrackingMode,
-    referenceQuantity?: number,
   ): Observable<void> {
-    return this.http.put<void>(
-      this.apiUrl + "/" + articleId + "/tracking",
-      undefined === referenceQuantity
-        ? { trackingMode }
-        : { trackingMode, referenceQuantity },
-    );
+    return this.http.put<void>(this.apiUrl + "/" + articleId + "/tracking", {
+      trackingMode,
+    });
   }
 }
