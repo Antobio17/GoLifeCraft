@@ -76,7 +76,8 @@
   },
   "inventoryShift": {
     "morning": "Mañana",
-    "afternoon": "Tarde"
+    "afternoon": "Tarde",
+    "night": "Noche"
   },
   "inventoryStatus": {
     "draft": "En curso",

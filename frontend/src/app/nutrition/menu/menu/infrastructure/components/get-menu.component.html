@@ -114,25 +114,19 @@
       }
     </ds-split-view>
   } @else if (detail(); as menu) {
-    <ds-stack
-      direction="row"
-      justify="between"
-      align="center"
-      [gap]="'var(--ds-space-2)'"
+    <ds-screen-header
+      [sticky]="true"
+      [leading]="'back'"
+      [leadingLabel]="'getMenu.back' | t"
+      (leadingClick)="goBack()"
     >
-      <ds-icon-button
-        icon="chevronLeft"
-        variant="soft"
-        [size]="40"
-        [iconSize]="19"
-        [stroke]="2.4"
-        [radius]="'var(--ds-radius-lg)'"
-        [ariaLabel]="'getMenu.back' | t"
-        (clicked)="goBack()"
-      />
-
       @if (!isDraft()) {
-        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+        <ds-stack
+          slot="actions"
+          direction="row"
+          align="center"
+          [gap]="'var(--ds-space-2)'"
+        >
           <ds-button
             variant="primary"
             size="icon-lg"
@@ -180,7 +174,7 @@
           />
         </ds-stack>
       }
-    </ds-stack>
+    </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 0.85fr) minmax(0, 1fr)'">
       <ds-stack

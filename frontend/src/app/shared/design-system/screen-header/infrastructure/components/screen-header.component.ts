@@ -47,20 +47,22 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         </button>
       }
 
-      <div class="ds-screen-head__text">
-        @if (eyebrow) {
-          <span class="ds-screen-head__eyebrow">{{ eyebrow }}</span>
-        }
-        <h1
-          class="ds-screen-head__title"
-          [class.ds-screen-head__title--wrap]="wrapTitle"
-        >
-          {{ title }}
-        </h1>
-        @if (subtitle) {
-          <p class="ds-screen-head__subtitle">{{ subtitle }}</p>
-        }
-      </div>
+      @if (title) {
+        <div class="ds-screen-head__text">
+          @if (eyebrow) {
+            <span class="ds-screen-head__eyebrow">{{ eyebrow }}</span>
+          }
+          <h1
+            class="ds-screen-head__title"
+            [class.ds-screen-head__title--wrap]="wrapTitle"
+          >
+            {{ title }}
+          </h1>
+          @if (subtitle) {
+            <p class="ds-screen-head__subtitle">{{ subtitle }}</p>
+          }
+        </div>
+      }
 
       <div class="ds-screen-head__actions">
         <ng-content select="[slot=actions]"></ng-content>
@@ -168,6 +170,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       }
       .ds-screen-head__actions {
         flex: 0 0 auto;
+        margin-left: auto;
         display: flex;
         align-items: center;
         gap: var(--ds-space-2);

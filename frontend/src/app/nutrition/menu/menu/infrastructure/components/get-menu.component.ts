@@ -21,6 +21,7 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
@@ -116,6 +117,7 @@ type PickerTab = "product" | "recipe";
     HeadingComponent,
     ButtonComponent,
     IconButtonComponent,
+    ScreenHeaderComponent,
     EmojiTileComponent,
     TextInputComponent,
     NoteComponent,
