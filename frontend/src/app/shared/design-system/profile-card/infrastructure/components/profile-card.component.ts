@@ -70,8 +70,10 @@ import { ImagePickerComponent } from "@shared/design-system/image-picker/infrast
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--ds-primary);
-        color: var(--ds-on-primary);
+        box-sizing: border-box;
+        border: 1px solid var(--ds-primary-soft-border);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
         font-size: var(--ds-text-2xl);
