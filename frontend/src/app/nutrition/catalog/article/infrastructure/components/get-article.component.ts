@@ -231,7 +231,7 @@ export class GetArticleComponent {
   stockDraftPreview = computed<string | null>(() => {
     const stock = this.stock();
     const base = this.stockDraftBase();
-    if (null === stock || null === base) return null;
+    if (null === stock || null === base || !stock.hasPack) return null;
 
     return StockUnitMode.Pack === this.stockDraftMode()
       ? this.stockView.amountText(stock, base)

@@ -36,7 +36,7 @@ export class StockViewService {
       packs: context.packSize > 0 ? stock / context.packSize : 0,
       valueText: this.valueText(context, stock),
       mainText: context.hasPack ? packsText : baseText,
-      subText: context.hasPack ? baseText : (bandText ?? baseText),
+      subText: context.hasPack ? baseText : (bandText ?? ""),
       bandText: context.hasPack ? bandText : null,
       trackingMode: estimate.trackingMode,
       level: estimate.level,

@@ -33,7 +33,9 @@ import {
               <ds-icon name="pencil" [size]="13" class="ds-stk__pencil" />
             }
           </span>
-          <span class="ds-stk__sub">{{ subText }}</span>
+          @if (subText) {
+            <span class="ds-stk__sub">{{ subText }}</span>
+          }
         </button>
 
         @if (valueText) {
