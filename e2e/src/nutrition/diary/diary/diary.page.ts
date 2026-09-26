@@ -59,12 +59,22 @@ export class DiaryPage {
   }
 
   async previousDay(): Promise<void> {
-    await this.ds.click("diary-prev");
-    await waitForAppReady(this.page);
+    await this.moveDay("diary-prev");
   }
 
   async nextDay(): Promise<void> {
-    await this.ds.click("diary-next");
+    await this.moveDay("diary-next");
+  }
+
+  private async moveDay(testId: string): Promise<void> {
+    const dayLoaded = this.page.waitForResponse(
+      (response) =>
+        response.request().method() === "GET" &&
+        new URL(response.url()).pathname === "/api/v1/nutrition/diary",
+    );
+
+    await this.ds.click(testId);
+    await dayLoaded;
     await waitForAppReady(this.page);
   }
 
