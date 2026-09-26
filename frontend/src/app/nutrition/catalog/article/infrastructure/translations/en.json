@@ -77,7 +77,6 @@
       "edit": "Correct",
       "confidence": "CONFIDENCE",
       "level": {
-        "unknown": "Not tracked",
         "empty": "Empty",
         "low": "Running low",
         "medium": "Half way",
@@ -91,7 +90,7 @@
         "none": "Not tracked",
         "hint": {
           "exact": "For things counted one by one: eggs, yoghurts, cans. The number is taken at face value.",
-          "approximate": "For things nobody weighs: rice, pasta, meat, vegetables. The number is kept, inside a margin that widens as days and meals go by.",
+          "approximate": "For things nobody weighs: rice, pasta, meat, vegetables. The number is kept, inside a margin that widens with every meal logged, until you look again.",
           "none": "Not tracked. The amount is still kept, but no level is claimed and nothing is said about having enough."
         }
       },

@@ -34,11 +34,8 @@ final readonly class CorrectArticleStockCommandHandler
             kind: $command->kind,
             quantity: $command->quantity,
             unit: $command->unit,
-            level: $command->level,
+            pack: $pack,
         );
-
-        $declaredQuantity = $correction->declaredQuantity(pack: $pack);
-        $declaredUnit = $correction->declaredUnit(pack: $pack);
 
         $movementId = $this->stockMovementRepository->nextId();
 
@@ -46,15 +43,15 @@ final readonly class CorrectArticleStockCommandHandler
             id: $movementId,
             kind: StockMovement::KIND_ARTICLE,
             refId: $command->articleId,
-            type: $correction->movementType(),
+            type: $correction->movementType,
             effectiveAt: $this->effectiveAt(command: $command),
             quantity: $this->unitConverter->toBaseUnits(
                 articleId: $command->articleId,
-                quantity: $declaredQuantity,
-                unit: $declaredUnit,
+                quantity: $correction->quantity,
+                unit: $correction->unit,
             ),
-            originalQuantity: $declaredQuantity,
-            originalUnit: $declaredUnit,
+            originalQuantity: $correction->quantity,
+            originalUnit: $correction->unit,
             sourceKind: StockMovement::SOURCE_MANUAL,
             sourceId: $movementId,
             confidence: $correction->confidence,

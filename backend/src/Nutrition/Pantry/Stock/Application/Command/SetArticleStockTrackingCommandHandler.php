@@ -52,12 +52,6 @@ final readonly class SetArticleStockTrackingCommandHandler
 
         $articleStock->retrack(
             trackingMode: $trackingMode,
-            referenceQuantity: $command->referenceQuantity,
-            updatedByUserId: $command->updatedByUserId,
-            dateTimeGenerator: $this->dateTimeGenerator,
-        );
-
-        $articleStock->change(
             estimate: StockEstimate::from(
                 summary: $this->stockLedger->summaryOf(
                     kind: StockMovement::KIND_ARTICLE,
@@ -65,8 +59,6 @@ final readonly class SetArticleStockTrackingCommandHandler
                 ),
                 trackingMode: $trackingMode,
                 packSize: $pack->size,
-                previousReference: $articleStock->referenceQuantity,
-                now: $this->dateTimeGenerator->now(),
             ),
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,

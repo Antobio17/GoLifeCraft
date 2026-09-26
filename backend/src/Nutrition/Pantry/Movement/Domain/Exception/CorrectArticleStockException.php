@@ -15,24 +15,6 @@ final class CorrectArticleStockException extends BaseException
         );
     }
 
-    public static function unknownLevel(string $level): self
-    {
-        return new static(
-            title: 'Stock correction level is not valid.',
-            keyTranslation: 'stock.correction.level.invalid',
-            details: ['level' => $level]
-        );
-    }
-
-    public static function quantityIsRequired(string $kind): self
-    {
-        return new static(
-            title: 'This stock correction needs a quantity.',
-            keyTranslation: 'stock.correction.quantity.required',
-            details: ['kind' => $kind]
-        );
-    }
-
     public static function quantityCannotBeNegative(float $quantity): self
     {
         return new static(
@@ -51,12 +33,12 @@ final class CorrectArticleStockException extends BaseException
         );
     }
 
-    public static function packIsUnknown(string $kind): self
+    public static function packIsUnknown(): self
     {
         return new static(
             title: 'This article has no pack equivalence to measure a part of a pack against.',
             keyTranslation: 'stock.correction.pack.unknown',
-            details: ['kind' => $kind]
+            details: []
         );
     }
 

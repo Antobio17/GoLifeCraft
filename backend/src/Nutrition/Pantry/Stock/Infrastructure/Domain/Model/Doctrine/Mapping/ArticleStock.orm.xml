@@ -19,25 +19,11 @@
         <option name="default">0</option>
       </options>
     </field>
-    <field name="uncertainty" type="float" column="uncertainty" nullable="true"/>
     <field name="minQuantity" type="float" column="min_quantity" nullable="true"/>
     <field name="maxQuantity" type="float" column="max_quantity" nullable="true"/>
     <field name="level" type="string" column="level" length="16">
       <options>
         <option name="default">unknown</option>
-      </options>
-    </field>
-    <field name="referenceQuantity" type="float" column="reference_quantity" nullable="true"/>
-    <field name="observedAt" type="datetime" column="observed_at" nullable="true"/>
-    <field name="observedQuantity" type="float" column="observed_quantity" nullable="true"/>
-    <field name="inferredCount" type="integer" column="inferred_count">
-      <options>
-        <option name="default">0</option>
-      </options>
-    </field>
-    <field name="inferredFlow" type="float" column="inferred_flow">
-      <options>
-        <option name="default">0</option>
       </options>
     </field>
     <field name="createdAt" type="datetime" column="created_at"/>
@@ -47,9 +33,5 @@
     <unique-constraints>
       <unique-constraint name="uniq_article_stock_article_id" columns="article_id"/>
     </unique-constraints>
-    <indexes>
-      <index name="idx_article_stock_tracking_mode" columns="tracking_mode"/>
-      <index name="idx_article_stock_level" columns="level"/>
-    </indexes>
   </entity>
 </doctrine-mapping>

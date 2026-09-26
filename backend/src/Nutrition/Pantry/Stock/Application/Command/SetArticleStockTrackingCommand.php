@@ -9,7 +9,6 @@ final readonly class SetArticleStockTrackingCommand implements Command
     public function __construct(
         public string $articleId,
         public string $trackingMode,
-        public ?float $referenceQuantity,
         public string $updatedByUserId,
     ) {
     }

@@ -9,7 +9,7 @@ use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleNutritionFactsResu
 use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleResult;
 use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleSupermarketResult;
 use Nutrition\Catalog\Article\Domain\QueryModel\GetArticleNeedleDataQuery;
-use Nutrition\Pantry\Movement\Domain\Model\StockLevel;
+use Nutrition\Pantry\Stock\Domain\Model\StockLevel;
 use Nutrition\Pantry\Stock\Domain\Model\StockTrackingMode;
 use Shared\Shared\Shared\Domain\QueryModel\Dto\QueryRelationshipResult;
 
@@ -57,12 +57,9 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
                 'st.quantity AS stock_quantity',
                 'st.tracking_mode AS stock_tracking_mode',
                 'st.confidence AS stock_confidence',
-                'st.uncertainty AS stock_uncertainty',
                 'st.min_quantity AS stock_min_quantity',
                 'st.max_quantity AS stock_max_quantity',
                 'st.level AS stock_level',
-                'st.reference_quantity AS stock_reference_quantity',
-                'st.observed_at AS stock_observed_at',
                 'li.location_id AS stock_location_id',
                 'pl.name AS stock_location_name',
             )
@@ -97,12 +94,9 @@ final readonly class DoctrineGetArticleNeedleDataQuery implements GetArticleNeed
             stock: (float) ($result['stock_quantity'] ?? 0.0),
             trackingMode: StockTrackingMode::fromValue(value: $result['stock_tracking_mode'] ?? null)->value,
             stockConfidence: (float) ($result['stock_confidence'] ?? 0.0),
-            stockUncertainty: null !== $result['stock_uncertainty'] ? (float) $result['stock_uncertainty'] : null,
             stockMinQuantity: null !== $result['stock_min_quantity'] ? (float) $result['stock_min_quantity'] : null,
             stockMaxQuantity: null !== $result['stock_max_quantity'] ? (float) $result['stock_max_quantity'] : null,
-            stockLevel: (StockLevel::tryFrom(value: (string) ($result['stock_level'] ?? '')) ?? StockLevel::UNKNOWN)->value,
-            stockReferenceQuantity: null !== $result['stock_reference_quantity'] ? (float) $result['stock_reference_quantity'] : null,
-            stockObservedAt: null !== $result['stock_observed_at'] ? new \DateTime(datetime: $result['stock_observed_at'], timezone: $utc) : null,
+            stockLevel: $result['stock_level'] ?? StockLevel::UNKNOWN->value,
             stockLocationId: $result['stock_location_id'],
             stockLocationName: $result['stock_location_name'],
             price: null !== $result['price'] ? (float) $result['price'] : null,

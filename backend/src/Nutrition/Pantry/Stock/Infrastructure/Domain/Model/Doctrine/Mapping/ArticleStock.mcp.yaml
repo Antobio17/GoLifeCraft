@@ -29,7 +29,7 @@ fields:
       and never drift, like eggs, yoghurts or cans: the number is taken at face value.
       "approximate" is the default and is for things nobody weighs, like rice, pasta, meat or
       peanut butter: the number is carried along but surrounded by a band of doubt that widens
-      as meals are logged and as time passes with nobody looking. "none" is for things not
+      as meals are logged and batches are cooked, until somebody looks again. "none" is for things not
       worth tracking: the number is still kept but no level and no confidence are claimed.
       Change it with the "set_article_stock_tracking" tool.
     filterable: true
@@ -38,19 +38,11 @@ fields:
     type: float
     description: >-
       How much this estimate can be trusted, from 0 to 1. It is set by the last observation and
-      only ever falls from there: logging a meal or cooking moves the quantity but never raises
-      the confidence, and neither does buying. Only somebody looking at the shelf raises it,
+      only ever falls from there: every meal logged or batch cooked widens the doubt, and buying
+      moves the quantity without raising the confidence. Only somebody looking at the shelf raises it,
       through an inventory or a correction. Above 0.8 the number can be acted on; below 0.5 it
       is a guess and the shelf is worth a look. Always 1 on an "exact" article and 0 on a
       "none" one.
-    filterable: true
-    sortable: true
-  uncertainty:
-    writable: false
-    type: float
-    description: >-
-      Half the width of the band around the quantity, in base units, so the real amount is
-      believed to sit between minQuantity and maxQuantity. Null when the article is not tracked.
     filterable: true
     sortable: true
   minQuantity:
@@ -74,53 +66,11 @@ fields:
     writable: false
     enum: [unknown, empty, low, medium, high, full]
     description: >-
-      The quantity read as a word, against referenceQuantity: empty under 2% of it, low under
-      30%, medium under 65%, high under 100% and full at or over it. A quarter of a pack reads
-      as low and half of one as medium, so the words a person taps come back as the same words. It is there to be shown
-      and spoken, and it never replaces the quantity. "unknown" means the article is not
-      tracked or nothing is known about what a full one looks like. The same five words are
-      accepted back as a correction.
+      The quantity read as a word, against the size of the article's pack: empty under 2% of
+      it, low under 30%, medium under 65%, high under 100% and full at or over it. A quarter of
+      a pack reads as low and half of one as medium, so the fractions a person taps come back as
+      the words they expect. It is there to be shown and spoken, and it never replaces the
+      quantity. "unknown" means the article is not tracked or has no pack to be read against.
     filterable: true
-  referenceQuantity:
-    writable: false
-    type: float
-    description: >-
-      What "a full one" means for this article, in base units: the size of its pack when it has
-      one, otherwise the largest amount ever counted. It is what the level is read against, so
-      an article with neither a pack nor a single count has no level to show. Turning "half a
-      pack" into grams does not go through here: that is the pack equivalence's job. Pin it with
-      the "set_article_stock_tracking" tool when it has been learnt wrong.
-    filterable: true
-    sortable: true
-  observedAt:
-    writable: false
-    type: datetime
-    description: >-
-      When somebody last actually looked at this article, which is the moment the confidence was
-      last raised. Null when nobody ever has.
-    filterable: true
-    sortable: true
-  observedQuantity:
-    writable: false
-    type: float
-    description: >-
-      How much was there the last time somebody looked. Everything since is arithmetic on top
-      of this number.
-  inferredCount:
-    writable: false
-    type: integer
-    description: >-
-      How many movements have been applied on faith since that observation, meaning meals logged
-      and batches cooked. The more there are, the wider the band.
-    filterable: true
-    sortable: true
-  inferredFlow:
-    writable: false
-    type: float
-    description: >-
-      How much has moved on faith since that observation, in base units, counting both
-      directions.
-    filterable: true
-    sortable: true
 
 relations: {}

@@ -204,30 +204,12 @@ export class ArticleViewService {
 
     return {
       quantity: attributes.stock ?? 0,
-      trackingMode: this.trackingMode(attributes.trackingMode),
+      trackingMode: attributes.trackingMode ?? StockTrackingMode.Approximate,
       confidence: attributes.stockConfidence ?? 0,
-      uncertainty: attributes.stockUncertainty ?? null,
       minQuantity: attributes.stockMinQuantity ?? null,
       maxQuantity: attributes.stockMaxQuantity ?? null,
-      level: this.stockLevel(attributes.stockLevel),
-      referenceQuantity: attributes.stockReferenceQuantity ?? null,
+      level: attributes.stockLevel ?? StockLevel.Unknown,
     };
-  }
-
-  private trackingMode(value: string | undefined): StockTrackingMode {
-    const modes = Object.values(StockTrackingMode);
-
-    return modes.includes(value as StockTrackingMode)
-      ? (value as StockTrackingMode)
-      : StockTrackingMode.Approximate;
-  }
-
-  private stockLevel(value: string | undefined): StockLevel {
-    const levels = Object.values(StockLevel);
-
-    return levels.includes(value as StockLevel)
-      ? (value as StockLevel)
-      : StockLevel.Unknown;
   }
 
   private stockContext(

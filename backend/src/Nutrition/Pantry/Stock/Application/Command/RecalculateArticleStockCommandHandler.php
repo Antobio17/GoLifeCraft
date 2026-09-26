@@ -47,8 +47,6 @@ final readonly class RecalculateArticleStockCommandHandler
                 ),
                 trackingMode: $articleStock->tracking(),
                 packSize: $pack->size,
-                previousReference: $articleStock->referenceQuantity,
-                now: $this->dateTimeGenerator->now(),
             ),
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,

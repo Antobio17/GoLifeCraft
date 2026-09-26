@@ -7,7 +7,6 @@ use Nutrition\Pantry\Movement\Application\Command\CorrectArticleStockCommand;
 use Nutrition\Pantry\Movement\Application\Command\CorrectArticleStockCommandHandler;
 use Nutrition\Pantry\Movement\Domain\Exception\CorrectArticleStockException;
 use Nutrition\Pantry\Movement\Domain\Model\StockCorrection;
-use Nutrition\Pantry\Movement\Domain\Model\StockLevel;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Nutrition\Pantry\Movement\Infrastructure\Domain\Model\InMemory\InMemoryStockMovementRepository;
 use Nutrition\Pantry\Movement\Infrastructure\Domain\QueryModel\InMemory\InMemoryCorrectArticleStockNeedleDataQuery;
@@ -70,26 +69,9 @@ final class CorrectArticleStockCommandHandlerTest extends TestCase
         $this->assertSame(expected: 250.0, actual: $this->lastMovement()->quantity);
     }
 
-    public function testRunningLowBecomesASmallSliceOfThePackWithLittleConfidence(): void
-    {
-        $this->correct(kind: StockCorrection::KIND_LEVEL, level: StockLevel::LOW->value);
-
-        $movement = $this->lastMovement();
-
-        $this->assertSame(expected: 200.0, actual: $movement->quantity);
-        $this->assertSame(expected: StockCorrection::CONFIDENCE_LEVEL, actual: $movement->confidence);
-    }
-
-    public function testPlentyLeftBecomesMostOfThePack(): void
-    {
-        $this->correct(kind: StockCorrection::KIND_LEVEL, level: StockLevel::HIGH->value);
-
-        $this->assertSame(expected: 800.0, actual: $this->lastMovement()->quantity);
-    }
-
     public function testRunningOutIsTheOneStatementNobodyMisreads(): void
     {
-        $this->correct(kind: StockCorrection::KIND_LEVEL, level: StockLevel::EMPTY_LEVEL->value);
+        $this->correct(kind: StockCorrection::KIND_MEASURED, quantity: 0.0);
 
         $movement = $this->lastMovement();
 
@@ -136,9 +118,9 @@ final class CorrectArticleStockCommandHandlerTest extends TestCase
         $this->correct(kind: StockCorrection::KIND_FRACTION, quantity: 0.5, articleId: 'article-loose');
     }
 
-    public function testRunningOutIsAcceptedEvenWithoutAPackEquivalence(): void
+    public function testAnEmptyFractionIsAcceptedEvenWithoutAPackEquivalence(): void
     {
-        $this->correct(kind: StockCorrection::KIND_LEVEL, level: StockLevel::EMPTY_LEVEL->value, articleId: 'article-loose');
+        $this->correct(kind: StockCorrection::KIND_FRACTION, quantity: 0.0, articleId: 'article-loose');
 
         $this->assertSame(expected: 0.0, actual: $this->lastMovement(articleId: 'article-loose')->quantity);
     }
@@ -159,8 +141,7 @@ final class CorrectArticleStockCommandHandlerTest extends TestCase
 
     private function correct(
         string $kind,
-        ?float $quantity = null,
-        ?string $level = null,
+        float $quantity,
         string $articleId = 'article-1',
     ): void {
         ($this->handler)(new CorrectArticleStockCommand(
@@ -168,7 +149,6 @@ final class CorrectArticleStockCommandHandlerTest extends TestCase
             kind: $kind,
             quantity: $quantity,
             unit: null,
-            level: $level,
             effectiveAt: null,
             correctedByUserId: 'god-user-id',
         ));

@@ -3,9 +3,11 @@
 namespace Nutrition\Pantry\Movement\Infrastructure\Application\Console;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Nutrition\Pantry\Inventory\Domain\Model\Inventory;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Nutrition\Pantry\Movement\Domain\Service\StockLedger;
+use Nutrition\Pantry\Stock\Application\Command\RecalculateArticleStockCommand;
 use Ramsey\Uuid\Uuid;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -13,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final class RebuildStockLedgerCommand extends Command
 {
@@ -21,6 +24,8 @@ final class RebuildStockLedgerCommand extends Command
     public function __construct(
         private readonly TenantConnectionSwitcher $switcher,
         private readonly Connection $writerTenantConnection,
+        private readonly EntityManagerInterface $tenantEntityManager,
+        private readonly MessageBusInterface $messageBus,
         private readonly StockLedger $stockLedger,
         private readonly DateTimeGenerator $dateTimeGenerator,
     ) {
@@ -57,6 +62,7 @@ final class RebuildStockLedgerCommand extends Command
     private function rebuildTenant(string $dbname, OutputInterface $output): void
     {
         $this->switcher->switch(tenantId: $dbname);
+        $this->tenantEntityManager->clear();
 
         $nightShifts = $this->writerTenantConnection->update(
             table: 'inventory',
@@ -67,7 +73,7 @@ final class RebuildStockLedgerCommand extends Command
         $seeded = $this->seedOpeningCounts(kind: StockMovement::KIND_ARTICLE, table: 'article_stock', refColumn: 'article_id', quantityColumn: 'quantity')
             + $this->seedOpeningCounts(kind: StockMovement::KIND_RECIPE, table: 'recipe_stock', refColumn: 'recipe_id', quantityColumn: 'servings');
 
-        $rebuilt = $this->rebuildProjection(kind: StockMovement::KIND_ARTICLE, table: 'article_stock', refColumn: 'article_id', quantityColumn: 'quantity')
+        $rebuilt = $this->recalculateArticleStocks()
             + $this->rebuildProjection(kind: StockMovement::KIND_RECIPE, table: 'recipe_stock', refColumn: 'recipe_id', quantityColumn: 'servings');
 
         $output->writeln(messages: sprintf(
@@ -143,6 +149,20 @@ final class RebuildStockLedgerCommand extends Command
         }
 
         return $rebuilt;
+    }
+
+    private function recalculateArticleStocks(): int
+    {
+        $rows = $this->stockRows(table: 'article_stock', refColumn: 'article_id', quantityColumn: 'quantity');
+
+        foreach ($rows as $row) {
+            $this->messageBus->dispatch(new RecalculateArticleStockCommand(
+                articleId: $row['ref_id'],
+                updatedByUserId: self::SYSTEM_USER_ID,
+            ));
+        }
+
+        return count($rows);
     }
 
     /**
