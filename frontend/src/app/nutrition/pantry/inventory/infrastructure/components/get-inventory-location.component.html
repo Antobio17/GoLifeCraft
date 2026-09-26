@@ -21,6 +21,7 @@
 
   @if (!loading() && location(); as inventoryLocation) {
     <ds-screen-header
+      [sticky]="true"
       [leading]="'back'"
       [leadingLabel]="'getInventoryLocation.back' | t"
       [eyebrow]="eyebrow()"

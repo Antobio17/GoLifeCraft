@@ -52,6 +52,7 @@
     />
   } @else if (detail(); as d) {
     <ds-screen-header
+      [sticky]="true"
       leading="back"
       [leadingLabel]="'getGlobalArticle.back' | t"
       [eyebrow]="d.category"

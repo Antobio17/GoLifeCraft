@@ -28,6 +28,7 @@
     </ds-split-view>
   } @else if (recipe(); as detail) {
     <ds-screen-header
+      [sticky]="true"
       [leading]="'back'"
       [leadingLabel]="'getProductionRecipe.back' | t"
       [eyebrow]="statusLabel()"
