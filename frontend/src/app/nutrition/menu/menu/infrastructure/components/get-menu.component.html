@@ -31,6 +31,16 @@
           height="2.5rem"
           radius="var(--ds-radius-lg)"
         />
+        <ds-skeleton-line
+          width="2.5rem"
+          height="2.5rem"
+          radius="var(--ds-radius-lg)"
+        />
+        <ds-skeleton-line
+          width="2.5rem"
+          height="2.5rem"
+          radius="var(--ds-radius-lg)"
+        />
       </ds-stack>
     </ds-stack>
 
@@ -102,15 +112,6 @@
           />
         </ds-stack>
       }
-
-      <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-        <ds-stack [grow]="true">
-          <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
-        </ds-stack>
-        <ds-stack [grow]="true">
-          <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
-        </ds-stack>
-      </ds-stack>
     </ds-split-view>
   } @else if (detail(); as menu) {
     <ds-stack
@@ -132,6 +133,25 @@
 
       @if (!isDraft()) {
         <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+          <ds-button
+            variant="primary"
+            size="icon-lg"
+            icon="download"
+            [iconSize]="19"
+            [disabled]="currentDayEmpty()"
+            [ariaLabel]="primaryLabel()"
+            (clicked)="onPrimaryAction()"
+          />
+
+          <ds-button
+            variant="outline"
+            size="icon-lg"
+            icon="cart"
+            [iconSize]="19"
+            [ariaLabel]="'getMenu.actions.shop' | t"
+            (clicked)="onShop()"
+          />
+
           <ds-button
             variant="secondary"
             size="icon-lg"
@@ -341,30 +361,6 @@
         >
           {{ "getMenu.actions.save" | t }}
         </ds-button>
-      } @else {
-        <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-          <ds-stack [grow]="true">
-            <ds-button
-              variant="primary"
-              icon="download"
-              [fullWidth]="true"
-              [disabled]="currentDayEmpty()"
-              (clicked)="onPrimaryAction()"
-            >
-              {{ primaryLabel() }}
-            </ds-button>
-          </ds-stack>
-          <ds-stack [grow]="true">
-            <ds-button
-              variant="outline"
-              icon="cart"
-              [fullWidth]="true"
-              (clicked)="onShop()"
-            >
-              {{ "getMenu.actions.shop" | t }}
-            </ds-button>
-          </ds-stack>
-        </ds-stack>
       }
     </ds-split-view>
   } @else {
