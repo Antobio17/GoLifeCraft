@@ -6,7 +6,7 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
   selector: "ds-diary-summary",
   imports: [ProgressRingComponent],
   template: `
-    <div class="daysum">
+    <div class="daysum" [class.daysum--dense]="dense">
       <div class="daysum__head">
         <span class="daysum__eyebrow">{{ eyebrow }}</span>
         <span class="daysum__count">{{ countLabel }}</span>
@@ -208,6 +208,73 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
       .macro__fill--carbs {
         background: var(--ds-data-2);
       }
+      @media (max-width: 767.98px) {
+        .daysum--dense {
+          display: grid;
+          grid-template-columns: auto minmax(0, 1fr) auto;
+          grid-template-areas:
+            "ring kcal count"
+            "macros macros macros";
+          align-items: center;
+          column-gap: var(--ds-space-3);
+          padding: var(--ds-space-3) var(--ds-space-4);
+        }
+        .daysum--dense .daysum__head,
+        .daysum--dense .daysum__main {
+          display: contents;
+        }
+        .daysum--dense .daysum__eyebrow {
+          display: none;
+        }
+        .daysum--dense .daysum__count {
+          grid-area: count;
+          align-self: start;
+          font-size: var(--ds-text-xs);
+        }
+        .daysum--dense .daysum__ring {
+          grid-area: ring;
+        }
+        .daysum--dense .daysum__ring ::ng-deep .ring {
+          width: 3rem;
+          height: 3rem;
+        }
+        .daysum--dense .daysum__ring-value {
+          font-size: var(--ds-text-xs);
+        }
+        .daysum--dense .daysum__kcal {
+          grid-area: kcal;
+          min-width: 0;
+        }
+        .daysum--dense .daysum__kcal-value {
+          font-size: var(--ds-text-xl);
+        }
+        .daysum--dense .daysum__kcal-goal {
+          font-size: var(--ds-text-sm);
+        }
+        .daysum--dense .daysum__kcal-foot {
+          margin-top: 0.125rem;
+          font-size: var(--ds-text-xs);
+        }
+        .daysum--dense .daysum__macros {
+          grid-area: macros;
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: var(--ds-space-3);
+          margin-top: var(--ds-space-3);
+        }
+        .daysum--dense .macro__top {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.125rem;
+        }
+        .daysum--dense .macro__label,
+        .daysum--dense .macro__value {
+          font-size: var(--ds-text-xs);
+        }
+        .daysum--dense .macro__track {
+          height: 0.25rem;
+        }
+      }
       @media (min-width: 768px) {
         .daysum {
           padding: var(--ds-space-5) var(--ds-space-6);
@@ -229,4 +296,5 @@ export class DiarySummaryComponent {
   @Input() footnote = "";
   @Input() over = false;
   @Input() macros: MacroGoal[] = [];
+  @Input() dense = false;
 }

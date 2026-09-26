@@ -17,10 +17,11 @@
       (action)="goToDiary()"
     />
     @if (summaryLoading()) {
-      <ds-skeleton-summary macros="bars" />
+      <ds-skeleton-summary macros="bars" [dense]="true" />
     } @else if (summary(); as diary) {
       <ds-diary-summary
         data-testid="dashboard-summary"
+        [dense]="true"
         [eyebrow]="'dashboard.summary.total' | t"
         [countLabel]="view.countLabel(diary.entryCount)"
         [percent]="diary.percent"
