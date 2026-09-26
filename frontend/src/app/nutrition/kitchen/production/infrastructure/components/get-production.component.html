@@ -24,6 +24,7 @@
     />
   } @else if (production(); as detail) {
     <ds-screen-header
+      [sticky]="true"
       [leading]="'back'"
       [leadingLabel]="'getProduction.back' | t"
       [eyebrow]="statusLabel()"

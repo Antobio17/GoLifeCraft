@@ -22,6 +22,7 @@
 
   @if (!loading() && attributes(); as ticket) {
     <ds-screen-header
+      [sticky]="true"
       [leading]="'back'"
       [leadingLabel]="'getTicket.back' | t"
       [eyebrow]="'getTicket.eyebrow' | t"

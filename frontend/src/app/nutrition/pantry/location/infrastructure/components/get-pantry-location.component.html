@@ -22,6 +22,7 @@
 
   @if (!loading() && attributes(); as location) {
     <ds-screen-header
+      [sticky]="true"
       [leading]="'back'"
       [leadingLabel]="'getPantryLocation.back' | t"
       [eyebrow]="'getPantryLocation.eyebrow' | t"

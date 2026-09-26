@@ -38,6 +38,7 @@
     </ds-split-view>
   } @else if (attributes(); as recipe) {
     <ds-screen-header
+      [sticky]="true"
       [leading]="'back'"
       [leadingLabel]="'getRecipe.back' | t"
       [eyebrow]="recipe.category"
