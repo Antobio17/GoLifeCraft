@@ -109,9 +109,9 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         border-radius: var(--ds-radius-pill);
       }
       .ds-image-picker__trigger.is-placeholder {
-        border: none;
-        background: var(--ds-primary);
-        color: var(--ds-on-primary);
+        border: 1px solid var(--ds-primary-soft-border);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
       }
       .ds-image-picker__placeholder {
         font-family: var(--ds-font-display);
