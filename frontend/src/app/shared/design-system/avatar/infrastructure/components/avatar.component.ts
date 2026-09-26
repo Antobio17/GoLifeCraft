@@ -2,7 +2,13 @@ import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-avatar",
-  template: `<span class="ds-avatar">{{ initial }}</span>`,
+  template: `<span class="ds-avatar">
+    @if (imageUrl) {
+      <img class="ds-avatar__image" [src]="imageUrl" alt="" />
+    } @else {
+      {{ initial }}
+    }
+  </span>`,
   styles: [
     `
       :host {
@@ -23,6 +29,13 @@ import { Component, Input } from "@angular/core";
         font-family: var(--ds-font-display);
         font-weight: 800;
         font-size: var(--ds-avatar-font, var(--ds-text-lg));
+        overflow: hidden;
+      }
+      .ds-avatar__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
       }
       :host-context([data-theme="dark"]) .ds-avatar {
         font-weight: 700;
@@ -36,4 +49,5 @@ import { Component, Input } from "@angular/core";
 export class AvatarComponent {
   @Input() initial = "";
   @Input() size = 40;
+  @Input() imageUrl: string | null = null;
 }

@@ -34,6 +34,21 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyAvatarController:
+    class: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyAvatarController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Authorization\User\User\Infrastructure\UI\API\Controller\GetMyAvatarController:
+    class: Authorization\User\User\Infrastructure\UI\API\Controller\GetMyAvatarController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $imageStorageService: '@Shared\Tool\Tool\Domain\Service\ImageStorageService'
+    tags:
+      - { name: controller.service_arguments }
+
   Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyVisualPreferenceController:
     class: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyVisualPreferenceController
     arguments:

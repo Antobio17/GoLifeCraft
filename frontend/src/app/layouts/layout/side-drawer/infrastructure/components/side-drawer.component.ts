@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { ViewportService } from "@shared/viewport/application/services/viewport.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
+import { MyAvatarService } from "@shared/my-avatar/application/services/my-avatar.service";
 import { ThemeService } from "@shared/theme/application/services/theme.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
@@ -42,6 +43,7 @@ export class SideDrawerComponent {
   private navSectionsService = inject(DrawerNavSectionsService);
   private themeService = inject(ThemeService);
   private authSessionService = inject(AuthSessionService);
+  private myAvatarService = inject(MyAvatarService);
   private router = inject(Router);
   private viewport = inject(ViewportService);
 
@@ -54,6 +56,8 @@ export class SideDrawerComponent {
   readonly sections = computed(() =>
     this.navSectionsService.getSections(this.isGod()),
   );
+
+  readonly avatarUrl = this.myAvatarService.url;
 
   readonly email = computed(() => this.authSessionService.getUsername());
 

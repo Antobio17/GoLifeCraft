@@ -7,6 +7,7 @@ import { ImpersonationProvider } from "@shared/auth/infrastructure/providers/imp
 import { AggregateImageProviders } from "@shared/aggregate-image/infrastructure/providers/aggregate-image.providers";
 import { VisualPreferenceProviders } from "@shared/visual-preference/infrastructure/providers/visual-preference.provider";
 import { EntityVisualProviders } from "@shared/entity-visual/infrastructure/providers/entity-visual.providers";
+import { MyAvatarProviders } from "@shared/my-avatar/infrastructure/providers/my-avatar.providers";
 
 export type ProviderModule = {
   getProviders(): Provider[];
@@ -22,6 +23,7 @@ export class GlobalProviders {
     AggregateImageProviders,
     VisualPreferenceProviders,
     EntityVisualProviders,
+    MyAvatarProviders,
   ];
 
   static getProviders(): Provider[] {

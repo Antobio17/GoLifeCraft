@@ -63,6 +63,7 @@ export class MainLayoutComponent implements OnInit {
         this.authSessionService.setUserIdentity(
           profile.data.attributes.name,
           profile.data.attributes.lastname,
+          profile.data.attributes.avatar,
         ),
     });
   }

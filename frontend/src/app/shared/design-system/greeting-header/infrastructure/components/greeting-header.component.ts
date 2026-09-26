@@ -16,7 +16,11 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         [attr.aria-label]="avatarLabel"
         (click)="avatarClick.emit()"
       >
-        {{ initial }}
+        @if (imageUrl) {
+          <img class="dash__avatar-image" [src]="imageUrl" alt="" />
+        } @else {
+          {{ initial }}
+        }
       </button>
     </header>
   `,
@@ -72,7 +76,14 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         font-family: var(--ds-font-display);
         font-weight: 800;
         font-size: var(--ds-text-lg);
+        overflow: hidden;
         transition: transform var(--ds-dur-2) var(--ds-ease-out);
+      }
+      .dash__avatar-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
       }
       .dash__avatar:hover {
         transform: scale(1.05);
@@ -102,6 +113,7 @@ export class GreetingHeaderComponent {
   @Input() greeting = "";
   @Input() name = "";
   @Input() initial = "";
+  @Input() imageUrl: string | null = null;
   @Input() avatarLabel = "";
   @Output() avatarClick = new EventEmitter<void>();
 }

@@ -2,6 +2,7 @@
 
 namespace Authorization\User\User\Domain\Model;
 
+use Authorization\User\User\Domain\Event\MyAvatarChanged;
 use Authorization\User\User\Domain\Event\MyThemeChanged;
 use Authorization\User\User\Domain\Event\MyVisualPreferenceChanged;
 use Authorization\User\User\Domain\Event\UserAccessGranted;
@@ -65,6 +66,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
         public ?array $visualPreferences = null,
         public array $roles = [],
         public bool $emailVerified = false,
+        public ?string $avatar = null,
     ) {
     }
 
@@ -115,6 +117,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
             emailVerified: $user->emailVerified,
             theme: $user->theme,
             visualPreferences: $user->visualPreferences,
+            avatar: $user->avatar,
             createdAt: $user->createdAt,
             updatedAt: $user->updatedAt,
             createdByUserId: $user->createdByUserId,
@@ -149,6 +152,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
             emailVerified: $this->emailVerified,
             theme: $this->theme,
             visualPreferences: $this->visualPreferences,
+            avatar: $this->avatar,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -184,6 +188,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
             emailVerified: $this->emailVerified,
             theme: $this->theme,
             visualPreferences: $this->visualPreferences,
+            avatar: $this->avatar,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -219,6 +224,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
             emailVerified: $this->emailVerified,
             theme: $this->theme,
             visualPreferences: $this->visualPreferences,
+            avatar: $this->avatar,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -244,6 +250,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
             emailVerified: $this->emailVerified,
             theme: $this->theme,
             visualPreferences: $this->visualPreferences,
+            avatar: $this->avatar,
             createdAt: $this->createdAt,
             updatedAt: $this->updatedAt,
             createdByUserId: $this->createdByUserId,
@@ -300,6 +307,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 emailVerified: $this->emailVerified,
                 theme: $this->theme,
                 visualPreferences: $this->visualPreferences,
+                avatar: $this->avatar,
                 createdAt: $this->createdAt,
                 updatedAt: $this->updatedAt,
                 createdByUserId: $this->createdByUserId,
@@ -334,6 +342,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 emailVerified: $this->emailVerified,
                 theme: $this->theme,
                 visualPreferences: $this->visualPreferences,
+                avatar: $this->avatar,
                 createdAt: $this->createdAt,
                 updatedAt: $this->updatedAt,
                 createdByUserId: $this->createdByUserId,
@@ -372,6 +381,42 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 emailVerified: $this->emailVerified,
                 theme: $this->theme,
                 visualPreferences: $this->visualPreferences,
+                avatar: $this->avatar,
+                createdAt: $this->createdAt,
+                updatedAt: $this->updatedAt,
+                createdByUserId: $this->createdByUserId,
+                updatedByUserId: $this->updatedByUserId,
+            )
+        );
+    }
+
+    public function changeAvatar(
+        ?string $avatar,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->avatar = $avatar;
+        $this->updatedByUserId = $updatedByUserId;
+        $this->updatedAt = $now;
+
+        $this->record(
+            event: new MyAvatarChanged(
+                aggregateId: $this->id,
+                occurredOn: $now,
+                username: $this->username,
+                tenantId: $this->tenantId,
+                email: $this->email,
+                name: $this->name,
+                lastname: $this->lastname,
+                role: $this->role,
+                roles: $this->roles,
+                isActive: $this->isActive,
+                emailVerified: $this->emailVerified,
+                theme: $this->theme,
+                visualPreferences: $this->visualPreferences,
+                avatar: $this->avatar,
                 createdAt: $this->createdAt,
                 updatedAt: $this->updatedAt,
                 createdByUserId: $this->createdByUserId,
@@ -433,6 +478,7 @@ class User extends Aggregate implements UserInterface, PasswordAuthenticatedUser
                 emailVerified: $this->emailVerified,
                 theme: $this->theme,
                 visualPreferences: $this->visualPreferences,
+                avatar: $this->avatar,
                 createdAt: $this->createdAt,
                 updatedAt: $this->updatedAt,
                 createdByUserId: $this->createdByUserId,

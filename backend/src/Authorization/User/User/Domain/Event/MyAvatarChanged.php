@@ -4,7 +4,7 @@ namespace Authorization\User\User\Domain\Event;
 
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
-final readonly class MyThemeChanged extends DomainEvent
+final readonly class MyAvatarChanged extends DomainEvent
 {
     /**
      * @param string[]                   $roles
@@ -35,6 +35,6 @@ final readonly class MyThemeChanged extends DomainEvent
 
     public function getName(): string
     {
-        return 'golifecraft.authorization.event.1.user.theme_changed';
+        return 'golifecraft.authorization.event.1.user.avatar_changed';
     }
 }

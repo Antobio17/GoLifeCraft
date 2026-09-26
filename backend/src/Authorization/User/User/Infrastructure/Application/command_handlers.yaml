@@ -27,6 +27,16 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
+  Authorization\User\User\Application\Command\ChangeMyAvatar\ChangeMyAvatarCommandHandler:
+    class: Authorization\User\User\Application\Command\ChangeMyAvatar\ChangeMyAvatarCommandHandler
+    arguments:
+      $userRepository: '@Authorization\User\User\Domain\Model\UserRepository'
+      $imageStorageService: '@Shared\Tool\Tool\Domain\Service\ImageStorageService'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Authorization\User\User\Application\Command\ChangeMyVisualPreference\ChangeMyVisualPreferenceCommandHandler:
     class: Authorization\User\User\Application\Command\ChangeMyVisualPreference\ChangeMyVisualPreferenceCommandHandler
     arguments:

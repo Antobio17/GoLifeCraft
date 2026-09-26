@@ -44,6 +44,7 @@ final readonly class DoctrineGetMyProfileNeedleDataQuery implements GetMyProfile
                 'u.tenant_id',
                 'u.theme',
                 'u.visual_preferences',
+                'u.avatar',
                 'u.created_at',
                 'u.updated_at',
             )
@@ -71,6 +72,7 @@ final readonly class DoctrineGetMyProfileNeedleDataQuery implements GetMyProfile
             tenantId: $result['tenant_id'],
             theme: $result['theme'] ?? User::THEME_DARK,
             visualPreferences: User::resolveVisualPreferences(stored: self::decodePreferences(value: $result['visual_preferences'])),
+            avatar: $result['avatar'],
             createdAt: new \DateTime(datetime: $result['created_at'], timezone: $utc),
             updatedAt: new \DateTime(datetime: $result['updated_at'], timezone: $utc),
         );

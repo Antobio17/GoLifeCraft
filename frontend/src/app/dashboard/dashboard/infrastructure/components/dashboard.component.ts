@@ -9,6 +9,7 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatePipe } from "@angular/common";
 import { Router } from "@angular/router";
+import { MyAvatarService } from "@shared/my-avatar/application/services/my-avatar.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
@@ -51,6 +52,7 @@ export class DashboardComponent implements OnInit {
   protected view = inject(DiaryViewService);
 
   private authSessionService = inject(AuthSessionService);
+  private myAvatarService = inject(MyAvatarService);
   private getDiaryService = inject(GetDiaryService);
   private getGymStatsService = inject(GetGymStatsService);
   private router = inject(Router);
@@ -77,6 +79,8 @@ export class DashboardComponent implements OnInit {
     const value = this.name().trim();
     return value ? value.charAt(0).toUpperCase() : "?";
   });
+
+  readonly avatarUrl = this.myAvatarService.url;
 
   readonly summary = signal<DiaryDayAttributes | null>(null);
 

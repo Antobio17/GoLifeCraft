@@ -18,6 +18,7 @@ final class GetMyProfileResult extends QueryAggregateResult
         public readonly string $tenantId,
         public readonly string $theme,
         public readonly array $visualPreferences,
+        public readonly ?string $avatar,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
     ) {

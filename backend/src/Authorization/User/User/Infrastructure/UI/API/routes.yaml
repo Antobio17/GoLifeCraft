@@ -31,6 +31,16 @@ change_my_theme:
   methods: [PUT]
   controller: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyThemeController
 
+get_my_avatar:
+  path: /api/v1/authorization/me/avatar
+  methods: [GET]
+  controller: Authorization\User\User\Infrastructure\UI\API\Controller\GetMyAvatarController
+
+change_my_avatar:
+  path: /api/v1/authorization/me/avatar
+  methods: [POST, DELETE]
+  controller: Authorization\User\User\Infrastructure\UI\API\Controller\ChangeMyAvatarController
+
 change_my_visual_preference:
   path: /api/v1/authorization/me/visual-preference
   methods: [PUT]
