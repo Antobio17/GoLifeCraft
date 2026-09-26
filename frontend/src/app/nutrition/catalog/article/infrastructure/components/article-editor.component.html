@@ -4,12 +4,27 @@
   [gap]="'var(--ds-space-5)'"
 >
   <ds-screen-header
+    [sticky]="true"
     [leading]="'close'"
     [leadingLabel]="'articleEditor.back' | t"
     [eyebrow]="'articleEditor.eyebrow' | t"
     [title]="title"
     (leadingClick)="cancel()"
-  />
+  >
+    <ds-button
+      slot="actions"
+      data-testid="editor-submit"
+      type="button"
+      variant="primary"
+      size="icon-lg"
+      icon="save"
+      [iconSize]="19"
+      [ariaLabel]="saveLabel"
+      [disabled]="!draft.hasChanges()"
+      [loading]="saving()"
+      (clicked)="save()"
+    />
+  </ds-screen-header>
 
   @if (loading()) {
     <app-article-form-skeleton />
@@ -23,7 +38,7 @@
       </ds-note>
     }
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form dsEditorForm [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-split-view
         [gap]="'var(--ds-space-5)'"
         [columns]="'minmax(0, 1fr) minmax(0, 1fr)'"
@@ -213,17 +228,6 @@
           [packLabel]="'articleEditor.units.pack' | t"
           [packCardLabel]="'articleEditor.units.packCard' | t"
         />
-
-        <ds-button
-          data-testid="editor-submit"
-          type="submit"
-          variant="soft"
-          [fullWidth]="true"
-          [loading]="saving()"
-          [disabled]="saving()"
-        >
-          {{ saving() ? ("articleEditor.saving" | t) : saveLabel }}
-        </ds-button>
       </ds-split-view>
     </form>
   }
@@ -235,4 +239,10 @@
   [supermarketId]="selectedSupermarketId()"
   (saved)="onAislesSaved()"
   (closed)="closeAisleSheet()"
+/>
+
+<ds-discard-changes-modal
+  [show]="draft.confirmingDiscard()"
+  (confirmed)="draft.discard()"
+  (cancelled)="draft.keepEditing()"
 />

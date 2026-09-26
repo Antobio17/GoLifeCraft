@@ -6,6 +6,7 @@ import {
   inject,
   input,
   signal,
+  viewChild,
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
@@ -37,11 +38,16 @@ import { ExerciseIconCatalogService } from "../../application/services/exercise-
 import { GetExerciseResponse } from "../../domain/models/get-exercise-response.model";
 import { ExerciseType } from "../../domain/models/exercise-type.model";
 import { ExerciseWeightMode } from "../../domain/models/exercise-weight-mode.model";
+import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
+import { EditorDraft } from "@shared/editor-form/application/editor-draft";
+import { EditorFormDirective } from "@shared/editor-form/infrastructure/directives/editor-form.directive";
 
 @Component({
   selector: "app-exercise-editor",
   templateUrl: "./exercise-editor.component.html",
   imports: [
+    DiscardChangesModalComponent,
+    EditorFormDirective,
     ReactiveFormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -77,6 +83,8 @@ export class ExerciseEditorComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
+  protected readonly draft: EditorDraft;
+  private readonly editorForm = viewChild(EditorFormDirective);
   readonly id = input<string>("");
 
   private readonly weightMode: Signal<string>;
@@ -108,6 +116,7 @@ export class ExerciseEditorComponent implements OnInit {
       muscleGroups: [[] as string[], [this.atLeastOneMuscle]],
       icon: [null as string | null],
     });
+    this.draft = EditorDraft.forForm(this.form);
 
     this.weightMode = toSignal(this.form.get("weightMode")!.valueChanges, {
       initialValue: ExerciseWeightMode.Total as string,
@@ -141,6 +150,7 @@ export class ExerciseEditorComponent implements OnInit {
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
         if (!this.isEdit) {
+          this.draft.markSaved();
           this.loading.set(false);
           return;
         }
@@ -155,6 +165,7 @@ export class ExerciseEditorComponent implements OnInit {
               muscleGroups: response.data.attributes.muscleGroups ?? [],
               icon: response.data.attributes.icon ?? null,
             });
+            this.draft.markSaved();
             this.loading.set(false);
           },
           error: () => this.loading.set(false),
@@ -202,13 +213,18 @@ export class ExerciseEditorComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.saving.set(false);
+        this.draft.markSaved();
         this.router.navigate(["/gym/exercises"]);
       },
       error: () => this.saving.set(false),
     });
   }
 
+  save(): void {
+    this.editorForm()?.submit();
+  }
+
   cancel(): void {
-    this.router.navigate(["/gym/exercises"]);
+    this.draft.leave(() => this.router.navigate(["/gym/exercises"]));
   }
 }

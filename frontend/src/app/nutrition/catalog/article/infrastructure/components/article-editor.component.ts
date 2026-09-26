@@ -5,6 +5,7 @@ import {
   inject,
   input,
   signal,
+  viewChild,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
@@ -58,6 +59,9 @@ import {
   ArticleNutritionRequest,
   CreateArticleRequest,
 } from "../../domain/models/create-article.model";
+import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
+import { EditorDraft } from "@shared/editor-form/application/editor-draft";
+import { EditorFormDirective } from "@shared/editor-form/infrastructure/directives/editor-form.directive";
 
 const FALLBACK_EMOJI = "🍽️";
 const REFERENCE_AMOUNT = 100;
@@ -96,6 +100,8 @@ function equivalencesValidator(
   templateUrl: "./article-editor.component.html",
   styleUrl: "./article-editor.component.scss",
   imports: [
+    DiscardChangesModalComponent,
+    EditorFormDirective,
     ReactiveFormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -194,6 +200,8 @@ export class ArticleEditorComponent implements OnInit {
   fromDraft = signal(false);
   draftLowConfidenceFields = signal<string[]>([]);
   saving = signal(false);
+  protected readonly draft: EditorDraft;
+  private readonly editorForm = viewChild(EditorFormDirective);
   articleName = signal("");
   aisleSheetOpen = signal(false);
   storedImage = signal<string | null>(null);
@@ -237,6 +245,10 @@ export class ArticleEditorComponent implements OnInit {
       sugars: [""],
       salt: [""],
     });
+    this.draft = EditorDraft.forForm(this.form, () => ({
+      pickedImage: null !== this.pickedImage(),
+      imageCleared: this.imageCleared(),
+    }));
 
     this.form.controls["supermarketId"].valueChanges
       .pipe(takeUntilDestroyed())
@@ -279,6 +291,7 @@ export class ArticleEditorComponent implements OnInit {
             this.supermarkets.set(supermarkets.data);
 
             if (!this.isEdit) {
+              this.draft.markSaved();
               this.applyDraft();
               this.loading.set(false);
               return;
@@ -314,14 +327,23 @@ export class ArticleEditorComponent implements OnInit {
     request$.pipe(switchMap(() => this.saveImage())).subscribe({
       next: () => {
         this.saving.set(false);
+        this.draft.markSaved();
         this.router.navigate(["/catalog"]);
       },
       error: () => this.saving.set(false),
     });
   }
 
+  save(): void {
+    this.editorForm()?.submit();
+  }
+
   cancel(): void {
-    this.router.navigate(this.isEdit ? ["/catalog", this.id()] : ["/catalog"]);
+    this.draft.leave(() =>
+      this.router.navigate(
+        this.isEdit ? ["/catalog", this.id()] : ["/catalog"],
+      ),
+    );
   }
 
   onImagePicked(file: File): void {
@@ -469,6 +491,7 @@ export class ArticleEditorComponent implements OnInit {
     this.getArticleService.getArticle(this.id()).subscribe({
       next: (response) => {
         this.patchForm(response.data);
+        this.draft.markSaved();
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

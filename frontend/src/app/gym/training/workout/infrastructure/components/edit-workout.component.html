@@ -39,12 +39,27 @@
     </ds-empty-state>
   } @else {
     <ds-screen-header
+      [sticky]="true"
       [leading]="'back'"
       [leadingLabel]="'editWorkout.back' | t"
       [eyebrow]="'editWorkout.eyebrow' | t"
       [title]="'editWorkout.title' | t"
       (leadingClick)="goBack()"
-    />
+    >
+      <ds-button
+        slot="actions"
+        data-testid="edit-workout-save"
+        type="button"
+        variant="primary"
+        size="icon-lg"
+        icon="save"
+        [iconSize]="19"
+        [ariaLabel]="'editWorkout.save' | t"
+        [disabled]="!canSave() || !editorDraft.hasChanges()"
+        [loading]="saving()"
+        (clicked)="onSave()"
+      />
+    </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ds-card
@@ -119,17 +134,6 @@
         } @else {
           <ds-text variant="muted">{{ "editWorkout.hint" | t }}</ds-text>
         }
-
-        <ds-button
-          data-testid="edit-workout-save"
-          icon="check"
-          [fullWidth]="true"
-          [loading]="saving()"
-          [disabled]="!canSave()"
-          (clicked)="onSave()"
-        >
-          {{ (saving() ? "editWorkout.saving" : "editWorkout.save") | t }}
-        </ds-button>
       </ds-card>
 
       <ds-stack [gap]="'var(--ds-space-2)'">
@@ -271,3 +275,9 @@
     }
   </ds-stack>
 </ds-modal-sheet>
+
+<ds-discard-changes-modal
+  [show]="editorDraft.confirmingDiscard()"
+  (confirmed)="editorDraft.discard()"
+  (cancelled)="editorDraft.keepEditing()"
+/>

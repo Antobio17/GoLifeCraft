@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, input, signal } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  inject,
+  input,
+  signal,
+  viewChild,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import {
   FormBuilder,
@@ -20,11 +27,16 @@ import { GetPantryLocationService } from "@nutrition/pantry/location/application
 import { UpdatePantryLocationService } from "@nutrition/pantry/location/application/services/update-pantry-location.service";
 import { PantryLocationEmojiCatalogService } from "@nutrition/pantry/location/application/services/pantry-location-emoji-catalog.service";
 import { GetPantryLocationResponse } from "../../domain/models/get-pantry-location-response.model";
+import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
+import { EditorDraft } from "@shared/editor-form/application/editor-draft";
+import { EditorFormDirective } from "@shared/editor-form/infrastructure/directives/editor-form.directive";
 
 @Component({
   selector: "app-update-pantry-location",
   templateUrl: "./update-pantry-location.component.html",
   imports: [
+    DiscardChangesModalComponent,
+    EditorFormDirective,
     ReactiveFormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -53,6 +65,8 @@ export class UpdatePantryLocationComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
+  protected readonly draft: EditorDraft;
+  private readonly editorForm = viewChild(EditorFormDirective);
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -60,6 +74,7 @@ export class UpdatePantryLocationComponent implements OnInit {
       emoji: [""],
       description: ["", [Validators.maxLength(255)]],
     });
+    this.draft = EditorDraft.forForm(this.form);
   }
 
   ngOnInit(): void {
@@ -73,6 +88,7 @@ export class UpdatePantryLocationComponent implements OnInit {
               emoji: response.data.attributes.emoji,
               description: response.data.attributes.description,
             });
+            this.draft.markSaved();
             this.loading.set(false);
           },
           error: () => this.loading.set(false),
@@ -97,13 +113,18 @@ export class UpdatePantryLocationComponent implements OnInit {
       .subscribe({
         next: () => {
           this.saving.set(false);
+          this.draft.markSaved();
           this.router.navigate(["/locations"]);
         },
         error: () => this.saving.set(false),
       });
   }
 
+  save(): void {
+    this.editorForm()?.submit();
+  }
+
   cancel(): void {
-    this.router.navigate(["/locations"]);
+    this.draft.leave(() => this.router.navigate(["/locations"]));
   }
 }

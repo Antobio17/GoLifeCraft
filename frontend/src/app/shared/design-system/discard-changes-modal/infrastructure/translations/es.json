@@ -1,0 +1,8 @@
+{
+  "discardChanges": {
+    "title": "¿Descartar los cambios?",
+    "body": "Si sales ahora perderás lo que no has guardado.",
+    "cancel": "Seguir editando",
+    "confirm": "Descartar"
+  }
+}

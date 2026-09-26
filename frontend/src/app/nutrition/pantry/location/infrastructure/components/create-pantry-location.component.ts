@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
+import { Component, OnInit, inject, signal, viewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import {
   FormBuilder,
@@ -18,11 +18,16 @@ import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrast
 import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
 import { CreatePantryLocationService } from "@nutrition/pantry/location/application/services/create-pantry-location.service";
 import { PantryLocationEmojiCatalogService } from "@nutrition/pantry/location/application/services/pantry-location-emoji-catalog.service";
+import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
+import { EditorDraft } from "@shared/editor-form/application/editor-draft";
+import { EditorFormDirective } from "@shared/editor-form/infrastructure/directives/editor-form.directive";
 
 @Component({
   selector: "app-create-pantry-location",
   templateUrl: "./create-pantry-location.component.html",
   imports: [
+    DiscardChangesModalComponent,
+    EditorFormDirective,
     ReactiveFormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -49,6 +54,8 @@ export class CreatePantryLocationComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
+  protected readonly draft: EditorDraft;
+  private readonly editorForm = viewChild(EditorFormDirective);
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -56,6 +63,8 @@ export class CreatePantryLocationComponent implements OnInit {
       emoji: [""],
       description: ["", [Validators.maxLength(255)]],
     });
+    this.draft = EditorDraft.forForm(this.form);
+    this.draft.markSaved();
   }
 
   ngOnInit(): void {
@@ -83,13 +92,18 @@ export class CreatePantryLocationComponent implements OnInit {
       .subscribe({
         next: () => {
           this.saving.set(false);
+          this.draft.markSaved();
           this.router.navigate(["/locations"]);
         },
         error: () => this.saving.set(false),
       });
   }
 
+  save(): void {
+    this.editorForm()?.submit();
+  }
+
   cancel(): void {
-    this.router.navigate(["/locations"]);
+    this.draft.leave(() => this.router.navigate(["/locations"]));
   }
 }

@@ -5,7 +5,9 @@ import {
   inject,
   input,
   signal,
+  Signal,
 } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import {
   FormBuilder,
@@ -50,6 +52,9 @@ import {
   SegmentedToggleComponent,
   SegmentedOption,
 } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
+import { EditorDraft } from "@shared/editor-form/application/editor-draft";
+import { EditorFormDirective } from "@shared/editor-form/infrastructure/directives/editor-form.directive";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list-item.component";
@@ -121,6 +126,8 @@ type PickerTab = "product" | "recipe";
     EmptyStateComponent,
     SegmentedToggleComponent,
     ModalSheetComponent,
+    DiscardChangesModalComponent,
+    EditorFormDirective,
     SearchInputComponent,
     SkeletonListItemComponent,
     SkeletonScreenHeaderComponent,
@@ -152,6 +159,7 @@ export class RecipeEditorComponent implements OnInit {
   readonly fallbackEmoji = FALLBACK_EMOJI;
 
   form: FormGroup;
+  private formValue: Signal<FormGroup["value"]>;
   loading = signal(true);
   saving = signal(false);
   storedImage = signal<string | null>(null);
@@ -229,12 +237,20 @@ export class RecipeEditorComponent implements OnInit {
     carbs: this.t("recipeEditor.macro.carbsShort"),
   }));
 
+  protected readonly draft = new EditorDraft(() => ({
+    payload: this.buildPayload(),
+    pickedImage: null !== this.pickedImage(),
+    imageCleared: this.imageCleared(),
+  }));
   constructor() {
     this.form = this.formBuilder.group({
       name: ["", [Validators.required, Validators.minLength(2)]],
       emoji: [FALLBACK_EMOJI],
       category: ["Comida", [Validators.required]],
       prepMode: [RecipePrepMode.Batch, [Validators.required]],
+    });
+    this.formValue = toSignal(this.form.valueChanges, {
+      initialValue: this.form.value,
     });
   }
 
@@ -301,6 +317,7 @@ export class RecipeEditorComponent implements OnInit {
             this.recipeForm.setRecipes(recipes.data);
 
             if (!this.isEdit) {
+              this.draft.markSaved();
               this.loading.set(false);
               return;
             }
@@ -452,6 +469,7 @@ export class RecipeEditorComponent implements OnInit {
     request$.pipe(switchMap(() => this.saveImage())).subscribe({
       next: () => {
         this.saving.set(false);
+        this.draft.markSaved();
         this.router.navigate(["/recipes"]);
       },
       error: () => this.saving.set(false),
@@ -459,7 +477,11 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(this.isEdit ? ["/recipes", this.id()] : ["/recipes"]);
+    this.draft.leave(() =>
+      this.router.navigate(
+        this.isEdit ? ["/recipes", this.id()] : ["/recipes"],
+      ),
+    );
   }
 
   onImagePicked(file: File): void {
@@ -519,6 +541,7 @@ export class RecipeEditorComponent implements OnInit {
     this.getRecipeService.getRecipe(this.id()).subscribe({
       next: (response) => {
         this.patchForm(response.data);
+        this.draft.markSaved();
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
@@ -558,7 +581,7 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   private buildPayload(): CreateRecipeRequest {
-    const value = this.form.value;
+    const value = this.formValue();
 
     return {
       id: this.recipeId,

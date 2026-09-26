@@ -37,6 +37,8 @@ import { FinanceBudgetForm } from "@economy/finance/budget/domain/models/finance
 import { FinanceBudgetCategoryKind } from "@economy/finance/budget/domain/models/finance-budget-category-kind.model";
 import { FinanceBudgetSettingsRow } from "@economy/finance/budget/domain/models/finance-budget-settings-row.model";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
+import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
+import { EditorDraft } from "@shared/editor-form/application/editor-draft";
 
 const SAVINGS_MAX_PERCENTAGE = 60;
 const REDIRECT_DELAY_MS = 600;
@@ -45,6 +47,7 @@ const REDIRECT_DELAY_MS = 600;
   selector: "app-save-finance-budget",
   templateUrl: "./save-finance-budget.component.html",
   imports: [
+    DiscardChangesModalComponent,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -89,6 +92,7 @@ export class SaveFinanceBudgetComponent implements OnInit {
 
   loading = signal(true);
   saving = signal(false);
+  protected readonly draft = new EditorDraft(() => this.form());
   translationsReady = signal(false);
 
   suggestedIncome = signal(0);
@@ -232,7 +236,7 @@ export class SaveFinanceBudgetComponent implements OnInit {
   }
 
   goBack(): void {
-    this.backNavigation.back(["/economy/budget"]);
+    this.draft.leave(() => this.backNavigation.back(["/economy/budget"]));
   }
 
   onReferenceIncome(referenceIncome: string): void {
@@ -278,6 +282,7 @@ export class SaveFinanceBudgetComponent implements OnInit {
       .subscribe({
         next: () => {
           this.saving.set(false);
+          this.draft.markSaved();
           this.router.navigate(["/economy/budget"]);
         },
         error: () => this.saving.set(false),
@@ -297,6 +302,7 @@ export class SaveFinanceBudgetComponent implements OnInit {
 
         this.suggestedIncome.set(settings.suggestedIncome);
         this.form.set(this.budgetForm.fromSettings(settings));
+        this.draft.markSaved();
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

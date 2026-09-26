@@ -5,6 +5,7 @@ import {
   inject,
   input,
   signal,
+  viewChild,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import {
@@ -29,11 +30,16 @@ import { UpdateSessionDetailsService } from "../../application/services/update-s
 import { GetSessionService } from "../../application/services/get-session.service";
 import { SessionDraftService } from "../../application/services/session-draft.service";
 import { GetSessionResponse } from "../../domain/models/get-session-response.model";
+import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
+import { EditorDraft } from "@shared/editor-form/application/editor-draft";
+import { EditorFormDirective } from "@shared/editor-form/infrastructure/directives/editor-form.directive";
 
 @Component({
   selector: "app-session-form",
   templateUrl: "./session-form.component.html",
   imports: [
+    DiscardChangesModalComponent,
+    EditorFormDirective,
     ReactiveFormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -92,6 +98,8 @@ export class SessionFormComponent implements OnInit {
   form: FormGroup;
   loading = signal(true);
   saving = signal(false);
+  protected readonly draft: EditorDraft;
+  private readonly editorForm = viewChild(EditorFormDirective);
   readonly id = input<string>("");
 
   constructor() {
@@ -101,6 +109,7 @@ export class SessionFormComponent implements OnInit {
       restSeconds: [this.DEFAULT_REST_SECONDS, [Validators.required]],
       progressionEnabled: [true],
     });
+    this.draft = EditorDraft.forForm(this.form);
   }
 
   get isEdit(): boolean {
@@ -120,6 +129,7 @@ export class SessionFormComponent implements OnInit {
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
         if (!this.isEdit) {
+          this.draft.markSaved();
           this.loading.set(false);
           return;
         }
@@ -133,6 +143,7 @@ export class SessionFormComponent implements OnInit {
               restSeconds: attributes.restSeconds,
               progressionEnabled: attributes.progressionEnabled,
             });
+            this.draft.markSaved();
             this.loading.set(false);
           },
           error: () => this.loading.set(false),
@@ -179,6 +190,7 @@ export class SessionFormComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.saving.set(false);
+        this.draft.markSaved();
         this.navigateAway();
       },
       error: () => this.saving.set(false),
@@ -199,7 +211,11 @@ export class SessionFormComponent implements OnInit {
     });
   }
 
+  save(): void {
+    this.editorForm()?.submit();
+  }
+
   cancel(): void {
-    this.navigateAway();
+    this.draft.leave(() => this.navigateAway());
   }
 }

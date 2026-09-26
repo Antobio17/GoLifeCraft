@@ -1,0 +1,8 @@
+{
+  "discardChanges": {
+    "title": "Discard changes?",
+    "body": "If you leave now you'll lose what you haven't saved.",
+    "cancel": "Keep editing",
+    "confirm": "Discard"
+  }
+}

@@ -26,6 +26,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     pagination: "shared/design-system/pagination",
     listFilters: "shared/design-system/list-filters",
     saveStatus: "shared/design-system/save-status",
+    discardChanges: "shared/design-system/discard-changes-modal",
     listTable: "shared/design-system/list-table",
     navbar: "layouts/layout/navbar/navbar",
     getExercises: "gym/library/exercise",

@@ -47,15 +47,29 @@
       />
     </ds-split-view>
   } @else {
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form dsEditorForm [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-stack [gap]="'var(--ds-space-4)'">
         <ds-screen-header
+          [sticky]="true"
           [leading]="'close'"
           [leadingLabel]="'recipeEditor.back' | t"
           [eyebrow]="'recipeEditor.eyebrow' | t"
           [title]="title"
           (leadingClick)="cancel()"
-        />
+        >
+          <ds-button
+            slot="actions"
+            data-testid="editor-submit"
+            type="submit"
+            variant="primary"
+            size="icon-lg"
+            icon="save"
+            [iconSize]="19"
+            [ariaLabel]="saveLabel"
+            [disabled]="!draft.hasChanges()"
+            [loading]="saving()"
+          />
+        </ds-screen-header>
 
         <ds-split-view
           [gap]="'var(--ds-space-4)'"
@@ -322,15 +336,6 @@
             [label]="'recipeEditor.addStep' | t"
             (clicked)="onAddStep()"
           />
-
-          <ds-button
-            type="submit"
-            variant="soft"
-            [fullWidth]="true"
-            [loading]="saving()"
-          >
-            {{ saveLabel }}
-          </ds-button>
         </ds-split-view>
       </ds-stack>
     </form>
@@ -394,3 +399,9 @@
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>
+
+<ds-discard-changes-modal
+  [show]="draft.confirmingDiscard()"
+  (confirmed)="draft.discard()"
+  (cancelled)="draft.keepEditing()"
+/>

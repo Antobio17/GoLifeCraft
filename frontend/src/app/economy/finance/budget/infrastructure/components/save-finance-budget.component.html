@@ -4,12 +4,27 @@
   [gap]="'var(--ds-space-3)'"
 >
   <ds-screen-header
+    [sticky]="true"
     leading="back"
     [leadingLabel]="'saveFinanceBudget.back' | t"
     [eyebrow]="'saveFinanceBudget.eyebrow' | t"
     [title]="'saveFinanceBudget.title' | t"
     (leadingClick)="goBack()"
-  />
+  >
+    <ds-button
+      slot="actions"
+      data-testid="editor-submit"
+      type="button"
+      variant="primary"
+      size="icon-lg"
+      icon="save"
+      [iconSize]="19"
+      [ariaLabel]="'saveFinanceBudget.save' | t"
+      [disabled]="!canSave() || !draft.hasChanges()"
+      [loading]="saving()"
+      (clicked)="save()"
+    />
+  </ds-screen-header>
 
   @if (loading()) {
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
@@ -232,16 +247,12 @@
           </ds-card>
         }
       </ds-stack>
-
-      <ds-button
-        variant="soft"
-        [fullWidth]="true"
-        [disabled]="!canSave()"
-        [loading]="saving()"
-        (clicked)="save()"
-      >
-        {{ "saveFinanceBudget.save" | t }}
-      </ds-button>
     </ds-split-view>
   }
 </ds-page-wrapper>
+
+<ds-discard-changes-modal
+  [show]="draft.confirmingDiscard()"
+  (confirmed)="draft.discard()"
+  (cancelled)="draft.keepEditing()"
+/>

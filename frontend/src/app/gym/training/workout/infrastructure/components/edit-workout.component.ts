@@ -53,11 +53,14 @@ import { WorkoutEditDraftService } from "../../application/services/workout-edit
 import { WorkoutTimeFieldsService } from "../../application/services/workout-time-fields.service";
 import { WorkoutExerciseView } from "../../domain/models/workout-detail.model";
 import { WorkoutTimeFields } from "../../domain/models/workout-time-fields.model";
+import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
+import { EditorDraft } from "@shared/editor-form/application/editor-draft";
 
 @Component({
   selector: "app-edit-workout",
   templateUrl: "./edit-workout.component.html",
   imports: [
+    DiscardChangesModalComponent,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -111,6 +114,11 @@ export class EditWorkoutComponent {
   loading = signal(true);
   notFound = signal(false);
   saving = signal(false);
+  protected readonly editorDraft = new EditorDraft(() => ({
+    name: this.name(),
+    time: this.time(),
+    exercises: this.exercises(),
+  }));
 
   name = signal("");
   time = signal<WorkoutTimeFields>({
@@ -227,6 +235,7 @@ export class EditWorkoutComponent {
           this.timeFields.fromWorkout(detail.startedAt, detail.durationSeconds),
         );
         this.exercises.set(detail.exercises);
+        this.editorDraft.markSaved();
       });
   }
 
@@ -337,6 +346,7 @@ export class EditWorkoutComponent {
       .subscribe({
         next: () => {
           this.saving.set(false);
+          this.editorDraft.markSaved();
           this.floatingToastService.showToast({
             status: 200,
             keyTranslation: "workout.edit.saved",
@@ -351,7 +361,9 @@ export class EditWorkoutComponent {
   }
 
   goBack(): void {
-    this.backNavigation.back(["/gym/history", this.id()]);
+    this.editorDraft.leave(() =>
+      this.backNavigation.back(["/gym/history", this.id()]),
+    );
   }
 
   private loadLibrary(): void {

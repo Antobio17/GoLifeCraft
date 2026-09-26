@@ -1,4 +1,18 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+  signal,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { distinctUntilChanged, fromEvent, map, startWith } from "rxjs";
+
+const STICKY_OFFSET_PROPERTY = "--ds-sticky-header-offset";
 
 export type ScreenHeaderLeading = "back" | "close" | null;
 
@@ -55,6 +69,35 @@ export type ScreenHeaderLeading = "back" | "close" | null;
   `,
   styles: [
     `
+      :host(.is-sticky) {
+        --screen-head-bleed: var(--ds-space-4);
+        display: block;
+        position: sticky;
+        top: env(safe-area-inset-top);
+        z-index: 20;
+        padding-block: var(--ds-space-2);
+        margin-block: calc(-1 * var(--ds-space-2));
+        background: var(--ds-bg);
+        box-shadow: 0 0 0 var(--screen-head-bleed) var(--ds-bg);
+        clip-path: inset(
+          calc(-1 * var(--screen-head-bleed))
+            calc(-1 * var(--screen-head-bleed)) -1px
+        );
+      }
+      :host(.is-sticky)::after {
+        content: "";
+        position: absolute;
+        left: calc(-1 * var(--screen-head-bleed));
+        right: calc(-1 * var(--screen-head-bleed));
+        bottom: -1px;
+        height: 1px;
+        background: var(--ds-border);
+        opacity: 0;
+        transition: opacity var(--ds-dur-2) var(--ds-ease-out);
+      }
+      :host(.is-scrolled)::after {
+        opacity: 1;
+      }
       .ds-screen-head {
         display: flex;
         align-items: center;
@@ -131,13 +174,59 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       }
     `,
   ],
+  host: {
+    "[class.is-sticky]": "sticky",
+    "[class.is-scrolled]": "sticky && scrolled()",
+  },
 })
-export class ScreenHeaderComponent {
+export class ScreenHeaderComponent implements OnInit {
+  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly scrolled = signal(false);
+
   @Input() leading: ScreenHeaderLeading = null;
   @Input() leadingLabel = "";
   @Input() eyebrow: string | null = null;
   @Input() title = "";
   @Input() wrapTitle = false;
   @Input() subtitle: string | null = null;
+  @Input() sticky = false;
   @Output() leadingClick = new EventEmitter<void>();
+
+  ngOnInit(): void {
+    if (!this.sticky) {
+      return;
+    }
+
+    this.trackScroll();
+    this.publishOffset();
+  }
+
+  private trackScroll(): void {
+    fromEvent(window, "scroll", { passive: true })
+      .pipe(
+        startWith(null),
+        map(() => window.scrollY > 0),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((scrolled) => this.scrolled.set(scrolled));
+  }
+
+  private publishOffset(): void {
+    const rootStyle = document.documentElement.style;
+    const observer = new ResizeObserver(([entry]) =>
+      rootStyle.setProperty(
+        STICKY_OFFSET_PROPERTY,
+        `${entry.borderBoxSize[0].blockSize}px`,
+      ),
+    );
+
+    observer.observe(this.host.nativeElement);
+    this.destroyRef.onDestroy(() => {
+      observer.disconnect();
+      rootStyle.removeProperty(STICKY_OFFSET_PROPERTY);
+    });
+  }
 }
