@@ -678,7 +678,7 @@ export class GetEconomyComponent implements OnInit {
           ? this.categoryCatalog.incomeEmoji()
           : this.categoryCatalog.emoji(transaction.category),
         title: transaction.note || category,
-        subtitle: `${origin} · ${this.view.dayShort(transaction.transactionDate)}`,
+        subtitle: `${origin} · ${this.view.dayShortWithWeekday(transaction.transactionDate)}`,
         amountLabel: income
           ? this.view.sensitiveSignedMoney(transaction.amount)
           : this.view.negativeMoney(transaction.amount),
