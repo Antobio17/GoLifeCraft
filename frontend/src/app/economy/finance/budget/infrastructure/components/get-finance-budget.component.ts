@@ -219,7 +219,7 @@ export class GetFinanceBudgetComponent implements OnInit {
       emoji: this.categoryCatalog.emoji(transaction.category),
       title:
         transaction.note || this.categoryCatalog.label(transaction.category),
-      subtitle: `${transaction.store || this.categoryCatalog.label(transaction.category)} · ${this.view.dayShort(transaction.transactionDate)}`,
+      subtitle: `${transaction.store || this.categoryCatalog.label(transaction.category)} · ${this.view.dayShortWithWeekday(transaction.transactionDate)}`,
       amountLabel: `−${this.view.money(transaction.amount)}`,
     })),
   );

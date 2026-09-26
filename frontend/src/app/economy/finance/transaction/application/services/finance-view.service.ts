@@ -56,6 +56,14 @@ export class FinanceViewService {
     return `${date.getDate()} ${month}`;
   }
 
+  dayShortWithWeekday(iso: string): string {
+    const weekday = new Intl.DateTimeFormat(this.locale(), { weekday: "short" })
+      .format(this.parse(iso))
+      .replace(".", "");
+
+    return `${weekday} ${this.dayShort(iso)}`;
+  }
+
   dayLong(iso: string): string {
     const date = this.parse(iso);
     const label = new Intl.DateTimeFormat(this.locale(), {
