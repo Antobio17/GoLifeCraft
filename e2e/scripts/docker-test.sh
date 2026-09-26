@@ -12,7 +12,7 @@
 # layout, accesibilidad) se puede lanzar en local con `npm test`.
 #
 # El servidor de Angular y la API se quedan FUERA del contenedor: éste entra a
-# la red del host, así que ve el `ng serve` del programador y el nginx de
+# la red del host, así que ve el `npm run start:e2e` del front y el nginx de
 # Docker en el 8083 sin levantar nada nuevo.
 # ---------------------------------------------------------------------------
 set -euo pipefail
@@ -30,13 +30,13 @@ PLAYWRIGHT_VERSION="$(node -p "require('$E2E_DIR/node_modules/@playwright/test/p
 [ -n "$PLAYWRIGHT_VERSION" ] || die "No hay @playwright/test instalado. Lanza \`npm ci\` en e2e/."
 IMAGE="mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble"
 
-BASE_URL="${E2E_BASE_URL:-http://localhost:4200}"
+BASE_URL="${E2E_BASE_URL:-http://localhost:4300}"
 API_URL="${E2E_API_URL:-http://localhost:8083}"
 
 command -v docker >/dev/null 2>&1 || die "Docker no está instalado."
 
 curl -sSf -o /dev/null "$BASE_URL" 2>/dev/null \
-  || die "No hay nada escuchando en $BASE_URL. Levanta el front con \`npm start\` en frontend/."
+  || die "No hay nada escuchando en $BASE_URL. Levanta el front con \`npm run start:e2e\` en frontend/."
 
 curl -sSf -o /dev/null "$API_URL/api/login" -X POST -H 'Content-Type: application/json' -d '{}' 2>/dev/null \
   || curl -sS -o /dev/null -w '' "$API_URL" 2>/dev/null \

@@ -24,14 +24,14 @@ set -euo pipefail
 
 E2E_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ROOT_DIR="$(cd "$E2E_DIR/.." && pwd)"
-BASE_URL="${E2E_BASE_URL:-http://localhost:4200}"
+BASE_URL="${E2E_BASE_URL:-http://localhost:4300}"
 
 cd "$E2E_DIR"
 
 die() { echo "✖ $1" >&2; exit 1; }
 
 curl -sSf -o /dev/null "$BASE_URL" 2>/dev/null \
-  || die "No hay nada escuchando en $BASE_URL. Levanta el front con \`npm start\` en frontend/."
+  || die "No hay nada escuchando en $BASE_URL. Levanta el front con \`npm run start:e2e\` en frontend/."
 
 echo "▸ 1/3  Etiquetas nativas"
 BEFORE_NATIVE="$(cat fixtures/native-tags-baseline.json)"

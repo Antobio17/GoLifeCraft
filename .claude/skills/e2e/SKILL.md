@@ -19,13 +19,14 @@ hecho que están:
 
 ```bash
 docker ps --format '{{.Names}}' | grep golifecraft   # mysql, php, nginx
-curl -sf -o /dev/null http://localhost:4200 && echo "front OK"
+curl -sf -o /dev/null http://localhost:4300 && echo "front OK"
 ```
 
 - Faltan contenedores → `make up` en la raíz.
-- Falta el front → arrancarlo **en segundo plano** (`cd frontend && npm start`) y
+- Falta el front → arrancarlo **en segundo plano** (`cd frontend && npm run start:e2e`) y
   esperar al puerto con un `until curl -sf ...; do sleep 2; done`. Nunca en
-  primer plano: bloquea la sesión.
+  primer plano: bloquea la sesión. Es la build de producción en el 4300, no el
+  `npm start` del 4200: con la de desarrollo la suite tarda más del doble.
 
 La semilla se recarga sola en cada ejecución; no hay que lanzarla a mano.
 
@@ -42,8 +43,8 @@ Mirar qué ha cambiado (`git status --porcelain`) y decidir:
 
 ```bash
 cd e2e
-npm test              # flujos + guards de layout/design system + a11y (~2,5 min)
-npm run test:visual   # regresión visual, en Docker (~1 min)
+npm test              # flujos + guards de layout/design system + a11y (~1,5 min)
+npm run test:visual   # regresión visual, en Docker (~30 s)
 ```
 
 `npm test` deja fuera lo visual a propósito: esas capturas sólo valen si se
