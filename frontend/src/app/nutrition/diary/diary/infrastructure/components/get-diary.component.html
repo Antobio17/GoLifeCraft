@@ -98,7 +98,7 @@
             titleWidth="6.5rem"
             [subtitle]="true"
             [action]="true"
-            actionWidth="2.5rem"
+            actionWidth="1.875rem"
           />
           <ds-rail>
             <ds-skeleton-list
@@ -171,9 +171,9 @@
             <ds-button
               [attr.data-testid]="'diary-add-' + meal.key"
               variant="outline"
-              size="icon-lg"
+              size="icon-sm"
               icon="plus"
-              [iconSize]="19"
+              [iconSize]="15"
               [ariaLabel]="'getDiary.add' | t"
               (clicked)="openPicker(meal.key)"
             />
