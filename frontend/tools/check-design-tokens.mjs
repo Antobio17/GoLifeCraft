@@ -88,6 +88,11 @@ const EXCEPTIONS = [
     why: "glifo emoji del hero, no es texto",
   },
   {
+    file: "design-system/quantity-sheet",
+    props: ["font-size"],
+    why: "cifra protagonista del selector de cantidad, por encima de la escala de texto",
+  },
+  {
     file: "design-system/auth-card",
     props: ["padding", "padding-right", "column-gap"],
     min: 36,

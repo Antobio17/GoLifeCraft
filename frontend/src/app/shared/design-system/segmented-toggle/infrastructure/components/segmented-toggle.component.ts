@@ -93,8 +93,9 @@ type SegmentedVariant = "underline" | "pill";
       .ds-segmented--pill {
         position: relative;
         flex-wrap: nowrap;
+        --seg-inset: var(--ds-space-1);
         gap: 0;
-        padding: 3px;
+        padding: var(--seg-inset);
         border: none;
         border-radius: var(--ds-radius-lg);
         background: var(--ds-surface-inset);
@@ -102,11 +103,11 @@ type SegmentedVariant = "underline" | "pill";
       }
       .ds-segmented__thumb {
         position: absolute;
-        top: 3px;
-        bottom: 3px;
-        left: 3px;
-        width: calc((100% - 6px) / var(--seg-count));
-        border-radius: calc(var(--ds-radius-lg) - 3px);
+        top: var(--seg-inset);
+        bottom: var(--seg-inset);
+        left: var(--seg-inset);
+        width: calc((100% - 2 * var(--seg-inset)) / var(--seg-count));
+        border-radius: calc(var(--ds-radius-lg) - var(--seg-inset));
         background: var(--seg-thumb);
         box-shadow: var(--seg-thumb-shadow);
         transform: translateX(calc(100% * var(--seg-index)));
@@ -120,7 +121,7 @@ type SegmentedVariant = "underline" | "pill";
         margin: 0;
         border: none;
         padding: var(--ds-space-2) var(--ds-space-2);
-        border-radius: calc(var(--ds-radius-lg) - 3px);
+        border-radius: calc(var(--ds-radius-lg) - var(--seg-inset));
         text-align: center;
         overflow: hidden;
         text-overflow: ellipsis;

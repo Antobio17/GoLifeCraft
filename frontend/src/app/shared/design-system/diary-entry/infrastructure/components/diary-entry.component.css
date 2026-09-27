@@ -101,8 +101,8 @@ ds-pressable.diary-entry__quantity {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 3px var(--ds-space-2);
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-1) var(--ds-space-2);
   border-radius: var(--ds-radius-pill);
   background: var(--ds-primary-soft);
   color: var(--ds-primary-soft-text);
@@ -144,7 +144,7 @@ ds-pressable.diary-entry__expand--caret {
   justify-content: center;
   width: 1.75rem;
   height: 1.5rem;
-  margin: -2px -4px -2px 0;
+  margin: -2px calc(-1 * var(--ds-space-1)) -2px 0;
   border-radius: var(--ds-radius-md);
   color: var(--ds-text-meta);
 }
