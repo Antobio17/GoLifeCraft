@@ -9,6 +9,10 @@
   padding: var(--ds-space-2) var(--ds-space-3);
 }
 
+.diary-entry__row--compact {
+  padding: var(--ds-space-2);
+}
+
 .diary-entry__row--expanded {
   border-color: var(--ds-primary);
 }

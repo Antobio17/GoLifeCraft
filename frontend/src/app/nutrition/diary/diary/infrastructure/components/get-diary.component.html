@@ -100,19 +100,21 @@
             [action]="true"
             actionWidth="4.625rem"
           />
-          <ds-skeleton-list
-            [count]="entries"
-            [gap]="'var(--ds-space-2)'"
-            radius="var(--ds-radius-lg)"
-            padding="var(--ds-space-2) var(--ds-space-3)"
-            [tile]="38"
-            [tileRadius]="10"
-            titleWidth="66%"
-            [meta]="false"
-            [chips]="2"
-            trailing="pill"
-            pillWidth="5.375rem"
-          />
+          <ds-rail>
+            <ds-skeleton-list
+              [count]="entries"
+              [gap]="'var(--ds-space-2)'"
+              radius="var(--ds-radius-lg)"
+              padding="var(--ds-space-2) var(--ds-space-3)"
+              [tile]="38"
+              [tileRadius]="10"
+              titleWidth="66%"
+              [meta]="false"
+              [chips]="2"
+              trailing="pill"
+              pillWidth="5.375rem"
+            />
+          </ds-rail>
         </ds-stack>
       }
     </ds-split-view>
@@ -176,11 +178,12 @@
           </ds-stack>
 
           @if (meal.entries.length > 0) {
-            <ds-stack [gap]="'var(--ds-space-2)'">
+            <ds-rail>
               @for (row of meal.entries; track row.entry.id) {
                 <ds-stack [gap]="'var(--ds-space-1-5)'">
                   <ds-diary-entry
                     data-testid="diary-entry"
+                    [compact]="true"
                     [attr.data-id]="row.entry.id"
                     [emoji]="row.entry.emoji"
                     [imageUrl]="row.imageUrl"
@@ -209,24 +212,19 @@
                     (remove)="onRemove(row.entry.id)"
                     (opened)="onOpenEntry(meal.key, row.entry)"
                     (expandToggled)="toggleEntryTree(row.entry.id)"
-                  />
-
-                  @if (row.lotPickable) {
-                    <ds-stack
-                      direction="row"
-                      align="center"
-                      [gap]="'var(--ds-space-2)'"
-                    >
+                  >
+                    @if (row.lotPickable) {
                       <ds-button
-                        variant="ghost"
+                        slot="footer"
+                        variant="link"
                         size="sm"
                         icon="package"
                         (clicked)="openLotPicker(row.entry.id, row.entry.refId)"
                       >
                         {{ row.lotLabel }}
                       </ds-button>
-                    </ds-stack>
-                  }
+                    }
+                  </ds-diary-entry>
 
                   @if (row.expanded) {
                     <ds-diary-tree
@@ -256,7 +254,7 @@
                   }
                 </ds-stack>
               }
-            </ds-stack>
+            </ds-rail>
           } @else {
             <ds-placeholder-note [message]="'getDiary.emptyAction' | t" />
           }
