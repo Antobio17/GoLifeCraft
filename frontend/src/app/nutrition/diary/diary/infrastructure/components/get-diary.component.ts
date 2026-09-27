@@ -20,6 +20,7 @@ import { SplitViewComponent } from "@shared/design-system/split-view/infrastruct
 import { DiarySummaryComponent } from "@shared/design-system/diary-summary/infrastructure/components/diary-summary.component";
 import { DiaryEntryComponent } from "@shared/design-system/diary-entry/infrastructure/components/diary-entry.component";
 import { RailComponent } from "@shared/design-system/rail/infrastructure/components/rail.component";
+import { StuckDirective } from "@shared/design-system/stuck/infrastructure/directives/stuck.directive";
 import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
@@ -127,6 +128,7 @@ type PickerTab = "product" | "recipe" | "quick";
     DiarySummaryComponent,
     DiaryEntryComponent,
     RailComponent,
+    StuckDirective,
     MacroBadgesComponent,
     EmojiTileComponent,
     TextComponent,
