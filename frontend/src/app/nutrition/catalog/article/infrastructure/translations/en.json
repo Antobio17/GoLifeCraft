@@ -67,6 +67,7 @@
       "base": "base",
       "recipe": "IN RECIPE",
       "diary": "IN DIARY",
+      "storage": "IN STORAGE",
       "equivalences": "EQUIVALENCES"
     },
     "stock": {
@@ -209,6 +210,7 @@
       "packCard": "Purchase pack",
       "recipeUnit": "UNIT IN RECIPE",
       "diaryUnit": "UNIT IN DIARY",
+      "storageUnit": "UNIT IN STORAGE",
       "remove": "Remove equivalence",
       "quantity": "Quantity",
       "unitPlaceholder": "Select…"

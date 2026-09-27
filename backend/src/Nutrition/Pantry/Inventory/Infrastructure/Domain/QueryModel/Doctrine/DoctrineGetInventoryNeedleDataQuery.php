@@ -132,6 +132,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 'a.emoji AS article_emoji',
                 'r.emoji AS recipe_emoji',
                 'a.image AS article_image',
+                'a.storage_unit AS article_storage_unit',
                 'r.image AS recipe_image',
             )
             ->from(table: 'inventory_location_item', alias: 'it')
@@ -159,6 +160,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
         $equivalences = $this->equivalencesOf(rows: $rows);
 
         foreach ($rows as $row) {
+            $units = self::unitsOf(unit: $row['unit'], equivalences: $equivalences[$row['ref_id']] ?? []);
             $expectedQuantity = (float) $row['expected_quantity'];
             $countedQuantity = null === $row['counted_quantity'] ? null : (float) $row['counted_quantity'];
 
@@ -171,7 +173,8 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 emoji: (string) ($row['article_emoji'] ?: ($row['recipe_emoji'] ?: ($row['emoji_snapshot'] ?? ''))),
                 image: $row['article_image'] ?? $row['recipe_image'] ?? null,
                 unit: $row['unit'],
-                units: self::unitsOf(unit: $row['unit'], equivalences: $equivalences[$row['ref_id']] ?? []),
+                units: $units,
+                storageUnit: self::storageUnitOf(unit: $row['unit'], storageUnit: $row['article_storage_unit'] ?? null, units: $units),
                 expectedQuantity: $expectedQuantity,
                 countedQuantity: $countedQuantity,
                 countedUnit: $row['counted_unit'] ?? null,
@@ -239,6 +242,24 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
         }
 
         return $units;
+    }
+
+    /**
+     * @param InventoryItemUnitView[] $units
+     */
+    private static function storageUnitOf(string $unit, ?string $storageUnit, array $units): string
+    {
+        if (null === $storageUnit) {
+            return $unit;
+        }
+
+        foreach ($units as $candidate) {
+            if ($candidate->unit === $storageUnit) {
+                return $storageUnit;
+            }
+        }
+
+        return $unit;
     }
 
     /**

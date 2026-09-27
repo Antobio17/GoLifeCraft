@@ -37,6 +37,7 @@ final class AssignArticleImageCommandHandlerTest extends TestCase
             recipeUnit: 'ml',
             baseUnit: 'ml',
             diaryUnit: 'ml',
+            storageUnit: 'ml',
             packUnit: null,
             price: null,
             brand: null,

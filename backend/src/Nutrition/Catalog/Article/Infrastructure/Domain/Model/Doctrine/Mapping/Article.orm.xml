@@ -15,6 +15,11 @@
         <option name="default">g</option>
       </options>
     </field>
+    <field name="storageUnit" type="string" column="storage_unit" length="30">
+      <options>
+        <option name="default">g</option>
+      </options>
+    </field>
     <field name="packUnit" type="string" column="pack_unit" length="30" nullable="true"/>
     <field name="price" type="float" column="price" nullable="true"/>
     <field name="brand" type="string" column="brand" length="120" nullable="true"/>

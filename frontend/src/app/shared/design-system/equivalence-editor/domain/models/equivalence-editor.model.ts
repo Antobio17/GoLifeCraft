@@ -7,6 +7,7 @@ export interface EquivalenceEditorValue {
   baseUnit: string;
   recipeUnit: string;
   diaryUnit: string;
+  storageUnit: string;
   packUnit: string | null;
   equivalences: EquivalenceLine[];
 }

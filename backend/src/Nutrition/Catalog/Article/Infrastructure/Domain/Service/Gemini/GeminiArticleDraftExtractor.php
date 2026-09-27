@@ -174,6 +174,7 @@ final readonly class GeminiArticleDraftExtractor implements ArticleDraftExtracto
             baseUnit: $baseUnit,
             recipeUnit: $baseUnit,
             diaryUnit: null !== $packaging->unitSize() ? ArticleUnit::UNIT->value : $baseUnit,
+            storageUnit: $packaging->storageUnit(),
             packUnit: $packaging->packUnit(),
             equivalences: ArticleDraftEquivalence::fromPackaging(packaging: $packaging),
             nutrition: $this->toNutrition(data: $data, notes: $notes),

@@ -38,6 +38,7 @@ final class CreateArticleController
                 recipeUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'recipeUnit') ?? $baseUnit,
                 baseUnit: $baseUnit,
                 diaryUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'diaryUnit') ?? $baseUnit,
+                storageUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'storageUnit') ?? $baseUnit,
                 packUnit: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'packUnit'),
                 price: RequestExtractor::getFloatRequestValue(request: $request, fieldName: 'price', required: false),
                 brand: RequestExtractor::getNullableStringRequestValue(request: $request, fieldName: 'brand'),

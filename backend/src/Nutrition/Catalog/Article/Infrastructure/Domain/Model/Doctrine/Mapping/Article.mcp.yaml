@@ -37,6 +37,17 @@ fields:
       equivalence of the article. Keys are always stored in English; the UI translates them.
     filterable: true
     sortable: true
+  storageUnit:
+    writable: true
+    max: 30
+    enum: [g, ml, unit, slice, bread_slice, glass, serving, piece, can, jar, bag, carton, container, tablespoon, pack, handful]
+    description: >-
+      Default unit key used when the article is counted in a pantry inventory, so the stocktake
+      reads the way the shelf looks (for example "jar" when there are jars, "pack" for packs).
+      Either the base unit ("g"/"ml") or one of the canonical alias keys, which must also exist
+      as an equivalence of the article. Keys are always stored in English; the UI translates them.
+    filterable: true
+    sortable: true
   image:
     writable: false
     description: >-

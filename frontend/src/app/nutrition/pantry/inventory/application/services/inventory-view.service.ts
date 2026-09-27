@@ -94,7 +94,7 @@ export class InventoryViewService {
   }
 
   selectedUnit(item: InventoryLocationItem): string {
-    return item.countedUnit ?? item.unit;
+    return item.countedUnit ?? item.storageUnit ?? item.unit;
   }
 
   format(quantity: number): string {

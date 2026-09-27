@@ -72,6 +72,7 @@ function defaultUnitsValue(): EquivalenceEditorValue {
     baseUnit: DEFAULT_BASE_UNIT,
     recipeUnit: DEFAULT_BASE_UNIT,
     diaryUnit: DEFAULT_BASE_UNIT,
+    storageUnit: DEFAULT_BASE_UNIT,
     packUnit: null,
     equivalences: [],
   };
@@ -454,6 +455,7 @@ export class ArticleEditorComponent implements OnInit {
         baseUnit: draft.baseUnit,
         recipeUnit: draft.recipeUnit,
         diaryUnit: draft.diaryUnit,
+        storageUnit: draft.storageUnit ?? draft.baseUnit,
         packUnit: draft.packUnit,
         equivalences: draft.equivalences.map((item) => ({
           unit: item.unit,
@@ -516,6 +518,11 @@ export class ArticleEditorComponent implements OnInit {
         baseUnit,
         recipeUnit: article.attributes.recipeUnit ?? baseUnit,
         diaryUnit: article.attributes.diaryUnit ?? baseUnit,
+        storageUnit: this.knownUnit(
+          article.attributes.storageUnit,
+          baseUnit,
+          article.attributes.equivalences ?? [],
+        ),
         packUnit: article.attributes.packUnit ?? null,
         equivalences: (article.attributes.equivalences ?? []).map((item) => ({
           unit: item.unit,
@@ -565,6 +572,11 @@ export class ArticleEditorComponent implements OnInit {
       recipeUnit: units.recipeUnit,
       baseUnit: units.baseUnit,
       diaryUnit: units.diaryUnit,
+      storageUnit: this.knownUnit(
+        units.storageUnit,
+        units.baseUnit,
+        equivalences,
+      ),
       packUnit: equivalences.some((line) => line.unit === units.packUnit)
         ? units.packUnit
         : null,
@@ -581,6 +593,17 @@ export class ArticleEditorComponent implements OnInit {
 
   private t(key: string, params?: Record<string, unknown>): string {
     return this.translationService.translate(key, this.MODULE_PATH, params);
+  }
+
+  private knownUnit(
+    unit: string | null | undefined,
+    baseUnit: string,
+    equivalences: { unit: string }[],
+  ): string {
+    if (!unit) return baseUnit;
+    if (unit === baseUnit) return unit;
+
+    return equivalences.some((line) => line.unit === unit) ? unit : baseUnit;
   }
 
   private parseDecimal(

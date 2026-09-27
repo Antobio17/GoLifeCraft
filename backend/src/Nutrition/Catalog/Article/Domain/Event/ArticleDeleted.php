@@ -20,6 +20,7 @@ final readonly class ArticleDeleted extends DomainEvent
         public string $baseUnit,
         public string $recipeUnit,
         public string $diaryUnit,
+        public string $storageUnit,
         public ?string $packUnit,
         public ?float $price,
         public ?string $categoryId,

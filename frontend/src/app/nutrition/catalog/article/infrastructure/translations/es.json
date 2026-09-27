@@ -67,6 +67,7 @@
       "base": "base",
       "recipe": "EN RECETA",
       "diary": "EN DIARIO",
+      "storage": "EN ALMACÉN",
       "equivalences": "EQUIVALENCIAS"
     },
     "stock": {
@@ -209,6 +210,7 @@
       "packCard": "Envase de compra",
       "recipeUnit": "UNIDAD EN RECETA",
       "diaryUnit": "UNIDAD EN DIARIO",
+      "storageUnit": "UNIDAD EN ALMACÉN",
       "remove": "Quitar equivalencia",
       "quantity": "Cantidad",
       "unitPlaceholder": "Selecciona…"

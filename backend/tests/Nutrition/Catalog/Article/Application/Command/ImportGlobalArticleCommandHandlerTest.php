@@ -84,6 +84,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
         $this->assertSame(Article::BASE_UNIT_MILLILITER, $article->baseUnit);
         $this->assertSame(Article::BASE_UNIT_MILLILITER, $article->recipeUnit);
         $this->assertSame(Article::BASE_UNIT_MILLILITER, $article->diaryUnit);
+        $this->assertSame(ArticleUnit::PACK->value, $article->storageUnit);
         $this->assertSame(ArticleUnit::PACK->value, $article->packUnit);
         $this->assertCount(1, $article->equivalences);
         $this->assertSame(ArticleUnit::PACK->value, $article->equivalences[0]->unit);
@@ -100,6 +101,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
 
         $this->assertSame(Article::BASE_UNIT_GRAM, $article->baseUnit);
         $this->assertSame(ArticleUnit::UNIT->value, $article->diaryUnit);
+        $this->assertSame(ArticleUnit::UNIT->value, $article->storageUnit);
         $this->assertSame(ArticleUnit::PACK->value, $article->packUnit);
         $this->assertCount(2, $article->equivalences);
         $this->assertSame(500.0, $article->equivalences[0]->quantity);
@@ -117,6 +119,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
 
         $this->assertSame(Article::BASE_UNIT_GRAM, $article->baseUnit);
         $this->assertSame(Article::BASE_UNIT_GRAM, $article->diaryUnit);
+        $this->assertSame(Article::BASE_UNIT_GRAM, $article->storageUnit);
         $this->assertNull($article->packUnit);
         $this->assertSame([], $article->equivalences);
     }
@@ -140,6 +143,7 @@ final class ImportGlobalArticleCommandHandlerTest extends TestCase
         $this->assertSame($imported->id, $article->id);
         $this->assertSame(Article::BASE_UNIT_MILLILITER, $article->baseUnit);
         $this->assertSame(ArticleUnit::UNIT->value, $article->diaryUnit);
+        $this->assertSame(ArticleUnit::UNIT->value, $article->storageUnit);
         $this->assertSame(ArticleUnit::PACK->value, $article->packUnit);
         $this->assertCount(2, $article->equivalences);
         $this->assertSame(1200.0, $article->equivalences[0]->quantity);

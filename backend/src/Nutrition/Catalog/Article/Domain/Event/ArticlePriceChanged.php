@@ -19,6 +19,7 @@ final readonly class ArticlePriceChanged extends DomainEvent
         public string $baseUnit,
         public string $recipeUnit,
         public string $diaryUnit,
+        public string $storageUnit,
         public ?string $packUnit,
         public ?float $previousPrice,
         public ?float $price,

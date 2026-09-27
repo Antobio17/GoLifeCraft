@@ -147,6 +147,17 @@ const BASE_UNITS = ["g", "ml"];
             (ngModelChange)="onDiaryUnit($event)"
           />
         </div>
+        <div class="ds-eq__default">
+          <span class="ds-eq__default-label">{{ storageLabel }}</span>
+          <ds-select
+            variant="bare"
+            [fluid]="true"
+            [options]="defaultOptions"
+            [ngModel]="value.storageUnit"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onStorageUnit($event)"
+          />
+        </div>
       </div>
     </section>
   `,
@@ -311,11 +322,12 @@ const BASE_UNITS = ["g", "ml"];
       }
       .ds-eq__defaults {
         display: flex;
+        flex-wrap: wrap;
         gap: var(--ds-space-2);
         padding: var(--ds-space-3) var(--ds-space-4);
       }
       .ds-eq__default {
-        flex: 1;
+        flex: 1 1 140px;
         min-width: 0;
         display: flex;
         flex-direction: column;
@@ -346,6 +358,7 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
   @Input() hint = "";
   @Input() recipeLabel = "";
   @Input() diaryLabel = "";
+  @Input() storageLabel = "";
   @Input() removeLabel = "";
   @Input() quantityLabel = "";
   @Input() unitPlaceholder = "";
@@ -357,6 +370,7 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
     baseUnit: "g",
     recipeUnit: "g",
     diaryUnit: "g",
+    storageUnit: "g",
     packUnit: null,
     equivalences: [],
   };
@@ -439,8 +453,12 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
       this.value.recipeUnit === previousBase ? baseUnit : this.value.recipeUnit;
     const diaryUnit =
       this.value.diaryUnit === previousBase ? baseUnit : this.value.diaryUnit;
+    const storageUnit =
+      this.value.storageUnit === previousBase
+        ? baseUnit
+        : this.value.storageUnit;
 
-    this.emit({ ...this.value, baseUnit, recipeUnit, diaryUnit });
+    this.emit({ ...this.value, baseUnit, recipeUnit, diaryUnit, storageUnit });
   }
 
   onLineUnit(index: number, unit: string): void {
@@ -492,6 +510,10 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
       this.value.diaryUnit === removedUnit
         ? this.value.baseUnit
         : this.value.diaryUnit;
+    const storageUnit =
+      this.value.storageUnit === removedUnit
+        ? this.value.baseUnit
+        : this.value.storageUnit;
     const packUnit =
       this.value.packUnit === removedUnit ? null : this.value.packUnit;
 
@@ -500,6 +522,7 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
       equivalences,
       recipeUnit,
       diaryUnit,
+      storageUnit,
       packUnit,
     });
   }
@@ -510,6 +533,10 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
 
   onDiaryUnit(diaryUnit: string): void {
     this.emit({ ...this.value, diaryUnit });
+  }
+
+  onStorageUnit(storageUnit: string): void {
+    this.emit({ ...this.value, storageUnit });
   }
 
   private emit(value: EquivalenceEditorValue): void {
@@ -540,6 +567,7 @@ export class EquivalenceEditorComponent implements ControlValueAccessor {
       baseUnit,
       recipeUnit: value?.recipeUnit ?? baseUnit,
       diaryUnit: value?.diaryUnit ?? baseUnit,
+      storageUnit: value?.storageUnit ?? baseUnit,
       packUnit: value?.packUnit ?? null,
       equivalences: (value?.equivalences ?? []).map((line) => ({
         unit: line.unit ?? "",

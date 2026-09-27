@@ -103,6 +103,7 @@ final class ArticleEventHydrationTest extends TestCase
             recipeUnit: 'ml',
             baseUnit: 'ml',
             diaryUnit: 'ml',
+            storageUnit: 'ml',
             packUnit: 'carton',
             price: 1.15,
             brand: 'Hacendado',

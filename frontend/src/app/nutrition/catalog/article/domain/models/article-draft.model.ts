@@ -13,6 +13,7 @@ export interface ArticleDraft {
   baseUnit: string;
   recipeUnit: string;
   diaryUnit: string;
+  storageUnit: string;
   packUnit: string | null;
   equivalences: ArticleDraftEquivalence[];
   nutrition: ArticleDraftNutrition | null;

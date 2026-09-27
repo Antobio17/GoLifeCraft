@@ -18,6 +18,7 @@ final class ArticlePackagingTest extends TestCase
         $this->assertNull($packaging->unitsPerPack);
         $this->assertSame(ArticleUnit::PACK->value, $packaging->packUnit());
         $this->assertSame(Article::BASE_UNIT_GRAM, $packaging->diaryUnit());
+        $this->assertSame(ArticleUnit::PACK->value, $packaging->storageUnit());
     }
 
     public function testItReadsAVolumeQuantityAsMilliliters(): void
@@ -43,6 +44,7 @@ final class ArticlePackagingTest extends TestCase
         $this->assertSame(4, $packaging->unitsPerPack);
         $this->assertSame(125.0, $packaging->unitSize());
         $this->assertSame(ArticleUnit::UNIT->value, $packaging->diaryUnit());
+        $this->assertSame(ArticleUnit::UNIT->value, $packaging->storageUnit());
     }
 
     public function testItPrefersTheMultipackDetailOverTheTotal(): void
@@ -64,6 +66,7 @@ final class ArticlePackagingTest extends TestCase
             $this->assertNull($packaging->packSize);
             $this->assertNull($packaging->packUnit());
             $this->assertSame(Article::BASE_UNIT_GRAM, $packaging->diaryUnit());
+            $this->assertSame(Article::BASE_UNIT_GRAM, $packaging->storageUnit());
         }
     }
 
@@ -82,5 +85,6 @@ final class ArticlePackagingTest extends TestCase
         $this->assertSame(1, $packaging->unitsPerPack);
         $this->assertNull($packaging->unitSize());
         $this->assertSame(Article::BASE_UNIT_MILLILITER, $packaging->diaryUnit());
+        $this->assertSame(ArticleUnit::PACK->value, $packaging->storageUnit());
     }
 }

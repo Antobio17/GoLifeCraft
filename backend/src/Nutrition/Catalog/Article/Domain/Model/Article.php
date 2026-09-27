@@ -22,6 +22,7 @@ class Article extends GenericAggregate
     public string $recipeUnit;
     public string $baseUnit = self::BASE_UNIT_GRAM;
     public string $diaryUnit = self::BASE_UNIT_GRAM;
+    public string $storageUnit = self::BASE_UNIT_GRAM;
     public ?string $packUnit = null;
     public ?float $price = null;
     public ?string $brand = null;
@@ -45,6 +46,7 @@ class Article extends GenericAggregate
         string $recipeUnit,
         string $baseUnit,
         string $diaryUnit,
+        string $storageUnit,
         ?string $packUnit,
         ?float $price,
         ?string $brand,
@@ -67,6 +69,7 @@ class Article extends GenericAggregate
         $unsupportedUnit = self::findUnsupportedUnit(
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
+            storageUnit: $storageUnit,
             equivalences: $equivalences,
         );
 
@@ -86,6 +89,7 @@ class Article extends GenericAggregate
         $article->recipeUnit = $recipeUnit;
         $article->baseUnit = $baseUnit;
         $article->diaryUnit = $diaryUnit;
+        $article->storageUnit = $storageUnit;
         $article->packUnit = $packUnit;
         $article->price = $price;
         $article->brand = $brand;
@@ -109,6 +113,7 @@ class Article extends GenericAggregate
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
+            storageUnit: $storageUnit,
             packUnit: $packUnit,
             price: $price,
             categoryId: $categoryId,
@@ -148,6 +153,7 @@ class Article extends GenericAggregate
             baseUnit: $this->baseUnit,
             recipeUnit: $this->recipeUnit,
             diaryUnit: $this->diaryUnit,
+            storageUnit: $this->storageUnit,
             packUnit: $this->packUnit,
             previousPrice: $previousPrice,
             price: $this->price,
@@ -184,6 +190,7 @@ class Article extends GenericAggregate
             baseUnit: $this->baseUnit,
             recipeUnit: $this->recipeUnit,
             diaryUnit: $this->diaryUnit,
+            storageUnit: $this->storageUnit,
             packUnit: $this->packUnit,
             price: $this->price,
             categoryId: $this->categoryId,
@@ -207,6 +214,7 @@ class Article extends GenericAggregate
         string $recipeUnit,
         string $baseUnit,
         string $diaryUnit,
+        string $storageUnit,
         ?string $packUnit,
         ?float $price,
         ?string $brand,
@@ -228,6 +236,7 @@ class Article extends GenericAggregate
         $unsupportedUnit = self::findUnsupportedUnit(
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
+            storageUnit: $storageUnit,
             equivalences: $equivalences,
         );
 
@@ -245,6 +254,7 @@ class Article extends GenericAggregate
         $this->recipeUnit = $recipeUnit;
         $this->baseUnit = $baseUnit;
         $this->diaryUnit = $diaryUnit;
+        $this->storageUnit = $storageUnit;
         $this->packUnit = $packUnit;
         $this->price = $price;
         $this->brand = $brand;
@@ -267,6 +277,7 @@ class Article extends GenericAggregate
             baseUnit: $baseUnit,
             recipeUnit: $recipeUnit,
             diaryUnit: $diaryUnit,
+            storageUnit: $storageUnit,
             packUnit: $packUnit,
             price: $price,
             categoryId: $categoryId,
@@ -301,6 +312,7 @@ class Article extends GenericAggregate
             baseUnit: $this->baseUnit,
             recipeUnit: $this->recipeUnit,
             diaryUnit: $this->diaryUnit,
+            storageUnit: $this->storageUnit,
             packUnit: $this->packUnit,
             price: $this->price,
             categoryId: $this->categoryId,
@@ -337,9 +349,10 @@ class Article extends GenericAggregate
     private static function findUnsupportedUnit(
         string $recipeUnit,
         string $diaryUnit,
+        string $storageUnit,
         array $equivalences,
     ): ?string {
-        foreach ([$recipeUnit, $diaryUnit] as $unit) {
+        foreach ([$recipeUnit, $diaryUnit, $storageUnit] as $unit) {
             if (!self::isMeasurementUnit(unit: $unit)) {
                 return $unit;
             }

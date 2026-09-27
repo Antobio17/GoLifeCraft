@@ -60,6 +60,7 @@ final class NormalizeArticleUnitsCommand extends Command
         ['table' => 'article', 'column' => 'base_unit', 'kind' => self::KIND_BASE],
         ['table' => 'article', 'column' => 'recipe_unit', 'kind' => self::KIND_MEASUREMENT],
         ['table' => 'article', 'column' => 'diary_unit', 'kind' => self::KIND_MEASUREMENT],
+        ['table' => 'article', 'column' => 'storage_unit', 'kind' => self::KIND_MEASUREMENT],
         ['table' => 'article', 'column' => 'pack_unit', 'kind' => self::KIND_ALIAS],
         ['table' => 'article_equivalence', 'column' => 'unit', 'kind' => self::KIND_ALIAS],
         ['table' => 'recipe_ingredient', 'column' => 'unit', 'kind' => self::KIND_MEASUREMENT],
