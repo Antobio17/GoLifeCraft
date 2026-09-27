@@ -25,7 +25,6 @@ final readonly class UpdateMenuDetailsCommandHandler
 
         $menu->updateDetails(
             name: $command->name,
-            emoji: $command->emoji,
             note: $command->note,
             updatedByUserId: $command->updatedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,

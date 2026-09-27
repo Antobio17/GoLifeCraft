@@ -33,7 +33,6 @@ final readonly class DuplicateMenuCommandHandler
         $menu = Menu::create(
             id: $menuId,
             name: trim(string: $snapshot->name.' '.$command->copySuffix),
-            emoji: $snapshot->emoji,
             note: $snapshot->note,
             type: $snapshot->type,
             items: $this->menuItemAssembler->assemble(

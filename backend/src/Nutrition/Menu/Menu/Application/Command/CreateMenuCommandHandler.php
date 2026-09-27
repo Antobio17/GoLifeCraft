@@ -24,7 +24,6 @@ final readonly class CreateMenuCommandHandler
         $menu = Menu::create(
             id: $menuId,
             name: $command->name,
-            emoji: $command->emoji,
             note: $command->note,
             type: $command->type,
             items: $this->menuItemAssembler->assemble(

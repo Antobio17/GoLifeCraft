@@ -14,7 +14,6 @@ final readonly class MenuItemTreeReset extends DomainEvent
         string $aggregateId,
         \DateTime $occurredOn,
         public string $name,
-        public string $emoji,
         public string $note,
         public string $type,
         public string $weekDays,

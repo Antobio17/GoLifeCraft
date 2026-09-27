@@ -35,7 +35,6 @@ final readonly class DoctrineGetMenusNeedleDataQuery implements GetMenusNeedleDa
         $qb = $this->getBaseQuery(filterName: $filterName, filterType: $filterType)->select(
             'm.id',
             'm.name',
-            'm.emoji',
             'm.note',
             'm.type',
             'm.created_at',
@@ -74,7 +73,6 @@ final readonly class DoctrineGetMenusNeedleDataQuery implements GetMenusNeedleDa
                 id: $row['id'],
                 aggregateName: 'Menu',
                 name: $row['name'],
-                emoji: $row['emoji'],
                 note: $row['note'],
                 type: $row['type'],
                 weekDays: $weekDays,

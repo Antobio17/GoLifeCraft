@@ -31,7 +31,6 @@ final class DeleteMenuCommandHandlerTest extends TestCase
         $this->menuRepository->save(menu: Menu::create(
             id: 'menu-1',
             name: 'Día ligero',
-            emoji: '🥗',
             note: '',
             type: Menu::TYPE_SINGLE,
             items: [],

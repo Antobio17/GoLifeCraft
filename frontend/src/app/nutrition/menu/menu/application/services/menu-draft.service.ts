@@ -28,7 +28,6 @@ export interface MenuDraftItem {
 export interface MenuDraft {
   type: MenuType;
   name: string;
-  emoji: string;
   note: string;
   items: MenuDraftItem[];
 }
@@ -45,9 +44,6 @@ const WEEK_DAY_KEYS: MenuWeekDayKey[] = [
   "sun",
 ];
 
-const SINGLE_EMOJI = "🍽️";
-const WEEK_EMOJI = "🗓️";
-
 @Injectable()
 export class MenuDraftService {
   private picker = inject(MenuPickerService);
@@ -56,7 +52,6 @@ export class MenuDraftService {
     return {
       type,
       name: "",
-      emoji: type === "week" ? WEEK_EMOJI : SINGLE_EMOJI,
       note: "",
       items: [],
     };
@@ -110,7 +105,6 @@ export class MenuDraftService {
   toCreateRequest(draft: MenuDraft): CreateMenuRequest {
     return {
       name: draft.name.trim(),
-      emoji: draft.emoji,
       note: draft.note,
       type: draft.type,
       items: draft.items.map(
@@ -140,7 +134,6 @@ export class MenuDraftService {
 
     return {
       name: draft.name,
-      emoji: draft.emoji,
       note: draft.note,
       type: draft.type,
       weekDays: plannedDays.map((day) => day.dayKey as MenuWeekDayKey),

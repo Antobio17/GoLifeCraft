@@ -11,7 +11,6 @@ final readonly class CreateMenuCommand implements Command
      */
     public function __construct(
         public string $name,
-        public string $emoji,
         public string $note,
         public string $type,
         public array $items,

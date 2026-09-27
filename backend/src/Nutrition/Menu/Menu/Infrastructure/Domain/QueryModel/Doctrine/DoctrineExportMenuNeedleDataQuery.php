@@ -34,7 +34,7 @@ final readonly class DoctrineExportMenuNeedleDataQuery implements ExportMenuNeed
     public function findMenuToExport(string $menuId): ?ExportMenuResult
     {
         $row = $this->connection->createQueryBuilder()
-            ->select('m.id', 'm.name', 'm.emoji', 'm.note', 'm.type')
+            ->select('m.id', 'm.name', 'm.note', 'm.type')
             ->from(table: 'menu', alias: 'm')
             ->where('m.id = :menuId')
             ->setParameter(key: 'menuId', value: $menuId)
@@ -69,7 +69,6 @@ final readonly class DoctrineExportMenuNeedleDataQuery implements ExportMenuNeed
             id: $row['id'],
             aggregateName: 'MenuDocument',
             name: $row['name'],
-            emoji: $row['emoji'],
             note: $row['note'],
             type: $row['type'],
             days: $days,

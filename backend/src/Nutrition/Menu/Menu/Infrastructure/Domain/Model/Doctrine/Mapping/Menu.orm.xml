@@ -4,7 +4,6 @@
     <id name="id" type="string" column="id" primary="true" length="36"/>
     <field name="version" type="integer" version="true"/>
     <field name="name" type="string" column="name" length="255"/>
-    <field name="emoji" type="string" column="emoji" length="16"/>
     <field name="note" type="string" column="note" length="255"/>
     <field name="type" type="string" column="type" length="16"/>
     <field name="weekDays" type="string" column="week_days" length="40"/>

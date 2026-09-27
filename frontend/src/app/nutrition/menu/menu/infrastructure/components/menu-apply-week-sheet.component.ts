@@ -13,7 +13,6 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
@@ -44,7 +43,6 @@ const MODULE_PATH = "nutrition/menu/menu";
     ModalSheetComponent,
     StackComponent,
     CardComponent,
-    EmojiTileComponent,
     TextComponent,
     IconComponent,
     ButtonComponent,
@@ -70,7 +68,6 @@ const MODULE_PATH = "nutrition/menu/menu";
 
         <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
           <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-            <ds-emoji-tile [emoji]="emoji()" [size]="46" [radius]="13" />
             <ds-stack [gap]="'2px'" [grow]="true">
               <ds-text variant="strong" [truncate]="true">{{ name() }}</ds-text>
               <ds-text variant="meta">{{
@@ -157,7 +154,6 @@ export class MenuApplyWeekSheetComponent {
   saving = signal(false);
 
   open = computed(() => this.currentMenuId() !== null);
-  emoji = computed(() => this.detail()?.emoji ?? "🗓️");
   name = computed(() => this.detail()?.name ?? "");
 
   weekOptions = computed(() => this.view.weekOptions());

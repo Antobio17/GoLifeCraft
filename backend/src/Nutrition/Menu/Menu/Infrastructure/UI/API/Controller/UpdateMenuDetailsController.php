@@ -30,7 +30,6 @@ final class UpdateMenuDetailsController
             $this->handle(message: new UpdateMenuDetailsCommand(
                 menuId: $request->attributes->get(key: 'menuId'),
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
-                emoji: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'emoji'),
                 note: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'note', required: false) ?? '',
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));

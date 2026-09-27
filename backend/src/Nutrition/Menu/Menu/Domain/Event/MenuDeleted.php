@@ -13,7 +13,6 @@ final readonly class MenuDeleted extends DomainEvent
         string $aggregateId,
         \DateTime $occurredOn,
         public string $name,
-        public string $emoji,
         public string $note,
         public string $type,
         public string $weekDays,

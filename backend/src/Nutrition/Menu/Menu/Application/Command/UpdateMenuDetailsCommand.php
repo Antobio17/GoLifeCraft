@@ -9,7 +9,6 @@ final readonly class UpdateMenuDetailsCommand implements Command
     public function __construct(
         public string $menuId,
         public string $name,
-        public string $emoji,
         public string $note,
         public string $updatedByUserId,
     ) {

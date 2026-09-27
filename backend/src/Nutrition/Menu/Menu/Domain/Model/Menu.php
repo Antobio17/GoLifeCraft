@@ -31,7 +31,6 @@ class Menu extends GenericAggregate
     ];
 
     public string $name;
-    public string $emoji;
     public string $note;
     public string $type;
     public string $weekDays = '';
@@ -45,7 +44,6 @@ class Menu extends GenericAggregate
     public static function create(
         string $id,
         string $name,
-        string $emoji,
         string $note,
         string $type,
         array $items,
@@ -61,7 +59,6 @@ class Menu extends GenericAggregate
         $menu = new self();
         $menu->id = $id;
         $menu->name = $name;
-        $menu->emoji = $emoji;
         $menu->note = $note;
         $menu->type = $type;
         $menu->items = $items;
@@ -73,7 +70,6 @@ class Menu extends GenericAggregate
             aggregateId: $id,
             occurredOn: $now,
             name: $name,
-            emoji: $emoji,
             note: $note,
             type: $type,
             weekDays: $menu->weekDays,
@@ -98,7 +94,6 @@ class Menu extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
-            emoji: $this->emoji,
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
@@ -178,7 +173,6 @@ class Menu extends GenericAggregate
 
     public function updateDetails(
         string $name,
-        string $emoji,
         string $note,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -186,7 +180,6 @@ class Menu extends GenericAggregate
         $now = $dateTimeGenerator->now();
 
         $this->name = $name;
-        $this->emoji = $emoji;
         $this->note = $note;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
@@ -194,7 +187,6 @@ class Menu extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
-            emoji: $this->emoji,
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
@@ -224,7 +216,6 @@ class Menu extends GenericAggregate
             occurredOn: $now,
             menuItemId: $item->id,
             name: $this->name,
-            emoji: $this->emoji,
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
@@ -263,7 +254,6 @@ class Menu extends GenericAggregate
             occurredOn: $now,
             menuItemId: $item->id,
             name: $this->name,
-            emoji: $this->emoji,
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
@@ -296,7 +286,6 @@ class Menu extends GenericAggregate
             occurredOn: $now,
             menuItemId: $item->id,
             name: $this->name,
-            emoji: $this->emoji,
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
@@ -382,7 +371,6 @@ class Menu extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
-            emoji: $this->emoji,
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
@@ -427,7 +415,6 @@ class Menu extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
-            emoji: $this->emoji,
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,
@@ -511,7 +498,6 @@ class Menu extends GenericAggregate
             aggregateId: $this->id,
             occurredOn: $now,
             name: $this->name,
-            emoji: $this->emoji,
             note: $this->note,
             type: $this->type,
             weekDays: $this->weekDays,

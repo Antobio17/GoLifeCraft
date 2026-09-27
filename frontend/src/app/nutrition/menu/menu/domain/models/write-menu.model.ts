@@ -17,7 +17,6 @@ export interface MenuItemRequest {
 
 export interface CreateMenuRequest {
   name: string;
-  emoji: string;
   note: string;
   type: MenuType;
   items: MenuItemRequest[];
