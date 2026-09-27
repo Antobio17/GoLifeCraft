@@ -64,7 +64,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         flex: none;
         width: 2.625rem;
         height: 2.625rem;
-        border: 1px solid var(--ds-primary-soft-border);
+        border: 1px solid var(--ds-avatar-ring);
         padding: 0;
         cursor: pointer;
         border-radius: 50%;

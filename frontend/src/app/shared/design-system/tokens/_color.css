@@ -112,6 +112,7 @@
     var(--ds-green-600) 28%,
     transparent
   );
+  --ds-avatar-ring: var(--ds-gray-950);
 
   /* ---- Semánticos: Secondary (la menta) ----
      Relleno de badges, botones de bajo contraste y señales de
@@ -236,6 +237,7 @@
   --ds-primary-soft-hover: rgba(143, 250, 152, 0.2);
   --ds-primary-soft-text: var(--ds-green-200);
   --ds-primary-soft-border: rgba(143, 250, 152, 0.3);
+  --ds-avatar-ring: var(--ds-gray-0);
 
   /* ---- Secondary → el bosque baja a contenedor ---- */
   --ds-secondary: var(--ds-green-800);

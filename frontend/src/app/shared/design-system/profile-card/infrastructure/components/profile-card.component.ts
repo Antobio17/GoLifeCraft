@@ -71,7 +71,7 @@ import { ImagePickerComponent } from "@shared/design-system/image-picker/infrast
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
-        border: 1px solid var(--ds-primary-soft-border);
+        border: 1px solid var(--ds-avatar-ring);
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
         font-family: var(--ds-font-display);
@@ -87,6 +87,7 @@ import { ImagePickerComponent } from "@shared/design-system/image-picker/infrast
       }
       .pc ds-image-picker {
         flex: 0 0 auto;
+        --ds-image-picker-ring: var(--ds-avatar-ring);
       }
       .pc__body {
         flex: 1 1 auto;

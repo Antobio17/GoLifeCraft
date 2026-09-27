@@ -95,7 +95,7 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
       }
       .ds-image-picker__trigger.is-filled {
         border-style: solid;
-        border-color: var(--ds-border);
+        border-color: var(--ds-image-picker-ring, var(--ds-border));
       }
       .ds-image-picker__trigger.is-circle {
         border-radius: 50%;
@@ -109,7 +109,8 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         border-radius: var(--ds-radius-pill);
       }
       .ds-image-picker__trigger.is-placeholder {
-        border: 1px solid var(--ds-primary-soft-border);
+        border: 1px solid
+          var(--ds-image-picker-ring, var(--ds-primary-soft-border));
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
       }
