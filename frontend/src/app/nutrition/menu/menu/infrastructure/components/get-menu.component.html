@@ -51,11 +51,6 @@
         align="center"
         [gap]="'var(--ds-space-3)'"
       >
-        <ds-skeleton-line
-          width="3.75rem"
-          height="3.75rem"
-          radius="var(--ds-radius-xl)"
-        />
         <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
           <ds-skeleton-line width="5.25rem" height="0.5625rem" />
           <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
@@ -183,7 +178,6 @@
         align="center"
         [gap]="'var(--ds-space-3)'"
       >
-        <ds-emoji-tile [emoji]="menu.emoji" [size]="60" [radius]="16" />
         <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
           <ds-text variant="label">{{ typeLabel() }}</ds-text>
           <ds-text-input

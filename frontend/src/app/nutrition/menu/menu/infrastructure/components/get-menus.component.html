@@ -61,7 +61,6 @@
         <ds-grid dsReveal="children" [minColumn]="'20rem'">
           @for (card of group.cards; track card.id) {
             <ds-menu-card
-              [emoji]="card.emoji"
               [name]="card.name"
               [meta]="card.meta"
               [kcal]="card.kcal"

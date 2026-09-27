@@ -38,7 +38,6 @@ final class CreateMenuCommandHandlerTest extends TestCase
     {
         ($this->handler)(new CreateMenuCommand(
             name: 'Día alto en proteína',
-            emoji: '🍗',
             note: 'Para días de entreno intenso.',
             type: Menu::TYPE_SINGLE,
             items: [
@@ -77,7 +76,6 @@ final class CreateMenuCommandHandlerTest extends TestCase
     {
         ($this->handler)(new CreateMenuCommand(
             name: 'Semana fuerza',
-            emoji: '🗓️',
             note: '',
             type: Menu::TYPE_WEEK,
             items: [
@@ -114,7 +112,6 @@ final class CreateMenuCommandHandlerTest extends TestCase
 
         ($this->handler)(new CreateMenuCommand(
             name: 'Semana fuerza',
-            emoji: '🗓️',
             note: '',
             type: Menu::TYPE_WEEK,
             items: [
@@ -137,7 +134,6 @@ final class CreateMenuCommandHandlerTest extends TestCase
 
         ($this->handler)(new CreateMenuCommand(
             name: 'Menú raro',
-            emoji: '🍽️',
             note: '',
             type: 'month',
             items: [],
@@ -151,7 +147,6 @@ final class CreateMenuCommandHandlerTest extends TestCase
 
         ($this->handler)(new CreateMenuCommand(
             name: 'Día ligero',
-            emoji: '🥗',
             note: '',
             type: Menu::TYPE_SINGLE,
             items: [

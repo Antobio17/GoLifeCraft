@@ -36,7 +36,6 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
 
 interface MenuCardView {
   id: string;
-  emoji: string;
   name: string;
   meta: string;
   kcal: string;
@@ -52,9 +51,6 @@ interface MenuGroupView {
   countLabel: string;
   cards: MenuCardView[];
 }
-
-const SINGLE_EMOJI = "🍽️";
-const WEEK_EMOJI = "🗓️";
 
 @Component({
   selector: "app-get-menus",
@@ -245,7 +241,6 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
     return {
       id: menu.id,
       isWeek,
-      emoji: attributes.emoji || (isWeek ? WEEK_EMOJI : SINGLE_EMOJI),
       name: attributes.name,
       meta: isWeek
         ? this.plural("getMenus.card.days", attributes.dayCount)

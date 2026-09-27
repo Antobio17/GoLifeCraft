@@ -35,7 +35,6 @@ final readonly class DoctrineGetMenuNeedleDataQuery implements GetMenuNeedleData
             ->select(
                 'm.id',
                 'm.name',
-                'm.emoji',
                 'm.note',
                 'm.type',
                 'm.created_at',
@@ -84,7 +83,6 @@ final readonly class DoctrineGetMenuNeedleDataQuery implements GetMenuNeedleData
             id: $row['id'],
             aggregateName: 'Menu',
             name: $row['name'],
-            emoji: $row['emoji'],
             note: $row['note'],
             type: $row['type'],
             weekDays: $weekDays,

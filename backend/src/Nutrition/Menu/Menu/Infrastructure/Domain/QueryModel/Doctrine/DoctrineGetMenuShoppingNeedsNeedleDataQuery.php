@@ -25,7 +25,7 @@ final readonly class DoctrineGetMenuShoppingNeedsNeedleDataQuery implements GetM
     public function findShoppingNeeds(string $menuId): ?GetMenuShoppingNeedsResult
     {
         $menu = $this->connection->createQueryBuilder()
-            ->select('m.id', 'm.name', 'm.emoji')
+            ->select('m.id', 'm.name')
             ->from(table: 'menu', alias: 'm')
             ->where('m.id = :menuId')
             ->setParameter(key: 'menuId', value: $menuId)
@@ -48,7 +48,6 @@ final readonly class DoctrineGetMenuShoppingNeedsNeedleDataQuery implements GetM
             id: $menuId,
             aggregateName: 'MenuShoppingNeeds',
             menuName: $menu['name'],
-            menuEmoji: $menu['emoji'],
             needs: $needs,
             needCount: count(value: $needs),
         );

@@ -8,14 +8,6 @@ fields:
     max: 255
     filterable: true
     sortable: true
-  emoji:
-    writable: true
-    required: true
-    max: 16
-    description: >-
-      A single emoji that represents the menu. Weekly menus use 🗓️; single day menus pick
-      one that matches the food they contain: high protein 🍗, light 🥗, stew 🍲, wrap 🥙,
-      bowl 🍱, veggie 🥦, breakfast 🍳. If nothing fits, use 🍽️.
   note:
     writable: true
     max: 255

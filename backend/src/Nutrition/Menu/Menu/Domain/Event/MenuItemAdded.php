@@ -14,7 +14,6 @@ final readonly class MenuItemAdded extends DomainEvent
         \DateTime $occurredOn,
         public string $menuItemId,
         public string $name,
-        public string $emoji,
         public string $note,
         public string $type,
         public string $weekDays,

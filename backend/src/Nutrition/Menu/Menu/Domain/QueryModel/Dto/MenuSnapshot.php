@@ -10,7 +10,6 @@ final readonly class MenuSnapshot
     public function __construct(
         public string $id,
         public string $name,
-        public string $emoji,
         public string $note,
         public string $type,
         public array $items,

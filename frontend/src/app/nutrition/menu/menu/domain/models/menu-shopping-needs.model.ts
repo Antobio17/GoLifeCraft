@@ -15,7 +15,6 @@ export interface MenuShoppingNeed {
 
 export interface MenuShoppingNeedsAttributes {
   menuName: string;
-  menuEmoji: string;
   needs: MenuShoppingNeed[];
   needCount: number;
 }

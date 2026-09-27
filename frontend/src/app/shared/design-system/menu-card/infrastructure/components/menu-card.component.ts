@@ -10,7 +10,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
   template: `
     <div class="ds-mcard">
       <button type="button" class="ds-mcard__main" (click)="activated.emit()">
-        <span class="ds-mcard__emoji">{{ emoji }}</span>
         <span class="ds-mcard__text">
           <span class="ds-mcard__name">{{ name }}</span>
           <span class="ds-mcard__meta">{{ meta }}</span>
@@ -88,17 +87,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         font: inherit;
         color: inherit;
         cursor: pointer;
-      }
-      .ds-mcard__emoji {
-        flex: 0 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 3.25rem;
-        height: 3.25rem;
-        border-radius: var(--ds-radius-lg);
-        background: var(--ds-surface-inset);
-        font-size: var(--ds-text-2xl);
       }
       .ds-mcard__text {
         flex: 1 1 auto;
@@ -182,7 +170,6 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
   ],
 })
 export class MenuCardComponent {
-  @Input() emoji = "";
   @Input() name = "";
   @Input() meta = "";
   @Input() kcal = "";

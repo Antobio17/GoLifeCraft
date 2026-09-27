@@ -56,7 +56,6 @@ export interface MenuDayView {
 
 export interface MenuListAttributes {
   name: string;
-  emoji: string;
   note: string;
   type: MenuType;
   weekDays: MenuWeekDayKey[];
@@ -70,7 +69,6 @@ export interface MenuListAttributes {
 
 export interface MenuDetailAttributes {
   name: string;
-  emoji: string;
   note: string;
   type: MenuType;
   weekDays: MenuWeekDayKey[];

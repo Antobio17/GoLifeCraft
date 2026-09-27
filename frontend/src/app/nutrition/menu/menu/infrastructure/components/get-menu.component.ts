@@ -878,7 +878,6 @@ export class GetMenuComponent implements OnInit {
     this.autosave.push("details", () =>
       this.updateMenuDetailsService.updateMenuDetails(this.id(), {
         name: this.name(),
-        emoji: this.loadedDetail()?.emoji ?? "",
         note: this.note(),
       }),
     );

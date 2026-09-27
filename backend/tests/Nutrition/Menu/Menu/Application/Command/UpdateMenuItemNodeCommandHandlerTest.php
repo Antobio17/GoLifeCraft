@@ -321,7 +321,6 @@ final class UpdateMenuItemNodeCommandHandlerTest extends TestCase
         $this->menuRepository->save(menu: Menu::create(
             id: self::MENU_ID,
             name: 'Día alto en proteína',
-            emoji: '🍗',
             note: '',
             type: Menu::TYPE_SINGLE,
             items: $items,

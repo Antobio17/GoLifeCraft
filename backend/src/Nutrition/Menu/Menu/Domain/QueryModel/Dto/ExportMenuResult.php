@@ -14,7 +14,6 @@ final class ExportMenuResult extends QueryAggregateResult
         string $id,
         string $aggregateName,
         public readonly string $name,
-        public readonly string $emoji,
         public readonly string $note,
         public readonly string $type,
         public readonly array $days,

@@ -118,7 +118,6 @@ final class LoadMenuIntoDiaryCommandHandlerTest extends TestCase
         $this->menuRepository->save(menu: Menu::create(
             id: 'menu-1',
             name: 'Vacío',
-            emoji: '🍽️',
             note: '',
             type: Menu::TYPE_SINGLE,
             items: [],
@@ -185,7 +184,6 @@ final class LoadMenuIntoDiaryCommandHandlerTest extends TestCase
         $this->menuRepository->save(menu: Menu::create(
             id: 'menu-1',
             name: 'Día alto en proteína',
-            emoji: '🍗',
             note: '',
             type: Menu::TYPE_SINGLE,
             items: $this->menuItemAssembler->assemble(
@@ -213,7 +211,6 @@ final class LoadMenuIntoDiaryCommandHandlerTest extends TestCase
         $this->menuRepository->save(menu: Menu::create(
             id: 'menu-1',
             name: 'Semana fuerza',
-            emoji: '🗓️',
             note: '',
             type: Menu::TYPE_WEEK,
             items: $this->menuItemAssembler->assemble(

@@ -13,7 +13,6 @@ final class GetMenuShoppingNeedsResult extends QueryAggregateResult
         string $id,
         string $aggregateName,
         public readonly string $menuName,
-        public readonly string $menuEmoji,
         public readonly array $needs,
         public readonly int $needCount,
     ) {

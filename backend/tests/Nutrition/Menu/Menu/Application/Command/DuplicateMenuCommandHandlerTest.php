@@ -42,7 +42,6 @@ final class DuplicateMenuCommandHandlerTest extends TestCase
         $this->needleDataQuery->add(snapshot: new MenuSnapshot(
             id: 'menu-source',
             name: 'Semana fuerza',
-            emoji: '🗓️',
             note: 'Alto en proteína.',
             type: Menu::TYPE_WEEK,
             items: [

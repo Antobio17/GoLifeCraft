@@ -67,14 +67,12 @@ final class MenuItemCommandHandlersTest extends TestCase
         ($this->updateDetailsHandler)(new UpdateMenuDetailsCommand(
             menuId: 'menu-1',
             name: 'Día ligero',
-            emoji: '🥗',
             note: 'Cardio suave.',
             updatedByUserId: 'god-user-id',
         ));
 
         $menu = $this->menuRepository->findById(id: 'menu-1');
         $this->assertEquals(expected: 'Día ligero', actual: $menu->name);
-        $this->assertEquals(expected: '🥗', actual: $menu->emoji);
         $this->assertCount(expectedCount: 1, haystack: $menu->items);
         $this->assertEquals(expected: self::ITEM_ID, actual: $menu->items[0]->id);
     }
@@ -240,7 +238,6 @@ final class MenuItemCommandHandlersTest extends TestCase
         $this->menuRepository->save(menu: Menu::create(
             id: 'menu-1',
             name: 'Día alto en proteína',
-            emoji: '🍗',
             note: '',
             type: Menu::TYPE_SINGLE,
             items: [],
@@ -254,7 +251,6 @@ final class MenuItemCommandHandlersTest extends TestCase
         $this->menuRepository->save(menu: Menu::create(
             id: 'menu-1',
             name: 'Semana fuerza',
-            emoji: '🗓️',
             note: '',
             type: Menu::TYPE_WEEK,
             items: [],

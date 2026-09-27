@@ -30,7 +30,6 @@ final class CreateMenuController
         try {
             $this->handle(message: new CreateMenuCommand(
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
-                emoji: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'emoji'),
                 note: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'note'),
                 type: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'type'),
                 items: MenuItemData::listFromArray(
