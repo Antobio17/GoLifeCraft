@@ -12,6 +12,7 @@
     <div class="qs">
       @if (unitChoices().length > 0) {
         <ds-segmented-toggle
+          variant="pill"
           data-testid="quantity-sheet-units"
           [options]="unitChoices()"
           [ngModel]="draftUnit()"

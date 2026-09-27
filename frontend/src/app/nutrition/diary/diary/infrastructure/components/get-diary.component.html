@@ -262,6 +262,7 @@
 
       @if (!quickEditing()) {
         <ds-segmented-toggle
+          variant="pill"
           data-testid="diary-picker-tabs"
           [options]="pickerTabs()"
           [ngModel]="pickerTab()"
@@ -560,9 +561,9 @@
     [decrementLabel]="'getDiary.quantitySheet.decrement' | t"
     [incrementLabel]="'getDiary.quantitySheet.increment' | t"
     [kcalLabel]="'getDiary.kcal' | t"
-    [proteinLabel]="'getDiary.macro.protein' | t"
-    [fatLabel]="'getDiary.macro.fat' | t"
-    [carbsLabel]="'getDiary.macro.carbs' | t"
+    [proteinLabel]="'getDiary.goal.protein' | t"
+    [fatLabel]="'getDiary.goal.fat' | t"
+    [carbsLabel]="'getDiary.goal.carbs' | t"
     (closed)="closeQuantity()"
     (saved)="onQuantitySaved($event)"
   >

@@ -372,9 +372,9 @@
     [decrementLabel]="'getMenu.quantitySheet.decrement' | t"
     [incrementLabel]="'getMenu.quantitySheet.increment' | t"
     [kcalLabel]="'getMenu.kcal' | t"
-    [proteinLabel]="'getMenu.macro.protein' | t"
-    [fatLabel]="'getMenu.macro.fat' | t"
-    [carbsLabel]="'getMenu.macro.carbs' | t"
+    [proteinLabel]="'getMenu.totals.protein' | t"
+    [fatLabel]="'getMenu.totals.fat' | t"
+    [carbsLabel]="'getMenu.totals.carbs' | t"
     (closed)="closeQuantity()"
     (saved)="onQuantitySaved($event)"
   />
@@ -390,6 +390,7 @@
       <ds-text variant="meta">{{ "getMenu.picker.subtitle" | t }}</ds-text>
 
       <ds-segmented-toggle
+        variant="pill"
         [options]="pickerTabs()"
         [ngModel]="pickerTab()"
         [ngModelOptions]="{ standalone: true }"
