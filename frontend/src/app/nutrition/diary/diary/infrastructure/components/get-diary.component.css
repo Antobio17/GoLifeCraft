@@ -65,10 +65,22 @@
 }
 
 .meal-header {
+  --meal-header-bleed: var(--ds-space-4);
   position: sticky;
   top: calc(var(--ds-sticky-header-offset, 0px) + env(safe-area-inset-top));
   z-index: 2;
   padding-block: var(--ds-space-2);
   margin-block: calc(-1 * var(--ds-space-2));
   background: var(--ds-bg);
+}
+
+.meal-header.is-stuck {
+  box-shadow:
+    0 0 0 var(--meal-header-bleed) var(--ds-bg),
+    0 calc(-1 * env(safe-area-inset-top)) 0 var(--meal-header-bleed)
+      var(--ds-bg);
+  clip-path: inset(
+    calc(-1 * (var(--meal-header-bleed) + env(safe-area-inset-top)))
+      calc(-1 * var(--meal-header-bleed)) 0
+  );
 }
