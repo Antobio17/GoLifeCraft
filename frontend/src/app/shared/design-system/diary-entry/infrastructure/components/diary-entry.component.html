@@ -26,74 +26,101 @@
       <ng-container [ngTemplateOutlet]="tile" />
     }
 
-    <ds-stack gap="var(--ds-space-1)" [grow]="true">
-      @if (openable) {
-        <ds-pressable
-          class="diary-entry__open"
-          [ariaLabel]="openLabel"
-          (press)="opened.emit()"
-        >
+    <ds-stack class="diary-entry__body" gap="var(--ds-space-1)" [grow]="true">
+      <ds-stack direction="row" align="center" gap="var(--ds-space-2)">
+        @if (openable) {
+          <ds-pressable
+            class="diary-entry__open"
+            [ariaLabel]="openLabel"
+            (press)="opened.emit()"
+          >
+            <ds-text variant="strong" class="diary-entry__name">{{
+              name
+            }}</ds-text>
+          </ds-pressable>
+        } @else {
           <ds-text variant="strong" class="diary-entry__name">{{
             name
           }}</ds-text>
-        </ds-pressable>
-      } @else {
-        <ds-text variant="strong" class="diary-entry__name">{{ name }}</ds-text>
-      }
+        }
 
-      @if (expandable) {
+        <ds-text class="diary-entry__kcal">{{ kcalLabel }}</ds-text>
+      </ds-stack>
+
+      <ds-stack direction="row" align="center" gap="var(--ds-space-2)">
         <ds-pressable
-          class="diary-entry__expand"
-          [ariaLabel]="expanded ? collapseLabel : expandLabel"
-          (press)="expandToggled.emit()"
+          class="diary-entry__quantity"
+          data-testid="diary-entry-quantity"
+          gap="3px"
+          [ariaLabel]="quantityAriaLabel"
+          (press)="quantityPressed.emit()"
         >
-          <ng-container [ngTemplateOutlet]="meta" />
+          <ds-text class="diary-entry__quantity-label">{{
+            quantityLabel
+          }}</ds-text>
+          <ds-icon
+            class="diary-entry__quantity-caret"
+            name="chevronDown"
+            [size]="12"
+            [stroke]="2.6"
+          />
         </ds-pressable>
-      } @else {
-        <ng-container [ngTemplateOutlet]="meta" />
-      }
+
+        <ds-text class="diary-entry__macros">{{ macrosLabel }}</ds-text>
+
+        @if (expandable) {
+          <ds-pressable
+            class="diary-entry__expand diary-entry__expand--caret"
+            [ariaLabel]="expanded ? collapseLabel : expandLabel"
+            (press)="expandToggled.emit()"
+          >
+            <ds-icon
+              class="diary-entry__caret"
+              [class.diary-entry__caret--open]="expanded"
+              name="chevronDown"
+              [size]="16"
+              [stroke]="2.4"
+            />
+          </ds-pressable>
+        }
+      </ds-stack>
 
       <ng-content select="[slot=footer]" />
     </ds-stack>
-
-    <ds-inline-quantity
-      [size]="compact ? 'sm' : 'md'"
-      [quantity]="quantity"
-      [unit]="unitValue || unit"
-      [unitLabel]="unit"
-      [unitOptions]="unitOptions"
-      [ariaLabel]="quantityAriaLabel"
-      [unitAriaLabel]="unitAriaLabel"
-      (quantityChange)="quantityChange.emit($event)"
-      (unitChange)="unitChange.emit($event)"
-    />
   </ds-stack>
 </ds-swipe-to-delete>
 
 <ng-template #tile>
-  <ds-emoji-tile
-    [emoji]="emoji"
-    [imageUrl]="imageUrl"
-    [alt]="name"
-    [size]="38"
-    [radius]="10"
-  />
-</ng-template>
-
-<ng-template #meta>
-  <ds-stack gap="var(--ds-space-1)" [grow]="true">
-    <ds-stack
-      direction="row"
-      align="center"
-      gap="var(--ds-space-1-5)"
-      [wrap]="true"
-    >
-      <ds-chip [tone]="badgeTone">{{ badge }}</ds-chip>
-      @if (tag) {
-        <ds-chip [tone]="tagTone">{{ tag }}</ds-chip>
-      }
-      <ds-macro-badges [kcal]="kcalLabel" />
-    </ds-stack>
-    <ds-macro-badges [macros]="macros" />
+  <ds-stack class="diary-entry__tile">
+    <ds-emoji-tile
+      [emoji]="emoji"
+      [imageUrl]="imageUrl"
+      [alt]="name"
+      [size]="40"
+      [radius]="11"
+    />
+    @if (kindIcon) {
+      <ds-icon
+        class="diary-entry__kind"
+        [name]="kindIcon"
+        [size]="10"
+        [stroke]="2.6"
+        [attr.aria-label]="kindLabel"
+        [attr.title]="kindLabel"
+        role="img"
+      />
+    }
+    @if (statusTone) {
+      <ds-icon
+        class="diary-entry__status"
+        [class.diary-entry__status--ok]="statusTone === 'ok'"
+        [class.diary-entry__status--warn]="statusTone === 'warn'"
+        name="dot"
+        [size]="12"
+        [attr.aria-label]="statusLabel"
+        [attr.title]="statusLabel"
+        role="img"
+      />
+    }
   </ds-stack>
 </ng-template>

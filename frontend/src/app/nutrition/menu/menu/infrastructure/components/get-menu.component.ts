@@ -99,6 +99,8 @@ import { MenuApplyWeekSheetComponent } from "./menu-apply-week-sheet.component";
 import { MenuShoppingSheetComponent } from "./menu-shopping-sheet.component";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
+import { QuantitySheetComponent } from "@shared/design-system/quantity-sheet/infrastructure/components/quantity-sheet.component";
+import { QuantityDraft } from "@shared/design-system/quantity-sheet/domain/models/quantity-draft.model";
 
 type PickerTab = "product" | "recipe";
 
@@ -125,6 +127,7 @@ type PickerTab = "product" | "recipe";
     SearchInputComponent,
     SegmentedToggleComponent,
     ModalSheetComponent,
+    QuantitySheetComponent,
     SkeletonListComponent,
     SkeletonMacroBarsComponent,
     SkeletonSectionHeaderComponent,
@@ -268,13 +271,14 @@ export class GetMenuComponent implements OnInit {
           item.refId,
           item.image,
         ),
-        badge: this.itemBadge(item),
-        badgeTone: this.itemBadgeTone(item),
+        kindIcon: item.kind === "recipe" ? ("chefHat" as const) : null,
+        kindLabel: this.itemBadge(item),
         kcal: this.itemKcal(item),
-        macros: this.itemMacros(item),
-        unitLabel: this.itemUnitLabel(item),
-        unitValue: item.unit ?? item.baseUnit,
-        unitOptions: item.kind === "product" ? this.itemUnitOptions(item) : [],
+        macrosLabel: this.view.macroLine(item.macros, this.macroLabels()),
+        quantityLabel: this.view.quantityLabel(
+          item.quantity,
+          this.itemUnitLabel(item),
+        ),
         openable: this.aggregateNavigation.canOpen(item.kind, item.refId),
         expandable: item.tree.length > 0,
         expanded: this.expandedItems().has(item.id),
@@ -289,6 +293,27 @@ export class GetMenuComponent implements OnInit {
       })),
     })),
   );
+
+  quantityItemId = signal<string | null>(null);
+
+  quantitySheet = computed(() => {
+    const id = this.quantityItemId();
+    const item =
+      (this.currentDay()?.meals ?? [])
+        .flatMap((meal) => meal.items)
+        .find((candidate) => candidate.id === id) ?? null;
+    if (null === item) return null;
+
+    const product = item.kind === "product";
+
+    return {
+      item,
+      unit: item.unit ?? item.baseUnit,
+      unitLabel: this.itemUnitLabel(item),
+      unitOptions: product ? this.itemUnitOptions(item) : [],
+      unitFactors: product ? this.picker.unitFactors(item.refId) : {},
+    };
+  });
 
   pickerRows = computed(() =>
     this.pickerChoices().map((choice) => ({
@@ -454,10 +479,6 @@ export class GetMenuComponent implements OnInit {
     );
   }
 
-  itemBadgeTone(item: MenuItemView): "brand" | "neutral" {
-    return item.kind === "recipe" ? "brand" : "neutral";
-  }
-
   choiceKcal(choice: MenuChoice): string {
     return `${this.view.integer(choice.macros.calories)} ${this.t("getMenu.kcal")}`;
   }
@@ -468,10 +489,6 @@ export class GetMenuComponent implements OnInit {
 
   itemKcal(item: MenuItemView): string {
     return `${this.view.integer(item.macros.calories)} ${this.t("getMenu.kcal")}`;
-  }
-
-  itemMacros(item: MenuItemView): MacroBadge[] {
-    return this.view.itemMacros(item.macros, this.macroLabels());
   }
 
   itemUnitLabel(item: MenuItemView): string {
@@ -609,6 +626,24 @@ export class GetMenuComponent implements OnInit {
     this.loadedDetail.set(patched);
     this.patchPendingItem(item.id, { quantity });
     this.queueItem(item.id);
+  }
+
+  openQuantity(itemId: string): void {
+    this.quantityItemId.set(itemId);
+  }
+
+  closeQuantity(): void {
+    this.quantityItemId.set(null);
+  }
+
+  onQuantitySaved(draft: QuantityDraft): void {
+    const sheet = this.quantitySheet();
+    this.closeQuantity();
+    if (!sheet) return;
+
+    if (draft.unit !== sheet.unit) this.onUnit(sheet.item, draft.unit);
+
+    this.onQuantity(sheet.item, draft.quantity);
   }
 
   onUnit(item: MenuItemView, unit: string): void {

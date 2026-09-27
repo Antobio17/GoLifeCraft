@@ -1,0 +1,96 @@
+<ds-modal-sheet
+  [open]="open()"
+  [auto]="true"
+  [title]="title()"
+  [closeLabel]="closeLabel()"
+  [confirmLabel]="confirmLabel()"
+  [confirmDisabled]="!valid() || !changed()"
+  (closed)="stopRepeat(); closed.emit()"
+  (confirmed)="save()"
+>
+  @if (open()) {
+    <div class="qs">
+      @if (unitChoices().length > 0) {
+        <ds-segmented-toggle
+          data-testid="quantity-sheet-units"
+          [options]="unitChoices()"
+          [ngModel]="draftUnit()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onUnit($event)"
+        />
+      }
+
+      <div class="qs__stepper">
+        <button
+          type="button"
+          class="qs__step"
+          data-testid="quantity-sheet-decrement"
+          [disabled]="!canDecrease()"
+          [attr.aria-label]="decrementLabel() || null"
+          (pointerdown)="startRepeat($event, -1)"
+          (pointerup)="stopRepeat()"
+          (pointerleave)="stopRepeat()"
+          (pointercancel)="stopRepeat()"
+          (click)="onStepKey($event, -1)"
+        >
+          <ds-icon name="minus" [size]="20" [stroke]="2.4" />
+        </button>
+
+        <label class="qs__value">
+          <input
+            class="qs__input"
+            data-testid="quantity-sheet-input"
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+            [style.width.ch]="inputWidth()"
+            [value]="draftText()"
+            [attr.aria-label]="quantityAriaLabel() || null"
+            (input)="onText($event)"
+            (keydown.enter)="onEnter($event)"
+          />
+          <span class="qs__unit">{{ draftUnitLabel() }}</span>
+        </label>
+
+        <button
+          type="button"
+          class="qs__step"
+          data-testid="quantity-sheet-increment"
+          [attr.aria-label]="incrementLabel() || null"
+          (pointerdown)="startRepeat($event, 1)"
+          (pointerup)="stopRepeat()"
+          (pointerleave)="stopRepeat()"
+          (pointercancel)="stopRepeat()"
+          (click)="onStepKey($event, 1)"
+        >
+          <ds-icon name="plus" [size]="20" [stroke]="2.4" />
+        </button>
+      </div>
+
+      <ds-scale-ruler
+        data-testid="quantity-sheet-ruler"
+        [value]="draftQuantity() ?? 0"
+        [min]="scale().min"
+        [max]="scale().max"
+        [step]="scale().step"
+        [spacing]="scale().spacing"
+        [majorEvery]="scale().majorEvery"
+        [ariaLabel]="rulerAriaLabel()"
+        (valueChange)="onRuler($event)"
+      />
+
+      @if (preview().length > 0) {
+        <dl class="qs__stats" aria-live="polite">
+          @for (stat of preview(); track stat.key) {
+            <div class="qs__stat" [class.qs__stat--lead]="stat.key === 'kcal'">
+              <dt class="qs__stat-label">{{ stat.label }}</dt>
+              <dd class="qs__stat-value">{{ stat.value }}</dd>
+            </div>
+          }
+        </dl>
+      }
+
+      <ng-content />
+    </div>
+  }
+</ds-modal-sheet>

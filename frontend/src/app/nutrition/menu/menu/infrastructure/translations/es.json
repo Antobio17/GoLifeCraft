@@ -222,6 +222,14 @@
       "customized": "Has ajustado esta receta en el menú.",
       "reset": "Restaurar receta",
       "servings": "rac."
+    },
+    "quantitySheet": {
+      "open": "Cambiar cantidad",
+      "close": "Cerrar",
+      "save": "Guardar",
+      "decrement": "Quitar",
+      "increment": "Añadir",
+      "ruler": "Desliza para ajustar la cantidad"
     }
   }
 }

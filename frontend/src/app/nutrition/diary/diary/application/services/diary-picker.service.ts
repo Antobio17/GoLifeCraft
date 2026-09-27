@@ -25,6 +25,7 @@ interface ProductEntry {
   baseUnit: string;
   diaryUnit: string;
   units: string[];
+  factors: Record<string, number>;
 }
 
 export interface DiaryEntryDefaults {
@@ -90,6 +91,13 @@ export class DiaryPickerService {
             (equivalence) => equivalence.unit,
           ),
         ],
+        factors: Object.fromEntries([
+          [baseUnit, 1],
+          ...(article.attributes.equivalences ?? []).map((equivalence) => [
+            equivalence.unit,
+            equivalence.quantity,
+          ]),
+        ]),
       });
     });
 
@@ -138,6 +146,10 @@ export class DiaryPickerService {
       value: unit,
       label: this.unitCatalog.label(unit),
     }));
+  }
+
+  unitFactors(refId: string): Record<string, number> {
+    return this.products().get(refId)?.factors ?? {};
   }
 
   unitLabel(unit: string): string {

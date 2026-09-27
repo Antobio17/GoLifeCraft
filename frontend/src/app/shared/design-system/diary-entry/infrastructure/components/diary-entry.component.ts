@@ -1,30 +1,25 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { EmojiTileComponent } from "../../../emoji-tile/infrastructure/components/emoji-tile.component";
-import { ChipComponent } from "../../../chip/infrastructure/components/chip.component";
 import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
-import { InlineQuantityComponent } from "../../../inline-quantity/infrastructure/components/inline-quantity.component";
-import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
-import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
-import { SelectOption } from "../../../select/domain/models/select-option.model";
+import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
+import { DsIconName } from "../../../icon/domain/models/icon.model";
 
-type ChipTone = "neutral" | "brand" | "accent" | "warning";
+type DiaryEntryStatusTone = "" | "ok" | "warn";
 
 @Component({
   selector: "ds-diary-entry",
   imports: [
     NgTemplateOutlet,
     EmojiTileComponent,
-    ChipComponent,
     SwipeToDeleteComponent,
     StackComponent,
     TextComponent,
     PressableComponent,
-    InlineQuantityComponent,
-    MacroBadgesComponent,
+    IconComponent,
   ],
   templateUrl: "./diary-entry.component.html",
   styleUrls: ["./diary-entry.component.css"],
@@ -33,18 +28,14 @@ export class DiaryEntryComponent {
   @Input() emoji = "";
   @Input() imageUrl: string | null = null;
   @Input() name = "";
-  @Input() badge = "";
-  @Input() badgeTone: ChipTone = "neutral";
-  @Input() tag = "";
-  @Input() tagTone: ChipTone = "neutral";
+  @Input() kindIcon: DsIconName | null = null;
+  @Input() kindLabel = "";
+  @Input() statusTone: DiaryEntryStatusTone = "";
+  @Input() statusLabel = "";
   @Input() kcalLabel = "";
-  @Input() macros: MacroBadge[] = [];
-  @Input() unit = "";
-  @Input() unitValue = "";
-  @Input() unitOptions: SelectOption[] = [];
-  @Input() quantity = 0;
+  @Input() macrosLabel = "";
+  @Input() quantityLabel = "";
   @Input() quantityAriaLabel = "";
-  @Input() unitAriaLabel = "";
   @Input() removeLabel = "";
   @Input() openable = false;
   @Input() openLabel = "";
@@ -54,8 +45,7 @@ export class DiaryEntryComponent {
   @Input() collapseLabel = "";
   @Input() compact = false;
 
-  @Output() quantityChange = new EventEmitter<number>();
-  @Output() unitChange = new EventEmitter<string>();
+  @Output() quantityPressed = new EventEmitter<void>();
   @Output() remove = new EventEmitter<void>();
   @Output() opened = new EventEmitter<void>();
   @Output() expandToggled = new EventEmitter<void>();

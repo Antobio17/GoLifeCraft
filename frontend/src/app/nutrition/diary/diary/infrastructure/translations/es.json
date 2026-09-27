@@ -123,6 +123,14 @@
       "changed": "ingredientes cambiados",
       "followRecipe": "Seguir la receta",
       "followRecipeHint": "Cuenta los ingredientes de la receta, no los de un lote."
+    },
+    "quantitySheet": {
+      "open": "Cambiar cantidad",
+      "close": "Cerrar",
+      "save": "Guardar",
+      "decrement": "Quitar",
+      "increment": "Añadir",
+      "ruler": "Desliza para ajustar la cantidad"
     }
   }
 }

@@ -113,6 +113,9 @@ import {
   DiaryGoalFormService,
 } from "@nutrition/diary/goal/application/services/diary-goal-form.service";
 import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
+import { QuantitySheetComponent } from "@shared/design-system/quantity-sheet/infrastructure/components/quantity-sheet.component";
+import { QuantityDraft } from "@shared/design-system/quantity-sheet/domain/models/quantity-draft.model";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 
 type PickerTab = "product" | "recipe" | "quick";
 
@@ -156,6 +159,7 @@ type PickerTab = "product" | "recipe" | "quick";
     CalendarComponent,
     DiaryTreeComponent,
     SaveStatusComponent,
+    QuantitySheetComponent,
   ],
 })
 export class GetDiaryComponent implements OnInit {
@@ -304,16 +308,14 @@ export class GetDiaryComponent implements OnInit {
           entry.refId,
           entry.image,
         ),
-        badge: this.badgeLabel(entry.kind),
-        badgeTone: this.view.entryBadgeTone(entry.kind),
+        kindIcon: this.kindIcon(entry.kind),
+        kindLabel: this.badgeLabel(entry.kind),
         kcalLabel: `${this.view.integer(entry.macros.calories)} ${this.t("getDiary.kcal")}`,
-        macros: this.entryMacros(entry),
-        unit: this.view.entryUnitLabel(entry),
-        unitValue: entry.unit,
-        unitOptions:
-          "product" === entry.kind && entry.refId
-            ? this.picker.unitOptions(entry.refId)
-            : [],
+        macrosLabel: this.view.macroLine(entry.macros, this.macroLabels()),
+        quantityLabel: this.view.quantityLabel(
+          entry,
+          this.treeLabels().servings,
+        ),
         openable:
           "quick" === entry.kind ||
           this.aggregateNavigation.canOpen(entry.kind, entry.refId),
@@ -330,16 +332,33 @@ export class GetDiaryComponent implements OnInit {
             )
           : [],
         showReset: entry.customized,
-        lotPickable: "recipe" === entry.kind && null !== entry.refId,
-        lotLabel: this.lotView.entryLabel(entry.lot, this.treeLabels().lotNone),
-        stockLabel: this.stockLabel(entry),
-        stockTone:
-          DiaryStockState.Covered === entry.stockState
-            ? ("brand" as const)
-            : ("neutral" as const),
+        statusLabel: this.stockLabel(entry),
+        statusTone: this.stockTone(entry),
       })),
     })),
   );
+
+  quantityEntryId = signal<string | null>(null);
+
+  quantitySheet = computed(() => {
+    const id = this.quantityEntryId();
+    const entry = null === id ? null : this.entryOf(id);
+    if (null === entry) return null;
+
+    const product = DiaryEntryKind.Product === entry.kind && entry.refId;
+    const recipe = DiaryEntryKind.Recipe === entry.kind;
+
+    return {
+      entry,
+      unitLabel: recipe
+        ? this.treeLabels().servings
+        : this.view.entryUnitLabel(entry),
+      unitOptions: product ? this.picker.unitOptions(entry.refId!) : [],
+      unitFactors: product ? this.picker.unitFactors(entry.refId!) : {},
+      lotPickable: recipe && null !== entry.refId,
+      lotLabel: this.lotView.entryLabel(entry.lot, this.treeLabels().lotNone),
+    };
+  });
 
   calendarOpen = signal(false);
   calendarMonth = signal(this.calendarView.monthOf(this.view.todayIso()));
@@ -453,6 +472,19 @@ export class GetDiaryComponent implements OnInit {
     return "";
   }
 
+  private stockTone(entry: DiaryEntryView): "" | "ok" | "warn" {
+    if (!this.stockLabel(entry)) return "";
+
+    return DiaryStockState.Covered === entry.stockState ? "ok" : "warn";
+  }
+
+  private kindIcon(kind: DiaryEntryKind): DsIconName | null {
+    if (DiaryEntryKind.Recipe === kind) return "chefHat";
+    if (DiaryEntryKind.Quick === kind) return "pencil";
+
+    return null;
+  }
+
   onConsumeMeal(mealKey: string, consumed: boolean): void {
     const previous = this.loadedDay();
     if (!previous) return;
@@ -493,10 +525,6 @@ export class GetDiaryComponent implements OnInit {
 
   choiceMacros(choice: DiaryChoice): MacroBadge[] {
     return this.view.macroItems(choice.macros, this.macroLabels());
-  }
-
-  entryMacros(entry: DiaryEntryView): MacroBadge[] {
-    return this.view.macroItems(entry.macros, this.macroLabels());
   }
 
   badgeLabel(kind: DiaryEntryKind): string {
@@ -684,24 +712,38 @@ export class GetDiaryComponent implements OnInit {
       });
   }
 
-  onQuantityChange(entryId: string, quantity: number): void {
-    if (!quantity || quantity <= 0) return;
+  openQuantity(entryId: string): void {
+    this.quantityEntryId.set(entryId);
+  }
 
-    this.autosave.push(`entry:${entryId}`, () =>
+  closeQuantity(): void {
+    this.quantityEntryId.set(null);
+  }
+
+  onQuantitySaved(draft: QuantityDraft): void {
+    const entry = this.quantitySheet()?.entry;
+    this.closeQuantity();
+    if (!entry || draft.quantity <= 0) return;
+
+    const unit = draft.unit !== entry.unit ? draft.unit : undefined;
+
+    this.autosave.push(`entry:${entry.id}`, () =>
       this.updateDiaryEntryService
-        .updateDiaryEntryQuantity(entryId, quantity)
+        .updateDiaryEntryQuantity(entry.id, draft.quantity, unit)
         .pipe(tap(() => this.load(this.date(), true))),
     );
   }
 
-  onRetrySave(): void {
-    this.autosave.retry();
+  openQuantityLot(): void {
+    const entry = this.quantitySheet()?.entry;
+    this.closeQuantity();
+    if (!entry) return;
+
+    this.openLotPicker(entry.id, entry.refId);
   }
 
-  onEntryUnitChange(entry: DiaryEntryView, unit: string): void {
-    this.updateDiaryEntryService
-      .updateDiaryEntryQuantity(entry.id, entry.quantity, unit)
-      .subscribe({ next: () => this.load(this.date(), true) });
+  onRetrySave(): void {
+    this.autosave.retry();
   }
 
   onNodeQuantityChange(entryId: string, change: DiaryTreeQuantityChange): void {

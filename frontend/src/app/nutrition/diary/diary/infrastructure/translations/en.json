@@ -123,6 +123,14 @@
       "changed": "ingredients changed",
       "followRecipe": "Follow the recipe",
       "followRecipeHint": "Counts the recipe ingredients instead of a batch."
+    },
+    "quantitySheet": {
+      "open": "Change quantity",
+      "close": "Close",
+      "save": "Save",
+      "decrement": "Decrease",
+      "increment": "Increase",
+      "ruler": "Slide to adjust the quantity"
     }
   }
 }

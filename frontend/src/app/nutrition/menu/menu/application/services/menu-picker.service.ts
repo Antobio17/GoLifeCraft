@@ -174,6 +174,10 @@ export class MenuPickerService {
     }));
   }
 
+  unitFactors(refId: string): Record<string, number> {
+    return this.products().get(refId)?.unitFactors ?? {};
+  }
+
   unitLabel(unit: string): string {
     return this.unitCatalog.label(unit);
   }

@@ -10,11 +10,13 @@ import {
   ViewChild,
   inject,
 } from "@angular/core";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { ScrollLockService } from "@shared/design-system/scroll-lock/application/services/scroll-lock.service";
 import { StatusBarTintService } from "@shared/design-system/status-bar-tint/application/services/status-bar-tint.service";
 
 @Component({
   selector: "ds-modal-sheet",
+  imports: [IconComponent],
   template: `
     @if (open) {
       <div
@@ -41,8 +43,20 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
           @if (!bare) {
             <header class="ds-sheet__header">
               <h2 class="ds-sheet__title">{{ title }}</h2>
+              @if (confirmLabel) {
+                <button
+                  class="ds-sheet__action ds-sheet__confirm"
+                  data-testid="sheet-confirm"
+                  type="button"
+                  [disabled]="confirmDisabled"
+                  [attr.aria-label]="confirmLabel"
+                  (click)="confirmed.emit()"
+                >
+                  <ds-icon name="save" [size]="17" [stroke]="2.2" />
+                </button>
+              }
               <button
-                class="ds-sheet__close"
+                class="ds-sheet__action ds-sheet__close"
                 type="button"
                 [attr.aria-label]="closeLabel"
                 (click)="closed.emit()"
@@ -163,11 +177,9 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .ds-sheet__close {
+      .ds-sheet__action {
         appearance: none;
         border: none;
-        background: var(--ds-surface-hover);
-        color: var(--ds-text-muted);
         cursor: pointer;
         width: 2rem;
         height: 2rem;
@@ -176,9 +188,28 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         align-items: center;
         justify-content: center;
         flex: 0 0 auto;
+        transition:
+          transform var(--ds-dur-1) var(--ds-ease-out),
+          opacity var(--ds-dur-2) var(--ds-ease-out);
+      }
+      .ds-sheet__action:active:not(:disabled) {
+        transform: scale(0.92);
+      }
+      .ds-sheet__close {
+        background: var(--ds-surface-hover);
+        color: var(--ds-text-muted);
       }
       .ds-sheet__close:hover {
         color: var(--ds-text);
+      }
+      .ds-sheet__confirm {
+        margin-right: calc(var(--ds-space-1) * -1);
+        background: var(--ds-primary);
+        color: var(--ds-on-primary);
+      }
+      .ds-sheet__confirm:disabled {
+        opacity: 0.4;
+        cursor: default;
       }
       .ds-sheet__body {
         flex: 1 1 auto;
@@ -283,7 +314,10 @@ export class ModalSheetComponent implements OnDestroy {
   @Input() bare = false;
   @Input() title = "";
   @Input() closeLabel = "Close";
+  @Input() confirmLabel = "";
+  @Input() confirmDisabled = false;
   @Output() closed = new EventEmitter<void>();
+  @Output() confirmed = new EventEmitter<void>();
 
   ngOnDestroy(): void {
     this.toggleOverlayEffects(false);

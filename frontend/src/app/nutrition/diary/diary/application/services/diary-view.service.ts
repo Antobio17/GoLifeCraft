@@ -10,6 +10,7 @@ import {
   DiaryMacros,
   DiaryMealView,
 } from "../../domain/models/diary.model";
+import { DiaryEntryKind } from "../../domain/models/diary-entry-kind.model";
 
 export interface MacroShortLabels {
   protein: string;
@@ -148,6 +149,23 @@ export class DiaryViewService {
 
   entryUnitLabel(entry: DiaryEntryView): string {
     return this.unitCatalog.label(entry.unit);
+  }
+
+  macroLine(macros: DiaryMacros, labels: MacroShortLabels): string {
+    return [
+      `${labels.protein} ${this.format(macros.protein)}`,
+      `${labels.fat} ${this.format(macros.fat)}`,
+      `${labels.carbs} ${this.format(macros.carbs)}`,
+    ].join(" · ");
+  }
+
+  quantityLabel(entry: DiaryEntryView, servingsLabel: string): string {
+    const unit =
+      DiaryEntryKind.Recipe === entry.kind
+        ? servingsLabel
+        : this.entryUnitLabel(entry);
+
+    return `${this.format(entry.quantity)} ${unit}`.trim();
   }
 
   macroItems(macros: DiaryMacros, labels: MacroShortLabels): MacroBadge[] {

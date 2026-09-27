@@ -281,6 +281,18 @@ export class MenuViewService {
     return Math.max(0, goal - value);
   }
 
+  macroLine(macros: MenuMacros, labels: MacroLabels): string {
+    return [
+      `${labels.protein} ${this.format(macros.protein)}`,
+      `${labels.fat} ${this.format(macros.fat)}`,
+      `${labels.carbs} ${this.format(macros.carbs)}`,
+    ].join(" · ");
+  }
+
+  quantityLabel(quantity: number, unitLabel: string): string {
+    return `${this.format(quantity)} ${unitLabel}`.trim();
+  }
+
   itemMacros(macros: MenuMacros, labels: MacroLabels): MacroBadge[] {
     return [
       {

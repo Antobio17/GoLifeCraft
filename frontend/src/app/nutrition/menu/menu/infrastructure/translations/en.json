@@ -222,6 +222,14 @@
       "customized": "You adjusted this recipe inside the menu.",
       "reset": "Restore recipe",
       "servings": "srv."
+    },
+    "quantitySheet": {
+      "open": "Change quantity",
+      "close": "Close",
+      "save": "Save",
+      "decrement": "Decrease",
+      "increment": "Increase",
+      "ruler": "Slide to adjust the quantity"
     }
   }
 }

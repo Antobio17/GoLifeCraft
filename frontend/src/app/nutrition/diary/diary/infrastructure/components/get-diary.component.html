@@ -106,13 +106,11 @@
               [gap]="'var(--ds-space-2)'"
               radius="var(--ds-radius-lg)"
               padding="var(--ds-space-2) var(--ds-space-3)"
-              [tile]="38"
-              [tileRadius]="10"
-              titleWidth="66%"
-              [meta]="false"
-              [chips]="2"
-              trailing="pill"
-              pillWidth="5.375rem"
+              [tile]="40"
+              [tileRadius]="11"
+              titleWidth="62%"
+              headTrailing="3.25rem"
+              metaWidth="78%"
             />
           </ds-rail>
         </ds-stack>
@@ -192,41 +190,24 @@
                     [name]="row.entry.name"
                     [openable]="row.openable"
                     [openLabel]="row.openLabel"
-                    [badge]="row.badge"
-                    [badgeTone]="row.badgeTone"
-                    [tag]="row.stockLabel"
-                    [tagTone]="row.stockTone"
+                    [kindIcon]="row.kindIcon"
+                    [kindLabel]="row.kindLabel"
+                    [statusTone]="row.statusTone"
+                    [statusLabel]="row.statusLabel"
                     [kcalLabel]="row.kcalLabel"
-                    [macros]="row.macros"
-                    [unit]="row.unit"
-                    [unitValue]="row.unitValue"
-                    [unitOptions]="row.unitOptions"
-                    [quantity]="row.entry.quantity"
-                    [quantityAriaLabel]="'getDiary.quantity' | t"
-                    [unitAriaLabel]="'getDiary.unit' | t"
+                    [macrosLabel]="row.macrosLabel"
+                    [quantityLabel]="row.quantityLabel"
+                    [quantityAriaLabel]="'getDiary.quantitySheet.open' | t"
                     [removeLabel]="'getDiary.remove' | t"
                     [expandable]="row.expandable"
                     [expanded]="row.expanded"
                     [expandLabel]="'getDiary.tree.expand' | t"
                     [collapseLabel]="'getDiary.tree.collapse' | t"
-                    (quantityChange)="onQuantityChange(row.entry.id, $event)"
-                    (unitChange)="onEntryUnitChange(row.entry, $event)"
+                    (quantityPressed)="openQuantity(row.entry.id)"
                     (remove)="onRemove(row.entry.id)"
                     (opened)="onOpenEntry(meal.key, row.entry)"
                     (expandToggled)="toggleEntryTree(row.entry.id)"
-                  >
-                    @if (row.lotPickable) {
-                      <ds-button
-                        slot="footer"
-                        variant="link"
-                        size="sm"
-                        icon="package"
-                        (clicked)="openLotPicker(row.entry.id, row.entry.refId)"
-                      >
-                        {{ row.lotLabel }}
-                      </ds-button>
-                    }
-                  </ds-diary-entry>
+                  />
 
                   @if (row.expanded) {
                     <ds-diary-tree
@@ -561,6 +542,40 @@
       />
     </ds-stack>
   </ds-modal-sheet>
+
+  <ds-quantity-sheet
+    data-testid="diary-quantity-sheet"
+    [open]="null !== quantitySheet()"
+    [title]="quantitySheet()?.entry?.name ?? ''"
+    [quantity]="quantitySheet()?.entry?.quantity ?? 0"
+    [unit]="quantitySheet()?.entry?.unit ?? ''"
+    [unitLabel]="quantitySheet()?.unitLabel ?? ''"
+    [unitOptions]="quantitySheet()?.unitOptions ?? []"
+    [unitFactors]="quantitySheet()?.unitFactors ?? {}"
+    [macros]="quantitySheet()?.entry?.macros ?? null"
+    [closeLabel]="'getDiary.quantitySheet.close' | t"
+    [confirmLabel]="'getDiary.quantitySheet.save' | t"
+    [rulerAriaLabel]="'getDiary.quantitySheet.ruler' | t"
+    [quantityAriaLabel]="'getDiary.quantity' | t"
+    [decrementLabel]="'getDiary.quantitySheet.decrement' | t"
+    [incrementLabel]="'getDiary.quantitySheet.increment' | t"
+    [kcalLabel]="'getDiary.kcal' | t"
+    [proteinLabel]="'getDiary.macro.protein' | t"
+    [fatLabel]="'getDiary.macro.fat' | t"
+    [carbsLabel]="'getDiary.macro.carbs' | t"
+    (closed)="closeQuantity()"
+    (saved)="onQuantitySaved($event)"
+  >
+    @if (quantitySheet()?.lotPickable) {
+      <ds-choice-row
+        data-testid="diary-quantity-lot"
+        icon="package"
+        [title]="'getDiary.lot.title' | t"
+        [description]="quantitySheet()?.lotLabel ?? ''"
+        (activated)="openQuantityLot()"
+      />
+    }
+  </ds-quantity-sheet>
 
   <ds-modal-sheet
     [open]="lotOpen()"
