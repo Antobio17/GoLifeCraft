@@ -9,13 +9,12 @@
   --drawer-active-icon: var(--ds-primary-soft-text);
   --drawer-mark-bg: var(--ds-primary-soft);
   --drawer-mark-fg: var(--ds-primary-soft-text);
-  --drawer-mark-border: var(--ds-gray-950);
+  --drawer-mark-border: var(--ds-avatar-ring);
   --drawer-switch-off: var(--ds-gray-300);
 }
 
 [data-theme="dark"] .drawer,
 [data-theme="dark"] .drawer__sheet {
-  --drawer-mark-border: var(--ds-gray-0);
   --drawer-switch-off: var(--ds-surface-inset);
 }
 
