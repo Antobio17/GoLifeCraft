@@ -52,6 +52,7 @@ export class DiaryEntryComponent {
   @Input() expanded = false;
   @Input() expandLabel = "";
   @Input() collapseLabel = "";
+  @Input() compact = false;
 
   @Output() quantityChange = new EventEmitter<number>();
   @Output() unitChange = new EventEmitter<string>();

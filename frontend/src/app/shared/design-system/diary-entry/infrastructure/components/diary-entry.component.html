@@ -9,7 +9,8 @@
     class="diary-entry__row"
     direction="row"
     align="center"
-    gap="var(--ds-space-3)"
+    [gap]="compact ? 'var(--ds-space-2)' : 'var(--ds-space-3)'"
+    [class.diary-entry__row--compact]="compact"
     [class.diary-entry__row--slid]="swipe.slid"
     [class.diary-entry__row--expanded]="expandable && expanded"
   >
@@ -51,9 +52,12 @@
       } @else {
         <ng-container [ngTemplateOutlet]="meta" />
       }
+
+      <ng-content select="[slot=footer]" />
     </ds-stack>
 
     <ds-inline-quantity
+      [size]="compact ? 'sm' : 'md'"
       [quantity]="quantity"
       [unit]="unitValue || unit"
       [unitLabel]="unit"
