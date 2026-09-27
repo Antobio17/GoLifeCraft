@@ -190,7 +190,8 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         flex: 0 0 auto;
         transition:
           transform var(--ds-dur-1) var(--ds-ease-out),
-          opacity var(--ds-dur-2) var(--ds-ease-out);
+          background-color var(--ds-dur-3) var(--ds-ease-in-out),
+          color var(--ds-dur-3) var(--ds-ease-in-out);
       }
       .ds-sheet__action:active:not(:disabled) {
         transform: scale(0.92);
@@ -208,7 +209,8 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         color: var(--ds-on-primary);
       }
       .ds-sheet__confirm:disabled {
-        opacity: 0.4;
+        background: var(--ds-surface-hover);
+        color: var(--ds-text-meta);
         cursor: default;
       }
       .ds-sheet__body {
