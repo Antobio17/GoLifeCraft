@@ -98,7 +98,7 @@
             titleWidth="6.5rem"
             [subtitle]="true"
             [action]="true"
-            actionWidth="4.625rem"
+            actionWidth="2.5rem"
           />
           <ds-rail>
             <ds-skeleton-list
@@ -136,6 +136,7 @@
       @for (meal of mealRows(); track meal.key) {
         <ds-stack [gap]="'var(--ds-space-2)'">
           <ds-stack
+            class="meal-header"
             direction="row"
             justify="between"
             align="center"
@@ -169,12 +170,12 @@
             <ds-button
               [attr.data-testid]="'diary-add-' + meal.key"
               variant="outline"
-              size="sm"
+              size="icon-lg"
               icon="plus"
+              [iconSize]="19"
+              [ariaLabel]="'getDiary.add' | t"
               (clicked)="openPicker(meal.key)"
-            >
-              {{ "getDiary.add" | t }}
-            </ds-button>
+            />
           </ds-stack>
 
           @if (meal.entries.length > 0) {
