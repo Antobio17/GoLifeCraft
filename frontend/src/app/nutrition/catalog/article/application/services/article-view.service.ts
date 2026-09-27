@@ -39,6 +39,7 @@ export interface ArticleUnitsView {
   baseUnit: string;
   recipeUnit: string;
   diaryUnit: string;
+  storageUnit: string;
   lines: { label: string; detail: string }[];
 }
 
@@ -261,6 +262,13 @@ export class ArticleViewService {
       ),
       diaryUnit: this.unitCatalog.label(
         article.attributes.diaryUnit ?? baseUnit,
+      ),
+      storageUnit: this.unitCatalog.label(
+        equivalences.some(
+          (item) => item.unit === article.attributes.storageUnit,
+        )
+          ? article.attributes.storageUnit
+          : baseUnit,
       ),
       lines: equivalences.map((item) => ({
         label: `1 ${this.unitCatalog.label(item.unit)}`,

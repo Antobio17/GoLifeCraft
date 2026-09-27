@@ -46,6 +46,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'ml',
             baseUnit: 'ml',
             diaryUnit: 'glass',
+            storageUnit: 'glass',
             packUnit: 'container',
             price: 1.15,
             brand: 'Hacendado',
@@ -76,6 +77,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
         $this->assertEquals(expected: 'Leche entera 1 L', actual: $article->name);
         $this->assertEquals(expected: 'ml', actual: $article->baseUnit);
         $this->assertEquals(expected: 'glass', actual: $article->diaryUnit);
+        $this->assertEquals(expected: 'glass', actual: $article->storageUnit);
         $this->assertEquals(expected: 'container', actual: $article->packUnit);
         $this->assertEquals(expected: 1.15, actual: $article->price);
         $this->assertEquals(expected: '🥛', actual: $article->emoji);
@@ -97,6 +99,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'unit',
             baseUnit: 'g',
             diaryUnit: 'unit',
+            storageUnit: 'unit',
             packUnit: null,
             price: null,
             brand: null,
@@ -129,6 +132,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'g',
+            storageUnit: 'g',
             packUnit: null,
             price: null,
             brand: null,
@@ -159,6 +163,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'g',
+            storageUnit: 'g',
             packUnit: 'pack',
             price: null,
             brand: null,
@@ -184,6 +189,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'g',
+            storageUnit: 'g',
             packUnit: null,
             price: null,
             brand: null,
@@ -209,6 +215,31 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'gram',
+            storageUnit: 'g',
+            packUnit: null,
+            price: null,
+            brand: null,
+            emoji: null,
+            categoryId: null,
+            supermarketId: null,
+            aisleId: null,
+            nutrition: ArticleNutritionData::fromArray(rawNutrition: []),
+            equivalences: [],
+            createdByUserId: 'god-user-id',
+        ));
+    }
+
+    public function testItThrowsExceptionWhenTheStorageUnitIsNotACatalogUnit(): void
+    {
+        $this->expectException(exception: CreateArticleException::class);
+
+        ($this->handler)(new CreateArticleCommand(
+            articleId: 'article-1',
+            name: 'Arroz redondo',
+            recipeUnit: 'g',
+            baseUnit: 'g',
+            diaryUnit: 'g',
+            storageUnit: 'kilo',
             packUnit: null,
             price: null,
             brand: null,
@@ -232,6 +263,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'l',
             diaryUnit: 'g',
+            storageUnit: 'g',
             packUnit: null,
             price: null,
             brand: null,
@@ -257,6 +289,7 @@ final class CreateArticleCommandHandlerTest extends TestCase
             recipeUnit: 'g',
             baseUnit: 'g',
             diaryUnit: 'g',
+            storageUnit: 'g',
             packUnit: null,
             price: null,
             brand: null,

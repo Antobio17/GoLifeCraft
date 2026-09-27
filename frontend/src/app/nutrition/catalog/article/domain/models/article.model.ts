@@ -11,6 +11,7 @@ export interface ArticleAttributes {
   recipeUnit: string;
   baseUnit: string;
   diaryUnit: string;
+  storageUnit: string;
   equivalences: ArticleEquivalence[];
   packUnit: string | null;
   stock?: number;

@@ -21,6 +21,7 @@ export interface CreateArticleRequest {
   recipeUnit: string;
   baseUnit: string;
   diaryUnit: string;
+  storageUnit: string;
   packUnit: string | null;
   price: number | null;
   brand: string | null;

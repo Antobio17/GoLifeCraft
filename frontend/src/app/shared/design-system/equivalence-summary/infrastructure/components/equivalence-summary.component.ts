@@ -19,6 +19,10 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
           <span class="ds-eqs__default-label">{{ diaryLabel }}</span>
           <span class="ds-eqs__default-value">{{ diaryUnit }}</span>
         </div>
+        <div class="ds-eqs__default">
+          <span class="ds-eqs__default-label">{{ storageLabel }}</span>
+          <span class="ds-eqs__default-value">{{ storageUnit }}</span>
+        </div>
       </div>
 
       @if (lines.length > 0) {
@@ -69,11 +73,12 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
       }
       .ds-eqs__defaults {
         display: flex;
+        flex-wrap: wrap;
         gap: var(--ds-space-2);
         padding: var(--ds-space-3);
       }
       .ds-eqs__default {
-        flex: 1;
+        flex: 1 1 100px;
         display: flex;
         flex-direction: column;
         gap: 2px;
@@ -128,6 +133,8 @@ export class EquivalenceSummaryComponent {
   @Input() recipeUnit = "";
   @Input() diaryLabel = "";
   @Input() diaryUnit = "";
+  @Input() storageLabel = "";
+  @Input() storageUnit = "";
   @Input() equivalencesLabel = "";
   @Input() lines: EquivalenceSummaryLine[] = [];
 }

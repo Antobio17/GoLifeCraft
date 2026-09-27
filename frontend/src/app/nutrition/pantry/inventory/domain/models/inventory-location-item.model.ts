@@ -11,6 +11,7 @@ export interface InventoryLocationItem {
   image: string | null;
   unit: string;
   units: InventoryItemUnit[];
+  storageUnit: string;
   expectedQuantity: number;
   countedQuantity: number | null;
   countedUnit: string | null;

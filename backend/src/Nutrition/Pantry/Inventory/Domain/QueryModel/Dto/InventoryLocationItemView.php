@@ -17,6 +17,7 @@ final readonly class InventoryLocationItemView
         public ?string $image,
         public string $unit,
         public array $units,
+        public string $storageUnit,
         public float $expectedQuantity,
         public ?float $countedQuantity,
         public ?string $countedUnit,

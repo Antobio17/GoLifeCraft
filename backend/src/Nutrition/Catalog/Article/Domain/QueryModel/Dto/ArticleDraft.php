@@ -19,6 +19,7 @@ final readonly class ArticleDraft
         public string $baseUnit,
         public string $recipeUnit,
         public string $diaryUnit,
+        public string $storageUnit,
         public ?string $packUnit,
         public array $equivalences,
         public ?ArticleDraftNutrition $nutrition,

@@ -83,6 +83,15 @@ final readonly class ArticlePackaging
         return ArticleUnit::UNIT->value;
     }
 
+    public function storageUnit(): string
+    {
+        if (null !== $this->unitSize()) {
+            return ArticleUnit::UNIT->value;
+        }
+
+        return $this->packUnit() ?? $this->baseUnit;
+    }
+
     public function unitSize(): ?float
     {
         if (null === $this->packSize || null === $this->unitsPerPack) {

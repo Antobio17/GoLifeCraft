@@ -123,6 +123,7 @@ final class GetArticleDraftController
             'baseUnit' => $draft->baseUnit,
             'recipeUnit' => $draft->recipeUnit,
             'diaryUnit' => $draft->diaryUnit,
+            'storageUnit' => $draft->storageUnit,
             'packUnit' => $draft->packUnit,
             'equivalences' => array_map(
                 callback: static fn ($equivalence): array => [

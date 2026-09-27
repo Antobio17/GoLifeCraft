@@ -15,6 +15,7 @@ final readonly class CreateArticleCommand implements Command
         public string $recipeUnit,
         public string $baseUnit,
         public string $diaryUnit,
+        public string $storageUnit,
         public ?string $packUnit,
         public ?float $price,
         public ?string $brand,

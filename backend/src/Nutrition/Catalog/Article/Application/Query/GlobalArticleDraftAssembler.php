@@ -26,6 +26,7 @@ final readonly class GlobalArticleDraftAssembler
             baseUnit: $packaging->baseUnit,
             recipeUnit: $packaging->baseUnit,
             diaryUnit: $packaging->diaryUnit(),
+            storageUnit: $packaging->storageUnit(),
             packUnit: $packaging->packUnit(),
             equivalences: ArticleDraftEquivalence::fromPackaging(packaging: $packaging),
             nutrition: $this->nutrition(globalArticle: $globalArticle),
