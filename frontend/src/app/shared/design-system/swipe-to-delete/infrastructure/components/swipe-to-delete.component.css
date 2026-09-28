@@ -19,6 +19,7 @@
   color: #fff;
   border: none;
   cursor: pointer;
+  touch-action: manipulation;
   /* En reposo la superficie lo tapa entero, pero el antialiasing del recorte
      redondeado deja asomar una franja de rojo en las esquinas. Se pinta sólo
      cuando la fila está desplazada. */

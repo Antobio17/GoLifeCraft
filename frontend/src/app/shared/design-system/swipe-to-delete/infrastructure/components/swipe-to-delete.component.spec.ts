@@ -109,7 +109,7 @@ describe("SwipeToDeleteComponent", () => {
 
     jasmine.clock().install();
     pointerUpOn(deleteButton);
-    jasmine.clock().tick(400);
+    jasmine.clock().tick(800);
     jasmine.clock().uninstall();
 
     neighbour.dispatchEvent(
@@ -118,6 +118,36 @@ describe("SwipeToDeleteComponent", () => {
     neighbour.remove();
 
     expect(neighbourClicks).toBe(1);
+  });
+
+  it("cancela el touchend del boton para que el movil no genere el click fantasma", () => {
+    const fixture = render();
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+    const touchEnd = new Event("touchend", { bubbles: true, cancelable: true });
+
+    deleteButton.dispatchEvent(touchEnd);
+
+    expect(touchEnd.defaultPrevented).toBeTrue();
+  });
+
+  it("sigue tragandose el click fantasma aunque el movil lo retrase", () => {
+    const fixture = render();
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+    const neighbour = document.createElement("button");
+    let neighbourClicks = 0;
+    neighbour.addEventListener("click", () => (neighbourClicks += 1));
+    document.body.appendChild(neighbour);
+
+    jasmine.clock().install();
+    pointerUpOn(deleteButton);
+    jasmine.clock().tick(500);
+    neighbour.dispatchEvent(
+      new MouseEvent("click", { bubbles: true, detail: 1 }),
+    );
+    jasmine.clock().uninstall();
+    neighbour.remove();
+
+    expect(neighbourClicks).toBe(0);
   });
 
   it("no borra si el dedo se sale del boton antes de levantarlo", () => {

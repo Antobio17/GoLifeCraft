@@ -19,7 +19,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 })
 export class SwipeToDeleteComponent {
   private readonly START_THRESHOLD = 8;
-  private readonly GHOST_CLICK_WINDOW_MS = 400;
+  private readonly GHOST_CLICK_WINDOW_MS = 800;
 
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
@@ -94,6 +94,12 @@ export class SwipeToDeleteComponent {
 
     this.swallowGhostClick();
     this.emitRemove();
+  }
+
+  onDeleteTouchEnd(event: TouchEvent): void {
+    if (!event.cancelable) return;
+
+    event.preventDefault();
   }
 
   onDeleteClick(event: MouseEvent): void {
