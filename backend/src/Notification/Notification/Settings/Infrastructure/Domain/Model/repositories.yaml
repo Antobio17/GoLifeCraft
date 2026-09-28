@@ -1,0 +1,6 @@
+services:
+  Notification\Notification\Settings\Domain\Model\NotificationSettingsRepository:
+    class: Notification\Notification\Settings\Infrastructure\Domain\Model\Doctrine\DoctrineNotificationSettingsRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Notification\Notification\Settings\Domain\Model\NotificationSettings

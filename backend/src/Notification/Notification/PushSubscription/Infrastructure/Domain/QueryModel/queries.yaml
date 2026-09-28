@@ -1,0 +1,5 @@
+services:
+  Notification\Notification\PushSubscription\Domain\QueryModel\GetPushNotificationsConfigNeedleDataQuery:
+    class: Notification\Notification\PushSubscription\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetPushNotificationsConfigNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'

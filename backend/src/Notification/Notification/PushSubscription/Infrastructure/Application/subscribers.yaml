@@ -1,0 +1,8 @@
+services:
+  Notification\Notification\PushSubscription\Application\Subscriber\SendPushOnNotificationDelivered:
+    class: Notification\Notification\PushSubscription\Application\Subscriber\SendPushOnNotificationDelivered
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $pushNotificationSender: '@Shared\Push\Push\Domain\Service\PushNotificationSender'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.notification.event.1.notification.delivered' }

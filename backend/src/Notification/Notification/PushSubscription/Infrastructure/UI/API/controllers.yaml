@@ -1,0 +1,28 @@
+services:
+  Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\GetPushNotificationsConfigController:
+    class: Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\GetPushNotificationsConfigController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\SubscribeToPushNotificationsController:
+    class: Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\SubscribeToPushNotificationsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\UnsubscribeFromPushNotificationsController:
+    class: Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\UnsubscribeFromPushNotificationsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\SendTestPushNotificationController:
+    class: Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\SendTestPushNotificationController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

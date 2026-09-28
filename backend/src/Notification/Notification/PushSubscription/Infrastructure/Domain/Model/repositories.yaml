@@ -1,0 +1,6 @@
+services:
+  Notification\Notification\PushSubscription\Domain\Model\PushSubscriptionRepository:
+    class: Notification\Notification\PushSubscription\Infrastructure\Domain\Model\Doctrine\DoctrinePushSubscriptionRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - Notification\Notification\PushSubscription\Domain\Model\PushSubscription

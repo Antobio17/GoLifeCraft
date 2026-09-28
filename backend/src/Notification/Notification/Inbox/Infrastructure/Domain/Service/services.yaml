@@ -1,0 +1,8 @@
+services:
+  Notification\Notification\Inbox\Domain\Service\NotificationRenderer:
+    class: Notification\Notification\Inbox\Infrastructure\Domain\Service\Translator\SymfonyTranslatorNotificationRenderer
+    arguments:
+      $translator: '@translator'
+
+  Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner:
+    class: Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner

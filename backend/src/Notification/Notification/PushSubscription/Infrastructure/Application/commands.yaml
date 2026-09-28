@@ -1,0 +1,12 @@
+services:
+  Notification\Notification\PushSubscription\Infrastructure\Application\Console\GenerateVapidKeysCommand:
+    class: Notification\Notification\PushSubscription\Infrastructure\Application\Console\GenerateVapidKeysCommand
+    tags:
+      - { name: 'console.command' }
+
+  Notification\Notification\PushSubscription\Infrastructure\Application\Console\SendPushNotificationConsoleCommand:
+    class: Notification\Notification\PushSubscription\Infrastructure\Application\Console\SendPushNotificationConsoleCommand
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'console.command' }

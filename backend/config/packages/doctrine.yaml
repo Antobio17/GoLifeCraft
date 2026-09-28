@@ -57,8 +57,8 @@ doctrine:
                     PushSubscription:
                         is_bundle: false
                         type: xml
-                        dir: '%kernel.project_dir%/src/Authorization/User/PushSubscription/Infrastructure/Domain/Model/Doctrine/Mapping'
-                        prefix: 'Authorization\User\PushSubscription\Domain\Model'
+                        dir: '%kernel.project_dir%/src/Notification/Notification/PushSubscription/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Notification\Notification\PushSubscription\Domain\Model'
                         alias: push_subscription
                     EmailVerificationToken:
                         is_bundle: false
@@ -233,3 +233,15 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Nutrition/Menu/Menu/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Nutrition\Menu\Menu\Domain\Model'
                         alias: menu
+                    NotificationSettings:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Notification/Notification/Settings/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Notification\Notification\Settings\Domain\Model'
+                        alias: notification_settings
+                    Notification:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Notification/Notification/Inbox/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Notification\Notification\Inbox\Domain\Model'
+                        alias: notification
