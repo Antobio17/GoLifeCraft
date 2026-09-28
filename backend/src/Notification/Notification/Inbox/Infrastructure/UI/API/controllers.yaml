@@ -1,0 +1,14 @@
+services:
+  Notification\Notification\Inbox\Infrastructure\UI\API\Controller\GetNotificationInboxController:
+    class: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\GetNotificationInboxController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Notification\Notification\Inbox\Infrastructure\UI\API\Controller\GetUnreadNotificationsCountController:
+    class: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\GetUnreadNotificationsCountController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

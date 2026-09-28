@@ -1,0 +1,15 @@
+services:
+  Notification\Notification\Inbox\Infrastructure\Application\Console\DispatchDueNotificationsCommand:
+    class: Notification\Notification\Inbox\Infrastructure\Application\Console\DispatchDueNotificationsCommand
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $tenantEntityManager: '@doctrine.orm.tenant_manager_entity_manager'
+      $recipientsNeedleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\NotificationRecipientsNeedleDataQuery'
+      $settingsNeedleDataQuery: '@Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery'
+      $needleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\DispatchDueNotificationsNeedleDataQuery'
+      $agendaReminderPlanner: '@Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner'
+      $messageBus: '@messenger.bus.default'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+      $logger: '@logger'
+    tags:
+      - { name: 'console.command' }

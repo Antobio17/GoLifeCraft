@@ -1,0 +1,20 @@
+services:
+  Notification\Notification\Inbox\Domain\QueryModel\DeliverNotificationNeedleDataQuery:
+    class: Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctrine\DoctrineDeliverNotificationNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'
+
+  Notification\Notification\Inbox\Domain\QueryModel\DispatchDueNotificationsNeedleDataQuery:
+    class: Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctrine\DoctrineDispatchDueNotificationsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'
+
+  Notification\Notification\Inbox\Domain\QueryModel\NotificationRecipientsNeedleDataQuery:
+    class: Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctrine\DoctrineNotificationRecipientsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.master_connection'
+
+  Notification\Notification\Inbox\Domain\QueryModel\GetNotificationInboxNeedleDataQuery:
+    class: Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetNotificationInboxNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

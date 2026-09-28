@@ -1,0 +1,14 @@
+get_notification_settings:
+  path: /api/v1/notification/settings
+  methods: [GET]
+  controller: Notification\Notification\Settings\Infrastructure\UI\API\Controller\GetNotificationSettingsController
+
+update_notification_settings:
+  path: /api/v1/notification/settings
+  methods: [PUT]
+  controller: Notification\Notification\Settings\Infrastructure\UI\API\Controller\UpdateNotificationSettingsController
+
+mark_notification_inbox_seen:
+  path: /api/v1/notification/notifications/seen
+  methods: [POST]
+  controller: Notification\Notification\Settings\Infrastructure\UI\API\Controller\MarkNotificationInboxSeenController

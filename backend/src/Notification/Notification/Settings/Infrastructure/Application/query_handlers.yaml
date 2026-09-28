@@ -1,0 +1,11 @@
+services:
+  Notification\Notification\Settings\Application\Query\GetNotificationSettingsQueryHandler:
+    class: Notification\Notification\Settings\Application\Query\GetNotificationSettingsQueryHandler
+    arguments:
+      $needleDataQuery: '@Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery'
+      $dataTransform: '@Notification\Notification\Settings\Application\Query\GetNotificationSettingsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\Settings\Application\Query\GetNotificationSettingsDataTransform:
+    class: Notification\Notification\Settings\Infrastructure\UI\API\DataTransform\ApiGetNotificationSettingsDataTransform

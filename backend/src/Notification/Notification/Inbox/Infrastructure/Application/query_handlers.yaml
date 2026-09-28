@@ -1,0 +1,24 @@
+services:
+  Notification\Notification\Inbox\Application\Query\GetNotificationInboxQueryHandler:
+    class: Notification\Notification\Inbox\Application\Query\GetNotificationInboxQueryHandler
+    arguments:
+      $needleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\GetNotificationInboxNeedleDataQuery'
+      $settingsNeedleDataQuery: '@Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery'
+      $dataTransform: '@Notification\Notification\Inbox\Application\Query\GetNotificationInboxDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\Inbox\Application\Query\GetNotificationInboxDataTransform:
+    class: Notification\Notification\Inbox\Infrastructure\UI\API\DataTransform\ApiGetNotificationInboxDataTransform
+
+  Notification\Notification\Inbox\Application\Query\GetUnreadNotificationsCountQueryHandler:
+    class: Notification\Notification\Inbox\Application\Query\GetUnreadNotificationsCountQueryHandler
+    arguments:
+      $needleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\GetNotificationInboxNeedleDataQuery'
+      $settingsNeedleDataQuery: '@Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery'
+      $dataTransform: '@Notification\Notification\Inbox\Application\Query\GetUnreadNotificationsCountDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\Inbox\Application\Query\GetUnreadNotificationsCountDataTransform:
+    class: Notification\Notification\Inbox\Infrastructure\UI\API\DataTransform\ApiGetUnreadNotificationsCountDataTransform

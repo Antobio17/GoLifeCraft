@@ -1,0 +1,9 @@
+get_notification_inbox:
+  path: /api/v1/notification/notifications
+  methods: [GET]
+  controller: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\GetNotificationInboxController
+
+get_unread_notifications_count:
+  path: /api/v1/notification/notifications/unread-count
+  methods: [GET]
+  controller: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\GetUnreadNotificationsCountController

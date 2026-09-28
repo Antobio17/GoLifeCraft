@@ -1,0 +1,12 @@
+services:
+  Notification\Notification\Inbox\Application\Command\DeliverNotificationCommandHandler:
+    class: Notification\Notification\Inbox\Application\Command\DeliverNotificationCommandHandler
+    arguments:
+      $notificationRepository: '@Notification\Notification\Inbox\Domain\Model\NotificationRepository'
+      $needleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\DeliverNotificationNeedleDataQuery'
+      $settingsNeedleDataQuery: '@Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery'
+      $notificationRenderer: '@Notification\Notification\Inbox\Domain\Service\NotificationRenderer'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

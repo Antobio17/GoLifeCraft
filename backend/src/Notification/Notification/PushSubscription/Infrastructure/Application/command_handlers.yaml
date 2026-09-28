@@ -1,0 +1,28 @@
+services:
+  Notification\Notification\PushSubscription\Application\Command\SubscribeToPushNotifications\SubscribeToPushNotificationsCommandHandler:
+    class: Notification\Notification\PushSubscription\Application\Command\SubscribeToPushNotifications\SubscribeToPushNotificationsCommandHandler
+    arguments:
+      $pushSubscriptionRepository: '@Notification\Notification\PushSubscription\Domain\Model\PushSubscriptionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\PushSubscription\Application\Command\UnsubscribeFromPushNotifications\UnsubscribeFromPushNotificationsCommandHandler:
+    class: Notification\Notification\PushSubscription\Application\Command\UnsubscribeFromPushNotifications\UnsubscribeFromPushNotificationsCommandHandler
+    arguments:
+      $pushSubscriptionRepository: '@Notification\Notification\PushSubscription\Domain\Model\PushSubscriptionRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\PushSubscription\Application\Command\SendPushNotification\SendPushNotificationCommandHandler:
+    class: Notification\Notification\PushSubscription\Application\Command\SendPushNotification\SendPushNotificationCommandHandler
+    arguments:
+      $pushSubscriptionRepository: '@Notification\Notification\PushSubscription\Domain\Model\PushSubscriptionRepository'
+      $pushNotificationSender: '@Shared\Push\Push\Domain\Service\PushNotificationSender'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

@@ -1,6 +1,0 @@
-services:
-  Authorization\User\PushSubscription\Domain\Model\PushSubscriptionRepository:
-    class: Authorization\User\PushSubscription\Infrastructure\Domain\Model\Doctrine\DoctrinePushSubscriptionRepository
-    factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments:
-      - Authorization\User\PushSubscription\Domain\Model\PushSubscription

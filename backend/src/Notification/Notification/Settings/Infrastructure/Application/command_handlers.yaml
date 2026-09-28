@@ -1,0 +1,18 @@
+services:
+  Notification\Notification\Settings\Application\Command\UpdateNotificationSettingsCommandHandler:
+    class: Notification\Notification\Settings\Application\Command\UpdateNotificationSettingsCommandHandler
+    arguments:
+      $notificationSettingsRepository: '@Notification\Notification\Settings\Domain\Model\NotificationSettingsRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\Settings\Application\Command\MarkNotificationInboxSeenCommandHandler:
+    class: Notification\Notification\Settings\Application\Command\MarkNotificationInboxSeenCommandHandler
+    arguments:
+      $notificationSettingsRepository: '@Notification\Notification\Settings\Domain\Model\NotificationSettingsRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

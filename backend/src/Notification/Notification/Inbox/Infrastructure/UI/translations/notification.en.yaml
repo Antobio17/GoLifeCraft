@@ -1,0 +1,6 @@
+agenda.appointment.dayBefore.title: 'Tomorrow: %title%'
+agenda.appointment.dayBefore.body.timed: 'You have an appointment tomorrow at %time%.'
+agenda.appointment.dayBefore.body.untimed: 'You have an appointment tomorrow.'
+agenda.appointment.upcoming.title: '%title% at %time%'
+agenda.appointment.upcoming.body.timed: 'Starts in %minutes% min.'
+agenda.appointment.upcoming.body.untimed: 'Starts in %minutes% min.'

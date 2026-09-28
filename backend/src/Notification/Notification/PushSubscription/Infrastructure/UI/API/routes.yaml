@@ -1,0 +1,19 @@
+get_push_notifications_config:
+  path: /api/v1/notification/push
+  methods: [GET]
+  controller: Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\GetPushNotificationsConfigController
+
+send_test_push_notification:
+  path: /api/v1/notification/push/test
+  methods: [POST]
+  controller: Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\SendTestPushNotificationController
+
+subscribe_to_push_notifications:
+  path: /api/v1/notification/push-subscriptions
+  methods: [PUT]
+  controller: Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\SubscribeToPushNotificationsController
+
+unsubscribe_from_push_notifications:
+  path: /api/v1/notification/push-subscriptions
+  methods: [DELETE]
+  controller: Notification\Notification\PushSubscription\Infrastructure\UI\API\Controller\UnsubscribeFromPushNotificationsController

@@ -1,0 +1,12 @@
+services:
+  Notification\Notification\PushSubscription\Application\Query\GetPushNotificationsConfig\GetPushNotificationsConfigQueryHandler:
+    class: Notification\Notification\PushSubscription\Application\Query\GetPushNotificationsConfig\GetPushNotificationsConfigQueryHandler
+    arguments:
+      $needleDataQuery: '@Notification\Notification\PushSubscription\Domain\QueryModel\GetPushNotificationsConfigNeedleDataQuery'
+      $pushNotificationSender: '@Shared\Push\Push\Domain\Service\PushNotificationSender'
+      $dataTransform: '@Notification\Notification\PushSubscription\Application\Query\GetPushNotificationsConfig\GetPushNotificationsConfigDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\PushSubscription\Application\Query\GetPushNotificationsConfig\GetPushNotificationsConfigDataTransform:
+    class: Notification\Notification\PushSubscription\Infrastructure\UI\API\DataTransform\ApiGetPushNotificationsConfigDataTransform

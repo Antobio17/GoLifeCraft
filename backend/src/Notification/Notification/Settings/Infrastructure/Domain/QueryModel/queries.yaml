@@ -1,0 +1,5 @@
+services:
+  Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery:
+    class: Notification\Notification\Settings\Infrastructure\Domain\QueryModel\Doctrine\DoctrineNotificationSettingsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'

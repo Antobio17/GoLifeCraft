@@ -1,0 +1,21 @@
+services:
+  Notification\Notification\Settings\Infrastructure\UI\API\Controller\GetNotificationSettingsController:
+    class: Notification\Notification\Settings\Infrastructure\UI\API\Controller\GetNotificationSettingsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Notification\Notification\Settings\Infrastructure\UI\API\Controller\UpdateNotificationSettingsController:
+    class: Notification\Notification\Settings\Infrastructure\UI\API\Controller\UpdateNotificationSettingsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Notification\Notification\Settings\Infrastructure\UI\API\Controller\MarkNotificationInboxSeenController:
+    class: Notification\Notification\Settings\Infrastructure\UI\API\Controller\MarkNotificationInboxSeenController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
