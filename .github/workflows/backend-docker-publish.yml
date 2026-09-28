@@ -15,6 +15,7 @@ on:
       - 'infrastructure/docker/production/php/php_fpm.ini'
       - 'infrastructure/docker/production/php/www.conf'
       - 'infrastructure/docker/production/php/opcache.ini'
+      - 'infrastructure/docker/production/cron/**'
       - 'infrastructure/docker/production/nginx/Dockerfile'
       - 'infrastructure/docker/production/nginx/default.conf'
       - 'infrastructure/docker/production/gateway/Dockerfile'

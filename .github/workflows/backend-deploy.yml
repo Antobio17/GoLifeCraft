@@ -128,7 +128,7 @@ jobs:
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
             echo "==> Pulling latest images..."
-            docker compose --env-file .env.local -f docker-compose.prod.yml pull gateway nginx php loki alloy grafana dockerproxy
+            docker compose --env-file .env.local -f docker-compose.prod.yml pull gateway nginx php cron loki alloy grafana dockerproxy
 
             echo "==> Starting services..."
             docker compose --env-file .env.local -f docker-compose.prod.yml up -d --remove-orphans
