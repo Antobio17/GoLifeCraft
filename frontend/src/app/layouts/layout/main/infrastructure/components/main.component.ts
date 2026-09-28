@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject, signal } from "@angular/core";
+import { DOCUMENT } from "@angular/common";
 import { Router, NavigationEnd, RouterOutlet } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { FloatingToastComponent } from "@shared/floating-toasts/infrastructure/components/floating-toast.component";
@@ -12,6 +13,7 @@ import { ImpersonationBarComponent } from "@shared/design-system/impersonation-b
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { GetMyProfileService } from "@authorization/user/user/application/services/get-my-profile.service";
 import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/providers/get-my-profile.provider";
+import { UnreadNotificationsService } from "@notification/notification/inbox/application/services/unread-notifications.service";
 
 @Component({
   selector: "app-main",
@@ -36,6 +38,9 @@ export class MainLayoutComponent implements OnInit {
   private workoutBannerVisibility = inject(
     ActiveWorkoutBannerVisibilityService,
   );
+  private unreadNotifications = inject(UnreadNotificationsService);
+  private document = inject(DOCUMENT);
+  private destroyRef = inject(DestroyRef);
 
   showTabBar = signal(this.computeShowTabBar());
   readonly impersonation = this.impersonationService.impersonation;
@@ -47,6 +52,7 @@ export class MainLayoutComponent implements OnInit {
       .subscribe(() => this.showTabBar.set(this.computeShowTabBar()));
 
     this.refreshProfileName();
+    this.watchUnreadNotifications();
   }
 
   exitImpersonation(): void {
@@ -66,6 +72,22 @@ export class MainLayoutComponent implements OnInit {
           profile.data.attributes.avatar,
         ),
     });
+  }
+
+  private watchUnreadNotifications(): void {
+    if (!this.authSessionService.isAuthenticated()) return;
+
+    const refreshWhenVisible = () => {
+      if ("visible" !== this.document.visibilityState) return;
+
+      this.unreadNotifications.refresh();
+    };
+
+    this.unreadNotifications.refresh();
+    this.document.addEventListener("visibilitychange", refreshWhenVisible);
+    this.destroyRef.onDestroy(() =>
+      this.document.removeEventListener("visibilitychange", refreshWhenVisible),
+    );
   }
 
   private computeShowTabBar(): boolean {

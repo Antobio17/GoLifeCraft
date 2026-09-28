@@ -8,6 +8,7 @@ import { AggregateImageProviders } from "@shared/aggregate-image/infrastructure/
 import { VisualPreferenceProviders } from "@shared/visual-preference/infrastructure/providers/visual-preference.provider";
 import { EntityVisualProviders } from "@shared/entity-visual/infrastructure/providers/entity-visual.providers";
 import { MyAvatarProviders } from "@shared/my-avatar/infrastructure/providers/my-avatar.providers";
+import { UnreadNotificationsProvider } from "@notification/notification/inbox/infrastructure/providers/unread-notifications.provider";
 
 export type ProviderModule = {
   getProviders(): Provider[];
@@ -24,6 +25,7 @@ export class GlobalProviders {
     VisualPreferenceProviders,
     EntityVisualProviders,
     MyAvatarProviders,
+    UnreadNotificationsProvider,
   ];
 
   static getProviders(): Provider[] {

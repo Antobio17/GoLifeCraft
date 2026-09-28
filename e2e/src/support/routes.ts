@@ -15,8 +15,14 @@ export const CORE_SCREENS: readonly CoreScreen[] = [
   { name: "tickets", path: "/tickets", ready: "[data-testid='ticket-card']" },
   { name: "ticket", path: `/tickets/${SEED.tickets.showcase.id}`, ready: "[data-testid='ticket-line']" },
   { name: "scan-ticket", path: "/tickets/scan", ready: "[data-testid='scan-ticket-analyze']" },
+  { name: "notifications", path: "/notifications", ready: "[data-testid='notifications-empty']" },
+  {
+    name: "notification-settings",
+    path: "/notifications?tab=settings",
+    ready: "[data-testid='notifications-quiet-toggle']",
+  },
 ] as const;
 
 export const SPLIT_VIEW_SCREENS = CORE_SCREENS.filter((screen) =>
-  ["diary", "shopping", "ticket"].includes(screen.name),
+  ["diary", "shopping", "ticket", "notification-settings"].includes(screen.name),
 );

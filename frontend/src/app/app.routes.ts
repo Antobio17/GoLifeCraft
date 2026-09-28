@@ -154,6 +154,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "notifications",
+        data: { breadcrumb: "notifications.breadcrumb" },
+        loadChildren: () =>
+          import("./notification/notification/inbox/infrastructure/routes/notification.routes").then(
+            (m) => m.NOTIFICATION_ROUTES,
+          ),
+      },
+      {
         path: "me",
         data: { breadcrumb: "profile.breadcrumb" },
         loadComponent: () =>

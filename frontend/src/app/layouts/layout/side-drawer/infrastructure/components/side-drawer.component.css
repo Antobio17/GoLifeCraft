@@ -80,6 +80,10 @@
   flex: none;
 }
 
+.drawer__profile ds-notification-bell {
+  --bell-size: 2.25rem;
+}
+
 /* ─── Rules ─── */
 
 .drawer__rule {

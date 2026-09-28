@@ -1,0 +1,57 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'62rem'"
+  [gap]="'var(--ds-space-4)'"
+>
+  <ds-screen-header
+    [sticky]="true"
+    leading="back"
+    [leadingLabel]="'notifications.back' | t"
+    [eyebrow]="'notifications.eyebrow' | t"
+    [title]="'notifications.title' | t"
+    (leadingClick)="back()"
+  />
+
+  <ds-segmented-toggle
+    data-testid="notifications-tabs"
+    variant="pill"
+    [options]="tabOptions()"
+    [ngModel]="activeTab()"
+    [ngModelOptions]="{ standalone: true }"
+    (ngModelChange)="changeTab($event)"
+  />
+
+  @if (isInbox()) {
+    @if (loading()) {
+      <ds-skeleton-list [count]="4" padding="var(--ds-space-3)" />
+    } @else if (empty()) {
+      <ds-empty-state
+        data-testid="notifications-empty"
+        icon="bell"
+        [title]="'notifications.inbox.empty.title' | t"
+        [text]="'notifications.inbox.empty.text' | t"
+      />
+    } @else {
+      <ds-stack data-testid="notifications-inbox" [gap]="'var(--ds-space-5)'">
+        @for (group of groups(); track group.key) {
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            <ds-text variant="label">{{ group.label }}</ds-text>
+            @for (row of group.rows; track row.id) {
+              <ds-notification-item
+                data-testid="notification-item"
+                [icon]="row.icon"
+                [title]="row.title"
+                [body]="row.body"
+                [time]="row.time"
+                [unread]="row.unread"
+                (opened)="open(row)"
+              />
+            }
+          </ds-stack>
+        }
+      </ds-stack>
+    }
+  } @else {
+    <app-notification-settings data-testid="notifications-settings" />
+  }
+</ds-page-wrapper>

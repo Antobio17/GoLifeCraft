@@ -1,0 +1,112 @@
+{
+  "notifications": {
+    "breadcrumb": "Notificaciones",
+    "eyebrow": "Avisos",
+    "title": "Notificaciones",
+    "back": "Volver",
+    "bell": "Abrir notificaciones",
+    "bellUnread": "Abrir notificaciones, {{count}} sin leer",
+    "tab": {
+      "inbox": "Recientes",
+      "settings": "Ajustes"
+    },
+    "inbox": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "empty": {
+        "title": "Todo al día",
+        "text": "Aquí aparecerán los avisos de tus citas y recordatorios."
+      }
+    },
+    "type": {
+      "dayBefore": {
+        "title": "Mañana: {{title}}",
+        "bodyTimed": "Tienes una cita mañana a las {{time}}.",
+        "bodyUntimed": "Tienes una cita mañana."
+      },
+      "upcoming": {
+        "title": "{{title}} a las {{time}}",
+        "body": "Empieza en {{minutes}} min."
+      }
+    },
+    "module": {
+      "agenda": "Agenda"
+    },
+    "settings": {
+      "device": "Este dispositivo",
+      "push": {
+        "title": "Notificaciones push",
+        "hint": {
+          "on": "Activadas en este dispositivo",
+          "ready": "Recibe avisos en este dispositivo aunque la app esté cerrada",
+          "loading": "Comprobando este dispositivo…",
+          "notStandalone": "Instala GoLifeCraft en la pantalla de inicio y ábrela desde ahí para activarlas",
+          "unsupported": "Este navegador no admite notificaciones push",
+          "notConfigured": "Las notificaciones push aún no están disponibles",
+          "denied": "Las tienes bloqueadas. Permítelas desde los ajustes del sistema para esta app"
+        },
+        "enableError": "No se han podido activar las notificaciones",
+        "disableError": "No se han podido desactivar las notificaciones",
+        "denied": "No has dado permiso para mostrar notificaciones",
+        "test": {
+          "action": "Enviar notificación de prueba",
+          "title": "Notificación",
+          "body": "Las notificaciones push funcionan en este dispositivo"
+        }
+      },
+      "general": "General",
+      "quiet": {
+        "title": "Horario de silencio",
+        "subtitle": "Los avisos llegan al buzón, pero sin sonar",
+        "from": "Desde",
+        "to": "Hasta"
+      },
+      "language": {
+        "title": "Idioma de los avisos",
+        "es": "Español",
+        "en": "English"
+      },
+      "timezone": {
+        "title": "Zona horaria",
+        "note": "los avisos se calculan con esta hora",
+        "useDevice": "Usar la de este dispositivo ({{timezone}})"
+      },
+      "inboxNote": "Aunque no actives el push, todos los avisos quedan en Recientes.",
+      "preference": {
+        "dayBefore": {
+          "title": "Cita mañana",
+          "subtitle": "La víspera, a la hora que elijas",
+          "time": "Hora del aviso"
+        },
+        "upcoming": {
+          "title": "Cita próxima",
+          "subtitle": "Antes de que empiece la cita",
+          "lead": "Con cuánta antelación"
+        }
+      },
+      "lead": {
+        "minutes": "{{value}} min",
+        "hours": "{{value}} h"
+      },
+      "saveError": "No se pudieron guardar los ajustes de notificaciones"
+    }
+  },
+  "notification": {
+    "settings": {
+      "invalid": {
+        "timezone": "La zona horaria no es válida",
+        "language": "Ese idioma no está disponible para los avisos",
+        "quiet": {
+          "hours": "El horario de silencio debe tener horas válidas"
+        },
+        "time": "La hora del aviso no es válida",
+        "lead": {
+          "minutes": "Esa antelación no está permitida"
+        }
+      },
+      "unknown": {
+        "type": "Tipo de aviso desconocido"
+      }
+    }
+  }
+}

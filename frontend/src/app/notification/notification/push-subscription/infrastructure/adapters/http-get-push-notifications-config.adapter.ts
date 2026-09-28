@@ -10,7 +10,7 @@ export class HttpGetPushNotificationsConfigAdapter implements GetPushNotificatio
 
   getConfig(): Observable<GetPushNotificationsConfigResponse> {
     return this.http.get<GetPushNotificationsConfigResponse>(
-      "/api/v1/authorization/me/push-notifications",
+      "/api/v1/notification/push",
     );
   }
 }

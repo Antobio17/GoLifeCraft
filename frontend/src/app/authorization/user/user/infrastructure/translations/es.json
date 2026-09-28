@@ -205,15 +205,6 @@
     },
     "avatar": {
       "error": "No se ha podido actualizar la foto de perfil"
-    },
-    "push": {
-      "enable": {
-        "error": "No se han podido activar las notificaciones",
-        "denied": "No has dado permiso para mostrar notificaciones"
-      },
-      "disable": {
-        "error": "No se han podido desactivar las notificaciones"
-      }
     }
   },
   "settings": {
@@ -292,22 +283,9 @@
       "cropConfirm": "Usar recorte",
       "cropZoom": "Zoom"
     },
-    "push": {
-      "title": "Notificaciones push",
-      "hint": {
-        "on": "Activadas en este dispositivo",
-        "ready": "Recibe avisos en este dispositivo aunque la app esté cerrada",
-        "loading": "Comprobando este dispositivo…",
-        "notStandalone": "Instala GoLifeCraft en la pantalla de inicio y ábrela desde ahí para activarlas",
-        "unsupported": "Este navegador no admite notificaciones push",
-        "notConfigured": "Las notificaciones push aún no están disponibles",
-        "denied": "Las tienes bloqueadas. Permítelas desde los ajustes del sistema para esta app"
-      },
-      "test": {
-        "action": "Enviar notificación de prueba",
-        "title": "Notificación",
-        "body": "Las notificaciones push funcionan en este dispositivo"
-      }
+    "notifications": {
+      "title": "Notificaciones",
+      "hint": "Avisos, buzón, push y horario de silencio"
     }
   },
   "users": {

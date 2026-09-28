@@ -9,7 +9,20 @@
     [imageUrl]="avatarUrl()"
     [avatarLabel]="'dashboard.avatar.settings' | t"
     (avatarClick)="goToSettings()"
-  />
+  >
+    <ds-notification-bell
+      slot="actions"
+      data-testid="dashboard-notifications"
+      [count]="unreadNotifications()"
+      [ariaLabel]="
+        (unreadNotifications() > 0
+          ? 'notifications.bellUnread'
+          : 'notifications.bell'
+        ) | t: { count: unreadNotifications() }
+      "
+      (clicked)="goToNotifications()"
+    />
+  </ds-greeting-header>
 
   <ds-stack slot="summary" [gap]="'var(--ds-space-2)'">
     <ds-section-header

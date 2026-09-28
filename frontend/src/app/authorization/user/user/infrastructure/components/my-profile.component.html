@@ -157,28 +157,13 @@
           {{ "settings.section.notifications" | t }}
         </ds-text>
 
-        <ds-preference-toggle
-          data-testid="settings-push-toggle"
-          icon="🔔"
-          [title]="'settings.push.title' | t"
-          [subtitle]="pushHintKey() | t"
-          [checked]="pushEnabled()"
-          [disabled]="!pushToggleable()"
-          (toggled)="togglePush()"
-        >
-          @if (pushEnabled()) {
-            <ds-icon-button
-              slot="action"
-              data-testid="settings-push-test"
-              icon="send"
-              variant="soft"
-              [iconSize]="17"
-              [ariaLabel]="'settings.push.test.action' | t"
-              [disabled]="sendingPushTest()"
-              (clicked)="sendPushTest()"
-            />
-          }
-        </ds-preference-toggle>
+        <ds-cta-row
+          data-testid="settings-notifications"
+          icon="bell"
+          [title]="'settings.notifications.title' | t"
+          [subtitle]="'settings.notifications.hint' | t"
+          (clicked)="goToNotifications()"
+        />
       </ds-stack>
 
       <ds-stack slot="side" [gap]="'var(--ds-space-3)'">

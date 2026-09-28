@@ -1,13 +1,6 @@
-import {
-  Component,
-  DestroyRef,
-  OnInit,
-  computed,
-  inject,
-  signal,
-} from "@angular/core";
+import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
-import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
+import { toSignal } from "@angular/core/rxjs-interop";
 import {
   EMPTY,
   Observable,
@@ -27,7 +20,6 @@ import {
 import { GetMyProfileService } from "../../application/services/get-my-profile.service";
 import { UpdateMyProfileService } from "../../application/services/update-my-profile.service";
 import { ChangeMyPasswordService } from "../../application/services/change-my-password.service";
-import { HttpErrorResponse } from "@angular/common/http";
 import { GetMyProfileProvider } from "../providers/get-my-profile.provider";
 import { UpdateMyProfileProvider } from "../providers/update-my-profile.provider";
 import { ChangeMyPasswordProvider } from "../providers/change-my-password.provider";
@@ -61,12 +53,8 @@ import { ProfileCardComponent } from "@shared/design-system/profile-card/infrast
 import { PreferenceChoiceComponent } from "@shared/design-system/preference-choice/infrastructure/components/preference-choice.component";
 import { PreferenceChoiceOption } from "@shared/design-system/preference-choice/domain/models/preference-choice-option.model";
 import { PasswordStrengthComponent } from "@shared/design-system/password-strength/infrastructure/components/password-strength.component";
+import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
-import { PreferenceToggleComponent } from "@shared/design-system/preference-toggle/infrastructure/components/preference-toggle.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
-import { PushNotificationsProvider } from "@authorization/user/push-subscription/infrastructure/providers/push-notifications.provider";
-import { PushNotificationsService } from "@authorization/user/push-subscription/application/services/push-notifications.service";
-import { PushPermissionDeniedError } from "@authorization/user/push-subscription/domain/errors/push-permission-denied.error";
 
 function passwordStrengthValidator(
   control: AbstractControl,
@@ -127,7 +115,6 @@ function passwordMatchValidator(
     ...GetMyProfileProvider.getProviders(),
     ...UpdateMyProfileProvider.getProviders(),
     ...ChangeMyPasswordProvider.getProviders(),
-    ...PushNotificationsProvider.getProviders(),
   ],
   imports: [
     ReactiveFormsModule,
@@ -150,8 +137,7 @@ function passwordMatchValidator(
     ProfileCardComponent,
     PreferenceChoiceComponent,
     PasswordStrengthComponent,
-    PreferenceToggleComponent,
-    IconButtonComponent,
+    CtaRowComponent,
   ],
 })
 export class MyProfileComponent implements OnInit {
@@ -167,8 +153,6 @@ export class MyProfileComponent implements OnInit {
   private authSessionService = inject(AuthSessionService);
   private myAvatarService = inject(MyAvatarService);
   private router = inject(Router);
-  private pushNotificationsService = inject(PushNotificationsService);
-  private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "authorization/user/user";
 
@@ -206,16 +190,6 @@ export class MyProfileComponent implements OnInit {
   savingAvatar = signal(false);
 
   readonly avatarUrl = this.myAvatarService.url;
-
-  readonly pushEnabled = this.pushNotificationsService.enabled;
-  readonly pushToggleable = this.pushNotificationsService.toggleable;
-  readonly sendingPushTest = signal(false);
-
-  readonly pushHintKey = computed(() =>
-    this.pushEnabled()
-      ? "settings.push.hint.on"
-      : `settings.push.hint.${this.pushNotificationsService.availability()}`,
-  );
 
   readonly theme = computed<string>(() =>
     this.themeService.isDark() ? "dark" : "light",
@@ -281,11 +255,6 @@ export class MyProfileComponent implements OnInit {
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => this.loadProfile());
-
-    this.pushNotificationsService
-      .load()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
   }
 
   private loadProfile(): void {
@@ -334,49 +303,9 @@ export class MyProfileComponent implements OnInit {
     this.visualPreferenceService.changeAll(mode as VisualMode);
   }
 
-  togglePush(): void {
-    const enabling = !this.pushEnabled();
-    const change = enabling
-      ? this.pushNotificationsService.enable()
-      : this.pushNotificationsService.disable();
-
-    change.subscribe({
-      error: (error: unknown) =>
-        this.showPushError(
-          error,
-          enabling ? "profile.push.enable.error" : "profile.push.disable.error",
-        ),
-    });
-  }
-
-  sendPushTest(): void {
-    if (this.sendingPushTest()) {
-      return;
-    }
-
-    this.sendingPushTest.set(true);
-
-    this.pushNotificationsService
-      .sendTest({
-        title: this.t("settings.push.test.title"),
-        body: this.t("settings.push.test.body"),
-      })
-      .pipe(finalize(() => this.sendingPushTest.set(false)))
-      .subscribe();
-  }
-
-  private showPushError(error: unknown, fallbackKey: string): void {
-    if (error instanceof HttpErrorResponse) {
-      return;
-    }
-
-    this.floatingToastService.showToast({
-      status: 400,
-      keyTranslation:
-        error instanceof PushPermissionDeniedError
-          ? "profile.push.enable.denied"
-          : fallbackKey,
-      details: [],
+  goToNotifications(): void {
+    this.router.navigate(["/notifications"], {
+      queryParams: { tab: "settings" },
     });
   }
 

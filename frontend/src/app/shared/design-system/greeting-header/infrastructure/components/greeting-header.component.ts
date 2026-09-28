@@ -10,18 +10,21 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
           {{ greeting }}{{ name ? ", " + name : "" }}
         </h1>
       </div>
-      <button
-        type="button"
-        class="dash__avatar"
-        [attr.aria-label]="avatarLabel"
-        (click)="avatarClick.emit()"
-      >
-        @if (imageUrl) {
-          <img class="dash__avatar-image" [src]="imageUrl" alt="" />
-        } @else {
-          {{ initial }}
-        }
-      </button>
+      <div class="dash__actions">
+        <ng-content select="[slot=actions]" />
+        <button
+          type="button"
+          class="dash__avatar"
+          [attr.aria-label]="avatarLabel"
+          (click)="avatarClick.emit()"
+        >
+          @if (imageUrl) {
+            <img class="dash__avatar-image" [src]="imageUrl" alt="" />
+          } @else {
+            {{ initial }}
+          }
+        </button>
+      </div>
     </header>
   `,
   styles: [
@@ -58,6 +61,12 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       }
       :host-context([data-theme="dark"]) .dash__greeting {
         font-weight: 700;
+      }
+      .dash__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--ds-space-2);
+        flex: none;
       }
       .dash__avatar {
         box-sizing: border-box;
