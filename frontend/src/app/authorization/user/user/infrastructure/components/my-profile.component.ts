@@ -63,6 +63,7 @@ import { PreferenceChoiceOption } from "@shared/design-system/preference-choice/
 import { PasswordStrengthComponent } from "@shared/design-system/password-strength/infrastructure/components/password-strength.component";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import { PreferenceToggleComponent } from "@shared/design-system/preference-toggle/infrastructure/components/preference-toggle.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { PushNotificationsProvider } from "@authorization/user/push-subscription/infrastructure/providers/push-notifications.provider";
 import { PushNotificationsService } from "@authorization/user/push-subscription/application/services/push-notifications.service";
 import { PushPermissionDeniedError } from "@authorization/user/push-subscription/domain/errors/push-permission-denied.error";
@@ -150,6 +151,7 @@ function passwordMatchValidator(
     PreferenceChoiceComponent,
     PasswordStrengthComponent,
     PreferenceToggleComponent,
+    IconButtonComponent,
   ],
 })
 export class MyProfileComponent implements OnInit {
@@ -360,13 +362,7 @@ export class MyProfileComponent implements OnInit {
         body: this.t("settings.push.test.body"),
       })
       .pipe(finalize(() => this.sendingPushTest.set(false)))
-      .subscribe(() =>
-        this.floatingToastService.showToast({
-          status: 200,
-          keyTranslation: "profile.push.test.success",
-          details: [],
-        }),
-      );
+      .subscribe();
   }
 
   private showPushError(error: unknown, fallbackKey: string): void {
