@@ -37,14 +37,16 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         @for (macro of macros; track macro.label) {
           <div class="macro">
             <div class="macro__top">
-              <span class="macro__label">{{ macro.label }}</span>
+              <span class="macro__label"
+                >{{ macro.label }}
+                @if (macro.overLabel) {
+                  <span class="macro__over-label">{{ macro.overLabel }}</span>
+                }
+              </span>
               <span class="macro__value"
                 >{{ macro.valueLabel }}
                 @if (macro.goalLabel) {
                   <span class="macro__goal"> / {{ macro.goalLabel }}</span>
-                }
-                @if (macro.overLabel) {
-                  <span class="macro__over-label">{{ macro.overLabel }}</span>
                 }
               </span>
             </div>
@@ -155,13 +157,23 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         display: flex;
         align-items: baseline;
         justify-content: space-between;
+        gap: var(--ds-space-2);
       }
       .macro__label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         font-size: var(--ds-text-sm);
         font-weight: 600;
         color: var(--ds-text-muted);
       }
       .macro__value {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         font-size: var(--ds-text-sm);
         font-weight: 700;
         font-family: var(--ds-font-display);
@@ -266,6 +278,9 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
           flex-direction: column;
           align-items: flex-start;
           gap: 0.125rem;
+        }
+        .daysum--dense .macro__label {
+          max-width: 100%;
         }
         .daysum--dense .macro__label,
         .daysum--dense .macro__value {
