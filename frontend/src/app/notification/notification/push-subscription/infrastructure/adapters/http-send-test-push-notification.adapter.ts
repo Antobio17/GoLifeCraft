@@ -9,9 +9,6 @@ export class HttpSendTestPushNotificationAdapter implements SendTestPushNotifica
   private http = inject(HttpClient);
 
   sendTest(request: SendTestPushNotificationRequest): Observable<void> {
-    return this.http.post<void>(
-      "/api/v1/authorization/me/push-notifications/test",
-      request,
-    );
+    return this.http.post<void>("/api/v1/notification/push/test", request);
   }
 }

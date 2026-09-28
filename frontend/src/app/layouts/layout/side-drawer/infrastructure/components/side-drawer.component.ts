@@ -15,6 +15,8 @@ import { AvatarComponent } from "@shared/design-system/avatar/infrastructure/com
 import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { NotificationBellComponent } from "@shared/design-system/notification-bell/infrastructure/components/notification-bell.component";
+import { UnreadNotificationsService } from "@notification/notification/inbox/application/services/unread-notifications.service";
 import { SideDrawerService } from "../../application/services/side-drawer.service";
 import { DrawerNavSectionsService } from "../../application/services/drawer-nav-sections.service";
 
@@ -34,6 +36,7 @@ import { DrawerNavSectionsService } from "../../application/services/drawer-nav-
     DividerComponent,
     StackComponent,
     TextComponent,
+    NotificationBellComponent,
   ],
   templateUrl: "./side-drawer.component.html",
   styleUrls: ["./side-drawer.component.css"],
@@ -46,6 +49,7 @@ export class SideDrawerComponent {
   private myAvatarService = inject(MyAvatarService);
   private router = inject(Router);
   private viewport = inject(ViewportService);
+  private unreadNotificationsService = inject(UnreadNotificationsService);
 
   readonly isDocked = this.viewport.matches("(min-width: 768px)");
 
@@ -58,6 +62,7 @@ export class SideDrawerComponent {
   );
 
   readonly avatarUrl = this.myAvatarService.url;
+  readonly unreadNotifications = this.unreadNotificationsService.count;
 
   readonly email = computed(() => this.authSessionService.getUsername());
 
@@ -77,6 +82,11 @@ export class SideDrawerComponent {
 
   close(): void {
     this.drawer.close();
+  }
+
+  openNotifications(): void {
+    this.close();
+    this.router.navigate(["/notifications"]);
   }
 
   toggleTheme(): void {

@@ -9,6 +9,7 @@
       "@economy/*": ["app/economy/*"],
       "@gym/*": ["app/gym/*"],
       "@layouts/*": ["app/layouts/*"],
+      "@notification/*": ["app/notification/*"],
       "@nutrition/*": ["app/nutrition/*"],
       "@shared/*": ["app/shared/*"],
       "@environments/*": ["environments/*"]

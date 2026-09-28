@@ -13,6 +13,19 @@
       </span>
     </a>
 
+    <ds-notification-bell
+      data-testid="drawer-notifications"
+      variant="soft"
+      [count]="unreadNotifications()"
+      [ariaLabel]="
+        (unreadNotifications() > 0
+          ? 'notifications.bellUnread'
+          : 'notifications.bell'
+        ) | t: { count: unreadNotifications() }
+      "
+      (clicked)="openNotifications()"
+    />
+
     <ds-icon-button
       class="drawer__close"
       icon="close"

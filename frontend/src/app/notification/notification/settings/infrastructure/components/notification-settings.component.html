@@ -1,0 +1,190 @@
+@if (loading()) {
+  <ds-split-view
+    [gap]="'var(--ds-space-6)'"
+    [columns]="'minmax(0, 1fr) minmax(0, 1.2fr)'"
+  >
+    <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
+      <ds-skeleton-line width="8rem" height="0.75rem" />
+      <ds-skeleton height="4rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton-line width="6rem" height="0.75rem" />
+      <ds-skeleton height="4rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton height="5.5rem" radius="var(--ds-radius-lg)" />
+    </ds-stack>
+
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-skeleton-line width="5rem" height="0.75rem" />
+      <ds-skeleton height="4rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton height="4rem" radius="var(--ds-radius-lg)" />
+    </ds-stack>
+  </ds-split-view>
+} @else {
+  <ds-split-view
+    [gap]="'var(--ds-space-6)'"
+    [columns]="'minmax(0, 1fr) minmax(0, 1.2fr)'"
+  >
+    <ds-stack slot="side" [gap]="'var(--ds-space-5)'">
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-text variant="label">{{
+          "notifications.settings.device" | t
+        }}</ds-text>
+
+        <ds-preference-toggle
+          data-testid="notifications-push-toggle"
+          icon="🔔"
+          [title]="'notifications.settings.push.title' | t"
+          [subtitle]="pushHintKey() | t"
+          [checked]="pushEnabled()"
+          [disabled]="!pushToggleable()"
+          (toggled)="togglePush()"
+        >
+          @if (pushEnabled()) {
+            <ds-icon-button
+              slot="action"
+              data-testid="notifications-push-test"
+              icon="send"
+              variant="soft"
+              [iconSize]="17"
+              [ariaLabel]="'notifications.settings.push.test.action' | t"
+              [disabled]="sendingPushTest()"
+              (clicked)="sendPushTest()"
+            />
+          }
+        </ds-preference-toggle>
+
+        <ds-note icon="info" tone="info">{{
+          "notifications.settings.inboxNote" | t
+        }}</ds-note>
+      </ds-stack>
+
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-stack
+          direction="row"
+          align="center"
+          justify="between"
+          [gap]="'var(--ds-space-2)'"
+        >
+          <ds-text variant="label">{{
+            "notifications.settings.general" | t
+          }}</ds-text>
+          <ds-save-status [status]="autosave.status()" align="end" />
+        </ds-stack>
+
+        <ds-preference-toggle
+          data-testid="notifications-quiet-toggle"
+          icon="🌙"
+          [title]="'notifications.settings.quiet.title' | t"
+          [subtitle]="'notifications.settings.quiet.subtitle' | t"
+          [checked]="settings()!.quietHoursEnabled"
+          (toggled)="toggleQuietHours()"
+        />
+
+        @if (settings()!.quietHoursEnabled) {
+          <ds-stack direction="row" [gap]="'var(--ds-space-3)'">
+            <ds-stack [gap]="'var(--ds-space-2)'" [grow]="true">
+              <ds-text variant="label">{{
+                "notifications.settings.quiet.from" | t
+              }}</ds-text>
+              <ds-date-input
+                data-testid="notifications-quiet-start"
+                type="time"
+                [ariaLabel]="'notifications.settings.quiet.from' | t"
+                [ngModel]="settings()!.quietHoursStart"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="changeQuietHoursStart($event)"
+              />
+            </ds-stack>
+            <ds-stack [gap]="'var(--ds-space-2)'" [grow]="true">
+              <ds-text variant="label">{{
+                "notifications.settings.quiet.to" | t
+              }}</ds-text>
+              <ds-date-input
+                data-testid="notifications-quiet-end"
+                type="time"
+                [ariaLabel]="'notifications.settings.quiet.to' | t"
+                [ngModel]="settings()!.quietHoursEnd"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="changeQuietHoursEnd($event)"
+              />
+            </ds-stack>
+          </ds-stack>
+        }
+
+        <ds-card [padding]="'0'" [gap]="'0'">
+          <ds-preference-choice
+            data-testid="notifications-language"
+            [title]="'notifications.settings.language.title' | t"
+            [options]="languageOptions()"
+            [value]="settings()!.languageCode"
+            (changed)="changeLanguage($event)"
+          />
+        </ds-card>
+
+        <ds-readonly-strip
+          data-testid="notifications-timezone"
+          [label]="'notifications.settings.timezone.title' | t"
+          [value]="settings()!.timezone"
+          [note]="'notifications.settings.timezone.note' | t"
+        />
+
+        @if (timezoneDiffers()) {
+          <ds-button
+            data-testid="notifications-use-device-timezone"
+            variant="secondary"
+            size="sm"
+            icon="globe"
+            (clicked)="useDeviceTimezone()"
+            >{{ useDeviceTimezoneLabel() }}</ds-button
+          >
+        }
+      </ds-stack>
+    </ds-stack>
+
+    <ds-stack [gap]="'var(--ds-space-5)'">
+      @for (group of groups(); track group.module) {
+        <ds-stack [gap]="'var(--ds-space-3)'">
+          <ds-text variant="label">{{ group.label }}</ds-text>
+
+          @for (row of group.rows; track row.type) {
+            <ds-stack [gap]="'var(--ds-space-2)'">
+              <ds-preference-toggle
+                [attr.data-testid]="row.testId"
+                [icon]="row.icon"
+                [title]="row.title"
+                [subtitle]="row.subtitle"
+                [checked]="row.enabled"
+                (toggled)="togglePreference(row.type)"
+              />
+
+              @if (row.enabled && row.time !== null) {
+                <ds-date-input
+                  [attr.data-testid]="row.testId + '-time'"
+                  type="time"
+                  [ariaLabel]="
+                    'notifications.settings.preference.dayBefore.time' | t
+                  "
+                  [ngModel]="row.time"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="changePreferenceTime(row.type, $event)"
+                />
+              }
+
+              @if (row.enabled && row.leadMinutes !== null) {
+                <ds-card [padding]="'0'" [gap]="'0'">
+                  <ds-preference-choice
+                    [attr.data-testid]="row.testId + '-lead'"
+                    [title]="
+                      'notifications.settings.preference.upcoming.lead' | t
+                    "
+                    [options]="row.leadOptions"
+                    [value]="row.leadMinutes"
+                    (changed)="changePreferenceLead(row.type, $event)"
+                  />
+                </ds-card>
+              }
+            </ds-stack>
+          }
+        </ds-stack>
+      }
+    </ds-stack>
+  </ds-split-view>
+}

@@ -11,9 +11,8 @@ export class HttpUnsubscribeFromPushNotificationsAdapter implements UnsubscribeF
   unsubscribe(
     request: UnsubscribeFromPushNotificationsRequest,
   ): Observable<void> {
-    return this.http.delete<void>(
-      "/api/v1/authorization/me/push-subscriptions",
-      { body: request },
-    );
+    return this.http.delete<void>("/api/v1/notification/push-subscriptions", {
+      body: request,
+    });
   }
 }

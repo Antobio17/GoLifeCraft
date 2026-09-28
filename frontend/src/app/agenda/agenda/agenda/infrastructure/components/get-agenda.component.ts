@@ -1,6 +1,15 @@
-import { Component, OnInit, computed, inject, signal } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+  signal,
+} from "@angular/core";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { Observable } from "rxjs";
+import { Observable, skip } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -108,11 +117,15 @@ export class GetAgendaComponent implements OnInit {
 
   private readonly MODULE_PATH = "agenda/agenda/agenda";
 
+  readonly at = input<string | undefined>(undefined);
+
   loading = signal(true);
   day = signal<AgendaDayAttributes | null>(null);
-  date = signal(this.view.todayIso());
+  date = linkedSignal(() => this.initialDate(this.at()));
 
-  calendarMonth = signal(this.calendarView.monthOf(this.view.todayIso()));
+  calendarMonth = linkedSignal(() =>
+    this.calendarView.monthOf(this.initialDate(this.at())),
+  );
   calendarDays = signal<AgendaCalendarDay[]>([]);
 
   sheetOpen = signal(false);
@@ -217,6 +230,12 @@ export class GetAgendaComponent implements OnInit {
 
     return this.entryForm.hasSeveralDays(this.form());
   });
+
+  constructor() {
+    toObservable(this.at)
+      .pipe(skip(1), takeUntilDestroyed())
+      .subscribe(() => this.selectDate(this.date()));
+  }
 
   ngOnInit(): void {
     this.translationService
@@ -415,6 +434,12 @@ export class GetAgendaComponent implements OnInit {
     return this.createAgendaEntryService.createAgendaEntry(
       this.entryForm.toPayload(form),
     );
+  }
+
+  private initialDate(date: string | undefined): string {
+    return date && /^\d{4}-\d{2}-\d{2}$/.test(date)
+      ? date
+      : this.view.todayIso();
   }
 
   private selectDate(date: string): void {

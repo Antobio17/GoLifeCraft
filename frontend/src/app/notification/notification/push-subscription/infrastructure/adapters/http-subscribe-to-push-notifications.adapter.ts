@@ -10,7 +10,7 @@ export class HttpSubscribeToPushNotificationsAdapter implements SubscribeToPushN
 
   subscribe(subscription: DevicePushSubscription): Observable<void> {
     return this.http.put<void>(
-      "/api/v1/authorization/me/push-subscriptions",
+      "/api/v1/notification/push-subscriptions",
       subscription,
     );
   }

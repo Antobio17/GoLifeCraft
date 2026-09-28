@@ -31,5 +31,13 @@
   "scan-ticket": [
     "color-contrast",
     "meta-viewport"
+  ],
+  "notifications": [
+    "color-contrast",
+    "meta-viewport"
+  ],
+  "notification-settings": [
+    "color-contrast",
+    "meta-viewport"
   ]
 }

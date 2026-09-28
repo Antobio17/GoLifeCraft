@@ -1,0 +1,112 @@
+{
+  "notifications": {
+    "breadcrumb": "Notifications",
+    "eyebrow": "Alerts",
+    "title": "Notifications",
+    "back": "Back",
+    "bell": "Open notifications",
+    "bellUnread": "Open notifications, {{count}} unread",
+    "tab": {
+      "inbox": "Recent",
+      "settings": "Settings"
+    },
+    "inbox": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "empty": {
+        "title": "All caught up",
+        "text": "Reminders for your appointments will show up here."
+      }
+    },
+    "type": {
+      "dayBefore": {
+        "title": "Tomorrow: {{title}}",
+        "bodyTimed": "You have an appointment tomorrow at {{time}}.",
+        "bodyUntimed": "You have an appointment tomorrow."
+      },
+      "upcoming": {
+        "title": "{{title}} at {{time}}",
+        "body": "Starts in {{minutes}} min."
+      }
+    },
+    "module": {
+      "agenda": "Agenda"
+    },
+    "settings": {
+      "device": "This device",
+      "push": {
+        "title": "Push notifications",
+        "hint": {
+          "on": "Enabled on this device",
+          "ready": "Get alerts on this device even when the app is closed",
+          "loading": "Checking this device…",
+          "notStandalone": "Install GoLifeCraft on your home screen and open it from there to enable them",
+          "unsupported": "This browser does not support push notifications",
+          "notConfigured": "Push notifications are not available yet",
+          "denied": "They are blocked. Allow them for this app in the system settings"
+        },
+        "enableError": "Notifications could not be enabled",
+        "disableError": "Notifications could not be disabled",
+        "denied": "You have blocked notifications for this app",
+        "test": {
+          "action": "Send a test notification",
+          "title": "Notification",
+          "body": "Push notifications work on this device"
+        }
+      },
+      "general": "General",
+      "quiet": {
+        "title": "Quiet hours",
+        "subtitle": "Alerts still reach your inbox, silently",
+        "from": "From",
+        "to": "To"
+      },
+      "language": {
+        "title": "Alert language",
+        "es": "Español",
+        "en": "English"
+      },
+      "timezone": {
+        "title": "Time zone",
+        "note": "alerts are timed with this clock",
+        "useDevice": "Use this device's ({{timezone}})"
+      },
+      "inboxNote": "Even without push, every alert stays in Recent.",
+      "preference": {
+        "dayBefore": {
+          "title": "Appointment tomorrow",
+          "subtitle": "The day before, at the time you pick",
+          "time": "Alert time"
+        },
+        "upcoming": {
+          "title": "Upcoming appointment",
+          "subtitle": "Before the appointment starts",
+          "lead": "How early"
+        }
+      },
+      "lead": {
+        "minutes": "{{value}} min",
+        "hours": "{{value}} h"
+      },
+      "saveError": "Notification settings could not be saved"
+    }
+  },
+  "notification": {
+    "settings": {
+      "invalid": {
+        "timezone": "The time zone is not valid",
+        "language": "That language is not available for alerts",
+        "quiet": {
+          "hours": "Quiet hours need valid times"
+        },
+        "time": "The alert time is not valid",
+        "lead": {
+          "minutes": "That lead time is not allowed"
+        }
+      },
+      "unknown": {
+        "type": "Unknown alert type"
+      }
+    }
+  }
+}

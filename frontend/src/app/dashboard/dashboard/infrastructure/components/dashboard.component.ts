@@ -15,6 +15,8 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
 import { DashboardLayoutComponent } from "@shared/design-system/dashboard-layout/infrastructure/components/dashboard-layout.component";
 import { GreetingHeaderComponent } from "@shared/design-system/greeting-header/infrastructure/components/greeting-header.component";
+import { NotificationBellComponent } from "@shared/design-system/notification-bell/infrastructure/components/notification-bell.component";
+import { UnreadNotificationsService } from "@notification/notification/inbox/application/services/unread-notifications.service";
 import { DiarySummaryComponent } from "@shared/design-system/diary-summary/infrastructure/components/diary-summary.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
@@ -38,6 +40,7 @@ import { FinanceSavingsSummaryComponent } from "@economy/finance/budget/infrastr
     ActionTileComponent,
     DashboardLayoutComponent,
     GreetingHeaderComponent,
+    NotificationBellComponent,
     DiarySummaryComponent,
     SectionHeaderComponent,
     SkeletonSummaryComponent,
@@ -53,6 +56,7 @@ export class DashboardComponent implements OnInit {
 
   private authSessionService = inject(AuthSessionService);
   private myAvatarService = inject(MyAvatarService);
+  private unreadNotificationsService = inject(UnreadNotificationsService);
   private getDiaryService = inject(GetDiaryService);
   private getGymStatsService = inject(GetGymStatsService);
   private router = inject(Router);
@@ -81,6 +85,7 @@ export class DashboardComponent implements OnInit {
   });
 
   readonly avatarUrl = this.myAvatarService.url;
+  readonly unreadNotifications = this.unreadNotificationsService.count;
 
   readonly summary = signal<DiaryDayAttributes | null>(null);
 
@@ -110,6 +115,10 @@ export class DashboardComponent implements OnInit {
 
   goToSettings(): void {
     this.router.navigate(["/me"]);
+  }
+
+  goToNotifications(): void {
+    this.router.navigate(["/notifications"]);
   }
 
   goToGym(): void {

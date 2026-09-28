@@ -205,15 +205,6 @@
     },
     "avatar": {
       "error": "Could not update the profile photo"
-    },
-    "push": {
-      "enable": {
-        "error": "Notifications could not be enabled",
-        "denied": "You did not allow notifications to be shown"
-      },
-      "disable": {
-        "error": "Notifications could not be disabled"
-      }
     }
   },
   "settings": {
@@ -292,22 +283,9 @@
       "cropConfirm": "Use crop",
       "cropZoom": "Zoom"
     },
-    "push": {
-      "title": "Push notifications",
-      "hint": {
-        "on": "Enabled on this device",
-        "ready": "Get alerts on this device even when the app is closed",
-        "loading": "Checking this device…",
-        "notStandalone": "Add GoLifeCraft to your home screen and open it from there to enable them",
-        "unsupported": "This browser does not support push notifications",
-        "notConfigured": "Push notifications are not available yet",
-        "denied": "They are blocked. Allow them for this app in your system settings"
-      },
-      "test": {
-        "action": "Send a test notification",
-        "title": "Notification",
-        "body": "Push notifications work on this device"
-      }
+    "notifications": {
+      "title": "Notifications",
+      "hint": "Alerts, inbox, push and quiet hours"
     }
   },
   "users": {
