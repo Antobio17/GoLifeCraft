@@ -305,7 +305,7 @@
       },
       "test": {
         "action": "Send a test notification",
-        "title": "GoLifeCraft",
+        "title": "Notification",
         "body": "Push notifications work on this device"
       }
     }

@@ -305,7 +305,7 @@
       },
       "test": {
         "action": "Enviar notificación de prueba",
-        "title": "GoLifeCraft",
+        "title": "Notificación",
         "body": "Las notificaciones push funcionan en este dispositivo"
       }
     }
