@@ -145,6 +145,30 @@ services:
           cpus: '0.25'
           memory: 128M
 
+  cron:
+    image: ghcr.io/antobio17/golifecraft-php-production:latest
+    container_name: golifecraft_cron
+    restart: always
+    user: root
+    command: ["cron", "-f"]
+    volumes:
+      - ./.env.local:/var/www/html/.env.local:ro
+    depends_on:
+      - db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+
   postfix:
     image: boky/postfix:latest
     container_name: golifecraft_postfix

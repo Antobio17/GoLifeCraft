@@ -44,6 +44,9 @@ RUN chmod 0644 /etc/cron.d/openfoodfacts-sync
 COPY infrastructure/docker/local/cron/finance-recurrences.cron /etc/cron.d/finance-recurrences
 RUN chmod 0644 /etc/cron.d/finance-recurrences
 
+COPY infrastructure/docker/local/cron/notification-dispatch.cron /etc/cron.d/notification-dispatch
+RUN chmod 0644 /etc/cron.d/notification-dispatch
+
 COPY backend/ /var/www/html/
 WORKDIR /var/www/html/
 
