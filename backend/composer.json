@@ -12,6 +12,7 @@
         "doctrine/orm": "^3.6",
         "dompdf/dompdf": "^3.1",
         "lexik/jwt-authentication-bundle": "^3.1",
+        "minishlink/web-push": "^11.0",
         "nyholm/psr7": "^1.8",
         "ramsey/uuid": "^4.9",
         "symfony/console": "7.4.*",

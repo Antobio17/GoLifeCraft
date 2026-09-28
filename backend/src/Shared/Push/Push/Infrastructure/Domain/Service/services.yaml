@@ -1,0 +1,8 @@
+services:
+  Shared\Push\Push\Domain\Service\PushNotificationSender:
+    class: Shared\Push\Push\Infrastructure\Domain\Service\WebPush\MinishlinkWebPushNotificationSender
+    arguments:
+      $vapidPublicKey: '%env(string:VAPID_PUBLIC_KEY)%'
+      $vapidPrivateKey: '%env(string:VAPID_PRIVATE_KEY)%'
+      $vapidSubject: '%env(string:VAPID_SUBJECT)%'
+      $logger: '@logger'

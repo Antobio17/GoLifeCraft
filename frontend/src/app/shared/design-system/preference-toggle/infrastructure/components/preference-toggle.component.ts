@@ -9,7 +9,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       role="switch"
       [attr.aria-checked]="checked"
       [attr.aria-label]="title"
-      (click)="toggled.emit()"
+      [disabled]="disabled"
+      (click)="toggle()"
     >
       <span class="pt__icon">{{ icon }}</span>
       <span class="pt__text">
@@ -38,6 +39,10 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         cursor: pointer;
         text-align: left;
         font-family: var(--ds-font-body);
+      }
+      .pt:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
       .pt__icon {
         flex: 0 0 auto;
@@ -95,6 +100,13 @@ export class PreferenceToggleComponent {
   @Input() title = "";
   @Input() subtitle = "";
   @Input() checked = false;
+  @Input() disabled = false;
 
   @Output() toggled = new EventEmitter<void>();
+
+  toggle(): void {
+    if (this.disabled) return;
+
+    this.toggled.emit();
+  }
 }

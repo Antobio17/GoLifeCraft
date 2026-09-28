@@ -54,6 +54,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Authorization/User/RefreshToken/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Authorization\User\RefreshToken\Domain\Model'
                         alias: refresh_token
+                    PushSubscription:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Authorization/User/PushSubscription/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Authorization\User\PushSubscription\Domain\Model'
+                        alias: push_subscription
                     EmailVerificationToken:
                         is_bundle: false
                         type: xml

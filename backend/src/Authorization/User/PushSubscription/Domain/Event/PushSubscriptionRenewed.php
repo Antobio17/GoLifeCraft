@@ -1,0 +1,30 @@
+<?php
+
+namespace Authorization\User\PushSubscription\Domain\Event;
+
+use Shared\Shared\Shared\Domain\Event\DomainEvent;
+
+final readonly class PushSubscriptionRenewed extends DomainEvent
+{
+    public function __construct(
+        string $aggregateId,
+        \DateTime $occurredOn,
+        public string $previousUserId,
+        public string $userId,
+        public string $endpoint,
+        public string $endpointHash,
+        public string $contentEncoding,
+        public ?string $userAgent,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $updatedByUserId,
+    ) {
+        parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
+    }
+
+    public function getName(): string
+    {
+        return 'golifecraft.authorization.event.1.push_subscription.renewed';
+    }
+}
