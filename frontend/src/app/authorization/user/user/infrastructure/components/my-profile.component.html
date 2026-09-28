@@ -165,19 +165,20 @@
           [checked]="pushEnabled()"
           [disabled]="!pushToggleable()"
           (toggled)="togglePush()"
-        />
-
-        @if (pushEnabled()) {
-          <ds-button
-            data-testid="settings-push-test"
-            variant="soft"
-            [fullWidth]="true"
-            [loading]="sendingPushTest()"
-            (clicked)="sendPushTest()"
-          >
-            {{ "settings.push.test.action" | t }}
-          </ds-button>
-        }
+        >
+          @if (pushEnabled()) {
+            <ds-icon-button
+              slot="action"
+              data-testid="settings-push-test"
+              icon="send"
+              variant="soft"
+              [iconSize]="17"
+              [ariaLabel]="'settings.push.test.action' | t"
+              [disabled]="sendingPushTest()"
+              (clicked)="sendPushTest()"
+            />
+          }
+        </ds-preference-toggle>
       </ds-stack>
 
       <ds-stack slot="side" [gap]="'var(--ds-space-3)'">

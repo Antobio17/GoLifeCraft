@@ -213,9 +213,6 @@
       },
       "disable": {
         "error": "Notifications could not be disabled"
-      },
-      "test": {
-        "success": "Test notification sent"
       }
     }
   },

@@ -213,9 +213,6 @@
       },
       "disable": {
         "error": "No se han podido desactivar las notificaciones"
-      },
-      "test": {
-        "success": "Notificación de prueba enviada"
       }
     }
   },
