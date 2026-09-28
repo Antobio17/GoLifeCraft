@@ -4,9 +4,10 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnInit,
   Output,
+  effect,
   inject,
+  input,
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -181,11 +182,11 @@ export type ScreenHeaderLeading = "back" | "close" | null;
     `,
   ],
   host: {
-    "[class.is-sticky]": "sticky",
-    "[class.is-scrolled]": "sticky && scrolled()",
+    "[class.is-sticky]": "sticky()",
+    "[class.is-scrolled]": "sticky() && scrolled()",
   },
 })
-export class ScreenHeaderComponent implements OnInit {
+export class ScreenHeaderComponent {
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -197,16 +198,18 @@ export class ScreenHeaderComponent implements OnInit {
   @Input() title = "";
   @Input() wrapTitle = false;
   @Input() subtitle: string | null = null;
-  @Input() sticky = false;
+  readonly sticky = input(false);
   @Output() leadingClick = new EventEmitter<void>();
 
-  ngOnInit(): void {
-    if (!this.sticky) {
-      return;
-    }
-
+  constructor() {
     this.trackScroll();
-    this.publishOffset();
+    effect((onCleanup) => {
+      if (!this.sticky()) {
+        return;
+      }
+
+      onCleanup(this.publishOffset());
+    });
   }
 
   private trackScroll(): void {
@@ -220,7 +223,7 @@ export class ScreenHeaderComponent implements OnInit {
       .subscribe((scrolled) => this.scrolled.set(scrolled));
   }
 
-  private publishOffset(): void {
+  private publishOffset(): () => void {
     const rootStyle = document.documentElement.style;
     const observer = new ResizeObserver(([entry]) =>
       rootStyle.setProperty(
@@ -230,9 +233,9 @@ export class ScreenHeaderComponent implements OnInit {
     );
 
     observer.observe(this.host.nativeElement);
-    this.destroyRef.onDestroy(() => {
+    return () => {
       observer.disconnect();
       rootStyle.removeProperty(STICKY_OFFSET_PROPERTY);
-    });
+    };
   }
 }
