@@ -92,17 +92,35 @@ final class AgendaReminderPlannerTest extends TestCase
         $this->assertSame(expected: [], actual: $due);
     }
 
-    public function testItDoesNotRemindAppointmentsCreatedAfterTheirReminderWasDue(): void
+    public function testItRemindsAppointmentsCreatedInsideTheirLeadWindowRightAway(): void
     {
         $due = $this->planner->plan(
             appointments: [$this->appointment(
                 id: 'late',
                 date: '2026-09-28',
                 time: '18:00',
-                createdAt: '2026-09-28T15:30:00+00:00',
+                createdAt: '2026-09-28T15:40:00+00:00',
             )],
             settings: $this->settings(),
-            now: new \DateTimeImmutable(datetime: '2026-09-28T15:31:00+00:00'),
+            now: new \DateTimeImmutable(datetime: '2026-09-28T15:41:00+00:00'),
+        );
+
+        $this->assertCount(expectedCount: 1, haystack: $due);
+        $this->assertSame(expected: NotificationType::AgendaAppointmentUpcoming, actual: $due[0]->type);
+        $this->assertSame(expected: 19, actual: $due[0]->params['minutes']);
+    }
+
+    public function testItDoesNotRemindTheDayBeforeForAppointmentsCreatedAfterThatReminderWasDue(): void
+    {
+        $due = $this->planner->plan(
+            appointments: [$this->appointment(
+                id: 'late',
+                date: '2026-09-29',
+                time: '10:30',
+                createdAt: '2026-09-28T19:30:00+00:00',
+            )],
+            settings: $this->settings(),
+            now: new \DateTimeImmutable(datetime: '2026-09-28T19:31:00+00:00'),
         );
 
         $this->assertSame(expected: [], actual: $due);

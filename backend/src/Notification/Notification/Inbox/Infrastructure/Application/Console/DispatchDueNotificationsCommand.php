@@ -5,10 +5,12 @@ namespace Notification\Notification\Inbox\Infrastructure\Application\Console;
 use Doctrine\ORM\EntityManagerInterface;
 use Notification\Notification\Inbox\Application\Command\DeliverNotificationCommand;
 use Notification\Notification\Inbox\Domain\QueryModel\DispatchDueNotificationsNeedleDataQuery;
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\AgendaAppointment;
 use Notification\Notification\Inbox\Domain\QueryModel\Dto\NotificationRecipient;
 use Notification\Notification\Inbox\Domain\QueryModel\NotificationRecipientsNeedleDataQuery;
 use Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner;
 use Notification\Notification\Inbox\Domain\Service\Dto\DueNotification;
+use Notification\Notification\Settings\Domain\QueryModel\Dto\NotificationSettingsSnapshot;
 use Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery;
 use Psr\Log\LoggerInterface;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
@@ -59,31 +61,48 @@ final class DispatchDueNotificationsCommand extends Command
             return Command::FAILURE;
         }
 
+        $dryRun = (bool) $input->getOption('dry-run');
         $recipients = $this->recipientsNeedleDataQuery->activeRecipients(tenantId: $input->getOption('tenant'));
 
+        $output->writeln(messages: sprintf('Now: %s (UTC)%s', $now->setTimezone(timezone: new \DateTimeZone(timezone: 'UTC'))->format(format: 'Y-m-d H:i:s'), $dryRun ? ' [dry-run]' : ''), options: OutputInterface::VERBOSITY_VERBOSE);
+
+        $dispatched = 0;
+
         foreach ($recipients as $recipient) {
-            $this->dispatchRecipient(
+            $dispatched += $this->dispatchRecipient(
                 recipient: $recipient,
                 now: $now,
-                dryRun: (bool) $input->getOption('dry-run'),
+                dryRun: $dryRun,
                 output: $output,
             );
         }
 
+        $output->writeln(messages: sprintf('%d recipient(s) checked, %d notification(s) %s.', count(value: $recipients), $dispatched, $dryRun ? 'would be delivered' : 'delivered'));
+
         return Command::SUCCESS;
     }
 
-    private function dispatchRecipient(NotificationRecipient $recipient, \DateTimeImmutable $now, bool $dryRun, OutputInterface $output): void
+    private function dispatchRecipient(NotificationRecipient $recipient, \DateTimeImmutable $now, bool $dryRun, OutputInterface $output): int
     {
         $this->switcher->switch(tenantId: $recipient->tenantId);
         $this->tenantEntityManager->clear();
 
         $settings = $this->settingsNeedleDataQuery->current();
         $window = $this->agendaReminderPlanner->window(settings: $settings, now: $now);
+        $appointments = $this->needleDataQuery->pendingAppointments(fromDate: $window['from'], toDate: $window['to']);
         $due = $this->agendaReminderPlanner->plan(
-            appointments: $this->needleDataQuery->pendingAppointments(fromDate: $window['from'], toDate: $window['to']),
+            appointments: $appointments,
             settings: $settings,
             now: $now,
+        );
+
+        $this->describeRecipient(
+            recipient: $recipient,
+            settings: $settings,
+            appointments: $appointments,
+            window: $window,
+            now: $now,
+            output: $output,
         );
 
         $delivered = $this->needleDataQuery->deliveredDedupeKeys(
@@ -102,6 +121,18 @@ final class DispatchDueNotificationsCommand extends Command
             ),
         );
 
+        foreach ($due as $notification) {
+            $output->writeln(
+                messages: sprintf(
+                    '  due %s at %s%s',
+                    $notification->type->value,
+                    $notification->dueAt->format(format: 'Y-m-d H:i'),
+                    in_array(needle: $notification->dedupeKeyFor(userId: $recipient->userId), haystack: $delivered, strict: true) ? ' (already delivered)' : '',
+                ),
+                options: OutputInterface::VERBOSITY_VERBOSE,
+            );
+        }
+
         foreach ($pending as $notification) {
             $output->writeln(messages: sprintf('%s: %s → %s', $recipient->tenantId, $notification->type->value, $notification->dedupeKeyFor(userId: $recipient->userId)));
 
@@ -110,6 +141,56 @@ final class DispatchDueNotificationsCommand extends Command
             }
 
             $this->deliver(recipient: $recipient, notification: $notification);
+        }
+
+        return count(value: $pending);
+    }
+
+    /**
+     * @param AgendaAppointment[]             $appointments
+     * @param array{from: string, to: string} $window
+     */
+    private function describeRecipient(
+        NotificationRecipient $recipient,
+        NotificationSettingsSnapshot $settings,
+        array $appointments,
+        array $window,
+        \DateTimeImmutable $now,
+        OutputInterface $output,
+    ): void {
+        if (!$output->isVerbose()) {
+            return;
+        }
+
+        $output->writeln(messages: sprintf(
+            '<info>%s</info> user %s · local now %s (%s)%s',
+            $recipient->tenantId,
+            $recipient->userId,
+            $settings->localNow(now: $now)->format(format: 'Y-m-d H:i'),
+            $settings->timezone,
+            $settings->isQuietAt(now: $now) ? ' · quiet hours, no push' : '',
+        ));
+
+        foreach ($settings->preferences as $preference) {
+            $output->writeln(messages: sprintf(
+                '  pref %s: %s%s%s',
+                $preference->type->value,
+                $preference->enabled ? 'on' : 'off',
+                null !== $preference->time ? ' at '.$preference->time : '',
+                null !== $preference->leadMinutes ? sprintf(' %d min before', $preference->leadMinutes) : '',
+            ));
+        }
+
+        $output->writeln(messages: sprintf('  %d pending appointment(s) between %s and %s', count(value: $appointments), $window['from'], $window['to']));
+
+        foreach ($appointments as $appointment) {
+            $output->writeln(messages: sprintf(
+                '  appointment "%s" %s %s · created %s UTC',
+                $appointment->title,
+                $appointment->entryDate,
+                $appointment->time ?? '(no time)',
+                $appointment->createdAt->format(format: 'Y-m-d H:i'),
+            ));
         }
     }
 

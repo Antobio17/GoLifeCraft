@@ -123,10 +123,6 @@ final class AgendaReminderPlanner
                 continue;
             }
 
-            if ($appointment->createdAt > $dueAt) {
-                continue;
-            }
-
             $due[] = new DueNotification(
                 type: NotificationType::AgendaAppointmentUpcoming,
                 sourceKey: sprintf('%s:%sT%s', $appointment->id, $appointment->entryDate, $appointment->time),
