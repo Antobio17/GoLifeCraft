@@ -36,6 +36,18 @@ export class NotificationsPage {
     return this.ds.button("notifications-preference-upcoming");
   }
 
+  get upcomingLead(): Locator {
+    return this.ds.select("notifications-preference-upcoming-lead");
+  }
+
+  async chooseUpcomingLead(minutes: string): Promise<Response> {
+    const saved = this.savedSettings();
+
+    await this.upcomingLead.selectOption(minutes);
+
+    return saved;
+  }
+
   async openTab(label: string): Promise<void> {
     await this.ds.host("notifications-tabs").getByRole("radio", { name: label }).click();
     await waitForAppReady(this.page);
@@ -46,13 +58,17 @@ export class NotificationsPage {
   }
 
   async toggleQuietHours(): Promise<Response> {
-    const saved = this.page.waitForResponse(
-      (response) =>
-        response.request().method() === "PUT" && new URL(response.url()).pathname === SETTINGS_PATH,
-    );
+    const saved = this.savedSettings();
 
     await this.quietHours.click();
 
     return saved;
+  }
+
+  private savedSettings(): Promise<Response> {
+    return this.page.waitForResponse(
+      (response) =>
+        response.request().method() === "PUT" && new URL(response.url()).pathname === SETTINGS_PATH,
+    );
   }
 }

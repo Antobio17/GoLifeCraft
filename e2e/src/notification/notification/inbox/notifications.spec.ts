@@ -72,6 +72,31 @@ test.describe("notificaciones", () => {
     expect(restored.status()).toBe(204);
   });
 
+  test("la antelación de la cita próxima se elige en un selector y se guarda", async ({ page }) => {
+    const notifications = new NotificationsPage(page);
+    await notifications.goto("settings");
+
+    await expect(notifications.upcomingLead.locator("option")).toHaveText([
+      "15 min",
+      "30 min",
+      "1 h",
+      "2 h",
+      "3 h",
+    ]);
+
+    const saved = await notifications.chooseUpcomingLead("30");
+    const upcoming = saved
+      .request()
+      .postDataJSON()
+      .preferences.find((preference: { type: string }) => preference.type === "agenda.appointment.upcoming");
+
+    expect(saved.status()).toBe(204);
+    expect(upcoming.leadMinutes).toBe(30);
+
+    const restored = await notifications.chooseUpcomingLead("60");
+    expect(restored.status()).toBe(204);
+  });
+
   test("las pestañas cambian entre el buzón y los ajustes", async ({ page }) => {
     const notifications = new NotificationsPage(page);
     await notifications.goto();

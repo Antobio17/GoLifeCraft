@@ -18,6 +18,7 @@ import { PreferenceChoiceComponent } from "@shared/design-system/preference-choi
 import { PreferenceChoiceOption } from "@shared/design-system/preference-choice/domain/models/preference-choice-option.model";
 import { ReadonlyStripComponent } from "@shared/design-system/readonly-strip/infrastructure/components/readonly-strip.component";
 import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
+import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -49,6 +50,7 @@ import { NotificationModuleGroup } from "../../domain/models/notification-module
     PreferenceChoiceComponent,
     ReadonlyStripComponent,
     DateInputComponent,
+    SelectComponent,
     NoteComponent,
     SaveStatusComponent,
     SkeletonComponent,

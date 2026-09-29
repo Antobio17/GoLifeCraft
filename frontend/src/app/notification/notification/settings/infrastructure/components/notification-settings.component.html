@@ -156,30 +156,42 @@
               />
 
               @if (row.enabled && row.time !== null) {
-                <ds-date-input
-                  [attr.data-testid]="row.testId + '-time'"
-                  type="time"
-                  [ariaLabel]="
-                    'notifications.settings.preference.dayBefore.time' | t
-                  "
-                  [ngModel]="row.time"
-                  [ngModelOptions]="{ standalone: true }"
-                  (ngModelChange)="changePreferenceTime(row.type, $event)"
-                />
+                <ds-stack [gap]="'var(--ds-space-1-5)'">
+                  <ds-text variant="label">{{
+                    "notifications.settings.preference.dayBefore.time" | t
+                  }}</ds-text>
+                  <ds-date-input
+                    [attr.data-testid]="row.testId + '-time'"
+                    type="time"
+                    [ariaLabel]="
+                      'notifications.settings.preference.dayBefore.time' | t
+                    "
+                    [ngModel]="row.time"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="changePreferenceTime(row.type, $event)"
+                  />
+                </ds-stack>
               }
 
               @if (row.enabled && row.leadMinutes !== null) {
-                <ds-card [padding]="'0'" [gap]="'0'">
-                  <ds-preference-choice
+                <ds-stack [gap]="'var(--ds-space-1-5)'">
+                  <ds-text variant="label">{{
+                    "notifications.settings.preference.upcoming.lead" | t
+                  }}</ds-text>
+                  <ds-select
                     [attr.data-testid]="row.testId + '-lead'"
-                    [title]="
+                    variant="field"
+                    leadingIcon="clock"
+                    [fluid]="true"
+                    [options]="row.leadOptions"
+                    [ariaLabel]="
                       'notifications.settings.preference.upcoming.lead' | t
                     "
-                    [options]="row.leadOptions"
-                    [value]="row.leadMinutes"
-                    (changed)="changePreferenceLead(row.type, $event)"
+                    [ngModel]="row.leadMinutes"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="changePreferenceLead(row.type, $event)"
                   />
-                </ds-card>
+                </ds-stack>
               }
             </ds-stack>
           }
