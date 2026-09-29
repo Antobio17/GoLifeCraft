@@ -29,7 +29,7 @@ import { ImageFit } from "../../domain/models/image-fit.model";
       <span class="ds-pcard__body">
         <span class="ds-pcard__head">
           <span class="ds-pcard__name">{{ name }}</span>
-          @if (price) {
+          @if (price && !priceAside) {
             <span class="ds-pcard__price">{{ price }}</span>
           }
         </span>
@@ -99,7 +99,14 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         } @else {
           <ng-container [ngTemplateOutlet]="content"></ng-container>
         }
-        <ng-container [ngTemplateOutlet]="actionButton"></ng-container>
+        @if (priceAside) {
+          <span class="ds-pcard__aside">
+            <span class="ds-pcard__price">{{ price }}</span>
+            <ng-container [ngTemplateOutlet]="actionButton"></ng-container>
+          </span>
+        } @else {
+          <ng-container [ngTemplateOutlet]="actionButton"></ng-container>
+        }
       </div>
     } @else {
       <button type="button" class="ds-pcard" (click)="activated.emit()">
@@ -265,6 +272,18 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         line-height: 1.2;
         color: var(--ds-text);
       }
+      .ds-pcard__aside {
+        flex: 0 0 auto;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: var(--ds-space-2);
+      }
+      .ds-pcard__aside .ds-pcard__action {
+        align-self: flex-end;
+      }
       .ds-pcard__price {
         font-size: var(--ds-text-md);
         font-weight: 800;
@@ -337,6 +356,10 @@ export class ProductCardComponent {
 
   get hasBadges(): boolean {
     return !!this.kcal || this.macros.some((macro) => !!macro.value);
+  }
+
+  get priceAside(): boolean {
+    return this.actionIconOnly && !this.footerAction && !!this.price;
   }
 
   get actionCaption(): string {

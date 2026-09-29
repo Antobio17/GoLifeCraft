@@ -297,6 +297,8 @@
               [store]="product.store"
               [actionable]="true"
               [added]="product.added"
+              [actionIcon]="'plus'"
+              [actionIconOnly]="true"
               [actionLabel]="'getShopping.sheet.addAction' | t"
               [addedLabel]="'getShopping.sheet.addedAction' | t"
               (action)="addProduct(product.articleId)"
