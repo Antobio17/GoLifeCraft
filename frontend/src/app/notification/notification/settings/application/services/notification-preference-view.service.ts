@@ -1,6 +1,7 @@
 import { inject } from "@angular/core";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
+import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum";
 import { NotificationType } from "@notification/notification/inbox/domain/models/notification-type.enum";
 import { NotificationPreference } from "../../domain/models/notification-preference.model";
 import { NotificationModuleGroup } from "../../domain/models/notification-module-group.model";
@@ -14,9 +15,9 @@ const PREFERENCE_KEY: Record<string, string> = {
   [NotificationType.AgendaAppointmentUpcoming]: "upcoming",
 };
 
-const PREFERENCE_ICON: Record<string, string> = {
-  [NotificationType.AgendaAppointmentDayBefore]: "📅",
-  [NotificationType.AgendaAppointmentUpcoming]: "⏰",
+const PREFERENCE_GLYPH: Record<string, DsGlyph> = {
+  [NotificationType.AgendaAppointmentDayBefore]: DsGlyph.EveReminder,
+  [NotificationType.AgendaAppointmentUpcoming]: DsGlyph.SoonAlarm,
 };
 
 export class NotificationPreferenceViewService {
@@ -55,7 +56,7 @@ export class NotificationPreferenceViewService {
 
     return {
       type: preference.type,
-      icon: PREFERENCE_ICON[preference.type] ?? "🔔",
+      glyph: PREFERENCE_GLYPH[preference.type] ?? DsGlyph.PushAlert,
       title: this.t(`notifications.settings.preference.${key}.title`),
       subtitle: this.t(`notifications.settings.preference.${key}.subtitle`),
       enabled: preference.enabled,

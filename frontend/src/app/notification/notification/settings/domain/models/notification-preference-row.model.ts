@@ -1,8 +1,9 @@
+import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 
 export interface NotificationPreferenceRow {
   type: string;
-  icon: string;
+  glyph: DsGlyph;
   title: string;
   subtitle: string;
   enabled: boolean;
