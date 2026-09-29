@@ -30,7 +30,7 @@
 
         <ds-preference-toggle
           data-testid="notifications-push-toggle"
-          icon="🔔"
+          glyph="pushAlert"
           [title]="'notifications.settings.push.title' | t"
           [subtitle]="pushHintKey() | t"
           [checked]="pushEnabled()"
@@ -71,7 +71,7 @@
 
         <ds-preference-toggle
           data-testid="notifications-quiet-toggle"
-          icon="🌙"
+          glyph="quietNight"
           [title]="'notifications.settings.quiet.title' | t"
           [subtitle]="'notifications.settings.quiet.subtitle' | t"
           [checked]="settings()!.quietHoursEnabled"
@@ -148,7 +148,7 @@
             <ds-stack [gap]="'var(--ds-space-2)'">
               <ds-preference-toggle
                 [attr.data-testid]="row.testId"
-                [icon]="row.icon"
+                [glyph]="row.glyph"
                 [title]="row.title"
                 [subtitle]="row.subtitle"
                 [checked]="row.enabled"

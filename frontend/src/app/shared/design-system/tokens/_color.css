@@ -121,6 +121,11 @@
   --ds-secondary-hover: var(--ds-green-300);
   --ds-on-secondary: var(--ds-green-900);
 
+  /* ---- Glifos de marca (ds-glyph): trazo + relleno duotono ---- */
+  --ds-glyph-line: var(--ds-green-600);
+  --ds-glyph-fill: var(--ds-green-200);
+  --ds-glyph-tile: var(--ds-green-50);
+
   /* ---- Semánticos: Accent ----
      Paleta monocroma: el acento NO es otro tono, es el mismo verde.
      Se distingue de primary por intensidad, no por color. */
@@ -243,6 +248,10 @@
   --ds-secondary: var(--ds-green-800);
   --ds-secondary-hover: var(--ds-green-700);
   --ds-on-secondary: var(--ds-green-50);
+
+  --ds-glyph-line: var(--ds-green-200);
+  --ds-glyph-fill: rgba(143, 250, 152, 0.26);
+  --ds-glyph-tile: rgba(143, 250, 152, 0.12);
 
   /* ---- Accent → menta (mismo tono, más intensidad) ---- */
   --ds-accent: var(--ds-green-200);

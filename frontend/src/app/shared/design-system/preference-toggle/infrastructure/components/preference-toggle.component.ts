@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { GlyphComponent } from "../../../glyph/infrastructure/components/glyph.component";
+import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
 
 @Component({
   selector: "ds-preference-toggle",
+  imports: [GlyphComponent],
   template: `
     <button
       type="button"
@@ -12,7 +15,11 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       [disabled]="disabled"
       (click)="toggle()"
     >
-      <span class="pt__icon">{{ icon }}</span>
+      @if (glyph) {
+        <ds-glyph [name]="glyph" [tile]="true" />
+      } @else {
+        <span class="pt__icon">{{ icon }}</span>
+      }
       <span class="pt__text">
         <span class="pt__title">{{ title }}</span>
         <span class="pt__sub">{{ subtitle }}</span>
@@ -114,6 +121,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 })
 export class PreferenceToggleComponent {
   @Input() icon = "";
+  @Input() glyph: `${DsGlyph}` | null = null;
   @Input() title = "";
   @Input() subtitle = "";
   @Input() checked = false;
