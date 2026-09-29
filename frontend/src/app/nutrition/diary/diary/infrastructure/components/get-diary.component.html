@@ -422,7 +422,12 @@
     [compact]="true"
     [title]="goalTitleKey() | t"
     [closeLabel]="'getDiary.goal.close' | t"
+    [confirmLabel]="
+      (goalValid() ? 'getDiary.goal.save' : 'getDiary.goal.saveInvalid') | t
+    "
+    [confirmDisabled]="!goalValid() || goalSaving()"
     (closed)="closeGoalSheet()"
+    (confirmed)="saveGoals()"
   >
     <ds-stack [gap]="'var(--ds-space-4)'">
       <ds-text variant="meta">{{ goalSubtitle() }}</ds-text>
@@ -506,18 +511,6 @@
         {{ "getDiary.goal.hintSum" | t }} {{ goalPercentTotal() }}%.
         {{ "getDiary.goal.hintFormula" | t }}
       </ds-note>
-
-      <ds-button
-        variant="soft"
-        [fullWidth]="true"
-        [disabled]="!goalValid()"
-        [loading]="goalSaving()"
-        (clicked)="saveGoals()"
-      >
-        {{
-          (goalValid() ? "getDiary.goal.save" : "getDiary.goal.saveInvalid") | t
-        }}
-      </ds-button>
     </ds-stack>
   </ds-modal-sheet>
 
