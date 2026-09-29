@@ -1,6 +1,6 @@
 import { inject } from "@angular/core";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
-import { PreferenceChoiceOption } from "@shared/design-system/preference-choice/domain/models/preference-choice-option.model";
+import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { NotificationType } from "@notification/notification/inbox/domain/models/notification-type.enum";
 import { NotificationPreference } from "../../domain/models/notification-preference.model";
 import { NotificationModuleGroup } from "../../domain/models/notification-module-group.model";
@@ -62,12 +62,10 @@ export class NotificationPreferenceViewService {
       time: preference.time,
       leadMinutes:
         null === preference.leadMinutes ? null : String(preference.leadMinutes),
-      leadOptions: leadMinutesOptions.map<PreferenceChoiceOption>(
-        (minutes) => ({
-          value: String(minutes),
-          label: this.leadLabel(minutes),
-        }),
-      ),
+      leadOptions: leadMinutesOptions.map<SelectOption>((minutes) => ({
+        value: String(minutes),
+        label: this.leadLabel(minutes),
+      })),
       testId: `notifications-preference-${key}`,
     };
   }

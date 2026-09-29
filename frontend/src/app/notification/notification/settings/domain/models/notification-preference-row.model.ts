@@ -1,4 +1,4 @@
-import { PreferenceChoiceOption } from "@shared/design-system/preference-choice/domain/models/preference-choice-option.model";
+import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 
 export interface NotificationPreferenceRow {
   type: string;
@@ -8,6 +8,6 @@ export interface NotificationPreferenceRow {
   enabled: boolean;
   time: string | null;
   leadMinutes: string | null;
-  leadOptions: PreferenceChoiceOption[];
+  leadOptions: SelectOption[];
   testId: string;
 }

@@ -4,7 +4,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 import { SelectOption } from "../../domain/models/select-option.model";
 
-type SelectVariant = "pill" | "bare" | "soft";
+type SelectVariant = "pill" | "bare" | "soft" | "field";
 
 @Component({
   selector: "ds-select",
@@ -20,6 +20,7 @@ type SelectVariant = "pill" | "bare" | "soft";
       [class.ds-select--pill]="variant === 'pill'"
       [class.ds-select--bare]="variant === 'bare'"
       [class.ds-select--soft]="variant === 'soft'"
+      [class.ds-select--field]="variant === 'field'"
       [class.ds-select--fluid]="fluid"
       [class.ds-select--lead]="!!leadingIcon"
       [class.is-active]="variant === 'pill' && value !== ''"
@@ -122,6 +123,35 @@ type SelectVariant = "pill" | "bare" | "soft";
       }
       .ds-select--soft.ds-select--lead .ds-select__native {
         padding-left: var(--ds-space-5);
+      }
+      .ds-select--field {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 2.875rem;
+        border: 1px solid var(--ds-border-input);
+        background: var(--ds-surface-inset);
+        color: var(--ds-text);
+        border-radius: var(--ds-radius-lg);
+        padding: 0 var(--ds-space-3);
+        transition: border-color var(--ds-transition-fast);
+      }
+      .ds-select--field:focus-within {
+        border-color: var(--ds-border-focus);
+      }
+      .ds-select--field .ds-select__native {
+        min-height: 2.75rem;
+        padding-right: var(--ds-space-5);
+        font-size: var(--ds-text-base);
+        font-weight: 600;
+      }
+      .ds-select--field.ds-select--lead .ds-select__native {
+        padding-left: var(--ds-space-6);
+      }
+      .ds-select--field .ds-select__lead {
+        position: absolute;
+        left: var(--ds-space-3);
+        pointer-events: none;
+        color: var(--ds-text-meta);
       }
       .ds-select--bare {
         border: 1px solid var(--ds-border-input);
