@@ -42,6 +42,7 @@
       [leadingLabel]="'getSession.back' | t"
       [eyebrow]="'getSession.eyebrow' | t"
       [title]="name()"
+      [wrapTitle]="true"
       (leadingClick)="goBack()"
     >
       @if (!activeWorkout.isActive()) {
