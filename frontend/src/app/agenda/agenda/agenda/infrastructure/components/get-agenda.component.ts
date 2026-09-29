@@ -33,6 +33,10 @@ import {
   ChoiceChipsComponent,
 } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import {
+  SegmentedOption,
+  SegmentedToggleComponent,
+} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import {
   CalendarCell,
   CalendarComponent,
 } from "@shared/design-system/calendar/infrastructure/components/calendar.component";
@@ -88,6 +92,7 @@ import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum
     DateInputComponent,
     AgendaItemComponent,
     ChoiceChipsComponent,
+    SegmentedToggleComponent,
     CalendarComponent,
   ],
 })
@@ -186,7 +191,7 @@ export class GetAgendaComponent implements OnInit {
   sheetTitle = computed(() =>
     this.editingId() ? "getAgenda.sheet.editTitle" : "getAgenda.sheet.newTitle",
   );
-  kindOptions = computed<ChoiceChipOption[]>(() => {
+  kindOptions = computed<SegmentedOption[]>(() => {
     this.translationsReady();
 
     return [
@@ -194,7 +199,7 @@ export class GetAgendaComponent implements OnInit {
       { value: "appointment", label: this.t("getAgenda.kind.appointment") },
     ];
   });
-  dateModeOptions = computed<ChoiceChipOption[]>(() => {
+  dateModeOptions = computed<SegmentedOption[]>(() => {
     this.translationsReady();
 
     return [

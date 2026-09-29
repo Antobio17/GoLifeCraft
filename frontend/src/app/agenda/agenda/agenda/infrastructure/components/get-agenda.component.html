@@ -138,7 +138,8 @@
     <ds-stack [gap]="'var(--ds-space-4)'">
       <ds-text variant="meta">{{ "getAgenda.sheet.subtitle" | t }}</ds-text>
 
-      <ds-choice-chips
+      <ds-segmented-toggle
+        variant="pill"
         [options]="kindOptions()"
         [ngModel]="form().kind"
         [ngModelOptions]="{ standalone: true }"
@@ -176,7 +177,8 @@
           <ds-text variant="label">{{
             "getAgenda.sheet.dateModeLabel" | t
           }}</ds-text>
-          <ds-choice-chips
+          <ds-segmented-toggle
+            variant="pill"
             [options]="dateModeOptions()"
             [ngModel]="form().dateMode"
             [ngModelOptions]="{ standalone: true }"
