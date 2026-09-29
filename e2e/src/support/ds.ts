@@ -46,6 +46,8 @@ export const SHEET = ".ds-sheet";
 
 export const SHEET_CLOSE = ".ds-sheet__close";
 
+export const SHEET_CONFIRM = ".ds-sheet [data-testid='sheet-confirm']";
+
 export async function closeSheet(page: Page): Promise<void> {
   const sheet = page.locator(SHEET);
 

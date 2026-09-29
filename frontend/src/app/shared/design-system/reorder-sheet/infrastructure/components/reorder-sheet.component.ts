@@ -8,7 +8,6 @@ import {
   computed,
   signal,
 } from "@angular/core";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -19,13 +18,7 @@ import { ReorderSheetItem } from "../../domain/models/reorder-sheet-item.model";
   selector: "ds-reorder-sheet",
   templateUrl: "./reorder-sheet.component.html",
   styleUrls: ["./reorder-sheet.component.css"],
-  imports: [
-    ButtonComponent,
-    IconComponent,
-    ModalSheetComponent,
-    StackComponent,
-    TextComponent,
-  ],
+  imports: [IconComponent, ModalSheetComponent, StackComponent, TextComponent],
 })
 export class ReorderSheetComponent {
   @ViewChild("list") private list?: ElementRef<HTMLElement>;

@@ -130,7 +130,10 @@
     [compact]="true"
     [title]="sheetTitle() | t"
     [closeLabel]="'getAgenda.sheet.close' | t"
+    [confirmLabel]="'getAgenda.sheet.save' | t"
+    [confirmDisabled]="!formValid() || loadingSeries() || saving()"
     (closed)="closeSheet()"
+    (confirmed)="save()"
   >
     <ds-stack [gap]="'var(--ds-space-4)'">
       <ds-text variant="meta">{{ "getAgenda.sheet.subtitle" | t }}</ds-text>
@@ -253,16 +256,6 @@
       </ds-stack>
 
       <ds-note icon="info">{{ sheetHint() | t }}</ds-note>
-
-      <ds-button
-        variant="soft"
-        [fullWidth]="true"
-        [disabled]="!formValid() || loadingSeries()"
-        [loading]="saving()"
-        (clicked)="save()"
-      >
-        {{ "getAgenda.sheet.save" | t }}
-      </ds-button>
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>

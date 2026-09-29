@@ -1,5 +1,5 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { Ds, SHEET } from "../../../support/ds";
+import { Ds, SHEET, SHEET_CONFIRM } from "../../../support/ds";
 import { waitForAppReady } from "../../../support/app-ready";
 import { swipeToDelete } from "../../../support/gestures";
 
@@ -98,7 +98,7 @@ export class DiaryPage {
     await this.ds.host("diary-picker-tabs").locator("button").last().click();
     await this.ds.fill("diary-quick-name", name);
     await this.ds.fill("diary-quick-calories", calories);
-    await this.ds.click("diary-quick-submit");
+    await this.page.locator(SHEET_CONFIRM).click();
     await expect(this.entryNamed(name)).toBeVisible();
   }
 

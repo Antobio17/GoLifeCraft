@@ -279,7 +279,6 @@
       "cropTitle": "Crop your photo",
       "cropHint": "Drag and zoom. It will be saved square.",
       "cropClose": "Close",
-      "cropCancel": "Cancel",
       "cropConfirm": "Use crop",
       "cropZoom": "Zoom"
     },

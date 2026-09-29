@@ -13,7 +13,6 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { SliderComponent } from "@shared/design-system/slider/infrastructure/components/slider.component";
 import { ImageCropService } from "@shared/design-system/image-cropper/application/services/image-crop.service";
@@ -29,7 +28,6 @@ const WHEEL_STEP = 0.0015;
   imports: [
     ReactiveFormsModule,
     ModalSheetComponent,
-    ButtonComponent,
     IconComponent,
     SliderComponent,
   ],
@@ -39,7 +37,11 @@ const WHEEL_STEP = 0.0015;
       [auto]="true"
       [title]="title"
       [closeLabel]="closeLabel"
+      [confirmLabel]="confirmLabel"
+      confirmIcon="check"
+      [confirmDisabled]="!ready() || cropping()"
       (closed)="cancel()"
+      (confirmed)="confirm()"
     >
       <div class="ds-cropper">
         <div
@@ -79,20 +81,6 @@ const WHEEL_STEP = 0.0015;
             [ariaLabel]="zoomLabel"
           />
           <ds-icon name="plus" [size]="16" [stroke]="2.4" />
-        </div>
-
-        <div class="ds-cropper__actions">
-          <ds-button variant="ghost" (clicked)="cancel()">
-            {{ cancelLabel }}
-          </ds-button>
-          <ds-button
-            variant="primary"
-            [disabled]="!ready()"
-            [loading]="cropping()"
-            (clicked)="confirm()"
-          >
-            {{ confirmLabel }}
-          </ds-button>
         </div>
       </div>
     </ds-modal-sheet>
@@ -174,11 +162,6 @@ const WHEEL_STEP = 0.0015;
       .ds-cropper__slider {
         flex: 1 1 auto;
       }
-      .ds-cropper__actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: var(--ds-space-2);
-      }
     `,
   ],
 })
@@ -190,7 +173,6 @@ export class ImageCropperComponent {
   @Input() title = "Recorta la imagen";
   @Input() hint = "Arrastra y haz zoom. Se guardará cuadrada.";
   @Input() closeLabel = "Cerrar";
-  @Input() cancelLabel = "Cancelar";
   @Input() confirmLabel = "Usar recorte";
   @Input() zoomLabel = "Zoom";
 

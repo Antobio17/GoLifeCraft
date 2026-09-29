@@ -279,7 +279,6 @@
       "cropTitle": "Recorta tu foto",
       "cropHint": "Arrastra y haz zoom. Se guardará cuadrada.",
       "cropClose": "Cerrar",
-      "cropCancel": "Cancelar",
       "cropConfirm": "Usar recorte",
       "cropZoom": "Zoom"
     },

@@ -553,7 +553,10 @@
     [compact]="true"
     [title]="sheetTitle() | t"
     [closeLabel]="'getEconomy.sheet.close' | t"
+    [confirmLabel]="saveLabel() | t"
+    [confirmDisabled]="!formValid() || saving()"
     (closed)="closeSheet()"
+    (confirmed)="save()"
   >
     <ds-stack [gap]="'var(--ds-space-4)'">
       <ds-text variant="meta">{{ "getEconomy.sheet.subtitle" | t }}</ds-text>
@@ -655,16 +658,6 @@
           (ngModelChange)="onStore($event)"
         />
       </ds-stack>
-
-      <ds-button
-        variant="soft"
-        [fullWidth]="true"
-        [disabled]="!formValid()"
-        [loading]="saving()"
-        (clicked)="save()"
-      >
-        {{ saveLabel() | t }}
-      </ds-button>
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>

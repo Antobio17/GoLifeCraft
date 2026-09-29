@@ -237,6 +237,9 @@ export class GetDiaryComponent implements OnInit {
   quickSubmitLabel = computed(() =>
     this.quickEditing() ? "getDiary.quick.save" : "getDiary.quick.submit",
   );
+  quickSubmitIcon = computed<DsIconName>(() =>
+    this.quickEditing() ? "save" : "plus",
+  );
   pickerTitle = computed(() =>
     this.quickEditing() ? "getDiary.quick.editTitle" : "getDiary.picker.title",
   );

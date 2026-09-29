@@ -253,7 +253,11 @@
     [compact]="true"
     [title]="pickerTitle() | t"
     [closeLabel]="'getDiary.picker.close' | t"
+    [confirmLabel]="pickerTab() === 'quick' ? (quickSubmitLabel() | t) : ''"
+    [confirmIcon]="quickSubmitIcon()"
+    [confirmDisabled]="!quickValid() || quickSaving()"
     (closed)="closePicker()"
+    (confirmed)="submitQuick()"
   >
     <ds-stack [gap]="'var(--ds-space-4)'">
       <ds-text variant="meta"
@@ -351,18 +355,6 @@
             />
           </ds-stack>
         </ds-stack>
-
-        <ds-button
-          data-testid="diary-quick-submit"
-          variant="primary"
-          icon="plus"
-          [fullWidth]="true"
-          [disabled]="!quickValid()"
-          [loading]="quickSaving()"
-          (clicked)="submitQuick()"
-        >
-          {{ quickSubmitLabel() | t }}
-        </ds-button>
       } @else {
         <ds-search-input
           data-testid="diary-picker-search"

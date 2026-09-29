@@ -17,7 +17,6 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { GetMenuService } from "@nutrition/menu/menu/application/services/get-menu.service";
 import { LoadMenuService } from "@nutrition/menu/menu/application/services/load-menu.service";
 import { MenuViewService } from "@nutrition/menu/menu/application/services/menu-view.service";
@@ -40,7 +39,6 @@ const MODULE_PATH = "nutrition/menu/menu";
     FieldComponent,
     DateInputComponent,
     NoteComponent,
-    ButtonComponent,
   ],
   template: `
     <ds-modal-sheet
@@ -48,7 +46,11 @@ const MODULE_PATH = "nutrition/menu/menu";
       [compact]="true"
       [title]="'getMenu.load.title' | t"
       [closeLabel]="'getMenu.close' | t"
+      [confirmLabel]="'getMenu.load.confirmDay' | t"
+      confirmIcon="download"
+      [confirmDisabled]="saving()"
       (closed)="close()"
+      (confirmed)="confirm()"
     >
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-text variant="meta">{{ "getMenu.load.subtitleDay" | t }}</ds-text>
@@ -73,16 +75,6 @@ const MODULE_PATH = "nutrition/menu/menu";
         </ds-field>
 
         <ds-note icon="info">{{ "getMenu.load.hintDay" | t }}</ds-note>
-
-        <ds-button
-          variant="primary"
-          icon="download"
-          [fullWidth]="true"
-          [loading]="saving()"
-          (clicked)="confirm()"
-        >
-          {{ "getMenu.load.confirmDay" | t }}
-        </ds-button>
       </ds-stack>
     </ds-modal-sheet>
   `,

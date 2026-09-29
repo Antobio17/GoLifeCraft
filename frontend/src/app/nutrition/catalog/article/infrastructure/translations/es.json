@@ -166,7 +166,6 @@
       "imageCropTitle": "Recorta la imagen",
       "imageCropHint": "Arrastra y haz zoom. La imagen se guardará cuadrada.",
       "imageCropClose": "Cerrar",
-      "imageCropCancel": "Cancelar",
       "imageCropConfirm": "Usar recorte",
       "imageCropZoom": "Zoom",
       "name": "Nombre",

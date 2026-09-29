@@ -67,7 +67,6 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
       [title]="cropTitle"
       [hint]="cropHint"
       [closeLabel]="cropCloseLabel"
-      [cancelLabel]="cropCancelLabel"
       [confirmLabel]="cropConfirmLabel"
       [zoomLabel]="cropZoomLabel"
       (cropped)="onCropped($event)"
@@ -197,7 +196,6 @@ export class ImagePickerComponent {
   @Input() cropTitle = "Recorta la imagen";
   @Input() cropHint = "Arrastra y haz zoom. Se guardará cuadrada.";
   @Input() cropCloseLabel = "Cerrar";
-  @Input() cropCancelLabel = "Cancelar";
   @Input() cropConfirmLabel = "Usar recorte";
   @Input() cropZoomLabel = "Zoom";
 

@@ -19,7 +19,6 @@ import { ImagePickerComponent } from "@shared/design-system/image-picker/infrast
           [cropTitle]="cropTitle"
           [cropHint]="cropHint"
           [cropCloseLabel]="cropCloseLabel"
-          [cropCancelLabel]="cropCancelLabel"
           [cropConfirmLabel]="cropConfirmLabel"
           [cropZoomLabel]="cropZoomLabel"
           (picked)="avatarPicked.emit($event)"
@@ -162,7 +161,6 @@ export class ProfileCardComponent {
   @Input() cropTitle = "Recorta la foto";
   @Input() cropHint = "Arrastra y haz zoom. Se guardará cuadrada.";
   @Input() cropCloseLabel = "Cerrar";
-  @Input() cropCancelLabel = "Cancelar";
   @Input() cropConfirmLabel = "Usar recorte";
   @Input() cropZoomLabel = "Zoom";
 
