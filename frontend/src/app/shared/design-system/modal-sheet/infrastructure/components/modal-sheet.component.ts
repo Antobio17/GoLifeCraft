@@ -10,6 +10,7 @@ import {
   ViewChild,
   inject,
 } from "@angular/core";
+import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { ScrollLockService } from "@shared/design-system/scroll-lock/application/services/scroll-lock.service";
 import { StatusBarTintService } from "@shared/design-system/status-bar-tint/application/services/status-bar-tint.service";
@@ -52,7 +53,7 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
                   [attr.aria-label]="confirmLabel"
                   (click)="confirmed.emit()"
                 >
-                  <ds-icon name="save" [size]="17" [stroke]="2.2" />
+                  <ds-icon [name]="confirmIcon" [size]="17" [stroke]="2.2" />
                 </button>
               }
               <button
@@ -318,6 +319,7 @@ export class ModalSheetComponent implements OnDestroy {
   @Input() closeLabel = "Close";
   @Input() confirmLabel = "";
   @Input() confirmDisabled = false;
+  @Input() confirmIcon: DsIconName = "save";
   @Output() closed = new EventEmitter<void>();
   @Output() confirmed = new EventEmitter<void>();
 

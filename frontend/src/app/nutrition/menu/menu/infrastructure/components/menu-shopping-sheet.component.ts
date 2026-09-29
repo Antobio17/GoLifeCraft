@@ -14,7 +14,6 @@ import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastru
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { CheckRowComponent } from "@shared/design-system/check-row/infrastructure/components/check-row.component";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { AddShoppingListItemService } from "@nutrition/shopping/shopping/application/services/add-shopping-list-item.service";
 import { GetMenuShoppingNeedsService } from "@nutrition/menu/menu/application/services/get-menu-shopping-needs.service";
 import {
@@ -33,7 +32,6 @@ const MODULE_PATH = "nutrition/menu/menu";
     StackComponent,
     TextComponent,
     CheckRowComponent,
-    ButtonComponent,
   ],
   template: `
     <ds-modal-sheet
@@ -41,7 +39,11 @@ const MODULE_PATH = "nutrition/menu/menu";
       [compact]="true"
       [title]="'getMenu.shopping.title' | t"
       [closeLabel]="'getMenu.close' | t"
+      [confirmLabel]="confirmLabel()"
+      confirmIcon="cart"
+      [confirmDisabled]="checkedCount() === 0 || saving()"
       (closed)="close()"
+      (confirmed)="confirm()"
     >
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-text variant="meta">{{ "getMenu.shopping.subtitle" | t }}</ds-text>
@@ -62,17 +64,6 @@ const MODULE_PATH = "nutrition/menu/menu";
               />
             }
           </ds-stack>
-
-          <ds-button
-            variant="primary"
-            icon="cart"
-            [fullWidth]="true"
-            [disabled]="checkedCount() === 0"
-            [loading]="saving()"
-            (clicked)="confirm()"
-          >
-            {{ confirmLabel() }}
-          </ds-button>
         }
       </ds-stack>
     </ds-modal-sheet>

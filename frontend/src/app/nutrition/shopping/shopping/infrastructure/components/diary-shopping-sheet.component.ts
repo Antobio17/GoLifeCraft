@@ -18,7 +18,6 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
 import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
 import { ShoppingItemComponent } from "@shared/design-system/shopping-item/infrastructure/components/shopping-item.component";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { DiaryShoppingNeed } from "@nutrition/diary/diary/domain/models/diary-shopping-need.model";
 import { GetDiaryShoppingNeedsService } from "@nutrition/diary/diary/application/services/get-diary-shopping-needs.service";
@@ -41,7 +40,6 @@ const DEFAULT_RANGE_DAYS = 6;
     FieldComponent,
     DateInputComponent,
     ShoppingItemComponent,
-    ButtonComponent,
     SkeletonListComponent,
   ],
   template: `
@@ -50,7 +48,11 @@ const DEFAULT_RANGE_DAYS = 6;
       [compact]="true"
       [title]="'getShopping.diary.title' | t"
       [closeLabel]="'getShopping.sheet.close' | t"
+      [confirmLabel]="confirmLabel()"
+      confirmIcon="cart"
+      [confirmDisabled]="loading() || checkedCount() === 0 || saving()"
       (closed)="close()"
+      (confirmed)="confirm()"
     >
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-text variant="meta">{{ "getShopping.diary.subtitle" | t }}</ds-text>
@@ -123,17 +125,6 @@ const DEFAULT_RANGE_DAYS = 6;
                 />
               }
             </ds-stack>
-
-            <ds-button
-              variant="primary"
-              icon="cart"
-              [fullWidth]="true"
-              [disabled]="checkedCount() === 0"
-              [loading]="saving()"
-              (clicked)="confirm()"
-            >
-              {{ confirmLabel() }}
-            </ds-button>
           }
         }
       </ds-stack>

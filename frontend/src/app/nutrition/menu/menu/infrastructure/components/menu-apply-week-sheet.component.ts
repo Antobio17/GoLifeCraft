@@ -15,7 +15,6 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { GetMenuService } from "@nutrition/menu/menu/application/services/get-menu.service";
 import { ApplyWeekMenuService } from "@nutrition/menu/menu/application/services/apply-week-menu.service";
@@ -45,7 +44,6 @@ const MODULE_PATH = "nutrition/menu/menu";
     CardComponent,
     TextComponent,
     IconComponent,
-    ButtonComponent,
     SelectComponent,
   ],
   template: `
@@ -54,7 +52,11 @@ const MODULE_PATH = "nutrition/menu/menu";
       [compact]="true"
       [title]="'getMenu.applyWeek.title' | t"
       [closeLabel]="'getMenu.close' | t"
+      [confirmLabel]="confirmLabel()"
+      confirmIcon="calendar"
+      [confirmDisabled]="activeCount() === 0 || saving()"
       (closed)="close()"
+      (confirmed)="confirm()"
     >
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-select
@@ -103,17 +105,6 @@ const MODULE_PATH = "nutrition/menu/menu";
             </ds-card>
           }
         </ds-stack>
-
-        <ds-button
-          variant="primary"
-          icon="calendar"
-          [fullWidth]="true"
-          [disabled]="activeCount() === 0"
-          [loading]="saving()"
-          (clicked)="confirm()"
-        >
-          {{ confirmLabel() }}
-        </ds-button>
       </ds-stack>
     </ds-modal-sheet>
   `,

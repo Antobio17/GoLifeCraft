@@ -45,8 +45,8 @@ describe("ReorderSheetComponent", () => {
   }
 
   function saveButton(): HTMLButtonElement {
-    return Array.from(document.querySelectorAll("button")).find(
-      (button) => button.textContent?.trim() === "Guardar",
+    return document.querySelector(
+      "[data-testid='sheet-confirm']",
     ) as HTMLButtonElement;
   }
 

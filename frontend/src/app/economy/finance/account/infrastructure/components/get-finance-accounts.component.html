@@ -203,7 +203,10 @@
     [compact]="true"
     [title]="accountSheetTitle() | t"
     [closeLabel]="'getFinanceAccounts.sheet.close' | t"
+    [confirmLabel]="'getFinanceAccounts.sheet.save' | t"
+    [confirmDisabled]="!accountFormValid() || saving()"
     (closed)="closeAccountSheet()"
+    (confirmed)="saveAccount()"
   >
     <ds-stack [gap]="'var(--ds-space-4)'">
       <ds-stack [gap]="'var(--ds-space-2)'">
@@ -253,16 +256,6 @@
         }}</ds-text>
       </ds-stack>
 
-      <ds-button
-        variant="soft"
-        [fullWidth]="true"
-        [disabled]="!accountFormValid()"
-        [loading]="saving()"
-        (clicked)="saveAccount()"
-      >
-        {{ "getFinanceAccounts.sheet.save" | t }}
-      </ds-button>
-
       @if (editingAccountId()) {
         @if (canDeleteAccount()) {
           <ds-button
@@ -289,7 +282,10 @@
     [compact]="true"
     [title]="checkSheetTitle() | t"
     [closeLabel]="'getFinanceAccounts.sheet.close' | t"
+    [confirmLabel]="'getFinanceAccounts.check.save' | t"
+    [confirmDisabled]="!checkFormValid() || saving()"
     (closed)="closeCheckSheet()"
+    (confirmed)="saveCheck()"
   >
     <ds-stack [gap]="'var(--ds-space-4)'">
       <ds-text variant="meta"
@@ -342,16 +338,6 @@
           (ngModelChange)="onCheckNote($event)"
         />
       </ds-stack>
-
-      <ds-button
-        variant="soft"
-        [fullWidth]="true"
-        [disabled]="!checkFormValid()"
-        [loading]="saving()"
-        (clicked)="saveCheck()"
-      >
-        {{ "getFinanceAccounts.check.save" | t }}
-      </ds-button>
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>

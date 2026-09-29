@@ -163,7 +163,10 @@
     [compact]="true"
     [title]="sheetTitle() | t"
     [closeLabel]="'getFinanceRecurrences.sheet.close' | t"
+    [confirmLabel]="'getFinanceRecurrences.sheet.save' | t"
+    [confirmDisabled]="!formValid() || saving()"
     (closed)="closeSheet()"
+    (confirmed)="save()"
   >
     <ds-stack [gap]="'var(--ds-space-4)'">
       <ds-text variant="meta">{{
@@ -313,16 +316,6 @@
           />
         </ds-stack>
       </ds-card>
-
-      <ds-button
-        variant="soft"
-        [fullWidth]="true"
-        [disabled]="!formValid()"
-        [loading]="saving()"
-        (clicked)="save()"
-      >
-        {{ "getFinanceRecurrences.sheet.save" | t }}
-      </ds-button>
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>

@@ -102,7 +102,6 @@
     "imageCropTitle": "Crop the image",
     "imageCropHint": "Drag and zoom. The image is saved square.",
     "imageCropClose": "Close",
-    "imageCropCancel": "Cancel",
     "imageCropConfirm": "Use crop",
     "imageCropZoom": "Zoom",
     "name": "Name",

@@ -3,7 +3,10 @@
   [auto]="true"
   [title]="title"
   [closeLabel]="cancelLabel"
+  [confirmLabel]="saveLabel"
+  [confirmDisabled]="!dirty()"
   (closed)="cancelled.emit()"
+  (confirmed)="saved.emit(orderedIds())"
 >
   <ds-stack [gap]="'var(--ds-space-3)'">
     @if (body) {
@@ -42,25 +45,5 @@
         </div>
       }
     </div>
-
-    <ds-stack [gap]="'var(--ds-space-2)'">
-      <ds-button
-        variant="primary"
-        size="md"
-        [fullWidth]="true"
-        [disabled]="!dirty()"
-        (clicked)="saved.emit(orderedIds())"
-      >
-        {{ saveLabel }}
-      </ds-button>
-      <ds-button
-        variant="ghost"
-        size="md"
-        [fullWidth]="true"
-        (clicked)="cancelled.emit()"
-      >
-        {{ cancelLabel }}
-      </ds-button>
-    </ds-stack>
   </ds-stack>
 </ds-modal-sheet>
