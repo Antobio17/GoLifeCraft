@@ -458,10 +458,10 @@ docker compose -f docker-compose.prod.yml run --rm worker \
 usuario los recordatorios que ya han vencido. **No lo lanza ningún contenedor ni
 el deploy**: si no se configura esta línea, en producción no sale ninguna
 notificación. Igual que el cron de Mercadona, vive en el **crontab del host**, así
-que se activa y se desactiva sin desplegar. Como `deploy`, `crontab -e` y añade:
+que se activa y se desactiva sin desplegar. Como `root`, `crontab -e` y añade:
 
 ```cron
-* * * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/notification-dispatch.lock docker exec golifecraft_php php bin/console app:notification:dispatch --no-interaction >> volumes/cron_logs/notification-dispatch.log 2>&1
+* * * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/notification-dispatch.lock docker exec golifecraft_php php bin/console app:notification:dispatch --no-interaction >> volumes/worker_logs/notification-dispatch.log 2>&1
 ```
 
 - Usa `docker exec` sobre el `php` que ya está levantado (con su `.env.local`) en
@@ -469,13 +469,15 @@ que se activa y se desactiva sin desplegar. Como `deploy`, `crontab -e` y añade
   cada vez sería puro desperdicio.
 - `flock -n` salta el tick si el anterior sigue en marcha. El comando es
   idempotente: cada notificación se entrega una sola vez.
-- El log va a `volumes/cron_logs/`, que no monta ningún contenedor: créalo una
-  vez como `deploy` (`mkdir -p volumes/cron_logs`) para que sea suyo y no de root.
+- El log va a `volumes/worker_logs/`, junto a los de los demás crons. La
+  redirección la hace el shell del host, no el contenedor, así que da igual que
+  `php` no monte esa carpeta. Es de `www-data` con permisos 755: sólo `root`
+  puede escribir en ella desde el host, por eso la línea va en su crontab.
 
 **Comprobar** que funciona:
 
 ```bash
-tail -f volumes/cron_logs/notification-dispatch.log
+tail -f volumes/worker_logs/notification-dispatch.log
 ```
 
 **Parar** el envío: quita (o comenta) la línea del `crontab -e`. Nada que desplegar.
