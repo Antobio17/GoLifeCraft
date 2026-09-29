@@ -16,7 +16,11 @@
       "empty": {
         "title": "Todo al día",
         "text": "Aquí aparecerán los avisos de tus citas, comidas y recordatorios."
-      }
+      },
+      "markRead": "Marcar como leída",
+      "markUnread": "Marcar como no leída",
+      "remove": "Borrar notificación",
+      "markAllRead": "Marcar todas como leídas"
     },
     "type": {
       "dayBefore": {

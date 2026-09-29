@@ -1,8 +1,10 @@
 import { Locator, Page, Response } from "@playwright/test";
 import { Ds } from "../../../support/ds";
+import { swipeToDelete } from "../../../support/gestures";
 import { waitForAppReady } from "../../../support/app-ready";
 
 const SETTINGS_PATH = "/api/v1/notification/settings";
+const INBOX_PATH = "/api/v1/notification/notifications";
 
 export class NotificationsPage {
   private readonly ds: Ds;
@@ -42,8 +44,48 @@ export class NotificationsPage {
     await waitForAppReady(this.page);
   }
 
+  get markAllReadButton(): Locator {
+    return this.ds.button("notifications-mark-all-read");
+  }
+
+  item(title: string): Locator {
+    return this.items.filter({ hasText: title });
+  }
+
+  readToggle(title: string): Locator {
+    return this.item(title).getByRole("button", { name: /^Marcar como (no )?leída$/ });
+  }
+
   async openItem(title: string): Promise<void> {
-    await this.items.filter({ hasText: title }).locator("button").first().click();
+    await this.item(title).getByRole("button", { name: title, exact: true }).click();
+  }
+
+  async toggleRead(title: string): Promise<Response> {
+    const saved = this.page.waitForResponse(
+      (response) => response.request().method() === "PUT" && new URL(response.url()).pathname.endsWith("/read"),
+    );
+
+    await this.readToggle(title).click();
+
+    return saved;
+  }
+
+  async remove(title: string): Promise<Response> {
+    const removed = this.page.waitForResponse((response) => response.request().method() === "DELETE");
+
+    await swipeToDelete(this.item(title));
+
+    return removed;
+  }
+
+  async markAllRead(): Promise<Response> {
+    const saved = this.page.waitForResponse(
+      (response) => response.request().method() === "POST" && new URL(response.url()).pathname === `${INBOX_PATH}/seen`,
+    );
+
+    await this.markAllReadButton.click();
+
+    return saved;
   }
 
   async toggleQuietHours(): Promise<Response> {

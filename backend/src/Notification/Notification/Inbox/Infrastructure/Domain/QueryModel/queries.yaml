@@ -18,3 +18,8 @@ services:
     class: Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetNotificationInboxNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Notification\Notification\Inbox\Domain\QueryModel\MarkNotificationsReadNeedleDataQuery:
+    class: Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctrine\DoctrineMarkNotificationsReadNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.writer_tenant_connection'

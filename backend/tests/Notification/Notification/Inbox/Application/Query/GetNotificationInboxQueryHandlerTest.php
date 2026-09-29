@@ -2,6 +2,8 @@
 
 namespace App\Tests\Notification\Notification\Inbox\Application\Query;
 
+use Notification\Notification\Inbox\Application\Command\ChangeNotificationReadStateCommand;
+use Notification\Notification\Inbox\Application\Command\ChangeNotificationReadStateCommandHandler;
 use Notification\Notification\Inbox\Application\Command\DeliverNotificationCommand;
 use Notification\Notification\Inbox\Application\Command\DeliverNotificationCommandHandler;
 use Notification\Notification\Inbox\Application\Query\GetNotificationInboxQuery;
@@ -16,8 +18,6 @@ use Notification\Notification\Inbox\Infrastructure\Domain\Service\Fake\FakeNotif
 use Notification\Notification\Inbox\Infrastructure\UI\API\DataTransform\ApiGetNotificationInboxDataTransform;
 use Notification\Notification\Inbox\Infrastructure\UI\API\DataTransform\ApiGetUnreadNotificationsCountDataTransform;
 use Notification\Notification\Inbox\Infrastructure\UI\API\DataTransform\NotificationInboxCollectionResult;
-use Notification\Notification\Settings\Application\Command\MarkNotificationInboxSeenCommand;
-use Notification\Notification\Settings\Application\Command\MarkNotificationInboxSeenCommandHandler;
 use Notification\Notification\Settings\Domain\Model\NotificationType;
 use Notification\Notification\Settings\Infrastructure\Domain\Model\InMemory\InMemoryNotificationSettingsRepository;
 use Notification\Notification\Settings\Infrastructure\Domain\QueryModel\InMemory\InMemoryNotificationSettingsNeedleDataQuery;
@@ -37,7 +37,7 @@ final class GetNotificationInboxQueryHandlerTest extends TestCase
         $this->settingsRepository = new InMemoryNotificationSettingsRepository();
     }
 
-    public function testItListsTheUserNotificationsAllUnreadUntilTheInboxIsSeen(): void
+    public function testItListsTheUserNotificationsAllUnreadUntilTheyAreRead(): void
     {
         $this->deliver(userId: 'user-1', dedupeKey: 'user-1:a');
         $this->deliver(userId: 'user-1', dedupeKey: 'user-1:b');
@@ -54,32 +54,34 @@ final class GetNotificationInboxQueryHandlerTest extends TestCase
         ));
     }
 
-    public function testSeeingTheInboxResetsTheUnreadCount(): void
+    public function testReadingANotificationLowersTheUnreadCount(): void
     {
         $this->deliver(userId: 'user-1', dedupeKey: 'user-1:a');
+        $this->deliver(userId: 'user-1', dedupeKey: 'user-1:b');
 
-        (new MarkNotificationInboxSeenCommandHandler(
-            notificationSettingsRepository: $this->settingsRepository,
+        (new ChangeNotificationReadStateCommandHandler(
+            notificationRepository: $this->repository,
             domainEventCollectorService: new DomainEventCollectorService(),
             dateTimeGenerator: new DateTimeGenerator(),
-        ))(new MarkNotificationInboxSeenCommand(seenByUserId: 'user-1'));
+        ))(new ChangeNotificationReadStateCommand(
+            notificationId: $this->repository->all()[0]->id,
+            read: true,
+            updatedByUserId: 'user-1',
+        ));
 
         $count = (new GetUnreadNotificationsCountQueryHandler(
             needleDataQuery: new InMemoryGetNotificationInboxNeedleDataQuery(repository: $this->repository),
-            settingsNeedleDataQuery: new InMemoryNotificationSettingsNeedleDataQuery(repository: $this->settingsRepository),
             dataTransform: new ApiGetUnreadNotificationsCountDataTransform(),
         ))(new GetUnreadNotificationsCountQuery(userSessionId: 'user-1'));
 
         $this->assertInstanceOf(expected: QuerySingleResult::class, actual: $count);
-        $this->assertSame(expected: 0, actual: $count->item->count);
-        $this->assertFalse(condition: $this->inbox(userId: 'user-1')->items[0]->unread);
+        $this->assertSame(expected: 1, actual: $count->item->count);
     }
 
     private function inbox(string $userId): NotificationInboxCollectionResult
     {
         return (new GetNotificationInboxQueryHandler(
             needleDataQuery: new InMemoryGetNotificationInboxNeedleDataQuery(repository: $this->repository),
-            settingsNeedleDataQuery: new InMemoryNotificationSettingsNeedleDataQuery(repository: $this->settingsRepository),
             dataTransform: new ApiGetNotificationInboxDataTransform(),
         ))(new GetNotificationInboxQuery(userSessionId: $userId, pageNumber: 1, pageSize: 20));
     }

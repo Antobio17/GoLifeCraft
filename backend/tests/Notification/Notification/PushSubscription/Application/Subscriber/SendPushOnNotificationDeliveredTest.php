@@ -54,6 +54,8 @@ final class SendPushOnNotificationDeliveredTest extends TestCase
             pushed: $pushed,
             dueAt: $now,
             deliveredAt: $now,
+            readAt: null,
+            dismissedAt: null,
             createdAt: $now,
             updatedAt: $now,
             createdByUserId: 'user-1',

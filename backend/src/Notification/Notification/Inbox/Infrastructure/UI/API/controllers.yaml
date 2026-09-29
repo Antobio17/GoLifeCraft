@@ -12,3 +12,17 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Notification\Notification\Inbox\Infrastructure\UI\API\Controller\ChangeNotificationReadStateController:
+    class: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\ChangeNotificationReadStateController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Notification\Notification\Inbox\Infrastructure\UI\API\Controller\DismissNotificationController:
+    class: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\DismissNotificationController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

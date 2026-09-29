@@ -3,7 +3,6 @@ services:
     class: Notification\Notification\Inbox\Application\Query\GetNotificationInboxQueryHandler
     arguments:
       $needleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\GetNotificationInboxNeedleDataQuery'
-      $settingsNeedleDataQuery: '@Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery'
       $dataTransform: '@Notification\Notification\Inbox\Application\Query\GetNotificationInboxDataTransform'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
@@ -15,7 +14,6 @@ services:
     class: Notification\Notification\Inbox\Application\Query\GetUnreadNotificationsCountQueryHandler
     arguments:
       $needleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\GetNotificationInboxNeedleDataQuery'
-      $settingsNeedleDataQuery: '@Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery'
       $dataTransform: '@Notification\Notification\Inbox\Application\Query\GetUnreadNotificationsCountDataTransform'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

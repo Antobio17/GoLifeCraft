@@ -16,7 +16,11 @@
       "empty": {
         "title": "All caught up",
         "text": "Reminders for your appointments, meals and tasks will show up here."
-      }
+      },
+      "markRead": "Mark as read",
+      "markUnread": "Mark as unread",
+      "remove": "Delete notification",
+      "markAllRead": "Mark all as read"
     },
     "type": {
       "dayBefore": {

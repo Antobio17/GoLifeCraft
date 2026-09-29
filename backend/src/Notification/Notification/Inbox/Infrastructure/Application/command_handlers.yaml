@@ -10,3 +10,21 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\Inbox\Application\Command\ChangeNotificationReadStateCommandHandler:
+    class: Notification\Notification\Inbox\Application\Command\ChangeNotificationReadStateCommandHandler
+    arguments:
+      $notificationRepository: '@Notification\Notification\Inbox\Domain\Model\NotificationRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Notification\Notification\Inbox\Application\Command\DismissNotificationCommandHandler:
+    class: Notification\Notification\Inbox\Application\Command\DismissNotificationCommandHandler
+    arguments:
+      $notificationRepository: '@Notification\Notification\Inbox\Domain\Model\NotificationRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

@@ -13,6 +13,8 @@
     <field name="pushed" type="boolean" column="pushed"/>
     <field name="dueAt" type="datetime" column="due_at"/>
     <field name="deliveredAt" type="datetime" column="delivered_at"/>
+    <field name="readAt" type="datetime" column="read_at" nullable="true"/>
+    <field name="dismissedAt" type="datetime" column="dismissed_at" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>

@@ -6,7 +6,7 @@ use Notification\Notification\Inbox\Domain\QueryModel\Dto\GetNotificationInboxRe
 
 interface GetNotificationInboxNeedleDataQuery
 {
-    public function findPage(string $userId, ?\DateTime $seenAt, int $pageNumber, int $pageSize): GetNotificationInboxResult;
+    public function findPage(string $userId, int $pageNumber, int $pageSize): GetNotificationInboxResult;
 
-    public function countUnread(string $userId, ?\DateTime $seenAt): int;
+    public function countUnread(string $userId): int;
 }

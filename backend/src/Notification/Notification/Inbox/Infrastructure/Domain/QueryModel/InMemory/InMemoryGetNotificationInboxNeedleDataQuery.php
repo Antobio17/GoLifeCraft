@@ -16,7 +16,7 @@ final readonly class InMemoryGetNotificationInboxNeedleDataQuery implements GetN
     ) {
     }
 
-    public function findPage(string $userId, ?\DateTime $seenAt, int $pageNumber, int $pageSize): GetNotificationInboxResult
+    public function findPage(string $userId, int $pageNumber, int $pageSize): GetNotificationInboxResult
     {
         $notifications = $this->ofUser(userId: $userId);
         usort($notifications, static fn (Notification $left, Notification $right): int => $right->deliveredAt <=> $left->deliveredAt);
@@ -32,7 +32,7 @@ final readonly class InMemoryGetNotificationInboxNeedleDataQuery implements GetN
                     body: $notification->body,
                     url: $notification->url,
                     pushed: $notification->pushed,
-                    unread: null === $seenAt || $notification->deliveredAt > $seenAt,
+                    unread: null === $notification->readAt,
                     deliveredAt: $notification->deliveredAt,
                 ),
                 array: array_slice(array: $notifications, offset: ($pageNumber - 1) * $pageSize, length: $pageSize),
@@ -40,15 +40,15 @@ final readonly class InMemoryGetNotificationInboxNeedleDataQuery implements GetN
             pageNumber: $pageNumber,
             pageSize: $pageSize,
             total: count(value: $notifications),
-            unreadCount: $this->countUnread(userId: $userId, seenAt: $seenAt),
+            unreadCount: $this->countUnread(userId: $userId),
         );
     }
 
-    public function countUnread(string $userId, ?\DateTime $seenAt): int
+    public function countUnread(string $userId): int
     {
         return count(value: array_filter(
             array: $this->ofUser(userId: $userId),
-            callback: static fn (Notification $notification): bool => null === $seenAt || $notification->deliveredAt > $seenAt,
+            callback: static fn (Notification $notification): bool => null === $notification->readAt,
         ));
     }
 
@@ -59,7 +59,7 @@ final readonly class InMemoryGetNotificationInboxNeedleDataQuery implements GetN
     {
         return array_values(array: array_filter(
             array: $this->repository->all(),
-            callback: static fn (Notification $notification): bool => $notification->userId === $userId,
+            callback: static fn (Notification $notification): bool => $notification->userId === $userId && null === $notification->dismissedAt,
         ));
     }
 }

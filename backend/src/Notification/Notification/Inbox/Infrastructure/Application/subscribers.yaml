@@ -1,0 +1,8 @@
+services:
+  Notification\Notification\Inbox\Application\Subscriber\MarkNotificationsReadOnNotificationInboxSeen:
+    class: Notification\Notification\Inbox\Application\Subscriber\MarkNotificationsReadOnNotificationInboxSeen
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $needleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\MarkNotificationsReadNeedleDataQuery'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.notification.event.1.notification_settings.inbox_seen' }

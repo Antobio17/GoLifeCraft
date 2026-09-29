@@ -4,7 +4,7 @@ namespace Notification\Notification\Inbox\Domain\Event;
 
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
-final readonly class NotificationDelivered extends DomainEvent
+final readonly class NotificationReadStateChanged extends DomainEvent
 {
     /**
      * @param array<string, scalar|null> $params
@@ -34,6 +34,6 @@ final readonly class NotificationDelivered extends DomainEvent
 
     public function getName(): string
     {
-        return 'golifecraft.notification.event.1.notification.delivered';
+        return 'golifecraft.notification.event.1.notification.read_state_changed';
     }
 }

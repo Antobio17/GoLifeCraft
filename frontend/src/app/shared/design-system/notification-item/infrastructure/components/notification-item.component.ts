@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconBadgeComponent } from "../../../icon-badge/infrastructure/components/icon-badge.component";
+import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
+import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 
@@ -9,42 +11,70 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
   selector: "ds-notification-item",
   imports: [
     IconBadgeComponent,
+    IconButtonComponent,
     PressableComponent,
     StackComponent,
+    SwipeToDeleteComponent,
     TextComponent,
   ],
   template: `
-    <ds-pressable
-      class="notice"
-      [class.notice--unread]="unread"
-      [grow]="true"
-      [ariaLabel]="title"
-      (press)="opened.emit()"
+    <ds-swipe-to-delete
+      #swipe
+      [reveal]="66"
+      [removeLabel]="removeLabel"
+      (remove)="removed.emit()"
     >
-      <ds-icon-badge
-        [icon]="icon"
-        [tone]="unread ? 'brand' : 'neutral'"
-        [size]="38"
-        [iconSize]="17"
-      />
-      <ds-stack class="notice__text" [gap]="'var(--ds-space-1)'" [grow]="true">
-        <ds-stack
-          direction="row"
-          align="center"
-          justify="between"
-          [gap]="'var(--ds-space-2)'"
+      <ds-stack
+        class="notice"
+        direction="row"
+        align="stretch"
+        [gap]="'var(--ds-space-2)'"
+        [class.notice--unread]="unread"
+        [class.notice--slid]="swipe.slid"
+      >
+        <ds-pressable
+          class="notice__open"
+          [grow]="true"
+          [ariaLabel]="title"
+          (press)="opened.emit()"
         >
-          <ds-text class="notice__title" variant="strong">{{ title }}</ds-text>
+          <ds-icon-badge
+            [icon]="icon"
+            [tone]="unread ? 'brand' : 'neutral'"
+            [size]="38"
+            [iconSize]="17"
+          />
+          <ds-stack
+            class="notice__text"
+            [gap]="'var(--ds-space-1)'"
+            [grow]="true"
+          >
+            <ds-text class="notice__title" variant="strong">{{
+              title
+            }}</ds-text>
+            @if (body) {
+              <ds-text class="notice__body" variant="muted">{{ body }}</ds-text>
+            }
+          </ds-stack>
+        </ds-pressable>
+        <ds-stack
+          class="notice__side"
+          align="end"
+          justify="between"
+          [gap]="'var(--ds-space-1)'"
+        >
           <ds-text class="notice__time" variant="meta">{{ time }}</ds-text>
+          <ds-icon-button
+            [icon]="unread ? 'mail' : 'mailOpen'"
+            [size]="34"
+            [iconSize]="17"
+            [color]="unread ? 'var(--ds-primary)' : null"
+            [ariaLabel]="unread ? markReadLabel : markUnreadLabel"
+            (clicked)="readToggled.emit()"
+          />
         </ds-stack>
-        @if (body) {
-          <ds-text class="notice__body" variant="muted">{{ body }}</ds-text>
-        }
       </ds-stack>
-      @if (unread) {
-        <span class="notice__dot" aria-hidden="true"></span>
-      }
-    </ds-pressable>
+    </ds-swipe-to-delete>
   `,
   styles: [
     `
@@ -54,10 +84,26 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .notice {
         box-sizing: border-box;
         width: 100%;
-        padding: var(--ds-space-3);
+        padding: var(--ds-space-3) var(--ds-space-2) var(--ds-space-3)
+          var(--ds-space-3);
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-xl);
         background: var(--ds-surface);
+      }
+      .notice--slid {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      .notice__open {
+        min-width: 0;
+      }
+      .notice__side {
+        flex: none;
+        text-align: right;
+      }
+      .notice__time {
+        padding-right: var(--ds-space-2);
+        white-space: nowrap;
       }
       .notice--unread {
         border-color: color-mix(
@@ -74,19 +120,8 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         --ds-leading-normal: 1.3;
         overflow-wrap: anywhere;
       }
-      .notice__time {
-        flex: none;
-        white-space: nowrap;
-      }
       .notice__body {
         --ds-text-base: 0.78125rem;
-      }
-      .notice__dot {
-        flex: none;
-        width: 0.5rem;
-        height: 0.5rem;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-primary);
       }
     `,
   ],
@@ -97,5 +132,10 @@ export class NotificationItemComponent {
   @Input() body = "";
   @Input() time = "";
   @Input() unread = false;
+  @Input() markReadLabel = "";
+  @Input() markUnreadLabel = "";
+  @Input() removeLabel = "";
   @Output() opened = new EventEmitter<void>();
+  @Output() readToggled = new EventEmitter<void>();
+  @Output() removed = new EventEmitter<void>();
 }

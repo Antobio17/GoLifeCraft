@@ -9,7 +9,6 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { switchMap, tap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
@@ -24,7 +23,10 @@ import {
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { NotificationItemComponent } from "@shared/design-system/notification-item/infrastructure/components/notification-item.component";
+import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { NotificationSettingsComponent } from "@notification/notification/settings/infrastructure/components/notification-settings.component";
+import { ChangeNotificationReadStateService } from "../../application/services/change-notification-read-state.service";
+import { DismissNotificationService } from "../../application/services/dismiss-notification.service";
 import { GetNotificationInboxService } from "../../application/services/get-notification-inbox.service";
 import { MarkNotificationInboxSeenService } from "../../application/services/mark-notification-inbox-seen.service";
 import { NotificationInboxViewService } from "../../application/services/notification-inbox-view.service";
@@ -48,12 +50,15 @@ import { NotificationTab } from "../../domain/models/notification-tab.enum";
     EmptyStateComponent,
     SkeletonListComponent,
     NotificationItemComponent,
+    ButtonComponent,
     NotificationSettingsComponent,
   ],
 })
 export class NotificationsComponent {
   private getInboxService = inject(GetNotificationInboxService);
   private markSeenService = inject(MarkNotificationInboxSeenService);
+  private changeReadStateService = inject(ChangeNotificationReadStateService);
+  private dismissService = inject(DismissNotificationService);
   private inboxView = inject(NotificationInboxViewService);
   private unreadNotifications = inject(UnreadNotificationsService);
   private translationService = inject(TranslationService);
@@ -78,6 +83,10 @@ export class NotificationsComponent {
     this.inboxView.groups(this.entries() ?? [], new Date()),
   );
 
+  readonly hasUnread = computed(() =>
+    (this.entries() ?? []).some((entry) => entry.unread),
+  );
+
   readonly empty = computed(
     () => !this.loading() && 0 === this.groups().length,
   );
@@ -95,17 +104,12 @@ export class NotificationsComponent {
 
     this.getInboxService
       .getInbox()
-      .pipe(
-        tap((response) =>
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (response) =>
           this.entries.set(
             response.data.map((item) => ({ id: item.id, ...item.attributes })),
           ),
-        ),
-        switchMap(() => this.markSeenService.markSeen()),
-        takeUntilDestroyed(),
-      )
-      .subscribe({
-        next: () => this.unreadNotifications.clear(),
         error: () => this.entries.update((entries) => entries ?? []),
       });
   }
@@ -119,13 +123,68 @@ export class NotificationsComponent {
   }
 
   open(row: NotificationRow): void {
+    this.markRead(row);
+
     if (!row.url) return;
 
     this.router.navigateByUrl(row.url);
   }
 
+  toggleRead(row: NotificationRow): void {
+    this.changeReadState(row.id, row.unread);
+  }
+
+  dismiss(row: NotificationRow): void {
+    const previous = this.entries();
+
+    this.entries.update((entries) =>
+      (entries ?? []).filter((entry) => entry.id !== row.id),
+    );
+
+    this.dismissService.dismiss(row.id).subscribe({
+      next: () => this.unreadNotifications.refresh(),
+      error: () => this.entries.set(previous),
+    });
+  }
+
+  markAllRead(): void {
+    const previous = this.entries();
+
+    this.entries.update((entries) =>
+      (entries ?? []).map((entry) => ({ ...entry, unread: false })),
+    );
+
+    this.markSeenService.markSeen().subscribe({
+      next: () => this.unreadNotifications.clear(),
+      error: () => this.entries.set(previous),
+    });
+  }
+
   back(): void {
     this.backNavigation.back(["/dashboard"]);
+  }
+
+  private markRead(row: NotificationRow): void {
+    if (!row.unread) return;
+
+    this.changeReadState(row.id, true);
+  }
+
+  private changeReadState(id: string, read: boolean): void {
+    this.patchUnread(id, !read);
+
+    this.changeReadStateService.changeReadState(id, read).subscribe({
+      next: () => this.unreadNotifications.refresh(),
+      error: () => this.patchUnread(id, read),
+    });
+  }
+
+  private patchUnread(id: string, unread: boolean): void {
+    this.entries.update((entries) =>
+      (entries ?? []).map((entry) =>
+        entry.id === id ? { ...entry, unread } : entry,
+      ),
+    );
   }
 
   private t(key: string): string {

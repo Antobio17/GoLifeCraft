@@ -14,6 +14,11 @@ final class DoctrineNotificationRepository extends EntityRepository implements N
         return Uuid::uuid4()->toString();
     }
 
+    public function findById(string $id): ?Notification
+    {
+        return $this->find(id: $id);
+    }
+
     public function save(Notification $notification): void
     {
         $this->getEntityManager()->persist(object: $notification);

@@ -7,3 +7,17 @@ get_unread_notifications_count:
   path: /api/v1/notification/notifications/unread-count
   methods: [GET]
   controller: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\GetUnreadNotificationsCountController
+
+change_notification_read_state:
+  path: /api/v1/notification/notifications/{notificationId}/read
+  methods: [PUT]
+  controller: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\ChangeNotificationReadStateController
+  requirements:
+    notificationId: '[0-9a-fA-F-]{36}'
+
+dismiss_notification:
+  path: /api/v1/notification/notifications/{notificationId}
+  methods: [DELETE]
+  controller: Notification\Notification\Inbox\Infrastructure\UI\API\Controller\DismissNotificationController
+  requirements:
+    notificationId: '[0-9a-fA-F-]{36}'

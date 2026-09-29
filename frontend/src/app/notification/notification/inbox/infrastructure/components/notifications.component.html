@@ -10,7 +10,20 @@
     [eyebrow]="'notifications.eyebrow' | t"
     [title]="'notifications.title' | t"
     (leadingClick)="back()"
-  />
+  >
+    @if (isInbox() && hasUnread()) {
+      <ds-button
+        slot="actions"
+        data-testid="notifications-mark-all-read"
+        variant="secondary"
+        size="icon-lg"
+        icon="checkAll"
+        [iconSize]="19"
+        [ariaLabel]="'notifications.inbox.markAllRead' | t"
+        (clicked)="markAllRead()"
+      />
+    }
+  </ds-screen-header>
 
   <ds-segmented-toggle
     data-testid="notifications-tabs"
@@ -44,7 +57,12 @@
                 [body]="row.body"
                 [time]="row.time"
                 [unread]="row.unread"
+                [markReadLabel]="'notifications.inbox.markRead' | t"
+                [markUnreadLabel]="'notifications.inbox.markUnread' | t"
+                [removeLabel]="'notifications.inbox.remove' | t"
                 (opened)="open(row)"
+                (readToggled)="toggleRead(row)"
+                (removed)="dismiss(row)"
               />
             }
           </ds-stack>

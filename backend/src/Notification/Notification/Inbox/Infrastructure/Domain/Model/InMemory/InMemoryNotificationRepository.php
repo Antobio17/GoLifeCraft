@@ -17,6 +17,11 @@ final class InMemoryNotificationRepository implements NotificationRepository
         return 'notification-'.++$this->sequence;
     }
 
+    public function findById(string $id): ?Notification
+    {
+        return $this->notifications[$id] ?? null;
+    }
+
     public function save(Notification $notification): void
     {
         $this->notifications[$notification->id] = $notification;
