@@ -3,7 +3,7 @@
 namespace Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
-use Notification\Notification\Inbox\Domain\Model\NotificationRecipient;
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\NotificationRecipient;
 use Notification\Notification\Inbox\Domain\QueryModel\NotificationRecipientsNeedleDataQuery;
 
 final readonly class DoctrineNotificationRecipientsNeedleDataQuery implements NotificationRecipientsNeedleDataQuery

@@ -4,7 +4,7 @@ namespace Notification\Notification\Settings\Infrastructure\Domain\QueryModel\Do
 
 use Doctrine\DBAL\Connection;
 use Notification\Notification\Settings\Domain\Model\NotificationSettings;
-use Notification\Notification\Settings\Domain\Model\NotificationSettingsSnapshot;
+use Notification\Notification\Settings\Domain\QueryModel\Dto\NotificationSettingsSnapshot;
 use Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery;
 
 final readonly class DoctrineNotificationSettingsNeedleDataQuery implements NotificationSettingsNeedleDataQuery

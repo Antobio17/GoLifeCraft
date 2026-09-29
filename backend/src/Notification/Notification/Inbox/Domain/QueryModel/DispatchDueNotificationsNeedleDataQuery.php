@@ -2,7 +2,7 @@
 
 namespace Notification\Notification\Inbox\Domain\QueryModel;
 
-use Notification\Notification\Inbox\Domain\Model\AgendaAppointment;
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\AgendaAppointment;
 
 interface DispatchDueNotificationsNeedleDataQuery
 {

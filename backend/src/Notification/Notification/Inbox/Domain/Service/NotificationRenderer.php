@@ -2,7 +2,7 @@
 
 namespace Notification\Notification\Inbox\Domain\Service;
 
-use Notification\Notification\Inbox\Domain\Model\RenderedNotification;
+use Notification\Notification\Inbox\Domain\Service\Dto\RenderedNotification;
 use Notification\Notification\Settings\Domain\Model\NotificationType;
 
 interface NotificationRenderer

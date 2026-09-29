@@ -157,19 +157,6 @@ class NotificationSettings extends Aggregate
         ));
     }
 
-    public function snapshot(): NotificationSettingsSnapshot
-    {
-        return NotificationSettingsSnapshot::fromStored(
-            timezone: $this->timezone,
-            languageCode: $this->languageCode,
-            quietHoursEnabled: $this->quietHoursEnabled,
-            quietHoursStart: $this->quietHoursStart,
-            quietHoursEnd: $this->quietHoursEnd,
-            preferences: $this->preferences,
-            inboxSeenAt: $this->inboxSeenAt,
-        );
-    }
-
     private function recordConfigured(\DateTime $now): void
     {
         $this->record(event: new NotificationSettingsConfigured(

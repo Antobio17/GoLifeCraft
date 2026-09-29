@@ -2,10 +2,10 @@
 
 namespace App\Tests\Notification\Notification\Inbox\Domain\Service;
 
-use Notification\Notification\Inbox\Domain\Model\AgendaAppointment;
-use Notification\Notification\Inbox\Domain\Model\DueNotification;
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\AgendaAppointment;
+use Notification\Notification\Inbox\Domain\Service\Dto\DueNotification;
 use Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner;
-use Notification\Notification\Settings\Domain\Model\NotificationSettingsSnapshot;
+use Notification\Notification\Settings\Domain\QueryModel\Dto\NotificationSettingsSnapshot;
 use Notification\Notification\Settings\Domain\Model\NotificationType;
 use PHPUnit\Framework\TestCase;
 

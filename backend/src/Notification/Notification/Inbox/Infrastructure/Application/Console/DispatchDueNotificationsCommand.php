@@ -4,11 +4,11 @@ namespace Notification\Notification\Inbox\Infrastructure\Application\Console;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Notification\Notification\Inbox\Application\Command\DeliverNotificationCommand;
-use Notification\Notification\Inbox\Domain\Model\DueNotification;
-use Notification\Notification\Inbox\Domain\Model\NotificationRecipient;
 use Notification\Notification\Inbox\Domain\QueryModel\DispatchDueNotificationsNeedleDataQuery;
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\NotificationRecipient;
 use Notification\Notification\Inbox\Domain\QueryModel\NotificationRecipientsNeedleDataQuery;
 use Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner;
+use Notification\Notification\Inbox\Domain\Service\Dto\DueNotification;
 use Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery;
 use Psr\Log\LoggerInterface;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
