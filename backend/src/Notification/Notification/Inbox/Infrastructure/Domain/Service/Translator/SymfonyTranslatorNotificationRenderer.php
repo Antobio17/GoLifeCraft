@@ -18,7 +18,7 @@ final readonly class SymfonyTranslatorNotificationRenderer implements Notificati
 
     public function render(NotificationType $type, array $params, string $languageCode): RenderedNotification
     {
-        $variant = null === ($params['time'] ?? null) ? 'untimed' : 'timed';
+        $variant = (string) ($params['variant'] ?? (null === ($params['time'] ?? null) ? 'untimed' : 'timed'));
         $parameters = [];
 
         foreach ($params as $key => $value) {

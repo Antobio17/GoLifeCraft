@@ -2,6 +2,7 @@ import { Provider } from "@angular/core";
 import { GetNotificationSettingsProvider } from "./get-notification-settings.provider";
 import { UpdateNotificationSettingsProvider } from "./update-notification-settings.provider";
 import { NotificationPreferenceViewService } from "../../application/services/notification-preference-view.service";
+import { NotificationSettingsEditorService } from "../../application/services/notification-settings-editor.service";
 import { PushNotificationsProvider } from "@notification/notification/push-subscription/infrastructure/providers/push-notifications.provider";
 import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
 
@@ -13,6 +14,7 @@ export class NotificationSettingsProvider {
       ...PushNotificationsProvider.getProviders(),
       ...AutosaveProvider.getProviders(),
       NotificationPreferenceViewService,
+      NotificationSettingsEditorService,
     ];
   }
 }

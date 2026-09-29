@@ -12,6 +12,7 @@ const DAY_MS = 86_400_000;
 
 const MODULE_ICON: Record<string, DsIconName> = {
   [NotificationModule.Agenda]: "agenda",
+  [NotificationModule.Nutrition]: "diary",
 };
 
 export class NotificationInboxViewService {
@@ -68,6 +69,10 @@ export class NotificationInboxViewService {
       };
     }
 
+    if (NotificationModule.Nutrition === entry.module && entry.params.meal) {
+      return this.mealText(entry.params.meal, entry.params.items ?? null);
+    }
+
     if (NotificationType.AgendaAppointmentUpcoming === entry.type) {
       return {
         title: this.t("notifications.type.upcoming.title", params),
@@ -76,6 +81,16 @@ export class NotificationInboxViewService {
     }
 
     return { title: entry.title, body: entry.body };
+  }
+
+  private mealText(
+    meal: string,
+    items: string | null,
+  ): { title: string; body: string } {
+    return {
+      title: this.t(`notifications.type.meal.${meal}.title`),
+      body: items ?? this.t(`notifications.type.meal.${meal}.empty`),
+    };
   }
 
   private dayLabel(date: Date, now: Date): string {

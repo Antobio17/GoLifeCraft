@@ -4,4 +4,8 @@ export interface NotificationParams {
   date?: string;
   time?: string | null;
   minutes?: number;
+  meal?: string;
+  variant?: string;
+  items?: string | null;
+  count?: number;
 }

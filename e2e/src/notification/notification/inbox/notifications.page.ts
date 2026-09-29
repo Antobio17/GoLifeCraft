@@ -28,24 +28,13 @@ export class NotificationsPage {
     return this.ds.button("notifications-quiet-toggle");
   }
 
-  get dayBeforeReminder(): Locator {
-    return this.ds.button("notifications-preference-dayBefore");
+  moduleCard(module: string): Locator {
+    return this.ds.button(`notifications-module-${module}`);
   }
 
-  get upcomingReminder(): Locator {
-    return this.ds.button("notifications-preference-upcoming");
-  }
-
-  get upcomingLead(): Locator {
-    return this.ds.select("notifications-preference-upcoming-lead");
-  }
-
-  async chooseUpcomingLead(minutes: string): Promise<Response> {
-    const saved = this.savedSettings();
-
-    await this.upcomingLead.selectOption(minutes);
-
-    return saved;
+  async openModule(module: string): Promise<void> {
+    await this.moduleCard(module).click();
+    await waitForAppReady(this.page);
   }
 
   async openTab(label: string): Promise<void> {

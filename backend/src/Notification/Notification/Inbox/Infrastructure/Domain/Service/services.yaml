@@ -6,3 +6,6 @@ services:
 
   Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner:
     class: Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner
+
+  Notification\Notification\Inbox\Domain\Service\MealReminderPlanner:
+    class: Notification\Notification\Inbox\Domain\Service\MealReminderPlanner

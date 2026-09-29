@@ -54,47 +54,15 @@ test.describe("notificaciones", () => {
     await expect(page).toHaveURL(/\/agenda\?at=2026-01-16$/);
   });
 
-  test("los ajustes guardan al momento el horario de silencio", async ({ page }) => {
+  test("cada tarjeta de módulo abre su subpantalla de avisos", async ({ page }) => {
     const notifications = new NotificationsPage(page);
     await notifications.goto("settings");
 
-    await expect(notifications.dayBeforeReminder).toBeVisible();
-    await expect(notifications.upcomingReminder).toBeVisible();
+    await expect(notifications.moduleCard("agenda")).toBeVisible();
 
-    const before = await notifications.quietHours.getAttribute("aria-checked");
-    const saved = await notifications.toggleQuietHours();
+    await notifications.openModule("nutrition");
 
-    expect(saved.status()).toBe(204);
-    expect(saved.request().postDataJSON().quietHoursEnabled).toBe(before !== "true");
-    await expect(notifications.quietHours).toHaveAttribute("aria-checked", String(before !== "true"));
-
-    const restored = await notifications.toggleQuietHours();
-    expect(restored.status()).toBe(204);
-  });
-
-  test("la antelación de la cita próxima se elige en un selector y se guarda", async ({ page }) => {
-    const notifications = new NotificationsPage(page);
-    await notifications.goto("settings");
-
-    await expect(notifications.upcomingLead.locator("option")).toHaveText([
-      "15 min",
-      "30 min",
-      "1 h",
-      "2 h",
-      "3 h",
-    ]);
-
-    const saved = await notifications.chooseUpcomingLead("30");
-    const upcoming = saved
-      .request()
-      .postDataJSON()
-      .preferences.find((preference: { type: string }) => preference.type === "agenda.appointment.upcoming");
-
-    expect(saved.status()).toBe(204);
-    expect(upcoming.leadMinutes).toBe(30);
-
-    const restored = await notifications.chooseUpcomingLead("60");
-    expect(restored.status()).toBe(204);
+    await expect(page).toHaveURL(/\/notifications\/settings\/nutrition$/);
   });
 
   test("las pestañas cambian entre el buzón y los ajustes", async ({ page }) => {

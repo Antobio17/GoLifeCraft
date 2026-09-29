@@ -15,7 +15,7 @@
       "yesterday": "Ayer",
       "empty": {
         "title": "Todo al día",
-        "text": "Aquí aparecerán los avisos de tus citas y recordatorios."
+        "text": "Aquí aparecerán los avisos de tus citas, comidas y recordatorios."
       }
     },
     "type": {
@@ -27,10 +27,29 @@
       "upcoming": {
         "title": "{{title}} a las {{time}}",
         "body": "Empieza en {{minutes}} min."
+      },
+      "meal": {
+        "breakfast": {
+          "title": "Toca desayunar",
+          "empty": "No tienes nada apuntado para el desayuno."
+        },
+        "lunch": {
+          "title": "Toca comer",
+          "empty": "No tienes nada apuntado para la comida."
+        },
+        "snack": {
+          "title": "Toca el snack",
+          "empty": "No tienes nada apuntado para el snack."
+        },
+        "dinner": {
+          "title": "Toca cenar",
+          "empty": "No tienes nada apuntado para la cena."
+        }
       }
     },
     "module": {
-      "agenda": "Agenda"
+      "agenda": "Agenda",
+      "nutrition": "Alimentación"
     },
     "settings": {
       "device": "Este dispositivo",
@@ -82,13 +101,40 @@
           "title": "Cita próxima",
           "subtitle": "Antes de que empiece la cita",
           "lead": "Con cuánta antelación"
+        },
+        "breakfast": {
+          "title": "Desayuno",
+          "subtitle": "Lo que tienes en el diario para desayunar",
+          "time": "Hora del aviso"
+        },
+        "lunch": {
+          "title": "Comida",
+          "subtitle": "Lo que tienes en el diario para comer",
+          "time": "Hora del aviso"
+        },
+        "snack": {
+          "title": "Snack",
+          "subtitle": "Lo que tienes en el diario para el snack",
+          "time": "Hora del aviso"
+        },
+        "dinner": {
+          "title": "Cena",
+          "subtitle": "Lo que tienes en el diario para cenar",
+          "time": "Hora del aviso"
         }
       },
       "lead": {
         "minutes": "{{value}} min",
         "hours": "{{value}} h"
       },
-      "saveError": "No se pudieron guardar los ajustes de notificaciones"
+      "saveError": "No se pudieron guardar los ajustes de notificaciones",
+      "alerts": "Avisos",
+      "breadcrumb": "Ajustes de avisos",
+      "module": {
+        "all": "Todos activados",
+        "none": "Todos desactivados",
+        "some": "{{enabled}} de {{total}} activados"
+      }
     }
   },
   "notification": {

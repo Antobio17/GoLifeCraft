@@ -6,7 +6,6 @@ use Notification\Notification\Settings\Domain\Exception\UpdateNotificationSettin
 
 final readonly class NotificationPreference
 {
-    public const string DEFAULT_DAY_BEFORE_TIME = '20:00';
     public const int DEFAULT_LEAD_MINUTES = 60;
 
     /** @var int[] */
@@ -25,7 +24,7 @@ final readonly class NotificationPreference
         return new self(
             type: $type,
             enabled: true,
-            time: $type->usesTime() ? self::DEFAULT_DAY_BEFORE_TIME : null,
+            time: $type->defaultTime(),
             leadMinutes: $type->usesLeadMinutes() ? self::DEFAULT_LEAD_MINUTES : null,
         );
     }

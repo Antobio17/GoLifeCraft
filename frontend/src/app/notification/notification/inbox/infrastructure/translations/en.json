@@ -15,7 +15,7 @@
       "yesterday": "Yesterday",
       "empty": {
         "title": "All caught up",
-        "text": "Reminders for your appointments will show up here."
+        "text": "Reminders for your appointments, meals and tasks will show up here."
       }
     },
     "type": {
@@ -27,10 +27,29 @@
       "upcoming": {
         "title": "{{title}} at {{time}}",
         "body": "Starts in {{minutes}} min."
+      },
+      "meal": {
+        "breakfast": {
+          "title": "Breakfast time",
+          "empty": "Nothing logged for breakfast yet."
+        },
+        "lunch": {
+          "title": "Lunch time",
+          "empty": "Nothing logged for lunch yet."
+        },
+        "snack": {
+          "title": "Snack time",
+          "empty": "Nothing logged for your snack yet."
+        },
+        "dinner": {
+          "title": "Dinner time",
+          "empty": "Nothing logged for dinner yet."
+        }
       }
     },
     "module": {
-      "agenda": "Agenda"
+      "agenda": "Agenda",
+      "nutrition": "Nutrition"
     },
     "settings": {
       "device": "This device",
@@ -82,13 +101,40 @@
           "title": "Upcoming appointment",
           "subtitle": "Before the appointment starts",
           "lead": "How early"
+        },
+        "breakfast": {
+          "title": "Breakfast",
+          "subtitle": "What your diary has for breakfast",
+          "time": "Alert time"
+        },
+        "lunch": {
+          "title": "Lunch",
+          "subtitle": "What your diary has for lunch",
+          "time": "Alert time"
+        },
+        "snack": {
+          "title": "Snack",
+          "subtitle": "What your diary has for your snack",
+          "time": "Alert time"
+        },
+        "dinner": {
+          "title": "Dinner",
+          "subtitle": "What your diary has for dinner",
+          "time": "Alert time"
         }
       },
       "lead": {
         "minutes": "{{value}} min",
         "hours": "{{value}} h"
       },
-      "saveError": "Notification settings could not be saved"
+      "saveError": "Notification settings could not be saved",
+      "alerts": "Alerts",
+      "breadcrumb": "Alert settings",
+      "module": {
+        "all": "All on",
+        "none": "All off",
+        "some": "{{enabled}} of {{total}} on"
+      }
     }
   },
   "notification": {

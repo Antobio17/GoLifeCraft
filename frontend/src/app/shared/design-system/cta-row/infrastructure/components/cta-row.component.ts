@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
+import { GlyphComponent } from "@shared/design-system/glyph/infrastructure/components/glyph.component";
+import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum";
 
 @Component({
   selector: "ds-cta-row",
-  imports: [IconComponent],
+  imports: [IconComponent, GlyphComponent],
   template: `
     <button
       type="button"
@@ -12,9 +14,13 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
       [class.is-dashed]="dashed"
       (click)="clicked.emit()"
     >
-      <span class="ds-cta__badge">
-        <ds-icon [name]="icon" [size]="21" [stroke]="1.9" />
-      </span>
+      @if (glyph) {
+        <ds-glyph [name]="glyph" [tile]="true" />
+      } @else {
+        <span class="ds-cta__badge">
+          <ds-icon [name]="icon" [size]="21" [stroke]="1.9" />
+        </span>
+      }
 
       <span class="ds-cta__text">
         <span class="ds-cta__title">{{ title }}</span>
@@ -85,7 +91,8 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
   ],
 })
 export class CtaRowComponent {
-  @Input({ required: true }) icon!: DsIconName;
+  @Input() icon: DsIconName = "bell";
+  @Input() glyph: `${DsGlyph}` | null = null;
   @Input() title = "";
   @Input() subtitle = "";
   @Input() dashed = false;

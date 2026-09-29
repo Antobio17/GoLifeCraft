@@ -1,0 +1,74 @@
+<ds-page-wrapper [maxWidth]="'40rem'" [gap]="'var(--ds-space-4)'">
+  <ds-screen-header
+    [sticky]="true"
+    leading="back"
+    [leadingLabel]="'notifications.back' | t"
+    [eyebrow]="'notifications.title' | t"
+    [title]="title()"
+    (leadingClick)="back()"
+  >
+    <ds-save-status slot="actions" [status]="autosave.status()" align="end" />
+  </ds-screen-header>
+
+  @if (loading()) {
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-skeleton height="4rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton height="3rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton height="4rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton height="3rem" radius="var(--ds-radius-lg)" />
+    </ds-stack>
+  } @else {
+    <ds-stack
+      data-testid="notifications-module-preferences"
+      [gap]="'var(--ds-space-4)'"
+    >
+      @for (row of rows(); track row.type) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-preference-toggle
+            [attr.data-testid]="row.testId"
+            [glyph]="row.glyph"
+            [title]="row.title"
+            [subtitle]="row.subtitle"
+            [checked]="row.enabled"
+            (toggled)="togglePreference(row.type)"
+          />
+
+          @if (row.enabled && row.time !== null) {
+            <ds-stack [gap]="'var(--ds-space-1-5)'">
+              <ds-text variant="label">{{ row.timeLabel }}</ds-text>
+              <ds-date-input
+                [attr.data-testid]="row.testId + '-time'"
+                type="time"
+                [ariaLabel]="row.timeLabel"
+                [ngModel]="row.time"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="changePreferenceTime(row.type, $event)"
+              />
+            </ds-stack>
+          }
+
+          @if (row.enabled && row.leadMinutes !== null) {
+            <ds-stack [gap]="'var(--ds-space-1-5)'">
+              <ds-text variant="label">{{
+                "notifications.settings.preference.upcoming.lead" | t
+              }}</ds-text>
+              <ds-select
+                [attr.data-testid]="row.testId + '-lead'"
+                variant="field"
+                leadingIcon="clock"
+                [fluid]="true"
+                [options]="row.leadOptions"
+                [ariaLabel]="
+                  'notifications.settings.preference.upcoming.lead' | t
+                "
+                [ngModel]="row.leadMinutes"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="changePreferenceLead(row.type, $event)"
+              />
+            </ds-stack>
+          }
+        </ds-stack>
+      }
+    </ds-stack>
+  }
+</ds-page-wrapper>

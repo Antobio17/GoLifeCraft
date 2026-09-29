@@ -8,6 +8,7 @@ services:
       $settingsNeedleDataQuery: '@Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery'
       $needleDataQuery: '@Notification\Notification\Inbox\Domain\QueryModel\DispatchDueNotificationsNeedleDataQuery'
       $agendaReminderPlanner: '@Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner'
+      $mealReminderPlanner: '@Notification\Notification\Inbox\Domain\Service\MealReminderPlanner'
       $messageBus: '@messenger.bus.default'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
       $logger: '@logger'

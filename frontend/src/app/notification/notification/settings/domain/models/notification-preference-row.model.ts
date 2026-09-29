@@ -8,6 +8,7 @@ export interface NotificationPreferenceRow {
   subtitle: string;
   enabled: boolean;
   time: string | null;
+  timeLabel: string;
   leadMinutes: string | null;
   leadOptions: SelectOption[];
   testId: string;

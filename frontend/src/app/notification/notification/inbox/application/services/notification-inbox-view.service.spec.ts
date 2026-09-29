@@ -15,6 +15,8 @@ describe("NotificationInboxViewService", () => {
     "notifications.type.dayBefore.bodyUntimed": "Sin hora.",
     "notifications.type.upcoming.title": "{{title}} a las {{time}}",
     "notifications.type.upcoming.body": "Empieza en {{minutes}} min.",
+    "notifications.type.meal.lunch.title": "Toca comer",
+    "notifications.type.meal.lunch.empty": "Nada apuntado.",
   };
 
   const translationService = {
@@ -95,6 +97,34 @@ describe("NotificationInboxViewService", () => {
     expect(group.rows[1].body).toBe("Empieza en 40 min.");
     expect(group.rows[2].body).toBe("Sin hora.");
     expect(group.rows[0].icon).toBe("agenda");
+  });
+
+  it("lists what the diary has planned for a meal, or says it is empty", () => {
+    const meal = {
+      type: NotificationType.NutritionMealLunch,
+      module: "nutrition",
+      url: "/diary",
+    };
+    const [group] = service.groups(
+      [
+        entry({
+          ...meal,
+          id: "a",
+          params: { meal: "lunch", variant: "planned", items: "🍗 Pollo" },
+        }),
+        entry({
+          ...meal,
+          id: "b",
+          params: { meal: "lunch", variant: "empty", items: null },
+        }),
+      ],
+      new Date("2026-09-28T22:00:00"),
+    );
+
+    expect(group.rows[0].title).toBe("Toca comer");
+    expect(group.rows[0].body).toBe("🍗 Pollo");
+    expect(group.rows[1].body).toBe("Nada apuntado.");
+    expect(group.rows[0].icon).toBe("diary");
   });
 
   it("falls back to the server text for unknown types", () => {

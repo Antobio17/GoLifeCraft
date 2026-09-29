@@ -39,5 +39,9 @@
   "notification-settings": [
     "color-contrast",
     "meta-viewport"
+  ],
+  "notification-module-settings": [
+    "color-contrast",
+    "meta-viewport"
   ]
 }

@@ -10,6 +10,7 @@ use Notification\Notification\Inbox\Domain\QueryModel\Dto\NotificationRecipient;
 use Notification\Notification\Inbox\Domain\QueryModel\NotificationRecipientsNeedleDataQuery;
 use Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner;
 use Notification\Notification\Inbox\Domain\Service\Dto\DueNotification;
+use Notification\Notification\Inbox\Domain\Service\MealReminderPlanner;
 use Notification\Notification\Settings\Domain\QueryModel\Dto\NotificationSettingsSnapshot;
 use Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery;
 use Psr\Log\LoggerInterface;
@@ -33,6 +34,7 @@ final class DispatchDueNotificationsCommand extends Command
         private readonly NotificationSettingsNeedleDataQuery $settingsNeedleDataQuery,
         private readonly DispatchDueNotificationsNeedleDataQuery $needleDataQuery,
         private readonly AgendaReminderPlanner $agendaReminderPlanner,
+        private readonly MealReminderPlanner $mealReminderPlanner,
         MessageBusInterface $messageBus,
         private readonly DateTimeGenerator $dateTimeGenerator,
         private readonly LoggerInterface $logger,
@@ -90,11 +92,18 @@ final class DispatchDueNotificationsCommand extends Command
         $settings = $this->settingsNeedleDataQuery->current();
         $window = $this->agendaReminderPlanner->window(settings: $settings, now: $now);
         $appointments = $this->needleDataQuery->pendingAppointments(fromDate: $window['from'], toDate: $window['to']);
-        $due = $this->agendaReminderPlanner->plan(
-            appointments: $appointments,
-            settings: $settings,
-            now: $now,
-        );
+        $due = [
+            ...$this->agendaReminderPlanner->plan(
+                appointments: $appointments,
+                settings: $settings,
+                now: $now,
+            ),
+            ...$this->mealReminderPlanner->plan(
+                entries: $this->needleDataQuery->diaryEntries(date: $this->mealReminderPlanner->day(settings: $settings, now: $now)),
+                settings: $settings,
+                now: $now,
+            ),
+        ];
 
         $this->describeRecipient(
             recipient: $recipient,

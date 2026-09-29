@@ -21,6 +21,11 @@ export const CORE_SCREENS: readonly CoreScreen[] = [
     path: "/notifications?tab=settings",
     ready: "[data-testid='notifications-quiet-toggle']",
   },
+  {
+    name: "notification-module-settings",
+    path: "/notifications/settings/nutrition",
+    ready: "[data-testid='notifications-preference-lunch']",
+  },
 ] as const;
 
 export const SPLIT_VIEW_SCREENS = CORE_SCREENS.filter((screen) =>

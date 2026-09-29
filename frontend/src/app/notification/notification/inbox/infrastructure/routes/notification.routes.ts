@@ -10,4 +10,12 @@ export const NOTIFICATION_ROUTES: Routes = [
         (m) => m.NotificationsComponent,
       ),
   },
+  {
+    path: "settings/:module",
+    data: { breadcrumb: "notifications.settings.breadcrumb" },
+    loadComponent: () =>
+      import("@notification/notification/settings/infrastructure/components/notification-module-settings.component").then(
+        (m) => m.NotificationModuleSettingsComponent,
+      ),
+  },
 ];
