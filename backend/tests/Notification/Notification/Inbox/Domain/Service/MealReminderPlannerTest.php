@@ -28,6 +28,17 @@ final class MealReminderPlannerTest extends TestCase
         $this->assertSame(expected: '2026-09-29', actual: $day);
     }
 
+    public function testMealsStaySilentUntilTheUserTurnsThemOn(): void
+    {
+        $due = $this->planner->plan(
+            entries: [],
+            settings: NotificationSettingsSnapshot::defaults(),
+            now: new \DateTimeImmutable(datetime: '2026-09-28T19:30:00+00:00'),
+        );
+
+        $this->assertSame(expected: [], actual: $due);
+    }
+
     public function testItRemindsAMealOnceItsTimeHasPassed(): void
     {
         $before = $this->planner->plan(
@@ -164,7 +175,10 @@ final class MealReminderPlannerTest extends TestCase
             quietHoursEnabled: false,
             quietHoursStart: '23:00',
             quietHoursEnd: '08:00',
-            preferences: $preferences,
+            preferences: array_replace_recursive(
+                array_fill_keys(keys: NotificationType::values(), value: ['enabled' => true]),
+                $preferences,
+            ),
             inboxSeenAt: null,
         );
     }

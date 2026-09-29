@@ -23,7 +23,7 @@ final readonly class NotificationPreference
     {
         return new self(
             type: $type,
-            enabled: true,
+            enabled: false,
             time: $type->defaultTime(),
             leadMinutes: $type->usesLeadMinutes() ? self::DEFAULT_LEAD_MINUTES : null,
         );

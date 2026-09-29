@@ -40,7 +40,7 @@ final class UpdateNotificationSettingsCommandHandlerTest extends TestCase
         $this->assertSame(expected: 'Atlantic/Canary', actual: $settings->timezone);
         $this->assertSame(expected: 30, actual: $settings->preferences[NotificationType::AgendaAppointmentUpcoming->value]['leadMinutes']);
         $this->assertSame(expected: '20:00', actual: $settings->preferences[NotificationType::AgendaAppointmentDayBefore->value]['time']);
-        $this->assertTrue(condition: $settings->preferences[NotificationType::AgendaAppointmentDayBefore->value]['enabled']);
+        $this->assertFalse(condition: $settings->preferences[NotificationType::AgendaAppointmentDayBefore->value]['enabled']);
     }
 
     public function testItUpdatesTheExistingSettings(): void

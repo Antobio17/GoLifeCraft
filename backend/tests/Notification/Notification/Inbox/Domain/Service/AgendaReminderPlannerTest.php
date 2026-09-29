@@ -3,10 +3,10 @@
 namespace App\Tests\Notification\Notification\Inbox\Domain\Service;
 
 use Notification\Notification\Inbox\Domain\QueryModel\Dto\AgendaAppointment;
-use Notification\Notification\Inbox\Domain\Service\Dto\DueNotification;
 use Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner;
-use Notification\Notification\Settings\Domain\QueryModel\Dto\NotificationSettingsSnapshot;
+use Notification\Notification\Inbox\Domain\Service\Dto\DueNotification;
 use Notification\Notification\Settings\Domain\Model\NotificationType;
+use Notification\Notification\Settings\Domain\QueryModel\Dto\NotificationSettingsSnapshot;
 use PHPUnit\Framework\TestCase;
 
 final class AgendaReminderPlannerTest extends TestCase
@@ -168,7 +168,10 @@ final class AgendaReminderPlannerTest extends TestCase
             quietHoursEnabled: false,
             quietHoursStart: '23:00',
             quietHoursEnd: '08:00',
-            preferences: $preferences,
+            preferences: array_replace_recursive(
+                array_fill_keys(keys: NotificationType::values(), value: ['enabled' => true]),
+                $preferences,
+            ),
             inboxSeenAt: null,
         );
     }
