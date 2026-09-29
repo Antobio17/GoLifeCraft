@@ -2,7 +2,7 @@
 
 namespace Notification\Notification\Inbox\Infrastructure\Domain\Service\Fake;
 
-use Notification\Notification\Inbox\Domain\Model\RenderedNotification;
+use Notification\Notification\Inbox\Domain\Service\Dto\RenderedNotification;
 use Notification\Notification\Inbox\Domain\Service\NotificationRenderer;
 use Notification\Notification\Settings\Domain\Model\NotificationType;
 

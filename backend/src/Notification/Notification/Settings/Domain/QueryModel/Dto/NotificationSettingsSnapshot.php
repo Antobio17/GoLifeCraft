@@ -1,6 +1,10 @@
 <?php
 
-namespace Notification\Notification\Settings\Domain\Model;
+namespace Notification\Notification\Settings\Domain\QueryModel\Dto;
+
+use Notification\Notification\Settings\Domain\Model\NotificationPreference;
+use Notification\Notification\Settings\Domain\Model\NotificationSettings;
+use Notification\Notification\Settings\Domain\Model\NotificationType;
 
 final readonly class NotificationSettingsSnapshot
 {

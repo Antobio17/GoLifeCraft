@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Notification\Notification\Settings\Domain\Model;
+namespace App\Tests\Notification\Notification\Settings\Domain\QueryModel\Dto;
 
-use Notification\Notification\Settings\Domain\Model\NotificationSettingsSnapshot;
+use Notification\Notification\Settings\Domain\QueryModel\Dto\NotificationSettingsSnapshot;
 use PHPUnit\Framework\TestCase;
 
 final class NotificationSettingsSnapshotTest extends TestCase

@@ -2,7 +2,7 @@
 
 namespace Notification\Notification\Inbox\Domain\QueryModel;
 
-use Notification\Notification\Inbox\Domain\Model\NotificationRecipient;
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\NotificationRecipient;
 
 interface NotificationRecipientsNeedleDataQuery
 {

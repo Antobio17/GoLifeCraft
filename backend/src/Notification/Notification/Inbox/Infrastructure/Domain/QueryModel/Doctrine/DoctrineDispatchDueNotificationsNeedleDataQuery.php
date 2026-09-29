@@ -4,8 +4,8 @@ namespace Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctr
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
-use Notification\Notification\Inbox\Domain\Model\AgendaAppointment;
 use Notification\Notification\Inbox\Domain\QueryModel\DispatchDueNotificationsNeedleDataQuery;
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\AgendaAppointment;
 
 final readonly class DoctrineDispatchDueNotificationsNeedleDataQuery implements DispatchDueNotificationsNeedleDataQuery
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Notification\Notification\Inbox\Domain\Model;
+namespace Notification\Notification\Inbox\Domain\QueryModel\Dto;
 
 final readonly class AgendaAppointment
 {

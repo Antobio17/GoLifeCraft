@@ -50,10 +50,10 @@ final class UpdateNotificationSettingsCommandHandlerTest extends TestCase
             ['type' => NotificationType::AgendaAppointmentDayBefore->value, 'enabled' => false, 'time' => '21:30'],
         ]));
 
-        $preference = $this->repository->findCurrent()->snapshot()->preference(type: NotificationType::AgendaAppointmentDayBefore);
+        $preference = $this->repository->findCurrent()->preferences[NotificationType::AgendaAppointmentDayBefore->value];
 
-        $this->assertFalse(condition: $preference->enabled);
-        $this->assertSame(expected: '21:30', actual: $preference->time);
+        $this->assertFalse(condition: $preference['enabled']);
+        $this->assertSame(expected: '21:30', actual: $preference['time']);
     }
 
     public function testItRejectsAnUnknownType(): void
