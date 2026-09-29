@@ -104,7 +104,8 @@
             (remove)="remove(row.recurrence)"
           >
             <ds-transaction-row
-              [emoji]="row.emoji"
+              [glyph]="row.glyph"
+              [glyphColor]="row.glyphColor"
               [title]="row.recurrence.note"
               [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
               [amountLabel]="row.amountLabel"
@@ -136,7 +137,8 @@
               (remove)="remove(row.recurrence)"
             >
               <ds-transaction-row
-                [emoji]="row.emoji"
+                [glyph]="row.glyph"
+                [glyphColor]="row.glyphColor"
                 [title]="row.recurrence.note"
                 [subtitle]="row.scheduleLabel + ' · ' + row.nextChargeLabel"
                 [amountLabel]="row.amountLabel"

@@ -201,7 +201,8 @@
                 (remove)="removeTransaction(row)"
               >
                 <ds-transaction-row
-                  [emoji]="row.emoji"
+                  [glyph]="row.glyph"
+                  [glyphColor]="row.glyphColor"
                   [title]="row.title"
                   [subtitle]="row.subtitle"
                   [amountLabel]="row.amountLabel"
@@ -394,6 +395,8 @@
                 <ds-breakdown-row
                   [label]="row.label"
                   [amountLabel]="row.amountLabel"
+                  [glyph]="row.glyph"
+                  [color]="row.color"
                   [ratio]="row.ratio"
                 />
               }
@@ -460,7 +463,7 @@
                   [label]="row.label"
                   [amountLabel]="row.amountLabel"
                   [percentageLabel]="row.percentageLabel"
-                  [emoji]="row.emoji"
+                  [glyph]="row.glyph"
                   [color]="row.color"
                   [ratio]="row.ratio"
                 />
@@ -524,7 +527,8 @@
                   (remove)="removeTransaction(row)"
                 >
                   <ds-transaction-row
-                    [emoji]="row.emoji"
+                    [glyph]="row.glyph"
+                    [glyphColor]="row.glyphColor"
                     [title]="row.title"
                     [subtitle]="row.subtitle"
                     [amountLabel]="row.amountLabel"

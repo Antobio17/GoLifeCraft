@@ -60,6 +60,12 @@
   letter-spacing: 0.04em;
 }
 
+.agenda-item__glyph {
+  --ds-glyph-line: currentColor;
+  --ds-glyph-fill: color-mix(in srgb, currentColor 24%, transparent);
+  margin-right: var(--ds-space-1);
+}
+
 .agenda-item__time {
   flex: 0 0 auto;
   color: var(--ds-text-muted);

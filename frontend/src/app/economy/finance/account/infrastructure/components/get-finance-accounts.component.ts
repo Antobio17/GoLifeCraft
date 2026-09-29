@@ -24,6 +24,7 @@ import { TextInputComponent } from "@shared/design-system/text-input/infrastruct
 import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
+import { GlyphComponent } from "@shared/design-system/glyph/infrastructure/components/glyph.component";
 import { TransactionRowComponent } from "@shared/design-system/transaction-row/infrastructure/components/transaction-row.component";
 import {
   ChoiceChipOption,
@@ -52,11 +53,13 @@ import { FinanceBalanceCheckForm } from "@economy/finance/balance-check/domain/m
 import { FinanceBalanceCheckRow } from "@economy/finance/balance-check/domain/models/finance-balance-check-row.model";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
+import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum";
 @Component({
   selector: "app-get-finance-accounts",
   templateUrl: "./get-finance-accounts.component.html",
   imports: [
     FormsModule,
+    GlyphComponent,
     ContextualTranslatePipe,
     PageWrapperComponent,
     SplitViewComponent,
@@ -113,7 +116,7 @@ export class GetFinanceAccountsComponent implements OnInit {
 
   private readonly MODULE_PATH = "economy/finance/account";
 
-  protected readonly checkEmoji = "🧾";
+  protected readonly checkGlyph = DsGlyph.Receipt;
 
   readonly skeletonAccounts = [2, 1, 2];
 
@@ -151,7 +154,8 @@ export class GetFinanceAccountsComponent implements OnInit {
 
     return this.accounts().map((account) => ({
       account,
-      emoji: this.catalog.emoji(account.type),
+      glyph: this.catalog.glyph(account.type),
+      color: this.catalog.color(account.type),
       typeLabel: this.catalog.label(account.type),
       balanceLabel: this.view.sensitiveMoney(account.balance),
       lastCheckLabel: this.lastCheckLabel(account),

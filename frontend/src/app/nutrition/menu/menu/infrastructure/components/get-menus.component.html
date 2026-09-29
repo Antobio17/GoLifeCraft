@@ -93,14 +93,14 @@
       <ds-text variant="meta">{{ "getMenus.newType.subtitle" | t }}</ds-text>
 
       <ds-choice-row
-        emoji="🍽️"
+        glyph="cloche"
         [title]="'getMenus.newType.singleTitle' | t"
         [description]="'getMenus.newType.singleText' | t"
         (activated)="onCreate('single')"
       />
 
       <ds-choice-row
-        emoji="🗓️"
+        glyph="calendarWeek"
         [title]="'getMenus.newType.weekTitle' | t"
         [description]="'getMenus.newType.weekText' | t"
         (activated)="onCreate('week')"

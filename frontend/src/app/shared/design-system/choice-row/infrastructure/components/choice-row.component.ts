@@ -2,10 +2,12 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
+import { GlyphComponent } from "../../../glyph/infrastructure/components/glyph.component";
+import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
 
 @Component({
   selector: "ds-choice-row",
-  imports: [IconBadgeComponent, IconComponent],
+  imports: [IconBadgeComponent, IconComponent, GlyphComponent],
   template: `
     <button
       type="button"
@@ -19,6 +21,8 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
         <span class="ds-choicerow__radio">
           <ds-icon name="check" [size]="14" [stroke]="3" />
         </span>
+      } @else if (glyph) {
+        <ds-glyph class="ds-choicerow__glyph" [name]="glyph" [tile]="true" />
       } @else if (icon) {
         <ds-icon-badge [icon]="icon" tone="brand" [size]="46" [iconSize]="21" />
       } @else {
@@ -74,6 +78,9 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
       .ds-choicerow:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+      }
+      .ds-choicerow__glyph {
+        --ds-glyph-box: 2.875rem;
       }
       .ds-choicerow__emoji {
         flex: 0 0 auto;
@@ -168,6 +175,7 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
 export class ChoiceRowComponent {
   @Input() emoji = "";
   @Input() icon?: DsIconName;
+  @Input() glyph: `${DsGlyph}` | null = null;
   @Input() title = "";
   @Input() description = "";
   @Input() disabled = false;

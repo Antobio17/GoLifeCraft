@@ -1,13 +1,18 @@
 import { Component, Input } from "@angular/core";
+import { GlyphComponent } from "../../../glyph/infrastructure/components/glyph.component";
+import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
 
 const MIN_FILL = 4;
 
 @Component({
   selector: "ds-breakdown-row",
+  imports: [GlyphComponent],
   template: `
     <div class="ds-breakdown">
       <div class="ds-breakdown__head">
-        @if (color) {
+        @if (glyph) {
+          <ds-glyph [name]="glyph" [tile]="true" [size]="18" [color]="color" />
+        } @else if (color) {
           <span class="ds-breakdown__dot" [style.background]="color"></span>
         }
         @if (emoji) {
@@ -19,7 +24,11 @@ const MIN_FILL = 4;
         }
         <span class="ds-breakdown__amount">{{ amountLabel }}</span>
       </div>
-      <div class="ds-breakdown__track" [class.is-indented]="!!color">
+      <div
+        class="ds-breakdown__track"
+        [class.is-indented]="!!color && !glyph"
+        [class.is-glyph-indented]="!!glyph"
+      >
         <span
           class="ds-breakdown__fill"
           [style.width.%]="fill"
@@ -48,6 +57,9 @@ const MIN_FILL = 4;
         height: var(--ds-space-2);
         border-radius: var(--ds-radius-sm);
         flex: 0 0 auto;
+      }
+      .ds-breakdown {
+        --ds-glyph-box: 2rem;
       }
       .ds-breakdown__emoji {
         font-size: var(--ds-text-lg);
@@ -88,6 +100,9 @@ const MIN_FILL = 4;
       .ds-breakdown__track.is-indented {
         margin-left: var(--ds-space-4);
       }
+      .ds-breakdown__track.is-glyph-indented {
+        margin-left: calc(var(--ds-space-8) + var(--ds-space-2));
+      }
       .ds-breakdown__fill {
         display: block;
         height: 100%;
@@ -102,6 +117,7 @@ export class BreakdownRowComponent {
   @Input() amountLabel = "";
   @Input() percentageLabel = "";
   @Input() emoji = "";
+  @Input() glyph: `${DsGlyph}` | null = null;
   @Input() color = "";
   @Input() ratio = 0;
 

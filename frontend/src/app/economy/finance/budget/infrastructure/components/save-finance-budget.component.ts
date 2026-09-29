@@ -15,7 +15,7 @@ import { CardComponent } from "@shared/design-system/card/infrastructure/compone
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { GlyphComponent } from "@shared/design-system/glyph/infrastructure/components/glyph.component";
 import { AllocationBarComponent } from "@shared/design-system/allocation-bar/infrastructure/components/allocation-bar.component";
 import { AllocationSegment } from "@shared/design-system/allocation-bar/domain/models/allocation-segment.model";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
@@ -61,7 +61,7 @@ const REDIRECT_DELAY_MS = 600;
     SectionHeaderComponent,
     NoteComponent,
     AmountInputComponent,
-    EmojiTileComponent,
+    GlyphComponent,
     SliderStepperComponent,
     AllocationBarComponent,
     TypeToggleComponent,
@@ -175,7 +175,8 @@ export class SaveFinanceBudgetComponent implements OnInit {
         key: category.category,
         index,
         name: this.categoryCatalog.label(category.category),
-        emoji: this.categoryCatalog.emoji(category.category),
+        glyph: this.categoryCatalog.glyph(category.category),
+        color: this.categoryCatalog.color(category.category),
         kind: category.kind,
         variable: category.kind === FinanceBudgetCategoryKind.VARIABLE,
         amount,

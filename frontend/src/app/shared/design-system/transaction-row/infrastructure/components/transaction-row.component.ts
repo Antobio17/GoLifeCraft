@@ -3,11 +3,18 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
 import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
+import { GlyphComponent } from "../../../glyph/infrastructure/components/glyph.component";
+import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
 import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model";
 
 @Component({
   selector: "ds-transaction-row",
-  imports: [NgTemplateOutlet, PressableComponent, IconButtonComponent],
+  imports: [
+    NgTemplateOutlet,
+    PressableComponent,
+    IconButtonComponent,
+    GlyphComponent,
+  ],
   template: `
     <div
       class="ds-tx"
@@ -41,7 +48,17 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
     </div>
 
     <ng-template #content>
-      <span class="ds-tx__chip" [class.is-income]="income">{{ emoji }}</span>
+      @if (glyph) {
+        <ds-glyph
+          class="ds-tx__glyph"
+          [name]="glyph"
+          [tile]="true"
+          [size]="22"
+          [color]="glyphColor"
+        />
+      } @else {
+        <span class="ds-tx__chip" [class.is-income]="income">{{ emoji }}</span>
+      }
       <span class="ds-tx__body">
         <span class="ds-tx__head">
           <span class="ds-tx__title">{{ title }}</span>
@@ -85,6 +102,10 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
       .ds-tx--grouped:last-child {
         border-bottom: none;
       }
+      .ds-tx {
+        --ds-glyph-box: 2.5rem;
+      }
+      .ds-tx--muted .ds-tx__glyph,
       .ds-tx--muted .ds-tx__chip,
       .ds-tx--muted .ds-tx__title,
       .ds-tx--muted .ds-tx__amount {
@@ -171,6 +192,8 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
 })
 export class TransactionRowComponent {
   @Input() emoji = "";
+  @Input() glyph: `${DsGlyph}` | null = null;
+  @Input() glyphColor = "";
   @Input() title = "";
   @Input() subtitle = "";
   @Input() amountLabel = "";

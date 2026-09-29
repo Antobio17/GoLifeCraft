@@ -309,7 +309,7 @@
           }}</ds-text>
           <ds-amount-input
             data-testid="diary-quick-calories"
-            emoji="🔥"
+            glyph="flame"
             [large]="true"
             inputmode="numeric"
             [unit]="'getDiary.kcal' | t"
@@ -439,7 +439,8 @@
         }}</ds-text>
         <ds-nutrient-input
           variant="energy"
-          [label]="'🎯 ' + ('getDiary.goal.calories' | t)"
+          icon="flame"
+          [label]="'getDiary.goal.calories' | t"
           [unit]="'getDiary.goal.perDay' | t"
           [ngModel]="goalSeed().calories"
           [ngModelOptions]="{ standalone: true }"

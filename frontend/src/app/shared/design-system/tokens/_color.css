@@ -149,6 +149,8 @@
   --ds-cat-subscriptions: #7a6ba8;
   --ds-cat-investments: #2f7a5c;
   --ds-cat-other: #9a958a;
+  --ds-account-bank: #3f6fb0;
+  --ds-account-savings: #c65a8e;
 
   --ds-focus-ring: 0 0 0 0.25rem rgba(0, 134, 61, 0.22);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(201, 58, 40, 0.18);
@@ -243,6 +245,8 @@
   --ds-cat-subscriptions: #ad9dd8;
   --ds-cat-investments: #6dbb98;
   --ds-cat-other: #c2bdb1;
+  --ds-account-bank: #8db4ec;
+  --ds-account-savings: #eea2c6;
 
   --ds-focus-ring: 0 0 0 0.25rem rgba(143, 250, 152, 0.28);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(242, 112, 94, 0.26);

@@ -33,6 +33,7 @@
       @for (entry of visibleEntries(); track entry.id) {
         <ds-agenda-item
           [title]="entry.title"
+          [glyph]="entryGlyph(entry)"
           [kindLabel]="
             entryKindLabel(entry, 'dashboard.agenda.kind.' + entry.kind | t)
           "

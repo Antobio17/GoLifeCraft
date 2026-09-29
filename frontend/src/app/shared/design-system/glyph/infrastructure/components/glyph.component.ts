@@ -18,9 +18,22 @@ import { DsGlyph } from "../../domain/models/ds-glyph.enum";
         color: var(--ds-glyph-line);
         line-height: 0;
       }
+      :host([tinted]) {
+        --ds-glyph-line: var(--glyph-color);
+        --ds-glyph-fill: color-mix(
+          in srgb,
+          var(--glyph-color) 30%,
+          transparent
+        );
+        --ds-glyph-tile: color-mix(
+          in srgb,
+          var(--glyph-color) 14%,
+          transparent
+        );
+      }
       :host([tile]) {
-        width: 2.75rem;
-        height: 2.75rem;
+        width: var(--ds-glyph-box, 2.75rem);
+        height: var(--ds-glyph-box, 2.75rem);
         border-radius: var(--ds-radius-lg);
         background: var(--ds-glyph-tile);
       }
@@ -42,7 +55,10 @@ import { DsGlyph } from "../../domain/models/ds-glyph.enum";
   ],
   host: {
     "[attr.tile]": "tile() ? '' : null",
+    "[attr.tinted]": "color() ? '' : null",
+    "[style.--glyph-color]": "color() || null",
     "[style.--glyph-size.px]": "size()",
+    "[style.--ds-glyph-box]": "box()",
   },
 })
 export class GlyphComponent {
@@ -52,6 +68,8 @@ export class GlyphComponent {
   readonly name = input.required<`${DsGlyph}`>();
   readonly size = input(24);
   readonly tile = input(false);
+  readonly color = input("");
+  readonly box = input<string | null>(null);
 
   readonly markup = computed(() =>
     this.sanitizer.bypassSecurityTrustHtml(

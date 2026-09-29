@@ -101,6 +101,7 @@
         @for (entry of entries(); track entry.id) {
           <ds-agenda-item
             [title]="entry.title"
+            [glyph]="entryGlyph(entry)"
             [kindLabel]="entryKindLabel(entry)"
             [appointment]="entry.kind === 'appointment'"
             [timeLabel]="entry.time ?? ''"

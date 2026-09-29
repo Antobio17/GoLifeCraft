@@ -133,10 +133,9 @@
             align="center"
             [gap]="'var(--ds-space-3)'"
           >
+            <ds-glyph [name]="row.glyph" [tile]="true" [color]="row.color" />
             <ds-stack [gap]="'2px'" [grow]="true">
-              <ds-text variant="strong"
-                >{{ row.emoji }} {{ row.account.name }}</ds-text
-              >
+              <ds-text variant="strong">{{ row.account.name }}</ds-text>
               <ds-text variant="meta"
                 >{{ row.typeLabel }} · {{ row.lastCheckLabel }}</ds-text
               >
@@ -181,7 +180,7 @@
                   (remove)="removeCheck(checkRow.check)"
                 >
                   <ds-transaction-row
-                    [emoji]="checkEmoji"
+                    [glyph]="checkGlyph"
                     [title]="checkRow.dateLabel"
                     [subtitle]="checkRow.driftLabel"
                     [amountLabel]="checkRow.amountLabel"

@@ -197,7 +197,8 @@ export class GetEconomyComponent implements OnInit {
   accountOptions = computed<ChoiceChipOption[]>(() =>
     this.accounts().map((account) => ({
       value: account.id,
-      label: `${this.accountCatalog.emoji(account.type)} ${account.name}`,
+      label: account.name,
+      glyph: this.accountCatalog.glyph(account.type),
     })),
   );
   accountRows = computed<FinanceBreakdownRow[]>(() => {
@@ -206,11 +207,11 @@ export class GetEconomyComponent implements OnInit {
 
     return balances.map((item) => ({
       key: item.accountId,
-      label: `${this.accountCatalog.emoji(item.type)} ${item.name}`,
+      label: item.name,
       amountLabel: this.view.sensitiveMoney(item.balance),
       percentageLabel: "",
-      emoji: "",
-      color: "",
+      glyph: this.accountCatalog.glyph(item.type),
+      color: this.accountCatalog.color(item.type),
       ratio: this.view.ratio(Math.abs(item.balance), max),
     }));
   });
@@ -343,7 +344,7 @@ export class GetEconomyComponent implements OnInit {
       label: this.categoryCatalog.label(total.category),
       amountLabel: this.view.money(total.amount),
       percentageLabel: `${Math.round(total.percentage)}%`,
-      emoji: this.categoryCatalog.emoji(total.category),
+      glyph: this.categoryCatalog.glyph(total.category),
       color: this.categoryCatalog.color(total.category),
       ratio: this.view.ratio(total.amount, max),
     }));
@@ -358,7 +359,7 @@ export class GetEconomyComponent implements OnInit {
       label: total.store,
       amountLabel: this.view.money(total.amount),
       percentageLabel: "",
-      emoji: "",
+      glyph: null,
       color: "",
       ratio: this.view.ratio(total.amount, max),
     }));
@@ -674,9 +675,12 @@ export class GetEconomyComponent implements OnInit {
 
       return {
         transaction,
-        emoji: income
-          ? this.categoryCatalog.incomeEmoji()
-          : this.categoryCatalog.emoji(transaction.category),
+        glyph: income
+          ? this.categoryCatalog.incomeGlyph()
+          : this.categoryCatalog.glyph(transaction.category),
+        glyphColor: income
+          ? ""
+          : this.categoryCatalog.color(transaction.category),
         title: transaction.note || category,
         subtitle: `${origin} · ${this.view.dayShortWithWeekday(transaction.transactionDate)}`,
         amountLabel: income

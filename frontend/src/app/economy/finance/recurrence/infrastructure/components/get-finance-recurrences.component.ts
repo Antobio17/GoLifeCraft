@@ -54,6 +54,7 @@ import { FinanceAccountCatalogService } from "@economy/finance/account/applicati
 import { FinanceAccount } from "@economy/finance/account/domain/models/finance-account.model";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
+import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum";
 @Component({
   selector: "app-get-finance-recurrences",
   templateUrl: "./get-finance-recurrences.component.html",
@@ -150,7 +151,8 @@ export class GetFinanceRecurrencesComponent implements OnInit {
 
     return this.recurrences().map((recurrence) => ({
       recurrence,
-      emoji: this.emojiOf(recurrence),
+      glyph: this.glyphOf(recurrence),
+      glyphColor: this.glyphColorOf(recurrence),
       amountLabel: this.amountLabelOf(recurrence),
       scheduleLabel: `${this.t("getFinanceRecurrences.day")} ${recurrence.dayOfMonth} · ${recurrence.accountName}`,
       nextChargeLabel: this.nextChargeLabelOf(recurrence),
@@ -175,7 +177,8 @@ export class GetFinanceRecurrencesComponent implements OnInit {
   accountOptions = computed<ChoiceChipOption[]>(() =>
     this.accounts().map((account) => ({
       value: account.id,
-      label: `${this.accountCatalog.emoji(account.type)} ${account.name}`,
+      label: account.name,
+      glyph: this.accountCatalog.glyph(account.type),
     })),
   );
   categoryOptions = computed<ChoiceChipOption[]>(() => {
@@ -421,10 +424,16 @@ export class GetFinanceRecurrencesComponent implements OnInit {
       : this.categoryCatalog.label(form.category);
   }
 
-  private emojiOf(recurrence: FinanceRecurrence): string {
+  private glyphOf(recurrence: FinanceRecurrence): DsGlyph {
     return recurrence.kind === FinanceTransactionKind.INCOME
-      ? this.categoryCatalog.incomeEmoji()
-      : this.categoryCatalog.emoji(recurrence.category);
+      ? this.categoryCatalog.incomeGlyph()
+      : this.categoryCatalog.glyph(recurrence.category);
+  }
+
+  private glyphColorOf(recurrence: FinanceRecurrence): string {
+    return recurrence.kind === FinanceTransactionKind.INCOME
+      ? ""
+      : this.categoryCatalog.color(recurrence.category);
   }
 
   private amountLabelOf(recurrence: FinanceRecurrence): string {

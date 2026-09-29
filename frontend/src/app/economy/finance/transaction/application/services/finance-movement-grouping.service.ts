@@ -61,7 +61,7 @@ export class FinanceMovementGroupingService {
 
     return {
       key,
-      label: `${first.emoji} ${this.labelOf(first)}`,
+      label: this.labelOf(first),
       summaryLabel: `${totalLabel} · ${this.countLabel(rows.length)}`,
       rows,
     };
