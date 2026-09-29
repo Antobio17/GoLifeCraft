@@ -1,17 +1,4 @@
-/* ============================================================
-   DESIGN SYSTEM — COLOR
-   Neutros con pizca de verde + marca bosque→menta.
-   Anclas de la paleta: #014421 (verde bosque) y #8ffa98 (menta).
-   Claro: lienzo blanco, la marca es el bosque; la menta entra
-   como acento sobre superficies de marca y fondos suaves.
-   Oscuro: lienzo negro puro, la menta pasa a ser el foco visual
-   y el bosque baja a superficie/contenedor.
-   Las primitivas son una escala única, independiente del tema;
-   cada tema elige de ella con los tokens semánticos.
-   ============================================================ */
-
 :root {
-  /* ---- Primitivos: Gray (neutro, pizca de verde) ---- */
   --ds-gray-0: #ffffff;
   --ds-gray-25: #fafcfa;
   --ds-gray-50: #f5f8f5;
@@ -28,7 +15,6 @@
   --ds-gray-900: #040805;
   --ds-gray-950: #000000;
 
-  /* ---- Primitivos: Green (marca) — bosque #014421 → menta #8ffa98 ---- */
   --ds-green-50: #e6fde5;
   --ds-green-100: #ccfccc;
   --ds-green-200: #8ffa98;
@@ -41,7 +27,6 @@
   --ds-green-900: #002910;
   --ds-green-950: #001907;
 
-  /* ---- Primitivos: Amber (solo señal de aviso) ---- */
   --ds-amber-50: #fdf5e3;
   --ds-amber-100: #fae9c4;
   --ds-amber-200: #f7dca0;
@@ -51,7 +36,6 @@
   --ds-amber-600: #b87f12;
   --ds-amber-700: #8c5f0c;
 
-  /* ---- Primitivos: Red (peligro) ---- */
   --ds-red-50: #fdece9;
   --ds-red-100: #fbdad4;
   --ds-red-200: #f7c6bf;
@@ -61,7 +45,6 @@
   --ds-red-600: #a82f20;
   --ds-red-700: #7f2418;
 
-  /* ---- Semánticos: Superficies ---- */
   --ds-bg: var(--ds-gray-0);
   --ds-surface: var(--ds-gray-0);
   --ds-surface-raised: var(--ds-gray-0);
@@ -74,15 +57,11 @@
   --ds-on-surface-brand: #e9f7ec;
   --ds-status-bar-tint: transparent;
 
-  /* Superficie de las tarjetas con gráfica: nunca es la de marca.
-     La tarjeta es lienzo (blanco en claro, casi negro en oscuro) y la
-     única nota de color es el trazo del gráfico y su relleno. */
   --ds-surface-chart: var(--ds-surface);
   --ds-on-surface-chart: var(--ds-text);
   --ds-accent-on-chart: var(--ds-accent);
   --ds-on-accent-on-chart: var(--ds-on-accent);
 
-  /* ---- Semánticos: Texto ---- */
   --ds-text: #0b1410;
   --ds-text-body: var(--ds-gray-700);
   --ds-text-muted: var(--ds-gray-600);
@@ -90,16 +69,13 @@
   --ds-text-meta: var(--ds-gray-500);
   --ds-text-inverse: var(--ds-gray-0);
 
-  /* ---- Semánticos: Bordes ---- */
   --ds-border: rgba(11, 20, 16, 0.09);
   --ds-border-strong: rgba(11, 20, 16, 0.18);
   --ds-border-hairline: rgba(11, 20, 16, 0.07);
   --ds-border-input: rgba(11, 20, 16, 0.14);
   --ds-border-focus: var(--ds-green-600);
 
-  /* ---- Semánticos: Primary (interactivo de marca) ----
-     Verde medio, no el bosque: el bosque queda para superficies
-     de marca. 4.69:1 con texto blanco encima (AA). */
+  /* 4.69:1 against white text (AA). */
   --ds-primary: var(--ds-green-600);
   --ds-primary-hover: var(--ds-green-700);
   --ds-primary-active: var(--ds-green-800);
@@ -114,21 +90,15 @@
   );
   --ds-avatar-ring: var(--ds-gray-950);
 
-  /* ---- Semánticos: Secondary (la menta) ----
-     Relleno de badges, botones de bajo contraste y señales de
-     éxito. Nunca como color de texto sobre superficie clara. */
+  /* Never use as text color on a light surface. */
   --ds-secondary: var(--ds-green-200);
   --ds-secondary-hover: var(--ds-green-300);
   --ds-on-secondary: var(--ds-green-900);
 
-  /* ---- Glifos de marca (ds-glyph): trazo + relleno duotono ---- */
   --ds-glyph-line: var(--ds-green-600);
   --ds-glyph-fill: var(--ds-green-200);
   --ds-glyph-tile: var(--ds-green-50);
 
-  /* ---- Semánticos: Accent ----
-     Paleta monocroma: el acento NO es otro tono, es el mismo verde.
-     Se distingue de primary por intensidad, no por color. */
   --ds-accent: var(--ds-green-600);
   --ds-on-accent: var(--ds-gray-0);
   --ds-accent-soft: var(--ds-green-50);
@@ -139,13 +109,9 @@
     transparent
   );
 
-  /* Contenido que se apoya sobre una superficie de marca: la menta,
-     para que las tarjetas hero se queden monocromas. El par on- va
-     junto: dentro de una marca el acento se aclara y su texto oscurece. */
   --ds-accent-on-brand: var(--ds-green-200);
   --ds-on-accent-on-brand: var(--ds-green-900);
 
-  /* ---- Semánticos: Peligro ---- */
   --ds-danger: var(--ds-red-500);
   --ds-danger-hover: var(--ds-red-600);
   --ds-danger-soft: var(--ds-red-50);
@@ -156,25 +122,16 @@
     transparent
   );
 
-  /* ---- Semánticos: Éxito / Aviso ----
-     El ámbar y el rojo sobreviven solo como señal (semáforo, error,
-     exceso). Nunca como decoración. */
   --ds-success: var(--ds-green-600);
   --ds-success-soft: var(--ds-green-100);
   --ds-warning: var(--ds-amber-600);
   --ds-warning-soft: var(--ds-amber-50);
 
-  /* ---- Escalera de datos: series y macros, mismo tono ----
-     data-1 es siempre el más prominente. Ningún paso llega al
-     extremo claro del verde: sobre blanco se perdería. */
   --ds-data-1: var(--ds-green-600);
   --ds-data-2: var(--ds-green-400);
   --ds-data-3: var(--ds-green-200);
 
-  /* ---- Categorías de gasto: paleta categórica ----
-     Aquí el color identifica, no jerarquiza: cada categoría necesita
-     ser distinguible de las demás de un vistazo. Es la única familia
-     que rompe el monotono verde, y solo se usa en Economía. */
+  /* The only palette that breaks the green monotone; Economy only. */
   --ds-cat-groceries: #6e8b3d;
   --ds-cat-restaurants: #c97b4a;
   --ds-cat-gym: #4e7c59;
@@ -193,17 +150,14 @@
   --ds-cat-investments: #2f7a5c;
   --ds-cat-other: #9a958a;
 
-  /* ---- Anillo de foco ---- */
   --ds-focus-ring: 0 0 0 0.25rem rgba(0, 134, 61, 0.22);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(201, 58, 40, 0.18);
 
-  /* ---- Skeleton ---- */
   --ds-skeleton-base: var(--ds-gray-100);
   --ds-skeleton-highlight: var(--ds-gray-50);
 }
 
 [data-theme="dark"] {
-  /* ---- Superficies: negro puro de lienzo, cada nivel sube un escalón ---- */
   --ds-bg: var(--ds-gray-950);
   --ds-surface: var(--ds-gray-875);
   --ds-surface-raised: var(--ds-gray-850);
@@ -218,7 +172,6 @@
 
   --ds-surface-chart: var(--ds-surface-raised);
 
-  /* ---- Texto ---- */
   --ds-text: #eef7f0;
   --ds-text-body: #c3cec8;
   --ds-text-muted: #8b968f;
@@ -226,14 +179,12 @@
   --ds-text-meta: #6a736d;
   --ds-text-inverse: var(--ds-gray-950);
 
-  /* ---- Bordes ---- */
   --ds-border: rgba(255, 255, 255, 0.11);
   --ds-border-strong: rgba(255, 255, 255, 0.21);
   --ds-border-hairline: rgba(255, 255, 255, 0.08);
   --ds-border-input: rgba(255, 255, 255, 0.17);
   --ds-border-focus: var(--ds-green-300);
 
-  /* ---- Primary → la menta toma el foco ---- */
   --ds-primary: var(--ds-green-200);
   --ds-primary-hover: var(--ds-green-100);
   --ds-primary-active: var(--ds-green-300);
@@ -244,7 +195,6 @@
   --ds-primary-soft-border: rgba(143, 250, 152, 0.3);
   --ds-avatar-ring: var(--ds-gray-0);
 
-  /* ---- Secondary → el bosque baja a contenedor ---- */
   --ds-secondary: var(--ds-green-800);
   --ds-secondary-hover: var(--ds-green-700);
   --ds-on-secondary: var(--ds-green-50);
@@ -253,7 +203,6 @@
   --ds-glyph-fill: rgba(143, 250, 152, 0.26);
   --ds-glyph-tile: rgba(143, 250, 152, 0.12);
 
-  /* ---- Accent → menta (mismo tono, más intensidad) ---- */
   --ds-accent: var(--ds-green-200);
   --ds-on-accent: var(--ds-green-950);
   --ds-accent-soft: rgba(143, 250, 152, 0.14);
@@ -262,26 +211,21 @@
   --ds-accent-on-brand: var(--ds-green-200);
   --ds-on-accent-on-brand: var(--ds-green-950);
 
-  /* ---- Peligro ---- */
   --ds-danger: var(--ds-red-400);
   --ds-danger-hover: var(--ds-red-300);
   --ds-danger-soft: rgba(242, 112, 94, 0.16);
   --ds-danger-soft-text: var(--ds-red-300);
   --ds-danger-soft-border: rgba(242, 112, 94, 0.32);
 
-  /* ---- Feedback ---- */
   --ds-success: var(--ds-green-300);
   --ds-success-soft: rgba(143, 250, 152, 0.16);
   --ds-warning: var(--ds-amber-400);
   --ds-warning-soft: rgba(242, 181, 68, 0.16);
 
-  /* ---- Escalera de datos: se queda en la mitad luminosa del verde ---- */
   --ds-data-1: var(--ds-green-200);
   --ds-data-2: var(--ds-green-400);
   --ds-data-3: var(--ds-green-600);
 
-  /* ---- Categorías de gasto: mismos tonos, subidos de luminosidad
-     para que separen igual de bien sobre superficie oscura. ---- */
   --ds-cat-groceries: #a3c46b;
   --ds-cat-restaurants: #e5a173;
   --ds-cat-gym: #7fb38c;
@@ -300,11 +244,9 @@
   --ds-cat-investments: #6dbb98;
   --ds-cat-other: #c2bdb1;
 
-  /* ---- Foco ---- */
   --ds-focus-ring: 0 0 0 0.25rem rgba(143, 250, 152, 0.28);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(242, 112, 94, 0.26);
 
-  /* ---- Skeleton ---- */
   --ds-skeleton-base: #131915;
   --ds-skeleton-highlight: #1e2620;
 }
