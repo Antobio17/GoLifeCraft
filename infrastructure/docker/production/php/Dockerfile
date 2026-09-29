@@ -63,14 +63,6 @@ WORKDIR /var/www/html/
 RUN mkdir -p var/uploads var/log var/cache && \
     chown -R www-data:www-data var/
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends cron && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-COPY infrastructure/docker/production/cron/notification-dispatch.cron /etc/cron.d/notification-dispatch
-RUN chmod 0644 /etc/cron.d/notification-dispatch
-
 EXPOSE 9000
 
 USER www-data
