@@ -99,6 +99,8 @@ que solo se hace una vez por servidor; el resto es en tu máquina / GitHub.
 6. Lanzar el primer deploy (`workflow_dispatch` en los workflows de deploy, o un
    push a master).
 7. **[servidor]** Emitir el **certificado TLS inicial** (ver más abajo).
+8. **[servidor]** Añadir al `crontab -e` de `deploy` el envío de notificaciones →
+   ver [Envío de notificaciones](#envío-de-notificaciones-cron-cada-minuto-a-mano-en-el-host).
 
 > Los pasos 1-3 (claves y servidor) ya están hechos en el servidor actual; se
 > documentan aquí por si hay que reconstruir el servidor o migrar a otro.
@@ -449,6 +451,37 @@ docker compose -f docker-compose.prod.yml run --rm worker \
 > tocar el `php` que sirve la web. Reutiliza la imagen `golifecraft-php-production`
 > que ya publica el CI, así que en un servidor recién actualizado basta con el
 > `pull`. El log del host persiste aunque el contenedor se elimine.
+
+### Envío de notificaciones (cron cada minuto, a mano en el host)
+
+`app:notification:dispatch` entrega a la bandeja y a los dispositivos de cada
+usuario los recordatorios que ya han vencido. **No lo lanza ningún contenedor ni
+el deploy**: si no se configura esta línea, en producción no sale ninguna
+notificación. Igual que el cron de Mercadona, vive en el **crontab del host**, así
+que se activa y se desactiva sin desplegar. Como `deploy`, `crontab -e` y añade:
+
+```cron
+* * * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/notification-dispatch.lock docker exec golifecraft_php php bin/console app:notification:dispatch --no-interaction >> volumes/cron_logs/notification-dispatch.log 2>&1
+```
+
+- Usa `docker exec` sobre el `php` que ya está levantado (con su `.env.local`) en
+  vez de `run --rm worker`: a un tick por minuto, crear y borrar un contenedor
+  cada vez sería puro desperdicio.
+- `flock -n` salta el tick si el anterior sigue en marcha. El comando es
+  idempotente: cada notificación se entrega una sola vez.
+- El log va a `volumes/cron_logs/`, que no monta ningún contenedor: créalo una
+  vez como `deploy` (`mkdir -p volumes/cron_logs`) para que sea suyo y no de root.
+
+**Comprobar** que funciona:
+
+```bash
+tail -f volumes/cron_logs/notification-dispatch.log
+```
+
+**Parar** el envío: quita (o comenta) la línea del `crontab -e`. Nada que desplegar.
+
+> En local no hace falta nada: la imagen de desarrollo ya trae este job en
+> `infrastructure/docker/local/cron/notification-dispatch.cron`.
 
 ## Notas
 

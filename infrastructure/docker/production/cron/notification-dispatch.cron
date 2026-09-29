@@ -1,7 +1,0 @@
-# Notifications — delivers every reminder that is due to its user's inbox and devices, every minute.
-# The container mounts the host .env.local, so Symfony's console loads it itself.
-# The command is idempotent: each notification is delivered once, and flock skips a tick
-# while the previous one is still running.
-# Job output is redirected to PID 1 so it shows up in `docker logs golifecraft_cron`.
-* * * * * root cd /var/www/html && flock -n /tmp/notification-dispatch.lock /usr/local/bin/php bin/console app:notification:dispatch --no-interaction > /proc/1/fd/1 2> /proc/1/fd/2
-
