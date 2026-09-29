@@ -1,13 +1,17 @@
 import { Component, Input, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { GlyphComponent } from "../../../glyph/infrastructure/components/glyph.component";
+import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
 
 export interface ChoiceChipOption {
   value: string | number;
   label: string;
+  glyph?: `${DsGlyph}`;
 }
 
 @Component({
   selector: "ds-choice-chips",
+  imports: [GlyphComponent],
   template: `
     <div
       class="ds-choice-chips"
@@ -24,6 +28,9 @@ export interface ChoiceChipOption {
           [attr.aria-checked]="value === option.value"
           (click)="select(option.value)"
         >
+          @if (option.glyph) {
+            <ds-glyph [name]="option.glyph" [size]="16" />
+          }
           {{ option.label }}
         </button>
       }
@@ -40,6 +47,12 @@ export interface ChoiceChipOption {
         gap: var(--ds-space-2);
       }
       .ds-choice-chip {
+        --ds-glyph-line: currentColor;
+        --ds-glyph-fill: color-mix(in srgb, currentColor 22%, transparent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ds-space-1-5);
         flex: 1 1 0;
         appearance: none;
         cursor: pointer;

@@ -1,86 +1,86 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ChoiceChipOption } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
+import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum";
 import { FinanceCategory } from "../../domain/models/finance-category.model";
 
 interface FinanceCategoryEntry {
-  emoji: string;
+  glyph: DsGlyph;
   color: string;
 }
 
 const CATEGORIES: Record<FinanceCategory, FinanceCategoryEntry> = {
   [FinanceCategory.GROCERIES]: {
-    emoji: "🛒",
+    glyph: DsGlyph.Cart,
     color: "var(--ds-cat-groceries)",
   },
   [FinanceCategory.RESTAURANTS]: {
-    emoji: "🍽️",
+    glyph: DsGlyph.Plate,
     color: "var(--ds-cat-restaurants)",
   },
   [FinanceCategory.GYM]: {
-    emoji: "💪",
+    glyph: DsGlyph.Dumbbell,
     color: "var(--ds-cat-gym)",
   },
   [FinanceCategory.TRANSPORT]: {
-    emoji: "🚇",
+    glyph: DsGlyph.Train,
     color: "var(--ds-cat-transport)",
   },
   [FinanceCategory.LEISURE]: {
-    emoji: "🎬",
+    glyph: DsGlyph.Ticket,
     color: "var(--ds-cat-leisure)",
   },
   [FinanceCategory.HOME]: {
-    emoji: "🏠",
+    glyph: DsGlyph.House,
     color: "var(--ds-cat-home)",
   },
   [FinanceCategory.BILLS]: {
-    emoji: "💡",
+    glyph: DsGlyph.Bulb,
     color: "var(--ds-cat-bills)",
   },
   [FinanceCategory.HEALTH]: {
-    emoji: "🩺",
+    glyph: DsGlyph.HeartCross,
     color: "var(--ds-cat-health)",
   },
   [FinanceCategory.BEAUTY]: {
-    emoji: "💇",
+    glyph: DsGlyph.Scissors,
     color: "var(--ds-cat-beauty)",
   },
   [FinanceCategory.CLOTHING]: {
-    emoji: "👕",
+    glyph: DsGlyph.Shirt,
     color: "var(--ds-cat-clothing)",
   },
   [FinanceCategory.TREATS]: {
-    emoji: "🍫",
+    glyph: DsGlyph.Cupcake,
     color: "var(--ds-cat-treats)",
   },
   [FinanceCategory.GIFTS]: {
-    emoji: "🎁",
+    glyph: DsGlyph.Gift,
     color: "var(--ds-cat-gifts)",
   },
   [FinanceCategory.TRAVEL]: {
-    emoji: "✈️",
+    glyph: DsGlyph.Plane,
     color: "var(--ds-cat-travel)",
   },
   [FinanceCategory.PETS]: {
-    emoji: "🐾",
+    glyph: DsGlyph.Paw,
     color: "var(--ds-cat-pets)",
   },
   [FinanceCategory.SUBSCRIPTIONS]: {
-    emoji: "🔁",
+    glyph: DsGlyph.Cycle,
     color: "var(--ds-cat-subscriptions)",
   },
   [FinanceCategory.INVESTMENTS]: {
-    emoji: "📈",
+    glyph: DsGlyph.TrendUp,
     color: "var(--ds-cat-investments)",
   },
   [FinanceCategory.OTHER]: {
-    emoji: "📦",
+    glyph: DsGlyph.Box,
     color: "var(--ds-cat-other)",
   },
 };
 
 const MODULE_PATH = "economy/finance/transaction";
-const INCOME_EMOJI = "💰";
 
 @Injectable()
 export class FinanceCategoryCatalogService {
@@ -90,12 +90,12 @@ export class FinanceCategoryCatalogService {
     return Object.keys(CATEGORIES) as FinanceCategory[];
   }
 
-  emoji(category: FinanceCategory): string {
-    return CATEGORIES[category].emoji;
+  glyph(category: FinanceCategory): DsGlyph {
+    return CATEGORIES[category].glyph;
   }
 
-  incomeEmoji(): string {
-    return INCOME_EMOJI;
+  incomeGlyph(): DsGlyph {
+    return DsGlyph.Coins;
   }
 
   color(category: FinanceCategory): string {
@@ -116,7 +116,8 @@ export class FinanceCategoryCatalogService {
   chipOptions(): ChoiceChipOption[] {
     return this.categories().map((category) => ({
       value: category,
-      label: `${this.emoji(category)} ${this.label(category)}`,
+      label: this.label(category),
+      glyph: this.glyph(category),
     }));
   }
 }

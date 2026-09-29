@@ -4,6 +4,8 @@ import { StackComponent } from "../../../stack/infrastructure/components/stack.c
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
 import { ChipComponent } from "../../../chip/infrastructure/components/chip.component";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
+import { GlyphComponent } from "../../../glyph/infrastructure/components/glyph.component";
+import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
 import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 
 @Component({
@@ -15,6 +17,7 @@ import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/
     ChipComponent,
     PressableComponent,
     SwipeToDeleteComponent,
+    GlyphComponent,
   ],
   templateUrl: "./agenda-item.component.html",
   styleUrls: ["./agenda-item.component.css"],
@@ -22,6 +25,7 @@ import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/
 export class AgendaItemComponent {
   @Input() title = "";
   @Input() kindLabel = "";
+  @Input() glyph: `${DsGlyph}` | null = null;
   @Input() appointment = false;
   @Input() timeLabel = "";
   @Input() notes = "";

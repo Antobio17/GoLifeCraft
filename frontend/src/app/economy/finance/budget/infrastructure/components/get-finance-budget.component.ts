@@ -12,7 +12,7 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { GlyphComponent } from "@shared/design-system/glyph/infrastructure/components/glyph.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
 import { BudgetMeterComponent } from "@shared/design-system/budget-meter/infrastructure/components/budget-meter.component";
@@ -54,7 +54,7 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     CardComponent,
     SectionHeaderComponent,
     EmptyStateComponent,
-    EmojiTileComponent,
+    GlyphComponent,
     ChipComponent,
     ProgressBarComponent,
     BudgetMeterComponent,
@@ -216,7 +216,8 @@ export class GetFinanceBudgetComponent implements OnInit {
   selectedCategoryRows = computed(() =>
     this.selectedCategoryTransactions().map((transaction) => ({
       id: transaction.id,
-      emoji: this.categoryCatalog.emoji(transaction.category),
+      glyph: this.categoryCatalog.glyph(transaction.category),
+      glyphColor: this.categoryCatalog.color(transaction.category),
       title:
         transaction.note || this.categoryCatalog.label(transaction.category),
       subtitle: `${transaction.store || this.categoryCatalog.label(transaction.category)} · ${this.view.dayShortWithWeekday(transaction.transactionDate)}`,
@@ -282,7 +283,8 @@ export class GetFinanceBudgetComponent implements OnInit {
     return {
       key: category.category,
       name: this.categoryCatalog.label(category.category),
-      emoji: this.categoryCatalog.emoji(category.category),
+      glyph: this.categoryCatalog.glyph(category.category),
+      color: this.categoryCatalog.color(category.category),
       spentLabel: this.view.money(category.spent),
       budgetLabel: this.view.money(category.budget),
       statusText: this.budgetView.differenceLabel(
@@ -310,7 +312,8 @@ export class GetFinanceBudgetComponent implements OnInit {
     return {
       key: category.category,
       name: this.categoryCatalog.label(category.category),
-      emoji: this.categoryCatalog.emoji(category.category),
+      glyph: this.categoryCatalog.glyph(category.category),
+      color: this.categoryCatalog.color(category.category),
       note: this.t(noteKey).replace(
         "{amount}",
         this.view.money(category.spent),

@@ -169,7 +169,13 @@
                 [gap]="'var(--ds-space-3)'"
                 [grow]="true"
               >
-                <ds-emoji-tile [emoji]="row.emoji" [size]="34" [radius]="10" />
+                <ds-glyph
+                  [name]="row.glyph"
+                  [tile]="true"
+                  [size]="20"
+                  [color]="row.color"
+                  box="2.125rem"
+                />
                 <ds-stack [grow]="true">
                   <ds-text variant="strong" [truncate]="true">{{
                     row.name

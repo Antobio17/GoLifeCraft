@@ -1,13 +1,15 @@
 import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { GlyphComponent } from "../../../glyph/infrastructure/components/glyph.component";
+import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
 
 type AmountInputLayout = "row" | "stacked";
 type AmountInputAlign = "start" | "end";
 
 @Component({
   selector: "ds-amount-input",
-  imports: [IconComponent],
+  imports: [IconComponent, GlyphComponent],
   template: `
     <label
       class="ds-amount"
@@ -17,6 +19,8 @@ type AmountInputAlign = "start" | "end";
     >
       @if (layout === "stacked") {
         <span class="ds-amount__label">{{ label }}</span>
+      } @else if (glyph) {
+        <ds-glyph [name]="glyph" [size]="large ? 28 : 22" />
       } @else if (emoji) {
         <span class="ds-amount__emoji" aria-hidden="true">{{ emoji }}</span>
       }
@@ -152,6 +156,7 @@ export class AmountInputComponent implements ControlValueAccessor {
   @Input() layout: AmountInputLayout = "row";
   @Input() align: AmountInputAlign = "start";
   @Input() emoji = "";
+  @Input() glyph: `${DsGlyph}` | null = null;
   @Input() label = "";
   @Input() unit = "";
   @Input() placeholder = "0";

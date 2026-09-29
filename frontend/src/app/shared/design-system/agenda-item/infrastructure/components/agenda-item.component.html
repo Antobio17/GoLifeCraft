@@ -48,7 +48,11 @@
           <ds-chip
             class="agenda-item__kind"
             [tone]="appointment ? 'brand' : 'neutral'"
-            >{{ kindLabel }}</ds-chip
+          >
+            @if (glyph) {
+              <ds-glyph class="agenda-item__glyph" [name]="glyph" [size]="12" />
+            }
+            {{ kindLabel }}</ds-chip
           >
 
           @if (timeLabel) {

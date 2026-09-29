@@ -62,6 +62,7 @@ import {
 } from "@agenda/agenda/agenda/domain/models/agenda.model";
 import { AgendaCalendarDay } from "@agenda/agenda/agenda/domain/models/agenda-calendar.model";
 
+import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum";
 @Component({
   selector: "app-get-agenda",
   templateUrl: "./get-agenda.component.html",
@@ -257,6 +258,10 @@ export class GetAgendaComponent implements OnInit {
       entry.category,
       this.t(`getAgenda.kind.${entry.kind}`),
     );
+  }
+
+  entryGlyph(entry: AgendaEntryView): DsGlyph | null {
+    return this.categoryCatalog.glyph(entry.kind, entry.category);
   }
 
   previousDay(): void {

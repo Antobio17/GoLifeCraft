@@ -40,6 +40,7 @@ interface AgendaSummaryEntry {
   timeLabel: string | null;
 }
 
+import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum";
 @Component({
   selector: "app-agenda-summary",
   templateUrl: "./agenda-summary.component.html",
@@ -104,6 +105,10 @@ export class AgendaSummaryComponent implements OnInit {
       entry.category,
       fallback,
     );
+  }
+
+  entryGlyph(entry: AgendaSummaryEntry): DsGlyph | null {
+    return this.categoryCatalog.glyph(entry.kind, entry.category);
   }
 
   entryWhenLabel(

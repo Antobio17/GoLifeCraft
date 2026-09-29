@@ -223,7 +223,13 @@
               align="center"
               [gap]="'var(--ds-space-3)'"
             >
-              <ds-emoji-tile [emoji]="row.emoji" [size]="34" [radius]="10" />
+              <ds-glyph
+                [name]="row.glyph"
+                [tile]="true"
+                [size]="20"
+                [color]="row.color"
+                box="2.125rem"
+              />
               <ds-stack [grow]="true">
                 <ds-text variant="strong" [truncate]="true">{{
                   row.name
@@ -270,7 +276,8 @@
               <ds-card [padding]="'0'" [gap]="'0'">
                 @for (row of selectedCategoryRows(); track row.id) {
                   <ds-transaction-row
-                    [emoji]="row.emoji"
+                    [glyph]="row.glyph"
+                    [glyphColor]="row.glyphColor"
                     [title]="row.title"
                     [subtitle]="row.subtitle"
                     [amountLabel]="row.amountLabel"
@@ -303,7 +310,13 @@
               align="center"
               [gap]="'var(--ds-space-3)'"
             >
-              <ds-emoji-tile [emoji]="row.emoji" [size]="34" [radius]="10" />
+              <ds-glyph
+                [name]="row.glyph"
+                [tile]="true"
+                [size]="20"
+                [color]="row.color"
+                box="2.125rem"
+              />
               <ds-stack [grow]="true" [gap]="'2px'">
                 <ds-text variant="strong" [truncate]="true">{{
                   row.name
