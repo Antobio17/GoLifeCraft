@@ -480,8 +480,8 @@ tail -f volumes/cron_logs/notification-dispatch.log
 
 **Parar** el envío: quita (o comenta) la línea del `crontab -e`. Nada que desplegar.
 
-> En local no hace falta nada: la imagen de desarrollo ya trae este job en
-> `infrastructure/docker/local/cron/notification-dispatch.cron`.
+> En local tampoco lo lanza nadie. Para probar el envío, ejecútalo a mano:
+> `docker exec golifecraft_php php bin/console app:notification:dispatch`.
 
 ## Notas
 
