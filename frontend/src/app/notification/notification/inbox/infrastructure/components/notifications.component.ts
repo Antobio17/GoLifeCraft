@@ -106,10 +106,12 @@ export class NotificationsComponent {
       .getInbox()
       .pipe(takeUntilDestroyed())
       .subscribe({
-        next: (response) =>
+        next: (response) => {
           this.entries.set(
             response.data.map((item) => ({ id: item.id, ...item.attributes })),
-          ),
+          );
+          this.unreadNotifications.sync(response.meta.unreadCount);
+        },
         error: () => this.entries.update((entries) => entries ?? []),
       });
   }
