@@ -8,5 +8,6 @@ export interface NotificationSettings {
   quietHoursEnd: string;
   preferences: NotificationPreference[];
   leadMinutesOptions: number[];
+  afterMinutesOptions: number[];
   languages: string[];
 }

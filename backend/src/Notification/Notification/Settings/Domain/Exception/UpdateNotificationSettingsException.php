@@ -62,4 +62,13 @@ final class UpdateNotificationSettingsException extends BaseException
             details: ['type' => $type, 'leadMinutes' => $leadMinutes, 'validLeadMinutes' => NotificationPreference::LEAD_MINUTES],
         );
     }
+
+    public static function invalidAfterMinutes(string $type, int $afterMinutes): self
+    {
+        return new static(
+            title: 'The notification delay is not allowed.',
+            keyTranslation: 'notification.settings.invalid.after.minutes',
+            details: ['type' => $type, 'afterMinutes' => $afterMinutes, 'validAfterMinutes' => NotificationPreference::AFTER_MINUTES],
+        );
+    }
 }

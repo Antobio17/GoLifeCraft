@@ -5,4 +5,5 @@ export enum NotificationType {
   NutritionMealLunch = "nutrition.meal.lunch",
   NutritionMealSnack = "nutrition.meal.snack",
   NutritionMealDinner = "nutrition.meal.dinner",
+  GymWorkoutStillActive = "gym.workout.stillActive",
 }

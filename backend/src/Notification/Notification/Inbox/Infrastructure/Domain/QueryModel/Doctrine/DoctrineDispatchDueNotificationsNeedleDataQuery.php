@@ -5,6 +5,7 @@ namespace Notification\Notification\Inbox\Infrastructure\Domain\QueryModel\Doctr
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Notification\Notification\Inbox\Domain\QueryModel\DispatchDueNotificationsNeedleDataQuery;
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\ActiveWorkout;
 use Notification\Notification\Inbox\Domain\QueryModel\Dto\AgendaAppointment;
 use Notification\Notification\Inbox\Domain\QueryModel\Dto\DiaryMealEntry;
 
@@ -12,6 +13,7 @@ final readonly class DoctrineDispatchDueNotificationsNeedleDataQuery implements 
 {
     private const string APPOINTMENT_KIND = 'appointment';
     private const string QUICK_KIND = 'quick';
+    private const string WORKOUT_IN_PROGRESS = 'in_progress';
 
     public function __construct(
         private Connection $connection,
@@ -60,6 +62,28 @@ final readonly class DoctrineDispatchDueNotificationsNeedleDataQuery implements 
                 meal: $row['meal'],
                 name: self::QUICK_KIND === $row['kind'] ? $row['quick_name'] : $row['snapshot_name'],
                 emoji: self::QUICK_KIND === $row['kind'] ? $row['quick_emoji'] : $row['snapshot_emoji'],
+            ),
+            array: $rows,
+        );
+    }
+
+    public function activeWorkouts(): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('w.id', 'w.session_id', 'w.session_name', 'w.started_at')
+            ->from(table: 'training_workout', alias: 'w')
+            ->where('w.status = :status')
+            ->setParameter(key: 'status', value: self::WORKOUT_IN_PROGRESS)
+            ->orderBy(sort: 'w.started_at')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        return array_map(
+            callback: static fn (array $row): ActiveWorkout => new ActiveWorkout(
+                id: $row['id'],
+                sessionId: $row['session_id'],
+                sessionName: $row['session_name'],
+                startedAt: new \DateTimeImmutable(datetime: $row['started_at'], timezone: new \DateTimeZone(timezone: 'UTC')),
             ),
             array: $rows,
         );

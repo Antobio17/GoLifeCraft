@@ -4,4 +4,5 @@ export interface NotificationPreference {
   enabled: boolean;
   time: string | null;
   leadMinutes: number | null;
+  afterMinutes: number | null;
 }

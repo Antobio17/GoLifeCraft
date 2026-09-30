@@ -49,11 +49,16 @@
           "title": "Dinner time",
           "empty": "Nothing logged for dinner yet."
         }
+      },
+      "workoutActive": {
+        "title": "Still training?",
+        "body": "\"{{sessionName}}\" has been running for {{elapsed}} since {{time}}. If you are done, finish it."
       }
     },
     "module": {
       "agenda": "Agenda",
-      "nutrition": "Nutrition"
+      "nutrition": "Nutrition",
+      "gym": "Gym"
     },
     "settings": {
       "device": "This device",
@@ -125,6 +130,11 @@
           "title": "Dinner",
           "subtitle": "What your diary has for dinner",
           "time": "Alert time"
+        },
+        "workoutActive": {
+          "title": "Unfinished workout",
+          "subtitle": "Asks whether you are still training when a session has been running for a long time",
+          "after": "Remind after"
         }
       },
       "lead": {
@@ -152,6 +162,9 @@
         "time": "The alert time is not valid",
         "lead": {
           "minutes": "That lead time is not allowed"
+        },
+        "after": {
+          "minutes": "That reminder delay is not allowed"
         }
       },
       "unknown": {

@@ -2,6 +2,7 @@
 
 namespace Notification\Notification\Inbox\Domain\QueryModel;
 
+use Notification\Notification\Inbox\Domain\QueryModel\Dto\ActiveWorkout;
 use Notification\Notification\Inbox\Domain\QueryModel\Dto\AgendaAppointment;
 use Notification\Notification\Inbox\Domain\QueryModel\Dto\DiaryMealEntry;
 
@@ -16,6 +17,11 @@ interface DispatchDueNotificationsNeedleDataQuery
      * @return DiaryMealEntry[]
      */
     public function diaryEntries(string $date): array;
+
+    /**
+     * @return ActiveWorkout[]
+     */
+    public function activeWorkouts(): array;
 
     /**
      * @param string[] $dedupeKeys

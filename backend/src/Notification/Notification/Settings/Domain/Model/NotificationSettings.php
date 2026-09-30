@@ -22,7 +22,7 @@ class NotificationSettings extends Aggregate
     private int $version;
 
     /**
-     * @param array<string, array{enabled: bool, time: ?string, leadMinutes: ?int}> $preferences
+     * @param array<string, array{enabled: bool, time: ?string, leadMinutes: ?int, afterMinutes: ?int}> $preferences
      */
     public function __construct(
         public readonly string $id,
@@ -42,7 +42,7 @@ class NotificationSettings extends Aggregate
     }
 
     /**
-     * @param array<int, array{type?: mixed, enabled?: mixed, time?: mixed, leadMinutes?: mixed}> $preferences
+     * @param array<int, array{type?: mixed, enabled?: mixed, time?: mixed, leadMinutes?: mixed, afterMinutes?: mixed}> $preferences
      */
     public static function create(
         string $id,
@@ -100,7 +100,7 @@ class NotificationSettings extends Aggregate
     }
 
     /**
-     * @param array<int, array{type?: mixed, enabled?: mixed, time?: mixed, leadMinutes?: mixed}> $preferences
+     * @param array<int, array{type?: mixed, enabled?: mixed, time?: mixed, leadMinutes?: mixed, afterMinutes?: mixed}> $preferences
      */
     public function update(
         string $timezone,
@@ -197,9 +197,9 @@ class NotificationSettings extends Aggregate
     }
 
     /**
-     * @param array<int, array{type?: mixed, enabled?: mixed, time?: mixed, leadMinutes?: mixed}> $raw
+     * @param array<int, array{type?: mixed, enabled?: mixed, time?: mixed, leadMinutes?: mixed, afterMinutes?: mixed}> $raw
      *
-     * @return array<string, array{enabled: bool, time: ?string, leadMinutes: ?int}>
+     * @return array<string, array{enabled: bool, time: ?string, leadMinutes: ?int, afterMinutes: ?int}>
      */
     private static function resolvePreferences(array $raw): array
     {

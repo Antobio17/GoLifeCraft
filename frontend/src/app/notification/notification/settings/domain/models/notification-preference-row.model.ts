@@ -11,5 +11,7 @@ export interface NotificationPreferenceRow {
   timeLabel: string;
   leadMinutes: string | null;
   leadOptions: SelectOption[];
+  afterMinutes: string | null;
+  afterOptions: SelectOption[];
   testId: string;
 }

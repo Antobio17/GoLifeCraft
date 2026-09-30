@@ -9,3 +9,6 @@ services:
 
   Notification\Notification\Inbox\Domain\Service\MealReminderPlanner:
     class: Notification\Notification\Inbox\Domain\Service\MealReminderPlanner
+
+  Notification\Notification\Inbox\Domain\Service\WorkoutReminderPlanner:
+    class: Notification\Notification\Inbox\Domain\Service\WorkoutReminderPlanner

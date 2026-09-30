@@ -36,7 +36,7 @@ final readonly class NotificationSettingsSnapshot
     }
 
     /**
-     * @param array<string, array{enabled?: mixed, time?: mixed, leadMinutes?: mixed}> $preferences
+     * @param array<string, array{enabled?: mixed, time?: mixed, leadMinutes?: mixed, afterMinutes?: mixed}> $preferences
      */
     public static function fromStored(
         string $timezone,

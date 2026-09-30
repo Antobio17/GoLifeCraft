@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Application\Command\Command;
 final readonly class UpdateNotificationSettingsCommand implements Command
 {
     /**
-     * @param array<int, array{type?: mixed, enabled?: mixed, time?: mixed, leadMinutes?: mixed}> $preferences
+     * @param array<int, array{type?: mixed, enabled?: mixed, time?: mixed, leadMinutes?: mixed, afterMinutes?: mixed}> $preferences
      */
     public function __construct(
         public string $timezone,

@@ -13,6 +13,7 @@ const DAY_MS = 86_400_000;
 const MODULE_ICON: Record<string, DsIconName> = {
   [NotificationModule.Agenda]: "agenda",
   [NotificationModule.Nutrition]: "diary",
+  [NotificationModule.Gym]: "dumbbell",
 };
 
 export class NotificationInboxViewService {
@@ -77,6 +78,13 @@ export class NotificationInboxViewService {
       return {
         title: this.t("notifications.type.upcoming.title", params),
         body: this.t("notifications.type.upcoming.body", params),
+      };
+    }
+
+    if (NotificationType.GymWorkoutStillActive === entry.type) {
+      return {
+        title: this.t("notifications.type.workoutActive.title", params),
+        body: this.t("notifications.type.workoutActive.body", params),
       };
     }
 

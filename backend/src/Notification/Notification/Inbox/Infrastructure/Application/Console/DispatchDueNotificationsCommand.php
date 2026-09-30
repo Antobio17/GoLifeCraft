@@ -11,6 +11,7 @@ use Notification\Notification\Inbox\Domain\QueryModel\NotificationRecipientsNeed
 use Notification\Notification\Inbox\Domain\Service\AgendaReminderPlanner;
 use Notification\Notification\Inbox\Domain\Service\Dto\DueNotification;
 use Notification\Notification\Inbox\Domain\Service\MealReminderPlanner;
+use Notification\Notification\Inbox\Domain\Service\WorkoutReminderPlanner;
 use Notification\Notification\Settings\Domain\QueryModel\Dto\NotificationSettingsSnapshot;
 use Notification\Notification\Settings\Domain\QueryModel\NotificationSettingsNeedleDataQuery;
 use Psr\Log\LoggerInterface;
@@ -35,6 +36,7 @@ final class DispatchDueNotificationsCommand extends Command
         private readonly DispatchDueNotificationsNeedleDataQuery $needleDataQuery,
         private readonly AgendaReminderPlanner $agendaReminderPlanner,
         private readonly MealReminderPlanner $mealReminderPlanner,
+        private readonly WorkoutReminderPlanner $workoutReminderPlanner,
         MessageBusInterface $messageBus,
         private readonly DateTimeGenerator $dateTimeGenerator,
         private readonly LoggerInterface $logger,
@@ -100,6 +102,11 @@ final class DispatchDueNotificationsCommand extends Command
             ),
             ...$this->mealReminderPlanner->plan(
                 entries: $this->needleDataQuery->diaryEntries(date: $this->mealReminderPlanner->day(settings: $settings, now: $now)),
+                settings: $settings,
+                now: $now,
+            ),
+            ...$this->workoutReminderPlanner->plan(
+                workouts: $this->needleDataQuery->activeWorkouts(),
                 settings: $settings,
                 now: $now,
             ),

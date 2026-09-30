@@ -18,6 +18,7 @@ const PREFERENCE_KEY: Record<string, string> = {
   [NotificationType.NutritionMealLunch]: "lunch",
   [NotificationType.NutritionMealSnack]: "snack",
   [NotificationType.NutritionMealDinner]: "dinner",
+  [NotificationType.GymWorkoutStillActive]: "workoutActive",
 };
 
 const PREFERENCE_GLYPH: Record<string, DsGlyph> = {
@@ -27,11 +28,13 @@ const PREFERENCE_GLYPH: Record<string, DsGlyph> = {
   [NotificationType.NutritionMealLunch]: DsGlyph.Plate,
   [NotificationType.NutritionMealSnack]: DsGlyph.Apple,
   [NotificationType.NutritionMealDinner]: DsGlyph.Cloche,
+  [NotificationType.GymWorkoutStillActive]: DsGlyph.Dumbbell,
 };
 
 const MODULE_GLYPH: Record<string, DsGlyph> = {
   [NotificationModule.Agenda]: DsGlyph.Calendar,
   [NotificationModule.Nutrition]: DsGlyph.Plate,
+  [NotificationModule.Gym]: DsGlyph.Dumbbell,
 };
 
 export class NotificationPreferenceViewService {
@@ -60,10 +63,13 @@ export class NotificationPreferenceViewService {
     preferences: NotificationPreference[],
     module: string,
     leadMinutesOptions: number[],
+    afterMinutesOptions: number[],
   ): NotificationPreferenceRow[] {
     return preferences
       .filter((preference) => preference.module === module)
-      .map((preference) => this.row(preference, leadMinutesOptions));
+      .map((preference) =>
+        this.row(preference, leadMinutesOptions, afterMinutesOptions),
+      );
   }
 
   moduleTitle(module: string): string {
@@ -90,6 +96,7 @@ export class NotificationPreferenceViewService {
   private row(
     preference: NotificationPreference,
     leadMinutesOptions: number[],
+    afterMinutesOptions: number[],
   ): NotificationPreferenceRow {
     const key = PREFERENCE_KEY[preference.type] ?? preference.type;
 
@@ -103,12 +110,21 @@ export class NotificationPreferenceViewService {
       timeLabel: this.t(`notifications.settings.preference.${key}.time`),
       leadMinutes:
         null === preference.leadMinutes ? null : String(preference.leadMinutes),
-      leadOptions: leadMinutesOptions.map<SelectOption>((minutes) => ({
-        value: String(minutes),
-        label: this.leadLabel(minutes),
-      })),
+      leadOptions: this.minuteOptions(leadMinutesOptions),
+      afterMinutes:
+        null === preference.afterMinutes
+          ? null
+          : String(preference.afterMinutes),
+      afterOptions: this.minuteOptions(afterMinutesOptions),
       testId: `notifications-preference-${key}`,
     };
+  }
+
+  private minuteOptions(options: number[]): SelectOption[] {
+    return options.map<SelectOption>((minutes) => ({
+      value: String(minutes),
+      label: this.leadLabel(minutes),
+    }));
   }
 
   private t(key: string, params?: Record<string, unknown>): string {
