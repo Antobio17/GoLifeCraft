@@ -41,6 +41,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         transition:
           background-color var(--ds-dur-3) var(--ds-ease-out),
           color var(--ds-dur-2) var(--ds-ease-out),
+          box-shadow var(--ds-dur-3) var(--ds-ease-out),
           padding var(--ds-dur-3) var(--ds-ease-spring),
           transform var(--ds-dur-1) var(--ds-ease-out);
       }
@@ -85,6 +86,14 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .tab--active {
         color: var(--ds-on-primary);
         background-color: var(--ds-primary);
+        background-image: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.28),
+          rgba(255, 255, 255, 0) 55%
+        );
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.5),
+          inset 0 -0.25rem 0.5rem rgba(0, 0, 0, 0.1);
         padding: 0 var(--ds-space-4) 0 var(--ds-space-3);
       }
       .tab--active .tab__live {
