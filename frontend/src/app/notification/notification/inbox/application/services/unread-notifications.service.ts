@@ -20,6 +20,10 @@ export class UnreadNotificationsService {
       });
   }
 
+  sync(count: number): void {
+    this.unread.set(count);
+  }
+
   clear(): void {
     this.unread.set(0);
   }

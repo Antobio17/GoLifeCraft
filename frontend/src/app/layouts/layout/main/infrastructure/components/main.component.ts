@@ -42,6 +42,8 @@ export class MainLayoutComponent implements OnInit {
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
 
+  private readonly PUSH_RECEIVED = "golifecraft.push.received";
+
   showTabBar = signal(this.computeShowTabBar());
   readonly impersonation = this.impersonationService.impersonation;
   readonly workoutTagVisible = this.workoutBannerVisibility.visible;
@@ -49,7 +51,10 @@ export class MainLayoutComponent implements OnInit {
   ngOnInit(): void {
     this.router.events
       .pipe(filter((e) => e instanceof NavigationEnd))
-      .subscribe(() => this.showTabBar.set(this.computeShowTabBar()));
+      .subscribe(() => {
+        this.showTabBar.set(this.computeShowTabBar());
+        this.refreshUnreadNotifications();
+      });
 
     this.refreshProfileName();
     this.watchUnreadNotifications();
@@ -83,11 +88,27 @@ export class MainLayoutComponent implements OnInit {
       this.unreadNotifications.refresh();
     };
 
+    const refreshOnPush = (event: MessageEvent) => {
+      if (this.PUSH_RECEIVED !== event.data?.type) return;
+
+      this.unreadNotifications.refresh();
+    };
+
+    const serviceWorker = this.document.defaultView?.navigator.serviceWorker;
+
     this.unreadNotifications.refresh();
     this.document.addEventListener("visibilitychange", refreshWhenVisible);
-    this.destroyRef.onDestroy(() =>
-      this.document.removeEventListener("visibilitychange", refreshWhenVisible),
-    );
+    serviceWorker?.addEventListener("message", refreshOnPush);
+    this.destroyRef.onDestroy(() => {
+      this.document.removeEventListener("visibilitychange", refreshWhenVisible);
+      serviceWorker?.removeEventListener("message", refreshOnPush);
+    });
+  }
+
+  private refreshUnreadNotifications(): void {
+    if (!this.authSessionService.isAuthenticated()) return;
+
+    this.unreadNotifications.refresh();
   }
 
   private computeShowTabBar(): boolean {
