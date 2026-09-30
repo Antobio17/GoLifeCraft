@@ -17,6 +17,9 @@ describe("NotificationInboxViewService", () => {
     "notifications.type.upcoming.body": "Empieza en {{minutes}} min.",
     "notifications.type.meal.lunch.title": "Toca comer",
     "notifications.type.meal.lunch.empty": "Nada apuntado.",
+    "notifications.type.workoutActive.title": "¿Sigues entrenando?",
+    "notifications.type.workoutActive.body":
+      "{{sessionName}} lleva {{elapsed}} desde las {{time}}.",
   };
 
   const translationService = {
@@ -127,9 +130,31 @@ describe("NotificationInboxViewService", () => {
     expect(group.rows[0].icon).toBe("diary");
   });
 
+  it("asks whether a workout that is still running is still going on", () => {
+    const [group] = service.groups(
+      [
+        entry({
+          type: NotificationType.GymWorkoutStillActive,
+          module: "gym",
+          url: "/gym/sessions/session-1",
+          params: {
+            sessionName: "Pierna",
+            elapsed: "2 h 5 min",
+            time: "19:00",
+          },
+        }),
+      ],
+      new Date("2026-09-28T22:00:00"),
+    );
+
+    expect(group.rows[0].title).toBe("¿Sigues entrenando?");
+    expect(group.rows[0].body).toBe("Pierna lleva 2 h 5 min desde las 19:00.");
+    expect(group.rows[0].icon).toBe("dumbbell");
+  });
+
   it("falls back to the server text for unknown types", () => {
     const [group] = service.groups(
-      [entry({ type: "gym.streak", module: "gym" })],
+      [entry({ type: "finance.budget", module: "finance" })],
       new Date("2026-09-28T22:00:00"),
     );
 

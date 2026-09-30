@@ -16,3 +16,5 @@ nutrition.meal.snack.body.empty: 'No tienes nada apuntado en el diario para el s
 nutrition.meal.dinner.title: 'Toca cenar'
 nutrition.meal.dinner.body.planned: '%items%'
 nutrition.meal.dinner.body.empty: 'No tienes nada apuntado en el diario para la cena.'
+gym.workout.stillActive.title: '¿Sigues entrenando?'
+gym.workout.stillActive.body.active: '«%sessionName%» lleva %elapsed% activa desde las %time%. Si ya has terminado, finalízala.'

@@ -7,7 +7,7 @@ use Shared\Shared\Shared\Domain\Event\DomainEvent;
 final readonly class NotificationInboxSeen extends DomainEvent
 {
     /**
-     * @param array<string, array{enabled: bool, time: ?string, leadMinutes: ?int}> $preferences
+     * @param array<string, array{enabled: bool, time: ?string, leadMinutes: ?int, afterMinutes: ?int}> $preferences
      */
     public function __construct(
         string $aggregateId,

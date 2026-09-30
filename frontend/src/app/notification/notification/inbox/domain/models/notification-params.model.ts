@@ -8,4 +8,8 @@ export interface NotificationParams {
   variant?: string;
   items?: string | null;
   count?: number;
+  workoutId?: string;
+  sessionId?: string | null;
+  sessionName?: string;
+  elapsed?: string;
 }

@@ -16,3 +16,5 @@ nutrition.meal.snack.body.empty: 'Nothing logged in your diary for your snack ye
 nutrition.meal.dinner.title: 'Dinner time'
 nutrition.meal.dinner.body.planned: '%items%'
 nutrition.meal.dinner.body.empty: 'Nothing logged in your diary for dinner yet.'
+gym.workout.stillActive.title: 'Still training?'
+gym.workout.stillActive.body.active: '"%sessionName%" has been running for %elapsed% since %time%. If you are done, finish it.'

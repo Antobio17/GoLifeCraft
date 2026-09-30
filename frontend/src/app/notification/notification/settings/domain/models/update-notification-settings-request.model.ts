@@ -8,6 +8,6 @@ export interface UpdateNotificationSettingsRequest {
   quietHoursEnd: string;
   preferences: Pick<
     NotificationPreference,
-    "type" | "enabled" | "time" | "leadMinutes"
+    "type" | "enabled" | "time" | "leadMinutes" | "afterMinutes"
   >[];
 }

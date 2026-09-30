@@ -36,6 +36,7 @@ final readonly class GetNotificationSettingsQueryHandler
                 array: $settings->preferences,
             )),
             leadMinutesOptions: NotificationPreference::LEAD_MINUTES,
+            afterMinutesOptions: NotificationPreference::AFTER_MINUTES,
             languages: NotificationSettings::LANGUAGES,
         ));
     }

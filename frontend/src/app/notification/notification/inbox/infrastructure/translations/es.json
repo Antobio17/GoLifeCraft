@@ -49,11 +49,16 @@
           "title": "Toca cenar",
           "empty": "No tienes nada apuntado para la cena."
         }
+      },
+      "workoutActive": {
+        "title": "¿Sigues entrenando?",
+        "body": "«{{sessionName}}» lleva {{elapsed}} activa desde las {{time}}. Si ya has terminado, finalízala."
       }
     },
     "module": {
       "agenda": "Agenda",
-      "nutrition": "Alimentación"
+      "nutrition": "Alimentación",
+      "gym": "Gimnasio"
     },
     "settings": {
       "device": "Este dispositivo",
@@ -125,6 +130,11 @@
           "title": "Cena",
           "subtitle": "Lo que tienes en el diario para cenar",
           "time": "Hora del aviso"
+        },
+        "workoutActive": {
+          "title": "Entreno sin cerrar",
+          "subtitle": "Pregunta si sigues entrenando cuando la sesión lleva mucho tiempo activa",
+          "after": "Avisar tras"
         }
       },
       "lead": {
@@ -152,6 +162,9 @@
         "time": "La hora del aviso no es válida",
         "lead": {
           "minutes": "Esa antelación no está permitida"
+        },
+        "after": {
+          "minutes": "Ese tiempo de aviso no está permitido"
         }
       },
       "unknown": {

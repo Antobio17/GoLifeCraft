@@ -47,6 +47,13 @@ export class NotificationSettingsEditorService {
     }));
   }
 
+  changePreferenceAfter(type: string, afterMinutes: string): void {
+    this.changePreference(type, (preference) => ({
+      ...preference,
+      afterMinutes: Number(afterMinutes),
+    }));
+  }
+
   change(
     update: (settings: NotificationSettings) => NotificationSettings,
   ): void {
@@ -66,11 +73,12 @@ export class NotificationSettingsEditorService {
           quietHoursStart: next.quietHoursStart,
           quietHoursEnd: next.quietHoursEnd,
           preferences: next.preferences.map(
-            ({ type, enabled, time, leadMinutes }) => ({
+            ({ type, enabled, time, leadMinutes, afterMinutes }) => ({
               type,
               enabled,
               time,
               leadMinutes,
+              afterMinutes,
             }),
           ),
         })

@@ -67,6 +67,27 @@
               />
             </ds-stack>
           }
+
+          @if (row.enabled && row.afterMinutes !== null) {
+            <ds-stack [gap]="'var(--ds-space-1-5)'">
+              <ds-text variant="label">{{
+                "notifications.settings.preference.workoutActive.after" | t
+              }}</ds-text>
+              <ds-select
+                [attr.data-testid]="row.testId + '-after'"
+                variant="field"
+                leadingIcon="clock"
+                [fluid]="true"
+                [options]="row.afterOptions"
+                [ariaLabel]="
+                  'notifications.settings.preference.workoutActive.after' | t
+                "
+                [ngModel]="row.afterMinutes"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="changePreferenceAfter(row.type, $event)"
+              />
+            </ds-stack>
+          }
         </ds-stack>
       }
     </ds-stack>

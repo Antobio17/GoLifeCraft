@@ -61,6 +61,7 @@ export class NotificationModuleSettingsComponent {
       settings.preferences,
       this.module(),
       settings.leadMinutesOptions,
+      settings.afterMinutesOptions,
     );
   });
 
@@ -79,6 +80,10 @@ export class NotificationModuleSettingsComponent {
 
   changePreferenceLead(type: string, leadMinutes: string): void {
     this.editor.changePreferenceLead(type, leadMinutes);
+  }
+
+  changePreferenceAfter(type: string, afterMinutes: string): void {
+    this.editor.changePreferenceAfter(type, afterMinutes);
   }
 
   back(): void {

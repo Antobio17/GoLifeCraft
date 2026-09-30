@@ -11,11 +11,17 @@ final readonly class NotificationPreference
     /** @var int[] */
     public const array LEAD_MINUTES = [15, 30, 60, 120, 180];
 
+    public const int DEFAULT_AFTER_MINUTES = 120;
+
+    /** @var int[] */
+    public const array AFTER_MINUTES = [60, 90, 120, 150, 180, 240];
+
     public function __construct(
         public NotificationType $type,
         public bool $enabled,
         public ?string $time,
         public ?int $leadMinutes,
+        public ?int $afterMinutes,
     ) {
     }
 
@@ -26,11 +32,12 @@ final readonly class NotificationPreference
             enabled: false,
             time: $type->defaultTime(),
             leadMinutes: $type->usesLeadMinutes() ? self::DEFAULT_LEAD_MINUTES : null,
+            afterMinutes: $type->usesAfterMinutes() ? self::DEFAULT_AFTER_MINUTES : null,
         );
     }
 
     /**
-     * @param array{enabled?: mixed, time?: mixed, leadMinutes?: mixed} $raw
+     * @param array{enabled?: mixed, time?: mixed, leadMinutes?: mixed, afterMinutes?: mixed} $raw
      */
     public static function fromArray(NotificationType $type, array $raw): self
     {
@@ -41,6 +48,7 @@ final readonly class NotificationPreference
             enabled: (bool) ($raw['enabled'] ?? $default->enabled),
             time: $type->usesTime() ? (string) ($raw['time'] ?? $default->time) : null,
             leadMinutes: $type->usesLeadMinutes() ? (int) ($raw['leadMinutes'] ?? $default->leadMinutes) : null,
+            afterMinutes: $type->usesAfterMinutes() ? (int) ($raw['afterMinutes'] ?? $default->afterMinutes) : null,
         );
     }
 
@@ -53,10 +61,14 @@ final readonly class NotificationPreference
         if ($this->type->usesLeadMinutes() && !in_array(needle: $this->leadMinutes, haystack: self::LEAD_MINUTES, strict: true)) {
             throw UpdateNotificationSettingsException::invalidLeadMinutes(type: $this->type->value, leadMinutes: (int) $this->leadMinutes);
         }
+
+        if ($this->type->usesAfterMinutes() && !in_array(needle: $this->afterMinutes, haystack: self::AFTER_MINUTES, strict: true)) {
+            throw UpdateNotificationSettingsException::invalidAfterMinutes(type: $this->type->value, afterMinutes: (int) $this->afterMinutes);
+        }
     }
 
     /**
-     * @return array{enabled: bool, time: ?string, leadMinutes: ?int}
+     * @return array{enabled: bool, time: ?string, leadMinutes: ?int, afterMinutes: ?int}
      */
     public function toArray(): array
     {
@@ -64,6 +76,7 @@ final readonly class NotificationPreference
             'enabled' => $this->enabled,
             'time' => $this->time,
             'leadMinutes' => $this->leadMinutes,
+            'afterMinutes' => $this->afterMinutes,
         ];
     }
 

@@ -72,6 +72,28 @@ final class UpdateNotificationSettingsCommandHandlerTest extends TestCase
         ]));
     }
 
+    public function testItStoresHowLongAWorkoutRunsBeforeAskingIfItIsStillGoing(): void
+    {
+        ($this->handler)($this->command(preferences: [
+            ['type' => NotificationType::GymWorkoutStillActive->value, 'enabled' => true, 'afterMinutes' => 180],
+        ]));
+
+        $preference = $this->repository->findCurrent()->preferences[NotificationType::GymWorkoutStillActive->value];
+
+        $this->assertTrue(condition: $preference['enabled']);
+        $this->assertSame(expected: 180, actual: $preference['afterMinutes']);
+        $this->assertNull(actual: $preference['leadMinutes']);
+    }
+
+    public function testItRejectsAWorkoutDelayOutsideTheAllowedOptions(): void
+    {
+        $this->expectException(exception: UpdateNotificationSettingsException::class);
+
+        ($this->handler)($this->command(preferences: [
+            ['type' => NotificationType::GymWorkoutStillActive->value, 'enabled' => true, 'afterMinutes' => 45],
+        ]));
+    }
+
     public function testItRejectsAnInvalidTimezone(): void
     {
         $this->expectException(exception: UpdateNotificationSettingsException::class);
