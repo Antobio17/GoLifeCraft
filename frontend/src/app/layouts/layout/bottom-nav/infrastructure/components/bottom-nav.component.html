@@ -3,6 +3,7 @@
   class="tabbar"
   aria-label="Principal"
   [class.tabbar--drawer-open]="isDrawerOpen()"
+  [class.tabbar--compact]="compact()"
 >
   <ng-content></ng-content>
 
@@ -10,25 +11,29 @@
     class="tabbar__row"
     direction="row"
     align="center"
-    gap="var(--ds-space-1)"
+    gap="var(--ds-space-2)"
   >
-    <ds-scroll-row
-      #track
-      class="tabbar__track"
-      (transitionend)="scrollActiveIntoView()"
-    >
-      @for (item of items; track item.route) {
-        <ds-tab-item
-          [attr.data-testid]="'nav-' + item.route"
-          [routerLink]="item.route"
-          [class.is-active]="activeRoute() === item.route"
-          [icon]="item.icon"
-          [label]="item.labelKey | t"
-          [active]="activeRoute() === item.route && !isDrawerOpen()"
-          [attr.aria-label]="item.labelKey | t"
-        />
-      }
-    </ds-scroll-row>
+    <ds-stack class="tabbar__dock" direction="row" align="center" gap="0">
+      <ds-scroll-row
+        #track
+        class="tabbar__track"
+        (transitionend)="scrollActiveIntoView()"
+      >
+        @for (item of items; track item.route) {
+          <ds-tab-item
+            [attr.data-testid]="'nav-' + item.route"
+            [routerLink]="item.route"
+            [class.is-active]="activeRoute() === item.route"
+            [icon]="item.icon"
+            [label]="item.labelKey | t"
+            [active]="activeRoute() === item.route && !isDrawerOpen()"
+            [iconOnly]="compact()"
+            [live]="liveRoute() === item.route"
+            [attr.aria-label]="item.labelKey | t"
+          />
+        }
+      </ds-scroll-row>
+    </ds-stack>
 
     <ds-tab-item
       data-testid="nav-menu"
@@ -36,6 +41,7 @@
       icon="menu"
       [label]="'navbar.menu' | t"
       [active]="isDrawerOpen()"
+      [iconOnly]="true"
       [attr.aria-label]="'navbar.openMenu' | t"
       (click)="toggleDrawer()"
     />

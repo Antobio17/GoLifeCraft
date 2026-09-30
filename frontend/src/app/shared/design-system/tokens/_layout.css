@@ -11,7 +11,7 @@
   --ds-app-frame-width: 30rem;
   /* Alto real de la tabbar más su separación del borde inferior:
      lo que cualquier capa fija de abajo tiene que dejar libre. */
-  --ds-app-bottom-nav-height: 4.375rem;
+  --ds-app-bottom-nav-height: 4.875rem;
   /* Alto del tag de sesión activa dentro de la tabbar, con su separación
      de la fila de pestañas: 0 mientras no hay entreno en curso. */
   --ds-app-workout-tag-height: 0rem;
@@ -25,7 +25,7 @@
 }
 
 :root:has(.app-frame--with-workout-tag) {
-  --ds-app-workout-tag-height: 2.375rem;
+  --ds-app-workout-tag-height: 2.875rem;
 }
 
 @media (min-width: 768px) {

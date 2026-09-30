@@ -5,9 +5,18 @@ import {
   computed,
   inject,
 } from "@angular/core";
+import { DOCUMENT } from "@angular/common";
 import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
-import { delay, filter, map, startWith } from "rxjs";
+import {
+  animationFrameScheduler,
+  auditTime,
+  delay,
+  filter,
+  fromEvent,
+  map,
+  startWith,
+} from "rxjs";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { TabItemComponent } from "@shared/design-system/tab-item/infrastructure/components/tab-item.component";
 import { ScrollRowComponent } from "@shared/design-system/scroll-row/infrastructure/components/scroll-row.component";
@@ -15,6 +24,8 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { SideDrawerService } from "@layouts/layout/side-drawer/application/services/side-drawer.service";
 import { BottomNavItemsService } from "../../application/services/bottom-nav-items.service";
 import { BottomNavActiveItemService } from "../../application/services/bottom-nav-active-item.service";
+import { BottomNavCollapseService } from "../../application/services/bottom-nav-collapse.service";
+import { ActiveWorkoutService } from "@gym/training/workout/application/services/active-workout.service";
 
 @Component({
   selector: "app-bottom-nav",
@@ -27,12 +38,16 @@ import { BottomNavActiveItemService } from "../../application/services/bottom-na
     ScrollRowComponent,
     StackComponent,
   ],
+  providers: [BottomNavCollapseService],
 })
 export class BottomNavComponent {
   private sideDrawerService = inject(SideDrawerService);
   private bottomNavItemsService = inject(BottomNavItemsService);
   private bottomNavActiveItemService = inject(BottomNavActiveItemService);
+  private bottomNavCollapseService = inject(BottomNavCollapseService);
+  private activeWorkout = inject(ActiveWorkoutService);
   private router = inject(Router);
+  private window = inject(DOCUMENT).defaultView;
 
   @ViewChild("track", { read: ElementRef })
   private track?: ElementRef<HTMLElement>;
@@ -52,7 +67,15 @@ export class BottomNavComponent {
     this.bottomNavActiveItemService.findActiveRoute(this.url(), this.items),
   );
 
+  compact = computed(
+    () => this.bottomNavCollapseService.collapsed() && !this.isDrawerOpen(),
+  );
+
+  liveRoute = computed(() => (this.activeWorkout.isActive() ? "/gym" : ""));
+
   constructor() {
+    this.watchScroll();
+
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -60,7 +83,10 @@ export class BottomNavComponent {
         delay(0),
         takeUntilDestroyed(),
       )
-      .subscribe(() => this.scrollActiveIntoView());
+      .subscribe(() => {
+        this.bottomNavCollapseService.expand();
+        this.scrollActiveIntoView();
+      });
   }
 
   toggleDrawer(): void {
@@ -72,5 +98,19 @@ export class BottomNavComponent {
     if (!active) return;
 
     active.scrollIntoView({ block: "nearest", inline: "center" });
+  }
+
+  private watchScroll(): void {
+    const view = this.window;
+    if (!view) return;
+
+    fromEvent(view, "scroll", { passive: true })
+      .pipe(auditTime(0, animationFrameScheduler), takeUntilDestroyed())
+      .subscribe(() =>
+        this.bottomNavCollapseService.track(
+          view.scrollY,
+          view.document.documentElement.scrollHeight - view.innerHeight,
+        ),
+      );
   }
 }

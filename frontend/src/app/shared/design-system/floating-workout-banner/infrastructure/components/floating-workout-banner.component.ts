@@ -9,7 +9,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       type="button"
       class="workout-banner"
       [class.workout-banner--paused]="paused"
-      [class.workout-banner--embedded]="embedded"
       [attr.aria-label]="goLabel"
       (click)="go.emit()"
     >
@@ -24,7 +23,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 })
 export class FloatingWorkoutBannerComponent {
   @Input() paused = false;
-  @Input() embedded = false;
   @Input() stateLabel = "";
   @Input() elapsedLabel = "";
   @Input() name = "";
