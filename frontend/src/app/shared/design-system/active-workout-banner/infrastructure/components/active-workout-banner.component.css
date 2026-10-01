@@ -14,6 +14,8 @@
   --ds-surface-subtle: var(--ds-sheet-surface-subtle);
   --ds-surface-inset: var(--ds-sheet-surface-inset);
   --ds-surface-hover: var(--ds-sheet-surface-hover);
+  --banner-inner-radius: var(--ds-radius-lg);
+  --banner-padding: var(--ds-space-3);
   position: sticky;
   top: calc(env(safe-area-inset-top) + var(--ds-space-2));
   z-index: 20;
@@ -22,18 +24,23 @@
   background: var(--ds-sheet-bg);
   color: var(--ds-text);
   border: 1px solid var(--ds-sheet-border);
-  border-radius: calc(var(--ds-device-radius) - var(--ds-space-2));
-  padding: var(--ds-space-4);
+  border-radius: calc(var(--banner-inner-radius) + var(--banner-padding));
+  padding: var(--banner-padding);
   box-shadow: var(--ds-sheet-shadow);
   backdrop-filter: var(--ds-sheet-backdrop);
   -webkit-backdrop-filter: var(--ds-sheet-backdrop);
-  will-change: padding;
-  transition: padding var(--ds-dur-4) var(--ds-ease-in-out);
+  will-change: padding, border-radius;
+  transition:
+    padding var(--ds-dur-4) var(--ds-ease-in-out),
+    border-radius var(--ds-dur-4) var(--ds-ease-in-out);
 }
 
 .active-banner--collapsed {
-  padding: var(--ds-space-2) var(--ds-space-2) var(--ds-space-2)
-    var(--ds-space-4);
+  --banner-padding: var(--ds-space-2);
+}
+
+.active-banner--collapsed .active-banner__pulse {
+  margin-left: var(--ds-space-2);
 }
 
 .active-banner__row {
@@ -50,6 +57,7 @@
   background: var(--ds-primary);
   box-shadow: 0 0 0 0.1875rem var(--ds-primary-soft);
   flex: 0 0 auto;
+  transition: margin-left var(--ds-dur-4) var(--ds-ease-in-out);
   animation: workoutPulse 1.4s ease-in-out infinite;
 }
 
@@ -107,8 +115,8 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 1px;
-  padding: var(--ds-space-1-5) var(--ds-space-4);
-  border-radius: var(--ds-radius-pill);
+  padding: var(--ds-space-1-5) var(--ds-space-3);
+  border-radius: var(--banner-inner-radius);
   background: var(--ds-warning-soft);
   color: var(--ds-warning);
   transition:
@@ -149,7 +157,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--ds-space-2);
-    padding: var(--ds-space-2) var(--ds-space-4);
+    padding: var(--ds-space-2) var(--ds-space-3);
   }
 
   .active-banner__rest-value {
@@ -157,7 +165,7 @@
   }
 
   .active-banner--collapsed .active-banner__rest {
-    padding: var(--ds-space-1-5) var(--ds-space-4);
+    padding: var(--ds-space-1-5) var(--ds-space-3);
   }
 
   .active-banner--collapsed .active-banner__rest-value {
@@ -217,7 +225,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--ds-border);
-  border-radius: 50%;
+  border-radius: var(--banner-inner-radius);
   background: var(--ds-surface-inset);
   color: var(--ds-text);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -252,9 +260,9 @@
 }
 
 .active-banner__compact-btn--finish {
-  background: var(--ds-primary);
-  border-color: transparent;
-  color: var(--ds-on-primary);
+  background: var(--ds-primary-soft);
+  border-color: var(--ds-primary-soft-border);
+  color: var(--ds-primary-soft-text);
 }
 
 .active-banner__compact-btn:disabled {
@@ -266,7 +274,7 @@
   display: flex;
   align-items: stretch;
   gap: var(--ds-space-2);
-  margin-top: var(--ds-space-4);
+  margin-top: var(--ds-space-3);
   max-height: 3.5rem;
   opacity: 1;
   overflow: hidden;
@@ -286,18 +294,19 @@
 
 .active-banner__finish {
   appearance: none;
+  box-sizing: border-box;
   flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--ds-space-2);
   height: 3rem;
-  border: none;
-  border-radius: var(--ds-radius-pill);
+  border: 1px solid var(--ds-primary-soft-border);
+  border-radius: var(--banner-inner-radius);
   padding: 0 var(--ds-space-4);
   cursor: pointer;
-  background: var(--ds-primary);
-  color: var(--ds-on-primary);
+  background: var(--ds-primary-soft);
+  color: var(--ds-primary-soft-text);
   font-family: var(--ds-font-body);
   font-weight: 800;
   font-size: var(--ds-text-md);
