@@ -18,6 +18,20 @@ export class MyAvatarService {
     )(),
   );
 
+  readonly displayName = computed(() => {
+    const name = this.authSessionService.getName();
+    if (name) return name;
+
+    const local = this.authSessionService.getUsername().trim().split("@")[0];
+    if (!local) return "";
+    return local.charAt(0).toUpperCase() + local.slice(1);
+  });
+
+  readonly initial = computed(() => {
+    const value = this.displayName().trim();
+    return value ? value.charAt(0).toUpperCase() : "?";
+  });
+
   upload(file: File): Observable<void> {
     return this.aggregateImageService.upload(
       AggregateImageKind.User,

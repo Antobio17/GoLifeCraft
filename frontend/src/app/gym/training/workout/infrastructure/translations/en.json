@@ -47,10 +47,7 @@
       "edit": "Edit"
     },
     "banner": {
-      "active": "Active session",
-      "paused": "Paused",
       "goToSession": "Go to session",
-      "freeActive": "Free workout",
       "goToWorkout": "Go to workout"
     },
     "free": {

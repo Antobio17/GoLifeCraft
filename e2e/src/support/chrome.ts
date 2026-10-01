@@ -6,7 +6,7 @@ export async function hideFixedChrome(page: Page): Promise<void> {
       [data-testid="bottom-nav"],
       [data-testid="drawer-docked"],
       app-active-workout-banner,
-      ds-floating-workout-banner,
+      ds-workout-bubble,
       app-floating-toast {
         visibility: hidden !important;
       }

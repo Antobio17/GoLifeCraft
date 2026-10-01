@@ -56,7 +56,7 @@ export const KITCHEN_ROUTES: Routes = [
           ),
       },
       {
-        path: "nueva",
+        path: "new",
         data: { breadcrumb: "createProduction.breadcrumb" },
         loadComponent: () =>
           import("../components/create-production.component").then(

@@ -6,12 +6,12 @@
   right: 0;
   bottom: 0;
   z-index: 40;
-  view-transition-name: ds-vt-tabbar;
   display: flex;
   justify-content: center;
   padding: 0 var(--ds-space-3)
     calc(var(--ds-space-4) + env(safe-area-inset-bottom));
   pointer-events: none;
+  --tabbar-drop: calc(100% + var(--ds-space-4) + env(safe-area-inset-bottom));
 }
 
 @media (display-mode: standalone) {
@@ -20,52 +20,70 @@
   }
 }
 
+:host-context(:root:active-view-transition) {
+  view-transition-name: ds-vt-tabbar;
+}
+
+/* Sólo transform y opacity: van en el compositor y no repintan el
+   cristal ni recalculan layout mientras la barra entra o sale. */
 .tabbar {
-  pointer-events: auto;
   width: 100%;
   max-width: var(--ds-app-frame-width, 30rem);
   display: flex;
   flex-direction: column;
-  gap: var(--ds-space-1-5);
-  padding: var(--ds-space-2) var(--ds-space-1-5);
-  background: color-mix(in srgb, var(--ds-surface) 86%, transparent);
-  border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-2xl);
-  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.16);
-  backdrop-filter: blur(1rem);
-  -webkit-backdrop-filter: blur(1rem);
+  align-items: center;
+  gap: var(--ds-space-2);
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform var(--ds-dur-4) var(--ds-ease-out),
+    opacity var(--ds-dur-3) var(--ds-ease-out);
+}
+
+.tabbar > * {
+  pointer-events: auto;
+}
+
+.tabbar--hidden {
+  transform: translate3d(0, var(--tabbar-drop), 0);
+  opacity: 0;
+  transition:
+    transform calc(var(--ds-dur-4) * 1.6) var(--ds-ease-in-out),
+    opacity calc(var(--ds-dur-4) * 1.6) var(--ds-ease-in);
+}
+
+.tabbar--hidden > * {
+  pointer-events: none;
 }
 
 .tabbar__row {
-  width: 100%;
+  max-width: 100%;
 }
 
-.tabbar__track {
-  flex: 1 1 auto;
-  scroll-padding-inline: var(--ds-space-6);
+.tabbar__pill {
+  min-width: 0;
+  padding: var(--ds-space-1);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-glass-bg);
+  border: 1px solid var(--ds-border);
+  box-shadow: var(--ds-glass-shadow);
+  backdrop-filter: var(--ds-glass-blur);
+  -webkit-backdrop-filter: var(--ds-glass-blur);
 }
 
-.tabbar__track ds-tab-item {
-  flex: 1 0 auto;
-  min-width: 3.25rem;
-  scroll-snap-align: center;
+.tabbar__pill ds-tab-item {
+  flex: 0 1 3.25rem;
+  min-width: 2.5rem;
 }
 
-.tabbar__pinned {
-  flex: 0 0 auto;
-  min-width: 3.25rem;
-  position: relative;
-  padding-left: var(--ds-space-1);
-}
+@media (prefers-reduced-motion: reduce) {
+  .tabbar {
+    transition: opacity var(--ds-dur-2) linear;
+  }
 
-.tabbar__pinned::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.375rem;
-  bottom: 0.375rem;
-  width: 1px;
-  background: var(--ds-border);
+  .tabbar--hidden {
+    transform: none;
+  }
 }
 
 /* En escritorio no hay tabbar: el dock sólo sostiene el tag de sesión
@@ -76,17 +94,17 @@
     padding: 0 var(--ds-space-5);
   }
 
-  .tabbar {
-    pointer-events: none;
-    padding: 0;
-    background: none;
-    border: none;
-    box-shadow: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+  .tabbar,
+  .tabbar--hidden {
+    transform: none;
+    opacity: 1;
+  }
+
+  .tabbar__pill {
+    display: none;
   }
 
   .tabbar__row {
-    display: none;
+    gap: 0;
   }
 }

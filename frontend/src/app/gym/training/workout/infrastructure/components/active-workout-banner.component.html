@@ -1,11 +1,8 @@
 @if (visible()) {
-  <ds-floating-workout-banner
+  <ds-workout-bubble
     [paused]="activeWorkout.paused()"
-    [embedded]="embedded()"
-    [stateLabel]="stateKey() | t"
     [elapsedLabel]="activeWorkout.elapsedLabel()"
-    [name]="activeWorkout.activeName()"
-    [goLabel]="goKey() | t"
+    [label]="goKey() | t"
     (go)="goToSession()"
   />
 }

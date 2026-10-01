@@ -22,7 +22,7 @@ export class DrawerNavSectionsService {
           this.route("diary", "navbar.diary", "/diary"),
           this.route("menuboard", "navbar.menus", "/menus"),
           this.route("chefHat", "navbar.recipes", "/recipes"),
-          this.route("flame", "navbar.kitchen", "/cocina"),
+          this.route("flame", "navbar.kitchen", "/kitchen"),
           this.route("cart", "navbar.list", "/shopping-list"),
           this.route("save", "navbar.tickets", "/tickets", {
             sub: true,

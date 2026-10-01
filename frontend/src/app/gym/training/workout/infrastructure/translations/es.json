@@ -47,10 +47,7 @@
       "edit": "Editar"
     },
     "banner": {
-      "active": "Sesión activa",
-      "paused": "En pausa",
       "goToSession": "Ir a la sesión",
-      "freeActive": "Entreno libre",
       "goToWorkout": "Ir al entreno"
     },
     "free": {
