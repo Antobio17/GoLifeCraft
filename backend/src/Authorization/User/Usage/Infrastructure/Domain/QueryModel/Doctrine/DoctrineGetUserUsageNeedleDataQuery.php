@@ -4,7 +4,9 @@ namespace Authorization\User\Usage\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Authorization\User\Usage\Domain\QueryModel\Dto\GetUserUsageResult;
 use Authorization\User\Usage\Domain\QueryModel\GetUserUsageNeedleDataQuery;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\TenantReaderConnectionFactory;
 
 final readonly class DoctrineGetUserUsageNeedleDataQuery implements GetUserUsageNeedleDataQuery
@@ -14,6 +16,10 @@ final readonly class DoctrineGetUserUsageNeedleDataQuery implements GetUserUsage
     private const string EVENT_LOG_TABLE = 'domain_event_log';
     private const string WORKOUT_TABLE = 'training_workout';
     private const string COMPLETED_STATUS = 'completed';
+
+    private const array SYSTEM_EVENT_NAMES = [
+        'golifecraft.notification.event.1.notification.delivered',
+    ];
 
     private const array METRIC_TABLES = [
         'articles' => 'article',
@@ -255,10 +261,14 @@ final readonly class DoctrineGetUserUsageNeedleDataQuery implements GetUserUsage
         }
 
         $row = $connection
-            ->executeQuery(sql: sprintf(
-                'SELECT COUNT(*) AS total, MIN(occurred_on) AS first_event, MAX(occurred_on) AS last_event FROM `%s`',
-                self::EVENT_LOG_TABLE,
-            ))
+            ->executeQuery(
+                sql: sprintf(
+                    'SELECT COUNT(*) AS total, MIN(occurred_on) AS first_event, MAX(occurred_on) AS last_event FROM `%s` WHERE event_name NOT IN (?)',
+                    self::EVENT_LOG_TABLE,
+                ),
+                params: [self::SYSTEM_EVENT_NAMES],
+                types: [ArrayParameterType::STRING],
+            )
             ->fetchAssociative();
 
         return [
@@ -325,10 +335,11 @@ final readonly class DoctrineGetUserUsageNeedleDataQuery implements GetUserUsage
         $rows = $connection
             ->executeQuery(
                 sql: sprintf(
-                    'SELECT DATE(occurred_on) AS bucket, COUNT(*) AS events FROM `%s` WHERE occurred_on >= ? GROUP BY bucket',
+                    'SELECT DATE(occurred_on) AS bucket, COUNT(*) AS events FROM `%s` WHERE occurred_on >= ? AND event_name NOT IN (?) GROUP BY bucket',
                     self::EVENT_LOG_TABLE,
                 ),
-                params: [array_key_first($buckets).' 00:00:00'],
+                params: [array_key_first($buckets).' 00:00:00', self::SYSTEM_EVENT_NAMES],
+                types: [ParameterType::STRING, ArrayParameterType::STRING],
             )
             ->fetchAllAssociative();
 
@@ -356,10 +367,11 @@ final readonly class DoctrineGetUserUsageNeedleDataQuery implements GetUserUsage
         $rows = $connection
             ->executeQuery(
                 sql: sprintf(
-                    "SELECT DATE_FORMAT(occurred_on, '%%Y-%%m') AS bucket, COUNT(*) AS events FROM `%s` WHERE occurred_on >= ? GROUP BY bucket",
+                    "SELECT DATE_FORMAT(occurred_on, '%%Y-%%m') AS bucket, COUNT(*) AS events FROM `%s` WHERE occurred_on >= ? AND event_name NOT IN (?) GROUP BY bucket",
                     self::EVENT_LOG_TABLE,
                 ),
-                params: [array_key_first($buckets).'-01 00:00:00'],
+                params: [array_key_first($buckets).'-01 00:00:00', self::SYSTEM_EVENT_NAMES],
+                types: [ParameterType::STRING, ArrayParameterType::STRING],
             )
             ->fetchAllAssociative();
 
