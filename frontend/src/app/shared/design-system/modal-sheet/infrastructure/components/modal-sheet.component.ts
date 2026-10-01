@@ -140,12 +140,18 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         width: 100%;
         max-width: 30rem;
         max-height: var(--ds-sheet-max);
-        background: var(--ds-surface-sheet);
-        border: 1px solid var(--ds-border);
+        --ds-surface: var(--ds-sheet-surface);
+        --ds-surface-raised: var(--ds-sheet-surface-raised);
+        --ds-surface-subtle: var(--ds-sheet-surface-subtle);
+        --ds-surface-inset: var(--ds-sheet-surface-inset);
+        --ds-surface-hover: var(--ds-sheet-surface-hover);
+        --ds-glass-bg: var(--ds-sheet-header-bg);
+        background: var(--ds-sheet-bg);
+        border: 1px solid var(--ds-sheet-border);
         border-radius: var(--ds-sheet-radius);
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.08),
-          0 1.5rem 3.75rem -0.75rem rgba(0, 0, 0, 0.4);
+        box-shadow: var(--ds-sheet-shadow);
+        backdrop-filter: var(--ds-sheet-backdrop);
+        -webkit-backdrop-filter: var(--ds-sheet-backdrop);
         overflow: hidden;
         will-change: transform;
         animation: ds-sheet-up var(--ds-dur-4) var(--ds-ease-spring);
@@ -178,8 +184,17 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         top: 0;
         z-index: 2;
         margin: 0 calc(var(--ds-space-4) * -1);
+      }
+      .ds-sheet__header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--ds-glass-bg);
+        box-shadow: 0 1px 0 var(--ds-border);
         backdrop-filter: var(--ds-glass-blur);
         -webkit-backdrop-filter: var(--ds-glass-blur);
+        opacity: 0;
         animation: ds-sheet-header-glass linear both;
         animation-timeline: scroll(nearest);
         animation-range: 0 var(--ds-space-4);
@@ -274,13 +289,8 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         }
       }
       @keyframes ds-sheet-header-glass {
-        from {
-          background: transparent;
-          box-shadow: none;
-        }
         to {
-          background: var(--ds-glass-bg);
-          box-shadow: 0 1px 0 var(--ds-border);
+          opacity: 1;
         }
       }
       @media (min-width: 640px) {

@@ -86,6 +86,18 @@
     0 0.625rem 1.875rem -0.625rem rgba(0, 0, 0, 0.35),
     0 0.125rem 0.375rem -0.125rem rgba(0, 0, 0, 0.12);
   --ds-glass-blur: blur(1.125rem) saturate(1.8);
+  --ds-sheet-bg: var(--ds-surface-sheet);
+  --ds-sheet-border: var(--ds-border);
+  --ds-sheet-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 1.5rem 3.75rem -0.75rem rgba(0, 0, 0, 0.4);
+  --ds-sheet-backdrop: none;
+  --ds-sheet-surface: var(--ds-surface);
+  --ds-sheet-surface-raised: var(--ds-surface-raised);
+  --ds-sheet-surface-subtle: var(--ds-surface-subtle);
+  --ds-sheet-surface-inset: var(--ds-surface-inset);
+  --ds-sheet-surface-hover: var(--ds-surface-hover);
+  --ds-sheet-header-bg: var(--ds-glass-bg);
   --ds-primary-soft: var(--ds-green-50);
   --ds-primary-soft-hover: var(--ds-green-100);
   --ds-primary-soft-text: var(--ds-green-700);
@@ -201,6 +213,23 @@
   --ds-glass-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0.625rem 1.875rem -0.625rem rgba(0, 0, 0, 0.6);
+  --ds-sheet-bg:
+    radial-gradient(110% 55% at 0% 0%, rgba(143, 250, 152, 0.13), transparent 70%),
+    radial-gradient(80% 45% at 100% 55%, rgba(122, 90, 18, 0.16), transparent 70%),
+    radial-gradient(90% 45% at 100% 100%, rgba(107, 35, 64, 0.2), transparent 70%),
+    radial-gradient(80% 45% at 0% 100%, rgba(31, 79, 122, 0.18), transparent 70%),
+    rgba(24, 28, 26, 0.78);
+  --ds-sheet-border: rgba(255, 255, 255, 0.12);
+  --ds-sheet-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 1.5rem 3.75rem -0.75rem rgba(0, 0, 0, 0.7);
+  --ds-sheet-backdrop: blur(2.25rem) saturate(1.7);
+  --ds-sheet-surface: rgba(255, 255, 255, 0.07);
+  --ds-sheet-surface-raised: rgba(255, 255, 255, 0.08);
+  --ds-sheet-surface-subtle: rgba(255, 255, 255, 0.05);
+  --ds-sheet-surface-inset: rgba(255, 255, 255, 0.08);
+  --ds-sheet-surface-hover: rgba(255, 255, 255, 0.1);
+  --ds-sheet-header-bg: rgba(24, 28, 26, 0.66);
   --ds-primary-soft: rgba(143, 250, 152, 0.14);
   --ds-primary-soft-hover: rgba(143, 250, 152, 0.2);
   --ds-primary-soft-text: var(--ds-green-200);
