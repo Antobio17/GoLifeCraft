@@ -9,28 +9,31 @@
 }
 
 .active-banner {
+  --ds-surface: var(--ds-sheet-surface);
+  --ds-surface-raised: var(--ds-sheet-surface-raised);
+  --ds-surface-subtle: var(--ds-sheet-surface-subtle);
+  --ds-surface-inset: var(--ds-sheet-surface-inset);
+  --ds-surface-hover: var(--ds-sheet-surface-hover);
   position: sticky;
-  top: calc(env(safe-area-inset-top) + 0.5rem);
+  top: calc(env(safe-area-inset-top) + var(--ds-space-2));
   z-index: 20;
   display: flex;
   flex-direction: column;
-  background: var(--ds-surface);
+  background: var(--ds-sheet-bg);
   color: var(--ds-text);
-  border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-xl);
-  padding: var(--ds-space-3) var(--ds-space-4);
-  box-shadow: var(--ds-shadow-card);
-  will-change: padding, border-radius;
-  transition:
-    padding var(--ds-dur-4) var(--ds-ease-in-out),
-    border-radius var(--ds-dur-4) var(--ds-ease-in-out),
-    box-shadow var(--ds-dur-4) var(--ds-ease-out);
+  border: 1px solid var(--ds-sheet-border);
+  border-radius: calc(var(--ds-device-radius) - var(--ds-space-2));
+  padding: var(--ds-space-4);
+  box-shadow: var(--ds-sheet-shadow);
+  backdrop-filter: var(--ds-sheet-backdrop);
+  -webkit-backdrop-filter: var(--ds-sheet-backdrop);
+  will-change: padding;
+  transition: padding var(--ds-dur-4) var(--ds-ease-in-out);
 }
 
 .active-banner--collapsed {
-  padding: var(--ds-space-2) var(--ds-space-3);
-  border-radius: var(--ds-radius-lg);
-  box-shadow: var(--ds-shadow-card);
+  padding: var(--ds-space-2) var(--ds-space-2) var(--ds-space-2)
+    var(--ds-space-4);
 }
 
 .active-banner__row {
@@ -45,13 +48,15 @@
   height: 0.5625rem;
   border-radius: 50%;
   background: var(--ds-primary);
+  box-shadow: 0 0 0 0.1875rem var(--ds-primary-soft);
   flex: 0 0 auto;
   animation: workoutPulse 1.4s ease-in-out infinite;
 }
 
 .active-banner--paused .active-banner__pulse {
   animation: none;
-  opacity: 0.5;
+  background: var(--ds-text-meta);
+  box-shadow: none;
 }
 
 @keyframes workoutPulse {
@@ -96,13 +101,14 @@
 }
 
 .active-banner__rest {
+  box-sizing: border-box;
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 1px;
-  padding: var(--ds-space-1) var(--ds-space-3);
-  border-radius: var(--ds-radius-md);
+  padding: var(--ds-space-1-5) var(--ds-space-4);
+  border-radius: var(--ds-radius-pill);
   background: var(--ds-warning-soft);
   color: var(--ds-warning);
   transition:
@@ -143,8 +149,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--ds-space-2);
-    padding: var(--ds-space-2) var(--ds-space-3);
-    border-radius: var(--ds-radius-lg);
+    padding: var(--ds-space-2) var(--ds-space-4);
   }
 
   .active-banner__rest-value {
@@ -152,8 +157,7 @@
   }
 
   .active-banner--collapsed .active-banner__rest {
-    padding: var(--ds-space-1) var(--ds-space-3);
-    border-radius: var(--ds-radius-md);
+    padding: var(--ds-space-1-5) var(--ds-space-4);
   }
 
   .active-banner--collapsed .active-banner__rest-value {
@@ -199,36 +203,58 @@
 }
 
 .active-banner--collapsed .active-banner__compact-actions {
-  max-width: 8.75rem;
+  max-width: 9.5rem;
   opacity: 1;
   pointer-events: auto;
 }
 
-.active-banner__compact-btn {
-  width: 2.125rem;
-  height: 2.125rem;
-  border: none;
-  border-radius: var(--ds-radius-md);
+.active-banner__compact-btn,
+.active-banner__btn {
+  appearance: none;
+  box-sizing: border-box;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  flex: 0 0 auto;
-}
-
-.active-banner__compact-btn--soft {
+  border: 1px solid var(--ds-border);
+  border-radius: 50%;
   background: var(--ds-surface-inset);
   color: var(--ds-text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--ds-dur-1) var(--ds-ease-out);
 }
 
-.active-banner__compact-btn--stop {
+.active-banner__compact-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.active-banner__compact-btn:active:not(:disabled),
+.active-banner__btn:active,
+.active-banner__finish:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.active-banner__compact-btn:focus-visible,
+.active-banner__btn:focus-visible,
+.active-banner__finish:focus-visible {
+  outline: 2px solid var(--ds-border-focus);
+  outline-offset: 2px;
+}
+
+.active-banner__compact-btn--stop,
+.active-banner__btn--stop {
   background: var(--ds-danger-soft);
+  border-color: transparent;
   color: var(--ds-danger-soft-text);
 }
 
 .active-banner__compact-btn--finish {
-  background: var(--ds-primary-soft);
-  color: var(--ds-primary-soft-text);
+  background: var(--ds-primary);
+  border-color: transparent;
+  color: var(--ds-on-primary);
 }
 
 .active-banner__compact-btn:disabled {
@@ -240,7 +266,7 @@
   display: flex;
   align-items: stretch;
   gap: var(--ds-space-2);
-  margin-top: var(--ds-space-3);
+  margin-top: var(--ds-space-4);
   max-height: 3.5rem;
   opacity: 1;
   overflow: hidden;
@@ -259,20 +285,24 @@
 }
 
 .active-banner__finish {
+  appearance: none;
   flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--ds-space-2);
+  height: 3rem;
   border: none;
-  border-radius: var(--ds-radius-lg);
-  padding: var(--ds-space-3);
+  border-radius: var(--ds-radius-pill);
+  padding: 0 var(--ds-space-4);
   cursor: pointer;
-  background: var(--ds-primary-soft);
-  color: var(--ds-primary-soft-text);
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
   font-family: var(--ds-font-body);
   font-weight: 800;
   font-size: var(--ds-text-md);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--ds-dur-1) var(--ds-ease-out);
 }
 
 .active-banner__finish:disabled {
@@ -281,26 +311,8 @@
 }
 
 .active-banner__btn {
-  flex: 0 0 auto;
-  box-sizing: border-box;
   width: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: var(--ds-radius-lg);
-  padding: var(--ds-space-3);
-  cursor: pointer;
-}
-
-.active-banner__btn--soft {
-  background: var(--ds-surface-inset);
-  color: var(--ds-text);
-}
-
-.active-banner__btn--stop {
-  background: var(--ds-danger-soft);
-  color: var(--ds-danger-soft-text);
+  height: 3rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
