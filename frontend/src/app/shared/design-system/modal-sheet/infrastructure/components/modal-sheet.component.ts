@@ -338,8 +338,10 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
   ],
 })
 export class ModalSheetComponent implements OnDestroy {
-  private static readonly DISMISS_RATIO = 0.4;
-  private static readonly DISMISS_VELOCITY = 0.5;
+  private static readonly DISMISS_RATIO = 0.3;
+  private static readonly DISMISS_VELOCITY = 0.4;
+  private static readonly FLING_MIN_OFFSET = 16;
+  private static readonly VELOCITY_WINDOW_MS = 100;
   private static readonly CLOSE_FALLBACK_MS = 900;
 
   private renderer = inject(Renderer2);
@@ -477,93 +479,195 @@ export class ModalSheetComponent implements OnDestroy {
 
     let startY = 0;
     let lastY = 0;
-    let lastTime = 0;
-    let velocity = 0;
     let height = 0;
     let dragging = false;
+    let touchStart: { x: number; y: number } | null = null;
+    let samples: { y: number; time: number }[] = [];
 
-    const down = fromEvent<PointerEvent>(grab, "pointerdown");
-    const move = fromEvent<PointerEvent>(grab, "pointermove");
-    const up = merge(
-      fromEvent<PointerEvent>(grab, "pointerup"),
-      fromEvent<PointerEvent>(grab, "pointercancel"),
-    );
+    const canDrag = () => !this.dialogLayout() && !this.closing();
+
+    const begin = (y: number) => {
+      dragging = true;
+      startY = lastY = y;
+      samples = [{ y, time: performance.now() }];
+      height = sheet.offsetHeight;
+      sheet.style.transition = "none";
+      this.overlayNode?.setAttribute("data-dragging", "");
+    };
+
+    const follow = (y: number) => {
+      const now = performance.now();
+      lastY = y;
+      samples = [...samples, { y, time: now }].filter(
+        (sample) => now - sample.time <= ModalSheetComponent.VELOCITY_WINDOW_MS,
+      );
+
+      const offset = this.resist(y - startY);
+      sheet.style.transform = `translate3d(0, ${offset}px, 0)`;
+      this.overlayNode?.style.setProperty(
+        "--ds-sheet-scrim",
+        String(1 - Math.max(0, offset) / height),
+      );
+    };
+
+    const release = () => {
+      dragging = false;
+      this.overlayNode?.removeAttribute("data-dragging");
+
+      const offset = lastY - startY;
+      const oldest = samples[0];
+      const elapsed = performance.now() - (oldest?.time ?? 0);
+      const velocity = oldest ? (lastY - oldest.y) / Math.max(1, elapsed) : 0;
+      const flung =
+        velocity > ModalSheetComponent.DISMISS_VELOCITY &&
+        offset > ModalSheetComponent.FLING_MIN_OFFSET;
+      const pulled = offset > height * ModalSheetComponent.DISMISS_RATIO;
+
+      if (!flung && !pulled) {
+        this.settle(sheet);
+        return;
+      }
+
+      this.zone.run(() => this.closed.emit());
+      afterNextRender(
+        () => {
+          if (this.closing()) {
+            return;
+          }
+
+          this.settle(sheet);
+        },
+        { injector: this.injector },
+      );
+    };
 
     this.gestures = new Subscription();
 
     this.gestures.add(
-      down.subscribe((event) => {
-        if (this.dialogLayout() || this.closing()) {
+      fromEvent<PointerEvent>(grab, "pointerdown").subscribe((event) => {
+        if (!canDrag() || (event.target as Element).closest("button")) {
           return;
         }
 
-        if ((event.target as Element).closest("button")) {
-          return;
-        }
-
-        dragging = true;
-        startY = lastY = event.clientY;
-        lastTime = performance.now();
-        velocity = 0;
-        height = sheet.offsetHeight;
         grab.setPointerCapture(event.pointerId);
-        sheet.style.transition = "none";
-        this.overlayNode?.setAttribute("data-dragging", "");
+        begin(event.clientY);
       }),
     );
 
     this.gestures.add(
-      move.subscribe((event) => {
+      fromEvent<PointerEvent>(grab, "pointermove").subscribe((event) => {
         if (!dragging) {
           return;
         }
 
-        const now = performance.now();
-        velocity = (event.clientY - lastY) / Math.max(1, now - lastTime);
-        lastY = event.clientY;
-        lastTime = now;
-
-        const offset = this.resist(event.clientY - startY);
-        sheet.style.transform = `translate3d(0, ${offset}px, 0)`;
-        this.overlayNode?.style.setProperty(
-          "--ds-sheet-scrim",
-          String(1 - Math.max(0, offset) / height),
-        );
+        follow(event.clientY);
       }),
     );
 
     this.gestures.add(
-      up.subscribe(() => {
+      merge(
+        fromEvent<PointerEvent>(grab, "pointerup"),
+        fromEvent<PointerEvent>(grab, "pointercancel"),
+      ).subscribe(() => {
         if (!dragging) {
           return;
         }
 
-        dragging = false;
-        this.overlayNode?.removeAttribute("data-dragging");
+        release();
+      }),
+    );
 
-        const offset = lastY - startY;
-        const flung =
-          velocity > ModalSheetComponent.DISMISS_VELOCITY && offset > 24;
-        const pulled = offset > height * ModalSheetComponent.DISMISS_RATIO;
+    this.gestures.add(
+      fromEvent<TouchEvent>(sheet, "touchstart", { passive: true }).subscribe(
+        (event) => {
+          touchStart = null;
+          const touch = event.touches[0];
+          if (event.touches.length !== 1 || !touch || !canDrag()) {
+            return;
+          }
 
-        if (!flung && !pulled) {
-          this.settle(sheet);
+          if (!this.claimsContentDrag(sheet, event.target as Element)) {
+            return;
+          }
+
+          touchStart = { x: touch.clientX, y: touch.clientY };
+        },
+      ),
+    );
+
+    this.gestures.add(
+      fromEvent<TouchEvent>(sheet, "touchmove", { passive: false }).subscribe(
+        (event) => {
+          const touch = event.touches[0];
+          if (!touch) {
+            return;
+          }
+
+          if (dragging && touchStart) {
+            event.preventDefault();
+            follow(touch.clientY);
+            return;
+          }
+
+          if (!touchStart) {
+            return;
+          }
+
+          const dx = touch.clientX - touchStart.x;
+          const dy = touch.clientY - touchStart.y;
+          if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
+            return;
+          }
+
+          const pullsDown = dy > 0 && dy >= Math.abs(dx);
+          const owned = event.defaultPrevented || !event.cancelable;
+          if (!pullsDown || owned || !canDrag()) {
+            touchStart = null;
+            return;
+          }
+
+          event.preventDefault();
+          begin(touchStart.y);
+          follow(touch.clientY);
+        },
+      ),
+    );
+
+    this.gestures.add(
+      merge(
+        fromEvent<TouchEvent>(sheet, "touchend"),
+        fromEvent<TouchEvent>(sheet, "touchcancel"),
+      ).subscribe(() => {
+        const wasDragging = dragging && touchStart !== null;
+        touchStart = null;
+        if (!wasDragging) {
           return;
         }
 
-        this.zone.run(() => this.closed.emit());
-        afterNextRender(
-          () => {
-            if (this.closing()) {
-              return;
-            }
-
-            this.settle(sheet);
-          },
-          { injector: this.injector },
-        );
+        release();
       }),
     );
+  }
+
+  private claimsContentDrag(sheet: HTMLElement, target: Element): boolean {
+    if (target.closest(".ds-sheet__grab, input, textarea, select")) {
+      return false;
+    }
+
+    if (target.closest("[contenteditable], [data-sheet-no-drag]")) {
+      return false;
+    }
+
+    let node: Element | null = target;
+    while (node && node !== sheet) {
+      if (node.scrollTop > 0) {
+        return false;
+      }
+
+      node = node.parentElement;
+    }
+
+    return true;
   }
 
   private resist(offset: number): number {
