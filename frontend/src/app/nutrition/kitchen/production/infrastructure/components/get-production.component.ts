@@ -199,11 +199,11 @@ export class GetProductionComponent {
   }
 
   onBack(): void {
-    this.backNavigation.back(["/cocina"]);
+    this.backNavigation.back(["/kitchen"]);
   }
 
   onOpen(item: ProductionItemView): void {
-    this.router.navigate(["/cocina", this.id(), item.itemId]);
+    this.router.navigate(["/kitchen", this.id(), item.itemId]);
   }
 
   onDiscard(): void {

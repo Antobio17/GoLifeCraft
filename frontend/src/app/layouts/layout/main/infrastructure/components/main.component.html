@@ -1,8 +1,4 @@
-<div
-  class="app-frame"
-  [class.app-frame--with-tabbar]="showTabBar()"
-  [class.app-frame--with-workout-tag]="showTabBar() && workoutTagVisible()"
->
+<div class="app-frame" [class.app-frame--with-tabbar]="showTabBar()">
   <app-floating-toast></app-floating-toast>
 
   @if (impersonation(); as active) {

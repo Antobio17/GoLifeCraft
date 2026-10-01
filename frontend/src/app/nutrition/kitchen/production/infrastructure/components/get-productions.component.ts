@@ -99,11 +99,11 @@ export class GetProductionsComponent extends AbstractListPageComponent<Productio
   }
 
   onCreate(): void {
-    this.router.navigate(["/cocina/nueva"]);
+    this.router.navigate(["/kitchen/new"]);
   }
 
   onOpen(production: ProductionListItem): void {
-    this.router.navigate(["/cocina", production.id]);
+    this.router.navigate(["/kitchen", production.id]);
   }
 
   private translate(key: string, params: Record<string, unknown>): string {

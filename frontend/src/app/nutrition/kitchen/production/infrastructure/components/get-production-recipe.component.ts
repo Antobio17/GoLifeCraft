@@ -620,7 +620,7 @@ export class GetProductionRecipeComponent {
   }
 
   onBack(): void {
-    this.backNavigation.back(["/cocina", this.id()]);
+    this.backNavigation.back(["/kitchen", this.id()]);
   }
 
   onOpenRecipe(): void {

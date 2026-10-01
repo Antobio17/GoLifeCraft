@@ -242,7 +242,7 @@ export class CreateProductionComponent {
   }
 
   onBack(): void {
-    this.backNavigation.back(["/cocina"]);
+    this.backNavigation.back(["/kitchen"]);
   }
 
   onSubmit(): void {
@@ -260,7 +260,7 @@ export class CreateProductionComponent {
       .subscribe({
         next: () => {
           this.saving.set(false);
-          this.router.navigate(["/cocina"]);
+          this.router.navigate(["/kitchen"]);
         },
         error: () => this.saving.set(false),
       });

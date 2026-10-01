@@ -1,14 +1,3 @@
 :host {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  pointer-events: none;
-}
-
-:host:empty {
-  display: none;
-}
-
-ds-floating-workout-banner {
-  pointer-events: auto;
+  display: contents;
 }
