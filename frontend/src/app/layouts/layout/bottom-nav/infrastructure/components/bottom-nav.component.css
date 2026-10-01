@@ -8,57 +8,11 @@
   z-index: 40;
   display: flex;
   justify-content: center;
-  padding: 0 var(--ds-space-3)
-    calc(var(--ds-space-4) + env(safe-area-inset-bottom));
   pointer-events: none;
-  --tabbar-glass: color-mix(in srgb, var(--ds-surface) 52%, transparent);
-  --tabbar-sheen: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.14) 0%,
-    rgba(255, 255, 255, 0.04) 40%,
-    rgba(255, 255, 255, 0) 62%,
-    rgba(255, 255, 255, 0.03) 100%
-  );
-  --tabbar-rim: rgba(255, 255, 255, 0.14);
-  --tabbar-shadow:
-    0 1.25rem 2.75rem rgba(0, 0, 0, 0.38),
-    0 0.25rem 0.75rem rgba(0, 0, 0, 0.18),
-    0 0 2.25rem color-mix(in srgb, var(--ds-primary) 12%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -0.75rem 1.5rem rgba(0, 0, 0, 0.14);
-  --tabbar-shadow-compact:
-    0 0.625rem 1.5rem rgba(0, 0, 0, 0.3),
-    0 0 1.5rem color-mix(in srgb, var(--ds-primary) 8%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -0.5rem 1rem rgba(0, 0, 0, 0.12);
 }
 
 :host-context(:root:active-view-transition) {
   view-transition-name: ds-vt-tabbar;
-}
-
-:host::before {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * var(--ds-space-8)) 0 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--ds-bg) 55%, transparent),
-    transparent
-  );
-  backdrop-filter: blur(0.625rem);
-  -webkit-backdrop-filter: blur(0.625rem);
-  mask-image: linear-gradient(to top, #000 40%, transparent);
-  -webkit-mask-image: linear-gradient(to top, #000 40%, transparent);
-}
-
-@media (display-mode: standalone) {
-  :host {
-    padding-bottom: var(--ds-space-4);
-  }
 }
 
 .tabbar {
@@ -68,58 +22,58 @@
   display: flex;
   flex-direction: column;
   gap: var(--ds-space-2);
-  transform-origin: 50% 100%;
-  transition: transform var(--ds-dur-4) var(--ds-ease-spring);
-}
-
-.tabbar--compact {
-  transform: translateY(var(--ds-space-4)) scale(0.88);
+  padding: 0 var(--ds-space-3);
+  box-sizing: border-box;
   transition: transform var(--ds-dur-3) var(--ds-ease-out);
 }
 
+.tabbar--compact {
+  transform: translateY(1.125rem);
+  transition-duration: var(--ds-dur-2);
+}
+
 .tabbar__row {
-  width: 100%;
+  margin: 0 calc(-1 * var(--ds-space-3));
+  padding: 0 var(--ds-space-1)
+    calc(var(--ds-space-2) + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--ds-surface) 92%, transparent);
+  border-top: 1px solid var(--ds-border);
+  backdrop-filter: blur(1rem) saturate(1.5);
+  -webkit-backdrop-filter: blur(1rem) saturate(1.5);
 }
 
-.tabbar__dock,
-.tabbar__pinned {
-  box-sizing: border-box;
-  background: var(--tabbar-sheen), var(--tabbar-glass);
-  border: 1px solid var(--tabbar-rim);
-  box-shadow: var(--tabbar-shadow);
-  backdrop-filter: blur(1.5rem) saturate(1.8) brightness(1.12);
-  -webkit-backdrop-filter: blur(1.5rem) saturate(1.8) brightness(1.12);
-  transition: box-shadow var(--ds-dur-3) var(--ds-ease-out);
-}
-
-.tabbar--compact .tabbar__dock,
-.tabbar--compact .tabbar__pinned {
-  box-shadow: var(--tabbar-shadow-compact);
-}
-
-.tabbar__dock {
-  flex: 1 1 auto;
-  padding: var(--ds-space-1-5);
-  border-radius: var(--ds-radius-pill);
+@media (display-mode: standalone) {
+  .tabbar__row {
+    padding-bottom: var(--ds-space-4);
+  }
 }
 
 .tabbar__track {
   flex: 1 1 auto;
-  --ds-scroll-row-gap: var(--ds-space-1);
+  --ds-scroll-row-gap: 0;
   scroll-padding-inline: var(--ds-space-6);
 }
 
 .tabbar__track ds-tab-item {
   flex: 1 0 auto;
-  min-width: 3rem;
+  min-width: 4rem;
   scroll-snap-align: center;
 }
 
 .tabbar__pinned {
   flex: 0 0 auto;
-  width: calc(3rem + 2 * var(--ds-space-1-5) + 2px);
-  padding: var(--ds-space-1-5);
-  border-radius: var(--ds-radius-pill);
+  min-width: 4.25rem;
+  position: relative;
+}
+
+.tabbar__pinned::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.875rem;
+  height: 1.75rem;
+  width: 1px;
+  background: var(--ds-border);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -140,11 +94,8 @@
   .tabbar,
   .tabbar--compact {
     pointer-events: none;
+    padding: 0;
     transform: none;
-  }
-
-  :host::before {
-    content: none;
   }
 
   .tabbar__row {

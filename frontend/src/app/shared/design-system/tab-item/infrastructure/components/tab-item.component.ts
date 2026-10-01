@@ -9,10 +9,11 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
     <span
       class="tab"
       [class.tab--active]="active"
-      [class.tab--icon-only]="iconOnly"
+      [class.tab--compact]="compact"
     >
+      <span class="tab__indicator"></span>
       <span class="tab__icon">
-        <ds-icon [name]="icon" [size]="20" [stroke]="2.2" />
+        <ds-icon [name]="icon" [size]="22" [stroke]="active ? 2.3 : 1.9" />
         @if (live) {
           <span class="tab__live"></span>
         }
@@ -29,27 +30,39 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         -webkit-tap-highlight-color: transparent;
       }
       .tab {
+        position: relative;
         box-sizing: border-box;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: 3rem;
-        padding: 0 var(--ds-space-3);
-        border-radius: var(--ds-radius-pill);
+        gap: var(--ds-space-1);
+        min-height: 3.5rem;
+        padding: var(--ds-space-1-5) var(--ds-space-1);
         color: var(--ds-text-meta);
         text-decoration: none;
         transition:
-          background-color var(--ds-dur-3) var(--ds-ease-out),
           color var(--ds-dur-2) var(--ds-ease-out),
-          box-shadow var(--ds-dur-3) var(--ds-ease-out),
-          padding var(--ds-dur-3) var(--ds-ease-spring),
           transform var(--ds-dur-1) var(--ds-ease-out);
       }
       :host(:hover) .tab:not(.tab--active) {
         color: var(--ds-text-muted);
       }
       :host(:active) .tab {
-        transform: scale(0.92);
+        transform: scale(0.94);
+      }
+      .tab__indicator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 1.75rem;
+        height: 3px;
+        margin: 0 auto;
+        border-radius: 0 0 var(--ds-radius-sm) var(--ds-radius-sm);
+        background: var(--ds-primary);
+        transform: scaleX(0);
+        transition: transform var(--ds-dur-3) var(--ds-ease-spring);
       }
       .tab__icon {
         position: relative;
@@ -57,10 +70,11 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         align-items: center;
         justify-content: center;
         flex: 0 0 auto;
+        transition: transform var(--ds-dur-3) var(--ds-ease-out);
       }
       .tab__live {
         position: absolute;
-        top: -0.1875rem;
+        top: -0.125rem;
         right: -0.3125rem;
         width: 0.5rem;
         height: 0.5rem;
@@ -70,50 +84,27 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         animation: tabLive 1.6s var(--ds-ease-in-out) infinite;
       }
       .tab__label {
-        max-width: 0;
-        overflow: hidden;
-        opacity: 0;
-        font-family: var(--ds-font-display, inherit);
-        font-size: var(--ds-text-base);
-        font-weight: 700;
+        font-size: var(--ds-text-xs);
+        font-weight: 600;
         line-height: 1;
+        letter-spacing: 0.01em;
         white-space: nowrap;
-        transition:
-          max-width var(--ds-dur-3) var(--ds-ease-spring),
-          padding-left var(--ds-dur-3) var(--ds-ease-spring),
-          opacity var(--ds-dur-2) var(--ds-ease-out);
+        transition: opacity var(--ds-dur-2) var(--ds-ease-out);
       }
       .tab--active {
-        color: var(--ds-on-primary);
-        background-color: var(--ds-primary);
-        background-image: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.28),
-          rgba(255, 255, 255, 0) 55%
-        );
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.5),
-          inset 0 -0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-        padding: 0 var(--ds-space-4) 0 var(--ds-space-3);
+        color: var(--ds-primary);
       }
-      .tab--active .tab__live {
-        background: var(--ds-on-primary);
-        box-shadow: 0 0 0 2px var(--ds-primary);
+      .tab--active .tab__indicator {
+        transform: scaleX(1);
       }
       .tab--active .tab__label {
-        max-width: 10rem;
-        opacity: 1;
-        padding-left: var(--ds-space-2);
+        font-weight: 700;
       }
-      .tab--icon-only,
-      .tab--active.tab--icon-only {
-        padding: 0 var(--ds-space-3);
-      }
-      .tab--icon-only .tab__label,
-      .tab--active.tab--icon-only .tab__label {
-        max-width: 0;
+      .tab--compact .tab__label {
         opacity: 0;
-        padding-left: 0;
+      }
+      .tab--compact .tab__indicator {
+        transform: scaleX(0);
       }
       @keyframes tabLive {
         0%,
@@ -128,6 +119,8 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       }
       @media (prefers-reduced-motion: reduce) {
         .tab,
+        .tab__indicator,
+        .tab__icon,
         .tab__label {
           transition: none;
         }
@@ -142,6 +135,6 @@ export class TabItemComponent {
   @Input({ required: true }) icon!: DsIconName;
   @Input() label = "";
   @Input() active = false;
-  @Input() iconOnly = false;
+  @Input() compact = false;
   @Input() live = false;
 }
