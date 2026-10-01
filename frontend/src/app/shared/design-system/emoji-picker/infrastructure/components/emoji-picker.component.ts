@@ -43,7 +43,6 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
 
     <ds-modal-sheet
       [open]="open()"
-      [compact]="true"
       [title]="sheetTitle"
       [closeLabel]="closeLabel"
       (closed)="closeSheet()"

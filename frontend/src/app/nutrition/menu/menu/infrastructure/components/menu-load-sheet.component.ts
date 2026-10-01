@@ -43,7 +43,6 @@ const MODULE_PATH = "nutrition/menu/menu";
   template: `
     <ds-modal-sheet
       [open]="open()"
-      [compact]="true"
       [title]="'getMenu.load.title' | t"
       [closeLabel]="'getMenu.close' | t"
       [confirmLabel]="'getMenu.load.confirmDay' | t"

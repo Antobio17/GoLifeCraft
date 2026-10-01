@@ -250,7 +250,6 @@
 
   <ds-modal-sheet
     [open]="pickerOpen()"
-    [compact]="true"
     [title]="pickerTitle() | t"
     [closeLabel]="'getDiary.picker.close' | t"
     [confirmLabel]="pickerTab() === 'quick' ? (quickSubmitLabel() | t) : ''"
@@ -411,7 +410,6 @@
 
   <ds-modal-sheet
     [open]="goalSheetOpen()"
-    [compact]="true"
     [title]="goalTitleKey() | t"
     [closeLabel]="'getDiary.goal.close' | t"
     [confirmLabel]="
@@ -508,7 +506,6 @@
 
   <ds-modal-sheet
     [open]="calendarOpen()"
-    [compact]="true"
     [title]="'getDiary.calendar.title' | t"
     [closeLabel]="'getDiary.calendar.close' | t"
     (closed)="closeCalendar()"
@@ -566,7 +563,6 @@
 
   <ds-modal-sheet
     [open]="lotOpen()"
-    [compact]="true"
     [title]="'getDiary.lot.title' | t"
     [closeLabel]="'getDiary.lot.close' | t"
     (closed)="closeLotPicker()"

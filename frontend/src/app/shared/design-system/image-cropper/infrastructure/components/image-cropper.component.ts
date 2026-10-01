@@ -34,7 +34,6 @@ const WHEEL_STEP = 0.0015;
   template: `
     <ds-modal-sheet
       [open]="open"
-      [auto]="true"
       [title]="title"
       [closeLabel]="closeLabel"
       [confirmLabel]="confirmLabel"

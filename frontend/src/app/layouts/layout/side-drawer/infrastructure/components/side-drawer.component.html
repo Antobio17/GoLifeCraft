@@ -27,15 +27,16 @@
     />
 
     <ds-icon-button
-      class="drawer__close"
-      icon="close"
-      variant="soft"
-      [size]="32"
-      [iconSize]="15"
+      data-testid="drawer-logout"
+      class="drawer__logout"
+      icon="logout"
+      variant="danger"
+      [size]="36"
+      [iconSize]="18"
       [stroke]="2.2"
       [radius]="'var(--ds-radius-pill)'"
-      [ariaLabel]="'navbar.closeMenu' | t"
-      (clicked)="close()"
+      [ariaLabel]="'navbar.logout' | t"
+      (clicked)="logout()"
     />
   </div>
 
@@ -100,16 +101,6 @@
         <span class="drawer__switch-knob"></span>
       </span>
     </button>
-
-    <button
-      data-testid="drawer-logout"
-      type="button"
-      class="drawer__logout"
-      (click)="logout()"
-    >
-      <ds-icon name="logout" [size]="17" [stroke]="2.2" />
-      <span>{{ "navbar.logout" | t }}</span>
-    </button>
   </ds-stack>
 </ng-template>
 
@@ -124,7 +115,6 @@
 } @else {
   <ds-modal-sheet
     [open]="isOpen()"
-    [auto]="true"
     [bare]="true"
     [title]="'navbar.openMenu' | t"
     (closed)="close()"

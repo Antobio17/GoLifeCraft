@@ -20,6 +20,7 @@ import {
 } from "@angular/router";
 import { IdlePreloadStrategy } from "./app/shared/routing/infrastructure/strategies/idle-preload.strategy";
 import { BackNavigationService } from "./app/shared/routing/application/services/back-navigation.service";
+import { PresentedSheetsService } from "./app/shared/design-system/modal-sheet/application/services/presented-sheets.service";
 import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/components/main.component";
 import { APP_ROUTES } from "./app/app.routes";
 import { GlobalProviders } from "@shared/providers/main.provider";
@@ -40,7 +41,14 @@ bootstrapApplication(MainLayoutComponent, {
         anchorScrolling: "enabled",
         scrollPositionRestoration: "enabled",
       }),
-      withViewTransitions({ skipInitialTransition: true }),
+      withViewTransitions({
+        skipInitialTransition: true,
+        onViewTransitionCreated: ({ transition }) => {
+          if (!inject(PresentedSheetsService).any()) return;
+
+          transition.skipTransition();
+        },
+      }),
       withPreloading(IdlePreloadStrategy),
     ),
     provideHttpClient(

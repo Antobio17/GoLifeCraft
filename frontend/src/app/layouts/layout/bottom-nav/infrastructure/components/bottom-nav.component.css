@@ -24,8 +24,6 @@
   view-transition-name: ds-vt-tabbar;
 }
 
-/* Sólo transform y opacity: van en el compositor y no repintan el
-   cristal ni recalculan layout mientras la barra entra o sale. */
 .tabbar {
   width: 100%;
   max-width: var(--ds-app-frame-width, 30rem);

@@ -45,7 +45,6 @@ const DEFAULT_RANGE_DAYS = 6;
   template: `
     <ds-modal-sheet
       [open]="sheetOpen()"
-      [compact]="true"
       [title]="'getShopping.diary.title' | t"
       [closeLabel]="'getShopping.sheet.close' | t"
       [confirmLabel]="confirmLabel()"

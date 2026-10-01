@@ -76,8 +76,9 @@
   white-space: nowrap;
 }
 
-.drawer__close {
+.drawer__logout {
   flex: none;
+  --icon-btn-color: var(--ds-danger);
 }
 
 .drawer__profile ds-notification-bell {
@@ -186,31 +187,6 @@
   transform: translateX(1.125rem);
 }
 
-/* ─── Logout ─── */
-
-.drawer__logout {
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--ds-space-2);
-  margin: var(--ds-space-1-5) var(--drawer-sheet-x) 0;
-  padding: var(--ds-space-3);
-  border: 1px solid var(--ds-border-strong);
-  border-radius: var(--ds-radius-lg);
-  background: transparent;
-  color: var(--ds-danger);
-  font-family: inherit;
-  font-size: var(--ds-text-md);
-  font-weight: 700;
-  cursor: pointer;
-  transition: background var(--ds-transition-base);
-}
-
-.drawer__logout:hover {
-  background: color-mix(in srgb, var(--ds-danger) 10%, transparent);
-}
-
 /* ─── Docked sidebar (≥768px) — must stay at end ─── */
 
 @media (min-width: 768px) {
@@ -232,10 +208,6 @@
     background: var(--ds-surface-nav);
     border-right: 1px solid var(--ds-border);
     --drawer-sheet-x: var(--ds-space-3);
-  }
-
-  .drawer__close {
-    display: none;
   }
 
   .drawer__brand {
@@ -273,9 +245,5 @@
 
   .drawer__theme {
     order: 6;
-  }
-
-  .drawer__logout {
-    order: 7;
   }
 }
