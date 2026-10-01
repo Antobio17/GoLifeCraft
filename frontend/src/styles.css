@@ -265,6 +265,27 @@ input:-webkit-autofill::first-line {
   animation: ds-page-in var(--ds-dur-3) var(--ds-ease-out) both;
 }
 
+:root:active-view-transition
+  app-bottom-nav
+  .tabbar:not(.tabbar--hidden)
+  .tabbar__pill {
+  view-transition-name: ds-vt-tabbar;
+}
+
+:root:active-view-transition
+  app-bottom-nav
+  .tabbar:not(.tabbar--hidden)
+  ds-workout-bubble {
+  view-transition-name: ds-vt-workout-bubble;
+}
+
+::view-transition-group(ds-vt-tabbar),
+::view-transition-group(ds-vt-workout-bubble) {
+  border-radius: var(--ds-radius-pill);
+  backdrop-filter: var(--ds-glass-blur);
+  -webkit-backdrop-filter: var(--ds-glass-blur);
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
