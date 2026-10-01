@@ -10,6 +10,8 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { BrandLogoComponent } from "@shared/design-system/brand-logo/infrastructure/components/brand-logo.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
+import { NavTileComponent } from "@shared/design-system/nav-tile/infrastructure/components/nav-tile.component";
+import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { NavItemComponent } from "@shared/design-system/nav-item/infrastructure/components/nav-item.component";
 import { AvatarComponent } from "@shared/design-system/avatar/infrastructure/components/avatar.component";
 import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
@@ -32,6 +34,8 @@ import { DrawerNavSectionsService } from "../../application/services/drawer-nav-
     IconComponent,
     IconButtonComponent,
     NavItemComponent,
+    NavTileComponent,
+    GridComponent,
     AvatarComponent,
     DividerComponent,
     StackComponent,

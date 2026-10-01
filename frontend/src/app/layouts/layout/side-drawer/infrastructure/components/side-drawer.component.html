@@ -50,29 +50,60 @@
             section.labelKey | t
           }}</ds-text>
 
-          @for (item of section.items; track item.labelKey) {
-            @if (item.route) {
-              <ds-nav-item
-                [attr.data-testid]="'drawer-' + item.route"
-                [routerLink]="item.route"
-                routerLinkActive="is-active"
-                [routerLinkActiveOptions]="item.activeOptions"
-                [icon]="item.icon"
-                [label]="item.labelKey | t"
-                [sub]="item.sub"
-                [badge]="item.badge"
-                (click)="close()"
-              />
-            } @else {
-              <ds-nav-item
-                [icon]="item.icon"
-                [href]="item.href"
-                [external]="false"
-                [label]="item.labelKey | t"
-                [badge]="item.badge"
-                (click)="close()"
-              />
+          @if (isDocked()) {
+            @for (item of section.items; track item.labelKey) {
+              @if (item.route) {
+                <ds-nav-item
+                  [attr.data-testid]="'drawer-' + item.route"
+                  [routerLink]="item.route"
+                  routerLinkActive="is-active"
+                  [routerLinkActiveOptions]="item.activeOptions"
+                  [icon]="item.icon"
+                  [label]="item.labelKey | t"
+                  [sub]="item.sub"
+                  [badge]="item.badge"
+                  (click)="close()"
+                />
+              } @else {
+                <ds-nav-item
+                  [icon]="item.icon"
+                  [href]="item.href"
+                  [external]="false"
+                  [label]="item.labelKey | t"
+                  [badge]="item.badge"
+                  (click)="close()"
+                />
+              }
             }
+          } @else {
+            <ds-grid
+              class="drawer__tiles"
+              [columns]="4"
+              gap="var(--ds-space-3) var(--ds-space-1)"
+            >
+              @for (item of section.items; track item.labelKey) {
+                @if (item.route) {
+                  <ds-nav-tile
+                    [attr.data-testid]="'drawer-' + item.route"
+                    [routerLink]="item.route"
+                    routerLinkActive="is-active"
+                    [routerLinkActiveOptions]="item.activeOptions"
+                    [icon]="item.icon"
+                    [label]="item.labelKey | t"
+                    [badge]="item.badge"
+                    (click)="close()"
+                  />
+                } @else {
+                  <ds-nav-tile
+                    [icon]="item.icon"
+                    [href]="item.href"
+                    [label]="item.labelKey | t"
+                    [badge]="item.badge"
+                    (click)="close()"
+                  />
+                }
+              }
+            </ds-grid>
           }
         </ds-stack>
       }
