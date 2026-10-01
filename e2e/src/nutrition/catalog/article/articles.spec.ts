@@ -179,3 +179,48 @@ test.describe("catálogo", () => {
     await expect(articles.cards).toHaveCount(before);
   });
 });
+
+test.describe("favoritos del catálogo", () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(
+      "functional-desktop" !== testInfo.project.name,
+      "marcan el mismo artículo de la semilla y chocarían entre escritorio y móvil",
+    );
+  });
+
+  test("un favorito sube al principio, se filtra y se desmarca desde el detalle", async ({
+    page,
+  }) => {
+    const articles = new ArticlesPage(page);
+    const article = new ArticlePage(page);
+    const favorite = SEED.articles.pollo.name;
+
+    await articles.goto();
+    await articles.toggleFavorite(favorite);
+
+    await expect(articles.favoriteToggle(favorite)).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(articles.cards.first()).toContainText(favorite);
+
+    await articles.filterByFavorite("Favoritos");
+    await expect(articles.cards).toHaveCount(1);
+    await expect(articles.cardNamed(favorite)).toBeVisible();
+
+    await articles.filterByFavorite("No favoritos");
+    await expect(articles.cards).toHaveCount(
+      Object.keys(SEED.articles).length - 1,
+    );
+    await expect(articles.cardNamed(favorite)).toHaveCount(0);
+
+    await article.goto(SEED.articles.pollo.id);
+    await expect(article.favorite).toHaveAttribute("aria-pressed", "true");
+    await article.toggleFavorite();
+    await expect(article.favorite).toHaveAttribute("aria-pressed", "false");
+
+    await articles.goto();
+    await articles.filterByFavorite("Favoritos");
+    await expect(articles.cards).toHaveCount(0);
+  });
+});

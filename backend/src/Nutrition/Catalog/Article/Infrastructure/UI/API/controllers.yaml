@@ -69,3 +69,10 @@ services:
       $imageStorageService: '@Shared\Tool\Tool\Domain\Service\ImageStorageService'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\ChangeArticleFavoriteController:
+    class: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\ChangeArticleFavoriteController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

@@ -37,7 +37,12 @@
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-skeleton-filters [search]="true" [selects]="3" [caption]="true" />
+    <ds-skeleton-filters
+      [search]="true"
+      [selects]="3"
+      [segments]="3"
+      [caption]="true"
+    />
     <ds-skeleton-list
       [count]="6"
       [columns]="null"
@@ -89,6 +94,15 @@
       />
     </ds-stack>
 
+    <ds-segmented-toggle
+      data-testid="articles-filter-favorite"
+      variant="pill"
+      [stretch]="true"
+      [options]="favoriteOptions()"
+      [ngModel]="favoriteFilter()"
+      (ngModelChange)="onFavoriteFilterChange($event)"
+    />
+
     <ds-text variant="label">{{ "getArticles.nutritionCaption" | t }}</ds-text>
 
     @if (reloading()) {
@@ -112,7 +126,12 @@
         <ds-text variant="muted">
           {{ "getArticles.noResults" | t }} “{{ searchQuery() }}”
         </ds-text>
-      } @else if (selectedCategory() || selectedBrand() || selectedStore()) {
+      } @else if (
+        selectedCategory() ||
+        selectedBrand() ||
+        selectedStore() ||
+        favoriteFilter() !== "all"
+      ) {
         <ds-text variant="muted">
           {{ "getArticles.noResultsFilters" | t }}
         </ds-text>
@@ -153,7 +172,10 @@
                 value: card.carbs || '',
               },
             ]"
+            [favorite]="card.favorite"
+            [favoriteLabel]="favoriteLabel()"
             (activated)="onSelect(card.id)"
+            (favoriteToggled)="onToggleFavorite(card.id)"
           />
         }
       </ds-grid>

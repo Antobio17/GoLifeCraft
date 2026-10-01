@@ -6,6 +6,7 @@
   [attr.title]="ariaLabel || null"
   [attr.aria-haspopup]="haspopup || null"
   [attr.aria-expanded]="expanded === null ? null : expanded"
+  [attr.aria-pressed]="pressed === null ? null : pressed"
   (click)="handleClick()"
 >
   @if (loading) {

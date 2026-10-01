@@ -81,6 +81,14 @@ fields:
     max: 120
     filterable: true
     sortable: true
+  favorite:
+    writable: true
+    type: boolean
+    description: >-
+      Whether the user marked the article as a favorite. Favorites are always listed before
+      the rest of the catalog, still in alphabetical order among themselves.
+    filterable: true
+    sortable: true
   emoji:
     writable: true
     max: 16

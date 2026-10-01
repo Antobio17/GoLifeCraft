@@ -67,6 +67,8 @@ export const DS_ICONS = {
   language:
     '<path d="M4 5h7M9 3v2c0 4-2.5 7-6 8"/><path d="M5 9c0 2.5 2.5 4.5 5 5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>',
   star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
+  starFilled:
+    '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>',
   menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
   alertCircle: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>',
   checkCircle: '<circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>',

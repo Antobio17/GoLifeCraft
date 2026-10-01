@@ -128,6 +128,11 @@
   border-color: var(--ds-border-strong);
 }
 
+.ds-btn--secondary.ds-btn--pressed {
+  color: var(--ds-warning);
+  border-color: color-mix(in srgb, var(--ds-warning) 45%, transparent);
+}
+
 .ds-btn--secondary:focus-visible {
   outline: 2px solid var(--ds-primary);
   outline-offset: 2px;

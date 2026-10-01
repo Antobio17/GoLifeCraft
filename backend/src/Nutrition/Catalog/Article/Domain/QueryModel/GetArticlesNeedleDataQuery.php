@@ -11,6 +11,7 @@ interface GetArticlesNeedleDataQuery
         ?string $filterCategory = null,
         ?string $filterBrand = null,
         ?string $filterStore = null,
+        ?bool $filterFavorite = null,
         ?string $orderBy = null,
     ): array;
 
@@ -19,5 +20,6 @@ interface GetArticlesNeedleDataQuery
         ?string $filterCategory = null,
         ?string $filterBrand = null,
         ?string $filterStore = null,
+        ?bool $filterFavorite = null,
     ): int;
 }

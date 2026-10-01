@@ -32,6 +32,7 @@ final class GetArticlesController
                     filterCategory: RequestExtractor::getFilterParam(request: $request, filterName: 'category'),
                     filterBrand: RequestExtractor::getFilterParam(request: $request, filterName: 'brand'),
                     filterStore: RequestExtractor::getFilterParam(request: $request, filterName: 'store'),
+                    filterFavorite: RequestExtractor::getBooleanFilterParam(request: $request, filterName: 'favorite'),
                     orderBy: RequestExtractor::getOrderByParam(request: $request),
                 )),
             );

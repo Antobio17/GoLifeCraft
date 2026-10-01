@@ -1,7 +1,8 @@
 import { Component, computed, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { switchMap } from "rxjs/operators";
 import { Article } from "../../domain/models/article.model";
 import {
   ArticleCardView,
@@ -9,6 +10,8 @@ import {
 } from "@nutrition/catalog/article/application/services/article-view.service";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
 import { GetArticleFacetsService } from "@nutrition/catalog/article/application/services/get-article-facets.service";
+import { ChangeArticleFavoriteService } from "@nutrition/catalog/article/application/services/change-article-favorite.service";
+import { ArticleFavoriteFilter } from "@nutrition/catalog/article/domain/models/article-favorite-filter.enum";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -22,6 +25,10 @@ import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrast
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
+import {
+  SegmentedOption,
+  SegmentedToggleComponent,
+} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
@@ -54,6 +61,7 @@ const ALL = "";
     TextComponent,
     StackComponent,
     SelectComponent,
+    SegmentedToggleComponent,
     ProductCardComponent,
     InfiniteScrollComponent,
   ],
@@ -61,6 +69,7 @@ const ALL = "";
 export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   private getArticlesService = inject(GetArticlesService);
   private getArticleFacetsService = inject(GetArticleFacetsService);
+  private changeArticleFavoriteService = inject(ChangeArticleFavoriteService);
   private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
   private aggregateImageService = inject(AggregateImageService);
@@ -76,6 +85,19 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   selectedCategory = signal(ALL);
   selectedBrand = signal(ALL);
   selectedStore = signal(ALL);
+  favoriteFilter = signal<ArticleFavoriteFilter>(ArticleFavoriteFilter.All);
+  pendingFavorites = signal<ReadonlyMap<string, boolean>>(new Map());
+
+  favoriteOptions = computed<SegmentedOption[]>(() =>
+    Object.values(ArticleFavoriteFilter).map((value) => ({
+      value,
+      label: this.t(`getArticles.filter.favorite.${value}`),
+    })),
+  );
+
+  favoriteLabel = computed(() => this.t("getArticles.favorite.toggle"));
+
+  private readonly refreshLoaded$ = new Subject<void>();
 
   reloading = signal(false);
   loadingMore = signal(false);
@@ -97,6 +119,20 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     return `${total} ${this.t("getArticles.formats")}`;
   });
 
+  constructor() {
+    super();
+
+    this.refreshLoaded$
+      .pipe(
+        switchMap(() => this.fetch(1, this.currentPage() * this.pageSize())),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((response) => {
+        this.items.set(response.data.map((item) => this.withPending(item)));
+        this.totalItems.set(response.meta.total);
+      });
+  }
+
   protected configureList(): void {
     this.currentPage.set(1);
     this.pageSize.set(20);
@@ -109,6 +145,7 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
       category: this.selectedCategory(),
       brand: this.selectedBrand(),
       store: this.selectedStore(),
+      favorite: this.favoriteFilter(),
     };
   }
 
@@ -117,6 +154,10 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     this.selectedCategory.set(filters["category"] ?? ALL);
     this.selectedBrand.set(filters["brand"] ?? ALL);
     this.selectedStore.set(filters["store"] ?? ALL);
+    this.favoriteFilter.set(
+      (filters["favorite"] as ArticleFavoriteFilter | undefined) ??
+        ArticleFavoriteFilter.All,
+    );
   }
 
   protected fetch(
@@ -128,6 +169,7 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
       category: this.selectedCategory() || undefined,
       brand: this.selectedBrand() || undefined,
       store: this.selectedStore() || undefined,
+      favorite: this.favoriteParam(),
     });
   }
 
@@ -176,6 +218,40 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     this.reload();
   }
 
+  onFavoriteFilterChange(value: string): void {
+    this.favoriteFilter.set(value as ArticleFavoriteFilter);
+    this.reload();
+  }
+
+  onToggleFavorite(id: string): void {
+    if (this.pendingFavorites().has(id)) return;
+
+    const article = this.items().find((item) => item.id === id);
+
+    if (undefined === article) return;
+
+    const favorite = !(article.attributes.favorite ?? false);
+
+    this.setFavorite(id, favorite);
+    this.pendingFavorites.update((pending) =>
+      new Map(pending).set(id, favorite),
+    );
+
+    this.changeArticleFavoriteService
+      .changeArticleFavorite(id, favorite)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.releaseFavorite(id);
+          this.refreshLoaded$.next();
+        },
+        error: () => {
+          this.setFavorite(id, !favorite);
+          this.releaseFavorite(id);
+        },
+      });
+  }
+
   onSelect(id: string): void {
     this.router.navigate(["/catalog", id]);
   }
@@ -206,6 +282,40 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
         },
         error: () => this.reloading.set(false),
       });
+  }
+
+  private favoriteParam(): boolean | undefined {
+    if (ArticleFavoriteFilter.Only === this.favoriteFilter()) return true;
+    if (ArticleFavoriteFilter.Excluded === this.favoriteFilter()) return false;
+
+    return undefined;
+  }
+
+  private setFavorite(id: string, favorite: boolean): void {
+    this.items.update((items) =>
+      items.map((item) =>
+        item.id === id
+          ? { ...item, attributes: { ...item.attributes, favorite } }
+          : item,
+      ),
+    );
+  }
+
+  private withPending(article: Article): Article {
+    const favorite = this.pendingFavorites().get(article.id);
+
+    if (undefined === favorite) return article;
+
+    return { ...article, attributes: { ...article.attributes, favorite } };
+  }
+
+  private releaseFavorite(id: string): void {
+    this.pendingFavorites.update((pending) => {
+      const next = new Map(pending);
+      next.delete(id);
+
+      return next;
+    });
   }
 
   private loadFacets(): void {

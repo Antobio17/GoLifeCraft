@@ -47,3 +47,8 @@ assign_article_image:
   path: /api/v1/nutrition/catalog/article/{articleId}/image
   methods: [POST, DELETE]
   controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\AssignArticleImageController
+
+change_article_favorite:
+  path: /api/v1/nutrition/catalog/article/{articleId}/favorite
+  methods: [PUT]
+  controller: Nutrition\Catalog\Article\Infrastructure\UI\API\Controller\ChangeArticleFavoriteController

@@ -9,7 +9,7 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="58%"
-      [actions]="2"
+      [actions]="3"
     />
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
       <ds-skeleton-hero />
@@ -65,6 +65,16 @@
       (leadingClick)="goBack()"
     >
       <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
+        <ds-button
+          data-testid="article-favorite"
+          variant="secondary"
+          size="icon-lg"
+          [icon]="favorite() ? 'starFilled' : 'star'"
+          [iconSize]="19"
+          [pressed]="favorite()"
+          [ariaLabel]="'getArticle.favorite' | t"
+          (clicked)="onToggleFavorite()"
+        />
         <ds-button
           data-testid="article-edit"
           variant="secondary"

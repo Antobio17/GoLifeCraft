@@ -26,6 +26,7 @@ export interface ArticleAttributes {
   brand: string | null;
   emoji: string | null;
   image: string | null;
+  favorite?: boolean;
   aisleId?: string | null;
   createdAt?: string;
   updatedAt?: string;

@@ -4,11 +4,10 @@ namespace Nutrition\Catalog\Article\Domain\Event;
 
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 
-final readonly class ArticleDeleted extends DomainEvent
+final readonly class ArticleFavoriteChanged extends DomainEvent
 {
     /**
      * @param array<int, array<string, mixed>> $equivalences
-     * @param array<string, mixed>|null        $nutritionFacts
      */
     public function __construct(
         string $aggregateId,
@@ -30,17 +29,16 @@ final readonly class ArticleDeleted extends DomainEvent
         public ?string $barcode,
         public bool $favorite,
         public array $equivalences,
-        public ?array $nutritionFacts,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,
         public string $createdByUserId,
-        public string $deletedByUserId,
+        public string $updatedByUserId,
     ) {
         parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
     }
 
     public function getName(): string
     {
-        return 'golifecraft.nutrition.event.1.article.deleted';
+        return 'golifecraft.nutrition.event.1.article.favorite_changed';
     }
 }

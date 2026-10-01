@@ -11,6 +11,7 @@ import {
 } from "@nutrition/catalog/article/application/services/article-view.service";
 import { GetArticleService } from "@nutrition/catalog/article/application/services/get-article.service";
 import { DeleteArticleService } from "@nutrition/catalog/article/application/services/delete-article.service";
+import { ChangeArticleFavoriteService } from "@nutrition/catalog/article/application/services/change-article-favorite.service";
 import { CorrectArticleStockService } from "@nutrition/pantry/stock/application/services/correct-article-stock.service";
 import { SetArticleStockTrackingService } from "@nutrition/pantry/stock/application/services/set-article-stock-tracking.service";
 import { AssignPantryLocationItemService } from "@nutrition/pantry/location/application/services/assign-pantry-location-item.service";
@@ -119,6 +120,7 @@ export class GetArticleComponent {
   private backNavigation = inject(BackNavigationService);
   private getArticleService = inject(GetArticleService);
   private deleteArticleService = inject(DeleteArticleService);
+  private changeArticleFavoriteService = inject(ChangeArticleFavoriteService);
   private correctArticleStockService = inject(CorrectArticleStockService);
   private setArticleStockTrackingService = inject(
     SetArticleStockTrackingService,
@@ -149,6 +151,8 @@ export class GetArticleComponent {
       article.attributes.image ?? null,
     );
   });
+  favorite = computed(() => this.article()?.attributes.favorite ?? false);
+  savingFavorite = signal(false);
   showDeleteModal = signal(false);
   deleting = signal(false);
   mode = signal<NutritionMode>("per100");
@@ -267,6 +271,27 @@ export class GetArticleComponent {
 
   onEdit(): void {
     this.router.navigate(["/catalog", this.id(), "edit"]);
+  }
+
+  onToggleFavorite(): void {
+    const article = this.article();
+
+    if (null === article || this.savingFavorite()) return;
+
+    const favorite = !this.favorite();
+
+    this.setFavorite(article, favorite);
+    this.savingFavorite.set(true);
+
+    this.changeArticleFavoriteService
+      .changeArticleFavorite(article.id, favorite)
+      .subscribe({
+        next: () => this.savingFavorite.set(false),
+        error: () => {
+          this.setFavorite(article, !favorite);
+          this.savingFavorite.set(false);
+        },
+      });
   }
 
   onIncrementStock(): void {
@@ -448,6 +473,13 @@ export class GetArticleComponent {
     this.trackingMode.set(
       detail?.stockEstimate.trackingMode ?? StockTrackingMode.Approximate,
     );
+  }
+
+  private setFavorite(article: Article, favorite: boolean): void {
+    this.article.set({
+      ...article,
+      attributes: { ...article.attributes, favorite },
+    });
   }
 
   private buildCorrection(): Observable<void> | null {

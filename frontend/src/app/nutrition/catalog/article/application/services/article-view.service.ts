@@ -22,6 +22,7 @@ export interface ArticleCardView {
   protein: string | null;
   fat: string | null;
   carbs: string | null;
+  favorite: boolean;
 }
 
 export interface ArticleMacroSet {
@@ -170,6 +171,7 @@ export class ArticleViewService {
       protein: nutrition ? this.decimal(nutrition.protein) : null,
       fat: nutrition ? this.decimal(nutrition.fat) : null,
       carbs: nutrition ? this.decimal(nutrition.carbs) : null,
+      favorite: article.attributes.favorite ?? false,
     };
   }
 

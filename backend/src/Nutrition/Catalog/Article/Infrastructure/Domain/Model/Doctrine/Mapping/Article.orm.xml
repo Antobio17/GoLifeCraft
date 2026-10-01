@@ -30,6 +30,7 @@
     <field name="aisleId" type="string" column="aisle_id" length="36" nullable="true"/>
     <field name="nutritionFactsId" type="string" column="nutrition_facts_id" length="36" nullable="true"/>
     <field name="barcode" type="string" column="barcode" length="64" nullable="true"/>
+    <field name="favorite" type="boolean" column="favorite" options="{&quot;default&quot;: false}"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="updatedAt" type="datetime" column="updated_at"/>
     <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
@@ -40,6 +41,7 @@
       <index name="idx_article_aisle_id" columns="aisle_id"/>
       <index name="idx_article_nutrition_facts_id" columns="nutrition_facts_id"/>
       <index name="idx_article_barcode" columns="barcode"/>
+      <index name="idx_article_favorite_name" columns="favorite,name"/>
     </indexes>
     <unique-constraints>
       <unique-constraint name="uniq_article_name" columns="name"/>
