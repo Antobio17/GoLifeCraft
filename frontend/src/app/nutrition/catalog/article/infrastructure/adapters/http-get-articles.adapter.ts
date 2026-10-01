@@ -38,6 +38,10 @@ export class HttpGetArticlesAdapter extends GetArticlesPort {
       params = params.set("filter[store]", filters.store);
     }
 
+    if (undefined !== filters.favorite) {
+      params = params.set("filter[favorite]", String(filters.favorite));
+    }
+
     return this.http.get<GetArticlesResponse>(this.apiUrl, { params });
   }
 }

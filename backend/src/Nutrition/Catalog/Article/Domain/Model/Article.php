@@ -5,6 +5,7 @@ namespace Nutrition\Catalog\Article\Domain\Model;
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Catalog\Article\Domain\Event\ArticleCreated;
 use Nutrition\Catalog\Article\Domain\Event\ArticleDeleted;
+use Nutrition\Catalog\Article\Domain\Event\ArticleFavoriteChanged;
 use Nutrition\Catalog\Article\Domain\Event\ArticleImageAssigned;
 use Nutrition\Catalog\Article\Domain\Event\ArticlePriceChanged;
 use Nutrition\Catalog\Article\Domain\Event\ArticleUpdated;
@@ -33,6 +34,7 @@ class Article extends GenericAggregate
     public ?string $aisleId = null;
     public ?string $nutritionFactsId = null;
     public ?string $barcode = null;
+    public bool $favorite = false;
 
     /** @var ArticleEquivalence[] */
     public array $equivalences = [];
@@ -121,6 +123,7 @@ class Article extends GenericAggregate
             aisleId: $article->aisleId,
             nutritionFactsId: $nutritionFactsId,
             barcode: $article->barcode,
+            favorite: $article->favorite,
             equivalences: self::snapshotAll(aggregates: $equivalences),
             nutritionFacts: $nutritionFacts,
             createdAt: $now,
@@ -162,6 +165,44 @@ class Article extends GenericAggregate
             aisleId: $this->aisleId,
             nutritionFactsId: $this->nutritionFactsId,
             barcode: $this->barcode,
+            favorite: $this->favorite,
+            equivalences: self::snapshotAll(aggregates: $this->equivalences),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $updatedByUserId,
+        ));
+    }
+
+    public function changeFavorite(
+        bool $favorite,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $now = $dateTimeGenerator->now();
+
+        $this->favorite = $favorite;
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new ArticleFavoriteChanged(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            name: $this->name,
+            brand: $this->brand,
+            emoji: $this->emoji,
+            image: $this->image,
+            baseUnit: $this->baseUnit,
+            recipeUnit: $this->recipeUnit,
+            diaryUnit: $this->diaryUnit,
+            storageUnit: $this->storageUnit,
+            packUnit: $this->packUnit,
+            price: $this->price,
+            categoryId: $this->categoryId,
+            supermarketId: $this->supermarketId,
+            aisleId: $this->aisleId,
+            nutritionFactsId: $this->nutritionFactsId,
+            barcode: $this->barcode,
+            favorite: $favorite,
             equivalences: self::snapshotAll(aggregates: $this->equivalences),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -198,6 +239,7 @@ class Article extends GenericAggregate
             aisleId: $this->aisleId,
             nutritionFactsId: $this->nutritionFactsId,
             barcode: $this->barcode,
+            favorite: $this->favorite,
             equivalences: self::snapshotAll(aggregates: $this->equivalences),
             createdAt: $this->createdAt,
             updatedAt: $now,
@@ -285,6 +327,7 @@ class Article extends GenericAggregate
             aisleId: $this->aisleId,
             nutritionFactsId: $nutritionFactsId,
             barcode: $this->barcode,
+            favorite: $this->favorite,
             equivalences: self::snapshotAll(aggregates: $equivalences),
             nutritionFacts: $nutritionFacts,
             createdAt: $this->createdAt,
@@ -320,6 +363,7 @@ class Article extends GenericAggregate
             aisleId: $this->aisleId,
             nutritionFactsId: $this->nutritionFactsId,
             barcode: $this->barcode,
+            favorite: $this->favorite,
             equivalences: self::snapshotAll(aggregates: $this->equivalences),
             nutritionFacts: $nutritionFacts,
             createdAt: $this->createdAt,

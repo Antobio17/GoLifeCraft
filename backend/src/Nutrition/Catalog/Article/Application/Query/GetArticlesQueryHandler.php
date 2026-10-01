@@ -23,6 +23,7 @@ final readonly class GetArticlesQueryHandler
                 filterCategory: $query->filterCategory,
                 filterBrand: $query->filterBrand,
                 filterStore: $query->filterStore,
+                filterFavorite: $query->filterFavorite,
                 orderBy: $query->orderBy,
             ),
             total: $this->needleDataQuery->totalArticles(
@@ -30,6 +31,7 @@ final readonly class GetArticlesQueryHandler
                 filterCategory: $query->filterCategory,
                 filterBrand: $query->filterBrand,
                 filterStore: $query->filterStore,
+                filterFavorite: $query->filterFavorite,
             ),
             pageNumber: $query->pageNumber,
             pageSize: $query->pageSize,

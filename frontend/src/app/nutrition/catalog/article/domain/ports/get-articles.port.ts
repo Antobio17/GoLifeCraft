@@ -6,6 +6,7 @@ export interface GetArticlesFilters {
   category?: string;
   brand?: string;
   store?: string;
+  favorite?: boolean;
 }
 
 export abstract class GetArticlesPort {

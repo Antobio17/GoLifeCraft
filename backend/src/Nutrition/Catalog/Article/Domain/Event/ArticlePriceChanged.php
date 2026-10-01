@@ -28,6 +28,7 @@ final readonly class ArticlePriceChanged extends DomainEvent
         public ?string $aisleId,
         public ?string $nutritionFactsId,
         public ?string $barcode,
+        public bool $favorite,
         public array $equivalences,
         public \DateTime $createdAt,
         public \DateTime $updatedAt,

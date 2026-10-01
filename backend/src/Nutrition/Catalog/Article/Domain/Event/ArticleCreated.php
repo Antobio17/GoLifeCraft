@@ -28,6 +28,7 @@ final readonly class ArticleCreated extends DomainEvent
         public ?string $aisleId,
         public ?string $nutritionFactsId,
         public ?string $barcode,
+        public bool $favorite,
         public array $equivalences,
         public ?array $nutritionFacts,
         public \DateTime $createdAt,

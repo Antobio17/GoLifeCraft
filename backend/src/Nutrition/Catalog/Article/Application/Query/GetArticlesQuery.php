@@ -13,6 +13,7 @@ final readonly class GetArticlesQuery implements Query
         public ?string $filterCategory = null,
         public ?string $filterBrand = null,
         public ?string $filterStore = null,
+        public ?bool $filterFavorite = null,
         public ?string $orderBy = null,
     ) {
     }

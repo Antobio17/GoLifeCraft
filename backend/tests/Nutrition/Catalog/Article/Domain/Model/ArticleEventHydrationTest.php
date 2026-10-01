@@ -35,6 +35,7 @@ final class ArticleEventHydrationTest extends TestCase
         $this->assertSame(expected: 'aisle-1', actual: $event->aisleId);
         $this->assertSame(expected: 'nutrition-facts-1', actual: $event->nutritionFactsId);
         $this->assertSame(expected: '8410000000001', actual: $event->barcode);
+        $this->assertFalse(condition: $event->favorite);
         $this->assertSame(expected: 'god-user-id', actual: $event->createdByUserId);
         $this->assertSame(expected: 'god-user-id', actual: $event->updatedByUserId);
         $this->assertSame(expected: $article->createdAt, actual: $event->createdAt);
@@ -89,6 +90,7 @@ final class ArticleEventHydrationTest extends TestCase
         $this->assertSame(expected: 'ml', actual: $event->baseUnit);
         $this->assertSame(expected: '8410000000001', actual: $event->barcode);
         $this->assertSame(expected: 'another-user-id', actual: $event->deletedByUserId);
+        $this->assertFalse(condition: $event->favorite);
         $this->assertSame(expected: 'god-user-id', actual: $event->createdByUserId);
         $this->assertCount(expectedCount: 1, haystack: $event->equivalences);
         $this->assertSame(expected: 'equivalence-1', actual: $event->equivalences[0]['id']);

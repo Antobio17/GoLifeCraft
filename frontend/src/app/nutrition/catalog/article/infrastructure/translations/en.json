@@ -12,7 +12,12 @@
     "filter": {
       "category": "Category",
       "brand": "Brand",
-      "store": "Store"
+      "store": "Store",
+      "favorite": {
+        "all": "All",
+        "only": "Favorites",
+        "excluded": "Not favorites"
+      }
     },
     "macro": {
       "kcal": "kcal",
@@ -24,7 +29,10 @@
       "title": "Empty catalog",
       "text": "There are no products in the catalog yet"
     },
-    "scan": "Scan"
+    "scan": "Scan",
+    "favorite": {
+      "toggle": "Mark as favorite"
+    }
   },
   "getArticle": {
     "back": "Back",
@@ -112,7 +120,8 @@
         },
         "swapUnit": "Switch unit"
       }
-    }
+    },
+    "favorite": "Favorite"
   },
   "article": {
     "breadcrumb": {

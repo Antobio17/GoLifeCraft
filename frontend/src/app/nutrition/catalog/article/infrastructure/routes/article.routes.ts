@@ -4,6 +4,7 @@ import { GetArticleProviders } from "../providers/get-article.providers";
 import { CreateArticleProviders } from "../providers/create-article.providers";
 import { UpdateArticleProviders } from "../providers/update-article.providers";
 import { DeleteArticleProviders } from "../providers/delete-article.providers";
+import { ChangeArticleFavoriteProviders } from "../providers/change-article-favorite.providers";
 import { CorrectArticleStockProviders } from "@nutrition/pantry/stock/infrastructure/providers/correct-article-stock.providers";
 import { SetArticleStockTrackingProviders } from "@nutrition/pantry/stock/infrastructure/providers/set-article-stock-tracking.providers";
 import { AssignPantryLocationItemProviders } from "@nutrition/pantry/location/infrastructure/providers/assign-pantry-location-item.providers";
@@ -25,6 +26,7 @@ export const ARTICLE_ROUTES: Routes = [
       ...CreateArticleProviders.getProviders(),
       ...UpdateArticleProviders.getProviders(),
       ...DeleteArticleProviders.getProviders(),
+      ...ChangeArticleFavoriteProviders.getProviders(),
       ...CorrectArticleStockProviders.getProviders(),
       ...SetArticleStockTrackingProviders.getProviders(),
       ...AssignPantryLocationItemProviders.getProviders(),

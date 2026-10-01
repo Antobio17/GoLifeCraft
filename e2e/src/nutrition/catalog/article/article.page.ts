@@ -18,6 +18,21 @@ export class ArticlePage {
     return this.ds.host("article-header");
   }
 
+  get favorite(): Locator {
+    return this.ds.button("article-favorite");
+  }
+
+  async toggleFavorite(): Promise<void> {
+    const saved = this.page.waitForResponse(
+      (res) =>
+        res.url().includes("/favorite") &&
+        "PUT" === res.request().method() &&
+        res.ok(),
+    );
+    await this.favorite.click();
+    await saved;
+  }
+
   get hero(): Locator {
     return this.ds.host("article-hero");
   }

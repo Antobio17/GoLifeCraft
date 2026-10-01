@@ -3,6 +3,7 @@
 namespace Nutrition\Catalog\Article\Infrastructure\Domain\QueryModel\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleCategoryResult;
 use Nutrition\Catalog\Article\Domain\QueryModel\Dto\GetArticleNutritionFactsResult;
@@ -25,6 +26,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         ?string $filterCategory = null,
         ?string $filterBrand = null,
         ?string $filterStore = null,
+        ?bool $filterFavorite = null,
         ?string $orderBy = null,
     ): array {
         $qb = $this->getBaseQuery(
@@ -32,6 +34,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             filterCategory: $filterCategory,
             filterBrand: $filterBrand,
             filterStore: $filterStore,
+            filterFavorite: $filterFavorite,
         );
 
         $this->applyOrdering(qb: $qb, orderBy: $orderBy);
@@ -65,6 +68,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
                 aisleId: $row['aisle_id'],
                 categoryId: $row['category_id'],
                 nutritionFactsId: $row['nutrition_facts_id'],
+                favorite: (bool) $row['favorite'],
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
                 createdByUserId: $row['created_by_user_id'],
@@ -82,6 +86,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         ?string $filterCategory = null,
         ?string $filterBrand = null,
         ?string $filterStore = null,
+        ?bool $filterFavorite = null,
     ): int {
         $qb = $this->connection->createQueryBuilder()
             ->select('COUNT(*)')
@@ -95,6 +100,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             filterCategory: $filterCategory,
             filterBrand: $filterBrand,
             filterStore: $filterStore,
+            filterFavorite: $filterFavorite,
         );
 
         return (int) $qb->executeQuery()->fetchOne();
@@ -105,6 +111,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         ?string $filterCategory = null,
         ?string $filterBrand = null,
         ?string $filterStore = null,
+        ?bool $filterFavorite = null,
     ): QueryBuilder {
         $qb = $this->connection->createQueryBuilder()
             ->select(
@@ -123,6 +130,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
                 't.aisle_id',
                 't.category_id',
                 't.nutrition_facts_id',
+                't.favorite',
                 't.created_at',
                 't.updated_at',
                 't.created_by_user_id',
@@ -150,6 +158,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             filterCategory: $filterCategory,
             filterBrand: $filterBrand,
             filterStore: $filterStore,
+            filterFavorite: $filterFavorite,
         );
 
         return $qb;
@@ -161,6 +170,7 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         ?string $filterCategory,
         ?string $filterBrand,
         ?string $filterStore,
+        ?bool $filterFavorite,
     ): void {
         SearchFilter::apply(queryBuilder: $qb, needle: $filterName, columns: ['t.name', 't.brand']);
 
@@ -178,6 +188,11 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             $qb->andWhere('s.name = :store')
                 ->setParameter(key: 'store', value: $filterStore);
         }
+
+        if (null !== $filterFavorite) {
+            $qb->andWhere('t.favorite = :favorite')
+                ->setParameter(key: 'favorite', value: $filterFavorite, type: ParameterType::BOOLEAN);
+        }
     }
 
     private function applyOrdering(QueryBuilder $qb, ?string $orderBy): void
@@ -189,8 +204,10 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
             'updatedAt' => 't.updated_at',
         ];
 
+        $qb->orderBy(sort: 't.favorite', order: 'DESC');
+
         if (null === $orderBy) {
-            $qb->orderBy(sort: 't.name', order: 'ASC');
+            $qb->addOrderBy(sort: 't.name', order: 'ASC');
 
             return;
         }
@@ -204,12 +221,12 @@ final readonly class DoctrineGetArticlesNeedleDataQuery implements GetArticlesNe
         }
 
         if (!isset($allowedFields[$field])) {
-            $qb->orderBy(sort: 't.name', order: 'ASC');
+            $qb->addOrderBy(sort: 't.name', order: 'ASC');
 
             return;
         }
 
-        $qb->orderBy(sort: $allowedFields[$field], order: $direction);
+        $qb->addOrderBy(sort: $allowedFields[$field], order: $direction);
     }
 
     /**

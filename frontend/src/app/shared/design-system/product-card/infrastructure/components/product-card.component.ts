@@ -29,7 +29,7 @@ import { ImageFit } from "../../domain/models/image-fit.model";
       <span class="ds-pcard__body">
         <span class="ds-pcard__head">
           <span class="ds-pcard__name">{{ name }}</span>
-          @if (price && !priceAside) {
+          @if (price && !priceAside && !favoritable) {
             <span class="ds-pcard__price">{{ price }}</span>
           }
         </span>
@@ -108,6 +108,31 @@ import { ImageFit } from "../../domain/models/image-fit.model";
           <ng-container [ngTemplateOutlet]="actionButton"></ng-container>
         }
       </div>
+    } @else if (favoritable) {
+      <div class="ds-pcard ds-pcard--favoritable">
+        <button type="button" class="ds-pcard__main" (click)="activated.emit()">
+          <ng-container [ngTemplateOutlet]="content"></ng-container>
+        </button>
+        <span class="ds-pcard__aside ds-pcard__aside--favorite">
+          @if (price) {
+            <span class="ds-pcard__price">{{ price }}</span>
+          }
+          <button
+            type="button"
+            class="ds-pcard__favorite"
+            [class.is-active]="favorite"
+            [attr.aria-pressed]="favorite"
+            [attr.aria-label]="favoriteLabel"
+            (click)="favoriteToggled.emit()"
+          >
+            <ds-icon
+              [name]="favorite ? 'starFilled' : 'star'"
+              [size]="20"
+              [stroke]="2"
+            />
+          </button>
+        </span>
+      </div>
     } @else {
       <button type="button" class="ds-pcard" (click)="activated.emit()">
         <ng-container [ngTemplateOutlet]="content"></ng-container>
@@ -141,11 +166,52 @@ import { ImageFit } from "../../domain/models/image-fit.model";
           box-shadow var(--ds-dur-3) var(--ds-ease-in-out),
           transform var(--ds-dur-3) var(--ds-ease-in-out);
       }
-      button.ds-pcard:hover {
+      button.ds-pcard:hover,
+      .ds-pcard--favoritable:hover {
         border-color: var(--ds-border-strong);
         background: var(--ds-surface-hover);
         box-shadow: var(--ds-elev-lg);
         transform: translateY(-2px);
+      }
+      .ds-pcard--favoritable {
+        cursor: default;
+      }
+      .ds-pcard--favoritable .ds-pcard__main {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .ds-pcard--favoritable .ds-pcard__aside--favorite {
+        justify-content: flex-start;
+        gap: var(--ds-space-1);
+      }
+      .ds-pcard__favorite {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        margin-right: calc(var(--ds-space-2) * -1);
+        appearance: none;
+        border: none;
+        border-radius: var(--ds-radius-md);
+        background: transparent;
+        color: var(--ds-text-muted);
+        cursor: pointer;
+        transition:
+          color var(--ds-dur-2) var(--ds-ease-out),
+          background var(--ds-dur-2) var(--ds-ease-out),
+          transform var(--ds-dur-2) var(--ds-ease-out);
+      }
+      .ds-pcard__favorite:hover:not(:disabled) {
+        color: var(--ds-text);
+        background: var(--ds-surface-inset);
+      }
+      .ds-pcard__favorite:active:not(:disabled) {
+        transform: scale(0.9);
+      }
+      .ds-pcard__favorite.is-active,
+      .ds-pcard__favorite.is-active:hover:not(:disabled) {
+        color: var(--ds-warning);
       }
       .ds-pcard--static {
         cursor: default;
@@ -350,12 +416,19 @@ export class ProductCardComponent {
   @Input() actionIconOnly = false;
   @Input() actionLabel = "";
   @Input() addedLabel = "";
+  @Input() favorite: boolean | null = null;
+  @Input() favoriteLabel = "";
 
   @Output() activated = new EventEmitter<void>();
   @Output() action = new EventEmitter<void>();
+  @Output() favoriteToggled = new EventEmitter<void>();
 
   get hasBadges(): boolean {
     return !!this.kcal || this.macros.some((macro) => !!macro.value);
+  }
+
+  get favoritable(): boolean {
+    return this.favorite !== null && !this.actionable;
   }
 
   get priceAside(): boolean {

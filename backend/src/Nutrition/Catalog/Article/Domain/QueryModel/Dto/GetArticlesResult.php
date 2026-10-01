@@ -27,6 +27,7 @@ final class GetArticlesResult extends QueryAggregateResult
         public readonly ?string $aisleId,
         public readonly ?string $categoryId,
         public readonly ?string $nutritionFactsId,
+        public readonly bool $favorite,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
         public readonly string $createdByUserId,

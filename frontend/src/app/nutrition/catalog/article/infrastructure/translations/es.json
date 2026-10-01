@@ -12,7 +12,12 @@
     "filter": {
       "category": "Categoría",
       "brand": "Marca",
-      "store": "Súper"
+      "store": "Súper",
+      "favorite": {
+        "all": "Todos",
+        "only": "Favoritos",
+        "excluded": "No favoritos"
+      }
     },
     "macro": {
       "kcal": "kcal",
@@ -24,7 +29,10 @@
       "title": "Catálogo vacío",
       "text": "Aún no hay productos en el catálogo"
     },
-    "scan": "Escanear"
+    "scan": "Escanear",
+    "favorite": {
+      "toggle": "Marcar como favorito"
+    }
   },
   "getArticle": {
     "back": "Volver",
@@ -112,7 +120,8 @@
         },
         "swapUnit": "Cambiar de unidad"
       }
-    }
+    },
+    "favorite": "Favorito"
   },
   "article": {
     "breadcrumb": {
