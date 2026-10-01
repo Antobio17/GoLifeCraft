@@ -20,10 +20,6 @@
   }
 }
 
-:host-context(:root:active-view-transition) {
-  view-transition-name: ds-vt-tabbar;
-}
-
 .tabbar {
   width: 100%;
   max-width: var(--ds-app-frame-width, 30rem);
