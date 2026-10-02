@@ -10,7 +10,7 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="62%"
-      [actions]="2"
+      [actions]="3"
     />
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ds-skeleton-chips
@@ -58,11 +58,25 @@
           (clicked)="onStartWorkout()"
         />
       }
-      <ds-menu
+      <ds-button
         slot="actions"
-        [triggerLabel]="'getSession.actions' | t"
-        [items]="menuItems()"
-        (selected)="onMenuAction($event)"
+        data-testid="session-edit"
+        variant="secondary"
+        size="icon-lg"
+        icon="pencil"
+        [iconSize]="19"
+        [ariaLabel]="'getSession.edit' | t"
+        (clicked)="onEdit()"
+      />
+      <ds-button
+        slot="actions"
+        data-testid="session-delete"
+        variant="danger"
+        size="icon-lg"
+        icon="trash"
+        [iconSize]="19"
+        [ariaLabel]="'getSession.delete' | t"
+        (clicked)="onDelete()"
       />
     </ds-screen-header>
 
@@ -216,9 +230,8 @@
                   <ds-text variant="meta">{{ exercise.muscleLabel }}</ds-text>
                 </ds-stack>
                 <ds-stack
-                  direction="row"
-                  align="center"
-                  [gap]="'var(--ds-space-2)'"
+                  align="end"
+                  [gap]="'var(--ds-space-1)'"
                   [shrink]="false"
                 >
                   <ds-chip tone="brand">
