@@ -5,6 +5,7 @@
 >
   @if (loading()) {
     <ds-skeleton-screen-header
+      [stacked]="true"
       [leading]="true"
       [eyebrow]="true"
       [subtitle]="false"
@@ -29,6 +30,7 @@
   } @else if (recipe(); as detail) {
     <ds-screen-header
       [sticky]="true"
+      [stacked]="true"
       [leading]="'back'"
       [leadingLabel]="'getProductionRecipe.back' | t"
       [eyebrow]="statusLabel()"

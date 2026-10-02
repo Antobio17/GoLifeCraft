@@ -1,13 +1,33 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "ds-skeleton-screen-header",
+  imports: [NgTemplateOutlet],
   template: `
-    <div class="skhead">
+    <div class="skhead" [class.skhead--stacked]="stacked">
       @if (leading) {
         <span class="ds-sk skhead__lead"></span>
       }
 
+      @if (!stacked) {
+        <ng-container [ngTemplateOutlet]="text" />
+      }
+
+      @if (actions > 0) {
+        <div class="skhead__actions">
+          @for (action of actionArray; track action) {
+            <span class="ds-sk skhead__action"></span>
+          }
+        </div>
+      }
+
+      @if (stacked) {
+        <ng-container [ngTemplateOutlet]="text" />
+      }
+    </div>
+
+    <ng-template #text>
       <div class="skhead__text">
         @if (eyebrow) {
           <span class="ds-sk skhead__eyebrow"></span>
@@ -17,15 +37,7 @@ import { Component, Input } from "@angular/core";
           <span class="ds-sk skhead__subtitle"></span>
         }
       </div>
-
-      @if (actions > 0) {
-        <div class="skhead__actions">
-          @for (action of actionArray; track action) {
-            <span class="ds-sk skhead__action"></span>
-          }
-        </div>
-      }
-    </div>
+    </ng-template>
   `,
   styles: [
     `
@@ -66,8 +78,16 @@ import { Component, Input } from "@angular/core";
         max-width: 100%;
         height: 0.6875rem;
       }
+      .skhead--stacked {
+        flex-wrap: wrap;
+        row-gap: var(--ds-space-3);
+      }
+      .skhead--stacked .skhead__text {
+        flex-basis: 100%;
+      }
       .skhead__actions {
         flex: 0 0 auto;
+        margin-left: auto;
         display: flex;
         align-items: center;
         gap: var(--ds-space-2);
@@ -93,6 +113,7 @@ export class SkeletonScreenHeaderComponent {
   @Input() subtitleWidth = "44%";
   @Input() actions = 0;
   @Input() actionWidth = "2.5rem";
+  @Input() stacked = false;
 
   get actionArray(): number[] {
     return Array.from({ length: this.actions }, (_, index) => index);

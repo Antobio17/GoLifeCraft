@@ -1,6 +1,7 @@
 <ds-page-wrapper [maxWidth]="'42.5rem'" [gap]="'var(--ds-space-3)'">
   @if (loading()) {
     <ds-skeleton-screen-header
+      [stacked]="true"
       [leading]="true"
       [eyebrow]="true"
       [subtitle]="false"
@@ -28,6 +29,7 @@
   } @else if (vm(); as detail) {
     <ds-screen-header
       [sticky]="true"
+      [stacked]="true"
       [leading]="'back'"
       [leadingLabel]="'getWorkout.back' | t"
       [eyebrow]="'getWorkout.eyebrow' | t"
