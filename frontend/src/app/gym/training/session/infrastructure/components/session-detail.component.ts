@@ -50,10 +50,6 @@ import { SkeletonExerciseComponent } from "@shared/design-system/skeleton/infras
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
 import {
-  MenuComponent,
-  MenuItem,
-} from "@shared/design-system/menu/infrastructure/components/menu.component";
-import {
   SegmentedToggleComponent,
   SegmentedOption,
 } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
@@ -154,7 +150,6 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     SkeletonExerciseComponent,
     SkeletonLineComponent,
     TextareaComponent,
-    MenuComponent,
     SegmentedToggleComponent,
     SelectComponent,
     ProgressionCardComponent,
@@ -716,24 +711,6 @@ export class SessionDetailComponent implements OnInit {
         ? "getSession.weightMode.perSide"
         : "getSession.weightMode.total",
     );
-  }
-
-  menuItems = computed<MenuItem[]>(() => [
-    { value: "edit", label: this.t("getSession.edit"), icon: "pencil" },
-    {
-      value: "delete",
-      label: this.t("getSession.delete"),
-      icon: "trash",
-      danger: true,
-    },
-  ]);
-
-  onMenuAction(value: string): void {
-    if (value === "edit") {
-      this.onEdit();
-      return;
-    }
-    this.onDelete();
   }
 
   private t(key: string, params?: Record<string, unknown>): string {
