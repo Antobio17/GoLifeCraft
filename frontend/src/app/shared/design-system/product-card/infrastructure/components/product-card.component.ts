@@ -181,8 +181,12 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         min-width: 0;
       }
       .ds-pcard--favoritable .ds-pcard__aside--favorite {
-        justify-content: flex-start;
-        gap: var(--ds-space-1);
+        justify-content: space-between;
+      }
+      .ds-pcard--favoritable .ds-pcard__favorite {
+        align-self: flex-end;
+        margin-top: auto;
+        margin-bottom: calc(var(--ds-space-1) * -1);
       }
       .ds-pcard__favorite {
         display: inline-flex;
@@ -190,7 +194,7 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         justify-content: center;
         width: 2.25rem;
         height: 2.25rem;
-        margin-right: calc(var(--ds-space-2) * -1);
+        margin-right: calc(var(--ds-space-1) * -1);
         appearance: none;
         border: none;
         border-radius: var(--ds-radius-md);
