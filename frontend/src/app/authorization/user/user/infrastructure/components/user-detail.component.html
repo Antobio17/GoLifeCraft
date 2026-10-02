@@ -1,11 +1,11 @@
 <ds-page-wrapper [maxWidth]="'56rem'" [gap]="'var(--ds-space-3)'">
   <ds-screen-header
     [sticky]="true"
+    [stacked]="true"
     leading="back"
     [leadingLabel]="'userDetail.back' | t"
     [eyebrow]="'userDetail.eyebrow' | t"
     [title]="loading() ? ('userDetail.title' | t) : displayName()"
-    [wrapTitle]="true"
     (leadingClick)="back()"
   >
     <ds-chip slot="actions" tone="brand" [uppercase]="true">{{

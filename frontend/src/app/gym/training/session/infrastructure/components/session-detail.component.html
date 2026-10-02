@@ -5,6 +5,7 @@
 >
   @if (loading()) {
     <ds-skeleton-screen-header
+      [stacked]="true"
       [leading]="true"
       [eyebrow]="true"
       [subtitle]="false"
@@ -38,11 +39,11 @@
   } @else {
     <ds-screen-header
       [sticky]="!isActiveHere"
+      [stacked]="true"
       [leading]="'back'"
       [leadingLabel]="'getSession.back' | t"
       [eyebrow]="'getSession.eyebrow' | t"
       [title]="name()"
-      [wrapTitle]="true"
       (leadingClick)="goBack()"
     >
       @if (!activeWorkout.isActive()) {

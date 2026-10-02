@@ -5,6 +5,7 @@
 >
   @if (loading()) {
     <ds-skeleton-screen-header
+      [stacked]="true"
       [leading]="true"
       [eyebrow]="true"
       [subtitle]="false"
@@ -57,6 +58,7 @@
   } @else if (detail(); as d) {
     <ds-screen-header
       [sticky]="true"
+      [stacked]="true"
       data-testid="article-header"
       [leading]="'back'"
       [leadingLabel]="'getArticle.back' | t"

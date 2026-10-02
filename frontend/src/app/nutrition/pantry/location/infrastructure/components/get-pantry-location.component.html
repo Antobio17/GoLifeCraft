@@ -1,6 +1,7 @@
 <ds-page-wrapper [gap]="'var(--ds-space-3)'">
   @if (loading()) {
     <ds-skeleton-screen-header
+      [stacked]="true"
       [leading]="true"
       [eyebrow]="true"
       [subtitle]="true"
@@ -23,6 +24,7 @@
   @if (!loading() && attributes(); as location) {
     <ds-screen-header
       [sticky]="true"
+      [stacked]="true"
       [leading]="'back'"
       [leadingLabel]="'getPantryLocation.back' | t"
       [eyebrow]="'getPantryLocation.eyebrow' | t"
