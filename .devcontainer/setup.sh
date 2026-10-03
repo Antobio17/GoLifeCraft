@@ -17,11 +17,11 @@ php_console() { docker exec "$PHP_CONTAINER" php bin/console "$@"; }
 
 create_env_file() {
   if [ -f "$ENV_FILE" ]; then
-    step "$ENV_FILE ya existe, se respeta"
+    step "$ENV_FILE already exists, keeping it"
     return
   fi
 
-  step "Generando $ENV_FILE con secretos aleatorios"
+  step "Generating $ENV_FILE with random secrets"
   local db_password app_secret jwt_passphrase
   db_password="$(openssl rand -hex 16)"
   app_secret="$(openssl rand -hex 32)"
@@ -42,7 +42,7 @@ create_env_file() {
 }
 
 wait_for_mysql() {
-  step "Esperando a MySQL"
+  step "Waiting for MySQL"
   local password
   password="$(grep '^DATABASE_MASTER_PASSWORD=' "$ENV_FILE" | cut -d= -f2-)"
   for _ in $(seq 1 90); do
@@ -51,32 +51,32 @@ wait_for_mysql() {
     fi
     sleep 2
   done
-  echo "✖ MySQL no respondió a tiempo" >&2
+  echo "✖ MySQL did not respond in time" >&2
   exit 1
 }
 
 create_env_file
 
-step "Construyendo y levantando ${SERVICES[*]}"
+step "Building and starting ${SERVICES[*]}"
 compose up -d --build "${SERVICES[@]}"
 
 wait_for_mysql
 
-step "Instalando dependencias de Composer"
+step "Installing Composer dependencies"
 docker exec "$PHP_CONTAINER" composer install --no-interaction --prefer-dist
 
-step "Generando las claves JWT"
+step "Generating the JWT keypair"
 php_console lexik:jwt:generate-keypair --skip-if-exists
 docker exec "$PHP_CONTAINER" chown -R www-data:www-data config/jwt var
 
-step "Creando el esquema de la base master"
+step "Creating the master database schema"
 php_console doctrine:schema:update --force --em=tenant_manager
 php_console doctrine:schema:update --force
 
-step "Cargando el usuario y los datos de prueba"
+step "Loading the test user and seed data"
 bash e2e/scripts/seed.sh
 
-step "Instalando dependencias del frontend"
+step "Installing frontend dependencies"
 (cd frontend && npm ci)
 
-echo "✔ Entorno listo. Usuario: e2e@golifecraft.test / GoLifeCraft123!"
+echo "✔ Environment ready. User: e2e@golifecraft.test / GoLifeCraft123!"

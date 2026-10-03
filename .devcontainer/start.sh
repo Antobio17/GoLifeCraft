@@ -18,4 +18,4 @@ cd frontend
 nohup npx ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --allowed-hosts true \
   > "$LOG_FILE" 2>&1 &
 
-echo "▸ Frontend arrancando en el puerto 4200 (log: $LOG_FILE)"
+echo "▸ Frontend starting on port 4200 (log: $LOG_FILE)"
