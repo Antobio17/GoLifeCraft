@@ -8,7 +8,7 @@ LOG_FILE="/tmp/golifecraft-frontend.log"
 
 [ -f .env.local ] || exit 0
 
-docker compose --env-file .env.local up -d nginx php db mailpit
+docker compose --env-file .env.local -f docker-compose.yml -f .devcontainer/docker-compose.codespace.yml up -d nginx php db
 
 if pgrep -f "ng serve" >/dev/null; then
   exit 0
