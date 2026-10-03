@@ -1,0 +1,5 @@
+services:
+  php:
+    links: !override
+      - nginx:golifecraft_nginx
+      - db:golifecraft_mysql

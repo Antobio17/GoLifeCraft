@@ -5,13 +5,13 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 ENV_FILE=".env.local"
-SERVICES=(nginx php db mailpit)
+SERVICES=(nginx php db)
 PHP_CONTAINER="golifecraft_php"
 DB_CONTAINER="golifecraft_mysql"
 
 step() { echo "▸ $1"; }
 
-compose() { docker compose --env-file "$ENV_FILE" "$@"; }
+compose() { docker compose --env-file "$ENV_FILE" -f docker-compose.yml -f .devcontainer/docker-compose.codespace.yml "$@"; }
 
 php_console() { docker exec "$PHP_CONTAINER" php bin/console "$@"; }
 
@@ -37,6 +37,8 @@ create_env_file() {
     -e "s/^VAPID_PUBLIC_KEY=.*/VAPID_PUBLIC_KEY=/" \
     -e "s/^VAPID_PRIVATE_KEY=.*/VAPID_PRIVATE_KEY=/" \
     backend/.env.local.dist > "$ENV_FILE"
+
+  echo "MAILER_DSN=null://null" >> "$ENV_FILE"
 }
 
 wait_for_mysql() {
