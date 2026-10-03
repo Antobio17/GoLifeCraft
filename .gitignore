@@ -19,5 +19,5 @@ frontend/tools/design-sync/
 # Permisos y overrides personales de Claude Code (settings.json sí se versiona)
 .claude/settings.local.json
 
-# Claves JWT generadas en local por el devcontainer (en prod viven en ./volumes)
+# JWT keys generated locally by the devcontainer (production keeps them in ./volumes)
 /backend/config/jwt/
