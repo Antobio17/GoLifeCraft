@@ -1,0 +1,30 @@
+{
+  "name": "GoLifeCraft",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" }
+  },
+  "hostRequirements": {
+    "memory": "8gb"
+  },
+  "forwardPorts": [4200, 8083, 8026],
+  "portsAttributes": {
+    "4200": { "label": "Frontend", "onAutoForward": "openBrowser" },
+    "8083": { "label": "API (nginx)", "onAutoForward": "silent" },
+    "8026": { "label": "Mailpit", "onAutoForward": "silent" }
+  },
+  "otherPortsAttributes": { "onAutoForward": "silent" },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/start.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "angular.ng-template",
+        "bmewburn.vscode-intelephense-client",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  }
+}
