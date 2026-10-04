@@ -10,12 +10,12 @@ Without a prebuild the first creation takes 5–10 minutes. With the prebuild
 enabled (repo **Settings** → **Codespaces** → **Set up prebuild**, branch
 `master`, trigger **On configuration change**) images and dependencies come
 ready and only the database setup runs. When it ends with `✔ Environment ready`,
-open the **Ports** tab and click the globe on port **4200**.
+run `make front` in a terminal, then open the **Ports** tab and click the globe on port **4200**.
 
-Ports **4200** and **8083** are made public automatically on every start
-(log: `/tmp/golifecraft-ports.log`). Don't make the database port public.
+Ports **4200** and **8083** are made public automatically when the editor
+attaches and again on `make front`. Don't make the database port public.
 
-If the page stays blank, check that the **Frontend (ng serve)** terminal shows
+If the page stays blank, check that the `make front` terminal shows
 `Application bundle generation complete`. If it does, open the codespace in a regular Safari tab (not a
 web app added to the Home Screen) and give the first build a minute.
 
@@ -35,16 +35,14 @@ GoLifeCraft123!
 
 ## Frontend
 
-The dev server starts on its own in the **Frontend (ng serve)** terminal every
-time the codespace opens, and waits for the dependencies on the first creation.
-Follow the build there.
-
-Restart the dev server: close that terminal, then command palette →
-**Tasks: Run Task** → **Frontend (ng serve)**, or:
+Start the dev server in a terminal and leave it open:
 
 ```bash
-pkill -f "ng serve"; bash .devcontainer/frontend.sh
+make front
 ```
+
+It installs the frontend dependencies if they changed and makes ports 4200 and
+8083 public. To restart it, stop it with `Ctrl+C` and run `make front` again.
 
 Lint and format:
 
