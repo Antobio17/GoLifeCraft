@@ -14,6 +14,7 @@
     "8083": { "label": "API (nginx)", "onAutoForward": "silent" }
   },
   "otherPortsAttributes": { "onAutoForward": "silent" },
+  "onCreateCommand": "bash .devcontainer/on-create.sh",
   "postCreateCommand": "bash .devcontainer/setup.sh",
   "postStartCommand": "bash .devcontainer/start.sh",
   "customizations": {

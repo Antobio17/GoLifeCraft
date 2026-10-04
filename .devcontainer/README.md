@@ -6,7 +6,10 @@ Develop and test GoLifeCraft from the browser (iPad included) before deploying.
 
 GitHub → **Code** → **Codespaces** → **Create codespace on master**.
 
-The first creation takes 5–10 minutes. When it ends with `✔ Environment ready`,
+Without a prebuild the first creation takes 5–10 minutes. With the prebuild
+enabled (repo **Settings** → **Codespaces** → **Set up prebuild**, branch
+`master`, trigger **On configuration change**) images and dependencies come
+ready and only the database setup runs. When it ends with `✔ Environment ready`,
 open the **Ports** tab and click the globe on port **4200**.
 
 If the page stays blank, open the codespace in a regular Safari tab (not a
