@@ -9,7 +9,22 @@ GitHub → **Code** → **Codespaces** → **Create codespace on master**.
 The first creation takes 5–10 minutes. When it ends with `✔ Environment ready`,
 open the **Ports** tab and click the globe on port **4200**.
 
-Login: `e2e@golifecraft.test` / `GoLifeCraft123!`
+If the page stays blank, open the codespace in a regular Safari tab (not a
+web app added to the Home Screen) and give the first build a minute.
+
+## Login
+
+Email:
+
+```
+e2e@golifecraft.test
+```
+
+Password:
+
+```
+GoLifeCraft123!
+```
 
 ## Frontend
 
