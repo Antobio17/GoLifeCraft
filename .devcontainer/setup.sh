@@ -74,7 +74,7 @@ php_console doctrine:schema:update --force --em=tenant_manager
 php_console doctrine:schema:update --force
 
 step "Loading the test user and seed data"
-bash e2e/scripts/seed.sh
+bash e2e/scripts/seed.sh || echo "⚠ Seed failed, continuing without test data"
 
 step "Installing frontend dependencies"
 (cd frontend && npm ci)
