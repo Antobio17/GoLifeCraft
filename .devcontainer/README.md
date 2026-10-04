@@ -15,7 +15,8 @@ open the **Ports** tab and click the globe on port **4200**.
 Ports **4200** and **8083** are made public automatically on every start
 (log: `/tmp/golifecraft-ports.log`). Don't make the database port public.
 
-If the page stays blank, open the codespace in a regular Safari tab (not a
+If the page stays blank, check that the **Frontend (ng serve)** terminal shows
+`Application bundle generation complete`. If it does, open the codespace in a regular Safari tab (not a
 web app added to the Home Screen) and give the first build a minute.
 
 ## Login
@@ -34,16 +35,15 @@ GoLifeCraft123!
 
 ## Frontend
 
-Follow the dev server log:
+The dev server starts on its own in the **Frontend (ng serve)** terminal every
+time the codespace opens, and waits for the dependencies on the first creation.
+Follow the build there.
+
+Restart the dev server: close that terminal, then command palette →
+**Tasks: Run Task** → **Frontend (ng serve)**, or:
 
 ```bash
-tail -f /tmp/golifecraft-frontend.log
-```
-
-Restart the dev server:
-
-```bash
-pkill -f "ng serve"; bash .devcontainer/start.sh
+pkill -f "ng serve"; bash .devcontainer/frontend.sh
 ```
 
 Lint and format:
