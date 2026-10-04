@@ -18,11 +18,9 @@
   "onCreateCommand": "bash .devcontainer/on-create.sh",
   "postCreateCommand": "bash .devcontainer/setup.sh",
   "postStartCommand": "bash .devcontainer/start.sh",
+  "postAttachCommand": "bash .devcontainer/public-ports.sh",
   "customizations": {
     "vscode": {
-      "settings": {
-        "task.allowAutomaticTasks": "on"
-      },
       "extensions": [
         "angular.ng-template",
         "bmewburn.vscode-intelephense-client",

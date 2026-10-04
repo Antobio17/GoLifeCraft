@@ -1,4 +1,4 @@
-.PHONY: up down build logs ps up-production down-production
+.PHONY: up down build logs ps front up-production down-production
 
 ENV_FILE ?= .env.local
 
@@ -16,6 +16,9 @@ logs:
 
 ps:
 	docker compose --env-file $(ENV_FILE) ps
+
+front:
+	bash .devcontainer/frontend.sh
 
 up-production:
 	docker compose --env-file $(ENV_FILE) -f docker-compose.prod.yml up -d
