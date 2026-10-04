@@ -41,6 +41,7 @@ interface ProductEntry {
   units: string[];
   factors: Record<string, number>;
   perUnit: RecipeMacros;
+  favorite: boolean;
 }
 
 interface RecipeEntry {
@@ -97,6 +98,7 @@ export class RecipeFormService {
         units: [baseUnit, ...Object.keys(factors)],
         factors,
         perUnit,
+        favorite: article.attributes.favorite ?? false,
       });
     });
 
@@ -121,6 +123,11 @@ export class RecipeFormService {
   productChoices(query: string): PickableIngredient[] {
     return Array.from(this.products().entries())
       .filter(([, entry]) => this.textSearch.matches(query, entry.name))
+      .sort(
+        ([, left], [, right]) =>
+          Number(right.favorite) - Number(left.favorite) ||
+          left.name.localeCompare(right.name, "es"),
+      )
       .map(([refId, entry]) => ({
         kind: "product" as const,
         refId,
@@ -129,8 +136,7 @@ export class RecipeFormService {
         image: entry.image,
         detail: `por 100 ${entry.baseUnit}`,
         macros: this.scale(entry.perUnit, DEFAULT_PRODUCT_QUANTITY),
-      }))
-      .sort((left, right) => left.name.localeCompare(right.name, "es"));
+      }));
   }
 
   recipeChoices(query: string, excludeId: string): PickableIngredient[] {
