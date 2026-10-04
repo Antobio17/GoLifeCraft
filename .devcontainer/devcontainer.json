@@ -20,6 +20,9 @@
   "postStartCommand": "bash .devcontainer/start.sh",
   "customizations": {
     "vscode": {
+      "settings": {
+        "task.allowAutomaticTasks": "on"
+      },
       "extensions": [
         "angular.ng-template",
         "bmewburn.vscode-intelephense-client",
