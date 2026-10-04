@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -63,6 +64,7 @@ export class ScanTicketComponent implements OnInit {
   private ticketDraftView = inject(TicketDraftViewService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "nutrition/shopping/ticket";
 
@@ -173,7 +175,7 @@ export class ScanTicketComponent implements OnInit {
       .subscribe({
         next: () => {
           this.saving.set(false);
-          this.router.navigate(["/tickets", id]);
+          this.router.navigate(["/tickets", id], { replaceUrl: true });
         },
         error: () => this.saving.set(false),
       });
@@ -186,7 +188,7 @@ export class ScanTicketComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(["/tickets"]);
+    this.backNavigation.leave(["/tickets"]);
   }
 
   private onDraft(

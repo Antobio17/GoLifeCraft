@@ -9,7 +9,7 @@ import {
   viewChild,
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { Router } from "@angular/router";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import {
   AbstractControl,
   FormBuilder,
@@ -70,7 +70,7 @@ export class ExerciseEditorComponent implements OnInit {
   private muscleCatalog = inject(MuscleCatalogService);
   private iconCatalog = inject(ExerciseIconCatalogService);
   private floatingToastService = inject(FloatingToastService);
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "gym/library/exercise";
   readonly muscleGroups = this.muscleCatalog.regions();
@@ -214,7 +214,7 @@ export class ExerciseEditorComponent implements OnInit {
       next: () => {
         this.saving.set(false);
         this.draft.markSaved();
-        this.router.navigate(["/gym/exercises"]);
+        this.backNavigation.leave(["/gym/exercises"]);
       },
       error: () => this.saving.set(false),
     });
@@ -225,6 +225,6 @@ export class ExerciseEditorComponent implements OnInit {
   }
 
   cancel(): void {
-    this.draft.leave(() => this.router.navigate(["/gym/exercises"]));
+    this.draft.leave(() => this.backNavigation.leave(["/gym/exercises"]));
   }
 }

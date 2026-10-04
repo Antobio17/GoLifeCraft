@@ -351,7 +351,7 @@ export class GetTicketComponent {
       next: () => {
         this.deleting.set(false);
         this.showDeleteModal.set(false);
-        this.router.navigate(["/tickets"]);
+        this.backNavigation.leave(["/tickets"]);
       },
       error: () => {
         this.deleting.set(false);

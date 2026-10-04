@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
@@ -45,6 +46,7 @@ export class ScanArticleComponent implements OnInit {
   private articleDraftStore = inject(ArticleDraftStoreService);
   private floatingToastService = inject(FloatingToastService);
   private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "nutrition/catalog/article";
 
@@ -99,7 +101,7 @@ export class ScanArticleComponent implements OnInit {
       .subscribe({
         next: () => {
           this.importing.set(false);
-          this.router.navigate(["/catalog"]);
+          this.backNavigation.leave(["/catalog"]);
         },
         error: () => this.importing.set(false),
       });
@@ -107,7 +109,7 @@ export class ScanArticleComponent implements OnInit {
 
   onFillByHand(): void {
     this.articleDraftStore.clear();
-    this.router.navigate(["/catalog/create"]);
+    this.router.navigate(["/catalog/create"], { replaceUrl: true });
   }
 
   onEditMatch(): void {
@@ -118,11 +120,11 @@ export class ScanArticleComponent implements OnInit {
     }
 
     this.articleDraftStore.keep(match.draft, match.lowConfidenceFields);
-    this.router.navigate(["/catalog/create"]);
+    this.router.navigate(["/catalog/create"], { replaceUrl: true });
   }
 
   cancel(): void {
-    this.router.navigate(["/catalog"]);
+    this.backNavigation.leave(["/catalog"]);
   }
 
   private onDraft(data: GetArticleDraftResponse["data"]): void {
@@ -141,7 +143,7 @@ export class ScanArticleComponent implements OnInit {
     }
 
     this.articleDraftStore.keep(data.draft, data.lowConfidenceFields);
-    this.router.navigate(["/catalog/create"]);
+    this.router.navigate(["/catalog/create"], { replaceUrl: true });
   }
 
   private t(key: string, params?: Record<string, unknown>): string {

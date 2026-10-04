@@ -8,7 +8,7 @@ import {
   Signal,
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { Router } from "@angular/router";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import {
   FormBuilder,
   FormGroup,
@@ -152,7 +152,7 @@ export class RecipeEditorComponent implements OnInit {
   private updateRecipeService = inject(UpdateRecipeService);
   private floatingToastService = inject(FloatingToastService);
   private aggregateImageService = inject(AggregateImageService);
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "nutrition/recipe/recipe";
   readonly emojiGroups = this.emojiCatalog.groups();
@@ -470,18 +470,14 @@ export class RecipeEditorComponent implements OnInit {
       next: () => {
         this.saving.set(false);
         this.draft.markSaved();
-        this.router.navigate(["/recipes"]);
+        this.backNavigation.leave(this.exitRoute);
       },
       error: () => this.saving.set(false),
     });
   }
 
   cancel(): void {
-    this.draft.leave(() =>
-      this.router.navigate(
-        this.isEdit ? ["/recipes", this.id()] : ["/recipes"],
-      ),
-    );
+    this.draft.leave(() => this.backNavigation.leave(this.exitRoute));
   }
 
   onImagePicked(file: File): void {
@@ -498,6 +494,10 @@ export class RecipeEditorComponent implements OnInit {
     this.pickedImagePreview.set(null);
     this.imageCleared.set(true);
     this.form.markAsDirty();
+  }
+
+  private get exitRoute(): string[] {
+    return this.isEdit ? ["/recipes", this.id()] : ["/recipes"];
   }
 
   private get recipeId(): string {

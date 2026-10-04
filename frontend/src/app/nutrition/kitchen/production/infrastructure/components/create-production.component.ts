@@ -1,7 +1,6 @@
 import { Component, DestroyRef, computed, inject, signal } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
 import { of } from "rxjs";
 import { catchError, switchMap, tap } from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
@@ -72,7 +71,6 @@ export class CreateProductionComponent {
   private startProductionService = inject(StartProductionService);
   private updateRecipeStockService = inject(UpdateRecipeStockService);
   private destroyRef = inject(DestroyRef);
-  private router = inject(Router);
   protected range = inject(ProductionRangeService);
   protected form = inject(ProposalFormService);
   protected view = inject(ProductionViewService);
@@ -260,7 +258,7 @@ export class CreateProductionComponent {
       .subscribe({
         next: () => {
           this.saving.set(false);
-          this.router.navigate(["/kitchen"]);
+          this.backNavigation.leave(["/kitchen"]);
         },
         error: () => this.saving.set(false),
       });

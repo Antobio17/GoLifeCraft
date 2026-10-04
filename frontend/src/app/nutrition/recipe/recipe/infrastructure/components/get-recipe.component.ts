@@ -348,7 +348,7 @@ export class GetRecipeComponent {
       next: () => {
         this.deleting.set(false);
         this.showDeleteModal.set(false);
-        this.router.navigate(["/recipes"]);
+        this.backNavigation.leave(["/recipes"]);
       },
       error: () => {
         this.deleting.set(false);

@@ -1,6 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
 import { delay } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -74,7 +73,6 @@ const REDIRECT_DELAY_MS = 600;
 export class SaveFinanceBudgetComponent implements OnInit {
   private translationService = inject(TranslationService);
   private backNavigation = inject(BackNavigationService);
-  private router = inject(Router);
   private getFinanceBudgetSettingsService = inject(
     GetFinanceBudgetSettingsService,
   );
@@ -284,7 +282,7 @@ export class SaveFinanceBudgetComponent implements OnInit {
         next: () => {
           this.saving.set(false);
           this.draft.markSaved();
-          this.router.navigate(["/economy/budget"]);
+          this.backNavigation.leave(["/economy/budget"]);
         },
         error: () => this.saving.set(false),
       });

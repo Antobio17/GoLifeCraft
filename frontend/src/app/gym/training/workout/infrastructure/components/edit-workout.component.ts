@@ -7,7 +7,6 @@ import {
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
-import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
@@ -102,7 +101,6 @@ export class EditWorkoutComponent {
   private setNumbering = inject(SetNumberingService);
   private textSearch = inject(TextSearchService);
   private floatingToastService = inject(FloatingToastService);
-  private router = inject(Router);
   private destroyRef = inject(DestroyRef);
 
   private readonly MODULE_PATH = "gym/training/workout";
@@ -352,9 +350,7 @@ export class EditWorkoutComponent {
             keyTranslation: "workout.edit.saved",
             details: [],
           });
-          this.router.navigate(["/gym/history", this.id()], {
-            replaceUrl: true,
-          });
+          this.backNavigation.leave(["/gym/history", this.id()]);
         },
         error: () => this.saving.set(false),
       });

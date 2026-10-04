@@ -7,7 +7,7 @@ import {
   signal,
   viewChild,
 } from "@angular/core";
-import { Router } from "@angular/router";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import {
   FormBuilder,
   FormGroup,
@@ -59,7 +59,7 @@ export class SessionFormComponent implements OnInit {
   private updateSessionDetailsService = inject(UpdateSessionDetailsService);
   private getSessionService = inject(GetSessionService);
   private sessionDraft = inject(SessionDraftService);
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "gym/training/session";
   private readonly DEFAULT_REST_SECONDS = 180;
@@ -199,10 +199,10 @@ export class SessionFormComponent implements OnInit {
 
   private navigateAway(): void {
     if (this.isEdit) {
-      this.router.navigate(["/gym/sessions", this.id()]);
+      this.backNavigation.leave(["/gym/sessions", this.id()]);
       return;
     }
-    this.router.navigate(["/gym/sessions"]);
+    this.backNavigation.leave(["/gym/sessions"]);
   }
 
   toggleProgressionEnabled(): void {

@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
-import { Router } from "@angular/router";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import {
   FormBuilder,
   FormGroup,
@@ -49,7 +49,7 @@ export class StartInventoryComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private getPantryLocationsService = inject(GetPantryLocationsService);
   private startInventoryService = inject(StartInventoryService);
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "nutrition/pantry/inventory";
 
@@ -124,14 +124,14 @@ export class StartInventoryComponent implements OnInit {
       .subscribe({
         next: () => {
           this.saving.set(false);
-          this.router.navigate(["/inventory"]);
+          this.backNavigation.leave(["/inventory"]);
         },
         error: () => this.saving.set(false),
       });
   }
 
   cancel(): void {
-    this.router.navigate(["/inventory"]);
+    this.backNavigation.leave(["/inventory"]);
   }
 
   protected t(key: string): string {

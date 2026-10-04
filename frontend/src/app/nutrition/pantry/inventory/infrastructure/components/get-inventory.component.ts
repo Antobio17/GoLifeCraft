@@ -219,7 +219,7 @@ export class GetInventoryComponent {
       next: () => {
         this.discarding.set(false);
         this.showDiscardModal.set(false);
-        this.router.navigate(["/inventory"]);
+        this.backNavigation.leave(["/inventory"]);
       },
       error: () => {
         this.discarding.set(false);
