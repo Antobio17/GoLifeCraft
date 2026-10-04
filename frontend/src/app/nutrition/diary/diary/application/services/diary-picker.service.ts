@@ -26,6 +26,7 @@ interface ProductEntry {
   diaryUnit: string;
   units: string[];
   factors: Record<string, number>;
+  favorite: boolean;
 }
 
 export interface DiaryEntryDefaults {
@@ -98,6 +99,7 @@ export class DiaryPickerService {
             equivalence.quantity,
           ]),
         ]),
+        favorite: article.attributes.favorite ?? false,
       });
     });
 
@@ -163,6 +165,11 @@ export class DiaryPickerService {
   productChoices(query: string): DiaryChoice[] {
     return Array.from(this.products().entries())
       .filter(([, entry]) => this.textSearch.matches(query, entry.name))
+      .sort(
+        ([, left], [, right]) =>
+          Number(right.favorite) - Number(left.favorite) ||
+          left.name.localeCompare(right.name, "es"),
+      )
       .map(([refId, entry]) => ({
         kind: "product" as const,
         refId,
@@ -171,8 +178,7 @@ export class DiaryPickerService {
         image: entry.image,
         detail: entry.detail,
         macros: entry.macros,
-      }))
-      .sort((left, right) => left.name.localeCompare(right.name, "es"));
+      }));
   }
 
   recipeChoices(query: string): DiaryChoice[] {
