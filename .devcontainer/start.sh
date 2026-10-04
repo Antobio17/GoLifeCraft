@@ -10,6 +10,9 @@ LOG_FILE="/tmp/golifecraft-frontend.log"
 
 docker compose --env-file .env.local -f docker-compose.yml -f .devcontainer/docker-compose.codespace.yml up -d nginx php db
 
+setsid nohup bash .devcontainer/public-ports.sh \
+  < /dev/null > /tmp/golifecraft-ports.log 2>&1 &
+
 if pgrep -f "ng serve" >/dev/null; then
   exit 0
 fi

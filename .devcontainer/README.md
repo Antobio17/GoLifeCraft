@@ -12,6 +12,9 @@ enabled (repo **Settings** → **Codespaces** → **Set up prebuild**, branch
 ready and only the database setup runs. When it ends with `✔ Environment ready`,
 open the **Ports** tab and click the globe on port **4200**.
 
+Ports **4200** and **8083** are made public automatically on every start
+(log: `/tmp/golifecraft-ports.log`). Don't make the database port public.
+
 If the page stays blank, open the codespace in a regular Safari tab (not a
 web app added to the Home Screen) and give the first build a minute.
 
