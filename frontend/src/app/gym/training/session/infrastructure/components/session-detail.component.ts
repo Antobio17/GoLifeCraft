@@ -1184,7 +1184,7 @@ export class SessionDetailComponent implements OnInit {
       next: () => {
         this.isDeleting.set(false);
         this.showDeleteModal.set(false);
-        this.router.navigate(["/gym/sessions"]);
+        this.backNavigation.leave(["/gym/sessions"]);
       },
       error: () => {
         this.isDeleting.set(false);

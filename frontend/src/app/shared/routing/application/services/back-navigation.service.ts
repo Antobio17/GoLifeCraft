@@ -58,6 +58,16 @@ export class BackNavigationService {
     this.location.back();
   }
 
+  leave(fallback: unknown[]): void {
+    if (0 === this.depth) {
+      void this.router.navigate(fallback, { replaceUrl: true });
+
+      return;
+    }
+
+    this.location.back();
+  }
+
   private deltaOf(event: NavigationStart): number {
     if ("popstate" === event.navigationTrigger) return -1;
 

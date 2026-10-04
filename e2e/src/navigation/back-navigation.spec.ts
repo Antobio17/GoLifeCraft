@@ -2,6 +2,8 @@ import { test, expect } from "../support/test";
 import { waitForAppReady } from "../support/app-ready";
 import { SEED } from "../support/seed-data";
 import { DiaryPage } from "../nutrition/diary/diary/diary.page";
+import { ArticlePage } from "../nutrition/catalog/article/article.page";
+import { ArticleEditorPage } from "../nutrition/catalog/article/article-editor.page";
 
 const backButton = ".ds-screen-head__lead";
 
@@ -40,6 +42,27 @@ test.describe("vuelta atrás", () => {
     await expect(page).toHaveURL(/\/catalog\/[0-9a-f-]{36}/);
     await waitForAppReady(page);
     await page.locator(backButton).first().click();
+    await expect(page).toHaveURL(/\/catalog$/);
+  });
+
+  test("guardar una edición quita el formulario del historial", async ({
+    page,
+  }) => {
+    await page.goto("/catalog");
+    await waitForAppReady(page);
+    await page.getByTestId("article-card").first().locator("button").click();
+    await expect(page).toHaveURL(/\/catalog\/[0-9a-f-]{36}$/);
+    await waitForAppReady(page);
+    const detailUrl = page.url();
+
+    await new ArticlePage(page).edit();
+    await waitForAppReady(page);
+    await new ArticleEditorPage(page).save();
+
+    await expect(page).toHaveURL(detailUrl);
+    await waitForAppReady(page);
+    await page.goBack();
+
     await expect(page).toHaveURL(/\/catalog$/);
   });
 

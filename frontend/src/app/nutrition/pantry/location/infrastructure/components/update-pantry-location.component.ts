@@ -6,7 +6,7 @@ import {
   signal,
   viewChild,
 } from "@angular/core";
-import { Router } from "@angular/router";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import {
   FormBuilder,
   FormGroup,
@@ -55,7 +55,7 @@ export class UpdatePantryLocationComponent implements OnInit {
   private getPantryLocationService = inject(GetPantryLocationService);
   private updatePantryLocationService = inject(UpdatePantryLocationService);
   private emojiCatalog = inject(PantryLocationEmojiCatalogService);
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "nutrition/pantry/location";
   readonly emojiGroups = this.emojiCatalog.groups();
@@ -114,7 +114,7 @@ export class UpdatePantryLocationComponent implements OnInit {
         next: () => {
           this.saving.set(false);
           this.draft.markSaved();
-          this.router.navigate(["/locations"]);
+          this.backNavigation.leave(["/locations"]);
         },
         error: () => this.saving.set(false),
       });
@@ -125,6 +125,6 @@ export class UpdatePantryLocationComponent implements OnInit {
   }
 
   cancel(): void {
-    this.draft.leave(() => this.router.navigate(["/locations"]));
+    this.draft.leave(() => this.backNavigation.leave(["/locations"]));
   }
 }

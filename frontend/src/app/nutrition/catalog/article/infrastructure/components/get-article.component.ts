@@ -450,7 +450,7 @@ export class GetArticleComponent {
       next: () => {
         this.deleting.set(false);
         this.showDeleteModal.set(false);
-        this.router.navigate(["/catalog"]);
+        this.backNavigation.leave(["/catalog"]);
       },
       error: () => {
         this.deleting.set(false);

@@ -8,7 +8,7 @@ import {
   viewChild,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { Router } from "@angular/router";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import {
   AbstractControl,
   FormBuilder,
@@ -139,7 +139,7 @@ export class ArticleEditorComponent implements OnInit {
   private articleDraftStore = inject(ArticleDraftStoreService);
   private floatingToastService = inject(FloatingToastService);
   private aggregateImageService = inject(AggregateImageService);
-  private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "nutrition/catalog/article";
   readonly emojiGroups = this.emojiCatalog.groups();
@@ -329,7 +329,7 @@ export class ArticleEditorComponent implements OnInit {
       next: () => {
         this.saving.set(false);
         this.draft.markSaved();
-        this.router.navigate(["/catalog"]);
+        this.backNavigation.leave(this.exitRoute);
       },
       error: () => this.saving.set(false),
     });
@@ -340,11 +340,7 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   cancel(): void {
-    this.draft.leave(() =>
-      this.router.navigate(
-        this.isEdit ? ["/catalog", this.id()] : ["/catalog"],
-      ),
-    );
+    this.draft.leave(() => this.backNavigation.leave(this.exitRoute));
   }
 
   onImagePicked(file: File): void {
@@ -361,6 +357,10 @@ export class ArticleEditorComponent implements OnInit {
     this.pickedImagePreview.set(null);
     this.imageCleared.set(true);
     this.form.markAsDirty();
+  }
+
+  private get exitRoute(): string[] {
+    return this.isEdit ? ["/catalog", this.id()] : ["/catalog"];
   }
 
   private get articleId(): string {
