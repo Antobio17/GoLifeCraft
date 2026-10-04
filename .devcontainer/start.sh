@@ -15,7 +15,7 @@ if pgrep -f "ng serve" >/dev/null; then
 fi
 
 cd frontend
-nohup npx ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --allowed-hosts true \
-  > "$LOG_FILE" 2>&1 &
+setsid nohup npx ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --allowed-hosts true \
+  < /dev/null > "$LOG_FILE" 2>&1 &
 
 echo "▸ Frontend starting on port 4200 (log: $LOG_FILE)"
