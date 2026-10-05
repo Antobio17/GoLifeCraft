@@ -6,6 +6,13 @@ services:
     tags:
       - { name: controller.service_arguments }
 
+  Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\RevokeManualStockMovementController:
+    class: Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\RevokeManualStockMovementController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
   Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\SetArticleStockTrackingController:
     class: Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\SetArticleStockTrackingController
     arguments:

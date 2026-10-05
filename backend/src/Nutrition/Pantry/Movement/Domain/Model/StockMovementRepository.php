@@ -6,6 +6,8 @@ interface StockMovementRepository
 {
     public function nextId(): string;
 
+    public function findById(string $id): ?StockMovement;
+
     public function findBySource(string $kind, string $refId, string $sourceKind, string $sourceId): ?StockMovement;
 
     /**

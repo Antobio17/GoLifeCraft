@@ -7,6 +7,14 @@ services:
     tags:
       - { name: 'mcp.tool' }
 
+  Nutrition\Pantry\Stock\Infrastructure\UI\Mcp\Tool\RevokeStockMovementTool:
+    class: Nutrition\Pantry\Stock\Infrastructure\UI\Mcp\Tool\RevokeStockMovementTool
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $requestStack: '@request_stack'
+    tags:
+      - { name: 'mcp.tool' }
+
   Nutrition\Pantry\Stock\Infrastructure\UI\Mcp\Tool\SetArticleStockTrackingTool:
     class: Nutrition\Pantry\Stock\Infrastructure\UI\Mcp\Tool\SetArticleStockTrackingTool
     arguments:

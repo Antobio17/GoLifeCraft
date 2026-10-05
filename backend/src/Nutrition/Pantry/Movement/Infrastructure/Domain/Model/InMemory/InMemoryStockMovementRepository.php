@@ -16,6 +16,11 @@ final class InMemoryStockMovementRepository implements StockMovementRepository
         return Uuid::uuid4()->toString();
     }
 
+    public function findById(string $id): ?StockMovement
+    {
+        return $this->movements[$id] ?? null;
+    }
+
     public function findBySource(string $kind, string $refId, string $sourceKind, string $sourceId): ?StockMovement
     {
         foreach ($this->movements as $movement) {

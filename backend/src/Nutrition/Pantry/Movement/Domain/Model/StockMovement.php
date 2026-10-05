@@ -208,6 +208,17 @@ class StockMovement extends GenericAggregate
         ));
     }
 
+    public function revokeByHand(
+        string $revokedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (self::SOURCE_MANUAL !== $this->sourceKind) {
+            throw StockMovementException::onlyManualCanBeRevoked(movementId: $this->id, sourceKind: $this->sourceKind);
+        }
+
+        $this->revoke(revokedByUserId: $revokedByUserId, dateTimeGenerator: $dateTimeGenerator);
+    }
+
     public function revoke(
         string $revokedByUserId,
         DateTimeGenerator $dateTimeGenerator,

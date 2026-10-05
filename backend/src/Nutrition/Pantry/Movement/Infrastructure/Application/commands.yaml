@@ -1,4 +1,14 @@
 services:
+  Nutrition\Pantry\Movement\Infrastructure\Application\Console\RecalculateStockCommand:
+    class: Nutrition\Pantry\Movement\Infrastructure\Application\Console\RecalculateStockCommand
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
+      $tenantEntityManager: '@doctrine.orm.tenant_manager_entity_manager'
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'console.command' }
+
   Nutrition\Pantry\Movement\Infrastructure\Application\Console\RebuildStockLedgerCommand:
     class: Nutrition\Pantry\Movement\Infrastructure\Application\Console\RebuildStockLedgerCommand
     arguments:
