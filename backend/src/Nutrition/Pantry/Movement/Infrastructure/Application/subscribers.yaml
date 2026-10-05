@@ -48,6 +48,7 @@ services:
     class: Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockCountsOnInventoryValidated
     arguments:
       $messageBus: '@messenger.bus.default'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.inventory.validated' }
 

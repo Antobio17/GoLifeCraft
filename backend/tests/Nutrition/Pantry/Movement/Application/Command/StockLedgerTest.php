@@ -155,7 +155,7 @@ final class StockLedgerTest extends TestCase
             kind: StockMovement::KIND_ARTICLE,
             refId: 'article-1',
             type: StockMovement::TYPE_COUNT,
-            effectiveAt: StockMovement::countMomentOf(countedOn: '2026-01-30', closesTheDay: false),
+            effectiveAt: StockMovement::countMomentOf(countedOn: '2026-01-30', closesTheDay: false, now: new \DateTime()),
             entries: [
                 ['quantity' => 1.0, 'unit' => 'pack'],
                 ['quantity' => 240.0, 'unit' => null],
@@ -224,7 +224,7 @@ final class StockLedgerTest extends TestCase
             kind: StockMovement::KIND_ARTICLE,
             refId: 'article-1',
             type: StockMovement::TYPE_COUNT,
-            effectiveAt: StockMovement::countMomentOf(countedOn: $countedOn, closesTheDay: 'afternoon' === $shift),
+            effectiveAt: StockMovement::countMomentOf(countedOn: $countedOn, closesTheDay: 'afternoon' === $shift, now: new \DateTime()),
             entries: RegisterStockMovementCommand::singleEntry(quantity: $quantity),
             sourceKind: StockMovement::SOURCE_INVENTORY,
             sourceId: $inventoryId,

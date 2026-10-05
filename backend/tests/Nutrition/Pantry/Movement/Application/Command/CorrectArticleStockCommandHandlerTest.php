@@ -139,17 +139,54 @@ final class CorrectArticleStockCommandHandlerTest extends TestCase
         $this->correct(kind: StockCorrection::KIND_MEASURED, quantity: -1.0);
     }
 
+    public function testACorrectionLandsAtTheMomentItIsMade(): void
+    {
+        $before = new \DateTime(datetime: 'now', timezone: new \DateTimeZone(timezone: 'UTC'));
+
+        $this->correct(kind: StockCorrection::KIND_MEASURED, quantity: 300.0);
+
+        $effectiveAt = $this->lastMovement()->effectiveAt;
+        $this->assertGreaterThanOrEqual(minimum: $before->getTimestamp(), actual: $effectiveAt->getTimestamp());
+        $this->assertLessThanOrEqual(maximum: time(), actual: $effectiveAt->getTimestamp());
+    }
+
+    public function testACorrectionDatedTodayNeverLandsInTheFuture(): void
+    {
+        $now = new \DateTime(datetime: 'now', timezone: new \DateTimeZone(timezone: 'UTC'));
+
+        $this->correct(
+            kind: StockCorrection::KIND_MEASURED,
+            quantity: 300.0,
+            effectiveAt: $now->format(format: 'Y-m-d'),
+        );
+
+        $this->assertLessThanOrEqual(maximum: time(),
+            actual: $this->lastMovement()->effectiveAt->getTimestamp(),
+        );
+    }
+
+    public function testACorrectionDatedOnAPastDayClosesThatDay(): void
+    {
+        $this->correct(kind: StockCorrection::KIND_MEASURED, quantity: 300.0, effectiveAt: '2026-01-30');
+
+        $this->assertSame(
+            expected: '2026-01-30 23:59:59',
+            actual: $this->lastMovement()->effectiveAt->format(format: 'Y-m-d H:i:s'),
+        );
+    }
+
     private function correct(
         string $kind,
         float $quantity,
         string $articleId = 'article-1',
+        ?string $effectiveAt = null,
     ): void {
         ($this->handler)(new CorrectArticleStockCommand(
             articleId: $articleId,
             kind: $kind,
             quantity: $quantity,
             unit: null,
-            effectiveAt: null,
+            effectiveAt: $effectiveAt,
             correctedByUserId: 'god-user-id',
         ));
     }

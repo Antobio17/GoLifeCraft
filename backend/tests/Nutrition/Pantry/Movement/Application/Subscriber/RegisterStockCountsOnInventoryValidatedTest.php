@@ -9,6 +9,7 @@ use Nutrition\Pantry\Movement\Application\Command\RegisterStockMovementCommand;
 use Nutrition\Pantry\Movement\Application\Subscriber\RegisterStockCountsOnInventoryValidated;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use PHPUnit\Framework\TestCase;
+use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -18,7 +19,7 @@ final class RegisterStockCountsOnInventoryValidatedTest extends TestCase
     {
         $bus = $this->bus();
 
-        (new RegisterStockCountsOnInventoryValidated(messageBus: $bus))($this->event(items: [
+        (new RegisterStockCountsOnInventoryValidated(messageBus: $bus, dateTimeGenerator: new DateTimeGenerator()))($this->event(items: [
             [
                 'kind' => InventoryLocationItem::KIND_ARTICLE,
                 'refId' => 'article-yogurt',
@@ -39,7 +40,7 @@ final class RegisterStockCountsOnInventoryValidatedTest extends TestCase
     {
         $bus = $this->bus();
 
-        (new RegisterStockCountsOnInventoryValidated(messageBus: $bus))($this->event(items: [
+        (new RegisterStockCountsOnInventoryValidated(messageBus: $bus, dateTimeGenerator: new DateTimeGenerator()))($this->event(items: [
             [
                 'kind' => InventoryLocationItem::KIND_ARTICLE,
                 'refId' => 'article-yogurt',
@@ -52,17 +53,59 @@ final class RegisterStockCountsOnInventoryValidatedTest extends TestCase
         $this->assertSame(expected: [], actual: $bus->dispatched);
     }
 
+    public function testAnAfternoonCountValidatedTheSameDayNeverLandsInTheFuture(): void
+    {
+        $bus = $this->bus();
+        $today = (new \DateTime(datetime: 'now', timezone: new \DateTimeZone(timezone: 'UTC')))->format(format: 'Y-m-d');
+
+        (new RegisterStockCountsOnInventoryValidated(messageBus: $bus, dateTimeGenerator: new DateTimeGenerator()))($this->event(
+            items: [
+                [
+                    'kind' => InventoryLocationItem::KIND_ARTICLE,
+                    'refId' => 'article-yogurt',
+                    'unit' => 'g',
+                    'countedQuantity' => 400.0,
+                    'countedUnit' => 'glass',
+                ],
+            ],
+            countedOn: $today,
+        ));
+
+        $effectiveAt = new \DateTime(datetime: $bus->dispatched[0]->effectiveAt, timezone: new \DateTimeZone(timezone: 'UTC'));
+        $this->assertLessThanOrEqual(maximum: time(), actual: $effectiveAt->getTimestamp());
+    }
+
+    public function testAnAfternoonCountOfAPastDayClosesThatDay(): void
+    {
+        $bus = $this->bus();
+
+        (new RegisterStockCountsOnInventoryValidated(messageBus: $bus, dateTimeGenerator: new DateTimeGenerator()))($this->event(
+            items: [
+                [
+                    'kind' => InventoryLocationItem::KIND_ARTICLE,
+                    'refId' => 'article-yogurt',
+                    'unit' => 'g',
+                    'countedQuantity' => 400.0,
+                    'countedUnit' => 'glass',
+                ],
+            ],
+            countedOn: '2026-01-30',
+        ));
+
+        $this->assertSame(expected: '2026-01-30 23:59:59', actual: $bus->dispatched[0]->effectiveAt);
+    }
+
     /**
      * @param array<int, array<string, mixed>> $items
      */
-    private function event(array $items): InventoryValidated
+    private function event(array $items, string $countedOn = '2026-10-05'): InventoryValidated
     {
         $now = new \DateTime();
 
         return new InventoryValidated(
             aggregateId: 'inventory-1',
             occurredOn: $now,
-            countedOn: '2026-10-05',
+            countedOn: $countedOn,
             shift: Inventory::SHIFT_AFTERNOON,
             status: Inventory::STATUS_VALIDATED,
             note: '',

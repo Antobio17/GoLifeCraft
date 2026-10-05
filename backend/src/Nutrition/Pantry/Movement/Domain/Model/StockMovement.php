@@ -100,12 +100,14 @@ class StockMovement extends GenericAggregate
         return self::momentOf(businessDate: $businessDate, timeOfDay: self::DELTA_TIME_OF_DAY);
     }
 
-    public static function countMomentOf(string $countedOn, bool $closesTheDay): string
+    public static function countMomentOf(string $countedOn, bool $closesTheDay, \DateTime $now): string
     {
-        return self::momentOf(
+        $moment = self::momentOf(
             businessDate: $countedOn,
             timeOfDay: $closesTheDay ? self::DAY_CLOSES_AT : self::DAY_OPENS_AT,
         );
+
+        return min($moment, $now->format(format: 'Y-m-d H:i:s'));
     }
 
     public static function register(
