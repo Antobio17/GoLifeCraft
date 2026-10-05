@@ -33,6 +33,19 @@
       @if (isDraft()) {
         <ds-button
           slot="actions"
+          data-testid="inventory-reschedule"
+          variant="secondary"
+          size="icon-lg"
+          icon="pencil"
+          [iconSize]="19"
+          [ariaLabel]="'getInventory.edit' | t"
+          (clicked)="onEditSchedule()"
+        />
+      }
+
+      @if (isDraft()) {
+        <ds-button
+          slot="actions"
           data-testid="inventory-validate"
           variant="soft"
           size="icon-lg"
@@ -114,6 +127,43 @@
       </ds-stack>
     </ds-split-view>
   }
+
+  <ds-modal-sheet
+    [open]="showScheduleSheet()"
+    [title]="'getInventory.schedule.title' | t"
+    [closeLabel]="'getInventory.cancel' | t"
+    [confirmLabel]="'getInventory.schedule.save' | t"
+    [confirmDisabled]="!scheduleChanged() || rescheduling()"
+    (closed)="onCloseSchedule()"
+    (confirmed)="onSaveSchedule()"
+  >
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-text variant="meta">{{
+        "getInventory.schedule.subtitle" | t
+      }}</ds-text>
+
+      <ds-field
+        [label]="'getInventory.schedule.countedOn' | t"
+        [required]="true"
+      >
+        <ds-date-input
+          data-testid="inventory-reschedule-date"
+          [ariaLabel]="'getInventory.schedule.countedOn' | t"
+          [ngModel]="scheduleCountedOn()"
+          (ngModelChange)="scheduleCountedOn.set($event)"
+        />
+      </ds-field>
+
+      <ds-field [label]="'getInventory.schedule.shift' | t" [required]="true">
+        <ds-segmented-toggle
+          data-testid="inventory-reschedule-shift"
+          [options]="shiftOptions()"
+          [ngModel]="scheduleShift()"
+          (ngModelChange)="scheduleShift.set($event)"
+        />
+      </ds-field>
+    </ds-stack>
+  </ds-modal-sheet>
 
   <ds-confirm-action-modal
     [show]="showDiscardModal()"

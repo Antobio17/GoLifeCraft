@@ -6,6 +6,7 @@ import { CountInventoryItemProviders } from "../providers/count-inventory-item.p
 import { ValidateInventoryProviders } from "../providers/validate-inventory.providers";
 import { ReopenInventoryProviders } from "../providers/reopen-inventory.providers";
 import { DiscardInventoryProviders } from "../providers/discard-inventory.providers";
+import { RescheduleInventoryProviders } from "../providers/reschedule-inventory.providers";
 import { GetPantryLocationsProviders } from "@nutrition/pantry/location/infrastructure/providers/get-pantry-locations.providers";
 
 export const INVENTORY_ROUTES: Routes = [
@@ -19,6 +20,7 @@ export const INVENTORY_ROUTES: Routes = [
       ...ValidateInventoryProviders.getProviders(),
       ...ReopenInventoryProviders.getProviders(),
       ...DiscardInventoryProviders.getProviders(),
+      ...RescheduleInventoryProviders.getProviders(),
       ...GetPantryLocationsProviders.getProviders(),
     ],
     children: [

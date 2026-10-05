@@ -43,3 +43,10 @@ reopen_inventory:
   controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\ReopenInventoryController
   requirements:
     inventoryId: '[0-9a-fA-F-]{36}'
+
+reschedule_inventory:
+  path: /api/v1/nutrition/pantry/inventories/{inventoryId}/schedule
+  methods: [PUT]
+  controller: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\RescheduleInventoryController
+  requirements:
+    inventoryId: '[0-9a-fA-F-]{36}'

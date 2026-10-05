@@ -6,11 +6,13 @@ use Integration\Mcp\Server\Domain\Model\GenericAggregate;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryDiscarded;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryItemCounted;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryReopened;
+use Nutrition\Pantry\Inventory\Domain\Event\InventoryRescheduled;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryStarted;
 use Nutrition\Pantry\Inventory\Domain\Event\InventoryValidated;
 use Nutrition\Pantry\Inventory\Domain\Exception\CountInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Exception\DiscardInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Exception\ReopenInventoryException;
+use Nutrition\Pantry\Inventory\Domain\Exception\RescheduleInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Exception\StartInventoryException;
 use Nutrition\Pantry\Inventory\Domain\Exception\ValidateInventoryException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
@@ -213,6 +215,49 @@ class Inventory extends GenericAggregate
             updatedAt: $now,
             createdByUserId: $this->createdByUserId,
             updatedByUserId: $reopenedByUserId,
+        ));
+    }
+
+    public function reschedule(
+        string $countedOn,
+        string $shift,
+        string $rescheduledByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        if (!$this->isDraft()) {
+            throw RescheduleInventoryException::alreadyValidated(inventoryId: $this->id);
+        }
+
+        if (!self::hasValidDate(countedOn: $countedOn)) {
+            throw RescheduleInventoryException::invalidDate(countedOn: $countedOn);
+        }
+
+        if (!in_array(needle: $shift, haystack: self::SHIFTS, strict: true)) {
+            throw RescheduleInventoryException::invalidShift(shift: $shift);
+        }
+
+        $now = $dateTimeGenerator->now();
+        $previousCountedOn = $this->countedOn;
+        $previousShift = $this->shift;
+
+        $this->countedOn = $countedOn;
+        $this->shift = $shift;
+        $this->stampUpdate(userId: $rescheduledByUserId, now: $now);
+
+        $this->record(event: new InventoryRescheduled(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            countedOn: $this->countedOn,
+            shift: $this->shift,
+            previousCountedOn: $previousCountedOn,
+            previousShift: $previousShift,
+            status: $this->status,
+            note: $this->note,
+            locations: $this->recordedLocations(),
+            createdAt: $this->createdAt,
+            updatedAt: $now,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $rescheduledByUserId,
         ));
     }
 

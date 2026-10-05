@@ -72,7 +72,15 @@
       "title": "No hay nada que contar",
       "text": "Ninguna ubicación guardaba nada cuando empezó este recuento"
     },
-    "reopen": "Volver a abrir el recuento"
+    "reopen": "Volver a abrir el recuento",
+    "edit": "Cambiar fecha y turno",
+    "schedule": {
+      "title": "Fecha y turno",
+      "subtitle": "Mueve el recuento al día y turno en que lo estás haciendo de verdad. Lo contado no se toca.",
+      "countedOn": "Fecha",
+      "shift": "Turno",
+      "save": "Guardar"
+    }
   },
   "inventoryShift": {
     "morning": "Mañana",
