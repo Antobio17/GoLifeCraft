@@ -310,7 +310,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         $stock = [];
 
         foreach ($rows as $row) {
-            $stock[$row['recipe_id']] = (float) $row['servings'];
+            $stock[$row['recipe_id']] = max(0.0, (float) $row['servings']);
         }
 
         return $stock;

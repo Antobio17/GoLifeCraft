@@ -11,12 +11,7 @@ export class ProposalFormService {
   seed(items: ProposalToCook[]): Map<string, number> {
     const servings = new Map<string, number>();
 
-    items.forEach((item) =>
-      servings.set(
-        this.slotOf(item),
-        item.packHint?.suggestedServings ?? item.deficit,
-      ),
-    );
+    items.forEach((item) => servings.set(this.slotOf(item), item.deficit));
 
     return servings;
   }
