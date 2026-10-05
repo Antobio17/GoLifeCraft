@@ -1,0 +1,34 @@
+<?php
+
+namespace Nutrition\Pantry\Inventory\Domain\Event;
+
+use Shared\Shared\Shared\Domain\Event\DomainEvent;
+
+final readonly class InventoryRescheduled extends DomainEvent
+{
+    /**
+     * @param array<int, array<string, mixed>> $locations
+     */
+    public function __construct(
+        string $aggregateId,
+        \DateTime $occurredOn,
+        public string $countedOn,
+        public string $shift,
+        public string $previousCountedOn,
+        public string $previousShift,
+        public string $status,
+        public string $note,
+        public array $locations,
+        public \DateTime $createdAt,
+        public \DateTime $updatedAt,
+        public string $createdByUserId,
+        public string $updatedByUserId,
+    ) {
+        parent::__construct(aggregateId: $aggregateId, occurredOn: $occurredOn);
+    }
+
+    public function getName(): string
+    {
+        return 'golifecraft.nutrition.event.1.inventory.rescheduled';
+    }
+}

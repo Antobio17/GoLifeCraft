@@ -47,3 +47,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\RescheduleInventoryController:
+    class: Nutrition\Pantry\Inventory\Infrastructure\UI\API\Controller\RescheduleInventoryController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
