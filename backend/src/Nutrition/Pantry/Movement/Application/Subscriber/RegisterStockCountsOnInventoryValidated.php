@@ -97,7 +97,7 @@ final readonly class RegisterStockCountsOnInventoryValidated implements DomainEv
 
             $counted[sprintf('%s|%s', $kind, $item['refId'])][] = [
                 'quantity' => (float) $item['countedQuantity'],
-                'unit' => $item['countedUnit'] ?? $item['unit'] ?? null,
+                'unit' => $item['unit'] ?? null,
             ];
         }
 
