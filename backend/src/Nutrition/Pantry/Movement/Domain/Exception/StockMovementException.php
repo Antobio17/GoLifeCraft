@@ -42,6 +42,24 @@ final class StockMovementException extends BaseException
         );
     }
 
+    public static function onlyManualCanBeRevoked(string $movementId, string $sourceKind): self
+    {
+        return new static(
+            title: 'Only a stock movement registered by hand can be revoked on its own.',
+            keyTranslation: 'stock.movement.revoke.not.manual',
+            details: ['movementId' => $movementId, 'sourceKind' => $sourceKind]
+        );
+    }
+
+    public static function notFound(string $movementId): self
+    {
+        return new static(
+            title: 'Stock movement not found.',
+            keyTranslation: 'stock.movement.not.found',
+            details: ['movementId' => $movementId]
+        );
+    }
+
     public static function countCannotBeNegative(float $quantity): self
     {
         return new static(

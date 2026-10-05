@@ -19,6 +19,15 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
+  Nutrition\Pantry\Movement\Application\Command\RevokeManualStockMovementCommandHandler:
+    class: Nutrition\Pantry\Movement\Application\Command\RevokeManualStockMovementCommandHandler
+    arguments:
+      $stockMovementRepository: '@Nutrition\Pantry\Movement\Domain\Model\StockMovementRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
   Nutrition\Pantry\Movement\Application\Command\PurgeStockMovementsCommandHandler:
     class: Nutrition\Pantry\Movement\Application\Command\PurgeStockMovementsCommandHandler
     arguments:

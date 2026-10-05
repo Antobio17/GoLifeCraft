@@ -5,6 +5,13 @@ correct_article_stock:
   requirements:
     articleId: '[0-9a-fA-F-]{36}'
 
+revoke_manual_stock_movement:
+  path: /api/v1/nutrition/pantry/stock/movements/{movementId}
+  methods: [DELETE]
+  controller: Nutrition\Pantry\Stock\Infrastructure\UI\API\Controller\RevokeManualStockMovementController
+  requirements:
+    movementId: '[0-9a-fA-F-]{36}'
+
 set_article_stock_tracking:
   path: /api/v1/nutrition/pantry/stock/{articleId}/tracking
   methods: [PUT]
