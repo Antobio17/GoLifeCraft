@@ -42,7 +42,7 @@
       <ds-stack [gap]="'var(--ds-space-2)'">
         <ds-section-header
           [title]="'getInventoryLocation.items.title' | t"
-          [staticLabel]="rows().length.toString()"
+          [staticLabel]="visibleRows().length.toString()"
         />
 
         @if (rows().length === 0) {
@@ -51,10 +51,25 @@
             [title]="'getInventoryLocation.empty.title' | t"
             [text]="'getInventoryLocation.empty.text' | t"
           />
+        } @else {
+          <ds-segmented-toggle
+            data-testid="inventory-location-filter-favorite"
+            variant="pill"
+            [stretch]="true"
+            [options]="filterOptions()"
+            [ngModel]="itemFilter()"
+            (ngModelChange)="onFilterChange($event)"
+          />
+        }
+
+        @if (rows().length > 0 && visibleRows().length === 0) {
+          <ds-text variant="muted">
+            {{ "getInventoryLocation.noFavorites" | t }}
+          </ds-text>
         }
 
         <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-          @for (row of rows(); track row.item.id) {
+          @for (row of visibleRows(); track row.item.id) {
             <ds-card
               variant="inset"
               [padding]="'var(--ds-space-3)'"
@@ -73,7 +88,21 @@
                   [radius]="11"
                 />
 
-                <ds-stack [grow]="true">
+                <ds-stack
+                  direction="row"
+                  align="center"
+                  [gap]="'var(--ds-space-1)'"
+                  [grow]="true"
+                >
+                  @if (row.favorite) {
+                    <ds-icon
+                      name="starFilled"
+                      tone="warning"
+                      [size]="14"
+                      [label]="favoriteLabel()"
+                    />
+                  }
+
                   @if (row.openable) {
                     <ds-pressable
                       class="item__open"

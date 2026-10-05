@@ -132,6 +132,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 'a.emoji AS article_emoji',
                 'r.emoji AS recipe_emoji',
                 'a.image AS article_image',
+                'a.favorite AS article_favorite',
                 'a.storage_unit AS article_storage_unit',
                 'r.image AS recipe_image',
             )
@@ -172,6 +173,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 name: $row['name_snapshot'],
                 emoji: (string) ($row['article_emoji'] ?: ($row['recipe_emoji'] ?: ($row['emoji_snapshot'] ?? ''))),
                 image: $row['article_image'] ?? $row['recipe_image'] ?? null,
+                favorite: (bool) ($row['article_favorite'] ?? false),
                 unit: $row['unit'],
                 units: $units,
                 storageUnit: self::storageUnitOf(unit: $row['unit'], storageUnit: $row['article_storage_unit'] ?? null, units: $units),

@@ -78,6 +78,7 @@ export class InventoryViewService {
         item.refId,
         item.image,
       ),
+      favorite: item.favorite,
       quantity: this.inUnit(
         item.countedQuantity ?? item.expectedQuantity,
         selected,

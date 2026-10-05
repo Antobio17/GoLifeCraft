@@ -6,6 +6,7 @@ export interface InventoryItemRow {
   emoji: string;
   name: string;
   imageUrl: string | null;
+  favorite: boolean;
   quantity: number;
   unit: string;
   unitLabel: string;

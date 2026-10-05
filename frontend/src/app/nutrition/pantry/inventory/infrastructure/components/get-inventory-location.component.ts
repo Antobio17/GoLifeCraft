@@ -7,6 +7,7 @@ import {
   signal,
 } from "@angular/core";
 import { toObservable, takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
 import { switchMap } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -37,12 +38,21 @@ import { InventoryStatus } from "../../domain/models/inventory-status.model";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import {
+  SegmentedOption,
+  SegmentedToggleComponent,
+} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { InventoryItemFilter } from "../../domain/models/inventory-item-filter.model";
 
 @Component({
   selector: "app-get-inventory-location",
   templateUrl: "./get-inventory-location.component.html",
   imports: [
+    FormsModule,
     PressableComponent,
+    IconComponent,
+    SegmentedToggleComponent,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
@@ -79,6 +89,7 @@ export class GetInventoryLocationComponent {
   attributes = signal<InventoryDetailAttributes | null>(null);
   unitByItem = signal<Record<string, string>>({});
   loading = signal(true);
+  itemFilter = signal<InventoryItemFilter>(InventoryItemFilter.ALL);
 
   isDraft = computed(() => InventoryStatus.DRAFT === this.attributes()?.status);
 
@@ -154,6 +165,23 @@ export class GetInventoryLocationComponent {
     );
   });
 
+  filterOptions = computed<SegmentedOption[]>(() =>
+    Object.values(InventoryItemFilter).map((value) => ({
+      value,
+      label: this.t(`getInventoryLocation.filter.${value}`),
+    })),
+  );
+
+  favoriteLabel = computed(() => this.t("getInventoryLocation.favorite"));
+
+  visibleRows = computed<InventoryItemRow[]>(() => {
+    const rows = this.rows();
+
+    if (InventoryItemFilter.FAVORITES !== this.itemFilter()) return rows;
+
+    return rows.filter((row) => row.favorite);
+  });
+
   constructor() {
     toObservable(this.id)
       .pipe(
@@ -179,6 +207,10 @@ export class GetInventoryLocationComponent {
 
   protected t(key: string): string {
     return this.translationService.translate(key, this.MODULE_PATH);
+  }
+
+  onFilterChange(value: string): void {
+    this.itemFilter.set(value as InventoryItemFilter);
   }
 
   onQuantity(row: InventoryItemRow, quantity: number): void {
