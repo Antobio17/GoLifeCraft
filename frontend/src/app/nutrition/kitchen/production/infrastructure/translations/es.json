@@ -95,6 +95,8 @@
   },
   "getProductionRecipe": {
     "back": "Volver al lote",
+    "openRecipe": "Abrir receta",
+    "openArticle": "Abrir producto",
     "breadcrumb": "Receta",
     "status": {
       "pending": "Cocinando",

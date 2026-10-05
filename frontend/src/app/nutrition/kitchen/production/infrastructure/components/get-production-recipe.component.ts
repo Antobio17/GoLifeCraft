@@ -630,6 +630,14 @@ export class GetProductionRecipeComponent {
     this.router.navigate(["/recipes", recipe.recipeId]);
   }
 
+  onOpenSubRecipe(recipeId: string): void {
+    this.router.navigate(["/recipes", recipeId]);
+  }
+
+  onOpenArticle(articleId: string): void {
+    this.router.navigate(["/catalog", articleId]);
+  }
+
   onUncook(): void {
     if (this.uncooking() || !this.done()) return;
 

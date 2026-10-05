@@ -1,19 +1,58 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 
 @Component({
   selector: "ds-check-row",
-  imports: [IconComponent],
+  imports: [NgTemplateOutlet, IconComponent],
   template: `
-    <button
-      type="button"
-      class="ds-checkrow"
-      role="checkbox"
-      [class.is-off]="!checked"
-      [class.is-done]="checked"
-      [attr.aria-checked]="checked"
-      (click)="toggled.emit()"
-    >
+    @if (openLabel) {
+      <div
+        class="ds-checkrow ds-checkrow--split"
+        [class.is-off]="!checked"
+        [class.is-done]="checked"
+      >
+        <button
+          type="button"
+          class="ds-checkrow__toggle"
+          role="checkbox"
+          [attr.aria-checked]="checked"
+          [attr.aria-label]="name"
+          (click)="toggled.emit()"
+        >
+          <ng-container [ngTemplateOutlet]="lead" />
+        </button>
+        <button
+          type="button"
+          class="ds-checkrow__open"
+          [attr.aria-label]="openLabel + ': ' + name"
+          (click)="opened.emit()"
+        >
+          <ng-container [ngTemplateOutlet]="text" />
+          <ds-icon
+            class="ds-checkrow__chevron"
+            name="chevronRight"
+            [size]="16"
+            [stroke]="2.4"
+          />
+        </button>
+      </div>
+    } @else {
+      <button
+        type="button"
+        class="ds-checkrow"
+        role="checkbox"
+        [class.is-off]="!checked"
+        [class.is-done]="checked"
+        [attr.aria-checked]="checked"
+        (click)="toggled.emit()"
+      >
+        <ng-container [ngTemplateOutlet]="lead" />
+        <ng-container [ngTemplateOutlet]="text" />
+      </button>
+    }
+
+    <ng-template #lead>
       <span class="ds-checkrow__box" [class.is-on]="checked">
         <ds-icon name="check" [size]="15" [stroke]="3" />
       </span>
@@ -29,6 +68,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       } @else if (emoji) {
         <span class="ds-checkrow__emoji">{{ emoji }}</span>
       }
+    </ng-template>
+
+    <ng-template #text>
       <span class="ds-checkrow__text">
         @if (eyebrow || chip) {
           <span class="ds-checkrow__head">
@@ -45,7 +87,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
           <span class="ds-checkrow__meta">{{ meta }}</span>
         }
       </span>
-    </button>
+    </ng-template>
   `,
   styles: [
     `
@@ -76,6 +118,45 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       }
       :host([dim-checked]) .ds-checkrow.is-done {
         opacity: 0.5;
+      }
+      .ds-checkrow--split {
+        cursor: default;
+        padding: 0;
+        gap: 0;
+      }
+      .ds-checkrow__toggle,
+      .ds-checkrow__open {
+        appearance: none;
+        border: none;
+        background: none;
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: var(--ds-space-3);
+        text-align: left;
+      }
+      .ds-checkrow__toggle {
+        flex: 0 0 auto;
+        align-self: stretch;
+        padding: var(--ds-space-2) 0 var(--ds-space-2) var(--ds-space-3);
+      }
+      .ds-checkrow__open {
+        flex: 1 1 auto;
+        min-width: 0;
+        padding: var(--ds-space-2) var(--ds-space-3);
+        border-radius: 0 var(--ds-radius-lg) var(--ds-radius-lg) 0;
+      }
+      .ds-checkrow__chevron {
+        flex: 0 0 auto;
+        color: var(--ds-text-meta);
+      }
+      .ds-checkrow__toggle:focus-visible,
+      .ds-checkrow__open:focus-visible {
+        outline: 2px solid var(--ds-primary);
+        outline-offset: -2px;
+        border-radius: var(--ds-radius-lg);
       }
       .ds-checkrow__box {
         flex: 0 0 auto;
@@ -129,7 +210,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         font-size: var(--ds-text-xs);
         color: var(--ds-text-muted);
       }
-      :host([wrap]) .ds-checkrow {
+      :host([wrap]) .ds-checkrow:not(.ds-checkrow--split) {
         align-items: flex-start;
         padding: var(--ds-space-3);
       }
@@ -196,5 +277,8 @@ export class CheckRowComponent {
   @Input() dimChecked = false;
   @Input() checked = false;
 
+  @Input() openLabel = "";
+
   @Output() toggled = new EventEmitter<void>();
+  @Output() opened = new EventEmitter<void>();
 }
