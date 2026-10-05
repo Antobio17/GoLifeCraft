@@ -171,7 +171,7 @@ final readonly class ProgressionPolicy
             return;
         }
 
-        $step = self::topSetsReachedTarget(sessionExercise: $sessionExercise, performed: $performed, baseWeight: $baseWeight) ? 2 : 1;
+        $step = self::topSetsBeatTarget(sessionExercise: $sessionExercise, performed: $performed, baseWeight: $baseWeight) ? 2 : 1;
 
         self::writePlan(
             sessionExercise: $sessionExercise,
@@ -275,19 +275,23 @@ final readonly class ProgressionPolicy
     /**
      * @param ExerciseSet[] $performed
      */
-    private static function topSetsReachedTarget(SessionExercise $sessionExercise, array $performed, float $baseWeight): bool
+    private static function topSetsBeatTarget(SessionExercise $sessionExercise, array $performed, float $baseWeight): bool
     {
+        $top = 0;
+
         foreach (array_values(array: $performed) as $index => $set) {
             if (($set->weight ?? 0.0) <= $baseWeight) {
                 continue;
             }
 
-            if ($set->reps < self::targetAt(sessionExercise: $sessionExercise, index: $index, fallback: $set->reps)) {
+            ++$top;
+
+            if ($set->reps <= self::targetAt(sessionExercise: $sessionExercise, index: $index, fallback: $set->reps)) {
                 return false;
             }
         }
 
-        return true;
+        return $top > 0;
     }
 
     /**
