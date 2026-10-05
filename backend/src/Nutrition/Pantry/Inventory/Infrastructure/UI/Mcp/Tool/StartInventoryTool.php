@@ -9,7 +9,7 @@ use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 
 #[McpTool(
     name: 'start_inventory',
-    description: 'Open a stock count of the pantry. It takes the walk-through list of every location that currently holds something, with the quantity the app believes is in it, and leaves the count in "draft" so it can be filled in. Only one count can be open at a time, and a count is refused when no location holds anything. Read the count back with query_model on the alias "inventory" filtered by status "draft", and its lines through "inventory_location" and "inventory_location_item". Counting the items and validating the count happen from the app: validating is what overwrites the stock.',
+    description: 'Open a stock count of the pantry. It takes the walk-through list of every location that currently holds something, with the quantity the app believes is in it expressed in each article's storage unit, and leaves the count in "draft" so it can be filled in. Only one count can be open at a time, and a count is refused when no location holds anything. Read the count back with query_model on the alias "inventory" filtered by status "draft", and its lines through "inventory_location" and "inventory_location_item". Counting the items and validating the count happen from the app: validating is what overwrites the stock.',
 )]
 final class StartInventoryTool extends McpMessengerTool
 {

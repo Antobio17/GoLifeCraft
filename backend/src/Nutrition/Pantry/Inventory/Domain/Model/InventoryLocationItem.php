@@ -17,7 +17,7 @@ class InventoryLocationItem extends GenericAggregate
         self::KIND_RECIPE,
     ];
 
-    public const int QUANTITY_PRECISION = 2;
+    public const int QUANTITY_PRECISION = 4;
 
     public string $inventoryId;
     public string $inventoryLocationId;

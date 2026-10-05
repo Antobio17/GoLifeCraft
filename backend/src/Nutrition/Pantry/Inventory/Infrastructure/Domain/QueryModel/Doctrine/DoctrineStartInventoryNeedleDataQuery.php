@@ -86,23 +86,44 @@ final readonly class DoctrineStartInventoryNeedleDataQuery implements StartInven
     private function articleItems(): array
     {
         $rows = $this->connection->executeQuery(sql: <<<SQL
-            SELECT i.location_id, a.id AS ref_id, a.name, a.emoji, a.base_unit, s.quantity
+            SELECT i.location_id, a.id AS ref_id, a.name, a.emoji, a.base_unit, s.quantity,
+                   e.unit AS storage_unit, e.quantity AS storage_factor
             FROM article a
             INNER JOIN location_item i ON i.ref_id = a.id AND i.kind = :locationKind
             LEFT JOIN article_stock s ON s.article_id = a.id
+            LEFT JOIN (
+                SELECT article_id, unit, MIN(quantity) AS quantity
+                FROM article_equivalence
+                WHERE quantity > 0
+                GROUP BY article_id, unit
+            ) e ON e.article_id = a.id AND e.unit = a.storage_unit
             SQL, params: [
             'locationKind' => InventoryLocationItem::KIND_ARTICLE,
         ])->fetchAllAssociative();
 
         return array_map(callback: static function (array $row): InventoryStockLine {
+            $quantity = (float) ($row['quantity'] ?? 0.0);
+
+            if (null === $row['storage_unit']) {
+                return new InventoryStockLine(
+                    locationId: $row['location_id'],
+                    kind: InventoryLocationItem::KIND_ARTICLE,
+                    refId: $row['ref_id'],
+                    name: $row['name'],
+                    emoji: (string) ($row['emoji'] ?? ''),
+                    unit: (string) ($row['base_unit'] ?? 'g'),
+                    quantity: $quantity,
+                );
+            }
+
             return new InventoryStockLine(
                 locationId: $row['location_id'],
                 kind: InventoryLocationItem::KIND_ARTICLE,
                 refId: $row['ref_id'],
                 name: $row['name'],
                 emoji: (string) ($row['emoji'] ?? ''),
-                unit: (string) ($row['base_unit'] ?? 'g'),
-                quantity: (float) ($row['quantity'] ?? 0.0),
+                unit: $row['storage_unit'],
+                quantity: $quantity / (float) $row['storage_factor'],
             );
         }, array: $rows);
     }

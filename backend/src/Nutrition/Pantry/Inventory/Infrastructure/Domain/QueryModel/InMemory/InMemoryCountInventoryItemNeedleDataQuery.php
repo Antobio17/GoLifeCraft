@@ -14,6 +14,11 @@ final class InMemoryCountInventoryItemNeedleDataQuery implements CountInventoryI
         $this->factors[$articleId][$unit] = $factor;
     }
 
+    public function withBaseUnit(string $articleId, string $unit): void
+    {
+        $this->factors[$articleId][$unit] = 1.0;
+    }
+
     public function baseUnitFactor(string $articleId, string $unit): ?float
     {
         return $this->factors[$articleId][$unit] ?? null;

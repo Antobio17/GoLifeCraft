@@ -49,26 +49,28 @@ fields:
     writable: false
     max: 30
     description: >-
-      Unit the quantities are expressed in: the article base unit ("g"/"ml"), or "serving"
-      for a recipe.
+      Unit the quantities of this line are expressed in: the article storage unit ("glass",
+      "pack"...) when it has an equivalence, otherwise its base unit ("g"/"ml"), or "serving"
+      for a recipe. Counts started before the storage unit was used are in the base unit.
   expectedQuantity:
     writable: false
     type: float
     description: >-
-      What the app believed was there when the count started.
+      What the app believed was there when the count started, in the unit of the line.
     sortable: true
   countedQuantity:
     writable: false
     type: float
     description: >-
-      What was actually found, always in the base unit of the item. Empty when the item was
-      never counted, in which case validating leaves that stock untouched.
+      What was actually found, always in the unit of the line. Empty when the item was never
+      counted, in which case validating leaves that stock untouched.
     sortable: true
   countedUnit:
     writable: false
     max: 30
     description: >-
-      Unit the count was typed in: the base unit itself or one of the article equivalences
-      ("pack", "can"...). Only kept to show the number back the way it was entered.
+      Unit the count was typed in: the unit of the line, the base unit or one of the article
+      equivalences ("pack", "can"...). Only kept to show the number back the way it was
+      entered.
 
 relations: {}

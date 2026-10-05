@@ -41,4 +41,13 @@ final class CountInventoryException extends BaseException
             details: ['quantity' => $quantity]
         );
     }
+
+    public static function unknownUnit(string $itemId, string $unit): self
+    {
+        return new static(
+            title: 'The counted item cannot be measured in that unit.',
+            keyTranslation: 'inventory.item.unknown.unit',
+            details: ['itemId' => $itemId, 'unit' => $unit]
+        );
+    }
 }
