@@ -8,12 +8,10 @@ use Nutrition\Pantry\Inventory\Domain\Model\InventoryLocationItem;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryLocationPlan;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\Dto\InventoryStockLine;
 use Nutrition\Pantry\Inventory\Domain\QueryModel\StartInventoryNeedleDataQuery;
-use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 
 final readonly class DoctrineStartInventoryNeedleDataQuery implements StartInventoryNeedleDataQuery
 {
     private const string RECIPE_UNIT = 'serving';
-    private const string UNPLACED_KEY = '';
 
     public function __construct(private Connection $connection)
     {
@@ -47,15 +45,6 @@ final readonly class DoctrineStartInventoryNeedleDataQuery implements StartInven
             );
         }
 
-        if (isset($itemsByLocation[self::UNPLACED_KEY])) {
-            $plans[] = new InventoryLocationPlan(
-                locationId: null,
-                name: 'Sin ubicar',
-                emoji: '📦',
-                items: $itemsByLocation[self::UNPLACED_KEY],
-            );
-        }
-
         return $plans;
     }
 
@@ -80,7 +69,7 @@ final readonly class DoctrineStartInventoryNeedleDataQuery implements StartInven
         $grouped = [];
 
         foreach (array_merge($this->articleItems(), $this->recipeItems()) as $item) {
-            $grouped[$item->locationId ?? self::UNPLACED_KEY][] = $item;
+            $grouped[$item->locationId][] = $item;
         }
 
         foreach ($grouped as $locationId => $items) {
@@ -99,14 +88,10 @@ final readonly class DoctrineStartInventoryNeedleDataQuery implements StartInven
         $rows = $this->connection->executeQuery(sql: <<<SQL
             SELECT i.location_id, a.id AS ref_id, a.name, a.emoji, a.base_unit, s.quantity
             FROM article a
+            INNER JOIN location_item i ON i.ref_id = a.id AND i.kind = :locationKind
             LEFT JOIN article_stock s ON s.article_id = a.id
-            LEFT JOIN location_item i ON i.ref_id = a.id AND i.kind = :locationKind
-            WHERE i.ref_id IS NOT NULL
-               OR s.quantity <> 0
-               OR EXISTS (SELECT 1 FROM stock_movement m WHERE m.ref_id = a.id AND m.kind = :movementKind)
             SQL, params: [
             'locationKind' => InventoryLocationItem::KIND_ARTICLE,
-            'movementKind' => StockMovement::KIND_ARTICLE,
         ])->fetchAllAssociative();
 
         return array_map(callback: static function (array $row): InventoryStockLine {
@@ -130,14 +115,10 @@ final readonly class DoctrineStartInventoryNeedleDataQuery implements StartInven
         $rows = $this->connection->executeQuery(sql: <<<SQL
             SELECT i.location_id, r.id AS ref_id, r.name, r.emoji, s.servings AS quantity
             FROM recipe r
+            INNER JOIN location_item i ON i.ref_id = r.id AND i.kind = :locationKind
             LEFT JOIN recipe_stock s ON s.recipe_id = r.id
-            LEFT JOIN location_item i ON i.ref_id = r.id AND i.kind = :locationKind
-            WHERE i.ref_id IS NOT NULL
-               OR s.servings <> 0
-               OR EXISTS (SELECT 1 FROM stock_movement m WHERE m.ref_id = r.id AND m.kind = :movementKind)
             SQL, params: [
             'locationKind' => InventoryLocationItem::KIND_RECIPE,
-            'movementKind' => StockMovement::KIND_RECIPE,
         ])->fetchAllAssociative();
 
         return array_map(callback: static function (array $row): InventoryStockLine {

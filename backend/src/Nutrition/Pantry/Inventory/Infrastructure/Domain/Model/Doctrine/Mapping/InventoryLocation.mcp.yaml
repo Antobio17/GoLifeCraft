@@ -19,9 +19,8 @@ fields:
     max: 36
     description: >-
       Id of the pantry location that was walked through. The location itself may have been
-      deleted since; the count keeps its own copy of the name and the emoji. Empty on the
-      "Sin ubicar" block, which gathers everything that has stock or movements but has not been
-      assigned to any location yet.
+      deleted since; the count keeps its own copy of the name and the emoji. Only what is
+      assigned to a location is counted: anything not placed anywhere stays out of the count.
     filterable: true
   nameSnapshot:
     writable: false
