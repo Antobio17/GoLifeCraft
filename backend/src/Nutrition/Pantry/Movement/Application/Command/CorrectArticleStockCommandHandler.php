@@ -65,13 +65,16 @@ final readonly class CorrectArticleStockCommandHandler
 
     private function effectiveAt(CorrectArticleStockCommand $command): \DateTime
     {
+        $now = $this->dateTimeGenerator->now();
+
         if (null === $command->effectiveAt || '' === $command->effectiveAt) {
-            return $this->dateTimeGenerator->now();
+            return $now;
         }
 
         return new \DateTime(datetime: StockMovement::countMomentOf(
             countedOn: $command->effectiveAt,
             closesTheDay: true,
+            now: $now,
         ));
     }
 }

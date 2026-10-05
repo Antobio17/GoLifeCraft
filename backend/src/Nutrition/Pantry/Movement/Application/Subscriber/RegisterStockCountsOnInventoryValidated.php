@@ -9,12 +9,14 @@ use Nutrition\Pantry\Movement\Application\Command\RegisterStockMovementCommand;
 use Nutrition\Pantry\Movement\Domain\Model\StockMovement;
 use Shared\Shared\Shared\Domain\Event\DomainEvent;
 use Shared\Shared\Shared\Domain\Event\DomainEventSubscriber;
+use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final readonly class RegisterStockCountsOnInventoryValidated implements DomainEventSubscriber
 {
     public function __construct(
         private MessageBusInterface $messageBus,
+        private DateTimeGenerator $dateTimeGenerator,
     ) {
     }
 
@@ -27,6 +29,7 @@ final readonly class RegisterStockCountsOnInventoryValidated implements DomainEv
         $effectiveAt = StockMovement::countMomentOf(
             countedOn: $event->countedOn,
             closesTheDay: Inventory::SHIFT_AFTERNOON === $event->shift,
+            now: $this->dateTimeGenerator->now(),
         );
 
         foreach (self::countedEntries(locations: $event->locations) as $reference => $entries) {
