@@ -16,8 +16,8 @@ final class CountInventoryItemTool extends McpMessengerTool
     /**
      * @param string  $inventoryId     Id of the open count
      * @param string  $itemId          Id of the inventory_location_item line being counted
-     * @param ?float  $countedQuantity What was found, in the base unit of the item. Empty leaves the line uncounted, which keeps that item's current balance untouched
-     * @param ?string $countedUnit     Unit the quantity was measured in, when it is not the item's base unit
+     * @param ?float  $countedQuantity What was found, in countedUnit or, when it is empty, in the unit of the line. Empty leaves the line uncounted, which keeps that item's current balance untouched
+     * @param ?string $countedUnit     Unit the quantity was measured in, when it is not the unit of the line: the base unit or one of the article equivalences
      */
     public function __invoke(
         string $inventoryId,

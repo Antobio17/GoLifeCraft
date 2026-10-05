@@ -27,7 +27,10 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
         $this->dateTimeGenerator = new DateTimeGenerator();
         $this->inventoryRepository = new InMemoryInventoryRepository();
         $this->needleDataQuery = new InMemoryCountInventoryItemNeedleDataQuery();
+        $this->needleDataQuery->withBaseUnit(articleId: 'article-1', unit: 'g');
         $this->needleDataQuery->withFactor(articleId: 'article-1', unit: 'pack', factor: 500.0);
+        $this->needleDataQuery->withBaseUnit(articleId: 'article-yogurt', unit: 'g');
+        $this->needleDataQuery->withFactor(articleId: 'article-yogurt', unit: 'glass', factor: 400.0);
         $this->handler = new CountInventoryItemCommandHandler(
             inventoryRepository: $this->inventoryRepository,
             needleDataQuery: $this->needleDataQuery,
@@ -71,8 +74,10 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
         $this->assertSame(expected: 'pack', actual: $item->countedUnit);
     }
 
-    public function testItKeepsTheQuantityWhenTheAliasIsNotConfigured(): void
+    public function testItRefusesAUnitTheArticleCannotBeMeasuredIn(): void
     {
+        $this->expectException(exception: CountInventoryException::class);
+
         ($this->handler)(new CountInventoryItemCommand(
             inventoryId: 'inventory-1',
             itemId: $this->itemId,
@@ -80,11 +85,43 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             countedUnit: 'jar',
             countedByUserId: 'god-user-id',
         ));
+    }
 
-        $this->assertSame(
-            expected: 3.0,
-            actual: $this->inventoryRepository->findById(id: 'inventory-1')->locations[0]->items[0]->countedQuantity,
-        );
+    public function testItKeepsTheCountAsTypedWhenItIsInTheStorageUnitOfTheLine(): void
+    {
+        $itemId = $this->givenStorageUnitInventory();
+
+        ($this->handler)(new CountInventoryItemCommand(
+            inventoryId: 'inventory-2',
+            itemId: $itemId,
+            countedQuantity: 1.0,
+            countedUnit: 'glass',
+            countedByUserId: 'god-user-id',
+        ));
+
+        $item = $this->inventoryRepository->findById(id: 'inventory-2')->locations[0]->items[0];
+
+        $this->assertSame(expected: 1.0, actual: $item->countedQuantity);
+        $this->assertSame(expected: 'glass', actual: $item->countedUnit);
+        $this->assertSame(expected: -1.0, actual: $item->difference());
+    }
+
+    public function testItConvertsACountInTheBaseUnitToTheStorageUnitOfTheLine(): void
+    {
+        $itemId = $this->givenStorageUnitInventory();
+
+        ($this->handler)(new CountInventoryItemCommand(
+            inventoryId: 'inventory-2',
+            itemId: $itemId,
+            countedQuantity: 150.0,
+            countedUnit: 'g',
+            countedByUserId: 'god-user-id',
+        ));
+
+        $item = $this->inventoryRepository->findById(id: 'inventory-2')->locations[0]->items[0];
+
+        $this->assertSame(expected: 0.375, actual: $item->countedQuantity);
+        $this->assertSame(expected: 'g', actual: $item->countedUnit);
     }
 
     public function testItDropsTheUnitWhenTheCountIsCleared(): void
@@ -118,7 +155,7 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             inventoryId: 'inventory-1',
             itemId: $inventory->locations[1]->items[0]->id,
             countedQuantity: 6.0,
-            countedUnit: 'g',
+            countedUnit: 'serving',
             countedByUserId: 'god-user-id',
         ));
 
@@ -242,6 +279,31 @@ final class CountInventoryItemCommandHandlerTest extends TestCase
             countedUnit: 'g',
             countedByUserId: 'god-user-id',
         ));
+    }
+
+    private function givenStorageUnitInventory(): string
+    {
+        $inventory = Inventory::start(
+            id: 'inventory-2',
+            countedOn: '2026-10-05',
+            shift: Inventory::SHIFT_MORNING,
+            note: '',
+            locations: [
+                InventoryTestPantry::location(
+                    position: 1,
+                    locationId: 'location-1',
+                    name: 'Nevera',
+                    items: [['article-yogurt', InventoryLocationItem::KIND_ARTICLE, 'Yogur', 'glass', 2.0]],
+                    dateTimeGenerator: $this->dateTimeGenerator,
+                ),
+            ],
+            startedByUserId: 'god-user-id',
+            dateTimeGenerator: $this->dateTimeGenerator,
+        );
+
+        $this->inventoryRepository->save(inventory: $inventory);
+
+        return $inventory->locations[0]->items[0]->id;
     }
 
     private function givenInventory(): Inventory

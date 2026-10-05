@@ -32,7 +32,7 @@ final readonly class CountInventoryItemCommandHandler
 
         $inventory->countItem(
             itemId: $command->itemId,
-            countedQuantity: $this->inBaseUnits(inventory: $inventory, command: $command),
+            countedQuantity: $this->inItemUnits(inventory: $inventory, command: $command),
             countedUnit: $command->countedUnit,
             countedByUserId: $command->countedByUserId,
             dateTimeGenerator: $this->dateTimeGenerator,
@@ -42,24 +42,25 @@ final readonly class CountInventoryItemCommandHandler
         $this->domainEventCollectorService->register(aggregate: $inventory);
     }
 
-    private function inBaseUnits(Inventory $inventory, CountInventoryItemCommand $command): ?float
+    private function inItemUnits(Inventory $inventory, CountInventoryItemCommand $command): ?float
     {
         if (null === $command->countedQuantity) {
             return null;
         }
 
-        if (null === $command->countedUnit || '' === $command->countedUnit) {
-            return $command->countedQuantity;
-        }
-
         $item = $inventory->item(itemId: $command->itemId);
 
-        if (null === $item || $command->countedUnit === $item->unit) {
+        if (null === $item || null === $command->countedUnit || '' === $command->countedUnit || $command->countedUnit === $item->unit) {
             return $command->countedQuantity;
         }
 
-        $factor = $this->needleDataQuery->baseUnitFactor(articleId: $item->refId, unit: $command->countedUnit);
+        $countedFactor = $this->needleDataQuery->baseUnitFactor(articleId: $item->refId, unit: $command->countedUnit);
+        $itemFactor = $this->needleDataQuery->baseUnitFactor(articleId: $item->refId, unit: $item->unit);
 
-        return null === $factor ? $command->countedQuantity : $command->countedQuantity * $factor;
+        if (null === $countedFactor || null === $itemFactor) {
+            throw CountInventoryException::unknownUnit(itemId: $item->id, unit: $command->countedUnit);
+        }
+
+        return $command->countedQuantity * $countedFactor / $itemFactor;
     }
 }

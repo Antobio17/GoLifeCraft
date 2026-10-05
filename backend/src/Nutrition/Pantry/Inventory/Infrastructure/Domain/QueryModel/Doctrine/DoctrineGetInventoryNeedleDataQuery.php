@@ -134,6 +134,7 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
                 'a.image AS article_image',
                 'a.favorite AS article_favorite',
                 'a.storage_unit AS article_storage_unit',
+                'a.base_unit AS article_base_unit',
                 'r.image AS recipe_image',
             )
             ->from(table: 'inventory_location_item', alias: 'it')
@@ -161,7 +162,11 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
         $equivalences = $this->equivalencesOf(rows: $rows);
 
         foreach ($rows as $row) {
-            $units = self::unitsOf(unit: $row['unit'], equivalences: $equivalences[$row['ref_id']] ?? []);
+            $units = self::unitsOf(
+                unit: $row['unit'],
+                baseUnit: $row['article_base_unit'] ?? null,
+                equivalences: $equivalences[$row['ref_id']] ?? [],
+            );
             $expectedQuantity = (float) $row['expected_quantity'];
             $countedQuantity = null === $row['counted_quantity'] ? null : (float) $row['counted_quantity'];
 
@@ -232,15 +237,26 @@ final readonly class DoctrineGetInventoryNeedleDataQuery implements GetInventory
      *
      * @return InventoryItemUnitView[]
      */
-    private static function unitsOf(string $unit, array $equivalences): array
+    private static function unitsOf(string $unit, ?string $baseUnit, array $equivalences): array
     {
-        $units = [new InventoryItemUnitView(unit: $unit, factor: 1.0)];
+        if (null === $baseUnit) {
+            return [new InventoryItemUnitView(unit: $unit, factor: 1.0)];
+        }
+
+        $baseFactors = [$baseUnit => 1.0];
 
         foreach ($equivalences as $equivalence) {
-            $units[] = new InventoryItemUnitView(
-                unit: $equivalence['unit'],
-                factor: (float) $equivalence['quantity'],
-            );
+            $baseFactors[$equivalence['unit']] ??= (float) $equivalence['quantity'];
+        }
+
+        if (!isset($baseFactors[$unit])) {
+            return [new InventoryItemUnitView(unit: $unit, factor: 1.0)];
+        }
+
+        $units = [];
+
+        foreach ($baseFactors as $candidate => $baseFactor) {
+            $units[] = new InventoryItemUnitView(unit: $candidate, factor: $baseFactor / $baseFactors[$unit]);
         }
 
         return $units;
