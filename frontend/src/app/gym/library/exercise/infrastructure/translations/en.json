@@ -2,7 +2,7 @@
   "getExercises": {
     "heading": "Library",
     "create": "Create",
-    "back": "Back",
+    "back": "Gym",
     "title": "Exercises",
     "subtitle": "Your exercise library",
     "new": "New",
@@ -12,7 +12,6 @@
       "list": "List",
       "grouped": "By muscle"
     },
-    "noResults": "No results for",
     "stats": {
       "exercises": "Exercises"
     },
@@ -30,7 +29,9 @@
     },
     "actions": {
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "editAria": "Edit {{name}}",
+      "deleteAria": "Delete {{name}}"
     },
     "deleteModal": {
       "title": "Delete exercise?",
@@ -39,7 +40,10 @@
       "cancel": "Cancel",
       "confirm": "Yes, delete",
       "deleting": "Deleting…"
-    }
+    },
+    "eyebrow": "Gym",
+    "noResultsTitle": "No results for “{{query}}”",
+    "noResultsHint": "Try another name or a muscle group."
   },
   "getExercise": {
     "back": "Back",

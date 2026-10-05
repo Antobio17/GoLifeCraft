@@ -39,13 +39,14 @@
   "getWorkout": {
     "back": "History",
     "eyebrow": "History",
-    "completed": "Completed",
     "duration": "duration",
     "sets": "sets",
     "set": {
       "number": "Set",
       "reps": "Reps",
-      "weight": "Weight (kg)"
+      "weight": "Weight (kg)",
+      "done": "Set done",
+      "skipped": "Set not done"
     },
     "copy": {
       "action": "Copy the routine as text",
@@ -56,7 +57,21 @@
       "perSide": "weight per side",
       "totalWeight": "total weight"
     },
-    "edit": "Edit workout"
+    "edit": "Edit workout",
+    "status": {
+      "complete": "Completed",
+      "partial": "Partly completed"
+    },
+    "volume": "volume",
+    "section": {
+      "exercises": "Exercises",
+      "expandAll": "Expand all",
+      "collapseAll": "Collapse all"
+    },
+    "empty": {
+      "title": "No exercises",
+      "text": "This workout has no exercises logged."
+    }
   },
   "workout": {
     "breadcrumb": {

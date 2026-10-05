@@ -2,7 +2,7 @@
   "getExercises": {
     "heading": "Biblioteca",
     "create": "Crear",
-    "back": "Volver",
+    "back": "Gimnasio",
     "title": "Ejercicios",
     "subtitle": "Tu biblioteca de ejercicios",
     "new": "Nuevo",
@@ -12,7 +12,6 @@
       "list": "Lista",
       "grouped": "Por músculos"
     },
-    "noResults": "Sin resultados para",
     "stats": {
       "exercises": "Ejercicios"
     },
@@ -30,7 +29,9 @@
     },
     "actions": {
       "edit": "Editar",
-      "delete": "Borrar"
+      "delete": "Borrar",
+      "editAria": "Editar {{name}}",
+      "deleteAria": "Borrar {{name}}"
     },
     "deleteModal": {
       "title": "¿Borrar ejercicio?",
@@ -39,7 +40,10 @@
       "cancel": "Cancelar",
       "confirm": "Sí, borrar",
       "deleting": "Borrando…"
-    }
+    },
+    "eyebrow": "Gimnasio",
+    "noResultsTitle": "Sin resultados para “{{query}}”",
+    "noResultsHint": "Prueba con otro nombre o con un grupo muscular."
   },
   "getExercise": {
     "back": "Volver",

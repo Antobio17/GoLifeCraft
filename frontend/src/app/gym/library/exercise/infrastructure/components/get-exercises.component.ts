@@ -8,6 +8,9 @@ import { DeleteExerciseService } from "@gym/library/exercise/application/service
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { Exercise } from "../../domain/models/exercise.model";
 import { ExerciseWeightMode } from "../../domain/models/exercise-weight-mode.model";
+import { ExerciseRowView } from "../../domain/models/exercise-row-view.model";
+import { ExerciseGroupView } from "../../domain/models/exercise-group-view.model";
+import { LibraryView } from "../../domain/models/library-view.enum";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
@@ -15,15 +18,9 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
-import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
-import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
-import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
-import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
-import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { ExerciseRowComponent } from "@shared/design-system/exercise-row/infrastructure/components/exercise-row.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
@@ -41,22 +38,6 @@ import {
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
-interface ExerciseRow {
-  id: string;
-  name: string;
-  muscleText: string;
-  icon: DsIconName;
-  exercise: Exercise;
-}
-
-interface ExerciseGroup {
-  muscle: string;
-  count: number;
-  items: ExerciseRow[];
-}
-
-type LibraryView = "list" | "grouped";
-
 @Component({
   selector: "app-get-exercises",
   templateUrl: "./get-exercises.component.html",
@@ -72,15 +53,9 @@ type LibraryView = "list" | "grouped";
     SegmentedToggleComponent,
     StackComponent,
     GridComponent,
-    CardComponent,
-    HeadingComponent,
-    TextComponent,
-    ChipComponent,
-    DividerComponent,
     ButtonComponent,
-    IconButtonComponent,
-    IconBadgeComponent,
-    PressableComponent,
+    SectionHeaderComponent,
+    ExerciseRowComponent,
     EmptyStateComponent,
     SkeletonListComponent,
     SkeletonSectionHeaderComponent,
@@ -104,7 +79,9 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   searchQuery = signal("");
   readonly skeletonGroups = [4, 2, 3];
 
-  view = signal<LibraryView>("grouped");
+  protected readonly views = LibraryView;
+
+  view = signal<LibraryView>(LibraryView.Grouped);
 
   reloading = signal(false);
   loadingMore = signal(false);
@@ -114,8 +91,8 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   isDeleting = signal(false);
 
   viewOptions = computed<SegmentedOption[]>(() => [
-    { value: "grouped", label: this.t("getExercises.view.grouped") },
-    { value: "list", label: this.t("getExercises.view.list") },
+    { value: LibraryView.Grouped, label: this.t("getExercises.view.grouped") },
+    { value: LibraryView.List, label: this.t("getExercises.view.list") },
   ]);
 
   headerSubtitle = computed(() => {
@@ -123,11 +100,15 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
     return `${this.totalItems()} ${exercises}`;
   });
 
-  rows = computed<ExerciseRow[]>(() =>
+  noResultsTitle = computed(() =>
+    this.tp("getExercises.noResultsTitle", { query: this.searchQuery() }),
+  );
+
+  rows = computed<ExerciseRowView[]>(() =>
     this.items().map((exercise) => this.toRow(exercise)),
   );
 
-  groupedItems = computed<ExerciseGroup[]>(() => {
+  groups = computed<ExerciseGroupView[]>(() => {
     const items = this.items();
 
     return this.muscleCatalog
@@ -138,15 +119,17 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
         );
         return {
           muscle,
-          count: groupItems.length,
-          items: groupItems.map((exercise) => this.toRow(exercise)),
+          countLabel: `${groupItems.length}`,
+          rows: groupItems.map((exercise) => this.toRow(exercise)),
         };
       })
-      .filter((group) => group.count > 0);
+      .filter((group) => group.rows.length > 0);
   });
 
   hasMore = computed(
-    () => "list" === this.view() && this.items().length < this.totalItems(),
+    () =>
+      LibraryView.List === this.view() &&
+      this.items().length < this.totalItems(),
   );
 
   protected configureList(): void {
@@ -160,7 +143,7 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
 
   protected override restoreFilters(filters: Record<string, string>): void {
     this.searchQuery.set(filters["search"] ?? "");
-    this.view.set((filters["view"] as LibraryView) ?? "grouped");
+    this.view.set((filters["view"] as LibraryView) ?? LibraryView.Grouped);
   }
 
   protected fetch(
@@ -176,7 +159,7 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
 
   loadMore(): void {
     if (
-      "list" !== this.view() ||
+      LibraryView.List !== this.view() ||
       this.loading() ||
       this.loadingMore() ||
       this.reloading() ||
@@ -208,7 +191,7 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   onViewChange(view: LibraryView): void {
     this.view.set(view);
     this.pageSize.set(
-      "grouped" === view
+      LibraryView.Grouped === view
         ? GetExercisesComponent.GROUPED_PAGE_SIZE
         : GetExercisesComponent.LIST_PAGE_SIZE,
     );
@@ -231,24 +214,28 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
       });
   }
 
-  private toRow(exercise: Exercise): ExerciseRow {
+  private toRow(exercise: Exercise): ExerciseRowView {
+    const name = exercise.attributes.name;
+
     return {
       id: exercise.id,
-      name: exercise.attributes.name,
-      muscleText: this.muscleText(exercise),
+      name,
+      muscleText: exercise.attributes.muscleGroups.join(" · "),
+      tags: [
+        this.t(`getExercises.type.${exercise.attributes.type.toLowerCase()}`),
+        this.t(
+          `getExercises.weightMode.${exercise.attributes.weightMode ?? ExerciseWeightMode.Total}`,
+        ),
+      ],
       icon: (exercise.attributes.icon as DsIconName) ?? "dumbbell",
+      editAriaLabel: this.tp("getExercises.actions.editAria", { name }),
+      deleteAriaLabel: this.tp("getExercises.actions.deleteAria", { name }),
       exercise,
     };
   }
 
-  private muscleText(exercise: Exercise): string {
-    const mode = this.t(
-      `getExercises.type.${exercise.attributes.type.toLowerCase()}`,
-    );
-    const weightMode = this.t(
-      `getExercises.weightMode.${exercise.attributes.weightMode ?? ExerciseWeightMode.Total}`,
-    );
-    return `${exercise.attributes.muscleGroups.join(" · ")} · ${mode} · ${weightMode}`;
+  private tp(key: string, params: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.modulePath, params);
   }
 
   goBack(): void {

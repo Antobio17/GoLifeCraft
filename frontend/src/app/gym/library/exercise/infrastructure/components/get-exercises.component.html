@@ -1,13 +1,15 @@
-<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper [gap]="'var(--ds-space-5)'">
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getExercises.back' | t"
+    [eyebrow]="'getExercises.eyebrow' | t"
     [title]="'getExercises.heading' | t"
     [subtitle]="headerSubtitle()"
     (leadingClick)="goBack()"
   >
     <ds-button
       slot="actions"
+      data-testid="exercises-create"
       variant="primary"
       size="icon-lg"
       icon="plus"
@@ -19,96 +21,42 @@
 
   @if (loading()) {
     <ds-skeleton-filters [search]="true" [segments]="2" />
-    <ds-stack [gap]="'var(--ds-space-4)'">
-      @for (items of skeletonGroups; track $index) {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-skeleton-section-header
-            titleWidth="6rem"
-            [count]="true"
-            [divider]="true"
-          />
-          <ds-skeleton-list
-            [count]="items"
-            [columns]="null"
-            minColumn="17.5rem"
-            [tabletColumns]="2"
-            [gap]="'var(--ds-space-3)'"
-            radius="var(--ds-radius-xl)"
-            padding="var(--ds-space-3) var(--ds-space-3)"
-            [tile]="34"
-            [tileRadius]="10"
-            titleWidth="56%"
-            metaWidth="40%"
-            trailing="actions"
-            [actions]="2"
-          />
-        </ds-stack>
-      }
-    </ds-stack>
+    <ng-container [ngTemplateOutlet]="groupedSkeleton" />
   } @else {
-    <ds-search-input
-      [placeholder]="'getExercises.searchPlaceholder' | t"
-      [clearLabel]="'getExercises.searchClear' | t"
-      [value]="searchQuery()"
-      (searched)="onSearch($event)"
-    />
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-search-input
+        data-testid="exercises-search"
+        [placeholder]="'getExercises.searchPlaceholder' | t"
+        [clearLabel]="'getExercises.searchClear' | t"
+        [value]="searchQuery()"
+        (searched)="onSearch($event)"
+      />
 
-    <ds-segmented-toggle
-      [options]="viewOptions()"
-      [ngModel]="view()"
-      (ngModelChange)="onViewChange($event)"
-    />
+      <ds-segmented-toggle
+        data-testid="exercises-view"
+        variant="pill"
+        [options]="viewOptions()"
+        [ngModel]="view()"
+        (ngModelChange)="onViewChange($event)"
+      />
+    </ds-stack>
 
     @if (reloading()) {
-      @if (view() === "grouped") {
-        <ds-stack [gap]="'var(--ds-space-4)'">
-          @for (items of skeletonGroups; track $index) {
-            <ds-stack [gap]="'var(--ds-space-2)'">
-              <ds-skeleton-section-header
-                titleWidth="6rem"
-                [count]="true"
-                [divider]="true"
-              />
-              <ds-skeleton-list
-                [count]="items"
-                [columns]="null"
-                minColumn="17.5rem"
-                [tabletColumns]="2"
-                [gap]="'var(--ds-space-3)'"
-                radius="var(--ds-radius-xl)"
-                padding="var(--ds-space-3) var(--ds-space-3)"
-                [tile]="34"
-                [tileRadius]="10"
-                titleWidth="56%"
-                metaWidth="40%"
-                trailing="actions"
-                [actions]="2"
-              />
-            </ds-stack>
-          }
-        </ds-stack>
+      @if (view() === views.Grouped) {
+        <ng-container [ngTemplateOutlet]="groupedSkeleton" />
       } @else {
-        <ds-skeleton-list
-          [count]="6"
-          [columns]="null"
-          minColumn="17.5rem"
-          [tabletColumns]="2"
-          [gap]="'var(--ds-space-3)'"
-          radius="var(--ds-radius-xl)"
-          padding="var(--ds-space-3) var(--ds-space-3)"
-          [tile]="34"
-          [tileRadius]="10"
-          titleWidth="56%"
-          metaWidth="40%"
-          trailing="actions"
-          [actions]="2"
+        <ng-container
+          [ngTemplateOutlet]="rowsSkeleton"
+          [ngTemplateOutletContext]="{ $implicit: 6 }"
         />
       }
     } @else if (items().length === 0) {
       @if (searchQuery()) {
-        <ds-text variant="muted">
-          {{ "getExercises.noResults" | t }} “{{ searchQuery() }}”
-        </ds-text>
+        <ds-empty-state
+          icon="search"
+          [title]="noResultsTitle()"
+          [text]="'getExercises.noResultsHint' | t"
+        />
       } @else {
         <ds-empty-state
           icon="dumbbell"
@@ -116,8 +64,13 @@
           [text]="'getExercises.table.emptyMessage' | t"
         />
       }
-    } @else if (view() === "list") {
-      <ds-grid dsReveal="children" [minColumn]="'17.5rem'" [tabletColumns]="2">
+    } @else if (view() === views.List) {
+      <ds-grid
+        dsReveal="children"
+        [minColumn]="'24rem'"
+        [gap]="'var(--ds-space-2)'"
+        [tabletColumns]="2"
+      >
         @for (row of rows(); track row.id) {
           <ng-container
             [ngTemplateOutlet]="exerciseRow"
@@ -127,20 +80,9 @@
       </ds-grid>
 
       @if (loadingMore()) {
-        <ds-skeleton-list
-          [count]="2"
-          [columns]="null"
-          minColumn="17.5rem"
-          [tabletColumns]="2"
-          [gap]="'var(--ds-space-3)'"
-          radius="var(--ds-radius-xl)"
-          padding="var(--ds-space-3) var(--ds-space-3)"
-          [tile]="34"
-          [tileRadius]="10"
-          titleWidth="56%"
-          metaWidth="40%"
-          trailing="actions"
-          [actions]="2"
+        <ng-container
+          [ngTemplateOutlet]="rowsSkeleton"
+          [ngTemplateOutletContext]="{ $implicit: 2 }"
         />
       }
 
@@ -149,66 +91,74 @@
         (reached)="loadMore()"
       />
     } @else {
-      <ds-stack dsReveal="children" [gap]="'var(--ds-space-4)'">
-        @for (group of groupedItems(); track group.muscle) {
-          <ds-stack [gap]="'var(--ds-space-2)'">
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-2)'"
-            >
-              <ds-text variant="label">{{ group.muscle }}</ds-text>
-              <ds-chip>{{ group.count }}</ds-chip>
-              <ds-divider [grow]="true" />
-            </ds-stack>
-            <ds-grid [minColumn]="'17.5rem'" [tabletColumns]="2">
-              @for (row of group.items; track row.id) {
-                <ng-container
-                  [ngTemplateOutlet]="exerciseRow"
-                  [ngTemplateOutletContext]="{ $implicit: row }"
-                />
-              }
-            </ds-grid>
-          </ds-stack>
-        }
-      </ds-stack>
+      @for (group of groups(); track group.muscle) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="group.muscle"
+            [staticLabel]="group.countLabel"
+          />
+          <ds-grid
+            dsReveal="children"
+            [minColumn]="'24rem'"
+            [gap]="'var(--ds-space-2)'"
+            [tabletColumns]="2"
+          >
+            @for (row of group.rows; track row.id) {
+              <ng-container
+                [ngTemplateOutlet]="exerciseRow"
+                [ngTemplateOutletContext]="{ $implicit: row }"
+              />
+            }
+          </ds-grid>
+        </ds-stack>
+      }
     }
   }
 </ds-page-wrapper>
 
 <ng-template #exerciseRow let-row>
-  <ds-card [padding]="'var(--ds-space-3) var(--ds-space-3)'">
-    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-      <ds-icon-badge
-        [icon]="row.icon"
-        tone="brand"
-        [size]="34"
-        [iconSize]="17"
-      />
-      <ds-pressable
-        [grow]="true"
-        [ariaLabel]="row.name"
-        (press)="onOpen(row.id)"
-      >
-        <ds-stack [gap]="'1px'" [grow]="true">
-          <ds-heading [level]="3" size="sm">{{ row.name }}</ds-heading>
-          <ds-text variant="meta">{{ row.muscleText }}</ds-text>
-        </ds-stack>
-      </ds-pressable>
-      <ds-icon-button
-        icon="pencil"
-        color="var(--ds-text-meta)"
-        [ariaLabel]="'getExercises.actions.edit' | t"
-        (clicked)="onEdit(row.id)"
-      />
-      <ds-icon-button
-        icon="trash"
-        color="var(--ds-danger)"
-        [ariaLabel]="'getExercises.actions.delete' | t"
-        (clicked)="onDelete(row.exercise)"
+  <ds-exercise-row
+    data-testid="exercise-row"
+    [icon]="row.icon"
+    [name]="row.name"
+    [meta]="row.muscleText"
+    [tags]="row.tags"
+    [editAriaLabel]="row.editAriaLabel"
+    [removeAriaLabel]="row.deleteAriaLabel"
+    (opened)="onOpen(row.id)"
+    (edited)="onEdit(row.id)"
+    (removed)="onDelete(row.exercise)"
+  />
+</ng-template>
+
+<ng-template #rowsSkeleton let-count>
+  <ds-skeleton-list
+    [count]="count"
+    [columns]="null"
+    minColumn="24rem"
+    [tabletColumns]="2"
+    [gap]="'var(--ds-space-2)'"
+    radius="var(--ds-radius-2xl)"
+    padding="var(--ds-space-3)"
+    [tile]="44"
+    [tileRadius]="12"
+    titleWidth="56%"
+    metaWidth="40%"
+    trailing="actions"
+    [actions]="2"
+  />
+</ng-template>
+
+<ng-template #groupedSkeleton>
+  @for (items of skeletonGroups; track $index) {
+    <ds-stack [gap]="'var(--ds-space-2)'">
+      <ds-skeleton-section-header titleWidth="6rem" [count]="true" />
+      <ng-container
+        [ngTemplateOutlet]="rowsSkeleton"
+        [ngTemplateOutletContext]="{ $implicit: items }"
       />
     </ds-stack>
-  </ds-card>
+  }
 </ng-template>
 
 <ds-confirm-action-modal

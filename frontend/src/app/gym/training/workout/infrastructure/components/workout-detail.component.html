@@ -1,4 +1,8 @@
-<ds-page-wrapper [maxWidth]="'42.5rem'" [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'42.5rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   @if (loading()) {
     <ds-skeleton-screen-header
       [stacked]="true"
@@ -6,26 +10,28 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="52%"
+      [actions]="2"
     />
-    <ds-skeleton-summary
-      tone="soft"
-      [head]="false"
-      [ring]="false"
-      [compact]="true"
-      [stats]="2"
-      macros="none"
-    />
-    <ds-stack [gap]="'var(--ds-space-2)'">
-      @for (sets of skeletonExercises; track $index) {
-        <ds-skeleton-exercise
-          variant="readonly"
-          badge="2.875rem"
-          nameWidth="48%"
-          [sets]="sets"
-          [doneCol]="true"
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-skeleton slot="side" height="11rem" radius="var(--ds-radius-2xl)" />
+
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-skeleton-section-header titleWidth="6rem" [count]="true" />
+        <ds-skeleton-list
+          [count]="4"
+          [gap]="'var(--ds-space-2)'"
+          radius="var(--ds-radius-2xl)"
+          padding="var(--ds-space-3) var(--ds-space-3) var(--ds-space-3) var(--ds-space-4)"
+          [tile]="32"
+          [tileRadius]="10"
+          titleWidth="48%"
+          metaWidth="36%"
+          trailing="pill"
+          pillWidth="3.5rem"
+          pillHeight="1.25rem"
         />
-      }
-    </ds-stack>
+      </ds-stack>
+    </ds-split-view>
   } @else if (vm(); as detail) {
     <ds-screen-header
       [sticky]="true"
@@ -58,36 +64,80 @@
       />
     </ds-screen-header>
 
-    <ds-workout-summary
-      [eyebrow]="'getWorkout.completed' | t"
-      [date]="detail.dateLabel"
-      [stats]="[
-        {
-          value: detail.durationLabel,
-          label: 'getWorkout.duration' | t,
-        },
-        {
-          value: detail.ratioLabel,
-          label: 'getWorkout.sets' | t,
-          accent: true,
-        },
-      ]"
-    />
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-card
+        slot="side"
+        data-testid="workout-summary"
+        variant="glass"
+        [gap]="'var(--ds-space-4)'"
+      >
+        <ds-stack [gap]="'var(--ds-space-1)'">
+          <ds-text variant="label">{{ detail.statusLabel }}</ds-text>
+          <ds-heading [level]="2" size="md">{{ detail.dateLabel }}</ds-heading>
+          <ds-text variant="meta">{{ detail.timeLabel }}</ds-text>
+        </ds-stack>
+        <ds-stat-strip [items]="detail.stats" />
+      </ds-card>
 
-    <ds-stack [gap]="'var(--ds-space-2)'">
-      @for (exercise of detail.exercises; track exercise.id; let i = $index) {
-        <ds-workout-exercise
-          [index]="i + 1"
-          [name]="exercise.name"
-          [muscle]="exercise.muscleLabel"
-          [ratio]="exercise.ratio"
-          [note]="exercise.note"
-          [sets]="exercise.sets"
-          [numLabel]="'getWorkout.set.number' | t"
-          [repsLabel]="'getWorkout.set.reps' | t"
-          [weightLabel]="'getWorkout.set.weight' | t"
+      @if (exerciseRows().length === 0) {
+        <ds-empty-state
+          icon="dumbbell"
+          [title]="'getWorkout.empty.title' | t"
+          [text]="'getWorkout.empty.text' | t"
         />
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="'getWorkout.section.exercises' | t"
+            [actionLabel]="toggleAllLabel()"
+            (action)="toggleAll()"
+          />
+          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+            @for (
+              exercise of exerciseRows();
+              track exercise.id;
+              let i = $index
+            ) {
+              <ds-exercise-panel
+                data-testid="workout-exercise"
+                [position]="i + 1"
+                [name]="exercise.name"
+                [meta]="exercise.muscleLabel"
+                [summary]="exercise.summaryLabel"
+                [detail]="exercise.loadLabel"
+                [progressLabel]="exercise.progressLabel"
+                [expanded]="exercise.expanded"
+                (toggled)="toggleExercise(exercise.id)"
+              >
+                @if (exercise.note) {
+                  <ds-note icon="pencil">{{ exercise.note }}</ds-note>
+                }
+
+                <ds-stack [gap]="'var(--ds-space-1)'">
+                  <ds-set-header
+                    [doneCol]="true"
+                    [numLabel]="'getWorkout.set.number' | t"
+                    [repsLabel]="'getWorkout.set.reps' | t"
+                    [weightLabel]="'getWorkout.set.weight' | t"
+                  />
+                  @for (set of exercise.sets; track set.id) {
+                    <ds-set-line
+                      data-testid="workout-set"
+                      [displayLabel]="set.displayLabel"
+                      [reps]="set.reps"
+                      [weight]="set.weight"
+                      [done]="set.done"
+                      [warmup]="set.warmup"
+                      [doneLabel]="'getWorkout.set.done' | t"
+                      [skippedLabel]="'getWorkout.set.skipped' | t"
+                    />
+                  }
+                </ds-stack>
+              </ds-exercise-panel>
+            }
+          </ds-stack>
+        </ds-stack>
       }
-    </ds-stack>
+    </ds-split-view>
   }
 </ds-page-wrapper>
