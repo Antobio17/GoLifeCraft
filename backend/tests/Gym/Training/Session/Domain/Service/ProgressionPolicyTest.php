@@ -69,18 +69,51 @@ final class ProgressionPolicyTest extends TestCase
         $this->assertEquals(expected: [102.5, 102.5, 100.0], actual: $this->weightsOf(exercise: $exercise));
     }
 
-    public function testItAdvancesTwoSetsWhenTheNewWeightReachesItsTarget(): void
+    public function testItAdvancesOnlyOneSetWhenTheNewWeightJustMeetsItsTarget(): void
     {
         $exercise = $this->exercise(performed: [[12, 102.5], [11, 100.0], [10, 100.0]]);
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [102.5, 102.5, 100.0], actual: $this->weightsOf(exercise: $exercise));
+    }
+
+    public function testItAdvancesTwoSetsWhenTheNewWeightBeatsItsTarget(): void
+    {
+        $exercise = $this->exercise(performed: [[14, 102.5], [11, 100.0], [10, 100.0]]);
 
         $this->policy->apply(sessionExercise: $exercise);
 
         $this->assertEquals(expected: [102.5, 102.5, 102.5], actual: $this->weightsOf(exercise: $exercise));
     }
 
+    public function testItAdvancesOneSetWhenOnlySomeOfTheNewSetsBeatTheirTarget(): void
+    {
+        $exercise = $this->exercise(
+            performed: [[14, 102.5], [11, 102.5], [10, 100.0], [10, 100.0]],
+            targets: [12, 11, 10, 10],
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [102.5, 102.5, 102.5, 100.0], actual: $this->weightsOf(exercise: $exercise));
+    }
+
+    public function testItAdvancesOneSetWhenTheWholeCascadeMeetsItsTargetWithTolerance(): void
+    {
+        $exercise = $this->exercise(
+            performed: [[12, 97.5], [11, 95.0], [10, 95.0]],
+            tolerance: 3,
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [97.5, 97.5, 95.0], actual: $this->weightsOf(exercise: $exercise));
+    }
+
     public function testItNeverAdvancesPastTheLastSet(): void
     {
-        $exercise = $this->exercise(performed: [[12, 102.5], [12, 102.5], [10, 100.0]]);
+        $exercise = $this->exercise(performed: [[14, 102.5], [13, 102.5], [10, 100.0]]);
 
         $this->policy->apply(sessionExercise: $exercise);
 
@@ -240,12 +273,15 @@ final class ProgressionPolicyTest extends TestCase
     /**
      * @param array<int, array{0: int, 1: float}> $performed
      * @param array<int, array{0: int, 1: float}> $warmups
+     * @param int[]                               $targets
      */
     private function exercise(
         array $performed,
         string $mode = SessionExercise::PROGRESSION_CASCADE,
         array $warmups = [],
         int $holds = 0,
+        array $targets = [12, 11, 10],
+        int $tolerance = 2,
     ): SessionExercise {
         $exercise = SessionExercise::create(
             sessionId: 'session-1',
@@ -258,8 +294,8 @@ final class ProgressionPolicyTest extends TestCase
 
         $exercise->configureProgression(
             mode: $mode,
-            repTargets: SessionExercise::PROGRESSION_NONE === $mode ? [] : [12, 11, 10],
-            repTolerance: 2,
+            repTargets: SessionExercise::PROGRESSION_NONE === $mode ? [] : $targets,
+            repTolerance: $tolerance,
             incrementKg: SessionExercise::PROGRESSION_NONE === $mode ? null : 2.5,
             updatedByUserId: 'user-1',
             dateTimeGenerator: $this->dateTimeGenerator,
