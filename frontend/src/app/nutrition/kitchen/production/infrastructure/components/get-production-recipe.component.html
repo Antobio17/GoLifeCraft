@@ -35,8 +35,23 @@
       [leadingLabel]="'getProductionRecipe.back' | t"
       [eyebrow]="statusLabel()"
       [title]="detail.name"
+      [titleActionLabel]="'getProductionRecipe.openRecipe' | t"
       (leadingClick)="onBack()"
-    />
+      (titleClick)="onOpenRecipe()"
+    >
+      @if (!editing() && !done()) {
+        <ds-button
+          slot="actions"
+          variant="primary"
+          icon="check"
+          data-testid="production-recipe-cook"
+          [loading]="cooking()"
+          [disabled]="cooking()"
+          (clicked)="onCook()"
+          >{{ "getProductionRecipe.submit" | t }}</ds-button
+        >
+      }
+    </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       @if (!editing()) {
@@ -187,7 +202,9 @@
                   row.short ? ('getProductionRecipe.subRecipe.chip' | t) : ''
                 "
                 [checked]="row.checked"
+                [openLabel]="'getProductionRecipe.openRecipe' | t"
                 (toggled)="onToggleIngredient(row.item.recipeId)"
+                (opened)="onOpenSubRecipe(row.item.recipeId)"
               />
 
               @if (!done()) {
@@ -215,7 +232,9 @@
               [name]="row.name"
               [meta]="row.meta"
               [checked]="row.checked"
+              [openLabel]="'getProductionRecipe.openArticle' | t"
               (toggled)="onToggleIngredient(row.key)"
+              (opened)="onOpenArticle(row.key)"
             />
           }
         </ds-stack>
@@ -252,17 +271,7 @@
       }
 
       @if (!editing()) {
-        @if (!done()) {
-          <ds-button
-            variant="primary"
-            size="lg"
-            [fullWidth]="true"
-            [loading]="cooking()"
-            [disabled]="cooking()"
-            (clicked)="onCook()"
-            >{{ "getProductionRecipe.submit" | t }}</ds-button
-          >
-        } @else {
+        @if (done()) {
           <ds-stack [gap]="'var(--ds-space-2)'">
             @if (lotCode()) {
               <ds-card [padding]="'var(--ds-space-3)'">

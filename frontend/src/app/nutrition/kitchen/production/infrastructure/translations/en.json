@@ -95,6 +95,8 @@
   },
   "getProductionRecipe": {
     "back": "Back to the batch",
+    "openRecipe": "Open recipe",
+    "openArticle": "Open product",
     "breadcrumb": "Recipe",
     "status": {
       "pending": "Cooking",

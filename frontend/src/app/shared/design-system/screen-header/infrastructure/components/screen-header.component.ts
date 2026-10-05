@@ -76,12 +76,43 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         @if (eyebrow) {
           <span class="ds-screen-head__eyebrow">{{ eyebrow }}</span>
         }
-        <h1
-          class="ds-screen-head__title"
-          [class.ds-screen-head__title--wrap]="wrapTitle || stacked()"
-        >
-          {{ title }}
-        </h1>
+        @if (titleActionLabel) {
+          <h1 class="ds-screen-head__title ds-screen-head__title--action">
+            <button
+              type="button"
+              class="ds-screen-head__title-link"
+              [attr.aria-label]="titleActionLabel + ': ' + title"
+              (click)="titleClick.emit()"
+            >
+              <span
+                class="ds-screen-head__title-text"
+                [class.ds-screen-head__title--wrap]="wrapTitle || stacked()"
+                >{{ title }}</span
+              >
+              <svg
+                class="ds-screen-head__title-chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </h1>
+        } @else {
+          <h1
+            class="ds-screen-head__title"
+            [class.ds-screen-head__title--wrap]="wrapTitle || stacked()"
+          >
+            {{ title }}
+          </h1>
+        }
         @if (subtitle) {
           <p class="ds-screen-head__subtitle">{{ subtitle }}</p>
         }
@@ -228,6 +259,48 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         -webkit-line-clamp: var(--screen-head-lines, 2);
         line-clamp: var(--screen-head-lines, 2);
       }
+      .ds-screen-head__title--action {
+        white-space: normal;
+        overflow: visible;
+      }
+      .ds-screen-head__title-link {
+        appearance: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        letter-spacing: inherit;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ds-space-2);
+        max-width: 100%;
+        border-radius: var(--ds-radius-sm);
+      }
+      .ds-screen-head__title-link:focus-visible {
+        outline: 2px solid var(--ds-primary);
+        outline-offset: 2px;
+      }
+      .ds-screen-head__title-text {
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ds-screen-head__title-text.ds-screen-head__title--wrap {
+        white-space: normal;
+      }
+      .ds-screen-head__title-chevron {
+        flex: 0 0 auto;
+        color: var(--ds-text-meta);
+        transition: transform var(--ds-dur-2) var(--ds-ease-out);
+      }
+      .ds-screen-head__title-link:hover .ds-screen-head__title-chevron {
+        transform: translateX(2px);
+      }
       .ds-screen-head__subtitle {
         margin: 2px 0 0;
         font-size: var(--ds-text-lg);
@@ -273,7 +346,9 @@ export class ScreenHeaderComponent {
   @Input() subtitle: string | null = null;
   readonly sticky = input(false);
   readonly stacked = input(false);
+  @Input() titleActionLabel = "";
   @Output() leadingClick = new EventEmitter<void>();
+  @Output() titleClick = new EventEmitter<void>();
 
   constructor() {
     this.trackScroll();
