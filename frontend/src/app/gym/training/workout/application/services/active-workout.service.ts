@@ -135,6 +135,17 @@ export class ActiveWorkoutService implements OnDestroy {
     return seconds !== null && target > 0 && seconds >= target;
   });
 
+  readonly restProgress = computed(() => {
+    const seconds = this.restSeconds() ?? 0;
+    const target = this.restTargetSeconds();
+
+    if (target <= 0) {
+      return 100;
+    }
+
+    return Math.min(100, Math.round((seconds / target) * 100));
+  });
+
   isActiveFor(sessionId: string): boolean {
     return this.isActive() && this.activeSessionId() === sessionId;
   }

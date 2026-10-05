@@ -11,6 +11,14 @@ import { Component, Input } from "@angular/core";
         }
       </span>
       <span class="ds-stile__label">{{ label }}</span>
+      @if (note) {
+        <span
+          class="ds-stile__note"
+          [class.ds-stile__note--positive]="positive"
+        >
+          {{ note }}
+        </span>
+      }
     </div>
   `,
   styles: [
@@ -50,6 +58,16 @@ import { Component, Input } from "@angular/core";
         font-weight: 600;
         color: var(--ds-text-muted);
       }
+      .ds-stile__note {
+        display: block;
+        margin-top: var(--ds-space-1);
+        font-size: var(--ds-text-xs);
+        font-weight: 700;
+        color: var(--ds-text-muted);
+      }
+      .ds-stile__note--positive {
+        color: var(--ds-primary-soft-text);
+      }
     `,
   ],
 })
@@ -57,4 +75,6 @@ export class StatTileComponent {
   @Input() value: string | number = "";
   @Input() unit = "";
   @Input() label = "";
+  @Input() note = "";
+  @Input() positive = false;
 }

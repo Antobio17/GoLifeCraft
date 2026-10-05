@@ -1,7 +1,7 @@
 <ds-swipe-to-delete
   #swipe
   [reveal]="64"
-  radius="var(--ds-radius-md)"
+  radius="var(--ds-radius-lg)"
   [removeLabel]="removeLabel"
   (remove)="remove.emit()"
 >
@@ -11,19 +11,6 @@
     [class.set-row--done]="done"
     [class.set-row--warmup]="warmup"
   >
-    @if (showCheck) {
-      <button
-        type="button"
-        class="set-check"
-        [class.set-check--on]="done"
-        [attr.aria-label]="markDoneLabel"
-        (click)="toggleDone.emit()"
-      >
-        @if (done) {
-          <ds-icon name="check" [size]="15" [stroke]="3" />
-        }
-      </button>
-    }
     @if (showKindToggle) {
       <button
         type="button"
@@ -38,7 +25,7 @@
       <span class="set-row__num">{{ displayLabel }}</span>
     }
     <ds-number-input
-      variant="boxed"
+      variant="field"
       [stepper]="true"
       [step]="1"
       [min]="0"
@@ -49,7 +36,7 @@
       [decrementLabel]="repsDownLabel"
     />
     <ds-number-input
-      variant="boxed"
+      variant="field"
       [stepper]="true"
       [step]="1.25"
       [precision]="2"
@@ -60,5 +47,18 @@
       [incrementLabel]="weightUpLabel"
       [decrementLabel]="weightDownLabel"
     />
+    @if (showCheck) {
+      <button
+        type="button"
+        class="set-check"
+        [class.set-check--on]="done"
+        [attr.aria-label]="markDoneLabel"
+        (click)="toggleDone.emit()"
+      >
+        @if (done) {
+          <ds-icon name="check" [size]="16" [stroke]="3" />
+        }
+      </button>
+    }
   </div>
 </ds-swipe-to-delete>

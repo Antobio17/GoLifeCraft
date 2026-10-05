@@ -1,6 +1,6 @@
 {
   "getSessions": {
-    "heading": "Gimnasio",
+    "heading": "Entrenar",
     "library": "Biblioteca",
     "history": "Históricos",
     "yourSessions": "Tus sesiones",
@@ -33,6 +33,58 @@
     "free": {
       "title": "Entrenamiento libre",
       "subtitle": "Empieza sin plantilla y añade ejercicios sobre la marcha"
+    },
+    "eyebrow": "Gimnasio",
+    "week": {
+      "title": "Últimos 7 días",
+      "caption": "{{count}} entrenos · {{volume}} kg movidos",
+      "captionEmpty": "Sin entrenos todavía esta semana",
+      "streakOne": "1 semana",
+      "streak": "{{count}} semanas",
+      "done": "entrenado",
+      "rest": "descanso",
+      "today": "hoy"
+    },
+    "next": {
+      "eyebrow": "Toca hoy",
+      "eyebrowFirst": "Empieza por aquí",
+      "lastDone": "La hiciste {{when}} · {{volume}} kg",
+      "neverDone": "Todavía no la has entrenado",
+      "start": "Empezar sesión",
+      "open": "Ver la sesión {{name}}",
+      "exercises": "ejercicios",
+      "sets": "series",
+      "minutes": "minutos"
+    },
+    "tiles": {
+      "free": "Libre",
+      "freeMeta": "Sin plantilla",
+      "history": "Historial",
+      "historyMeta": "{{count}} entrenos",
+      "library": "Biblioteca",
+      "libraryMeta": "{{count}} ejercicios"
+    },
+    "row": {
+      "today": "Hoy",
+      "meta": "{{exercises}} ejercicios · {{sets}} series · ~{{minutes}} min",
+      "start": "Empezar {{name}}"
+    },
+    "when": {
+      "today": "hoy",
+      "yesterday": "ayer",
+      "days": "hace {{count}} días",
+      "short": "hace {{count}} d",
+      "shortToday": "hoy",
+      "shortYesterday": "ayer"
+    },
+    "month": {
+      "title": "Últimos 30 días",
+      "workouts": "entrenos",
+      "volume": "volumen",
+      "time": "entrenando",
+      "workoutsDelta": "{{delta}} vs. 30 días antes",
+      "volumeDelta": "{{delta}} %",
+      "average": "{{minutes}} min de media"
     }
   },
   "createSession": {
@@ -123,7 +175,7 @@
       },
       "metric": {
         "volume": "Volumen",
-        "reps": "Repeticiones",
+        "reps": "Reps",
         "duration": "Duración"
       },
       "metricName": {
@@ -180,7 +232,7 @@
       "save": "Guardar orden",
       "cancel": "Cancelar",
       "drag": "Arrastrar para recolocar",
-      "trigger": "Ordenar ejercicios, ahora {{name}}"
+      "action": "Reordenar"
     },
     "progression": {
       "label": "Progresión",
@@ -200,6 +252,14 @@
     "tab": {
       "sets": "Series",
       "progression": "Progresión"
+    },
+    "startBar": {
+      "title": "{{sets}} series · ~{{minutes}} min",
+      "subtitle": "Se guarda sola mientras entrenas",
+      "action": "Empezar"
+    },
+    "section": {
+      "exercises": "Ejercicios"
     }
   },
   "session": {

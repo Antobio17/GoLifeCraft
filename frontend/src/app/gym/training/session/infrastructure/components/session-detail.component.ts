@@ -8,12 +8,23 @@ import {
   input,
   signal,
 } from "@angular/core";
-import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
+import {
+  takeUntilDestroyed,
+  toObservable,
+  toSignal,
+} from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { NgTemplateOutlet } from "@angular/common";
 import { Observable, forkJoin, of } from "rxjs";
-import { map, switchMap, tap } from "rxjs/operators";
+import {
+  delay,
+  map,
+  pairwise,
+  startWith,
+  switchMap,
+  tap,
+} from "rxjs/operators";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
@@ -26,10 +37,8 @@ import { ChoiceModalOption } from "@shared/design-system/choice-modal/domain/mod
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
-import { PositionChipComponent } from "@shared/design-system/position-chip/infrastructure/components/position-chip.component";
 import { ReorderSheetComponent } from "@shared/design-system/reorder-sheet/infrastructure/components/reorder-sheet.component";
 import { ReorderSheetItem } from "@shared/design-system/reorder-sheet/domain/models/reorder-sheet-item.model";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
@@ -62,6 +71,10 @@ import {
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
+import { ExercisePanelComponent } from "@shared/design-system/exercise-panel/infrastructure/components/exercise-panel.component";
+import { ExercisePanelState } from "@shared/design-system/exercise-panel/domain/models/exercise-panel-state.enum";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { ActionBarComponent } from "@shared/design-system/action-bar/infrastructure/components/action-bar.component";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
 import { uuidV4 } from "@shared/uuid/uuid";
@@ -71,6 +84,7 @@ import { SaveSessionExerciseService } from "../../application/services/save-sess
 import { DeleteSessionService } from "../../application/services/delete-session.service";
 import { SessionDraftService } from "../../application/services/session-draft.service";
 import { SetNumberingService } from "../../application/services/set-numbering.service";
+import { ExerciseSetSummaryService } from "../../application/services/exercise-set-summary.service";
 import { ProgressionEditorService } from "../../application/services/progression-editor.service";
 import { Progression } from "../../domain/models/progression.model";
 import { SaveSessionExerciseRequest } from "../../domain/models/session-exercise-request.model";
@@ -80,10 +94,6 @@ import {
   ProgressionTargetRow,
 } from "@shared/design-system/progression-editor/infrastructure/components/progression-editor.component";
 import { ProgressionSummaryComponent } from "@shared/design-system/progression-summary/infrastructure/components/progression-summary.component";
-import {
-  TypeToggleComponent,
-  TypeToggleOption,
-} from "@shared/design-system/type-toggle/infrastructure/components/type-toggle.component";
 import { SessionProgressService } from "../../application/services/session-progress.service";
 import { SessionProgressMetric } from "../../domain/models/session-progress-metric.model";
 import { SessionProgressRange } from "../../domain/models/session-progress-range.model";
@@ -126,10 +136,8 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ChoiceModalComponent,
     StackComponent,
     CardComponent,
-    HeadingComponent,
     TextComponent,
     ChipComponent,
-    PositionChipComponent,
     ReorderSheetComponent,
     IconComponent,
     IconButtonComponent,
@@ -140,7 +148,6 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     SetRowComponent,
     ProgressionEditorComponent,
     ProgressionSummaryComponent,
-    TypeToggleComponent,
     TopSetRowComponent,
     AddTileComponent,
     EmptyStateComponent,
@@ -155,6 +162,9 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ProgressionCardComponent,
     SkeletonPanelComponent,
     SaveStatusComponent,
+    ExercisePanelComponent,
+    ActionBarComponent,
+    SectionHeaderComponent,
   ],
 })
 export class SessionDetailComponent implements OnInit {
@@ -169,6 +179,7 @@ export class SessionDetailComponent implements OnInit {
   private deleteSessionService = inject(DeleteSessionService);
   private sessionDraft = inject(SessionDraftService);
   private setNumbering = inject(SetNumberingService);
+  private setSummary = inject(ExerciseSetSummaryService);
   private progressionEditor = inject(ProgressionEditorService);
   private sessionProgress = inject(SessionProgressService);
   private getExercisesService = inject(GetExercisesService);
@@ -180,6 +191,7 @@ export class SessionDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
 
+  private static readonly ADVANCE_DELAY_MS = 450;
   private readonly MODULE_PATH = "gym/training/session";
 
   readonly id = input.required<string>();
@@ -220,18 +232,63 @@ export class SessionDetailComponent implements OnInit {
   );
 
   private openTabs = signal<Record<string, string>>({});
+  private expandedOverride = signal<string | null | undefined>(undefined);
+
+  private currentExerciseId = computed<string | null>(() => {
+    if (!this.isActiveHere) {
+      return null;
+    }
+
+    const current = this.exercises().find(
+      (exercise, i) =>
+        exercise.sets.length > 0 &&
+        exercise.sets.some((_set, j) => !this.activeWorkout.isDone(i, j)),
+    );
+
+    return current?.id ?? null;
+  });
+
+  private followedExerciseId = toSignal(
+    toObservable(this.currentExerciseId).pipe(
+      startWith(null),
+      pairwise(),
+      switchMap(([previous, next]) =>
+        previous === null
+          ? of(next)
+          : of(next).pipe(delay(SessionDetailComponent.ADVANCE_DELAY_MS)),
+      ),
+    ),
+    { initialValue: null },
+  );
+
+  expandedId = computed<string | null>(() => {
+    const override = this.expandedOverride();
+
+    if (override !== undefined) {
+      return override;
+    }
+
+    return this.followedExerciseId();
+  });
 
   exerciseRows = computed(() => {
     const topSets = this.topSetsByExerciseId();
     const openTabs = this.openTabs();
     const active = this.isActiveHere;
+    const expandedId = this.expandedId();
+    const currentId = this.currentExerciseId();
 
-    return this.exercises().map((exercise) => {
+    return this.exercises().map((exercise, i) => {
       const topSet = exercise.exerciseId
         ? (topSets[exercise.exerciseId] ?? null)
         : null;
 
       const configured = exercise.progression.mode !== ProgressionMode.None;
+      const summary = this.setSummary.summarize(exercise.sets);
+      const doneSets = active
+        ? exercise.sets.filter((_set, j) => this.activeWorkout.isDone(i, j))
+            .length
+        : 0;
       const progressionAvailable =
         !active || !!this.templateExerciseFor(exercise.exerciseId);
 
@@ -249,16 +306,50 @@ export class SessionDetailComponent implements OnInit {
         showProgressionTab:
           progressionAvailable && openTabs[exercise.id] === "progression",
         muscleLabel: this.muscleText(exercise),
-        modeLabel: this.modeLabel(exercise.type),
-        weightModeLabel: this.weightModeLabel(exercise.weightMode),
+        modeTags: this.modeTags(exercise),
         topSetValue: this.topSetFormat.valueLabel(topSet),
         topSetCaption: this.topSetFormat.dateLabel(topSet),
         topSetHasAction: !!exercise.exerciseId,
         topSetActionAria: this.t("getSession.topSet.actionAria", {
           name: exercise.exerciseName,
         }),
+        expanded: exercise.id === expandedId,
+        summaryLabel: this.setSummary.schemeLabel(summary),
+        loadLabel: summary.topWeightKg > 0 ? `${summary.topWeightKg} kg` : "",
+        progressLabel: active ? `${doneSets}/${exercise.sets.length}` : "",
+        panelState: this.panelState(
+          active,
+          exercise.id === currentId,
+          exercise.sets.length > 0 && doneSets === exercise.sets.length,
+        ),
       };
     });
+  });
+
+  plannedSets = computed(() =>
+    this.exercises().reduce(
+      (total, exercise) => total + exercise.sets.length,
+      0,
+    ),
+  );
+
+  exerciseCountLabel = computed(() => `${this.exercises().length}`);
+
+  startBarTitle = computed(() =>
+    this.t("getSession.startBar.title", {
+      sets: this.plannedSets(),
+      minutes: this.estimatedDurationMinutes(),
+    }),
+  );
+
+  activeStateLabel = computed(() => {
+    const state = this.t(
+      this.activeWorkout.paused()
+        ? "getSession.active.paused"
+        : "getSession.active.running",
+    );
+
+    return `${this.name()} · ${state}`;
   });
 
   topSetLabel = computed(() => this.t("getSession.topSet.label"));
@@ -274,6 +365,10 @@ export class SessionDetailComponent implements OnInit {
       label: exercise.exerciseName,
       meta: exercise.muscleLabel,
     })),
+  );
+
+  reorderActionLabel = computed(() =>
+    this.exercises().length < 2 ? "" : this.t("getSession.reorder.action"),
   );
 
   reorderTitle = computed(() => this.t("getSession.reorder.title"));
@@ -488,6 +583,7 @@ export class SessionDetailComponent implements OnInit {
     this.topSets.set([]);
     this.topSetsLoading.set(true);
     this.requestedTopSets.clear();
+    this.expandedOverride.set(undefined);
   }
 
   private changeProgression(
@@ -697,6 +793,20 @@ export class SessionDetailComponent implements OnInit {
     return exercise.attributes.muscleGroups.join(" · ");
   }
 
+  private modeTags(exercise: SessionExerciseView): string[] {
+    const tags: string[] = [];
+
+    if (exercise.type === ExerciseType.Unilateral) {
+      tags.push(this.modeLabel(exercise.type));
+    }
+
+    if (exercise.weightMode === ExerciseWeightMode.PerSide) {
+      tags.push(this.weightModeLabel(exercise.weightMode));
+    }
+
+    return tags;
+  }
+
   private modeLabel(type: string): string {
     return this.t(
       type === ExerciseType.Unilateral
@@ -785,20 +895,16 @@ export class SessionDetailComponent implements OnInit {
     });
   }
 
-  openReorder(exerciseId: string): void {
+  openReorder(): void {
     if (this.exercises().length < 2) {
       return;
     }
 
-    this.reorderExerciseId.set(exerciseId);
+    this.reorderExerciseId.set("");
   }
 
   closeReorder(): void {
     this.reorderExerciseId.set(null);
-  }
-
-  reorderAriaLabel(exerciseName: string): string {
-    return this.t("getSession.reorder.trigger", { name: exerciseName });
   }
 
   onReorderSaved(orderedIds: string[]): void {
@@ -878,7 +984,7 @@ export class SessionDetailComponent implements OnInit {
     },
   ]);
 
-  exerciseTabs = computed<TypeToggleOption[]>(() => [
+  exerciseTabs = computed<SegmentedOption[]>(() => [
     { value: "sets", label: this.t("getSession.tab.sets") },
     { value: "progression", label: this.t("getSession.tab.progression") },
   ]);
@@ -1010,6 +1116,39 @@ export class SessionDetailComponent implements OnInit {
 
   toggleSetDone(exerciseIndex: number, setIndex: number): void {
     this.activeWorkout.toggleDone(exerciseIndex, setIndex, this.toActive());
+
+    const exercise = this.exercises()[exerciseIndex];
+    const completed = exercise?.sets.every((_set, j) =>
+      this.activeWorkout.isDone(exerciseIndex, j),
+    );
+
+    if (!completed) {
+      return;
+    }
+
+    this.expandedOverride.set(undefined);
+  }
+
+  toggleExercise(exerciseId: string): void {
+    this.expandedOverride.set(
+      this.expandedId() === exerciseId ? null : exerciseId,
+    );
+  }
+
+  private panelState(
+    active: boolean,
+    current: boolean,
+    completed: boolean,
+  ): ExercisePanelState {
+    if (active && completed) {
+      return ExercisePanelState.Done;
+    }
+
+    if (current) {
+      return ExercisePanelState.Current;
+    }
+
+    return ExercisePanelState.Idle;
   }
 
   onStartWorkout(): void {
@@ -1020,7 +1159,10 @@ export class SessionDetailComponent implements OnInit {
     this.activeWorkout
       .start(this.id(), this.name(), this.toActive())
       .subscribe({
-        next: () => this.syncRestTarget(),
+        next: () => {
+          this.expandedOverride.set(undefined);
+          this.syncRestTarget();
+        },
       });
   }
 

@@ -15,6 +15,25 @@
     "empty": {
       "title": "No workouts yet",
       "text": "Once you finish a session it will show up here with the exercises you completed."
+    },
+    "free": "Free",
+    "volume": "{{volume}} kg",
+    "month": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "workouts": "workouts",
+      "volume": "volume",
+      "time": "training",
+      "dayEmpty": "{{date}}: no workout",
+      "day": "{{date}}: {{count}} workout(s)"
+    },
+    "week": {
+      "current": "This week",
+      "previous": "Last week",
+      "summary": "{{count}} workouts · {{volume}} t"
+    },
+    "row": {
+      "open": "Open workout {{name}} from {{date}}"
     }
   },
   "getWorkout": {

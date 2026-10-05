@@ -78,7 +78,8 @@
     "empty": {
       "title": "No data yet",
       "text": "Log this exercise in a session to see your progression here."
-    }
+    },
+    "setCount": "{{count}} sets"
   },
   "createExercise": {
     "title": "New exercise",

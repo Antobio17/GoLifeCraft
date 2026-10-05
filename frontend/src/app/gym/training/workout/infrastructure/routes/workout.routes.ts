@@ -3,6 +3,7 @@ import { GetWorkoutsProviders } from "../providers/get-workouts.providers";
 import { GetWorkoutProviders } from "../providers/get-workout.providers";
 import { EditWorkoutProviders } from "../providers/edit-workout.providers";
 import { GetExercisesProviders } from "@gym/library/exercise/infrastructure/providers/get-exercises.providers";
+import { GetGymStatsProviders } from "@gym/analytics/stats/infrastructure/providers/get-gym-stats.providers";
 
 export const WORKOUT_ROUTES: Routes = [
   {
@@ -10,6 +11,7 @@ export const WORKOUT_ROUTES: Routes = [
     providers: [
       ...GetWorkoutsProviders.getProviders(),
       ...GetWorkoutProviders.getProviders(),
+      ...GetGymStatsProviders.getProviders(),
     ],
     children: [
       {

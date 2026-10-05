@@ -8,6 +8,7 @@ export interface WorkoutListAttributes {
   exerciseCount: number;
   totalSets: number;
   completedSets: number;
+  volumeKg: number;
   muscleGroups: string[];
 }
 

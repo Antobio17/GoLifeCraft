@@ -78,7 +78,8 @@
     "empty": {
       "title": "Aún sin datos",
       "text": "Registra este ejercicio en una sesión para ver aquí tu progresión."
-    }
+    },
+    "setCount": "{{count}} series"
   },
   "createExercise": {
     "title": "Nuevo ejercicio",

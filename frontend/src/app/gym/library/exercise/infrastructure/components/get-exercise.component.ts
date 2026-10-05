@@ -25,7 +25,6 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { MetricCardComponent } from "@shared/design-system/metric-card/infrastructure/components/metric-card.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
@@ -38,6 +37,10 @@ import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list-item.component";
 import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import { DatedRowComponent } from "@shared/design-system/dated-row/infrastructure/components/dated-row.component";
+import { DatedRowTone } from "@shared/design-system/dated-row/domain/models/dated-row-tone.enum";
 import {
   ProgressionCardComponent,
   ProgressionTrend,
@@ -46,7 +49,9 @@ import {
 type MetricKey = "max" | "e1rm" | "vol";
 
 interface SessionRow {
-  dateLabel: string;
+  weekday: string;
+  day: string;
+  title: string;
   valueLabel: string;
   setsText: string;
   isPr: boolean;
@@ -66,7 +71,6 @@ interface SessionRow {
     GridComponent,
     CardComponent,
     TextComponent,
-    HeadingComponent,
     ChipComponent,
     MetricCardComponent,
     ButtonComponent,
@@ -79,6 +83,9 @@ interface SessionRow {
     SkeletonMetricsComponent,
     SkeletonPanelComponent,
     ProgressionCardComponent,
+    DatedRowComponent,
+    SectionHeaderComponent,
+    RevealDirective,
   ],
 })
 export class GetExerciseComponent {
@@ -94,6 +101,12 @@ export class GetExerciseComponent {
     day: "numeric",
     month: "short",
   });
+
+  private readonly weekdayFormatter = new Intl.DateTimeFormat("es", {
+    weekday: "short",
+  });
+
+  protected readonly tones = DatedRowTone;
 
   readonly id = input.required<string>();
   readonly from = input<string | undefined>(undefined);
@@ -227,12 +240,15 @@ export class GetExerciseComponent {
     return this.sessions()
       .map((session) => {
         const value = this.valueOf(session);
+        const date = this.parseDate(session.date);
         return {
-          dateLabel: this.formatDate(session.date),
+          weekday: this.weekdayFormatter.format(date).replace(".", ""),
+          day: `${date.getDate()}`,
+          title: this.t("getExercise.setCount", { count: session.sets.length }),
           valueLabel: `${this.round(value)} kg`,
           setsText: session.sets
-            .map((set) => `${set.reps} × ${set.weightKg}kg`)
-            .join("   "),
+            .map((set) => `${set.weightKg}×${set.reps}`)
+            .join(" · "),
           isPr: value === pr && pr > 0,
         };
       })
@@ -298,13 +314,18 @@ export class GetExerciseComponent {
   }
 
   private formatDate(value: string): string {
-    return this.dateFormatter.format(new Date(value.replace(" ", "T")));
+    return this.dateFormatter.format(this.parseDate(value));
   }
 
-  private t(key: string): string {
+  private parseDate(value: string): Date {
+    return new Date(value.replace(" ", "T"));
+  }
+
+  private t(key: string, params?: Record<string, unknown>): string {
     return this.translationService.translate(
       key,
       GetExerciseComponent.MODULE_PATH,
+      params,
     );
   }
 }

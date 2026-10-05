@@ -17,18 +17,20 @@
       <div class="pe-tbl">
         <div class="pe-tbl__head">
           <span class="pe-tbl__cell pe-tbl__cell--set">{{ setLabel }}</span>
-          <span class="pe-tbl__cell">{{ nowLabel }}</span>
+          <span class="pe-tbl__cell pe-tbl__cell--now">{{ nowLabel }}</span>
           <span class="pe-tbl__cell">{{ targetLabel }}</span>
         </div>
 
         @for (row of targets; track row.index) {
           <div class="pe-tbl__row">
             <span class="pe-tbl__cell pe-tbl__cell--set">{{ row.label }}</span>
-            <span class="pe-tbl__cell pe-tbl__now">{{ row.now }}</span>
+            <span class="pe-tbl__cell pe-tbl__cell--now pe-tbl__now">{{
+              row.now
+            }}</span>
             <div class="pe-tbl__cell">
               <ds-number-input
-                variant="boxed"
-                [stepper]="false"
+                variant="field"
+                [stepper]="true"
                 [step]="1"
                 [min]="1"
                 [ngModel]="row.reps"
@@ -45,7 +47,7 @@
       <div class="pe-pair__item">
         <ds-text variant="meta">{{ toleranceLabel }}</ds-text>
         <ds-number-input
-          variant="boxed"
+          variant="field"
           [stepper]="true"
           [step]="1"
           [min]="0"
@@ -57,7 +59,7 @@
       <div class="pe-pair__item">
         <ds-text variant="meta">{{ incrementLabel }}</ds-text>
         <ds-number-input
-          variant="boxed"
+          variant="field"
           [stepper]="true"
           [step]="0.25"
           [precision]="2"

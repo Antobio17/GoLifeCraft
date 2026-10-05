@@ -10,6 +10,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       class="ds-num"
       [class.ds-num--stepper]="stepper"
       [class.ds-num--boxed]="variant === 'boxed'"
+      [class.ds-num--field]="variant === 'field'"
     >
       @if (stepper) {
         <button
@@ -168,6 +169,49 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-num--boxed .ds-num__unit {
         margin-left: var(--ds-space-1);
       }
+      .ds-num.ds-num--field {
+        gap: 0;
+        height: 2.375rem;
+        box-sizing: border-box;
+        padding: 0 var(--ds-space-1);
+        background: var(--ds-surface-inset);
+        border: 1px solid var(--ds-border-hairline);
+        border-radius: var(--ds-radius-lg);
+        transition:
+          border-color var(--ds-transition-fast),
+          box-shadow var(--ds-transition-fast);
+      }
+      .ds-num.ds-num--field:focus-within {
+        border-color: var(--ds-border-focus);
+        box-shadow: var(--ds-focus-ring);
+      }
+      .ds-num--field .ds-num__step {
+        width: 1.625rem;
+        height: 1.875rem;
+        border-radius: var(--ds-radius-md);
+        background: transparent;
+        color: var(--ds-text-muted);
+        box-shadow: none;
+      }
+      .ds-num--field .ds-num__step:hover:not(:disabled) {
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary-soft-text);
+      }
+      .ds-num.ds-num--field .ds-num__field {
+        flex: 1 1 0;
+        width: 0;
+        min-width: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+        font-family: var(--ds-font-display);
+        font-size: var(--ds-text-md);
+        font-weight: var(--ds-weight-bold);
+        font-variant-numeric: tabular-nums;
+      }
+      .ds-num--field .ds-num__field:focus {
+        box-shadow: none;
+      }
     `,
   ],
 })
@@ -175,7 +219,7 @@ export class NumberInputComponent implements ControlValueAccessor {
   ngControl = inject(NgControl, { optional: true, self: true });
 
   @Input() stepper = false;
-  @Input() variant: "pill" | "boxed" = "pill";
+  @Input() variant: "pill" | "boxed" | "field" = "pill";
   @Input() step = 1;
   @Input() min = 0;
   @Input() max: number | null = null;

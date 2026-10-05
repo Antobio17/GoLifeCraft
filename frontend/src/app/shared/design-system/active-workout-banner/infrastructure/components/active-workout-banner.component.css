@@ -8,6 +8,12 @@
   pointer-events: none;
 }
 
+.active-banner__compensation {
+  flex: 0 0 auto;
+  margin-top: calc(-1 * var(--ds-space-3));
+  pointer-events: none;
+}
+
 .active-banner {
   --ds-surface: var(--ds-sheet-surface);
   --ds-surface-raised: var(--ds-sheet-surface-raised);
@@ -80,7 +86,7 @@
 }
 
 .active-banner__info {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -88,6 +94,9 @@
 }
 
 .active-banner__state {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: var(--ds-text-xs);
   font-weight: 800;
   letter-spacing: 0.09em;
@@ -108,91 +117,134 @@
   font-size: var(--ds-text-xl);
 }
 
-.active-banner__rest {
-  box-sizing: border-box;
+.active-banner__count {
+  position: relative;
   flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
-  padding: var(--ds-space-1-5) var(--ds-space-3);
-  border-radius: var(--banner-inner-radius);
-  background: var(--ds-warning-soft);
-  color: var(--ds-warning);
+  width: 4.25rem;
+  height: 4.25rem;
   transition:
-    background var(--ds-dur-2) var(--ds-ease-out),
-    color var(--ds-dur-2) var(--ds-ease-out);
+    width var(--ds-dur-4) var(--ds-ease-in-out),
+    height var(--ds-dur-4) var(--ds-ease-in-out);
+}
+
+.active-banner--collapsed .active-banner__count {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.active-banner__ring {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.active-banner__ring-track,
+.active-banner__ring-fill {
+  fill: none;
+  stroke-width: 6;
+}
+
+.active-banner__ring-track {
+  stroke: color-mix(in srgb, var(--ds-text) 10%, transparent);
+}
+
+.active-banner__ring-fill {
+  stroke: var(--ds-primary);
+  stroke-linecap: round;
+  transition: stroke-dasharray var(--ds-dur-4) var(--ds-ease-out);
+}
+
+.active-banner__count-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ds-font-display);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.active-banner__count-value {
+  font-weight: 800;
+  font-size: var(--ds-text-xl);
+  color: var(--ds-text);
+}
+
+.active-banner__count-total {
+  font-size: var(--ds-text-sm);
+  font-weight: 700;
+  color: var(--ds-text-muted);
+}
+
+.active-banner--collapsed .active-banner__count-total {
+  display: none;
+}
+
+.active-banner--collapsed .active-banner__count-value {
+  font-size: var(--ds-text-md);
+}
+
+.active-banner--collapsed .active-banner__row {
+  flex-wrap: nowrap;
+  gap: var(--ds-space-2);
+}
+
+.active-banner__clock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2) var(--ds-space-3);
+  min-width: 0;
+}
+
+.active-banner__rest {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-1) var(--ds-space-2);
+  border-radius: var(--ds-radius-pill);
+  white-space: nowrap;
+  color: var(--ds-warning);
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--ds-warning) 26%, transparent)
+      var(--rest-progress, 0%),
+    var(--ds-warning-soft) var(--rest-progress, 0%)
+  );
 }
 
 .active-banner__rest--over {
-  background: var(--ds-danger-soft);
   color: var(--ds-danger-soft-text);
-}
-
-.active-banner__rest-label {
-  font-size: var(--ds-text-xs);
-  font-weight: 800;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  background: var(--ds-danger-soft);
 }
 
 .active-banner__rest-value {
   font-family: var(--ds-font-display);
-  font-weight: 800;
   font-size: var(--ds-text-lg);
+  font-weight: 800;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
-/**
- * Por debajo de la tablet la fila no da de sí para un bloque más, así que el
- * descanso rompe línea y pasa a franja. El order lo manda al final del wrap:
- * sin él la fila rompería antes de tiempo y bajaría también series y botones.
- */
-@media (max-width: 767px) {
-  .active-banner__rest {
-    order: 1;
-    flex-basis: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--ds-space-2);
-    padding: var(--ds-space-2) var(--ds-space-3);
-  }
-
-  .active-banner__rest-value {
-    font-size: var(--ds-text-xl);
-  }
-
-  .active-banner--collapsed .active-banner__rest {
-    padding: var(--ds-space-1-5) var(--ds-space-3);
-  }
-
-  .active-banner--collapsed .active-banner__rest-value {
-    font-size: var(--ds-text-lg);
-  }
+.active-banner--collapsed .active-banner__clock {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
 }
 
-.active-banner__count {
-  flex: 0 0 auto;
-  text-align: right;
+.active-banner--collapsed .active-banner__rest {
+  padding: 0;
+  background: none;
 }
 
-.active-banner__count-value {
-  display: block;
-  font-family: var(--ds-font-display);
-  font-weight: 800;
-  font-size: var(--ds-text-lg);
-  line-height: 1;
-  color: var(--ds-primary);
+.active-banner--collapsed .active-banner__rest-value {
+  font-size: var(--ds-text-base);
 }
 
-.active-banner__count-label {
-  display: block;
-  font-size: var(--ds-text-xs);
-  font-weight: 600;
-  color: var(--ds-text-muted);
-  margin-top: 2px;
+.active-banner--collapsed .active-banner__info--resting .active-banner__state {
+  display: none;
 }
 
 .active-banner__compact-actions {
@@ -327,9 +379,10 @@
 @media (prefers-reduced-motion: reduce) {
   .active-banner,
   .active-banner__time,
-  .active-banner__rest,
   .active-banner__actions,
-  .active-banner__compact-actions {
+  .active-banner__compact-actions,
+  .active-banner__count,
+  .active-banner__ring-fill {
     transition-duration: 0.01ms;
   }
 }

@@ -1,32 +1,58 @@
 <div #sentinel class="active-banner__sentinel" aria-hidden="true"></div>
 
 <div
+  #panel
   class="active-banner"
   [class.active-banner--collapsed]="scrolled"
   [class.active-banner--paused]="paused"
+  (transitionend)="onPanelTransitionEnd($event)"
 >
   <div class="active-banner__row">
     <span class="active-banner__pulse"></span>
-    <div class="active-banner__info">
+    <div
+      class="active-banner__info"
+      [class.active-banner__info--resting]="restVisible"
+    >
       <span class="active-banner__state">{{ stateLabel }}</span>
-      <span class="active-banner__time">{{ elapsedLabel }}</span>
+      <span class="active-banner__clock">
+        <span class="active-banner__time">{{ elapsedLabel }}</span>
+        @if (restVisible) {
+          <span
+            class="active-banner__rest"
+            [class.active-banner__rest--over]="restOverTarget"
+            [style.--rest-progress.%]="restProgress"
+            role="status"
+            [attr.aria-label]="restCaption + ' ' + restLabel"
+          >
+            <ds-icon name="stopwatch" [size]="14" [stroke]="2.4" />
+            <span class="active-banner__rest-value">{{ restLabel }}</span>
+          </span>
+        }
+      </span>
     </div>
-    @if (restVisible) {
-      <div
-        class="active-banner__rest"
-        [class.active-banner__rest--over]="restOverTarget"
-        role="status"
-      >
-        <span class="active-banner__rest-label">{{ restCaption }}</span>
-        <span class="active-banner__rest-value">{{ restLabel }}</span>
-      </div>
-    }
-
-    <div class="active-banner__count">
-      <span class="active-banner__count-value"
-        >{{ doneCount }}/{{ totalSets }}</span
-      >
-      <span class="active-banner__count-label">{{ setsLabel }}</span>
+    <div
+      class="active-banner__count"
+      role="img"
+      [attr.aria-label]="doneCount + '/' + totalSets + ' ' + setsLabel"
+    >
+      <svg class="active-banner__ring" viewBox="0 0 64 64" aria-hidden="true">
+        <circle class="active-banner__ring-track" cx="32" cy="32" r="27" />
+        <circle
+          class="active-banner__ring-fill"
+          cx="32"
+          cy="32"
+          r="27"
+          [attr.stroke-dasharray]="ringDash"
+        />
+      </svg>
+      <span class="active-banner__count-center" aria-hidden="true">
+        <span
+          ><span class="active-banner__count-value">{{ doneCount }}</span
+          ><span class="active-banner__count-total"
+            >/{{ totalSets }}</span
+          ></span
+        >
+      </span>
     </div>
     <div class="active-banner__compact-actions">
       <button
@@ -99,3 +125,9 @@
     </button>
   </div>
 </div>
+
+<div
+  class="active-banner__compensation"
+  aria-hidden="true"
+  [style.height.px]="compensation()"
+></div>

@@ -7,7 +7,7 @@ export class StickyCollapseService implements OnDestroy {
   readonly collapsed = signal(false);
 
   private readonly STICKY_TOP = 8;
-  private readonly STICKY_BAND = 72;
+  private readonly STICKY_BAND = 4;
 
   private sentinel?: HTMLElement;
   private observers: IntersectionObserver[] = [];

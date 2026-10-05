@@ -13,7 +13,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
       [disabled]="disabled"
       [attr.maxlength]="maxLength || null"
       [attr.aria-label]="ariaLabel || null"
-      [style.resize]="resize"
+      [style.resize]="compact ? null : resize"
       (input)="onInput($event)"
     ></textarea>
   `,
@@ -39,10 +39,16 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
           box-shadow var(--ds-transition-fast);
       }
       .ds-textarea--compact {
-        border-color: var(--ds-border);
+        field-sizing: content;
+        min-height: 2.375rem;
+        max-height: 8rem;
+        border-color: var(--ds-border-hairline);
+        border-radius: var(--ds-radius-lg);
         background: var(--ds-surface-inset);
-        font-size: var(--ds-text-base);
-        padding: var(--ds-space-2);
+        font-size: var(--ds-text-md);
+        line-height: var(--ds-leading-snug);
+        padding: var(--ds-space-2) var(--ds-space-3);
+        resize: none;
       }
       .ds-textarea::placeholder {
         color: var(--ds-text-meta);

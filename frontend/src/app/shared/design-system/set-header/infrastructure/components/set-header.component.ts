@@ -20,7 +20,7 @@ import { Component, Input } from "@angular/core";
       .ds-seth {
         display: flex;
         gap: var(--ds-space-1-5);
-        padding: 0 var(--ds-space-1-5);
+        padding: 0 var(--ds-space-1);
         font-size: var(--ds-text-xs);
         font-weight: 800;
         letter-spacing: 0.04em;
@@ -28,7 +28,8 @@ import { Component, Input } from "@angular/core";
         color: var(--ds-text-meta);
       }
       .ds-seth__num {
-        width: 2.125rem;
+        width: 2rem;
+        text-align: center;
       }
       .ds-seth__col {
         flex: 1 1 0;
@@ -36,7 +37,7 @@ import { Component, Input } from "@angular/core";
         text-align: center;
       }
       .ds-seth__done {
-        width: 1.875rem;
+        width: 2.25rem;
         flex: 0 0 auto;
       }
     `,

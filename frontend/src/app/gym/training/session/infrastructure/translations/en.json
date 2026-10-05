@@ -1,6 +1,6 @@
 {
   "getSessions": {
-    "heading": "Gym",
+    "heading": "Train",
     "library": "Library",
     "history": "History",
     "yourSessions": "Your sessions",
@@ -33,6 +33,58 @@
     "free": {
       "title": "Free workout",
       "subtitle": "Start without a template and add exercises as you go"
+    },
+    "eyebrow": "Gym",
+    "week": {
+      "title": "Last 7 days",
+      "caption": "{{count}} workouts · {{volume}} kg lifted",
+      "captionEmpty": "No workouts yet this week",
+      "streakOne": "1 week",
+      "streak": "{{count}} weeks",
+      "done": "trained",
+      "rest": "rest",
+      "today": "today"
+    },
+    "next": {
+      "eyebrow": "Up next",
+      "eyebrowFirst": "Start here",
+      "lastDone": "Last done {{when}} · {{volume}} kg",
+      "neverDone": "You haven't trained it yet",
+      "start": "Start session",
+      "open": "Open session {{name}}",
+      "exercises": "exercises",
+      "sets": "sets",
+      "minutes": "minutes"
+    },
+    "tiles": {
+      "free": "Free",
+      "freeMeta": "No template",
+      "history": "History",
+      "historyMeta": "{{count}} workouts",
+      "library": "Library",
+      "libraryMeta": "{{count}} exercises"
+    },
+    "row": {
+      "today": "Today",
+      "meta": "{{exercises}} exercises · {{sets}} sets · ~{{minutes}} min",
+      "start": "Start {{name}}"
+    },
+    "when": {
+      "today": "today",
+      "yesterday": "yesterday",
+      "days": "{{count}} days ago",
+      "short": "{{count}}d ago",
+      "shortToday": "today",
+      "shortYesterday": "yesterday"
+    },
+    "month": {
+      "title": "Last 30 days",
+      "workouts": "workouts",
+      "volume": "volume",
+      "time": "training",
+      "workoutsDelta": "{{delta}} vs. previous 30 days",
+      "volumeDelta": "{{delta}} %",
+      "average": "{{minutes}} min average"
     }
   },
   "createSession": {
@@ -180,7 +232,7 @@
       "save": "Save order",
       "cancel": "Cancel",
       "drag": "Drag to reorder",
-      "trigger": "Reorder exercises, currently {{name}}"
+      "action": "Reorder"
     },
     "progression": {
       "label": "Progression",
@@ -200,6 +252,14 @@
     "tab": {
       "sets": "Sets",
       "progression": "Progression"
+    },
+    "startBar": {
+      "title": "{{sets}} sets · ~{{minutes}} min",
+      "subtitle": "Saves itself while you train",
+      "action": "Start"
+    },
+    "section": {
+      "exercises": "Exercises"
     }
   },
   "session": {

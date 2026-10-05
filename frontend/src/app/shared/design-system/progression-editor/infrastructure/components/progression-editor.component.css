@@ -5,7 +5,7 @@
 .pe-tbl {
   display: flex;
   flex-direction: column;
-  gap: var(--ds-space-1-5);
+  gap: var(--ds-space-1);
 }
 
 .pe-tbl__head,
@@ -22,18 +22,31 @@
 }
 
 .pe-tbl__cell--set {
-  flex: 0 0 3rem;
+  flex: 0 0 2rem;
   font-family: var(--ds-font-display);
   font-weight: 800;
   font-size: var(--ds-text-base);
-  color: var(--ds-primary);
+  color: var(--ds-text);
+}
+
+.pe-tbl__row .pe-tbl__cell--set {
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-surface-inset);
+}
+
+.pe-tbl__cell--now {
+  flex: 0 0 3.5rem;
 }
 
 .pe-tbl__head .pe-tbl__cell {
   font-family: var(--ds-font-body);
-  font-size: var(--ds-text-sm);
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: var(--ds-text-xs);
+  font-weight: 800;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ds-text-meta);
 }
@@ -41,7 +54,8 @@
 .pe-tbl__now {
   font-family: var(--ds-font-display);
   font-weight: 700;
-  font-size: var(--ds-text-md);
+  font-size: var(--ds-text-lg);
+  font-variant-numeric: tabular-nums;
   color: var(--ds-text-muted);
 }
 
@@ -55,5 +69,5 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--ds-space-1);
+  gap: var(--ds-space-1-5);
 }

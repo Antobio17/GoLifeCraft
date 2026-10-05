@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-type CardVariant = "plain" | "brand" | "inset";
+type CardVariant = "plain" | "brand" | "inset" | "glass";
 
 @Component({
   selector: "ds-card",
@@ -48,6 +48,18 @@ type CardVariant = "plain" | "brand" | "inset";
         --ds-on-primary: var(--ds-on-accent-on-brand);
         color: var(--ds-on-surface-brand);
         box-shadow: var(--ds-elev-float);
+      }
+      :host([variant="glass"]) .ds-card {
+        --card-bg: var(--ds-hero-bg);
+        --card-border: var(--ds-sheet-border);
+        --ds-surface: var(--ds-sheet-surface);
+        --ds-surface-raised: var(--ds-sheet-surface-raised);
+        --ds-surface-subtle: var(--ds-sheet-surface-subtle);
+        --ds-surface-inset: var(--ds-sheet-surface-inset);
+        --ds-surface-hover: var(--ds-sheet-surface-hover);
+        --ds-surface-chart: transparent;
+        border-radius: var(--ds-radius-2xl);
+        box-shadow: var(--ds-hero-shadow);
       }
       :host([variant="inset"]) .ds-card {
         --card-bg: var(--ds-surface-inset);

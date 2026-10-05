@@ -7,9 +7,9 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
   selector: "ds-top-set-row",
   imports: [IconComponent, IconButtonComponent, SkeletonLineComponent],
   template: `
-    <div class="ds-tsr">
+    <div class="ds-tsr" [class.ds-tsr--filled]="!!value && !loading">
       <span class="ds-tsr__badge">
-        <ds-icon name="weightPlate" [size]="17" [stroke]="1.9" />
+        <ds-icon name="weightPlate" [size]="18" [stroke]="1.9" />
       </span>
 
       <span class="ds-tsr__text">
@@ -48,21 +48,30 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
       .ds-tsr {
         display: flex;
         align-items: center;
-        gap: var(--ds-space-2);
+        gap: var(--ds-space-3);
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-lg);
-        padding: var(--ds-space-2);
+        border-radius: var(--ds-radius-xl);
+        padding: var(--ds-space-2) var(--ds-space-2) var(--ds-space-2)
+          var(--ds-space-3);
+        transition: background var(--ds-dur-2) var(--ds-ease-out);
+      }
+      .ds-tsr--filled {
+        background: var(--ds-warning-soft);
       }
       .ds-tsr__badge {
-        width: 1.875rem;
-        height: 1.875rem;
+        width: 2.25rem;
+        height: 2.25rem;
         flex: 0 0 auto;
-        border-radius: var(--ds-radius-sm);
-        background: var(--ds-primary-soft);
-        color: var(--ds-primary-soft-text);
+        border-radius: var(--ds-radius-md);
+        background: var(--ds-surface);
+        color: var(--ds-text-muted);
         display: inline-flex;
         align-items: center;
         justify-content: center;
+      }
+      .ds-tsr--filled .ds-tsr__badge {
+        background: color-mix(in srgb, var(--ds-warning) 18%, transparent);
+        color: var(--ds-warning);
       }
       .ds-tsr__text {
         flex: 1 1 auto;
@@ -74,21 +83,28 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
       .ds-tsr__label {
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
-        letter-spacing: 0.04em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: var(--ds-text-meta);
+        color: var(--ds-text-muted);
+      }
+      .ds-tsr--filled .ds-tsr__label {
+        color: var(--ds-warning);
       }
       .ds-tsr__value {
-        font-size: var(--ds-text-sm);
+        font-family: var(--ds-font-display);
+        font-size: var(--ds-text-lg);
         font-weight: var(--ds-weight-bold);
+        font-variant-numeric: tabular-nums;
         color: var(--ds-text);
       }
       .ds-tsr__caption {
+        font-family: var(--ds-font-body);
+        font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
       }
       .ds-tsr__empty {
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
       }

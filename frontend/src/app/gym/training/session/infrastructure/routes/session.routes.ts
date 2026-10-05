@@ -10,6 +10,8 @@ import { UndoProvider } from "@shared/undo/infrastructure/providers/undo.provide
 import { DeleteSessionProviders } from "../providers/delete-session.providers";
 import { GetExercisesProviders } from "@gym/library/exercise/infrastructure/providers/get-exercises.providers";
 import { GetExerciseTopSetsProviders } from "@gym/library/exercise/infrastructure/providers/get-exercise-top-sets.providers";
+import { GetWorkoutsProviders } from "@gym/training/workout/infrastructure/providers/get-workouts.providers";
+import { GetGymStatsProviders } from "@gym/analytics/stats/infrastructure/providers/get-gym-stats.providers";
 
 export const SESSION_ROUTES: Routes = [
   {
@@ -24,6 +26,8 @@ export const SESSION_ROUTES: Routes = [
       ...DeleteSessionProviders.getProviders(),
       ...GetExercisesProviders.getProviders(),
       ...GetExerciseTopSetsProviders.getProviders(),
+      ...GetWorkoutsProviders.getProviders(),
+      ...GetGymStatsProviders.getProviders(),
     ],
     children: [
       {

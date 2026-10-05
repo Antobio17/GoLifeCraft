@@ -64,29 +64,27 @@
       [columns]="'minmax(0, 0.85fr) minmax(0, 1fr)'"
     >
       <ds-stack slot="side" [gap]="'var(--ds-space-4)'">
-        <ds-card [padding]="'var(--ds-space-3) var(--ds-space-4)'">
-          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-            <ds-icon-badge
-              [icon]="icon()"
-              tone="brand"
-              [size]="60"
-              [iconSize]="30"
-            />
-            <ds-stack [gap]="'var(--ds-space-2)'" [grow]="true">
-              <ds-stack
-                direction="row"
-                [wrap]="true"
-                [gap]="'var(--ds-space-1-5)'"
-              >
-                @for (muscle of muscles(); track muscle) {
-                  <ds-chip tone="brand">{{ muscle }}</ds-chip>
-                }
-              </ds-stack>
-              <ds-text variant="meta">{{ modeLabel() }}</ds-text>
-              <ds-text variant="meta">{{ weightModeLabel() }}</ds-text>
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+          <ds-icon-badge
+            [icon]="icon()"
+            tone="brand"
+            [size]="64"
+            [iconSize]="32"
+          />
+          <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
+            <ds-stack
+              direction="row"
+              [wrap]="true"
+              [gap]="'var(--ds-space-1-5)'"
+            >
+              @for (muscle of muscles(); track muscle) {
+                <ds-chip tone="brand">{{ muscle }}</ds-chip>
+              }
             </ds-stack>
+            <ds-text variant="meta">{{ modeLabel() }}</ds-text>
+            <ds-text variant="meta">{{ weightModeLabel() }}</ds-text>
           </ds-stack>
-        </ds-card>
+        </ds-stack>
 
         <ds-grid [columns]="3" [gap]="'var(--ds-space-2)'">
           <ds-metric-card
@@ -104,62 +102,51 @@
         </ds-grid>
       </ds-stack>
 
-      <ds-stack [gap]="'var(--ds-space-3)'">
-        <ds-text variant="label">{{ "getExercise.progression" | t }}</ds-text>
-
+      <ds-stack [gap]="'var(--ds-space-4)'">
         @if (hasData()) {
-          <ds-segmented-toggle
-            [options]="metricOptions()"
-            [ngModel]="metric()"
-            (ngModelChange)="onMetricChange($event)"
-          />
+          <ds-card variant="glass" [gap]="'var(--ds-space-3)'">
+            <ds-text variant="label">{{
+              "getExercise.progression" | t
+            }}</ds-text>
 
-          @if (metricsUsePerSideWeight()) {
-            <ds-text variant="meta">{{ perSideMetricsNote() }}</ds-text>
-          }
+            <ds-segmented-toggle
+              variant="pill"
+              [options]="metricOptions()"
+              [ngModel]="metric()"
+              (ngModelChange)="onMetricChange($event)"
+            />
 
-          <ds-progression-card
-            [metricLabel]="metricName()"
-            [value]="currentLabel()"
-            [delta]="deltaLabel()"
-            [trend]="deltaTrend()"
-            [prLabel]="prLabel()"
-            [points]="chartPoints()"
-            [pointLabels]="chartLabels()"
-            [firstLabel]="firstDateLabel()"
-            [lastLabel]="lastDateLabel()"
-          />
+            @if (metricsUsePerSideWeight()) {
+              <ds-text variant="meta">{{ perSideMetricsNote() }}</ds-text>
+            }
+
+            <ds-progression-card
+              [metricLabel]="metricName()"
+              [value]="currentLabel()"
+              [delta]="deltaLabel()"
+              [trend]="deltaTrend()"
+              [prLabel]="prLabel()"
+              [points]="chartPoints()"
+              [pointLabels]="chartLabels()"
+              [firstLabel]="firstDateLabel()"
+              [lastLabel]="lastDateLabel()"
+            />
+          </ds-card>
 
           <ds-stack [gap]="'var(--ds-space-2)'">
-            <ds-text variant="label">{{ "getExercise.sessions" | t }}</ds-text>
-            <ds-stack [gap]="'var(--ds-space-1-5)'">
+            <ds-section-header [title]="'getExercise.sessions' | t" />
+            <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
               @for (row of sessionRows(); track $index) {
-                <ds-card [padding]="'var(--ds-space-2) var(--ds-space-3)'">
-                  <ds-stack
-                    direction="row"
-                    align="center"
-                    [gap]="'var(--ds-space-2)'"
-                  >
-                    <ds-stack [gap]="'2px'" [grow]="true">
-                      <ds-stack
-                        direction="row"
-                        align="center"
-                        [gap]="'var(--ds-space-1-5)'"
-                      >
-                        <ds-text variant="strong">{{ row.dateLabel }}</ds-text>
-                        @if (row.isPr) {
-                          <ds-chip tone="accent" [uppercase]="true">
-                            {{ "getExercise.pr" | t }}
-                          </ds-chip>
-                        }
-                      </ds-stack>
-                      <ds-text variant="meta">{{ row.setsText }}</ds-text>
-                    </ds-stack>
-                    <ds-heading [level]="3" size="sm">{{
-                      row.valueLabel
-                    }}</ds-heading>
-                  </ds-stack>
-                </ds-card>
+                <ds-dated-row
+                  data-testid="exercise-history-row"
+                  [weekday]="row.weekday"
+                  [day]="row.day"
+                  [title]="row.title"
+                  [tag]="row.isPr ? ('getExercise.pr' | t) : ''"
+                  [tagTone]="tones.Warning"
+                  [meta]="row.setsText"
+                  [value]="row.valueLabel"
+                />
               }
             </ds-stack>
           </ds-stack>

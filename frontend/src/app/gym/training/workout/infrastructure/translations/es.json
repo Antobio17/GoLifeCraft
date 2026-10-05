@@ -2,7 +2,7 @@
   "getWorkouts": {
     "back": "Gimnasio",
     "eyebrow": "Gimnasio",
-    "heading": "Histórico",
+    "heading": "Historial",
     "subtitle": "entrenos completados",
     "recent": "Entrenos recientes",
     "stats": {
@@ -15,6 +15,25 @@
     "empty": {
       "title": "Aún no hay entrenos",
       "text": "Cuando finalices una sesión aparecerá aquí con los ejercicios que completaste."
+    },
+    "free": "Libre",
+    "volume": "{{volume}} kg",
+    "month": {
+      "previous": "Mes anterior",
+      "next": "Mes siguiente",
+      "workouts": "entrenos",
+      "volume": "volumen",
+      "time": "entrenando",
+      "dayEmpty": "{{date}}: sin entreno",
+      "day": "{{date}}: {{count}} entreno(s)"
+    },
+    "week": {
+      "current": "Esta semana",
+      "previous": "Semana pasada",
+      "summary": "{{count}} entrenos · {{volume}} t"
+    },
+    "row": {
+      "open": "Abrir entreno {{name}} del {{date}}"
     }
   },
   "getWorkout": {

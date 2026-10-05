@@ -19,18 +19,21 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         display: flex;
         align-items: center;
         gap: var(--ds-space-2);
-        padding-top: var(--ds-space-2);
-        border-top: 1px solid var(--ds-border-hairline);
+        padding: var(--ds-space-2) var(--ds-space-3);
+        border-radius: var(--ds-radius-lg);
+        background: var(--ds-primary-soft);
+        border: 1px solid var(--ds-primary-soft-border);
       }
       .ps__icon {
         flex: 0 0 auto;
-        color: var(--ds-primary);
+        color: var(--ds-primary-soft-text);
       }
       .ps__text {
         min-width: 0;
         font-family: var(--ds-font-body);
         font-size: var(--ds-text-base);
-        color: var(--ds-text-meta);
+        font-weight: var(--ds-weight-semibold);
+        color: var(--ds-primary-soft-text);
       }
     `,
   ],
