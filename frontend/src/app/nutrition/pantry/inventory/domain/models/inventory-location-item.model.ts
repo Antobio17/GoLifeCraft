@@ -9,6 +9,7 @@ export interface InventoryLocationItem {
   name: string;
   emoji: string;
   image: string | null;
+  favorite: boolean;
   unit: string;
   units: InventoryItemUnit[];
   storageUnit: string;

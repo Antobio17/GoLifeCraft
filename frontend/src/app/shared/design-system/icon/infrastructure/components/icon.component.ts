@@ -1,6 +1,7 @@
 import { Component, computed, inject, input } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { DS_ICONS, DsIconName } from "../../domain/models/icon.model";
+import { DsIconTone } from "../../domain/models/icon-tone.model";
 
 @Component({
   selector: "ds-icon",
@@ -18,6 +19,9 @@ import { DS_ICONS, DsIconName } from "../../domain/models/icon.model";
         justify-content: center;
         line-height: 0;
       }
+      :host([tone="warning"]) {
+        color: var(--ds-warning);
+      }
       .ds-icon {
         display: inline-flex;
         flex: 0 0 auto;
@@ -31,6 +35,11 @@ import { DS_ICONS, DsIconName } from "../../domain/models/icon.model";
       }
     `,
   ],
+  host: {
+    "[attr.tone]": "tone()",
+    "[attr.role]": "label() ? 'img' : null",
+    "[attr.aria-label]": "label()",
+  },
 })
 export class IconComponent {
   private sanitizer = inject(DomSanitizer);
@@ -38,6 +47,8 @@ export class IconComponent {
   readonly name = input.required<DsIconName>();
   readonly size = input(20);
   readonly stroke = input(2);
+  readonly tone = input<DsIconTone>("inherit");
+  readonly label = input<string | null>(null);
 
   readonly markup = computed<SafeHtml>(() => {
     const inner = DS_ICONS[this.name()] ?? "";

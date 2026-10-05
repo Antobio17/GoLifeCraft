@@ -15,6 +15,7 @@ final readonly class InventoryLocationItemView
         public string $name,
         public string $emoji,
         public ?string $image,
+        public bool $favorite,
         public string $unit,
         public array $units,
         public string $storageUnit,
