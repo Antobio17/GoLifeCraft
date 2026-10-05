@@ -49,7 +49,7 @@ final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNe
         $utc = new \DateTimeZone(timezone: 'UTC');
 
         return array_map(callback: function ($row) use ($summaries, $utc): GetSessionsResult {
-            $summary = $summaries[$row['id']] ?? ['count' => 0, 'muscleGroups' => []];
+            $summary = $summaries[$row['id']] ?? ['count' => 0, 'setCount' => 0, 'muscleGroups' => []];
 
             return new GetSessionsResult(
                 id: $row['id'],
@@ -58,6 +58,7 @@ final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNe
                 estimatedDurationMinutes: (int) $row['estimated_duration_minutes'],
                 restSeconds: (int) $row['rest_seconds'],
                 exerciseCount: $summary['count'],
+                setCount: $summary['setCount'],
                 muscleGroups: $summary['muscleGroups'],
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
@@ -78,7 +79,7 @@ final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNe
     private function exercisesSummary(array $sessionIds): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('se.session_id', 'e.muscle_groups')
+            ->select('se.session_id', 'e.muscle_groups', '(SELECT COUNT(*) FROM exercise_set es WHERE es.session_exercise_id = se.id) AS set_count')
             ->from(table: 'session_exercise', alias: 'se')
             ->leftJoin('se', 'exercise', 'e', 'e.id = se.exercise_id')
             ->where('se.session_id IN (:sessionIds)')
@@ -94,8 +95,9 @@ final readonly class DoctrineGetSessionsNeedleDataQuery implements GetSessionsNe
 
         foreach ($rows as $row) {
             $sessionId = $row['session_id'];
-            $summaries[$sessionId] ??= ['count' => 0, 'muscleGroups' => []];
+            $summaries[$sessionId] ??= ['count' => 0, 'setCount' => 0, 'muscleGroups' => []];
             ++$summaries[$sessionId]['count'];
+            $summaries[$sessionId]['setCount'] += (int) $row['set_count'];
 
             $muscleGroups = json_decode(json: $row['muscle_groups'] ?? '[]', associative: true) ?? [];
             foreach ($muscleGroups as $muscleGroup) {

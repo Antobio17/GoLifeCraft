@@ -11,6 +11,10 @@ use Gym\Training\Workout\Domain\QueryModel\GetWorkoutsNeedleDataQuery;
 
 final readonly class DoctrineGetWorkoutsNeedleDataQuery implements GetWorkoutsNeedleDataQuery
 {
+    private const string EFFECTIVE_KIND = 'effective';
+    private const string PER_SIDE_WEIGHT_MODE = 'perSide';
+    private const int PER_SIDE_FACTOR = 2;
+
     public function __construct(private Connection $connection)
     {
     }
@@ -51,7 +55,7 @@ final readonly class DoctrineGetWorkoutsNeedleDataQuery implements GetWorkoutsNe
         $utc = new \DateTimeZone(timezone: 'UTC');
 
         return array_map(callback: function ($row) use ($summaries, $utc): GetWorkoutsResult {
-            $summary = $summaries[$row['id']] ?? ['count' => 0, 'totalSets' => 0, 'completedSets' => 0, 'muscleGroups' => []];
+            $summary = $summaries[$row['id']] ?? ['count' => 0, 'totalSets' => 0, 'completedSets' => 0, 'volumeKg' => 0.0, 'muscleGroups' => []];
 
             return new GetWorkoutsResult(
                 id: $row['id'],
@@ -65,6 +69,7 @@ final readonly class DoctrineGetWorkoutsNeedleDataQuery implements GetWorkoutsNe
                 exerciseCount: $summary['count'],
                 totalSets: $summary['totalSets'],
                 completedSets: $summary['completedSets'],
+                volumeKg: round(num: $summary['volumeKg'], precision: 1),
                 muscleGroups: $summary['muscleGroups'],
                 createdAt: new \DateTime(datetime: $row['created_at'], timezone: $utc),
                 updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
@@ -85,7 +90,7 @@ final readonly class DoctrineGetWorkoutsNeedleDataQuery implements GetWorkoutsNe
     private function exercisesSummary(array $workoutIds): array
     {
         $exerciseRows = $this->connection->createQueryBuilder()
-            ->select('we.id', 'we.workout_id', 'e.muscle_groups')
+            ->select('we.id', 'we.workout_id', 'we.weight_mode', 'e.muscle_groups')
             ->from(table: 'workout_exercise', alias: 'we')
             ->leftJoin('we', 'exercise', 'e', 'e.id = we.exercise_id')
             ->where('we.workout_id IN (:workoutIds)')
@@ -102,12 +107,14 @@ final readonly class DoctrineGetWorkoutsNeedleDataQuery implements GetWorkoutsNe
         }
 
         $exerciseToWorkout = [];
+        $weightFactors = [];
         $summaries = [];
 
         foreach ($exerciseRows as $row) {
             $workoutId = $row['workout_id'];
             $exerciseToWorkout[$row['id']] = $workoutId;
-            $summaries[$workoutId] ??= ['count' => 0, 'totalSets' => 0, 'completedSets' => 0, 'muscleGroups' => []];
+            $weightFactors[$row['id']] = self::PER_SIDE_WEIGHT_MODE === $row['weight_mode'] ? self::PER_SIDE_FACTOR : 1;
+            $summaries[$workoutId] ??= ['count' => 0, 'totalSets' => 0, 'completedSets' => 0, 'volumeKg' => 0.0, 'muscleGroups' => []];
             ++$summaries[$workoutId]['count'];
 
             $muscleGroups = json_decode(json: $row['muscle_groups'] ?? '[]', associative: true) ?? [];
@@ -119,7 +126,7 @@ final readonly class DoctrineGetWorkoutsNeedleDataQuery implements GetWorkoutsNe
         }
 
         $setRows = $this->connection->createQueryBuilder()
-            ->select('ws.workout_exercise_id', 'ws.done')
+            ->select('ws.workout_exercise_id', 'ws.done', 'ws.kind', 'ws.reps', 'ws.weight')
             ->from(table: 'workout_set', alias: 'ws')
             ->where('ws.workout_exercise_id IN (:exerciseIds)')
             ->setParameter(
@@ -137,9 +144,16 @@ final readonly class DoctrineGetWorkoutsNeedleDataQuery implements GetWorkoutsNe
             }
 
             ++$summaries[$workoutId]['totalSets'];
-            if ((bool) $row['done']) {
-                ++$summaries[$workoutId]['completedSets'];
+            if (!(bool) $row['done']) {
+                continue;
             }
+
+            ++$summaries[$workoutId]['completedSets'];
+            if (self::EFFECTIVE_KIND !== $row['kind']) {
+                continue;
+            }
+
+            $summaries[$workoutId]['volumeKg'] += (int) $row['reps'] * (float) ($row['weight'] ?? 0) * $weightFactors[$row['workout_exercise_id']];
         }
 
         return $summaries;

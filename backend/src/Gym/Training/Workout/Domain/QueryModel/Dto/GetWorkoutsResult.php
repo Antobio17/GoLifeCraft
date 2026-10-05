@@ -18,6 +18,7 @@ final class GetWorkoutsResult extends QueryAggregateResult
         public readonly int $exerciseCount,
         public readonly int $totalSets,
         public readonly int $completedSets,
+        public readonly float $volumeKg,
         public readonly array $muscleGroups,
         public readonly \DateTime $createdAt,
         public readonly \DateTime $updatedAt,
