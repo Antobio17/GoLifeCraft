@@ -4,7 +4,11 @@ import { StatStripItem } from "../../domain/models/stat-strip-item.model";
 @Component({
   selector: "ds-stat-strip",
   template: `
-    <dl class="ds-sstrip" [style.--sstrip-cols]="items.length">
+    <dl
+      class="ds-sstrip"
+      [class.ds-sstrip--compact]="compact"
+      [style.--sstrip-cols]="items.length"
+    >
       @for (item of items; track item.label) {
         <div class="ds-sstrip__cell">
           <dt class="ds-sstrip__label">{{ item.label }}</dt>
@@ -64,9 +68,16 @@ import { StatStripItem } from "../../domain/models/stat-strip-item.model";
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
       }
+      .ds-sstrip--compact .ds-sstrip__cell {
+        padding: var(--ds-space-2) var(--ds-space-3);
+      }
+      .ds-sstrip--compact .ds-sstrip__value {
+        font-size: var(--ds-text-lg);
+      }
     `,
   ],
 })
 export class StatStripComponent {
   @Input() items: StatStripItem[] = [];
+  @Input() compact = false;
 }
