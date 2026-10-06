@@ -50,7 +50,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         cursor: pointer;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
         box-shadow: var(--ds-elev);
         transition:
@@ -66,7 +66,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       .ds-rcard__emoji {
         width: 3.625rem;
         height: 3.625rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
         flex: 0 0 auto;
         display: flex;

@@ -24,7 +24,7 @@ import { Component, Input } from "@angular/core";
         justify-content: space-between;
         gap: var(--ds-space-2);
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
       }
       .rs__main {

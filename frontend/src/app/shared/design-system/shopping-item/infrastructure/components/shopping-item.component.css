@@ -7,7 +7,8 @@
   box-sizing: border-box;
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
+  --ds-pad: var(--ds-space-2);
   padding: var(--ds-space-2) var(--ds-space-3);
   transition: background var(--ds-dur-2) var(--ds-ease-out);
 }
@@ -30,7 +31,7 @@
   flex: 0 0 auto;
   width: 1.625rem;
   height: 1.625rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +90,7 @@
 }
 
 .shopping-item__count {
-  --chip-radius: 0.5rem;
+  --chip-radius: var(--ds-radius-control-sm);
   --chip-pad: 1px 0.5rem;
   --chip-size: 0.8125rem;
   --chip-weight: var(--ds-weight-extrabold);
@@ -105,7 +106,7 @@
 .shopping-item__stepper {
   flex: 0 0 auto;
   background: var(--ds-surface-inset);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   padding: 1px;
 }
 
@@ -119,7 +120,7 @@
   appearance: none;
   background: transparent;
   border: none;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
   font-weight: 800;
   font-size: var(--ds-text-lg);
   line-height: 1;

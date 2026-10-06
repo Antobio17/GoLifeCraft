@@ -29,7 +29,7 @@
           <ds-skeleton-line
             width="7.5rem"
             height="1.375rem"
-            radius="var(--ds-radius-md)"
+            radius="var(--ds-radius-mark)"
           />
         </ds-stack>
       </ds-card>
@@ -52,7 +52,7 @@
             <ds-skeleton-line
               width="4.5rem"
               height="1.125rem"
-              radius="var(--ds-radius-md)"
+              radius="var(--ds-radius-mark)"
             />
           </ds-stack>
 
@@ -60,12 +60,12 @@
             <ds-skeleton-line
               width="7.5rem"
               height="2rem"
-              radius="var(--ds-radius-lg)"
+              radius="var(--ds-radius-control)"
             />
             <ds-skeleton-line
               width="2.125rem"
               height="2.125rem"
-              radius="var(--ds-radius-md)"
+              radius="var(--ds-radius-control-sm)"
             />
           </ds-stack>
 
@@ -74,10 +74,9 @@
           <ds-skeleton-list
             [count]="checks"
             [gap]="'var(--ds-space-2)'"
-            radius="var(--ds-radius-lg)"
+            radius="var(--ds-radius-surface)"
             padding="var(--ds-space-2) var(--ds-space-3)"
             [tile]="40"
-            [tileRadius]="10"
             titleWidth="46%"
             metaWidth="34%"
             trailing="pill"
@@ -162,7 +161,6 @@
               variant="soft"
               [size]="34"
               [iconSize]="16"
-              [radius]="'var(--ds-radius-md)'"
               [ariaLabel]="'getFinanceAccounts.edit' | t"
               (clicked)="openEditAccountSheet(row.account)"
             />
@@ -175,7 +173,7 @@
               @for (checkRow of row.checks; track checkRow.check.id) {
                 <ds-swipe-to-delete
                   #checkSwipe
-                  radius="var(--ds-radius-lg)"
+                  pad="var(--ds-space-2)"
                   [removeLabel]="'getFinanceAccounts.check.remove' | t"
                   (remove)="removeCheck(checkRow.check)"
                 >

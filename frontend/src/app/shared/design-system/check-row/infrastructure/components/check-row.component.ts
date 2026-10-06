@@ -104,7 +104,8 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         border: none;
         cursor: pointer;
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
+        --ds-pad: var(--ds-space-2);
         padding: var(--ds-space-2) var(--ds-space-3);
         font: inherit;
         color: inherit;
@@ -145,8 +146,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-checkrow__open {
         flex: 1 1 auto;
         min-width: 0;
+        --ds-pad: var(--ds-space-2);
         padding: var(--ds-space-2) var(--ds-space-3);
-        border-radius: 0 var(--ds-radius-lg) var(--ds-radius-lg) 0;
+        border-radius: 0 var(--ds-radius-surface) var(--ds-radius-surface) 0;
       }
       .ds-checkrow__chevron {
         flex: 0 0 auto;
@@ -156,7 +158,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-checkrow__open:focus-visible {
         outline: 2px solid var(--ds-primary);
         outline-offset: -2px;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
       }
       .ds-checkrow__box {
         flex: 0 0 auto;
@@ -165,7 +167,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         justify-content: center;
         width: 1.625rem;
         height: 1.625rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control-sm);
         background: var(--ds-surface);
         border: 1.5px solid var(--ds-border-strong);
         color: transparent;
@@ -189,7 +191,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         justify-content: center;
         width: 2.25rem;
         height: 2.25rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface);
         font-size: var(--ds-text-xl);
       }

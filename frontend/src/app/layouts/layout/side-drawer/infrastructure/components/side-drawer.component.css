@@ -161,7 +161,7 @@
   width: 2.75rem;
   height: 1.625rem;
   padding: var(--ds-space-1);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-pill);
   background: var(--drawer-switch-off);
   transition: background var(--ds-transition-base);
 }

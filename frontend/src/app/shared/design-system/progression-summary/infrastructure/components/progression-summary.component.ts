@@ -6,7 +6,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
   imports: [IconComponent],
   template: `
     <div class="ps">
-      <ds-icon class="ps__icon" name="chart" [size]="16" [stroke]="2.2" />
+      <ds-icon class="ps__icon" name="chart" [size]="14" [stroke]="2" />
       <span class="ps__text">{{ text }}</span>
     </div>
   `,
@@ -18,22 +18,20 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ps {
         display: flex;
         align-items: center;
-        gap: var(--ds-space-2);
-        padding: var(--ds-space-2) var(--ds-space-3);
-        border-radius: var(--ds-radius-lg);
-        background: var(--ds-primary-soft);
-        border: 1px solid var(--ds-primary-soft-border);
+        gap: var(--ds-space-1-5);
+        padding: 0 var(--ds-space-1);
       }
       .ps__icon {
         flex: 0 0 auto;
         color: var(--ds-primary-soft-text);
+        opacity: 0.8;
       }
       .ps__text {
         min-width: 0;
         font-family: var(--ds-font-body);
         font-size: var(--ds-text-base);
-        font-weight: var(--ds-weight-semibold);
-        color: var(--ds-primary-soft-text);
+        font-weight: var(--ds-weight-medium);
+        color: var(--ds-text-muted);
       }
     `,
   ],

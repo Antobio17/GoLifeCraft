@@ -6,9 +6,18 @@
 .sksum {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-2xl);
+  border-radius: var(--ds-radius-surface);
   padding: var(--ds-space-4);
   box-shadow: var(--ds-elev);
+}
+
+.sksum--glass {
+  --ds-surface-inset: var(--ds-sheet-surface-inset);
+  --ds-skeleton-base: color-mix(in srgb, var(--ds-text) 8%, transparent);
+  --ds-skeleton-highlight: color-mix(in srgb, var(--ds-text) 14%, transparent);
+  background: var(--ds-hero-bg);
+  border-color: var(--ds-sheet-border);
+  box-shadow: var(--ds-hero-shadow);
 }
 
 /* Espeja la tarjeta soft: superficie encajada con borde, sin elevación. */
@@ -43,7 +52,7 @@
     transparent
   );
   background: var(--ds-primary);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
   padding: var(--ds-space-3) var(--ds-space-4);
   box-shadow: none;
 }
@@ -99,6 +108,14 @@
   background: var(--ds-surface);
 }
 
+.sksum--glass .sksum__ring {
+  mask: radial-gradient(farthest-side, transparent 75.5%, #000 76.5%);
+}
+
+.sksum--glass .sksum__ring::after {
+  display: none;
+}
+
 .sksum--soft .sksum__ring::after {
   background: var(--ds-surface-inset);
 }
@@ -123,7 +140,7 @@
   width: 8rem;
   max-width: 70%;
   height: 1.5rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-mark);
 }
 
 .sksum__value-foot {
@@ -140,38 +157,47 @@
 }
 
 .sksum__bars {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ds-space-2);
-  margin-top: var(--ds-space-4);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: var(--ds-space-3);
+  background: var(--ds-surface-inset);
+  border: 1px solid var(--ds-border-hairline);
+  border-radius: var(--ds-radius-inner);
 }
 
 .sksum__bar {
   display: flex;
   flex-direction: column;
-  gap: var(--ds-space-1);
+  gap: var(--ds-space-1-5);
+  min-width: 0;
+  padding: var(--ds-space-2) var(--ds-space-3) var(--ds-space-3);
+}
+
+.sksum__bar + .sksum__bar {
+  border-left: 1px solid var(--ds-border-hairline);
 }
 
 .sksum__bar-head {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ds-space-2);
+  flex-direction: column;
+  gap: var(--ds-space-1-5);
 }
 
 .sksum__bar-label {
-  width: 3.875rem;
+  width: 70%;
   height: 0.625rem;
 }
 
 .sksum__bar-value {
-  width: 4.375rem;
-  height: 0.625rem;
+  width: 85%;
+  height: 1rem;
+  border-radius: var(--ds-radius-mark);
 }
 
 .sksum__bar-track {
   width: 100%;
-  height: 0.375rem;
+  height: 0.3125rem;
+  margin-top: var(--ds-space-1);
   border-radius: var(--ds-radius-pill);
 }
 
@@ -187,7 +213,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--ds-space-1-5);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-inner);
   padding: var(--ds-space-2);
   background: var(--ds-surface-inset);
 }
@@ -256,42 +282,37 @@
 
   .sksum--dense .sksum__bars {
     grid-area: bars;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--ds-space-3);
     margin-top: var(--ds-space-3);
   }
 
-  .sksum--dense .sksum__bar-head {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .sksum--dense .sksum__bar-label,
-  .sksum--dense .sksum__bar-value {
-    width: 70%;
-  }
-
-  .sksum--dense .sksum__bar-track {
-    height: 0.25rem;
+  .sksum__bar {
+    padding: var(--ds-space-2);
   }
 }
 
 @media (min-width: 768px) {
   .sksum {
     padding: var(--ds-space-5) var(--ds-space-6);
-    border-radius: var(--ds-radius-2xl);
+    border-radius: var(--ds-radius-surface);
+  }
+
+  .sksum--glass {
+    padding: var(--ds-space-5);
+  }
+
+  .sksum--glass .sksum__bars {
+    margin-top: var(--ds-space-4);
   }
 
   .sksum--primary {
     padding: var(--ds-space-4);
-    border-radius: var(--ds-radius-xl);
+    border-radius: var(--ds-radius-surface);
   }
 }
 
 .sksum--compact {
   padding: var(--ds-space-3) var(--ds-space-4);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
   box-shadow: none;
 }
 
@@ -325,7 +346,7 @@
 .sksum__stat-value {
   width: 2.75rem;
   height: 1rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 .sksum__stat-label {

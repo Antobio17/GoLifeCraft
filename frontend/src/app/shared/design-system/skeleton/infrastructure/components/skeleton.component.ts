@@ -12,7 +12,7 @@ import { Component, Input } from "@angular/core";
         display: block;
         width: var(--skeleton-w, 100%);
         height: var(--skeleton-h, 6rem);
-        border-radius: var(--skeleton-r, var(--ds-radius-xl));
+        border-radius: var(--skeleton-r, var(--ds-radius-surface));
       }
     `,
   ],
@@ -26,6 +26,6 @@ import { Component, Input } from "@angular/core";
 export class SkeletonComponent {
   @Input() width = "100%";
   @Input() height = "6rem";
-  @Input() radius = "var(--ds-radius-xl)";
+  @Input() radius = "var(--ds-radius-surface)";
   @Input() delay = "0s";
 }

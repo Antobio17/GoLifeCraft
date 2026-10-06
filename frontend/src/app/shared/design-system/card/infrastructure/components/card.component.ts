@@ -7,6 +7,7 @@ type CardVariant = "plain" | "brand" | "inset" | "glass";
   template: `
     <div
       class="ds-card"
+      [style.--ds-pad]="padding === '0' ? null : padding"
       [class.ds-card--interactive]="interactive"
       [attr.tabindex]="interactive ? 0 : null"
       [attr.role]="interactive ? 'button' : null"
@@ -29,11 +30,14 @@ type CardVariant = "plain" | "brand" | "inset" | "glass";
         height: 100%;
         gap: var(--card-gap, var(--ds-space-3));
         padding: var(--card-pad, var(--ds-space-4));
-        border-radius: var(--ds-radius-xl);
-        border-top-right-radius: var(--ds-card-tr-radius, var(--ds-radius-xl));
+        border-radius: var(--ds-radius-surface);
+        border-top-right-radius: var(
+          --ds-card-tr-radius,
+          var(--ds-radius-surface)
+        );
         border-bottom-right-radius: var(
           --ds-card-br-radius,
-          var(--ds-radius-xl)
+          var(--ds-radius-surface)
         );
         background: var(--card-bg, var(--ds-surface));
         border: 1px solid var(--card-border, var(--ds-border-hairline));
@@ -58,7 +62,7 @@ type CardVariant = "plain" | "brand" | "inset" | "glass";
         --ds-surface-inset: var(--ds-sheet-surface-inset);
         --ds-surface-hover: var(--ds-sheet-surface-hover);
         --ds-surface-chart: transparent;
-        border-radius: var(--ds-radius-2xl);
+        border-radius: var(--ds-radius-surface);
         box-shadow: var(--ds-hero-shadow);
       }
       :host([variant="inset"]) .ds-card {

@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-inner);
   background: var(--ds-primary-soft);
   color: var(--ds-primary-soft-text);
   font-family: var(--ds-font-display);
@@ -20,7 +20,7 @@
 .wk-ex-ratio {
   flex: 0 0 auto;
   padding: var(--ds-space-1) var(--ds-space-2);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-inner);
   background: var(--ds-surface-inset);
   color: var(--ds-text-muted);
   font-family: var(--ds-font-display);
@@ -33,7 +33,7 @@
   line-height: 1.4;
   color: var(--ds-text-muted);
   background: var(--ds-surface-inset);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-inner);
   padding: var(--ds-space-1-5) var(--ds-space-2);
 }
 
@@ -42,7 +42,7 @@
   align-items: center;
   gap: var(--ds-space-1-5);
   background: var(--ds-bg);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-inner);
   padding: var(--ds-space-2) var(--ds-space-1-5);
 }
 
@@ -86,7 +86,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   color: var(--ds-text-meta);
 }
 

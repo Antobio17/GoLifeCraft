@@ -79,7 +79,7 @@ type TextInputVariant = "default" | "outlined";
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-3);
         font: inherit;
         font-size: var(--ds-text-md);
@@ -119,7 +119,7 @@ type TextInputVariant = "default" | "outlined";
         gap: var(--ds-space-2);
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-3);
         transition:
           border-color var(--ds-transition-fast),

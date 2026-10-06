@@ -132,10 +132,11 @@
       },
       "stopModal": {
         "title": "Descartar entreno",
-        "body": "Vas a descartar este entrenamiento libre:",
-        "warning": "Se perderá todo lo registrado y no quedará en el historial.",
+        "body": "Se perderá todo lo registrado en este entrenamiento libre y no quedará en el historial.",
+        "hint": "Pulsa dos veces el botón de parar para descartarlo, o la X para seguir entrenando.",
         "cancel": "Seguir entrenando",
-        "confirm": "Descartar"
+        "confirm": "Descartar",
+        "confirmArmed": "Pulsa otra vez para descartar"
       },
       "finishModal": {
         "title": "Terminar entreno",

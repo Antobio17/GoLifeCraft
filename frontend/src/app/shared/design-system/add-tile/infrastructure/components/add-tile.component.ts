@@ -47,9 +47,9 @@ type AddTileVariant = "inline" | "dashed";
       }
       .ds-add--dashed {
         gap: var(--ds-space-1-5);
-        border: 1.5px dashed var(--ds-border-strong);
-        border-radius: var(--ds-radius-lg);
-        padding: var(--ds-space-3);
+        border: 1.5px dashed var(--ds-border);
+        border-radius: var(--add-tile-radius, var(--ds-radius-surface));
+        padding: var(--ds-space-2);
         font-size: var(--ds-text-base);
       }
     `,

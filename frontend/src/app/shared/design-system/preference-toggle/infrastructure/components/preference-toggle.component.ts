@@ -35,7 +35,7 @@ import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
       :host {
         display: flex;
         align-items: center;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
       }

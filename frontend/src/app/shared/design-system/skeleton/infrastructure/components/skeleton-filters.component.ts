@@ -41,7 +41,7 @@ import { Component, Input } from "@angular/core";
       .skfil__search {
         width: 100%;
         height: 2.75rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
       }
       .skfil__row {
         display: flex;
@@ -51,12 +51,12 @@ import { Component, Input } from "@angular/core";
         flex: 1 1 0;
         min-width: 0;
         height: 2.125rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control-sm);
       }
       .skfil__segmented {
         width: 100%;
         height: 2.5rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
       }
       .skfil__caption {
         width: 10.5rem;

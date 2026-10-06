@@ -48,7 +48,7 @@ import { Component, Input } from "@angular/core";
       }
       .skfld__control {
         width: 100%;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
       }
     `,
   ],

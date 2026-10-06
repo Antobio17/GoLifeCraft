@@ -55,7 +55,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         justify-content: center;
         width: 3.25rem;
         height: 3.25rem;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
         color: var(--ds-text-muted);
         transition:

@@ -35,7 +35,7 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
         align-items: center;
         gap: var(--ds-space-3);
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3) var(--ds-space-4);
       }
       .ds-macro__kcal {
@@ -67,7 +67,7 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
       }
       .ds-macro__line {
         height: 0.375rem;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-mark);
         margin-bottom: var(--ds-space-1);
       }
       .ds-macro__line--protein {

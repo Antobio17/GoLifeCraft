@@ -32,7 +32,6 @@
     />
 
     <ds-active-workout-banner
-      [scrolled]="sticky.collapsed()"
       [paused]="activeWorkout.paused()"
       [stateLabel]="
         (activeWorkout.paused()
@@ -251,19 +250,23 @@
   </ds-stack>
 </ds-modal-sheet>
 
-<ds-confirm-action-modal
-  [show]="showStopModal()"
+<ds-modal-sheet
+  [open]="showStopModal()"
   [title]="'workout.free.stopModal.title' | t"
-  [body]="'workout.free.stopModal.body' | t"
-  [itemName]="name()"
-  [warningText]="'workout.free.stopModal.warning' | t"
-  [isDeleting]="false"
-  [cancelLabel]="'workout.free.stopModal.cancel' | t"
+  [closeLabel]="'workout.free.stopModal.cancel' | t"
   [confirmLabel]="'workout.free.stopModal.confirm' | t"
-  [deletingLabel]="'workout.free.stopModal.confirm' | t"
+  [confirmArmedLabel]="'workout.free.stopModal.confirmArmed' | t"
+  confirmIcon="square"
+  confirmTone="danger"
+  [confirmTwice]="true"
   (confirmed)="onConfirmStop()"
-  (cancelled)="onCancelStop()"
-/>
+  (closed)="onCancelStop()"
+>
+  <ds-stack [gap]="'var(--ds-space-1)'">
+    <ds-text>{{ "workout.free.stopModal.body" | t }}</ds-text>
+    <ds-text variant="muted">{{ "workout.free.stopModal.hint" | t }}</ds-text>
+  </ds-stack>
+</ds-modal-sheet>
 
 <ds-choice-modal
   [show]="showFinishModal()"

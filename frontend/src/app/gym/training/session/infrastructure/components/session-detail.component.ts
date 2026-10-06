@@ -2,7 +2,6 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  ViewChild,
   computed,
   inject,
   input,
@@ -46,7 +45,6 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ActiveWorkoutBannerComponent } from "@shared/design-system/active-workout-banner/infrastructure/components/active-workout-banner.component";
-import { StickyCollapseService } from "@shared/design-system/active-workout-banner/application/services/sticky-collapse.service";
 import { SetHeaderComponent } from "@shared/design-system/set-header/infrastructure/components/set-header.component";
 import { SetRowComponent } from "@shared/design-system/set-row/infrastructure/components/set-row.component";
 import { TopSetRowComponent } from "@shared/design-system/top-set-row/infrastructure/components/top-set-row.component";
@@ -57,7 +55,7 @@ import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/in
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonExerciseComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-exercise.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
-import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
+import { InlineNoteComponent } from "@shared/design-system/inline-note/infrastructure/components/inline-note.component";
 import {
   SegmentedToggleComponent,
   SegmentedOption,
@@ -72,6 +70,10 @@ import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastru
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
 import { ExercisePanelComponent } from "@shared/design-system/exercise-panel/infrastructure/components/exercise-panel.component";
+import {
+  MenuComponent,
+  MenuItem,
+} from "@shared/design-system/menu/infrastructure/components/menu.component";
 import { ExercisePanelState } from "@shared/design-system/exercise-panel/domain/models/exercise-panel-state.enum";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { ActionBarComponent } from "@shared/design-system/action-bar/infrastructure/components/action-bar.component";
@@ -122,7 +124,6 @@ import { BackNavigationService } from "@shared/routing/application/services/back
   selector: "app-session-detail",
   templateUrl: "./session-detail.component.html",
   styleUrls: ["./session-detail.component.css"],
-  providers: [StickyCollapseService],
   imports: [
     FormsModule,
     NgTemplateOutlet,
@@ -156,8 +157,9 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     SkeletonComponent,
     SkeletonExerciseComponent,
     SkeletonLineComponent,
-    TextareaComponent,
     SegmentedToggleComponent,
+    MenuComponent,
+    InlineNoteComponent,
     SelectComponent,
     ProgressionCardComponent,
     SkeletonPanelComponent,
@@ -186,7 +188,6 @@ export class SessionDetailComponent implements OnInit {
   private getExerciseTopSetsService = inject(GetExerciseTopSetsService);
   private topSetFormat = inject(ExerciseTopSetFormatService);
   protected activeWorkout = inject(ActiveWorkoutService);
-  protected sticky = inject(StickyCollapseService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
@@ -274,6 +275,8 @@ export class SessionDetailComponent implements OnInit {
   exerciseRows = computed(() => {
     const topSets = this.topSetsByExerciseId();
     const openTabs = this.openTabs();
+    const menu = this.exerciseMenu();
+    const editingNoteId = this.editingNoteId();
     const active = this.isActiveHere;
     const expandedId = this.expandedId();
     const currentId = this.currentExerciseId();
@@ -305,18 +308,27 @@ export class SessionDetailComponent implements OnInit {
         progressionAvailable,
         showProgressionTab:
           progressionAvailable && openTabs[exercise.id] === "progression",
+        menuItems: [
+          ...(progressionAvailable ? [menu.sets, menu.progression] : []),
+          menu.note,
+          ...(exercise.exerciseId ? [menu.open] : []),
+          menu.remove,
+        ],
+        editingNote: exercise.id === editingNoteId,
+        activeView: !progressionAvailable
+          ? null
+          : openTabs[exercise.id] === "progression"
+            ? "progression"
+            : "sets",
         muscleLabel: this.muscleText(exercise),
         modeTags: this.modeTags(exercise),
         topSetValue: this.topSetFormat.valueLabel(topSet),
         topSetCaption: this.topSetFormat.dateLabel(topSet),
-        topSetHasAction: !!exercise.exerciseId,
-        topSetActionAria: this.t("getSession.topSet.actionAria", {
-          name: exercise.exerciseName,
-        }),
         expanded: exercise.id === expandedId,
         summaryLabel: this.setSummary.schemeLabel(summary),
         loadLabel: summary.topWeightKg > 0 ? `${summary.topWeightKg} kg` : "",
         progressLabel: active ? `${doneSets}/${exercise.sets.length}` : "",
+        progress: active ? doneSets / Math.max(exercise.sets.length, 1) : null,
         panelState: this.panelState(
           active,
           exercise.id === currentId,
@@ -342,15 +354,13 @@ export class SessionDetailComponent implements OnInit {
     }),
   );
 
-  activeStateLabel = computed(() => {
-    const state = this.t(
+  activeStateLabel = computed(() =>
+    this.t(
       this.activeWorkout.paused()
         ? "getSession.active.paused"
         : "getSession.active.running",
-    );
-
-    return `${this.name()} · ${state}`;
-  });
+    ),
+  );
 
   topSetLabel = computed(() => this.t("getSession.topSet.label"));
   topSetEmpty = computed(() => this.t("getSession.topSet.empty"));
@@ -548,11 +558,6 @@ export class SessionDetailComponent implements OnInit {
       this.syncOption("none", TemplateSyncMode.None, "lock"),
     ];
   });
-
-  @ViewChild(ActiveWorkoutBannerComponent)
-  set bannerRef(ref: ActiveWorkoutBannerComponent | undefined) {
-    this.sticky.track(ref?.sentinelElement);
-  }
 
   constructor() {
     toObservable(this.id)
@@ -984,10 +989,83 @@ export class SessionDetailComponent implements OnInit {
     },
   ]);
 
-  exerciseTabs = computed<SegmentedOption[]>(() => [
-    { value: "sets", label: this.t("getSession.tab.sets") },
-    { value: "progression", label: this.t("getSession.tab.progression") },
-  ]);
+  private editingNoteId = signal<string | null>(null);
+
+  private exerciseMenu = computed(
+    () =>
+      ({
+        sets: {
+          value: "sets",
+          label: this.t("getSession.tab.sets"),
+          icon: "list",
+        },
+        progression: {
+          value: "progression",
+          label: this.t("getSession.tab.progression"),
+          icon: "chart",
+        },
+        note: {
+          value: "note",
+          label: this.t("getSession.exercise.noteAction"),
+          icon: "pencil",
+        },
+        open: {
+          value: "open",
+          label: this.t("getSession.exercise.openAction"),
+          icon: "externalLink",
+        },
+        remove: {
+          value: "remove",
+          label: this.t("getSession.exercise.remove"),
+          icon: "trash",
+          danger: true,
+          separated: true,
+        },
+      }) satisfies Record<string, MenuItem>,
+  );
+
+  exerciseMenuLabel = computed(() => this.t("getSession.exercise.menu"));
+
+  onExerciseMenu(exerciseId: string, action: string): void {
+    if (action === "remove") {
+      this.removeExercise(exerciseId);
+      return;
+    }
+
+    if (action === "open") {
+      this.openExerciseOf(exerciseId);
+      return;
+    }
+
+    this.openTab(exerciseId, action === "progression" ? action : "sets");
+    this.expandedOverride.set(exerciseId);
+
+    if (action === "note") {
+      this.editingNoteId.set(exerciseId);
+    }
+  }
+
+  setNoteEditing(exerciseId: string, editing: boolean): void {
+    if (editing) {
+      this.editingNoteId.set(exerciseId);
+      return;
+    }
+
+    this.editingNoteId.update((current) =>
+      current === exerciseId ? null : current,
+    );
+  }
+
+  private openExerciseOf(sessionExerciseId: string): void {
+    const exercise = this.exercises().find(
+      (candidate) => candidate.id === sessionExerciseId,
+    );
+    if (!exercise?.exerciseId) {
+      return;
+    }
+
+    this.onOpenExercise(exercise.exerciseId);
+  }
 
   openTab(exerciseId: string, tab: string): void {
     this.openTabs.update((tabs) => ({ ...tabs, [exerciseId]: tab }));

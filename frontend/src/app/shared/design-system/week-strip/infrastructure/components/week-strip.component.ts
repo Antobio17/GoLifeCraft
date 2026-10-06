@@ -54,7 +54,7 @@ import { WeekStripDayState } from "../../domain/models/week-strip-day-state.enum
         padding: var(--ds-space-4);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-2xl);
+        border-radius: var(--ds-radius-surface);
         box-shadow: var(--ds-shadow-card);
       }
       .ds-week__head {

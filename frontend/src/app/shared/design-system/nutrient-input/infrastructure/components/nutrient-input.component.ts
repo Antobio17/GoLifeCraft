@@ -130,7 +130,7 @@ type NutrientVariant = "default" | "energy" | "sub";
         width: 4.625rem;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-1-5) var(--ds-space-2);
         font-size: var(--ds-text-lg);
         color: var(--ds-primary);

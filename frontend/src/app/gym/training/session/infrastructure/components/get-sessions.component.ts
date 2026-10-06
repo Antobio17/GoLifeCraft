@@ -167,7 +167,6 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
     this.loading() ? "" : `${this.totalItems()}`,
   );
 
-  nextStartLabel = computed(() => this.tp("getSessions.next.start"));
 
   rows = computed<SessionRow[]>(() => {
     const nextId = this.nextSession()?.id ?? null;

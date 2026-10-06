@@ -27,7 +27,7 @@ import { Component, Input } from "@angular/core";
       .ds-panel {
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
         display: flex;
         flex-direction: column;

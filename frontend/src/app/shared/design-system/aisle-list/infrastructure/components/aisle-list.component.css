@@ -11,7 +11,8 @@
 .aisle-list__row {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-surface);
+  --ds-pad: var(--ds-space-2);
   padding: var(--ds-space-2) var(--ds-space-3);
 }
 
@@ -46,7 +47,7 @@
   flex: 0 0 auto;
   width: 1.875rem;
   height: 1.875rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   background: var(--ds-surface-inset);
   color: var(--ds-text-muted);
   display: flex;

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { ButtonComponent } from "../../../button/infrastructure/components/button.component";
+import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 export interface MenuItem {
@@ -8,23 +9,35 @@ export interface MenuItem {
   label: string;
   icon?: DsIconName;
   danger?: boolean;
+  separated?: boolean;
 }
 
 @Component({
   selector: "ds-menu",
-  imports: [IconComponent, ButtonComponent],
+  imports: [IconComponent, ButtonComponent, IconButtonComponent],
   template: `
     <div class="ds-menu">
-      <ds-button
-        variant="secondary"
-        size="icon-lg"
-        [icon]="triggerIcon"
-        [iconSize]="19"
-        [ariaLabel]="triggerLabel"
-        haspopup="menu"
-        [expanded]="open()"
-        (clicked)="toggle()"
-      />
+      @if (compact) {
+        <ds-icon-button
+          [icon]="triggerIcon"
+          [iconSize]="18"
+          [ariaLabel]="triggerLabel"
+          haspopup="menu"
+          [expanded]="open()"
+          (clicked)="toggle()"
+        />
+      } @else {
+        <ds-button
+          variant="secondary"
+          size="icon-lg"
+          [icon]="triggerIcon"
+          [iconSize]="19"
+          [ariaLabel]="triggerLabel"
+          haspopup="menu"
+          [expanded]="open()"
+          (clicked)="toggle()"
+        />
+      }
       @if (open()) {
         <div
           class="ds-menu__backdrop"
@@ -34,17 +47,29 @@ export interface MenuItem {
         ></div>
         <div class="ds-menu__panel" role="menu">
           @for (item of items; track item.value) {
+            @if (item.separated) {
+              <div class="ds-menu__separator" role="separator"></div>
+            }
             <button
               type="button"
               class="ds-menu__item"
               [class.ds-menu__item--danger]="item.danger"
+              [class.ds-menu__item--active]="item.value === activeValue"
               role="menuitem"
               (click)="pick(item.value)"
             >
               @if (item.icon) {
                 <ds-icon [name]="item.icon" [size]="16" />
               }
-              {{ item.label }}
+              <span class="ds-menu__label">{{ item.label }}</span>
+              @if (item.value === activeValue) {
+                <ds-icon
+                  class="ds-menu__check"
+                  name="check"
+                  [size]="16"
+                  [stroke]="2.5"
+                />
+              }
             </button>
           }
         </div>
@@ -70,8 +95,9 @@ export interface MenuItem {
         min-width: 10.5rem;
         display: flex;
         flex-direction: column;
-        padding: var(--ds-space-1-5);
-        border-radius: var(--ds-radius-lg);
+        --ds-pad: var(--ds-space-1-5);
+        padding: var(--ds-pad);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border-hairline);
         box-shadow: var(--ds-shadow-lg);
@@ -83,7 +109,7 @@ export interface MenuItem {
         width: 100%;
         padding: var(--ds-space-2) var(--ds-space-3);
         border: none;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control-sm);
         background: transparent;
         color: var(--ds-text-body);
         font: inherit;
@@ -95,6 +121,18 @@ export interface MenuItem {
       }
       .ds-menu__item:hover {
         background: var(--ds-surface-hover);
+      }
+      .ds-menu__label {
+        flex: 1 1 auto;
+      }
+      .ds-menu__item--active,
+      .ds-menu__check {
+        color: var(--ds-primary-soft-text);
+      }
+      .ds-menu__separator {
+        height: 1px;
+        margin: var(--ds-space-1) var(--ds-space-2);
+        background: var(--ds-border-hairline);
       }
       .ds-menu__item--danger {
         color: var(--ds-danger);
@@ -109,6 +147,8 @@ export class MenuComponent {
   @Input() triggerIcon: DsIconName = "dots";
   @Input() triggerLabel = "";
   @Input() items: MenuItem[] = [];
+  @Input() activeValue: string | null = null;
+  @Input() compact = false;
 
   @Output() selected = new EventEmitter<string>();
 

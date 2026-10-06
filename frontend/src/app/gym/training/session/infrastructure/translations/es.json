@@ -50,7 +50,6 @@
       "eyebrowFirst": "Empieza por aquí",
       "lastDone": "La hiciste {{when}} · {{volume}} kg",
       "neverDone": "Todavía no la has entrenado",
-      "start": "Empezar sesión",
       "open": "Ver la sesión {{name}}",
       "exercises": "ejercicios",
       "sets": "series",
@@ -135,9 +134,10 @@
     "stopModal": {
       "title": "¿Parar la sesión?",
       "body": "Se descartará el cronómetro sin guardar el entreno.",
-      "warning": "El progreso de este entreno no se guardará.",
+      "hint": "Pulsa dos veces el botón de parar para descartarlo, o la X para seguir entrenando.",
       "cancel": "Seguir entrenando",
-      "confirm": "Sí, parar"
+      "confirm": "Parar",
+      "confirmArmed": "Pulsa otra vez para parar"
     },
     "finishModal": {
       "title": "¿Qué hacemos con la plantilla?",
@@ -199,6 +199,9 @@
     "exercise": {
       "add": "Añadir ejercicio",
       "remove": "Quitar ejercicio",
+      "menu": "Opciones del ejercicio",
+      "noteAction": "Comentario",
+      "openAction": "Ver ejercicio",
       "noteLabel": "Comentario del ejercicio",
       "notePlaceholder": "Comentario…"
     },

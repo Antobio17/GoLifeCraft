@@ -56,7 +56,7 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
           var(--ds-space-4);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-2xl);
+        border-radius: var(--ds-radius-surface);
         box-shadow: var(--ds-shadow-card);
         transition: border-color var(--ds-transition-fast);
       }
@@ -177,7 +177,7 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
       .ds-srow__start:focus-visible {
         outline: 2px solid var(--ds-border-focus);
         outline-offset: 2px;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-mark);
       }
       .ds-srow__start:focus-visible {
         border-radius: 50%;

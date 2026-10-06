@@ -17,7 +17,7 @@
 .skph-icon {
   width: 2.75rem;
   height: 2.75rem;
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-inner);
   flex-shrink: 0;
   margin-top: var(--ds-space-3);
 }
@@ -34,7 +34,7 @@
 .skph-eyebrow {
   height: 0.6875rem;
   width: 6rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
   margin-bottom: var(--ds-space-2);
   animation-delay: 0.04s;
 }
@@ -42,7 +42,7 @@
 .skph-title {
   height: 2rem;
   width: 17.5rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-mark);
   animation-delay: 0.06s;
 }
 
@@ -57,7 +57,7 @@
 .skph-subtitle {
   height: 0.875rem;
   margin-top: var(--ds-space-2);
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
   max-width: 100%;
 }
 
@@ -96,7 +96,7 @@
 .skph-action {
   height: 2.75rem;
   width: 10rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
   animation-delay: 0.12s;
 }
 
@@ -155,7 +155,7 @@
     grid-area: icon;
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: var(--ds-radius-md);
+    border-radius: var(--ds-radius-inner);
     margin-top: 0;
     align-self: center;
   }
@@ -202,6 +202,6 @@
 
   .skph-action {
     width: 10rem;
-    border-radius: var(--ds-radius-md);
+    border-radius: var(--ds-radius-control-sm);
   }
 }

@@ -30,12 +30,12 @@ import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastruc
             <ds-skeleton
               width="4.5rem"
               height="4.5rem"
-              radius="var(--ds-radius-xl)"
+              radius="var(--ds-radius-surface)"
             />
           </ds-stack>
           <ds-stack [grow]="true" [gap]="'var(--ds-space-2)'">
             <ds-skeleton-line width="4.5rem" height="0.6875rem" />
-            <ds-skeleton height="3rem" radius="var(--ds-radius-lg)" />
+            <ds-skeleton height="3rem" radius="var(--ds-radius-surface)" />
           </ds-stack>
         </ds-stack>
 
@@ -89,7 +89,7 @@ import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastruc
         labelWidth="38%"
         valueWidth="6.75rem"
       />
-      <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton height="2.875rem" radius="var(--ds-radius-surface)" />
     </ds-split-view>
   `,
 })

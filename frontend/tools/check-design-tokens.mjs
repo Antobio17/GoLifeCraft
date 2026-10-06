@@ -18,6 +18,11 @@
  *   - rootMargin de ds-infinite-scroll y minWidth de ListColumn viven fuera
  *     de CSS, así que este checker no los mira
  *   - env(safe-area-inset-*): píxeles físicos del dispositivo
+ *
+ * El radio además tiene que ser semántico: fuera de tokens/ sólo valen
+ * --ds-radius-{surface,inner,inner-lg,control,control-sm,cta,tag,mark,pill}.
+ * Los pasos de la escala (sm…2xl) son la paleta de esos tokens; si un
+ * componente los usa directamente, deja de evolucionar con el resto.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
@@ -341,6 +346,32 @@ for (const path of files) {
   )) {
     if (declared.has(m[1])) continue;
     report(path, text, m.index, "var()", m[1], "ese token no existe");
+  }
+
+  // 5) el radio se consume por rol, nunca por paso de escala
+  if (!isTokenFile) {
+    for (const m of text.matchAll(/\[(?:radius|tileRadius)\]="\d/g)) {
+      report(
+        path,
+        text,
+        m.index,
+        "radius",
+        m[0],
+        "un radio en píxeles no sigue a la card: usa un token --ds-radius-*",
+      );
+    }
+    for (const m of text.matchAll(
+      /--ds-radius-(?:sm|md|lg|xl|2xl)(?![\w-])/g,
+    )) {
+      report(
+        path,
+        text,
+        m.index,
+        "radius",
+        m[0],
+        "usa un token semántico (--ds-radius-surface, -inner, -control, -cta, -tag, -mark…)",
+      );
+    }
   }
 }
 

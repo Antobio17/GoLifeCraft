@@ -28,7 +28,6 @@
         <ds-skeleton-list-item
           padding="var(--ds-space-3) var(--ds-space-4)"
           [tile]="60"
-          [tileRadius]="16"
           titleWidth="72%"
           metaWidth="46%"
         />
@@ -37,7 +36,7 @@
 
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-skeleton-line width="8rem" height="0.75rem" />
-        <ds-skeleton height="2.5rem" radius="var(--ds-radius-lg)" />
+        <ds-skeleton height="2.5rem" radius="var(--ds-radius-control)" />
         <ds-skeleton-panel
           [brand]="true"
           [figure]="true"
@@ -48,7 +47,7 @@
         <ds-skeleton-list
           [count]="3"
           [gap]="'var(--ds-space-1-5)'"
-          radius="var(--ds-radius-xl)"
+          radius="var(--ds-radius-surface)"
           padding="var(--ds-space-2) var(--ds-space-3)"
           titleWidth="46%"
           metaWidth="62%"

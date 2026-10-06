@@ -72,9 +72,15 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
                       class="ds-sheet__action ds-sheet__confirm"
                       data-testid="sheet-confirm"
                       type="button"
+                      [class.ds-sheet__confirm--danger]="
+                        confirmTone === 'danger'
+                      "
+                      [class.ds-sheet__confirm--armed]="armed()"
                       [disabled]="confirmDisabled"
-                      [attr.aria-label]="confirmLabel"
-                      (click)="confirmed.emit()"
+                      [attr.aria-label]="
+                        armed() ? confirmArmedLabel : confirmLabel
+                      "
+                      (click)="onConfirm()"
                     >
                       <ds-icon
                         [name]="confirmIcon"
@@ -247,6 +253,18 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         border-color: transparent;
         color: var(--ds-on-primary);
       }
+      .ds-sheet__confirm--danger {
+        background: var(--ds-danger-soft);
+        border-color: var(--ds-danger-soft-border);
+        color: var(--ds-danger-soft-text);
+      }
+      .ds-sheet__confirm--armed {
+        background: var(--ds-danger);
+        border-color: transparent;
+        color: #fff;
+        box-shadow: 0 0 0 0.25rem var(--ds-danger-soft);
+        animation: ds-sheet-armed var(--ds-dur-3) var(--ds-ease-spring);
+      }
       .ds-sheet__confirm:disabled {
         background: var(--ds-surface-hover);
         color: var(--ds-text-meta);
@@ -283,6 +301,11 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
           transform: translate3d(0, calc(100% + var(--ds-sheet-gap) * 2), 0);
         }
       }
+      @keyframes ds-sheet-armed {
+        50% {
+          transform: scale(1.12);
+        }
+      }
       @keyframes ds-sheet-fade {
         from {
           opacity: 0;
@@ -306,7 +329,7 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
           touch-action: auto;
         }
         .ds-sheet {
-          border-radius: var(--ds-radius-2xl);
+          border-radius: var(--ds-radius-surface);
           animation-name: ds-sheet-pop;
           animation-timing-function: var(--ds-ease-out);
         }
@@ -326,6 +349,7 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
       }
       @media (prefers-reduced-motion: reduce) {
         .ds-sheet,
+        .ds-sheet__confirm--armed,
         .ds-sheet__overlay::before {
           animation: none;
         }
@@ -343,6 +367,7 @@ export class ModalSheetComponent implements OnDestroy {
   private static readonly FLING_MIN_OFFSET = 16;
   private static readonly VELOCITY_WINDOW_MS = 100;
   private static readonly CLOSE_FALLBACK_MS = 900;
+  private static readonly ARMED_MS = 3000;
 
   private renderer = inject(Renderer2);
   private document = inject(DOCUMENT);
@@ -358,11 +383,13 @@ export class ModalSheetComponent implements OnDestroy {
   private sheetNode: HTMLElement | null = null;
   private gestures: Subscription | null = null;
   private closeWatch: Subscription | null = null;
+  private armedWatch: Subscription | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private tallestSeen = 0;
 
   readonly rendered = signal(false);
   readonly closing = signal(false);
+  readonly armed = signal(false);
 
   @ViewChild("overlay")
   set overlay(reference: ElementRef<HTMLElement> | undefined) {
@@ -415,18 +442,42 @@ export class ModalSheetComponent implements OnDestroy {
   @Input() confirmLabel = "";
   @Input() confirmDisabled = false;
   @Input() confirmIcon: DsIconName = "save";
+  @Input() confirmTone: "primary" | "danger" = "primary";
+  @Input() confirmTwice = false;
+  @Input() confirmArmedLabel = "";
   @Output() closed = new EventEmitter<void>();
   @Output() confirmed = new EventEmitter<void>();
 
   ngOnDestroy(): void {
+    this.disarm();
     this.closeWatch?.unsubscribe();
     this.toggleOverlayEffects(false);
     this.detachGestures();
     this.detachOverlay();
   }
 
+  onConfirm(): void {
+    if (!this.confirmTwice || this.armed()) {
+      this.disarm();
+      this.confirmed.emit();
+      return;
+    }
+
+    this.armed.set(true);
+    this.armedWatch = timer(ModalSheetComponent.ARMED_MS).subscribe(() =>
+      this.disarm(),
+    );
+  }
+
+  private disarm(): void {
+    this.armedWatch?.unsubscribe();
+    this.armedWatch = null;
+    this.armed.set(false);
+  }
+
   private show(): void {
     this.closeWatch?.unsubscribe();
+    this.disarm();
     this.closing.set(false);
     this.rendered.set(true);
     this.toggleOverlayEffects(true);

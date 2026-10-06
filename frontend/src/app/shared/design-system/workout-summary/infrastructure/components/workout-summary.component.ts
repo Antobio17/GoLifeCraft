@@ -36,7 +36,7 @@ export interface WorkoutSummaryStat {
         align-items: center;
         gap: var(--ds-space-3);
         padding: var(--ds-space-3) var(--ds-space-4);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface-inset);
         color: var(--ds-text);
         border: 1px solid var(--ds-border);

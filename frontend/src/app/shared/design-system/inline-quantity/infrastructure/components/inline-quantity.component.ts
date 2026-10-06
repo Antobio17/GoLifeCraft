@@ -62,12 +62,12 @@ type InlineQuantitySize = "md" | "sm";
         align-items: center;
         gap: var(--ds-space-1);
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-1) var(--ds-space-1-5);
       }
       .ds-inline-qty--sm {
         gap: var(--ds-space-1);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control);
       }
       .ds-inline-qty--field {
         gap: var(--ds-space-1-5);
@@ -85,7 +85,7 @@ type InlineQuantitySize = "md" | "sm";
       .ds-inline-qty--field .ds-inline-qty__picker {
         gap: 2px;
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-control-sm);
         padding: 2px var(--ds-space-1);
       }
       .ds-inline-qty--field .ds-inline-qty__caret {
@@ -123,7 +123,7 @@ type InlineQuantitySize = "md" | "sm";
         display: inline-flex;
         align-items: center;
         max-width: 6rem;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-mark);
       }
       .ds-inline-qty__picker:focus-within {
         outline: 2px solid var(--ds-primary);

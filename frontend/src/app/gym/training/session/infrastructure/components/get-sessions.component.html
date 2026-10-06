@@ -24,7 +24,11 @@
     [gap]="'var(--ds-space-5)'"
   >
     @if (statsLoading()) {
-      <ds-skeleton slot="side" height="8.5rem" radius="var(--ds-radius-2xl)" />
+      <ds-skeleton
+        slot="side"
+        height="8.5rem"
+        radius="var(--ds-radius-surface)"
+      />
     } @else {
       <ds-week-strip
         slot="side"
@@ -37,7 +41,11 @@
     }
 
     @if (loading()) {
-      <ds-skeleton slot="side" height="16rem" radius="var(--ds-radius-2xl)" />
+      <ds-skeleton
+        slot="side"
+        height="11rem"
+        radius="var(--ds-radius-surface)"
+      />
     } @else if (next(); as next) {
       <ds-next-session-card
         slot="side"
@@ -47,9 +55,7 @@
         [caption]="next.caption"
         [stats]="next.stats"
         [tags]="next.tags"
-        [ctaLabel]="nextStartLabel()"
         [openAriaLabel]="next.openAriaLabel"
-        (started)="onStart(next.id)"
         (opened)="onOpen(next.id)"
       />
     }
@@ -90,7 +96,7 @@
           [columns]="null"
           minColumn="18rem"
           [gap]="'var(--ds-space-2)'"
-          radius="var(--ds-radius-2xl)"
+          radius="var(--ds-radius-surface)"
           padding="var(--ds-space-4)"
           titleWidth="48%"
           metaWidth="70%"

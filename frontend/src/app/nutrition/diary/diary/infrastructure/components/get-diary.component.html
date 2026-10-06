@@ -67,7 +67,6 @@
         [size]="32"
         [iconSize]="16"
         [stroke]="2.4"
-        [radius]="'var(--ds-radius-md)'"
         [ariaLabel]="'getDiary.nav.previous' | t"
         (clicked)="previousDay()"
       />
@@ -81,7 +80,6 @@
         [size]="32"
         [iconSize]="16"
         [stroke]="2.4"
-        [radius]="'var(--ds-radius-md)'"
         [ariaLabel]="'getDiary.nav.next' | t"
         (clicked)="nextDay()"
       />
@@ -90,7 +88,7 @@
 
   @if (loading()) {
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-      <ds-skeleton-summary slot="side" macros="bars" />
+      <ds-skeleton-summary slot="side" tone="glass" macros="bars" />
 
       @for (entries of skeletonMeals; track $index) {
         <ds-stack [gap]="'var(--ds-space-2)'">
@@ -104,10 +102,9 @@
             <ds-skeleton-list
               [count]="entries"
               [gap]="'var(--ds-space-2)'"
-              radius="var(--ds-radius-lg)"
+              radius="var(--ds-radius-surface)"
               padding="var(--ds-space-2) var(--ds-space-3)"
               [tile]="40"
-              [tileRadius]="11"
               titleWidth="62%"
               headTrailing="3.25rem"
               metaWidth="78%"
@@ -383,7 +380,6 @@
                     [imageUrl]="row.imageUrl"
                     [alt]="row.choice.name"
                     [size]="36"
-                    [radius]="10"
                   />
                   <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
                     <ds-text variant="strong" [truncate]="true">{{

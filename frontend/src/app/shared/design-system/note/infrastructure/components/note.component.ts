@@ -25,7 +25,7 @@ type NoteTone = "info" | "warning" | "danger";
         align-items: flex-start;
         gap: var(--ds-space-2);
         background: var(--note-bg, var(--ds-primary-soft));
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
       }
       .ds-note__icon {

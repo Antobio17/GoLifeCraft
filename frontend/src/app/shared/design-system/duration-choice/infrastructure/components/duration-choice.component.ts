@@ -73,7 +73,7 @@ import { DurationChoiceOption } from "../../domain/models/duration-choice-option
         cursor: pointer;
         text-align: center;
         padding: var(--ds-space-2);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         border: 1px solid var(--ds-border-input);
         background: var(--ds-surface);
         color: var(--ds-text);
@@ -104,7 +104,7 @@ import { DurationChoiceOption } from "../../domain/models/duration-choice-option
         gap: var(--ds-space-2);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-3);
         transition:
           border-color var(--ds-transition-fast),

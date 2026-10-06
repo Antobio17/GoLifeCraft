@@ -2,7 +2,9 @@
   "discardChanges": {
     "title": "¿Descartar los cambios?",
     "body": "Si sales ahora perderás lo que no has guardado.",
+    "hint": "Pulsa dos veces la papelera para descartarlos, o la X para seguir editando.",
     "cancel": "Seguir editando",
-    "confirm": "Descartar"
+    "confirm": "Descartar",
+    "confirmArmed": "Pulsa otra vez para descartar"
   }
 }

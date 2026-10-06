@@ -34,7 +34,7 @@ import { Component, Input } from "@angular/core";
       .ds-page-heading__tile {
         width: 3.25rem;
         height: 3.25rem;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-brand);
         color: var(--ds-accent-on-brand);
         display: flex;

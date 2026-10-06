@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ChoiceRowComponent } from "@shared/design-system/choice-row/infrastructure/components/choice-row.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
@@ -11,7 +10,6 @@ import { ChoiceModalOption } from "../../domain/models/choice-modal-option.model
   selector: "ds-choice-modal",
   templateUrl: "./choice-modal.component.html",
   imports: [
-    ButtonComponent,
     ChoiceRowComponent,
     ModalSheetComponent,
     NoteComponent,

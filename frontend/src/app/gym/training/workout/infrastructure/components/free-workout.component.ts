@@ -2,7 +2,6 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  ViewChild,
   computed,
   inject,
   signal,
@@ -16,7 +15,6 @@ import { SplitViewComponent } from "@shared/design-system/split-view/infrastruct
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { ChoiceModalComponent } from "@shared/design-system/choice-modal/infrastructure/components/choice-modal.component";
 import { ChoiceModalOption } from "@shared/design-system/choice-modal/domain/models/choice-modal-option.model";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
@@ -33,7 +31,6 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ActiveWorkoutBannerComponent } from "@shared/design-system/active-workout-banner/infrastructure/components/active-workout-banner.component";
-import { StickyCollapseService } from "@shared/design-system/active-workout-banner/application/services/sticky-collapse.service";
 import { SetHeaderComponent } from "@shared/design-system/set-header/infrastructure/components/set-header.component";
 import { SetRowComponent } from "@shared/design-system/set-row/infrastructure/components/set-row.component";
 import { TopSetRowComponent } from "@shared/design-system/top-set-row/infrastructure/components/top-set-row.component";
@@ -68,7 +65,6 @@ import { BackNavigationService } from "@shared/routing/application/services/back
 @Component({
   selector: "app-free-workout",
   templateUrl: "./free-workout.component.html",
-  providers: [StickyCollapseService],
   imports: [
     FormsModule,
     ContextualTranslatePipe,
@@ -77,7 +73,6 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ScreenHeaderComponent,
     ModalSheetComponent,
     SearchInputComponent,
-    ConfirmActionModalComponent,
     ChoiceModalComponent,
     StackComponent,
     CardComponent,
@@ -113,7 +108,6 @@ export class FreeWorkoutComponent implements OnInit {
   private setNumbering = inject(SetNumberingService);
   private floatingToastService = inject(FloatingToastService);
   protected activeWorkout = inject(ActiveWorkoutService);
-  protected sticky = inject(StickyCollapseService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
 
@@ -225,11 +219,6 @@ export class FreeWorkoutComponent implements OnInit {
       this.finishOption(FreeWorkoutFinishMode.Template, "bookmark"),
     ];
   });
-
-  @ViewChild(ActiveWorkoutBannerComponent)
-  set bannerRef(ref: ActiveWorkoutBannerComponent | undefined) {
-    this.sticky.track(ref?.sentinelElement);
-  }
 
   ngOnInit(): void {
     this.translationService

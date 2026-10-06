@@ -16,3 +16,27 @@
   --ds-radius-pill: 9999px;
   --ds-device-radius: 2.875rem;
 }
+
+:root {
+  --ds-radius-inner: var(--ds-radius-lg);
+  --ds-radius-control: var(--ds-radius-xl);
+  --ds-radius-control-sm: var(--ds-radius-md);
+  --ds-radius-cta: var(--ds-radius-pill);
+  --ds-radius-tag: var(--ds-radius-pill);
+  --ds-radius-mark: var(--ds-radius-sm);
+}
+
+@property --ds-pad {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 100px;
+}
+
+*,
+::before,
+::after {
+  --ds-radius-surface: min(
+    var(--ds-radius-2xl),
+    calc(var(--ds-radius-inner) + var(--ds-pad, 100px))
+  );
+}

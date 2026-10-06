@@ -58,7 +58,7 @@ import { ImagePickerComponent } from "@shared/design-system/image-picker/infrast
         background: var(--ds-surface-inset);
         color: var(--ds-text);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-4);
       }
       .pc__avatar {
@@ -121,7 +121,7 @@ import { ImagePickerComponent } from "@shared/design-system/image-picker/infrast
         text-transform: uppercase;
         color: var(--ds-primary-soft-text);
         background: var(--ds-primary-soft);
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-tag);
         padding: var(--ds-space-1) var(--ds-space-2);
       }
       .pc__status {

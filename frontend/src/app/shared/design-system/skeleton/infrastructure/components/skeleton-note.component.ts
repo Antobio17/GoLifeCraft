@@ -33,14 +33,14 @@ import { Component, Input } from "@angular/core";
         align-items: flex-start;
         gap: var(--ds-space-2);
         background: var(--ds-primary-soft);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
       }
       .sknote__icon {
         flex: 0 0 auto;
         width: 1rem;
         height: 1rem;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-mark);
       }
       .sknote__text {
         flex: 1 1 auto;

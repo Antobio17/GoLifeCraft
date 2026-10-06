@@ -11,7 +11,7 @@
   align-items: flex-start;
   width: 100%;
   padding: var(--ds-space-3);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
   background: var(--ds-surface);
   border: 1px solid var(--ds-border-hairline);
   box-shadow: var(--ds-elev-float);
@@ -65,7 +65,7 @@
   flex: none;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-inner);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,7 +97,7 @@
   align-self: center;
   padding: var(--ds-space-1) var(--ds-space-2);
   border: none;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   background: var(--toast-icon-bg);
   color: var(--toast-icon-color);
   font-family: inherit;

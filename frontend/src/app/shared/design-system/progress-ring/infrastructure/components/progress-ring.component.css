@@ -34,3 +34,26 @@
   font-size: var(--ds-text-md);
   line-height: 1;
 }
+
+.ring--hollow {
+  position: relative;
+  background: none;
+}
+
+.ring--hollow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--ds-ring-fill, var(--ds-accent)) 0 calc(var(--ring-progress) * 1%),
+    var(--ds-ring-track, color-mix(in srgb, currentColor 16%, transparent))
+      calc(var(--ring-progress) * 1%) 100%
+  );
+  mask: radial-gradient(farthest-side, transparent 75.5%, #000 76.5%);
+}
+
+.ring--hollow .ring__center {
+  position: relative;
+  background: none;
+}

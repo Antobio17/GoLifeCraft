@@ -132,10 +132,11 @@
       },
       "stopModal": {
         "title": "Discard workout",
-        "body": "You are about to discard this free workout:",
-        "warning": "Everything you logged will be lost and it won't reach your history.",
+        "body": "Everything you logged in this free workout will be lost and it won't reach your history.",
+        "hint": "Tap the stop button twice to discard it, or the X to keep training.",
         "cancel": "Keep training",
-        "confirm": "Discard"
+        "confirm": "Discard",
+        "confirmArmed": "Tap again to discard"
       },
       "finishModal": {
         "title": "Finish workout",

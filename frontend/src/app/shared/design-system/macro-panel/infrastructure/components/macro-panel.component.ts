@@ -62,7 +62,7 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         background: var(--ds-surface);
         color: var(--ds-text);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
         box-shadow: var(--ds-elev);
       }

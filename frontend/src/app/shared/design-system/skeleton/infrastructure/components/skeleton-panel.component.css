@@ -7,7 +7,7 @@
   height: 100%;
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
   padding: var(--ds-space-3);
   display: flex;
   flex-direction: column;
@@ -55,7 +55,7 @@
 .skpan__figure {
   width: 4.625rem;
   height: 1rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-inner);
 }
 
 .skpan__heat {
@@ -70,7 +70,7 @@
 .skpan__heat-cell {
   width: 0.75rem;
   height: 0.75rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 .skpan__meters {
@@ -110,5 +110,5 @@
 
 .skpan__spark {
   width: 100%;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-mark);
 }

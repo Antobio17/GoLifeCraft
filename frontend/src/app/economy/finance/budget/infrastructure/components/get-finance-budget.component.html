@@ -18,7 +18,6 @@
         [size]="36"
         [iconSize]="16"
         [stroke]="2.4"
-        [radius]="'var(--ds-radius-md)'"
         [ariaLabel]="'getFinanceBudget.month.previous' | t"
         (clicked)="previousMonth()"
       />
@@ -28,7 +27,6 @@
         [size]="36"
         [iconSize]="16"
         [stroke]="2.4"
-        [radius]="'var(--ds-radius-md)'"
         [disabled]="!canGoNextMonth()"
         [ariaLabel]="'getFinanceBudget.month.next' | t"
         (clicked)="nextMonth()"
@@ -39,7 +37,6 @@
         variant="soft"
         [size]="36"
         [iconSize]="18"
-        [radius]="'var(--ds-radius-md)'"
         [ariaLabel]="'getFinanceBudget.configure' | t"
         (clicked)="goToSettings()"
       />

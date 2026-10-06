@@ -22,6 +22,7 @@ import { PressableComponent } from "@shared/design-system/pressable/infrastructu
   ],
   template: `
     <ds-swipe-to-delete
+      pad="var(--ds-space-2)"
       #swipe
       [disabled]="received"
       [removeLabel]="removeLabel"
@@ -46,7 +47,6 @@ import { PressableComponent } from "@shared/design-system/pressable/infrastructu
             [imageUrl]="imageUrl"
             [alt]="title"
             [size]="44"
-            [radius]="12"
           />
 
           <ds-stack class="ds-tline__body" [gap]="'2px'" [grow]="true">
@@ -168,7 +168,8 @@ import { PressableComponent } from "@shared/design-system/pressable/infrastructu
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
+        --ds-pad: var(--ds-space-2);
         padding: var(--ds-space-2) var(--ds-space-3);
         transition: var(--ds-motion-tint);
       }
@@ -224,7 +225,7 @@ import { PressableComponent } from "@shared/design-system/pressable/infrastructu
       .ds-tline__stepper {
         flex: 0 0 auto;
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control);
         padding: 1px;
       }
       .ds-tline__step {
@@ -242,7 +243,7 @@ import { PressableComponent } from "@shared/design-system/pressable/infrastructu
         font-weight: var(--ds-weight-bold);
         line-height: 1;
         cursor: pointer;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-control-sm);
         transition: var(--ds-motion-tint);
       }
       .ds-tline__step:hover:not(:disabled) {

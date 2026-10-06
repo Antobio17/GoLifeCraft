@@ -30,7 +30,7 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
         gap: var(--ds-space-1-5);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: 0 var(--ds-space-3);
       }
       .ds-price:focus-within {

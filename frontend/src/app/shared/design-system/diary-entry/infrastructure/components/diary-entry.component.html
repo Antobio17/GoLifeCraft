@@ -1,7 +1,7 @@
 <ds-swipe-to-delete
   #swipe
   [reveal]="66"
-  radius="var(--ds-radius-lg)"
+  pad="var(--ds-space-2)"
   [removeLabel]="removeLabel"
   (remove)="remove.emit()"
 >
@@ -97,7 +97,6 @@
       [imageUrl]="imageUrl"
       [alt]="name"
       [size]="40"
-      [radius]="11"
     />
     @if (kindIcon) {
       <ds-icon

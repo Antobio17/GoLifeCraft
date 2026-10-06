@@ -38,7 +38,7 @@ import { MacroBadge } from "../../domain/models/macro-badge.model";
       }
       .ds-mbadges__badge {
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-tag);
         padding: var(--ds-space-1) var(--ds-space-1-5);
         font-size: var(--ds-text-xs);
         font-weight: 600;

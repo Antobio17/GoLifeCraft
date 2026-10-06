@@ -34,7 +34,7 @@ import { DsGlyph } from "../../domain/models/ds-glyph.enum";
       :host([tile]) {
         width: var(--ds-glyph-box, 2.75rem);
         height: var(--ds-glyph-box, 2.75rem);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-glyph-tile);
       }
       .ds-glyph {

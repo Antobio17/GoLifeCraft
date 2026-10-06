@@ -14,7 +14,6 @@
         [size]="40"
         [iconSize]="19"
         [stroke]="2.1"
-        [radius]="'var(--ds-radius-lg)'"
         [ariaLabel]="'getEconomy.accounts.manage' | t"
         (clicked)="goToAccounts()"
       />
@@ -25,7 +24,6 @@
         [size]="40"
         [iconSize]="19"
         [stroke]="2.1"
-        [radius]="'var(--ds-radius-lg)'"
         [ariaLabel]="'getEconomy.recurrences.manage' | t"
         (clicked)="goToRecurrences()"
       />
@@ -36,7 +34,6 @@
         [size]="40"
         [iconSize]="19"
         [stroke]="2.1"
-        [radius]="'var(--ds-radius-lg)'"
         [ariaLabel]="'getEconomy.dayView' | t"
         (clicked)="toggleDayMode()"
       />
@@ -139,7 +136,7 @@
           <ds-skeleton-line
             width="9rem"
             height="1rem"
-            radius="var(--ds-radius-md)"
+            radius="var(--ds-radius-mark)"
           />
           <ds-skeleton-line width="12rem" height="0.6875rem" />
         </ds-stack>
@@ -147,10 +144,9 @@
         <ds-skeleton-list
           [count]="3"
           [gap]="'var(--ds-space-2)'"
-          radius="var(--ds-radius-lg)"
+          radius="var(--ds-radius-surface)"
           padding="var(--ds-space-2) var(--ds-space-3)"
           [tile]="40"
-          [tileRadius]="10"
           titleWidth="52%"
           metaWidth="34%"
           trailing="pill"
@@ -196,7 +192,7 @@
             @for (row of dayMovementRows(); track row.transaction.id) {
               <ds-swipe-to-delete
                 #daySwipe
-                radius="var(--ds-radius-lg)"
+                pad="var(--ds-space-2)"
                 [removeLabel]="'getEconomy.movements.remove' | t"
                 (remove)="removeTransaction(row)"
               >
@@ -245,18 +241,18 @@
         <ds-skeleton-line
           width="8.5rem"
           height="1.125rem"
-          radius="var(--ds-radius-md)"
+          radius="var(--ds-radius-mark)"
         />
         <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
           <ds-skeleton-line
             width="1.875rem"
             height="1.875rem"
-            radius="var(--ds-radius-md)"
+            radius="var(--ds-radius-control-sm)"
           />
           <ds-skeleton-line
             width="1.875rem"
             height="1.875rem"
-            radius="var(--ds-radius-md)"
+            radius="var(--ds-radius-control-sm)"
           />
         </ds-stack>
       </ds-stack>
@@ -304,17 +300,16 @@
         />
 
         <ds-skeleton-section-header titleWidth="7.5rem" [count]="true" />
-        <ds-skeleton height="2.5rem" radius="var(--ds-radius-lg)" />
+        <ds-skeleton height="2.5rem" radius="var(--ds-radius-control)" />
 
         @for (rows of skeletonMovementGroups; track $index) {
           <ds-skeleton-section-header titleWidth="6.5rem" [count]="true" />
           <ds-skeleton-list
             [count]="rows"
             [gap]="'var(--ds-space-2)'"
-            radius="var(--ds-radius-lg)"
+            radius="var(--ds-radius-surface)"
             padding="var(--ds-space-2) var(--ds-space-3)"
             [tile]="40"
-            [tileRadius]="10"
             titleWidth="52%"
             metaWidth="34%"
             trailing="pill"
@@ -357,7 +352,6 @@
             [size]="30"
             [iconSize]="15"
             [stroke]="2.4"
-            [radius]="'var(--ds-radius-md)'"
             [ariaLabel]="'getEconomy.month.previous' | t"
             (clicked)="previousMonth()"
           />
@@ -367,7 +361,6 @@
             [size]="30"
             [iconSize]="15"
             [stroke]="2.4"
-            [radius]="'var(--ds-radius-md)'"
             [disabled]="!canGoNextMonth()"
             [ariaLabel]="'getEconomy.month.next' | t"
             (clicked)="nextMonth()"
@@ -522,7 +515,7 @@
               @for (row of group.rows; track row.transaction.id) {
                 <ds-swipe-to-delete
                   #swipe
-                  radius="var(--ds-radius-lg)"
+                  pad="var(--ds-space-2)"
                   [removeLabel]="'getEconomy.movements.remove' | t"
                   (remove)="removeTransaction(row)"
                 >

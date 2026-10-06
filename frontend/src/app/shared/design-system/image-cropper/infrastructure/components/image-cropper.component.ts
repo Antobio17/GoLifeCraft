@@ -101,7 +101,7 @@ const WHEEL_STEP = 0.0015;
         aspect-ratio: 1;
         margin: 0 auto;
         overflow: hidden;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-inner);
         border: 1px solid var(--ds-border);
         background: var(--ds-surface-inset);
         touch-action: none;

@@ -67,8 +67,10 @@ type SplitViewSide = "start" | "end";
           overflow-y: auto;
           overscroll-behavior: contain;
           scrollbar-width: thin;
-          padding-inline: var(--ds-space-1);
-          margin-inline: calc(-1 * var(--ds-space-1));
+          padding-inline: var(--ds-space-3);
+          margin-inline: calc(-1 * var(--ds-space-3));
+          padding-block-end: var(--ds-space-8);
+          margin-block-end: calc(-1 * var(--ds-space-8));
         }
       }
     `,

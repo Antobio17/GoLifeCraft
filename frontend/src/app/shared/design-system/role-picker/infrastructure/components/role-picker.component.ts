@@ -50,7 +50,7 @@ import { RoleOption } from "../../domain/models/role-option.model";
         text-align: left;
         background: var(--ds-surface);
         border: 2px solid var(--ds-primary-soft-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         cursor: pointer;
         transition: var(--ds-motion-tint);
         position: relative;
@@ -73,7 +73,7 @@ import { RoleOption } from "../../domain/models/role-option.model";
         align-items: center;
         justify-content: center;
         background: var(--ds-surface-subtle);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-inner);
         color: var(--ds-text-muted);
         transition: var(--ds-motion-tint);
       }

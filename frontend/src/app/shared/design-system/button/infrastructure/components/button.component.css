@@ -34,19 +34,19 @@
 .ds-btn--lg {
   padding: var(--ds-space-2) var(--ds-space-5);
   font-size: var(--ds-text-md);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-control);
 }
 
 .ds-btn--md {
   padding: var(--ds-btn-y) var(--ds-btn-x);
   font-size: var(--ds-text-md);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
 }
 
 .ds-btn--sm {
   padding: var(--ds-btn-sm-y) var(--ds-btn-sm-x);
   font-size: var(--ds-text-base);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
 }
 
 .ds-btn--icon,
@@ -66,31 +66,32 @@
 .ds-btn--icon {
   width: 2rem;
   height: 2rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
 }
 
 .ds-btn--icon-xs {
   width: 1.5rem;
   height: 1.5rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
   border-width: 1px;
 }
 
 .ds-btn--icon-sm {
   width: 1.875rem;
   height: 1.875rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   border-width: 1px;
 }
 
 .ds-btn--icon-lg {
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-control);
 }
 
 /* ---- Variante: primary (CTA sólida de marca) ---- */
 .ds-btn--primary {
+  border-radius: var(--ds-radius-cta);
   background: var(--ds-primary);
   color: var(--ds-on-primary);
   border-color: transparent;

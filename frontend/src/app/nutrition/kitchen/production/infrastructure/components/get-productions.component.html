@@ -22,10 +22,9 @@
     <ds-skeleton-list
       [count]="3"
       [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-xl)"
+      radius="var(--ds-radius-surface)"
       padding="var(--ds-space-3)"
       [tile]="44"
-      [tileRadius]="12"
       titleWidth="42%"
       metaWidth="64%"
       trailing="pill"
@@ -44,7 +43,6 @@
               [imageUrl]="row.imageUrl"
               [alt]="row.title"
               [size]="44"
-              [radius]="12"
             />
 
             <ds-stack [gap]="'2px'" [grow]="true">

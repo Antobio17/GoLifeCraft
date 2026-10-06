@@ -59,13 +59,13 @@ export class SkeletonListComponent {
   @Input() tabletColumns: number | null = null;
 
   @Input() padding = "var(--ds-space-2) var(--ds-space-3)";
-  @Input() radius = "var(--ds-radius-xl)";
+  @Input() radius = "var(--ds-radius-surface)";
   @Input() tone: "surface" | "brand" = "surface";
   @Input() alignTop = false;
   @Input() check = false;
   @Input() checkSize = 26;
   @Input() tile = 0;
-  @Input() tileRadius = 12;
+  @Input() tileRadius = "var(--ds-radius-inner)";
   @Input() titleWidth = "58%";
   @Input() titleHeight = "0.8125rem";
   @Input() headTrailing = "";

@@ -29,7 +29,6 @@
   <ds-split-view [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'">
     <ds-card
       slot="side"
-      class="agenda-calendar-card"
       [padding]="'var(--ds-space-4) var(--ds-space-4) var(--ds-space-4)'"
     >
       <ds-calendar
@@ -64,7 +63,6 @@
           [size]="30"
           [iconSize]="15"
           [stroke]="2.4"
-          [radius]="'var(--ds-radius-md)'"
           [ariaLabel]="'getAgenda.nav.previous' | t"
           (clicked)="previousDay()"
         />
@@ -77,7 +75,6 @@
           [size]="30"
           [iconSize]="15"
           [stroke]="2.4"
-          [radius]="'var(--ds-radius-md)'"
           [ariaLabel]="'getAgenda.nav.next' | t"
           (clicked)="nextDay()"
         />
@@ -88,7 +85,7 @@
       <ds-skeleton-list
         [count]="4"
         [gap]="'var(--ds-space-2)'"
-        radius="var(--ds-radius-xl)"
+        radius="var(--ds-radius-surface)"
         padding="var(--ds-space-3) var(--ds-space-3)"
         [check]="true"
         [checkSize]="24"

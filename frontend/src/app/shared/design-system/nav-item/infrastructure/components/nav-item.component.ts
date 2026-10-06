@@ -56,7 +56,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         gap: var(--ds-space-3);
         width: 100%;
         padding: var(--ds-space-3);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         color: var(--ds-text);
         font-family: inherit;
         font-size: var(--ds-text-md);

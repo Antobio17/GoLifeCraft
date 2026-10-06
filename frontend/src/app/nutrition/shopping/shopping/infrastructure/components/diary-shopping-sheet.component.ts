@@ -82,11 +82,10 @@ const DEFAULT_RANGE_DAYS = 6;
           <ds-skeleton-list
             [count]="3"
             [gap]="'var(--ds-space-2)'"
-            radius="var(--ds-radius-xl)"
+            radius="var(--ds-radius-surface)"
             padding="var(--ds-space-2) var(--ds-space-3)"
             [check]="true"
             [tile]="44"
-            [tileRadius]="12"
             titleWidth="62%"
             metaWidth="44%"
             trailing="stack"

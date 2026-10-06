@@ -11,7 +11,7 @@
   gap: var(--ds-space-3);
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
   padding: var(--ds-space-3);
   cursor: pointer;
   text-align: left;
@@ -32,7 +32,7 @@
 .tile__icon {
   width: 2.375rem;
   height: 2.375rem;
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-inner);
   background: var(--ds-surface-inset);
   display: inline-flex;
   align-items: center;

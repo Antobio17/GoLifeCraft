@@ -159,7 +159,7 @@ export interface CalendarLegendItem {
         cursor: pointer;
         width: 2.125rem;
         height: 2.125rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         background: var(--ds-surface-subtle);
         color: var(--ds-text-muted);
         display: flex;
@@ -207,7 +207,7 @@ export interface CalendarLegendItem {
         aspect-ratio: 1;
         width: 100%;
         min-width: 0;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -303,7 +303,7 @@ export interface CalendarLegendItem {
       .ds-cal__swatch {
         width: 0.6875rem;
         height: 0.6875rem;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-mark);
         flex: 0 0 auto;
         background: var(--ds-surface-subtle);
       }

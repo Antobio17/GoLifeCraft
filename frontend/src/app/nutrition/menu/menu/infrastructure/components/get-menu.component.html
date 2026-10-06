@@ -13,33 +13,33 @@
       <ds-skeleton-line
         width="2.5rem"
         height="2.5rem"
-        radius="var(--ds-radius-lg)"
+        radius="var(--ds-radius-inner)"
       />
       <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
         <ds-skeleton-line
           width="2.5rem"
           height="2.5rem"
-          radius="var(--ds-radius-lg)"
+          radius="var(--ds-radius-inner)"
         />
         <ds-skeleton-line
           width="2.5rem"
           height="2.5rem"
-          radius="var(--ds-radius-lg)"
+          radius="var(--ds-radius-inner)"
         />
         <ds-skeleton-line
           width="2.5rem"
           height="2.5rem"
-          radius="var(--ds-radius-lg)"
+          radius="var(--ds-radius-inner)"
         />
         <ds-skeleton-line
           width="2.5rem"
           height="2.5rem"
-          radius="var(--ds-radius-lg)"
+          radius="var(--ds-radius-inner)"
         />
         <ds-skeleton-line
           width="2.5rem"
           height="2.5rem"
-          radius="var(--ds-radius-lg)"
+          radius="var(--ds-radius-inner)"
         />
       </ds-stack>
     </ds-stack>
@@ -53,11 +53,15 @@
       >
         <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
           <ds-skeleton-line width="5.25rem" height="0.5625rem" />
-          <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+          <ds-skeleton height="2.875rem" radius="var(--ds-radius-control)" />
         </ds-stack>
       </ds-stack>
 
-      <ds-skeleton slot="side" height="2.875rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton
+        slot="side"
+        height="2.875rem"
+        radius="var(--ds-radius-control)"
+      />
 
       @if (skeletonWeek()) {
         <ds-stack slot="side" [gap]="'var(--ds-space-2)'">
@@ -75,10 +79,10 @@
             [equal]="true"
             height="2.875rem"
             [gap]="'var(--ds-space-1)'"
-            radius="var(--ds-radius-lg)"
+            radius="var(--ds-radius-control)"
           />
           <ds-skeleton-line width="82%" height="0.625rem" />
-          <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+          <ds-skeleton height="2.875rem" radius="var(--ds-radius-control)" />
         </ds-stack>
       }
 
@@ -95,10 +99,9 @@
           <ds-skeleton-list
             [count]="entries"
             [gap]="'var(--ds-space-1-5)'"
-            radius="var(--ds-radius-lg)"
+            radius="var(--ds-radius-surface)"
             padding="var(--ds-space-2) var(--ds-space-3)"
             [tile]="38"
-            [tileRadius]="11"
             titleWidth="58%"
             [meta]="false"
             [chips]="2"
@@ -418,7 +421,6 @@
                   [imageUrl]="row.imageUrl"
                   [alt]="row.choice.name"
                   [size]="36"
-                  [radius]="10"
                 />
                 <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
                   <ds-text variant="strong" [truncate]="true">{{

@@ -54,7 +54,7 @@ import { LineChartComponent } from "../../../line-chart/infrastructure/component
         background: var(--ds-surface-chart);
         color: var(--ds-on-surface-chart);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-4);
         overflow: hidden;
       }

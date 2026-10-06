@@ -64,7 +64,7 @@ import { Component, Input } from "@angular/core";
         flex: 0 0 auto;
         width: var(--sksec-action, 4.25rem);
         height: 1.625rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control-sm);
       }
     `,
   ],

@@ -33,7 +33,7 @@
 :host ::ng-deep .pw-container > .list-card {
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-surface);
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
 }

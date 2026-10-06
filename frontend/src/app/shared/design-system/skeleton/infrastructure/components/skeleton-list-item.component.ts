@@ -16,7 +16,7 @@ export type SkeletonListItemTrailing =
     "[style.--skli-radius]": "radius",
     "[style.--skli-check.px]": "checkSize",
     "[style.--skli-tile.px]": "tile",
-    "[style.--skli-tile-radius.px]": "tileRadius",
+    "[style.--skli-tile-radius]": "tileRadius",
     "[style.--skli-title]": "titleWidth",
     "[style.--skli-title-h]": "titleHeight",
     "[style.--skli-head-trailing]": "headTrailing",
@@ -28,7 +28,7 @@ export type SkeletonListItemTrailing =
 })
 export class SkeletonListItemComponent {
   @Input() padding = "var(--ds-space-2) var(--ds-space-3)";
-  @Input() radius = "var(--ds-radius-xl)";
+  @Input() radius = "var(--ds-radius-surface)";
   @Input() surface = true;
   @Input() tone: "surface" | "brand" = "surface";
   @Input() alignTop = false;
@@ -37,7 +37,7 @@ export class SkeletonListItemComponent {
   @Input() checkSize = 26;
 
   @Input() tile = 0;
-  @Input() tileRadius = 12;
+  @Input() tileRadius = "var(--ds-radius-inner)";
 
   @Input() titleWidth = "58%";
   @Input() titleHeight = "0.8125rem";

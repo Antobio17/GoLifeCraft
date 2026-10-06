@@ -99,7 +99,7 @@
         @for (row of activeRows(); track row.recurrence.id) {
           <ds-swipe-to-delete
             #recurrenceSwipe
-            radius="var(--ds-radius-lg)"
+            pad="var(--ds-space-2)"
             [removeLabel]="'getFinanceRecurrences.remove' | t"
             (remove)="remove(row.recurrence)"
           >
@@ -132,7 +132,7 @@
           @for (row of pausedRows(); track row.recurrence.id) {
             <ds-swipe-to-delete
               #pausedSwipe
-              radius="var(--ds-radius-lg)"
+              pad="var(--ds-space-2)"
               [removeLabel]="'getFinanceRecurrences.remove' | t"
               (remove)="remove(row.recurrence)"
             >

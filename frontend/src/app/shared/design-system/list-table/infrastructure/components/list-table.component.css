@@ -11,7 +11,7 @@
   text-align: center;
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-surface);
   box-shadow: var(--ds-shadow-card);
   gap: var(--ds-space-4);
 }
@@ -37,7 +37,7 @@
 .lt-desktop {
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-surface);
   box-shadow: var(--ds-shadow-card);
   overflow-x: auto;
   overflow-y: hidden;
@@ -57,7 +57,7 @@
 
 .lt-desktop::-webkit-scrollbar-thumb {
   background: var(--ds-border);
-  border-radius: 0 0 var(--ds-radius-lg) var(--ds-radius-lg);
+  border-radius: 0 0 var(--ds-radius-surface) var(--ds-radius-surface);
 }
 
 .lt-desktop::-webkit-scrollbar-thumb:hover {
@@ -157,7 +157,7 @@
 .lt-text-link:focus-visible {
   outline: 2px solid var(--ds-border-focus);
   outline-offset: 2px;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 .lt-cell-icon {
@@ -166,7 +166,7 @@
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-inner);
   flex-shrink: 0;
   margin-right: var(--ds-space-2);
 }
@@ -222,7 +222,7 @@
   align-items: center;
   gap: var(--ds-space-1);
   padding: var(--ds-space-1) var(--ds-space-2);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-tag);
   font-size: var(--ds-text-base);
   font-weight: 500;
   letter-spacing: 0;
@@ -469,7 +469,7 @@
 
 .lt-card {
   background: var(--ds-surface-raised);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-surface);
   border: 1px solid var(--ds-border);
   box-shadow: var(--ds-shadow-card);
   overflow: hidden;
@@ -556,7 +556,7 @@
   font-weight: 600;
   cursor: pointer;
   border: 1.5px solid var(--ds-primary-soft-border);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   background: var(--ds-primary-soft);
   color: var(--ds-primary);
   font-family: inherit;

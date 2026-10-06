@@ -252,7 +252,7 @@ import {
         justify-content: center;
         gap: var(--ds-space-1-5);
         border: none;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-3);
         font: inherit;
         font-size: var(--ds-text-md);
@@ -276,7 +276,7 @@ import {
         justify-content: center;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-strong);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         color: var(--ds-text-muted);
         cursor: pointer;
       }

@@ -46,7 +46,7 @@ import { NgTemplateOutlet } from "@angular/common";
         gap: var(--ds-space-3);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-4);
         box-shadow: var(--ds-shadow-card);
         transition:

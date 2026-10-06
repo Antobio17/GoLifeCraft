@@ -33,7 +33,7 @@ import { StatStripItem } from "../../domain/models/stat-strip-item.model";
         margin: 0;
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border-hairline);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
       }
       .ds-sstrip__cell {
         display: flex;
@@ -68,8 +68,11 @@ import { StatStripItem } from "../../domain/models/stat-strip-item.model";
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
       }
+      .ds-sstrip--compact {
+        border-radius: var(--ds-radius-inner);
+      }
       .ds-sstrip--compact .ds-sstrip__cell {
-        padding: var(--ds-space-2) var(--ds-space-3);
+        padding: var(--ds-space-2) var(--ds-space-4);
       }
       .ds-sstrip--compact .ds-sstrip__value {
         font-size: var(--ds-text-lg);

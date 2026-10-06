@@ -2,7 +2,9 @@
   "discardChanges": {
     "title": "Discard changes?",
     "body": "If you leave now you'll lose what you haven't saved.",
+    "hint": "Tap the bin twice to discard them, or the X to keep editing.",
     "cancel": "Keep editing",
-    "confirm": "Discard"
+    "confirm": "Discard",
+    "confirmArmed": "Tap again to discard"
   }
 }

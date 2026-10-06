@@ -61,8 +61,9 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         height: 100%;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
-        padding: var(--ds-space-3);
+        border-radius: var(--ds-radius-surface);
+        --ds-pad: var(--ds-space-4);
+        padding: var(--ds-pad);
         box-shadow: var(--ds-elev);
         transition:
           border-color var(--ds-transition-fast),
@@ -113,6 +114,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         flex-direction: column;
         align-items: flex-end;
         gap: 2px;
+        padding: var(--ds-space-1) var(--ds-space-1) 0 0;
       }
       .ds-mcard__kcal {
         font-family: var(--ds-font-display);
@@ -143,7 +145,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
         border: 1px solid var(--ds-primary-soft-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-2);
         font: inherit;
         font-size: var(--ds-text-base);
@@ -160,7 +162,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         cursor: pointer;
         background: var(--ds-surface-inset);
         color: var(--ds-text);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
       }
       .ds-mcard__action[disabled] {
         opacity: 0.55;

@@ -4,7 +4,7 @@
 
 .form-section {
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-surface);
   background: var(--ds-surface-raised);
   box-shadow: var(--ds-shadow-card);
   display: flex;
@@ -25,7 +25,7 @@
   justify-content: space-between;
   margin: 0;
   background: var(--ds-surface-raised);
-  border-radius: var(--ds-radius-lg) var(--ds-radius-lg) 0 0;
+  border-radius: var(--ds-radius-surface) var(--ds-radius-surface) 0 0;
 }
 
 .section-header.collapsible {

@@ -24,7 +24,6 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
         [imageUrl]="imageUrl"
         [alt]="name"
         [size]="44"
-        [radius]="12"
       />
 
       <ds-stack class="ds-prow__body" [gap]="'2px'" [grow]="true">
@@ -84,7 +83,8 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
+        --ds-pad: var(--ds-space-2);
         padding: var(--ds-space-2) var(--ds-space-3);
       }
       .ds-prow--interactive {
@@ -142,7 +142,7 @@ import { ProductionRowState } from "@shared/design-system/production-row/domain/
         align-self: flex-start;
         max-width: 100%;
         margin-top: var(--ds-space-1);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-tag);
         padding: 1px var(--ds-space-2);
         background: var(--ds-surface-inset);
         color: var(--ds-text-meta);

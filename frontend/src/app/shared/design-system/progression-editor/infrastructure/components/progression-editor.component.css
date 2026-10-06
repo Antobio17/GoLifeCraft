@@ -34,7 +34,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
   background: var(--ds-surface-inset);
 }
 

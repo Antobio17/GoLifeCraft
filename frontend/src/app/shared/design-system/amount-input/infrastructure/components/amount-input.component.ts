@@ -72,7 +72,7 @@ type AmountInputAlign = "start" | "end";
         box-sizing: border-box;
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-3);
         cursor: text;
       }

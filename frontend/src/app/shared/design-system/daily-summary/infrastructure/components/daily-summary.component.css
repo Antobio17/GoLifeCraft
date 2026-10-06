@@ -8,7 +8,7 @@
   background: var(--ds-surface);
   color: var(--ds-text);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-2xl);
+  border-radius: var(--ds-radius-surface);
   padding: var(--ds-space-4);
   box-shadow: var(--ds-elev);
 }
@@ -64,7 +64,7 @@
 .macro {
   flex: 1;
   background: var(--ds-surface-inset);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-inner);
   padding: var(--ds-space-2);
 }
 
@@ -94,7 +94,7 @@
 @media (min-width: 768px) {
   .summary {
     padding: var(--ds-space-5) var(--ds-space-6);
-    border-radius: var(--ds-radius-2xl);
+    border-radius: var(--ds-radius-surface);
   }
   .summary__ring {
     --ds-ring-size: 5.25rem;

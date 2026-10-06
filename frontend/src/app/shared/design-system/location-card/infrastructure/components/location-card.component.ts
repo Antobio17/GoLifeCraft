@@ -37,8 +37,9 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         cursor: pointer;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
-        padding: var(--ds-space-2);
+        border-radius: var(--ds-radius-surface);
+        --ds-pad: var(--ds-space-2);
+        padding: var(--ds-pad);
         box-shadow: var(--ds-elev);
         transition:
           border-color var(--ds-dur-2) var(--ds-ease-out),
@@ -56,7 +57,7 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
         width: 3.5rem;
         height: 3.5rem;
         flex: 0 0 auto;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
         display: flex;
         align-items: center;

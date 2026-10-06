@@ -60,12 +60,12 @@ const ARROW_STEPS: Record<string, number> = {
       }
       :host(:first-of-type) .ds-prefchoice {
         border-top: none;
-        border-top-left-radius: var(--ds-radius-xl);
-        border-top-right-radius: var(--ds-radius-xl);
+        border-top-left-radius: var(--ds-radius-surface);
+        border-top-right-radius: var(--ds-radius-surface);
       }
       :host(:last-of-type) .ds-prefchoice {
-        border-bottom-left-radius: var(--ds-radius-xl);
-        border-bottom-right-radius: var(--ds-radius-xl);
+        border-bottom-left-radius: var(--ds-radius-surface);
+        border-bottom-right-radius: var(--ds-radius-surface);
       }
       .ds-prefchoice.is-inset {
         background: var(--ds-surface-inset);
@@ -90,7 +90,7 @@ const ARROW_STEPS: Record<string, number> = {
         display: flex;
         gap: 2px;
         padding: 2px;
-        border-radius: var(--ds-radius-pill);
+        border-radius: var(--ds-radius-control);
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border);
       }
@@ -103,7 +103,7 @@ const ARROW_STEPS: Record<string, number> = {
         cursor: pointer;
         white-space: nowrap;
         padding: var(--ds-space-1) var(--ds-space-3);
-        border-radius: var(--ds-radius-pill);
+        border-radius: calc(var(--ds-radius-control) - 2px);
         background: transparent;
         color: var(--ds-text-muted);
         font: inherit;

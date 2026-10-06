@@ -24,6 +24,7 @@ import { AisleListRename } from "@shared/design-system/aisle-list/domain/models/
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
+import { AutosaveStatus } from "@shared/autosave/domain/models/autosave-status.model";
 import { Supermarket } from "../../domain/models/supermarket.model";
 import { SupermarketAisle } from "../../domain/models/supermarket-aisle.model";
 import { AisleCatalogService } from "../../application/services/aisle-catalog.service";
@@ -109,6 +110,9 @@ export class ManageAislesComponent {
   });
 
   hasStores = computed(() => this.stores().length > 0);
+  saveFailed = computed(
+    () => this.autosave.status() === AutosaveStatus.Error,
+  );
 
   title = computed(() => this.t("aisles.title"));
   subtitle = computed(() => this.t("aisles.subtitle"));

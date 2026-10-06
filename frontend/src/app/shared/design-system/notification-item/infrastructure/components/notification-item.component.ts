@@ -19,8 +19,10 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
   ],
   template: `
     <ds-swipe-to-delete
+      pad="var(--ds-space-2)"
       #swipe
       [reveal]="66"
+      pad="var(--ds-space-2)"
       [removeLabel]="removeLabel"
       (remove)="removed.emit()"
     >
@@ -84,10 +86,11 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .notice {
         box-sizing: border-box;
         width: 100%;
+        --ds-pad: var(--ds-space-2);
         padding: var(--ds-space-3) var(--ds-space-2) var(--ds-space-3)
           var(--ds-space-3);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface);
       }
       .notice--slid {

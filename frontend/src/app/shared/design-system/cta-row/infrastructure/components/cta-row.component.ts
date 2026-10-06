@@ -44,7 +44,7 @@ import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum
         gap: var(--ds-space-3);
         background: var(--ds-surface-raised);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-4);
         cursor: pointer;
         text-align: left;
@@ -63,7 +63,7 @@ import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum
         width: 2.5rem;
         height: 2.5rem;
         flex: 0 0 auto;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
         display: inline-flex;

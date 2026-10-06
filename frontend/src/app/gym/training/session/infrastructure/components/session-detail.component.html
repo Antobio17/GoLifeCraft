@@ -34,7 +34,7 @@
           />
         }
       </ds-stack>
-      <ds-skeleton height="2.875rem" radius="var(--ds-radius-lg)" />
+      <ds-skeleton height="2.875rem" radius="var(--ds-radius-control)" />
     </ds-split-view>
   } @else {
     <ds-screen-header
@@ -70,7 +70,6 @@
 
     @if (isActiveHere) {
       <ds-active-workout-banner
-        [scrolled]="sticky.collapsed()"
         [paused]="activeWorkout.paused()"
         [stateLabel]="activeStateLabel()"
         [elapsedLabel]="activeWorkout.elapsedLabel()"
@@ -218,35 +217,20 @@
               [summary]="exercise.summaryLabel"
               [detail]="exercise.loadLabel"
               [progressLabel]="exercise.progressLabel"
+              [progress]="exercise.progress"
               [state]="exercise.panelState"
               [expanded]="exercise.expanded"
               (toggled)="toggleExercise(exercise.id)"
             >
-              <ds-stack
-                direction="row"
-                align="center"
-                [gap]="'var(--ds-space-2)'"
-              >
-                <ds-stack [grow]="true">
-                  @if (exercise.progressionAvailable) {
-                    <ds-segmented-toggle
-                      data-testid="session-exercise-tabs"
-                      variant="pill"
-                      [options]="exerciseTabs()"
-                      [ngModel]="
-                        exercise.showProgressionTab ? 'progression' : 'sets'
-                      "
-                      (ngModelChange)="openTab(exercise.id, $event)"
-                    />
-                  }
-                </ds-stack>
-                <ds-icon-button
-                  icon="trash"
-                  color="var(--ds-danger)"
-                  [ariaLabel]="'getSession.exercise.remove' | t"
-                  (clicked)="removeExercise(exercise.id)"
-                />
-              </ds-stack>
+              <ds-menu
+                panelActions
+                data-testid="session-exercise-menu"
+                [compact]="true"
+                [triggerLabel]="exerciseMenuLabel()"
+                [items]="exercise.menuItems"
+                [activeValue]="exercise.activeView"
+                (selected)="onExerciseMenu(exercise.id, $event)"
+              />
 
               @if (exercise.modeTags.length) {
                 <ds-stack
@@ -267,10 +251,8 @@
                   [value]="exercise.topSetValue"
                   [caption]="exercise.topSetCaption"
                   [emptyText]="topSetEmpty()"
-                  [showAction]="exercise.topSetHasAction"
-                  [actionAriaLabel]="exercise.topSetActionAria"
+                  [subtle]="true"
                   [loading]="topSetsLoading()"
-                  (actionClicked)="onOpenExercise(exercise.exerciseId)"
                 />
 
                 <ds-stack [gap]="'var(--ds-space-1)'">
@@ -315,13 +297,15 @@
                   (clicked)="addSet(exercise.id)"
                 />
 
-                <ds-textarea
+                <ds-inline-note
+                  data-testid="session-exercise-note"
                   [value]="exercise.note ?? ''"
+                  [editing]="exercise.editingNote"
                   [placeholder]="'getSession.exercise.notePlaceholder' | t"
                   [ariaLabel]="'getSession.exercise.noteLabel' | t"
-                  [rows]="2"
-                  [compact]="true"
+                  [editLabel]="'getSession.exercise.noteAction' | t"
                   (valueChange)="setNote(exercise.id, $event)"
+                  (editingChange)="setNoteEditing(exercise.id, $event)"
                 />
 
                 @if (exercise.progressionConfigured) {
@@ -331,6 +315,14 @@
                   />
                 }
               } @else {
+                <ds-button
+                  variant="link"
+                  icon="arrowLeft"
+                  (clicked)="openTab(exercise.id, 'sets')"
+                >
+                  {{ "getSession.tab.sets" | t }}
+                </ds-button>
+
                 <ds-progression-editor
                   data-testid="session-progression"
                   [modeLabel]="progressionLabel()"
@@ -425,7 +417,7 @@
       <ds-skeleton-line width="6rem" height="0.75rem" />
       <ds-skeleton-line width="7.25rem" height="0.75rem" />
     </ds-stack>
-    <ds-skeleton height="2.5rem" radius="var(--ds-radius-lg)" />
+    <ds-skeleton height="2.5rem" radius="var(--ds-radius-control)" />
     <ds-skeleton-panel
       [brand]="true"
       [figure]="true"
@@ -449,19 +441,23 @@
   (cancelled)="onCancelDelete()"
 />
 
-<ds-confirm-action-modal
-  [show]="showStopModal()"
+<ds-modal-sheet
+  [open]="showStopModal()"
   [title]="'getSession.stopModal.title' | t"
-  [body]="'getSession.stopModal.body' | t"
-  [itemName]="name()"
-  [warningText]="'getSession.stopModal.warning' | t"
-  [isDeleting]="false"
-  [cancelLabel]="'getSession.stopModal.cancel' | t"
+  [closeLabel]="'getSession.stopModal.cancel' | t"
   [confirmLabel]="'getSession.stopModal.confirm' | t"
-  [deletingLabel]="'getSession.stopModal.confirm' | t"
+  [confirmArmedLabel]="'getSession.stopModal.confirmArmed' | t"
+  confirmIcon="square"
+  confirmTone="danger"
+  [confirmTwice]="true"
   (confirmed)="onConfirmStop()"
-  (cancelled)="onCancelStop()"
-/>
+  (closed)="onCancelStop()"
+>
+  <ds-stack [gap]="'var(--ds-space-1)'">
+    <ds-text>{{ "getSession.stopModal.body" | t }}</ds-text>
+    <ds-text variant="muted">{{ "getSession.stopModal.hint" | t }}</ds-text>
+  </ds-stack>
+</ds-modal-sheet>
 
 <ds-choice-modal
   [show]="showFinishModal()"

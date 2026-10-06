@@ -54,11 +54,7 @@ export type ProgressionTrend = "up" | "down" | "neutral";
         --ds-on-accent: var(--ds-on-accent-on-chart);
         --ds-primary: var(--ds-accent-on-chart);
         --ds-on-primary: var(--ds-on-accent-on-chart);
-        background: var(--ds-surface-chart);
         color: var(--ds-on-surface-chart);
-        border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
-        padding: var(--ds-space-4);
       }
       .ds-progression__head {
         display: flex;
@@ -79,10 +75,10 @@ export type ProgressionTrend = "up" | "down" | "neutral";
       }
       .ds-progression__value {
         display: block;
-        margin-top: var(--ds-space-1-5);
+        margin-top: var(--ds-space-1);
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
-        font-size: var(--ds-text-3xl);
+        font-size: var(--ds-text-xl);
         line-height: 1;
       }
       .ds-progression__aside {
@@ -115,13 +111,13 @@ export type ProgressionTrend = "up" | "down" | "neutral";
         --line-stroke: var(--ds-accent);
         --line-area: var(--ds-accent);
         --line-area-opacity: 0.16;
-        --line-dot-stroke: var(--ds-surface-chart);
+        --line-dot-stroke: var(--ds-surface);
         display: block;
-        height: 6rem;
-        margin-top: var(--ds-space-5);
+        height: 4.5rem;
+        margin-top: var(--ds-space-3);
       }
       .ds-progression__chart.is-scrollable {
-        height: 6.75rem;
+        height: 5rem;
         margin-top: var(--ds-space-2);
       }
       .ds-progression__axis {

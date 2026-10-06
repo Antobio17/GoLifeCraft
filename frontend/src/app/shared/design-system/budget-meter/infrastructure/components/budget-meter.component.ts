@@ -66,7 +66,7 @@ const TONE_COLOR: Record<BudgetMeterTone, string> = {
         bottom: -0.1875rem;
         width: 0.125rem;
         margin-left: -0.0625rem;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-mark);
         background: var(--ds-text);
         opacity: 0.55;
       }

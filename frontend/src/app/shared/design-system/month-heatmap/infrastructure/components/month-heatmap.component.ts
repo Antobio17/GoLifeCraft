@@ -119,7 +119,7 @@ import { MonthHeatmapCell } from "../../domain/models/month-heatmap-cell.model";
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
         color: var(--ds-text-muted);
         font-family: var(--ds-font-display);

@@ -43,6 +43,7 @@ const BASE_UNITS = ["g", "ml"];
           <span class="ds-eq__base-hint">{{ baseHint }}</span>
         </div>
         <ds-segmented-toggle
+          variant="pill"
           [stretch]="false"
           [options]="baseOptions"
           [ngModel]="value.baseUnit"
@@ -168,7 +169,7 @@ const BASE_UNITS = ["g", "ml"];
       }
       .ds-eq {
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface);
         overflow: hidden;
       }
@@ -212,7 +213,9 @@ const BASE_UNITS = ["g", "ml"];
         color: var(--ds-text-muted);
       }
       .ds-eq__base ds-segmented-toggle {
+        display: block;
         flex: 0 0 auto;
+        width: 7.5rem;
       }
       .ds-eq__lines {
         padding: var(--ds-space-3) var(--ds-space-4);
@@ -270,7 +273,7 @@ const BASE_UNITS = ["g", "ml"];
         gap: var(--ds-space-1);
         padding: var(--ds-space-1-5) var(--ds-space-2);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
         color: var(--ds-text-meta);
         font-family: inherit;
@@ -294,7 +297,7 @@ const BASE_UNITS = ["g", "ml"];
         margin-top: var(--ds-space-1);
         padding: var(--ds-space-3);
         border: 1px solid var(--ds-primary-soft-border);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
       }

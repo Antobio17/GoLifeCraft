@@ -33,7 +33,7 @@ import { IconComponent } from "@shared/design-system/icon/infrastructure/compone
         padding: var(--ds-space-1) var(--ds-space-1-5) var(--ds-space-1)
           var(--ds-space-2);
         border: 1px solid transparent;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-tag);
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
         transition:

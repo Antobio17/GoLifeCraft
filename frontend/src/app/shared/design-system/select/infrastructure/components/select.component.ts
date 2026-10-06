@@ -93,7 +93,7 @@ type SelectVariant = "pill" | "bare" | "soft" | "field";
         border: 1px solid var(--ds-border-strong);
         background: var(--ds-surface);
         color: var(--ds-text);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-1-5) var(--ds-space-3);
       }
       .ds-select--pill .ds-select__native {
@@ -113,7 +113,7 @@ type SelectVariant = "pill" | "bare" | "soft" | "field";
         border: 1px solid transparent;
         background: var(--ds-surface-inset);
         color: var(--ds-text);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-1-5) var(--ds-space-3);
       }
       .ds-select--soft .ds-select__native {
@@ -131,7 +131,7 @@ type SelectVariant = "pill" | "bare" | "soft" | "field";
         border: 1px solid var(--ds-border-input);
         background: var(--ds-surface-inset);
         color: var(--ds-text);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: 0 var(--ds-space-3);
         transition: border-color var(--ds-transition-fast);
       }
@@ -157,7 +157,7 @@ type SelectVariant = "pill" | "bare" | "soft" | "field";
         border: 1px solid var(--ds-border-input);
         background: var(--ds-surface);
         color: var(--ds-text);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-2) var(--ds-space-3);
       }
       .ds-select--bare .ds-select__native {

@@ -40,16 +40,6 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
           }
         </ul>
       }
-
-      <button
-        type="button"
-        class="ds-next__cta"
-        [disabled]="disabled"
-        (click)="started.emit()"
-      >
-        <ds-icon name="play" [size]="16" />
-        {{ ctaLabel }}
-      </button>
     </section>
   `,
   styles: [
@@ -64,7 +54,7 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
         flex-direction: column;
         gap: var(--ds-space-3);
         padding: var(--ds-space-4);
-        border-radius: var(--ds-radius-2xl);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-hero-bg);
         border: 1px solid var(--ds-sheet-border);
         box-shadow: var(--ds-hero-shadow);
@@ -146,34 +136,7 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
         font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-semibold);
       }
-      .ds-next__cta {
-        appearance: none;
-        height: 2.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--ds-space-2);
-        border: none;
-        border-radius: var(--ds-radius-xl);
-        background: var(--ds-primary);
-        color: var(--ds-on-primary);
-        font-family: var(--ds-font-body);
-        font-size: var(--ds-text-md);
-        font-weight: var(--ds-weight-bold);
-        cursor: pointer;
-        box-shadow: var(--ds-elev-cta);
-        -webkit-tap-highlight-color: transparent;
-        transition: transform var(--ds-dur-1) var(--ds-ease-out);
-      }
-      .ds-next__cta:active:not(:disabled) {
-        transform: scale(0.98);
-      }
-      .ds-next__cta:disabled {
-        opacity: 0.6;
-        cursor: default;
-      }
-      .ds-next__open:focus-visible,
-      .ds-next__cta:focus-visible {
+      .ds-next__open:focus-visible {
         outline: 2px solid var(--ds-border-focus);
         outline-offset: 2px;
       }
@@ -186,10 +149,7 @@ export class NextSessionCardComponent {
   @Input() caption = "";
   @Input() stats: StatStripItem[] = [];
   @Input() tags: string[] = [];
-  @Input() ctaLabel = "";
   @Input() openAriaLabel = "";
-  @Input() disabled = false;
 
-  @Output() started = new EventEmitter<void>();
   @Output() opened = new EventEmitter<void>();
 }

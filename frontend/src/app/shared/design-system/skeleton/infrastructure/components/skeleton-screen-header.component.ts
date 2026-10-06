@@ -53,7 +53,7 @@ import { Component, Input } from "@angular/core";
         flex: 0 0 auto;
         width: 2.5rem;
         height: 2.5rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
       }
       .skhead__text {
         flex: 1 1 auto;
@@ -71,7 +71,7 @@ import { Component, Input } from "@angular/core";
         width: var(--skhead-title, 62%);
         max-width: 100%;
         height: 1.375rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-mark);
       }
       .skhead__subtitle {
         width: var(--skhead-subtitle, 44%);
@@ -95,7 +95,7 @@ import { Component, Input } from "@angular/core";
       .skhead__action {
         width: var(--skhead-action, 2.5rem);
         height: 2.5rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
       }
     `,
   ],

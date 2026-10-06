@@ -61,7 +61,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       }
       .ds-num--stepper {
         background: var(--ds-surface-inset);
-        border-radius: var(--ds-radius-pill);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-1);
       }
       .ds-num__field {
@@ -69,7 +69,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         width: 100%;
         box-sizing: border-box;
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control);
         background: var(--ds-surface);
         padding: var(--ds-space-2) var(--ds-space-3);
         font: inherit;
@@ -110,7 +110,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         width: 1.875rem;
         height: 1.875rem;
         border: none;
-        border-radius: var(--ds-radius-pill);
+        border-radius: calc(var(--ds-radius-control) - var(--ds-space-1));
         background: var(--ds-surface);
         color: var(--ds-text-body);
         cursor: pointer;
@@ -142,7 +142,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         width: 1.5rem;
         height: 1.75rem;
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-control-sm);
         background: var(--ds-surface);
         color: var(--ds-primary);
         box-shadow: none;
@@ -156,7 +156,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         width: 0;
         min-width: 0;
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-control-sm);
         background: var(--ds-surface);
         padding: var(--ds-space-1-5) 2px;
         font-size: var(--ds-text-md);
@@ -171,12 +171,12 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       }
       .ds-num.ds-num--field {
         gap: 0;
-        height: 2.375rem;
+        height: 2.125rem;
         box-sizing: border-box;
         padding: 0 var(--ds-space-1);
         background: var(--ds-surface-inset);
-        border: 1px solid var(--ds-border-hairline);
-        border-radius: var(--ds-radius-lg);
+        border: 1px solid transparent;
+        border-radius: var(--ds-radius-control);
         transition:
           border-color var(--ds-transition-fast),
           box-shadow var(--ds-transition-fast);
@@ -188,7 +188,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       .ds-num--field .ds-num__step {
         width: 1.625rem;
         height: 1.875rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control-sm);
         background: transparent;
         color: var(--ds-text-muted);
         box-shadow: none;

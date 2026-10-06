@@ -30,7 +30,8 @@ export class SwipeToDeleteComponent {
 
   @Input() disabled = false;
   @Input() reveal = 66;
-  @Input() radius = "var(--ds-radius-xl)";
+  @Input() radius = "var(--ds-radius-surface)";
+  @Input() pad: string | null = null;
   @Input() removeLabel = "";
 
   @Output() remove = new EventEmitter<void>();

@@ -8,7 +8,7 @@
   flex-direction: column;
   gap: var(--ds-space-3);
   padding: var(--ds-space-4);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
   background: var(--ds-surface);
   border: 1px solid var(--ds-border-hairline);
   box-shadow: var(--ds-shadow-card);
@@ -41,7 +41,7 @@
 .skbud__value {
   width: 6.25rem;
   height: 1.5rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-mark);
 }
 
 .skbud__total {

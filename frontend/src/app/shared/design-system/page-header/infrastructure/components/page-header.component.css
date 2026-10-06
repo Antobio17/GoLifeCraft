@@ -19,7 +19,7 @@
 .ph-icon {
   width: 2.75rem;
   height: 2.75rem;
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-inner);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -219,7 +219,7 @@
    shadow that lifts the button off the page background. */
 .ph-actions :is(app-button, .btn) {
   box-shadow: var(--ds-shadow-sm);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-control);
 }
 
 /* ── Responsive ──────────────────────────────────────────────── */
@@ -273,7 +273,7 @@
     grid-area: icon;
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: var(--ds-radius-md);
+    border-radius: var(--ds-radius-inner);
     font-size: var(--ds-text-lg);
     margin-top: 0;
     align-self: center;
@@ -347,7 +347,7 @@
   .ph-subtitle:focus-visible {
     outline: 2px solid var(--ds-primary);
     outline-offset: 2px;
-    border-radius: var(--ds-radius-sm);
+    border-radius: var(--ds-radius-mark);
   }
 
   .ph-stats {

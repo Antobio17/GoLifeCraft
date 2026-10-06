@@ -17,6 +17,23 @@ class HostComponent {
   removed = 0;
 }
 
+@Component({
+  imports: [SwipeToDeleteComponent],
+  template: `<ds-swipe-to-delete pad="var(--ds-space-2)" removeLabel="x">
+    <span class="row">contenido</span>
+  </ds-swipe-to-delete>`,
+  styles: [
+    `
+      .row {
+        display: block;
+        --ds-pad: var(--ds-space-2);
+        border-radius: var(--ds-radius-surface);
+      }
+    `,
+  ],
+})
+class PaddedHostComponent {}
+
 describe("SwipeToDeleteComponent", () => {
   function render() {
     const fixture = TestBed.createComponent(HostComponent);
@@ -47,6 +64,17 @@ describe("SwipeToDeleteComponent", () => {
     expect(getComputedStyle(swipe).overflow).toBe("hidden");
     expect(getComputedStyle(swipe).borderRadius).toBe(
       getComputedStyle(card).borderRadius,
+    );
+  });
+
+  it("recorta con el radio de una superficie con padding propio", () => {
+    const fixture = TestBed.createComponent(PaddedHostComponent);
+    fixture.detectChanges();
+    const swipe = fixture.nativeElement.querySelector(".swipe");
+    const row = fixture.nativeElement.querySelector(".row");
+
+    expect(getComputedStyle(swipe).borderRadius).toBe(
+      getComputedStyle(row).borderRadius,
     );
   });
 

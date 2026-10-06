@@ -60,7 +60,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .ds-fab--extended {
         height: 3rem;
         padding: 0 var(--ds-space-4);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-cta);
       }
       .ds-fab ds-icon {
         color: var(--ds-on-primary);

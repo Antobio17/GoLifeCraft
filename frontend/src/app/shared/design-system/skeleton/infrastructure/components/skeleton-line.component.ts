@@ -12,7 +12,7 @@ import { Component, Input } from "@angular/core";
       .ds-sk {
         width: var(--line-w, 100%);
         height: var(--line-h, 0.75rem);
-        border-radius: var(--line-r, var(--ds-radius-sm));
+        border-radius: var(--line-r, var(--ds-radius-mark));
       }
     `,
   ],
@@ -25,5 +25,5 @@ import { Component, Input } from "@angular/core";
 export class SkeletonLineComponent {
   @Input() width = "100%";
   @Input() height = "0.75rem";
-  @Input() radius = "var(--ds-radius-sm)";
+  @Input() radius = "var(--ds-radius-mark)";
 }

@@ -66,7 +66,7 @@ import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
         cursor: pointer;
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
         font: inherit;
         color: inherit;
@@ -89,7 +89,7 @@ import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
         justify-content: center;
         width: 2.875rem;
         height: 2.875rem;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-primary-soft);
         font-size: var(--ds-text-2xl);
       }
@@ -117,7 +117,7 @@ import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
       :host([selectable]) .ds-choicerow {
         background: var(--ds-surface);
         border-width: 1.5px;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         align-items: flex-start;
       }
       :host([selected]) .ds-choicerow {

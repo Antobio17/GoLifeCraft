@@ -23,7 +23,7 @@
 .form-control {
   padding: var(--ds-space-2) var(--ds-space-3);
   border: 1.5px solid var(--ds-border-input);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   font-size: var(--ds-text-md);
   font-family: var(--ds-font-body);
   transition: border-color var(--ds-transition-fast);
@@ -126,7 +126,7 @@ input[type="number"].form-control::-webkit-inner-spin-button {
   height: 1.875rem;
   background: none;
   border: none;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
   cursor: pointer;
   color: var(--ds-text-disabled);
   transition:

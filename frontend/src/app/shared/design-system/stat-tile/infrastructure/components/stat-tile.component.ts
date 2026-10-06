@@ -35,7 +35,7 @@ import { Component, Input } from "@angular/core";
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
       }
       .ds-stile__value {

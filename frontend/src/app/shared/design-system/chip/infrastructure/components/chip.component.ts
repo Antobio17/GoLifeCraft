@@ -20,7 +20,7 @@ export type ChipTone =
         display: inline-flex;
         align-items: center;
         padding: var(--chip-pad, var(--ds-space-1) var(--ds-space-2));
-        border-radius: var(--chip-radius, var(--ds-radius-sm));
+        border-radius: var(--chip-radius, var(--ds-radius-tag));
         background: var(--chip-bg, var(--ds-surface-inset));
         color: var(--chip-text, var(--ds-text-muted));
         font-size: var(--chip-size, var(--ds-text-xs));

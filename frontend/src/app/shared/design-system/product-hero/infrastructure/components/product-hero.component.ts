@@ -31,7 +31,7 @@ import { Component, Input } from "@angular/core";
       .ds-product-hero {
         position: relative;
         height: 7.375rem;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface-inset);
         display: flex;
         align-items: center;
@@ -54,7 +54,7 @@ import { Component, Input } from "@angular/core";
         right: 0.625rem;
         background: var(--ds-primary);
         color: var(--ds-on-primary);
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-tag);
         padding: var(--ds-space-1) var(--ds-space-2);
         font-family: var(--ds-font-display);
         font-weight: 700;

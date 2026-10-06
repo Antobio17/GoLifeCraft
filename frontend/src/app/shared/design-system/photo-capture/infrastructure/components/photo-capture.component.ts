@@ -77,7 +77,7 @@ import { ImageResizerService } from "../../application/services/image-resizer.se
       .ds-photo-capture__item {
         position: relative;
         aspect-ratio: 1;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         overflow: hidden;
         background: var(--ds-surface-alt);
         border: 1px solid var(--ds-border);
@@ -118,7 +118,7 @@ import { ImageResizerService } from "../../application/services/image-resizer.se
         color: var(--ds-text-muted);
         background: var(--ds-surface-alt);
         border: 1px dashed var(--ds-border-strong);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-inner);
         transition: border-color var(--ds-transition-fast);
       }
       .ds-photo-capture__add:hover:not(:disabled) {

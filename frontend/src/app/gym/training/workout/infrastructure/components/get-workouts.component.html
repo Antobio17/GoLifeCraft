@@ -9,7 +9,7 @@
   />
 
   @if (statsLoading()) {
-    <ds-skeleton height="24rem" radius="var(--ds-radius-2xl)" />
+    <ds-skeleton height="24rem" radius="var(--ds-radius-surface)" />
   } @else {
     <ds-card
       data-testid="workouts-month"
@@ -35,10 +35,9 @@
     <ds-skeleton-list
       [count]="4"
       [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-2xl)"
+      radius="var(--ds-radius-surface)"
       padding="var(--ds-space-3)"
       [tile]="50"
-      [tileRadius]="16"
       titleWidth="52%"
       metaWidth="40%"
       trailing="pill"
@@ -81,10 +80,9 @@
       <ds-skeleton-list
         [count]="2"
         [gap]="'var(--ds-space-2)'"
-        radius="var(--ds-radius-2xl)"
+        radius="var(--ds-radius-surface)"
         padding="var(--ds-space-3)"
         [tile]="50"
-        [tileRadius]="16"
         titleWidth="52%"
         metaWidth="40%"
         trailing="pill"

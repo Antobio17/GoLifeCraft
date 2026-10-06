@@ -3,6 +3,6 @@
   box-sizing: border-box;
   background: var(--ds-surface-inset);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
   padding: var(--ds-space-3);
 }

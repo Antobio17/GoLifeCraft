@@ -11,8 +11,9 @@
 .diary-tree {
   background: var(--ds-surface-subtle);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
-  padding: var(--ds-space-2);
+  border-radius: var(--ds-radius-surface);
+  --ds-pad: var(--ds-space-2);
+  padding: var(--ds-pad);
 }
 
 .diary-tree__header {
@@ -30,7 +31,7 @@ ds-text.diary-tree__title {
 
 .diary-tree__reset {
   background: var(--ds-primary-soft);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-control);
   padding: var(--ds-space-2);
   color: var(--ds-primary);
 }
@@ -45,8 +46,9 @@ ds-text.diary-tree__reset-text {
 .diary-tree__row {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
-  padding: var(--ds-space-1-5) var(--ds-space-2);
+  border-radius: var(--ds-radius-surface);
+  --ds-pad: var(--ds-space-2);
+  padding: var(--ds-space-1-5) var(--ds-pad);
 }
 
 .diary-tree__row--slid {

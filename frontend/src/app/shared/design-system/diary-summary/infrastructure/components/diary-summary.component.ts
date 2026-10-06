@@ -6,9 +6,20 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
   selector: "ds-diary-summary",
   imports: [ProgressRingComponent],
   template: `
-    <div class="daysum" [class.daysum--dense]="dense">
+    <section
+      class="daysum"
+      [class.daysum--dense]="dense"
+      [attr.aria-label]="eyebrow"
+    >
       <div class="daysum__head">
-        <span class="daysum__eyebrow">{{ eyebrow }}</span>
+        <span class="daysum__eyebrow">
+          <span
+            class="daysum__pulse"
+            [class.daysum__pulse--over]="over"
+            aria-hidden="true"
+          ></span>
+          {{ eyebrow }}
+        </span>
         <span class="daysum__count">{{ countLabel }}</span>
       </div>
 
@@ -17,6 +28,7 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
           class="daysum__ring"
           [class.daysum__ring--over]="over"
           [value]="percent"
+          [hollow]="true"
         >
           <span class="daysum__ring-value">{{ percent }}%</span>
         </ds-progress-ring>
@@ -33,10 +45,10 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         </div>
       </div>
 
-      <div class="daysum__macros">
-        @for (macro of macros; track macro.label) {
-          <div class="macro">
-            <div class="macro__top">
+      @if (macros.length) {
+        <div class="daysum__macros" [style.--daysum-cols]="macros.length">
+          @for (macro of macros; track macro.label) {
+            <div class="macro">
               <span class="macro__label"
                 >{{ macro.label }}
                 @if (macro.overLabel) {
@@ -46,30 +58,30 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
               <span class="macro__value"
                 >{{ macro.valueLabel }}
                 @if (macro.goalLabel) {
-                  <span class="macro__goal"> / {{ macro.goalLabel }}</span>
+                  <span class="macro__goal">/ {{ macro.goalLabel }}</span>
+                }
+              </span>
+              <span class="macro__track">
+                <span
+                  class="macro__fill"
+                  [class.macro__fill--protein]="macro.tone === 'protein'"
+                  [class.macro__fill--fat]="macro.tone === 'fat'"
+                  [class.macro__fill--carbs]="macro.tone === 'carbs'"
+                  [class.macro__fill--capped]="macro.overPercent > 0"
+                  [style.width.%]="macro.percent"
+                ></span>
+                @if (macro.overPercent > 0) {
+                  <span
+                    class="macro__over"
+                    [style.width.%]="macro.overPercent"
+                  ></span>
                 }
               </span>
             </div>
-            <span class="macro__track">
-              <span
-                class="macro__fill"
-                [class.macro__fill--protein]="macro.tone === 'protein'"
-                [class.macro__fill--fat]="macro.tone === 'fat'"
-                [class.macro__fill--carbs]="macro.tone === 'carbs'"
-                [class.macro__fill--capped]="macro.overPercent > 0"
-                [style.width.%]="macro.percent"
-              ></span>
-              @if (macro.overPercent > 0) {
-                <span
-                  class="macro__over"
-                  [style.width.%]="macro.overPercent"
-                ></span>
-              }
-            </span>
-          </div>
-        }
-      </div>
-    </div>
+          }
+        </div>
+      }
+    </section>
   `,
   styles: [
     `
@@ -77,26 +89,50 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         display: block;
       }
       .daysum {
-        background: var(--ds-surface);
-        color: var(--ds-text);
-        border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        --ds-surface: var(--ds-sheet-surface);
+        --ds-surface-inset: var(--ds-sheet-surface-inset);
+        display: flex;
+        flex-direction: column;
+        gap: var(--ds-space-3);
         padding: var(--ds-space-4);
-        box-shadow: var(--ds-elev);
+        border-radius: var(--ds-radius-surface);
+        background: var(--ds-hero-bg);
+        border: 1px solid var(--ds-sheet-border);
+        box-shadow: var(--ds-hero-shadow);
+        color: var(--ds-text);
       }
       .daysum__head {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: var(--ds-space-3);
       }
       .daysum__eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ds-space-2);
+        min-width: 0;
         font-size: var(--ds-text-xs);
-        font-weight: 700;
-        letter-spacing: 0.06em;
+        font-weight: var(--ds-weight-extrabold);
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--ds-primary);
       }
+      .daysum__pulse {
+        flex: 0 0 auto;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--ds-primary);
+        box-shadow: 0 0 0 0.1875rem var(--ds-primary-soft);
+      }
+      .daysum__pulse--over {
+        background: var(--ds-danger);
+        box-shadow: 0 0 0 0.1875rem
+          color-mix(in srgb, var(--ds-danger) 18%, transparent);
+      }
       .daysum__count {
+        flex: 0 0 auto;
         font-size: var(--ds-text-sm);
         color: var(--ds-text-muted);
       }
@@ -104,11 +140,9 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         display: flex;
         align-items: center;
         gap: var(--ds-space-4);
-        margin-top: var(--ds-space-3);
       }
       .daysum__ring {
         --ds-ring-fill: var(--ds-primary);
-        --ds-ring-center: var(--ds-surface);
         --ds-ring-track: var(--ds-surface-inset);
       }
       .daysum__ring--over {
@@ -118,20 +152,23 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         font-size: var(--ds-text-md);
         color: var(--ds-text);
       }
+      .daysum__kcal {
+        min-width: 0;
+      }
       .daysum__kcal-value {
         margin: 0;
         font-family: var(--ds-font-display);
-        font-weight: 800;
+        font-weight: var(--ds-weight-bold);
         font-size: var(--ds-text-2xl);
-        line-height: 1;
-      }
-      :host-context([data-theme="dark"]) .daysum__kcal-value {
-        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
       }
       .daysum__kcal-goal {
         font-size: var(--ds-text-md);
-        font-weight: 600;
-        color: var(--ds-text-meta);
+        font-weight: var(--ds-weight-semibold);
+        letter-spacing: 0;
+        color: var(--ds-text-muted);
       }
       .daysum__kcal-foot {
         margin: var(--ds-space-1) 0 0;
@@ -140,58 +177,61 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
       }
       .daysum__kcal-foot--over {
         color: var(--ds-danger);
-        font-weight: 600;
+        font-weight: var(--ds-weight-semibold);
       }
       .daysum__macros {
-        display: flex;
-        flex-direction: column;
-        gap: var(--ds-space-2);
-        margin-top: var(--ds-space-4);
+        display: grid;
+        grid-template-columns: repeat(var(--daysum-cols, 3), minmax(0, 1fr));
+        background: var(--ds-surface-inset);
+        border: 1px solid var(--ds-border-hairline);
+        border-radius: var(--ds-radius-inner);
       }
       .macro {
         display: flex;
         flex-direction: column;
-        gap: var(--ds-space-1);
+        gap: 2px;
+        min-width: 0;
+        padding: var(--ds-space-2) var(--ds-space-3) var(--ds-space-3);
       }
-      .macro__top {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: var(--ds-space-2);
+      .macro + .macro {
+        border-left: 1px solid var(--ds-border-hairline);
       }
       .macro__label {
-        min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: var(--ds-text-sm);
-        font-weight: 600;
+        font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
-      }
-      .macro__value {
-        min-width: 0;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: var(--ds-text-sm);
-        font-weight: 700;
-        font-family: var(--ds-font-display);
-      }
-      .macro__goal {
-        font-weight: 600;
-        color: var(--ds-text-meta);
       }
       .macro__over-label {
         margin-left: var(--ds-space-1);
-        font-weight: 700;
+        font-weight: var(--ds-weight-bold);
         color: var(--ds-danger);
+      }
+      .macro__value {
+        font-family: var(--ds-font-display);
+        font-size: var(--ds-text-lg);
+        font-weight: var(--ds-weight-bold);
+        line-height: var(--ds-leading-tight);
+        font-variant-numeric: tabular-nums;
+        color: var(--ds-text);
+        margin-bottom: var(--ds-space-2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .macro__goal {
+        font-size: var(--ds-text-sm);
+        font-weight: var(--ds-weight-semibold);
+        color: var(--ds-text-muted);
       }
       .macro__track {
         display: flex;
-        height: 0.375rem;
+        height: 0.3125rem;
+        margin-top: auto;
         border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface-inset);
+        background: color-mix(in srgb, var(--ds-text) 10%, transparent);
         overflow: hidden;
       }
       .macro__fill {
@@ -208,7 +248,6 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         height: 100%;
         border-radius: 0 var(--ds-radius-pill) var(--ds-radius-pill) 0;
         background: var(--ds-danger);
-        border-left: 2px solid var(--ds-surface);
         transition: width var(--ds-dur-4) var(--ds-ease-in-out);
       }
       .macro__fill--protein {
@@ -229,6 +268,7 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
             "macros macros macros";
           align-items: center;
           column-gap: var(--ds-space-3);
+          row-gap: var(--ds-space-3);
           padding: var(--ds-space-3) var(--ds-space-4);
         }
         .daysum--dense .daysum__head,
@@ -255,7 +295,6 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         }
         .daysum--dense .daysum__kcal {
           grid-area: kcal;
-          min-width: 0;
         }
         .daysum--dense .daysum__kcal-value {
           font-size: var(--ds-text-xl);
@@ -269,31 +308,22 @@ import { MacroGoal } from "../../../macro-panel/domain/models/macro-goal.model";
         }
         .daysum--dense .daysum__macros {
           grid-area: macros;
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: var(--ds-space-3);
-          margin-top: var(--ds-space-3);
         }
-        .daysum--dense .macro__top {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.125rem;
+        .macro {
+          padding: var(--ds-space-2);
         }
-        .daysum--dense .macro__label {
-          max-width: 100%;
-        }
-        .daysum--dense .macro__label,
-        .daysum--dense .macro__value {
+        .macro__label,
+        .macro__goal {
           font-size: var(--ds-text-xs);
         }
-        .daysum--dense .macro__track {
-          height: 0.25rem;
+        .macro__value {
+          font-size: var(--ds-text-md);
         }
       }
       @media (min-width: 768px) {
         .daysum {
-          padding: var(--ds-space-5) var(--ds-space-6);
-          border-radius: var(--ds-radius-lg);
+          gap: var(--ds-space-4);
+          padding: var(--ds-space-5);
         }
         .daysum__kcal-value {
           font-size: var(--ds-text-3xl);

@@ -85,7 +85,7 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         cursor: pointer;
         width: var(--ds-image-picker-size, 4rem);
         height: var(--ds-image-picker-size, 4rem);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-control);
         background: var(--ds-surface-inset);
         border: 1px dashed var(--ds-border-strong);
         color: var(--ds-text-muted);
@@ -124,7 +124,7 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: calc(var(--ds-radius-xl) - 1px);
+        border-radius: calc(var(--ds-radius-control) - 1px);
         overflow: hidden;
       }
       .ds-image-picker__trigger:disabled {
@@ -143,7 +143,7 @@ import { ImageCropperComponent } from "@shared/design-system/image-cropper/infra
         bottom: -0.3125rem;
         width: 1.5rem;
         height: 1.5rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-tag);
         background: var(--ds-primary);
         color: var(--ds-on-primary);
         display: flex;

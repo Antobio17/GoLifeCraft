@@ -156,8 +156,9 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         color: inherit;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
-        padding: var(--ds-space-2);
+        border-radius: var(--ds-radius-surface);
+        --ds-pad: var(--ds-space-2);
+        padding: var(--ds-pad);
         cursor: pointer;
         box-shadow: var(--ds-elev);
         transition:
@@ -186,7 +187,6 @@ import { ImageFit } from "../../domain/models/image-fit.model";
       .ds-pcard--favoritable .ds-pcard__favorite {
         align-self: flex-end;
         margin-top: auto;
-        margin-bottom: calc(var(--ds-space-1) * -1);
       }
       .ds-pcard__favorite {
         display: inline-flex;
@@ -194,10 +194,9 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         justify-content: center;
         width: 2.25rem;
         height: 2.25rem;
-        margin-right: calc(var(--ds-space-1) * -1);
         appearance: none;
         border: none;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control-sm);
         background: transparent;
         color: var(--ds-text-muted);
         cursor: pointer;
@@ -260,7 +259,7 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         color: var(--ds-on-primary);
         background: var(--ds-primary);
         border: none;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-2) var(--ds-space-3);
         cursor: pointer;
         transition:
@@ -279,7 +278,7 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         height: 2.25rem;
         padding: 0;
         justify-content: center;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-control);
         color: var(--ds-text-muted);
         background: var(--ds-surface-inset);
       }
@@ -311,7 +310,8 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         width: 3.5rem;
         height: 3.5rem;
         flex: 0 0 auto;
-        border-radius: var(--ds-radius-lg);
+        align-self: center;
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
         display: flex;
         align-items: center;
@@ -350,6 +350,7 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         align-items: flex-end;
         justify-content: space-between;
         gap: var(--ds-space-2);
+        padding: var(--ds-space-1) var(--ds-space-1) 0 0;
       }
       .ds-pcard__aside .ds-pcard__action {
         align-self: flex-end;

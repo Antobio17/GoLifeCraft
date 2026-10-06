@@ -55,7 +55,7 @@ const MIN_FILL = 4;
       .ds-breakdown__dot {
         width: var(--ds-space-2);
         height: var(--ds-space-2);
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-mark);
         flex: 0 0 auto;
       }
       .ds-breakdown {

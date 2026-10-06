@@ -248,7 +248,7 @@ export class FormInputComponent implements ControlValueAccessor, OnDestroy {
       fontWeight: "400",
       lineHeight: "1.5",
       padding: "var(--ds-space-2) var(--ds-space-3)",
-      borderRadius: "var(--ds-radius-md)",
+      borderRadius: "var(--ds-radius-inner)",
       maxWidth: "16.25rem",
       textAlign: "center",
       pointerEvents: "none",

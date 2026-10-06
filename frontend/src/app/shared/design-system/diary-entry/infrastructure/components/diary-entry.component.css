@@ -5,7 +5,8 @@
 .diary-entry__row {
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-surface);
+  --ds-pad: var(--ds-space-2);
   padding: var(--ds-space-2) var(--ds-space-3);
 }
 
@@ -145,7 +146,7 @@ ds-pressable.diary-entry__expand--caret {
   width: 1.75rem;
   height: 1.5rem;
   margin: -2px calc(-1 * var(--ds-space-1)) -2px 0;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
   color: var(--ds-text-meta);
 }
 

@@ -88,7 +88,8 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         gap: var(--ds-space-2);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
+        --ds-pad: var(--ds-space-2);
         padding: var(--ds-space-2) var(--ds-space-3);
       }
       .ds-tx--grouped {
@@ -119,7 +120,7 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         width: 2.5rem;
         height: 2.5rem;
         flex: 0 0 auto;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-tag);
         background: var(--ds-surface-inset);
         display: flex;
         align-items: center;
@@ -160,7 +161,7 @@ import { TransactionRowTag } from "../../domain/models/transaction-row-tag.model
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.04em;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-tag);
         padding: 0.125rem var(--ds-space-1);
         background: var(--ds-surface-inset);
         color: var(--ds-text-muted);

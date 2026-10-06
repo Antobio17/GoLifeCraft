@@ -1,6 +1,6 @@
 .skf-card {
   background: var(--ds-surface-raised);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-surface);
   border: 1px solid var(--ds-border);
   padding: var(--ds-space-6);
   display: flex;
@@ -24,13 +24,13 @@
 .skf-label {
   height: 0.75rem;
   width: 6.875rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 .skf-input {
   height: 2.75rem;
   width: 100%;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
 }
 
 .skf-row:nth-child(2) .skf-bar {
@@ -81,13 +81,13 @@
 .skf-page-title {
   height: 1.75rem;
   width: 13.75rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-mark);
 }
 
 .skf-page-description {
   height: 0.875rem;
   width: 18.75rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
   animation-delay: 0.06s;
 }
 
@@ -109,14 +109,14 @@
 .skf-card-icon {
   width: 1.125rem;
   height: 1.125rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
   flex-shrink: 0;
 }
 
 .skf-card-title {
   height: 0.875rem;
   width: 8.125rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 @media (max-width: 768px) {

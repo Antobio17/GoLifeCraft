@@ -35,7 +35,7 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
         gap: var(--ds-space-3);
         padding: var(--ds-space-2) var(--ds-space-2) var(--ds-space-2)
           var(--ds-space-4);
-        border-radius: var(--ds-radius-2xl);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface);
         border: 1px solid var(--ds-primary-soft-border);
         box-shadow: var(--ds-shadow-card);
@@ -70,7 +70,7 @@ import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model"
         gap: var(--ds-space-2);
         padding: 0 var(--ds-space-5);
         border: none;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-cta);
         background: var(--ds-primary);
         color: var(--ds-on-primary);
         font-family: var(--ds-font-body);

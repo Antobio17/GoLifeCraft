@@ -42,7 +42,7 @@ import { WeekDayTab } from "../../domain/models/week-day-tab.model";
         appearance: none;
         border: 1px solid transparent;
         cursor: pointer;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-2) 2px;
         font: inherit;
         font-size: var(--ds-text-sm);

@@ -11,7 +11,7 @@ export type SkeletonSummaryMacros = "none" | "bars" | "tiles";
   },
 })
 export class SkeletonSummaryComponent {
-  @Input() tone: "surface" | "soft" | "brand" | "primary" = "surface";
+  @Input() tone: "surface" | "soft" | "brand" | "primary" | "glass" = "surface";
   @Input() head = true;
   @Input() ring = true;
   @Input() mainAside = false;

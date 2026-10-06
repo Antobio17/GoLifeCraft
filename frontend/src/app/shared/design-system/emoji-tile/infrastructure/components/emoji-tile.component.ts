@@ -28,7 +28,7 @@ import { Component, Input } from "@angular/core";
         justify-content: center;
         width: var(--tile-size, 2.5rem);
         height: var(--tile-size, 2.5rem);
-        border-radius: var(--tile-radius, var(--ds-radius-lg));
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
         font-size: var(--tile-font, var(--ds-text-xl));
       }
@@ -41,14 +41,12 @@ import { Component, Input } from "@angular/core";
   ],
   host: {
     "[style.--tile-size.px]": "size",
-    "[style.--tile-radius.px]": "radius",
     "[style.--tile-font.px]": "fontSize",
   },
 })
 export class EmojiTileComponent {
   @Input() emoji = "";
   @Input() size = 40;
-  @Input() radius = 11;
   @Input() alt = "";
 
   @Input()

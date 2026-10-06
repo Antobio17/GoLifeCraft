@@ -1,7 +1,3 @@
-.agenda-calendar-card {
-  --ds-radius-xl: var(--ds-radius-2xl);
-}
-
 .agenda-field {
   flex: 1 1 0;
   min-width: 0;

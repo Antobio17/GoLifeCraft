@@ -31,7 +31,7 @@
       (action)="goToDiary()"
     />
     @if (summaryLoading()) {
-      <ds-skeleton-summary macros="bars" [dense]="true" />
+      <ds-skeleton-summary tone="glass" macros="bars" [dense]="true" />
     } @else if (summary(); as diary) {
       <ds-diary-summary
         data-testid="dashboard-summary"

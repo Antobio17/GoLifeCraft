@@ -9,7 +9,7 @@
   padding: var(--ds-space-3) var(--ds-space-5);
   background: var(--ds-surface-raised);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-surface);
   box-shadow: var(--ds-shadow-card);
   flex-wrap: wrap;
   transition:
@@ -50,7 +50,7 @@
   color: var(--ds-on-primary);
   font-size: var(--ds-text-xs);
   font-weight: 700;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-tag);
   animation: badge-pop var(--ds-dur-2) var(--ds-ease-spring);
 }
 
@@ -105,7 +105,7 @@
   padding: var(--ds-space-1-5) var(--ds-space-3) var(--ds-space-1-5)
     var(--ds-space-8);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   font-size: var(--ds-text-md);
   font-weight: 400;
   color: var(--ds-text);
@@ -142,7 +142,7 @@
   padding: var(--ds-space-1-5) var(--ds-space-8) var(--ds-space-1-5)
     var(--ds-space-3);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   font-size: var(--ds-text-md);
   font-weight: 500;
   color: var(--ds-text-body);
@@ -203,7 +203,7 @@
 .lf-date-input {
   padding: var(--ds-space-1-5) var(--ds-space-3);
   border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   font-size: var(--ds-text-md);
   font-weight: 400;
   color: var(--ds-text);
@@ -239,7 +239,7 @@
   padding: var(--ds-space-1) var(--ds-space-3);
   background: transparent;
   border: 1.5px solid var(--ds-border);
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-tag);
   font-size: var(--ds-text-base);
   font-weight: 500;
   color: var(--ds-text-muted);
@@ -300,7 +300,7 @@
   gap: 2px;
   background: color-mix(in srgb, var(--ds-border) 22%, transparent);
   border: 1.5px solid var(--ds-border);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control);
   flex-shrink: 0;
 }
 
@@ -309,7 +309,7 @@
   border: none;
   background: transparent;
   padding: var(--ds-space-1) var(--ds-space-3);
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-control-sm);
   font-family: inherit;
   font-size: var(--ds-text-base);
   font-weight: 500;
@@ -361,7 +361,7 @@
   position: absolute;
   inset: 0;
   background: var(--ds-border);
-  border-radius: var(--ds-radius-xl);
+  border-radius: var(--ds-radius-pill);
   transition: background var(--ds-dur-2) var(--ds-ease-out);
 }
 
@@ -416,7 +416,7 @@
 .lf-skeleton-field {
   height: 2rem;
   width: 11.25rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
 }
 
 .lf-skeleton-field:nth-child(2) {

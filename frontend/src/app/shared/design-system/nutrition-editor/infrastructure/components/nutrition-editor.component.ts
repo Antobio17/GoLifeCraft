@@ -20,7 +20,7 @@ import { Component, Input } from "@angular/core";
       }
       .ds-nedit {
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         overflow: hidden;
         background: var(--ds-surface);
       }

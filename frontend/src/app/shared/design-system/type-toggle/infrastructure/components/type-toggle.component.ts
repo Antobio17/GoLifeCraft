@@ -45,7 +45,7 @@ export interface TypeToggleOption {
         display: inline-flex;
         gap: 2px;
         padding: var(--ds-space-1);
-        border-radius: var(--ds-radius-pill);
+        border-radius: var(--ds-radius-control);
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border-hairline);
       }
@@ -55,7 +55,7 @@ export interface TypeToggleOption {
         border: none;
         background: transparent;
         color: var(--ds-text-muted);
-        border-radius: var(--ds-radius-pill);
+        border-radius: calc(var(--ds-radius-control) - var(--ds-space-1));
         padding: var(--ds-space-1-5) var(--ds-space-3);
         font: inherit;
         font-size: var(--ds-text-base);

@@ -37,7 +37,7 @@ import { Component, Input } from "@angular/core";
         text-align: center;
       }
       .ds-seth__done {
-        width: 2.25rem;
+        width: 2.125rem;
         flex: 0 0 auto;
       }
     `,

@@ -38,7 +38,7 @@ import { Component, Input } from "@angular/core";
         box-sizing: border-box;
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         overflow: hidden;
         --skrow-pad: var(--ds-space-3) var(--ds-space-4);
       }

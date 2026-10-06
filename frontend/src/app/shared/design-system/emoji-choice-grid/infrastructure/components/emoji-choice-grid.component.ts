@@ -45,7 +45,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
         align-items: center;
         justify-content: center;
         aspect-ratio: 1;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         border: 1px solid var(--ds-border-strong);
         background: var(--ds-surface);
         padding: 0;

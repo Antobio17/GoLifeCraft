@@ -99,7 +99,7 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
         cursor: pointer;
         width: 4rem;
         height: 4rem;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-control);
         background: var(--ds-surface-inset);
         border: 1px solid var(--ds-border);
         display: flex;
@@ -118,7 +118,7 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
         bottom: -0.3125rem;
         width: 1.5rem;
         height: 1.5rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-tag);
         background: var(--ds-primary);
         color: var(--ds-on-primary);
         display: flex;
@@ -162,7 +162,7 @@ import { TextSearchService } from "@shared/search/application/services/text-sear
         cursor: pointer;
         border: 1px solid var(--ds-border);
         background: var(--ds-surface-subtle);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         height: 3.125rem;
         color: var(--ds-text);
         transition: var(--ds-motion-tint), var(--ds-motion-press);

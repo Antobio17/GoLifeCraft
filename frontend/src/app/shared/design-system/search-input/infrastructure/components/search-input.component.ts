@@ -70,7 +70,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
         gap: var(--ds-space-2);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         padding: var(--ds-space-3);
         transition:
           border-color var(--ds-dur-2) var(--ds-ease-out),
@@ -105,7 +105,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
         cursor: pointer;
         display: flex;
         padding: 2px;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-control-sm);
         flex: 0 0 auto;
       }
       .ds-search__clear:hover {

@@ -53,7 +53,7 @@ import { debounceTime, fromEvent } from "rxjs";
       }
       .ruler {
         position: relative;
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         outline: none;
       }
       .ruler:focus-visible {

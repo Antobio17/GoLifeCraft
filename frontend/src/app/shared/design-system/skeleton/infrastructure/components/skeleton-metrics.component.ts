@@ -34,7 +34,7 @@ import { Component, Input } from "@angular/core";
         gap: var(--ds-space-1-5);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--skmet-radius, var(--ds-radius-lg));
+        border-radius: var(--skmet-radius, var(--ds-radius-surface));
         padding: var(--skmet-padding, var(--ds-space-3) var(--ds-space-3));
       }
       .skmet__card--feature {
@@ -54,7 +54,7 @@ import { Component, Input } from "@angular/core";
       .skmet__value {
         width: 58%;
         height: 1.25rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-mark);
       }
       .skmet__label {
         width: 78%;
@@ -71,7 +71,7 @@ import { Component, Input } from "@angular/core";
 export class SkeletonMetricsComponent {
   @Input() count = 3;
   @Input() gap = "var(--ds-space-2)";
-  @Input() radius = "var(--ds-radius-lg)";
+  @Input() radius = "var(--ds-radius-surface)";
   @Input() padding = "var(--ds-space-3) var(--ds-space-3)";
   @Input() feature = false;
 

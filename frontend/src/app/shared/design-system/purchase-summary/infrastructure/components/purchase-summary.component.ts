@@ -40,7 +40,7 @@ import { Component, Input } from "@angular/core";
       }
       .ds-pus {
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface);
         overflow: hidden;
       }

@@ -87,7 +87,7 @@ import { DatedRowTone } from "../../domain/models/dated-row-tone.enum";
           var(--ds-space-3);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-2xl);
+        border-radius: var(--ds-radius-surface);
         box-shadow: var(--ds-shadow-card);
         color: var(--ds-text);
         font-family: var(--ds-font-body);
@@ -119,7 +119,7 @@ import { DatedRowTone } from "../../domain/models/dated-row-tone.enum";
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
       }
       .ds-drow__weekday {

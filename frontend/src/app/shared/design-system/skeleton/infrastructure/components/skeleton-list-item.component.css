@@ -11,7 +11,8 @@
   box-sizing: border-box;
   background: var(--ds-surface);
   border: 1px solid var(--ds-border);
-  border-radius: var(--skli-radius, var(--ds-radius-xl));
+  border-radius: var(--skli-radius, var(--ds-radius-surface));
+  --ds-pad: var(--ds-space-2);
   padding: var(--skli-padding, var(--ds-space-2) var(--ds-space-3));
 }
 
@@ -42,13 +43,13 @@
 .skli__check {
   width: var(--skli-check, 1.625rem);
   height: var(--skli-check, 1.625rem);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
 }
 
 .skli__tile {
   width: var(--skli-tile, 2.75rem);
   height: var(--skli-tile, 2.75rem);
-  border-radius: var(--skli-tile-radius, var(--ds-radius-lg));
+  border-radius: var(--skli-tile-radius, var(--ds-radius-inner));
 }
 
 .skli__body {
@@ -69,19 +70,19 @@
 .skli__title {
   width: var(--skli-title, 58%);
   height: var(--skli-title-h, 0.8125rem);
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 .skli__head-trailing {
   width: var(--skli-head-trailing, 3rem);
   height: 1rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 .skli__meta {
   width: var(--skli-meta, 38%);
   height: 0.625rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 .skli__chips {
@@ -94,7 +95,7 @@
 .skli__chip {
   width: 2.875rem;
   height: 1.125rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-tag);
 }
 
 .skli__chips .skli__chip:nth-child(1) {
@@ -113,7 +114,7 @@
 .skli__pill {
   width: var(--skli-pill-w, 4.875rem);
   height: var(--skli-pill-h, 1.875rem);
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-tag);
 }
 
 .skli__stack {
@@ -126,7 +127,7 @@
 .skli__price {
   width: 2.875rem;
   height: 0.8125rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-tag);
 }
 
 .skli__actions {
@@ -138,13 +139,13 @@
 .skli__action {
   width: 2rem;
   height: 2rem;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--ds-radius-control-sm);
 }
 
 .skli__button {
   width: 5.25rem;
   height: 2rem;
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-control);
 }
 
 .skli__progress {
@@ -161,7 +162,7 @@
 .skli__foot-item {
   width: 4.625rem;
   height: 0.6875rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-mark);
 }
 
 .skli__foot .skli__foot-item:nth-child(2) {
@@ -171,5 +172,5 @@
 .skli__foot-button {
   width: 100%;
   height: 2.125rem;
-  border-radius: var(--ds-radius-lg);
+  border-radius: var(--ds-radius-control);
 }

@@ -33,7 +33,7 @@
         [style.margin-left]="indentOf(row)"
         [disabled]="!row.removable"
         [reveal]="56"
-        radius="var(--ds-radius-lg)"
+        pad="var(--ds-space-2)"
         [removeLabel]="removeLabel"
         (remove)="removed.emit(row.path)"
       >
@@ -153,6 +153,5 @@
     [imageUrl]="row.imageUrl"
     [alt]="row.name"
     [size]="30"
-    [radius]="9"
   />
 </ng-template>

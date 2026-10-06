@@ -219,7 +219,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         border: none;
         background: var(--ds-surface-inset);
         color: var(--ds-text);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         cursor: pointer;
         transition: background var(--ds-dur-2) var(--ds-ease-out);
       }
@@ -278,7 +278,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         align-items: center;
         gap: var(--ds-space-2);
         max-width: 100%;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-mark);
       }
       .ds-screen-head__title-link:focus-visible {
         outline: 2px solid var(--ds-primary);

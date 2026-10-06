@@ -50,7 +50,6 @@
       "eyebrowFirst": "Start here",
       "lastDone": "Last done {{when}} · {{volume}} kg",
       "neverDone": "You haven't trained it yet",
-      "start": "Start session",
       "open": "Open session {{name}}",
       "exercises": "exercises",
       "sets": "sets",
@@ -135,9 +134,10 @@
     "stopModal": {
       "title": "Stop the session?",
       "body": "The timer will be discarded without saving the workout.",
-      "warning": "This workout's progress will not be saved.",
+      "hint": "Tap the stop button twice to discard it, or the X to keep training.",
       "cancel": "Keep training",
-      "confirm": "Yes, stop"
+      "confirm": "Stop",
+      "confirmArmed": "Tap again to stop"
     },
     "finishModal": {
       "title": "What do we do with the template?",
@@ -199,6 +199,9 @@
     "exercise": {
       "add": "Add exercise",
       "remove": "Remove exercise",
+      "menu": "Exercise options",
+      "noteAction": "Comment",
+      "openAction": "View exercise",
       "noteLabel": "Exercise note",
       "notePlaceholder": "Comment…"
     },

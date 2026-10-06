@@ -30,7 +30,7 @@ import { Component, computed, input } from "@angular/core";
         gap: var(--ds-space-3);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-xl);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3) var(--ds-space-4);
         box-shadow: var(--ds-elev);
       }
@@ -43,7 +43,7 @@ import { Component, computed, input } from "@angular/core";
       .skmac__kcal-value {
         width: 3.875rem;
         height: 1.5rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-mark);
       }
       .skmac__kcal-unit {
         width: 2.75rem;
@@ -64,7 +64,7 @@ import { Component, computed, input } from "@angular/core";
       .skmac__line {
         width: 100%;
         height: 0.375rem;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-mark);
       }
       .skmac__label {
         width: 72%;

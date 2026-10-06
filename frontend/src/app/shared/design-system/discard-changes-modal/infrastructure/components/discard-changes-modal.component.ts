@@ -1,21 +1,35 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
+import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
+import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 
 @Component({
   selector: "ds-discard-changes-modal",
-  imports: [ConfirmActionModalComponent],
+  imports: [
+    ContextualTranslatePipe,
+    ModalSheetComponent,
+    StackComponent,
+    TextComponent,
+  ],
   template: `
-    <ds-confirm-action-modal
-      [show]="show"
-      title="discardChanges.title"
-      body="discardChanges.body"
-      [isDeleting]="false"
-      cancelLabel="discardChanges.cancel"
-      confirmLabel="discardChanges.confirm"
-      deletingLabel="discardChanges.confirm"
+    <ds-modal-sheet
+      [open]="show"
+      [title]="'discardChanges.title' | t"
+      [closeLabel]="'discardChanges.cancel' | t"
+      [confirmLabel]="'discardChanges.confirm' | t"
+      [confirmArmedLabel]="'discardChanges.confirmArmed' | t"
+      confirmIcon="trash"
+      confirmTone="danger"
+      [confirmTwice]="true"
       (confirmed)="confirmed.emit()"
-      (cancelled)="cancelled.emit()"
-    />
+      (closed)="cancelled.emit()"
+    >
+      <ds-stack gap="var(--ds-space-1)">
+        <ds-text>{{ "discardChanges.body" | t }}</ds-text>
+        <ds-text variant="muted">{{ "discardChanges.hint" | t }}</ds-text>
+      </ds-stack>
+    </ds-modal-sheet>
   `,
 })
 export class DiscardChangesModalComponent {

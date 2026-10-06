@@ -45,7 +45,7 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
       }
       .ds-eqs {
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         background: var(--ds-surface);
         overflow: hidden;
       }

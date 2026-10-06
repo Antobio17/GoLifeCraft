@@ -263,7 +263,7 @@ export class DiaryViewService {
 
     return {
       label,
-      valueLabel: this.grams(value),
+      valueLabel: this.format(value),
       goalLabel: this.grams(goal),
       percent: this.reachedPercent(value, goal),
       overPercent: this.excessPercent(value, goal),

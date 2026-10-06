@@ -25,15 +25,5 @@
         />
       }
     </ds-stack>
-
-    <ds-button
-      variant="ghost"
-      size="md"
-      [fullWidth]="true"
-      [disabled]="busy"
-      (clicked)="cancelled.emit()"
-    >
-      {{ cancelLabel }}
-    </ds-button>
   </ds-stack>
 </ds-modal-sheet>

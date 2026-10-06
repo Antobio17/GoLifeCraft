@@ -7,7 +7,7 @@
         #swipe
         [disabled]="disabled || editingId === item.id"
         [reveal]="66"
-        radius="var(--ds-radius-lg)"
+        pad="var(--ds-space-2)"
         [removeLabel]="removeLabel"
         (remove)="removed.emit(item.id)"
       >

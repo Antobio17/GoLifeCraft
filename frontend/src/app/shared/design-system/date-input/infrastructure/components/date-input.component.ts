@@ -36,7 +36,7 @@ type DateInputType = "date" | "month" | "time";
         -webkit-appearance: none;
         appearance: none;
         border: 1px solid var(--ds-border-input);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-control);
         background: var(--ds-surface-inset);
         color: var(--ds-text);
         font: inherit;

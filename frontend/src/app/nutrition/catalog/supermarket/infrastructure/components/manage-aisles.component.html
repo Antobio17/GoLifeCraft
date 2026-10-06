@@ -12,11 +12,13 @@
       [gap]="'var(--ds-space-2)'"
     >
       <ds-text variant="meta">{{ subtitle() }}</ds-text>
-      <ds-save-status
-        align="end"
-        [status]="autosave.status()"
-        (retried)="onRetrySave()"
-      />
+      @if (saveFailed()) {
+        <ds-save-status
+          align="end"
+          [status]="autosave.status()"
+          (retried)="onRetrySave()"
+        />
+      }
     </ds-stack>
 
     @if (!hasStores()) {

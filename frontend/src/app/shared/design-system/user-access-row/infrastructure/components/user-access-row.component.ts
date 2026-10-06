@@ -83,7 +83,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         gap: var(--ds-space-3);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
-        border-radius: var(--ds-radius-lg);
+        border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
         transition: opacity var(--ds-dur-2) var(--ds-ease-out);
       }
@@ -94,7 +94,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         flex: 0 0 auto;
         width: 2.625rem;
         height: 2.625rem;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-inner);
         background: var(--ds-surface-inset);
         color: var(--ds-primary);
         display: flex;
@@ -145,7 +145,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.02em;
-        border-radius: var(--ds-radius-sm);
+        border-radius: var(--ds-radius-tag);
         padding: var(--ds-space-1) var(--ds-space-2);
       }
       .ds-uar__badge--ok {
