@@ -12,11 +12,6 @@
   transition: background var(--ds-dur-2) var(--ds-ease-out);
 }
 
-.set-row--slid {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
 .set-row--done ds-number-input {
   opacity: 0.6;
 }

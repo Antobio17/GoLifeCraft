@@ -33,6 +33,7 @@ export class SwipeToDeleteComponent {
   @Input() radius = "var(--ds-radius-surface)";
   @Input() pad: string | null = null;
   @Input() removeLabel = "";
+  @Input() floating = false;
 
   @Output() remove = new EventEmitter<void>();
 
@@ -54,6 +55,12 @@ export class SwipeToDeleteComponent {
 
   get transform(): string {
     return this.offset === 0 ? "none" : `translateX(${this.offset}px)`;
+  }
+
+  get deleteWidth(): string {
+    return this.floating
+      ? `calc(${this.reveal}px - var(--ds-space-2))`
+      : `${this.reveal}px`;
   }
 
   get transition(): string {

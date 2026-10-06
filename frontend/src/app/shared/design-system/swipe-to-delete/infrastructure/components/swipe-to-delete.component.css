@@ -38,7 +38,11 @@
   touch-action: pan-y;
 }
 
-.swipe__surface--slid {
+.swipe--floating .swipe__delete {
+  border-radius: inherit;
+}
+
+.swipe:not(.swipe--floating) .swipe__surface--slid {
   --ds-card-tr-radius: 0;
   --ds-card-br-radius: 0;
   border-top-right-radius: 0;
