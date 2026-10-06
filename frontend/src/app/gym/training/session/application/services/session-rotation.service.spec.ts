@@ -73,29 +73,30 @@ describe("SessionRotationService", () => {
     expect(next?.id).toBe("a");
   });
 
-  it("proposes the session usually trained on the same weekday", () => {
+  it("proposes the session trained on the same weekday last time", () => {
     const workouts = [
       workout("legs", "2026-10-03 10:00:00"),
-      workout("monthly", "2026-09-28 10:00:00"),
+      workout("pull", "2026-09-28 10:00:00"),
       workout("push", "2026-09-21 10:00:00"),
       workout("push", "2026-09-14 10:00:00"),
-      workout("pull", "2026-09-29 10:00:00"),
+      workout("push", "2026-09-07 10:00:00"),
     ];
 
     const next = service.sessionForToday(
-      [session("legs"), session("monthly"), session("push"), session("pull")],
+      [session("legs"), session("pull"), session("push")],
       workouts,
       service.lastWorkoutBySession(workouts),
       new Date(2026, 9, 5),
     );
 
-    expect(next?.id).toBe("push");
+    expect(next?.id).toBe("pull");
   });
 
-  it("breaks a weekday tie with the most recent session", () => {
+  it("skips a deleted session trained last time on that weekday", () => {
     const workouts = [
-      workout("push", "2026-09-28 10:00:00"),
-      workout("legs", "2026-09-21 10:00:00"),
+      workout("deleted", "2026-09-28 10:00:00"),
+      workout("push", "2026-09-21 10:00:00"),
+      workout("legs", "2026-10-03 10:00:00"),
     ];
 
     const next = service.sessionForToday(
