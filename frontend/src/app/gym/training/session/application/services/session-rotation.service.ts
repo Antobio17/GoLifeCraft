@@ -11,7 +11,7 @@ export class SessionRotationService {
     today: Date = new Date(),
   ): Session | null {
     return (
-      this.usualSessionOnWeekday(sessions, workouts, today.getDay()) ??
+      this.lastSessionOnWeekday(sessions, workouts, today.getDay()) ??
       this.nextSession(sessions, lastWorkouts)
     );
   }
@@ -66,50 +66,35 @@ export class SessionRotationService {
     return lastWorkouts.get(session.id)?.attributes.startedAt ?? "";
   }
 
-  private usualSessionOnWeekday(
+  private lastSessionOnWeekday(
     sessions: Session[],
     workouts: Workout[],
     weekday: number,
   ): Session | null {
-    const tally = new Map<string, { count: number; lastStartedAt: string }>();
+    const knownIds = new Set(sessions.map((session) => session.id));
+    const latest = workouts
+      .filter(
+        (workout) =>
+          workout.attributes.sessionId !== null &&
+          knownIds.has(workout.attributes.sessionId) &&
+          this.startedAt(workout).getDay() === weekday,
+      )
+      .reduce<Workout | null>(
+        (best, workout) =>
+          !best || workout.attributes.startedAt > best.attributes.startedAt
+            ? workout
+            : best,
+        null,
+      );
 
-    for (const workout of workouts) {
-      const sessionId = workout.attributes.sessionId;
-
-      if (!sessionId || this.startedAt(workout).getDay() !== weekday) {
-        continue;
-      }
-
-      const entry = tally.get(sessionId) ?? { count: 0, lastStartedAt: "" };
-      tally.set(sessionId, {
-        count: entry.count + 1,
-        lastStartedAt:
-          workout.attributes.startedAt > entry.lastStartedAt
-            ? workout.attributes.startedAt
-            : entry.lastStartedAt,
-      });
-    }
-
-    const candidates = sessions.filter((session) => tally.has(session.id));
-
-    if (candidates.length === 0) {
+    if (!latest) {
       return null;
     }
 
-    return candidates.reduce((best, session) =>
-      this.beats(tally.get(session.id)!, tally.get(best.id)!) ? session : best,
+    return (
+      sessions.find((session) => session.id === latest.attributes.sessionId) ??
+      null
     );
-  }
-
-  private beats(
-    candidate: { count: number; lastStartedAt: string },
-    current: { count: number; lastStartedAt: string },
-  ): boolean {
-    if (candidate.count !== current.count) {
-      return candidate.count > current.count;
-    }
-
-    return candidate.lastStartedAt > current.lastStartedAt;
   }
 
   private startedAt(workout: Workout): Date {
