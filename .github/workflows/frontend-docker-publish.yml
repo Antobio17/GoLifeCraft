@@ -15,6 +15,13 @@ on:
       - '.github/workflows/frontend-docker-publish.yml'
   workflow_dispatch:
 
+# Runs are queued, never parallel: every one pushes or pulls the moving
+# :latest tag, so two overlapping runs let an older commit finish last and
+# ship stale code. Queued runs are superseded by the newest one.
+concurrency:
+  group: frontend-publish
+  cancel-in-progress: false
+
 env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: ${{ github.repository_owner }}/golifecraft
