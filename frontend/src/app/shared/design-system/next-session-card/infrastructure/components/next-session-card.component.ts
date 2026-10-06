@@ -25,12 +25,12 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
           [attr.aria-label]="openAriaLabel"
           (click)="opened.emit()"
         >
-          <ds-icon name="chevronRight" [size]="20" [stroke]="2.2" />
+          <ds-icon name="chevronRight" [size]="18" [stroke]="2.2" />
         </button>
       </div>
 
       @if (stats.length) {
-        <ds-stat-strip [items]="stats" />
+        <ds-stat-strip [items]="stats" [compact]="true" />
       }
 
       @if (tags.length) {
@@ -47,7 +47,7 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
         [disabled]="disabled"
         (click)="started.emit()"
       >
-        <ds-icon name="play" [size]="18" />
+        <ds-icon name="play" [size]="16" />
         {{ ctaLabel }}
       </button>
     </section>
@@ -62,8 +62,8 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
         --ds-surface-inset: var(--ds-sheet-surface-inset);
         display: flex;
         flex-direction: column;
-        gap: var(--ds-space-4);
-        padding: var(--ds-space-5);
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-4);
         border-radius: var(--ds-radius-2xl);
         background: var(--ds-hero-bg);
         border: 1px solid var(--ds-sheet-border);
@@ -79,14 +79,14 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
       .ds-next__text {
         display: flex;
         flex-direction: column;
-        gap: var(--ds-space-1-5);
+        gap: var(--ds-space-1);
         min-width: 0;
       }
       .ds-next__eyebrow {
         display: inline-flex;
         align-items: center;
         gap: var(--ds-space-2);
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-extrabold);
         letter-spacing: 0.12em;
         text-transform: uppercase;
@@ -101,21 +101,21 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
       }
       .ds-next__title {
         font-family: var(--ds-font-display);
-        font-size: var(--ds-text-3xl);
+        font-size: var(--ds-text-2xl);
         font-weight: var(--ds-weight-bold);
         line-height: 1.05;
         letter-spacing: -0.02em;
         overflow-wrap: anywhere;
       }
       .ds-next__caption {
-        font-size: var(--ds-text-md);
+        font-size: var(--ds-text-base);
         color: var(--ds-text-muted);
       }
       .ds-next__open {
         appearance: none;
         flex: 0 0 auto;
-        width: 2.75rem;
-        height: 2.75rem;
+        width: 2.5rem;
+        height: 2.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -139,16 +139,16 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
         list-style: none;
       }
       .ds-next__tag {
-        padding: var(--ds-space-1) var(--ds-space-3);
+        padding: 0.125rem var(--ds-space-2);
         border-radius: var(--ds-radius-pill);
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
-        font-size: var(--ds-text-base);
+        font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-semibold);
       }
       .ds-next__cta {
         appearance: none;
-        height: 3.375rem;
+        height: 2.75rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -158,7 +158,7 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
         background: var(--ds-primary);
         color: var(--ds-on-primary);
         font-family: var(--ds-font-body);
-        font-size: var(--ds-text-lg);
+        font-size: var(--ds-text-md);
         font-weight: var(--ds-weight-bold);
         cursor: pointer;
         box-shadow: var(--ds-elev-cta);
