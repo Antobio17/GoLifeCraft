@@ -187,15 +187,21 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
       }
       .ds-num--field .ds-num__step {
         width: 1.625rem;
-        height: 1.875rem;
-        border-radius: var(--ds-radius-control-sm);
+        height: 1.625rem;
+        border-radius: var(--ds-radius-pill);
         background: transparent;
         color: var(--ds-text-muted);
         box-shadow: none;
       }
-      .ds-num--field .ds-num__step:hover:not(:disabled) {
-        background: var(--ds-primary-soft);
-        color: var(--ds-primary-soft-text);
+      @media (hover: hover) {
+        .ds-num--field .ds-num__step:hover:not(:disabled) {
+          background: var(--ds-border);
+          color: var(--ds-text);
+        }
+      }
+      .ds-num--field .ds-num__step:active:not(:disabled) {
+        background: var(--ds-border);
+        color: var(--ds-text);
       }
       .ds-num.ds-num--field .ds-num__field {
         flex: 1 1 0;

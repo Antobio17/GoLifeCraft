@@ -1,10 +1,15 @@
-<div class="swipe" [style.--ds-pad]="pad" [style.border-radius]="radius">
+<div
+  class="swipe"
+  [class.swipe--floating]="floating"
+  [style.--ds-pad]="pad"
+  [style.border-radius]="radius"
+>
   @if (!disabled) {
     <button
       type="button"
       class="swipe__delete"
       [class.swipe__delete--revealed]="slid"
-      [style.width.px]="reveal"
+      [style.width]="deleteWidth"
       [attr.aria-label]="removeLabel"
       (pointerup)="onDeletePointerUp($event)"
       (touchend)="onDeleteTouchEnd($event)"

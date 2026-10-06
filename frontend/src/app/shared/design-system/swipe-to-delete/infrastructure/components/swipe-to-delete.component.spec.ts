@@ -34,6 +34,18 @@ class HostComponent {
 })
 class PaddedHostComponent {}
 
+@Component({
+  imports: [SwipeToDeleteComponent, CardComponent],
+  template: `<ds-swipe-to-delete
+    [reveal]="64"
+    [floating]="true"
+    removeLabel="x"
+  >
+    <ds-card>contenido</ds-card>
+  </ds-swipe-to-delete>`,
+})
+class FloatingHostComponent {}
+
 describe("SwipeToDeleteComponent", () => {
   function render() {
     const fixture = TestBed.createComponent(HostComponent);
@@ -196,5 +208,28 @@ describe("SwipeToDeleteComponent", () => {
     );
 
     expect(fixture.componentInstance.removed).toBe(1);
+  });
+
+  it("separa el boton flotante de la fila y le da su propio radio", () => {
+    const fixture = TestBed.createComponent(FloatingHostComponent);
+    fixture.detectChanges();
+    const swipe = fixture.nativeElement.querySelector(".swipe");
+    const deleteButton = fixture.nativeElement.querySelector(".swipe__delete");
+
+    expect(deleteButton.getBoundingClientRect().width).toBeLessThan(64);
+    expect(getComputedStyle(deleteButton).borderTopLeftRadius).toBe(
+      getComputedStyle(swipe).borderTopLeftRadius,
+    );
+  });
+
+  it("no cuadra las esquinas de la superficie al desplazarse si flota", () => {
+    const fixture = TestBed.createComponent(FloatingHostComponent);
+    fixture.detectChanges();
+    const surface = fixture.nativeElement.querySelector(".swipe__surface");
+    const card = fixture.nativeElement.querySelector(".ds-card");
+    const restingRadius = getComputedStyle(card).borderTopRightRadius;
+    surface.classList.add("swipe__surface--slid");
+
+    expect(getComputedStyle(card).borderTopRightRadius).toBe(restingRadius);
   });
 });

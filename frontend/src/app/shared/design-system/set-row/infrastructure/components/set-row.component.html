@@ -1,13 +1,12 @@
 <ds-swipe-to-delete
-  #swipe
   [reveal]="64"
+  [floating]="true"
   radius="var(--ds-radius-inner)"
   [removeLabel]="removeLabel"
   (remove)="remove.emit()"
 >
   <div
     class="set-row"
-    [class.set-row--slid]="swipe.slid"
     [class.set-row--done]="done"
     [class.set-row--warmup]="warmup"
   >
