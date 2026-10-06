@@ -1,4 +1,8 @@
-<ds-page-wrapper [gap]="'var(--ds-space-5)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'70rem'"
+  [gap]="'var(--ds-space-5)'"
+>
   <ds-screen-header
     [eyebrow]="'getSessions.eyebrow' | t"
     [title]="'getSessions.heading' | t"
@@ -15,123 +19,128 @@
     />
   </ds-screen-header>
 
-  @if (statsLoading()) {
-    <ds-skeleton height="8.5rem" radius="var(--ds-radius-2xl)" />
-  } @else {
-    <ds-week-strip
-      data-testid="sessions-week"
-      [title]="weekTitle()"
-      [caption]="weekCaption()"
-      [badgeLabel]="streakLabel()"
-      [days]="weekDays()"
-    />
-  }
-
-  @if (loading()) {
-    <ds-skeleton height="19rem" radius="var(--ds-radius-2xl)" />
-  } @else if (next(); as next) {
-    <ds-next-session-card
-      data-testid="sessions-next"
-      [eyebrow]="next.eyebrow"
-      [title]="next.title"
-      [caption]="next.caption"
-      [stats]="next.stats"
-      [tags]="next.tags"
-      [ctaLabel]="nextStartLabel()"
-      [openAriaLabel]="next.openAriaLabel"
-      (started)="onStart(next.id)"
-      (opened)="onOpen(next.id)"
-    />
-  }
-
-  <ds-grid [columns]="3" [gap]="'var(--ds-space-2)'">
-    <ds-action-tile
-      data-testid="sessions-free"
-      icon="stopwatch"
-      [name]="tiles().free"
-      [meta]="tiles().freeMeta"
-      (clicked)="onFreeWorkout()"
-    />
-    <ds-action-tile
-      data-testid="sessions-history"
-      icon="history"
-      [name]="tiles().history"
-      [meta]="tiles().historyMeta"
-      (clicked)="onHistory()"
-    />
-    <ds-action-tile
-      data-testid="sessions-library"
-      icon="dumbbell"
-      [name]="tiles().library"
-      [meta]="tiles().libraryMeta"
-      (clicked)="onLibrary()"
-    />
-  </ds-grid>
-
-  <ds-stack [gap]="'var(--ds-space-3)'">
-    <ds-section-header
-      [title]="'getSessions.yourSessions' | t"
-      [staticLabel]="sessionCountLabel()"
-    />
+  <ds-split-view
+    [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+    [gap]="'var(--ds-space-5)'"
+  >
+    @if (statsLoading()) {
+      <ds-skeleton slot="side" height="8.5rem" radius="var(--ds-radius-2xl)" />
+    } @else {
+      <ds-week-strip
+        slot="side"
+        data-testid="sessions-week"
+        [title]="weekTitle()"
+        [caption]="weekCaption()"
+        [badgeLabel]="streakLabel()"
+        [days]="weekDays()"
+      />
+    }
 
     @if (loading()) {
-      <ds-skeleton-list
-        [count]="4"
-        [columns]="null"
-        minColumn="18rem"
-        [tabletColumns]="2"
-        [gap]="'var(--ds-space-2)'"
-        radius="var(--ds-radius-2xl)"
-        padding="var(--ds-space-4)"
-        titleWidth="48%"
-        metaWidth="70%"
-        trailing="actions"
-        [actions]="1"
+      <ds-skeleton slot="side" height="16rem" radius="var(--ds-radius-2xl)" />
+    } @else if (next(); as next) {
+      <ds-next-session-card
+        slot="side"
+        data-testid="sessions-next"
+        [eyebrow]="next.eyebrow"
+        [title]="next.title"
+        [caption]="next.caption"
+        [stats]="next.stats"
+        [tags]="next.tags"
+        [ctaLabel]="nextStartLabel()"
+        [openAriaLabel]="next.openAriaLabel"
+        (started)="onStart(next.id)"
+        (opened)="onOpen(next.id)"
       />
-    } @else if (items().length === 0) {
-      <ds-empty-state
-        icon="dumbbell"
-        [title]="'getSessions.table.emptyTitle' | t"
-        [text]="'getSessions.table.emptyMessage' | t"
-      />
-    } @else {
-      <ds-grid
-        dsReveal="children"
-        [minColumn]="'18rem'"
-        [gap]="'var(--ds-space-2)'"
-        [tabletColumns]="2"
-      >
-        @for (session of rows(); track session.id) {
-          <ds-session-row
-            data-testid="session-row"
-            [name]="session.name"
-            [badge]="session.badge"
-            [meta]="session.meta"
-            [muscles]="session.muscles"
-            [lastLabel]="session.lastLabel"
-            [startAriaLabel]="session.startAriaLabel"
-            (opened)="onOpen(session.id)"
-            (started)="onStart(session.id)"
-          />
-        }
-      </ds-grid>
     }
-  </ds-stack>
 
-  @if (!statsLoading()) {
+    <ds-grid slot="side" [columns]="3" [gap]="'var(--ds-space-2)'">
+      <ds-action-tile
+        data-testid="sessions-free"
+        icon="stopwatch"
+        [name]="tiles().free"
+        [meta]="tiles().freeMeta"
+        (clicked)="onFreeWorkout()"
+      />
+      <ds-action-tile
+        data-testid="sessions-history"
+        icon="history"
+        [name]="tiles().history"
+        [meta]="tiles().historyMeta"
+        (clicked)="onHistory()"
+      />
+      <ds-action-tile
+        data-testid="sessions-library"
+        icon="dumbbell"
+        [name]="tiles().library"
+        [meta]="tiles().libraryMeta"
+        (clicked)="onLibrary()"
+      />
+    </ds-grid>
+
     <ds-stack [gap]="'var(--ds-space-3)'">
-      <ds-section-header [title]="monthTitle()" />
-      <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-        @for (stat of monthStats(); track stat.label) {
-          <ds-stat-tile
-            [value]="stat.value"
-            [unit]="stat.unit"
-            [label]="stat.label"
-            [note]="stat.note"
-            [positive]="stat.positive"
-          />
-        }
-      </ds-stack>
+      <ds-section-header
+        [title]="'getSessions.yourSessions' | t"
+        [staticLabel]="sessionCountLabel()"
+      />
+
+      @if (loading()) {
+        <ds-skeleton-list
+          [count]="4"
+          [columns]="null"
+          minColumn="18rem"
+          [gap]="'var(--ds-space-2)'"
+          radius="var(--ds-radius-2xl)"
+          padding="var(--ds-space-4)"
+          titleWidth="48%"
+          metaWidth="70%"
+          trailing="actions"
+          [actions]="1"
+        />
+      } @else if (items().length === 0) {
+        <ds-empty-state
+          icon="dumbbell"
+          [title]="'getSessions.table.emptyTitle' | t"
+          [text]="'getSessions.table.emptyMessage' | t"
+        />
+      } @else {
+        <ds-grid
+          dsReveal="children"
+          [minColumn]="'18rem'"
+          [gap]="'var(--ds-space-2)'"
+        >
+          @for (session of rows(); track session.id) {
+            <ds-session-row
+              data-testid="session-row"
+              [name]="session.name"
+              [badge]="session.badge"
+              [meta]="session.meta"
+              [muscles]="session.muscles"
+              [lastLabel]="session.lastLabel"
+              [startAriaLabel]="session.startAriaLabel"
+              (opened)="onOpen(session.id)"
+              (started)="onStart(session.id)"
+            />
+          }
+        </ds-grid>
+      }
     </ds-stack>
-  }
+
+    @if (!statsLoading()) {
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-section-header [title]="monthTitle()" />
+        <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+          @for (stat of monthStats(); track stat.label) {
+            <ds-stat-tile
+              [value]="stat.value"
+              [unit]="stat.unit"
+              [label]="stat.label"
+              [note]="stat.note"
+              [positive]="stat.positive"
+            />
+          }
+        </ds-stack>
+      </ds-stack>
+    }
+  </ds-split-view>
 </ds-page-wrapper>

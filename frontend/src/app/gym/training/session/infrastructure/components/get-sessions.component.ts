@@ -15,6 +15,7 @@ import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrast
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -78,6 +79,7 @@ const KG_PER_TONNE = 1000;
     ScreenHeaderComponent,
     StackComponent,
     GridComponent,
+    SplitViewComponent,
     ButtonComponent,
     EmptyStateComponent,
     SkeletonComponent,
