@@ -12,8 +12,19 @@
   transition: background var(--ds-transition-fast);
 }
 
+.agenda-item--glass {
+  --ds-surface-inset: var(--ds-sheet-surface-inset);
+  background: var(--ds-hero-bg);
+  border-color: var(--ds-sheet-border);
+  box-shadow: var(--ds-hero-shadow);
+}
+
 .agenda-item--done {
   background: var(--ds-surface-subtle);
+}
+
+.agenda-item--glass.agenda-item--done {
+  opacity: 0.7;
 }
 
 .agenda-item--slid {

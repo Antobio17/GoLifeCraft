@@ -32,6 +32,7 @@ export class AgendaItemComponent {
   @Input() done = false;
   @Input() removable = true;
   @Input() checkable = true;
+  @Input() glass = false;
   @Input() toggleLabel = "";
   @Input() editLabel = "";
   @Input() removeLabel = "";

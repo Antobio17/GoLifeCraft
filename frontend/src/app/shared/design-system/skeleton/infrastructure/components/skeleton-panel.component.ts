@@ -9,6 +9,7 @@ export type SkeletonPanelContent = "none" | "heatmap" | "meters" | "spark";
 })
 export class SkeletonPanelComponent {
   @Input() brand = false;
+  @Input() glass = false;
   @Input() subtitle = true;
   @Input() figure = false;
   @Input() content: SkeletonPanelContent = "heatmap";

@@ -66,6 +66,7 @@
     />
     <ds-grid [columns]="2" [gap]="'var(--ds-space-2)'">
       <ds-action-tile
+        [glass]="true"
         data-testid="dashboard-tile-catalog"
         icon="leaf"
         [name]="'dashboard.explore.catalog' | t"
@@ -73,6 +74,7 @@
         (clicked)="goToCatalog()"
       />
       <ds-action-tile
+        [glass]="true"
         data-testid="dashboard-tile-gym"
         icon="dumbbell"
         [name]="'dashboard.explore.gym' | t"
@@ -80,6 +82,7 @@
         (clicked)="goToGym()"
       />
       <ds-action-tile
+        [glass]="true"
         data-testid="dashboard-tile-recipes"
         icon="chefHat"
         [name]="'dashboard.explore.recipes' | t"
@@ -87,6 +90,7 @@
         (clicked)="goToRecipes()"
       />
       <ds-action-tile
+        [glass]="true"
         data-testid="dashboard-tile-shopping"
         icon="cart"
         [name]="'dashboard.explore.list' | t"

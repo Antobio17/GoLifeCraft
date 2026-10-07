@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 @Component({
   selector: "ds-stat-tile",
   template: `
-    <div class="ds-stile">
+    <div class="ds-stile" [class.ds-stile--glass]="glass">
       <span class="ds-stile__value"
         >{{ value }}
         @if (unit) {
@@ -37,6 +37,12 @@ import { Component, Input } from "@angular/core";
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-surface);
         padding: var(--ds-space-3);
+      }
+      .ds-stile--glass {
+        background: var(--ds-hero-bg);
+        border-color: var(--ds-sheet-border);
+        box-shadow: var(--ds-hero-shadow);
+        padding: var(--ds-space-3) var(--ds-space-4);
       }
       .ds-stile__value {
         display: block;
@@ -77,4 +83,5 @@ export class StatTileComponent {
   @Input() label = "";
   @Input() note = "";
   @Input() positive = false;
+  @Input() glass = false;
 }
