@@ -9,6 +9,7 @@
     <ds-skeleton-line width="11.5rem" height="0.6875rem" />
     <ds-skeleton-list
       [count]="4"
+      tone="glass"
       [gap]="'var(--ds-space-2)'"
       radius="var(--ds-radius-surface)"
       padding="var(--ds-space-3) var(--ds-space-3)"
@@ -32,6 +33,7 @@
     <ds-stack [gap]="'var(--ds-space-2)'">
       @for (entry of visibleEntries(); track entry.id) {
         <ds-agenda-item
+          [glass]="true"
           [title]="entry.title"
           [glyph]="entryGlyph(entry)"
           [kindLabel]="

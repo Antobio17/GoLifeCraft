@@ -30,7 +30,7 @@ export class SkeletonListItemComponent {
   @Input() padding = "var(--ds-space-2) var(--ds-space-3)";
   @Input() radius = "var(--ds-radius-surface)";
   @Input() surface = true;
-  @Input() tone: "surface" | "brand" = "surface";
+  @Input() tone: "surface" | "brand" | "glass" = "surface";
   @Input() alignTop = false;
 
   @Input() check = false;

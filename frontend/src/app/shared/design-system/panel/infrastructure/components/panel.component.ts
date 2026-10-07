@@ -3,7 +3,11 @@ import { Component, Input } from "@angular/core";
 @Component({
   selector: "ds-panel",
   template: `
-    <article class="ds-panel" [class.ds-panel--brand]="brand">
+    <article
+      class="ds-panel"
+      [class.ds-panel--brand]="brand"
+      [class.ds-panel--glass]="glass"
+    >
       <div class="ds-panel__head">
         <div class="ds-panel__heading">
           <p class="ds-panel__title">{{ title }}</p>
@@ -40,6 +44,14 @@ import { Component, Input } from "@angular/core";
         background: var(--ds-surface-chart);
         color: var(--ds-on-surface-chart);
         overflow: hidden;
+      }
+      .ds-panel--glass {
+        --ds-surface: var(--ds-sheet-surface);
+        --ds-surface-inset: var(--ds-sheet-surface-inset);
+        background: var(--ds-hero-bg);
+        border-color: var(--ds-sheet-border);
+        box-shadow: var(--ds-hero-shadow);
+        padding: var(--ds-space-4);
       }
       .ds-panel__head {
         display: flex;
@@ -79,4 +91,5 @@ export class PanelComponent {
   @Input() subtitle = "";
   @Input() figure = "";
   @Input() brand = false;
+  @Input() glass = false;
 }

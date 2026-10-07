@@ -19,6 +19,13 @@
   font-family: var(--ds-font-body);
 }
 
+.tile--glass {
+  --ds-surface-inset: var(--ds-sheet-surface-inset);
+  background: var(--ds-hero-bg);
+  border-color: var(--ds-sheet-border);
+  box-shadow: var(--ds-hero-shadow);
+}
+
 .tile:active {
   transform: scale(0.98);
 }

@@ -7,6 +7,7 @@ import { Component, Input } from "@angular/core";
       @for (metric of metricArray; track metric; let i = $index) {
         <div
           class="skmet__card"
+          [class.skmet__card--glass]="glass"
           [class.skmet__card--feature]="feature && i === metricArray.length - 1"
           [style.--ds-sk-delay]="delayFor(i)"
         >
@@ -36,6 +37,18 @@ import { Component, Input } from "@angular/core";
         border: 1px solid var(--ds-border);
         border-radius: var(--skmet-radius, var(--ds-radius-surface));
         padding: var(--skmet-padding, var(--ds-space-3) var(--ds-space-3));
+      }
+      .skmet__card--glass {
+        --ds-surface-inset: var(--ds-sheet-surface-inset);
+        --ds-skeleton-base: color-mix(in srgb, var(--ds-text) 8%, transparent);
+        --ds-skeleton-highlight: color-mix(
+          in srgb,
+          var(--ds-text) 14%,
+          transparent
+        );
+        background: var(--ds-hero-bg);
+        border-color: var(--ds-sheet-border);
+        box-shadow: var(--ds-hero-shadow);
       }
       .skmet__card--feature {
         --ds-skeleton-base: color-mix(
@@ -74,6 +87,7 @@ export class SkeletonMetricsComponent {
   @Input() radius = "var(--ds-radius-surface)";
   @Input() padding = "var(--ds-space-3) var(--ds-space-3)";
   @Input() feature = false;
+  @Input() glass = false;
 
   get metricArray(): number[] {
     return Array.from({ length: this.count }, (_, index) => index);

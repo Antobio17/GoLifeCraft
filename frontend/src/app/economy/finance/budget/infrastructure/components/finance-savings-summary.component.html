@@ -6,11 +6,11 @@
   />
 
   @if (loading()) {
-    <ds-skeleton-panel [figure]="true" content="meters" />
+    <ds-skeleton-panel [glass]="true" [figure]="true" content="meters" />
   } @else if (!configured()) {
     <ds-text variant="muted">{{ "dashboard.savings.empty" | t }}</ds-text>
   } @else {
-    <ds-card [padding]="'var(--ds-space-4)'">
+    <ds-card variant="glass" [padding]="'var(--ds-space-4)'">
       <ds-stack
         direction="row"
         justify="between"

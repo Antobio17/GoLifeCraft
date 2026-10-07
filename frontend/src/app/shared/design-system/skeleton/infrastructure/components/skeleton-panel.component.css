@@ -28,6 +28,16 @@
   background: var(--ds-surface-chart);
 }
 
+.skpan--glass {
+  --ds-surface-inset: var(--ds-sheet-surface-inset);
+  --ds-skeleton-base: color-mix(in srgb, var(--ds-text) 8%, transparent);
+  --ds-skeleton-highlight: color-mix(in srgb, var(--ds-text) 14%, transparent);
+  background: var(--ds-hero-bg);
+  border-color: var(--ds-sheet-border);
+  box-shadow: var(--ds-hero-shadow);
+  padding: var(--ds-space-4);
+}
+
 .skpan__head {
   display: flex;
   align-items: flex-start;

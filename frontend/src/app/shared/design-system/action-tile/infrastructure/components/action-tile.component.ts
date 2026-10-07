@@ -14,6 +14,7 @@ export class ActionTileComponent {
   @Input() meta = "";
   @Input() soon = false;
   @Input() soonLabel = "";
+  @Input() glass = false;
 
   @Output() clicked = new EventEmitter<void>();
 }
