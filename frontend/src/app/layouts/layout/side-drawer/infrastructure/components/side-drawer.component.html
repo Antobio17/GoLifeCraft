@@ -87,6 +87,7 @@
                     [attr.data-testid]="'drawer-' + item.route"
                     [routerLink]="item.route"
                     routerLinkActive="is-active"
+                    [muted]="!isOpen()"
                     [routerLinkActiveOptions]="item.activeOptions"
                     [icon]="item.icon"
                     [label]="item.labelKey | t"
@@ -97,6 +98,7 @@
                   <ds-nav-tile
                     [icon]="item.icon"
                     [href]="item.href"
+                    [muted]="!isOpen()"
                     [label]="item.labelKey | t"
                     [badge]="item.badge"
                     (click)="close()"

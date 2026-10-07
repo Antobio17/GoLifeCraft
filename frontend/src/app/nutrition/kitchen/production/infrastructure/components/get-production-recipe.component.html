@@ -331,8 +331,7 @@
     (closed)="onClosePicker()"
   >
     <ds-stack [gap]="'var(--ds-space-3)'">
-      <ds-segmented-toggle
-        variant="pill"
+      <ds-view-switch
         [options]="pickerTabs()"
         [ngModel]="pickerTab()"
         [ngModelOptions]="{ standalone: true }"

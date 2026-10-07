@@ -1,11 +1,12 @@
 import { NgTemplateOutlet } from "@angular/common";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { BarComponent } from "../../../bar/infrastructure/components/bar.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { DatedRowTone } from "../../domain/models/dated-row-tone.enum";
 
 @Component({
   selector: "ds-dated-row",
-  imports: [IconComponent, NgTemplateOutlet],
+  imports: [IconComponent, NgTemplateOutlet, BarComponent],
   template: `
     <ng-template #content>
       <span class="ds-drow__date">
@@ -39,9 +40,7 @@ import { DatedRowTone } from "../../domain/models/dated-row-tone.enum";
           </span>
         }
         @if (progress !== null) {
-          <span class="ds-drow__track" aria-hidden="true">
-            <span class="ds-drow__fill" [style.width.%]="progress"></span>
-          </span>
+          <ds-bar [value]="progress" />
         }
       </span>
 
@@ -192,19 +191,6 @@ import { DatedRowTone } from "../../domain/models/dated-row-tone.enum";
       .ds-drow__meta-text {
         font-variant-numeric: tabular-nums;
         overflow-wrap: anywhere;
-      }
-      .ds-drow__track {
-        display: block;
-        height: 0.25rem;
-        border-radius: var(--ds-radius-pill);
-        background: color-mix(in srgb, var(--ds-text) 8%, transparent);
-        overflow: hidden;
-      }
-      .ds-drow__fill {
-        display: block;
-        height: 100%;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-primary);
       }
       .ds-drow__value {
         flex: 0 0 auto;

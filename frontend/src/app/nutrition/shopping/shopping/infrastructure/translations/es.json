@@ -11,6 +11,11 @@
     "decrement": "Reducir cantidad",
     "remove": "Eliminar",
     "clearChecked": "Quitar comprados",
+    "search": {
+      "placeholder": "Buscar en la lista…",
+      "clear": "Borrar búsqueda",
+      "empty": "Nada en la lista coincide con la búsqueda"
+    },
     "tabEmpty": "No hay artículos en este supermercado",
     "error": "No se pudo cargar la lista de compra",
     "summary": {
@@ -80,7 +85,8 @@
       "aisle": "Por pasillo",
       "category": "Por categoría",
       "manage": "Gestionar pasillos",
-      "withoutAisle": "sin pasillo"
+      "withoutAisle": "sin pasillo",
+      "label": "Ordenar la lista"
     }
   }
 }

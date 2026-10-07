@@ -27,14 +27,22 @@
       "kind": {
         "task": "Tarea",
         "appointment": "Cita"
-      }
+      },
+      "emptyTitle": "Semana despejada"
     },
     "savings": {
       "title": "Tu ahorro del mes",
       "seeAll": "Ver más",
       "eyebrow": "AHORRO DEL MES",
-      "goal": "de",
-      "empty": "Aún no tienes presupuesto. Fíjate un objetivo de ahorro para verlo aquí."
+      "empty": "Aún no tienes presupuesto. Fíjate un objetivo de ahorro para verlo aquí.",
+      "emptyTitle": "Sin presupuesto",
+      "saved": "{{amount}} ahorrados",
+      "stats": {
+        "goal": "Objetivo",
+        "remaining": "Falta",
+        "extra": "De más",
+        "month": "Mes"
+      }
     },
     "gym": {
       "title": "Tu semana en el gimnasio",
@@ -61,14 +69,19 @@
     "explore": {
       "title": "Explora",
       "quickAccess": "Accesos rápidos",
-      "catalog": "Catálogo",
-      "catalogMeta": "248 formatos",
-      "recipes": "Recetas",
-      "recipesMeta": "Tu recetario",
       "list": "Lista de compra",
       "listMeta": "Tu compra por súper",
       "gym": "Gimnasio",
-      "gymMeta": "Sesiones y ejercicios"
+      "gymMeta": "Sesiones y ejercicios",
+      "agenda": "Nuevo evento",
+      "agendaMeta": "Apunta una cita o una tarea",
+      "movement": "Nuevo movimiento",
+      "movementMeta": "Apunta un gasto o un ingreso"
+    },
+    "headline": {
+      "empty": "Aún no has registrado nada hoy.",
+      "over": "Vas {{kcal}} kcal por encima.",
+      "under": "Te quedan {{kcal}} kcal hoy."
     }
   }
 }

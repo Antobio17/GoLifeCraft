@@ -12,16 +12,16 @@ import { Router } from "@angular/router";
 import { MyAvatarService } from "@shared/my-avatar/application/services/my-avatar.service";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
 import { DashboardLayoutComponent } from "@shared/design-system/dashboard-layout/infrastructure/components/dashboard-layout.component";
 import { GreetingHeaderComponent } from "@shared/design-system/greeting-header/infrastructure/components/greeting-header.component";
 import { NotificationBellComponent } from "@shared/design-system/notification-bell/infrastructure/components/notification-bell.component";
 import { UnreadNotificationsService } from "@notification/notification/inbox/application/services/unread-notifications.service";
-import { DiarySummaryComponent } from "@shared/design-system/diary-summary/infrastructure/components/diary-summary.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
+import { CalorieSummaryComponent } from "@shared/design-system/calorie-summary/infrastructure/components/calorie-summary.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
-import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { LinkRowComponent } from "@shared/design-system/link-row/infrastructure/components/link-row.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { GetGymStatsService } from "@gym/analytics/stats/application/services/get-gym-stats.service";
 import { GymStats } from "@gym/analytics/stats/domain/models/gym-stats.model";
 import { GymAnalyticsComponent } from "@gym/analytics/stats/infrastructure/components/gym-analytics.component";
@@ -37,15 +37,15 @@ import { FinanceSavingsSummaryComponent } from "@economy/finance/budget/infrastr
   imports: [
     DatePipe,
     ContextualTranslatePipe,
-    ActionTileComponent,
     DashboardLayoutComponent,
     GreetingHeaderComponent,
     NotificationBellComponent,
-    DiarySummaryComponent,
+    SkeletonLineComponent,
+    CalorieSummaryComponent,
     SectionHeaderComponent,
-    SkeletonSummaryComponent,
+    ModuleCardComponent,
+    LinkRowComponent,
     StackComponent,
-    GridComponent,
     GymAnalyticsComponent,
     AgendaSummaryComponent,
     FinanceSavingsSummaryComponent,
@@ -89,6 +89,31 @@ export class DashboardComponent implements OnInit {
 
   readonly summary = signal<DiaryDayAttributes | null>(null);
 
+  readonly summaryCard = computed(() => {
+    const diary = this.summary();
+    if (!diary) return null;
+
+    return this.view.summaryCard(diary);
+  });
+
+  readonly headlineKey = computed(() => {
+    const diary = this.summary();
+    if (!diary) return "";
+    if (diary.entryCount === 0) return "dashboard.headline.empty";
+    if (this.view.exceedsCalories(diary)) return "dashboard.headline.over";
+
+    return "dashboard.headline.under";
+  });
+
+  readonly headlineKcal = computed(() => {
+    const diary = this.summary();
+    if (!diary) return "";
+
+    return this.view.integer(
+      Math.abs(diary.consumedCalories - diary.goalCalories),
+    );
+  });
+
   ngOnInit(): void {
     this.getDiaryService
       .getDiary()
@@ -129,20 +154,20 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(["/agenda"]);
   }
 
+  goToNewAgendaEntry(): void {
+    this.router.navigate(["/agenda"], { queryParams: { create: 1 } });
+  }
+
+  goToNewMovement(): void {
+    this.router.navigate(["/economy"], { queryParams: { create: 1 } });
+  }
+
   goToBudget(): void {
     this.router.navigate(["/economy/budget"]);
   }
 
-  goToCatalog(): void {
-    this.router.navigate(["/catalog"]);
-  }
-
   goToDiary(): void {
     this.router.navigate(["/diary"]);
-  }
-
-  goToRecipes(): void {
-    this.router.navigate(["/recipes"]);
   }
 
   goToShopping(): void {

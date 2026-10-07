@@ -385,8 +385,7 @@
     <ds-stack [gap]="'var(--ds-space-3)'">
       <ds-text variant="meta">{{ "getMenu.picker.subtitle" | t }}</ds-text>
 
-      <ds-segmented-toggle
-        variant="pill"
+      <ds-view-switch
         [options]="pickerTabs()"
         [ngModel]="pickerTab()"
         [ngModelOptions]="{ standalone: true }"

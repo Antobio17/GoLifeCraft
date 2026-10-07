@@ -55,12 +55,22 @@
 
   @if (loading()) {
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-      <ds-skeleton
-        slot="side"
-        height="2.5rem"
-        radius="var(--ds-radius-control)"
-      />
       <ds-skeleton-chips slot="side" [count]="3" height="2rem" />
+      <ds-stack
+        slot="side"
+        direction="row"
+        align="center"
+        [gap]="'var(--ds-space-2)'"
+      >
+        <ds-stack [grow]="true">
+          <ds-skeleton height="2.625rem" radius="var(--ds-radius-control)" />
+        </ds-stack>
+        <ds-skeleton
+          width="5.75rem"
+          height="2.625rem"
+          radius="var(--ds-radius-control)"
+        />
+      </ds-stack>
       <ds-skeleton-summary
         slot="side"
         tone="primary"
@@ -97,14 +107,6 @@
     @if (list.itemCount > 0) {
       <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
         <ng-container slot="side">
-          <ds-segmented-toggle
-            data-testid="shopping-sort"
-            [options]="sortOptions()"
-            [ngModel]="sortMode()"
-            [ngModelOptions]="{ standalone: true }"
-            (ngModelChange)="onSort($event)"
-          />
-
           @if (showTabs()) {
             <ds-store-tabs
               data-testid="shopping-tabs"
@@ -113,6 +115,28 @@
               (selected)="onTab($event)"
             />
           }
+
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+            <ds-stack [grow]="true">
+              <ds-search-input
+                data-testid="shopping-search"
+                [placeholder]="'getShopping.search.placeholder' | t"
+                [clearLabel]="'getShopping.search.clear' | t"
+                [debounce]="120"
+                [value]="listSearch()"
+                (searched)="onListSearch($event)"
+              />
+            </ds-stack>
+
+            <ds-view-switch
+              data-testid="shopping-sort"
+              [options]="sortOptions()"
+              [ariaLabel]="'getShopping.sort.label' | t"
+              [ngModel]="sortMode()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onSort($event)"
+            />
+          </ds-stack>
 
           <ds-shopping-summary
             data-testid="shopping-summary"
@@ -125,6 +149,12 @@
 
         @if (tabEmpty()) {
           <ds-empty-state icon="cart" [title]="'getShopping.tabEmpty' | t" />
+        } @else if (searchEmpty()) {
+          <ds-empty-state
+            data-testid="shopping-search-empty"
+            icon="search"
+            [title]="'getShopping.search.empty' | t"
+          />
         } @else {
           @for (group of groups(); track group.category) {
             <ds-stack [gap]="'var(--ds-space-2)'">

@@ -1,7 +1,9 @@
 import { Component, Input } from "@angular/core";
+import { BarComponent } from "../../../bar/infrastructure/components/bar.component";
 
 @Component({
   selector: "ds-meter",
+  imports: [BarComponent],
   template: `
     <div class="ds-meter">
       <div class="ds-meter__row">
@@ -9,16 +11,7 @@ import { Component, Input } from "@angular/core";
         <span class="ds-meter__label">{{ label }}</span>
         <span class="ds-meter__pct">{{ percent }}%</span>
       </div>
-      <div
-        class="ds-meter__track"
-        role="progressbar"
-        [attr.aria-valuenow]="percent"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        [attr.aria-label]="label"
-      >
-        <div class="ds-meter__fill" [style.width.%]="percent"></div>
-      </div>
+      <ds-bar [value]="percent" [color]="color" [ariaLabel]="label" />
     </div>
   `,
   styles: [
@@ -50,18 +43,6 @@ import { Component, Input } from "@angular/core";
         font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text-meta);
-      }
-      .ds-meter__track {
-        height: 0.5rem;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface-inset);
-        overflow: hidden;
-      }
-      .ds-meter__fill {
-        height: 100%;
-        border-radius: var(--ds-radius-pill);
-        background: var(--meter-color, var(--ds-primary));
-        transition: width var(--ds-transition-smooth);
       }
     `,
   ],

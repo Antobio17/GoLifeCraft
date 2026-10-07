@@ -48,10 +48,8 @@ import { EntityVisualService } from "@shared/entity-visual/application/services/
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import {
-  SegmentedToggleComponent,
-  SegmentedOption,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
 import { EditorDraft } from "@shared/editor-form/application/editor-draft";
 import { EditorFormDirective } from "@shared/editor-form/infrastructure/directives/editor-form.directive";
@@ -124,7 +122,7 @@ type PickerTab = "product" | "recipe";
     EmojiTileComponent,
     SwipeToDeleteComponent,
     EmptyStateComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     ModalSheetComponent,
     DiscardChangesModalComponent,
     EditorFormDirective,
@@ -209,7 +207,7 @@ export class RecipeEditorComponent implements OnInit {
     },
   ]);
 
-  pickerTabs = computed<SegmentedOption[]>(() => [
+  pickerTabs = computed<ViewSwitchOption[]>(() => [
     { value: "product", label: this.t("recipeEditor.tabProducts") },
     { value: "recipe", label: this.t("recipeEditor.tabRecipes") },
   ]);

@@ -16,7 +16,7 @@
       "favorite": {
         "all": "All",
         "only": "Favorites",
-        "excluded": "Not favorites"
+        "label": "Favorites filter"
       }
     },
     "macro": {

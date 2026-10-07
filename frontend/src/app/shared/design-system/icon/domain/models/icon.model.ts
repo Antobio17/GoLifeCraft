@@ -74,6 +74,7 @@ export const DS_ICONS = {
   checkCircle: '<circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>',
   arrowLeft: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
   dot: '<circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/>',
+  tag: '<path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h6.9a1.5 1.5 0 0 1 1.06.44l8.1 8.1a1.5 1.5 0 0 1 0 2.12l-6.9 6.9a1.5 1.5 0 0 1-2.12 0l-8.1-8.1A1.5 1.5 0 0 1 3 11.4z"/><circle cx="8" cy="8" r="1.4"/>',
   category:
     '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>',
   download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
@@ -156,6 +157,10 @@ export const DS_ICONS = {
     '<path d="M8 4v16"/><path d="M5 7l3-3 3 3"/><path d="M16 20V4"/><path d="M13 17l3 3 3-3"/>',
   repeat:
     '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  viewGrouped:
+    '<rect x="4" y="4" width="16" height="4" rx="1.5"/><path d="M6 12h12M6 16h12M6 20h8"/>',
+  viewList:
+    '<path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>',
 } as const;
 
 export type DsIconName = keyof typeof DS_ICONS;

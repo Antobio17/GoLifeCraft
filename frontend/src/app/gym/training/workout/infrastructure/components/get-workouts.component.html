@@ -1,4 +1,8 @@
-<ds-page-wrapper [gap]="'var(--ds-space-5)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'70rem'"
+  [gap]="'var(--ds-space-5)'"
+>
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getWorkouts.back' | t"
@@ -8,77 +12,41 @@
     (leadingClick)="goBack()"
   />
 
-  @if (statsLoading()) {
-    <ds-skeleton height="24rem" radius="var(--ds-radius-surface)" />
-  } @else {
-    <ds-card
-      data-testid="workouts-month"
-      variant="glass"
-      [gap]="'var(--ds-space-4)'"
-    >
-      <ds-month-heatmap
-        [title]="monthTitle()"
-        [weekdayLabels]="weekdayLabels()"
-        [cells]="monthCells()"
-        [previousLabel]="'getWorkouts.month.previous' | t"
-        [nextLabel]="'getWorkouts.month.next' | t"
-        [canPrevious]="canPreviousMonth()"
-        [canNext]="canNextMonth()"
-        (previous)="onPreviousMonth()"
-        (next)="onNextMonth()"
+  <ds-split-view
+    [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+    [gap]="'var(--ds-space-5)'"
+  >
+    @if (statsLoading()) {
+      <ds-skeleton
+        slot="side"
+        height="24rem"
+        radius="var(--ds-radius-surface)"
       />
-      <ds-stat-strip [items]="monthStats()" />
-    </ds-card>
-  }
-
-  @if (loading()) {
-    <ds-skeleton-list
-      [count]="4"
-      [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-surface)"
-      padding="var(--ds-space-3)"
-      [tile]="50"
-      titleWidth="52%"
-      metaWidth="40%"
-      trailing="pill"
-      pillWidth="3rem"
-      pillHeight="1.25rem"
-    />
-  } @else if (items().length === 0) {
-    <ds-empty-state
-      icon="history"
-      [title]="'getWorkouts.empty.title' | t"
-      [text]="'getWorkouts.empty.text' | t"
-    />
-  } @else {
-    @for (week of weeks(); track week.key) {
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        <ds-section-header [title]="week.title" [staticLabel]="week.summary" />
-        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-          @for (row of week.rows; track row.id) {
-            <ds-dated-row
-              data-testid="workout-row"
-              [interactive]="true"
-              [ariaLabel]="row.ariaLabel"
-              [weekday]="row.weekday"
-              [day]="row.day"
-              [title]="row.title"
-              [tag]="row.tag"
-              [duration]="row.duration"
-              [meta]="row.meta"
-              [value]="row.ratio"
-              [valueTone]="row.ratioTone"
-              [progress]="row.progress"
-              (activated)="onOpen(row.id)"
-            />
-          }
-        </ds-stack>
-      </ds-stack>
+    } @else {
+      <ds-card
+        slot="side"
+        data-testid="workouts-month"
+        variant="glass"
+        [gap]="'var(--ds-space-4)'"
+      >
+        <ds-month-heatmap
+          [title]="monthTitle()"
+          [weekdayLabels]="weekdayLabels()"
+          [cells]="monthCells()"
+          [previousLabel]="'getWorkouts.month.previous' | t"
+          [nextLabel]="'getWorkouts.month.next' | t"
+          [canPrevious]="canPreviousMonth()"
+          [canNext]="canNextMonth()"
+          (previous)="onPreviousMonth()"
+          (next)="onNextMonth()"
+        />
+        <ds-stat-strip [items]="monthStats()" />
+      </ds-card>
     }
 
-    @if (loadingMore()) {
+    @if (loading()) {
       <ds-skeleton-list
-        [count]="2"
+        [count]="4"
         [gap]="'var(--ds-space-2)'"
         radius="var(--ds-radius-surface)"
         padding="var(--ds-space-3)"
@@ -89,11 +57,60 @@
         pillWidth="3rem"
         pillHeight="1.25rem"
       />
-    }
+    } @else if (items().length === 0) {
+      <ds-empty-state
+        icon="history"
+        [title]="'getWorkouts.empty.title' | t"
+        [text]="'getWorkouts.empty.text' | t"
+      />
+    } @else {
+      @for (week of weeks(); track week.key) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="week.title"
+            [staticLabel]="week.summary"
+          />
+          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+            @for (row of week.rows; track row.id) {
+              <ds-dated-row
+                data-testid="workout-row"
+                [interactive]="true"
+                [ariaLabel]="row.ariaLabel"
+                [weekday]="row.weekday"
+                [day]="row.day"
+                [title]="row.title"
+                [tag]="row.tag"
+                [duration]="row.duration"
+                [meta]="row.meta"
+                [value]="row.ratio"
+                [valueTone]="row.ratioTone"
+                [progress]="row.progress"
+                (activated)="onOpen(row.id)"
+              />
+            }
+          </ds-stack>
+        </ds-stack>
+      }
 
-    <ds-infinite-scroll
-      [disabled]="loadingMore() || !hasMore()"
-      (reached)="loadMore()"
-    />
-  }
+      @if (loadingMore()) {
+        <ds-skeleton-list
+          [count]="2"
+          [gap]="'var(--ds-space-2)'"
+          radius="var(--ds-radius-surface)"
+          padding="var(--ds-space-3)"
+          [tile]="50"
+          titleWidth="52%"
+          metaWidth="40%"
+          trailing="pill"
+          pillWidth="3rem"
+          pillHeight="1.25rem"
+        />
+      }
+
+      <ds-infinite-scroll
+        [disabled]="loadingMore() || !hasMore()"
+        (reached)="loadMore()"
+      />
+    }
+  </ds-split-view>
 </ds-page-wrapper>

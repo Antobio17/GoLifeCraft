@@ -35,10 +35,8 @@ import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/in
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { ChoiceRowComponent } from "@shared/design-system/choice-row/infrastructure/components/choice-row.component";
-import {
-  SegmentedToggleComponent,
-  SegmentedOption,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
@@ -106,7 +104,7 @@ const LABEL_SAVE_DEBOUNCE_MS = 600;
     ModalSheetComponent,
     ChoiceRowComponent,
     SearchInputComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     CtaRowComponent,
     EmptyStateComponent,
     SkeletonScreenHeaderComponent,
@@ -297,7 +295,7 @@ export class GetProductionRecipeComponent {
     );
   }
 
-  pickerTabs = computed<SegmentedOption[]>(() => [
+  pickerTabs = computed<ViewSwitchOption[]>(() => [
     { value: "product", label: this.t("getProductionRecipe.pickerProducts") },
     { value: "recipe", label: this.t("getProductionRecipe.pickerRecipes") },
   ]);

@@ -25,10 +25,8 @@ import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrast
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
-import {
-  SegmentedOption,
-  SegmentedToggleComponent,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
@@ -61,7 +59,7 @@ const ALL = "";
     TextComponent,
     StackComponent,
     SelectComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     ProductCardComponent,
     InfiniteScrollComponent,
   ],
@@ -88,12 +86,18 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   favoriteFilter = signal<ArticleFavoriteFilter>(ArticleFavoriteFilter.All);
   pendingFavorites = signal<ReadonlyMap<string, boolean>>(new Map());
 
-  favoriteOptions = computed<SegmentedOption[]>(() =>
-    Object.values(ArticleFavoriteFilter).map((value) => ({
-      value,
-      label: this.t(`getArticles.filter.favorite.${value}`),
-    })),
-  );
+  favoriteOptions = computed<ViewSwitchOption[]>(() => [
+    {
+      value: ArticleFavoriteFilter.All,
+      label: this.t("getArticles.filter.favorite.all"),
+      icon: "viewList",
+    },
+    {
+      value: ArticleFavoriteFilter.Only,
+      label: this.t("getArticles.filter.favorite.only"),
+      icon: "star",
+    },
+  ]);
 
   favoriteLabel = computed(() => this.t("getArticles.favorite.toggle"));
 
@@ -155,8 +159,9 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     this.selectedBrand.set(filters["brand"] ?? ALL);
     this.selectedStore.set(filters["store"] ?? ALL);
     this.favoriteFilter.set(
-      (filters["favorite"] as ArticleFavoriteFilter | undefined) ??
-        ArticleFavoriteFilter.All,
+      ArticleFavoriteFilter.Only === filters["favorite"]
+        ? ArticleFavoriteFilter.Only
+        : ArticleFavoriteFilter.All,
     );
   }
 
@@ -286,7 +291,6 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
 
   private favoriteParam(): boolean | undefined {
     if (ArticleFavoriteFilter.Only === this.favoriteFilter()) return true;
-    if (ArticleFavoriteFilter.Excluded === this.favoriteFilter()) return false;
 
     return undefined;
   }

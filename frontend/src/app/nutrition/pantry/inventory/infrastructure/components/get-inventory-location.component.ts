@@ -39,10 +39,8 @@ import { BackNavigationService } from "@shared/routing/application/services/back
 import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
-import {
-  SegmentedOption,
-  SegmentedToggleComponent,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { InventoryItemFilter } from "../../domain/models/inventory-item-filter.model";
 
 @Component({
@@ -52,7 +50,7 @@ import { InventoryItemFilter } from "../../domain/models/inventory-item-filter.m
     FormsModule,
     PressableComponent,
     IconComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
@@ -165,12 +163,18 @@ export class GetInventoryLocationComponent {
     );
   });
 
-  filterOptions = computed<SegmentedOption[]>(() =>
-    Object.values(InventoryItemFilter).map((value) => ({
-      value,
-      label: this.t(`getInventoryLocation.filter.${value}`),
-    })),
-  );
+  filterOptions = computed<ViewSwitchOption[]>(() => [
+    {
+      value: InventoryItemFilter.ALL,
+      label: this.t("getInventoryLocation.filter.all"),
+      icon: "viewList",
+    },
+    {
+      value: InventoryItemFilter.FAVORITES,
+      label: this.t("getInventoryLocation.filter.favorites"),
+      icon: "star",
+    },
+  ]);
 
   favoriteLabel = computed(() => this.t("getInventoryLocation.favorite"));
 

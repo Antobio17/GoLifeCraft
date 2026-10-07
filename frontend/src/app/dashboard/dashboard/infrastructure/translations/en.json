@@ -27,14 +27,22 @@
       "kind": {
         "task": "Task",
         "appointment": "Appointment"
-      }
+      },
+      "emptyTitle": "Clear week"
     },
     "savings": {
       "title": "Your savings this month",
       "seeAll": "See more",
       "eyebrow": "SAVINGS THIS MONTH",
-      "goal": "of",
-      "empty": "No budget yet. Set a savings goal to see it here."
+      "empty": "No budget yet. Set a savings goal to see it here.",
+      "emptyTitle": "No budget yet",
+      "saved": "{{amount}} saved",
+      "stats": {
+        "goal": "Goal",
+        "remaining": "Left",
+        "extra": "Extra",
+        "month": "Month"
+      }
     },
     "gym": {
       "title": "Your week at the gym",
@@ -61,14 +69,19 @@
     "explore": {
       "title": "Explore",
       "quickAccess": "Quick access",
-      "catalog": "Catalog",
-      "catalogMeta": "248 products",
-      "recipes": "Recipes",
-      "recipesMeta": "Your recipe book",
       "list": "Shopping list",
       "listMeta": "Your shop by store",
       "gym": "Gym",
-      "gymMeta": "Sessions & exercises"
+      "gymMeta": "Sessions & exercises",
+      "agenda": "New event",
+      "agendaMeta": "Add an appointment or a task",
+      "movement": "New transaction",
+      "movementMeta": "Log an expense or income"
+    },
+    "headline": {
+      "empty": "Nothing logged yet today.",
+      "over": "You're {{kcal}} kcal over.",
+      "under": "{{kcal}} kcal left today."
     }
   }
 }

@@ -55,16 +55,18 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         justify-content: center;
         width: 3.25rem;
         height: 3.25rem;
-        border-radius: var(--ds-radius-inner);
+        border-radius: var(--ds-radius-control);
         background: var(--ds-surface-inset);
         color: var(--ds-text-muted);
         transition:
           background var(--ds-dur-2) var(--ds-ease-out),
           color var(--ds-dur-2) var(--ds-ease-out);
       }
-      :host(:hover) .tile__icon {
-        background: var(--ds-surface-hover);
-        color: var(--ds-text);
+      @media (hover: hover) {
+        :host(:hover) .tile__icon {
+          background: var(--ds-primary-soft);
+          color: var(--ds-primary);
+        }
       }
       .tile__badge {
         position: absolute;
@@ -95,6 +97,14 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         color: var(--ds-primary);
         font-weight: 700;
       }
+      :host(.is-muted) .tile__icon {
+        background: var(--ds-surface-inset);
+        color: var(--ds-text-muted);
+      }
+      :host(.is-muted) .tile__label {
+        color: var(--ds-text);
+        font-weight: 600;
+      }
       :host(:focus-visible) {
         outline: none;
       }
@@ -104,10 +114,14 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       }
     `,
   ],
+  host: {
+    "[class.is-muted]": "muted",
+  },
 })
 export class NavTileComponent {
   @Input({ required: true }) icon!: DsIconName;
   @Input() label = "";
   @Input() badge = "";
   @Input() href = "";
+  @Input() muted = false;
 }

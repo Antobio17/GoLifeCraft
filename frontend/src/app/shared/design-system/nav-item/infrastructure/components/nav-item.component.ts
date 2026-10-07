@@ -102,7 +102,8 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         color: var(--ds-text-meta);
       }
       :host(:hover) .item {
-        background: color-mix(in srgb, var(--ds-text) 6%, transparent);
+        background: var(--ds-primary-soft);
+        color: var(--ds-primary);
       }
       :host(.is-active) .item {
         background: var(--drawer-active-bg, var(--ds-primary));

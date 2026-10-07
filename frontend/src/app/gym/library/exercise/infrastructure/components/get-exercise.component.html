@@ -10,12 +10,23 @@
   >
     <ds-button
       slot="actions"
+      data-testid="exercise-edit"
       variant="secondary"
       size="icon-lg"
       icon="pencil"
       [iconSize]="19"
       [ariaLabel]="'getExercise.edit' | t"
       (clicked)="onEdit()"
+    />
+    <ds-button
+      slot="actions"
+      data-testid="exercise-delete"
+      variant="danger"
+      size="icon-lg"
+      icon="trash"
+      [iconSize]="19"
+      [ariaLabel]="'getExercise.delete' | t"
+      (clicked)="onDelete()"
     />
   </ds-screen-header>
 
@@ -35,8 +46,19 @@
       </ds-stack>
 
       <ds-stack [gap]="'var(--ds-space-3)'">
-        <ds-skeleton-line width="8rem" height="0.75rem" />
-        <ds-skeleton height="2.5rem" radius="var(--ds-radius-control)" />
+        <ds-stack
+          direction="row"
+          align="center"
+          justify="between"
+          [gap]="'var(--ds-space-2)'"
+        >
+          <ds-skeleton-line width="6rem" height="0.75rem" />
+          <ds-skeleton
+            width="8.5rem"
+            height="2rem"
+            radius="var(--ds-radius-control)"
+          />
+        </ds-stack>
         <ds-skeleton-panel
           [brand]="true"
           [figure]="true"
@@ -104,16 +126,26 @@
       <ds-stack [gap]="'var(--ds-space-4)'">
         @if (hasData()) {
           <ds-card variant="glass" [gap]="'var(--ds-space-3)'">
-            <ds-text variant="label">{{
-              "getExercise.progression" | t
-            }}</ds-text>
+            <ds-stack
+              direction="row"
+              align="center"
+              justify="between"
+              [wrap]="true"
+              [gap]="'var(--ds-space-2)'"
+            >
+              <ds-text variant="label">{{
+                "getExercise.progression" | t
+              }}</ds-text>
 
-            <ds-segmented-toggle
-              variant="pill"
-              [options]="metricOptions()"
-              [ngModel]="metric()"
-              (ngModelChange)="onMetricChange($event)"
-            />
+              <ds-view-switch
+                data-testid="exercise-metric"
+                size="sm"
+                [options]="metricOptions()"
+                [ariaLabel]="'getExercise.metric.label' | t"
+                [ngModel]="metric()"
+                (ngModelChange)="onMetricChange($event)"
+              />
+            </ds-stack>
 
             @if (metricsUsePerSideWeight()) {
               <ds-text variant="meta">{{ perSideMetricsNote() }}</ds-text>
@@ -160,3 +192,17 @@
     </ds-split-view>
   }
 </ds-page-wrapper>
+
+<ds-confirm-action-modal
+  [show]="showDeleteModal()"
+  [title]="'getExercises.deleteModal.title' | t"
+  [body]="'getExercises.deleteModal.body' | t"
+  [itemName]="exercise()?.attributes?.name ?? ''"
+  [warningText]="'getExercises.deleteModal.warning' | t"
+  [isDeleting]="isDeleting()"
+  [cancelLabel]="'getExercises.deleteModal.cancel' | t"
+  [confirmLabel]="'getExercises.deleteModal.confirm' | t"
+  [deletingLabel]="'getExercises.deleteModal.deleting' | t"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()"
+/>

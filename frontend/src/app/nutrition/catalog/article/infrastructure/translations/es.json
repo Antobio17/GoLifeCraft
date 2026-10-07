@@ -16,7 +16,7 @@
       "favorite": {
         "all": "Todos",
         "only": "Favoritos",
-        "excluded": "No favoritos"
+        "label": "Filtro de favoritos"
       }
     },
     "macro": {

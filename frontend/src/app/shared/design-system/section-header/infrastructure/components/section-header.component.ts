@@ -9,13 +9,20 @@ type SectionHeaderSize = "sm" | "md";
       <h2 class="ds-shead__title" [class.ds-shead__title--md]="size === 'md'">
         {{ title }}
       </h2>
-      @if (actionLabel) {
-        <button type="button" class="ds-shead__action" (click)="action.emit()">
-          {{ actionLabel }} ›
-        </button>
-      } @else if (staticLabel) {
-        <span class="ds-shead__label">{{ staticLabel }}</span>
-      }
+      <div class="ds-shead__end">
+        @if (actionLabel) {
+          <button
+            type="button"
+            class="ds-shead__action"
+            (click)="action.emit()"
+          >
+            {{ actionLabel }} ›
+          </button>
+        } @else if (staticLabel) {
+          <span class="ds-shead__label">{{ staticLabel }}</span>
+        }
+        <ng-content select="[slot=trailing]" />
+      </div>
     </div>
   `,
   styles: [
@@ -27,6 +34,11 @@ type SectionHeaderSize = "sm" | "md";
         display: flex;
         align-items: center;
         justify-content: space-between;
+      }
+      .ds-shead__end {
+        display: flex;
+        align-items: center;
+        gap: var(--ds-space-3);
       }
       .ds-shead__title {
         margin: 0;

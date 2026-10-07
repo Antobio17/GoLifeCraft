@@ -102,11 +102,8 @@ estos tests conducen la UI.
 
 ## Antes de dar por terminado cualquier cambio de frontend
 
-Obligatorio, igual que los comandos del backend. Lo hace cumplir un hook `Stop`
-(`.claude/hooks/require-e2e-check.sh`): si quedan cambios sin commitear bajo
-`frontend/src/app/**`, no deja cerrar el turno sin haber pasado por la skill
-**`/e2e`**, que comprueba el entorno, decide qué correr y sabe interpretar los
-fallos. El hook avisa una vez por turno y se aparta; no bloquea en bucle.
+La skill **`/e2e`** comprueba el entorno, decide qué correr y sabe interpretar
+los fallos.
 
 No se cierra un cambio de `frontend/src/app/**` sin esto:
 

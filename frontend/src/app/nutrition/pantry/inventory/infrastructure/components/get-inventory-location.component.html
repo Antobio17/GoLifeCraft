@@ -43,22 +43,24 @@
         <ds-section-header
           [title]="'getInventoryLocation.items.title' | t"
           [staticLabel]="visibleRows().length.toString()"
-        />
+        >
+          @if (rows().length > 0) {
+            <ds-view-switch
+              slot="trailing"
+              data-testid="inventory-location-filter-favorite"
+              [options]="filterOptions()"
+              [ariaLabel]="'getInventoryLocation.filter.label' | t"
+              [ngModel]="itemFilter()"
+              (ngModelChange)="onFilterChange($event)"
+            />
+          }
+        </ds-section-header>
 
         @if (rows().length === 0) {
           <ds-empty-state
             icon="package"
             [title]="'getInventoryLocation.empty.title' | t"
             [text]="'getInventoryLocation.empty.text' | t"
-          />
-        } @else {
-          <ds-segmented-toggle
-            data-testid="inventory-location-filter-favorite"
-            variant="pill"
-            [stretch]="true"
-            [options]="filterOptions()"
-            [ngModel]="itemFilter()"
-            (ngModelChange)="onFilterChange($event)"
           />
         }
 

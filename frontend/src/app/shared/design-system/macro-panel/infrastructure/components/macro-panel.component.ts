@@ -1,8 +1,10 @@
 import { Component, Input } from "@angular/core";
+import { BarComponent } from "../../../bar/infrastructure/components/bar.component";
 import { MacroGoal } from "../../domain/models/macro-goal.model";
 
 @Component({
   selector: "ds-macro-panel",
+  imports: [BarComponent],
   template: `
     <div class="ds-mpanel">
       <div class="ds-mpanel__energy">
@@ -20,22 +22,12 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         @for (macro of macros; track macro.label) {
           <div class="ds-mpanel__bar">
             <span class="ds-mpanel__label">{{ macro.label }}</span>
-            <span class="ds-mpanel__track">
-              <span
-                class="ds-mpanel__fill"
-                [class.ds-mpanel__fill--protein]="macro.tone === 'protein'"
-                [class.ds-mpanel__fill--fat]="macro.tone === 'fat'"
-                [class.ds-mpanel__fill--carbs]="macro.tone === 'carbs'"
-                [class.ds-mpanel__fill--capped]="macro.overPercent > 0"
-                [style.width.%]="macro.percent"
-              ></span>
-              @if (macro.overPercent > 0) {
-                <span
-                  class="ds-mpanel__over"
-                  [style.width.%]="macro.overPercent"
-                ></span>
-              }
-            </span>
+            <ds-bar
+              [value]="macro.percent"
+              [over]="macro.overPercent"
+              [tone]="macro.tone"
+              [ariaLabel]="macro.label"
+            />
             <span
               class="ds-mpanel__value"
               [class.ds-mpanel__value--over]="macro.overPercent > 0"
@@ -113,40 +105,6 @@ import { MacroGoal } from "../../domain/models/macro-goal.model";
         overflow: hidden;
         text-overflow: ellipsis;
         color: var(--ds-text-muted);
-      }
-      .ds-mpanel__track {
-        display: flex;
-        height: 0.375rem;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface-inset);
-        overflow: hidden;
-      }
-      .ds-mpanel__fill {
-        display: block;
-        height: 100%;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-accent);
-        transition: width var(--ds-transition-base);
-      }
-      .ds-mpanel__fill--capped {
-        border-radius: var(--ds-radius-pill) 0 0 var(--ds-radius-pill);
-      }
-      .ds-mpanel__fill--protein {
-        background: var(--ds-data-1);
-      }
-      .ds-mpanel__fill--fat {
-        background: var(--ds-data-3);
-      }
-      .ds-mpanel__fill--carbs {
-        background: var(--ds-data-2);
-      }
-      .ds-mpanel__over {
-        display: block;
-        height: 100%;
-        border-radius: 0 var(--ds-radius-pill) var(--ds-radius-pill) 0;
-        background: var(--ds-danger);
-        border-left: 2px solid var(--ds-surface);
-        transition: width var(--ds-transition-base);
       }
       .ds-mpanel__value {
         font-size: var(--ds-text-sm);

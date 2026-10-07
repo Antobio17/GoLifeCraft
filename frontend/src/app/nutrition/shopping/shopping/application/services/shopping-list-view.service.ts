@@ -123,6 +123,21 @@ export class ShoppingListViewService {
     return attributes.items.filter((item) => item.store === tab);
   }
 
+  searchedItems(
+    items: ShoppingListItemView[],
+    query: string,
+  ): ShoppingListItemView[] {
+    return items.filter((item) =>
+      this.textSearch.matches(
+        query,
+        item.name,
+        item.brand,
+        item.category,
+        item.store,
+      ),
+    );
+  }
+
   groups(
     items: ShoppingListItemView[],
     labels: ShoppingGroupLabels,

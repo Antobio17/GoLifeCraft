@@ -22,6 +22,7 @@
   "getEconomy.removed": "{{name}} removed",
   "getEconomy.grouping.date": "By date",
   "getEconomy.grouping.category": "By category",
+  "getEconomy.grouping.label": "Group transactions",
   "getEconomy.empty.title": "No movements this month",
   "getEconomy.empty.text": "Add an expense or an income to start seeing your data.",
   "getEconomy.day.spent": "Spent",

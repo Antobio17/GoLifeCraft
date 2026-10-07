@@ -9,36 +9,12 @@
     align="center"
     [gap]="'var(--ds-space-3)'"
   >
-    <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-      <ds-stack [gap]="'2px'">
-        <ds-heading [level]="2" size="xl" [truncate]="true">{{
-          "getDiary.title" | t
-        }}</ds-heading>
-        <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
-        <ds-save-status
-          [status]="autosave.status()"
-          (retried)="onRetrySave()"
-        />
-      </ds-stack>
-      @if (dayStatus(); as status) {
-        <ds-chip>
-          <ds-stack
-            direction="row"
-            align="center"
-            [gap]="'var(--ds-space-1-5)'"
-          >
-            <ds-icon
-              class="day-status-dot"
-              [class.day-status-dot--green]="status === 'green'"
-              [class.day-status-dot--orange]="status === 'orange'"
-              [class.day-status-dot--red]="status === 'red'"
-              name="dot"
-              [size]="8"
-            />
-            {{ dayStatusLabel() }}
-          </ds-stack>
-        </ds-chip>
-      }
+    <ds-stack [gap]="'2px'" [grow]="true">
+      <ds-heading [level]="2" size="xl" [truncate]="true">{{
+        "getDiary.title" | t
+      }}</ds-heading>
+      <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
+      <ds-save-status [status]="autosave.status()" (retried)="onRetrySave()" />
     </ds-stack>
 
     <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
@@ -87,8 +63,20 @@
   </ds-stack>
 
   @if (loading()) {
-    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-      <ds-skeleton-summary slot="side" tone="glass" macros="bars" />
+    <ds-split-view
+      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
+      [sectionGap]="'var(--ds-space-6)'"
+    >
+      <ds-module-card slot="side" [hero]="true">
+        <ds-stack [gap]="'var(--ds-space-3)'">
+          <ds-skeleton-line width="40%" height="0.75rem" />
+          <ds-skeleton-line width="70%" height="1.75rem" />
+          <ds-skeleton-line width="45%" height="1rem" />
+          <ds-skeleton-line width="100%" height="0.5rem" />
+          <ds-skeleton-line width="100%" height="3.5rem" />
+          <ds-skeleton-line width="35%" height="1.5rem" />
+        </ds-stack>
+      </ds-module-card>
 
       @for (entries of skeletonMeals; track $index) {
         <ds-stack [gap]="'var(--ds-space-2)'">
@@ -114,18 +102,24 @@
       }
     </ds-split-view>
   } @else if (attributes(); as diary) {
-    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-      <ds-diary-summary
+    <ds-split-view
+      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
+      [sectionGap]="'var(--ds-space-6)'"
+    >
+      @let card = summaryCard()!;
+      <ds-calorie-summary
         data-testid="diary-summary"
         slot="side"
+        [hero]="true"
         [eyebrow]="summaryEyebrowKey() | t"
-        [countLabel]="view.countLabel(diary.entryCount, planningDay())"
-        [percent]="diary.percent"
-        [consumed]="view.integer(diary.consumedCalories)"
-        [goal]="view.integer(diary.goalCalories)"
-        [footnote]="view.caloriesFootnote(diary, planningDay())"
-        [over]="view.exceedsCalories(diary)"
-        [macros]="view.goalMacros(diary)"
+        [statusLabel]="card.statusKey | t"
+        [statusTone]="card.statusTone"
+        [title]="card.headlineKey | t: { kcal: card.kcal }"
+        [over]="card.over"
+        [caption]="'getDiary.summary.caption' | t: card.caption"
+        [segments]="card.segments"
+        [marker]="card.marker"
+        [stats]="card.stats"
       />
 
       @for (meal of mealRows(); track meal.key) {
@@ -261,8 +255,7 @@
       >
 
       @if (!quickEditing()) {
-        <ds-segmented-toggle
-          variant="pill"
+        <ds-view-switch
           data-testid="diary-picker-tabs"
           [options]="pickerTabs()"
           [ngModel]="pickerTab()"

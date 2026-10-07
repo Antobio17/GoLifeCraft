@@ -17,7 +17,8 @@ import { TranslationService } from "@shared/i18n/application/services/translatio
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
-import { DiarySummaryComponent } from "@shared/design-system/diary-summary/infrastructure/components/diary-summary.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { CalorieSummaryComponent } from "@shared/design-system/calorie-summary/infrastructure/components/calorie-summary.component";
 import { DiaryEntryComponent } from "@shared/design-system/diary-entry/infrastructure/components/diary-entry.component";
 import { RailComponent } from "@shared/design-system/rail/infrastructure/components/rail.component";
 import { StuckDirective } from "@shared/design-system/stuck/infrastructure/directives/stuck.directive";
@@ -32,7 +33,7 @@ import { IconButtonComponent } from "@shared/design-system/icon-button/infrastru
 import { PlaceholderNoteComponent } from "@shared/design-system/placeholder-note/infrastructure/components/placeholder-note.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
@@ -45,16 +46,13 @@ import { AmountInputComponent } from "@shared/design-system/amount-input/infrast
 import { EmojiChoiceGridComponent } from "@shared/design-system/emoji-choice-grid/infrastructure/components/emoji-choice-grid.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import {
   CalendarComponent,
   CalendarCell,
   CalendarLegendItem,
 } from "@shared/design-system/calendar/infrastructure/components/calendar.component";
-import {
-  SegmentedOption,
-  SegmentedToggleComponent,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
 import { GetRecipesService } from "@nutrition/recipe/recipe/application/services/get-recipes.service";
 import { GetDiaryService } from "@nutrition/diary/diary/application/services/get-diary.service";
@@ -65,10 +63,7 @@ import {
 } from "@nutrition/diary/diary/application/services/diary-view.service";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { DiaryCalendarViewService } from "@nutrition/diary/diary/application/services/diary-calendar-view.service";
-import {
-  DiaryCalendarDay,
-  DiaryCalendarStatus,
-} from "@nutrition/diary/diary/domain/models/diary-calendar.model";
+import { DiaryCalendarDay } from "@nutrition/diary/diary/domain/models/diary-calendar.model";
 import {
   DiaryChoice,
   DiaryPickerService,
@@ -128,7 +123,8 @@ type PickerTab = "product" | "recipe" | "quick";
     ContextualTranslatePipe,
     PageWrapperComponent,
     SplitViewComponent,
-    DiarySummaryComponent,
+    ModuleCardComponent,
+    CalorieSummaryComponent,
     DiaryEntryComponent,
     RailComponent,
     StuckDirective,
@@ -141,13 +137,13 @@ type PickerTab = "product" | "recipe" | "quick";
     PlaceholderNoteComponent,
     CardComponent,
     StackComponent,
-    SkeletonSummaryComponent,
+    SkeletonLineComponent,
     SkeletonSectionHeaderComponent,
     SkeletonListComponent,
     ModalSheetComponent,
     ChoiceRowComponent,
     SearchInputComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     NutrientInputComponent,
     NumberInputComponent,
     TextInputComponent,
@@ -155,7 +151,6 @@ type PickerTab = "product" | "recipe" | "quick";
     EmojiChoiceGridComponent,
     NoteComponent,
     IconComponent,
-    ChipComponent,
     CalendarComponent,
     DiaryTreeComponent,
     SaveStatusComponent,
@@ -214,13 +209,20 @@ export class GetDiaryComponent implements OnInit {
   pickerMeal = signal("");
   pickerTab = signal<PickerTab>("product");
   pickerQuery = signal("");
-  pickerTabs = computed<SegmentedOption[]>(() => [
+  pickerTabs = computed<ViewSwitchOption[]>(() => [
     { value: "product", label: this.t("getDiary.picker.products") },
     { value: "recipe", label: this.t("getDiary.picker.recipes") },
     { value: "quick", label: this.t("getDiary.picker.quick") },
   ]);
 
   attributes = computed(() => this.day()?.attributes ?? null);
+
+  summaryCard = computed(() => {
+    const diary = this.attributes();
+    if (!diary) return null;
+
+    return this.view.summaryCard(diary);
+  });
   planningDay = computed(() => this.view.isFuture(this.date()));
   pastDay = computed(() => this.view.isPast(this.date()));
   summaryEyebrowKey = computed(() =>
@@ -388,30 +390,6 @@ export class GetDiaryComponent implements OnInit {
       planned: this.t("getDiary.calendar.legend.planned"),
     }),
   );
-
-  dayStatus = computed<DiaryCalendarStatus | null>(() => {
-    const diary = this.attributes();
-    if (!diary) return null;
-
-    return this.calendarView.dayStatus(
-      diary.consumedCalories,
-      diary.goalCalories,
-      diary.entryCount,
-    );
-  });
-  dayStatusLabel = computed(() => {
-    const status = this.dayStatus();
-    if (!status) return "";
-
-    if (!this.planningDay())
-      return this.t(`getDiary.calendar.legend.${status}`);
-
-    return this.t(
-      status === "rest"
-        ? "getDiary.calendar.legend.unplanned"
-        : "getDiary.calendar.legend.planned",
-    );
-  });
 
   goalSheetOpen = signal(false);
   goalSaving = signal(false);

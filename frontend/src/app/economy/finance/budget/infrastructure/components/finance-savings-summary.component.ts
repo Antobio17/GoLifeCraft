@@ -11,13 +11,15 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
-import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { BudgetMeterComponent } from "@shared/design-system/budget-meter/infrastructure/components/budget-meter.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
-import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
+import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
+import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/stat-strip-item.model";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { FinanceViewService } from "@economy/finance/transaction/application/services/finance-view.service";
 import { GetFinanceBudgetService } from "@economy/finance/budget/application/services/get-finance-budget.service";
@@ -26,6 +28,7 @@ import { FinanceBudgetAttributes } from "@economy/finance/budget/domain/models/f
 import { FinanceBudgetStatus } from "@economy/finance/budget/domain/models/finance-budget-status.model";
 
 const MODULE_PATH = "economy/finance/budget";
+const DASHBOARD_PATH = "dashboard/dashboard";
 
 @Component({
   selector: "app-finance-savings-summary",
@@ -34,13 +37,14 @@ const MODULE_PATH = "economy/finance/budget";
     RevealDirective,
     ContextualTranslatePipe,
     StackComponent,
-    TextComponent,
     HeadingComponent,
-    CardComponent,
     ChipComponent,
     BudgetMeterComponent,
+    ModuleCardComponent,
+    CtaRowComponent,
     SectionHeaderComponent,
-    SkeletonPanelComponent,
+    StatStripComponent,
+    SkeletonLineComponent,
   ],
 })
 export class FinanceSavingsSummaryComponent implements OnInit {
@@ -59,10 +63,10 @@ export class FinanceSavingsSummaryComponent implements OnInit {
   configured = computed(() => this.budget()?.configured ?? false);
 
   savingsRealLabel = computed(() =>
-    this.view.money(this.budget()?.savingsReal ?? 0),
+    this.view.moneyShort(this.budget()?.savingsReal ?? 0),
   );
   savingsObjectiveLabel = computed(() =>
-    this.view.money(this.budget()?.savingsObjective ?? 0),
+    this.view.moneyShort(this.budget()?.savingsObjective ?? 0),
   );
   savingsRatio = computed(() => this.budget()?.savingsProgress ?? 0);
   monthProgressRatio = computed(() => this.budget()?.monthProgress ?? 0);
@@ -82,15 +86,33 @@ export class FinanceSavingsSummaryComponent implements OnInit {
       (this.budget()?.savingsReal ?? 0),
   );
   savingsGoalReached = computed(() => this.savingsRemaining() <= 0);
-  savingsRemainingLabel = computed(() => {
-    this.translationsReady();
-    const remaining = this.savingsRemaining();
 
-    return this.budgetView.savingsRemainingLabel(
-      remaining,
-      this.view.money(Math.abs(remaining)),
-    );
-  });
+  savedLabel = computed(() =>
+    this.translationService.translate(
+      "dashboard.savings.saved",
+      DASHBOARD_PATH,
+      { amount: this.savingsRealLabel() },
+    ),
+  );
+
+  statItems = computed<StatStripItem[]>(() => [
+    {
+      value: this.savingsObjectiveLabel(),
+      label: this.translate("dashboard.savings.stats.goal"),
+    },
+    {
+      value: this.view.moneyShort(Math.abs(this.savingsRemaining())),
+      label: this.translate(
+        this.savingsGoalReached()
+          ? "dashboard.savings.stats.extra"
+          : "dashboard.savings.stats.remaining",
+      ),
+    },
+    {
+      value: `${Math.round(this.monthProgressRatio() * 100)}%`,
+      label: this.translate("dashboard.savings.stats.month"),
+    },
+  ]);
 
   ngOnInit(): void {
     this.translationService
@@ -107,5 +129,9 @@ export class FinanceSavingsSummaryComponent implements OnInit {
         },
         error: () => this.loading.set(false),
       });
+  }
+
+  private translate(key: string): string {
+    return this.translationService.translate(key, DASHBOARD_PATH);
   }
 }

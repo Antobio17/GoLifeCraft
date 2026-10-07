@@ -47,23 +47,6 @@
   width: 6rem;
 }
 
-.day-status-dot {
-  flex: 0 0 auto;
-  color: var(--ds-text-disabled);
-}
-
-.day-status-dot--green {
-  color: var(--ds-success);
-}
-
-.day-status-dot--orange {
-  color: var(--ds-warning);
-}
-
-.day-status-dot--red {
-  color: var(--ds-danger);
-}
-
 .meal-header {
   --meal-header-bleed: var(--ds-space-4);
   --meal-header-fade: var(--ds-space-5);

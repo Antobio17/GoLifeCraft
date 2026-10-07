@@ -370,6 +370,7 @@ export class ModalSheetComponent implements OnDestroy {
   private static readonly ARMED_MS = 3000;
 
   private renderer = inject(Renderer2);
+  private host = inject<ElementRef<HTMLElement>>(ElementRef);
   private document = inject(DOCUMENT);
   private zone = inject(NgZone);
   private injector = inject(Injector);
@@ -400,6 +401,7 @@ export class ModalSheetComponent implements OnDestroy {
     }
 
     this.overlayNode = reference.nativeElement;
+    this.inheritModule(this.overlayNode);
     this.renderer.appendChild(this.document.body, this.overlayNode);
   }
 
@@ -755,6 +757,15 @@ export class ModalSheetComponent implements OnDestroy {
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
     this.sheetNode = null;
+  }
+
+  private inheritModule(node: HTMLElement): void {
+    const module = this.host.nativeElement
+      .closest("[data-module]")
+      ?.getAttribute("data-module");
+    if (!module) return;
+
+    this.renderer.setAttribute(node, "data-module", module);
   }
 
   private detachOverlay(): void {

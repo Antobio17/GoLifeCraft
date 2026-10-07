@@ -27,10 +27,8 @@ import { TextInputComponent } from "@shared/design-system/text-input/infrastruct
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { PlaceholderNoteComponent } from "@shared/design-system/placeholder-note/infrastructure/components/placeholder-note.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
-import {
-  SegmentedToggleComponent,
-  SegmentedOption,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
@@ -125,7 +123,7 @@ type PickerTab = "product" | "recipe";
     NoteComponent,
     PlaceholderNoteComponent,
     SearchInputComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     ModalSheetComponent,
     QuantitySheetComponent,
     SkeletonListComponent,
@@ -194,7 +192,7 @@ export class GetMenuComponent implements OnInit {
   pickerMeal = signal<MenuMealKey | null>(null);
   pickerTab = signal<PickerTab>("product");
   pickerQuery = signal("");
-  pickerTabs = computed<SegmentedOption[]>(() => [
+  pickerTabs = computed<ViewSwitchOption[]>(() => [
     { value: "product", label: this.t("getMenu.picker.products") },
     { value: "recipe", label: this.t("getMenu.picker.recipes") },
   ]);

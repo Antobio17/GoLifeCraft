@@ -47,29 +47,48 @@ import { LineChartComponent } from "../../../line-chart/infrastructure/component
         display: block;
       }
       .ds-balance {
-        --ds-accent: var(--ds-accent-on-chart);
-        --ds-on-accent: var(--ds-on-accent-on-chart);
-        --ds-primary: var(--ds-accent-on-chart);
-        --ds-on-primary: var(--ds-on-accent-on-chart);
-        background: var(--ds-surface-chart);
-        color: var(--ds-on-surface-chart);
-        border: 1px solid var(--ds-border);
+        --ds-surface: var(--ds-sheet-surface);
+        --ds-surface-inset: var(--ds-sheet-surface-inset);
+        background: var(--ds-hero-bg);
+        color: var(--ds-text);
+        border: 1px solid var(--ds-sheet-border);
         border-radius: var(--ds-radius-surface);
+        box-shadow: var(--ds-hero-shadow);
         padding: var(--ds-space-4);
         overflow: hidden;
+      }
+      @media (min-width: 768px) {
+        .ds-balance {
+          padding: var(--ds-space-5);
+        }
       }
       .ds-balance__top {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: var(--ds-space-2);
+        min-height: 1.875rem;
       }
       .ds-balance__eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--ds-space-2);
+        min-width: 0;
         font-size: var(--ds-text-xs);
         font-weight: var(--ds-weight-bold);
-        letter-spacing: 0.06em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--ds-accent);
+        color: var(--ds-accent-soft-text, var(--ds-accent));
+      }
+      .ds-balance__eyebrow::before {
+        content: "";
+        flex: none;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: var(--ds-radius-pill);
+        background: var(--ds-accent);
+        box-shadow: 0 0 0 0.1875rem
+          color-mix(in srgb, var(--ds-accent) 20%, transparent);
       }
       .ds-balance__actions {
         display: inline-flex;
@@ -112,7 +131,7 @@ import { LineChartComponent } from "../../../line-chart/infrastructure/component
         --line-stroke: var(--ds-accent);
         --line-area: var(--ds-accent);
         --line-area-opacity: 0.16;
-        --line-dot-stroke: var(--ds-surface-chart);
+        --line-dot-stroke: var(--ds-module-hero-base);
         display: block;
         height: 4rem;
         margin-top: var(--ds-space-4);

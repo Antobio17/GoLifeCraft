@@ -11,9 +11,10 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
-import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
-import { AgendaItemComponent } from "@shared/design-system/agenda-item/infrastructure/components/agenda-item.component";
+import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { LinkRowComponent } from "@shared/design-system/link-row/infrastructure/components/link-row.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetAgendaUpcomingService } from "@agenda/agenda/agenda/application/services/get-agenda-upcoming.service";
 import { AgendaViewService } from "@agenda/agenda/agenda/application/services/agenda-view.service";
@@ -26,7 +27,7 @@ import {
 import { AgendaSeriesAttributes } from "@agenda/agenda/agenda/domain/models/agenda-series.model";
 
 const UPCOMING_DAYS = 7;
-const VISIBLE_ENTRIES = 4;
+const VISIBLE_ENTRIES = 3;
 
 interface AgendaSummaryEntry {
   id: string;
@@ -50,9 +51,10 @@ import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum
     StackComponent,
     TextComponent,
     SkeletonLineComponent,
-    SkeletonListComponent,
+    ModuleCardComponent,
+    CtaRowComponent,
     SectionHeaderComponent,
-    AgendaItemComponent,
+    LinkRowComponent,
   ],
 })
 export class AgendaSummaryComponent implements OnInit {

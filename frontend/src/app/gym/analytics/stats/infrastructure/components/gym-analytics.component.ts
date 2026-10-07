@@ -1,15 +1,16 @@
 import { Component, computed, inject, input, output } from "@angular/core";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ActivityHeatmapComponent } from "@shared/design-system/activity-heatmap/infrastructure/components/activity-heatmap.component";
-import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
-import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
-import { StatTileComponent } from "@shared/design-system/stat-tile/infrastructure/components/stat-tile.component";
-import { PanelComponent } from "@shared/design-system/panel/infrastructure/components/panel.component";
-import { MeterComponent } from "@shared/design-system/meter/infrastructure/components/meter.component";
+import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { BigFigureComponent } from "@shared/design-system/big-figure/infrastructure/components/big-figure.component";
+import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
+import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/stat-strip-item.model";
+import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import {
   GymActivityView,
@@ -17,19 +18,8 @@ import {
 } from "../../application/services/gym-activity-view.service";
 import { GymStats } from "../../domain/models/gym-stats.model";
 
-interface RegionShare {
-  region: string;
-  percent: number;
-  color: string;
-}
-
 const ACTIVITY_WEEKS = 27;
-
-const REGION_COLORS = [
-  "var(--gym-muscle-1)",
-  "var(--gym-muscle-2)",
-  "var(--gym-muscle-3)",
-];
+const TONNE_THRESHOLD_KG = 10000;
 
 @Component({
   selector: "app-gym-analytics",
@@ -40,13 +30,13 @@ const REGION_COLORS = [
     ContextualTranslatePipe,
     TextComponent,
     ActivityHeatmapComponent,
-    SkeletonMetricsComponent,
-    SkeletonPanelComponent,
+    SkeletonLineComponent,
     StackComponent,
+    ModuleCardComponent,
+    CtaRowComponent,
     SectionHeaderComponent,
-    StatTileComponent,
-    PanelComponent,
-    MeterComponent,
+    BigFigureComponent,
+    StatStripComponent,
   ],
 })
 export class GymAnalyticsComponent {
@@ -55,8 +45,8 @@ export class GymAnalyticsComponent {
 
   readonly seeAll = output<void>();
 
-  private muscleCatalog = inject(MuscleCatalogService);
   private activityView = inject(GymActivityViewService);
+  private translationService = inject(TranslationService);
   private readonly formatter = new Intl.NumberFormat("es", {
     maximumFractionDigits: 0,
   });
@@ -74,28 +64,34 @@ export class GymAnalyticsComponent {
       .join(""),
   );
 
+  readonly statItems = computed<StatStripItem[]>(() => [
+    {
+      value: String(this.stats()?.totalSessions ?? 0),
+      label: this.t("dashboard.gym.sessions"),
+    },
+    {
+      ...this.volumeFigure(),
+      label: this.t("dashboard.gym.volume"),
+    },
+    {
+      value: String(this.stats()?.totalExercises ?? 0),
+      label: this.t("dashboard.gym.exercises"),
+    },
+  ]);
+
   readonly activity = computed<GymActivityView>(() =>
     this.activityView.build(this.stats()?.trainingDays ?? [], ACTIVITY_WEEKS),
   );
 
-  readonly regionShares = computed<RegionShare[]>(() => {
-    const distribution = this.stats()?.muscleDistribution ?? [];
-    const order = this.muscleCatalog.regionNames();
-    const totals = new Map<string, number>(order.map((region) => [region, 0]));
+  private t(key: string): string {
+    return this.translationService.translate(key, "dashboard/dashboard");
+  }
 
-    for (const item of distribution) {
-      const region = this.muscleCatalog.regionOf(item.muscleGroup);
-      if (!region) continue;
-      totals.set(region, (totals.get(region) ?? 0) + item.sets);
-    }
+  private volumeFigure(): { value: string; unit: string } {
+    const kg = this.stats()?.totalVolumeKg ?? 0;
+    if (kg < TONNE_THRESHOLD_KG)
+      return { value: this.totalVolumeText(), unit: "kg" };
 
-    const total = [...totals.values()].reduce((acc, value) => acc + value, 0);
-
-    return order.map((region, index) => ({
-      region,
-      percent:
-        total === 0 ? 0 : Math.round(((totals.get(region) ?? 0) / total) * 100),
-      color: REGION_COLORS[index] ?? REGION_COLORS[0],
-    }));
-  });
+    return { value: this.formatter.format(kg / 1000), unit: "t" };
+  }
 }

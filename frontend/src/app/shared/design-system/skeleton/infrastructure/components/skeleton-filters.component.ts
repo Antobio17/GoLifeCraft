@@ -5,7 +5,12 @@ import { Component, Input } from "@angular/core";
   template: `
     <div class="skfil">
       @if (search) {
-        <span class="ds-sk skfil__search"></span>
+        <div class="skfil__row skfil__row--search">
+          <span class="ds-sk skfil__search"></span>
+          @if (viewSwitch) {
+            <span class="ds-sk skfil__switch"></span>
+          }
+        </div>
       }
 
       @if (selects > 0) {
@@ -17,10 +22,6 @@ import { Component, Input } from "@angular/core";
             ></span>
           }
         </div>
-      }
-
-      @if (segments > 0) {
-        <span class="ds-sk skfil__segmented"></span>
       }
 
       @if (caption) {
@@ -39,7 +40,8 @@ import { Component, Input } from "@angular/core";
         gap: var(--skfil-gap, var(--ds-space-3));
       }
       .skfil__search {
-        width: 100%;
+        flex: 1 1 auto;
+        min-width: 0;
         height: 2.75rem;
         border-radius: var(--ds-radius-control);
       }
@@ -47,15 +49,18 @@ import { Component, Input } from "@angular/core";
         display: flex;
         gap: var(--ds-space-1-5);
       }
+      .skfil__row--search {
+        gap: var(--ds-space-2);
+      }
       .skfil__select {
         flex: 1 1 0;
         min-width: 0;
         height: 2.125rem;
         border-radius: var(--ds-radius-control-sm);
       }
-      .skfil__segmented {
-        width: 100%;
-        height: 2.5rem;
+      .skfil__switch {
+        flex: 0 0 5.75rem;
+        height: 2.75rem;
         border-radius: var(--ds-radius-control);
       }
       .skfil__caption {
@@ -71,7 +76,7 @@ import { Component, Input } from "@angular/core";
 export class SkeletonFiltersComponent {
   @Input() search = true;
   @Input() selects = 0;
-  @Input() segments = 0;
+  @Input() viewSwitch = false;
   @Input() caption = false;
   @Input() gap = "var(--ds-space-3)";
 

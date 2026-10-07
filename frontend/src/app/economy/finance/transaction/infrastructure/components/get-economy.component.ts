@@ -1,4 +1,11 @@
-import { Component, OnInit, computed, inject, signal } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -44,6 +51,8 @@ import {
   CalendarCell,
   CalendarComponent,
 } from "@shared/design-system/calendar/infrastructure/components/calendar.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import {
   SegmentedOption,
   SegmentedToggleComponent,
@@ -128,6 +137,7 @@ const EVOLUTION_MONTHS = 6;
     TransactionRowComponent,
     CalendarComponent,
     SegmentedToggleComponent,
+    ViewSwitchComponent,
     ChoiceChipsComponent,
     FinancePrivacyToggleComponent,
   ],
@@ -179,6 +189,9 @@ export class GetEconomyComponent implements OnInit {
   selectedDate = signal<string | null>(null);
   private loadedDayTransactions = signal<FinanceTransactionView[]>([]);
   grouping = signal<FinanceMovementGrouping>(FinanceMovementGrouping.CATEGORY);
+
+  readonly create = input<string>();
+  private createHandled = false;
 
   sheetOpen = signal(false);
   editingId = signal<string | null>(null);
@@ -374,17 +387,19 @@ export class GetEconomyComponent implements OnInit {
   movementGroups = computed<FinanceMovementGroup[]>(() =>
     this.movementGrouping.group(this.movementRows(), this.grouping()),
   );
-  groupingOptions = computed<SegmentedOption[]>(() => {
+  groupingOptions = computed<ViewSwitchOption[]>(() => {
     this.translationsReady();
 
     return [
       {
         value: FinanceMovementGrouping.CATEGORY,
         label: this.t("getEconomy.grouping.category"),
+        icon: "tag",
       },
       {
         value: FinanceMovementGrouping.DATE,
         label: this.t("getEconomy.grouping.date"),
+        icon: "calendar",
       },
     ];
   });
@@ -723,6 +738,18 @@ export class GetEconomyComponent implements OnInit {
     if (date) this.loadDay(date);
   }
 
+  private openRequestedSheet(): void {
+    if (!this.create() || this.createHandled) return;
+
+    this.createHandled = true;
+    this.openNewSheet();
+    this.router.navigate([], {
+      queryParams: { create: null },
+      queryParamsHandling: "merge",
+      replaceUrl: true,
+    });
+  }
+
   private load(silent = false): void {
     if (!silent) {
       this.loading.set(true);
@@ -749,7 +776,10 @@ export class GetEconomyComponent implements OnInit {
     });
 
     this.getFinanceAccountsService.getFinanceAccounts().subscribe({
-      next: (response) => this.accounts.set(response.data.attributes.accounts),
+      next: (response) => {
+        this.accounts.set(response.data.attributes.accounts);
+        this.openRequestedSheet();
+      },
     });
 
     this.getFinanceBudgetService.getFinanceBudget(month).subscribe({

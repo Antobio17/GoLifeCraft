@@ -7,6 +7,7 @@ import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { GetExerciseService } from "../../application/services/get-exercise.service";
+import { DeleteExerciseService } from "../../application/services/delete-exercise.service";
 import { GetExerciseStatsService } from "../../application/services/get-exercise-stats.service";
 import { Exercise } from "../../domain/models/exercise.model";
 import { ExerciseWeightMode } from "../../domain/models/exercise-weight-mode.model";
@@ -14,13 +15,12 @@ import {
   ExerciseStats,
   ExerciseStatsSession,
 } from "../../domain/models/exercise-stats.model";
+import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
-import {
-  SegmentedToggleComponent,
-  SegmentedOption,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
@@ -38,6 +38,7 @@ import { SkeletonListItemComponent } from "@shared/design-system/skeleton/infras
 import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { DatedRowComponent } from "@shared/design-system/dated-row/infrastructure/components/dated-row.component";
 import { DatedRowTone } from "@shared/design-system/dated-row/domain/models/dated-row-tone.enum";
@@ -63,10 +64,11 @@ interface SessionRow {
   imports: [
     FormsModule,
     ContextualTranslatePipe,
+    ConfirmActionModalComponent,
     PageWrapperComponent,
     SplitViewComponent,
     ScreenHeaderComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     StackComponent,
     GridComponent,
     CardComponent,
@@ -95,7 +97,9 @@ export class GetExerciseComponent {
   private translationService = inject(TranslationService);
   private getExerciseService = inject(GetExerciseService);
   private getExerciseStatsService = inject(GetExerciseStatsService);
+  private deleteExerciseService = inject(DeleteExerciseService);
   private router = inject(Router);
+  private backNavigation = inject(BackNavigationService);
 
   private readonly dateFormatter = new Intl.DateTimeFormat("es", {
     day: "numeric",
@@ -115,8 +119,10 @@ export class GetExerciseComponent {
   exercise = signal<Exercise | null>(null);
   sessions = signal<ExerciseStatsSession[]>([]);
   metric = signal<MetricKey>("max");
+  showDeleteModal = signal(false);
+  isDeleting = signal(false);
 
-  metricOptions = computed<SegmentedOption[]>(() => [
+  metricOptions = computed<ViewSwitchOption[]>(() => [
     { value: "max", label: this.t("getExercise.metric.max") },
     { value: "e1rm", label: this.t("getExercise.metric.e1rm") },
     { value: "vol", label: this.t("getExercise.metric.vol") },
@@ -291,6 +297,29 @@ export class GetExerciseComponent {
 
   onEdit(): void {
     this.router.navigate(["/gym/exercises", this.id(), "edit"]);
+  }
+
+  onDelete(): void {
+    this.showDeleteModal.set(true);
+  }
+
+  onConfirmDelete(): void {
+    this.isDeleting.set(true);
+    this.deleteExerciseService.deleteExercise(this.id()).subscribe({
+      next: () => {
+        this.isDeleting.set(false);
+        this.showDeleteModal.set(false);
+        this.backNavigation.leave(["/gym/exercises"]);
+      },
+      error: () => {
+        this.isDeleting.set(false);
+        this.showDeleteModal.set(false);
+      },
+    });
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteModal.set(false);
   }
 
   onMetricChange(metric: MetricKey): void {

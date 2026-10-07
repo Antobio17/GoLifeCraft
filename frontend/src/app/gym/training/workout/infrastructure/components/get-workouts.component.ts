@@ -16,6 +16,7 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -47,6 +48,7 @@ const FIRST_MONDAY = new Date(2024, 0, 1);
     PageWrapperComponent,
     ScreenHeaderComponent,
     StackComponent,
+    SplitViewComponent,
     CardComponent,
     EmptyStateComponent,
     SkeletonComponent,

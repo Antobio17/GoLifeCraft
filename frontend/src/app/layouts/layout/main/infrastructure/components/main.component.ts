@@ -12,6 +12,7 @@ import { ImpersonationBarComponent } from "@shared/design-system/impersonation-b
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { GetMyProfileService } from "@authorization/user/user/application/services/get-my-profile.service";
 import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/providers/get-my-profile.provider";
+import { RouteModuleService } from "@shared/design-system/module-theme/application/services/route-module.service";
 import { UnreadNotificationsService } from "@notification/notification/inbox/application/services/unread-notifications.service";
 
 @Component({
@@ -37,10 +38,13 @@ export class MainLayoutComponent implements OnInit {
   private unreadNotifications = inject(UnreadNotificationsService);
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
+  private routeModuleService = inject(RouteModuleService);
 
   private readonly PUSH_RECEIVED = "golifecraft.push.received";
 
   showTabBar = signal(this.computeShowTabBar());
+  module = signal(this.routeModuleService.moduleFor(this.router.url));
+  navModule = signal(this.routeModuleService.navModuleFor(this.router.url));
   readonly impersonation = this.impersonationService.impersonation;
 
   ngOnInit(): void {
@@ -48,6 +52,10 @@ export class MainLayoutComponent implements OnInit {
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => {
         this.showTabBar.set(this.computeShowTabBar());
+        this.module.set(this.routeModuleService.moduleFor(this.router.url));
+        this.navModule.set(
+          this.routeModuleService.navModuleFor(this.router.url),
+        );
         this.refreshUnreadNotifications();
       });
 

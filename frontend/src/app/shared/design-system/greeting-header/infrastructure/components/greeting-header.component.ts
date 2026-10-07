@@ -9,6 +9,9 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         <h1 class="dash__greeting">
           {{ greeting }}{{ name ? ", " + name : "" }}
         </h1>
+        @if (subtitle) {
+          <p class="dash__subtitle">{{ subtitle }}</p>
+        }
       </div>
       <div class="dash__actions">
         <ng-content select="[slot=actions]" />
@@ -58,6 +61,15 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         line-height: 1.1;
         letter-spacing: -0.02em;
         color: var(--ds-text);
+      }
+      .dash__subtitle {
+        margin: var(--ds-space-1) 0 0;
+        font-family: var(--ds-font-display);
+        font-weight: 700;
+        font-size: var(--ds-text-xl);
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        color: var(--ds-text-muted);
       }
       :host-context([data-theme="dark"]) .dash__greeting {
         font-weight: 700;
@@ -121,6 +133,7 @@ export class GreetingHeaderComponent {
   @Input() date: string | null = "";
   @Input() greeting = "";
   @Input() name = "";
+  @Input() subtitle = "";
   @Input() initial = "";
   @Input() imageUrl: string | null = null;
   @Input() avatarLabel = "";

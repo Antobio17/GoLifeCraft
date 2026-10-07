@@ -1,0 +1,30 @@
+/* ============================================================
+   DESIGN SYSTEM — BARRAS DE PROGRESO
+   Un único grosor para toda la app. Cada tono tiñe también la
+   pista, así la barra se lee entera aunque esté casi vacía.
+   Segmentada como una batería: --ds-bar-segments tramos.
+   ============================================================ */
+
+:root {
+  --ds-bar-height: 0.3125rem;
+  --ds-bar-track-tint: 16%;
+  --ds-bar-segments: 10;
+  --ds-bar-segment-gap: 2px;
+  --ds-bar-segment-radius: var(--ds-radius-mark);
+
+  --ds-bar-brand: var(--ds-accent);
+  --ds-bar-positive: var(--ds-success);
+  --ds-bar-warning: var(--ds-warning);
+  --ds-bar-danger: var(--ds-danger);
+  --ds-bar-protein: var(--ds-green-600);
+  --ds-bar-carbs: var(--ds-amber-500);
+  --ds-bar-fat: #2c6db3;
+}
+
+[data-theme="dark"] {
+  --ds-bar-track-tint: 20%;
+
+  --ds-bar-protein: var(--ds-green-200);
+  --ds-bar-carbs: var(--ds-amber-300);
+  --ds-bar-fat: #a8d1fa;
+}

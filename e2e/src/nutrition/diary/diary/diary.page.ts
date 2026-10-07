@@ -99,6 +99,7 @@ export class DiaryPage {
     await this.ds.fill("diary-quick-name", name);
     await this.ds.fill("diary-quick-calories", calories);
     await this.page.locator(SHEET_CONFIRM).click();
+    await expect(this.page.locator(SHEET)).toHaveCount(0);
     await expect(this.entryNamed(name)).toBeVisible();
   }
 

@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { BarComponent } from "../../../bar/infrastructure/components/bar.component";
 import { GlyphComponent } from "../../../glyph/infrastructure/components/glyph.component";
 import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
 
@@ -6,7 +7,7 @@ const MIN_FILL = 4;
 
 @Component({
   selector: "ds-breakdown-row",
-  imports: [GlyphComponent],
+  imports: [GlyphComponent, BarComponent],
   template: `
     <div class="ds-breakdown">
       <div class="ds-breakdown__head">
@@ -24,17 +25,14 @@ const MIN_FILL = 4;
         }
         <span class="ds-breakdown__amount">{{ amountLabel }}</span>
       </div>
-      <div
+      <ds-bar
         class="ds-breakdown__track"
         [class.is-indented]="!!color && !glyph"
         [class.is-glyph-indented]="!!glyph"
-      >
-        <span
-          class="ds-breakdown__fill"
-          [style.width.%]="fill"
-          [style.background]="color || 'var(--ds-primary)'"
-        ></span>
-      </div>
+        [value]="fill"
+        [color]="color"
+        [ariaLabel]="label"
+      />
     </div>
   `,
   styles: [
@@ -89,12 +87,6 @@ const MIN_FILL = 4;
         color: var(--ds-text);
         white-space: nowrap;
       }
-      .ds-breakdown__track {
-        height: 0.5rem;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface-inset);
-        overflow: hidden;
-      }
       /* El punto y el hueco miden un paso cada uno, así que la barra
          arranca bajo la etiqueta en dos pasos exactos. */
       .ds-breakdown__track.is-indented {
@@ -102,12 +94,6 @@ const MIN_FILL = 4;
       }
       .ds-breakdown__track.is-glyph-indented {
         margin-left: calc(var(--ds-space-8) + var(--ds-space-2));
-      }
-      .ds-breakdown__fill {
-        display: block;
-        height: 100%;
-        border-radius: var(--ds-radius-pill);
-        transition: width var(--ds-transition-base);
       }
     `,
   ],

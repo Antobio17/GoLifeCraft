@@ -146,26 +146,21 @@
                 direction="row"
                 align="center"
                 justify="between"
+                [wrap]="true"
                 [gap]="'var(--ds-space-2)'"
               >
                 <ds-text variant="label">
                   {{ "getSession.progress.title" | t }}
                 </ds-text>
-                <ds-select
-                  variant="bare"
-                  [options]="rangeOptions()"
-                  [ariaLabel]="'getSession.progress.rangeLabel' | t"
-                  [ngModel]="range()"
-                  (ngModelChange)="onRangeChange($event)"
+                <ds-view-switch
+                  data-testid="session-progress-metric"
+                  size="sm"
+                  [options]="metricOptions()"
+                  [ariaLabel]="'getSession.progress.metric.label' | t"
+                  [ngModel]="metric()"
+                  (ngModelChange)="onMetricChange($event)"
                 />
               </ds-stack>
-
-              <ds-segmented-toggle
-                variant="pill"
-                [options]="metricOptions()"
-                [ngModel]="metric()"
-                (ngModelChange)="onMetricChange($event)"
-              />
 
               @if (hasProgressPoints()) {
                 <ds-progression-card
@@ -185,6 +180,16 @@
                   {{ "getSession.progress.empty" | t }}
                 </ds-text>
               }
+
+              <ds-stack direction="row" justify="end">
+                <ds-select
+                  variant="bare"
+                  [options]="rangeOptions()"
+                  [ariaLabel]="'getSession.progress.rangeLabel' | t"
+                  [ngModel]="range()"
+                  (ngModelChange)="onRangeChange($event)"
+                />
+              </ds-stack>
             </ds-card>
           }
         }
@@ -415,15 +420,21 @@
       [gap]="'var(--ds-space-2)'"
     >
       <ds-skeleton-line width="6rem" height="0.75rem" />
-      <ds-skeleton-line width="7.25rem" height="0.75rem" />
+      <ds-skeleton
+        width="10rem"
+        height="2rem"
+        radius="var(--ds-radius-control)"
+      />
     </ds-stack>
-    <ds-skeleton height="2.5rem" radius="var(--ds-radius-control)" />
     <ds-skeleton-panel
       [brand]="true"
       [figure]="true"
       content="spark"
       chartHeight="6.75rem"
     />
+    <ds-stack direction="row" justify="end">
+      <ds-skeleton-line width="7.25rem" height="0.75rem" />
+    </ds-stack>
   </ds-stack>
 </ng-template>
 

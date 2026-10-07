@@ -57,10 +57,10 @@ import { Component } from "@angular/core";
       .dash__area--agenda {
         order: 1;
       }
-      .dash__area--balance {
+      .dash__area--gym {
         order: 2;
       }
-      .dash__area--gym {
+      .dash__area--balance {
         order: 3;
       }
       .dash__area--explore {
