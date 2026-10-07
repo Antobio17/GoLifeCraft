@@ -182,15 +182,6 @@
                 </ds-text>
               }
 
-              <ds-stack direction="row" justify="end">
-                <ds-select
-                  variant="bare"
-                  [options]="rangeOptions()"
-                  [ariaLabel]="'getSession.progress.rangeLabel' | t"
-                  [ngModel]="range()"
-                  (ngModelChange)="onRangeChange($event)"
-                />
-              </ds-stack>
             </ds-card>
           }
         }

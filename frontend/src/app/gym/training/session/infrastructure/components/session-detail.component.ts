@@ -58,7 +58,6 @@ import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastruc
 import { InlineNoteComponent } from "@shared/design-system/inline-note/infrastructure/components/inline-note.component";
 import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
 import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
-import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import {
   ProgressionCardComponent,
@@ -158,7 +157,6 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ViewSwitchComponent,
     MenuComponent,
     InlineNoteComponent,
-    SelectComponent,
     ProgressionCardComponent,
     SkeletonPanelComponent,
     SaveStatusComponent,
@@ -388,7 +386,6 @@ export class SessionDetailComponent implements OnInit {
   statsLoading = signal(true);
   workouts = signal<SessionWorkoutStats[]>([]);
   metric = signal<SessionProgressMetric>(SessionProgressMetric.Volume);
-  range = signal<SessionProgressRange>(SessionProgressRange.ThreeMonths);
 
   metricOptions = computed<ViewSwitchOption[]>(() => [
     {
@@ -405,29 +402,13 @@ export class SessionDetailComponent implements OnInit {
     },
   ]);
 
-  rangeOptions = computed<SelectOption[]>(() => [
-    {
-      value: SessionProgressRange.OneMonth,
-      label: this.t("getSession.progress.range.oneMonth"),
-    },
-    {
-      value: SessionProgressRange.ThreeMonths,
-      label: this.t("getSession.progress.range.threeMonths"),
-    },
-    {
-      value: SessionProgressRange.SixMonths,
-      label: this.t("getSession.progress.range.sixMonths"),
-    },
-    {
-      value: SessionProgressRange.All,
-      label: this.t("getSession.progress.range.all"),
-    },
-  ]);
-
   hasProgress = computed<boolean>(() => this.workouts().length > 0);
 
   private visibleWorkouts = computed<SessionWorkoutStats[]>(() =>
-    this.sessionProgress.visibleWorkouts(this.workouts(), this.range()),
+    this.sessionProgress.visibleWorkouts(
+      this.workouts(),
+      SessionProgressRange.ThreeMonths,
+    ),
   );
 
   private visibleValues = computed<number[]>(() =>
@@ -845,10 +826,6 @@ export class SessionDetailComponent implements OnInit {
 
   onMetricChange(metric: SessionProgressMetric): void {
     this.metric.set(metric);
-  }
-
-  onRangeChange(range: SessionProgressRange): void {
-    this.range.set(range);
   }
 
   openPicker(): void {
