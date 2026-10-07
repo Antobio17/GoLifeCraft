@@ -179,6 +179,46 @@ export class GlyphCatalogService {
       fill: '<path d="M4.5 17a7.5 7.5 0 0 1 15 0z"/>',
       line: '<path d="M4.5 17a7.5 7.5 0 0 1 15 0"/><path d="M3 17h18M4.5 20.5h15"/><path d="M12 9.5V7.5M10.5 7.5h3"/>',
     },
+    [DsGlyph.Fridge]: {
+      fill: '<path d="M6 5a2.5 2.5 0 0 1 2.5-2.5h7A2.5 2.5 0 0 1 18 5v4H6z"/>',
+      line: '<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M6 9h12"/><path d="M9 5.2v1.4M9 11.8v3.4"/>',
+    },
+    [DsGlyph.Snowflake]: {
+      fill: '<path d="M12 8.5l3 1.75v3.5L12 15.5l-3-1.75v-3.5z"/>',
+      line: '<path d="M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5"/><path d="M9.5 4 12 6l2.5-2M9.5 20l2.5-2 2.5 2M3.8 10.2 6.8 9l-.5-3.2M20.2 10.2 17.2 9l.5-3.2M3.8 13.8l3 1.2-.5 3.2M20.2 13.8l-3 1.2.5 3.2"/>',
+    },
+    [DsGlyph.Shelves]: {
+      fill: '<path d="M7 9.5V6.6a1 1 0 0 1 1-1h1.6a1 1 0 0 1 1 1v2.9z"/><path d="M13 9.5V7.4h4v2.1z"/><path d="M7 15.5a2.4 2.4 0 0 1 4.8 0z"/><path d="M14.2 15.5v-3.2a1 1 0 0 1 1-1h.8a1 1 0 0 1 1 1v3.2z"/>',
+      line: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9.5h16M4 15.5h16M10.5 18.3h3"/><path d="M7 9.5V6.6a1 1 0 0 1 1-1h1.6a1 1 0 0 1 1 1v2.9"/><path d="M13 9.5V7.4h4v2.1"/><path d="M7 15.5a2.4 2.4 0 0 1 4.8 0"/><path d="M14.2 15.5v-3.2a1 1 0 0 1 1-1h.8a1 1 0 0 1 1 1v3.2"/>',
+    },
+    [DsGlyph.Cupboard]: {
+      fill: '<path d="M12 3H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6z"/>',
+      line: '<rect x="4" y="3" width="16" height="15" rx="2"/><path d="M12 3v15"/><path d="M10 9.5v2.5M14 9.5v2.5"/><path d="M6.5 18v2.5M17.5 18v2.5"/>',
+    },
+    [DsGlyph.Basket]: {
+      fill: '<path d="M3 10h18l-1.8 9a1.5 1.5 0 0 1-1.5 1.2H6.3A1.5 1.5 0 0 1 4.8 19z"/>',
+      line: '<path d="M3 10h18l-1.8 9a1.5 1.5 0 0 1-1.5 1.2H6.3A1.5 1.5 0 0 1 4.8 19z"/><path d="M7.5 10 10 4M16.5 10 14 4"/><path d="M9 13.5v3.5M12 13.5v3.5M15 13.5v3.5"/>',
+    },
+    [DsGlyph.Jar]: {
+      fill: '<rect x="8.5" y="11.5" width="7" height="5" rx="1"/>',
+      line: '<rect x="7" y="3" width="10" height="3" rx="1"/><path d="M7.5 6h9v.5c1.5.8 2.5 2.4 2.5 4.2V18a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 5 18v-7.3c0-1.8 1-3.4 2.5-4.2z"/><rect x="8.5" y="11.5" width="7" height="5" rx="1"/>',
+    },
+    [DsGlyph.Bucket]: {
+      fill: '<path d="M5.1 12h13.8l-1.1 7.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3z"/>',
+      line: '<path d="M4.5 8h15l-1.7 11.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3z"/><path d="M4.5 8a7.5 5.5 0 0 1 15 0"/>',
+    },
+    [DsGlyph.Car]: {
+      fill: '<rect x="3" y="11.5" width="18" height="6" rx="2"/>',
+      line: '<path d="M5 11.5l1.6-4.2A2 2 0 0 1 8.5 6h7a2 2 0 0 1 1.9 1.3l1.6 4.2"/><rect x="3" y="11.5" width="18" height="6" rx="2"/><path d="M5.5 17.5v2M18.5 17.5v2"/><path d="M6.8 14.5h.01M17.2 14.5h.01"/>',
+    },
+    [DsGlyph.Suitcase]: {
+      fill: '<rect x="8" y="7" width="8" height="13"/>',
+      line: '<rect x="3.5" y="7" width="17" height="13" rx="2.5"/><path d="M9 7V5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5v2"/><path d="M8 7v13M16 7v13"/>',
+    },
+    [DsGlyph.Storeroom]: {
+      fill: '<rect x="7" y="12.5" width="10" height="8"/>',
+      line: '<path d="M3 20.5V9l9-5.5L21 9v11.5"/><path d="M7 20.5v-8h10v8"/><path d="M7 15.2h10M7 17.9h10"/>',
+    },
   };
 
   svg(name: DsGlyph): string {

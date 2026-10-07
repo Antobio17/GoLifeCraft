@@ -3,6 +3,7 @@ import { EntityVisualService } from "@shared/entity-visual/application/services/
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
+import { PantryLocationKindCatalogService } from "@nutrition/pantry/location/application/services/pantry-location-kind-catalog.service";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import { InventoryLocation } from "../../domain/models/inventory-location.model";
 import { InventoryLocationItem } from "../../domain/models/inventory-location-item.model";
@@ -16,6 +17,7 @@ export class InventoryViewService {
   private entityVisual = inject(EntityVisualService);
   private aggregateNavigation = inject(AggregateNavigationService);
   private unitCatalog = inject(UnitCatalogService);
+  private kindCatalog = inject(PantryLocationKindCatalogService);
 
   shiftKey(shift: InventoryShift | string): string {
     return `inventoryShift.${shift}`;
@@ -44,7 +46,7 @@ export class InventoryViewService {
   ): InventoryLocationRow {
     return {
       location,
-      emoji: location.emoji,
+      ...this.kindCatalog.visualOf(location.emoji),
       name: location.name,
       description: this.locationDescription(location, t),
       badges: [

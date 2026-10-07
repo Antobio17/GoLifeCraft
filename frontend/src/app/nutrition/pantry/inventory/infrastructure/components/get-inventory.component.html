@@ -116,7 +116,8 @@
         <ds-grid dsReveal="children" [minColumn]="'18.75rem'">
           @for (row of locationRows(); track row.location.id) {
             <ds-location-card
-              [emoji]="row.emoji"
+              [glyph]="row.glyph"
+              [color]="row.color"
               [name]="row.name"
               [description]="row.description"
               [badges]="row.badges"

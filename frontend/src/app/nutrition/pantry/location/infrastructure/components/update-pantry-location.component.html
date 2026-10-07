@@ -27,33 +27,25 @@
   } @else {
     <form dsEditorForm [formGroup]="form" (ngSubmit)="onSubmit()">
       <ds-stack [gap]="'var(--ds-space-5)'">
-        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
-          <ds-field [label]="'updatePantryLocation.field.emoji' | t">
-            <ds-emoji-picker
-              formControlName="emoji"
-              [groups]="emojiGroups"
-              [fallback]="fallbackEmoji"
-              [sheetTitle]="'updatePantryLocation.field.emojiSheetTitle' | t"
-              [closeLabel]="'updatePantryLocation.field.emojiClose' | t"
-              [triggerLabel]="'updatePantryLocation.field.emojiTrigger' | t"
-              [searchPlaceholder]="'updatePantryLocation.field.emojiSearch' | t"
-              [emptyLabel]="'updatePantryLocation.field.emojiEmpty' | t"
-            />
-          </ds-field>
+        <ds-field
+          [label]="'updatePantryLocation.field.name' | t"
+          [required]="true"
+        >
+          <ds-text-input
+            variant="outlined"
+            formControlName="name"
+            [maxLength]="60"
+            [placeholder]="'updatePantryLocation.field.namePlaceholder' | t"
+          />
+        </ds-field>
 
-          <ds-field
-            [grow]="true"
-            [label]="'updatePantryLocation.field.name' | t"
-            [required]="true"
-          >
-            <ds-text-input
-              variant="outlined"
-              formControlName="name"
-              [maxLength]="60"
-              [placeholder]="'updatePantryLocation.field.namePlaceholder' | t"
-            />
-          </ds-field>
-        </ds-stack>
+        <ds-field [label]="'updatePantryLocation.field.emoji' | t">
+          <ds-choice-chips
+            formControlName="emoji"
+            [options]="kindOptions()"
+            [wrap]="true"
+          />
+        </ds-field>
 
         <ds-field
           [label]="'updatePantryLocation.field.locationDescription' | t"

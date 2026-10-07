@@ -1,0 +1,15 @@
+export enum PantryLocationKind {
+  Fridge = "fridge",
+  Freezer = "freezer",
+  Pantry = "pantry",
+  Cupboard = "cupboard",
+  Box = "box",
+  Basket = "basket",
+  Jar = "jar",
+  Bucket = "bucket",
+  Kitchen = "kitchen",
+  Home = "home",
+  Car = "car",
+  Travel = "travel",
+  Storeroom = "storeroom",
+}

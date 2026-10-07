@@ -62,8 +62,17 @@
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
       <ng-container slot="side">
-        <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-2)'">
-          <ds-macro-badges [macros]="summaryBadges()" />
+        <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-3)'">
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+            <ds-glyph
+              [name]="locationVisual().glyph"
+              [color]="locationVisual().color"
+              [size]="32"
+              [tile]="true"
+              box="3.5rem"
+            />
+            <ds-macro-badges [macros]="summaryBadges()" />
+          </ds-stack>
           <ds-text variant="meta">{{ "getPantryLocation.hint" | t }}</ds-text>
         </ds-card>
       </ng-container>

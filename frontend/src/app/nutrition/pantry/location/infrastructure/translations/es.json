@@ -27,12 +27,7 @@
       "locationDescription": "Descripción",
       "descriptionHint": "Opcional: dónde está o qué guardas ahí",
       "descriptionPlaceholder": "En la cocina, debajo del fregadero...",
-      "emoji": "Icono",
-      "emojiSheetTitle": "Elige un icono",
-      "emojiClose": "Cerrar",
-      "emojiTrigger": "Elegir icono",
-      "emojiSearch": "Buscar icono...",
-      "emojiEmpty": "Sin resultados."
+      "emoji": "Tipo"
     },
     "save": "Guardar",
     "saving": "Guardando...",
@@ -47,12 +42,7 @@
       "locationDescription": "Descripción",
       "descriptionHint": "Opcional: dónde está o qué guardas ahí",
       "descriptionPlaceholder": "En la cocina, debajo del fregadero...",
-      "emoji": "Icono",
-      "emojiSheetTitle": "Elige un icono",
-      "emojiClose": "Cerrar",
-      "emojiTrigger": "Elegir icono",
-      "emojiSearch": "Buscar icono...",
-      "emojiEmpty": "Sin resultados."
+      "emoji": "Tipo"
     },
     "save": "Guardar",
     "saving": "Guardando...",
@@ -100,5 +90,20 @@
       "emptyTitle": "Sin resultados",
       "emptyText": "Nada sin ubicar encaja con la búsqueda. Lo que ya está en otro sitio hay que quitarlo de allí antes"
     }
+  },
+  "pantryLocationKind": {
+    "fridge": "Nevera",
+    "freezer": "Congelador",
+    "pantry": "Despensa",
+    "cupboard": "Armario",
+    "box": "Caja",
+    "basket": "Cesta",
+    "jar": "Bote",
+    "bucket": "Cubo",
+    "kitchen": "Cocina",
+    "home": "Casa",
+    "car": "Coche",
+    "travel": "Maleta",
+    "storeroom": "Trastero"
   }
 }

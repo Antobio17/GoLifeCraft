@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  computed,
   inject,
   input,
   signal,
@@ -21,11 +22,11 @@ import { FieldComponent } from "@shared/design-system/field/infrastructure/compo
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { EmojiPickerComponent } from "@shared/design-system/emoji-picker/infrastructure/components/emoji-picker.component";
+import { ChoiceChipsComponent } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import { SkeletonFieldsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-fields.component";
 import { GetPantryLocationService } from "@nutrition/pantry/location/application/services/get-pantry-location.service";
 import { UpdatePantryLocationService } from "@nutrition/pantry/location/application/services/update-pantry-location.service";
-import { PantryLocationEmojiCatalogService } from "@nutrition/pantry/location/application/services/pantry-location-emoji-catalog.service";
+import { PantryLocationKindCatalogService } from "@nutrition/pantry/location/application/services/pantry-location-kind-catalog.service";
 import { GetPantryLocationResponse } from "../../domain/models/get-pantry-location-response.model";
 import { DiscardChangesModalComponent } from "@shared/design-system/discard-changes-modal/infrastructure/components/discard-changes-modal.component";
 import { EditorDraft } from "@shared/editor-form/application/editor-draft";
@@ -45,7 +46,7 @@ import { EditorFormDirective } from "@shared/editor-form/infrastructure/directiv
     StackComponent,
     TextInputComponent,
     ButtonComponent,
-    EmojiPickerComponent,
+    ChoiceChipsComponent,
     SkeletonFieldsComponent,
   ],
 })
@@ -54,12 +55,11 @@ export class UpdatePantryLocationComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private getPantryLocationService = inject(GetPantryLocationService);
   private updatePantryLocationService = inject(UpdatePantryLocationService);
-  private emojiCatalog = inject(PantryLocationEmojiCatalogService);
+  private kindCatalog = inject(PantryLocationKindCatalogService);
   private backNavigation = inject(BackNavigationService);
 
   private readonly MODULE_PATH = "nutrition/pantry/location";
-  readonly emojiGroups = this.emojiCatalog.groups();
-  readonly fallbackEmoji = "📦";
+  readonly kindOptions = computed(() => this.kindCatalog.chipOptions());
   readonly id = input.required<string>();
 
   form: FormGroup;
@@ -71,7 +71,7 @@ export class UpdatePantryLocationComponent implements OnInit {
   constructor() {
     this.form = this.formBuilder.group({
       name: ["", [Validators.required, Validators.maxLength(60)]],
-      emoji: [""],
+      emoji: [this.kindCatalog.defaultEmoji()],
       description: ["", [Validators.maxLength(255)]],
     });
     this.draft = EditorDraft.forForm(this.form);
@@ -85,7 +85,9 @@ export class UpdatePantryLocationComponent implements OnInit {
           next: (response: GetPantryLocationResponse) => {
             this.form.patchValue({
               name: response.data.attributes.name,
-              emoji: response.data.attributes.emoji,
+              emoji: this.kindCatalog.canonicalEmoji(
+                response.data.attributes.emoji,
+              ),
               description: response.data.attributes.description,
             });
             this.draft.markSaved();

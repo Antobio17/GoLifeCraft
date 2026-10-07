@@ -22,6 +22,7 @@ import {
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
 import { PantryLocation } from "../../domain/models/pantry-location.model";
 import { PantryLocationRow } from "../../domain/models/pantry-location-row.model";
+import { PantryLocationKindCatalogService } from "@nutrition/pantry/location/application/services/pantry-location-kind-catalog.service";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
@@ -49,6 +50,7 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
 
   private getPantryLocationsService = inject(GetPantryLocationsService);
   private backNavigation = inject(BackNavigationService);
+  private kindCatalog = inject(PantryLocationKindCatalogService);
 
   protected readonly modulePath = "nutrition/pantry/location";
   protected readonly storageKey = "pageSize_pantryLocations";
@@ -159,7 +161,7 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
     return {
       id: location.id,
       name,
-      emoji,
+      ...this.kindCatalog.visualOf(emoji),
       description,
       badges: [
         {

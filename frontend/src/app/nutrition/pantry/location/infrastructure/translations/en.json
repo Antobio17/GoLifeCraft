@@ -27,12 +27,7 @@
       "locationDescription": "Description",
       "descriptionHint": "Optional: where it is or what you keep there",
       "descriptionPlaceholder": "In the kitchen, under the sink...",
-      "emoji": "Icon",
-      "emojiSheetTitle": "Pick an icon",
-      "emojiClose": "Close",
-      "emojiTrigger": "Pick an icon",
-      "emojiSearch": "Search icon...",
-      "emojiEmpty": "No results."
+      "emoji": "Type"
     },
     "save": "Save",
     "saving": "Saving...",
@@ -47,12 +42,7 @@
       "locationDescription": "Description",
       "descriptionHint": "Optional: where it is or what you keep there",
       "descriptionPlaceholder": "In the kitchen, under the sink...",
-      "emoji": "Icon",
-      "emojiSheetTitle": "Pick an icon",
-      "emojiClose": "Close",
-      "emojiTrigger": "Pick an icon",
-      "emojiSearch": "Search icon...",
-      "emojiEmpty": "No results."
+      "emoji": "Type"
     },
     "save": "Save",
     "saving": "Saving...",
@@ -100,5 +90,20 @@
       "emptyTitle": "No results",
       "emptyText": "Nothing unplaced matches the search. What already sits elsewhere has to be removed from there first"
     }
+  },
+  "pantryLocationKind": {
+    "fridge": "Fridge",
+    "freezer": "Freezer",
+    "pantry": "Pantry",
+    "cupboard": "Cupboard",
+    "box": "Box",
+    "basket": "Basket",
+    "jar": "Jar",
+    "bucket": "Bucket",
+    "kitchen": "Kitchen",
+    "home": "Home",
+    "car": "Car",
+    "travel": "Suitcase",
+    "storeroom": "Storeroom"
   }
 }

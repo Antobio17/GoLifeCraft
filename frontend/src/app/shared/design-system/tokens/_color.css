@@ -164,7 +164,7 @@
   --ds-data-2: var(--ds-green-400);
   --ds-data-3: var(--ds-green-200);
 
-  /* The only palette that breaks the green monotone; Economy only. */
+  /* The only palettes that break the green monotone: Economy and pantry places. */
   --ds-cat-groceries: #6e8b3d;
   --ds-cat-restaurants: #c97b4a;
   --ds-cat-gym: #4e7c59;
@@ -184,6 +184,20 @@
   --ds-cat-other: #9a958a;
   --ds-account-bank: #3f6fb0;
   --ds-account-savings: #c65a8e;
+
+  --ds-place-fridge: #4f86b8;
+  --ds-place-freezer: #3a97b2;
+  --ds-place-pantry: #a0723f;
+  --ds-place-cupboard: #8a6a4f;
+  --ds-place-box: #a8843a;
+  --ds-place-basket: #8d8a34;
+  --ds-place-jar: #b5544a;
+  --ds-place-bucket: #5f6bb0;
+  --ds-place-kitchen: #c97b4a;
+  --ds-place-home: #6e8b3d;
+  --ds-place-car: #7a6ba8;
+  --ds-place-travel: #a05f9c;
+  --ds-place-storeroom: #6b7a70;
 
   --ds-focus-ring: 0 0 0 0.25rem rgba(0, 134, 61, 0.22);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(201, 58, 40, 0.18);
@@ -319,6 +333,20 @@
   --ds-cat-other: #c2bdb1;
   --ds-account-bank: #8db4ec;
   --ds-account-savings: #eea2c6;
+
+  --ds-place-fridge: #8fbce6;
+  --ds-place-freezer: #86d0e3;
+  --ds-place-pantry: #d9a873;
+  --ds-place-cupboard: #c4a487;
+  --ds-place-box: #dcbd72;
+  --ds-place-basket: #cdc76f;
+  --ds-place-jar: #e58379;
+  --ds-place-bucket: #9aa4de;
+  --ds-place-kitchen: #e5a173;
+  --ds-place-home: #a3c46b;
+  --ds-place-car: #ad9dd8;
+  --ds-place-travel: #cf9bcb;
+  --ds-place-storeroom: #aebbb2;
 
   --ds-focus-ring: 0 0 0 0.25rem rgba(143, 250, 152, 0.28);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(242, 112, 94, 0.26);

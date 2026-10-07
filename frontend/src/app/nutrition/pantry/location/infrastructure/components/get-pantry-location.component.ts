@@ -48,6 +48,8 @@ import { PantryLocationCandidateRow } from "../../domain/models/pantry-location-
 import { PantryLocationItemKind } from "../../domain/models/pantry-location-item-kind.model";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 import { AggregateNavigationService } from "@shared/routing/application/services/aggregate-navigation.service";
+import { GlyphComponent } from "@shared/design-system/glyph/infrastructure/components/glyph.component";
+import { PantryLocationKindCatalogService } from "@nutrition/pantry/location/application/services/pantry-location-kind-catalog.service";
 import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 
 const ALL_KINDS = "";
@@ -56,6 +58,7 @@ const ALL_KINDS = "";
   selector: "app-get-pantry-location",
   templateUrl: "./get-pantry-location.component.html",
   imports: [
+    GlyphComponent,
     PressableComponent,
     FormsModule,
     ContextualTranslatePipe,
@@ -91,6 +94,7 @@ export class GetPantryLocationComponent {
   private assignItemService = inject(AssignPantryLocationItemService);
   private releaseItemService = inject(ReleasePantryLocationItemService);
   private locationView = inject(PantryLocationViewService);
+  private kindCatalog = inject(PantryLocationKindCatalogService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
 
@@ -124,6 +128,9 @@ export class GetPantryLocationComponent {
   );
 
   locationName = computed(() => this.attributes()?.name ?? "");
+  locationVisual = computed(() =>
+    this.kindCatalog.visualOf(this.attributes()?.emoji ?? ""),
+  );
 
   summaryBadges = computed<MacroBadge[]>(() => [
     {
