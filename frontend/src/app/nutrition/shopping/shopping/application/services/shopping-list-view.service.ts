@@ -8,6 +8,13 @@ import {
 } from "@nutrition/shopping/shopping/domain/models/shopping-list.model";
 import { ShoppingGroupLabels } from "@nutrition/shopping/shopping/domain/models/shopping-group-labels.model";
 import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/shopping-sort-mode.model";
+import { ShoppingRouteGroup } from "@nutrition/shopping/shopping/domain/models/shopping-route-group.model";
+import { ShoppingGroupBucket } from "@nutrition/shopping/shopping/domain/models/shopping-group-bucket.model";
+import { ShoppingHero } from "@nutrition/shopping/shopping/domain/models/shopping-hero.model";
+import { StoreCell } from "@shared/design-system/store-cells/domain/models/store-cell.model";
+import { StepBadgeState } from "@shared/design-system/step-badge/domain/models/step-badge-state.enum";
+import { RouteIndexEntry } from "@shared/design-system/route-index/domain/models/route-index-entry.model";
+import { QuickAddSuggestion } from "@shared/design-system/quick-add/domain/models/quick-add-suggestion.model";
 import { TextSearchService } from "@shared/search/application/services/text-search.service";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
@@ -18,12 +25,6 @@ export const ALL_FILTER = "all";
 
 const OTHER_CATEGORY = "Otros";
 const CUSTOM_NAME_MAX_LENGTH = 120;
-
-export interface ShoppingStoreTab {
-  key: string;
-  label: string;
-  count: number;
-}
 
 export interface ShoppingPackLabels {
   perPack: string;
@@ -38,28 +39,11 @@ export interface ShoppingItemRow {
   emoji: string;
   imageUrl: string | null;
   name: string;
-  brand: string | null;
-  store: string | null;
+  meta: string | null;
+  leftoverLabel: string | null;
   quantity: number;
   checked: boolean;
   priceLabel: string;
-  unitLabel: string | null;
-  packLabel: string | null;
-}
-
-export interface ShoppingCategoryGroup {
-  category: string;
-  label: string;
-  countLabel: string;
-  badge: string | null;
-  tag: string | null;
-  items: ShoppingItemRow[];
-}
-
-export interface ShoppingSummary {
-  totalLabel: string;
-  boughtLabel: string;
-  percent: number;
 }
 
 export interface ShoppingSheetProduct {
@@ -94,24 +78,45 @@ export class ShoppingListViewService {
     return ALL_STORES;
   }
 
-  storeTabs(
+  storeCells(
     attributes: ShoppingListAttributes,
-    allLabel: string,
-  ): ShoppingStoreTab[] {
-    const storeTabs = attributes.stores.map((store) => ({
-      key: store,
-      label: store,
-      count: attributes.items.filter((item) => item.store === store).length,
-    }));
-
+    labels: ShoppingGroupLabels,
+  ): StoreCell[] {
     return [
-      { key: ALL_STORES, label: allLabel, count: attributes.items.length },
-      ...storeTabs,
+      this.storeCell(ALL_STORES, labels.all, attributes.items, labels),
+      ...attributes.stores.map((store) =>
+        this.storeCell(
+          store,
+          store,
+          attributes.items.filter((item) => item.store === store),
+          labels,
+        ),
+      ),
     ];
   }
 
-  hasStoreTabs(attributes: ShoppingListAttributes): boolean {
-    return attributes.stores.length > 1;
+  private storeCell(
+    key: string,
+    label: string,
+    items: ShoppingListItemView[],
+    labels: ShoppingGroupLabels,
+  ): StoreCell {
+    const pending = items.filter((item) => !item.checked);
+    const done = items.length > 0 && pending.length === 0;
+
+    return {
+      key,
+      label,
+      value: this.money(this.total(pending)),
+      meta: done
+        ? labels.done
+        : labels.pending.replace("{count}", `${pending.length}`),
+      done,
+    };
+  }
+
+  hasStoreCells(attributes: ShoppingListAttributes): boolean {
+    return attributes.stores.length > 0;
   }
 
   visibleItems(
@@ -120,7 +125,7 @@ export class ShoppingListViewService {
   ): ShoppingListItemView[] {
     if (tab === ALL_STORES) return attributes.items;
 
-    return attributes.items.filter((item) => item.store === tab);
+    return attributes.items.filter((item) => item.store === tab || !item.store);
   }
 
   searchedItems(
@@ -138,24 +143,107 @@ export class ShoppingListViewService {
     );
   }
 
-  groups(
+  routeGroups(
     items: ShoppingListItemView[],
+    tab: string,
+    storeCount: number,
+    sort: ShoppingSortMode,
     labels: ShoppingGroupLabels,
     packLabels: ShoppingPackLabels,
-    sort: ShoppingSortMode = ShoppingSortMode.Category,
-  ): ShoppingCategoryGroup[] {
-    if (ShoppingSortMode.Category === sort) {
-      return this.categoryGroups(items, labels, packLabels, null);
-    }
+    query = "",
+  ): ShoppingRouteGroup[] {
+    const byCategory = ShoppingSortMode.Category === sort;
+    const showStore = byCategory && tab === ALL_STORES && storeCount > 1;
+    const buckets = this.buckets(items, tab, storeCount, sort, labels);
+    const nextKey = byCategory
+      ? null
+      : (buckets.find(
+          (bucket) =>
+            !bucket.muted && bucket.items.some((item) => !item.checked),
+        )?.key ?? null);
 
-    return this.aisleGroups(items, labels, packLabels);
+    return buckets
+      .filter(
+        (bucket) =>
+          !query.trim() || this.searchedItems(bucket.items, query).length > 0,
+      )
+      .map((bucket) => {
+        const pending = bucket.items.filter((item) => !item.checked);
+
+        return {
+          key: bucket.key,
+          domId: `shopping-group-${encodeURIComponent(bucket.key)}`,
+          label: bucket.label,
+          meta:
+            pending.length === 0
+              ? labels.done
+              : labels.pending.replace("{count}", `${pending.length}`),
+          badge: bucket.badge,
+          state: this.groupState(bucket, pending.length, nextKey),
+          items: this.searchedItems(pending, query).map((item) =>
+            this.row(item, packLabels, showStore),
+          ),
+        };
+      })
+      .filter((group) => !byCategory || group.items.length > 0);
   }
 
-  private aisleGroups(
+  private groupState(
+    bucket: ShoppingGroupBucket,
+    pendingCount: number,
+    nextKey: string | null,
+  ): `${StepBadgeState}` {
+    if (pendingCount === 0) return StepBadgeState.Done;
+    if (bucket.muted) return StepBadgeState.Muted;
+    if (bucket.key === nextKey) return StepBadgeState.Next;
+
+    return StepBadgeState.Pending;
+  }
+
+  private buckets(
+    items: ShoppingListItemView[],
+    tab: string,
+    storeCount: number,
+    sort: ShoppingSortMode,
+    labels: ShoppingGroupLabels,
+  ): ShoppingGroupBucket[] {
+    if (ShoppingSortMode.Category === sort) return this.categoryBuckets(items);
+    if (tab === ALL_STORES && storeCount > 1) {
+      return this.storeBuckets(items, labels);
+    }
+
+    return this.aisleBuckets(items, labels);
+  }
+
+  private storeBuckets(
     items: ShoppingListItemView[],
     labels: ShoppingGroupLabels,
-    packLabels: ShoppingPackLabels,
-  ): ShoppingCategoryGroup[] {
+  ): ShoppingGroupBucket[] {
+    const stores = [
+      ...new Set(
+        items
+          .map((item) => item.store)
+          .filter((store): store is string => !!store),
+      ),
+    ];
+    const withoutStore = items.filter((item) => !item.store);
+
+    return [
+      ...stores.map((store) => ({
+        key: `store:${store}`,
+        label: store,
+        badge: store.charAt(0).toUpperCase(),
+        muted: false,
+        items: items.filter((item) => item.store === store),
+      })),
+      ...this.looseBucket(withoutStore, labels.withoutStore),
+    ];
+  }
+
+  private aisleBuckets(
+    items: ShoppingListItemView[],
+    labels: ShoppingGroupLabels,
+  ): ShoppingGroupBucket[] {
     const withAisle = items.filter((item) => !!item.aisle);
     const withoutAisle = items.filter((item) => !item.aisle);
 
@@ -181,30 +269,28 @@ export class ShoppingListViewService {
 
     return [
       ...ordered.map((aisle, index) => ({
-        category: aisle,
-        label: aisle.toUpperCase(),
-        countLabel: `${(buckets.get(aisle) ?? []).length} ${labels.count}`,
+        key: `aisle:${aisle}`,
+        label: aisle,
         badge: `${index + 1}`,
-        tag: null,
-        items: (buckets.get(aisle) ?? []).map((item) =>
-          this.row(item, packLabels),
-        ),
+        muted: false,
+        items: buckets.get(aisle) ?? [],
       })),
-      ...this.categoryGroups(
-        withoutAisle,
-        labels,
-        packLabels,
-        labels.withoutAisle,
-      ),
+      ...this.looseBucket(withoutAisle, labels.withoutAisle),
     ];
   }
 
-  private categoryGroups(
+  private looseBucket(
     items: ShoppingListItemView[],
-    labels: ShoppingGroupLabels,
-    packLabels: ShoppingPackLabels,
-    tag: string | null,
-  ): ShoppingCategoryGroup[] {
+    label: string,
+  ): ShoppingGroupBucket[] {
+    if (items.length === 0) return [];
+
+    return [{ key: "loose", label, badge: "·", muted: true, items }];
+  }
+
+  private categoryBuckets(
+    items: ShoppingListItemView[],
+  ): ShoppingGroupBucket[] {
     const order: string[] = [];
     const buckets: Record<string, ShoppingListItemView[]> = {};
 
@@ -218,19 +304,84 @@ export class ShoppingListViewService {
     });
 
     return order.map((category) => ({
-      category,
-      label: category.toUpperCase(),
-      countLabel: `${buckets[category].length} ${labels.count}`,
-      badge: null,
-      tag,
-      items: buckets[category].map((item) => this.row(item, packLabels)),
+      key: `category:${category}`,
+      label: category,
+      badge: category.charAt(0).toUpperCase(),
+      muted: false,
+      items: buckets[category],
     }));
+  }
+
+  cartRows(
+    items: ShoppingListItemView[],
+    packLabels: ShoppingPackLabels,
+    showStore: boolean,
+  ): ShoppingItemRow[] {
+    return items
+      .filter((item) => item.checked)
+      .map((item) => this.row(item, packLabels, showStore));
+  }
+
+  routeIndex(groups: ShoppingRouteGroup[]): RouteIndexEntry[] {
+    return groups.map((group) => ({
+      key: group.domId,
+      label: group.label,
+      badge: group.badge ?? "",
+      state: group.state,
+      meta: group.state === StepBadgeState.Done ? "✓" : `${group.items.length}`,
+    }));
+  }
+
+  quickSuggestions(
+    articles: Article[],
+    listArticleIds: Set<string>,
+    query: string,
+    limit: number,
+  ): QuickAddSuggestion[] {
+    if (!query.trim()) return [];
+
+    return articles
+      .filter((article) => !listArticleIds.has(article.id))
+      .filter((article) =>
+        this.textSearch.matches(
+          query,
+          article.attributes.name,
+          this.articleView.brand(article),
+        ),
+      )
+      .slice(0, limit)
+      .map((article) => ({
+        key: article.id,
+        emoji: this.articleView.emoji(article),
+        imageUrl: this.entityVisual.urlOf(
+          VisualSurface.Shopping,
+          AggregateImageKind.Article,
+          article.id,
+          article.attributes.image,
+        ),
+        label: article.attributes.name,
+        meta: [
+          this.articleView.brand(article),
+          this.articleView.store(article),
+          this.articleView.price(article),
+        ]
+          .filter((part) => !!part && part !== "—")
+          .join(" · "),
+      }));
   }
 
   row(
     item: ShoppingListItemView,
     packLabels: ShoppingPackLabels,
+    showStore: boolean,
   ): ShoppingItemRow {
+    const meta = [
+      item.brand,
+      showStore ? item.store : null,
+      ...this.packSizeParts(item, packLabels),
+      ...this.needParts(item, packLabels),
+    ].filter((part): part is string => !!part);
+
     return {
       id: item.id,
       articleId: item.articleId,
@@ -243,13 +394,11 @@ export class ShoppingListViewService {
         item.image,
       ),
       name: item.name,
-      brand: item.brand,
-      store: item.store,
+      meta: meta.length ? meta.join(" · ") : null,
+      leftoverLabel: this.leftoverLabel(item, packLabels),
       quantity: item.quantity,
       checked: item.checked,
       priceLabel: item.custom ? "" : this.money(item.lineTotal),
-      unitLabel: this.unitLabel(item),
-      packLabel: this.packLabel(item, packLabels),
     };
   }
 
@@ -257,26 +406,6 @@ export class ShoppingListViewService {
     if (!item.packSize || !item.baseQuantity) return 0;
 
     return Math.max(0, item.quantity * item.packSize - item.baseQuantity);
-  }
-
-  private unitLabel(item: ShoppingListItemView): string | null {
-    if (!item.packUnit) return null;
-
-    return this.unitCatalog.pluralLabel(item.packUnit, item.quantity);
-  }
-
-  private packLabel(
-    item: ShoppingListItemView,
-    packLabels: ShoppingPackLabels,
-  ): string | null {
-    const parts = [
-      ...this.packSizeParts(item, packLabels),
-      ...this.needParts(item, packLabels),
-    ];
-
-    if (parts.length === 0) return null;
-
-    return parts.join(" · ");
   }
 
   private packSizeParts(
@@ -298,41 +427,54 @@ export class ShoppingListViewService {
   ): string[] {
     if (!item.baseQuantity) return [];
 
-    const parts = [
+    return [
       packLabels.need.replace(
         "{amount}",
         this.amount(item.baseQuantity, item.baseUnit),
       ),
     ];
+  }
 
+  private leftoverLabel(
+    item: ShoppingListItemView,
+    packLabels: ShoppingPackLabels,
+  ): string | null {
     const leftover = this.leftover(item);
-    if (leftover <= 0) return parts;
+    if (leftover <= 0) return null;
 
-    return [
-      ...parts,
-      packLabels.leftover.replace(
-        "{amount}",
-        this.amount(leftover, item.baseUnit),
-      ),
-    ];
+    return packLabels.leftover.replace(
+      "{amount}",
+      this.amount(leftover, item.baseUnit),
+    );
   }
 
   private amount(value: number, baseUnit: string): string {
     return this.unitCatalog.amountLabel(value, baseUnit);
   }
 
-  summary(items: ShoppingListItemView[], boughtLabel: string): ShoppingSummary {
-    const total = items.reduce((sum, item) => sum + item.lineTotal, 0);
-    const done = items.filter((item) => item.checked).length;
-    const percent = items.length ? Math.round((done / items.length) * 100) : 0;
+  hero(items: ShoppingListItemView[]): ShoppingHero {
+    const total = this.total(items);
+    const cart = this.total(items.filter((item) => item.checked));
+    const inCart = items.filter((item) => item.checked).length;
+    const percent =
+      total > 0
+        ? Math.round((cart / total) * 100)
+        : items.length
+          ? Math.round((inCart / items.length) * 100)
+          : 0;
 
     return {
+      pendingLabel: this.money(total - cart),
       totalLabel: this.money(total),
-      boughtLabel: boughtLabel
-        .replace("{done}", `${done}`)
-        .replace("{count}", `${items.length}`),
+      cartLabel: this.money(cart),
       percent,
+      inCart,
+      count: items.length,
     };
+  }
+
+  private total(items: ShoppingListItemView[]): number {
+    return items.reduce((sum, item) => sum + item.lineTotal, 0);
   }
 
   optimisticItem(article: Article, id: string): ShoppingListItemView {
@@ -436,6 +578,11 @@ export class ShoppingListViewService {
       ...attributes,
       items: attributes.items.filter((item) => item.id !== itemId),
       itemCount: attributes.itemCount - 1,
+      stores: attributes.stores.filter((store) =>
+        attributes.items.some(
+          (item) => item.id !== itemId && item.store === store,
+        ),
+      ),
       totalEstimated: attributes.totalEstimated - removed.lineTotal,
     };
   }

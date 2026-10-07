@@ -10,7 +10,7 @@
     "increment": "Increase quantity",
     "decrement": "Decrease quantity",
     "remove": "Remove",
-    "clearChecked": "Remove bought",
+    "clearChecked": "Empty cart",
     "search": {
       "placeholder": "Search the list…",
       "clear": "Clear search",
@@ -19,7 +19,10 @@
     "tabEmpty": "No items for this supermarket",
     "error": "Could not load the shopping list",
     "summary": {
-      "total": "Estimated total"
+      "total": "Estimated total",
+      "pending": "Left to pay",
+      "ofTotal": "of {{total}}",
+      "cartProgress": "{{done}} of {{count}} in the cart"
     },
     "bought": "{done} of {count} bought",
     "pack": {
@@ -71,22 +74,46 @@
         "one": "1 item",
         "many": "{{count}} items"
       },
-      "unknownFormat": "no purchase format · ask for {amount}"
+      "unknownFormat": "no purchase format · ask for {amount}",
+      "cardText": "are missing from the list",
+      "cardTitle": "{{count}} ingredients for your week",
+      "emptyCardText": "Pick a date range and add the ingredients you need.",
+      "review": "Review"
     },
     "clearModal": {
-      "title": "Remove bought",
+      "title": "Empty cart",
       "body": "All items marked as bought will be removed from this list.",
       "warning": "This action cannot be undone.",
       "cancel": "Cancel",
-      "confirm": "Remove bought",
+      "confirm": "Empty cart",
       "clearing": "Removing…"
     },
     "sort": {
       "aisle": "By aisle",
       "category": "By category",
-      "manage": "Manage aisles",
-      "withoutAisle": "no aisle",
+      "manage": "Edit route",
+      "withoutAisle": "No aisle",
       "label": "Sort the list"
-    }
+    },
+    "pending": "{count} left to pick",
+    "done": "Done",
+    "withoutStore": "No store",
+    "route": "Your route",
+    "cart": {
+      "title": "In the cart",
+      "add": "Add to cart: {{name}}",
+      "remove": "Remove from cart: {{name}}"
+    },
+    "completion": {
+      "title": "Shopping complete",
+      "text": "{{total}} in the cart. Scan your receipt to add it to your pantry.",
+      "scan": "Scan receipt",
+      "clear": "Empty cart"
+    },
+    "quick": {
+      "placeholder": "Add an item…",
+      "free": "Add custom item"
+    },
+    "header": "{{count}} items · {{stores}} stores"
   }
 }

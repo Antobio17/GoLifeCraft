@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ButtonVariant } from "@shared/design-system/button/domain/models/button.model";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
@@ -13,7 +12,6 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
   selector: "ds-confirm-action-modal",
   templateUrl: "./confirm-action-modal.component.html",
   imports: [
-    ButtonComponent,
     ContextualTranslatePipe,
     IconBadgeComponent,
     ModalSheetComponent,
@@ -40,6 +38,11 @@ export class ConfirmActionModalComponent {
 
   get badgeIcon(): DsIconName {
     return this.iconVariant === "success" ? "check" : "trash";
+  }
+
+  onConfirm(): void {
+    if (this.isDeleting) return;
+    this.confirmed.emit();
   }
 
   onDismiss(): void {

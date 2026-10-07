@@ -3,120 +3,162 @@
   [wideMaxWidth]="'66rem'"
   [gap]="'var(--ds-space-3)'"
 >
-  <ds-stack
-    direction="row"
-    justify="between"
-    align="center"
-    [gap]="'var(--ds-space-3)'"
-  >
-    <ds-stack [gap]="'2px'" [grow]="true">
-      <ds-heading [level]="2" size="xl">{{
-        "getShopping.title" | t
-      }}</ds-heading>
-      <ds-text variant="meta">{{ "getShopping.subtitle" | t }}</ds-text>
-      <ds-save-status [status]="autosave.status()" (retried)="onRetrySave()" />
-    </ds-stack>
-
-    <ds-stack
-      direction="row"
-      align="center"
-      [gap]="'var(--ds-space-1-5)'"
-      [shrink]="false"
-    >
-      <ds-button
-        data-testid="shopping-aisles"
-        variant="secondary"
-        size="icon-lg"
-        icon="aisles"
-        [iconSize]="19"
-        [ariaLabel]="manageAislesLabel()"
-        (clicked)="openAisleSheet()"
-      />
-      <ds-button
-        data-testid="shopping-from-diary"
-        variant="secondary"
-        size="icon-lg"
-        icon="diary"
-        [iconSize]="19"
-        [ariaLabel]="generateFromDiaryLabel()"
-        (clicked)="openDiarySheet()"
-      />
-      <ds-button
-        data-testid="shopping-add"
-        variant="primary"
-        size="icon-lg"
-        icon="plus"
-        [iconSize]="19"
-        [ariaLabel]="addLabel()"
-        (clicked)="openSheet()"
-      />
-    </ds-stack>
-  </ds-stack>
-
-  @if (loading()) {
-    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-      <ds-skeleton-chips slot="side" [count]="3" height="2rem" />
+  <div class="shopping-layout" [attr.aria-busy]="loading()">
+    <div class="shopping-sidebar">
       <ds-stack
-        slot="side"
+        class="shopping-header"
         direction="row"
+        justify="between"
         align="center"
-        [gap]="'var(--ds-space-2)'"
+        [gap]="'var(--ds-space-3)'"
       >
-        <ds-stack [grow]="true">
-          <ds-skeleton height="2.625rem" radius="var(--ds-radius-control)" />
+        <ds-stack [gap]="'2px'" [grow]="true">
+          <ds-heading [level]="2" size="xl">{{
+            "getShopping.title" | t
+          }}</ds-heading>
+          @if (loading()) {
+            <ds-skeleton width="10rem" height="0.875rem" />
+          } @else {
+            <ds-text variant="meta">{{ headerLabel() }}</ds-text>
+          }
+          <ds-save-status
+            [status]="autosave.status()"
+            (retried)="onRetrySave()"
+          />
         </ds-stack>
-        <ds-skeleton
-          width="5.75rem"
-          height="2.625rem"
-          radius="var(--ds-radius-control)"
+        <ds-button
+          data-testid="shopping-add"
+          variant="primary"
+          size="icon-lg"
+          icon="plus"
+          [iconSize]="19"
+          [ariaLabel]="addLabel()"
+          (clicked)="openSheet()"
         />
       </ds-stack>
-      <ds-skeleton-summary
-        slot="side"
-        tone="primary"
-        [ring]="false"
-        [mainAside]="true"
-        macros="none"
-        [progress]="true"
-      />
 
-      @for (items of skeletonGroups; track $index) {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-skeleton-section-header
-            titleWidth="6rem"
-            [count]="true"
-            [divider]="true"
-          />
-          <ds-skeleton-list
-            [count]="items"
-            [gap]="'var(--ds-space-2)'"
-            radius="var(--ds-radius-surface)"
-            padding="var(--ds-space-2) var(--ds-space-3)"
-            [check]="true"
-            [tile]="44"
-            titleWidth="62%"
-            metaWidth="44%"
-            trailing="stack"
-            pillWidth="5rem"
-            pillHeight="1.8125rem"
-          />
+      @if (loading()) {
+        <ds-skeleton-summary
+          class="shopping-summary"
+          tone="primary"
+          [ring]="false"
+          [mainAside]="true"
+          macros="tiles"
+          [progress]="true"
+        />
+        <ds-stack class="shopping-index" [gap]="'var(--ds-space-2)'">
+          @for (group of skeletonGroups; track $index) {
+            <ds-skeleton height="2.5rem" />
+          }
         </ds-stack>
-      }
-    </ds-split-view>
-  } @else if (attributes(); as list) {
-    @if (list.itemCount > 0) {
-      <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-        <ng-container slot="side">
-          @if (showTabs()) {
-            <ds-store-tabs
-              data-testid="shopping-tabs"
-              [tabs]="storeTabs()"
-              [active]="effectiveTab()"
-              (selected)="onTab($event)"
+      } @else if (attributes()) {
+        @if (!isEmpty()) {
+          <ds-module-card
+            class="shopping-summary"
+            data-testid="shopping-summary"
+            [hero]="true"
+            [eyebrow]="'getShopping.summary.pending' | t"
+          >
+            <ds-text slot="aside" variant="meta">{{
+              cartProgressLabel()
+            }}</ds-text>
+            <ds-big-figure
+              [value]="summary().pendingLabel"
+              [suffix]="totalSuffix()"
+            />
+            <ds-progress-bar
+              [value]="summary().percent"
+              [ariaLabel]="cartProgressLabel()"
+            />
+            @if (showStoreCells()) {
+              <ds-store-cells
+                data-testid="shopping-tabs"
+                [ariaLabel]="'getShopping.filters.store' | t"
+                [cells]="storeCells()"
+                [active]="effectiveTab()"
+                (selected)="onTab($event)"
+              />
+            }
+          </ds-module-card>
+          @if (showRouteIndex()) {
+            <ds-route-index
+              class="shopping-index"
+              [title]="routeTitle()"
+              [entries]="routeIndex()"
+              (picked)="scrollToGroup($event)"
             />
           }
+        }
+        @if (showDiary()) {
+          <ds-suggestion-card
+            class="shopping-diary"
+            data-testid="shopping-from-diary"
+            icon="diary"
+            [title]="diaryCardTitle()"
+            [text]="diaryCardText()"
+            [actionLabel]="'getShopping.diary.review' | t"
+            (action)="openDiarySheet()"
+          />
+        }
+        <ds-quick-add
+          class="shopping-quick-add"
+          [placeholder]="'getShopping.quick.placeholder' | t"
+          [ariaLabel]="addLabel()"
+          [submitLabel]="addLabel()"
+          [freeLabel]="'getShopping.quick.free' | t"
+          [suggestions]="quickSuggestions()"
+          (queryChange)="quickQuery.set($event)"
+          (picked)="addProduct($event)"
+          (submitted)="quickAddCustom($event)"
+        />
+      }
+    </div>
 
-          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+    <div class="shopping-content">
+      @if (loading()) {
+        <ds-stack
+          class="shopping-tools"
+          direction="row"
+          align="center"
+          [gap]="'var(--ds-space-2)'"
+        >
+          <ds-stack [grow]="true"
+            ><ds-skeleton height="2.625rem" radius="var(--ds-radius-control)"
+          /></ds-stack>
+          <ds-skeleton
+            width="5.75rem"
+            height="2.625rem"
+            radius="var(--ds-radius-control)"
+          />
+        </ds-stack>
+        <ds-stack class="shopping-main" [gap]="'var(--ds-space-1)'">
+          @for (items of skeletonGroups; track $index) {
+            <ds-route-step [badge]="'' + ($index + 1)">
+              <ds-skeleton width="60%" height="1rem" />
+              <ds-skeleton-list
+                [count]="items"
+                [gap]="'var(--ds-space-1-5)'"
+                radius="var(--ds-radius-surface)"
+                padding="var(--ds-space-2) var(--ds-space-3)"
+                [check]="true"
+                [tile]="40"
+                titleWidth="62%"
+                metaWidth="44%"
+                trailing="stack"
+                pillWidth="5rem"
+                pillHeight="1.625rem"
+              />
+            </ds-route-step>
+          }
+        </ds-stack>
+      } @else if (attributes()) {
+        @if (!isEmpty()) {
+          <ds-stack
+            class="shopping-tools"
+            direction="row"
+            align="center"
+            [gap]="'var(--ds-space-2)'"
+          >
             <ds-stack [grow]="true">
               <ds-search-input
                 data-testid="shopping-search"
@@ -127,7 +169,6 @@
                 (searched)="onListSearch($event)"
               />
             </ds-stack>
-
             <ds-view-switch
               data-testid="shopping-sort"
               [options]="sortOptions()"
@@ -137,97 +178,171 @@
               (ngModelChange)="onSort($event)"
             />
           </ds-stack>
-
-          <ds-shopping-summary
-            data-testid="shopping-summary"
-            [eyebrow]="'getShopping.summary.total' | t"
-            [totalLabel]="summary().totalLabel"
-            [boughtLabel]="summary().boughtLabel"
-            [percent]="summary().percent"
-          />
-        </ng-container>
-
-        @if (tabEmpty()) {
-          <ds-empty-state icon="cart" [title]="'getShopping.tabEmpty' | t" />
-        } @else if (searchEmpty()) {
-          <ds-empty-state
-            data-testid="shopping-search-empty"
-            icon="search"
-            [title]="'getShopping.search.empty' | t"
-          />
-        } @else {
-          @for (group of groups(); track group.category) {
-            <ds-stack [gap]="'var(--ds-space-2)'">
-              <ds-stack
-                direction="row"
-                align="center"
-                [gap]="'var(--ds-space-2)'"
+        }
+        <ds-stack class="shopping-main" [gap]="'var(--ds-space-3)'">
+          @if (isEmpty()) {
+            <ds-empty-state
+              data-testid="shopping-empty"
+              icon="cart"
+              [title]="'getShopping.empty.title' | t"
+              [text]="'getShopping.empty.text' | t"
+            />
+          } @else if (tabEmpty()) {
+            <ds-empty-state icon="cart" [title]="'getShopping.tabEmpty' | t" />
+          } @else if (searchEmpty()) {
+            <ds-empty-state
+              data-testid="shopping-search-empty"
+              icon="search"
+              [title]="'getShopping.search.empty' | t"
+            />
+          } @else if (complete()) {
+            <ds-completion-card
+              data-testid="shopping-complete"
+              animate.enter="shopping-section--in"
+              animate.leave="shopping-section--out"
+              [title]="'getShopping.completion.title' | t"
+              [text]="completionText()"
+            >
+              <ds-button
+                data-testid="shopping-scan-ticket"
+                variant="primary"
+                icon="camera"
+                (clicked)="scanTicket()"
+                >{{ "getShopping.completion.scan" | t }}</ds-button
               >
-                @if (group.badge) {
-                  <ds-chip tone="brand-solid">{{ group.badge }}</ds-chip>
-                }
-                <ds-text variant="meta">{{ group.label }}</ds-text>
-                <ds-text variant="meta">{{ group.countLabel }}</ds-text>
-                @if (group.tag) {
-                  <ds-chip [uppercase]="true">{{ group.tag }}</ds-chip>
-                }
-                <ds-divider [grow]="true" />
-              </ds-stack>
-
-              @for (item of group.items; track item.id) {
-                <ds-shopping-item
-                  data-testid="shopping-item"
-                  [attr.data-id]="item.id"
-                  [emoji]="item.emoji"
-                  [imageUrl]="item.imageUrl"
-                  [name]="item.name"
-                  [brand]="item.brand"
-                  [store]="item.store"
-                  [priceLabel]="item.priceLabel"
-                  [packLabel]="item.packLabel"
-                  [quantity]="item.quantity"
-                  [unitLabel]="item.unitLabel"
-                  [checked]="item.checked"
-                  [toggleAriaLabel]="'getShopping.toggle' | t"
-                  [incrementLabel]="'getShopping.increment' | t"
-                  [decrementLabel]="'getShopping.decrement' | t"
-                  [removeLabel]="'getShopping.remove' | t"
-                  [openable]="!item.custom && !!item.articleId"
-                  [openLabel]="'getShopping.openArticle' | t"
-                  (toggled)="toggleChecked(item)"
-                  (increment)="increment(item)"
-                  (decrement)="decrement(item)"
-                  (remove)="removeItem(item)"
-                  (opened)="onOpenItem(item)"
-                />
+              <ds-button
+                data-testid="shopping-completion-clear"
+                variant="outline"
+                icon="trash"
+                (clicked)="askClearChecked()"
+                >{{ "getShopping.completion.clear" | t }}</ds-button
+              >
+            </ds-completion-card>
+          } @else {
+            <ds-stack
+              class="shopping-route"
+              [gap]="'var(--ds-space-1)'"
+              animate.enter="shopping-section--in"
+              animate.leave="shopping-section--out"
+            >
+              @for (group of groups(); track group.key; let first = $first) {
+                <ds-route-step
+                  class="shopping-group"
+                  [attr.id]="group.domId"
+                  [title]="group.label"
+                  [meta]="group.meta"
+                  [badge]="group.badge ?? ''"
+                  [state]="group.state"
+                  [actionLabel]="
+                    first && isRouteMode() ? manageAislesLabel() : ''
+                  "
+                  (action)="openAisleSheet()"
+                >
+                  @for (item of group.items; track item.id) {
+                    <div
+                      class="shopping-row-motion"
+                      animate.enter="shopping-row-motion--in"
+                      animate.leave="shopping-row-motion--out"
+                    >
+                      <div class="shopping-row-motion__clip">
+                        <ds-shopping-item
+                          data-testid="shopping-item"
+                          [attr.data-id]="item.id"
+                          [emoji]="item.emoji"
+                          [imageUrl]="item.imageUrl"
+                          [name]="item.name"
+                          [meta]="item.meta"
+                          [leftoverLabel]="item.leftoverLabel"
+                          [priceLabel]="item.priceLabel"
+                          [quantity]="item.quantity"
+                          [checked]="item.checked"
+                          [toggleAriaLabel]="itemToggleLabel(item)"
+                          [incrementLabel]="'getShopping.increment' | t"
+                          [decrementLabel]="'getShopping.decrement' | t"
+                          [removeLabel]="'getShopping.remove' | t"
+                          [openable]="!item.custom && !!item.articleId"
+                          [openLabel]="'getShopping.openArticle' | t"
+                          (toggled)="toggleChecked(item)"
+                          (increment)="increment(item)"
+                          (decrement)="decrement(item)"
+                          (remove)="removeItem(item)"
+                          (opened)="onOpenItem(item)"
+                        />
+                      </div>
+                    </div>
+                  }
+                </ds-route-step>
               }
             </ds-stack>
           }
-
-          @if (hasChecked()) {
-            <ds-button
-              data-testid="shopping-clear-checked"
-              variant="outline"
-              [fullWidth]="true"
-              icon="trash"
-              (clicked)="askClearChecked()"
+          @if (cart().length > 0) {
+            <ds-disclosure
+              data-testid="shopping-cart"
+              animate.enter="shopping-section--in"
+              animate.leave="shopping-section--out"
+              icon="cart"
+              [title]="'getShopping.cart.title' | t"
+              [meta]="cartMeta()"
+              [(open)]="cartOpen"
             >
-              {{ "getShopping.clearChecked" | t }}
-            </ds-button>
+              @for (item of cart(); track item.id) {
+                <div
+                  class="shopping-row-motion"
+                  animate.enter="shopping-row-motion--in"
+                  animate.leave="shopping-row-motion--out"
+                >
+                  <div class="shopping-row-motion__clip">
+                    <ds-shopping-item
+                      data-testid="shopping-item"
+                      [attr.data-id]="item.id"
+                      [emoji]="item.emoji"
+                      [imageUrl]="item.imageUrl"
+                      [name]="item.name"
+                      [meta]="item.meta"
+                      [leftoverLabel]="item.leftoverLabel"
+                      [priceLabel]="item.priceLabel"
+                      [quantity]="item.quantity"
+                      [checked]="item.checked"
+                      [toggleAriaLabel]="itemToggleLabel(item)"
+                      [incrementLabel]="'getShopping.increment' | t"
+                      [decrementLabel]="'getShopping.decrement' | t"
+                      [removeLabel]="'getShopping.remove' | t"
+                      [openable]="!item.custom && !!item.articleId"
+                      [openLabel]="'getShopping.openArticle' | t"
+                      (toggled)="toggleChecked(item)"
+                      (increment)="increment(item)"
+                      (decrement)="decrement(item)"
+                      (remove)="removeItem(item)"
+                      (opened)="onOpenItem(item)"
+                    />
+                  </div>
+                </div>
+              }
+              <ds-stack
+                direction="row"
+                justify="end"
+                [gap]="'var(--ds-space-2)'"
+              >
+                <ds-button
+                  data-testid="shopping-clear-checked"
+                  variant="outline"
+                  icon="trash"
+                  (clicked)="askClearChecked()"
+                  >{{ "getShopping.clearChecked" | t }}</ds-button
+                >
+              </ds-stack>
+            </ds-disclosure>
           }
-        }
-      </ds-split-view>
-    } @else {
-      <ds-empty-state
-        data-testid="shopping-empty"
-        icon="cart"
-        [title]="'getShopping.empty.title' | t"
-        [text]="'getShopping.empty.text' | t"
-      />
-    }
-  } @else {
-    <ds-empty-state icon="alertCircle" [title]="'getShopping.error' | t" />
-  }
+        </ds-stack>
+      } @else {
+        <ds-empty-state
+          class="shopping-main"
+          icon="alertCircle"
+          [title]="'getShopping.error' | t"
+        />
+      }
+    </div>
+  </div>
 
   <ds-modal-sheet
     [open]="sheetOpen()"

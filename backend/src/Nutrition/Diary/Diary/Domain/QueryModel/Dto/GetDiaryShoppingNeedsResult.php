@@ -18,6 +18,7 @@ final class GetDiaryShoppingNeedsResult extends QueryAggregateResult
         public readonly int $entryCount,
         public readonly array $needs,
         public readonly int $needCount,
+        public readonly int $pendingCount,
     ) {
         parent::__construct(id: $id, aggregateName: $aggregateName);
     }

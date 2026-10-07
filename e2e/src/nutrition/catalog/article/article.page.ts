@@ -108,8 +108,8 @@ export class ArticlePage {
 
   async deleteAndConfirm(): Promise<void> {
     await this.ds.click("article-delete");
-    await expect(this.ds.button("confirm-accept")).toBeVisible();
-    await this.ds.click("confirm-accept");
+    await expect(this.page.getByTestId("sheet-confirm")).toBeVisible();
+    await this.page.getByTestId("sheet-confirm").click();
     await expect(this.page).toHaveURL(/\/catalog$/);
   }
 }

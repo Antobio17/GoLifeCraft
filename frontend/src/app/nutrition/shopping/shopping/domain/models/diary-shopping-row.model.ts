@@ -6,7 +6,7 @@ export interface DiaryShoppingRow {
   brand: string | null;
   store: string | null;
   priceLabel: string;
-  packLabel: string | null;
+  meta: string;
   quantity: number;
   baseQuantity: number;
   covered: boolean;

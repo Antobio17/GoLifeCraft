@@ -7,4 +7,5 @@ export interface DiaryShoppingNeedsAttributes {
   entryCount: number;
   needs: DiaryShoppingNeed[];
   needCount: number;
+  pendingCount: number;
 }

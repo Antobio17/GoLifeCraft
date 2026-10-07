@@ -1,3 +1,18 @@
+import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
+import { SuggestionCardComponent } from "@shared/design-system/suggestion-card/infrastructure/components/suggestion-card.component";
+import { RouteStepComponent } from "@shared/design-system/route-step/infrastructure/components/route-step.component";
+import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
+import { BigFigureComponent } from "@shared/design-system/big-figure/infrastructure/components/big-figure.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { DOCUMENT } from "@angular/common";
+import { Router } from "@angular/router";
+import { GetDiaryShoppingNeedsService } from "@nutrition/diary/diary/application/services/get-diary-shopping-needs.service";
+import { DiaryShoppingViewService } from "@nutrition/shopping/shopping/application/services/diary-shopping-view.service";
+import { QuickAddComponent } from "@shared/design-system/quick-add/infrastructure/components/quick-add.component";
+import { CompletionCardComponent } from "@shared/design-system/completion-card/infrastructure/components/completion-card.component";
+import { DisclosureComponent } from "@shared/design-system/disclosure/infrastructure/components/disclosure.component";
+import { RouteIndexComponent } from "@shared/design-system/route-index/infrastructure/components/route-index.component";
+import { StoreCellsComponent } from "@shared/design-system/store-cells/infrastructure/components/store-cells.component";
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { forkJoin, of } from "rxjs";
@@ -8,16 +23,13 @@ import { SaveStatusComponent } from "@shared/design-system/save-status/infrastru
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
-import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
-import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
 import { SkeletonSummaryComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-summary.component";
-import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
@@ -25,15 +37,11 @@ import { SearchInputComponent } from "@shared/design-system/search-input/infrast
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import { ChoiceChipsComponent } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
 import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
-import { StoreTabsComponent } from "@shared/design-system/store-tabs/infrastructure/components/store-tabs.component";
-import { ShoppingSummaryComponent } from "@shared/design-system/shopping-summary/infrastructure/components/shopping-summary.component";
 import { ShoppingItemComponent } from "@shared/design-system/shopping-item/infrastructure/components/shopping-item.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
 import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
-import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { Supermarket } from "@nutrition/catalog/supermarket/domain/models/supermarket.model";
 import { GetSupermarketsService } from "@nutrition/catalog/supermarket/application/services/get-supermarkets.service";
 import { ManageAislesComponent } from "@nutrition/catalog/supermarket/infrastructure/components/manage-aisles.component";
@@ -66,19 +74,26 @@ type FilterKind = "store" | "cat" | "brand";
   styleUrls: ["./get-shopping-list.component.css"],
   imports: [
     RevealDirective,
+    SuggestionCardComponent,
+    RouteStepComponent,
+    ProgressBarComponent,
+    BigFigureComponent,
+    ModuleCardComponent,
+    QuickAddComponent,
+    CompletionCardComponent,
+    DisclosureComponent,
+    RouteIndexComponent,
+    StoreCellsComponent,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
-    SplitViewComponent,
     StackComponent,
     TextComponent,
     TextInputComponent,
     HeadingComponent,
     ButtonComponent,
     SkeletonComponent,
-    SkeletonChipsComponent,
     SkeletonSummaryComponent,
-    SkeletonSectionHeaderComponent,
     SkeletonListComponent,
     EmptyStateComponent,
     ModalSheetComponent,
@@ -86,18 +101,22 @@ type FilterKind = "store" | "cat" | "brand";
     ProductCardComponent,
     ChoiceChipsComponent,
     DividerComponent,
-    StoreTabsComponent,
-    ShoppingSummaryComponent,
     ShoppingItemComponent,
     ConfirmActionModalComponent,
     ViewSwitchComponent,
-    ChipComponent,
     ManageAislesComponent,
     DiaryShoppingSheetComponent,
     SaveStatusComponent,
   ],
 })
 export class GetShoppingListComponent implements OnInit {
+  private document = inject(DOCUMENT);
+  private router = inject(Router);
+  private diaryNeeds = inject(GetDiaryShoppingNeedsService);
+  private diaryView = inject(DiaryShoppingViewService);
+  pendingCount = signal(0);
+  quickQuery = signal("");
+  cartOpen = signal(false);
   private translationService = inject(TranslationService);
   private aggregateNavigation = inject(AggregateNavigationService);
   protected autosave = inject(AutosaveService);
@@ -152,16 +171,16 @@ export class GetShoppingListComponent implements OnInit {
     return this.view.resolveTab(attributes, this.activeTab());
   });
 
-  storeTabs = computed(() => {
+  storeCells = computed(() => {
     const attributes = this.attributes();
     if (!attributes) return [];
 
-    return this.view.storeTabs(attributes, this.t("getShopping.tabs.all"));
+    return this.view.storeCells(attributes, this.groupLabels());
   });
 
-  showTabs = computed(() => {
+  showStoreCells = computed(() => {
     const attributes = this.attributes();
-    return !!attributes && this.view.hasStoreTabs(attributes);
+    return !!attributes && this.view.hasStoreCells(attributes);
   });
 
   visibleItems = computed(() => {
@@ -182,7 +201,10 @@ export class GetShoppingListComponent implements OnInit {
   }));
 
   groupLabels = computed<ShoppingGroupLabels>(() => ({
-    count: this.t("getShopping.items"),
+    all: this.t("getShopping.tabs.all"),
+    pending: this.t("getShopping.pending"),
+    done: this.t("getShopping.done"),
+    withoutStore: this.t("getShopping.withoutStore"),
     withoutAisle: this.t("getShopping.sort.withoutAisle"),
   }));
 
@@ -225,17 +247,125 @@ export class GetShoppingListComponent implements OnInit {
   });
 
   groups = computed(() =>
-    this.view.groups(
-      this.searchedItems(),
+    this.view.routeGroups(
+      this.visibleItems(),
+      this.effectiveTab(),
+      this.attributes()?.stores.length ?? 0,
+      this.sortMode(),
       this.groupLabels(),
       this.packLabels(),
-      this.sortMode(),
+      this.listSearch(),
     ),
   );
 
-  summary = computed(() =>
-    this.view.summary(this.visibleItems(), this.t("getShopping.bought")),
+  summary = computed(() => this.view.hero(this.attributes()?.items ?? []));
+
+  cart = computed(() =>
+    this.view.cartRows(
+      this.searchedItems(),
+      this.packLabels(),
+      this.effectiveTab() === ALL_STORES,
+    ),
   );
+  scopeSummary = computed(() => this.view.hero(this.visibleItems()));
+  cartSummary = computed(() => this.view.hero(this.searchedItems()));
+  headerLabel = computed(() =>
+    this.t("getShopping.header", {
+      count: this.attributes()?.itemCount ?? 0,
+      stores: this.attributes()?.stores.length ?? 0,
+    }),
+  );
+  cartProgressLabel = computed(() =>
+    this.t("getShopping.summary.cartProgress", {
+      count: this.summary().count,
+      done: this.summary().inCart,
+    }),
+  );
+  totalSuffix = computed(() =>
+    this.t("getShopping.summary.ofTotal", { total: this.summary().totalLabel }),
+  );
+  cartMeta = computed(
+    () => `${this.cart().length} · ${this.cartSummary().cartLabel}`,
+  );
+  completionText = computed(() =>
+    this.t("getShopping.completion.text", {
+      total: this.scopeSummary().cartLabel,
+    }),
+  );
+  diaryCardTitle = computed(() =>
+    this.pendingCount() > 0
+      ? this.t("getShopping.diary.cardTitle", { count: this.pendingCount() })
+      : this.t("getShopping.diary.title"),
+  );
+  diaryCardText = computed(() =>
+    this.t(
+      this.pendingCount() > 0
+        ? "getShopping.diary.cardText"
+        : "getShopping.diary.emptyCardText",
+    ),
+  );
+  isRouteMode = computed(() => this.sortMode() === ShoppingSortMode.Aisle);
+  showRouteIndex = computed(
+    () => this.isRouteMode() && !this.complete() && this.groups().length > 0,
+  );
+  routeTitle = computed(() =>
+    this.effectiveTab() === ALL_STORES
+      ? this.t("getShopping.route")
+      : `${this.t("getShopping.route")} · ${this.effectiveTab()}`,
+  );
+
+  itemToggleLabel(item: ShoppingItemRow): string {
+    return this.t(
+      item.checked ? "getShopping.cart.remove" : "getShopping.cart.add",
+      { name: item.name },
+    );
+  }
+
+  routeIndex = computed(() => this.view.routeIndex(this.groups()));
+  complete = computed(
+    () =>
+      this.visibleItems().length > 0 &&
+      this.visibleItems().every((item) => item.checked),
+  );
+  showDiary = computed(() => this.isEmpty() || this.pendingCount() > 0);
+  quickSuggestions = computed(() =>
+    this.view.quickSuggestions(
+      this.articles(),
+      this.listArticleIds(),
+      this.quickQuery(),
+      5,
+    ),
+  );
+
+  scrollToGroup(id: string): void {
+    const reducedMotion = this.document.defaultView?.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    this.document.getElementById(id)?.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }
+
+  scanTicket(): void {
+    void this.router.navigateByUrl("/tickets/scan");
+  }
+
+  quickAddCustom(name: string): void {
+    this.customName.set(name);
+    this.addCustomItem();
+  }
+
+  private loadDiaryNeeds(): void {
+    const today = this.diaryView.todayIso();
+    this.diaryNeeds
+      .getDiaryShoppingNeeds(today, this.diaryView.addDays(today, 6))
+      .subscribe({
+        next: (response) =>
+          this.pendingCount.set(response.data.attributes.pendingCount),
+        error: () => this.pendingCount.set(0),
+      });
+  }
 
   isEmpty = computed(() => (this.attributes()?.itemCount ?? 0) === 0);
 
@@ -574,6 +704,7 @@ export class GetShoppingListComponent implements OnInit {
     this.getShoppingListService.getShoppingList().subscribe({
       next: (response) => {
         this.loadedAttributes.set(response.data.attributes);
+        this.loadDiaryNeeds();
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

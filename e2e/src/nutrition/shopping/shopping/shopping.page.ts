@@ -42,16 +42,30 @@ export class ShoppingPage {
   }
 
   async toggle(name: string): Promise<void> {
-    await this.itemNamed(name).first().getByTestId("shopping-item-toggle").click();
+    await this.itemNamed(name)
+      .first()
+      .getByTestId("shopping-item-toggle")
+      .click();
     await waitForAutosave(this.page);
   }
 
   async increment(name: string): Promise<void> {
-    await this.itemNamed(name).first().getByTestId("shopping-item-increment").click();
+    await this.itemNamed(name)
+      .first()
+      .getByTestId("shopping-item-increment")
+      .click();
     await waitForAutosave(this.page);
   }
 
   async expectChecked(name: string, checked: boolean): Promise<void> {
+    if (checked) {
+      const cart = this.page
+        .getByTestId("shopping-cart")
+        .getByRole("button")
+        .first();
+      if ((await cart.getAttribute("aria-expanded")) === "false")
+        await cart.click();
+    }
     await expect(
       this.itemNamed(name).first().getByTestId("shopping-item-toggle"),
     ).toHaveAttribute("aria-pressed", String(checked));

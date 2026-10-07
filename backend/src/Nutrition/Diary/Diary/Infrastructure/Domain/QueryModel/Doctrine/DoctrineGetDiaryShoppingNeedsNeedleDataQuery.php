@@ -44,6 +44,10 @@ final readonly class DoctrineGetDiaryShoppingNeedsNeedleDataQuery implements Get
             entryCount: count($entries),
             needs: $needs,
             needCount: count($needs),
+            pendingCount: count(array_filter(
+                $needs,
+                static fn (DiaryShoppingNeedView $need): bool => $need->missingQuantity > 0 && !$need->inShoppingList,
+            )),
         );
     }
 

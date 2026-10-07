@@ -2,7 +2,9 @@ import { test, expect } from "../../../support/test";
 import { ShoppingPage } from "./shopping.page";
 
 test.describe("lista de la compra", () => {
-  test("añade un artículo suelto, lo marca y lo deja marcado tras recargar", async ({ page }) => {
+  test("añade un artículo suelto, lo marca y lo deja marcado tras recargar", async ({
+    page,
+  }) => {
     const shopping = new ShoppingPage(page);
     const name = `E2E Compra ${Date.now()}`;
     await shopping.goto();
@@ -25,6 +27,8 @@ test.describe("lista de la compra", () => {
     await shopping.addCustomItem(name);
     await shopping.increment(name);
 
-    await expect(shopping.itemNamed(name).locator("ds-chip")).toHaveText("2");
+    await expect(
+      shopping.itemNamed(name).getByTestId("shopping-item-quantity"),
+    ).toHaveText("2");
   });
 });

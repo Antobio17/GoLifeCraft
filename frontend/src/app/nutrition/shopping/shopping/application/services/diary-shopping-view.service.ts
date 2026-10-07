@@ -68,7 +68,9 @@ export class DiaryShoppingViewService {
         brand: need.brand,
         store: need.store,
         priceLabel: this.shoppingView.money((need.price ?? 0) * quantity),
-        packLabel: this.packLabel(need, quantity, labels),
+        meta: [need.brand, need.store, this.packLabel(need, quantity, labels)]
+          .filter((part): part is string => !!part)
+          .join(" · "),
         quantity,
         baseQuantity: this.baseQuantity(need),
         covered: need.missingQuantity <= 0,

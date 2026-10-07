@@ -2,7 +2,7 @@
   "getShopping": {
     "removed": "{{name}} eliminado",
     "openArticle": "Abrir la ficha",
-    "title": "Lista de compra",
+    "title": "Lista de la compra",
     "subtitle": "Añade artículos de tu catálogo o escríbelos a mano",
     "add": "Añadir",
     "items": "art.",
@@ -10,7 +10,7 @@
     "increment": "Aumentar cantidad",
     "decrement": "Reducir cantidad",
     "remove": "Eliminar",
-    "clearChecked": "Quitar comprados",
+    "clearChecked": "Vaciar carrito",
     "search": {
       "placeholder": "Buscar en la lista…",
       "clear": "Borrar búsqueda",
@@ -19,7 +19,10 @@
     "tabEmpty": "No hay artículos en este supermercado",
     "error": "No se pudo cargar la lista de compra",
     "summary": {
-      "total": "Total estimado"
+      "total": "Total estimado",
+      "pending": "Por pagar",
+      "ofTotal": "de {{total}}",
+      "cartProgress": "{{done}} de {{count}} en el carrito"
     },
     "bought": "{done} de {count} comprados",
     "pack": {
@@ -71,22 +74,46 @@
         "one": "1 artículo",
         "many": "{{count}} artículos"
       },
-      "unknownFormat": "sin formato de compra · pide {amount}"
+      "unknownFormat": "sin formato de compra · pide {amount}",
+      "cardText": "no están en la lista",
+      "cardTitle": "{{count}} ingredientes de tu semana",
+      "emptyCardText": "Elige unos días y añade los ingredientes que necesitas.",
+      "review": "Revisar"
     },
     "clearModal": {
-      "title": "Quitar comprados",
+      "title": "Vaciar carrito",
       "body": "Se eliminarán todos los artículos marcados como comprados de esta lista.",
       "warning": "Esta acción no se puede deshacer.",
       "cancel": "Cancelar",
-      "confirm": "Quitar comprados",
+      "confirm": "Vaciar carrito",
       "clearing": "Quitando…"
     },
     "sort": {
       "aisle": "Por pasillo",
       "category": "Por categoría",
-      "manage": "Gestionar pasillos",
-      "withoutAisle": "sin pasillo",
+      "manage": "Editar recorrido",
+      "withoutAisle": "Sin pasillo",
       "label": "Ordenar la lista"
-    }
+    },
+    "pending": "{count} por coger",
+    "done": "Listo",
+    "withoutStore": "Sin supermercado",
+    "route": "Tu recorrido",
+    "cart": {
+      "title": "En el carrito",
+      "add": "Al carrito: {{name}}",
+      "remove": "Sacar del carrito: {{name}}"
+    },
+    "completion": {
+      "title": "Compra hecha",
+      "text": "{{total}} en el carrito. Escanea el ticket para meterlo en la despensa.",
+      "scan": "Escanear ticket",
+      "clear": "Vaciar"
+    },
+    "quick": {
+      "placeholder": "Añadir un artículo…",
+      "free": "Añadir a mano"
+    },
+    "header": "{{count}} artículos · {{stores}} súpers"
   }
 }

@@ -6,11 +6,8 @@
   [removeLabel]="removeLabel"
   (remove)="remove.emit()"
 >
-  <ds-stack
+  <div
     class="shopping-item"
-    direction="row"
-    align="center"
-    [gap]="'var(--ds-space-3)'"
     [class.shopping-item--checked]="checked && dimChecked"
     [class.shopping-item--slid]="swipe.slid"
   >
@@ -24,7 +21,7 @@
       (click)="toggled.emit()"
     >
       @if (checked) {
-        <ds-icon name="check" [size]="15" [stroke]="3" />
+        <ds-icon name="check" [size]="13" [stroke]="2.5" />
       }
     </button>
 
@@ -32,86 +29,64 @@
       [emoji]="emoji"
       [imageUrl]="imageUrl"
       [alt]="name"
-      [size]="44"
+      [size]="40"
     />
 
-    <ds-stack class="shopping-item__body" [gap]="'2px'" [grow]="true">
+    <div class="shopping-item__body">
       @if (openable) {
         <ds-pressable
           class="shopping-item__open"
           [ariaLabel]="openLabel"
           (press)="opened.emit()"
         >
-          <ds-text variant="strong" class="shopping-item__name">{{
-            name
-          }}</ds-text>
+          <span class="shopping-item__name">{{ name }}</span>
         </ds-pressable>
       } @else {
-        <ds-text variant="strong" class="shopping-item__name">{{
-          name
-        }}</ds-text>
+        <span class="shopping-item__name">{{ name }}</span>
       }
 
-      <ds-stack
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-1-5)'"
-        [wrap]="true"
-      >
-        <ds-text [inline]="true" class="shopping-item__price">{{
-          priceLabel
-        }}</ds-text>
-        <ds-chip tone="brand" class="shopping-item__count">{{
-          quantity
-        }}</ds-chip>
-        @if (unitLabel) {
-          <ds-text variant="meta" [inline]="true" class="shopping-item__unit">{{
-            unitLabel
-          }}</ds-text>
-        }
-      </ds-stack>
-
-      <ds-stack
-        class="shopping-item__meta"
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-1)'"
-        [wrap]="true"
-      >
-        @if (brand) {
-          <ds-text variant="meta" [inline]="true">{{ brand }} ·</ds-text>
-        }
-        <ds-text [inline]="true" class="shopping-item__store">{{
-          store
-        }}</ds-text>
-      </ds-stack>
-
-      @if (packLabel) {
-        <ds-text variant="meta" class="shopping-item__pack">{{
-          packLabel
-        }}</ds-text>
+      @if (meta) {
+        <span class="shopping-item__meta">{{ meta }}</span>
       }
-    </ds-stack>
 
-    <ds-stack class="shopping-item__stepper" align="center">
-      <button
-        data-testid="shopping-item-increment"
-        type="button"
-        class="shopping-item__step"
-        [attr.aria-label]="incrementLabel"
-        (click)="increment.emit()"
-      >
-        +
-      </button>
-      <button
-        data-testid="shopping-item-decrement"
-        type="button"
-        class="shopping-item__step"
-        [attr.aria-label]="decrementLabel"
-        (click)="decrement.emit()"
-      >
-        −
-      </button>
-    </ds-stack>
-  </ds-stack>
+      @if (leftoverLabel && !checked) {
+        <span class="shopping-item__leftover">{{ leftoverLabel }}</span>
+      }
+    </div>
+
+    <div class="shopping-item__end">
+      @if (priceLabel) {
+        <span class="shopping-item__price">{{ priceLabel }}</span>
+      }
+
+      @if (!checked || !dimChecked) {
+        <div class="shopping-item__stepper">
+          <button
+            data-testid="shopping-item-decrement"
+            type="button"
+            class="shopping-item__step"
+            [disabled]="quantity <= 1"
+            [attr.aria-label]="decrementLabel"
+            (click)="decrement.emit()"
+          >
+            <ds-icon name="minus" [size]="13" [stroke]="2.6" />
+          </button>
+          <span
+            data-testid="shopping-item-quantity"
+            class="shopping-item__qty"
+            >{{ quantity }}</span
+          >
+          <button
+            data-testid="shopping-item-increment"
+            type="button"
+            class="shopping-item__step"
+            [attr.aria-label]="incrementLabel"
+            (click)="increment.emit()"
+          >
+            <ds-icon name="plus" [size]="13" [stroke]="2.6" />
+          </button>
+        </div>
+      }
+    </div>
+  </div>
 </ds-swipe-to-delete>

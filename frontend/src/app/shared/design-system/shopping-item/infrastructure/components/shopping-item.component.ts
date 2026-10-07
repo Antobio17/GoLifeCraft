@@ -2,9 +2,6 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { EmojiTileComponent } from "../../../emoji-tile/infrastructure/components/emoji-tile.component";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
-import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
-import { TextComponent } from "../../../text/infrastructure/components/text.component";
-import { ChipComponent } from "../../../chip/infrastructure/components/chip.component";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
 
 @Component({
@@ -13,9 +10,6 @@ import { PressableComponent } from "../../../pressable/infrastructure/components
     EmojiTileComponent,
     IconComponent,
     SwipeToDeleteComponent,
-    StackComponent,
-    TextComponent,
-    ChipComponent,
     PressableComponent,
   ],
   templateUrl: "./shopping-item.component.html",
@@ -25,12 +19,10 @@ export class ShoppingItemComponent {
   @Input() emoji = "";
   @Input() imageUrl: string | null = null;
   @Input() name = "";
-  @Input() brand: string | null = null;
-  @Input() store: string | null = null;
+  @Input() meta: string | null = null;
+  @Input() leftoverLabel: string | null = null;
   @Input() priceLabel = "";
-  @Input() packLabel: string | null = null;
   @Input() quantity = 0;
-  @Input() unitLabel: string | null = null;
   @Input() checked = false;
   @Input() swipeable = true;
   @Input() dimChecked = true;

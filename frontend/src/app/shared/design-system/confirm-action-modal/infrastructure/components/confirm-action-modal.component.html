@@ -2,6 +2,15 @@
   [open]="show"
   [title]="title | t"
   [closeLabel]="cancelLabel | t"
+  [confirmLabel]="(isDeleting ? deletingLabel : confirmLabel) | t"
+  [confirmIcon]="badgeIcon"
+  [confirmTone]="
+    confirmVariant === 'danger' || confirmVariant === 'outline-danger'
+      ? 'danger'
+      : 'primary'
+  "
+  [confirmDisabled]="isDeleting"
+  (confirmed)="onConfirm()"
   (closed)="onDismiss()"
 >
   <ds-stack gap="var(--ds-space-4)">
@@ -26,28 +35,5 @@
     @if (warningText) {
       <ds-note icon="alertCircle" tone="danger">{{ warningText | t }}</ds-note>
     }
-
-    <ds-stack gap="var(--ds-space-2)">
-      <ds-button
-        data-testid="confirm-accept"
-        [variant]="confirmVariant"
-        size="md"
-        [fullWidth]="true"
-        [loading]="isDeleting"
-        (clicked)="confirmed.emit()"
-      >
-        {{ isDeleting ? (deletingLabel | t) : (confirmLabel | t) }}
-      </ds-button>
-      <ds-button
-        data-testid="confirm-cancel"
-        variant="ghost"
-        size="md"
-        [fullWidth]="true"
-        [disabled]="isDeleting"
-        (clicked)="cancelled.emit()"
-      >
-        {{ cancelLabel | t }}
-      </ds-button>
-    </ds-stack>
   </ds-stack>
 </ds-modal-sheet>

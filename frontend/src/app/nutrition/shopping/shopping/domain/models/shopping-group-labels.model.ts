@@ -1,4 +1,7 @@
 export interface ShoppingGroupLabels {
-  count: string;
+  all: string;
+  pending: string;
+  done: string;
   withoutAisle: string;
+  withoutStore: string;
 }

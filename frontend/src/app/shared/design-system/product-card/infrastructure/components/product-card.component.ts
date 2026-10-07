@@ -337,6 +337,10 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         gap: var(--ds-space-2);
       }
       .ds-pcard__name {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
         font-size: var(--ds-text-md);
         font-weight: 700;
         line-height: 1.2;
@@ -356,6 +360,7 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         align-self: flex-end;
       }
       .ds-pcard__price {
+        flex: none;
         font-size: var(--ds-text-md);
         font-weight: 800;
         color: var(--ds-primary);
@@ -373,9 +378,8 @@ import { ImageFit } from "../../domain/models/image-fit.model";
         font-size: var(--ds-text-sm);
         color: var(--ds-text-muted);
         margin-top: 2px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        white-space: normal;
+        overflow-wrap: anywhere;
       }
       .ds-pcard__store {
         color: var(--ds-warning);
