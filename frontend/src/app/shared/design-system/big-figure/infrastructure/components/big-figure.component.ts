@@ -24,7 +24,7 @@ import { Component, input } from "@angular/core";
       }
       .ds-bfig__value {
         font-family: var(--ds-font-display);
-        font-size: 2.125rem;
+        font-size: var(--ds-text-3xl);
         font-weight: var(--ds-weight-bold);
         line-height: 1;
         letter-spacing: -0.04em;
