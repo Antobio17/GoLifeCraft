@@ -16,6 +16,7 @@ export class ActiveWorkoutBannerComponent {
   @Input() restCaption = "";
   @Input() restOverTarget = false;
   @Input() restProgress = 0;
+  @Input() restEnding = false;
   @Input() doneCount = 0;
   @Input() totalSets = 0;
   @Input() setsLabel = "";
@@ -33,6 +34,10 @@ export class ActiveWorkoutBannerComponent {
   @Output() stopped = new EventEmitter<void>();
 
   private static readonly RING_CIRCUMFERENCE = 2 * Math.PI * 28;
+
+  get restSwapped(): boolean {
+    return this.restVisible && this.restEnding;
+  }
 
   get ringDash(): string {
     const circumference = ActiveWorkoutBannerComponent.RING_CIRCUMFERENCE;

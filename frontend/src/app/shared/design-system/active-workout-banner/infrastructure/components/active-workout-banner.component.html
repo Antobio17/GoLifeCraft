@@ -4,22 +4,38 @@
   [attr.aria-label]="stateLabel"
 >
   <div class="active-banner__info">
-    <span
-      class="active-banner__time"
-      [class.active-banner__time--long]="elapsedLabel.length > 5"
-      >{{ elapsedLabel }}</span
-    >
-    @if (restVisible) {
+    @if (restSwapped) {
       <span
-        class="active-banner__rest"
-        [class.active-banner__rest--over]="restOverTarget"
-        [style.--rest-progress.%]="restProgress"
+        class="active-banner__time active-banner__time--rest active-banner__swap"
+        [class.active-banner__time--long]="restLabel.length > 5"
+        [class.active-banner__time--over]="restOverTarget"
         role="status"
         [attr.aria-label]="restCaption + ' ' + restLabel"
       >
-        <ds-icon name="stopwatch" [size]="12" [stroke]="2.4" />
+        <ds-icon name="stopwatch" [size]="22" [stroke]="2.4" />
         {{ restLabel }}
       </span>
+      <span class="active-banner__elapsed active-banner__swap">{{
+        elapsedLabel
+      }}</span>
+    } @else {
+      <span
+        class="active-banner__time"
+        [class.active-banner__time--long]="elapsedLabel.length > 5"
+        >{{ elapsedLabel }}</span
+      >
+      @if (restVisible) {
+        <span
+          class="active-banner__rest"
+          [class.active-banner__rest--over]="restOverTarget"
+          [style.--rest-progress.%]="restProgress"
+          role="status"
+          [attr.aria-label]="restCaption + ' ' + restLabel"
+        >
+          <ds-icon name="stopwatch" [size]="12" [stroke]="2.4" />
+          {{ restLabel }}
+        </span>
+      }
     }
   </div>
 

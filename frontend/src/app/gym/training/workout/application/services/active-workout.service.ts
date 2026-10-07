@@ -135,6 +135,13 @@ export class ActiveWorkoutService implements OnDestroy {
     return seconds !== null && target > 0 && seconds >= target;
   });
 
+  readonly restEnding = computed(() => {
+    const seconds = this.restSeconds();
+    const target = this.restTargetSeconds();
+
+    return seconds !== null && target > 0 && seconds * 3 >= target * 2;
+  });
+
   readonly restProgress = computed(() => {
     const seconds = this.restSeconds() ?? 0;
     const target = this.restTargetSeconds();
