@@ -176,7 +176,8 @@
       "metric": {
         "volume": "Volume",
         "reps": "Reps",
-        "duration": "Duration"
+        "duration": "Duration",
+        "label": "Metric"
       },
       "metricName": {
         "volume": "Volume",

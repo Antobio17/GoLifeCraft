@@ -56,10 +56,8 @@ import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure
 import { SkeletonExerciseComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-exercise.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { InlineNoteComponent } from "@shared/design-system/inline-note/infrastructure/components/inline-note.component";
-import {
-  SegmentedToggleComponent,
-  SegmentedOption,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { SelectOption } from "@shared/design-system/select/domain/models/select-option.model";
 import {
@@ -157,7 +155,7 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     SkeletonComponent,
     SkeletonExerciseComponent,
     SkeletonLineComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     MenuComponent,
     InlineNoteComponent,
     SelectComponent,
@@ -392,7 +390,7 @@ export class SessionDetailComponent implements OnInit {
   metric = signal<SessionProgressMetric>(SessionProgressMetric.Volume);
   range = signal<SessionProgressRange>(SessionProgressRange.ThreeMonths);
 
-  metricOptions = computed<SegmentedOption[]>(() => [
+  metricOptions = computed<ViewSwitchOption[]>(() => [
     {
       value: SessionProgressMetric.Volume,
       label: this.t("getSession.progress.metric.volume"),

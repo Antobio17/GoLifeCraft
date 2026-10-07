@@ -38,7 +38,7 @@ test.describe("vuelta atrás", () => {
   test("dos saltos vuelven uno a uno", async ({ page }) => {
     await page.goto("/catalog");
     await waitForAppReady(page);
-    await page.getByTestId("article-card").first().locator("button").click();
+    await page.getByTestId("article-card").first().locator("button").first().click();
     await expect(page).toHaveURL(/\/catalog\/[0-9a-f-]{36}/);
     await waitForAppReady(page);
     await page.locator(backButton).first().click();
@@ -50,7 +50,7 @@ test.describe("vuelta atrás", () => {
   }) => {
     await page.goto("/catalog");
     await waitForAppReady(page);
-    await page.getByTestId("article-card").first().locator("button").click();
+    await page.getByTestId("article-card").first().locator("button").first().click();
     await expect(page).toHaveURL(/\/catalog\/[0-9a-f-]{36}$/);
     await waitForAppReady(page);
     const detailUrl = page.url();

@@ -226,7 +226,7 @@
   @if (!dayMode()) {
     @if (loading()) {
       <ds-skeleton-panel
-        [brand]="true"
+        [glass]="true"
         [figure]="true"
         content="spark"
         chartHeight="6.5rem"
@@ -494,14 +494,17 @@
             [title]="'getEconomy.movements.title' | t"
             [staticLabel]="movementsCountLabel()"
             size="md"
-          />
-
-          <ds-segmented-toggle
-            [options]="groupingOptions()"
-            [ngModel]="grouping()"
-            [ngModelOptions]="{ standalone: true }"
-            (ngModelChange)="onGrouping($event)"
-          />
+          >
+            <ds-view-switch
+              slot="trailing"
+              data-testid="economy-grouping"
+              [options]="groupingOptions()"
+              [ariaLabel]="'getEconomy.grouping.label' | t"
+              [ngModel]="grouping()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onGrouping($event)"
+            />
+          </ds-section-header>
 
           @for (group of movementGroups(); track group.key) {
             @if (group.label) {

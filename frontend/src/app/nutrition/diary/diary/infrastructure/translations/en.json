@@ -9,7 +9,24 @@
     "remove": "Remove",
     "summary": {
       "total": "DAILY TOTAL",
-      "planned": "PLANNED TOTAL"
+      "planned": "PLANNED TOTAL",
+      "caption": "{{consumed}} of {{goal}} · {{percent}} %",
+      "headline": {
+        "remaining": "{{kcal}} kcal left",
+        "remainingPast": "{{kcal}} kcal were left",
+        "over": "{{kcal}} kcal over",
+        "missing": "{{kcal}} kcal to plan",
+        "overPlanned": "{{kcal}} kcal over"
+      },
+      "status": {
+        "inProgress": "In progress",
+        "green": "Goal met",
+        "orange": "Close to goal",
+        "red": "Off goal",
+        "rest": "No entries",
+        "planned": "Planned",
+        "unplanned": "Not planned"
+      }
     },
     "macro": {
       "protein": "P",

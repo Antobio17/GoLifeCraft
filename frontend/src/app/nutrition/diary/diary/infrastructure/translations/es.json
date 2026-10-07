@@ -9,7 +9,24 @@
     "remove": "Eliminar",
     "summary": {
       "total": "TOTAL DEL DÍA",
-      "planned": "TOTAL PLANIFICADO"
+      "planned": "TOTAL PLANIFICADO",
+      "caption": "{{consumed}} de {{goal}} · {{percent}} %",
+      "headline": {
+        "remaining": "Quedan {{kcal}} kcal",
+        "remainingPast": "Te quedaron {{kcal}} kcal",
+        "over": "Te has pasado {{kcal}} kcal",
+        "missing": "Faltan {{kcal}} kcal",
+        "overPlanned": "Te pasas {{kcal}} kcal"
+      },
+      "status": {
+        "inProgress": "En curso",
+        "green": "Objetivo cumplido",
+        "orange": "Cerca del objetivo",
+        "red": "Fuera de objetivo",
+        "rest": "Sin registros",
+        "planned": "Planificado",
+        "unplanned": "Sin planificar"
+      }
     },
     "macro": {
       "protein": "P",

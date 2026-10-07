@@ -1,6 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { MacroGoal } from "@shared/design-system/macro-panel/domain/models/macro-goal.model";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
+import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/stat-strip-item.model";
+import { StackedBarSegment } from "@shared/design-system/stacked-bar/domain/models/stacked-bar-segment.model";
 import { UnitCatalogService } from "@nutrition/catalog/article/application/services/unit-catalog.service";
 import {
   DiaryDay,
@@ -11,6 +13,10 @@ import {
   DiaryMealView,
 } from "../../domain/models/diary.model";
 import { DiaryEntryKind } from "../../domain/models/diary-entry-kind.model";
+import { DiarySummaryStatus } from "../../domain/models/diary-summary-status.enum";
+import { DiarySummaryCard } from "../../domain/models/diary-summary-card.model";
+import { ChipTone } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { DiaryCalendarViewService } from "./diary-calendar-view.service";
 
 export interface MacroShortLabels {
   protein: string;
@@ -21,6 +27,7 @@ export interface MacroShortLabels {
 @Injectable()
 export class DiaryViewService {
   private unitCatalog = inject(UnitCatalogService);
+  private calendarView = inject(DiaryCalendarViewService);
 
   withMealConsumed(
     day: DiaryDay,
@@ -117,22 +124,63 @@ export class DiaryViewService {
     ];
   }
 
-  countLabel(count: number, planning = false): string {
-    if (planning) return `${count} ${count === 1 ? "plato" : "platos"}`;
+  macroStats(attributes: DiaryDayAttributes): StatStripItem[] {
+    const { totals, goals } = attributes;
 
-    return `${count} ${count === 1 ? "registro" : "registros"}`;
+    return this.goalMacros(attributes).map((macro) => ({
+      value: this.integer(totals[macro.tone]),
+      unit: `/\u00a0${this.integer(goals[macro.tone])}\u00a0g`,
+      label: macro.label,
+      tone: macro.tone,
+    }));
   }
 
-  caloriesFootnote(attributes: DiaryDayAttributes, planning = false): string {
-    const excess = this.excessCalories(attributes);
+  summaryCard(attributes: DiaryDayAttributes): DiarySummaryCard {
+    const status = this.summaryStatus(attributes);
 
-    if (excess > 0 && planning)
-      return `kcal · te pasas ${this.integer(excess)}`;
-    if (excess > 0) return `kcal · te has pasado ${this.integer(excess)}`;
-    if (planning)
-      return `kcal · faltan ${this.integer(attributes.remainingCalories)}`;
+    return {
+      statusKey: `getDiary.summary.status.${status}`,
+      statusTone: this.summaryTone(status),
+      headlineKey: `getDiary.summary.headline.${this.headline(attributes)}`,
+      kcal: this.integer(
+        Math.abs(attributes.goalCalories - attributes.consumedCalories),
+      ),
+      over: this.exceedsCalories(attributes),
+      caption: {
+        consumed: this.integer(attributes.consumedCalories),
+        goal: this.integer(attributes.goalCalories),
+        percent: this.integer(this.goalShare(attributes)),
+      },
+      segments: this.calorieSegments(attributes),
+      marker: this.calorieGoalMarker(attributes),
+      stats: this.macroStats(attributes),
+    };
+  }
 
-    return `kcal · quedan ${this.integer(attributes.remainingCalories)}`;
+  calorieSegments(attributes: DiaryDayAttributes): StackedBarSegment[] {
+    const { totals } = attributes;
+    const macros = this.goalMacros(attributes);
+    const macroCalories = macros.map(
+      (macro) => totals[macro.tone] * this.caloriesPerGram(macro.tone),
+    );
+    const macroTotal = macroCalories.reduce((sum, value) => sum + value, 0);
+    const scale = this.calorieScale(attributes);
+
+    if (macroTotal <= 0 || scale <= 0) return [];
+
+    const consumedShare = (attributes.consumedCalories / scale) * 100;
+
+    return macros.map((macro, index) => ({
+      value: (macroCalories[index] / macroTotal) * consumedShare,
+      tone: macro.tone,
+      label: macro.label,
+    }));
+  }
+
+  calorieGoalMarker(attributes: DiaryDayAttributes): number | null {
+    if (!this.exceedsCalories(attributes)) return null;
+
+    return (attributes.goalCalories / attributes.consumedCalories) * 100;
   }
 
   exceedsCalories(attributes: DiaryDayAttributes): boolean {
@@ -289,6 +337,62 @@ export class DiaryViewService {
     if (goal <= 0) return 0;
 
     return Math.max(0, value - goal);
+  }
+
+  private summaryStatus(attributes: DiaryDayAttributes): DiarySummaryStatus {
+    const { entryCount, consumedCalories, goalCalories, date } = attributes;
+
+    if (this.isFuture(date))
+      return entryCount > 0
+        ? DiarySummaryStatus.Planned
+        : DiarySummaryStatus.Unplanned;
+    if (
+      this.isToday(date) &&
+      entryCount > 0 &&
+      !this.exceedsCalories(attributes)
+    )
+      return DiarySummaryStatus.InProgress;
+
+    return this.calendarView.dayStatus(
+      consumedCalories,
+      goalCalories,
+      entryCount,
+    ) as DiarySummaryStatus;
+  }
+
+  private summaryTone(status: DiarySummaryStatus): ChipTone {
+    if (status === DiarySummaryStatus.Red) return "danger";
+    if (status === DiarySummaryStatus.Orange) return "warning";
+    if (status === DiarySummaryStatus.Rest) return "neutral";
+    if (status === DiarySummaryStatus.Unplanned) return "neutral";
+
+    return "brand";
+  }
+
+  private headline(attributes: DiaryDayAttributes): string {
+    const over = this.exceedsCalories(attributes);
+
+    if (this.isFuture(attributes.date)) return over ? "overPlanned" : "missing";
+    if (over) return "over";
+    if (this.isPast(attributes.date)) return "remainingPast";
+
+    return "remaining";
+  }
+
+  private goalShare(attributes: DiaryDayAttributes): number {
+    if (attributes.goalCalories <= 0) return 0;
+
+    return (attributes.consumedCalories / attributes.goalCalories) * 100;
+  }
+
+  private calorieScale(attributes: DiaryDayAttributes): number {
+    return Math.max(attributes.goalCalories, attributes.consumedCalories);
+  }
+
+  private caloriesPerGram(tone: MacroGoal["tone"]): number {
+    if (tone === "fat") return 9;
+
+    return 4;
   }
 
   private excessCalories(attributes: DiaryDayAttributes): number {

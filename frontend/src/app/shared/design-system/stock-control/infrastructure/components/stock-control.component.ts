@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { BarComponent } from "../../../bar/infrastructure/components/bar.component";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import {
   ChipComponent,
@@ -7,7 +8,7 @@ import {
 
 @Component({
   selector: "ds-stock-control",
-  imports: [IconComponent, ChipComponent],
+  imports: [IconComponent, ChipComponent, BarComponent],
   template: `
     <section class="ds-stk">
       @if (levelLabel) {
@@ -59,20 +60,11 @@ import {
             <span class="ds-stk__label">{{ confidenceLabel }}</span>
             <span class="ds-stk__trust-pct">{{ confidencePercent }}%</span>
           </div>
-          <div
-            class="ds-stk__trust-track"
-            role="progressbar"
-            [attr.aria-valuenow]="confidencePercent"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            [attr.aria-label]="confidenceLabel"
-          >
-            <div
-              class="ds-stk__trust-fill"
-              [class.ds-stk__trust-fill--weak]="confidencePercent < 50"
-              [style.width.%]="confidencePercent"
-            ></div>
-          </div>
+          <ds-bar
+            [value]="confidencePercent"
+            [tone]="confidencePercent < 50 ? 'warning' : 'brand'"
+            [ariaLabel]="confidenceLabel"
+          />
         </div>
       }
 
@@ -159,20 +151,6 @@ import {
         font-size: var(--ds-text-xs);
         font-weight: 800;
         color: var(--ds-text-meta);
-      }
-      .ds-stk__trust-track {
-        height: 0.375rem;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface-inset);
-        overflow: hidden;
-      }
-      .ds-stk__trust-fill {
-        height: 100%;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-primary);
-      }
-      .ds-stk__trust-fill--weak {
-        background: var(--ds-warning);
       }
       .ds-stk__top {
         display: flex;

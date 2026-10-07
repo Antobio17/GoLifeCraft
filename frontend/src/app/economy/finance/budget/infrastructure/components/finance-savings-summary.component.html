@@ -6,38 +6,34 @@
   />
 
   @if (loading()) {
-    <ds-skeleton-panel [glass]="true" [figure]="true" content="meters" />
+    <ds-module-card>
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-skeleton-line width="40%" height="0.75rem" />
+        <ds-skeleton-line width="55%" height="1.5rem" />
+        <ds-skeleton-line width="100%" height="0.75rem" />
+        <ds-skeleton-line width="100%" height="3.25rem" />
+      </ds-stack>
+    </ds-module-card>
   } @else if (!configured()) {
-    <ds-text variant="muted">{{ "dashboard.savings.empty" | t }}</ds-text>
+    <ds-cta-row
+      icon="wallet"
+      [dashed]="true"
+      [title]="'dashboard.savings.emptyTitle' | t"
+      [subtitle]="'dashboard.savings.empty' | t"
+      (clicked)="seeAll.emit()"
+    />
   } @else {
-    <ds-card variant="glass" [padding]="'var(--ds-space-4)'">
-      <ds-stack
-        direction="row"
-        justify="between"
-        align="center"
-        [gap]="'var(--ds-space-2)'"
+    <ds-module-card [eyebrow]="'dashboard.savings.eyebrow' | t">
+      <ds-chip
+        slot="aside"
+        [tone]="savingsTone() === 'positive' ? 'brand' : 'warning'"
+        [uppercase]="true"
+        >{{ savingsBadgeLabel() }}</ds-chip
       >
-        <ds-text variant="label">{{ "dashboard.savings.eyebrow" | t }}</ds-text>
 
-        <ds-chip
-          [tone]="savingsTone() === 'positive' ? 'brand' : 'warning'"
-          [uppercase]="true"
-          >{{ savingsBadgeLabel() }}</ds-chip
-        >
-      </ds-stack>
-
-      <ds-stack
-        direction="row"
-        align="end"
-        [gap]="'var(--ds-space-2)'"
-        [wrap]="true"
-      >
-        <ds-heading [level]="3" size="lg">{{ savingsRealLabel() }}</ds-heading>
-        <ds-text variant="meta"
-          >{{ "dashboard.savings.goal" | t }}
-          {{ savingsObjectiveLabel() }}</ds-text
-        >
-      </ds-stack>
+      <ds-heading [level]="3" size="xl" [truncate]="true">{{
+        savedLabel()
+      }}</ds-heading>
 
       <ds-budget-meter
         [ratio]="savingsRatio()"
@@ -46,9 +42,7 @@
         [ariaLabel]="'dashboard.savings.eyebrow' | t"
       />
 
-      <ds-text [variant]="savingsGoalReached() ? 'success' : 'meta'">{{
-        savingsRemainingLabel()
-      }}</ds-text>
-    </ds-card>
+      <ds-stat-strip [compact]="true" [items]="statItems()" />
+    </ds-module-card>
   }
 </ds-stack>

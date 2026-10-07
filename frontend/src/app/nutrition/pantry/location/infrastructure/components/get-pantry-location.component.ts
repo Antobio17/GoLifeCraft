@@ -24,10 +24,8 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
-import {
-  SegmentedOption,
-  SegmentedToggleComponent,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
@@ -72,7 +70,7 @@ const ALL_KINDS = "";
     IconButtonComponent,
     EmojiTileComponent,
     SearchInputComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     EmptyStateComponent,
     SkeletonComponent,
     SkeletonScreenHeaderComponent,
@@ -138,7 +136,7 @@ export class GetPantryLocationComponent {
     },
   ]);
 
-  kindOptions = computed<SegmentedOption[]>(() => [
+  kindOptions = computed<ViewSwitchOption[]>(() => [
     { value: ALL_KINDS, label: this.t("getPantryLocation.kind.all") },
     {
       value: PantryLocationItemKind.ARTICLE,

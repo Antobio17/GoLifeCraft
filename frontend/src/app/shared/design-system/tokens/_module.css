@@ -1,0 +1,108 @@
+:root {
+  --ds-module-nutrition: var(--ds-green-600);
+  --ds-module-nutrition-text: var(--ds-green-700);
+  --ds-module-finance: var(--ds-amber-500);
+  --ds-module-finance-text: var(--ds-amber-700);
+  --ds-module-gym: #e2734d;
+  --ds-module-gym-text: #a8462a;
+  --ds-module-agenda: #c46fa3;
+  --ds-module-agenda-text: #8f3d76;
+  --ds-module-on: var(--ds-gray-0);
+
+  --ds-module-hero-base: var(--ds-gray-25);
+  --ds-module-glow: 16%;
+}
+
+[data-theme="dark"] {
+  --ds-module-nutrition: var(--ds-green-200);
+  --ds-module-nutrition-text: var(--ds-green-200);
+  --ds-module-finance: var(--ds-amber-400);
+  --ds-module-finance-text: var(--ds-amber-300);
+  --ds-module-gym: #ff9f80;
+  --ds-module-gym-text: #ffb59c;
+  --ds-module-agenda: #e9a8d4;
+  --ds-module-agenda-text: #f0bfe0;
+  --ds-module-on: #0b0f0c;
+
+  --ds-module-hero-base: rgba(24, 28, 26, 0.78);
+  --ds-module-glow: 15%;
+}
+
+[data-module="home"] {
+  --ds-module: var(--ds-text);
+  --ds-module-text: var(--ds-text);
+}
+
+[data-module="nutrition"] {
+  --ds-module: var(--ds-module-nutrition);
+  --ds-module-text: var(--ds-module-nutrition-text);
+}
+
+[data-module="finance"] {
+  --ds-module: var(--ds-module-finance);
+  --ds-module-text: var(--ds-module-finance-text);
+}
+
+[data-module="gym"] {
+  --ds-module: var(--ds-module-gym);
+  --ds-module-text: var(--ds-module-gym-text);
+}
+
+[data-module="agenda"] {
+  --ds-module: var(--ds-module-agenda);
+  --ds-module-text: var(--ds-module-agenda-text);
+}
+
+[data-module] {
+  --ds-primary: var(--ds-module-text);
+  --ds-primary-hover: color-mix(
+    in srgb,
+    var(--ds-module-text) 88%,
+    var(--ds-text)
+  );
+  --ds-primary-active: color-mix(
+    in srgb,
+    var(--ds-module-text) 76%,
+    var(--ds-text)
+  );
+  --ds-on-primary: var(--ds-module-on);
+  --ds-primary-soft: color-mix(in srgb, var(--ds-module) 14%, transparent);
+  --ds-primary-soft-hover: color-mix(
+    in srgb,
+    var(--ds-module) 20%,
+    transparent
+  );
+  --ds-primary-soft-text: var(--ds-module-text);
+  --ds-primary-soft-border: color-mix(
+    in srgb,
+    var(--ds-module) 30%,
+    transparent
+  );
+  --ds-accent: var(--ds-module);
+  --ds-on-accent: var(--ds-module-on);
+  --ds-accent-soft: color-mix(in srgb, var(--ds-module) 14%, transparent);
+  --ds-accent-soft-text: var(--ds-module-text);
+  --ds-accent-soft-border: color-mix(
+    in srgb,
+    var(--ds-module) 30%,
+    transparent
+  );
+  --ds-accent-on-chart: var(--ds-module);
+  --ds-on-accent-on-chart: var(--ds-module-on);
+  --ds-border-focus: var(--ds-module-text);
+  --ds-focus-ring: 0 0 0 0.25rem
+    color-mix(in srgb, var(--ds-module) 24%, transparent);
+  --ds-data-1: var(--ds-module);
+  --ds-data-2: color-mix(in srgb, var(--ds-module) 62%, transparent);
+  --ds-data-3: color-mix(in srgb, var(--ds-module) 34%, transparent);
+  --ds-glyph-line: var(--ds-module);
+  --ds-glyph-fill: color-mix(in srgb, var(--ds-module) 30%, transparent);
+  --ds-glyph-tile: color-mix(in srgb, var(--ds-module) 14%, transparent);
+  --ds-hero-bg:
+    radial-gradient(
+      110% 55% at 0% 0%,
+      color-mix(in srgb, var(--ds-module) var(--ds-module-glow), transparent),
+      transparent 70%
+    ),
+    var(--ds-module-hero-base);
+}

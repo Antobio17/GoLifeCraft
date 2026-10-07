@@ -208,11 +208,8 @@ test.describe("favoritos del catálogo", () => {
     await expect(articles.cards).toHaveCount(1);
     await expect(articles.cardNamed(favorite)).toBeVisible();
 
-    await articles.filterByFavorite("No favoritos");
-    await expect(articles.cards).toHaveCount(
-      Object.keys(SEED.articles).length - 1,
-    );
-    await expect(articles.cardNamed(favorite)).toHaveCount(0);
+    await articles.filterByFavorite("Todos");
+    await expect(articles.cards).toHaveCount(Object.keys(SEED.articles).length);
 
     await article.goto(SEED.articles.pollo.id);
     await expect(article.favorite).toHaveAttribute("aria-pressed", "true");

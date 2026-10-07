@@ -149,7 +149,8 @@
     "open": "Abrir la ficha",
     "filter": {
       "all": "Todos",
-      "favorites": "Favoritos"
+      "favorites": "Favoritos",
+      "label": "Filtro de favoritos"
     },
     "noFavorites": "Ningún favorito guardado aquí",
     "favorite": "Favorito"

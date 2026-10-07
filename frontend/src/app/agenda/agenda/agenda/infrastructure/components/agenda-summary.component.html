@@ -6,61 +6,56 @@
   />
 
   @if (loading()) {
-    <ds-skeleton-line width="11.5rem" height="0.6875rem" />
-    <ds-skeleton-list
-      [count]="4"
-      tone="glass"
-      [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-surface)"
-      padding="var(--ds-space-3) var(--ds-space-3)"
-      titleWidth="64%"
-      [meta]="false"
-      [chips]="2"
-    />
+    <ds-module-card>
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-skeleton-line width="45%" height="0.75rem" />
+        <ds-skeleton-line width="85%" height="1rem" />
+        <ds-skeleton-line width="70%" height="1rem" />
+      </ds-stack>
+    </ds-module-card>
   } @else if (!hasEntries()) {
-    <ds-text variant="muted">{{ "dashboard.agenda.empty" | t }}</ds-text>
+    <ds-cta-row
+      icon="calendar"
+      [dashed]="true"
+      [title]="'dashboard.agenda.emptyTitle' | t"
+      [subtitle]="'dashboard.agenda.empty' | t"
+      (clicked)="seeAll.emit()"
+    />
   } @else {
-    <ds-text variant="meta">
-      @if (pendingCount() === 0) {
-        {{ "dashboard.agenda.allDone" | t }}
-      } @else if (pendingCount() === 1) {
-        {{ "dashboard.agenda.pendingOne" | t }}
-      } @else {
-        {{ "dashboard.agenda.pendingMany" | t: { count: pendingCount() } }}
-      }
-    </ds-text>
-
-    <ds-stack [gap]="'var(--ds-space-2)'">
-      @for (entry of visibleEntries(); track entry.id) {
-        <ds-agenda-item
-          [glass]="true"
-          [title]="entry.title"
-          [glyph]="entryGlyph(entry)"
-          [kindLabel]="
-            entryKindLabel(entry, 'dashboard.agenda.kind.' + entry.kind | t)
-          "
-          [appointment]="entry.kind === 'appointment'"
-          [timeLabel]="
-            entry.timeLabel ??
-            entryWhenLabel(
-              entry.entry,
-              'dashboard.agenda.day.today' | t,
-              'dashboard.agenda.day.tomorrow' | t
-            )
-          "
-          [done]="entry.done"
-          [removable]="false"
-          [checkable]="false"
-          [editLabel]="'dashboard.agenda.open' | t"
-          (opened)="seeAll.emit()"
-        />
-      }
+    <ds-module-card
+      [eyebrow]="
+        pendingCount() === 0
+          ? ('dashboard.agenda.allDone' | t)
+          : pendingCount() === 1
+            ? ('dashboard.agenda.pendingOne' | t)
+            : ('dashboard.agenda.pendingMany' | t: { count: pendingCount() })
+      "
+    >
+      <ds-stack [gap]="'var(--ds-space-1)'">
+        @for (entry of visibleEntries(); track entry.id) {
+          <ds-link-row
+            [title]="entry.title"
+            [glyph]="entryGlyph(entry)"
+            [icon]="entry.appointment ? 'clock' : 'check'"
+            [meta]="
+              entry.timeLabel ??
+              entryWhenLabel(
+                entry.entry,
+                'dashboard.agenda.day.today' | t,
+                'dashboard.agenda.day.tomorrow' | t
+              )
+            "
+            [done]="entry.done"
+            (clicked)="seeAll.emit()"
+          />
+        }
+      </ds-stack>
 
       @if (hiddenCount() > 0) {
         <ds-text variant="meta">{{
           "dashboard.agenda.more" | t: { count: hiddenCount() }
         }}</ds-text>
       }
-    </ds-stack>
+    </ds-module-card>
   }
 </ds-stack>

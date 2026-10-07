@@ -29,7 +29,8 @@ import { StoreTabsComponent } from "@shared/design-system/store-tabs/infrastruct
 import { ShoppingSummaryComponent } from "@shared/design-system/shopping-summary/infrastructure/components/shopping-summary.component";
 import { ShoppingItemComponent } from "@shared/design-system/shopping-item/infrastructure/components/shopping-item.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
-import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
@@ -89,7 +90,7 @@ type FilterKind = "store" | "cat" | "brand";
     ShoppingSummaryComponent,
     ShoppingItemComponent,
     ConfirmActionModalComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     ChipComponent,
     ManageAislesComponent,
     DiaryShoppingSheetComponent,
@@ -118,6 +119,7 @@ export class GetShoppingListComponent implements OnInit {
   loading = signal(true);
   loadedAttributes = signal<ShoppingListAttributes | null>(null);
   activeTab = signal<string>(ALL_STORES);
+  listSearch = signal("");
   sortMode = signal<ShoppingSortMode>(ShoppingSortMode.Aisle);
   supermarkets = signal<Supermarket[]>([]);
   aisleSheetOpen = signal(false);
@@ -169,6 +171,10 @@ export class GetShoppingListComponent implements OnInit {
     return this.view.visibleItems(attributes, this.effectiveTab());
   });
 
+  searchedItems = computed(() =>
+    this.view.searchedItems(this.visibleItems(), this.listSearch()),
+  );
+
   packLabels = computed<ShoppingPackLabels>(() => ({
     perPack: this.t("getShopping.pack.perPack"),
     need: this.t("getShopping.pack.need"),
@@ -180,14 +186,16 @@ export class GetShoppingListComponent implements OnInit {
     withoutAisle: this.t("getShopping.sort.withoutAisle"),
   }));
 
-  sortOptions = computed(() => [
+  sortOptions = computed<ViewSwitchOption[]>(() => [
     {
       value: ShoppingSortMode.Aisle,
       label: this.t("getShopping.sort.aisle"),
+      icon: "aisles",
     },
     {
       value: ShoppingSortMode.Category,
       label: this.t("getShopping.sort.category"),
+      icon: "tag",
     },
   ]);
 
@@ -218,7 +226,7 @@ export class GetShoppingListComponent implements OnInit {
 
   groups = computed(() =>
     this.view.groups(
-      this.visibleItems(),
+      this.searchedItems(),
       this.groupLabels(),
       this.packLabels(),
       this.sortMode(),
@@ -233,6 +241,10 @@ export class GetShoppingListComponent implements OnInit {
 
   tabEmpty = computed(
     () => !this.isEmpty() && this.visibleItems().length === 0,
+  );
+
+  searchEmpty = computed(
+    () => !this.tabEmpty() && this.searchedItems().length === 0,
   );
 
   hasChecked = computed(() => this.visibleItems().some((item) => item.checked));
@@ -292,6 +304,10 @@ export class GetShoppingListComponent implements OnInit {
 
     this.loadArticles();
     this.loadSupermarkets();
+  }
+
+  onListSearch(query: string): void {
+    this.listSearch.set(query);
   }
 
   onSort(mode: string): void {

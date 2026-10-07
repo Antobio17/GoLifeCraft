@@ -5,6 +5,9 @@
     [date]="today | date: 'EEEE, d MMM'"
     [greeting]="'dashboard.greeting' | t"
     [name]="name()"
+    [subtitle]="
+      headlineKey() ? (headlineKey() | t: { kcal: headlineKcal() }) : ''
+    "
     [initial]="initial()"
     [imageUrl]="avatarUrl()"
     [avatarLabel]="'dashboard.avatar.settings' | t"
@@ -31,72 +34,92 @@
       (action)="goToDiary()"
     />
     @if (summaryLoading()) {
-      <ds-skeleton-summary tone="glass" macros="bars" [dense]="true" />
+      <ds-module-card>
+        <ds-stack [gap]="'var(--ds-space-3)'">
+          <ds-skeleton-line width="40%" height="0.75rem" />
+          <ds-skeleton-line width="70%" height="1.75rem" />
+          <ds-skeleton-line width="45%" height="1rem" />
+          <ds-skeleton-line width="100%" height="0.5rem" />
+          <ds-skeleton-line width="100%" height="3.5rem" />
+          <ds-skeleton-line width="35%" height="1.5rem" />
+        </ds-stack>
+      </ds-module-card>
     } @else if (summary(); as diary) {
-      <ds-diary-summary
+      @let card = summaryCard()!;
+      <ds-calorie-summary
         data-testid="dashboard-summary"
-        [dense]="true"
         [eyebrow]="'dashboard.summary.total' | t"
-        [countLabel]="view.countLabel(diary.entryCount)"
-        [percent]="diary.percent"
-        [consumed]="view.integer(diary.consumedCalories)"
-        [goal]="view.integer(diary.goalCalories)"
-        [footnote]="view.caloriesFootnote(diary)"
-        [over]="view.exceedsCalories(diary)"
-        [macros]="view.goalMacros(diary)"
+        [statusLabel]="card.statusKey | t"
+        [statusTone]="card.statusTone"
+        [title]="card.headlineKey | t: { kcal: card.kcal }"
+        [over]="card.over"
+        [caption]="'getDiary.summary.caption' | t: card.caption"
+        [segments]="card.segments"
+        [marker]="card.marker"
+        [stats]="card.stats"
       />
     }
   </ds-stack>
 
-  <app-agenda-summary slot="agenda" (seeAll)="goToAgenda()" />
+  <app-agenda-summary
+    slot="agenda"
+    data-module="agenda"
+    (seeAll)="goToAgenda()"
+  />
 
-  <app-finance-savings-summary slot="balance" (seeAll)="goToBudget()" />
+  <app-finance-savings-summary
+    slot="balance"
+    data-module="finance"
+    (seeAll)="goToBudget()"
+  />
 
   <app-gym-analytics
     slot="gym"
+    data-module="gym"
     [stats]="gymStats()"
     [loading]="gymStatsLoading()"
     (seeAll)="goToGym()"
   />
 
-  <ds-stack slot="explore" [gap]="'var(--ds-space-3)'">
+  <ds-stack slot="explore" [gap]="'var(--ds-space-2)'">
     <ds-section-header
       [title]="'dashboard.explore.title' | t"
       [staticLabel]="'dashboard.explore.quickAccess' | t"
     />
-    <ds-grid [columns]="2" [gap]="'var(--ds-space-2)'">
-      <ds-action-tile
-        [glass]="true"
-        data-testid="dashboard-tile-catalog"
-        icon="leaf"
-        [name]="'dashboard.explore.catalog' | t"
-        [meta]="'dashboard.explore.catalogMeta' | t"
-        (clicked)="goToCatalog()"
-      />
-      <ds-action-tile
-        [glass]="true"
-        data-testid="dashboard-tile-gym"
-        icon="dumbbell"
-        [name]="'dashboard.explore.gym' | t"
-        [meta]="'dashboard.explore.gymMeta' | t"
-        (clicked)="goToGym()"
-      />
-      <ds-action-tile
-        [glass]="true"
-        data-testid="dashboard-tile-recipes"
-        icon="chefHat"
-        [name]="'dashboard.explore.recipes' | t"
-        [meta]="'dashboard.explore.recipesMeta' | t"
-        (clicked)="goToRecipes()"
-      />
-      <ds-action-tile
-        [glass]="true"
-        data-testid="dashboard-tile-shopping"
-        icon="cart"
-        [name]="'dashboard.explore.list' | t"
-        [meta]="'dashboard.explore.listMeta' | t"
-        (clicked)="goToShopping()"
-      />
-    </ds-grid>
+    <ds-module-card>
+      <ds-stack [gap]="'var(--ds-space-1)'">
+        <ds-link-row
+          data-testid="dashboard-tile-agenda"
+          data-module="agenda"
+          icon="agenda"
+          [title]="'dashboard.explore.agenda' | t"
+          [meta]="'dashboard.explore.agendaMeta' | t"
+          (clicked)="goToNewAgendaEntry()"
+        />
+        <ds-link-row
+          data-testid="dashboard-tile-movement"
+          data-module="finance"
+          icon="wallet"
+          [title]="'dashboard.explore.movement' | t"
+          [meta]="'dashboard.explore.movementMeta' | t"
+          (clicked)="goToNewMovement()"
+        />
+        <ds-link-row
+          data-testid="dashboard-tile-shopping"
+          icon="cart"
+          [title]="'dashboard.explore.list' | t"
+          [meta]="'dashboard.explore.listMeta' | t"
+          (clicked)="goToShopping()"
+        />
+        <ds-link-row
+          data-testid="dashboard-tile-gym"
+          data-module="gym"
+          icon="dumbbell"
+          [title]="'dashboard.explore.gym' | t"
+          [meta]="'dashboard.explore.gymMeta' | t"
+          (clicked)="goToGym()"
+        />
+      </ds-stack>
+    </ds-module-card>
   </ds-stack>
 </ds-dashboard-layout>

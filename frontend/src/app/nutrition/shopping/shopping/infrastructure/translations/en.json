@@ -11,6 +11,11 @@
     "decrement": "Decrease quantity",
     "remove": "Remove",
     "clearChecked": "Remove bought",
+    "search": {
+      "placeholder": "Search the list…",
+      "clear": "Clear search",
+      "empty": "Nothing on the list matches your search"
+    },
     "tabEmpty": "No items for this supermarket",
     "error": "Could not load the shopping list",
     "summary": {
@@ -80,7 +85,8 @@
       "aisle": "By aisle",
       "category": "By category",
       "manage": "Manage aisles",
-      "withoutAisle": "no aisle"
+      "withoutAisle": "no aisle",
+      "label": "Sort the list"
     }
   }
 }

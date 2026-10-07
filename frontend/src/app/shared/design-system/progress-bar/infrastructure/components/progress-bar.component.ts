@@ -1,35 +1,14 @@
 import { Component, Input } from "@angular/core";
+import { BarComponent } from "../../../bar/infrastructure/components/bar.component";
 
 @Component({
   selector: "ds-progress-bar",
-  template: `
-    <div
-      class="ds-pbar"
-      role="progressbar"
-      [attr.aria-label]="ariaLabel || null"
-      [attr.aria-valuenow]="value"
-      aria-valuemin="0"
-      aria-valuemax="100"
-    >
-      <div class="ds-pbar__fill" [style.width.%]="value"></div>
-    </div>
-  `,
+  imports: [BarComponent],
+  template: `<ds-bar [value]="value" [ariaLabel]="ariaLabel" />`,
   styles: [
     `
       :host {
         display: block;
-      }
-      .ds-pbar {
-        height: 0.375rem;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface-inset);
-        overflow: hidden;
-      }
-      .ds-pbar__fill {
-        height: 100%;
-        border-radius: var(--ds-radius-pill);
-        background: var(--ds-primary);
-        transition: width var(--ds-transition-base);
       }
     `,
   ],

@@ -11,14 +11,14 @@
     ></ds-impersonation-bar>
   }
 
-  <div class="app-frame__content">
+  <div class="app-frame__content" [attr.data-module]="module()">
     <router-outlet></router-outlet>
   </div>
 
   @if (showTabBar()) {
-    <app-bottom-nav>
+    <app-bottom-nav [attr.data-module]="navModule()">
       <app-active-workout-banner></app-active-workout-banner>
     </app-bottom-nav>
-    <app-side-drawer></app-side-drawer>
+    <app-side-drawer [attr.data-module]="navModule()"></app-side-drawer>
   }
 </div>

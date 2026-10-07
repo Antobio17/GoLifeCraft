@@ -6,30 +6,29 @@
   />
 
   @if (loading()) {
-    <ds-skeleton-panel
-      [glass]="true"
-      [figure]="true"
-      content="heatmap"
-      chartHeight="6.75rem"
-    />
-    <ds-skeleton-metrics
-      [glass]="true"
-      [count]="3"
-      [gap]="'var(--ds-space-2)'"
-      padding="var(--ds-space-3) var(--ds-space-3)"
-    />
-    <ds-skeleton-panel [glass]="true" content="meters" [meters]="4" />
+    <ds-module-card>
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-skeleton-line width="40%" height="0.75rem" />
+        <ds-skeleton-line width="45%" height="2.25rem" />
+        <ds-skeleton-line width="100%" height="6.75rem" />
+        <ds-skeleton-line width="100%" height="3.5rem" />
+      </ds-stack>
+    </ds-module-card>
   } @else if (!hasData()) {
-    <ds-text variant="muted">{{ "dashboard.gym.empty" | t }}</ds-text>
-  } @else {
-    <ds-panel
-      [glass]="true"
+    <ds-cta-row
+      icon="dumbbell"
+      [dashed]="true"
       [title]="'dashboard.gym.activity.title' | t"
-      [subtitle]="'dashboard.gym.activity.subtitle' | t"
-      [figure]="
-        'dashboard.gym.activity.figure' | t: { days: activity().activeDays }
-      "
-    >
+      [subtitle]="'dashboard.gym.empty' | t"
+      (clicked)="seeAll.emit()"
+    />
+  } @else {
+    <ds-module-card [eyebrow]="'dashboard.gym.activity.title' | t">
+      <ds-big-figure
+        [value]="activity().activeDays"
+        [suffix]="'dashboard.gym.activity.subtitle' | t"
+      />
+
       <ds-activity-heatmap
         class="panel__heatmap"
         [weeks]="activity().weeks"
@@ -38,41 +37,8 @@
         [legendLess]="'dashboard.gym.activity.less' | t"
         [legendMore]="'dashboard.gym.activity.more' | t"
       />
-    </ds-panel>
 
-    <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-      <ds-stat-tile
-        [glass]="true"
-        [value]="stats()!.totalSessions"
-        [label]="'dashboard.gym.sessions' | t"
-      />
-      <ds-stat-tile
-        [glass]="true"
-        [value]="totalVolumeText()"
-        unit="kg"
-        [label]="'dashboard.gym.volume' | t"
-      />
-      <ds-stat-tile
-        [glass]="true"
-        [value]="stats()!.totalExercises"
-        [label]="'dashboard.gym.exercises' | t"
-      />
-    </ds-stack>
-
-    <ds-panel
-      [glass]="true"
-      [title]="'dashboard.gym.muscles.title' | t"
-      [subtitle]="'dashboard.gym.muscles.subtitle' | t"
-    >
-      <ds-stack class="muscles" [gap]="'var(--ds-space-3)'">
-        @for (region of regionShares(); track region.region) {
-          <ds-meter
-            [label]="region.region"
-            [percent]="region.percent"
-            [color]="region.color"
-          />
-        }
-      </ds-stack>
-    </ds-panel>
+      <ds-stat-strip [compact]="true" [items]="statItems()" />
+    </ds-module-card>
   }
 </ds-stack>

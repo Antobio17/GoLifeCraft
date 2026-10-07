@@ -9,6 +9,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
 import { Observable, skip } from "rxjs";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
@@ -98,6 +99,7 @@ import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum
 })
 export class GetAgendaComponent implements OnInit {
   private translationService = inject(TranslationService);
+  private router = inject(Router);
   private getAgendaDayService = inject(GetAgendaDayService);
   private getAgendaCalendarService = inject(GetAgendaCalendarService);
   private createAgendaEntryService = inject(CreateAgendaEntryService);
@@ -124,6 +126,7 @@ export class GetAgendaComponent implements OnInit {
   private readonly MODULE_PATH = "agenda/agenda/agenda";
 
   readonly at = input<string | undefined>(undefined);
+  readonly create = input<string>();
 
   loading = signal(true);
   day = signal<AgendaDayAttributes | null>(null);
@@ -250,7 +253,19 @@ export class GetAgendaComponent implements OnInit {
         this.translationsReady.set(true);
         this.load(this.date());
         this.loadCalendar();
+        this.openRequestedSheet();
       });
+  }
+
+  private openRequestedSheet(): void {
+    if (!this.create()) return;
+
+    this.openNewSheet();
+    this.router.navigate([], {
+      queryParams: { create: null },
+      queryParamsHandling: "merge",
+      replaceUrl: true,
+    });
   }
 
   t(key: string): string {

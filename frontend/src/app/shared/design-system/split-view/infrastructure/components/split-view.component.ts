@@ -24,7 +24,7 @@ type SplitViewSide = "start" | "end";
       .split {
         display: flex;
         flex-direction: column;
-        gap: var(--split-gap, var(--ds-space-3));
+        gap: var(--split-section-gap, var(--split-gap, var(--ds-space-3)));
       }
 
       .split__side,
@@ -77,6 +77,7 @@ type SplitViewSide = "start" | "end";
   ],
   host: {
     "[style.--split-gap]": "gap",
+    "[style.--split-section-gap]": "sectionGap",
     "[style.--split-columns]": "columns",
     "[style.--split-column-gap]": "columnGap",
     "[style.--split-sticky-top]": "stickyTop",
@@ -85,6 +86,7 @@ type SplitViewSide = "start" | "end";
 })
 export class SplitViewComponent {
   @Input() gap = "var(--ds-space-3)";
+  @Input() sectionGap: string | null = null;
   @Input() columnGap = "var(--ds-space-5)";
   @Input() columns = "minmax(0, 1fr) minmax(0, 1fr)";
   @Input() side: SplitViewSide = "start";

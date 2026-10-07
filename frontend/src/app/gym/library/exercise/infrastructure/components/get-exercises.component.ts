@@ -4,54 +4,44 @@ import { FormsModule } from "@angular/forms";
 import { NgTemplateOutlet } from "@angular/common";
 import { Observable } from "rxjs";
 import { GetExercisesService } from "@gym/library/exercise/application/services/get-exercises.service";
-import { DeleteExerciseService } from "@gym/library/exercise/application/services/delete-exercise.service";
 import { MuscleCatalogService } from "@gym/library/exercise/application/services/muscle-catalog.service";
 import { Exercise } from "../../domain/models/exercise.model";
 import { ExerciseWeightMode } from "../../domain/models/exercise-weight-mode.model";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
-import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
-import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
-import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
-import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
-import { IconBadgeComponent } from "@shared/design-system/icon-badge/infrastructure/components/icon-badge.component";
 import { DsIconName } from "@shared/design-system/icon/domain/models/icon.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
-import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
-import {
-  SegmentedToggleComponent,
-  SegmentedOption,
-} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import {
   AbstractListPageComponent,
   PagedResult,
 } from "@shared/design-system/list-page/abstract-list-page.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { ExerciseRowComponent } from "@shared/design-system/exercise-row/infrastructure/components/exercise-row.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 interface ExerciseRow {
   id: string;
   name: string;
-  muscleText: string;
+  muscles: string;
+  tags: string[];
   icon: DsIconName;
-  exercise: Exercise;
 }
 
 interface ExerciseGroup {
   muscle: string;
-  count: number;
+  countLabel: string;
   items: ExerciseRow[];
 }
 
@@ -65,26 +55,19 @@ type LibraryView = "list" | "grouped";
     FormsModule,
     NgTemplateOutlet,
     ContextualTranslatePipe,
-    ConfirmActionModalComponent,
     PageWrapperComponent,
     ScreenHeaderComponent,
     SearchInputComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
     StackComponent,
     GridComponent,
-    CardComponent,
-    HeadingComponent,
-    TextComponent,
-    ChipComponent,
-    DividerComponent,
+    SectionHeaderComponent,
+    ExerciseRowComponent,
     ButtonComponent,
-    IconButtonComponent,
-    IconBadgeComponent,
-    PressableComponent,
     EmptyStateComponent,
     SkeletonListComponent,
     SkeletonSectionHeaderComponent,
-    SkeletonFiltersComponent,
+    SkeletonComponent,
     InfiniteScrollComponent,
   ],
 })
@@ -94,7 +77,6 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
 
   private getExercisesService = inject(GetExercisesService);
   private backNavigation = inject(BackNavigationService);
-  private deleteExerciseService = inject(DeleteExerciseService);
   private muscleCatalog = inject(MuscleCatalogService);
 
   protected readonly modulePath = "gym/library/exercise";
@@ -109,19 +91,27 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
   reloading = signal(false);
   loadingMore = signal(false);
 
-  showDeleteModal = signal(false);
-  exerciseToDelete = signal<Exercise | null>(null);
-  isDeleting = signal(false);
-
-  viewOptions = computed<SegmentedOption[]>(() => [
-    { value: "grouped", label: this.t("getExercises.view.grouped") },
-    { value: "list", label: this.t("getExercises.view.list") },
+  viewOptions = computed<ViewSwitchOption[]>(() => [
+    {
+      value: "grouped",
+      label: this.t("getExercises.view.grouped"),
+      icon: "viewGrouped",
+    },
+    {
+      value: "list",
+      label: this.t("getExercises.view.list"),
+      icon: "viewList",
+    },
   ]);
 
   headerSubtitle = computed(() => {
     const exercises = this.t("getExercises.stats.exercises").toLowerCase();
     return `${this.totalItems()} ${exercises}`;
   });
+
+  noResultsText = computed(
+    () => `${this.t("getExercises.noResults")} “${this.searchQuery()}”`,
+  );
 
   rows = computed<ExerciseRow[]>(() =>
     this.items().map((exercise) => this.toRow(exercise)),
@@ -138,11 +128,11 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
         );
         return {
           muscle,
-          count: groupItems.length,
+          countLabel: `${groupItems.length}`,
           items: groupItems.map((exercise) => this.toRow(exercise)),
         };
       })
-      .filter((group) => group.count > 0);
+      .filter((group) => group.items.length > 0);
   });
 
   hasMore = computed(
@@ -235,20 +225,15 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
     return {
       id: exercise.id,
       name: exercise.attributes.name,
-      muscleText: this.muscleText(exercise),
+      muscles: exercise.attributes.muscleGroups.join(" · "),
+      tags: [
+        this.t(`getExercises.type.${exercise.attributes.type.toLowerCase()}`),
+        this.t(
+          `getExercises.weightMode.${exercise.attributes.weightMode ?? ExerciseWeightMode.Total}`,
+        ),
+      ],
       icon: (exercise.attributes.icon as DsIconName) ?? "dumbbell",
-      exercise,
     };
-  }
-
-  private muscleText(exercise: Exercise): string {
-    const mode = this.t(
-      `getExercises.type.${exercise.attributes.type.toLowerCase()}`,
-    );
-    const weightMode = this.t(
-      `getExercises.weightMode.${exercise.attributes.weightMode ?? ExerciseWeightMode.Total}`,
-    );
-    return `${exercise.attributes.muscleGroups.join(" · ")} · ${mode} · ${weightMode}`;
   }
 
   goBack(): void {
@@ -261,40 +246,5 @@ export class GetExercisesComponent extends AbstractListPageComponent<Exercise> {
 
   onOpen(id: string): void {
     this.router.navigate(["/gym/exercises", id]);
-  }
-
-  onEdit(id: string): void {
-    this.router.navigate(["/gym/exercises", id, "edit"]);
-  }
-
-  onDelete(exercise: Exercise): void {
-    this.exerciseToDelete.set(exercise);
-    this.showDeleteModal.set(true);
-  }
-
-  onConfirmDelete(): void {
-    if (!this.exerciseToDelete()) return;
-
-    this.isDeleting.set(true);
-    this.deleteExerciseService
-      .deleteExercise(this.exerciseToDelete()!.id)
-      .subscribe({
-        next: () => {
-          this.isDeleting.set(false);
-          this.showDeleteModal.set(false);
-          this.exerciseToDelete.set(null);
-          this.load();
-        },
-        error: () => {
-          this.isDeleting.set(false);
-          this.showDeleteModal.set(false);
-          this.exerciseToDelete.set(null);
-        },
-      });
-  }
-
-  onCancelDelete(): void {
-    this.showDeleteModal.set(false);
-    this.exerciseToDelete.set(null);
   }
 }

@@ -149,7 +149,8 @@
     "open": "Open the record",
     "filter": {
       "all": "All",
-      "favorites": "Favorites"
+      "favorites": "Favorites",
+      "label": "Favorites filter"
     },
     "noFavorites": "No favorites stored here",
     "favorite": "Favorite"

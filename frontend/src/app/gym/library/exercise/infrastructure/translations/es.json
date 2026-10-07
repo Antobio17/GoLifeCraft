@@ -1,6 +1,7 @@
 {
   "getExercises": {
     "heading": "Biblioteca",
+    "eyebrow": "Gimnasio",
     "create": "Crear",
     "back": "Volver",
     "title": "Ejercicios",
@@ -9,10 +10,12 @@
     "searchPlaceholder": "Buscar ejercicio…",
     "searchClear": "Limpiar búsqueda",
     "view": {
+      "label": "Vista",
       "list": "Lista",
       "grouped": "Por músculos"
     },
     "noResults": "Sin resultados para",
+    "noResultsTitle": "Nada por aquí",
     "stats": {
       "exercises": "Ejercicios"
     },
@@ -27,10 +30,6 @@
     "table": {
       "emptyTitle": "No hay ejercicios",
       "emptyMessage": "Aún no has añadido ejercicios a la biblioteca"
-    },
-    "actions": {
-      "edit": "Editar",
-      "delete": "Borrar"
     },
     "deleteModal": {
       "title": "¿Borrar ejercicio?",
@@ -61,9 +60,10 @@
       "perSide": "Peso por lado · el número es la carga de un lado"
     },
     "metric": {
-      "e1rm": "1RM est.",
-      "max": "Peso máx.",
-      "vol": "Volumen"
+      "e1rm": "1RM",
+      "max": "Máx.",
+      "vol": "Vol.",
+      "label": "Métrica"
     },
     "metricName": {
       "e1rm": "1RM estimado",
@@ -79,7 +79,8 @@
       "title": "Aún sin datos",
       "text": "Registra este ejercicio en una sesión para ver aquí tu progresión."
     },
-    "setCount": "{{count}} series"
+    "setCount": "{{count}} series",
+    "delete": "Borrar"
   },
   "createExercise": {
     "title": "Nuevo ejercicio",

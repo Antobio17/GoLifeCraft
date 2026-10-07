@@ -39,8 +39,8 @@
   @if (loading()) {
     <ds-skeleton-filters
       [search]="true"
+      [viewSwitch]="true"
       [selects]="3"
-      [segments]="3"
       [caption]="true"
     />
     <ds-skeleton-list
@@ -58,13 +58,25 @@
       [chips]="4"
     />
   } @else {
-    <ds-search-input
-      data-testid="articles-search"
-      [placeholder]="'getArticles.searchPlaceholder' | t"
-      [clearLabel]="'getArticles.searchClear' | t"
-      [value]="searchQuery()"
-      (searched)="onSearch($event)"
-    />
+    <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+      <ds-stack [grow]="true">
+        <ds-search-input
+          data-testid="articles-search"
+          [placeholder]="'getArticles.searchPlaceholder' | t"
+          [clearLabel]="'getArticles.searchClear' | t"
+          [value]="searchQuery()"
+          (searched)="onSearch($event)"
+        />
+      </ds-stack>
+
+      <ds-view-switch
+        data-testid="articles-filter-favorite"
+        [options]="favoriteOptions()"
+        [ariaLabel]="'getArticles.filter.favorite.label' | t"
+        [ngModel]="favoriteFilter()"
+        (ngModelChange)="onFavoriteFilterChange($event)"
+      />
+    </ds-stack>
 
     <ds-stack direction="row" [gap]="'var(--ds-space-1-5)'">
       <ds-select
@@ -92,15 +104,6 @@
         (ngModelChange)="onStoreChange($event)"
       />
     </ds-stack>
-
-    <ds-segmented-toggle
-      data-testid="articles-filter-favorite"
-      variant="pill"
-      [stretch]="true"
-      [options]="favoriteOptions()"
-      [ngModel]="favoriteFilter()"
-      (ngModelChange)="onFavoriteFilterChange($event)"
-    />
 
     <ds-text variant="label">{{ "getArticles.nutritionCaption" | t }}</ds-text>
 
