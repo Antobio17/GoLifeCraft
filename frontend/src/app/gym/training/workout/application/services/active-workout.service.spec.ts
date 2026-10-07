@@ -206,6 +206,23 @@ describe("ActiveWorkoutService rest timer", () => {
     expect(service.restOverTarget()).toBeTrue();
   });
 
+  it("flags the rest as ending once a third of the target is left", () => {
+    service.restTargetSeconds.set(90);
+    startWorkout();
+    service.toggleDone(0, 0, exercises);
+    tick(59000);
+
+    expect(service.restEnding()).toBeFalse();
+
+    tick(1000);
+
+    expect(service.restEnding()).toBeTrue();
+
+    tick(60000);
+
+    expect(service.restEnding()).toBeTrue();
+  });
+
   it("does not add the paused time to the rest", () => {
     startWorkout();
     service.toggleDone(0, 0, exercises);
