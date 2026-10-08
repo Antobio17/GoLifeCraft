@@ -57,7 +57,9 @@ test.describe("vuelta atrás", () => {
 
     await new ArticlePage(page).edit();
     await waitForAppReady(page);
-    await new ArticleEditorPage(page).save();
+    const editor = new ArticleEditorPage(page);
+    await editor.setBrand(`E2E ${Date.now()}`);
+    await editor.save();
 
     await expect(page).toHaveURL(detailUrl);
     await waitForAppReady(page);

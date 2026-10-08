@@ -45,7 +45,7 @@ export class DiaryPage {
 
   async consumedCalories(): Promise<number> {
     const text = (await this.summary.innerText()).replace(/\s+/g, " ");
-    const match = text.match(/([\d.,]+)\s*\/\s*[\d.,]+\s*kcal/i);
+    const match = text.match(/([\d.,]+)\s*(?:de|of)\s*[\d.,]+\s*·/i);
 
     if (!match) {
       throw new Error(`El resumen no trae calorías legibles: "${text}"`);

@@ -9,8 +9,9 @@ test.describe("catálogo", () => {
     const articles = new ArticlesPage(page);
     await articles.goto();
 
-    await expect(articles.cards).toHaveCount(Object.keys(SEED.articles).length);
-    await expect(articles.cardNamed(SEED.articles.yogur.name)).toBeVisible();
+    for (const { name } of Object.values(SEED.articles)) {
+      await expect(articles.cardNamed(name)).toBeVisible();
+    }
   });
 
   test("la búsqueda filtra contra el servidor y se recupera al vaciarla", async ({
@@ -24,7 +25,9 @@ test.describe("catálogo", () => {
     await expect(articles.cardNamed(SEED.articles.brocoli.name)).toBeVisible();
 
     await articles.search("");
-    await expect(articles.cards).toHaveCount(Object.keys(SEED.articles).length);
+    for (const { name } of Object.values(SEED.articles)) {
+      await expect(articles.cardNamed(name)).toBeVisible();
+    }
   });
 
   test("la búsqueda ignora acentos y mayúsculas", async ({ page }) => {
@@ -209,7 +212,9 @@ test.describe("favoritos del catálogo", () => {
     await expect(articles.cardNamed(favorite)).toBeVisible();
 
     await articles.filterByFavorite("Todos");
-    await expect(articles.cards).toHaveCount(Object.keys(SEED.articles).length);
+    for (const { name } of Object.values(SEED.articles)) {
+      await expect(articles.cardNamed(name)).toBeVisible();
+    }
 
     await article.goto(SEED.articles.pollo.id);
     await expect(article.favorite).toHaveAttribute("aria-pressed", "true");

@@ -68,6 +68,10 @@ export class ArticleEditorPage {
     }
   }
 
+  async setBrand(brand: string): Promise<void> {
+    await this.ds.fill("editor-brand", brand);
+  }
+
   async save(): Promise<void> {
     await this.submit.click();
   }
