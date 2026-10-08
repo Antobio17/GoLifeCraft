@@ -77,11 +77,6 @@
       "agendaMeta": "Add an appointment or a task",
       "movement": "New transaction",
       "movementMeta": "Log an expense or income"
-    },
-    "headline": {
-      "empty": "Nothing logged yet today.",
-      "over": "You're {{kcal}} kcal over.",
-      "under": "{{kcal}} kcal left today."
     }
   }
 }
