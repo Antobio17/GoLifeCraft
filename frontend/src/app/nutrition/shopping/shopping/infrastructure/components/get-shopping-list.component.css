@@ -23,9 +23,6 @@
 .shopping-tools {
   order: 2;
 }
-.shopping-diary {
-  order: 3;
-}
 .shopping-main {
   order: 5;
   min-width: 0;

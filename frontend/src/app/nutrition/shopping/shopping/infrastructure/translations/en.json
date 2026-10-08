@@ -74,11 +74,7 @@
         "one": "1 item",
         "many": "{{count}} items"
       },
-      "unknownFormat": "no purchase format · ask for {amount}",
-      "cardText": "are missing from the list",
-      "cardTitle": "{{count}} ingredients for your week",
-      "emptyCardText": "Pick a date range and add the ingredients you need.",
-      "review": "Review"
+      "unknownFormat": "no purchase format · ask for {amount}"
     },
     "clearModal": {
       "title": "Empty cart",

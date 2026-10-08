@@ -1,13 +1,10 @@
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
-import { SuggestionCardComponent } from "@shared/design-system/suggestion-card/infrastructure/components/suggestion-card.component";
 import { RouteStepComponent } from "@shared/design-system/route-step/infrastructure/components/route-step.component";
 import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
 import { BigFigureComponent } from "@shared/design-system/big-figure/infrastructure/components/big-figure.component";
 import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
 import { DOCUMENT } from "@angular/common";
 import { Router } from "@angular/router";
-import { GetDiaryShoppingNeedsService } from "@nutrition/diary/diary/application/services/get-diary-shopping-needs.service";
-import { DiaryShoppingViewService } from "@nutrition/shopping/shopping/application/services/diary-shopping-view.service";
 import { QuickAddComponent } from "@shared/design-system/quick-add/infrastructure/components/quick-add.component";
 import { CompletionCardComponent } from "@shared/design-system/completion-card/infrastructure/components/completion-card.component";
 import { DisclosureComponent } from "@shared/design-system/disclosure/infrastructure/components/disclosure.component";
@@ -74,7 +71,6 @@ type FilterKind = "store" | "cat" | "brand";
   styleUrls: ["./get-shopping-list.component.css"],
   imports: [
     RevealDirective,
-    SuggestionCardComponent,
     RouteStepComponent,
     ProgressBarComponent,
     BigFigureComponent,
@@ -112,9 +108,6 @@ type FilterKind = "store" | "cat" | "brand";
 export class GetShoppingListComponent implements OnInit {
   private document = inject(DOCUMENT);
   private router = inject(Router);
-  private diaryNeeds = inject(GetDiaryShoppingNeedsService);
-  private diaryView = inject(DiaryShoppingViewService);
-  pendingCount = signal(0);
   quickQuery = signal("");
   cartOpen = signal(false);
   private translationService = inject(TranslationService);
@@ -292,18 +285,6 @@ export class GetShoppingListComponent implements OnInit {
       total: this.scopeSummary().cartLabel,
     }),
   );
-  diaryCardTitle = computed(() =>
-    this.pendingCount() > 0
-      ? this.t("getShopping.diary.cardTitle", { count: this.pendingCount() })
-      : this.t("getShopping.diary.title"),
-  );
-  diaryCardText = computed(() =>
-    this.t(
-      this.pendingCount() > 0
-        ? "getShopping.diary.cardText"
-        : "getShopping.diary.emptyCardText",
-    ),
-  );
   isRouteMode = computed(() => this.sortMode() === ShoppingSortMode.Aisle);
   showRouteIndex = computed(
     () => this.isRouteMode() && !this.complete() && this.groups().length > 0,
@@ -327,7 +308,6 @@ export class GetShoppingListComponent implements OnInit {
       this.visibleItems().length > 0 &&
       this.visibleItems().every((item) => item.checked),
   );
-  showDiary = computed(() => this.isEmpty() || this.pendingCount() > 0);
   quickSuggestions = computed(() =>
     this.view.quickSuggestions(
       this.articles(),
@@ -354,17 +334,6 @@ export class GetShoppingListComponent implements OnInit {
   quickAddCustom(name: string): void {
     this.customName.set(name);
     this.addCustomItem();
-  }
-
-  private loadDiaryNeeds(): void {
-    const today = this.diaryView.todayIso();
-    this.diaryNeeds
-      .getDiaryShoppingNeeds(today, this.diaryView.addDays(today, 6))
-      .subscribe({
-        next: (response) =>
-          this.pendingCount.set(response.data.attributes.pendingCount),
-        error: () => this.pendingCount.set(0),
-      });
   }
 
   isEmpty = computed(() => (this.attributes()?.itemCount ?? 0) === 0);
@@ -704,7 +673,6 @@ export class GetShoppingListComponent implements OnInit {
     this.getShoppingListService.getShoppingList().subscribe({
       next: (response) => {
         this.loadedAttributes.set(response.data.attributes);
-        this.loadDiaryNeeds();
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

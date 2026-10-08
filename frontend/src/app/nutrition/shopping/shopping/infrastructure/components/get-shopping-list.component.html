@@ -27,6 +27,15 @@
           />
         </ds-stack>
         <ds-button
+          data-testid="shopping-from-diary"
+          variant="secondary"
+          size="icon-lg"
+          icon="diary"
+          [iconSize]="19"
+          [ariaLabel]="generateFromDiaryLabel()"
+          (clicked)="openDiarySheet()"
+        />
+        <ds-button
           data-testid="shopping-add"
           variant="primary"
           size="icon-lg"
@@ -88,17 +97,6 @@
               (picked)="scrollToGroup($event)"
             />
           }
-        }
-        @if (showDiary()) {
-          <ds-suggestion-card
-            class="shopping-diary"
-            data-testid="shopping-from-diary"
-            icon="diary"
-            [title]="diaryCardTitle()"
-            [text]="diaryCardText()"
-            [actionLabel]="'getShopping.diary.review' | t"
-            (action)="openDiarySheet()"
-          />
         }
         <ds-quick-add
           class="shopping-quick-add"

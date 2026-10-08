@@ -74,11 +74,7 @@
         "one": "1 artículo",
         "many": "{{count}} artículos"
       },
-      "unknownFormat": "sin formato de compra · pide {amount}",
-      "cardText": "no están en la lista",
-      "cardTitle": "{{count}} ingredientes de tu semana",
-      "emptyCardText": "Elige unos días y añade los ingredientes que necesitas.",
-      "review": "Revisar"
+      "unknownFormat": "sin formato de compra · pide {amount}"
     },
     "clearModal": {
       "title": "Vaciar carrito",
