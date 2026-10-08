@@ -1,4 +1,15 @@
-import { Component, computed, input, output, signal } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { EmojiTileComponent } from "../../../emoji-tile/infrastructure/components/emoji-tile.component";
 import { QuickAddSuggestion } from "../../domain/models/quick-add-suggestion.model";
@@ -40,8 +51,13 @@ import { QuickAddSuggestion } from "../../domain/models/quick-add-suggestion.mod
 
       @if (showList()) {
         <ul
+          #list
+          popover="manual"
           class="ds-qadd__list"
           role="listbox"
+          [style.top.px]="anchor().top"
+          [style.left.px]="anchor().left"
+          [style.width.px]="anchor().width"
           [id]="listId"
           [attr.aria-label]="ariaLabel() || placeholder()"
         >
@@ -157,12 +173,11 @@ import { QuickAddSuggestion } from "../../domain/models/quick-add-suggestion.mod
         color: var(--ds-text-muted);
       }
       .ds-qadd__list {
-        position: absolute;
-        z-index: 20;
-        top: calc(100% + var(--ds-space-1));
-        left: 0;
-        right: 0;
-        margin: 0;
+        position: fixed;
+        inset: auto;
+        margin: var(--ds-space-1) 0 0;
+        overflow: visible;
+        color: inherit;
         padding: var(--ds-space-1);
         list-style: none;
         display: flex;
@@ -232,6 +247,32 @@ export class QuickAddComponent {
     () => this.focused() && this.query().trim().length > 0,
   );
 
+  readonly anchor = signal({ top: 0, left: 0, width: 0 });
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly list = viewChild<ElementRef<HTMLUListElement>>("list");
+
+  constructor() {
+    effect(() => {
+      const list = this.list()?.nativeElement;
+      if (!list || list.matches(":popover-open")) return;
+
+      this.placeList();
+      list.showPopover();
+    });
+
+    const place = () => {
+      if (!this.showList()) return;
+      this.placeList();
+    };
+    window.addEventListener("scroll", place, { capture: true, passive: true });
+    window.addEventListener("resize", place, { passive: true });
+    inject(DestroyRef).onDestroy(() => {
+      window.removeEventListener("scroll", place, { capture: true });
+      window.removeEventListener("resize", place);
+    });
+  }
+
   onInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.query.set(value);
@@ -283,6 +324,18 @@ export class QuickAddComponent {
 
     this.submitted.emit(text);
     this.reset();
+  }
+
+  private placeList(): void {
+    const form = this.host.nativeElement.firstElementChild;
+    if (!form) return;
+
+    const rect = form.getBoundingClientRect();
+    this.anchor.set({
+      top: rect.bottom,
+      left: rect.left,
+      width: rect.width,
+    });
   }
 
   private reset(): void {

@@ -3,7 +3,9 @@ import { RouteStepComponent } from "@shared/design-system/route-step/infrastruct
 import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
 import { BigFigureComponent } from "@shared/design-system/big-figure/infrastructure/components/big-figure.component";
 import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT, NgTemplateOutlet } from "@angular/common";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
+import { CollapseRowComponent } from "@shared/design-system/collapse-row/infrastructure/components/collapse-row.component";
 import { Router } from "@angular/router";
 import { QuickAddComponent } from "@shared/design-system/quick-add/infrastructure/components/quick-add.component";
 import { CompletionCardComponent } from "@shared/design-system/completion-card/infrastructure/components/completion-card.component";
@@ -70,6 +72,9 @@ type FilterKind = "store" | "cat" | "brand";
   templateUrl: "./get-shopping-list.component.html",
   styleUrls: ["./get-shopping-list.component.css"],
   imports: [
+    NgTemplateOutlet,
+    SplitViewComponent,
+    CollapseRowComponent,
     RevealDirective,
     RouteStepComponent,
     ProgressBarComponent,
