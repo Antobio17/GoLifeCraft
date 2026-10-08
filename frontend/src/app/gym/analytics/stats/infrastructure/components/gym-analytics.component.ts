@@ -1,6 +1,5 @@
 import { Component, computed, inject, input, output } from "@angular/core";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
-import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ActivityHeatmapComponent } from "@shared/design-system/activity-heatmap/infrastructure/components/activity-heatmap.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -28,7 +27,6 @@ const TONNE_THRESHOLD_KG = 10000;
   imports: [
     RevealDirective,
     ContextualTranslatePipe,
-    TextComponent,
     ActivityHeatmapComponent,
     SkeletonLineComponent,
     StackComponent,
