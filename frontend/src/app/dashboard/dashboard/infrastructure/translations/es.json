@@ -77,11 +77,6 @@
       "agendaMeta": "Apunta una cita o una tarea",
       "movement": "Nuevo movimiento",
       "movementMeta": "Apunta un gasto o un ingreso"
-    },
-    "headline": {
-      "empty": "Aún no has registrado nada hoy.",
-      "over": "Vas {{kcal}} kcal por encima.",
-      "under": "Te quedan {{kcal}} kcal hoy."
     }
   }
 }

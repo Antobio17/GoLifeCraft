@@ -96,24 +96,6 @@ export class DashboardComponent implements OnInit {
     return this.view.summaryCard(diary);
   });
 
-  readonly headlineKey = computed(() => {
-    const diary = this.summary();
-    if (!diary) return "";
-    if (diary.entryCount === 0) return "dashboard.headline.empty";
-    if (this.view.exceedsCalories(diary)) return "dashboard.headline.over";
-
-    return "dashboard.headline.under";
-  });
-
-  readonly headlineKcal = computed(() => {
-    const diary = this.summary();
-    if (!diary) return "";
-
-    return this.view.integer(
-      Math.abs(diary.consumedCalories - diary.goalCalories),
-    );
-  });
-
   ngOnInit(): void {
     this.getDiaryService
       .getDiary()

@@ -5,9 +5,6 @@
     [date]="today | date: 'EEEE, d MMM'"
     [greeting]="'dashboard.greeting' | t"
     [name]="name()"
-    [subtitle]="
-      headlineKey() ? (headlineKey() | t: { kcal: headlineKcal() }) : ''
-    "
     [initial]="initial()"
     [imageUrl]="avatarUrl()"
     [avatarLabel]="'dashboard.avatar.settings' | t"

@@ -65,16 +65,16 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
       }
       .ds-csum__title {
         font-family: var(--ds-font-display);
-        font-size: var(--ds-text-2xl);
-        font-weight: var(--ds-weight-bold);
-        line-height: 1.05;
-        letter-spacing: -0.02em;
+        font-size: var(--ds-text-xl);
+        font-weight: var(--ds-weight-semibold);
+        line-height: 1.15;
+        letter-spacing: -0.01em;
         font-variant-numeric: tabular-nums;
         color: var(--ds-text);
         overflow-wrap: anywhere;
       }
       .ds-csum__title--over {
-        color: var(--ds-danger);
+        color: var(--ds-danger-soft-text);
       }
       .ds-csum__caption {
         font-size: var(--ds-text-base);
