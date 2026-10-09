@@ -262,7 +262,6 @@ import { ExercisePanelState } from "../../domain/models/exercise-panel-state.enu
         transition: height var(--ds-dur-3) var(--ds-ease-in-out);
       }
       .ds-xpanel__body {
-        --add-tile-radius: var(--ds-radius-inner);
         display: flex;
         flex-direction: column;
         gap: var(--ds-space-2);

@@ -218,7 +218,6 @@
             }
 
             <ds-add-tile
-              variant="row"
               [label]="'workout.free.set.add' | t"
               (clicked)="addSet(exercise.id)"
             />
@@ -227,7 +226,6 @@
 
         <ds-add-tile
           data-testid="edit-workout-add-exercise"
-          variant="dashed"
           [label]="'workout.free.exercise.add' | t"
           (clicked)="openPicker()"
         />
