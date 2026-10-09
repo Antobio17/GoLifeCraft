@@ -252,6 +252,13 @@
                   [loading]="topSetsLoading()"
                 />
 
+                @if (exercise.progressionConfigured) {
+                  <ds-progression-summary
+                    data-testid="session-progression-summary"
+                    [text]="exercise.progressionSummary"
+                  />
+                }
+
                 <ds-stack [gap]="'var(--ds-space-1)'">
                   <ds-set-header
                     [doneCol]="isActiveHere"
@@ -304,13 +311,6 @@
                   (valueChange)="setNote(exercise.id, $event)"
                   (editingChange)="setNoteEditing(exercise.id, $event)"
                 />
-
-                @if (exercise.progressionConfigured) {
-                  <ds-progression-summary
-                    data-testid="session-progression-summary"
-                    [text]="exercise.progressionSummary"
-                  />
-                }
               } @else {
                 <ds-button
                   variant="link"
