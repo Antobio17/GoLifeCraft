@@ -104,12 +104,7 @@ const BASE_UNITS = ["g", "ml"];
         }
 
         @if (!disabled) {
-          <ds-add-tile
-            variant="dashed"
-            icon="plus"
-            [label]="addLabel"
-            (clicked)="onAdd()"
-          />
+          <ds-add-tile icon="plus" [label]="addLabel" (clicked)="onAdd()" />
         }
 
         <p class="ds-eq__help">{{ hint }}</p>
