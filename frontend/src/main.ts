@@ -20,6 +20,7 @@ import {
 } from "@angular/router";
 import { IdlePreloadStrategy } from "./app/shared/routing/infrastructure/strategies/idle-preload.strategy";
 import { BackNavigationService } from "./app/shared/routing/application/services/back-navigation.service";
+import { AppSplashService } from "./app/shared/splash/application/services/app-splash.service";
 import { PresentedSheetsService } from "./app/shared/design-system/modal-sheet/application/services/presented-sheets.service";
 import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/components/main.component";
 import { APP_ROUTES } from "./app/app.routes";
@@ -33,6 +34,7 @@ bootstrapApplication(MainLayoutComponent, {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAppInitializer(() => {
       inject(BackNavigationService);
+      inject(AppSplashService).dismissOnFirstNavigation();
     }),
     provideRouter(
       APP_ROUTES,
