@@ -48,3 +48,26 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
+
+.swipe--compact .swipe__delete {
+  top: 50%;
+  bottom: auto;
+  height: 2.5rem;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 1px solid var(--ds-danger-soft-border);
+  border-radius: var(--ds-radius-control);
+  background: var(--ds-danger-soft);
+  color: var(--ds-danger-soft-text);
+  clip-path: inset(0 0 0 max(0px, calc(100% + var(--swipe-offset, 0px))));
+}
+
+.swipe--compact .swipe__delete:hover {
+  border-color: var(--ds-danger-soft-text);
+}
+
+.swipe--compact .swipe__delete:focus-visible {
+  clip-path: none;
+  outline: 2px solid var(--ds-border-focus);
+  outline-offset: -2px;
+}

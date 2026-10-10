@@ -5,6 +5,7 @@ import {
   Input,
   Output,
   inject,
+  input,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DOCUMENT } from "@angular/common";
@@ -27,6 +28,8 @@ export class SwipeToDeleteComponent {
     event.preventDefault();
     event.stopPropagation();
   };
+
+  readonly compact = input(false);
 
   @Input() disabled = false;
   @Input() reveal = 66;
@@ -64,7 +67,7 @@ export class SwipeToDeleteComponent {
   }
 
   get transition(): string {
-    return this.dragging ? "none" : "transform 0.2s ease";
+    return this.dragging ? "none" : "transform 0.2s ease, clip-path 0.2s ease";
   }
 
   onPointerDown(event: PointerEvent): void {

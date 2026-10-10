@@ -1,6 +1,9 @@
 <ds-swipe-to-delete
   #swipe
   [reveal]="66"
+  [floating]="line"
+  [compact]="line"
+  [radius]="line ? 'var(--ds-radius-control)' : 'var(--ds-radius-surface)'"
   pad="var(--ds-space-2)"
   [removeLabel]="removeLabel"
   (remove)="remove.emit()"

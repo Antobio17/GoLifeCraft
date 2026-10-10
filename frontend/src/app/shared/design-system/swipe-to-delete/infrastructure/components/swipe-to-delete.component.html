@@ -1,6 +1,8 @@
 <div
   class="swipe"
   [class.swipe--floating]="floating"
+  [class.swipe--compact]="compact()"
+  [style.--swipe-offset.px]="offset"
   [style.--ds-pad]="pad"
   [style.border-radius]="radius"
 >
@@ -9,7 +11,8 @@
       type="button"
       class="swipe__delete"
       [class.swipe__delete--revealed]="slid"
-      [style.width]="deleteWidth"
+      [style.width]="compact() ? '2.5rem' : deleteWidth"
+      [style.transition]="compact() ? transition : null"
       [attr.aria-label]="removeLabel"
       (pointerup)="onDeletePointerUp($event)"
       (touchend)="onDeleteTouchEnd($event)"

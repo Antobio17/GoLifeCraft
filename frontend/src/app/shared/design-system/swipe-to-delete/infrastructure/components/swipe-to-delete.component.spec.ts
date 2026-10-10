@@ -222,6 +222,31 @@ describe("SwipeToDeleteComponent", () => {
     );
   });
 
+  it("mantiene el boton compacto centrado aunque cambie la altura de la fila", () => {
+    const fixture = TestBed.createComponent(SwipeToDeleteComponent);
+    fixture.componentRef.setInput("compact", true);
+    fixture.componentRef.setInput("floating", true);
+    fixture.detectChanges();
+    const surface: HTMLElement =
+      fixture.nativeElement.querySelector(".swipe__surface");
+    const button: HTMLElement =
+      fixture.nativeElement.querySelector(".swipe__delete");
+    const swipe: HTMLElement = fixture.nativeElement.querySelector(".swipe");
+    const buttonSize =
+      2.5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+    for (const height of [80, 240]) {
+      surface.style.height = `${height}px`;
+      const buttonRect = button.getBoundingClientRect();
+      const swipeRect = swipe.getBoundingClientRect();
+      expect(buttonRect.width).toBe(buttonSize);
+      expect(buttonRect.height).toBe(buttonSize);
+      expect(buttonRect.top + buttonRect.height / 2).toBe(
+        swipeRect.top + swipeRect.height / 2,
+      );
+    }
+  });
+
   it("no cuadra las esquinas de la superficie al desplazarse si flota", () => {
     const fixture = TestBed.createComponent(FloatingHostComponent);
     fixture.detectChanges();
