@@ -10,6 +10,7 @@ use Nutrition\Kitchen\Production\Domain\Model\Production;
 use Nutrition\Kitchen\Production\Domain\Model\ProductionItem;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\GetProductionProposalResult;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalCoveredItem;
+use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalDay;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalPackCandidate;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalPackHint;
 use Nutrition\Kitchen\Production\Domain\QueryModel\Dto\ProposalToCookItem;
@@ -132,7 +133,81 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
             days: $this->days(fromDate: $fromDate, toDate: $toDate),
             toCook: $toCook,
             covered: $covered,
+            coverage: $this->coverage(
+                fromDate: $fromDate,
+                toDate: $toDate,
+                demandByDate: $demandByDate,
+                stock: $stock,
+                inProduction: $inProduction,
+            ),
         );
+    }
+
+    /**
+     * @param array<string, array<string, float>> $demandByDate
+     * @param array<string, float>                $stock
+     * @param array<string, float>                $inProduction
+     *
+     * @return ProposalDay[]
+     */
+    private function coverage(
+        string $fromDate,
+        string $toDate,
+        array $demandByDate,
+        array $stock,
+        array $inProduction,
+    ): array {
+        $demand = [];
+        $deficit = [];
+
+        foreach ($demandByDate as $recipeId => $dates) {
+            $available = ($stock[$recipeId] ?? 0.0) + ($inProduction[$recipeId] ?? 0.0);
+
+            foreach ($dates as $date => $servings) {
+                $demand[$date] = ($demand[$date] ?? 0.0) + $servings;
+            }
+
+            foreach (self::shortfallByDate(dates: $dates, available: $available) as $date => $missing) {
+                $deficit[$date] = ($deficit[$date] ?? 0.0) + $missing;
+            }
+        }
+
+        $period = new \DatePeriod(
+            start: new \DateTimeImmutable(datetime: $fromDate),
+            interval: new \DateInterval(duration: 'P1D'),
+            end: new \DateTimeImmutable(datetime: $toDate),
+            options: \DatePeriod::INCLUDE_END_DATE,
+        );
+
+        $days = [];
+
+        foreach ($period as $day) {
+            $date = $day->format(format: 'Y-m-d');
+            $dayDemand = round(num: $demand[$date] ?? 0.0, precision: ProductionItem::SERVINGS_PRECISION);
+            $dayDeficit = round(num: $deficit[$date] ?? 0.0, precision: ProductionItem::SERVINGS_PRECISION);
+
+            $days[] = new ProposalDay(
+                date: $date,
+                status: self::dayStatus(demand: $dayDemand, deficit: $dayDeficit),
+                demand: $dayDemand,
+                deficit: $dayDeficit,
+            );
+        }
+
+        return $days;
+    }
+
+    private static function dayStatus(float $demand, float $deficit): string
+    {
+        if ($deficit > 0.0) {
+            return ProposalDay::STATUS_TO_COOK;
+        }
+
+        if ($demand > 0.0) {
+            return ProposalDay::STATUS_COVERED;
+        }
+
+        return ProposalDay::STATUS_EMPTY;
     }
 
     /**

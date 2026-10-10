@@ -1,5 +1,6 @@
 {
   "getRecipes": {
+    "eyebrow": "Nutrition",
     "heading": "Recipes",
     "subtitle": "recipes",
     "create": "New",
@@ -17,7 +18,8 @@
     "empty": {
       "title": "No recipes yet",
       "text": "Create recipes by combining catalog articles and other recipes as sub-recipes."
-    }
+    },
+    "back": "Back"
   },
   "getRecipe": {
     "back": "Back",
@@ -25,6 +27,7 @@
     "edit": "Edit recipe",
     "delete": "Delete recipe",
     "perServing": "kcal · per serving",
+    "macrosHeading": "Macros per serving",
     "ingredients": "Ingredients",
     "total": "Total:",
     "subRecipe": "Sub",
@@ -63,10 +66,14 @@
         "save": "Save",
         "location": "Location",
         "noLocation": "No location"
+      },
+      "debt": {
+        "one": "You owe 1 serving",
+        "many": "You owe {{servings}} servings",
+        "hint": "You ate more than you cooked. It is settled when you cook."
       }
     },
     "steps": "Steps",
-    "step": "Step {{position}}",
     "minutes": "{{minutes}} min",
     "noSteps": "This recipe has no steps."
   },
@@ -131,6 +138,11 @@
     "subRecipe": "Sub",
     "removeIngredient": "Remove ingredient",
     "quantity": "Quantity",
+    "quantitySheet": {
+      "save": "Save quantity",
+      "decrement": "Decrease quantity",
+      "increment": "Increase quantity"
+    },
     "unit": "Unit",
     "rationUnit": "srv",
     "noIngredients": "No ingredients yet",

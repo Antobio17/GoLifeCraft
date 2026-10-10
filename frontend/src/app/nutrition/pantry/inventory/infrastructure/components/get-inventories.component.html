@@ -1,19 +1,19 @@
-<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'70rem'"
+  [gap]="'var(--ds-space-5)'"
+>
   <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getInventories.back' | t"
+    (leadingClick)="goBack()"
+    [eyebrow]="'getInventories.eyebrow' | t"
     [title]="'getInventories.title' | t"
     [subtitle]="headerSubtitle()"
   >
     <ds-button
       slot="actions"
-      variant="secondary"
-      size="icon-lg"
-      icon="aisles"
-      [iconSize]="19"
-      [ariaLabel]="'getInventories.locations' | t"
-      (clicked)="onLocations()"
-    />
-    <ds-button
-      slot="actions"
+      data-testid="inventories-create"
       variant="primary"
       size="icon-lg"
       icon="plus"
@@ -23,90 +23,118 @@
     />
   </ds-screen-header>
 
-  @if (loading()) {
-    <ds-skeleton-filters [search]="false" [selects]="2" />
-    <ng-container
-      [ngTemplateOutlet]="inventorySkeleton"
-      [ngTemplateOutletContext]="{ $implicit: 4 }"
-    />
-  } @else {
-    <ds-stack direction="row" [gap]="'var(--ds-space-1-5)'">
-      <ds-select
-        [fluid]="true"
-        [placeholder]="'getInventories.filter.allShifts' | t"
-        [options]="shiftOptions()"
-        [ngModel]="selectedShift()"
-        (ngModelChange)="onShiftChange($event)"
+  <ds-split-view
+    [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+    [gap]="'var(--ds-space-5)'"
+  >
+    @if (loading()) {
+      <ds-skeleton
+        slot="side"
+        height="13.5rem"
+        radius="var(--ds-radius-surface)"
       />
-      <ds-select
-        [fluid]="true"
-        [placeholder]="'getInventories.filter.allStatuses' | t"
-        [options]="statusOptions()"
-        [ngModel]="selectedStatus()"
-        (ngModelChange)="onStatusChange($event)"
-      />
-    </ds-stack>
+    } @else if (hero(); as hero) {
+      <ds-module-card
+        slot="side"
+        data-testid="inventories-hero"
+        [hero]="true"
+        [eyebrow]="'getInventories.hero.eyebrow' | t"
+      >
+        <ds-chip slot="aside" [tone]="hero.validated ? 'brand' : 'warning'">
+          {{ hero.statusLabel }}
+        </ds-chip>
 
-    @if (reloading()) {
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+          <ds-progress-ring [value]="hero.percent" [soft]="true">
+            <ds-text variant="strong">{{ hero.percent }}%</ds-text>
+          </ds-progress-ring>
+          <ds-stack [gap]="'2px'">
+            <ds-heading [level]="2" size="md">{{ hero.title }}</ds-heading>
+            <ds-text variant="meta">{{ hero.caption }}</ds-text>
+          </ds-stack>
+        </ds-stack>
+
+        <ds-stat-strip [items]="hero.stats" />
+      </ds-module-card>
+    } @else {
+      <ds-module-card
+        slot="side"
+        data-testid="inventories-hero"
+        [hero]="true"
+        [eyebrow]="'getInventories.hero.eyebrow' | t"
+      >
+        <ds-stack [gap]="'2px'">
+          <ds-heading [level]="2" size="md">
+            {{ "getInventories.hero.emptyTitle" | t }}
+          </ds-heading>
+          <ds-text variant="meta">
+            {{ "getInventories.hero.emptyText" | t }}
+          </ds-text>
+        </ds-stack>
+      </ds-module-card>
+    }
+
+    <ds-grid slot="side" [columns]="3" [gap]="'var(--ds-space-2)'">
+      <ds-action-tile
+        data-testid="inventories-locations"
+        icon="aisles"
+        [name]="tiles().locations"
+        [meta]="tiles().locationsMeta"
+        (clicked)="onLocations()"
+      />
+      <ds-action-tile
+        data-testid="inventories-tickets"
+        icon="cart"
+        [name]="tiles().tickets"
+        [meta]="tiles().ticketsMeta"
+        (clicked)="onTickets()"
+      />
+      <ds-action-tile
+        data-testid="inventories-catalog"
+        icon="leaf"
+        [name]="tiles().catalog"
+        [meta]="tiles().catalogMeta"
+        (clicked)="onCatalog()"
+      />
+    </ds-grid>
+
+    @if (loading()) {
       <ng-container
         [ngTemplateOutlet]="inventorySkeleton"
         [ngTemplateOutletContext]="{ $implicit: 4 }"
       />
-    } @else if (rows().length === 0) {
-      @if (selectedShift() || selectedStatus()) {
-        <ds-text variant="muted">
-          {{ "getInventories.noResultsFilters" | t }}
-        </ds-text>
-      } @else {
-        <ds-empty-state
-          icon="history"
-          [title]="'getInventories.empty.title' | t"
-          [text]="'getInventories.empty.text' | t"
-        />
-      }
+    } @else if (months().length === 0) {
+      <ds-empty-state
+        icon="history"
+        [title]="'getInventories.empty.title' | t"
+        [text]="'getInventories.empty.text' | t"
+      />
     } @else {
-      <ds-grid
-        dsReveal="children"
-        [minColumn]="'16.25rem'"
-        [tabletColumns]="2"
-        [gap]="'var(--ds-space-2)'"
-      >
-        @for (row of rows(); track row.id) {
-          <ds-card
-            [interactive]="true"
-            [padding]="'var(--ds-space-3)'"
-            [gap]="'var(--ds-space-3)'"
-            (activated)="onOpen(row.id)"
-          >
-            <ds-stack
-              direction="row"
-              align="start"
-              justify="between"
-              [gap]="'var(--ds-space-2)'"
-            >
-              <ds-stack [gap]="'2px'">
-                <ds-heading [level]="3" size="md">
-                  {{ row.dateLabel }}
-                </ds-heading>
-                <ds-text variant="meta">{{ row.metaLabel }}</ds-text>
-              </ds-stack>
-
-              <ds-chip [tone]="row.validated ? 'brand' : 'warning'">
-                {{ row.statusLabel }}
-              </ds-chip>
-            </ds-stack>
-
-            <ds-progress-bar [value]="row.progressPercent" />
-
-            <ds-stack direction="row" [gap]="'var(--ds-space-3)'" [wrap]="true">
-              <ds-meta-item icon="check">{{ row.countedLabel }}</ds-meta-item>
-              <ds-meta-item icon="alertCircle">
-                {{ row.adjustedLabel }}
-              </ds-meta-item>
-            </ds-stack>
-          </ds-card>
-        }
-      </ds-grid>
+      @for (month of months(); track month.key) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="month.title"
+            [staticLabel]="month.countLabel"
+          />
+          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+            @for (row of month.rows; track row.id) {
+              <ds-dated-row
+                data-testid="inventory-row"
+                [interactive]="true"
+                [ariaLabel]="row.ariaLabel"
+                [weekday]="row.weekday"
+                [day]="row.day"
+                [title]="row.title"
+                [tag]="row.tag"
+                [tagTone]="row.tagTone"
+                [meta]="row.meta"
+                [progress]="row.progress"
+                (activated)="onOpen(row.id)"
+              />
+            }
+          </ds-stack>
+        </ds-stack>
+      }
 
       @if (loadingMore()) {
         <ng-container
@@ -120,23 +148,36 @@
         (reached)="loadMore()"
       />
     }
-  }
+  </ds-split-view>
 </ds-page-wrapper>
+
+<ds-modal-sheet
+  data-testid="inventory-start-sheet"
+  [open]="startOpen()"
+  [title]="'startInventory.title' | t"
+  [caption]="startForm.scopeLabel()"
+  [closeLabel]="'startInventory.close' | t"
+  [confirmLabel]="'startInventory.save' | t"
+  [confirmDisabled]="!startForm.canSubmit()"
+  (confirmed)="startForm.submit()"
+  (closed)="onCloseStart()"
+>
+  <app-start-inventory-form
+    #startForm
+    [active]="startOpen()"
+    (started)="onStarted($event)"
+  />
+</ds-modal-sheet>
 
 <ng-template #inventorySkeleton let-count>
   <ds-skeleton-list
     [count]="count"
-    [columns]="null"
-    minColumn="16.25rem"
-    [tabletColumns]="2"
     [gap]="'var(--ds-space-2)'"
     radius="var(--ds-radius-surface)"
     padding="var(--ds-space-3)"
-    [alignTop]="true"
+    [tile]="50"
     titleWidth="52%"
-    metaWidth="44%"
-    headTrailing="4.5rem"
+    metaWidth="60%"
     [progress]="true"
-    [footItems]="2"
   />
 </ng-template>

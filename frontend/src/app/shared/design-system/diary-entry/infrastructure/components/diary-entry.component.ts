@@ -44,6 +44,8 @@ export class DiaryEntryComponent {
   @Input() expandLabel = "";
   @Input() collapseLabel = "";
   @Input() compact = false;
+  @Input() flat = false;
+  @Input() line = false;
 
   @Output() quantityPressed = new EventEmitter<void>();
   @Output() remove = new EventEmitter<void>();

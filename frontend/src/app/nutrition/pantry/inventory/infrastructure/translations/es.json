@@ -1,16 +1,11 @@
 {
   "getInventories": {
+    "eyebrow": "Despensa",
     "title": "Inventario",
     "new": "Nuevo recuento",
-    "locations": "Ubicaciones",
     "stats": {
-      "counts": "recuentos"
+      "counts": "{{count}} recuentos"
     },
-    "filter": {
-      "allShifts": "Todos los turnos",
-      "allStatuses": "Todos los estados"
-    },
-    "noResultsFilters": "Ningún recuento coincide con los filtros",
     "card": {
       "locations": "{{count}} ubicaciones",
       "counted": "{{counted}}/{{total}} contados",
@@ -19,36 +14,55 @@
     "empty": {
       "title": "Todavía no has hecho ningún recuento",
       "text": "Empieza uno para cuadrar el stock con lo que hay de verdad en casa"
-    }
+    },
+    "hero": {
+      "eyebrow": "Último recuento",
+      "counted": "Contados",
+      "adjusted": "Con diferencia",
+      "locations": "Ubicaciones",
+      "emptyTitle": "Aún no has contado la despensa",
+      "emptyText": "El primer recuento fija el stock real de casa"
+    },
+    "tiles": {
+      "locations": "Ubicaciones",
+      "locationsMeta": "Dónde guardas",
+      "tickets": "Tickets",
+      "ticketsMeta": "Compras",
+      "catalog": "Catálogo",
+      "catalogMeta": "Productos"
+    },
+    "row": {
+      "open": "Abrir recuento del {{date}}"
+    },
+    "back": "Volver"
   },
   "startInventory": {
     "title": "Nuevo recuento",
-    "description": "Se congela el stock actual como punto de partida y lo vas corrigiendo",
     "field": {
       "countedOn": "Fecha",
       "shift": "Turno",
       "shiftHint": "De mañana cuenta antes de lo que pase ese día; de tarde, después",
       "note": "Nota",
-      "noteHint": "Opcional: algo que quieras recordar de este recuento",
-      "notePlaceholder": "Recuento del sábado, tras la compra..."
+      "notePlaceholder": "Recuento del sábado, tras la compra...",
+      "otherDate": "Otra fecha",
+      "optional": "Opcional"
     },
     "scope": {
       "willCount": "Se contarán {count} de tus {total} ubicaciones: las que ahora mismo guardan algo."
     },
     "explanation": "Al validar, el stock pasa a ser exactamente lo que hayas contado. Lo que dejes sin contar no se toca.",
     "save": "Empezar recuento",
-    "saving": "Creando...",
-    "back": "Volver al inventario"
+    "close": "Cerrar"
   },
   "getInventory": {
     "eyebrow": "Recuento",
     "back": "Volver al historial",
-    "locationsCounted": "{count} ubicaciones",
     "locationGone": "Ya no existe",
     "notCounted": "Sin contar",
     "stat": {
-      "counted": "contados",
-      "adjusted": "con diferencia"
+      "counted": "Contados",
+      "adjusted": "Con diferencia",
+      "locations": "Ubicaciones"
     },
     "locations": {
       "title": "Ubicaciones"
@@ -58,7 +72,6 @@
       "counted": "contados",
       "adjusted": "con diferencia"
     },
-    "draftHint": "Entra en cada ubicación y anota lo que encuentres. Al validar, el stock se sobrescribe con estos números.",
     "validatedHint": "Este recuento ya está validado. Si lo cerraste sin querer, vuelve a abrirlo: lo contado sigue ahí y el stock se reescribe al validarlo de nuevo.",
     "validate": "Validar y actualizar stock",
     "discard": "Descartar recuento",
@@ -80,7 +93,18 @@
       "countedOn": "Fecha",
       "shift": "Turno",
       "save": "Guardar"
-    }
+    },
+    "hero": {
+      "eyebrow": "Progreso",
+      "remainingTitle": "Quedan {count} por contar",
+      "doneTitle": "Todo contado",
+      "validatedTitle": "Stock actualizado",
+      "draftCaption": "Al validar, el stock toma estos números",
+      "validatedCaption": "El stock ya refleja este recuento"
+    },
+    "reopenTitle": "Volver a abrir el recuento",
+    "reopenConfirm": "Reabrir",
+    "reopening": "Reabriendo..."
   },
   "inventoryShift": {
     "morning": "Mañana",
@@ -94,7 +118,6 @@
   "inventory": {
     "breadcrumb": {
       "list": "Inventario",
-      "start": "Nuevo recuento",
       "detail": "Recuento",
       "location": "Ubicación"
     },

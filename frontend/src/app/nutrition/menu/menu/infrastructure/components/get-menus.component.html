@@ -1,5 +1,9 @@
 <ds-page-wrapper [gap]="'var(--ds-space-3)'">
   <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getMenus.back' | t"
+    (leadingClick)="goBack()"
+    [eyebrow]="'getMenus.eyebrow' | t"
     [title]="'getMenus.title' | t"
     [subtitle]="headerSubtitle()"
   >
@@ -22,19 +26,17 @@
       minColumn="20rem"
       [gap]="'var(--ds-space-2)'"
       radius="var(--ds-radius-surface)"
-      padding="var(--ds-space-3)"
-      [alignTop]="true"
-      [tile]="52"
+      padding="var(--ds-space-4)"
       titleWidth="52%"
-      headTrailing="3.25rem"
-      metaWidth="42%"
-      [chips]="3"
+      metaWidth="70%"
+      trailing="actions"
+      [actions]="2"
     />
   } @else if (isEmpty()) {
     <ds-empty-state
       icon="menuboard"
       [title]="'getMenus.empty.title' | t"
-      [text]="'getMenus.empty.text' | t"
+      [text]="'getMenus.hint' | t"
     />
   } @else {
     <ds-search-input
@@ -43,8 +45,6 @@
       [value]="searchQuery()"
       (searched)="onSearch($event)"
     />
-
-    <ds-note icon="info">{{ "getMenus.hint" | t }}</ds-note>
 
     @if (!hasResults()) {
       <ds-text variant="muted">
@@ -57,19 +57,27 @@
           [staticLabel]="group.countLabel"
         />
 
-        <ds-grid dsReveal="children" [minColumn]="'20rem'">
+        <ds-grid
+          dsReveal="children"
+          [minColumn]="'20rem'"
+          [gap]="'var(--ds-space-2)'"
+        >
           @for (card of group.cards; track card.id) {
             <ds-menu-card
+              data-testid="menu-card"
               [name]="card.name"
               [meta]="card.meta"
-              [kcal]="card.kcal"
-              [kcalCaption]="card.kcalCaption"
-              [macros]="card.macros"
+              [protein]="card.protein"
+              [fat]="card.fat"
+              [carbs]="card.carbs"
+              [macrosLabel]="card.macrosLabel"
+              [macroLabels]="macroLabels()"
               [loadLabel]="card.loadLabel"
+              [loadInMenu]="card.isWeek"
               [loadIcon]="card.isWeek ? 'calendar' : 'download'"
+              [moreLabel]="'getMenus.card.more' | t"
               [shopLabel]="'getMenus.card.shop' | t"
               [exportLabel]="'getMenus.card.export' | t"
-              [exporting]="exportingMenuId() === card.id"
               (activated)="onOpen(card)"
               (loaded)="onLoad(card)"
               (shopped)="onShop(card.id)"

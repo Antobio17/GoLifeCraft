@@ -9,6 +9,7 @@ export class ProgressRingComponent {
   @Input() value = 0;
   @Input() size = 66;
   @Input() hollow = false;
+  @Input() soft = false;
 
   get clamped(): number {
     return Math.max(0, Math.min(100, this.value));

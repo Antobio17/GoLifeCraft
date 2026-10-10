@@ -8,6 +8,9 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 import { DsIconName } from "../../../icon/domain/models/icon.model";
 
 @Component({
+  host: {
+    "[class.ds-btn-host--stretch]": "stretch",
+  },
   selector: "ds-button",
   templateUrl: "./button.component.html",
   styleUrls: ["./button.component.css"],
@@ -28,6 +31,7 @@ export class ButtonComponent {
   @Input() haspopup: string | null = null;
   @Input() expanded: boolean | null = null;
   @Input() pressed: boolean | null = null;
+  @Input() stretch = false;
 
   @Output() clicked = new EventEmitter<void>();
 
@@ -55,6 +59,7 @@ export class ButtonComponent {
     if (this.iconOnlyMobile) classes.push("ds-btn--icon-only-mobile");
     if (this.loading) classes.push("ds-btn--loading");
     if (this.pressed) classes.push("ds-btn--pressed");
+    if (this.stretch) classes.push("ds-btn--stretch");
     return classes.join(" ");
   }
 

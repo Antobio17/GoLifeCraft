@@ -1,38 +1,51 @@
 {
   "getArticles": {
+    "eyebrow": "Nutrición",
     "heading": "Catálogo",
     "formats": "formatos",
     "create": "Nuevo",
-    "globalCatalog": "Catálogo global",
-    "searchPlaceholder": "Buscar producto o marca…",
+    "searchPlaceholder": "Buscar producto",
     "searchClear": "Limpiar búsqueda",
-    "nutritionCaption": "Valores nutricionales",
     "noResults": "Sin resultados para",
     "noResultsFilters": "No hay productos con estos filtros",
     "filter": {
       "category": "Categoría",
       "brand": "Marca",
-      "store": "Súper",
       "favorite": {
         "all": "Todos",
         "only": "Favoritos",
         "label": "Filtro de favoritos"
-      }
+      },
+      "title": "Filtros",
+      "close": "Cerrar",
+      "apply": "Aplicar",
+      "open": "Filtrar por categoría y marca",
+      "allStores": "Todos",
+      "allCategories": "Todas",
+      "allBrands": "Todas"
     },
     "macro": {
       "kcal": "kcal",
       "proteinShort": "P",
       "fatShort": "G",
-      "carbsShort": "H"
+      "carbsShort": "H",
+      "protein": "Proteína",
+      "fat": "Grasa",
+      "carbs": "Hidratos"
     },
     "empty": {
       "title": "Catálogo vacío",
       "text": "Aún no hay productos en el catálogo"
     },
-    "scan": "Escanear",
     "favorite": {
-      "toggle": "Marcar como favorito"
-    }
+      "mark": "Favorito"
+    },
+    "createMenu": {
+      "create": "Crear producto",
+      "scan": "Escanear código",
+      "global": "Desde el catálogo global"
+    },
+    "back": "Volver"
   },
   "getArticle": {
     "back": "Volver",
@@ -46,7 +59,7 @@
       "pack": "Por envase"
     },
     "purchase": {
-      "heading": "COMPRA Y STOCK",
+      "heading": "Compra",
       "pack": "ENVASE",
       "cost": "COSTE REAL",
       "empty": "Marca una equivalencia como Envase al editar el artículo para saber cuánto trae el paquete que compras y su coste real."
@@ -71,7 +84,7 @@
       "salt": "Sal"
     },
     "units": {
-      "heading": "UNIDADES Y EQUIVALENCIAS",
+      "heading": "Unidades y equivalencias",
       "base": "base",
       "recipe": "EN RECETA",
       "diary": "EN DIARIO",
@@ -79,12 +92,12 @@
       "equivalences": "EQUIVALENCIAS"
     },
     "stock": {
-      "heading": "STOCK ESTIMADO",
-      "value": "VALOR",
+      "heading": "Stock",
+      "value": "Valor",
       "step": "1 envase",
       "clear": "Se ha acabado",
       "edit": "Corregir",
-      "confidence": "FIABILIDAD",
+      "confidence": "Fiabilidad",
       "level": {
         "empty": "Vacío",
         "low": "Queda poco",
@@ -121,7 +134,9 @@
         "swapUnit": "Cambiar de unidad"
       }
     },
-    "favorite": "Favorito"
+    "favorite": "Favorito",
+    "estimated": "Estimado",
+    "nutritionHeading": "Información nutricional"
   },
   "article": {
     "breadcrumb": {

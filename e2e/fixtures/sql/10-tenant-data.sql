@@ -9,6 +9,8 @@
 -- src/support/seed-data.ts. Ningún test escribe un id a mano.
 --   e2e1… supermercados      e2e2… categorías     e2e3… artículos
 --   e2e4… recetas            e2e5… nutrición      e2e6… stock / pasillos
+--   e2e8… cocina             e2ed… ubicaciones    e2ee… inventarios
+--   e2ef… menús
 --
 -- scripts/seed.sh vacía todas las tablas del tenant antes de cargar esto.
 -- ---------------------------------------------------------------------------
@@ -160,3 +162,77 @@ INSERT INTO `shopping_ticket_item` (`id`, `version`, `ticket_id`, `position`, `r
   ('e2ec0000-0000-4000-8000-000000000042', 1, 'e2eb0000-0000-4000-8000-000000000004', 2, 'E2E BOLSA PLASTICO',  'e2ebolsaplastico', 1, NULL, 0.15, 0.15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @now, @now, @actor, @actor),
   ('e2ec0000-0000-4000-8000-000000000051', 1, 'e2eb0000-0000-4000-8000-000000000005', 1, 'E2E YOGUR NAT. PACK', 'e2eyogurnatpack',  2, NULL, 0.45, 0.90, 'e2e30000-0000-4000-8000-000000000001', 'memory',  'E2E Yogur natural', '🥛', 'pack', 500, 'g', 1000, NULL, @now, @now, @actor, @actor),
   ('e2ec0000-0000-4000-8000-000000000052', 1, 'e2eb0000-0000-4000-8000-000000000005', 2, 'E2E BOLSA PLASTICO',  'e2ebolsaplastico', 1, NULL, 0.15, 0.15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @now, @now, @actor, @actor);
+
+-- Diario planificado de mañana y pasado (cocina) -----------------------------
+-- La cocina propone lo que falta para hoy..hoy+2 sumando las entradas de receta
+-- sin consumir. Van fuera de hoy para no tocar el diario que fotografía la
+-- regresión visual, pero sí pintan el tono "planificado" en su tira de semana.
+INSERT INTO `diary_entry` (
+  `id`, `version`, `entry_date`, `meal`, `kind`, `ref_id`, `production_item_id`,
+  `quantity`, `unit`, `snapshot_name`, `snapshot_emoji`, `snapshot_calories`,
+  `snapshot_protein`, `snapshot_fat`, `snapshot_carbs`,
+  `quick_name`, `quick_emoji`, `quick_calories`, `quick_protein`, `quick_fat`, `quick_carbs`,
+  `customized`, `consumed`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`
+) VALUES
+  ('e2ea1000-0000-4000-8000-000000000001', 1, '2026-01-16', 'lunch', 'recipe',
+   'e2e40000-0000-4000-8000-000000000001', NULL, 2, NULL,
+   'E2E Pollo con arroz', '🍛', 1120.6, 85.8, 24.56, 138.8,
+   '', '', 0, 0, 0, 0, 0, 0, @now, @now, @actor, @actor),
+  ('e2ea1000-0000-4000-8000-000000000002', 1, '2026-01-17', 'dinner', 'recipe',
+   'e2e40000-0000-4000-8000-000000000001', NULL, 1, NULL,
+   'E2E Pollo con arroz', '🍛', 560.3, 42.9, 12.28, 69.4,
+   '', '', 0, 0, 0, 0, 0, 0, @now, @now, @actor, @actor);
+
+-- Cocina: un lote ya cocinado ------------------------------------------------
+-- Terminado, así que no resta de la propuesta: sólo llena el listado de lotes.
+INSERT INTO `production` (`id`, `version`, `from_date`, `to_date`, `status`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2e80000-0000-4000-8000-000000000001', 1, '2026-01-08', '2026-01-10', 'done', @now, @now, @actor, @actor);
+
+INSERT INTO `production_item` (`id`, `version`, `production_id`, `position`, `recipe_id`, `status`, `servings_planned`, `servings_cooked`, `name_snapshot`, `emoji_snapshot`, `prep_mode`, `due_date`, `code`, `label`, `customized`, `checked_articles`, `checked_steps`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2e81000-0000-4000-8000-000000000001', 1, 'e2e80000-0000-4000-8000-000000000001', 0, 'e2e40000-0000-4000-8000-000000000001', 'done', 4, 4, 'E2E Pollo con arroz', '🍛', 'batch', NULL, NULL, '', 0, '[]', '[]', @now, @now, @actor, @actor);
+
+-- Ubicaciones de la despensa -------------------------------------------------
+-- El yogur se queda fuera a propósito: la ficha de artículo enseña sus
+-- ubicaciones y es la que fotografía la regresión visual.
+INSERT INTO `pantry_location` (`id`, `version`, `name`, `emoji`, `description`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2ed0000-0000-4000-8000-000000000001', 1, 'E2E Nevera',   '🥶', 'Frescos de la semana', @now, @now, @actor, @actor),
+  ('e2ed0000-0000-4000-8000-000000000002', 1, 'E2E Despensa', '🚪', 'Secos y conservas',    @now, @now, @actor, @actor);
+
+INSERT INTO `location_item` (`id`, `version`, `location_id`, `kind`, `ref_id`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2ed1000-0000-4000-8000-000000000001', 1, 'e2ed0000-0000-4000-8000-000000000001', 'article', 'e2e30000-0000-4000-8000-000000000002', @now, @now, @actor, @actor),
+  ('e2ed1000-0000-4000-8000-000000000002', 1, 'e2ed0000-0000-4000-8000-000000000001', 'article', 'e2e30000-0000-4000-8000-000000000004', @now, @now, @actor, @actor),
+  ('e2ed1000-0000-4000-8000-000000000003', 1, 'e2ed0000-0000-4000-8000-000000000002', 'article', 'e2e30000-0000-4000-8000-000000000003', @now, @now, @actor, @actor),
+  ('e2ed1000-0000-4000-8000-000000000004', 1, 'e2ed0000-0000-4000-8000-000000000002', 'article', 'e2e30000-0000-4000-8000-000000000005', @now, @now, @actor, @actor);
+
+-- Inventarios: uno validado y otro a medias ----------------------------------
+-- Sin movimientos de stock: validar de verdad escribiría recuentos en el libro
+-- y cambiaría el stock que enseñan el catálogo y la ficha de artículo.
+INSERT INTO `inventory` (`id`, `version`, `counted_on`, `shift`, `status`, `note`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2ee0000-0000-4000-8000-000000000001', 1, '2026-01-08', 'morning',   'validated', '', @now, @now, @actor, @actor),
+  ('e2ee0000-0000-4000-8000-000000000002', 1, '2026-01-14', 'afternoon', 'draft',     '', @now, @now, @actor, @actor);
+
+INSERT INTO `inventory_location` (`id`, `version`, `inventory_id`, `position`, `location_id`, `name_snapshot`, `emoji_snapshot`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2ee1000-0000-4000-8000-000000000011', 1, 'e2ee0000-0000-4000-8000-000000000001', 0, 'e2ed0000-0000-4000-8000-000000000001', 'E2E Nevera',   '🥶', @now, @now, @actor, @actor),
+  ('e2ee1000-0000-4000-8000-000000000012', 1, 'e2ee0000-0000-4000-8000-000000000001', 1, 'e2ed0000-0000-4000-8000-000000000002', 'E2E Despensa', '🚪', @now, @now, @actor, @actor),
+  ('e2ee1000-0000-4000-8000-000000000021', 1, 'e2ee0000-0000-4000-8000-000000000002', 0, 'e2ed0000-0000-4000-8000-000000000001', 'E2E Nevera',   '🥶', @now, @now, @actor, @actor),
+  ('e2ee1000-0000-4000-8000-000000000022', 1, 'e2ee0000-0000-4000-8000-000000000002', 1, 'e2ed0000-0000-4000-8000-000000000002', 'E2E Despensa', '🚪', @now, @now, @actor, @actor);
+
+INSERT INTO `inventory_location_item` (`id`, `version`, `inventory_id`, `inventory_location_id`, `position`, `kind`, `ref_id`, `name_snapshot`, `emoji_snapshot`, `unit`, `expected_quantity`, `counted_quantity`, `counted_unit`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2ee2000-0000-4000-8000-000000000011', 1, 'e2ee0000-0000-4000-8000-000000000001', 'e2ee1000-0000-4000-8000-000000000011', 0, 'article', 'e2e30000-0000-4000-8000-000000000002', 'E2E Pechuga de pollo', '🍗', 'g',  800,  750, 'g',  @now, @now, @actor, @actor),
+  ('e2ee2000-0000-4000-8000-000000000012', 1, 'e2ee0000-0000-4000-8000-000000000001', 'e2ee1000-0000-4000-8000-000000000011', 1, 'article', 'e2e30000-0000-4000-8000-000000000004', 'E2E Brócoli',          '🥦', 'g',  400,  400, 'g',  @now, @now, @actor, @actor),
+  ('e2ee2000-0000-4000-8000-000000000013', 1, 'e2ee0000-0000-4000-8000-000000000001', 'e2ee1000-0000-4000-8000-000000000012', 0, 'article', 'e2e30000-0000-4000-8000-000000000003', 'E2E Arroz redondo',    '🍚', 'g', 2000, 2000, 'g',  @now, @now, @actor, @actor),
+  ('e2ee2000-0000-4000-8000-000000000014', 1, 'e2ee0000-0000-4000-8000-000000000001', 'e2ee1000-0000-4000-8000-000000000012', 1, 'article', 'e2e30000-0000-4000-8000-000000000005', 'E2E Aceite de oliva',  '🫒', 'ml', 500,  500, 'ml', @now, @now, @actor, @actor),
+  ('e2ee2000-0000-4000-8000-000000000021', 1, 'e2ee0000-0000-4000-8000-000000000002', 'e2ee1000-0000-4000-8000-000000000021', 0, 'article', 'e2e30000-0000-4000-8000-000000000002', 'E2E Pechuga de pollo', '🍗', 'g',  750,  700, 'g',  @now, @now, @actor, @actor),
+  ('e2ee2000-0000-4000-8000-000000000022', 1, 'e2ee0000-0000-4000-8000-000000000002', 'e2ee1000-0000-4000-8000-000000000021', 1, 'article', 'e2e30000-0000-4000-8000-000000000004', 'E2E Brócoli',          '🥦', 'g',  400, NULL, NULL, @now, @now, @actor, @actor),
+  ('e2ee2000-0000-4000-8000-000000000023', 1, 'e2ee0000-0000-4000-8000-000000000002', 'e2ee1000-0000-4000-8000-000000000022', 0, 'article', 'e2e30000-0000-4000-8000-000000000003', 'E2E Arroz redondo',    '🍚', 'g', 2000, NULL, NULL, @now, @now, @actor, @actor),
+  ('e2ee2000-0000-4000-8000-000000000024', 1, 'e2ee0000-0000-4000-8000-000000000002', 'e2ee1000-0000-4000-8000-000000000022', 1, 'article', 'e2e30000-0000-4000-8000-000000000005', 'E2E Aceite de oliva',  '🫒', 'ml', 500, NULL, NULL, @now, @now, @actor, @actor);
+
+-- Menú semanal con dos días ---------------------------------------------------
+INSERT INTO `menu` (`id`, `version`, `name`, `note`, `type`, `week_days`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2ef0000-0000-4000-8000-000000000001', 1, 'E2E Semana ligera', '', 'week', 'mon,tue', @now, @now, @actor, @actor);
+
+INSERT INTO `menu_item` (`id`, `version`, `menu_id`, `day_key`, `meal`, `kind`, `ref_id`, `quantity`, `unit`, `position`, `customized`, `created_at`, `updated_at`, `created_by_user_id`, `updated_by_user_id`) VALUES
+  ('e2ef1000-0000-4000-8000-000000000001', 1, 'e2ef0000-0000-4000-8000-000000000001', 'mon', 'breakfast', 'product', 'e2e30000-0000-4000-8000-000000000001',   1, 'unit', 0, 0, @now, @now, @actor, @actor),
+  ('e2ef1000-0000-4000-8000-000000000002', 1, 'e2ef0000-0000-4000-8000-000000000001', 'mon', 'lunch',     'recipe',  'e2e40000-0000-4000-8000-000000000001',   1, NULL,   1, 0, @now, @now, @actor, @actor),
+  ('e2ef1000-0000-4000-8000-000000000003', 1, 'e2ef0000-0000-4000-8000-000000000001', 'tue', 'breakfast', 'product', 'e2e30000-0000-4000-8000-000000000001',   1, 'unit', 2, 0, @now, @now, @actor, @actor),
+  ('e2ef1000-0000-4000-8000-000000000004', 1, 'e2ef0000-0000-4000-8000-000000000001', 'tue', 'lunch',     'product', 'e2e30000-0000-4000-8000-000000000002', 150, 'g',    3, 0, @now, @now, @actor, @actor);

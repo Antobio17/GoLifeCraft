@@ -1,5 +1,6 @@
 {
   "getMenus": {
+    "eyebrow": "Nutrition",
     "title": "Menus",
     "create": "New",
     "breadcrumb": {
@@ -41,13 +42,13 @@
       "apply": "Apply",
       "shop": "Add to shopping list",
       "export": "Export to PDF",
+      "more": "More actions",
       "protein": "Protein",
       "fat": "Fat",
       "carbs": "Carbs"
     },
     "empty": {
-      "title": "No menus yet",
-      "text": "Create daily menus with your recipes and articles to load them into the diary in one tap."
+      "title": "No menus yet"
     },
     "newType": {
       "title": "New menu",
@@ -63,7 +64,8 @@
       "message": "This menu will be removed.",
       "confirm": "Delete",
       "cancel": "Cancel"
-    }
+    },
+    "back": "Back"
   },
   "getMenu": {
     "removed": "{{name}} removed",
@@ -112,7 +114,8 @@
     "meal": {
       "empty": "No food · tap to add",
       "meta": "{{kcal}} kcal · {{count}}",
-      "add": "Add"
+      "add": "Add",
+      "addTo": "Add to {{meal}}"
     },
     "items": {
       "one": "1 item",
@@ -230,6 +233,18 @@
       "decrement": "Decrease",
       "increment": "Increase",
       "ruler": "Slide to adjust the quantity"
+    },
+    "untitled": "Untitled menu",
+    "more": {
+      "export": "Export to PDF",
+      "shop": "Build shopping list",
+      "duplicate": "Duplicate",
+      "delete": "Delete"
+    },
+    "details": {
+      "title": "Edit details",
+      "edit": "Edit details",
+      "save": "Save"
     }
   }
 }

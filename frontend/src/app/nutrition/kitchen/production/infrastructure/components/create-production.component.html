@@ -4,37 +4,80 @@
   [gap]="'var(--ds-space-3)'"
 >
   <ds-screen-header
+    [sticky]="true"
     [leading]="'back'"
     [leadingLabel]="'createProduction.back' | t"
     [eyebrow]="daysLabel()"
     [title]="'createProduction.title' | t"
     (leadingClick)="onBack()"
-  />
+  >
+    <ds-button
+      slot="actions"
+      data-testid="production-submit"
+      type="button"
+      variant="primary"
+      size="icon-lg"
+      icon="save"
+      [iconSize]="19"
+      [ariaLabel]="'createProduction.submit' | t"
+      [disabled]="!canSubmit() || saving()"
+      [loading]="saving()"
+      (clicked)="onSubmit()"
+    />
+  </ds-screen-header>
 
   <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-    <ds-stack slot="side" class="range-panel" [gap]="'var(--ds-space-3)'">
-      <ds-stack [gap]="'var(--ds-space-1)'">
-        <ds-text variant="label">{{ "createProduction.from" | t }}</ds-text>
-        <ds-date-input
-          [ariaLabel]="'createProduction.from' | t"
-          [ngModel]="fromDate()"
-          [ngModelOptions]="{ standalone: true }"
-          (ngModelChange)="onFromDate($event)"
-        />
-      </ds-stack>
+    <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
+      <ds-choice-chips
+        data-testid="production-range-presets"
+        [wrap]="true"
+        [options]="presetOptions()"
+        [ngModel]="preset()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onPreset($event)"
+      />
 
-      <ds-stack [gap]="'var(--ds-space-1)'">
-        <ds-text variant="label">{{ "createProduction.to" | t }}</ds-text>
-        <ds-date-input
-          [min]="fromDate()"
-          [ariaLabel]="'createProduction.to' | t"
-          [ngModel]="toDate()"
-          [ngModelOptions]="{ standalone: true }"
-          (ngModelChange)="onToDate($event)"
-        />
-      </ds-stack>
+      @if (isCustom()) {
+        <ds-stack
+          class="range-panel"
+          direction="row"
+          [gap]="'var(--ds-space-3)'"
+        >
+          <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+            <ds-text variant="label">{{ "createProduction.from" | t }}</ds-text>
+            <ds-date-field
+              data-testid="production-from"
+              [ariaLabel]="'createProduction.from' | t"
+              [ngModel]="fromDate()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onFromDate($event)"
+            />
+          </ds-stack>
 
-      <ds-note icon="info">{{ "createProduction.hint" | t }}</ds-note>
+          <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+            <ds-text variant="label">{{ "createProduction.to" | t }}</ds-text>
+            <ds-date-field
+              data-testid="production-to"
+              [min]="fromDate()"
+              [ariaLabel]="'createProduction.to' | t"
+              [ngModel]="toDate()"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onToDate($event)"
+            />
+          </ds-stack>
+        </ds-stack>
+      }
+
+      <ds-week-strip
+        data-testid="production-range-strip"
+        [title]="rangeLabel()"
+        [caption]="'createProduction.hint' | t"
+        [days]="stripDays()"
+        [selectable]="true"
+        [rangeStart]="fromDate()"
+        [rangeEnd]="toDate()"
+        (daySelected)="onDayPicked($event)"
+      />
     </ds-stack>
 
     @if (loading()) {
@@ -150,28 +193,33 @@
         align="center"
         [gap]="'var(--ds-space-3)'"
       >
-        <ds-stack [grow]="true">
-          <ds-text variant="meta">{{ summary() }}</ds-text>
-        </ds-stack>
-        <ds-button
-          variant="primary"
-          size="md"
-          [disabled]="!canSubmit() || saving()"
-          [loading]="saving()"
-          (clicked)="onSubmit()"
-          >{{ "createProduction.submit" | t }}</ds-button
-        >
+        <ds-text variant="meta">{{ summary() }}</ds-text>
       </ds-stack>
-    } @else {
+    } @else if (!coveredRows().length) {
       <ds-empty-state
         icon="chefHat"
         [title]="'createProduction.empty.title' | t"
         [text]="'createProduction.empty.text' | t"
-      />
+      >
+        <ds-button
+          data-testid="production-widen"
+          variant="secondary"
+          size="md"
+          icon="plus"
+          (clicked)="onWiden()"
+          >{{ "createProduction.widen" | t }}</ds-button
+        >
+      </ds-empty-state>
     }
 
-    @if (coveredRows().length) {
-      <ds-section-header [title]="'createProduction.covered.title' | t" />
+    @if (!loading() && coveredRows().length) {
+      <ds-section-header
+        [title]="'createProduction.covered.title' | t"
+        [staticLabel]="rows().length ? '' : rangeLabel()"
+        [caption]="
+          rows().length ? '' : ('createProduction.covered.caption' | t)
+        "
+      />
 
       <ds-stack [gap]="'var(--ds-space-2)'">
         @for (row of coveredRows(); track row.item.recipeId) {
@@ -186,6 +234,18 @@
           />
         }
       </ds-stack>
+
+      @if (!rows().length) {
+        <ds-button
+          data-testid="production-widen"
+          variant="secondary"
+          size="md"
+          icon="plus"
+          [fullWidth]="true"
+          (clicked)="onWiden()"
+          >{{ "createProduction.widen" | t }}</ds-button
+        >
+      }
     }
   </ds-split-view>
 </ds-page-wrapper>

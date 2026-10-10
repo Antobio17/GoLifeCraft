@@ -113,6 +113,13 @@ export class PantryLocationKindCatalogService {
     return { glyph, color };
   }
 
+  labelOf(emoji: string): string {
+    return this.translationService.translate(
+      `pantryLocationKind.${this.kindOf(emoji)}`,
+      MODULE_PATH,
+    );
+  }
+
   chipOptions(): ChoiceChipOption[] {
     return this.kinds().map((kind) => ({
       value: KINDS[kind].emoji,

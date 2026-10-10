@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
 import {
   ChipComponent,
@@ -43,11 +43,43 @@ import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/st
 
       <ds-stat-strip [compact]="true" [items]="stats()" />
     </ds-module-card>
+
+    @if (pressLabel()) {
+      <button
+        type="button"
+        class="ds-csum__press"
+        [attr.aria-label]="pressLabel()"
+        (click)="pressed.emit()"
+      ></button>
+    }
   `,
   styles: [
     `
       :host {
         display: block;
+        position: relative;
+      }
+      .ds-csum__press {
+        appearance: none;
+        position: absolute;
+        inset: 0;
+        padding: 0;
+        border: none;
+        border-radius: var(--ds-radius-surface);
+        background: transparent;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: background var(--ds-dur-2) var(--ds-ease-out);
+      }
+      .ds-csum__press:hover {
+        background: color-mix(in srgb, var(--ds-text) 3%, transparent);
+      }
+      .ds-csum__press:active {
+        background: color-mix(in srgb, var(--ds-text) 6%, transparent);
+      }
+      .ds-csum__press:focus-visible {
+        outline: 2px solid var(--ds-border-focus);
+        outline-offset: 2px;
       }
       .ds-csum__dot {
         flex: none;
@@ -95,4 +127,7 @@ export class CalorieSummaryComponent {
   readonly segments = input<StackedBarSegment[]>([]);
   readonly marker = input<number | null>(null);
   readonly stats = input<StatStripItem[]>([]);
+  readonly pressLabel = input("");
+
+  readonly pressed = output<void>();
 }

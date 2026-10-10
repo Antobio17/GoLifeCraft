@@ -1,0 +1,10 @@
+{
+  "dateField": {
+    "placeholder": "Elegir fecha",
+    "title": "Elegir fecha",
+    "close": "Cerrar",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "thisWeek": "Esta semana"
+  }
+}

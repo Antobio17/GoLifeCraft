@@ -3,6 +3,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 import { ButtonComponent } from "../../../button/infrastructure/components/button.component";
 import { IconButtonComponent } from "../../../icon-button/infrastructure/components/icon-button.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
+import { ButtonVariant } from "../../../button/domain/models/button.model";
 
 export interface MenuItem {
   value: string;
@@ -28,7 +29,7 @@ export interface MenuItem {
         />
       } @else {
         <ds-button
-          variant="secondary"
+          [variant]="triggerVariant"
           size="icon-lg"
           [icon]="triggerIcon"
           [iconSize]="19"
@@ -149,6 +150,7 @@ export class MenuComponent {
   @Input() items: MenuItem[] = [];
   @Input() activeValue: string | null = null;
   @Input() compact = false;
+  @Input() triggerVariant: ButtonVariant = "secondary";
 
   @Output() selected = new EventEmitter<string>();
 

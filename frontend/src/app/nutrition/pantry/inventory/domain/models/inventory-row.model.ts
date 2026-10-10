@@ -1,10 +1,13 @@
+import { DatedRowTone } from "@shared/design-system/dated-row/domain/models/dated-row-tone.enum";
+
 export interface InventoryRow {
   id: string;
-  dateLabel: string;
-  metaLabel: string;
-  statusLabel: string;
-  validated: boolean;
-  progressPercent: number;
-  countedLabel: string;
-  adjustedLabel: string;
+  weekday: string;
+  day: string;
+  title: string;
+  meta: string;
+  tag: string;
+  tagTone: DatedRowTone;
+  progress: number;
+  ariaLabel: string;
 }

@@ -63,4 +63,42 @@ export const SEED = {
     entryCount: 3,
   },
   goal: { calories: 2200, protein: 165, fat: 70, carbs: 220 },
+  plannedDiary: {
+    tomorrow: { id: "e2ea1000-0000-4000-8000-000000000001", date: "2026-01-16", servings: 2 },
+    dayAfter: { id: "e2ea1000-0000-4000-8000-000000000002", date: "2026-01-17", servings: 1 },
+  },
+  kitchen: {
+    proposal: { recipesToCook: 1, servingsToCook: 3 },
+    doneLot: {
+      id: "e2e80000-0000-4000-8000-000000000001",
+      fromDate: "2026-01-08",
+      toDate: "2026-01-10",
+      itemId: "e2e81000-0000-4000-8000-000000000001",
+    },
+    lotCount: 1,
+  },
+  locations: {
+    nevera: { id: "e2ed0000-0000-4000-8000-000000000001", name: "E2E Nevera", articleCount: 2 },
+    despensa: { id: "e2ed0000-0000-4000-8000-000000000002", name: "E2E Despensa", articleCount: 2 },
+    count: 2,
+  },
+  inventories: {
+    validated: { id: "e2ee0000-0000-4000-8000-000000000001", countedOn: "2026-01-08", shift: "morning" },
+    open: {
+      id: "e2ee0000-0000-4000-8000-000000000002",
+      countedOn: "2026-01-14",
+      shift: "afternoon",
+      countedItems: 1,
+      totalItems: 4,
+    },
+    count: 2,
+  },
+  menus: {
+    week: {
+      id: "e2ef0000-0000-4000-8000-000000000001",
+      name: "E2E Semana ligera",
+      dayCount: 2,
+    },
+    count: 1,
+  },
 } as const;

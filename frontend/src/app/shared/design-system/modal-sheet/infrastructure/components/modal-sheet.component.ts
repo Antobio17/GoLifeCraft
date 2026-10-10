@@ -66,7 +66,14 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
                   >
                     <ds-icon name="close" [size]="18" [stroke]="2.3" />
                   </button>
-                  <h2 class="ds-sheet__title">{{ title }}</h2>
+                  @if (caption) {
+                    <div class="ds-sheet__heading">
+                      <h2 class="ds-sheet__title">{{ title }}</h2>
+                      <p class="ds-sheet__caption">{{ caption }}</p>
+                    </div>
+                  } @else {
+                    <h2 class="ds-sheet__title">{{ title }}</h2>
+                  }
                   @if (confirmLabel) {
                     <button
                       class="ds-sheet__action ds-sheet__confirm"
@@ -222,6 +229,24 @@ import { StatusBarTintService } from "@shared/design-system/status-bar-tint/appl
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      .ds-sheet__heading {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+      .ds-sheet__heading .ds-sheet__title {
+        max-width: 100%;
+      }
+      .ds-sheet__caption {
+        margin: 0;
+        max-width: 100%;
+        text-align: center;
+        font-size: var(--ds-text-xs);
+        color: var(--ds-text-muted);
+        overflow-wrap: anywhere;
       }
       .ds-sheet__action {
         appearance: none;
@@ -440,6 +465,7 @@ export class ModalSheetComponent implements OnDestroy {
   @Input() tall = false;
   @Input() bare = false;
   @Input() title = "";
+  @Input() caption = "";
   @Input() closeLabel = "Close";
   @Input() confirmLabel = "";
   @Input() confirmDisabled = false;

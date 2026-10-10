@@ -188,6 +188,10 @@ export type ScreenHeaderLeading = "back" | "close" | null;
         opacity: 1;
         transform: none;
       }
+      :host(.is-compact.is-mini-off) .ds-screen-head__mini {
+        opacity: 0;
+        transform: translateY(0.5rem);
+      }
       :host(.is-stacked) .ds-screen-head__text {
         flex: none;
         --screen-head-lines: 3;
@@ -324,6 +328,7 @@ export type ScreenHeaderLeading = "back" | "close" | null;
     "[class.is-scrolled]": "sticky() && scrolled()",
     "[class.is-stacked]": "stacked()",
     "[class.is-compact]": "stacked() && sticky() && compact()",
+    "[class.is-mini-off]": "!miniTitle()",
   },
 })
 export class ScreenHeaderComponent {
@@ -346,6 +351,7 @@ export class ScreenHeaderComponent {
   @Input() subtitle: string | null = null;
   readonly sticky = input(false);
   readonly stacked = input(false);
+  readonly miniTitle = input(true);
   @Input() titleActionLabel = "";
   @Output() leadingClick = new EventEmitter<void>();
   @Output() titleClick = new EventEmitter<void>();

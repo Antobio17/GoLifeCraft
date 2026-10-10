@@ -1,5 +1,6 @@
 {
   "getMenus": {
+    "eyebrow": "Nutrición",
     "title": "Menús",
     "create": "Nuevo",
     "breadcrumb": {
@@ -41,13 +42,13 @@
       "apply": "Aplicar",
       "shop": "Añadir a la compra",
       "export": "Exportar a PDF",
+      "more": "Más acciones",
       "protein": "Proteínas",
       "fat": "Grasas",
       "carbs": "Hidratos"
     },
     "empty": {
-      "title": "Aún no hay menús",
-      "text": "Crea menús diarios con tus recetas y artículos para cargarlos en el diario en un toque."
+      "title": "Aún no hay menús"
     },
     "newType": {
       "title": "Nuevo menú",
@@ -63,7 +64,8 @@
       "message": "Se eliminará este menú.",
       "confirm": "Borrar",
       "cancel": "Cancelar"
-    }
+    },
+    "back": "Volver"
   },
   "getMenu": {
     "removed": "{{name}} eliminado",
@@ -112,7 +114,8 @@
     "meal": {
       "empty": "Sin alimentos · toca para añadir",
       "meta": "{{kcal}} kcal · {{count}}",
-      "add": "Añadir"
+      "add": "Añadir",
+      "addTo": "Añadir a {{meal}}"
     },
     "items": {
       "one": "1 alimento",
@@ -230,6 +233,18 @@
       "decrement": "Quitar",
       "increment": "Añadir",
       "ruler": "Desliza para ajustar la cantidad"
+    },
+    "untitled": "Menú sin nombre",
+    "more": {
+      "export": "Exportar a PDF",
+      "shop": "Generar compra",
+      "duplicate": "Duplicar",
+      "delete": "Borrar"
+    },
+    "details": {
+      "title": "Editar datos",
+      "edit": "Editar datos",
+      "save": "Guardar"
     }
   }
 }

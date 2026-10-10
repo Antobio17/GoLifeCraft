@@ -1,22 +1,32 @@
 {
   "getPantryLocations": {
+    "eyebrow": "Pantry",
     "title": "Locations",
-    "back": "Back to inventories",
     "new": "New location",
     "stats": {
-      "locations": "locations"
+      "locations": {
+        "one": "location",
+        "other": "locations"
+      }
     },
     "searchPlaceholder": "Search location...",
     "searchClear": "Clear",
     "noResults": "No location matches",
     "card": {
-      "articles": "articles",
-      "recipes": "recipes"
+      "articles": {
+        "one": "article",
+        "other": "articles"
+      },
+      "recipes": {
+        "one": "recipe",
+        "other": "recipes"
+      }
     },
     "empty": {
       "title": "No locations yet",
       "text": "Create the fridge, the freezer or the pantry to start organising your stock"
-    }
+    },
+    "back": "Back"
   },
   "createPantryLocation": {
     "title": "New location",
@@ -78,7 +88,7 @@
       "title": "Contents",
       "remove": "Remove",
       "emptyTitle": "Nothing here yet",
-      "emptyText": "Use the + button in the header to place here what you keep in this spot",
+      "emptyText": "Use “Add to the location” to place here what you keep in this spot",
       "open": "Open the record"
     },
     "candidates": {
@@ -89,6 +99,15 @@
       "add": "Add",
       "emptyTitle": "No results",
       "emptyText": "Nothing unplaced matches the search. What already sits elsewhere has to be removed from there first"
+    },
+    "hero": {
+      "items": {
+        "one": "item stored",
+        "other": "items stored"
+      },
+      "empty": "Still empty",
+      "articles": "Articles",
+      "recipes": "Recipes"
     }
   },
   "pantryLocationKind": {

@@ -1,5 +1,9 @@
 <ds-page-wrapper [gap]="'var(--ds-space-3)'">
   <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getRecipes.back' | t"
+    (leadingClick)="goBack()"
+    [eyebrow]="'getRecipes.eyebrow' | t"
     [title]="'getRecipes.heading' | t"
     [subtitle]="headerSubtitle()"
   >
@@ -20,16 +24,14 @@
     <ds-skeleton-list
       [count]="6"
       [columns]="null"
-      minColumn="20rem"
-      [gap]="'var(--ds-space-3)'"
+      minColumn="18.75rem"
+      [gap]="'var(--ds-space-2)'"
       radius="var(--ds-radius-surface)"
-      padding="var(--ds-space-3)"
-      [alignTop]="true"
-      [tile]="58"
-      titleWidth="52%"
-      headTrailing="3.25rem"
-      metaWidth="42%"
-      [chips]="3"
+      padding="var(--ds-space-2) var(--ds-space-3) var(--ds-space-2) var(--ds-space-2)"
+      [tile]="44"
+      titleWidth="56%"
+      headTrailing="2.25rem"
+      metaWidth="44%"
     />
   } @else if (items().length === 0) {
     <ds-empty-state
@@ -54,19 +56,27 @@
         {{ "getRecipes.noResults" | t }} “{{ searchQuery() }}”
       </ds-text>
     } @else {
-      <ds-grid dsReveal="children" [minColumn]="'20rem'">
+      <ds-grid
+        dsReveal="children"
+        [minColumn]="'18.75rem'"
+        [gap]="'var(--ds-space-2)'"
+      >
         @for (card of cards(); track card.id) {
-          <ds-recipe-card
+          <ds-product-card
             data-testid="recipe-card"
             [attr.data-id]="card.id"
+            [compact]="true"
             [emoji]="card.emoji"
             [imageUrl]="card.imageUrl"
             [name]="card.name"
-            [kcal]="card.kcal + ' ' + ('getRecipes.macro.kcal' | t)"
-            [meta]="card.meta"
-            [macros]="card.macros"
-            [hasSubRecipe]="card.hasSubRecipe"
-            [subRecipeLabel]="'getRecipes.subRecipeTag' | t"
+            [meta]="card.rowMeta"
+            [kcal]="card.kcal"
+            [kcalUnit]="'getRecipes.macro.kcal' | t"
+            [proteinG]="card.proteinG"
+            [fatG]="card.fatG"
+            [carbsG]="card.carbsG"
+            [macroLabel]="card.macroAria"
+            [macroLetters]="macroLabels()"
             (activated)="onSelect(card.id)"
           />
         }

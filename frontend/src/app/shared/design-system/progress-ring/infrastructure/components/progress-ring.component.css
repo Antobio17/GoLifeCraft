@@ -57,3 +57,8 @@
   position: relative;
   background: none;
 }
+
+.ring--soft {
+  --ds-ring-fill: color-mix(in srgb, var(--ds-success) 45%, var(--ds-surface));
+  --ds-ring-track: var(--ds-surface-inset);
+}

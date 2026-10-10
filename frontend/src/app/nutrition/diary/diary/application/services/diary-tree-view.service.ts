@@ -46,7 +46,7 @@ export class DiaryTreeViewService {
           node.image,
         ),
         name: node.name,
-        kcalLabel: `${this.view.integer(node.macros.calories)} ${labels.kcal}`,
+        kcalLabel: this.view.integer(node.macros.calories),
         macros: this.view.macroItems(node.macros, labels),
         quantity: node.quantity,
         unit: node.unit,

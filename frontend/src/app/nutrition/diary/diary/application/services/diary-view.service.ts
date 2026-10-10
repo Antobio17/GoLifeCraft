@@ -85,15 +85,23 @@ export class DiaryViewService {
     return `${this.capitalize(weekday)}, ${date.getDate()} ${month}`;
   }
 
-  navLabel(iso: string): string {
-    if (this.isToday(iso)) return "Hoy";
+  shortDateLine(iso: string): string {
+    return this.dateLine(iso).replace(",", "");
+  }
 
-    const date = this.parse(iso);
-    const month = new Intl.DateTimeFormat("es-ES", { month: "short" })
-      .format(date)
-      .replace(".", "");
+  mealForHour(meals: DiaryMealView[], hour: number): string {
+    const preferred = this.mealKeyForHour(hour);
+    const match = meals.find((meal) => meal.key === preferred);
 
-    return `${date.getDate()} ${month}`;
+    return match?.key ?? meals[0]?.key ?? preferred;
+  }
+
+  private mealKeyForHour(hour: number): string {
+    if (hour < 11) return "breakfast";
+    if (hour < 16) return "lunch";
+    if (hour < 20) return "snack";
+
+    return "dinner";
   }
 
   decimal(value: number | null | undefined): string {
@@ -192,7 +200,7 @@ export class DiaryViewService {
 
     const foods = `${meal.entryCount} ${meal.entryCount === 1 ? "alimento" : "alimentos"}`;
 
-    return `${foods} · ${this.integer(meal.totals.calories)} kcal`;
+    return `${this.integer(meal.totals.calories)} kcal · ${foods}`;
   }
 
   entryUnitLabel(entry: DiaryEntryView): string {

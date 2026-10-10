@@ -47,34 +47,37 @@
   width: 6rem;
 }
 
-.meal-header {
-  --meal-header-bleed: var(--ds-space-4);
-  --meal-header-fade: var(--ds-space-5);
-  position: sticky;
-  top: calc(var(--ds-sticky-header-offset, 0px) + env(safe-area-inset-top));
-  z-index: 2;
-  padding-block: var(--ds-space-2);
-  margin-block: calc(-1 * var(--ds-space-2));
+ds-button.diary__add {
+  display: block;
+  align-self: flex-start;
+  padding-block: var(--ds-space-2) var(--ds-space-1);
 }
 
-.meal-header.is-stuck::before,
-.meal-header.is-stuck::after {
-  content: "";
-  position: absolute;
-  left: calc(-1 * var(--meal-header-bleed));
-  right: calc(-1 * var(--meal-header-bleed));
-  pointer-events: none;
+.diary__add--in {
+  overflow: hidden;
+  animation: diary-add-in var(--ds-dur-3) var(--ds-ease-out);
 }
 
-.meal-header.is-stuck::before {
-  z-index: -1;
-  top: calc(-1 * env(safe-area-inset-top));
-  bottom: 0;
-  background: var(--ds-bg);
+.diary__add--out {
+  overflow: hidden;
+  animation: diary-add-in var(--ds-dur-3) var(--ds-ease-in) reverse;
 }
 
-.meal-header.is-stuck::after {
-  top: 100%;
-  height: var(--meal-header-fade);
-  background: linear-gradient(var(--ds-bg), transparent);
+@keyframes diary-add-in {
+  from {
+    max-height: 0;
+    padding-block: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 3rem;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diary__add--in,
+  .diary__add--out {
+    animation-duration: 0.01ms;
+  }
 }

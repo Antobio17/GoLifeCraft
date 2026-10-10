@@ -9,15 +9,15 @@
 }
 
 .diary-tree {
-  background: var(--ds-surface-subtle);
-  border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-surface);
+  background: transparent;
+  border: none;
+  border-radius: 0;
   --ds-pad: var(--ds-space-2);
   padding: var(--ds-pad);
 }
 
 .diary-tree__header {
-  padding: 0 2px 1px;
+  padding: 0 0 var(--ds-space-2);
   color: var(--ds-text-meta);
 }
 
@@ -45,23 +45,9 @@ ds-text.diary-tree__reset-text {
 
 .diary-tree__row {
   background: var(--ds-surface);
-  border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-surface);
-  --ds-pad: var(--ds-space-2);
-  padding: var(--ds-space-1-5) var(--ds-pad);
-}
-
-.diary-tree__row--slid {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.diary-tree__row--recipe {
-  background: var(--ds-primary-soft);
-}
-
-.diary-tree__row--expanded {
-  border-color: var(--ds-primary);
+  border: none;
+  border-radius: 0;
+  padding: var(--ds-space-2) 0;
 }
 
 .diary-tree__row--in {
@@ -95,17 +81,22 @@ ds-text.diary-tree__reset-text {
 }
 
 ds-text.diary-tree__name {
-  font-size: var(--ds-text-base);
+  min-width: 0;
+  flex: 0 1 auto;
+  font-size: var(--ds-text-md);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
   color: var(--ds-text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .diary-tree__lot {
-  margin-top: calc(var(--ds-space-1) * -1);
+  padding-block: var(--ds-space-1);
+}
+
+.diary-tree__lot ds-icon {
+  flex: 0 0 auto;
 }
 
 .diary-tree__lot--fixed {
@@ -114,13 +105,16 @@ ds-text.diary-tree__name {
 }
 
 .diary-tree__lot-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: var(--ds-text-xs);
   font-weight: 700;
   color: var(--ds-text-meta);
 }
 
 ds-pressable.diary-tree__open {
-  align-self: flex-start;
+  flex: 0 1 auto;
+  min-width: 0;
   max-width: 100%;
 }
 
@@ -131,4 +125,33 @@ ds-pressable.diary-tree__open:hover ds-text.diary-tree__name {
 
 ds-pressable.diary-tree__expand--tile {
   flex: 0 0 auto;
+}
+
+.diary-tree__kcal {
+  margin-inline-start: auto;
+  flex: 0 0 auto;
+  font-size: var(--ds-text-md);
+  font-weight: 700;
+  min-width: 2.5rem;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.diary-tree__macros {
+  font-size: var(--ds-text-xs);
+  font-weight: 400;
+  color: var(--ds-text-meta);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.diary-tree__caret {
+  flex: 0 0 auto;
+  color: var(--ds-text-meta);
+}
+
+.diary-tree__caret--open {
+  transform: rotate(180deg);
 }

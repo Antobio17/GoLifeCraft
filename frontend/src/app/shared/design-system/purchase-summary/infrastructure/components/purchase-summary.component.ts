@@ -3,13 +3,15 @@ import { Component, Input } from "@angular/core";
 @Component({
   selector: "ds-purchase-summary",
   template: `
-    <section class="ds-pus">
-      <header class="ds-pus__head">
-        <span class="ds-pus__title">{{ title }}</span>
-        @if (priceBadge) {
-          <span class="ds-pus__badge">{{ priceBadge }}</span>
-        }
-      </header>
+    <section class="ds-pus" [class.ds-pus--headless]="headless">
+      @if (!headless) {
+        <header class="ds-pus__head">
+          <span class="ds-pus__title">{{ title }}</span>
+          @if (priceBadge) {
+            <span class="ds-pus__badge">{{ priceBadge }}</span>
+          }
+        </header>
+      }
 
       @if (hasPack) {
         <div class="ds-pus__cells">
@@ -43,6 +45,16 @@ import { Component, Input } from "@angular/core";
         border-radius: var(--ds-radius-surface);
         background: var(--ds-surface);
         overflow: hidden;
+      }
+      .ds-pus--headless {
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        overflow: visible;
+      }
+      .ds-pus--headless .ds-pus__cells,
+      .ds-pus--headless .ds-pus__empty {
+        padding: 0;
       }
       .ds-pus__head {
         display: flex;
@@ -115,4 +127,5 @@ export class PurchaseSummaryComponent {
   @Input() costLabel = "";
   @Input() costValue: string | null = null;
   @Input() emptyText = "";
+  @Input() headless = false;
 }

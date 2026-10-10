@@ -18,8 +18,11 @@ import { SplitViewComponent } from "@shared/design-system/split-view/infrastruct
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
-import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
+import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/stat-strip-item.model";
+import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
@@ -68,7 +71,10 @@ const ALL_KINDS = "";
     StackComponent,
     CardComponent,
     TextComponent,
-    MacroBadgesComponent,
+    ModuleCardComponent,
+    HeadingComponent,
+    StatStripComponent,
+    AddTileComponent,
     ButtonComponent,
     IconButtonComponent,
     EmojiTileComponent,
@@ -132,14 +138,26 @@ export class GetPantryLocationComponent {
     this.kindCatalog.visualOf(this.attributes()?.emoji ?? ""),
   );
 
-  summaryBadges = computed<MacroBadge[]>(() => [
+  kindLabel = computed(() =>
+    this.kindCatalog.labelOf(this.attributes()?.emoji ?? ""),
+  );
+
+  heroTitle = computed(() => {
+    const total = this.items().length;
+
+    if (0 === total) return this.t("getPantryLocation.hero.empty");
+
+    return `${total} ${this.t(this.locationView.countKey(total, "getPantryLocation.hero.items"))}`;
+  });
+
+  heroStats = computed<StatStripItem[]>(() => [
     {
-      label: `${this.articleCount()}`,
-      value: this.t("getPantryLocations.card.articles"),
+      value: `${this.articleCount()}`,
+      label: this.t("getPantryLocation.hero.articles"),
     },
     {
-      label: `${this.recipeCount()}`,
-      value: this.t("getPantryLocations.card.recipes"),
+      value: `${this.recipeCount()}`,
+      label: this.t("getPantryLocation.hero.recipes"),
     },
   ]);
 

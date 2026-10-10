@@ -221,6 +221,10 @@
   opacity: 0.75;
 }
 
+.ds-btn--ghost.ds-btn--pressed {
+  color: var(--ds-warning);
+}
+
 .ds-btn--ghost:focus-visible {
   outline: 2px solid var(--ds-primary);
   outline-offset: 2px;
@@ -338,4 +342,16 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* ---- Estirado: iguala la altura de los controles vecinos ---- */
+:host(.ds-btn-host--stretch) {
+  display: flex;
+  align-self: stretch;
+}
+
+.ds-btn--stretch {
+  height: auto;
+  min-height: 100%;
+  aspect-ratio: 1;
 }

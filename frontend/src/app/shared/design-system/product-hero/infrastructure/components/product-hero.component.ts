@@ -21,6 +21,9 @@ import { Component, Input } from "@angular/core";
       } @else if (badge) {
         <span class="ds-product-hero__price">{{ badge }}</span>
       }
+      <div class="ds-product-hero__corner">
+        <ng-content select="[slot=corner]" />
+      </div>
     </div>
   `,
   styles: [
@@ -47,6 +50,16 @@ import { Component, Input } from "@angular/core";
         height: 100%;
         object-fit: contain;
         padding: var(--ds-space-3);
+      }
+      .ds-product-hero__corner {
+        position: absolute;
+        top: 0.625rem;
+        right: 0.625rem;
+        display: flex;
+        gap: var(--ds-space-1-5);
+      }
+      .ds-product-hero__corner:empty {
+        display: none;
       }
       .ds-product-hero__price {
         position: absolute;

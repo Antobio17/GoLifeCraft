@@ -12,6 +12,8 @@ import { InventoryItemRow } from "../../domain/models/inventory-item-row.model";
 import { InventoryItemUnit } from "../../domain/models/inventory-item-unit.model";
 import { InventoryShift } from "../../domain/models/inventory-shift.model";
 
+const MILLISECONDS_PER_DAY = 86_400_000;
+
 @Injectable({ providedIn: "root" })
 export class InventoryViewService {
   private entityVisual = inject(EntityVisualService);
@@ -38,6 +40,64 @@ export class InventoryViewService {
       day: "numeric",
       month: "short",
     });
+  }
+
+  countedDate(countedOn: string): Date {
+    const [year, month, day] = countedOn.slice(0, 10).split("-").map(Number);
+
+    return new Date(year, month - 1, day);
+  }
+
+  monthKey(countedOn: string): string {
+    return countedOn.slice(0, 7);
+  }
+
+  monthTitle(countedOn: string, locale: string): string {
+    return this.capitalize(
+      new Intl.DateTimeFormat(locale, {
+        month: "long",
+        year: "numeric",
+      }).format(this.countedDate(countedOn)),
+    );
+  }
+
+  weekdayLabel(countedOn: string, locale: string): string {
+    return new Intl.DateTimeFormat(locale, { weekday: "short" })
+      .format(this.countedDate(countedOn))
+      .replace(".", "");
+  }
+
+  longDateLabel(countedOn: string, locale: string): string {
+    return this.capitalize(
+      new Intl.DateTimeFormat(locale, {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      }).format(this.countedDate(countedOn)),
+    );
+  }
+
+  relativeDayLabel(countedOn: string, locale: string, today: Date): string {
+    const midnight = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+    const days = Math.round(
+      (this.countedDate(countedOn).getTime() - midnight.getTime()) /
+        MILLISECONDS_PER_DAY,
+    );
+
+    return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(
+      days,
+      "day",
+    );
+  }
+
+  progressPercent(counted: number, total: number): number {
+    if (total <= 0) return 0;
+
+    return Math.round((counted / total) * 100);
   }
 
   locationRowOf(
@@ -143,6 +203,10 @@ export class InventoryViewService {
     if (null !== location.locationId) return items;
 
     return `${t("getInventory.locationGone")} · ${items}`;
+  }
+
+  private capitalize(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
   private fill(text: string, replacements: Record<string, string>): string {

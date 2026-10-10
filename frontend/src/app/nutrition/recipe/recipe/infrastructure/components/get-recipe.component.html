@@ -14,11 +14,10 @@
     />
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
       <ds-skeleton-hero slot="side" />
-      <ds-skeleton-chips
+      <ds-skeleton
         slot="side"
-        [count]="1"
-        height="1.625rem"
-        [gap]="'var(--ds-space-1-5)'"
+        height="8.5rem"
+        radius="var(--ds-radius-surface)"
       />
       <ds-skeleton-macro-bars slot="side" />
 
@@ -75,116 +74,90 @@
           [badge]="view.servingsLabel(recipe.servings)"
         />
 
-        <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
-          <ds-chip>{{
-            view.ingredientsLabel(recipe.ingredients.length)
-          }}</ds-chip>
-        </ds-stack>
+        <ds-card data-testid="recipe-stock" [padding]="'0'" [gap]="'0'">
+          <ds-stock-control
+            [stockLabel]="'getRecipe.stock.heading' | t"
+            [mainText]="stockText()"
+            [subText]="stockSubText()"
+            [stepLabel]="'getRecipe.stock.step' | t"
+            [clearLabel]="'getRecipe.stock.clear' | t"
+            [editLabel]="'getRecipe.stock.edit' | t"
+            [levelLabel]="stockDebtLabel()"
+            levelTone="warning"
+            (incremented)="onIncrementStock()"
+            (decremented)="onDecrementStock()"
+            (cleared)="onClearStock()"
+            (editRequested)="onOpenStockEditor()"
+          />
+        </ds-card>
 
-        <ds-stock-control
-          [stockLabel]="'getRecipe.stock.heading' | t"
-          [mainText]="stockText()"
-          [subText]="'getRecipe.stock.hint' | t"
-          [stepLabel]="'getRecipe.stock.step' | t"
-          [clearLabel]="'getRecipe.stock.clear' | t"
-          [editLabel]="'getRecipe.stock.edit' | t"
-          [negative]="stock() < 0"
-          (incremented)="onIncrementStock()"
-          (decremented)="onDecrementStock()"
-          (cleared)="onClearStock()"
-          (editRequested)="onOpenStockEditor()"
-        />
+        @if (showSaveStatus()) {
+          <ds-save-status
+            [status]="autosave.status()"
+            (retried)="onRetrySave()"
+          />
+        }
 
-        <ds-save-status
-          [status]="autosave.status()"
-          (retried)="onRetrySave()"
-        />
-
-        <ds-macro-bars
-          [kcal]="view.integer(recipe.perServing.calories)"
-          [kcalUnit]="'getRecipe.perServing' | t"
-          [macros]="[
-            {
-              label: 'getRecipe.macro.protein' | t,
-              value: view.grams(recipe.perServing.protein),
-              tone: 'protein',
-            },
-            {
-              label: 'getRecipe.macro.fat' | t,
-              value: view.grams(recipe.perServing.fat),
-              tone: 'fat',
-            },
-            {
-              label: 'getRecipe.macro.carbs' | t,
-              value: view.grams(recipe.perServing.carbs),
-              tone: 'carbs',
-            },
-          ]"
-        />
+        <ds-card [gap]="'var(--ds-space-2)'">
+          <ds-text variant="label">{{ "getRecipe.macrosHeading" | t }}</ds-text>
+          <ds-macro-bars
+            [kcal]="view.integer(recipe.perServing.calories)"
+            [kcalUnit]="'getRecipe.perServing' | t"
+            [macros]="[
+              {
+                label: 'getRecipe.macro.protein' | t,
+                value: view.grams(recipe.perServing.protein),
+                tone: 'protein',
+              },
+              {
+                label: 'getRecipe.macro.fat' | t,
+                value: view.grams(recipe.perServing.fat),
+                tone: 'fat',
+              },
+              {
+                label: 'getRecipe.macro.carbs' | t,
+                value: view.grams(recipe.perServing.carbs),
+                tone: 'carbs',
+              },
+            ]"
+          />
+        </ds-card>
       </ng-container>
 
       <ds-section-header
         [title]="'getRecipe.ingredients' | t"
         [staticLabel]="totalLabel(recipe.total.calories)"
+        [caption]="'getRecipe.note' | t"
       />
 
-      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-        @for (row of ingredientRows(); track row.ingredient.id) {
-          <ds-card [padding]="'var(--ds-space-2)'">
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-3)'"
-            >
-              <ds-emoji-tile
-                [emoji]="row.ingredient.emoji"
-                [imageUrl]="row.imageUrl"
-                [alt]="row.ingredient.name"
-              />
-              <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-                <ds-stack
-                  direction="row"
-                  align="center"
-                  justify="between"
-                  [gap]="'var(--ds-space-2)'"
-                >
-                  <ds-stack
-                    direction="row"
-                    align="center"
-                    [gap]="'var(--ds-space-1-5)'"
-                    [grow]="true"
-                  >
-                    @if (row.openable) {
-                      <ds-pressable
-                        class="ingredient__open"
-                        [ariaLabel]="'getRecipe.openIngredient' | t"
-                        (press)="onOpenIngredient(row.ingredient)"
-                      >
-                        <ds-text variant="strong" [truncate]="true">{{
-                          row.ingredient.name
-                        }}</ds-text>
-                      </ds-pressable>
-                    } @else {
-                      <ds-text variant="strong" [truncate]="true">{{
-                        row.ingredient.name
-                      }}</ds-text>
-                    }
-                    @if (row.ingredient.kind === "recipe") {
-                      <ds-chip tone="brand">{{
-                        "getRecipe.subRecipe" | t
-                      }}</ds-chip>
-                    }
-                  </ds-stack>
-                  <ds-text variant="meta">{{ row.quantityLabel }}</ds-text>
-                </ds-stack>
-                <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
-              </ds-stack>
-            </ds-stack>
-          </ds-card>
-        }
-      </ds-stack>
+      @if (ingredientRows().length) {
+        <ds-card
+          data-testid="recipe-ingredients"
+          [padding]="'var(--ds-space-1) var(--ds-space-4)'"
+          [gap]="'0'"
+        >
+          @for (row of ingredientRows(); track row.ingredient.id) {
+            <ds-food-line
+              data-testid="recipe-ingredient"
+              [emoji]="row.ingredient.emoji"
+              [imageUrl]="row.imageUrl"
+              [name]="row.ingredient.name"
+              [kindIcon]="row.kindIcon"
+              [kindLabel]="'getRecipe.subRecipe' | t"
+              [quantityLabel]="row.quantityLabel"
+              [kcal]="row.kcal"
+              [macros]="row.macros"
+              [openable]="row.openable"
+              [openLabel]="'getRecipe.openIngredient' | t"
+              (opened)="onOpenIngredient(row.ingredient)"
+            />
+            @if (!$last) {
+              <ds-divider />
+            }
+          }
+        </ds-card>
+      }
 
-      <ds-note icon="info">{{ "getRecipe.note" | t }}</ds-note>
       <ds-section-header
         [title]="'getRecipe.steps' | t"
         [staticLabel]="stepsLabel()"
@@ -193,23 +166,19 @@
       @if (recipe.steps.length) {
         <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
           @for (step of recipe.steps; track step.position) {
-            <ds-card [padding]="'var(--ds-space-3)'">
-              <ds-stack [gap]="'var(--ds-space-1)'">
-                <ds-stack
-                  direction="row"
-                  align="center"
-                  [gap]="'var(--ds-space-2)'"
-                >
-                  <ds-text variant="label">{{
-                    "getRecipe.step" | t: { position: step.position }
-                  }}</ds-text>
+            <ds-card data-testid="recipe-step" [padding]="'var(--ds-space-3)'">
+              <ds-stack direction="row" [gap]="'var(--ds-space-3)'">
+                <ds-step-badge [label]="'' + step.position" />
+                <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
+                  <ds-text>{{ step.text }}</ds-text>
                   @if (step.minutes) {
-                    <ds-chip>{{
-                      "getRecipe.minutes" | t: { minutes: step.minutes }
-                    }}</ds-chip>
+                    <ds-stack direction="row">
+                      <ds-chip>{{
+                        "getRecipe.minutes" | t: { minutes: step.minutes }
+                      }}</ds-chip>
+                    </ds-stack>
                   }
                 </ds-stack>
-                <ds-text>{{ step.text }}</ds-text>
               </ds-stack>
             </ds-card>
           }

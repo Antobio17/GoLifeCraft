@@ -22,6 +22,9 @@ export interface RecipeCardView {
   meta: string;
   kcal: string;
   macros: MacroBadge[];
+  proteinG: number;
+  fatG: number;
+  carbsG: number;
   hasSubRecipe: boolean;
 }
 
@@ -69,6 +72,9 @@ export class RecipeViewService {
       meta: `${a.category} · ${this.servingsLabel(a.servings)} · ${this.ingredientsLabel(a.ingredientCount)}`,
       kcal: this.integer(a.perServing.calories),
       macros: this.macroItems(a.perServing, labels),
+      proteinG: a.perServing.protein,
+      fatG: a.perServing.fat,
+      carbsG: a.perServing.carbs,
       hasSubRecipe: a.hasSubRecipe,
     };
   }

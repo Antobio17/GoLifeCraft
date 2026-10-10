@@ -13,7 +13,7 @@ export class TicketsPage {
   async goto(): Promise<void> {
     await this.page.goto("/tickets");
     await waitForAppReady(this.page);
-    await expect(this.cards.first()).toBeVisible();
+    await expect(this.rows.first()).toBeVisible();
   }
 
   async open(ticketId: string): Promise<void> {
@@ -22,8 +22,8 @@ export class TicketsPage {
     await expect(this.lines.first()).toBeVisible();
   }
 
-  get cards(): Locator {
-    return this.ds.all("ticket-card");
+  get rows(): Locator {
+    return this.ds.all("ticket-row");
   }
 
   get lines(): Locator {

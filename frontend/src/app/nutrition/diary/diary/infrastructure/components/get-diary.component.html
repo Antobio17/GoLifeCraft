@@ -1,72 +1,82 @@
 <ds-page-wrapper
   [maxWidth]="'40rem'"
   [wideMaxWidth]="'68rem'"
-  [gap]="'var(--ds-space-3)'"
+  [gap]="'var(--ds-space-5)'"
 >
-  <ds-stack
-    direction="row"
-    justify="between"
-    align="center"
-    [gap]="'var(--ds-space-3)'"
+  <ds-screen-header [eyebrow]="eyebrow()" [title]="'getDiary.title' | t">
+    <ds-save-status
+      slot="actions"
+      align="end"
+      [status]="autosave.status()"
+      (retried)="onRetrySave()"
+    />
+    <ds-button
+      slot="actions"
+      data-testid="diary-calendar"
+      variant="secondary"
+      size="icon-lg"
+      icon="calendar"
+      [iconSize]="19"
+      [ariaLabel]="'getDiary.calendar.open' | t"
+      (clicked)="openCalendar()"
+    />
+    <ds-button
+      slot="actions"
+      data-testid="diary-add"
+      variant="primary"
+      size="icon-lg"
+      icon="plus"
+      [iconSize]="19"
+      [ariaLabel]="quickAddLabel()"
+      [disabled]="!quickAddMeal()"
+      (clicked)="openQuickAdd()"
+    />
+  </ds-screen-header>
+
+  <ds-split-view
+    [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
+    [gap]="'var(--ds-space-5)'"
   >
-    <ds-stack [gap]="'2px'" [grow]="true">
-      <ds-heading [level]="2" size="xl" [truncate]="true">{{
-        "getDiary.title" | t
-      }}</ds-heading>
-      <ds-text variant="meta">{{ view.dateLine(date()) }}</ds-text>
-      <ds-save-status [status]="autosave.status()" (retried)="onRetrySave()" />
-    </ds-stack>
-
-    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
-      <ds-button
-        data-testid="diary-calendar"
-        variant="secondary"
-        size="icon-lg"
-        icon="calendar"
-        [iconSize]="19"
-        [ariaLabel]="'getDiary.calendar.open' | t"
-        (clicked)="openCalendar()"
-      />
-      <ds-button
-        data-testid="diary-goal"
-        variant="secondary"
-        size="icon-lg"
-        icon="settings"
-        [iconSize]="19"
-        [ariaLabel]="'getDiary.goal.open' | t"
-        (clicked)="openGoalSheet()"
-      />
-      <ds-icon-button
-        data-testid="diary-prev"
-        icon="chevronLeft"
-        variant="soft"
-        [size]="32"
-        [iconSize]="16"
-        [stroke]="2.4"
-        [ariaLabel]="'getDiary.nav.previous' | t"
-        (clicked)="previousDay()"
-      />
-      <ds-button data-testid="diary-today" variant="link" (clicked)="goToday()">
-        {{ view.navLabel(date()) }}
-      </ds-button>
-      <ds-icon-button
-        data-testid="diary-next"
-        icon="chevronRight"
-        variant="soft"
-        [size]="32"
-        [iconSize]="16"
-        [stroke]="2.4"
-        [ariaLabel]="'getDiary.nav.next' | t"
-        (clicked)="nextDay()"
-      />
-    </ds-stack>
-  </ds-stack>
-
-  @if (loading()) {
-    <ds-split-view
-      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
-      [sectionGap]="'var(--ds-space-6)'"
+    <ds-week-strip
+      slot="side"
+      data-testid="diary-week"
+      [title]="weekTitle()"
+      [caption]="weekCaption()"
+      [selectable]="true"
+      [days]="weekDays()"
+      [selected]="date()"
+      (daySelected)="onWeekDay($event)"
     >
+      <ds-button
+        slot="actions"
+        data-testid="diary-prev"
+        variant="secondary"
+        size="icon-sm"
+        icon="chevronLeft"
+        [ariaLabel]="'getDiary.day.previous' | t"
+        (clicked)="shiftDay(-1)"
+      />
+      <ds-button
+        slot="actions"
+        data-testid="diary-today"
+        variant="secondary"
+        size="sm"
+        [disabled]="isToday()"
+        (clicked)="goToday()"
+        >{{ "getDiary.day.today" | t }}</ds-button
+      >
+      <ds-button
+        slot="actions"
+        data-testid="diary-next"
+        variant="secondary"
+        size="icon-sm"
+        icon="chevronRight"
+        [ariaLabel]="'getDiary.day.next' | t"
+        (clicked)="shiftDay(1)"
+      />
+    </ds-week-strip>
+
+    @if (loading()) {
       <ds-module-card slot="side" [hero]="true">
         <ds-stack [gap]="'var(--ds-space-3)'">
           <ds-skeleton-line width="40%" height="0.75rem" />
@@ -74,39 +84,9 @@
           <ds-skeleton-line width="45%" height="1rem" />
           <ds-skeleton-line width="100%" height="0.5rem" />
           <ds-skeleton-line width="100%" height="3.5rem" />
-          <ds-skeleton-line width="35%" height="1.5rem" />
         </ds-stack>
       </ds-module-card>
-
-      @for (entries of skeletonMeals; track $index) {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-skeleton-section-header
-            titleWidth="6.5rem"
-            [subtitle]="true"
-            [action]="true"
-            actionWidth="1.875rem"
-          />
-          <ds-rail>
-            <ds-skeleton-list
-              [count]="entries"
-              [gap]="'var(--ds-space-2)'"
-              radius="var(--ds-radius-surface)"
-              padding="var(--ds-space-2) var(--ds-space-3)"
-              [tile]="40"
-              titleWidth="62%"
-              headTrailing="3.25rem"
-              metaWidth="78%"
-            />
-          </ds-rail>
-        </ds-stack>
-      }
-    </ds-split-view>
-  } @else if (attributes(); as diary) {
-    <ds-split-view
-      [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
-      [sectionGap]="'var(--ds-space-6)'"
-    >
-      @let card = summaryCard()!;
+    } @else if (summaryCard(); as card) {
       <ds-calorie-summary
         data-testid="diary-summary"
         slot="side"
@@ -120,124 +100,164 @@
         [segments]="card.segments"
         [marker]="card.marker"
         [stats]="card.stats"
+        [pressLabel]="'getDiary.goal.open' | t"
+        (pressed)="openGoalSheet()"
       />
+    }
 
-      @for (meal of mealRows(); track meal.key) {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-stack
-            class="meal-header"
-            dsStuck
-            direction="row"
-            justify="between"
-            align="center"
-            [gap]="'var(--ds-space-2)'"
-          >
-            @if (meal.consumable) {
-              <ds-button
-                [variant]="
-                  meal.consumed
-                    ? 'primary'
-                    : meal.partial
-                      ? 'soft'
-                      : 'secondary'
-                "
-                size="icon-xs"
-                [icon]="meal.partial ? 'minus' : 'check'"
-                [iconSize]="12"
-                [ariaLabel]="meal.consumeLabel"
-                (clicked)="
-                  onConsumeMeal(meal.key, !meal.consumed && !meal.partial)
-                "
-              />
-            }
+    <ds-grid slot="side" [columns]="3" [gap]="'var(--ds-space-2)'">
+      <ds-action-tile
+        data-testid="diary-shortcut-menu"
+        icon="menuboard"
+        [name]="'getDiary.shortcuts.menu' | t"
+        [meta]="shortcuts().menuMeta"
+        (clicked)="goTo('/menus')"
+      />
+      <ds-action-tile
+        data-testid="diary-shortcut-kitchen"
+        icon="flame"
+        [name]="'getDiary.shortcuts.kitchen' | t"
+        [meta]="shortcuts().kitchenMeta"
+        (clicked)="goTo('/kitchen')"
+      />
+      <ds-action-tile
+        data-testid="diary-shortcut-shopping"
+        icon="cart"
+        [name]="'getDiary.shortcuts.shopping' | t"
+        [meta]="shortcuts().shoppingMeta"
+        (clicked)="goTo('/shopping-list')"
+      />
+    </ds-grid>
 
-            <ds-stack [gap]="'1px'" [grow]="true">
-              <ds-heading [level]="3" size="sm" [truncate]="true">{{
-                meal.label
-              }}</ds-heading>
-              <ds-text variant="meta">{{ meal.meta }}</ds-text>
-            </ds-stack>
-            <ds-button
-              [attr.data-testid]="'diary-add-' + meal.key"
-              variant="outline"
-              size="icon-sm"
-              icon="plus"
-              [iconSize]="15"
-              [ariaLabel]="'getDiary.add' | t"
-              (clicked)="openPicker(meal.key)"
+    @if (loading()) {
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        @for (entries of skeletonMeals; track $index) {
+          <ds-card [padding]="'var(--ds-space-4)'">
+            <ds-skeleton-section-header
+              titleWidth="6.5rem"
+              [subtitle]="true"
+              [action]="true"
+              actionWidth="2.75rem"
             />
-          </ds-stack>
+            <ds-skeleton-list
+              [count]="entries"
+              [gap]="'var(--ds-space-2)'"
+              radius="var(--ds-radius-inner)"
+              padding="var(--ds-space-2) 0"
+              [tile]="40"
+              titleWidth="62%"
+              headTrailing="3.25rem"
+              metaWidth="78%"
+            />
+          </ds-card>
+        }
+      </ds-stack>
+    } @else if (attributes()) {
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        @for (meal of mealRows(); track meal.key) {
+          <ds-meal-card
+            [attr.data-testid]="'diary-meal-' + meal.key"
+            [title]="meal.label"
+            [kcal]="meal.kcal"
+            [kcalUnit]="meal.kcalUnit"
+            [protein]="meal.protein"
+            [fat]="meal.fat"
+            [carbs]="meal.carbs"
+            [macrosLabel]="meal.macrosLabel"
+            [macroLabels]="macroLabels()"
+            [consumable]="meal.consumable"
+            [consumed]="meal.consumed"
+            [partial]="meal.partial"
+            [consumeLabel]="meal.consumeLabel"
+            (consumeToggled)="
+              onConsumeMeal(meal.key, !meal.consumed && !meal.partial)
+            "
+          >
+            @for (row of meal.entries; track row.entry.id) {
+              <ds-stack [gap]="'var(--ds-space-1-5)'">
+                <ds-diary-entry
+                  data-testid="diary-entry"
+                  [line]="true"
+                  [attr.data-id]="row.entry.id"
+                  [emoji]="row.entry.emoji"
+                  [imageUrl]="row.imageUrl"
+                  [name]="row.entry.name"
+                  [openable]="row.openable"
+                  [openLabel]="row.openLabel"
+                  [kindIcon]="row.kindIcon"
+                  [kindLabel]="row.kindLabel"
+                  [statusTone]="row.statusTone"
+                  [statusLabel]="row.statusLabel"
+                  [kcalLabel]="row.kcalLabel"
+                  [macrosLabel]="row.macrosLabel"
+                  [quantityLabel]="row.quantityLabel"
+                  [quantityAriaLabel]="'getDiary.quantitySheet.open' | t"
+                  [removeLabel]="'getDiary.remove' | t"
+                  [expandable]="row.expandable"
+                  [expanded]="row.expanded"
+                  [expandLabel]="'getDiary.tree.expand' | t"
+                  [collapseLabel]="'getDiary.tree.collapse' | t"
+                  (quantityPressed)="openQuantity(row.entry.id)"
+                  (remove)="onRemove(row.entry.id)"
+                  (opened)="onOpenEntry(meal.key, row.entry)"
+                  (expandToggled)="toggleEntryTree(row.entry.id)"
+                />
 
-          @if (meal.entries.length > 0) {
-            <ds-rail>
-              @for (row of meal.entries; track row.entry.id) {
-                <ds-stack [gap]="'var(--ds-space-1-5)'">
-                  <ds-diary-entry
-                    data-testid="diary-entry"
-                    [compact]="true"
-                    [attr.data-id]="row.entry.id"
-                    [emoji]="row.entry.emoji"
-                    [imageUrl]="row.imageUrl"
-                    [name]="row.entry.name"
-                    [openable]="row.openable"
-                    [openLabel]="row.openLabel"
-                    [kindIcon]="row.kindIcon"
-                    [kindLabel]="row.kindLabel"
-                    [statusTone]="row.statusTone"
-                    [statusLabel]="row.statusLabel"
-                    [kcalLabel]="row.kcalLabel"
-                    [macrosLabel]="row.macrosLabel"
-                    [quantityLabel]="row.quantityLabel"
-                    [quantityAriaLabel]="'getDiary.quantitySheet.open' | t"
-                    [removeLabel]="'getDiary.remove' | t"
-                    [expandable]="row.expandable"
-                    [expanded]="row.expanded"
+                @if (row.expanded) {
+                  <ds-diary-tree
+                    animate.enter="diary-tree--in"
+                    animate.leave="diary-tree--out"
+                    [rows]="row.treeRows"
+                    [title]="'getDiary.tree.title' | t"
+                    [showReset]="row.showReset"
+                    [resetMessage]="'getDiary.tree.customized' | t"
+                    [resetLabel]="'getDiary.tree.reset' | t"
                     [expandLabel]="'getDiary.tree.expand' | t"
                     [collapseLabel]="'getDiary.tree.collapse' | t"
-                    (quantityPressed)="openQuantity(row.entry.id)"
-                    (remove)="onRemove(row.entry.id)"
-                    (opened)="onOpenEntry(meal.key, row.entry)"
-                    (expandToggled)="toggleEntryTree(row.entry.id)"
+                    [openLabel]="'getDiary.openEntry' | t"
+                    [quantityAriaLabel]="'getDiary.quantity' | t"
+                    [unitAriaLabel]="'getDiary.unit' | t"
+                    [removeLabel]="'getDiary.tree.remove' | t"
+                    (toggled)="toggleTreeNode($event)"
+                    (opened)="onOpenTreeNode(row.entry.id, $event)"
+                    (quantityChanged)="
+                      onNodeQuantityChange(row.entry.id, $event)
+                    "
+                    (unitChanged)="onNodeUnitChange(row.entry.id, $event)"
+                    (restored)="onResetTree(row.entry.id)"
+                    (lotPicked)="openNodeLotPicker(row.entry.id, $event)"
+                    (removed)="onNodeRemove(row.entry.id, $event)"
                   />
-
-                  @if (row.expanded) {
-                    <ds-diary-tree
-                      animate.enter="diary-tree--in"
-                      animate.leave="diary-tree--out"
-                      [rows]="row.treeRows"
-                      [title]="'getDiary.tree.title' | t"
-                      [showReset]="row.showReset"
-                      [resetMessage]="'getDiary.tree.customized' | t"
-                      [resetLabel]="'getDiary.tree.reset' | t"
-                      [expandLabel]="'getDiary.tree.expand' | t"
-                      [collapseLabel]="'getDiary.tree.collapse' | t"
-                      [openLabel]="'getDiary.openEntry' | t"
-                      [quantityAriaLabel]="'getDiary.quantity' | t"
-                      [unitAriaLabel]="'getDiary.unit' | t"
-                      [removeLabel]="'getDiary.tree.remove' | t"
-                      (toggled)="toggleTreeNode($event)"
-                      (opened)="onOpenTreeNode(row.entry.id, $event)"
-                      (quantityChanged)="
-                        onNodeQuantityChange(row.entry.id, $event)
-                      "
-                      (unitChanged)="onNodeUnitChange(row.entry.id, $event)"
-                      (restored)="onResetTree(row.entry.id)"
-                      (lotPicked)="openNodeLotPicker(row.entry.id, $event)"
-                      (removed)="onNodeRemove(row.entry.id, $event)"
-                    />
-                  }
-                </ds-stack>
+                }
+              </ds-stack>
+              @if (!$last || !meal.consumed) {
+                <ds-divider
+                  animate.enter="diary__add--in"
+                  animate.leave="diary__add--out"
+                />
               }
-            </ds-rail>
-          } @else {
-            <ds-placeholder-note [message]="'getDiary.emptyAction' | t" />
-          }
-        </ds-stack>
-      }
-    </ds-split-view>
-  } @else {
-    <ds-placeholder-note [message]="'getDiary.error' | t" />
-  }
+            }
+
+            @if (!meal.consumed) {
+              <ds-button
+                class="diary__add"
+                animate.enter="diary__add--in"
+                animate.leave="diary__add--out"
+                [attr.data-testid]="'diary-add-' + meal.key"
+                variant="link"
+                size="sm"
+                icon="plus"
+                (clicked)="openPicker(meal.key)"
+                >{{ meal.addLabel }}</ds-button
+              >
+            }
+          </ds-meal-card>
+        }
+      </ds-stack>
+    } @else {
+      <ds-placeholder-note [message]="'getDiary.error' | t" />
+    }
+  </ds-split-view>
 
   <ds-modal-sheet
     [open]="pickerOpen()"
@@ -254,17 +274,18 @@
         >{{ "getDiary.picker.subtitle" | t }} · {{ pickerMealLabel() }}</ds-text
       >
 
-      @if (!quickEditing()) {
-        <ds-view-switch
-          data-testid="diary-picker-tabs"
-          [options]="pickerTabs()"
-          [ngModel]="pickerTab()"
-          [ngModelOptions]="{ standalone: true }"
-          (ngModelChange)="onPickerTab($event)"
-        />
-      }
-
       @if (pickerTab() === "quick") {
+        @if (!quickEditing()) {
+          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
+            <ds-stack [grow]="true">
+              <ds-text variant="label">{{
+                "getDiary.picker.quick" | t
+              }}</ds-text>
+            </ds-stack>
+            <ng-container [ngTemplateOutlet]="pickerSwitch" />
+          </ds-stack>
+        }
+
         <ds-note icon="info">{{ "getDiary.quick.hint" | t }}</ds-note>
 
         <ds-stack [gap]="'var(--ds-space-2)'">
@@ -345,53 +366,49 @@
           </ds-stack>
         </ds-stack>
       } @else {
-        <ds-search-input
-          data-testid="diary-picker-search"
-          [placeholder]="'getDiary.picker.search' | t"
-          [clearLabel]="'getDiary.picker.close' | t"
-          [debounce]="120"
-          (searched)="onPickerSearch($event)"
-        />
+        <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+          <ds-stack [grow]="true">
+            <ds-search-input
+              data-testid="diary-picker-search"
+              [ariaLabel]="'getDiary.picker.search' | t"
+              [clearLabel]="'getDiary.picker.close' | t"
+              [debounce]="120"
+              (searched)="onPickerSearch($event)"
+            />
+          </ds-stack>
+          <ng-container [ngTemplateOutlet]="pickerSwitch" />
+        </ds-stack>
 
         @if (pickerChoices().length === 0) {
           <ds-text variant="muted">{{ "getDiary.picker.empty" | t }}</ds-text>
         } @else {
-          <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-card
+            [padding]="'var(--ds-space-1) var(--ds-space-4)'"
+            [gap]="'0'"
+          >
             @for (row of pickerRows(); track row.choice.refId) {
-              <ds-card
+              <ds-stack
                 data-testid="diary-picker-row"
                 [attr.data-id]="row.choice.refId"
-                [padding]="'var(--ds-space-3)'"
               >
-                <ds-stack
-                  direction="row"
-                  align="center"
-                  [gap]="'var(--ds-space-3)'"
-                >
-                  <ds-emoji-tile
-                    [emoji]="row.choice.emoji"
-                    [imageUrl]="row.imageUrl"
-                    [alt]="row.choice.name"
-                    [size]="36"
-                  />
-                  <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                    <ds-text variant="strong" [truncate]="true">{{
-                      row.choice.name
-                    }}</ds-text>
-                    <ds-text variant="meta">{{ row.choice.detail }}</ds-text>
-                    <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
-                  </ds-stack>
-                  <ds-icon-button
-                    data-testid="diary-picker-add"
-                    icon="plus"
-                    variant="soft"
-                    [ariaLabel]="'getDiary.add' | t"
-                    (clicked)="onPick(row.choice)"
-                  />
-                </ds-stack>
-              </ds-card>
+                <ds-food-line
+                  data-testid="diary-picker-add"
+                  [emoji]="row.choice.emoji"
+                  [imageUrl]="row.imageUrl"
+                  [name]="row.choice.name"
+                  [meta]="row.choice.detail"
+                  [kcal]="row.kcal"
+                  [macros]="row.macros"
+                  [selectable]="true"
+                  [selectLabel]="'getDiary.add' | t"
+                  (selected)="onPick(row.choice)"
+                />
+              </ds-stack>
+              @if (!$last) {
+                <ds-divider />
+              }
             }
-          </ds-stack>
+          </ds-card>
         }
       }
     </ds-stack>
@@ -593,3 +610,13 @@
     </ds-stack>
   </ds-modal-sheet>
 </ds-page-wrapper>
+
+<ng-template #pickerSwitch>
+  <ds-view-switch
+    data-testid="diary-picker-tabs"
+    [options]="pickerTabs()"
+    [ngModel]="pickerTab()"
+    [ngModelOptions]="{ standalone: true }"
+    (ngModelChange)="onPickerTab($event)"
+  />
+</ng-template>

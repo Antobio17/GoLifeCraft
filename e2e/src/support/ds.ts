@@ -38,6 +38,30 @@ export class Ds {
   async click(testId: string): Promise<void> {
     await this.button(testId).click();
   }
+
+  async pickDate(testId: string, iso: string): Promise<void> {
+    const page = "page" in this.root ? this.root.page() : this.root;
+    const calendar = page.locator(
+      `${SHEET} [data-testid='date-field-calendar']`,
+    );
+    const target = calendar.locator(`[data-date='${iso}']`);
+    const month = iso.slice(0, 7);
+
+    await this.button(testId).click();
+    await expect(calendar).toBeVisible();
+
+    for (let step = 0; step < 24 && (await target.count()) === 0; step++) {
+      const shown = await calendar
+        .locator("[data-date]")
+        .first()
+        .getAttribute("data-date");
+      const direction = (shown ?? "").slice(0, 7) < month ? "last" : "first";
+      await calendar.locator(".ds-cal__navbtn")[direction]().click();
+    }
+
+    await target.click();
+    await expect(calendar).toHaveCount(0);
+  }
 }
 
 export const SKELETON = ".ds-sk";

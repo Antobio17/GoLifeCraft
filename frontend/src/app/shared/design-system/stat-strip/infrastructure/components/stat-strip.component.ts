@@ -85,9 +85,7 @@ import { BarComponent } from "../../../bar/infrastructure/components/bar.compone
         color: var(--ds-text-muted);
       }
       .ds-sstrip__label {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: anywhere;
         font-size: var(--ds-text-sm);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);

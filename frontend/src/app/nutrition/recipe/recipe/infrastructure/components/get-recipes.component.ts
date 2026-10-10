@@ -18,7 +18,7 @@ import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastru
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { RecipeCardComponent } from "@shared/design-system/recipe-card/infrastructure/components/recipe-card.component";
+import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -30,6 +30,7 @@ import { EntityVisualService } from "@shared/entity-visual/application/services/
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 @Component({
   selector: "app-get-recipes",
   templateUrl: "./get-recipes.component.html",
@@ -46,10 +47,11 @@ import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggreg
     SkeletonListComponent,
     SkeletonFiltersComponent,
     TextComponent,
-    RecipeCardComponent,
+    ProductCardComponent,
   ],
 })
 export class GetRecipesComponent extends AbstractListPageComponent<RecipeListItem> {
+  private backNavigation = inject(BackNavigationService);
   private textSearch = inject(TextSearchService);
   private getRecipesService = inject(GetRecipesService);
   protected view = inject(RecipeViewService);
@@ -79,10 +81,22 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
     carbs: this.t("getRecipes.macro.carbsShort"),
   }));
 
-  cards = computed<RecipeCardView[]>(() =>
-    this.filteredRecipes().map((recipe) =>
-      this.view.toCard(recipe, this.macroLabels(), this.imageUrl(recipe)),
-    ),
+  cards = computed(() =>
+    this.filteredRecipes().map((recipe) => {
+      const card = this.view.toCard(
+        recipe,
+        this.macroLabels(),
+        this.imageUrl(recipe),
+      );
+
+      return {
+        ...card,
+        rowMeta: this.rowMeta(card),
+        macroAria: card.macros
+          .map((macro) => `${macro.label} ${macro.value}`)
+          .join(" · "),
+      };
+    }),
   );
 
   headerSubtitle = computed(() => {
@@ -130,5 +144,15 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
       recipe.id,
       recipe.attributes.image ?? null,
     );
+  }
+
+  goBack(): void {
+    this.backNavigation.back(["/kitchen"]);
+  }
+
+  private rowMeta(card: RecipeCardView): string {
+    if (!card.hasSubRecipe) return card.meta;
+
+    return `${card.meta} · ${this.t("getRecipes.subRecipeTag")}`;
   }
 }

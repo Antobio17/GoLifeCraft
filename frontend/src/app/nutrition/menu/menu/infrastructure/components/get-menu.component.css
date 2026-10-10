@@ -1,0 +1,5 @@
+ds-button.menu__add {
+  display: block;
+  align-self: flex-start;
+  padding-block: var(--ds-space-2) var(--ds-space-1);
+}

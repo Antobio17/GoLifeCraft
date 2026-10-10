@@ -1,17 +1,20 @@
 <ds-page-wrapper [gap]="'var(--ds-space-3)'">
   @if (loading()) {
     <ds-skeleton-screen-header
+      [stacked]="true"
       [leading]="true"
       [eyebrow]="true"
       [subtitle]="true"
       titleWidth="46%"
-      [actions]="1"
+      [actions]="2"
     />
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
-      <ng-container slot="side">
-        <ds-skeleton height="10rem" />
-      </ng-container>
+      <ds-skeleton
+        slot="side"
+        height="17rem"
+        radius="var(--ds-radius-surface)"
+      />
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-skeleton height="5rem" />
         <ds-skeleton height="5rem" delay="0.1s" />
@@ -20,9 +23,10 @@
     </ds-split-view>
   }
 
-  @if (!loading() && attributes(); as inventory) {
+  @if (!loading() && hero(); as hero) {
     <ds-screen-header
       [sticky]="true"
+      [stacked]="true"
       [leading]="'back'"
       [leadingLabel]="'getInventory.back' | t"
       [eyebrow]="'getInventory.eyebrow' | t"
@@ -46,20 +50,6 @@
       @if (isDraft()) {
         <ds-button
           slot="actions"
-          data-testid="inventory-validate"
-          variant="soft"
-          size="icon-lg"
-          icon="check"
-          [iconSize]="19"
-          [loading]="validating()"
-          [ariaLabel]="'getInventory.validate' | t"
-          (clicked)="onValidate()"
-        />
-      }
-
-      @if (isDraft()) {
-        <ds-button
-          slot="actions"
           data-testid="inventory-discard"
           variant="danger"
           size="icon-lg"
@@ -69,35 +59,54 @@
           (clicked)="onDiscard()"
         />
       }
-
-      @if (!isDraft()) {
-        <ds-button
-          slot="actions"
-          data-testid="inventory-reopen"
-          variant="secondary"
-          size="icon-lg"
-          icon="restore"
-          [iconSize]="19"
-          [disabled]="reopening()"
-          [ariaLabel]="'getInventory.reopen' | t"
-          (clicked)="onReopen()"
-        />
-      }
     </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
-      <ng-container slot="side">
-        <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-2)'">
-          <ds-macro-badges [macros]="summaryBadges()" />
-          <ds-progress-bar [value]="progressPercent()" />
+      <ds-module-card
+        slot="side"
+        data-testid="inventory-hero"
+        [hero]="true"
+        [eyebrow]="'getInventory.hero.eyebrow' | t"
+      >
+        <ds-chip slot="aside" [tone]="hero.validated ? 'brand' : 'warning'">
+          {{ hero.statusLabel }}
+        </ds-chip>
 
-          @if (inventory.note) {
-            <ds-text variant="meta">{{ inventory.note }}</ds-text>
-          }
+        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+          <ds-progress-ring [value]="hero.percent">
+            <ds-text variant="strong">{{ hero.percent }}%</ds-text>
+          </ds-progress-ring>
+          <ds-stack [gap]="'2px'">
+            <ds-heading [level]="2" size="md">{{ hero.title }}</ds-heading>
+            <ds-text variant="meta">{{ hero.caption }}</ds-text>
+          </ds-stack>
+        </ds-stack>
 
-          <ds-text variant="meta">{{ hint() }}</ds-text>
-        </ds-card>
-      </ng-container>
+        <ds-stat-strip [items]="hero.stats" />
+
+        @if (hero.validated) {
+          <ds-button
+            data-testid="inventory-reopen"
+            variant="primary"
+            icon="restore"
+            [fullWidth]="true"
+            (clicked)="onReopen()"
+          >
+            {{ "getInventory.reopen" | t }}
+          </ds-button>
+        } @else {
+          <ds-button
+            data-testid="inventory-validate"
+            variant="primary"
+            icon="check"
+            [fullWidth]="true"
+            [loading]="validating()"
+            (clicked)="onValidate()"
+          >
+            {{ "getInventory.validate" | t }}
+          </ds-button>
+        }
+      </ds-module-card>
 
       <ds-stack [gap]="'var(--ds-space-2)'">
         <ds-section-header
@@ -147,7 +156,7 @@
         [label]="'getInventory.schedule.countedOn' | t"
         [required]="true"
       >
-        <ds-date-input
+        <ds-date-field
           data-testid="inventory-reschedule-date"
           [ariaLabel]="'getInventory.schedule.countedOn' | t"
           [ngModel]="scheduleCountedOn()"
@@ -177,5 +186,19 @@
     [deletingLabel]="'getInventory.discarding' | t"
     (confirmed)="onConfirmDiscard()"
     (cancelled)="onCancelDiscard()"
+  />
+
+  <ds-confirm-action-modal
+    [show]="showReopenModal()"
+    [title]="'getInventory.reopenTitle' | t"
+    [body]="'getInventory.validatedHint' | t"
+    [isDeleting]="reopening()"
+    [cancelLabel]="'getInventory.cancel' | t"
+    [confirmLabel]="'getInventory.reopenConfirm' | t"
+    [deletingLabel]="'getInventory.reopening' | t"
+    confirmVariant="primary"
+    iconVariant="success"
+    (confirmed)="onConfirmReopen()"
+    (cancelled)="onCancelReopen()"
   />
 </ds-page-wrapper>

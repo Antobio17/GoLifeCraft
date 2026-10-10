@@ -3,6 +3,7 @@ import { KitchenFormatService } from "@nutrition/kitchen/production/application/
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProposalFormService } from "@nutrition/kitchen/production/application/services/proposal-form.service";
+import { UpcomingProductionProposalService } from "@nutrition/kitchen/production/application/services/upcoming-production-proposal.service";
 import { ProductionIngredientFormService } from "@nutrition/kitchen/production/application/services/production-ingredient-form.service";
 import { GetProductionsProviders } from "../providers/get-productions.providers";
 import { GetProductionProviders } from "../providers/get-production.providers";
@@ -19,6 +20,7 @@ import { ServeProductionItemSubRecipeProviders } from "../providers/serve-produc
 import { GetRecipeLotsProviders } from "../providers/get-recipe-lots.providers";
 import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/providers/get-articles.providers";
 import { GetRecipesProviders } from "@nutrition/recipe/recipe/infrastructure/providers/get-recipes.providers";
+import { GetRecipeProviders } from "@nutrition/recipe/recipe/infrastructure/providers/get-recipe.providers";
 import { UpdateRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/update-recipe-stock.providers";
 
 export const KITCHEN_ROUTES: Routes = [
@@ -29,6 +31,7 @@ export const KITCHEN_ROUTES: Routes = [
       ProductionRangeService,
       ProductionViewService,
       ProposalFormService,
+      UpcomingProductionProposalService,
       ProductionIngredientFormService,
       ...GetProductionsProviders.getProviders(),
       ...GetProductionProviders.getProviders(),
@@ -45,6 +48,7 @@ export const KITCHEN_ROUTES: Routes = [
       ...GetRecipeLotsProviders.getProviders(),
       ...GetArticlesProviders.getProviders(),
       ...GetRecipesProviders.getProviders(),
+      ...GetRecipeProviders.getProviders(),
       ...UpdateRecipeStockProviders.getProviders(),
     ],
     children: [

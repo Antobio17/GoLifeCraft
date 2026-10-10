@@ -1,5 +1,6 @@
 {
   "getRecipes": {
+    "eyebrow": "Nutrición",
     "heading": "Recetario",
     "subtitle": "recetas",
     "create": "Nueva",
@@ -17,7 +18,8 @@
     "empty": {
       "title": "Aún no hay recetas",
       "text": "Crea recetas combinando artículos del catálogo y otras recetas como subrecetas."
-    }
+    },
+    "back": "Volver"
   },
   "getRecipe": {
     "back": "Volver",
@@ -25,6 +27,7 @@
     "edit": "Editar receta",
     "delete": "Borrar receta",
     "perServing": "kcal · por ración",
+    "macrosHeading": "Macros por ración",
     "ingredients": "Ingredientes",
     "total": "Total:",
     "subRecipe": "Sub",
@@ -63,10 +66,14 @@
         "save": "Guardar",
         "location": "Ubicación",
         "noLocation": "Sin ubicación"
+      },
+      "debt": {
+        "one": "Debes 1 ración",
+        "many": "Debes {{servings}} raciones",
+        "hint": "Has comido más de lo que cocinaste. Al cocinar se descuenta."
       }
     },
     "steps": "Pasos",
-    "step": "Paso {{position}}",
     "minutes": "{{minutes}} min",
     "noSteps": "Esta receta no tiene pasos."
   },
@@ -131,6 +138,11 @@
     "subRecipe": "Sub",
     "removeIngredient": "Quitar ingrediente",
     "quantity": "Cantidad",
+    "quantitySheet": {
+      "save": "Guardar cantidad",
+      "decrement": "Reducir cantidad",
+      "increment": "Aumentar cantidad"
+    },
     "unit": "Unidad",
     "rationUnit": "rac.",
     "noIngredients": "Sin ingredientes todavía",

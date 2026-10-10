@@ -17,11 +17,12 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
-import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
-import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
-import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
+import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
+import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { LocationCardComponent } from "@shared/design-system/location-card/infrastructure/components/location-card.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
@@ -30,7 +31,7 @@ import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/in
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
-import { DateInputComponent } from "@shared/design-system/date-input/infrastructure/components/date-input.component";
+import { DateFieldComponent } from "@shared/design-system/date-field/infrastructure/components/date-field.component";
 import {
   SegmentedOption,
   SegmentedToggleComponent,
@@ -43,6 +44,7 @@ import { DiscardInventoryService } from "@nutrition/pantry/inventory/application
 import { ReopenInventoryService } from "@nutrition/pantry/inventory/application/services/reopen-inventory.service";
 import { RescheduleInventoryService } from "@nutrition/pantry/inventory/application/services/reschedule-inventory.service";
 import { InventoryViewService } from "@nutrition/pantry/inventory/application/services/inventory-view.service";
+import { InventoryHero } from "../../domain/models/inventory-hero.model";
 import { InventoryDetailAttributes } from "../../domain/models/inventory-detail-attributes.model";
 import { InventoryLocationRow } from "../../domain/models/inventory-location-row.model";
 import { InventoryStatus } from "../../domain/models/inventory-status.model";
@@ -60,10 +62,12 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     SplitViewComponent,
     StackComponent,
     GridComponent,
-    CardComponent,
     TextComponent,
-    MacroBadgesComponent,
-    ProgressBarComponent,
+    HeadingComponent,
+    ModuleCardComponent,
+    ChipComponent,
+    ProgressRingComponent,
+    StatStripComponent,
     ButtonComponent,
     LocationCardComponent,
     EmptyStateComponent,
@@ -72,7 +76,7 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     SectionHeaderComponent,
     ConfirmActionModalComponent,
     ModalSheetComponent,
-    DateInputComponent,
+    DateFieldComponent,
     SegmentedToggleComponent,
     FieldComponent,
     RevealDirective,
@@ -100,6 +104,7 @@ export class GetInventoryComponent {
   reopening = signal(false);
   discarding = signal(false);
   showDiscardModal = signal(false);
+  showReopenModal = signal(false);
   showScheduleSheet = signal(false);
   rescheduling = signal(false);
   scheduleCountedOn = signal("");
@@ -139,46 +144,41 @@ export class GetInventoryComponent {
 
     if (null === attributes) return "";
 
-    return [
-      this.t(this.inventoryView.shiftKey(attributes.shift)),
-      this.t(this.inventoryView.statusKey(attributes.status)),
-      this.t("getInventory.locationsCounted").replace(
-        "{count}",
-        String(attributes.totalLocations),
+    return this.t(this.inventoryView.shiftKey(attributes.shift));
+  });
+
+  hero = computed<InventoryHero | null>(() => {
+    const attributes = this.attributes();
+
+    if (null === attributes) return null;
+
+    const validated = InventoryStatus.VALIDATED === attributes.status;
+
+    return {
+      title: this.heroTitle(attributes, validated),
+      caption: attributes.note || this.heroCaption(validated),
+      statusLabel: this.t(this.inventoryView.statusKey(attributes.status)),
+      validated,
+      percent: this.inventoryView.progressPercent(
+        attributes.countedItems,
+        attributes.totalItems,
       ),
-    ].join(" · ");
+      stats: [
+        {
+          value: `${attributes.countedItems}/${attributes.totalItems}`,
+          label: this.t("getInventory.stat.counted"),
+        },
+        {
+          value: `${attributes.adjustedItems}`,
+          label: this.t("getInventory.stat.adjusted"),
+        },
+        {
+          value: `${attributes.totalLocations}`,
+          label: this.t("getInventory.stat.locations"),
+        },
+      ],
+    };
   });
-
-  summaryBadges = computed<MacroBadge[]>(() => {
-    const attributes = this.attributes();
-
-    if (null === attributes) return [];
-
-    return [
-      {
-        label: `${attributes.countedItems}/${attributes.totalItems}`,
-        value: this.t("getInventory.stat.counted"),
-      },
-      {
-        label: `${attributes.adjustedItems}`,
-        value: this.t("getInventory.stat.adjusted"),
-      },
-    ];
-  });
-
-  progressPercent = computed(() => {
-    const attributes = this.attributes();
-
-    if (null === attributes || 0 === attributes.totalItems) return 0;
-
-    return Math.round((attributes.countedItems / attributes.totalItems) * 100);
-  });
-
-  hint = computed(() =>
-    this.isDraft()
-      ? this.t("getInventory.draftHint")
-      : this.t("getInventory.validatedHint"),
-  );
 
   locationRows = computed<InventoryLocationRow[]>(() =>
     (this.attributes()?.locations ?? []).map((location) =>
@@ -235,11 +235,22 @@ export class GetInventoryComponent {
   }
 
   onReopen(): void {
+    this.showReopenModal.set(true);
+  }
+
+  onCancelReopen(): void {
+    this.showReopenModal.set(false);
+  }
+
+  onConfirmReopen(): void {
     this.reopening.set(true);
 
     this.reopenInventoryService.reopenInventory(this.id()).subscribe({
       next: () => this.refresh(),
-      error: () => this.reopening.set(false),
+      error: () => {
+        this.reopening.set(false);
+        this.showReopenModal.set(false);
+      },
     });
   }
 
@@ -313,13 +324,39 @@ export class GetInventoryComponent {
     this.backNavigation.back(["/inventory"]);
   }
 
+  private heroTitle(
+    attributes: InventoryDetailAttributes,
+    validated: boolean,
+  ): string {
+    if (validated) return this.t("getInventory.hero.validatedTitle");
+
+    const remaining = attributes.totalItems - attributes.countedItems;
+
+    if (remaining <= 0) return this.t("getInventory.hero.doneTitle");
+
+    return this.t("getInventory.hero.remainingTitle").replace(
+      "{count}",
+      String(remaining),
+    );
+  }
+
+  private heroCaption(validated: boolean): string {
+    return validated
+      ? this.t("getInventory.hero.validatedCaption")
+      : this.t("getInventory.hero.draftCaption");
+  }
+
   private refresh(): void {
     this.getInventoryService.getInventory(this.id()).subscribe({
       next: (response) => {
         this.attributes.set(response.data.attributes);
         this.reopening.set(false);
+        this.showReopenModal.set(false);
       },
-      error: () => this.reopening.set(false),
+      error: () => {
+        this.reopening.set(false);
+        this.showReopenModal.set(false);
+      },
     });
   }
 }

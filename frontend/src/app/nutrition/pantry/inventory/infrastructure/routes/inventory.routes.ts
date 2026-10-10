@@ -1,4 +1,5 @@
-import { Routes } from "@angular/router";
+import { inject } from "@angular/core";
+import { Router, Routes } from "@angular/router";
 import { GetInventoriesProviders } from "../providers/get-inventories.providers";
 import { GetInventoryProviders } from "../providers/get-inventory.providers";
 import { StartInventoryProviders } from "../providers/start-inventory.providers";
@@ -33,11 +34,10 @@ export const INVENTORY_ROUTES: Routes = [
       },
       {
         path: "start",
-        data: { breadcrumb: "inventory.breadcrumb.start" },
-        loadComponent: () =>
-          import("../components/start-inventory.component").then(
-            (m) => m.StartInventoryComponent,
-          ),
+        redirectTo: () =>
+          inject(Router).createUrlTree(["/inventory"], {
+            queryParams: { start: 1 },
+          }),
       },
       {
         path: ":id",

@@ -1,30 +1,38 @@
 import { Component, computed, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { Observable, Subject } from "rxjs";
-import { switchMap } from "rxjs/operators";
+import { NgTemplateOutlet } from "@angular/common";
+import { Observable } from "rxjs";
 import { Article } from "../../domain/models/article.model";
-import {
-  ArticleCardView,
-  ArticleViewService,
-} from "@nutrition/catalog/article/application/services/article-view.service";
+import { ArticleViewService } from "@nutrition/catalog/article/application/services/article-view.service";
+import { ArticleListRow } from "@nutrition/catalog/article/domain/models/article-list-row.model";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
 import { GetArticleFacetsService } from "@nutrition/catalog/article/application/services/get-article-facets.service";
-import { ChangeArticleFavoriteService } from "@nutrition/catalog/article/application/services/change-article-favorite.service";
+import { ArticleCreateAction } from "@nutrition/catalog/article/domain/models/article-create-action.enum";
 import { ArticleFavoriteFilter } from "@nutrition/catalog/article/domain/models/article-favorite-filter.enum";
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
+import {
+  MenuComponent,
+  MenuItem,
+} from "@shared/design-system/menu/infrastructure/components/menu.component";
+import {
+  ChoiceChipOption,
+  ChoiceChipsComponent,
+} from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
+import { ScrollRowComponent } from "@shared/design-system/scroll-row/infrastructure/components/scroll-row.component";
+import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
+import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
-import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { SelectComponent } from "@shared/design-system/select/infrastructure/components/select.component";
 import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
 import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { ProductCardComponent } from "@shared/design-system/product-card/infrastructure/components/product-card.component";
@@ -41,33 +49,39 @@ import { RevealDirective } from "@shared/design-system/reveal/infrastructure/dir
 
 const ALL = "";
 
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 @Component({
   selector: "app-get-articles",
   templateUrl: "./get-articles.component.html",
   imports: [
     RevealDirective,
     FormsModule,
+    NgTemplateOutlet,
     ContextualTranslatePipe,
     PageWrapperComponent,
     ScreenHeaderComponent,
     ButtonComponent,
+    MenuComponent,
+    ChoiceChipsComponent,
+    ScrollRowComponent,
+    ModalSheetComponent,
+    FieldComponent,
+    SkeletonComponent,
     SearchInputComponent,
     GridComponent,
     EmptyStateComponent,
     SkeletonListComponent,
-    SkeletonFiltersComponent,
     TextComponent,
     StackComponent,
-    SelectComponent,
     ViewSwitchComponent,
     ProductCardComponent,
     InfiniteScrollComponent,
   ],
 })
 export class GetArticlesComponent extends AbstractListPageComponent<Article> {
+  private backNavigation = inject(BackNavigationService);
   private getArticlesService = inject(GetArticlesService);
   private getArticleFacetsService = inject(GetArticleFacetsService);
-  private changeArticleFavoriteService = inject(ChangeArticleFavoriteService);
   private authSession = inject(AuthSessionService);
   protected view = inject(ArticleViewService);
   private aggregateImageService = inject(AggregateImageService);
@@ -84,7 +98,6 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   selectedBrand = signal(ALL);
   selectedStore = signal(ALL);
   favoriteFilter = signal<ArticleFavoriteFilter>(ArticleFavoriteFilter.All);
-  pendingFavorites = signal<ReadonlyMap<string, boolean>>(new Map());
 
   favoriteOptions = computed<ViewSwitchOption[]>(() => [
     {
@@ -99,9 +112,38 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     },
   ]);
 
-  favoriteLabel = computed(() => this.t("getArticles.favorite.toggle"));
+  favoriteLabel = computed(() => this.t("getArticles.favorite.mark"));
+  macroLetters = computed(() => ({
+    protein: this.t("getArticles.macro.proteinShort"),
+    fat: this.t("getArticles.macro.fatShort"),
+    carbs: this.t("getArticles.macro.carbsShort"),
+  }));
 
-  private readonly refreshLoaded$ = new Subject<void>();
+  kcalUnit = computed(() => this.t("getArticles.macro.kcal"));
+
+  createItems = computed<MenuItem[]>(() => [
+    {
+      value: ArticleCreateAction.Create,
+      label: this.t("getArticles.createMenu.create"),
+      icon: "plus",
+    },
+    {
+      value: ArticleCreateAction.Scan,
+      label: this.t("getArticles.createMenu.scan"),
+      icon: "camera",
+    },
+    {
+      value: ArticleCreateAction.Global,
+      label: this.t("getArticles.createMenu.global"),
+      icon: "globe",
+    },
+  ]);
+
+  readonly chipSkeletons = ["4rem", "6.5rem", "4.5rem", "5rem"];
+
+  filtersOpen = signal(false);
+  draftCategory = signal(ALL);
+  draftBrand = signal(ALL);
 
   reloading = signal(false);
   loadingMore = signal(false);
@@ -110,11 +152,40 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
   brands = signal<string[]>([]);
   stores = signal<string[]>([]);
 
-  cards = computed<ArticleCardView[]>(() =>
-    this.items().map((article) =>
-      this.view.toCard(article, this.imageUrl(article)),
-    ),
+  rows = computed<ArticleListRow[]>(() =>
+    this.items().map((article) => {
+      const row = this.view.toListRow(article, this.imageUrl(article));
+
+      return { ...row, macroLabel: this.macroLabel(row) };
+    }),
   );
+
+  storeOptions = computed<ChoiceChipOption[]>(() =>
+    this.withAll(this.stores(), this.t("getArticles.filter.allStores")),
+  );
+
+  categoryOptions = computed<ChoiceChipOption[]>(() =>
+    this.withAll(this.categories(), this.t("getArticles.filter.allCategories")),
+  );
+
+  brandOptions = computed<ChoiceChipOption[]>(() =>
+    this.withAll(this.brands(), this.t("getArticles.filter.allBrands")),
+  );
+
+  hasSheetFilters = computed(
+    () => ALL !== this.selectedCategory() || ALL !== this.selectedBrand(),
+  );
+
+  filtersLabel = computed(() => {
+    const active = [this.selectedCategory(), this.selectedBrand()].filter(
+      (value) => ALL !== value,
+    ).length;
+    const label = this.t("getArticles.filter.open");
+
+    if (0 === active) return label;
+
+    return `${label} (${active})`;
+  });
 
   hasMore = computed(() => this.items().length < this.totalItems());
 
@@ -122,20 +193,6 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     const total = new Intl.NumberFormat("es-ES").format(this.totalItems());
     return `${total} ${this.t("getArticles.formats")}`;
   });
-
-  constructor() {
-    super();
-
-    this.refreshLoaded$
-      .pipe(
-        switchMap(() => this.fetch(1, this.currentPage() * this.pageSize())),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((response) => {
-        this.items.set(response.data.map((item) => this.withPending(item)));
-        this.totalItems.set(response.meta.total);
-      });
-  }
 
   protected configureList(): void {
     this.currentPage.set(1);
@@ -208,53 +265,52 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
     this.reload();
   }
 
-  onCategoryChange(value: string): void {
-    this.selectedCategory.set(value);
-    this.reload();
-  }
-
-  onBrandChange(value: string): void {
-    this.selectedBrand.set(value);
-    this.reload();
-  }
-
   onStoreChange(value: string): void {
     this.selectedStore.set(value);
     this.reload();
   }
 
-  onFavoriteFilterChange(value: string): void {
-    this.favoriteFilter.set(value as ArticleFavoriteFilter);
+  openFilters(): void {
+    this.draftCategory.set(this.selectedCategory());
+    this.draftBrand.set(this.selectedBrand());
+    this.filtersOpen.set(true);
+  }
+
+  closeFilters(): void {
+    this.filtersOpen.set(false);
+  }
+
+  confirmFilters(): void {
+    this.filtersOpen.set(false);
+
+    if (
+      this.draftCategory() === this.selectedCategory() &&
+      this.draftBrand() === this.selectedBrand()
+    )
+      return;
+
+    this.selectedCategory.set(this.draftCategory());
+    this.selectedBrand.set(this.draftBrand());
     this.reload();
   }
 
-  onToggleFavorite(id: string): void {
-    if (this.pendingFavorites().has(id)) return;
+  onCreateAction(action: string): void {
+    if (ArticleCreateAction.Scan === action) {
+      this.onScan();
+      return;
+    }
 
-    const article = this.items().find((item) => item.id === id);
+    if (ArticleCreateAction.Global === action) {
+      this.onImportCatalog();
+      return;
+    }
 
-    if (undefined === article) return;
+    this.onCreate();
+  }
 
-    const favorite = !(article.attributes.favorite ?? false);
-
-    this.setFavorite(id, favorite);
-    this.pendingFavorites.update((pending) =>
-      new Map(pending).set(id, favorite),
-    );
-
-    this.changeArticleFavoriteService
-      .changeArticleFavorite(id, favorite)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.releaseFavorite(id);
-          this.refreshLoaded$.next();
-        },
-        error: () => {
-          this.setFavorite(id, !favorite);
-          this.releaseFavorite(id);
-        },
-      });
+  onFavoriteFilterChange(value: string): void {
+    this.favoriteFilter.set(value as ArticleFavoriteFilter);
+    this.reload();
   }
 
   onSelect(id: string): void {
@@ -289,37 +345,25 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
       });
   }
 
+  private macroLabel(row: ArticleListRow): string {
+    return [
+      `${this.t("getArticles.macro.protein")} ${this.view.decimal(row.proteinG)} g`,
+      `${this.t("getArticles.macro.fat")} ${this.view.decimal(row.fatG)} g`,
+      `${this.t("getArticles.macro.carbs")} ${this.view.decimal(row.carbsG)} g`,
+    ].join(", ");
+  }
+
+  private withAll(values: string[], allLabel: string): ChoiceChipOption[] {
+    return [
+      { value: ALL, label: allLabel },
+      ...values.map((value) => ({ value, label: value })),
+    ];
+  }
+
   private favoriteParam(): boolean | undefined {
     if (ArticleFavoriteFilter.Only === this.favoriteFilter()) return true;
 
     return undefined;
-  }
-
-  private setFavorite(id: string, favorite: boolean): void {
-    this.items.update((items) =>
-      items.map((item) =>
-        item.id === id
-          ? { ...item, attributes: { ...item.attributes, favorite } }
-          : item,
-      ),
-    );
-  }
-
-  private withPending(article: Article): Article {
-    const favorite = this.pendingFavorites().get(article.id);
-
-    if (undefined === favorite) return article;
-
-    return { ...article, attributes: { ...article.attributes, favorite } };
-  }
-
-  private releaseFavorite(id: string): void {
-    this.pendingFavorites.update((pending) => {
-      const next = new Map(pending);
-      next.delete(id);
-
-      return next;
-    });
   }
 
   private loadFacets(): void {
@@ -340,5 +384,9 @@ export class GetArticlesComponent extends AbstractListPageComponent<Article> {
       article.id,
       article.attributes.image ?? null,
     );
+  }
+
+  goBack(): void {
+    this.backNavigation.back(["/kitchen"]);
   }
 }

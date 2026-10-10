@@ -85,7 +85,7 @@ test.describe("tickets de compra", () => {
     const tickets = new TicketsPage(page);
     await tickets.goto();
 
-    await tickets.cards
+    await tickets.rows
       .filter({ hasText: SEED.supermarkets.mercadona.name })
       .first()
       .click();

@@ -17,6 +17,8 @@ export const DS_ICONS = {
   dots: '<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
   bookmark: '<path d="M4 4h13a2 2 0 0 1 2 2v14l-8-3.5L3 20V5a1 1 0 0 1 1-1z"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  filter:
+    '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
   camera:
     '<path d="M3 9a2 2 0 0 1 2-2h2.2l1.3-2h6.8l1.3 2H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12.5" cy="13" r="3.6"/>',
   sparkles:

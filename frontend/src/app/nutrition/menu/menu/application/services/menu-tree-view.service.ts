@@ -42,7 +42,7 @@ export class MenuTreeViewService {
           node.image,
         ),
         name: node.name,
-        kcalLabel: `${this.view.integer(node.macros.calories)} ${labels.kcal}`,
+        kcalLabel: this.view.integer(node.macros.calories),
         macros: this.view.itemMacros(node.macros, labels),
         quantity: node.quantity,
         unit: node.unit,

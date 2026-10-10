@@ -1,3 +1,4 @@
+import { MacroBarLabels } from "@shared/design-system/macro-bar/domain/models/macro-bar-labels.model";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
@@ -5,10 +6,16 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
 import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
 import { ImageFit } from "../../domain/models/image-fit.model";
+import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/macro-bar.component";
 
 @Component({
   selector: "ds-product-card",
-  imports: [NgTemplateOutlet, IconComponent, MacroBadgesComponent],
+  imports: [
+    NgTemplateOutlet,
+    IconComponent,
+    MacroBadgesComponent,
+    MacroBarComponent,
+  ],
   template: `
     <ng-template #content>
       <span class="ds-pcard__emoji">
@@ -82,7 +89,67 @@ import { ImageFit } from "../../domain/models/image-fit.model";
       </button>
     </ng-template>
 
-    @if (actionable) {
+    @if (compact) {
+      <button
+        type="button"
+        class="ds-pcard ds-pcard--compact"
+        (click)="activated.emit()"
+      >
+        <span class="ds-pcard__emoji ds-pcard__emoji--compact">
+          @if (imageUrl && !imageFailed) {
+            <img
+              class="ds-pcard__image"
+              [style.object-fit]="imageFit"
+              [src]="imageUrl"
+              [alt]="name"
+              loading="lazy"
+              decoding="async"
+              (error)="imageFailed = true"
+            />
+          } @else {
+            {{ emoji }}
+          }
+        </span>
+        <span class="ds-pcard__body ds-pcard__body--compact">
+          <span class="ds-pcard__line">
+            <span class="ds-pcard__name ds-pcard__name--compact">{{
+              name
+            }}</span>
+            @if (favorite) {
+              <ds-icon
+                class="ds-pcard__star"
+                name="starFilled"
+                [size]="14"
+                [stroke]="2"
+                [attr.title]="favoriteLabel || null"
+              />
+            }
+          </span>
+          @if (compactMeta) {
+            <span class="ds-pcard__meta ds-pcard__meta--compact">{{
+              compactMeta
+            }}</span>
+          }
+          <ds-macro-bar
+            class="ds-pcard__mbar"
+            [class.ds-pcard__mbar--figures]="macroLetters"
+            [protein]="proteinG"
+            [fat]="fatG"
+            [carbs]="carbsG"
+            [ariaLabel]="macroLabel"
+            [labels]="macroLetters"
+          />
+        </span>
+        @if (kcal) {
+          <span class="ds-pcard__kcal">
+            <span class="ds-pcard__kcal-value">{{ kcal }}</span>
+            @if (kcalUnit) {
+              <span class="ds-pcard__kcal-unit">{{ kcalUnit }}</span>
+            }
+          </span>
+        }
+      </button>
+    } @else if (actionable) {
       <div
         class="ds-pcard"
         [class.ds-pcard--static]="!footerAction"
@@ -388,6 +455,65 @@ import { ImageFit } from "../../domain/models/image-fit.model";
       .ds-pcard__badges {
         margin-top: var(--ds-space-2);
       }
+      .ds-pcard--compact {
+        align-items: center;
+        --ds-pad: var(--ds-space-2);
+        padding: var(--ds-pad) var(--ds-space-3) var(--ds-pad) var(--ds-pad);
+      }
+      .ds-pcard__emoji--compact {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: var(--ds-text-xl);
+      }
+      .ds-pcard__body--compact {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .ds-pcard__line {
+        display: flex;
+        align-items: center;
+        gap: var(--ds-space-1);
+        min-width: 0;
+      }
+      .ds-pcard__name--compact {
+        flex: 0 1 auto;
+      }
+      .ds-pcard__star {
+        flex: 0 0 auto;
+        color: var(--ds-warning);
+      }
+      .ds-pcard__meta--compact {
+        margin-top: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ds-pcard__mbar {
+        margin-top: var(--ds-space-1);
+        max-width: 8rem;
+      }
+      .ds-pcard__mbar.ds-pcard__mbar--figures {
+        max-width: 15rem;
+      }
+      .ds-pcard__kcal {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        line-height: 1.1;
+      }
+      .ds-pcard__kcal-value {
+        font-size: var(--ds-text-md);
+        font-weight: 800;
+        color: var(--ds-text);
+        font-variant-numeric: tabular-nums;
+      }
+      .ds-pcard__kcal-unit {
+        font-size: var(--ds-text-xs);
+        font-weight: 600;
+        color: var(--ds-text-muted);
+      }
     `,
   ],
 })
@@ -414,6 +540,7 @@ export class ProductCardComponent {
   @Input() price: string | null = null;
   @Input() priceBelow: string | null = null;
   @Input() brand: string | null = null;
+  @Input() meta: string | null = null;
   @Input() store: string | null = null;
   @Input() kcal = "";
   @Input() macros: MacroBadge[] = [];
@@ -427,6 +554,13 @@ export class ProductCardComponent {
   @Input() addedLabel = "";
   @Input() favorite: boolean | null = null;
   @Input() favoriteLabel = "";
+  @Input() compact = false;
+  @Input() macroLetters: MacroBarLabels | null = null;
+  @Input() kcalUnit = "";
+  @Input() proteinG = 0;
+  @Input() fatG = 0;
+  @Input() carbsG = 0;
+  @Input() macroLabel = "";
 
   @Output() activated = new EventEmitter<void>();
   @Output() action = new EventEmitter<void>();
@@ -434,6 +568,14 @@ export class ProductCardComponent {
 
   get hasBadges(): boolean {
     return !!this.kcal || this.macros.some((macro) => !!macro.value);
+  }
+
+  get compactMeta(): string {
+    if (this.meta) return this.meta;
+
+    return [this.brand, this.store, this.price]
+      .filter((part) => !!part)
+      .join(" · ");
   }
 
   get favoritable(): boolean {

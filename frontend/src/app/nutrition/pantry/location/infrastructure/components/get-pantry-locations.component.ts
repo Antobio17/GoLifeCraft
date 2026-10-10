@@ -22,9 +22,10 @@ import {
 import { GetPantryLocationsService } from "@nutrition/pantry/location/application/services/get-pantry-locations.service";
 import { PantryLocation } from "../../domain/models/pantry-location.model";
 import { PantryLocationRow } from "../../domain/models/pantry-location-row.model";
+import { PantryLocationViewService } from "@nutrition/pantry/location/application/services/pantry-location-view.service";
 import { PantryLocationKindCatalogService } from "@nutrition/pantry/location/application/services/pantry-location-kind-catalog.service";
-import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 @Component({
   selector: "app-get-pantry-locations",
   templateUrl: "./get-pantry-locations.component.html",
@@ -46,11 +47,12 @@ import { BackNavigationService } from "@shared/routing/application/services/back
   ],
 })
 export class GetPantryLocationsComponent extends AbstractListPageComponent<PantryLocation> {
+  private backNavigation = inject(BackNavigationService);
   private static readonly PAGE_SIZE = 20;
 
   private getPantryLocationsService = inject(GetPantryLocationsService);
-  private backNavigation = inject(BackNavigationService);
   private kindCatalog = inject(PantryLocationKindCatalogService);
+  private locationView = inject(PantryLocationViewService);
 
   protected readonly modulePath = "nutrition/pantry/location";
   protected readonly storageKey = "pageSize_pantryLocations";
@@ -65,7 +67,7 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
 
   headerSubtitle = computed(
     () =>
-      `${this.totalItems()} ${this.t("getPantryLocations.stats.locations")}`,
+      `${this.totalItems()} ${this.t(this.locationView.countKey(this.totalItems(), "getPantryLocations.stats.locations"))}`,
   );
 
   rows = computed<PantryLocationRow[]>(() =>
@@ -134,10 +136,6 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
     this.router.navigate(["/locations", id]);
   }
 
-  back(): void {
-    this.backNavigation.back(["/inventory"]);
-  }
-
   private reload(): void {
     this.currentPage.set(1);
     this.reloading.set(true);
@@ -166,13 +164,27 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
       badges: [
         {
           label: `${articleCount}`,
-          value: this.t("getPantryLocations.card.articles"),
+          value: this.t(
+            this.locationView.countKey(
+              articleCount,
+              "getPantryLocations.card.articles",
+            ),
+          ),
         },
         {
           label: `${recipeCount}`,
-          value: this.t("getPantryLocations.card.recipes"),
+          value: this.t(
+            this.locationView.countKey(
+              recipeCount,
+              "getPantryLocations.card.recipes",
+            ),
+          ),
         },
       ],
     };
+  }
+
+  goBack(): void {
+    this.backNavigation.back(["/inventory"]);
   }
 }

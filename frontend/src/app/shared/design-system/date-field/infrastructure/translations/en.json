@@ -1,0 +1,10 @@
+{
+  "dateField": {
+    "placeholder": "Pick a date",
+    "title": "Pick a date",
+    "close": "Close",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "thisWeek": "This week"
+  }
+}

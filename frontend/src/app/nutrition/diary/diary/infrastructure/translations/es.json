@@ -1,9 +1,11 @@
 {
   "getDiary": {
+    "eyebrow": "Nutrición",
     "removed": "{{name}} eliminado",
     "title": "Diario",
     "kcal": "kcal",
     "add": "Añadir",
+    "macrosAria": "Reparto de macros",
     "openEntry": "Abrir la ficha",
     "quantity": "Cantidad",
     "remove": "Eliminar",
@@ -44,10 +46,17 @@
       "dinner": "Cena",
       "snack": "Snacks"
     },
-    "nav": {
-      "previous": "Día anterior",
-      "next": "Día siguiente",
-      "today": "Hoy"
+    "addTo": {
+      "breakfast": "Añadir al desayuno",
+      "lunch": "Añadir a la comida",
+      "dinner": "Añadir a la cena",
+      "snack": "Añadir a snacks"
+    },
+    "week": {
+      "title": "Esta semana",
+      "titleOther": "Semana {{range}}",
+      "caption": "{{onTarget}} de {{logged}} días en objetivo",
+      "captionEmpty": "Sin registros esta semana"
     },
     "picker": {
       "title": "Registrar en el diario",
@@ -95,7 +104,6 @@
       "saveInvalid": "Los porcentajes deben sumar 100%",
       "upcomingScope": "Cambiar el objetivo afecta al día de hoy y a los días futuros que hayas planificado. Los días pasados conservan el suyo."
     },
-    "emptyAction": "Sin alimentos, añade uno desde el botón +",
     "error": "No hemos podido cargar el diario de este día",
     "quick": {
       "hint": "Registra algo puntual sin crear un artículo ni una receta. Solo nombre y calorías; los macros son opcionales.",
@@ -148,6 +156,19 @@
       "decrement": "Quitar",
       "increment": "Añadir",
       "ruler": "Desliza para ajustar la cantidad"
+    },
+    "shortcuts": {
+      "menu": "Aplicar menú",
+      "menuMeta": "{{count}} menús",
+      "kitchen": "Cocina",
+      "kitchenMeta": "{{count}} en marcha",
+      "shopping": "Compra",
+      "shoppingMeta": "{{count}} por comprar"
+    },
+    "day": {
+      "previous": "Día anterior",
+      "today": "Hoy",
+      "next": "Día siguiente"
     }
   }
 }

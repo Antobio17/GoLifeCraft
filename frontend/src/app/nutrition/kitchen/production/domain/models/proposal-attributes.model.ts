@@ -1,4 +1,5 @@
 import { ProposalCovered } from "./proposal-covered.model";
+import { ProposalDay } from "./proposal-day.model";
 import { ProposalToCook } from "./proposal-to-cook.model";
 
 export interface ProposalAttributes {
@@ -7,4 +8,5 @@ export interface ProposalAttributes {
   days: number;
   toCook: ProposalToCook[];
   covered: ProposalCovered[];
+  coverage: ProposalDay[];
 }

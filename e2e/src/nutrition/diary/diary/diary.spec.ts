@@ -14,13 +14,13 @@ test.describe("diario", () => {
   test("navega a ayer y vuelve a hoy", async ({ page }) => {
     const diary = new DiaryPage(page);
     await diary.goto();
-    const today = await diary.dayLabel.textContent();
+    const today = await diary.selectedDate();
 
     await diary.previousDay();
-    await expect(diary.dayLabel).not.toHaveText(today ?? "");
+    await expect.poll(() => diary.selectedDate()).not.toBe(today);
 
     await diary.nextDay();
-    await expect(diary.dayLabel).toHaveText(today ?? "");
+    await expect.poll(() => diary.selectedDate()).toBe(today);
   });
 
   test("una entrada rápida suma al total y se puede borrar", async ({ page }, testInfo) => {

@@ -5,12 +5,14 @@ import {
   ChipComponent,
   ChipTone,
 } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
+import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/stat-strip-item.model";
 
 @Component({
   selector: "ds-stock-control",
-  imports: [IconComponent, ChipComponent, BarComponent],
+  imports: [IconComponent, ChipComponent, BarComponent, StatStripComponent],
   template: `
-    <section class="ds-stk">
+    <section class="ds-stk" [class.ds-stk--summary]="null !== summary">
       @if (levelLabel) {
         <div class="ds-stk__level">
           <ds-chip [tone]="levelTone" [uppercase]="true">{{
@@ -19,53 +21,71 @@ import {
         </div>
       }
 
-      <div class="ds-stk__top">
-        <button
-          class="ds-stk__amount"
-          type="button"
-          [disabled]="disabled || readonly"
-          [attr.aria-label]="editLabel"
-          (click)="editRequested.emit()"
-        >
-          <span class="ds-stk__label">{{ stockLabel }}</span>
-          <span class="ds-stk__main" [class.ds-stk__main--negative]="negative">
-            {{ mainText }}
-            @if (!readonly) {
-              <ds-icon name="pencil" [size]="13" class="ds-stk__pencil" />
-            }
-          </span>
-          @if (subText) {
-            <span class="ds-stk__sub">{{ subText }}</span>
-          }
-        </button>
-
-        @if (valueText) {
-          <div class="ds-stk__value">
-            <span class="ds-stk__label">{{ valueLabel }}</span>
-            <span class="ds-stk__value-amount">{{ valueText }}</span>
+      @if (null !== summary) {
+        <ds-stat-strip [items]="summary" />
+        @if (subText) {
+          <div class="ds-stk__band">
+            <span>{{ subText }}</span>
           </div>
         }
-      </div>
-
-      @if (bandText) {
-        <div class="ds-stk__band">
-          <ds-icon name="info" [size]="13" />
-          <span>{{ bandText }}</span>
-        </div>
-      }
-
-      @if (null !== confidencePercent) {
-        <div class="ds-stk__trust">
-          <div class="ds-stk__trust-row">
-            <span class="ds-stk__label">{{ confidenceLabel }}</span>
-            <span class="ds-stk__trust-pct">{{ confidencePercent }}%</span>
+        @if (bandText) {
+          <div class="ds-stk__band">
+            <ds-icon name="info" [size]="13" />
+            <span>{{ bandText }}</span>
           </div>
-          <ds-bar
-            [value]="confidencePercent"
-            [tone]="confidencePercent < 50 ? 'warning' : 'brand'"
-            [ariaLabel]="confidenceLabel"
-          />
+        }
+      } @else {
+        <div class="ds-stk__top">
+          <button
+            class="ds-stk__amount"
+            type="button"
+            [disabled]="disabled || readonly"
+            [attr.aria-label]="editLabel"
+            (click)="editRequested.emit()"
+          >
+            <span class="ds-stk__label">{{ stockLabel }}</span>
+            <span
+              class="ds-stk__main"
+              [class.ds-stk__main--negative]="negative"
+            >
+              {{ mainText }}
+              @if (!readonly) {
+                <ds-icon name="pencil" [size]="13" class="ds-stk__pencil" />
+              }
+            </span>
+            @if (subText) {
+              <span class="ds-stk__sub">{{ subText }}</span>
+            }
+          </button>
+
+          @if (valueText) {
+            <div class="ds-stk__value">
+              <span class="ds-stk__label">{{ valueLabel }}</span>
+              <span class="ds-stk__value-amount">{{ valueText }}</span>
+            </div>
+          }
         </div>
+
+        @if (bandText) {
+          <div class="ds-stk__band">
+            <ds-icon name="info" [size]="13" />
+            <span>{{ bandText }}</span>
+          </div>
+        }
+
+        @if (null !== confidencePercent) {
+          <div class="ds-stk__trust">
+            <div class="ds-stk__trust-row">
+              <span class="ds-stk__label">{{ confidenceLabel }}</span>
+              <span class="ds-stk__trust-pct">{{ confidencePercent }}%</span>
+            </div>
+            <ds-bar
+              [value]="confidencePercent"
+              [tone]="confidencePercent < 50 ? 'warning' : 'brand'"
+              [ariaLabel]="confidenceLabel"
+            />
+          </div>
+        }
       }
 
       @if (!readonly) {
@@ -100,6 +120,18 @@ import {
               {{ editLabel }}
             </button>
           }
+          @if (null !== summary && showSteps) {
+            <button
+              class="ds-stk__clear"
+              type="button"
+              [disabled]="disabled"
+              [attr.title]="editLabel"
+              [attr.aria-label]="editLabel"
+              (click)="editRequested.emit()"
+            >
+              <ds-icon name="pencil" [size]="16" [stroke]="2.2" />
+            </button>
+          }
           <button
             class="ds-stk__clear"
             type="button"
@@ -121,6 +153,9 @@ import {
       }
       .ds-stk {
         padding: var(--ds-space-3);
+      }
+      .ds-stk--summary {
+        padding: 0;
       }
       .ds-stk__level {
         display: flex;
@@ -229,7 +264,7 @@ import {
         align-items: center;
         justify-content: center;
         gap: var(--ds-space-1-5);
-        border: none;
+        border: 1px solid transparent;
         border-radius: var(--ds-radius-control);
         padding: var(--ds-space-3);
         font: inherit;
@@ -238,8 +273,9 @@ import {
         cursor: pointer;
       }
       .ds-stk__step--minus {
-        background: var(--ds-surface-inset);
-        color: var(--ds-warning);
+        background: var(--ds-surface);
+        border-color: var(--ds-border-strong);
+        color: var(--ds-text);
       }
       .ds-stk__step--plus {
         background: var(--ds-primary);
@@ -284,6 +320,7 @@ export class StockControlComponent {
   @Input() confidenceLabel = "";
   @Input() confidencePercent: number | null = null;
   @Input() showSteps = true;
+  @Input() summary: StatStripItem[] | null = null;
 
   @Output() incremented = new EventEmitter<void>();
   @Output() decremented = new EventEmitter<void>();

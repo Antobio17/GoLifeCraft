@@ -1,9 +1,11 @@
 {
   "getDiary": {
+    "eyebrow": "Nutrition",
     "removed": "{{name}} removed",
     "title": "Diary",
     "kcal": "kcal",
     "add": "Add",
+    "macrosAria": "Macro split",
     "openEntry": "Open the record",
     "quantity": "Quantity",
     "remove": "Remove",
@@ -44,10 +46,17 @@
       "dinner": "Dinner",
       "snack": "Snacks"
     },
-    "nav": {
-      "previous": "Previous day",
-      "next": "Next day",
-      "today": "Today"
+    "addTo": {
+      "breakfast": "Add to breakfast",
+      "lunch": "Add to lunch",
+      "dinner": "Add to dinner",
+      "snack": "Add to snacks"
+    },
+    "week": {
+      "title": "This week",
+      "titleOther": "Week {{range}}",
+      "caption": "{{onTarget}} of {{logged}} days on target",
+      "captionEmpty": "Nothing logged this week"
     },
     "picker": {
       "title": "Log to the diary",
@@ -95,7 +104,6 @@
       "saveInvalid": "Percentages must add up to 100%",
       "upcomingScope": "Changing the goal affects today and any future day you have planned. Past days keep their own."
     },
-    "emptyAction": "No food yet, add one with the + button",
     "error": "We couldn't load this day's diary",
     "quick": {
       "hint": "Log a one-off food without creating an article or a recipe. Only name and calories; macros are optional.",
@@ -148,6 +156,19 @@
       "decrement": "Decrease",
       "increment": "Increase",
       "ruler": "Slide to adjust the quantity"
+    },
+    "shortcuts": {
+      "menu": "Apply menu",
+      "menuMeta": "{{count}} menus",
+      "kitchen": "Kitchen",
+      "kitchenMeta": "{{count}} in progress",
+      "shopping": "Shopping",
+      "shoppingMeta": "{{count}} to buy"
+    },
+    "day": {
+      "previous": "Previous day",
+      "today": "Today",
+      "next": "Next day"
     }
   }
 }

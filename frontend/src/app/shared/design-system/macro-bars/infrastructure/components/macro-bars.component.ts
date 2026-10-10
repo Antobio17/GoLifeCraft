@@ -71,13 +71,13 @@ import { MacroBar } from "../../domain/models/macro-bar.model";
         margin-bottom: var(--ds-space-1);
       }
       .ds-macro__line--protein {
-        background: var(--ds-primary);
+        background: var(--ds-bar-protein);
       }
       .ds-macro__line--fat {
-        background: var(--ds-warning);
+        background: var(--ds-bar-fat);
       }
       .ds-macro__line--carbs {
-        background: var(--ds-accent);
+        background: var(--ds-bar-carbs);
       }
       .ds-macro__label {
         font-size: var(--ds-text-xs);

@@ -4,14 +4,14 @@
       [stacked]="true"
       [leading]="true"
       [eyebrow]="true"
-      [subtitle]="true"
+      [subtitle]="false"
       titleWidth="52%"
-      [actions]="3"
+      [actions]="2"
     />
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
       <ng-container slot="side">
-        <ds-skeleton height="7rem" />
+        <ds-skeleton height="13rem" />
       </ng-container>
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-skeleton height="4rem" />
@@ -29,18 +29,9 @@
       [leadingLabel]="'getPantryLocation.back' | t"
       [eyebrow]="'getPantryLocation.eyebrow' | t"
       [title]="locationName()"
-      [subtitle]="location.description"
       (leadingClick)="back()"
     >
       <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
-        <ds-button
-          variant="primary"
-          size="icon-lg"
-          icon="plus"
-          [iconSize]="19"
-          [ariaLabel]="'getPantryLocation.add' | t"
-          (clicked)="onOpenAddSheet()"
-        />
         <ds-button
           variant="secondary"
           size="icon-lg"
@@ -50,6 +41,7 @@
           (clicked)="onEdit()"
         />
         <ds-button
+          data-testid="location-delete"
           variant="danger"
           size="icon-lg"
           icon="trash"
@@ -62,19 +54,24 @@
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
       <ng-container slot="side">
-        <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-3)'">
+        <ds-module-card [hero]="true" [eyebrow]="kindLabel()">
           <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
             <ds-glyph
               [name]="locationVisual().glyph"
               [color]="locationVisual().color"
-              [size]="32"
+              [size]="44"
               [tile]="true"
-              box="3.5rem"
+              box="4.75rem"
             />
-            <ds-macro-badges [macros]="summaryBadges()" />
+            <ds-heading [level]="2" size="md">{{ heroTitle() }}</ds-heading>
           </ds-stack>
-          <ds-text variant="meta">{{ "getPantryLocation.hint" | t }}</ds-text>
-        </ds-card>
+
+          @if (location.description) {
+            <ds-text variant="meta">{{ location.description }}</ds-text>
+          }
+
+          <ds-stat-strip [items]="heroStats()" />
+        </ds-module-card>
       </ng-container>
 
       <ds-stack [gap]="'var(--ds-space-2)'">
@@ -142,6 +139,11 @@
             </ds-card>
           </ds-swipe-to-delete>
         }
+
+        <ds-add-tile
+          [label]="'getPantryLocation.add' | t"
+          (clicked)="onOpenAddSheet()"
+        />
       </ds-stack>
     </ds-split-view>
   }
@@ -155,6 +157,8 @@
   (closed)="onCloseAddSheet()"
 >
   <ds-stack [gap]="'var(--ds-space-3)'">
+    <ds-text variant="meta">{{ "getPantryLocation.hint" | t }}</ds-text>
+
     <ds-search-input
       [placeholder]="'getPantryLocation.candidates.search' | t"
       [clearLabel]="'getPantryLocation.candidates.clear' | t"

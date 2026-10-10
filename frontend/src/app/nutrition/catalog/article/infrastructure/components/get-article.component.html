@@ -10,20 +10,16 @@
       [eyebrow]="true"
       [subtitle]="false"
       titleWidth="58%"
-      [actions]="3"
+      [actions]="2"
     />
-    <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
-      <ds-skeleton-hero />
+    <ds-split-view [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'">
+      <ds-skeleton-hero slot="side" />
       <ds-skeleton-chips
+        slot="side"
         [count]="2"
         height="1.625rem"
         [gap]="'var(--ds-space-1-5)'"
       />
-      <ds-skeleton height="2.5rem" radius="var(--ds-radius-control)" />
-      <ds-skeleton-line width="9.25rem" height="0.75rem" />
-      <ds-skeleton-macro-bars />
-      <ds-skeleton-rows [rows]="7" />
-
       <ds-skeleton-rows
         slot="side"
         [card]="true"
@@ -39,6 +35,23 @@
         [header]="true"
         [badge]="true"
         [rows]="1"
+        labelWidth="36%"
+        valueWidth="5.125rem"
+      />
+
+      <ds-skeleton-rows
+        [card]="true"
+        [header]="true"
+        [badge]="true"
+        [rows]="7"
+        labelWidth="44%"
+        valueWidth="3.5rem"
+      />
+      <ds-skeleton-rows
+        [card]="true"
+        [header]="true"
+        [badge]="true"
+        [rows]="3"
         labelWidth="36%"
         valueWidth="5.125rem"
       />
@@ -68,16 +81,6 @@
     >
       <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
         <ds-button
-          data-testid="article-favorite"
-          variant="secondary"
-          size="icon-lg"
-          [icon]="favorite() ? 'starFilled' : 'star'"
-          [iconSize]="19"
-          [pressed]="favorite()"
-          [ariaLabel]="'getArticle.favorite' | t"
-          (clicked)="onToggleFavorite()"
-        />
-        <ds-button
           data-testid="article-edit"
           variant="secondary"
           size="icon-lg"
@@ -98,17 +101,35 @@
       </ds-stack>
     </ds-screen-header>
 
-    <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 0.9fr)'" side="end">
+    <ds-split-view [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'">
       <ds-product-hero
+        slot="side"
         data-testid="article-hero"
         [emoji]="d.emoji"
         [imageUrl]="imageUrl()"
         [alt]="d.name"
         [price]="d.price"
-      />
+      >
+        <ds-button
+          slot="corner"
+          data-testid="article-favorite"
+          variant="secondary"
+          size="icon"
+          [icon]="favorite() ? 'starFilled' : 'star'"
+          [iconSize]="18"
+          [pressed]="favorite()"
+          [ariaLabel]="'getArticle.favorite' | t"
+          (clicked)="onToggleFavorite()"
+        />
+      </ds-product-hero>
 
       @if (d.brand || d.store || d.aisle) {
-        <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
+        <ds-stack
+          slot="side"
+          direction="row"
+          [wrap]="true"
+          [gap]="'var(--ds-space-1-5)'"
+        >
           @if (d.brand) {
             <ds-chip>{{ d.brand }}</ds-chip>
           }
@@ -123,122 +144,20 @@
         </ds-stack>
       }
 
-      @if (d.hasNutrition) {
-        @if (d.hasPack) {
-          <ds-segmented-toggle
-            [options]="[
-              { value: 'per100', label: 'getArticle.tab.per100' | t },
-              { value: 'pack', label: 'getArticle.tab.pack' | t },
-            ]"
-            [ngModel]="mode()"
-            (ngModelChange)="setMode($event)"
-          />
-        }
-
-        @if (activeMacros(); as m) {
-          <ds-text variant="label">
-            {{ "getArticle.per" | t }}
-            {{ "pack" === mode() ? d.packLabel : d.per100Label }}
-          </ds-text>
-
-          <ds-macro-bars
-            data-testid="article-macros"
-            [kcal]="m.kcal ?? '—'"
-            [kcalUnit]="'getArticle.macro.kcal' | t"
-            [macros]="[
-              {
-                label: 'getArticle.macro.protein' | t,
-                value: m.proteinG ?? '—',
-                tone: 'protein',
-              },
-              {
-                label: 'getArticle.macro.fat' | t,
-                value: m.fatG ?? '—',
-                tone: 'fat',
-              },
-              {
-                label: 'getArticle.macro.carbs' | t,
-                value: m.carbsG ?? '—',
-                tone: 'carbs',
-              },
-            ]"
-          />
-
-          <ds-nutrition-facts
-            data-testid="article-nutrition"
-            [rows]="[
-              { label: 'getArticle.table.fat' | t, value: m.fatG ?? '—' },
-              {
-                label: 'getArticle.table.saturated' | t,
-                value: m.saturatedG ?? '—',
-                sub: true,
-              },
-              { label: 'getArticle.table.carbs' | t, value: m.carbsG ?? '—' },
-              {
-                label: 'getArticle.table.sugars' | t,
-                value: m.sugarsG ?? '—',
-                sub: true,
-              },
-              {
-                label: 'getArticle.table.protein' | t,
-                value: m.proteinG ?? '—',
-              },
-              {
-                label: 'getArticle.table.fiber' | t,
-                value: m.fiberG ?? '—',
-                hidden: !m.fiberG,
-              },
-              { label: 'getArticle.table.salt' | t, value: m.saltG ?? '—' },
-            ]"
-          />
-        }
-      } @else {
-        <ds-text variant="muted">{{ "getArticle.noNutrition" | t }}</ds-text>
-      }
-
-      <ds-equivalence-summary
-        data-testid="article-units"
-        slot="side"
-        [title]="'getArticle.units.heading' | t"
-        [baseBadge]="('getArticle.units.base' | t) + ' ' + d.units.baseUnit"
-        [recipeLabel]="'getArticle.units.recipe' | t"
-        [recipeUnit]="d.units.recipeUnit"
-        [diaryLabel]="'getArticle.units.diary' | t"
-        [diaryUnit]="d.units.diaryUnit"
-        [storageLabel]="'getArticle.units.storage' | t"
-        [storageUnit]="d.units.storageUnit"
-        [equivalencesLabel]="'getArticle.units.equivalences' | t"
-        [lines]="d.units.lines"
-      />
-
-      <ds-purchase-summary
-        data-testid="article-purchase"
-        slot="side"
-        [title]="'getArticle.purchase.heading' | t"
-        [priceBadge]="d.purchase.pricePerPack"
-        [hasPack]="d.purchase.hasPack"
-        [packLabel]="'getArticle.purchase.pack' | t"
-        [packValue]="d.purchase.packLabel"
-        [costLabel]="'getArticle.purchase.cost' | t"
-        [costValue]="d.purchase.costPer100"
-        [emptyText]="'getArticle.purchase.empty' | t"
-      >
-        @if (stock(); as s) {
+      @if (stock(); as s) {
+        <ds-card slot="side">
+          <ds-section-header [title]="'getArticle.stock.heading' | t" />
           <ds-stock-control
             data-testid="article-stock"
-            [stockLabel]="'getArticle.stock.heading' | t"
+            [summary]="stockSummary()"
             [mainText]="s.mainText"
             [subText]="s.subText"
-            [valueLabel]="'getArticle.stock.value' | t"
-            [valueText]="s.valueText"
             [stepLabel]="'getArticle.stock.step' | t"
             [clearLabel]="'getArticle.stock.clear' | t"
             [editLabel]="'getArticle.stock.edit' | t"
             [levelLabel]="stockLevelLabel()"
             [levelTone]="s.levelTone"
             [bandText]="s.bandText"
-            [confidenceLabel]="'getArticle.stock.confidence' | t"
-            [confidencePercent]="s.confidencePercent"
             [showSteps]="s.hasPack"
             [negative]="s.stock < 0"
             [disabled]="savingStock()"
@@ -247,8 +166,128 @@
             (cleared)="onClearStock()"
             (editRequested)="onOpenStockEditor()"
           />
+        </ds-card>
+      }
+
+      <ds-card slot="side">
+        <ds-section-header
+          [title]="'getArticle.purchase.heading' | t"
+          [staticLabel]="d.purchase.pricePerPack ?? ''"
+        />
+        <ds-purchase-summary
+          data-testid="article-purchase"
+          [headless]="true"
+          [hasPack]="d.purchase.hasPack"
+          [packLabel]="'getArticle.purchase.pack' | t"
+          [packValue]="d.purchase.packLabel"
+          [costLabel]="'getArticle.purchase.cost' | t"
+          [costValue]="d.purchase.costPer100"
+          [emptyText]="'getArticle.purchase.empty' | t"
+        />
+      </ds-card>
+
+      <ds-card>
+        <ds-section-header
+          [title]="'getArticle.nutritionHeading' | t"
+          [caption]="
+            d.hasNutrition
+              ? ('getArticle.per' | t) +
+                ' ' +
+                ('pack' === mode() ? d.packLabel : d.per100Label)
+              : ''
+          "
+        >
+          @if (d.hasNutrition && d.hasPack) {
+            <ds-view-switch
+              slot="trailing"
+              data-testid="article-nutrition-mode"
+              size="sm"
+              [options]="modeOptions()"
+              [ngModel]="mode()"
+              (ngModelChange)="setMode($event)"
+            />
+          }
+        </ds-section-header>
+
+        @if (d.hasNutrition) {
+          @if (activeMacros(); as m) {
+            <ds-macro-bars
+              data-testid="article-macros"
+              [kcal]="m.kcal ?? '—'"
+              [kcalUnit]="'getArticle.macro.kcal' | t"
+              [macros]="[
+                {
+                  label: 'getArticle.macro.protein' | t,
+                  value: m.proteinG ?? '—',
+                  tone: 'protein',
+                },
+                {
+                  label: 'getArticle.macro.fat' | t,
+                  value: m.fatG ?? '—',
+                  tone: 'fat',
+                },
+                {
+                  label: 'getArticle.macro.carbs' | t,
+                  value: m.carbsG ?? '—',
+                  tone: 'carbs',
+                },
+              ]"
+            />
+
+            <ds-nutrition-facts
+              data-testid="article-nutrition"
+              [rows]="[
+                { label: 'getArticle.table.fat' | t, value: m.fatG ?? '—' },
+                {
+                  label: 'getArticle.table.saturated' | t,
+                  value: m.saturatedG ?? '—',
+                  sub: true,
+                },
+                {
+                  label: 'getArticle.table.carbs' | t,
+                  value: m.carbsG ?? '—',
+                },
+                {
+                  label: 'getArticle.table.sugars' | t,
+                  value: m.sugarsG ?? '—',
+                  sub: true,
+                },
+                {
+                  label: 'getArticle.table.protein' | t,
+                  value: m.proteinG ?? '—',
+                },
+                {
+                  label: 'getArticle.table.fiber' | t,
+                  value: m.fiberG ?? '—',
+                  hidden: !m.fiberG,
+                },
+                { label: 'getArticle.table.salt' | t, value: m.saltG ?? '—' },
+              ]"
+            />
+          }
+        } @else {
+          <ds-text variant="muted">{{ "getArticle.noNutrition" | t }}</ds-text>
         }
-      </ds-purchase-summary>
+      </ds-card>
+
+      <ds-card>
+        <ds-section-header
+          [title]="'getArticle.units.heading' | t"
+          [staticLabel]="('getArticle.units.base' | t) + ' ' + d.units.baseUnit"
+        />
+        <ds-equivalence-summary
+          data-testid="article-units"
+          [headless]="true"
+          [recipeLabel]="'getArticle.units.recipe' | t"
+          [recipeUnit]="d.units.recipeUnit"
+          [diaryLabel]="'getArticle.units.diary' | t"
+          [diaryUnit]="d.units.diaryUnit"
+          [storageLabel]="'getArticle.units.storage' | t"
+          [storageUnit]="d.units.storageUnit"
+          [equivalencesLabel]="'getArticle.units.equivalences' | t"
+          [lines]="d.units.lines"
+        />
+      </ds-card>
     </ds-split-view>
   }
 </ds-page-wrapper>

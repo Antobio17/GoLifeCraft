@@ -1,14 +1,19 @@
 <ds-page-wrapper
   [maxWidth]="'40rem'"
-  [wideMaxWidth]="'60rem'"
-  [gap]="'var(--ds-space-3)'"
+  [wideMaxWidth]="'70rem'"
+  [gap]="'var(--ds-space-5)'"
 >
   <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getProductions.back' | t"
+    (leadingClick)="goBack()"
+    [eyebrow]="'getProductions.eyebrow' | t"
     [title]="'getProductions.title' | t"
-    [subtitle]="'getProductions.subtitle' | t"
+    [subtitle]="headerSubtitle()"
   >
     <ds-button
       slot="actions"
+      data-testid="kitchen-create"
       variant="primary"
       size="icon-lg"
       icon="plus"
@@ -18,50 +23,146 @@
     />
   </ds-screen-header>
 
-  @if (loading()) {
-    <ds-skeleton-list
-      [count]="3"
-      [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-surface)"
-      padding="var(--ds-space-3)"
-      [tile]="44"
-      titleWidth="42%"
-      metaWidth="64%"
-      trailing="pill"
-    />
-  } @else if (rows().length) {
-    <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-      @for (row of rows(); track row.production.id) {
-        <ds-card
-          [interactive]="true"
-          [padding]="'var(--ds-space-3)'"
-          (activated)="onOpen(row.production)"
-        >
-          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-            <ds-emoji-tile
-              [emoji]="row.emoji"
-              [imageUrl]="row.imageUrl"
-              [alt]="row.title"
-              [size]="44"
-            />
+  <ds-split-view
+    [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+    [gap]="'var(--ds-space-5)'"
+  >
+    @if (heroLoading()) {
+      <ds-module-card slot="side" [hero]="true">
+        <ds-stack [gap]="'var(--ds-space-3)'">
+          <ds-skeleton-line width="35%" height="0.75rem" />
+          <ds-skeleton-line width="65%" height="1.75rem" />
+          <ds-skeleton-line width="100%" height="4.25rem" />
+          <ds-skeleton-line width="100%" height="4.5rem" />
+          <ds-skeleton-line width="100%" height="2.25rem" />
+          <ds-skeleton-line width="100%" height="2.25rem" />
+        </ds-stack>
+      </ds-module-card>
+    } @else if (hero(); as hero) {
+      <ds-module-card
+        slot="side"
+        data-testid="kitchen-hero"
+        [hero]="true"
+        [eyebrow]="'getProductions.hero.kicker' | t"
+      >
+        <ds-heading [level]="2" size="md">{{ hero.title }}</ds-heading>
 
-            <ds-stack [gap]="'2px'" [grow]="true">
-              <ds-text variant="strong">{{ row.title }}</ds-text>
-              <ds-text variant="meta">{{ row.meta }}</ds-text>
-            </ds-stack>
+        <ds-stat-strip [items]="hero.stats" />
 
-            <ds-chip [tone]="row.cooking ? 'brand' : 'neutral'">{{
-              row.statusLabel
-            }}</ds-chip>
+        <ds-week-strip
+          data-testid="kitchen-hero-week"
+          [frameless]="true"
+          [title]="hero.weekTitle"
+          [caption]="hero.weekCaption"
+          [days]="hero.week"
+        />
+
+        @if (hero.rows.length) {
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            @for (row of hero.rows; track row.recipeId) {
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-3)'"
+              >
+                <ds-emoji-tile
+                  [emoji]="row.emoji"
+                  [imageUrl]="row.imageUrl"
+                  [alt]="row.name"
+                  [size]="36"
+                />
+                <ds-stack [grow]="true">
+                  <ds-text variant="strong">{{ row.name }}</ds-text>
+                </ds-stack>
+                <ds-text variant="meta">{{ row.servings }}</ds-text>
+              </ds-stack>
+            }
+            @if (hero.more) {
+              <ds-text variant="meta">{{ hero.more }}</ds-text>
+            }
           </ds-stack>
-        </ds-card>
+        }
+      </ds-module-card>
+    }
+
+    <ds-grid slot="side" [columns]="3" [gap]="'var(--ds-space-2)'">
+      <ds-action-tile
+        data-testid="kitchen-shortcut-recipes"
+        icon="chefHat"
+        [name]="tiles().recipes"
+        [meta]="tiles().recipesMeta"
+        (clicked)="goTo('/recipes')"
+      />
+      <ds-action-tile
+        data-testid="kitchen-shortcut-inventory"
+        icon="package"
+        [name]="tiles().inventory"
+        [meta]="tiles().inventoryMeta"
+        (clicked)="goTo('/inventory')"
+      />
+      <ds-action-tile
+        data-testid="kitchen-shortcut-catalog"
+        icon="leaf"
+        [name]="tiles().catalog"
+        [meta]="tiles().catalogMeta"
+        (clicked)="goTo('/catalog')"
+      />
+    </ds-grid>
+
+    <ds-stack [gap]="'var(--ds-space-5)'">
+      @if (loading()) {
+        <ds-stack [gap]="'var(--ds-space-3)'">
+          <ds-skeleton-line width="8rem" height="1rem" />
+          <ds-skeleton-list
+            [count]="3"
+            [gap]="'var(--ds-space-2)'"
+            radius="var(--ds-radius-surface)"
+            padding="var(--ds-space-3)"
+            [tile]="50"
+            titleWidth="42%"
+            metaWidth="64%"
+            trailing="pill"
+          />
+        </ds-stack>
+      } @else if (groups().length) {
+        @for (group of groups(); track group.key) {
+          <ds-stack [gap]="'var(--ds-space-3)'">
+            <ds-section-header
+              [title]="group.title"
+              [staticLabel]="group.count"
+            />
+            <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+              @for (row of group.rows; track row.production.id) {
+                <ds-dated-row
+                  data-testid="kitchen-lot-row"
+                  [interactive]="true"
+                  [weekday]="row.weekday"
+                  [day]="row.day"
+                  [title]="row.title"
+                  [meta]="row.meta"
+                  [value]="row.value"
+                  [valueTone]="row.valueTone"
+                  [progress]="row.progress"
+                  [ariaLabel]="row.ariaLabel"
+                  (activated)="onOpen(row.production)"
+                />
+              }
+            </ds-stack>
+          </ds-stack>
+        }
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-3)'">
+          <ds-section-header
+            [title]="'getProductions.lots.title' | t"
+            staticLabel="0"
+          />
+          <ds-empty-state
+            icon="chefHat"
+            [title]="'getProductions.empty.title' | t"
+            [text]="'getProductions.empty.text' | t"
+          />
+        </ds-stack>
       }
     </ds-stack>
-  } @else {
-    <ds-empty-state
-      icon="chefHat"
-      [title]="'getProductions.empty.title' | t"
-      [text]="'getProductions.empty.text' | t"
-    />
-  }
+  </ds-split-view>
 </ds-page-wrapper>

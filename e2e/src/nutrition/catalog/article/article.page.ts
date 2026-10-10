@@ -66,7 +66,9 @@ export class ArticlePage {
   }
 
   async openStockEditor(): Promise<void> {
-    await this.ds.click("article-stock");
+    await this.stock
+      .getByRole("button", { name: "Corregir", exact: true })
+      .click();
     await expect(this.ds.host("stock-confirm")).toBeVisible();
   }
 

@@ -1,3 +1,8 @@
+import { QuantityDraft } from "@shared/design-system/quantity-sheet/domain/models/quantity-draft.model";
+import { QuantitySheetComponent } from "@shared/design-system/quantity-sheet/infrastructure/components/quantity-sheet.component";
+import { DiaryEntryComponent } from "@shared/design-system/diary-entry/infrastructure/components/diary-entry.component";
+import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
+import { FoodLineComponent } from "@shared/design-system/food-line/infrastructure/components/food-line.component";
 import {
   Component,
   OnInit,
@@ -34,19 +39,14 @@ import { FieldComponent } from "@shared/design-system/field/infrastructure/compo
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
-import { InlineQuantityComponent } from "@shared/design-system/inline-quantity/infrastructure/components/inline-quantity.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
-import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
 import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
@@ -79,7 +79,6 @@ import {
   MacroShortLabels,
   RecipeViewService,
 } from "@nutrition/recipe/recipe/application/services/recipe-view.service";
-import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { RecipePrepMode } from "@nutrition/recipe/recipe/domain/models/recipe-prep-mode.enum";
 import { RecipeDetail } from "@nutrition/recipe/recipe/domain/models/recipe.model";
@@ -95,6 +94,10 @@ type PickerTab = "product" | "recipe";
   selector: "app-recipe-editor",
   templateUrl: "./recipe-editor.component.html",
   imports: [
+    QuantitySheetComponent,
+    DiaryEntryComponent,
+    DividerComponent,
+    FoodLineComponent,
     ReactiveFormsModule,
     FormsModule,
     ContextualTranslatePipe,
@@ -109,18 +112,12 @@ type PickerTab = "product" | "recipe";
     TextInputComponent,
     CardComponent,
     StackComponent,
-    ChipComponent,
     TextComponent,
     SectionHeaderComponent,
     MacroBarsComponent,
-    MacroBadgesComponent,
     NumberInputComponent,
     TextareaComponent,
-    InlineQuantityComponent,
-    IconButtonComponent,
     AddTileComponent,
-    EmojiTileComponent,
-    SwipeToDeleteComponent,
     EmptyStateComponent,
     ViewSwitchComponent,
     ModalSheetComponent,
@@ -208,8 +205,16 @@ export class RecipeEditorComponent implements OnInit {
   ]);
 
   pickerTabs = computed<ViewSwitchOption[]>(() => [
-    { value: "product", label: this.t("recipeEditor.tabProducts") },
-    { value: "recipe", label: this.t("recipeEditor.tabRecipes") },
+    {
+      value: "product",
+      label: this.t("recipeEditor.tabProducts"),
+      icon: "leaf",
+    },
+    {
+      value: "recipe",
+      label: this.t("recipeEditor.tabRecipes"),
+      icon: "chefHat",
+    },
   ]);
 
   pickerOpen = signal(false);
@@ -256,21 +261,15 @@ export class RecipeEditorComponent implements OnInit {
     return !!this.id();
   }
 
-  get title(): string {
-    return this.t(
-      this.isEdit ? "recipeEditor.editTitle" : "recipeEditor.createTitle",
-    );
-  }
+  title = computed(() =>
+    this.t(this.id() ? "recipeEditor.editTitle" : "recipeEditor.createTitle"),
+  );
 
-  get saveLabel(): string {
-    return this.t(
-      this.isEdit ? "recipeEditor.saveEdit" : "recipeEditor.saveCreate",
-    );
-  }
+  saveLabel = computed(() =>
+    this.t(this.id() ? "recipeEditor.saveEdit" : "recipeEditor.saveCreate"),
+  );
 
-  get hasIngredients(): boolean {
-    return this.ingredients().length > 0;
-  }
+  hasIngredients = computed(() => this.ingredients().length > 0);
 
   ingredientRows = computed(() =>
     this.ingredients().map((ingredient) => ({
@@ -281,12 +280,37 @@ export class RecipeEditorComponent implements OnInit {
         ingredient.refId,
         ingredient.image,
       ),
-      kcal: this.ingredientKcal(ingredient),
+      kindIcon: ingredient.kind === "recipe" ? ("chefHat" as const) : null,
+      kcal: this.ingredientCalories(ingredient),
       macros: this.ingredientMacros(ingredient),
+      quantityLabel: `${this.format(ingredient.quantity)} ${this.ingredientUnitLabel(ingredient)}`,
+      nutrition: this.recipeForm.ingredientMacros(ingredient),
+      unitFactors: this.recipeForm.unitFactors(ingredient),
       unitLabel: this.ingredientUnitLabel(ingredient),
       unitOptions: this.recipeForm.unitOptions(ingredient),
     })),
   );
+
+  quantityIngredientKey = signal<string | null>(null);
+  quantityIngredient = computed(
+    () =>
+      this.ingredientRows().find(
+        (row) => row.ingredient.key === this.quantityIngredientKey(),
+      ) ?? null,
+  );
+
+  onIngredientQuantitySaved(draft: QuantityDraft): void {
+    const key = this.quantityIngredientKey();
+    if (!key) return;
+    this.ingredients.update((list) =>
+      list.map((ingredient) =>
+        ingredient.key === key
+          ? { ...ingredient, quantity: draft.quantity, unit: draft.unit }
+          : ingredient,
+      ),
+    );
+    this.quantityIngredientKey.set(null);
+  }
 
   pickerRows = computed(() =>
     this.pickerChoices().map((choice) => ({
@@ -297,7 +321,7 @@ export class RecipeEditorComponent implements OnInit {
         choice.refId,
         choice.image,
       ),
-      kcal: this.choiceKcal(choice),
+      kcal: this.format(choice.macros.calories),
       macros: this.choiceMacros(choice),
     })),
   );
@@ -448,7 +472,7 @@ export class RecipeEditorComponent implements OnInit {
       return;
     }
 
-    if (!this.hasIngredients) {
+    if (!this.hasIngredients()) {
       this.floatingToastService.showToast({
         status: 400,
         keyTranslation: "recipe.ingredient.required",

@@ -35,12 +35,9 @@ import { VisualSurface } from "@shared/visual-preference/domain/models/visual-su
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
-import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
-import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
@@ -49,7 +46,11 @@ import { ChipComponent } from "@shared/design-system/chip/infrastructure/compone
 import { ProductHeroComponent } from "@shared/design-system/product-hero/infrastructure/components/product-hero.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
-import { SegmentedToggleComponent } from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
+import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/stat-strip-item.model";
 import {
   SelectChipOption,
   SelectChipsComponent,
@@ -88,12 +89,9 @@ const QUICK_AMOUNTS = [
     SplitViewComponent,
     ScreenHeaderComponent,
     ConfirmActionModalComponent,
-    SkeletonComponent,
     SkeletonChipsComponent,
-    SkeletonLineComponent,
     SkeletonScreenHeaderComponent,
     SkeletonHeroComponent,
-    SkeletonMacroBarsComponent,
     SkeletonRowsComponent,
     EmptyStateComponent,
     TextComponent,
@@ -102,7 +100,9 @@ const QUICK_AMOUNTS = [
     ProductHeroComponent,
     MacroBarsComponent,
     NutritionFactsComponent,
-    SegmentedToggleComponent,
+    ViewSwitchComponent,
+    CardComponent,
+    SectionHeaderComponent,
     SelectChipsComponent,
     ChoiceChipsComponent,
     FieldComponent,
@@ -163,6 +163,10 @@ export class GetArticleComponent {
     return "pack" === this.mode() ? detail.pack : detail.per100;
   });
   readonly id = input.required<string>();
+  modeOptions = computed<ViewSwitchOption[]>(() => [
+    { value: "per100", label: this.t("getArticle.tab.per100") },
+    { value: "pack", label: this.t("getArticle.tab.pack") },
+  ]);
 
   stock = signal<ArticleStockView | null>(null);
   savingStock = signal(false);
@@ -231,6 +235,37 @@ export class GetArticleComponent {
     if (null === stock || StockLevel.Unknown === stock.level) return "";
 
     return this.t(`getArticle.stock.level.${stock.level}`);
+  });
+  stockSummary = computed<StatStripItem[]>(() => {
+    const stock = this.stock();
+    if (null === stock) return [];
+
+    const [value, ...unit] = stock.mainText.split(" ");
+    const items: StatStripItem[] = [
+      {
+        label: this.t("getArticle.estimated"),
+        value,
+        unit: unit.join(" ") || undefined,
+      },
+    ];
+
+    if (null !== stock.valueText) {
+      items.push({
+        label: this.t("getArticle.stock.value"),
+        value: stock.valueText,
+      });
+    }
+
+    if (null !== stock.confidencePercent) {
+      items.push({
+        label: this.t("getArticle.stock.confidence"),
+        value: `${stock.confidencePercent}%`,
+        percent: stock.confidencePercent,
+        tone: stock.confidencePercent < 50 ? "warning" : "brand",
+      });
+    }
+
+    return items;
   });
   stockDraftPreview = computed<string | null>(() => {
     const stock = this.stock();

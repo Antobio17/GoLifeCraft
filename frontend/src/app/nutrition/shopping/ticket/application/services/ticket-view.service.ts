@@ -8,6 +8,9 @@ import { TicketItem } from "../../domain/models/ticket-item.model";
 import { TicketLineRow } from "../../domain/models/ticket-line-row.model";
 import { TicketRow } from "../../domain/models/ticket-row.model";
 import { TicketStatus } from "../../domain/models/ticket-status.model";
+import { Ticket } from "../../domain/models/ticket.model";
+import { TicketMonthSummary } from "../../domain/models/ticket-month-summary.model";
+import { DatedRowTone } from "@shared/design-system/dated-row/domain/models/dated-row-tone.enum";
 
 @Injectable({ providedIn: "root" })
 export class TicketViewService {
@@ -52,29 +55,103 @@ export class TicketViewService {
     return Math.round((linked / total) * 100);
   }
 
+  purchasedDate(purchasedOn: string): Date {
+    const [year, month, day] = purchasedOn.slice(0, 10).split("-").map(Number);
+
+    return new Date(year, month - 1, day);
+  }
+
+  monthKey(purchasedOn: string): string {
+    return purchasedOn.slice(0, 7);
+  }
+
+  monthTitle(purchasedOn: string, locale: string): string {
+    return this.capitalize(
+      new Intl.DateTimeFormat(locale, {
+        month: "long",
+        year: "numeric",
+      }).format(this.purchasedDate(purchasedOn)),
+    );
+  }
+
+  weekdayLabel(purchasedOn: string, locale: string): string {
+    return new Intl.DateTimeFormat(locale, { weekday: "short" })
+      .format(this.purchasedDate(purchasedOn))
+      .replace(".", "");
+  }
+
+  longDateLabel(purchasedOn: string, locale: string): string {
+    return this.capitalize(
+      new Intl.DateTimeFormat(locale, {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      }).format(this.purchasedDate(purchasedOn)),
+    );
+  }
+
+  monthSummary(tickets: Ticket[], today: Date): TicketMonthSummary {
+    const purchasedOn = this.isoDate(today);
+    const month = this.monthKey(purchasedOn);
+    const inMonth = tickets.filter(
+      (ticket) => this.monthKey(ticket.attributes.purchasedOn) === month,
+    );
+    const pending = inMonth.find(
+      (ticket) =>
+        TicketStatus.DRAFT === ticket.attributes.status &&
+        ticket.attributes.pendingItems > 0,
+    );
+
+    return {
+      purchasedOn,
+      spent: this.round(
+        inMonth.reduce(
+          (sum, ticket) => sum + (ticket.attributes.total ?? 0),
+          0,
+        ),
+        2,
+      ),
+      tickets: inMonth.length,
+      totalItems: this.sumOf(inMonth, (attributes) => attributes.totalItems),
+      linkedItems: this.sumOf(inMonth, (attributes) => attributes.linkedItems),
+      pendingItems: this.sumOf(
+        inMonth,
+        (attributes) => attributes.pendingItems,
+      ),
+      pendingTicketId: pending?.id ?? null,
+    };
+  }
+
   rowOf(
     id: string,
     attributes: TicketAttributes,
+    locale: string,
     t: (key: string) => string,
     count: (key: string, params: Record<string, unknown>) => string,
   ): TicketRow {
+    const received = TicketStatus.RECEIVED === attributes.status;
+
     return {
       id,
-      storeLabel: this.storeLabel(attributes),
-      dateLabel: this.dateLabel(attributes.purchasedOn),
-      totalLabel: this.money(attributes.total),
-      statusLabel: t(this.statusKey(attributes.status)),
-      received: TicketStatus.RECEIVED === attributes.status,
-      progressPercent: this.progressPercent(
+      weekday: this.weekdayLabel(attributes.purchasedOn, locale),
+      day: `${this.purchasedDate(attributes.purchasedOn).getDate()}`,
+      title: this.storeLabel(attributes),
+      meta: `${count("getTickets.card.linked", {
+        linked: attributes.linkedItems,
+        total: attributes.totalItems,
+      })} · ${count("getTickets.card.pending", {
+        count: attributes.pendingItems,
+      })}`,
+      value: this.money(attributes.total),
+      tag: t(this.statusKey(attributes.status)),
+      tagTone: received ? DatedRowTone.Success : DatedRowTone.Warning,
+      progress: this.progressPercent(
         attributes.linkedItems,
         attributes.totalItems,
       ),
-      linkedLabel: count("getTickets.card.linked", {
-        linked: attributes.linkedItems,
-        total: attributes.totalItems,
-      }),
-      pendingLabel: count("getTickets.card.pending", {
-        count: attributes.pendingItems,
+      ariaLabel: count("getTickets.row.open", {
+        store: this.storeLabel(attributes),
+        date: this.longDateLabel(attributes.purchasedOn, locale),
       }),
     };
   }
@@ -156,6 +233,24 @@ export class TicketViewService {
     const factor = 10 ** decimals;
 
     return Math.round(value * factor) / factor;
+  }
+
+  private sumOf(
+    tickets: Ticket[],
+    pick: (attributes: TicketAttributes) => number,
+  ): number {
+    return tickets.reduce((sum, ticket) => sum + pick(ticket.attributes), 0);
+  }
+
+  private isoDate(date: Date): string {
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    const day = `${date.getDate()}`.padStart(2, "0");
+
+    return `${date.getFullYear()}-${month}-${day}`;
+  }
+
+  private capitalize(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
   private decimal(value: number): string {

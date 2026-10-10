@@ -18,6 +18,12 @@
   border-color: var(--ds-primary);
 }
 
+.diary-entry__row--flat {
+  border-color: transparent;
+  border-radius: var(--ds-radius-inner);
+  padding-inline: 0;
+}
+
 .diary-entry__row--slid {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -157,4 +163,63 @@ ds-icon.diary-entry__caret {
 ds-icon.diary-entry__caret--open {
   transform: rotate(180deg);
   color: var(--ds-primary);
+}
+
+.diary-entry__row--line {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  --ds-pad: 0;
+  padding: var(--ds-space-2) 0;
+}
+
+ds-stack.diary-entry__body--line {
+  min-width: 0;
+}
+
+ds-pressable.diary-entry__open--line {
+  flex: 0 1 auto;
+}
+
+ds-text.diary-entry__name--line {
+  flex: 0 1 auto;
+}
+
+ds-pressable.diary-entry__quantity--plain {
+  padding: 0;
+  background: transparent;
+  color: var(--ds-text-muted);
+  border-radius: var(--ds-radius-control-sm);
+}
+
+ds-pressable.diary-entry__quantity--plain:hover {
+  background: transparent;
+  color: var(--ds-text);
+}
+
+ds-pressable.diary-entry__quantity--plain ds-text.diary-entry__quantity-label {
+  font-weight: 500;
+}
+
+.diary-entry__row--line ds-text.diary-entry__kcal {
+  margin-inline-start: auto;
+  font-family: var(--ds-font-body);
+  font-weight: 700;
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.diary-entry__row--line ds-text.diary-entry__name {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+
+.diary-entry__row--line ds-text.diary-entry__macros--line {
+  font-size: var(--ds-text-xs);
+  font-weight: 400;
+  color: var(--ds-text-meta);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
 }

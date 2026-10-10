@@ -4,65 +4,16 @@
   [gap]="'var(--ds-space-3)'"
 >
   @if (loading()) {
-    <ds-stack
-      direction="row"
-      justify="between"
-      align="center"
-      [gap]="'var(--ds-space-2)'"
-    >
-      <ds-skeleton-line
-        width="2.5rem"
-        height="2.5rem"
-        radius="var(--ds-radius-inner)"
-      />
-      <ds-stack direction="row" align="center" [gap]="'var(--ds-space-2)'">
-        <ds-skeleton-line
-          width="2.5rem"
-          height="2.5rem"
-          radius="var(--ds-radius-inner)"
-        />
-        <ds-skeleton-line
-          width="2.5rem"
-          height="2.5rem"
-          radius="var(--ds-radius-inner)"
-        />
-        <ds-skeleton-line
-          width="2.5rem"
-          height="2.5rem"
-          radius="var(--ds-radius-inner)"
-        />
-        <ds-skeleton-line
-          width="2.5rem"
-          height="2.5rem"
-          radius="var(--ds-radius-inner)"
-        />
-        <ds-skeleton-line
-          width="2.5rem"
-          height="2.5rem"
-          radius="var(--ds-radius-inner)"
-        />
-      </ds-stack>
-    </ds-stack>
+    <ds-skeleton-screen-header
+      [stacked]="true"
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="62%"
+      [actions]="5"
+    />
 
     <ds-split-view [columns]="'minmax(0, 0.85fr) minmax(0, 1fr)'">
-      <ds-stack
-        slot="side"
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-3)'"
-      >
-        <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-          <ds-skeleton-line width="5.25rem" height="0.5625rem" />
-          <ds-skeleton height="2.875rem" radius="var(--ds-radius-control)" />
-        </ds-stack>
-      </ds-stack>
-
-      <ds-skeleton
-        slot="side"
-        height="2.875rem"
-        radius="var(--ds-radius-control)"
-      />
-
       @if (skeletonWeek()) {
         <ds-stack slot="side" [gap]="'var(--ds-space-2)'">
           <ds-stack
@@ -90,12 +41,7 @@
 
       @for (entries of skeletonMeals; track $index) {
         <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-skeleton-section-header
-            titleWidth="6.5rem"
-            [subtitle]="true"
-            [action]="true"
-            actionWidth="4.625rem"
-          />
+          <ds-skeleton-section-header titleWidth="6.5rem" [subtitle]="true" />
           <ds-skeleton-list
             [count]="entries"
             [gap]="'var(--ds-space-1-5)'"
@@ -108,66 +54,89 @@
             trailing="pill"
             pillWidth="2.875rem"
           />
+          <ds-skeleton-line width="100%" height="2.625rem" />
         </ds-stack>
       }
     </ds-split-view>
   } @else if (detail(); as menu) {
     <ds-screen-header
+      data-testid="menu-header"
       [sticky]="true"
+      [stacked]="true"
+      [miniTitle]="false"
       [leading]="'back'"
       [leadingLabel]="'getMenu.back' | t"
+      [eyebrow]="typeLabel()"
+      [title]="title()"
+      [titleActionLabel]="'getMenu.details.edit' | t"
       (leadingClick)="goBack()"
+      (titleClick)="openDetails()"
     >
-      @if (!isDraft()) {
-        <ds-stack
+      @if (isDraft()) {
+        <ds-button
           slot="actions"
-          direction="row"
-          align="center"
-          [gap]="'var(--ds-space-2)'"
-        >
-          <ds-button
-            variant="primary"
-            size="icon-lg"
-            icon="download"
-            [iconSize]="19"
-            [disabled]="currentDayEmpty()"
-            [ariaLabel]="primaryLabel()"
-            (clicked)="onPrimaryAction()"
-          />
+          data-testid="menu-save"
+          variant="primary"
+          size="icon-lg"
+          icon="save"
+          [iconSize]="19"
+          [disabled]="!draftSavable()"
+          [loading]="saving()"
+          [ariaLabel]="'getMenu.actions.save' | t"
+          (clicked)="saveDraft()"
+        />
+      }
 
-          <ds-button
-            variant="outline"
-            size="icon-lg"
-            icon="cart"
-            [iconSize]="19"
-            [ariaLabel]="'getMenu.actions.shop' | t"
-            (clicked)="onShop()"
-          />
+      @if (!isDraft()) {
+        <ds-button
+          slot="actions"
+          data-testid="menu-load"
+          variant="primary"
+          size="icon-lg"
+          icon="download"
+          [iconSize]="19"
+          [disabled]="currentDayEmpty()"
+          [ariaLabel]="primaryLabel()"
+          (clicked)="onPrimaryAction()"
+        />
+      }
 
+      @if (!isDraft()) {
+        <ds-stack slot="actions" direction="row" [gap]="'var(--ds-space-2)'">
           <ds-button
+            data-testid="menu-export"
             variant="secondary"
             size="icon-lg"
             icon="share"
             [iconSize]="19"
-            [disabled]="exporting()"
-            [ariaLabel]="'getMenu.export' | t"
+            [ariaLabel]="'getMenu.more.export' | t"
             (clicked)="onExport()"
           />
-
           <ds-button
+            data-testid="menu-shop"
+            variant="secondary"
+            size="icon-lg"
+            icon="cart"
+            [iconSize]="19"
+            [ariaLabel]="'getMenu.more.shop' | t"
+            (clicked)="onShop()"
+          />
+          <ds-button
+            data-testid="menu-duplicate"
             variant="secondary"
             size="icon-lg"
             icon="copy"
             [iconSize]="19"
-            [ariaLabel]="'getMenu.duplicate' | t"
+            [ariaLabel]="'getMenu.more.duplicate' | t"
             (clicked)="onDuplicate()"
           />
           <ds-button
+            data-testid="menu-delete"
             variant="danger"
             size="icon-lg"
             icon="trash"
             [iconSize]="19"
-            [ariaLabel]="'getMenu.delete' | t"
+            [ariaLabel]="'getMenu.more.delete' | t"
             (clicked)="askDelete()"
           />
         </ds-stack>
@@ -175,47 +144,12 @@
     </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 0.85fr) minmax(0, 1fr)'">
-      <ds-stack
-        slot="side"
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-3)'"
-      >
-        <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-          <ds-text variant="label">{{ typeLabel() }}</ds-text>
-          <ds-text-input
-            [strong]="true"
-            [ariaLabel]="'getMenu.nameLabel' | t"
-            [placeholder]="'getMenu.namePlaceholder' | t"
-            [ngModel]="name()"
-            [ngModelOptions]="{ standalone: true }"
-            (ngModelChange)="onName($event)"
-          />
-        </ds-stack>
-      </ds-stack>
-
       @if (!isDraft()) {
         <ds-save-status
           slot="side"
           [status]="autosave.status()"
           (retried)="onRetrySave()"
         />
-      }
-
-      <ds-text-input
-        slot="side"
-        variant="outlined"
-        [ariaLabel]="'getMenu.noteLabel' | t"
-        [placeholder]="'getMenu.notePlaceholder' | t"
-        [ngModel]="note()"
-        [ngModelOptions]="{ standalone: true }"
-        (ngModelChange)="onNote($event)"
-      />
-
-      @if (isDraft()) {
-        <ds-note slot="side" icon="info">{{
-          "getMenu.draft.hint" | t
-        }}</ds-note>
       }
 
       @if (isWeek()) {
@@ -260,98 +194,113 @@
       />
 
       @for (meal of mealRows(); track meal.key) {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-stack
-            direction="row"
-            justify="between"
-            align="center"
-            [gap]="'var(--ds-space-2)'"
-          >
-            <ds-stack [gap]="'1px'" [grow]="true">
-              <ds-heading [level]="3" size="sm">{{ meal.label }}</ds-heading>
-              <ds-text variant="meta">{{ meal.meta }}</ds-text>
-            </ds-stack>
-            <ds-button
-              variant="outline"
-              size="sm"
-              icon="plus"
-              (clicked)="openPicker(meal.key)"
-            >
-              {{ "getMenu.meal.add" | t }}
-            </ds-button>
-          </ds-stack>
-
-          @if (meal.items.length === 0) {
-            <ds-placeholder-note [message]="'getMenu.meal.empty' | t" />
-          } @else {
+        <ds-meal-card
+          [attr.data-testid]="'menu-meal-' + meal.key"
+          [title]="meal.label"
+          [kcal]="meal.kcal"
+          [kcalUnit]="'getMenu.kcal' | t"
+          [protein]="meal.protein"
+          [fat]="meal.fat"
+          [carbs]="meal.carbs"
+          [macrosLabel]="meal.macrosLabel"
+          [macroLabels]="macroLabels()"
+          [consumable]="meal.items.length > 0"
+          [showConsume]="false"
+        >
+          @for (row of meal.items; track row.item.id) {
             <ds-stack [gap]="'var(--ds-space-1-5)'">
-              @for (row of meal.items; track row.item.id) {
-                <ds-stack [gap]="'var(--ds-space-1-5)'">
-                  <ds-diary-entry
-                    [emoji]="row.item.emoji"
-                    [imageUrl]="row.imageUrl"
-                    [name]="row.item.name"
-                    [openable]="row.openable"
-                    [openLabel]="'getMenu.openItem' | t"
-                    [kindIcon]="row.kindIcon"
-                    [kindLabel]="row.kindLabel"
-                    [kcalLabel]="row.kcal"
-                    [macrosLabel]="row.macrosLabel"
-                    [quantityLabel]="row.quantityLabel"
-                    [quantityAriaLabel]="'getMenu.quantitySheet.open' | t"
-                    [removeLabel]="'getMenu.remove' | t"
-                    [expandable]="row.expandable"
-                    [expanded]="row.expanded"
-                    [expandLabel]="'getMenu.tree.expand' | t"
-                    [collapseLabel]="'getMenu.tree.collapse' | t"
-                    (quantityPressed)="openQuantity(row.item.id)"
-                    (remove)="onRemoveItem(row.item)"
-                    (opened)="onOpenItem(row.item)"
-                    (expandToggled)="toggleItemTree(row.item.id)"
-                  />
+              <ds-diary-entry
+                [line]="true"
+                [emoji]="row.item.emoji"
+                [imageUrl]="row.imageUrl"
+                [name]="row.item.name"
+                [openable]="row.openable"
+                [openLabel]="'getMenu.openItem' | t"
+                [kindIcon]="row.kindIcon"
+                [kindLabel]="row.kindLabel"
+                [kcalLabel]="row.kcal"
+                [macrosLabel]="row.macrosLabel"
+                [quantityLabel]="row.quantityLabel"
+                [quantityAriaLabel]="'getMenu.quantitySheet.open' | t"
+                [removeLabel]="'getMenu.remove' | t"
+                [expandable]="row.expandable"
+                [expanded]="row.expanded"
+                [expandLabel]="'getMenu.tree.expand' | t"
+                [collapseLabel]="'getMenu.tree.collapse' | t"
+                (quantityPressed)="openQuantity(row.item.id)"
+                (remove)="onRemoveItem(row.item)"
+                (opened)="onOpenItem(row.item)"
+                (expandToggled)="toggleItemTree(row.item.id)"
+              />
 
-                  @if (row.expanded) {
-                    <ds-diary-tree
-                      [rows]="row.treeRows"
-                      [title]="'getMenu.tree.title' | t"
-                      [showReset]="row.showReset"
-                      [resetMessage]="'getMenu.tree.customized' | t"
-                      [resetLabel]="'getMenu.tree.reset' | t"
-                      [expandLabel]="'getMenu.tree.expand' | t"
-                      [collapseLabel]="'getMenu.tree.collapse' | t"
-                      [openLabel]="'getMenu.openItem' | t"
-                      [quantityAriaLabel]="'getMenu.quantity' | t"
-                      [unitAriaLabel]="'getMenu.unit' | t"
-                      (toggled)="toggleTreeNode($event)"
-                      (opened)="onOpenTreeNode(row.item, $event)"
-                      (quantityChanged)="onNodeQuantityChange(row.item, $event)"
-                      (unitChanged)="onNodeUnitChange(row.item, $event)"
-                      (restored)="onResetTree(row.item)"
-                    />
-                  }
-                </ds-stack>
+              @if (row.expanded) {
+                <ds-diary-tree
+                  [rows]="row.treeRows"
+                  [title]="'getMenu.tree.title' | t"
+                  [showReset]="row.showReset"
+                  [resetMessage]="'getMenu.tree.customized' | t"
+                  [resetLabel]="'getMenu.tree.reset' | t"
+                  [expandLabel]="'getMenu.tree.expand' | t"
+                  [collapseLabel]="'getMenu.tree.collapse' | t"
+                  [openLabel]="'getMenu.openItem' | t"
+                  [quantityAriaLabel]="'getMenu.quantity' | t"
+                  [unitAriaLabel]="'getMenu.unit' | t"
+                  (toggled)="toggleTreeNode($event)"
+                  (opened)="onOpenTreeNode(row.item, $event)"
+                  (quantityChanged)="onNodeQuantityChange(row.item, $event)"
+                  (unitChanged)="onNodeUnitChange(row.item, $event)"
+                  (restored)="onResetTree(row.item)"
+                />
               }
             </ds-stack>
+            <ds-divider />
           }
-        </ds-stack>
-      }
 
-      @if (isDraft()) {
-        <ds-button
-          variant="soft"
-          icon="check"
-          [fullWidth]="true"
-          [disabled]="!draftSavable()"
-          [loading]="saving()"
-          (clicked)="saveDraft()"
-        >
-          {{ "getMenu.actions.save" | t }}
-        </ds-button>
+          <ds-button
+            class="menu__add"
+            [attr.data-testid]="'menu-add-' + meal.key"
+            variant="link"
+            size="sm"
+            icon="plus"
+            (clicked)="openPicker(meal.key)"
+            >{{ meal.addLabel }}</ds-button
+          >
+        </ds-meal-card>
       }
     </ds-split-view>
   } @else {
     <ds-placeholder-note [message]="'getMenu.error' | t" />
   }
+
+  <ds-modal-sheet
+    data-testid="menu-details-sheet"
+    [open]="detailsOpen()"
+    [title]="'getMenu.details.title' | t"
+    [closeLabel]="'getMenu.close' | t"
+    [confirmLabel]="'getMenu.details.save' | t"
+    [confirmDisabled]="!detailsSavable()"
+    (closed)="closeDetails()"
+    (confirmed)="saveDetails()"
+  >
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-form-input
+        data-testid="menu-details-name"
+        [label]="'getMenu.nameLabel' | t"
+        [placeholder]="'getMenu.namePlaceholder' | t"
+        [ngModel]="detailsName()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="detailsName.set($event)"
+      />
+      <ds-form-input
+        data-testid="menu-details-note"
+        [label]="'getMenu.noteLabel' | t"
+        [placeholder]="'getMenu.notePlaceholder' | t"
+        [ngModel]="detailsNote()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="detailsNote.set($event)"
+      />
+    </ds-stack>
+  </ds-modal-sheet>
 
   <ds-quantity-sheet
     [open]="null !== quantitySheet()"
@@ -385,19 +334,22 @@
     <ds-stack [gap]="'var(--ds-space-3)'">
       <ds-text variant="meta">{{ "getMenu.picker.subtitle" | t }}</ds-text>
 
-      <ds-view-switch
-        [options]="pickerTabs()"
-        [ngModel]="pickerTab()"
-        [ngModelOptions]="{ standalone: true }"
-        (ngModelChange)="onPickerTab($event)"
-      />
-
-      <ds-search-input
-        [placeholder]="pickerSearchPlaceholder()"
-        [clearLabel]="'getMenu.close' | t"
-        [debounce]="120"
-        (searched)="onPickerSearch($event)"
-      />
+      <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+        <ds-stack [grow]="true">
+          <ds-search-input
+            [ariaLabel]="pickerSearchPlaceholder()"
+            [clearLabel]="'getMenu.close' | t"
+            [debounce]="120"
+            (searched)="onPickerSearch($event)"
+          />
+        </ds-stack>
+        <ds-view-switch
+          [options]="pickerTabs()"
+          [ngModel]="pickerTab()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onPickerTab($event)"
+        />
+      </ds-stack>
 
       @if (pickerChoices().length === 0) {
         <ds-text variant="muted">{{
@@ -407,37 +359,25 @@
           ) | t
         }}</ds-text>
       } @else {
-        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+        <ds-card [padding]="'var(--ds-space-1) var(--ds-space-4)'" [gap]="'0'">
           @for (row of pickerRows(); track row.choice.refId) {
-            <ds-card [padding]="'var(--ds-space-2)'">
-              <ds-stack
-                direction="row"
-                align="center"
-                [gap]="'var(--ds-space-3)'"
-              >
-                <ds-emoji-tile
-                  [emoji]="row.choice.emoji"
-                  [imageUrl]="row.imageUrl"
-                  [alt]="row.choice.name"
-                  [size]="36"
-                />
-                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
-                  <ds-text variant="strong" [truncate]="true">{{
-                    row.choice.name
-                  }}</ds-text>
-                  <ds-text variant="meta">{{ row.choice.detail }}</ds-text>
-                  <ds-macro-badges [kcal]="row.kcal" [macros]="row.macros" />
-                </ds-stack>
-                <ds-icon-button
-                  icon="plus"
-                  variant="soft"
-                  [ariaLabel]="'getMenu.picker.add' | t"
-                  (clicked)="onPick(row.choice)"
-                />
-              </ds-stack>
-            </ds-card>
+            <ds-food-line
+              [emoji]="row.choice.emoji"
+              [imageUrl]="row.imageUrl"
+              [name]="row.choice.name"
+              [meta]="row.choice.detail"
+              [kcal]="row.kcal"
+              [macros]="row.macros"
+              [selectable]="true"
+              [selectLabel]="'getMenu.picker.add' | t"
+              (selected)="onPick(row.choice)"
+            />
+
+            @if (!$last) {
+              <ds-divider />
+            }
           }
-        </ds-stack>
+        </ds-card>
       }
     </ds-stack>
   </ds-modal-sheet>

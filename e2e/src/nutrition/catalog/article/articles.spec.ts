@@ -191,20 +191,19 @@ test.describe("favoritos del catálogo", () => {
     );
   });
 
-  test("un favorito sube al principio, se filtra y se desmarca desde el detalle", async ({
+  test("un favorito sube al principio con su estrella, se filtra y se desmarca desde el detalle", async ({
     page,
   }) => {
     const articles = new ArticlesPage(page);
     const article = new ArticlePage(page);
     const favorite = SEED.articles.pollo.name;
 
-    await articles.goto();
-    await articles.toggleFavorite(favorite);
+    await article.goto(SEED.articles.pollo.id);
+    await article.toggleFavorite();
+    await expect(article.favorite).toHaveAttribute("aria-pressed", "true");
 
-    await expect(articles.favoriteToggle(favorite)).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
+    await articles.goto();
+    await expect(articles.favoriteMark(favorite)).toBeVisible();
     await expect(articles.cards.first()).toContainText(favorite);
 
     await articles.filterByFavorite("Favoritos");

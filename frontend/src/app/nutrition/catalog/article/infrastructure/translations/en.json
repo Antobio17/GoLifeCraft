@@ -1,38 +1,51 @@
 {
   "getArticles": {
+    "eyebrow": "Nutrition",
     "heading": "Catalog",
     "formats": "items",
     "create": "New",
-    "globalCatalog": "Global catalog",
-    "searchPlaceholder": "Search product or brand…",
+    "searchPlaceholder": "Search product",
     "searchClear": "Clear search",
-    "nutritionCaption": "Nutrition values",
     "noResults": "No results for",
     "noResultsFilters": "No products match these filters",
     "filter": {
       "category": "Category",
       "brand": "Brand",
-      "store": "Store",
       "favorite": {
         "all": "All",
         "only": "Favorites",
         "label": "Favorites filter"
-      }
+      },
+      "title": "Filters",
+      "close": "Close",
+      "apply": "Apply",
+      "open": "Filter by category and brand",
+      "allStores": "All",
+      "allCategories": "All",
+      "allBrands": "All"
     },
     "macro": {
       "kcal": "kcal",
       "proteinShort": "P",
       "fatShort": "F",
-      "carbsShort": "C"
+      "carbsShort": "C",
+      "protein": "Protein",
+      "fat": "Fat",
+      "carbs": "Carbs"
     },
     "empty": {
       "title": "Empty catalog",
       "text": "There are no products in the catalog yet"
     },
-    "scan": "Scan",
     "favorite": {
-      "toggle": "Mark as favorite"
-    }
+      "mark": "Favorite"
+    },
+    "createMenu": {
+      "create": "Create product",
+      "scan": "Scan barcode",
+      "global": "From the global catalog"
+    },
+    "back": "Back"
   },
   "getArticle": {
     "back": "Back",
@@ -46,7 +59,7 @@
       "pack": "Per pack"
     },
     "purchase": {
-      "heading": "PURCHASE AND STOCK",
+      "heading": "Purchase",
       "pack": "PACK",
       "cost": "REAL COST",
       "empty": "Mark an equivalence as Pack when editing the article to know how much the pack you buy holds and its real cost."
@@ -71,7 +84,7 @@
       "salt": "Salt"
     },
     "units": {
-      "heading": "UNITS & EQUIVALENCES",
+      "heading": "Units & equivalences",
       "base": "base",
       "recipe": "IN RECIPE",
       "diary": "IN DIARY",
@@ -79,12 +92,12 @@
       "equivalences": "EQUIVALENCES"
     },
     "stock": {
-      "heading": "ESTIMATED STOCK",
-      "value": "VALUE",
+      "heading": "Stock",
+      "value": "Value",
       "step": "1 pack",
       "clear": "It has run out",
       "edit": "Correct",
-      "confidence": "CONFIDENCE",
+      "confidence": "Confidence",
       "level": {
         "empty": "Empty",
         "low": "Running low",
@@ -121,7 +134,9 @@
         "swapUnit": "Switch unit"
       }
     },
-    "favorite": "Favorite"
+    "favorite": "Favorite",
+    "estimated": "Estimated",
+    "nutritionHeading": "Nutrition facts"
   },
   "article": {
     "breadcrumb": {

@@ -1,0 +1,68 @@
+@if (loading()) {
+  <ds-skeleton-fields [rows]="[1, 1, 1]" />
+} @else {
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <ds-stack [gap]="'var(--ds-space-5)'">
+      <ds-field
+        [label]="'startInventory.field.countedOn' | t"
+        [required]="true"
+      >
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-week-strip
+            data-testid="inventory-week"
+            [frameless]="true"
+            [selectable]="true"
+            [selected]="countedOn()"
+            [days]="weekDays()"
+            (daySelected)="onDay($event)"
+          />
+          <ds-date-field
+            data-testid="inventory-counted-on"
+            [formControl]="otherDate"
+            [placeholder]="'startInventory.field.otherDate' | t"
+            [sheetTitle]="'startInventory.field.otherDate' | t"
+            [ariaLabel]="'startInventory.field.otherDate' | t"
+          />
+        </ds-stack>
+      </ds-field>
+
+      <ds-field
+        [label]="'startInventory.field.shift' | t"
+        [hint]="'startInventory.field.shiftHint' | t"
+        [hintIcon]="true"
+        [required]="true"
+      >
+        <ds-segmented-toggle
+          data-testid="inventory-shift"
+          formControlName="shift"
+          [options]="shiftOptions()"
+        />
+      </ds-field>
+
+      <ds-disclosure
+        data-testid="inventory-note-toggle"
+        icon="pencil"
+        [title]="'startInventory.field.note' | t"
+        [meta]="'startInventory.field.optional' | t"
+        [(open)]="noteOpen"
+      >
+        <ds-text-input
+          data-testid="inventory-note"
+          variant="outlined"
+          formControlName="note"
+          [maxLength]="255"
+          [ariaLabel]="'startInventory.field.note' | t"
+          [placeholder]="'startInventory.field.notePlaceholder' | t"
+        />
+      </ds-disclosure>
+
+      @if (hasNothingToCount()) {
+        <ds-note icon="alertCircle" tone="warning">
+          {{ scopeLabel() }}
+        </ds-note>
+      } @else {
+        <ds-note>{{ "startInventory.explanation" | t }}</ds-note>
+      }
+    </ds-stack>
+  </form>
+}

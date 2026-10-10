@@ -97,6 +97,7 @@ export interface CalendarLegendItem {
               [class.ds-cal__cell--today]="cell.isToday"
               [class.ds-cal__cell--selected]="cell.isSelected"
               [disabled]="cell.disabled"
+              [attr.data-date]="cell.date"
               (click)="daySelected.emit(cell.date)"
             >
               {{ cell.day }}

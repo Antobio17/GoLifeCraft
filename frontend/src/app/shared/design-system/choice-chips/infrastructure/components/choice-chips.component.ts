@@ -16,6 +16,7 @@ export interface ChoiceChipOption {
     <div
       class="ds-choice-chips"
       [class.ds-choice-chips--wrap]="wrap"
+      [class.ds-choice-chips--scroll]="scroll"
       role="radiogroup"
     >
       @for (option of options; track option.value) {
@@ -78,6 +79,16 @@ export interface ChoiceChipOption {
         padding: var(--ds-space-2) var(--ds-space-3);
         border-radius: var(--ds-radius-pill);
       }
+      .ds-choice-chips--scroll {
+        flex-wrap: nowrap;
+        width: max-content;
+      }
+      .ds-choice-chips--scroll .ds-choice-chip {
+        flex: 0 0 auto;
+        padding: var(--ds-space-1-5) var(--ds-space-3);
+        border-radius: var(--ds-radius-pill);
+        white-space: nowrap;
+      }
       .ds-choice-chip.is-selected {
         background: var(--ds-primary);
         border-color: var(--ds-primary);
@@ -101,6 +112,7 @@ export interface ChoiceChipOption {
 export class ChoiceChipsComponent implements ControlValueAccessor {
   @Input() options: ChoiceChipOption[] = [];
   @Input() wrap = false;
+  @Input() scroll = false;
 
   value: string | number | null = null;
   disabled = false;

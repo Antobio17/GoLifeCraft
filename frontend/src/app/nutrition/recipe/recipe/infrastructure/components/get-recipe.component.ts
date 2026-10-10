@@ -1,3 +1,5 @@
+import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
+import { FoodLineComponent } from "@shared/design-system/food-line/infrastructure/components/food-line.component";
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
@@ -15,11 +17,8 @@ import { CardComponent } from "@shared/design-system/card/infrastructure/compone
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
-import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
-import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
+import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
 import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
@@ -27,6 +26,7 @@ import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/i
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
+import { StepBadgeComponent } from "@shared/design-system/step-badge/infrastructure/components/step-badge.component";
 import { StockControlComponent } from "@shared/design-system/stock-control/infrastructure/components/stock-control.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
@@ -46,6 +46,7 @@ import {
   SelectChipsComponent,
 } from "@shared/design-system/select-chips/infrastructure/components/select-chips.component";
 import { FieldComponent } from "@shared/design-system/field/infrastructure/components/field.component";
+import { AutosaveStatus } from "@shared/autosave/domain/models/autosave-status.model";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import {
   MacroShortLabels,
@@ -55,7 +56,6 @@ import {
   RecipeDetail,
   RecipeIngredientView,
 } from "@nutrition/recipe/recipe/domain/models/recipe.model";
-import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
@@ -70,6 +70,8 @@ import { AggregateNavigationService } from "@shared/routing/application/services
   templateUrl: "./get-recipe.component.html",
   styleUrls: ["./get-recipe.component.css"],
   imports: [
+    DividerComponent,
+    FoodLineComponent,
     RevealDirective,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -77,17 +79,13 @@ import { AggregateNavigationService } from "@shared/routing/application/services
     ScreenHeaderComponent,
     ProductHeroComponent,
     MacroBarsComponent,
-    MacroBadgesComponent,
     SectionHeaderComponent,
     CardComponent,
     StackComponent,
     ChipComponent,
     TextComponent,
-    PressableComponent,
     ButtonComponent,
-    EmojiTileComponent,
-    NoteComponent,
-    SkeletonChipsComponent,
+    SkeletonComponent,
     SkeletonScreenHeaderComponent,
     SkeletonHeroComponent,
     SkeletonMacroBarsComponent,
@@ -96,6 +94,7 @@ import { AggregateNavigationService } from "@shared/routing/application/services
     EmptyStateComponent,
     ConfirmActionModalComponent,
     StockControlComponent,
+    StepBadgeComponent,
     ModalSheetComponent,
     SaveStatusComponent,
     NumberInputComponent,
@@ -116,6 +115,9 @@ export class GetRecipeComponent {
   private getPantryLocationsService = inject(GetPantryLocationsService);
   protected stockView = inject(RecipeStockViewService);
   protected autosave = inject(AutosaveService);
+  showSaveStatus = computed(
+    () => AutosaveStatus.Idle !== this.autosave.status(),
+  );
   protected view = inject(RecipeViewService);
   private aggregateImageService = inject(AggregateImageService);
   private entityVisual = inject(EntityVisualService);
@@ -154,6 +156,24 @@ export class GetRecipeComponent {
       { servings: this.stockView.servings(this.stock()) },
     ),
   );
+  stockDebtLabel = computed(() => {
+    const debt = -this.stock();
+
+    if (debt <= 0) return "";
+
+    return 1 === debt
+      ? this.t("getRecipe.stock.debt.one")
+      : this.t("getRecipe.stock.debt.many", {
+          servings: this.stockView.servings(debt),
+        });
+  });
+
+  stockSubText = computed(() =>
+    this.t(
+      this.stock() < 0 ? "getRecipe.stock.debt.hint" : "getRecipe.stock.hint",
+    ),
+  );
+
   deleting = signal(false);
 
   readonly id = input.required<string>();
@@ -219,8 +239,9 @@ export class GetRecipeComponent {
         ingredient.kind,
         ingredient.refId,
       ),
+      kindIcon: ingredient.kind === "recipe" ? ("chefHat" as const) : null,
       quantityLabel: this.view.ingredientQuantityLabel(ingredient),
-      kcal: this.ingredientKcal(ingredient),
+      kcal: this.view.integer(ingredient.macros.calories),
       macros: this.ingredientMacros(ingredient),
     })),
   );

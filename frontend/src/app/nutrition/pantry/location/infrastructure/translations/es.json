@@ -1,22 +1,32 @@
 {
   "getPantryLocations": {
+    "eyebrow": "Despensa",
     "title": "Ubicaciones",
-    "back": "Volver a inventarios",
     "new": "Nueva ubicación",
     "stats": {
-      "locations": "ubicaciones"
+      "locations": {
+        "one": "ubicación",
+        "other": "ubicaciones"
+      }
     },
     "searchPlaceholder": "Buscar ubicación...",
     "searchClear": "Limpiar",
     "noResults": "Ninguna ubicación coincide con",
     "card": {
-      "articles": "artículos",
-      "recipes": "recetas"
+      "articles": {
+        "one": "artículo",
+        "other": "artículos"
+      },
+      "recipes": {
+        "one": "receta",
+        "other": "recetas"
+      }
     },
     "empty": {
       "title": "No hay ubicaciones",
       "text": "Crea la nevera, el congelador o la despensa para empezar a organizar el inventario"
-    }
+    },
+    "back": "Volver"
   },
   "createPantryLocation": {
     "title": "Nueva ubicación",
@@ -78,7 +88,7 @@
       "title": "Contenido",
       "remove": "Quitar",
       "emptyTitle": "Aquí no hay nada todavía",
-      "emptyText": "Usa el botón + de la cabecera para colocar aquí lo que guardas en este sitio",
+      "emptyText": "Usa «Añadir a la ubicación» para colocar aquí lo que guardas en este sitio",
       "open": "Abrir la ficha"
     },
     "candidates": {
@@ -89,6 +99,15 @@
       "add": "Añadir",
       "emptyTitle": "Sin resultados",
       "emptyText": "Nada sin ubicar encaja con la búsqueda. Lo que ya está en otro sitio hay que quitarlo de allí antes"
+    },
+    "hero": {
+      "items": {
+        "one": "cosa guardada",
+        "other": "cosas guardadas"
+      },
+      "empty": "Todavía vacía",
+      "articles": "Artículos",
+      "recipes": "Recetas"
     }
   },
   "pantryLocationKind": {

@@ -7,12 +7,14 @@ import { GetDiaryCalendarPort } from "@nutrition/diary/diary/domain/ports/get-di
 import { HttpGetDiaryCalendarAdapter } from "@nutrition/diary/diary/infrastructure/adapters/http-get-diary-calendar.adapter";
 import { GetDiaryCalendarService } from "@nutrition/diary/diary/application/services/get-diary-calendar.service";
 import { DiaryCalendarViewService } from "@nutrition/diary/diary/application/services/diary-calendar-view.service";
+import { DiaryWeekViewService } from "@nutrition/diary/diary/application/services/diary-week-view.service";
 
 export class GetDiaryProviders {
   static getProviders(): Provider[] {
     return [
       DiaryViewService,
       DiaryCalendarViewService,
+      DiaryWeekViewService,
       { provide: GetDiaryPort, useClass: HttpGetDiaryAdapter },
       {
         provide: GetDiaryService,

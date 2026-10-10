@@ -9,6 +9,7 @@ import { ArticleStockEstimate } from "@nutrition/pantry/stock/domain/models/arti
 import { StockLevel } from "@nutrition/pantry/stock/domain/models/stock-level.model";
 import { StockTrackingMode } from "@nutrition/pantry/stock/domain/models/stock-tracking-mode.model";
 import { UnitCatalogService } from "./unit-catalog.service";
+import { ArticleListRow } from "../../domain/models/article-list-row.model";
 
 export interface ArticleCardView {
   id: string;
@@ -171,6 +172,26 @@ export class ArticleViewService {
       protein: nutrition ? this.decimal(nutrition.protein) : null,
       fat: nutrition ? this.decimal(nutrition.fat) : null,
       carbs: nutrition ? this.decimal(nutrition.carbs) : null,
+      favorite: article.attributes.favorite ?? false,
+    };
+  }
+
+  toListRow(article: Article, imageUrl: string | null): ArticleListRow {
+    const nutrition = this.nutrition(article);
+
+    return {
+      id: article.id,
+      emoji: this.emoji(article),
+      imageUrl,
+      name: article.attributes.name,
+      price: this.price(article),
+      brand: this.brand(article),
+      store: this.store(article),
+      kcal: nutrition ? this.integer(nutrition.calories) : null,
+      proteinG: nutrition?.protein ?? 0,
+      fatG: nutrition?.fat ?? 0,
+      carbsG: nutrition?.carbs ?? 0,
+      macroLabel: "",
       favorite: article.attributes.favorite ?? false,
     };
   }

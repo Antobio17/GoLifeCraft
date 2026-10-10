@@ -1,3 +1,6 @@
+import { FoodLineComponent } from "@shared/design-system/food-line/infrastructure/components/food-line.component";
+import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
+import { MealCardComponent } from "@shared/design-system/meal-card/infrastructure/components/meal-card.component";
 import {
   Component,
   DestroyRef,
@@ -18,13 +21,9 @@ import { SplitViewComponent } from "@shared/design-system/split-view/infrastruct
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
-import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
-import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
+import { FormInputComponent } from "@shared/design-system/form-input/infrastructure/components/form-input.component";
 import { PlaceholderNoteComponent } from "@shared/design-system/placeholder-note/infrastructure/components/placeholder-note.component";
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
@@ -36,9 +35,9 @@ import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/i
 import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { MacroPanelComponent } from "@shared/design-system/macro-panel/infrastructure/components/macro-panel.component";
-import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { DiaryEntryComponent } from "@shared/design-system/diary-entry/infrastructure/components/diary-entry.component";
 import { DiaryTreeComponent } from "@shared/design-system/diary-tree/infrastructure/components/diary-tree.component";
@@ -67,7 +66,6 @@ import { AddMenuItemRequest } from "@nutrition/menu/menu/domain/models/add-menu-
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
-import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { uuidV4 } from "@shared/uuid/uuid";
 import {
   MenuDraft,
@@ -105,8 +103,11 @@ type PickerTab = "product" | "recipe";
 @Component({
   selector: "app-get-menu",
   templateUrl: "./get-menu.component.html",
+  styleUrl: "./get-menu.component.css",
   imports: [
-    RevealDirective,
+    FoodLineComponent,
+    MealCardComponent,
+    DividerComponent,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -114,13 +115,9 @@ type PickerTab = "product" | "recipe";
     StackComponent,
     CardComponent,
     TextComponent,
-    HeadingComponent,
     ButtonComponent,
-    IconButtonComponent,
     ScreenHeaderComponent,
-    EmojiTileComponent,
-    TextInputComponent,
-    NoteComponent,
+    FormInputComponent,
     PlaceholderNoteComponent,
     SearchInputComponent,
     ViewSwitchComponent,
@@ -132,9 +129,9 @@ type PickerTab = "product" | "recipe";
     SkeletonChipsComponent,
     SkeletonLineComponent,
     SkeletonComponent,
+    SkeletonScreenHeaderComponent,
     ConfirmActionModalComponent,
     MacroPanelComponent,
-    MacroBadgesComponent,
     WeekDayTabsComponent,
     DiaryEntryComponent,
     DiaryTreeComponent,
@@ -193,8 +190,16 @@ export class GetMenuComponent implements OnInit {
   pickerTab = signal<PickerTab>("product");
   pickerQuery = signal("");
   pickerTabs = computed<ViewSwitchOption[]>(() => [
-    { value: "product", label: this.t("getMenu.picker.products") },
-    { value: "recipe", label: this.t("getMenu.picker.recipes") },
+    {
+      value: "product",
+      label: this.t("getMenu.picker.products"),
+      icon: "leaf",
+    },
+    {
+      value: "recipe",
+      label: this.t("getMenu.picker.recipes"),
+      icon: "chefHat",
+    },
   ]);
 
   loadSheetMenuId = signal<string | null>(null);
@@ -203,6 +208,13 @@ export class GetMenuComponent implements OnInit {
   deleteAsked = signal(false);
   deleting = signal(false);
   exporting = signal(false);
+
+  detailsOpen = signal(false);
+  detailsName = signal("");
+  detailsNote = signal("");
+  detailsSavable = computed(() => this.detailsName().trim().length > 0);
+
+  title = computed(() => this.name().trim() || this.t("getMenu.untitled"));
 
   readonly skeletonMeals = [2, 2, 1, 1];
 
@@ -260,7 +272,14 @@ export class GetMenuComponent implements OnInit {
     (this.currentDay()?.meals ?? []).map((meal) => ({
       key: meal.key,
       label: this.mealLabel(meal.key),
-      meta: this.mealMeta(meal.totals.calories, meal.itemCount),
+      addLabel: this.translate("getMenu.meal.addTo", {
+        meal: this.mealLabel(meal.key).toLowerCase(),
+      }),
+      kcal: this.view.integer(meal.totals.calories),
+      protein: meal.totals.protein,
+      fat: meal.totals.fat,
+      carbs: meal.totals.carbs,
+      macrosLabel: this.view.macroLine(meal.totals, this.macroLabels()),
       items: meal.items.map((item) => ({
         item,
         imageUrl: this.entityVisual.urlOf(
@@ -271,7 +290,7 @@ export class GetMenuComponent implements OnInit {
         ),
         kindIcon: item.kind === "recipe" ? ("chefHat" as const) : null,
         kindLabel: this.itemBadge(item),
-        kcal: this.itemKcal(item),
+        kcal: this.view.integer(item.macros.calories),
         macrosLabel: this.view.macroLine(item.macros, this.macroLabels()),
         quantityLabel: this.view.quantityLabel(
           item.quantity,
@@ -322,7 +341,7 @@ export class GetMenuComponent implements OnInit {
         choice.refId,
         choice.image,
       ),
-      kcal: this.choiceKcal(choice),
+      kcal: this.view.integer(choice.macros.calories),
       macros: this.choiceMacros(choice),
     })),
   );
@@ -457,20 +476,6 @@ export class GetMenuComponent implements OnInit {
     return this.t(`getMenu.meals.${meal}`);
   }
 
-  mealMeta(calories: number, count: number): string {
-    if (count === 0) return this.t("getMenu.items.zero");
-
-    const items =
-      count === 1
-        ? this.t("getMenu.items.one")
-        : this.translate("getMenu.items.many", { count });
-
-    return this.translate("getMenu.meal.meta", {
-      kcal: this.view.integer(calories),
-      count: items,
-    });
-  }
-
   itemBadge(item: MenuItemView): string {
     return this.t(
       item.kind === "recipe" ? "getMenu.badge.recipe" : "getMenu.badge.product",
@@ -483,10 +488,6 @@ export class GetMenuComponent implements OnInit {
 
   choiceMacros(choice: MenuChoice): MacroBadge[] {
     return this.view.itemMacros(choice.macros, this.macroLabels());
-  }
-
-  itemKcal(item: MenuItemView): string {
-    return `${this.view.integer(item.macros.calories)} ${this.t("getMenu.kcal")}`;
   }
 
   itemUnitLabel(item: MenuItemView): string {
@@ -507,27 +508,30 @@ export class GetMenuComponent implements OnInit {
     this.backNavigation.back(["/menus"]);
   }
 
-  onName(value: string): void {
-    this.name.set(value);
-
-    const draft = this.draft();
-    if (draft) {
-      this.draft.set({ ...draft, name: value });
-
-      return;
-    }
-
-    if (!this.loadedDetail()) return;
-
-    this.queueDetails();
+  openDetails(): void {
+    this.detailsName.set(this.name());
+    this.detailsNote.set(this.note());
+    this.detailsOpen.set(true);
   }
 
-  onNote(value: string): void {
-    this.note.set(value);
+  closeDetails(): void {
+    this.detailsOpen.set(false);
+  }
+
+  saveDetails(): void {
+    if (!this.detailsSavable()) return;
+
+    this.closeDetails();
+    this.applyDetails(this.detailsName().trim(), this.detailsNote());
+  }
+
+  private applyDetails(name: string, note: string): void {
+    this.name.set(name);
+    this.note.set(note);
 
     const draft = this.draft();
     if (draft) {
-      this.draft.set({ ...draft, note: value });
+      this.draft.set({ ...draft, name, note });
 
       return;
     }
@@ -835,6 +839,7 @@ export class GetMenuComponent implements OnInit {
     this.name.set("");
     this.note.set("");
     this.loading.set(false);
+    this.openDetails();
   }
 
   private goToSavedMenu(type: MenuType): void {

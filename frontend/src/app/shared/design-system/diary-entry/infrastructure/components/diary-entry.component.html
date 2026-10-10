@@ -5,89 +5,171 @@
   [removeLabel]="removeLabel"
   (remove)="remove.emit()"
 >
-  <ds-stack
-    class="diary-entry__row"
-    direction="row"
-    align="center"
-    [gap]="compact ? 'var(--ds-space-2)' : 'var(--ds-space-3)'"
-    [class.diary-entry__row--compact]="compact"
-    [class.diary-entry__row--slid]="swipe.slid"
-    [class.diary-entry__row--expanded]="expandable && expanded"
-  >
-    @if (expandable) {
-      <ds-pressable
-        class="diary-entry__expand diary-entry__expand--tile"
-        [ariaLabel]="expanded ? collapseLabel : expandLabel"
-        (press)="expandToggled.emit()"
-      >
+  @if (line) {
+    <ds-stack
+      class="diary-entry__row diary-entry__row--line"
+      direction="row"
+      align="center"
+      gap="var(--ds-space-3)"
+      [class.diary-entry__row--slid]="swipe.slid"
+    >
+      @if (expandable) {
+        <ds-pressable
+          class="diary-entry__expand diary-entry__expand--tile"
+          [ariaLabel]="expanded ? collapseLabel : expandLabel"
+          (press)="expandToggled.emit()"
+        >
+          <ng-container [ngTemplateOutlet]="tile" />
+        </ds-pressable>
+      } @else {
         <ng-container [ngTemplateOutlet]="tile" />
-      </ds-pressable>
-    } @else {
-      <ng-container [ngTemplateOutlet]="tile" />
-    }
+      }
 
-    <ds-stack class="diary-entry__body" gap="var(--ds-space-1)" [grow]="true">
-      <ds-stack direction="row" align="center" gap="var(--ds-space-2)">
-        @if (openable) {
+      <ds-stack
+        class="diary-entry__body diary-entry__body--line"
+        gap="var(--ds-space-1)"
+        [grow]="true"
+      >
+        <ds-stack direction="row" align="center" gap="var(--ds-space-2)">
+          @if (openable) {
+            <ds-pressable
+              class="diary-entry__open diary-entry__open--line"
+              [ariaLabel]="openLabel"
+              (press)="opened.emit()"
+            >
+              <ds-text variant="strong" class="diary-entry__name">{{
+                name
+              }}</ds-text>
+            </ds-pressable>
+          } @else {
+            <ds-text
+              variant="strong"
+              class="diary-entry__name diary-entry__name--line"
+              >{{ name }}</ds-text
+            >
+          }
+
           <ds-pressable
-            class="diary-entry__open"
-            [ariaLabel]="openLabel"
-            (press)="opened.emit()"
+            class="diary-entry__quantity diary-entry__quantity--plain"
+            data-testid="diary-entry-quantity"
+            [ariaLabel]="quantityAriaLabel"
+            (press)="quantityPressed.emit()"
           >
+            <ds-text class="diary-entry__quantity-label">{{
+              quantityLabel
+            }}</ds-text>
+          </ds-pressable>
+          @if (expandable) {
+            <ds-pressable
+              class="diary-entry__expand diary-entry__expand--caret"
+              [ariaLabel]="expanded ? collapseLabel : expandLabel"
+              (press)="expandToggled.emit()"
+            >
+              <ds-icon
+                class="diary-entry__caret"
+                [class.diary-entry__caret--open]="expanded"
+                name="chevronDown"
+                [size]="16"
+                [stroke]="2.4"
+              />
+            </ds-pressable>
+          }
+
+          <ds-text class="diary-entry__kcal">{{ kcalLabel }}</ds-text>
+        </ds-stack>
+        @if (macrosLabel) {
+          <ds-text class="diary-entry__macros diary-entry__macros--line">{{
+            macrosLabel
+          }}</ds-text>
+        }
+      </ds-stack>
+    </ds-stack>
+  } @else {
+    <ds-stack
+      class="diary-entry__row"
+      direction="row"
+      align="center"
+      [gap]="compact ? 'var(--ds-space-2)' : 'var(--ds-space-3)'"
+      [class.diary-entry__row--compact]="compact"
+      [class.diary-entry__row--flat]="flat"
+      [class.diary-entry__row--slid]="swipe.slid"
+      [class.diary-entry__row--expanded]="expandable && expanded"
+    >
+      @if (expandable) {
+        <ds-pressable
+          class="diary-entry__expand diary-entry__expand--tile"
+          [ariaLabel]="expanded ? collapseLabel : expandLabel"
+          (press)="expandToggled.emit()"
+        >
+          <ng-container [ngTemplateOutlet]="tile" />
+        </ds-pressable>
+      } @else {
+        <ng-container [ngTemplateOutlet]="tile" />
+      }
+
+      <ds-stack class="diary-entry__body" gap="var(--ds-space-1)" [grow]="true">
+        <ds-stack direction="row" align="center" gap="var(--ds-space-2)">
+          @if (openable) {
+            <ds-pressable
+              class="diary-entry__open"
+              [ariaLabel]="openLabel"
+              (press)="opened.emit()"
+            >
+              <ds-text variant="strong" class="diary-entry__name">{{
+                name
+              }}</ds-text>
+            </ds-pressable>
+          } @else {
             <ds-text variant="strong" class="diary-entry__name">{{
               name
             }}</ds-text>
-          </ds-pressable>
-        } @else {
-          <ds-text variant="strong" class="diary-entry__name">{{
-            name
-          }}</ds-text>
-        }
+          }
 
-        <ds-text class="diary-entry__kcal">{{ kcalLabel }}</ds-text>
-      </ds-stack>
+          <ds-text class="diary-entry__kcal">{{ kcalLabel }}</ds-text>
+        </ds-stack>
 
-      <ds-stack direction="row" align="center" gap="var(--ds-space-2)">
-        <ds-pressable
-          class="diary-entry__quantity"
-          data-testid="diary-entry-quantity"
-          gap="var(--ds-space-1)"
-          [ariaLabel]="quantityAriaLabel"
-          (press)="quantityPressed.emit()"
-        >
-          <ds-text class="diary-entry__quantity-label">{{
-            quantityLabel
-          }}</ds-text>
-          <ds-icon
-            class="diary-entry__quantity-caret"
-            name="chevronDown"
-            [size]="12"
-            [stroke]="2.6"
-          />
-        </ds-pressable>
-
-        <ds-text class="diary-entry__macros">{{ macrosLabel }}</ds-text>
-
-        @if (expandable) {
+        <ds-stack direction="row" align="center" gap="var(--ds-space-2)">
           <ds-pressable
-            class="diary-entry__expand diary-entry__expand--caret"
-            [ariaLabel]="expanded ? collapseLabel : expandLabel"
-            (press)="expandToggled.emit()"
+            class="diary-entry__quantity"
+            data-testid="diary-entry-quantity"
+            gap="var(--ds-space-1)"
+            [ariaLabel]="quantityAriaLabel"
+            (press)="quantityPressed.emit()"
           >
+            <ds-text class="diary-entry__quantity-label">{{
+              quantityLabel
+            }}</ds-text>
             <ds-icon
-              class="diary-entry__caret"
-              [class.diary-entry__caret--open]="expanded"
+              class="diary-entry__quantity-caret"
               name="chevronDown"
-              [size]="16"
-              [stroke]="2.4"
+              [size]="12"
+              [stroke]="2.6"
             />
           </ds-pressable>
-        }
-      </ds-stack>
 
-      <ng-content select="[slot=footer]" />
+          <ds-text class="diary-entry__macros">{{ macrosLabel }}</ds-text>
+
+          @if (expandable) {
+            <ds-pressable
+              class="diary-entry__expand diary-entry__expand--caret"
+              [ariaLabel]="expanded ? collapseLabel : expandLabel"
+              (press)="expandToggled.emit()"
+            >
+              <ds-icon
+                class="diary-entry__caret"
+                [class.diary-entry__caret--open]="expanded"
+                name="chevronDown"
+                [size]="16"
+                [stroke]="2.4"
+              />
+            </ds-pressable>
+          }
+        </ds-stack>
+
+        <ng-content select="[slot=footer]" />
+      </ds-stack>
     </ds-stack>
-  </ds-stack>
+  }
 </ds-swipe-to-delete>
 
 <ng-template #tile>
@@ -96,7 +178,7 @@
       [emoji]="emoji"
       [imageUrl]="imageUrl"
       [alt]="name"
-      [size]="40"
+      [size]="line ? 32 : 40"
     />
     @if (kindIcon) {
       <ds-icon

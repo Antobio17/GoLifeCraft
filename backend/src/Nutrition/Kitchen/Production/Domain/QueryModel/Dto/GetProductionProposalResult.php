@@ -9,6 +9,7 @@ final class GetProductionProposalResult extends QueryAggregateResult
     /**
      * @param ProposalToCookItem[]  $toCook
      * @param ProposalCoveredItem[] $covered
+     * @param ProposalDay[]         $coverage
      */
     public function __construct(
         string $id,
@@ -18,6 +19,7 @@ final class GetProductionProposalResult extends QueryAggregateResult
         public readonly int $days,
         public readonly array $toCook,
         public readonly array $covered,
+        public readonly array $coverage,
     ) {
         parent::__construct(id: $id, aggregateName: $aggregateName);
     }

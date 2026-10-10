@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Output,
+  computed,
+  input,
+} from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { StackComponent } from "../../../stack/infrastructure/components/stack.component";
 import { TextComponent } from "../../../text/infrastructure/components/text.component";
@@ -6,7 +12,7 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
 import { ButtonComponent } from "../../../button/infrastructure/components/button.component";
 import { PressableComponent } from "../../../pressable/infrastructure/components/pressable.component";
 import { EmojiTileComponent } from "../../../emoji-tile/infrastructure/components/emoji-tile.component";
-import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
+import { DividerComponent } from "../../../divider/infrastructure/components/divider.component";
 import { InlineQuantityComponent } from "../../../inline-quantity/infrastructure/components/inline-quantity.component";
 import { SwipeToDeleteComponent } from "../../../swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { DiaryTreeRow } from "../../domain/models/diary-tree-row.model";
@@ -27,7 +33,7 @@ const INDENT_PER_LEVEL_REM = 0.9375;
     ButtonComponent,
     PressableComponent,
     EmojiTileComponent,
-    MacroBadgesComponent,
+    DividerComponent,
     InlineQuantityComponent,
     SwipeToDeleteComponent,
   ],
@@ -35,17 +41,17 @@ const INDENT_PER_LEVEL_REM = 0.9375;
   styleUrls: ["./diary-tree.component.css"],
 })
 export class DiaryTreeComponent {
-  @Input() rows: DiaryTreeRow[] = [];
-  @Input() title = "";
-  @Input() showReset = false;
-  @Input() resetMessage = "";
-  @Input() resetLabel = "";
-  @Input() expandLabel = "";
-  @Input() collapseLabel = "";
-  @Input() openLabel = "";
-  @Input() quantityAriaLabel = "";
-  @Input() unitAriaLabel = "";
-  @Input() removeLabel = "";
+  rows = input<DiaryTreeRow[]>([]);
+  title = input("");
+  showReset = input(false);
+  resetMessage = input("");
+  resetLabel = input("");
+  expandLabel = input("");
+  collapseLabel = input("");
+  openLabel = input("");
+  quantityAriaLabel = input("");
+  unitAriaLabel = input("");
+  removeLabel = input("");
 
   @Output() toggled = new EventEmitter<string>();
   @Output() opened = new EventEmitter<string>();
@@ -55,7 +61,14 @@ export class DiaryTreeComponent {
   @Output() lotPicked = new EventEmitter<string>();
   @Output() removed = new EventEmitter<string>();
 
-  indentOf(row: DiaryTreeRow): string {
-    return `${row.depth * INDENT_PER_LEVEL_REM}rem`;
-  }
+  viewRows = computed(() =>
+    this.rows().map((row) => ({
+      ...row,
+      indent: `${row.depth * INDENT_PER_LEVEL_REM}rem`,
+      macrosLabel: row.macros
+        .filter((macro) => !!macro.value)
+        .map((macro) => `${macro.label} ${macro.value}`)
+        .join(" · "),
+    })),
+  );
 }

@@ -48,6 +48,10 @@ export class PantryLocationViewService {
     };
   }
 
+  countKey(count: number, key: string): string {
+    return 1 === count ? `${key}.one` : `${key}.other`;
+  }
+
   format(quantity: number): string {
     return Number.isInteger(quantity)
       ? quantity.toString()

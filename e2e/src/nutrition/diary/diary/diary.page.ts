@@ -54,26 +54,39 @@ export class DiaryPage {
     return Number(match[1].replace(/[.,]/g, ""));
   }
 
-  get dayLabel(): Locator {
-    return this.ds.button("diary-today");
+  get week(): Locator {
+    return this.ds.host("diary-week");
+  }
+
+  async selectedDate(): Promise<string> {
+    const date = await this.week
+      .locator("button[aria-pressed='true']")
+      .first()
+      .getAttribute("data-date");
+
+    if (!date) {
+      throw new Error("La tira de semana no marca ningún día");
+    }
+
+    return date;
   }
 
   async previousDay(): Promise<void> {
-    await this.moveDay("diary-prev");
+    await this.moveDay(-1);
   }
 
   async nextDay(): Promise<void> {
-    await this.moveDay("diary-next");
+    await this.moveDay(1);
   }
 
-  private async moveDay(testId: string): Promise<void> {
+  private async moveDay(offset: number): Promise<void> {
     const dayLoaded = this.page.waitForResponse(
       (response) =>
         response.request().method() === "GET" &&
         new URL(response.url()).pathname === "/api/v1/nutrition/diary",
     );
 
-    await this.ds.click(testId);
+    await this.ds.click(offset < 0 ? "diary-prev" : "diary-next");
     await dayLoaded;
     await waitForAppReady(this.page);
   }

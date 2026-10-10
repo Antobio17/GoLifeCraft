@@ -5,8 +5,12 @@
     }
   },
   "getProductions": {
+    "eyebrow": "Nutrición",
     "title": "Cocina",
-    "subtitle": "Lo que cocinas en lote y te dura varios días",
+    "count": {
+      "one": "1 lote en marcha",
+      "many": "{{count}} lotes en marcha"
+    },
     "create": "Nueva producción",
     "meta": "{{recipes}} recetas · {{servings}} raciones",
     "status": {
@@ -16,7 +20,42 @@
     "empty": {
       "title": "Todavía no has cocinado en lote",
       "text": "Elige un rango de días y te decimos qué toca producir para cubrir el diario."
-    }
+    },
+    "hero": {
+      "kicker": "Toca cocinar",
+      "titlePending": "Lote para {{range}}",
+      "titleCovered": "Todo cubierto hasta el {{day}}",
+      "titleIdle": "Nada planificado hasta el {{day}}",
+      "stats": {
+        "recipes": "Recetas",
+        "servings": "Raciones",
+        "covered": "Cubiertas"
+      },
+      "servings": "{{servings}} rac.",
+      "more": "y {{count}} más",
+      "week": {
+        "title": "Próximos 7 días",
+        "caption": "{{covered}} cubiertos · {{toCook}} por cocinar",
+        "covered": "cubierto",
+        "toCook": "falta cocinar",
+        "empty": "nada planificado"
+      }
+    },
+    "tiles": {
+      "recipes": "Recetas",
+      "recipesMeta": "Lo que cocinas",
+      "inventory": "Inventario",
+      "inventoryMeta": "Lo que tienes",
+      "catalog": "Catálogo",
+      "catalogMeta": "Ingredientes"
+    },
+    "lots": {
+      "title": "Lotes",
+      "cooking": "En marcha",
+      "done": "Anteriores",
+      "open": "Abrir el lote del {{range}}"
+    },
+    "back": "Volver"
   },
   "createProduction": {
     "title": "Nueva producción",
@@ -26,7 +65,7 @@
     "to": "Hasta",
     "days": "{{days}} días",
     "dayOne": "1 día",
-    "hint": "Sumamos lo que el diario pide en esos días y le restamos lo que ya tienes hecho.",
+    "hint": "Lo que pide el diario menos lo que ya tienes hecho",
     "toCook": "Por producir",
     "summary": "{{recipes}} recetas · {{servings}} raciones",
     "submit": "Crear producción",
@@ -43,13 +82,16 @@
       "requiredBy": "Para {{parents}}",
       "fromDiary": "Del diario",
       "dueOn": "Para el {{day}}",
-      "cookNow": "Cocinar ahora"
+      "cookNow": "Cocinar ahora",
+      "metaNoDemand": "El diario no la pide · tienes {{stock}}",
+      "fromRecipe": "Desde la receta"
     },
     "covered": {
       "title": "Ya lo tienes cubierto",
       "meta": "Deberías tener {{servings}} raciones",
       "metaInProduction": "{{cooking}} raciones ya en marcha",
-      "clear": "no queda"
+      "clear": "no queda",
+      "caption": "El diario de esos días ya sale de lo que tienes hecho."
     },
     "empty": {
       "title": "No hay nada que producir",
@@ -57,7 +99,14 @@
     },
     "hint2": "Si una receta lleva otra dentro, la sub-receta entra en el lote y se cocina primero.",
     "toCookBatch": "Cocinar ahora para toda la semana",
-    "toCookSameDay": "Se cocina el día"
+    "toCookSameDay": "Se cocina el día",
+    "preset": {
+      "3": "3 días",
+      "5": "5 días",
+      "7": "1 semana",
+      "custom": "Personalizado"
+    },
+    "widen": "Ampliar 7 días más"
   },
   "getProduction": {
     "back": "Volver a producciones",

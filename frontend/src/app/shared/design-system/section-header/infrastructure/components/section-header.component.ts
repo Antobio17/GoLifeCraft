@@ -24,6 +24,9 @@ type SectionHeaderSize = "sm" | "md";
         <ng-content select="[slot=trailing]" />
       </div>
     </div>
+    @if (caption) {
+      <p class="ds-shead__caption">{{ caption }}</p>
+    }
   `,
   styles: [
     `
@@ -62,6 +65,12 @@ type SectionHeaderSize = "sm" | "md";
         font-weight: 700;
         color: var(--ds-primary);
       }
+      .ds-shead__caption {
+        margin: var(--ds-space-1) 0 0;
+        font-size: var(--ds-text-sm);
+        line-height: 1.4;
+        color: var(--ds-text-meta);
+      }
       .ds-shead__label {
         font-size: var(--ds-text-sm);
         font-weight: 700;
@@ -74,6 +83,7 @@ export class SectionHeaderComponent {
   @Input() title = "";
   @Input() actionLabel = "";
   @Input() staticLabel = "";
+  @Input() caption = "";
   @Input() size: SectionHeaderSize = "sm";
 
   @Output() action = new EventEmitter<void>();

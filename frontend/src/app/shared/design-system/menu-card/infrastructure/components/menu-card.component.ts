@@ -1,53 +1,55 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { MacroBarLabels } from "../../../macro-bar/domain/models/macro-bar-labels.model";
+import { Component, computed, input, output } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { DsIconName } from "../../../icon/domain/models/icon.model";
-import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
-import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
+import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/macro-bar.component";
+import {
+  MenuComponent,
+  MenuItem,
+} from "../../../menu/infrastructure/components/menu.component";
 
 @Component({
   selector: "ds-menu-card",
-  imports: [IconComponent, MacroBadgesComponent],
+  imports: [IconComponent, MacroBarComponent, MenuComponent],
   template: `
-    <div class="ds-mcard">
+    <article class="ds-mcard">
       <button type="button" class="ds-mcard__main" (click)="activated.emit()">
-        <span class="ds-mcard__text">
-          <span class="ds-mcard__name">{{ name }}</span>
-          <span class="ds-mcard__meta">{{ meta }}</span>
-        </span>
-        <span class="ds-mcard__energy">
-          <span class="ds-mcard__kcal">{{ kcal }}</span>
-          <span class="ds-mcard__kcalCaption">{{ kcalCaption }}</span>
-        </span>
+        <span class="ds-mcard__name">{{ name() }}</span>
+        @if (meta()) {
+          <span class="ds-mcard__meta">{{ meta() }}</span>
+        }
+        <ds-macro-bar
+          class="ds-mcard__macros"
+          [protein]="protein()"
+          [fat]="fat()"
+          [carbs]="carbs()"
+          [ariaLabel]="macrosLabel()"
+          [labels]="macroLabels()"
+        />
       </button>
 
-      <ds-macro-badges [macros]="macros" />
-
-      <div class="ds-mcard__actions">
-        <button type="button" class="ds-mcard__load" (click)="loaded.emit()">
-          <ds-icon [name]="loadIcon" [size]="14" [stroke]="2.4" />
-          {{ loadLabel }}
-        </button>
-        <button
-          type="button"
-          class="ds-mcard__action"
-          [attr.aria-label]="shopLabel"
-          [attr.title]="shopLabel"
-          (click)="shopped.emit()"
-        >
-          <ds-icon name="cart" [size]="17" [stroke]="2.1" />
-        </button>
-        <button
-          type="button"
-          class="ds-mcard__action"
-          [disabled]="exporting"
-          [attr.aria-label]="exportLabel"
-          [attr.title]="exportLabel"
-          (click)="exported.emit()"
-        >
-          <ds-icon name="share" [size]="17" [stroke]="2.1" />
-        </button>
+      <div class="ds-mcard__aside">
+        <ds-menu
+          data-testid="menu-card-more"
+          [compact]="true"
+          [triggerLabel]="moreLabel()"
+          [items]="moreItems()"
+          (selected)="onMore($event)"
+        />
+        @if (!loadInMenu()) {
+          <button
+            type="button"
+            class="ds-mcard__load"
+            data-testid="menu-card-load"
+            [attr.aria-label]="loadLabel()"
+            [attr.title]="loadLabel()"
+            (click)="loaded.emit()"
+          >
+            <ds-icon [name]="loadIcon()" [size]="18" [stroke]="2.4" />
+          </button>
+        }
       </div>
-    </div>
+    </article>
   `,
   styles: [
     `
@@ -56,135 +58,133 @@ import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.mode
       }
       .ds-mcard {
         display: flex;
-        flex-direction: column;
-        gap: var(--ds-space-2);
-        height: 100%;
+        align-items: center;
+        gap: var(--ds-space-3);
+        padding: var(--ds-space-3) var(--ds-space-3) var(--ds-space-3)
+          var(--ds-space-4);
         background: var(--ds-surface);
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-surface);
-        --ds-pad: var(--ds-space-4);
-        padding: var(--ds-pad);
-        box-shadow: var(--ds-elev);
-        transition:
-          border-color var(--ds-transition-fast),
-          box-shadow var(--ds-dur-3) var(--ds-ease-in-out),
-          transform var(--ds-dur-3) var(--ds-ease-in-out);
+        box-shadow: var(--ds-shadow-card);
+        transition: border-color var(--ds-transition-fast);
       }
       .ds-mcard:hover {
-        border-color: var(--ds-border-strong);
-        box-shadow: var(--ds-elev-lg);
-        transform: translateY(-2px);
+        border-color: var(--ds-primary-soft-border);
       }
       .ds-mcard__main {
-        display: flex;
-        align-items: center;
-        gap: var(--ds-space-3);
-        width: 100%;
-        text-align: left;
         appearance: none;
-        border: none;
-        background: transparent;
-        padding: 0;
-        font: inherit;
-        color: inherit;
-        cursor: pointer;
-      }
-      .ds-mcard__text {
         flex: 1 1 auto;
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: var(--ds-space-1);
+        gap: var(--ds-space-1-5);
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--ds-text);
+        font-family: var(--ds-font-body);
+        text-align: left;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
       }
       .ds-mcard__name {
+        font-family: var(--ds-font-display);
         font-size: var(--ds-text-lg);
         font-weight: var(--ds-weight-bold);
-        line-height: 1.2;
+        letter-spacing: -0.01em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .ds-mcard__meta {
-        font-size: var(--ds-text-sm);
+        font-size: var(--ds-text-base);
         color: var(--ds-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
-      .ds-mcard__energy {
+      .ds-mcard__macros {
+        width: min(100%, 22rem);
+      }
+      .ds-mcard__aside {
         flex: 0 0 auto;
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 2px;
-        padding: var(--ds-space-1) var(--ds-space-1) 0 0;
-      }
-      .ds-mcard__kcal {
-        font-family: var(--ds-font-display);
-        font-weight: 800;
-        font-size: var(--ds-text-xl);
-        line-height: 1;
-        color: var(--ds-primary);
-      }
-      .ds-mcard__kcalCaption {
-        font-size: var(--ds-text-xs);
-        font-weight: var(--ds-weight-bold);
-        color: var(--ds-text-meta);
-      }
-      .ds-mcard__actions {
-        display: flex;
-        gap: var(--ds-space-1-5);
-        margin-top: auto;
-        padding-top: 2px;
+        align-items: center;
+        gap: var(--ds-space-1);
       }
       .ds-mcard__load {
-        flex: 1 1 auto;
+        appearance: none;
+        width: 2.75rem;
+        height: 2.75rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: var(--ds-space-1);
-        appearance: none;
-        cursor: pointer;
+        border: none;
+        border-radius: 50%;
         background: var(--ds-primary-soft);
         color: var(--ds-primary-soft-text);
-        border: 1px solid var(--ds-primary-soft-border);
-        border-radius: var(--ds-radius-control);
-        padding: var(--ds-space-2);
-        font: inherit;
-        font-size: var(--ds-text-base);
-        font-weight: var(--ds-weight-bold);
-      }
-      .ds-mcard__action {
-        flex: 0 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.375rem;
-        appearance: none;
-        border: none;
         cursor: pointer;
-        background: var(--ds-surface-inset);
-        color: var(--ds-text);
-        border-radius: var(--ds-radius-control);
+        -webkit-tap-highlight-color: transparent;
+        transition: transform var(--ds-dur-1) var(--ds-ease-out);
       }
-      .ds-mcard__action[disabled] {
-        opacity: 0.55;
-        cursor: default;
+      .ds-mcard__load:hover {
+        background: var(--ds-primary-soft-hover);
+      }
+      .ds-mcard__load:active {
+        transform: scale(0.92);
+      }
+      .ds-mcard__main:focus-visible {
+        outline: 2px solid var(--ds-border-focus);
+        outline-offset: 2px;
+        border-radius: var(--ds-radius-mark);
+      }
+      .ds-mcard__load:focus-visible {
+        outline: 2px solid var(--ds-border-focus);
+        outline-offset: 2px;
       }
     `,
   ],
 })
 export class MenuCardComponent {
-  @Input() name = "";
-  @Input() meta = "";
-  @Input() kcal = "";
-  @Input() kcalCaption = "";
-  @Input() macros: MacroBadge[] = [];
-  @Input() loadLabel = "";
-  @Input() loadIcon: DsIconName = "download";
-  @Input() shopLabel = "";
-  @Input() exportLabel = "";
-  @Input() exporting = false;
+  readonly name = input("");
+  readonly meta = input("");
+  readonly protein = input(0);
+  readonly fat = input(0);
+  readonly carbs = input(0);
+  readonly macrosLabel = input("");
+  readonly macroLabels = input<MacroBarLabels | null>(null);
+  readonly loadLabel = input("");
+  readonly loadInMenu = input(false);
+  readonly loadIcon = input<DsIconName>("download");
+  readonly moreLabel = input("");
+  readonly shopLabel = input("");
+  readonly exportLabel = input("");
 
-  @Output() activated = new EventEmitter<void>();
-  @Output() loaded = new EventEmitter<void>();
-  @Output() shopped = new EventEmitter<void>();
-  @Output() exported = new EventEmitter<void>();
+  readonly activated = output<void>();
+  readonly loaded = output<void>();
+  readonly shopped = output<void>();
+  readonly exported = output<void>();
+
+  readonly moreItems = computed<MenuItem[]>(() => [
+    ...(this.loadInMenu()
+      ? [{ value: "load", label: this.loadLabel(), icon: this.loadIcon() }]
+      : []),
+    { value: "shop", label: this.shopLabel(), icon: "cart" },
+    { value: "export", label: this.exportLabel(), icon: "share" },
+  ]);
+
+  onMore(value: string): void {
+    if (value === "load") {
+      this.loaded.emit();
+      return;
+    }
+
+    if (value === "shop") {
+      this.shopped.emit();
+
+      return;
+    }
+
+    this.exported.emit();
+  }
 }

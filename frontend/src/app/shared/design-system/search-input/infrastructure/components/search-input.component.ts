@@ -34,6 +34,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
         class="ds-search__input"
         type="text"
         [placeholder]="placeholder"
+        [attr.aria-label]="ariaLabel || null"
         [value]="value"
         [disabled]="disabled"
         (input)="onInput($event)"
@@ -125,6 +126,7 @@ export class SearchInputComponent
   implements ControlValueAccessor, OnInit, OnDestroy
 {
   @Input() placeholder = "";
+  @Input() ariaLabel = "";
   @Input() clearLabel = "Clear";
   @Input() debounce = 300;
   @Input() value = "";

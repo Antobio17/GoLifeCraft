@@ -1,3 +1,5 @@
+import { FoodLineComponent } from "@shared/design-system/food-line/infrastructure/components/food-line.component";
+import { NgTemplateOutlet } from "@angular/common";
 import {
   Component,
   DestroyRef,
@@ -8,7 +10,8 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { Observable } from "rxjs";
+import { Router } from "@angular/router";
+import { Observable, forkJoin } from "rxjs";
 import { tap } from "rxjs/operators";
 import { AutosaveService } from "@shared/autosave/application/services/autosave.service";
 import { UndoService } from "@shared/undo/application/services/undo.service";
@@ -20,16 +23,17 @@ import { SplitViewComponent } from "@shared/design-system/split-view/infrastruct
 import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
 import { CalorieSummaryComponent } from "@shared/design-system/calorie-summary/infrastructure/components/calorie-summary.component";
 import { DiaryEntryComponent } from "@shared/design-system/diary-entry/infrastructure/components/diary-entry.component";
-import { RailComponent } from "@shared/design-system/rail/infrastructure/components/rail.component";
-import { StuckDirective } from "@shared/design-system/stuck/infrastructure/directives/stuck.directive";
-import { MacroBadgesComponent } from "@shared/design-system/macro-badges/infrastructure/components/macro-badges.component";
-import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
+import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
+import { WeekStripComponent } from "@shared/design-system/week-strip/infrastructure/components/week-strip.component";
+import { WeekStripDay } from "@shared/design-system/week-strip/domain/models/week-strip-day.model";
+import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
+import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
+import { MealCardComponent } from "@shared/design-system/meal-card/infrastructure/components/meal-card.component";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { PlaceholderNoteComponent } from "@shared/design-system/placeholder-note/infrastructure/components/placeholder-note.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -55,6 +59,10 @@ import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastru
 import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { GetArticlesService } from "@nutrition/catalog/article/application/services/get-articles.service";
 import { GetRecipesService } from "@nutrition/recipe/recipe/application/services/get-recipes.service";
+import { GetMenusService } from "@nutrition/menu/menu/application/services/get-menus.service";
+import { GetProductionsService } from "@nutrition/kitchen/production/application/services/get-productions.service";
+import { ProductionStatus } from "@nutrition/kitchen/production/domain/models/production-status.model";
+import { GetShoppingListService } from "@nutrition/shopping/shopping/application/services/get-shopping-list.service";
 import { GetDiaryService } from "@nutrition/diary/diary/application/services/get-diary.service";
 import { GetDiaryCalendarService } from "@nutrition/diary/diary/application/services/get-diary-calendar.service";
 import {
@@ -63,6 +71,7 @@ import {
 } from "@nutrition/diary/diary/application/services/diary-view.service";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import { DiaryCalendarViewService } from "@nutrition/diary/diary/application/services/diary-calendar-view.service";
+import { DiaryWeekViewService } from "@nutrition/diary/diary/application/services/diary-week-view.service";
 import { DiaryCalendarDay } from "@nutrition/diary/diary/domain/models/diary-calendar.model";
 import {
   DiaryChoice,
@@ -119,6 +128,8 @@ type PickerTab = "product" | "recipe" | "quick";
   templateUrl: "./get-diary.component.html",
   styleUrls: ["./get-diary.component.css"],
   imports: [
+    FoodLineComponent,
+    NgTemplateOutlet,
     FormsModule,
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -126,14 +137,14 @@ type PickerTab = "product" | "recipe" | "quick";
     ModuleCardComponent,
     CalorieSummaryComponent,
     DiaryEntryComponent,
-    RailComponent,
-    StuckDirective,
-    MacroBadgesComponent,
-    EmojiTileComponent,
+    ScreenHeaderComponent,
+    WeekStripComponent,
+    GridComponent,
+    ActionTileComponent,
+    DividerComponent,
+    MealCardComponent,
     TextComponent,
-    HeadingComponent,
     ButtonComponent,
-    IconButtonComponent,
     PlaceholderNoteComponent,
     CardComponent,
     StackComponent,
@@ -163,6 +174,9 @@ export class GetDiaryComponent implements OnInit {
   private getDiaryCalendarService = inject(GetDiaryCalendarService);
   private getArticlesService = inject(GetArticlesService);
   private getRecipesService = inject(GetRecipesService);
+  private getMenusService = inject(GetMenusService);
+  private getProductionsService = inject(GetProductionsService);
+  private getShoppingListService = inject(GetShoppingListService);
   private createDiaryEntryService = inject(CreateDiaryEntryService);
   private updateDiaryEntryService = inject(UpdateDiaryEntryService);
   private updateDiaryEntryNodeService = inject(UpdateDiaryEntryNodeService);
@@ -184,6 +198,8 @@ export class GetDiaryComponent implements OnInit {
   protected goalForm = inject(DiaryGoalFormService);
   protected view = inject(DiaryViewService);
   protected calendarView = inject(DiaryCalendarViewService);
+  private weekView = inject(DiaryWeekViewService);
+  private router = inject(Router);
   protected picker = inject(DiaryPickerService);
   private destroyRef = inject(DestroyRef);
   protected autosave = inject(AutosaveService);
@@ -210,12 +226,75 @@ export class GetDiaryComponent implements OnInit {
   pickerTab = signal<PickerTab>("product");
   pickerQuery = signal("");
   pickerTabs = computed<ViewSwitchOption[]>(() => [
-    { value: "product", label: this.t("getDiary.picker.products") },
-    { value: "recipe", label: this.t("getDiary.picker.recipes") },
-    { value: "quick", label: this.t("getDiary.picker.quick") },
+    {
+      value: "product",
+      label: this.t("getDiary.picker.products"),
+      icon: "leaf",
+    },
+    {
+      value: "recipe",
+      label: this.t("getDiary.picker.recipes"),
+      icon: "chefHat",
+    },
+    { value: "quick", label: this.t("getDiary.picker.quick"), icon: "pencil" },
   ]);
 
   attributes = computed(() => this.day()?.attributes ?? null);
+
+  eyebrow = computed(
+    () =>
+      `${this.t("getDiary.eyebrow")} · ${this.view.shortDateLine(this.date())}`,
+  );
+
+  quickAddMeal = computed(() => {
+    const open = (this.attributes()?.meals ?? []).filter(
+      (meal) => !meal.consumed,
+    );
+    if (open.length === 0) return null;
+
+    return this.view.mealForHour(open, new Date().getHours());
+  });
+  quickAddLabel = computed(() => {
+    const mealKey = this.quickAddMeal();
+    if (!mealKey) return "";
+
+    return this.t(`getDiary.addTo.${mealKey}`);
+  });
+
+  weekStart = signal(this.weekView.weekStart(this.view.todayIso()));
+  weekCalendar = signal<DiaryCalendarDay[]>([]);
+  weekDays = computed<WeekStripDay[]>(() =>
+    this.weekView.days(
+      this.weekStart(),
+      this.weekCalendar(),
+      this.view.todayIso(),
+    ),
+  );
+  weekTitle = computed(() => {
+    if (this.weekView.contains(this.weekStart(), this.view.todayIso())) {
+      return this.t("getDiary.week.title");
+    }
+
+    return this.t("getDiary.week.titleOther", {
+      range: this.weekView.rangeLabel(this.weekStart()),
+    });
+  });
+  weekCaption = computed(() => {
+    const tally = this.weekView.tally(
+      this.weekStart(),
+      this.weekCalendar(),
+      this.view.todayIso(),
+    );
+
+    if (tally.logged === 0) {
+      return this.t("getDiary.week.captionEmpty");
+    }
+
+    return this.t("getDiary.week.caption", {
+      onTarget: tally.onTarget,
+      logged: tally.logged,
+    });
+  });
 
   summaryCard = computed(() => {
     const diary = this.attributes();
@@ -261,7 +340,7 @@ export class GetDiaryComponent implements OnInit {
         choice.refId,
         choice.image,
       ),
-      kcal: this.choiceKcal(choice),
+      kcal: this.view.integer(choice.macros.calories),
       macros: this.choiceMacros(choice),
     })),
   );
@@ -300,7 +379,13 @@ export class GetDiaryComponent implements OnInit {
     (this.attributes()?.meals ?? []).map((meal) => ({
       key: meal.key,
       label: this.mealLabel(meal.key),
-      meta: this.view.mealMeta(meal),
+      kcal: this.view.integer(meal.totals.calories),
+      kcalUnit: this.t("getDiary.kcal"),
+      protein: meal.totals.protein,
+      fat: meal.totals.fat,
+      carbs: meal.totals.carbs,
+      macrosLabel: `${this.t("getDiary.macrosAria")}: ${this.view.macroLine(meal.totals, this.macroLabels())}`,
+      addLabel: this.t(`getDiary.addTo.${meal.key}`),
       consumed: meal.consumed,
       partial: !meal.consumed && meal.entries.some((entry) => entry.consumed),
       consumable: meal.entries.length > 0,
@@ -315,7 +400,7 @@ export class GetDiaryComponent implements OnInit {
         ),
         kindIcon: this.kindIcon(entry.kind),
         kindLabel: this.badgeLabel(entry.kind),
-        kcalLabel: `${this.view.integer(entry.macros.calories)} ${this.t("getDiary.kcal")}`,
+        kcalLabel: this.view.integer(entry.macros.calories),
         macrosLabel: this.view.macroLine(entry.macros, this.macroLabels()),
         quantityLabel: this.view.quantityLabel(
           entry,
@@ -481,11 +566,21 @@ export class GetDiaryComponent implements OnInit {
       });
   }
 
+  menusTotal = signal<number | null>(null);
+  cookingTotal = signal<number | null>(null);
+  shoppingPending = signal<number | null>(null);
+  shortcuts = computed(() => ({
+    menuMeta: this.countLabel("menuMeta", this.menusTotal()),
+    kitchenMeta: this.countLabel("kitchenMeta", this.cookingTotal()),
+    shoppingMeta: this.countLabel("shoppingMeta", this.shoppingPending()),
+  }));
+
   ngOnInit(): void {
     this.translationService
       .loadModuleTranslations(this.MODULE_PATH)
       .then(() => {
         this.loadChoices();
+        this.loadShortcuts();
         this.load(this.date());
       });
   }
@@ -519,18 +614,41 @@ export class GetDiaryComponent implements OnInit {
     return this.t(`getDiary.meals.${key}`);
   }
 
-  previousDay(): void {
-    this.load(this.view.addDays(this.date(), -1));
-  }
+  isToday = computed(() => this.date() === this.view.todayIso());
 
-  nextDay(): void {
-    this.load(this.view.addDays(this.date(), 1));
+  shiftDay(offset: number): void {
+    this.load(this.view.addDays(this.date(), offset));
   }
 
   goToday(): void {
-    if (this.view.isToday(this.date())) return;
+    if (this.isToday()) return;
 
     this.load(this.view.todayIso());
+  }
+
+  onWeekDay(date: string): void {
+    if (date === this.date()) return;
+
+    this.load(date);
+  }
+
+  goTo(path: string): void {
+    this.router.navigate([path]);
+  }
+
+  private loadWeek(): void {
+    const requests = this.weekView
+      .months(this.weekStart())
+      .map((month) => this.getDiaryCalendarService.getDiaryCalendar(month));
+
+    forkJoin(requests)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (responses) =>
+          this.weekCalendar.set(
+            responses.flatMap((response) => response.data.attributes.days),
+          ),
+      });
   }
 
   openCalendar(): void {
@@ -571,7 +689,16 @@ export class GetDiaryComponent implements OnInit {
       });
   }
 
+  openQuickAdd(): void {
+    const mealKey = this.quickAddMeal();
+    if (!mealKey) return;
+
+    this.openPicker(mealKey);
+  }
+
   openPicker(mealKey: string): void {
+    if (this.isMealConsumed(mealKey)) return;
+
     this.pickerMeal.set(mealKey);
     this.pickerTab.set("product");
     this.pickerQuery.set("");
@@ -967,6 +1094,46 @@ export class GetDiaryComponent implements OnInit {
     return Math.min(100, Math.max(0, Math.round(percent)));
   }
 
+  private followWeek(date: string): void {
+    if (this.weekView.contains(this.weekStart(), date)) return;
+
+    this.weekStart.set(this.weekView.weekStart(date));
+  }
+
+  private isMealConsumed(mealKey: string): boolean {
+    return (this.attributes()?.meals ?? []).some(
+      (meal) => meal.key === mealKey && meal.consumed,
+    );
+  }
+
+  private countLabel(key: string, count: number | null): string {
+    if (count === null) return "";
+
+    return this.t(`getDiary.shortcuts.${key}`, { count });
+  }
+
+  private loadShortcuts(): void {
+    this.getMenusService.getMenus(1, 1).subscribe({
+      next: (response) => this.menusTotal.set(response.meta.total),
+    });
+    this.getProductionsService.getProductions(1, 100).subscribe({
+      next: (response) =>
+        this.cookingTotal.set(
+          response.data.filter(
+            (production) =>
+              ProductionStatus.Cooking === production.attributes.status,
+          ).length,
+        ),
+    });
+    this.getShoppingListService.getShoppingList().subscribe({
+      next: (response) =>
+        this.shoppingPending.set(
+          response.data.attributes.itemCount -
+            response.data.attributes.checkedCount,
+        ),
+    });
+  }
+
   private loadChoices(): void {
     this.getArticlesService.getArticles(1, 200).subscribe({
       next: (response) => this.picker.setProducts(response.data),
@@ -978,12 +1145,14 @@ export class GetDiaryComponent implements OnInit {
 
   private load(date: string, silent = false): void {
     this.date.set(date);
+    this.followWeek(date);
     if (!silent) this.loading.set(true);
 
     this.getDiaryService.getDiary(date).subscribe({
       next: (response) => {
         this.loadedDay.set(response.data);
         this.loading.set(false);
+        this.loadWeek();
       },
       error: () => this.loading.set(false),
     });

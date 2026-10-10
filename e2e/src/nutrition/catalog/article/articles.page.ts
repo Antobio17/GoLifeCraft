@@ -1,5 +1,5 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { Ds } from "../../../support/ds";
+import { Ds, SHEET_CONFIRM } from "../../../support/ds";
 import { waitForAppReady } from "../../../support/app-ready";
 
 export class ArticlesPage {
@@ -40,23 +40,17 @@ export class ArticlesPage {
       (res) =>
         res.url().includes("/api/v1/nutrition/catalog/articles") && res.ok(),
     );
-    await this.ds.choose("articles-filter-category", name);
+    await this.ds.click("articles-filters");
+    await this.ds
+      .host("articles-filter-category")
+      .getByRole("radio", { name, exact: true })
+      .click();
+    await this.page.locator(SHEET_CONFIRM).click();
     await response;
   }
 
-  favoriteToggle(name: string): Locator {
-    return this.cardNamed(name).locator(".ds-pcard__favorite");
-  }
-
-  async toggleFavorite(name: string): Promise<void> {
-    const saved = this.page.waitForResponse(
-      (res) =>
-        res.url().includes("/favorite") &&
-        "PUT" === res.request().method() &&
-        res.ok(),
-    );
-    await this.favoriteToggle(name).click();
-    await saved;
+  favoriteMark(name: string): Locator {
+    return this.cardNamed(name).locator(".ds-pcard__star");
   }
 
   async filterByFavorite(label: string): Promise<void> {
@@ -78,6 +72,7 @@ export class ArticlesPage {
 
   async startCreate(): Promise<void> {
     await this.ds.click("articles-create");
+    await this.page.getByRole("menuitem", { name: "Crear producto" }).click();
     await expect(this.page).toHaveURL(/\/catalog\/create$/);
   }
 }

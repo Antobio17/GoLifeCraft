@@ -2,9 +2,10 @@
   <ds-screen-header
     [leading]="'back'"
     [leadingLabel]="'getPantryLocations.back' | t"
+    (leadingClick)="goBack()"
+    [eyebrow]="'getPantryLocations.eyebrow' | t"
     [title]="'getPantryLocations.title' | t"
     [subtitle]="headerSubtitle()"
-    (leadingClick)="back()"
   >
     <ds-button
       slot="actions"
@@ -52,6 +53,7 @@
       <ds-grid dsReveal="children" [minColumn]="'18.75rem'">
         @for (row of rows(); track row.id) {
           <ds-location-card
+            data-testid="location-card"
             [glyph]="row.glyph"
             [color]="row.color"
             [name]="row.name"

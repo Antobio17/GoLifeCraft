@@ -5,8 +5,12 @@
     }
   },
   "getProductions": {
+    "eyebrow": "Nutrition",
     "title": "Kitchen",
-    "subtitle": "What you batch-cook and lasts you several days",
+    "count": {
+      "one": "1 batch in progress",
+      "many": "{{count}} batches in progress"
+    },
     "create": "New production",
     "meta": "{{recipes}} recipes · {{servings}} servings",
     "status": {
@@ -16,7 +20,42 @@
     "empty": {
       "title": "You have not batch-cooked yet",
       "text": "Pick a range of days and we will tell you what to produce to cover the diary."
-    }
+    },
+    "hero": {
+      "kicker": "Time to cook",
+      "titlePending": "Batch for {{range}}",
+      "titleCovered": "All covered until {{day}}",
+      "titleIdle": "Nothing planned until {{day}}",
+      "stats": {
+        "recipes": "Recipes",
+        "servings": "Servings",
+        "covered": "Covered"
+      },
+      "servings": "{{servings}} serv.",
+      "more": "and {{count}} more",
+      "week": {
+        "title": "Next 7 days",
+        "caption": "{{covered}} covered · {{toCook}} to cook",
+        "covered": "covered",
+        "toCook": "still to cook",
+        "empty": "nothing planned"
+      }
+    },
+    "tiles": {
+      "recipes": "Recipes",
+      "recipesMeta": "What you cook",
+      "inventory": "Inventory",
+      "inventoryMeta": "What you have",
+      "catalog": "Catalog",
+      "catalogMeta": "Ingredients"
+    },
+    "lots": {
+      "title": "Batches",
+      "cooking": "In progress",
+      "done": "Previous",
+      "open": "Open the {{range}} batch"
+    },
+    "back": "Back"
   },
   "createProduction": {
     "title": "New production",
@@ -26,7 +65,7 @@
     "to": "To",
     "days": "{{days}} days",
     "dayOne": "1 day",
-    "hint": "We add up what the diary asks for on those days and subtract what you already have cooked.",
+    "hint": "What the diary asks for minus what you already have cooked",
     "toCook": "To produce",
     "summary": "{{recipes}} recipes · {{servings}} servings",
     "submit": "Create production",
@@ -43,13 +82,16 @@
       "requiredBy": "For {{parents}}",
       "fromDiary": "From the diary",
       "dueOn": "For {{day}}",
-      "cookNow": "Cook now"
+      "cookNow": "Cook now",
+      "metaNoDemand": "Not in the diary · you have {{stock}}",
+      "fromRecipe": "From the recipe"
     },
     "covered": {
       "title": "Already covered",
       "meta": "You should have {{servings}} servings",
       "metaInProduction": "{{cooking}} servings already under way",
-      "clear": "none left"
+      "clear": "none left",
+      "caption": "The diary for those days is already covered by what you have cooked."
     },
     "empty": {
       "title": "Nothing to produce",
@@ -57,7 +99,14 @@
     },
     "hint2": "If a recipe contains another one, the sub-recipe joins the batch and is cooked first.",
     "toCookBatch": "Cook now for the whole week",
-    "toCookSameDay": "Cooked on the day"
+    "toCookSameDay": "Cooked on the day",
+    "preset": {
+      "3": "3 days",
+      "5": "5 days",
+      "7": "1 week",
+      "custom": "Custom"
+    },
+    "widen": "Add 7 more days"
   },
   "getProduction": {
     "back": "Back to productions",

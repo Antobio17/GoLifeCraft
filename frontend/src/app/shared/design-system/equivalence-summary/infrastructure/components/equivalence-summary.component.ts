@@ -4,11 +4,13 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
 @Component({
   selector: "ds-equivalence-summary",
   template: `
-    <section class="ds-eqs">
-      <header class="ds-eqs__head">
-        <span class="ds-eqs__title">{{ title }}</span>
-        <span class="ds-eqs__badge">{{ baseBadge }}</span>
-      </header>
+    <section class="ds-eqs" [class.ds-eqs--headless]="headless">
+      @if (!headless) {
+        <header class="ds-eqs__head">
+          <span class="ds-eqs__title">{{ title }}</span>
+          <span class="ds-eqs__badge">{{ baseBadge }}</span>
+        </header>
+      }
 
       <div class="ds-eqs__defaults">
         <div class="ds-eqs__default">
@@ -48,6 +50,18 @@ import { EquivalenceSummaryLine } from "../../domain/models/equivalence-summary.
         border-radius: var(--ds-radius-surface);
         background: var(--ds-surface);
         overflow: hidden;
+      }
+      .ds-eqs--headless {
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        overflow: visible;
+      }
+      .ds-eqs--headless .ds-eqs__defaults {
+        padding: 0 0 var(--ds-space-3);
+      }
+      .ds-eqs--headless .ds-eqs__lines {
+        padding: 0;
       }
       .ds-eqs__head {
         display: flex;
@@ -137,4 +151,5 @@ export class EquivalenceSummaryComponent {
   @Input() storageUnit = "";
   @Input() equivalencesLabel = "";
   @Input() lines: EquivalenceSummaryLine[] = [];
+  @Input() headless = false;
 }

@@ -228,6 +228,13 @@ export class RecipeFormService {
     }));
   }
 
+  unitFactors(ingredient: FormIngredient): Record<string, number> {
+    if (ingredient.kind === "recipe") return { [ingredient.unit]: 1 };
+    const entry = this.products().get(ingredient.refId);
+    if (!entry) return { [ingredient.unit]: 1 };
+    return { ...entry.factors, [entry.baseUnit]: 1 };
+  }
+
   ingredientCalories(ingredient: FormIngredient): number {
     return this.contribution(ingredient).calories;
   }

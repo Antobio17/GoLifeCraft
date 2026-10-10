@@ -1,61 +1,30 @@
 <ds-page-wrapper [gap]="'var(--ds-space-3)'">
   <ds-screen-header
+    [leading]="'back'"
+    [leadingLabel]="'getArticles.back' | t"
+    (leadingClick)="goBack()"
+    [eyebrow]="'getArticles.eyebrow' | t"
     [title]="'getArticles.heading' | t"
     [subtitle]="headerSubtitle()"
   >
     @if (canCreate) {
-      <ng-container slot="actions">
-        <ds-button
-          data-testid="articles-global-catalog"
-          variant="secondary"
-          size="icon-lg"
-          icon="globe"
-          [iconSize]="19"
-          [ariaLabel]="'getArticles.globalCatalog' | t"
-          (clicked)="onImportCatalog()"
-        />
-        <ds-button
-          data-testid="articles-scan"
-          variant="secondary"
-          size="icon-lg"
-          icon="camera"
-          [iconSize]="19"
-          [ariaLabel]="'getArticles.scan' | t"
-          (clicked)="onScan()"
-        />
-        <ds-button
-          data-testid="articles-create"
-          variant="primary"
-          size="icon-lg"
-          icon="plus"
-          [iconSize]="19"
-          [ariaLabel]="'getArticles.create' | t"
-          (clicked)="onCreate()"
-        />
-      </ng-container>
+      <ds-menu
+        slot="actions"
+        data-testid="articles-create"
+        triggerIcon="plus"
+        triggerVariant="primary"
+        [triggerLabel]="'getArticles.create' | t"
+        [items]="createItems()"
+        (selected)="onCreateAction($event)"
+      />
     }
   </ds-screen-header>
 
   @if (loading()) {
-    <ds-skeleton-filters
-      [search]="true"
-      [viewSwitch]="true"
-      [selects]="3"
-      [caption]="true"
-    />
-    <ds-skeleton-list
-      [count]="6"
-      [columns]="null"
-      minColumn="18.75rem"
-      [gap]="'var(--ds-space-3)'"
-      radius="var(--ds-radius-surface)"
-      padding="var(--ds-space-2)"
-      [alignTop]="true"
-      [tile]="56"
-      titleWidth="54%"
-      headTrailing="2.625rem"
-      metaWidth="48%"
-      [chips]="4"
+    <ng-container [ngTemplateOutlet]="filtersSkeleton" />
+    <ng-container
+      [ngTemplateOutlet]="rowsSkeleton"
+      [ngTemplateOutletContext]="{ $implicit: 8 }"
     />
   } @else {
     <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
@@ -76,51 +45,36 @@
         [ngModel]="favoriteFilter()"
         (ngModelChange)="onFavoriteFilterChange($event)"
       />
-    </ds-stack>
 
-    <ds-stack direction="row" [gap]="'var(--ds-space-1-5)'">
-      <ds-select
-        data-testid="articles-filter-category"
-        [fluid]="true"
-        [placeholder]="'getArticles.filter.category' | t"
-        [options]="categories()"
-        [ngModel]="selectedCategory()"
-        (ngModelChange)="onCategoryChange($event)"
-      />
-      <ds-select
-        data-testid="articles-filter-brand"
-        [fluid]="true"
-        [placeholder]="'getArticles.filter.brand' | t"
-        [options]="brands()"
-        [ngModel]="selectedBrand()"
-        (ngModelChange)="onBrandChange($event)"
-      />
-      <ds-select
-        data-testid="articles-filter-store"
-        [fluid]="true"
-        [placeholder]="'getArticles.filter.store' | t"
-        [options]="stores()"
-        [ngModel]="selectedStore()"
-        (ngModelChange)="onStoreChange($event)"
+      <ds-button
+        data-testid="articles-filters"
+        variant="ghost"
+        size="icon-lg"
+        [stretch]="true"
+        icon="filter"
+        [iconSize]="19"
+        [pressed]="hasSheetFilters()"
+        [ariaLabel]="filtersLabel()"
+        (clicked)="openFilters()"
       />
     </ds-stack>
 
-    <ds-text variant="label">{{ "getArticles.nutritionCaption" | t }}</ds-text>
+    @if (stores().length > 0) {
+      <ds-scroll-row>
+        <ds-choice-chips
+          data-testid="articles-filter-store"
+          [scroll]="true"
+          [options]="storeOptions()"
+          [ngModel]="selectedStore()"
+          (ngModelChange)="onStoreChange($event)"
+        />
+      </ds-scroll-row>
+    }
 
     @if (reloading()) {
-      <ds-skeleton-list
-        [count]="6"
-        [columns]="null"
-        minColumn="18.75rem"
-        [gap]="'var(--ds-space-3)'"
-        radius="var(--ds-radius-surface)"
-        padding="var(--ds-space-2)"
-        [alignTop]="true"
-        [tile]="56"
-        titleWidth="54%"
-        headTrailing="2.625rem"
-        metaWidth="48%"
-        [chips]="4"
+      <ng-container
+        [ngTemplateOutlet]="rowsSkeleton"
+        [ngTemplateOutletContext]="{ $implicit: 8 }"
       />
     } @else if (items().length === 0) {
       @if (searchQuery()) {
@@ -145,56 +99,40 @@
         />
       }
     } @else {
-      <ds-grid dsReveal="children" [minColumn]="'18.75rem'">
-        @for (card of cards(); track card.id) {
+      <ds-grid
+        dsReveal="children"
+        [minColumn]="'18.75rem'"
+        [gap]="'var(--ds-space-2)'"
+      >
+        @for (row of rows(); track row.id) {
           <ds-product-card
             data-testid="article-card"
-            [attr.data-id]="card.id"
-            [emoji]="card.emoji"
-            [imageUrl]="card.imageUrl"
-            [name]="card.name"
-            [price]="card.price"
-            [brand]="card.brand"
-            [store]="card.store"
-            [kcal]="
-              card.kcal ? card.kcal + ' ' + ('getArticles.macro.kcal' | t) : ''
-            "
-            [macros]="[
-              {
-                label: 'getArticles.macro.proteinShort' | t,
-                value: card.protein || '',
-              },
-              {
-                label: 'getArticles.macro.fatShort' | t,
-                value: card.fat || '',
-              },
-              {
-                label: 'getArticles.macro.carbsShort' | t,
-                value: card.carbs || '',
-              },
-            ]"
-            [favorite]="card.favorite"
+            [attr.data-id]="row.id"
+            [compact]="true"
+            [emoji]="row.emoji"
+            [imageUrl]="row.imageUrl"
+            [name]="row.name"
+            [price]="row.price"
+            [brand]="row.brand"
+            [store]="row.store"
+            [kcal]="row.kcal ?? ''"
+            [kcalUnit]="kcalUnit()"
+            [proteinG]="row.proteinG"
+            [fatG]="row.fatG"
+            [carbsG]="row.carbsG"
+            [macroLabel]="row.macroLabel"
+            [macroLetters]="macroLetters()"
+            [favorite]="row.favorite"
             [favoriteLabel]="favoriteLabel()"
-            (activated)="onSelect(card.id)"
-            (favoriteToggled)="onToggleFavorite(card.id)"
+            (activated)="onSelect(row.id)"
           />
         }
       </ds-grid>
 
       @if (loadingMore()) {
-        <ds-skeleton-list
-          [count]="2"
-          [columns]="null"
-          minColumn="18.75rem"
-          [gap]="'var(--ds-space-3)'"
-          radius="var(--ds-radius-surface)"
-          padding="var(--ds-space-2)"
-          [alignTop]="true"
-          [tile]="56"
-          titleWidth="54%"
-          headTrailing="2.625rem"
-          metaWidth="48%"
-          [chips]="4"
+        <ng-container
+          [ngTemplateOutlet]="rowsSkeleton"
+          [ngTemplateOutletContext]="{ $implicit: 2 }"
         />
       }
 
@@ -205,3 +143,78 @@
     }
   }
 </ds-page-wrapper>
+
+<ds-modal-sheet
+  data-testid="articles-filters-sheet"
+  [open]="filtersOpen()"
+  [tall]="true"
+  [title]="'getArticles.filter.title' | t"
+  [closeLabel]="'getArticles.filter.close' | t"
+  [confirmLabel]="'getArticles.filter.apply' | t"
+  confirmIcon="check"
+  (closed)="closeFilters()"
+  (confirmed)="confirmFilters()"
+>
+  <ds-stack [gap]="'var(--ds-space-5)'">
+    @if (categoryOptions().length > 1) {
+      <ds-field [label]="'getArticles.filter.category' | t">
+        <ds-choice-chips
+          data-testid="articles-filter-category"
+          [wrap]="true"
+          [options]="categoryOptions()"
+          [ngModel]="draftCategory()"
+          (ngModelChange)="draftCategory.set($event)"
+        />
+      </ds-field>
+    }
+    @if (brandOptions().length > 1) {
+      <ds-field [label]="'getArticles.filter.brand' | t">
+        <ds-choice-chips
+          data-testid="articles-filter-brand"
+          [wrap]="true"
+          [options]="brandOptions()"
+          [ngModel]="draftBrand()"
+          (ngModelChange)="draftBrand.set($event)"
+        />
+      </ds-field>
+    }
+  </ds-stack>
+</ds-modal-sheet>
+
+<ng-template #filtersSkeleton>
+  <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+    <ds-stack [grow]="true">
+      <ds-skeleton height="3rem" radius="var(--ds-radius-control)" />
+    </ds-stack>
+    <ds-skeleton width="3rem" height="3rem" radius="var(--ds-radius-control)" />
+    <ds-skeleton
+      width="5.75rem"
+      height="3rem"
+      radius="var(--ds-radius-control)"
+    />
+  </ds-stack>
+  <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+    @for (width of chipSkeletons; track $index) {
+      <ds-skeleton
+        [width]="width"
+        height="2.125rem"
+        radius="var(--ds-radius-pill)"
+      />
+    }
+  </ds-stack>
+</ng-template>
+
+<ng-template #rowsSkeleton let-count>
+  <ds-skeleton-list
+    [count]="count"
+    [columns]="null"
+    minColumn="18.75rem"
+    [gap]="'var(--ds-space-2)'"
+    radius="var(--ds-radius-surface)"
+    padding="var(--ds-space-2) var(--ds-space-3) var(--ds-space-2) var(--ds-space-2)"
+    [tile]="44"
+    titleWidth="56%"
+    headTrailing="2.25rem"
+    metaWidth="44%"
+  />
+</ng-template>

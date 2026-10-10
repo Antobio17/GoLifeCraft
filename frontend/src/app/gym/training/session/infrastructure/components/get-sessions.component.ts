@@ -217,6 +217,7 @@ export class GetSessionsComponent extends AbstractListPageComponent<Session> {
 
       return {
         key: day.iso,
+        date: day.iso,
         weekday: weekday.format(day.date),
         day: `${day.date.getDate()}`,
         state,

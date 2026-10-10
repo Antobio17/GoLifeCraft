@@ -7,7 +7,6 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { SearchInputComponent } from "@shared/design-system/search-input/infrastructure/components/search-input.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
-import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
@@ -16,7 +15,6 @@ import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrast
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { ChoiceRowComponent } from "@shared/design-system/choice-row/infrastructure/components/choice-row.component";
 import { MenuCardComponent } from "@shared/design-system/menu-card/infrastructure/components/menu-card.component";
-import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
 import {
   AbstractListPageComponent,
   PagedResult,
@@ -38,9 +36,10 @@ interface MenuCardView {
   id: string;
   name: string;
   meta: string;
-  kcal: string;
-  kcalCaption: string;
-  macros: MacroBadge[];
+  protein: number;
+  fat: number;
+  carbs: number;
+  macrosLabel: string;
   loadLabel: string;
   isWeek: boolean;
 }
@@ -52,6 +51,7 @@ interface MenuGroupView {
   cards: MenuCardView[];
 }
 
+import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 @Component({
   selector: "app-get-menus",
   templateUrl: "./get-menus.component.html",
@@ -64,7 +64,6 @@ interface MenuGroupView {
     SearchInputComponent,
     SectionHeaderComponent,
     GridComponent,
-    NoteComponent,
     StackComponent,
     TextComponent,
     EmptyStateComponent,
@@ -79,6 +78,7 @@ interface MenuGroupView {
   ],
 })
 export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
+  private backNavigation = inject(BackNavigationService);
   private textSearch = inject(TextSearchService);
   private getMenusService = inject(GetMenusService);
   private exportMenuService = inject(ExportMenuService);
@@ -116,6 +116,12 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
       this.textSearch.matches(query, menu.attributes.name),
     );
   });
+
+  macroLabels = computed(() => ({
+    protein: this.t("getMenu.macro.protein"),
+    fat: this.t("getMenu.macro.fat"),
+    carbs: this.t("getMenu.macro.carbs"),
+  }));
 
   groups = computed<MenuGroupView[]>(() => {
     const menus = this.filteredMenus();
@@ -242,20 +248,35 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
       id: menu.id,
       isWeek,
       name: attributes.name,
-      meta: isWeek
-        ? this.plural("getMenus.card.days", attributes.dayCount)
-        : this.itemsLabel(attributes.itemCount),
-      kcal: this.view.integer(attributes.perDay.calories),
-      kcalCaption: this.t(
-        isWeek ? "getMenus.card.kcalPerDay" : "getMenus.card.kcal",
-      ),
-      macros: this.view.itemMacros(attributes.perDay, {
-        protein: this.t("getMenus.card.protein"),
-        fat: this.t("getMenus.card.fat"),
-        carbs: this.t("getMenus.card.carbs"),
-      }),
+      meta: this.cardMeta(menu),
+      protein: attributes.perDay.protein,
+      fat: attributes.perDay.fat,
+      carbs: attributes.perDay.carbs,
+      macrosLabel: this.view
+        .itemMacros(attributes.perDay, {
+          protein: this.t("getMenus.card.protein"),
+          fat: this.t("getMenus.card.fat"),
+          carbs: this.t("getMenus.card.carbs"),
+        })
+        .map((macro) => `${macro.label} ${macro.value}`)
+        .join(", "),
       loadLabel: this.t(isWeek ? "getMenus.card.apply" : "getMenus.card.load"),
     };
+  }
+
+  private cardMeta(menu: MenuListItem): string {
+    const attributes = menu.attributes;
+    const kcal = `${this.view.integer(attributes.perDay.calories)} ${this.t(
+      attributes.type === "week"
+        ? "getMenus.card.kcalPerDay"
+        : "getMenus.card.kcal",
+    )}`;
+    const size =
+      attributes.type === "week"
+        ? this.plural("getMenus.card.days", attributes.dayCount)
+        : this.itemsLabel(attributes.itemCount);
+
+    return `${size} · ${kcal}`;
   }
 
   private itemsLabel(count: number): string {
@@ -270,5 +291,9 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
     return this.translationService.translate(`${key}.many`, this.modulePath, {
       count,
     });
+  }
+
+  goBack(): void {
+    this.backNavigation.back(["/diary"]);
   }
 }

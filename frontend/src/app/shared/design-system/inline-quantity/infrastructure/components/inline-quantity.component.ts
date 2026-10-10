@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, input } from "@angular/core";
 import { IconComponent } from "../../../icon/infrastructure/components/icon.component";
 import { SelectOption } from "../../../select/domain/models/select-option.model";
 
@@ -12,6 +12,7 @@ type InlineQuantitySize = "md" | "sm";
       class="ds-inline-qty"
       [class.ds-inline-qty--sm]="size === 'sm'"
       [class.ds-inline-qty--field]="field"
+      [class.ds-inline-qty--plain]="plain()"
     >
       <input
         class="ds-inline-qty__input"
@@ -134,6 +135,22 @@ type InlineQuantitySize = "md" | "sm";
         text-overflow: ellipsis;
         cursor: pointer;
       }
+      .ds-inline-qty--plain {
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+      }
+      .ds-inline-qty--plain .ds-inline-qty__input,
+      .ds-inline-qty--plain .ds-inline-qty__unit {
+        font-family: var(--ds-font-body);
+        font-size: var(--ds-text-base);
+        font-weight: 500;
+        color: var(--ds-text-muted);
+      }
+      .ds-inline-qty--plain .ds-inline-qty__input:focus-visible {
+        outline: 2px solid var(--ds-border-focus);
+        outline-offset: 2px;
+      }
       .ds-inline-qty__select {
         position: absolute;
         inset: 0;
@@ -154,6 +171,7 @@ type InlineQuantitySize = "md" | "sm";
   ],
 })
 export class InlineQuantityComponent {
+  readonly plain = input(false);
   @Input() quantity = 0;
   @Input() unit = "";
   @Input() unitLabel = "";
