@@ -56,6 +56,16 @@
           [activeLabel]="accessLabel()"
         ></ds-profile-card>
 
+        <ds-preference-toggle
+          data-testid="user-access-toggle"
+          glyph="key"
+          [title]="'userDetail.access.title' | t"
+          [subtitle]="accessHint()"
+          [checked]="user()!.isActive"
+          [disabled]="savingAccess()"
+          (toggled)="toggleAccess()"
+        />
+
         <ds-stack [gap]="'var(--ds-space-2)'">
           <ds-text variant="label">{{ "userDetail.section.data" | t }}</ds-text>
 
@@ -93,7 +103,8 @@
 
         @if (canImpersonate()) {
           <ds-button
-            variant="soft"
+            data-testid="user-impersonate"
+            variant="secondary"
             icon="eye"
             [fullWidth]="true"
             [loading]="entering()"

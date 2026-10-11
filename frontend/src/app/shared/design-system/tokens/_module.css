@@ -7,6 +7,8 @@
   --ds-module-gym-text: #a8462a;
   --ds-module-agenda: #c46fa3;
   --ds-module-agenda-text: #8f3d76;
+  --ds-module-admin: #d23a56;
+  --ds-module-admin-text: #a5233d;
   --ds-module-on: var(--ds-gray-0);
 
   --ds-module-hero-base: var(--ds-gray-25);
@@ -22,6 +24,8 @@
   --ds-module-gym-text: #ffb59c;
   --ds-module-agenda: #e9a8d4;
   --ds-module-agenda-text: #f0bfe0;
+  --ds-module-admin: #ff7f8f;
+  --ds-module-admin-text: #ffa1ac;
   --ds-module-on: #0b0f0c;
 
   --ds-module-hero-base: rgba(24, 28, 26, 0.78);
@@ -51,6 +55,11 @@
 [data-module="agenda"] {
   --ds-module: var(--ds-module-agenda);
   --ds-module-text: var(--ds-module-agenda-text);
+}
+
+[data-module="admin"] {
+  --ds-module: var(--ds-module-admin);
+  --ds-module-text: var(--ds-module-admin-text);
 }
 
 [data-module] {

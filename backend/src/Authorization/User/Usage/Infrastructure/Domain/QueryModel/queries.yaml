@@ -4,3 +4,9 @@ services:
     arguments:
       $masterConnection: '@doctrine.dbal.master_connection'
       $connectionFactory: '@Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\TenantReaderConnectionFactory'
+
+  Authorization\User\Usage\Domain\QueryModel\GetUsersUsageNeedleDataQuery:
+    class: Authorization\User\Usage\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetUsersUsageNeedleDataQuery
+    arguments:
+      $masterConnection: '@doctrine.dbal.master_connection'
+      $connectionFactory: '@Shared\Tenant\Tenant\Infrastructure\Domain\Service\Doctrine\TenantReaderConnectionFactory'

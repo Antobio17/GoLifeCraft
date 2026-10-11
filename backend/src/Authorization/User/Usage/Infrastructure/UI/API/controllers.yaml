@@ -5,3 +5,10 @@ services:
       $messageBus: '@messenger.bus.default'
     tags:
       - { name: controller.service_arguments }
+
+  Authorization\User\Usage\Infrastructure\UI\API\Controller\GetUsersUsageController:
+    class: Authorization\User\Usage\Infrastructure\UI\API\Controller\GetUsersUsageController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

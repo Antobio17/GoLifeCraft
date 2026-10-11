@@ -49,4 +49,5 @@ export enum DsGlyph {
   Car = "car",
   Suitcase = "suitcase",
   Storeroom = "storeroom",
+  Key = "key",
 }

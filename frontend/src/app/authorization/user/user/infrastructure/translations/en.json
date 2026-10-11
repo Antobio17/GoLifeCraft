@@ -293,32 +293,29 @@
     "eyebrow": "Administration",
     "title": "Users",
     "adminOnly": "Admin only",
-    "summary": {
-      "requests": "Requests",
-      "verified": "Verified",
-      "withAccess": "With access"
-    },
     "section": {
-      "requests": "Registration requests"
-    },
-    "badge": {
-      "verified": "Verified",
-      "unverified": "Unverified"
-    },
-    "access": {
-      "active": "Active",
-      "inactive": "Inactive",
-      "toggleAria": "Toggle app access for this user"
+      "activity": "By latest activity"
     },
     "empty": {
       "title": "No requests",
       "text": "No users have requested access to the app yet."
     },
-    "note": "Turn on the switch to grant access to the app. Only administrators can see this screen.",
+    "note": "Tap a user to see their usage and grant or revoke access. Only administrators can see this screen.",
     "toast": {
       "error": "The access change could not be saved."
     },
-    "openAria": "Open this user's detail"
+    "hero": {
+      "eyebrow": "Activity · 30 days",
+      "events": "{{events}} events",
+      "activeOf": "of {{total}} users active this week",
+      "chartAria": "Daily events of every user over the last 30 days"
+    },
+    "row": {
+      "never": "Never used",
+      "unverified": "Unverified",
+      "inactive": "No access",
+      "sparkAria": "Activity over the last 14 days"
+    }
   },
   "createUser": {
     "title": "Create New User",
@@ -410,7 +407,10 @@
     },
     "access": {
       "active": "Access granted",
-      "inactive": "No access"
+      "inactive": "No access",
+      "title": "App access",
+      "grantedHint": "Can sign in and use the app",
+      "revokedHint": "Cannot sign in until you grant access"
     },
     "role": {
       "ROLE_GOD": "Administrator",
@@ -419,7 +419,7 @@
     "impersonate": {
       "help": "Entering the account opens the app against this client's database for 30 minutes. You can read and write their data, and everything you do is logged.",
       "action": "Enter their account",
-      "blocked": "This user has no access granted. Enable it in the list before entering their account.",
+      "blocked": "This user has no access granted. Grant it above before entering their account.",
       "confirmTitle": "Enter the account",
       "confirmBody": "You are about to work on this client's database:",
       "confirmWarning": "The session expires after 30 minutes and you can leave at any time from the top bar.",
@@ -428,7 +428,8 @@
       "entering": "Entering..."
     },
     "toast": {
-      "error": "Could not enter this user's account."
+      "error": "Could not enter this user's account.",
+      "accessError": "The access change could not be saved."
     }
   },
   "impersonation": {

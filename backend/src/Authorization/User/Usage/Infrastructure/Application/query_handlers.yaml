@@ -9,3 +9,14 @@ services:
 
   Authorization\User\Usage\Application\Query\GetUserUsage\GetUserUsageDataTransform:
     class: Authorization\User\Usage\Infrastructure\UI\API\DataTransform\ApiGetUserUsageDataTransform
+
+  Authorization\User\Usage\Application\Query\GetUsersUsage\GetUsersUsageQueryHandler:
+    class: Authorization\User\Usage\Application\Query\GetUsersUsage\GetUsersUsageQueryHandler
+    arguments:
+      $needleDataQuery: '@Authorization\User\Usage\Domain\QueryModel\GetUsersUsageNeedleDataQuery'
+      $dataTransform: '@Authorization\User\Usage\Application\Query\GetUsersUsage\GetUsersUsageDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Authorization\User\Usage\Application\Query\GetUsersUsage\GetUsersUsageDataTransform:
+    class: Authorization\User\Usage\Infrastructure\UI\API\DataTransform\ApiGetUsersUsageDataTransform
