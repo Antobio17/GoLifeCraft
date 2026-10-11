@@ -75,11 +75,10 @@ import { BarComponent } from "../../../bar/infrastructure/components/bar.compone
         line-height: var(--ds-leading-tight);
         font-variant-numeric: tabular-nums;
         color: var(--ds-text);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow-wrap: anywhere;
       }
       .ds-sstrip__unit {
+        white-space: nowrap;
         font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
