@@ -32,9 +32,10 @@
   "getFinanceBudget.categoryMovements.emptyTitle": "No spending in this category",
   "getFinanceBudget.categoryMovements.emptyText": "There are no recorded expenses for this category in the selected month.",
   "getFinanceBudget.fixed.title": "Fixed and provisions",
-  "getFinanceBudget.fixed.hint": "For reference only",
-  "getFinanceBudget.fixed.settled": "Paid · {amount}",
-  "getFinanceBudget.fixed.pending": "{amount} so far",
+  "getFinanceBudget.fixed.summary": "{paid} of {total} paid",
+  "getFinanceBudget.fixed.planned": "Planned {amount}",
+  "getFinanceBudget.fixed.paid": "Paid",
+  "getFinanceBudget.fixed.pending": "Pending",
   "getFinanceBudget.empty.title": "No budget yet",
   "getFinanceBudget.empty.text": "Set a cap per category and a savings goal to follow your monthly pace here.",
   "saveFinanceBudget.title": "Configure",
@@ -74,5 +75,13 @@
   "saveFinanceBudget.unassigned.warning": "The split goes over your reference income. Lower a cap before saving.",
   "saveFinanceBudget.save": "Save budget",
   "getFinanceBudget.empty.ctaTitle": "Create your budget",
-  "getFinanceBudget.empty.ctaText": "Set a cap per category and a savings goal"
+  "getFinanceBudget.empty.ctaText": "Set a cap per category and a savings goal",
+  "getFinanceBudget.variable.label": "Variable spending",
+  "getFinanceBudget.variable.excess": "{amount} over the cap",
+  "getFinanceBudget.savings.label": "Savings this month",
+  "getFinanceBudget.groups.over": "Over the cap",
+  "getFinanceBudget.groups.active": "Within the cap",
+  "getFinanceBudget.groups.idle": "No spending yet",
+  "getFinanceBudget.category.spentOf": "{spent} of {budget}",
+  "getFinanceBudget.category.exceeded": "+{amount}"
 }

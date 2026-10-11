@@ -45,13 +45,19 @@
 
   @if (loading()) {
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
-      <ds-skeleton-panel slot="side" [figure]="true" content="meters" />
-      <ds-skeleton-panel slot="side" [figure]="true" content="meters" />
+      <ds-skeleton-panel
+        slot="side"
+        [glass]="true"
+        [figure]="true"
+        content="meters"
+        [meters]="1"
+      />
+      <ds-skeleton-metrics slot="side" [count]="2" />
 
       <ds-skeleton-section-header titleWidth="7rem" [action]="true" />
       <ds-skeleton-rows [card]="true" [rows]="5" labelWidth="46%" />
       <ds-skeleton-section-header titleWidth="9rem" />
-      <ds-skeleton-rows [card]="true" [rows]="3" labelWidth="40%" />
+      <ds-skeleton-rows [card]="true" [rows]="1" labelWidth="40%" />
     </ds-split-view>
   } @else if (!configured()) {
     <ds-empty-state
@@ -68,128 +74,96 @@
       (clicked)="goToSettings()"
     />
   } @else {
-    <ds-stack
-      direction="row"
-      align="center"
-      [gap]="'var(--ds-space-3)'"
-      [wrap]="false"
-    >
-      <ds-text variant="meta">{{ dayLabel() }}</ds-text>
-      <ds-stack [grow]="true">
-        <ds-progress-bar [value]="monthProgressPercent()" />
-      </ds-stack>
-      <ds-text variant="strong">{{ monthProgressLabel() }}</ds-text>
-    </ds-stack>
-
     <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
       <ng-container slot="side">
-        <ds-card [padding]="'var(--ds-space-4)'">
+        <ds-module-card
+          data-testid="finance-budget-variable"
+          [hero]="true"
+          [eyebrow]="dayLabel()"
+        >
+          <ds-chip
+            slot="aside"
+            [tone]="variableChipTone()"
+            [uppercase]="true"
+            >{{ variableBadgeLabel() }}</ds-chip
+          >
+
           <ds-stack
             direction="row"
-            justify="between"
             align="center"
-            [gap]="'var(--ds-space-2)'"
+            [gap]="'var(--ds-space-4)'"
+            [wrap]="false"
           >
-            <ds-text variant="label">{{
-              "getFinanceBudget.savings.title" | t
-            }}</ds-text>
-
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-1-5)'"
+            <ds-progress-ring
+              [value]="variablePercent()"
+              [size]="88"
+              [hollow]="true"
+              [tone]="variableTone()"
+              >{{ variablePercentLabel() }}</ds-progress-ring
             >
-              <ds-chip
-                [tone]="savingsTone() === 'positive' ? 'brand' : 'warning'"
-                [uppercase]="true"
-                >{{ savingsBadgeLabel() }}</ds-chip
+
+            <ds-stack [grow]="true" [gap]="'2px'">
+              <ds-text variant="meta">{{
+                "getFinanceBudget.variable.label" | t
+              }}</ds-text>
+              <ds-heading [level]="3" size="xl" [truncate]="true">{{
+                variableSpentLabel()
+              }}</ds-heading>
+              <ds-text variant="meta"
+                >{{ "getFinanceBudget.variable.of" | t }}
+                {{ variableBudgetLabel() }}</ds-text
               >
-              <app-finance-privacy-toggle [size]="30" [iconSize]="16" />
+              <ds-text
+                [variant]="variableOverBudget() ? 'danger' : 'success'"
+                >{{ variableBalanceLabel() }}</ds-text
+              >
             </ds-stack>
           </ds-stack>
+        </ds-module-card>
 
-          <ds-stack
-            direction="row"
-            align="end"
-            [gap]="'var(--ds-space-2)'"
-            [wrap]="true"
+        <ds-grid [columns]="2" [gap]="'var(--ds-space-2)'">
+          <ds-card
+            data-testid="finance-budget-savings"
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'2px'"
           >
-            <ds-heading [level]="3" size="lg">{{
+            <ds-stack
+              direction="row"
+              justify="between"
+              align="center"
+              [gap]="'var(--ds-space-1-5)'"
+              [wrap]="false"
+            >
+              <ds-text variant="meta" [truncate]="true">{{
+                "getFinanceBudget.savings.label" | t
+              }}</ds-text>
+              <app-finance-privacy-toggle [size]="26" [iconSize]="14" />
+            </ds-stack>
+            <ds-heading [level]="3" size="md" [truncate]="true">{{
               savingsRealLabel()
             }}</ds-heading>
-            <ds-text variant="meta"
-              >{{ "getFinanceBudget.savings.goal" | t }}
-              {{ savingsObjectiveLabel() }}</ds-text
-            >
-          </ds-stack>
-
-          <ds-budget-meter
-            [ratio]="savingsRatio()"
-            [paceRatio]="monthProgressRatio()"
-            [tone]="savingsTone()"
-            [ariaLabel]="'getFinanceBudget.savings.title' | t"
-          />
-
-          <ds-text [variant]="savingsGoalReached() ? 'success' : 'meta'">{{
-            savingsRemainingLabel()
-          }}</ds-text>
-        </ds-card>
-
-        <ds-card [padding]="'var(--ds-space-4)'">
-          <ds-stack
-            direction="row"
-            justify="between"
-            align="center"
-            [gap]="'var(--ds-space-2)'"
-          >
-            <ds-text variant="label">{{
-              "getFinanceBudget.variable.title" | t
+            <ds-text [variant]="savingsGoalReached() ? 'success' : 'meta'">{{
+              savingsRemainingLabel()
             }}</ds-text>
-            <ds-chip
-              [tone]="variableTone() === 'positive' ? 'brand' : 'warning'"
-              [uppercase]="true"
-              >{{ variableBadgeLabel() }}</ds-chip
-            >
-          </ds-stack>
+          </ds-card>
 
-          <ds-stack
-            direction="row"
-            align="end"
-            [gap]="'var(--ds-space-2)'"
-            [wrap]="true"
+          <ds-card
+            data-testid="finance-budget-pace"
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'2px'"
           >
-            <ds-heading [level]="3" size="xl">{{
-              variableSpentLabel()
+            <ds-text variant="meta" [truncate]="true">{{
+              "getFinanceBudget.pace.today" | t
+            }}</ds-text>
+            <ds-heading [level]="3" size="md" [truncate]="true">{{
+              variableExpectedLabel()
             }}</ds-heading>
-            <ds-text variant="meta"
-              >{{ "getFinanceBudget.variable.of" | t }}
-              {{ variableBudgetLabel() }}</ds-text
-            >
-          </ds-stack>
-
-          <ds-budget-meter
-            [ratio]="variableRatio()"
-            [paceRatio]="monthProgressRatio()"
-            [tone]="variableTone()"
-            [ariaLabel]="'getFinanceBudget.variable.title' | t"
-          />
-
-          <ds-stack
-            direction="row"
-            justify="between"
-            align="center"
-            [gap]="'var(--ds-space-2)'"
-          >
-            <ds-text variant="meta"
-              >{{ "getFinanceBudget.pace.today" | t }} ·
-              {{ variableExpectedLabel() }}</ds-text
-            >
             <ds-text
               [variant]="variableDifferencePositive() ? 'success' : 'danger'"
               >{{ variableDifferenceLabel() }}</ds-text
             >
-          </ds-stack>
-        </ds-card>
+          </ds-card>
+        </ds-grid>
       </ng-container>
 
       <ds-section-header
@@ -206,122 +180,111 @@
         />
       }
 
-      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-        @for (row of categoryRows(); track row.key) {
-          <ds-card
-            [padding]="'var(--ds-space-3)'"
-            [gap]="'var(--ds-space-2)'"
-            [interactive]="true"
-            (activated)="selectCategory(row.key)"
-          >
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-3)'"
-            >
-              <ds-glyph
-                [name]="row.glyph"
-                [tile]="true"
-                [size]="20"
-                [color]="row.color"
-                box="2.125rem"
-              />
-              <ds-stack [grow]="true">
-                <ds-text variant="strong" [truncate]="true">{{
-                  row.name
-                }}</ds-text>
-              </ds-stack>
-              <ds-stack align="end" [gap]="'2px'">
-                <ds-text variant="strong">{{ row.spentLabel }}</ds-text>
-                <ds-text variant="meta"
-                  >{{ "getFinanceBudget.variable.of" | t }}
-                  {{ row.budgetLabel }}</ds-text
-                >
-              </ds-stack>
-            </ds-stack>
+      @for (group of categoryGroups(); track group.key) {
+        <ds-section-header
+          [title]="group.title"
+          [staticLabel]="group.countLabel"
+        />
 
-            <ds-budget-meter
+        <ds-card
+          dsReveal
+          [attr.data-testid]="'finance-budget-group-' + group.key"
+          [padding]="'0'"
+          [gap]="'0'"
+        >
+          @for (row of group.rows; track row.key) {
+            <ds-budget-row
+              [glyph]="row.glyph"
+              [color]="row.color"
+              [title]="row.name"
+              [meta]="row.metaLabel"
+              [amountLabel]="row.amountLabel"
+              [chipLabel]="row.chipLabel"
+              [chipTone]="row.chipTone"
               [ratio]="row.ratio"
               [paceRatio]="row.paceRatio"
               [tone]="row.tone"
-              [ariaLabel]="row.name"
+              [pressable]="true"
+              [selected]="selectedCategoryKey() === row.key"
+              (pressed)="selectCategory(row.key)"
             />
-
-            <ds-stack
-              direction="row"
-              justify="between"
-              align="center"
-              [gap]="'var(--ds-space-2)'"
-            >
-              <ds-text variant="meta">{{ row.statusText }}</ds-text>
-              <ds-text [variant]="row.tone === 'danger' ? 'danger' : 'muted'">{{
-                row.remainLabel
-              }}</ds-text>
-            </ds-stack>
-          </ds-card>
-
-          @if (selectedCategoryKey() === row.key) {
-            <ds-section-header [title]="selectedCategoryTitle()" size="md" />
-
-            @if (loadingCategoryTransactions()) {
-              <ds-card [padding]="'0'" [gap]="'0'">
-                <ds-skeleton-rows [card]="true" [rows]="4" labelWidth="55%" />
-              </ds-card>
-            } @else if (hasSelectedCategoryTransactions()) {
-              <ds-card [padding]="'0'" [gap]="'0'">
-                @for (row of selectedCategoryRows(); track row.id) {
-                  <ds-transaction-row
-                    [glyph]="row.glyph"
-                    [glyphColor]="row.glyphColor"
-                    [title]="row.title"
-                    [subtitle]="row.subtitle"
-                    [amountLabel]="row.amountLabel"
-                    [grouped]="true"
-                  />
-                }
-              </ds-card>
-            } @else {
-              <ds-empty-state
-                icon="wallet"
-                [title]="'getFinanceBudget.categoryMovements.emptyTitle' | t"
-                [text]="'getFinanceBudget.categoryMovements.emptyText' | t"
-              />
-            }
-          }
-        }
-      </ds-stack>
-
-      @if (hasFixed()) {
-        <ds-section-header
-          [title]="'getFinanceBudget.fixed.title' | t"
-          [staticLabel]="'getFinanceBudget.fixed.hint' | t"
-          size="md"
-        />
-
-        <ds-card [padding]="'var(--ds-space-4)'">
-          @for (row of fixedRows(); track row.key) {
-            <ds-stack
-              direction="row"
-              align="center"
-              [gap]="'var(--ds-space-3)'"
-            >
-              <ds-glyph
-                [name]="row.glyph"
-                [tile]="true"
-                [size]="20"
-                [color]="row.color"
-                box="2.125rem"
-              />
-              <ds-stack [grow]="true" [gap]="'2px'">
-                <ds-text variant="strong" [truncate]="true">{{
-                  row.name
-                }}</ds-text>
-                <ds-text variant="meta">{{ row.note }}</ds-text>
-              </ds-stack>
-              <ds-text variant="muted">{{ row.amountLabel }}</ds-text>
-            </ds-stack>
           }
         </ds-card>
+
+        @if (selectedGroupKey() === group.key) {
+          <ds-section-header [title]="selectedCategoryTitle()" />
+
+          @if (loadingCategoryTransactions()) {
+            <ds-card [padding]="'0'" [gap]="'0'">
+              <ds-skeleton-rows [card]="true" [rows]="4" labelWidth="55%" />
+            </ds-card>
+          } @else if (hasSelectedCategoryTransactions()) {
+            <ds-card [padding]="'0'" [gap]="'0'">
+              @for (row of selectedCategoryRows(); track row.id) {
+                <ds-transaction-row
+                  [glyph]="row.glyph"
+                  [glyphColor]="row.glyphColor"
+                  [title]="row.title"
+                  [subtitle]="row.subtitle"
+                  [amountLabel]="row.amountLabel"
+                  [grouped]="true"
+                />
+              }
+            </ds-card>
+          } @else {
+            <ds-empty-state
+              icon="wallet"
+              [title]="'getFinanceBudget.categoryMovements.emptyTitle' | t"
+              [text]="'getFinanceBudget.categoryMovements.emptyText' | t"
+            />
+          }
+        }
+      }
+
+      @if (hasIdleCategories()) {
+        <ds-section-header
+          [title]="'getFinanceBudget.groups.idle' | t"
+          [staticLabel]="idleCountLabel()"
+        />
+
+        <ds-stack
+          data-testid="finance-budget-group-idle"
+          direction="row"
+          [gap]="'var(--ds-space-1-5)'"
+          [wrap]="true"
+        >
+          @for (row of idleCategoryRows(); track row.key) {
+            <ds-category-pill
+              [glyph]="row.glyph"
+              [color]="row.color"
+              [label]="row.name"
+              [meta]="row.budgetLabel"
+            />
+          }
+        </ds-stack>
+      }
+
+      @if (hasFixed()) {
+        <ds-disclosure
+          data-testid="finance-budget-fixed"
+          icon="repeat"
+          [title]="'getFinanceBudget.fixed.title' | t"
+          [meta]="fixedSummaryLabel()"
+        >
+          <ds-card [padding]="'0'" [gap]="'0'">
+            @for (row of fixedRows(); track row.key) {
+              <ds-budget-row
+                [glyph]="row.glyph"
+                [color]="row.color"
+                [title]="row.name"
+                [meta]="row.metaLabel"
+                [amountLabel]="row.amountLabel"
+                [chipLabel]="row.chipLabel"
+                [chipTone]="row.chipTone"
+              />
+            }
+          </ds-card>
+        </ds-disclosure>
       }
     </ds-split-view>
   }
