@@ -9,7 +9,7 @@ import { SearchInputComponent } from "@shared/design-system/search-input/infrast
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { LocationCardComponent } from "@shared/design-system/location-card/infrastructure/components/location-card.component";
+import { LocationRowComponent } from "@shared/design-system/location-row/infrastructure/components/location-row.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
@@ -39,7 +39,7 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     GridComponent,
     TextComponent,
     ButtonComponent,
-    LocationCardComponent,
+    LocationRowComponent,
     EmptyStateComponent,
     SkeletonListComponent,
     SkeletonFiltersComponent,
@@ -160,28 +160,17 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
       id: location.id,
       name,
       ...this.kindCatalog.visualOf(emoji),
-      description,
-      badges: [
-        {
-          label: `${articleCount}`,
-          value: this.t(
-            this.locationView.countKey(
-              articleCount,
-              "getPantryLocations.card.articles",
-            ),
-          ),
-        },
-        {
-          label: `${recipeCount}`,
-          value: this.t(
-            this.locationView.countKey(
-              recipeCount,
-              "getPantryLocations.card.recipes",
-            ),
-          ),
-        },
-      ],
+      meta: description || this.kindCatalog.labelOf(emoji),
+      figure: `${articleCount + recipeCount}`,
+      figureLabel: [
+        this.countLabel(articleCount, "getPantryLocations.card.articles"),
+        this.countLabel(recipeCount, "getPantryLocations.card.recipes"),
+      ].join(", "),
     };
+  }
+
+  private countLabel(count: number, key: string): string {
+    return `${count} ${this.t(this.locationView.countKey(count, key))}`;
   }
 
   goBack(): void {

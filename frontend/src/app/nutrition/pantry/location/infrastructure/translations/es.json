@@ -85,11 +85,16 @@
       "recipes": "Recetas"
     },
     "contents": {
-      "title": "Contenido",
       "remove": "Quitar",
       "emptyTitle": "Aquí no hay nada todavía",
       "emptyText": "Usa «Añadir a la ubicación» para colocar aquí lo que guardas en este sitio",
-      "open": "Abrir la ficha"
+      "open": "Abrir la ficha",
+      "search": "Buscar aquí...",
+      "clear": "Limpiar",
+      "filter": "Mostrar",
+      "noResults": "Nada coincide con",
+      "noArticles": "No hay artículos en esta ubicación",
+      "noRecipes": "No hay recetas en esta ubicación"
     },
     "candidates": {
       "title": "Añadir a esta ubicación",
@@ -105,9 +110,17 @@
         "one": "cosa guardada",
         "other": "cosas guardadas"
       },
-      "empty": "Todavía vacía",
-      "articles": "Artículos",
-      "recipes": "Recetas"
+      "empty": "Todavía vacía"
+    },
+    "chips": {
+      "articles": {
+        "one": "artículo",
+        "other": "artículos"
+      },
+      "recipes": {
+        "one": "receta",
+        "other": "recetas"
+      }
     }
   },
   "pantryLocationKind": {
