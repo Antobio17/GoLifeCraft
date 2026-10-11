@@ -14,27 +14,21 @@
 
     @if (loading()) {
       <ds-stack [gap]="'var(--ds-space-5)'">
-        <ds-skeleton-metrics
-          [count]="3"
-          [gap]="'var(--ds-space-2)'"
-          [feature]="true"
-        />
+        <ds-skeleton height="13rem" />
 
         <ds-stack [gap]="'var(--ds-space-2)'">
           <ds-skeleton-line width="8.875rem" height="0.75rem" />
           <ds-skeleton-list
-            [count]="4"
+            [count]="5"
             [gap]="'var(--ds-space-2)'"
             radius="var(--ds-radius-surface)"
             padding="var(--ds-space-3) var(--ds-space-3)"
-            [tile]="44"
-            tileRadius="50%"
+            [tile]="40"
             titleWidth="52%"
-            metaWidth="68%"
-            [chips]="1"
+            metaWidth="34%"
             trailing="pill"
-            pillWidth="3.875rem"
-            pillHeight="1.75rem"
+            pillWidth="3.5rem"
+            pillHeight="1.5rem"
           />
         </ds-stack>
 
@@ -42,24 +36,31 @@
       </ds-stack>
     } @else {
       <ds-stack [gap]="'var(--ds-space-5)'">
-        <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-          <ds-metric-card
-            [value]="total()"
-            [label]="'users.summary.requests' | t"
-          ></ds-metric-card>
-          <ds-metric-card
-            [value]="verifiedCount()"
-            [label]="'users.summary.verified' | t"
-          ></ds-metric-card>
-          <ds-metric-card
-            variant="feature"
-            [value]="activeCount()"
-            [label]="'users.summary.withAccess' | t"
-          ></ds-metric-card>
-        </ds-stack>
+        <ds-module-card
+          data-testid="users-activity"
+          [hero]="true"
+          [eyebrow]="'users.hero.eyebrow' | t"
+        >
+          <ds-text slot="aside" variant="meta">{{ eventsLabel() }}</ds-text>
+
+          <ds-big-figure
+            [value]="activeThisWeek()"
+            [suffix]="activeOfLabel()"
+          />
+
+          <ds-line-chart
+            role="img"
+            [attr.aria-label]="'users.hero.chartAria' | t"
+            [points]="dailyTotals()"
+            [captions]="dailyCaptions()"
+          ></ds-line-chart>
+        </ds-module-card>
 
         <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-text variant="label">{{ "users.section.requests" | t }}</ds-text>
+          <ds-section-header
+            [title]="'users.section.activity' | t"
+            [staticLabel]="rowCountLabel()"
+          />
 
           @if (rows().length === 0) {
             <ds-empty-state
@@ -68,25 +69,28 @@
               [text]="'users.empty.text' | t"
             ></ds-empty-state>
           } @else {
-            @for (row of rows(); track row.id) {
-              <ds-user-access-row
-                [initial]="row.initial"
-                [name]="row.name"
-                [email]="row.email"
-                [verified]="row.verified"
-                [verifiedLabel]="'users.badge.verified' | t"
-                [unverifiedLabel]="'users.badge.unverified' | t"
-                [active]="row.active"
-                [activeLabel]="'users.access.active' | t"
-                [inactiveLabel]="'users.access.inactive' | t"
-                [disabled]="row.saving"
-                [ariaLabel]="'users.access.toggleAria' | t"
-                [selectable]="true"
-                [selectAriaLabel]="'users.openAria' | t"
-                (toggled)="onToggle(row)"
-                (selected)="openUser(row)"
-              ></ds-user-access-row>
-            }
+            <ds-card
+              data-testid="users-list"
+              [padding]="'var(--ds-space-1) var(--ds-space-2)'"
+              [gap]="'0'"
+            >
+              @for (row of rows(); track row.id) {
+                <ds-user-activity-row
+                  data-testid="user-row"
+                  [initial]="row.initial"
+                  [name]="row.name"
+                  [meta]="row.meta"
+                  [status]="row.status"
+                  [modules]="row.modules"
+                  [spark]="row.spark"
+                  [sparkAriaLabel]="'users.row.sparkAria' | t"
+                  (activated)="openUser(row)"
+                />
+                @if (!$last) {
+                  <ds-divider />
+                }
+              }
+            </ds-card>
           }
         </ds-stack>
 

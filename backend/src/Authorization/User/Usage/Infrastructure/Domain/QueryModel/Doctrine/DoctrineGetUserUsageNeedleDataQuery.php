@@ -13,11 +13,11 @@ final readonly class DoctrineGetUserUsageNeedleDataQuery implements GetUserUsage
 {
     private const int DAILY_DAYS = 30;
     private const int MONTHLY_MONTHS = 12;
-    private const string EVENT_LOG_TABLE = 'domain_event_log';
+    public const string EVENT_LOG_TABLE = 'domain_event_log';
     private const string WORKOUT_TABLE = 'training_workout';
     private const string COMPLETED_STATUS = 'completed';
 
-    private const array SYSTEM_EVENT_NAMES = [
+    public const array SYSTEM_EVENT_NAMES = [
         'golifecraft.notification.event.1.notification.delivered',
     ];
 
@@ -36,7 +36,7 @@ final readonly class DoctrineGetUserUsageNeedleDataQuery implements GetUserUsage
         'financeTransactions' => 'finance_transaction',
     ];
 
-    private const array MODULE_TABLES = [
+    public const array MODULE_TABLES = [
         'nutrition' => [
             'article',
             'nutrition_facts',

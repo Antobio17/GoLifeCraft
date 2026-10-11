@@ -293,32 +293,29 @@
     "eyebrow": "Administración",
     "title": "Usuarios",
     "adminOnly": "Solo admin",
-    "summary": {
-      "requests": "Solicitudes",
-      "verified": "Verificados",
-      "withAccess": "Con acceso"
-    },
     "section": {
-      "requests": "Solicitudes de registro"
-    },
-    "badge": {
-      "verified": "Verificado",
-      "unverified": "Sin verificar"
-    },
-    "access": {
-      "active": "Activo",
-      "inactive": "Inactivo",
-      "toggleAria": "Conceder o retirar acceso a la app para este usuario"
+      "activity": "Por última actividad"
     },
     "empty": {
       "title": "Sin solicitudes",
       "text": "Todavía no hay usuarios que hayan solicitado acceso a la app."
     },
-    "note": "Activa el interruptor para conceder acceso a la app. Solo los administradores ven esta pantalla.",
+    "note": "Toca un usuario para ver su uso y conceder o retirar el acceso. Solo los administradores ven esta pantalla.",
     "toast": {
       "error": "No se pudo guardar el cambio de acceso."
     },
-    "openAria": "Abrir ficha de este usuario"
+    "hero": {
+      "eyebrow": "Actividad · 30 días",
+      "events": "{{events}} eventos",
+      "activeOf": "de {{total}} usuarios activos esta semana",
+      "chartAria": "Eventos diarios de todos los usuarios en los últimos 30 días"
+    },
+    "row": {
+      "never": "Sin uso",
+      "unverified": "Sin verificar",
+      "inactive": "Sin acceso",
+      "sparkAria": "Actividad de los últimos 14 días"
+    }
   },
   "createUser": {
     "title": "Crear Nuevo Usuario",
@@ -410,7 +407,10 @@
     },
     "access": {
       "active": "Con acceso",
-      "inactive": "Sin acceso"
+      "inactive": "Sin acceso",
+      "title": "Acceso a la app",
+      "grantedHint": "Puede iniciar sesión y usar la app",
+      "revokedHint": "No puede iniciar sesión hasta que se lo concedas"
     },
     "role": {
       "ROLE_GOD": "Administrador",
@@ -419,7 +419,7 @@
     "impersonate": {
       "help": "Entrar en la cuenta abre la aplicación con la base de datos de este cliente durante 30 minutos. Podrás leer y escribir sus datos, y todo lo que hagas queda registrado.",
       "action": "Entrar en su cuenta",
-      "blocked": "Este usuario no tiene acceso concedido. Actívalo en el listado antes de entrar en su cuenta.",
+      "blocked": "Este usuario no tiene acceso concedido. Concédeselo arriba antes de entrar en su cuenta.",
       "confirmTitle": "Entrar en la cuenta",
       "confirmBody": "Vas a trabajar sobre la base de datos de este cliente:",
       "confirmWarning": "La sesión caduca a los 30 minutos y puedes salir cuando quieras desde la barra superior.",
@@ -428,7 +428,8 @@
       "entering": "Entrando..."
     },
     "toast": {
-      "error": "No se pudo entrar en la cuenta de este usuario."
+      "error": "No se pudo entrar en la cuenta de este usuario.",
+      "accessError": "No se pudo guardar el cambio de acceso."
     }
   },
   "impersonation": {

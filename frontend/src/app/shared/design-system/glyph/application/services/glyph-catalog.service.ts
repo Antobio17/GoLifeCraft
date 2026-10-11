@@ -55,6 +55,10 @@ export class GlyphCatalogService {
       fill: '<path d="M14.5 6h5A1.5 1.5 0 0 1 21 7.5v2a2.5 2.5 0 0 0 0 5v2a1.5 1.5 0 0 1-1.5 1.5h-5z"/>',
       line: '<path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h15A1.5 1.5 0 0 1 21 7.5v2a2.5 2.5 0 0 0 0 5v2a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 16.5v-2a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 6.5V8M14.5 11.25v1.5M14.5 16v1.5"/>',
     },
+    [DsGlyph.Key]: {
+      fill: '<circle cx="8" cy="15" r="4.5"/>',
+      line: '<circle cx="8" cy="15" r="4.5"/><path d="M11.2 11.8 20 3"/><path d="M16.5 6.5 19 9"/><path d="M14.5 8.5 16.5 10.5"/><circle cx="8" cy="15" r="1.2"/>',
+    },
     [DsGlyph.House]: {
       fill: '<path d="M5 9 12 3.5 19 9v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/>',
       line: '<path d="M3 10.5 12 3.5l9 7"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/><path d="M10 20v-5a2 2 0 0 1 4 0v5"/>',

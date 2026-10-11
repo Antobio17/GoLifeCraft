@@ -4,4 +4,5 @@ export enum AppModule {
   Finance = "finance",
   Gym = "gym",
   Agenda = "agenda",
+  Admin = "admin",
 }

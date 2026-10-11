@@ -7,6 +7,7 @@ export class RouteModuleService {
     ["/gym", AppModule.Gym],
     ["/economy", AppModule.Finance],
     ["/agenda", AppModule.Agenda],
+    ["/users", AppModule.Admin],
   ];
 
   moduleFor(url: string): AppModule | null {

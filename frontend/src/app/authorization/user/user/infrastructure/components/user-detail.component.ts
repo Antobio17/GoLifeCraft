@@ -4,8 +4,10 @@ import { toObservable, takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { switchMap } from "rxjs/operators";
 import { GetUserService } from "../../application/services/get-user.service";
 import { ImpersonateUserService } from "../../application/services/impersonate-user.service";
+import { SetUserAccessService } from "../../application/services/set-user-access.service";
 import { GetUserProvider } from "../providers/get-user.provider";
 import { ImpersonateUserProvider } from "../providers/impersonate-user.provider";
+import { SetUserAccessProvider } from "../providers/set-user-access.provider";
 import { UserDetail } from "../../domain/models/user-detail.model";
 import { FloatingToastService } from "@shared/floating-toasts/application/services/floating-toast.service";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
@@ -20,6 +22,7 @@ import { ReadonlyStripComponent } from "@shared/design-system/readonly-strip/inf
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { PreferenceToggleComponent } from "@shared/design-system/preference-toggle/infrastructure/components/preference-toggle.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
@@ -34,6 +37,7 @@ import { BackNavigationService } from "@shared/routing/application/services/back
   providers: [
     ...GetUserProvider.getProviders(),
     ...ImpersonateUserProvider.getProviders(),
+    ...SetUserAccessProvider.getProviders(),
   ],
   imports: [
     ContextualTranslatePipe,
@@ -47,6 +51,7 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ButtonComponent,
     NoteComponent,
     ChipComponent,
+    PreferenceToggleComponent,
     ConfirmActionModalComponent,
     SkeletonLineComponent,
     SkeletonListComponent,
@@ -59,6 +64,7 @@ export class UserDetailComponent {
   private getUserService = inject(GetUserService);
   private backNavigation = inject(BackNavigationService);
   private impersonateUserService = inject(ImpersonateUserService);
+  private setUserAccessService = inject(SetUserAccessService);
   private floatingToastService = inject(FloatingToastService);
   private translationService = inject(TranslationService);
   private router = inject(Router);
@@ -70,6 +76,7 @@ export class UserDetailComponent {
   loading = signal(true);
   entering = signal(false);
   confirming = signal(false);
+  savingAccess = signal(false);
   user = signal<UserDetail | null>(null);
 
   readonly displayName = computed(() => {
@@ -94,6 +101,14 @@ export class UserDetailComponent {
       this.user()?.isActive
         ? "userDetail.access.active"
         : "userDetail.access.inactive",
+    ),
+  );
+
+  readonly accessHint = computed(() =>
+    this.t(
+      this.user()?.isActive
+        ? "userDetail.access.grantedHint"
+        : "userDetail.access.revokedHint",
     ),
   );
 
@@ -136,6 +151,32 @@ export class UserDetailComponent {
 
   back(): void {
     this.backNavigation.back(["/users"]);
+  }
+
+  toggleAccess(): void {
+    const user = this.user();
+    if (!user || this.savingAccess()) return;
+
+    const nextActive = !user.isActive;
+    this.user.set({ ...user, isActive: nextActive });
+    this.savingAccess.set(true);
+
+    this.setUserAccessService
+      .setUserAccess({ userId: user.id, isActive: nextActive })
+      .subscribe({
+        next: () => this.savingAccess.set(false),
+        error: () => {
+          this.user.update((current) =>
+            current ? { ...current, isActive: !nextActive } : current,
+          );
+          this.savingAccess.set(false);
+          this.floatingToastService.showToast({
+            status: 400,
+            keyTranslation: "userDetail.toast.accessError",
+            details: [],
+          });
+        },
+      });
   }
 
   askForImpersonation(): void {
