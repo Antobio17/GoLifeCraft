@@ -176,13 +176,16 @@
             [title]="'getShopping.search.empty' | t"
           />
         } @else if (complete()) {
-          <ds-route-step
-            data-testid="shopping-complete"
+          <ds-stack
             animate.enter="shopping-section--in"
             animate.leave="shopping-section--out"
-            [title]="routeDoneLabel()"
-            [state]="routeDoneState"
-          />
+          >
+            <ds-route-step
+              data-testid="shopping-complete"
+              [title]="routeDoneLabel()"
+              [state]="routeDoneState"
+            />
+          </ds-stack>
         } @else {
           <ds-stack
             class="shopping-route"
@@ -278,16 +281,21 @@
             </ds-receipt>
 
             @if (complete()) {
-              <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-                <ds-button
-                  data-testid="shopping-scan-ticket"
-                  variant="soft"
-                  icon="camera"
-                  [stretch]="true"
-                  [fullWidth]="true"
-                  (clicked)="scanTicket()"
-                  >{{ "getShopping.completion.scan" | t }}</ds-button
-                >
+              <ds-stack
+                direction="row"
+                align="center"
+                [gap]="'var(--ds-space-2)'"
+              >
+                <ds-stack [grow]="true">
+                  <ds-button
+                    data-testid="shopping-scan-ticket"
+                    variant="soft"
+                    icon="camera"
+                    [fullWidth]="true"
+                    (clicked)="scanTicket()"
+                    >{{ "getShopping.completion.scan" | t }}</ds-button
+                  >
+                </ds-stack>
                 <ds-button
                   data-testid="shopping-completion-clear"
                   variant="outline"
