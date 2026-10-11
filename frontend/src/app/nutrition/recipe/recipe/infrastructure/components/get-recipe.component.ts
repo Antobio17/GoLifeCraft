@@ -26,7 +26,7 @@ import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/i
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
-import { StepBadgeComponent } from "@shared/design-system/step-badge/infrastructure/components/step-badge.component";
+import { StepLineComponent } from "@shared/design-system/step-line/infrastructure/components/step-line.component";
 import { StockControlComponent } from "@shared/design-system/stock-control/infrastructure/components/stock-control.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SaveStatusComponent } from "@shared/design-system/save-status/infrastructure/components/save-status.component";
@@ -57,7 +57,6 @@ import {
   RecipeIngredientView,
 } from "@nutrition/recipe/recipe/domain/models/recipe.model";
 import { MacroBadge } from "@shared/design-system/macro-badges/domain/models/macro-badge.model";
-import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { AggregateImageService } from "@shared/aggregate-image/application/services/aggregate-image.service";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
@@ -72,7 +71,6 @@ import { AggregateNavigationService } from "@shared/routing/application/services
   imports: [
     DividerComponent,
     FoodLineComponent,
-    RevealDirective,
     ContextualTranslatePipe,
     PageWrapperComponent,
     SplitViewComponent,
@@ -94,7 +92,7 @@ import { AggregateNavigationService } from "@shared/routing/application/services
     EmptyStateComponent,
     ConfirmActionModalComponent,
     StockControlComponent,
-    StepBadgeComponent,
+    StepLineComponent,
     ModalSheetComponent,
     SaveStatusComponent,
     NumberInputComponent,
