@@ -3,14 +3,23 @@ import { InventoriesPage } from "./inventories.page";
 import { SEED } from "../../../support/seed-data";
 
 test.describe("inventario", () => {
-  test("el hero enseña el recuento abierto con su progreso", async ({ page }) => {
+  test("el listado enseña el progreso de cada recuento", async ({ page }) => {
     const inventories = new InventoriesPage(page);
     await inventories.goto();
 
     await expect(inventories.rows).toHaveCount(SEED.inventories.count);
-    await expect(inventories.hero).toContainText(
+    await expect(inventories.rows.first()).toContainText(
       `${SEED.inventories.open.countedItems}/${SEED.inventories.open.totalItems}`,
     );
+  });
+
+  test("la cabecera lleva a las ubicaciones", async ({ page }) => {
+    const inventories = new InventoriesPage(page);
+    await inventories.goto();
+
+    await inventories.openLocations();
+
+    await expect(page).toHaveURL(/\/locations$/);
   });
 
   test("el listado abre el recuento más reciente", async ({ page }) => {

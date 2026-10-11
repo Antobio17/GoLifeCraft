@@ -13,6 +13,16 @@
   >
     <ds-button
       slot="actions"
+      data-testid="inventories-locations"
+      variant="secondary"
+      size="icon-lg"
+      icon="aisles"
+      [iconSize]="19"
+      [ariaLabel]="'getInventories.locations' | t"
+      (clicked)="onLocations()"
+    />
+    <ds-button
+      slot="actions"
       data-testid="inventories-create"
       variant="primary"
       size="icon-lg"
@@ -23,132 +33,56 @@
     />
   </ds-screen-header>
 
-  <ds-split-view
-    [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
-    [gap]="'var(--ds-space-5)'"
-  >
-    @if (loading()) {
-      <ds-skeleton
-        slot="side"
-        height="13.5rem"
-        radius="var(--ds-radius-surface)"
-      />
-    } @else if (hero(); as hero) {
-      <ds-module-card
-        slot="side"
-        data-testid="inventories-hero"
-        [hero]="true"
-        [eyebrow]="'getInventories.hero.eyebrow' | t"
-      >
-        <ds-chip slot="aside" [tone]="hero.validated ? 'brand' : 'warning'">
-          {{ hero.statusLabel }}
-        </ds-chip>
-
-        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-          <ds-progress-ring [value]="hero.percent" [soft]="true">
-            <ds-text variant="strong">{{ hero.percent }}%</ds-text>
-          </ds-progress-ring>
-          <ds-stack [gap]="'2px'">
-            <ds-heading [level]="2" size="md">{{ hero.title }}</ds-heading>
-            <ds-text variant="meta">{{ hero.caption }}</ds-text>
-          </ds-stack>
+  @if (loading()) {
+    <ng-container
+      [ngTemplateOutlet]="inventorySkeleton"
+      [ngTemplateOutletContext]="{ $implicit: 4 }"
+    />
+  } @else if (months().length === 0) {
+    <ds-empty-state
+      icon="history"
+      [title]="'getInventories.empty.title' | t"
+      [text]="'getInventories.empty.text' | t"
+    />
+  } @else {
+    @for (month of months(); track month.key) {
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-section-header
+          [title]="month.title"
+          [staticLabel]="month.countLabel"
+        />
+        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+          @for (row of month.rows; track row.id) {
+            <ds-dated-row
+              data-testid="inventory-row"
+              [interactive]="true"
+              [ariaLabel]="row.ariaLabel"
+              [weekday]="row.weekday"
+              [day]="row.day"
+              [title]="row.title"
+              [tag]="row.tag"
+              [tagTone]="row.tagTone"
+              [meta]="row.meta"
+              [progress]="row.progress"
+              (activated)="onOpen(row.id)"
+            />
+          }
         </ds-stack>
-
-        <ds-stat-strip [items]="hero.stats" />
-      </ds-module-card>
-    } @else {
-      <ds-module-card
-        slot="side"
-        data-testid="inventories-hero"
-        [hero]="true"
-        [eyebrow]="'getInventories.hero.eyebrow' | t"
-      >
-        <ds-stack [gap]="'2px'">
-          <ds-heading [level]="2" size="md">
-            {{ "getInventories.hero.emptyTitle" | t }}
-          </ds-heading>
-          <ds-text variant="meta">
-            {{ "getInventories.hero.emptyText" | t }}
-          </ds-text>
-        </ds-stack>
-      </ds-module-card>
+      </ds-stack>
     }
 
-    <ds-grid slot="side" [columns]="3" [gap]="'var(--ds-space-2)'">
-      <ds-action-tile
-        data-testid="inventories-locations"
-        icon="aisles"
-        [name]="tiles().locations"
-        [meta]="tiles().locationsMeta"
-        (clicked)="onLocations()"
-      />
-      <ds-action-tile
-        data-testid="inventories-tickets"
-        icon="cart"
-        [name]="tiles().tickets"
-        [meta]="tiles().ticketsMeta"
-        (clicked)="onTickets()"
-      />
-      <ds-action-tile
-        data-testid="inventories-catalog"
-        icon="leaf"
-        [name]="tiles().catalog"
-        [meta]="tiles().catalogMeta"
-        (clicked)="onCatalog()"
-      />
-    </ds-grid>
-
-    @if (loading()) {
+    @if (loadingMore()) {
       <ng-container
         [ngTemplateOutlet]="inventorySkeleton"
-        [ngTemplateOutletContext]="{ $implicit: 4 }"
-      />
-    } @else if (months().length === 0) {
-      <ds-empty-state
-        icon="history"
-        [title]="'getInventories.empty.title' | t"
-        [text]="'getInventories.empty.text' | t"
-      />
-    } @else {
-      @for (month of months(); track month.key) {
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-section-header
-            [title]="month.title"
-            [staticLabel]="month.countLabel"
-          />
-          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-            @for (row of month.rows; track row.id) {
-              <ds-dated-row
-                data-testid="inventory-row"
-                [interactive]="true"
-                [ariaLabel]="row.ariaLabel"
-                [weekday]="row.weekday"
-                [day]="row.day"
-                [title]="row.title"
-                [tag]="row.tag"
-                [tagTone]="row.tagTone"
-                [meta]="row.meta"
-                [progress]="row.progress"
-                (activated)="onOpen(row.id)"
-              />
-            }
-          </ds-stack>
-        </ds-stack>
-      }
-
-      @if (loadingMore()) {
-        <ng-container
-          [ngTemplateOutlet]="inventorySkeleton"
-          [ngTemplateOutletContext]="{ $implicit: 2 }"
-        />
-      }
-
-      <ds-infinite-scroll
-        [disabled]="loadingMore() || !hasMore()"
-        (reached)="loadMore()"
+        [ngTemplateOutletContext]="{ $implicit: 2 }"
       />
     }
-  </ds-split-view>
+
+    <ds-infinite-scroll
+      [disabled]="loadingMore() || !hasMore()"
+      (reached)="loadMore()"
+    />
+  }
 </ds-page-wrapper>
 
 <ds-modal-sheet

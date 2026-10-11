@@ -13,20 +13,10 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
-import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
-import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
-import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
-import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
-import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
-import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
-import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { DatedRowComponent } from "@shared/design-system/dated-row/infrastructure/components/dated-row.component";
 import { DatedRowTone } from "@shared/design-system/dated-row/domain/models/dated-row-tone.enum";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { InfiniteScrollComponent } from "@shared/design-system/infinite-scroll/infrastructure/components/infinite-scroll.component";
@@ -40,9 +30,7 @@ import { GetInventoriesService } from "@nutrition/pantry/inventory/application/s
 import { InventoryViewService } from "@nutrition/pantry/inventory/application/services/inventory-view.service";
 import { Inventory } from "../../domain/models/inventory.model";
 import { InventoryRow } from "../../domain/models/inventory-row.model";
-import { InventoryHero } from "../../domain/models/inventory-hero.model";
 import { InventoryMonthGroup } from "../../domain/models/inventory-month-group.model";
-import { InventoryQuickAccess } from "../../domain/models/inventory-quick-access.model";
 import { InventoryStatus } from "../../domain/models/inventory-status.model";
 import { StartInventoryFormComponent } from "./start-inventory-form.component";
 
@@ -57,22 +45,12 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     PageWrapperComponent,
     ScreenHeaderComponent,
     StackComponent,
-    GridComponent,
-    HeadingComponent,
-    TextComponent,
-    ChipComponent,
     ButtonComponent,
     EmptyStateComponent,
     SkeletonListComponent,
     InfiniteScrollComponent,
-    SplitViewComponent,
-    ModuleCardComponent,
-    ProgressRingComponent,
-    StatStripComponent,
-    ActionTileComponent,
     SectionHeaderComponent,
     DatedRowComponent,
-    SkeletonComponent,
     ModalSheetComponent,
     StartInventoryFormComponent,
   ],
@@ -93,8 +71,6 @@ export class GetInventoriesComponent extends AbstractListPageComponent<Inventory
   loadingMore = signal(false);
   startOpen = signal(false);
 
-  private readonly today = new Date();
-
   hasMore = computed(() => this.items().length < this.totalItems());
 
   headerSubtitle = computed(() =>
@@ -102,51 +78,6 @@ export class GetInventoriesComponent extends AbstractListPageComponent<Inventory
       count: this.totalItems(),
     }),
   );
-
-  latest = computed<Inventory | null>(() => this.items()[0] ?? null);
-
-  hero = computed<InventoryHero | null>(() => {
-    const latest = this.latest();
-
-    if (!latest) return null;
-
-    const attributes = latest.attributes;
-    const locale = this.translationService.getLocale();
-
-    return {
-      title: this.inventoryView.longDateLabel(attributes.countedOn, locale),
-      caption: `${this.t(this.inventoryView.shiftKey(attributes.shift))} · ${this.inventoryView.relativeDayLabel(attributes.countedOn, locale, this.today)}`,
-      statusLabel: this.t(this.inventoryView.statusKey(attributes.status)),
-      validated: InventoryStatus.VALIDATED === attributes.status,
-      percent: this.inventoryView.progressPercent(
-        attributes.countedItems,
-        attributes.totalItems,
-      ),
-      stats: [
-        {
-          value: `${attributes.countedItems}/${attributes.totalItems}`,
-          label: this.t("getInventories.hero.counted"),
-        },
-        {
-          value: `${attributes.adjustedItems}`,
-          label: this.t("getInventories.hero.adjusted"),
-        },
-        {
-          value: `${attributes.totalLocations}`,
-          label: this.t("getInventories.hero.locations"),
-        },
-      ],
-    };
-  });
-
-  tiles = computed<InventoryQuickAccess>(() => ({
-    locations: this.t("getInventories.tiles.locations"),
-    locationsMeta: this.t("getInventories.tiles.locationsMeta"),
-    tickets: this.t("getInventories.tiles.tickets"),
-    ticketsMeta: this.t("getInventories.tiles.ticketsMeta"),
-    catalog: this.t("getInventories.tiles.catalog"),
-    catalogMeta: this.t("getInventories.tiles.catalogMeta"),
-  }));
 
   months = computed<InventoryMonthGroup[]>(() => {
     const locale = this.translationService.getLocale();
@@ -261,14 +192,6 @@ export class GetInventoriesComponent extends AbstractListPageComponent<Inventory
 
   onLocations(): void {
     this.router.navigate(["/locations"]);
-  }
-
-  onTickets(): void {
-    this.router.navigate(["/tickets"]);
-  }
-
-  onCatalog(): void {
-    this.router.navigate(["/catalog"]);
   }
 
   private toRow(inventory: Inventory, locale: string): InventoryRow {

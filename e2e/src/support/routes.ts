@@ -38,7 +38,6 @@ export const SPLIT_VIEW_SCREENS = CORE_SCREENS.filter((screen) =>
     "shopping",
     "ticket",
     "kitchen",
-    "inventory",
     "notification-settings",
   ].includes(screen.name),
 );

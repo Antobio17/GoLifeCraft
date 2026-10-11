@@ -3,6 +3,7 @@
     "eyebrow": "Pantry",
     "title": "Inventory",
     "new": "New count",
+    "locations": "Locations",
     "stats": {
       "counts": "{{count}} counts"
     },
@@ -14,22 +15,6 @@
     "empty": {
       "title": "No counts yet",
       "text": "Start one to line the stock up with what is really at home"
-    },
-    "hero": {
-      "eyebrow": "Last count",
-      "counted": "Counted",
-      "adjusted": "With a gap",
-      "locations": "Locations",
-      "emptyTitle": "You have not counted the pantry yet",
-      "emptyText": "The first count sets the real stock at home"
-    },
-    "tiles": {
-      "locations": "Locations",
-      "locationsMeta": "Where you store",
-      "tickets": "Tickets",
-      "ticketsMeta": "Purchases",
-      "catalog": "Catalog",
-      "catalogMeta": "Products"
     },
     "row": {
       "open": "Open count from {{date}}"

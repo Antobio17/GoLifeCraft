@@ -3,6 +3,7 @@
     "eyebrow": "Despensa",
     "title": "Inventario",
     "new": "Nuevo recuento",
+    "locations": "Ubicaciones",
     "stats": {
       "counts": "{{count}} recuentos"
     },
@@ -14,22 +15,6 @@
     "empty": {
       "title": "Todavía no has hecho ningún recuento",
       "text": "Empieza uno para cuadrar el stock con lo que hay de verdad en casa"
-    },
-    "hero": {
-      "eyebrow": "Último recuento",
-      "counted": "Contados",
-      "adjusted": "Con diferencia",
-      "locations": "Ubicaciones",
-      "emptyTitle": "Aún no has contado la despensa",
-      "emptyText": "El primer recuento fija el stock real de casa"
-    },
-    "tiles": {
-      "locations": "Ubicaciones",
-      "locationsMeta": "Dónde guardas",
-      "tickets": "Tickets",
-      "ticketsMeta": "Compras",
-      "catalog": "Catálogo",
-      "catalogMeta": "Productos"
     },
     "row": {
       "open": "Abrir recuento del {{date}}"

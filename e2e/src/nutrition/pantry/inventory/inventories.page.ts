@@ -15,15 +15,15 @@ export class InventoriesPage {
     await expect(this.rows.first()).toBeVisible();
   }
 
-  get hero(): Locator {
-    return this.ds.host("inventories-hero");
-  }
-
   get rows(): Locator {
     return this.ds.all("inventory-row");
   }
 
   async openFirst(): Promise<void> {
     await this.rows.first().locator("button").first().click();
+  }
+
+  async openLocations(): Promise<void> {
+    await this.ds.click("inventories-locations");
   }
 }
