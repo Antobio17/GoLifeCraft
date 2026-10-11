@@ -40,11 +40,10 @@ import { TextInputComponent } from "@shared/design-system/text-input/infrastruct
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
-import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
+import { StepLineComponent } from "@shared/design-system/step-line/infrastructure/components/step-line.component";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
@@ -113,11 +112,10 @@ type PickerTab = "product" | "recipe";
     CardComponent,
     StackComponent,
     TextComponent,
-    SectionHeaderComponent,
     MacroBarsComponent,
     NumberInputComponent,
     TextareaComponent,
-    AddTileComponent,
+    StepLineComponent,
     EmptyStateComponent,
     ViewSwitchComponent,
     ModalSheetComponent,

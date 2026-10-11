@@ -164,25 +164,30 @@
       />
 
       @if (recipe.steps.length) {
-        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+        <ds-card
+          data-testid="recipe-steps"
+          [padding]="'var(--ds-space-1) var(--ds-space-4)'"
+          [gap]="'0'"
+        >
           @for (step of recipe.steps; track step.position) {
-            <ds-card data-testid="recipe-step" [padding]="'var(--ds-space-3)'">
-              <ds-stack direction="row" [gap]="'var(--ds-space-3)'">
-                <ds-step-badge [label]="'' + step.position" />
-                <ds-stack [gap]="'var(--ds-space-1-5)'" [grow]="true">
-                  <ds-text>{{ step.text }}</ds-text>
-                  @if (step.minutes) {
-                    <ds-stack direction="row">
-                      <ds-chip>{{
-                        "getRecipe.minutes" | t: { minutes: step.minutes }
-                      }}</ds-chip>
-                    </ds-stack>
-                  }
+            <ds-step-line
+              data-testid="recipe-step"
+              [label]="'' + step.position"
+            >
+              <ds-text>{{ step.text }}</ds-text>
+              @if (step.minutes) {
+                <ds-stack direction="row">
+                  <ds-chip>{{
+                    "getRecipe.minutes" | t: { minutes: step.minutes }
+                  }}</ds-chip>
                 </ds-stack>
-              </ds-stack>
-            </ds-card>
+              }
+            </ds-step-line>
+            @if (!$last) {
+              <ds-divider />
+            }
           }
-        </ds-stack>
+        </ds-card>
       } @else {
         <ds-text variant="meta">{{ "getRecipe.noSteps" | t }}</ds-text>
       }
