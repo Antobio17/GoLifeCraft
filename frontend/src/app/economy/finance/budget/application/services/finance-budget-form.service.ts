@@ -61,6 +61,27 @@ export class FinanceBudgetFormService {
     return this.round(this.referenceIncomeOf(form) - this.allocatedOf(form));
   }
 
+  totalOf(form: FinanceBudgetForm, kind: FinanceBudgetCategoryKind): number {
+    return this.round(
+      form.categories
+        .filter((category) => category.kind === kind)
+        .reduce((total, category) => total + this.amountOf(category), 0),
+    );
+  }
+
+  afterSavingsOf(form: FinanceBudgetForm): number {
+    return this.round(
+      this.referenceIncomeOf(form) - this.savingsAmountOf(form),
+    );
+  }
+
+  afterFixedOf(form: FinanceBudgetForm): number {
+    return this.round(
+      this.afterSavingsOf(form) -
+        this.totalOf(form, FinanceBudgetCategoryKind.FIXED),
+    );
+  }
+
   percentageOf(form: FinanceBudgetForm, amount: number): number {
     const referenceIncome = this.referenceIncomeOf(form);
 
@@ -90,26 +111,17 @@ export class FinanceBudgetFormService {
     return { ...form, savingsPercentage };
   }
 
-  withCategoryKind(
+  withCategory(
     form: FinanceBudgetForm,
     index: number,
-    kind: FinanceBudgetCategoryKind,
+    category: FinanceBudgetCategoryForm,
   ): FinanceBudgetForm {
-    return this.replaceCategory(form, index, (category) => ({
-      ...category,
-      kind,
-    }));
-  }
-
-  withCategoryAmount(
-    form: FinanceBudgetForm,
-    index: number,
-    amount: string,
-  ): FinanceBudgetForm {
-    return this.replaceCategory(form, index, (category) => ({
-      ...category,
-      amount,
-    }));
+    return {
+      ...form,
+      categories: form.categories.map((current, position) =>
+        position === index ? category : current,
+      ),
+    };
   }
 
   isValid(form: FinanceBudgetForm): boolean {
@@ -135,19 +147,6 @@ export class FinanceBudgetFormService {
         amount: this.amountOf(category),
         position: index + 1,
       }));
-  }
-
-  private replaceCategory(
-    form: FinanceBudgetForm,
-    index: number,
-    change: (category: FinanceBudgetCategoryForm) => FinanceBudgetCategoryForm,
-  ): FinanceBudgetForm {
-    return {
-      ...form,
-      categories: form.categories.map((category, position) =>
-        position === index ? change(category) : category,
-      ),
-    };
   }
 
   private parseAmount(value: string): number {
