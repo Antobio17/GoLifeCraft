@@ -30,15 +30,17 @@
       [ngTemplateOutletContext]="{ $implicit: 4 }"
     />
   } @else {
-    <ds-stack [gap]="'var(--ds-space-3)'">
-      <ds-search-input
-        data-testid="tickets-search"
-        [placeholder]="'getTickets.filter.search' | t"
-        [clearLabel]="'getTickets.filter.clear' | t"
-        [debounce]="300"
-        [value]="search()"
-        (searched)="onSearch($event)"
-      />
+    <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+      <ds-stack [grow]="true">
+        <ds-search-input
+          data-testid="tickets-search"
+          [placeholder]="'getTickets.filter.search' | t"
+          [clearLabel]="'getTickets.filter.clear' | t"
+          [debounce]="300"
+          [value]="search()"
+          (searched)="onSearch($event)"
+        />
+      </ds-stack>
 
       <ds-view-switch
         data-testid="tickets-status"
