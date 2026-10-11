@@ -27,7 +27,6 @@ import { CardComponent } from "@shared/design-system/card/infrastructure/compone
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { MetricCardComponent } from "@shared/design-system/metric-card/infrastructure/components/metric-card.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
@@ -115,7 +114,6 @@ const EVOLUTION_MONTHS = 6;
     SectionHeaderComponent,
     MetricCardComponent,
     SkeletonListComponent,
-    SkeletonComponent,
     SkeletonLineComponent,
     SkeletonPanelComponent,
     SkeletonMetricsComponent,
