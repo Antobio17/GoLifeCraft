@@ -13,6 +13,7 @@ import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/conte
 import { PageWrapperComponent } from "@shared/design-system/page-wrapper/infrastructure/components/page-wrapper.component";
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
+import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonNoteComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-note.component";
@@ -67,6 +68,7 @@ const RELATIVE_STEPS: ReadonlyArray<[Intl.RelativeTimeFormatUnit, number]> = [
     PageWrapperComponent,
     ScreenHeaderComponent,
     StackComponent,
+    SplitViewComponent,
     TextComponent,
     SkeletonComponent,
     SkeletonNoteComponent,
