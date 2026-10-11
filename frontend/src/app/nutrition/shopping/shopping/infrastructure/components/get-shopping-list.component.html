@@ -59,17 +59,11 @@
           macros="tiles"
           [progress]="true"
         />
-        <ds-stack class="shopping-index" [gap]="'var(--ds-space-2)'">
-          @for (group of skeletonGroups; track $index) {
-            <ds-skeleton height="2.5rem" />
-          }
-        </ds-stack>
       } @else if (attributes()) {
         @if (!isEmpty()) {
           <ds-module-card
             class="shopping-summary"
             data-testid="shopping-summary"
-            [hero]="true"
             [eyebrow]="'getShopping.summary.pending' | t"
           >
             <ds-text slot="aside" variant="meta">{{
@@ -93,14 +87,6 @@
               />
             }
           </ds-module-card>
-          @if (showRouteIndex()) {
-            <ds-route-index
-              class="shopping-index"
-              [title]="routeTitle()"
-              [entries]="routeIndex()"
-              (picked)="scrollToGroup($event)"
-            />
-          }
         }
         <ng-container
           [ngTemplateOutlet]="quickAdd"
@@ -190,28 +176,13 @@
             [title]="'getShopping.search.empty' | t"
           />
         } @else if (complete()) {
-          <ds-completion-card
+          <ds-route-step
             data-testid="shopping-complete"
             animate.enter="shopping-section--in"
             animate.leave="shopping-section--out"
-            [title]="'getShopping.completion.title' | t"
-            [text]="completionText()"
-          >
-            <ds-button
-              data-testid="shopping-scan-ticket"
-              variant="primary"
-              icon="camera"
-              (clicked)="scanTicket()"
-              >{{ "getShopping.completion.scan" | t }}</ds-button
-            >
-            <ds-button
-              data-testid="shopping-completion-clear"
-              variant="outline"
-              icon="trash"
-              (clicked)="askClearChecked()"
-              >{{ "getShopping.completion.clear" | t }}</ds-button
-            >
-          </ds-completion-card>
+            [title]="routeDoneLabel()"
+            [state]="routeDoneState"
+          />
         } @else {
           <ds-stack
             class="shopping-route"
@@ -266,56 +237,78 @@
             }
           </ds-stack>
         }
-        @if (cart().length > 0) {
-          <ds-disclosure
-            data-testid="shopping-cart"
+        @if (hasCart()) {
+          <ds-stack
+            [gap]="'var(--ds-space-3)'"
             animate.enter="shopping-section--in"
             animate.leave="shopping-section--out"
-            icon="cart"
-            [title]="'getShopping.cart.title' | t"
-            [meta]="cartMeta()"
-            [(open)]="cartOpen"
           >
-            @for (item of cart(); track item.id) {
-              <ds-collapse-row
-                animate.enter="ds-collapse-row--in"
-                animate.leave="ds-collapse-row--out"
-              >
-                <ds-shopping-item
-                  data-testid="shopping-item"
-                  [attr.data-id]="item.id"
-                  [emoji]="item.emoji"
-                  [imageUrl]="item.imageUrl"
-                  [name]="item.name"
-                  [meta]="item.meta"
-                  [leftoverLabel]="item.leftoverLabel"
-                  [priceLabel]="item.priceLabel"
-                  [quantity]="item.quantity"
-                  [checked]="item.checked"
-                  [toggleAriaLabel]="itemToggleLabel(item)"
-                  [incrementLabel]="'getShopping.increment' | t"
-                  [decrementLabel]="'getShopping.decrement' | t"
-                  [removeLabel]="'getShopping.remove' | t"
-                  [openable]="!item.custom && !!item.articleId"
-                  [openLabel]="'getShopping.openArticle' | t"
-                  (toggled)="toggleChecked(item)"
-                  (increment)="increment(item)"
-                  (decrement)="decrement(item)"
-                  (remove)="removeItem(item)"
-                  (opened)="onOpenItem(item)"
-                />
-              </ds-collapse-row>
+            <ds-receipt
+              data-testid="shopping-cart"
+              [title]="receiptTitle()"
+              [meta]="receiptMeta()"
+              [stamp]="receiptStamp()"
+              [columns]="receiptColumns()"
+              [totalLabel]="receiptTotalLabel()"
+              [total]="cartSummary().cartLabel"
+              [note]="receiptNote()"
+              [noteAside]="receiptNoteAside()"
+              [noteAccent]="!complete()"
+              [(open)]="cartOpen"
+            >
+              @for (group of receiptGroups(); track group.key) {
+                @if (group.label) {
+                  <ds-receipt-group
+                    [label]="group.label"
+                    [subtotalLabel]="'getShopping.receipt.subtotal' | t"
+                    [subtotal]="group.subtotalLabel"
+                  >
+                    <ng-container
+                      [ngTemplateOutlet]="receiptLines"
+                      [ngTemplateOutletContext]="{ lines: group.lines }"
+                    />
+                  </ds-receipt-group>
+                } @else {
+                  <ng-container
+                    [ngTemplateOutlet]="receiptLines"
+                    [ngTemplateOutletContext]="{ lines: group.lines }"
+                  />
+                }
+              }
+            </ds-receipt>
+
+            @if (complete()) {
+              <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+                <ds-button
+                  data-testid="shopping-scan-ticket"
+                  variant="soft"
+                  icon="camera"
+                  [stretch]="true"
+                  [fullWidth]="true"
+                  (clicked)="scanTicket()"
+                  >{{ "getShopping.completion.scan" | t }}</ds-button
+                >
+                <ds-button
+                  data-testid="shopping-completion-clear"
+                  variant="outline"
+                  icon="trash"
+                  (clicked)="askClearChecked()"
+                  >{{ "getShopping.completion.clear" | t }}</ds-button
+                >
+              </ds-stack>
+            } @else {
+              <ds-stack direction="row" justify="end">
+                <ds-button
+                  data-testid="shopping-clear-checked"
+                  variant="ghost"
+                  size="sm"
+                  icon="trash"
+                  (clicked)="askClearChecked()"
+                  >{{ "getShopping.clearChecked" | t }}</ds-button
+                >
+              </ds-stack>
             }
-            <ds-stack direction="row" justify="end" [gap]="'var(--ds-space-2)'">
-              <ds-button
-                data-testid="shopping-clear-checked"
-                variant="outline"
-                icon="trash"
-                (clicked)="askClearChecked()"
-                >{{ "getShopping.clearChecked" | t }}</ds-button
-              >
-            </ds-stack>
-          </ds-disclosure>
+          </ds-stack>
         }
       </ds-stack>
     } @else {
@@ -332,6 +325,26 @@
       />
     }
   </ds-split-view>
+
+  <ng-template #receiptLines let-lines="lines">
+    @for (line of lines; track line.id) {
+      <ds-receipt-line
+        data-testid="shopping-cart-line"
+        animate.enter="shopping-line--in"
+        [attr.data-id]="line.id"
+        [quantity]="line.quantity"
+        [name]="line.name"
+        [meta]="line.meta"
+        [priceLabel]="line.priceLabel"
+        [returnLabel]="'getShopping.receipt.return' | t"
+        [incrementLabel]="'getShopping.increment' | t"
+        [decrementLabel]="'getShopping.decrement' | t"
+        (returned)="toggleChecked(line)"
+        (increment)="increment(line)"
+        (decrement)="decrement(line)"
+      />
+    }
+  </ng-template>
 
   <ng-template #quickAdd let-placement="placement">
     <ds-quick-add

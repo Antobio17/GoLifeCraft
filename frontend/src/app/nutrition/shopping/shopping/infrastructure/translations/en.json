@@ -94,15 +94,12 @@
     "pending": "{count} left to pick",
     "done": "Done",
     "withoutStore": "No store",
-    "route": "Your route",
     "cart": {
       "title": "In the cart",
       "add": "Add to cart: {{name}}",
       "remove": "Remove from cart: {{name}}"
     },
     "completion": {
-      "title": "Shopping complete",
-      "text": "{{total}} in the cart. Scan your receipt to add it to your pantry.",
       "scan": "Scan receipt",
       "clear": "Empty cart"
     },
@@ -110,6 +107,31 @@
       "placeholder": "Add an item…",
       "free": "Add custom item"
     },
-    "header": "{{count}} items · {{stores}} stores"
+    "header": "{{count}} items · {{stores}} stores",
+    "receipt": {
+      "titleDone": "Shopping done",
+      "stamp": "All picked",
+      "items": {
+        "one": "1 item",
+        "many": "{{count}} items"
+      },
+      "stores": "{{count}} stores",
+      "columns": {
+        "quantity": "Qty",
+        "name": "Item",
+        "price": "€"
+      },
+      "total": "In the cart",
+      "totalDone": "Estimated total",
+      "subtotal": "Subtotal",
+      "missing": {
+        "one": "1 item left",
+        "many": "{{count}} items left"
+      },
+      "toPick": "{{total}} still to pick",
+      "estimate": "Catalogue prices. The real receipt may differ.",
+      "return": "Back to the route",
+      "routeDone": "Route complete · {{count}} aisles"
+    }
   }
 }

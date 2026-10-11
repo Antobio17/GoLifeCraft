@@ -10,7 +10,6 @@
 .shopping-main {
   min-width: 0;
 }
-.shopping-index,
 .shopping-quick-add {
   display: none;
 }
@@ -25,7 +24,6 @@
   }
 }
 @media (min-width: 1000px) {
-  .shopping-index,
   .shopping-quick-add--side {
     display: block;
   }
@@ -48,9 +46,25 @@
     transform: translateY(0);
   }
 }
+.shopping-line--in {
+  animation: shopping-line-in var(--ds-dur-3) var(--ds-ease-out);
+}
+@keyframes shopping-line-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--ds-space-1-5)));
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .shopping-section--in,
-  .shopping-section--out {
+  .shopping-section--out,
+  .shopping-line--in {
     animation: none;
   }
 }
