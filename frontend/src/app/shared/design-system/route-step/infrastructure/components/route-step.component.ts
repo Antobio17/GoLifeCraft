@@ -102,6 +102,15 @@ import { StepBadgeState } from "../../../step-badge/domain/models/step-badge-sta
       .ds-rstep--done .ds-rstep__items {
         padding-bottom: var(--ds-space-2);
       }
+      :host(:only-child) .ds-rstep {
+        align-items: center;
+      }
+      :host(:only-child) .ds-rstep__head {
+        padding-top: 0;
+      }
+      :host(:only-child) .ds-rstep__items:empty {
+        display: none;
+      }
     `,
   ],
 })
