@@ -65,25 +65,29 @@
           <ds-note icon="info">{{ suggestedIncomeHint() }}</ds-note>
         </ds-card>
 
-        <ds-card [padding]="'var(--ds-space-4)'">
-          <ds-text variant="label">{{
-            "saveFinanceBudget.savings.title" | t
-          }}</ds-text>
-
+        <ds-card
+          [padding]="'var(--ds-space-4)'"
+          data-testid="budget-step-savings"
+        >
           <ds-stack
             direction="row"
             justify="between"
-            align="end"
-            [gap]="'var(--ds-space-2)'"
+            align="center"
+            [gap]="'var(--ds-space-3)'"
           >
-            <ds-stack [gap]="'2px'" [grow]="true">
-              <ds-text variant="strong">{{
-                "saveFinanceBudget.savings.goal" | t
-              }}</ds-text>
-              <ds-text variant="meta"
-                >{{ savingsAmountLabel() }}
-                {{ "saveFinanceBudget.savings.perMonth" | t }}</ds-text
-              >
+            <ds-stack
+              direction="row"
+              align="center"
+              [gap]="'var(--ds-space-3)'"
+              [grow]="true"
+            >
+              <ds-step-badge label="1" />
+              <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-text variant="strong">{{
+                  "saveFinanceBudget.steps.savings.title" | t
+                }}</ds-text>
+                <ds-text variant="meta">{{ savingsSubtitle() }}</ds-text>
+              </ds-stack>
             </ds-stack>
 
             <ds-heading [level]="3" size="lg">{{
@@ -103,50 +107,93 @@
             [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="onSavingsPercentage($event)"
           />
-        </ds-card>
 
-        <ds-card [padding]="'var(--ds-space-4)'">
+          <ds-divider />
+
           <ds-stack
             direction="row"
             justify="between"
-            align="start"
-            [gap]="'var(--ds-space-3)'"
+            align="center"
+            [gap]="'var(--ds-space-2)'"
           >
-            <ds-stack [gap]="'2px'" [grow]="true">
-              <ds-text variant="label">{{
-                "saveFinanceBudget.unassigned.title" | t
-              }}</ds-text>
-              <ds-text variant="meta">{{ unassignedHint() }}</ds-text>
-            </ds-stack>
+            <ds-text variant="meta">{{
+              "saveFinanceBudget.steps.remaining" | t
+            }}</ds-text>
+            <ds-text variant="strong">{{ afterSavingsLabel() }}</ds-text>
+          </ds-stack>
+          <ds-progress-bar
+            [value]="afterSavingsPercent()"
+            [ariaLabel]="'saveFinanceBudget.steps.remaining' | t"
+          />
+        </ds-card>
+      </ng-container>
 
-            <ds-stack align="end" [gap]="'2px'">
-              <ds-heading [level]="3" size="md">{{
-                unassignedPercentageLabel()
-              }}</ds-heading>
-              <ds-text [variant]="overAssigned() ? 'danger' : 'muted'">{{
-                unassignedAmountLabel()
+      <ds-card [padding]="'var(--ds-space-4)'" data-testid="budget-step-fixed">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'var(--ds-space-3)'"
+        >
+          <ds-stack
+            direction="row"
+            align="center"
+            [gap]="'var(--ds-space-3)'"
+            [grow]="true"
+          >
+            <ds-step-badge label="2" />
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="strong">{{
+                "saveFinanceBudget.steps.fixed.title" | t
+              }}</ds-text>
+              <ds-text variant="meta">{{
+                "saveFinanceBudget.steps.fixed.subtitle" | t
               }}</ds-text>
             </ds-stack>
           </ds-stack>
 
-          <ds-allocation-bar
-            [segments]="allocationSegments()"
-            [ariaLabel]="'saveFinanceBudget.allocation.aria' | t"
-          />
-        </ds-card>
+          <ds-heading [level]="3" size="md">{{ fixedTotalLabel() }}</ds-heading>
+        </ds-stack>
 
-        @if (overAssigned()) {
-          <ds-note icon="alertCircle" tone="danger">{{
-            "saveFinanceBudget.unassigned.warning" | t
-          }}</ds-note>
-        }
-      </ng-container>
+        <ds-stack [gap]="'0'">
+          @for (row of fixedRows(); track row.key; let first = $first) {
+            @if (!first) {
+              <ds-divider />
+            }
+            <ds-allocation-row
+              data-testid="budget-category-row"
+              [label]="row.name"
+              [amountLabel]="row.amountLabel"
+              [glyph]="row.glyph"
+              [color]="row.color"
+              [ariaLabel]="row.editLabel"
+              (pressed)="openCategory(row.index)"
+            />
+          } @empty {
+            <ds-text variant="meta">{{
+              "saveFinanceBudget.steps.fixed.empty" | t
+            }}</ds-text>
+          }
+        </ds-stack>
 
-      <ds-section-header
-        [title]="'saveFinanceBudget.categories.title' | t"
-        [staticLabel]="'saveFinanceBudget.categories.hint' | t"
-        size="md"
-      />
+        <ds-divider />
+
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'var(--ds-space-2)'"
+        >
+          <ds-text variant="meta">{{
+            "saveFinanceBudget.steps.remaining" | t
+          }}</ds-text>
+          <ds-text variant="strong">{{ afterFixedLabel() }}</ds-text>
+        </ds-stack>
+        <ds-progress-bar
+          [value]="afterFixedPercent()"
+          [ariaLabel]="'saveFinanceBudget.steps.remaining' | t"
+        />
+      </ds-card>
 
       @if (!hasReferenceIncome()) {
         <ds-note icon="alertCircle" tone="warning">{{
@@ -154,108 +201,159 @@
         }}</ds-note>
       }
 
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        @for (row of categoryRows(); track row.key) {
-          <ds-card [padding]="'var(--ds-space-3)'" [gap]="'var(--ds-space-3)'">
-            <ds-stack
-              direction="row"
-              align="start"
-              justify="between"
-              [gap]="'var(--ds-space-3)'"
-            >
-              <ds-stack
-                direction="row"
-                align="center"
-                [gap]="'var(--ds-space-3)'"
-                [grow]="true"
-              >
-                <ds-glyph
-                  [name]="row.glyph"
-                  [tile]="true"
-                  [size]="20"
-                  [color]="row.color"
-                  box="2.125rem"
-                />
-                <ds-stack [grow]="true">
-                  <ds-text variant="strong" [truncate]="true">{{
-                    row.name
-                  }}</ds-text>
-                </ds-stack>
-              </ds-stack>
-
-              <ds-type-toggle
-                [options]="kindOptions()"
-                [ngModel]="row.kind"
-                [ngModelOptions]="{ standalone: true }"
-                (ngModelChange)="onCategoryKind(row.index, $event)"
-              />
+      <ds-card
+        [padding]="'var(--ds-space-4)'"
+        data-testid="budget-step-variable"
+      >
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'var(--ds-space-3)'"
+        >
+          <ds-stack
+            direction="row"
+            align="center"
+            [gap]="'var(--ds-space-3)'"
+            [grow]="true"
+          >
+            <ds-step-badge label="3" />
+            <ds-stack [gap]="'2px'" [grow]="true">
+              <ds-text variant="strong">{{
+                "saveFinanceBudget.steps.variable.title" | t
+              }}</ds-text>
+              <ds-text variant="meta">{{
+                "saveFinanceBudget.steps.variable.subtitle" | t
+              }}</ds-text>
             </ds-stack>
+          </ds-stack>
 
-            @if (row.variable) {
-              <ds-stack
-                direction="row"
-                align="center"
-                [gap]="'var(--ds-space-4)'"
-              >
-                <ds-stack [grow]="true">
-                  <ds-slider-stepper
-                    [min]="0"
-                    [max]="row.sliderMax"
-                    [step]="variableStep()"
-                    [ariaLabel]="row.name"
-                    [valueText]="row.amountLabel"
-                    [decreaseAriaLabel]="
-                      ('saveFinanceBudget.slider.decreaseCategory' | t) +
-                      ' ' +
-                      row.name
-                    "
-                    [increaseAriaLabel]="
-                      ('saveFinanceBudget.slider.increaseCategory' | t) +
-                      ' ' +
-                      row.name
-                    "
-                    [ngModel]="row.amount"
-                    [ngModelOptions]="{ standalone: true }"
-                    (ngModelChange)="onCategorySlider(row.index, $event)"
-                  />
-                </ds-stack>
+          <ds-heading [level]="3" size="md">{{
+            variableTotalLabel()
+          }}</ds-heading>
+        </ds-stack>
 
-                <ds-stack align="end" [gap]="'2px'" [shrink]="false">
-                  <ds-text variant="strong">{{ row.amountLabel }}</ds-text>
-                  <ds-text variant="meta">{{ row.percentageLabel }}</ds-text>
-                </ds-stack>
-              </ds-stack>
-            } @else {
-              <ds-stack
-                direction="row"
-                align="center"
-                [gap]="'var(--ds-space-4)'"
-              >
-                <ds-amount-input
-                  unit="€"
-                  align="end"
-                  placeholder="0,00"
-                  [grow]="true"
-                  [ariaLabel]="row.name"
-                  [ngModel]="row.amountText"
-                  [ngModelOptions]="{ standalone: true }"
-                  (ngModelChange)="onCategoryAmount(row.index, $event)"
-                />
-
-                <ds-stack align="end" [gap]="'2px'" [shrink]="false">
-                  <ds-text variant="strong">{{ row.percentageLabel }}</ds-text>
-                  <ds-text variant="meta">{{
-                    "saveFinanceBudget.kind.exactHint" | t
-                  }}</ds-text>
-                </ds-stack>
-              </ds-stack>
+        <ds-stack [gap]="'0'">
+          @for (row of variableRows(); track row.key; let first = $first) {
+            @if (!first) {
+              <ds-divider />
             }
-          </ds-card>
-        }
-      </ds-stack>
+            <ds-allocation-row
+              data-testid="budget-category-row"
+              [label]="row.name"
+              [amountLabel]="row.amountLabel"
+              [glyph]="row.glyph"
+              [color]="row.color"
+              [ariaLabel]="row.editLabel"
+              (pressed)="openCategory(row.index)"
+            />
+          } @empty {
+            <ds-text variant="meta">{{
+              "saveFinanceBudget.steps.variable.empty" | t
+            }}</ds-text>
+          }
+        </ds-stack>
+      </ds-card>
+
+      <ds-card [padding]="'var(--ds-space-4)'" data-testid="budget-unassigned">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="start"
+          [gap]="'var(--ds-space-3)'"
+        >
+          <ds-stack [gap]="'2px'" [grow]="true">
+            <ds-text variant="label">{{
+              "saveFinanceBudget.unassigned.title" | t
+            }}</ds-text>
+            <ds-text variant="meta">{{ unassignedHint() }}</ds-text>
+          </ds-stack>
+
+          <ds-stack align="end" [gap]="'2px'">
+            <ds-heading [level]="3" size="md">{{
+              unassignedPercentageLabel()
+            }}</ds-heading>
+            <ds-text [variant]="overAssigned() ? 'danger' : 'muted'">{{
+              unassignedAmountLabel()
+            }}</ds-text>
+          </ds-stack>
+        </ds-stack>
+
+        <ds-progress-bar
+          [value]="unassignedPercent()"
+          [ariaLabel]="'saveFinanceBudget.unassigned.title' | t"
+        />
+      </ds-card>
+
+      @if (overAssigned()) {
+        <ds-note icon="alertCircle" tone="danger">{{
+          "saveFinanceBudget.unassigned.warning" | t
+        }}</ds-note>
+      }
     </ds-split-view>
   }
 </ds-page-wrapper>
+
+<ds-modal-sheet
+  data-testid="budget-category-sheet"
+  [open]="categorySheet() !== null"
+  [title]="categorySheet()?.name ?? ''"
+  [caption]="categorySheet()?.caption ?? ''"
+  [closeLabel]="'saveFinanceBudget.sheet.close' | t"
+  [confirmLabel]="'saveFinanceBudget.sheet.confirm' | t"
+  confirmIcon="check"
+  (closed)="closeCategory()"
+  (confirmed)="confirmCategory()"
+>
+  @if (categorySheet(); as sheet) {
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-segmented-toggle
+        variant="pill"
+        data-testid="budget-sheet-kind"
+        [options]="kindOptions()"
+        [ngModel]="sheet.kind"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onDraftKind($event)"
+      />
+
+      <ds-amount-input
+        data-testid="budget-sheet-amount"
+        unit="€"
+        align="end"
+        placeholder="0,00"
+        [large]="true"
+        [ariaLabel]="'saveFinanceBudget.sheet.amount' | t"
+        [ngModel]="sheet.amountText"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="onDraftAmount($event)"
+      />
+
+      @if (sheet.variable) {
+        <ds-slider-stepper
+          data-testid="budget-sheet-slider"
+          [min]="0"
+          [max]="sheet.sliderMax"
+          [step]="variableStep()"
+          [ariaLabel]="sheet.name"
+          [valueText]="sheet.amountText"
+          [decreaseAriaLabel]="
+            ('saveFinanceBudget.slider.decreaseCategory' | t) + ' ' + sheet.name
+          "
+          [increaseAriaLabel]="
+            ('saveFinanceBudget.slider.increaseCategory' | t) + ' ' + sheet.name
+          "
+          [ngModel]="sheet.amount"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onDraftSlider($event)"
+        />
+      }
+
+      <ds-text [variant]="sheet.over ? 'danger' : 'meta'">{{
+        sheet.freeLabel
+      }}</ds-text>
+    </ds-stack>
+  }
+</ds-modal-sheet>
 
 <ds-discard-changes-modal
   [show]="draft.confirmingDiscard()"
