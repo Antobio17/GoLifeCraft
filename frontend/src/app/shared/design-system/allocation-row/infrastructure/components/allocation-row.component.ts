@@ -53,7 +53,7 @@ import { DsGlyph } from "../../../glyph/domain/models/ds-glyph.enum";
       .ds-arow:focus-visible {
         outline: 2px solid var(--ds-border-focus);
         outline-offset: 2px;
-        border-radius: var(--ds-radius-md);
+        border-radius: var(--ds-radius-mark);
       }
       .ds-arow__label {
         flex: 1 1 auto;
