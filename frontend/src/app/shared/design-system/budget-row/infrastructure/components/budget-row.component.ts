@@ -87,6 +87,18 @@ import {
         gap: var(--ds-space-2);
         padding: var(--ds-space-3);
       }
+      :host(:first-child) .ds-brow {
+        border-top-left-radius: calc(var(--ds-radius-surface) - 1px);
+        border-top-right-radius: calc(
+          var(--ds-card-tr-radius, var(--ds-radius-surface)) - 1px
+        );
+      }
+      :host(:last-child) .ds-brow {
+        border-bottom-left-radius: calc(var(--ds-radius-surface) - 1px);
+        border-bottom-right-radius: calc(
+          var(--ds-card-br-radius, var(--ds-radius-surface)) - 1px
+        );
+      }
       .ds-brow--selected {
         background: var(--ds-surface-hover);
       }
