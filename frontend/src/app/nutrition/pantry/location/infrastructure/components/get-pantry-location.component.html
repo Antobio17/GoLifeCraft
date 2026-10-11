@@ -129,7 +129,7 @@
 
         @for (row of visibleRows(); track row.item.id) {
           <ds-swipe-to-delete
-            radius="var(--ds-radius-surface)"
+            pad="var(--ds-space-2)"
             [disabled]="moving()"
             [removeLabel]="removeLabel()"
             (remove)="onRemove(row)"
