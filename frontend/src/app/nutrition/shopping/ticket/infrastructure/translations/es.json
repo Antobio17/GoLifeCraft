@@ -55,7 +55,7 @@
       "tickets": "{{count}} tickets"
     },
     "filter": {
-      "search": "Buscar por súper o nota",
+      "search": "Buscar ticket",
       "clear": "Limpiar",
       "label": "Estado de los tickets",
       "all": "Todos",

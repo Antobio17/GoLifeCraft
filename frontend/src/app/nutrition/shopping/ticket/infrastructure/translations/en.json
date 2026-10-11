@@ -55,7 +55,7 @@
       "tickets": "{{count}} tickets"
     },
     "filter": {
-      "search": "Search by shop or note",
+      "search": "Search tickets",
       "clear": "Clear",
       "label": "Ticket status",
       "all": "All",

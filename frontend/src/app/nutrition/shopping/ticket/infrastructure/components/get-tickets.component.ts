@@ -74,14 +74,17 @@ export class GetTicketsComponent extends AbstractListPageComponent<Ticket> {
     {
       value: TicketStatusFilter.ALL,
       label: this.t("getTickets.filter.all"),
+      icon: "viewList",
     },
     {
       value: TicketStatusFilter.DRAFT,
       label: this.t("getTickets.filter.draft"),
+      icon: "clock",
     },
     {
       value: TicketStatusFilter.RECEIVED,
       label: this.t("getTickets.filter.received"),
+      icon: "checkCircle",
     },
   ]);
 
