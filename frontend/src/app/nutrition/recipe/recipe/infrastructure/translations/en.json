@@ -157,7 +157,17 @@
     "stepsCount": "{{count}}",
     "step": "Step {{position}}",
     "stepPlaceholder": "Fry the onion until soft…",
-    "stepMinutes": "Minutes for this step",
+    "stepsSummary": "{{count}} · {{minutes}} min",
+    "stepMinutesShort": "{{minutes}} min",
+    "editStep": "Edit step {{position}}",
+    "stepSheet": {
+      "text": "What to do",
+      "minutes": "Time (optional)",
+      "save": "Save step",
+      "addAnother": "Save and add another",
+      "decrement": "One minute less",
+      "increment": "One minute more"
+    },
     "addStep": "Add step",
     "removeStep": "Remove step",
     "prepMode": {

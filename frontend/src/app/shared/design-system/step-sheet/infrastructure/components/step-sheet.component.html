@@ -1,0 +1,65 @@
+<ds-modal-sheet
+  [open]="open()"
+  [title]="title()"
+  [closeLabel]="closeLabel()"
+  [confirmLabel]="confirmLabel()"
+  [confirmDisabled]="!valid() || !changed()"
+  (closed)="closed.emit()"
+  (confirmed)="save()"
+>
+  @if (open()) {
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-field [label]="textLabel()">
+        <ds-textarea
+          data-testid="step-sheet-text"
+          [rows]="4"
+          resize="none"
+          [value]="draftText()"
+          [placeholder]="placeholder()"
+          [ariaLabel]="textLabel()"
+          (valueChange)="draftText.set($event)"
+        />
+      </ds-field>
+
+      <ds-field [label]="minutesLabel()">
+        <ds-number-input
+          data-testid="step-sheet-minutes"
+          [stepper]="true"
+          [min]="0"
+          [unit]="minutesUnit()"
+          [ariaLabel]="minutesLabel()"
+          [incrementLabel]="incrementLabel()"
+          [decrementLabel]="decrementLabel()"
+          [ngModel]="draftMinutes()"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="draftMinutes.set($event)"
+        />
+      </ds-field>
+
+      @if (addAnotherLabel()) {
+        <ds-button
+          data-testid="step-sheet-add-another"
+          variant="outline"
+          icon="plus"
+          [fullWidth]="true"
+          [disabled]="!valid()"
+          (clicked)="saveAndNext()"
+        >
+          {{ addAnotherLabel() }}
+        </ds-button>
+      }
+
+      @if (removeLabel()) {
+        <ds-button
+          data-testid="step-sheet-remove"
+          variant="outline-danger"
+          icon="trash"
+          [fullWidth]="true"
+          (clicked)="removed.emit()"
+        >
+          {{ removeLabel() }}
+        </ds-button>
+      }
+    </ds-stack>
+  }
+</ds-modal-sheet>
