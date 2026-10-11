@@ -12,6 +12,7 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { NoteComponent } from "@shared/design-system/note/infrastructure/components/note.component";
+import { GlyphComponent } from "@shared/design-system/glyph/infrastructure/components/glyph.component";
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { AllocationRowComponent } from "@shared/design-system/allocation-row/infrastructure/components/allocation-row.component";
 import { DividerComponent } from "@shared/design-system/divider/infrastructure/components/divider.component";
@@ -63,6 +64,7 @@ const REDIRECT_DELAY_MS = 600;
     CardComponent,
     NoteComponent,
     AmountInputComponent,
+    GlyphComponent,
     SliderStepperComponent,
     AllocationRowComponent,
     DividerComponent,
@@ -99,7 +101,6 @@ export class SaveFinanceBudgetComponent implements OnInit {
   protected readonly draft = new EditorDraft(() => this.form());
   translationsReady = signal(false);
 
-  suggestedIncome = signal(0);
   form = signal<FinanceBudgetForm>({
     referenceIncome: "",
     savingsPercentage: 0,
@@ -139,18 +140,6 @@ export class SaveFinanceBudgetComponent implements OnInit {
       : "saveFinanceBudget.unassigned.left";
 
     return this.t(key);
-  });
-
-  suggestedIncomeHint = computed(() => {
-    this.translationsReady();
-    const suggested = this.suggestedIncome();
-
-    if (suggested <= 0) return this.t("saveFinanceBudget.income.noHistory");
-
-    return this.t("saveFinanceBudget.income.hint").replace(
-      "{amount}",
-      this.view.sensitiveMoney(suggested),
-    );
   });
 
   savingsSubtitle = computed(() => {
@@ -388,7 +377,6 @@ export class SaveFinanceBudgetComponent implements OnInit {
       next: (response) => {
         const settings = response.data.attributes;
 
-        this.suggestedIncome.set(settings.suggestedIncome);
         this.form.set(this.budgetForm.fromSettings(settings));
         this.draft.markSaved();
         this.loading.set(false);

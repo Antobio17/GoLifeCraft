@@ -80,7 +80,7 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
         width: 1.125rem;
         height: 1.125rem;
         border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface);
+        background: var(--ds-bg);
         border: 2px solid var(--ds-primary);
         box-shadow: var(--ds-shadow-sm);
       }
@@ -88,7 +88,7 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
         width: 1.125rem;
         height: 1.125rem;
         border-radius: var(--ds-radius-pill);
-        background: var(--ds-surface);
+        background: var(--ds-bg);
         border: 2px solid var(--ds-primary);
         box-shadow: var(--ds-shadow-sm);
       }
