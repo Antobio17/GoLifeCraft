@@ -94,15 +94,12 @@
     "pending": "{count} por coger",
     "done": "Listo",
     "withoutStore": "Sin supermercado",
-    "route": "Tu recorrido",
     "cart": {
       "title": "En el carrito",
       "add": "Al carrito: {{name}}",
       "remove": "Sacar del carrito: {{name}}"
     },
     "completion": {
-      "title": "Compra hecha",
-      "text": "{{total}} en el carrito. Escanea el ticket para meterlo en la despensa.",
       "scan": "Escanear ticket",
       "clear": "Vaciar"
     },
@@ -110,6 +107,31 @@
       "placeholder": "Añadir un artículo…",
       "free": "Añadir a mano"
     },
-    "header": "{{count}} artículos · {{stores}} súpers"
+    "header": "{{count}} artículos · {{stores}} súpers",
+    "receipt": {
+      "titleDone": "Compra hecha",
+      "stamp": "Todo cogido",
+      "items": {
+        "one": "1 artículo",
+        "many": "{{count}} artículos"
+      },
+      "stores": "{{count}} súpers",
+      "columns": {
+        "quantity": "Ud",
+        "name": "Artículo",
+        "price": "€"
+      },
+      "total": "Llevas",
+      "totalDone": "Total estimado",
+      "subtotal": "Subtotal",
+      "missing": {
+        "one": "Falta 1 artículo",
+        "many": "Faltan {{count}} artículos"
+      },
+      "toPick": "{{total}} por coger",
+      "estimate": "Precios del catálogo. El ticket real puede variar.",
+      "return": "Devolver al recorrido",
+      "routeDone": "Recorrido completo · {{count}} pasillos"
+    }
   }
 }

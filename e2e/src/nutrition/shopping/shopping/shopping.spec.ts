@@ -19,6 +19,19 @@ test.describe("lista de la compra", () => {
     await shopping.expectChecked(name, true);
   });
 
+  test("devuelve un artículo del ticket al recorrido", async ({ page }) => {
+    const shopping = new ShoppingPage(page);
+    const name = `E2E Devolver ${Date.now()}`;
+    await shopping.goto();
+
+    await shopping.addCustomItem(name);
+    await shopping.toggle(name);
+    await shopping.expectChecked(name, true);
+
+    await shopping.returnToRoute(name);
+    await shopping.expectChecked(name, false);
+  });
+
   test("el stepper sube la cantidad del artículo", async ({ page }) => {
     const shopping = new ShoppingPage(page);
     const name = `E2E Cantidad ${Date.now()}`;

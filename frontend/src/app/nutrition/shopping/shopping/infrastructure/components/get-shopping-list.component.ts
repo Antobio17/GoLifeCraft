@@ -3,14 +3,16 @@ import { RouteStepComponent } from "@shared/design-system/route-step/infrastruct
 import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
 import { BigFigureComponent } from "@shared/design-system/big-figure/infrastructure/components/big-figure.component";
 import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
-import { DOCUMENT, NgTemplateOutlet } from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import { SplitViewComponent } from "@shared/design-system/split-view/infrastructure/components/split-view.component";
 import { CollapseRowComponent } from "@shared/design-system/collapse-row/infrastructure/components/collapse-row.component";
 import { Router } from "@angular/router";
 import { QuickAddComponent } from "@shared/design-system/quick-add/infrastructure/components/quick-add.component";
-import { CompletionCardComponent } from "@shared/design-system/completion-card/infrastructure/components/completion-card.component";
-import { DisclosureComponent } from "@shared/design-system/disclosure/infrastructure/components/disclosure.component";
-import { RouteIndexComponent } from "@shared/design-system/route-index/infrastructure/components/route-index.component";
+import { ReceiptComponent } from "@shared/design-system/receipt/infrastructure/components/receipt.component";
+import { ReceiptLineComponent } from "@shared/design-system/receipt/infrastructure/components/receipt-line.component";
+import { ReceiptGroupComponent } from "@shared/design-system/receipt/infrastructure/components/receipt-group.component";
+import { ReceiptColumns } from "@shared/design-system/receipt/domain/models/receipt-columns.model";
+import { StepBadgeState } from "@shared/design-system/step-badge/domain/models/step-badge-state.enum";
 import { StoreCellsComponent } from "@shared/design-system/store-cells/infrastructure/components/store-cells.component";
 import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -81,9 +83,9 @@ type FilterKind = "store" | "cat" | "brand";
     BigFigureComponent,
     ModuleCardComponent,
     QuickAddComponent,
-    CompletionCardComponent,
-    DisclosureComponent,
-    RouteIndexComponent,
+    ReceiptComponent,
+    ReceiptLineComponent,
+    ReceiptGroupComponent,
     StoreCellsComponent,
     FormsModule,
     ContextualTranslatePipe,
@@ -111,10 +113,11 @@ type FilterKind = "store" | "cat" | "brand";
   ],
 })
 export class GetShoppingListComponent implements OnInit {
-  private document = inject(DOCUMENT);
   private router = inject(Router);
   quickQuery = signal("");
-  cartOpen = signal(false);
+  cartOpen = signal(true);
+  cartOrder = signal<ReadonlyMap<string, number>>(new Map());
+  private cartSequence = 0;
   private translationService = inject(TranslationService);
   private aggregateNavigation = inject(AggregateNavigationService);
   protected autosave = inject(AutosaveService);
@@ -258,14 +261,6 @@ export class GetShoppingListComponent implements OnInit {
 
   summary = computed(() => this.view.hero(this.attributes()?.items ?? []));
 
-  cart = computed(() =>
-    this.view.cartRows(
-      this.searchedItems(),
-      this.packLabels(),
-      this.effectiveTab() === ALL_STORES,
-    ),
-  );
-  scopeSummary = computed(() => this.view.hero(this.visibleItems()));
   cartSummary = computed(() => this.view.hero(this.searchedItems()));
   headerLabel = computed(() =>
     this.t("getShopping.header", {
@@ -282,23 +277,7 @@ export class GetShoppingListComponent implements OnInit {
   totalSuffix = computed(() =>
     this.t("getShopping.summary.ofTotal", { total: this.summary().totalLabel }),
   );
-  cartMeta = computed(
-    () => `${this.cart().length} · ${this.cartSummary().cartLabel}`,
-  );
-  completionText = computed(() =>
-    this.t("getShopping.completion.text", {
-      total: this.scopeSummary().cartLabel,
-    }),
-  );
   isRouteMode = computed(() => this.sortMode() === ShoppingSortMode.Aisle);
-  showRouteIndex = computed(
-    () => this.isRouteMode() && !this.complete() && this.groups().length > 0,
-  );
-  routeTitle = computed(() =>
-    this.effectiveTab() === ALL_STORES
-      ? this.t("getShopping.route")
-      : `${this.t("getShopping.route")} · ${this.effectiveTab()}`,
-  );
 
   itemToggleLabel(item: ShoppingItemRow): string {
     return this.t(
@@ -307,12 +286,105 @@ export class GetShoppingListComponent implements OnInit {
     );
   }
 
-  routeIndex = computed(() => this.view.routeIndex(this.groups()));
   complete = computed(
     () =>
       this.visibleItems().length > 0 &&
       this.visibleItems().every((item) => item.checked),
   );
+  readonly routeDoneState = StepBadgeState.Done;
+
+  private cartItems = computed(() =>
+    this.searchedItems().filter((item) => item.checked),
+  );
+
+  private cartStores = computed(
+    () =>
+      new Set(
+        this.cartItems().map(
+          (item) => item.store ?? this.groupLabels().withoutStore,
+        ),
+      ),
+  );
+
+  private groupReceiptByStore = computed(
+    () => this.effectiveTab() === ALL_STORES && this.cartStores().size > 1,
+  );
+
+  hasCart = computed(() => this.cartItems().length > 0);
+
+  receiptGroups = computed(() =>
+    this.view.receiptGroups(
+      this.searchedItems(),
+      this.packLabels(),
+      this.cartOrder(),
+      this.groupReceiptByStore(),
+      this.groupLabels().withoutStore,
+    ),
+  );
+
+  receiptTitle = computed(() =>
+    this.complete()
+      ? this.t("getShopping.receipt.titleDone")
+      : this.t("getShopping.cart.title"),
+  );
+
+  receiptMeta = computed(() => {
+    const count = this.cartItems().length;
+    const items = this.t(
+      count === 1
+        ? "getShopping.receipt.items.one"
+        : "getShopping.receipt.items.many",
+      { count },
+    );
+    const stores = this.cartStores();
+    const where = this.groupReceiptByStore()
+      ? this.t("getShopping.receipt.stores", { count: stores.size })
+      : [...stores][0];
+
+    return [where, items].filter((part) => !!part).join(" · ");
+  });
+
+  receiptColumns = computed<ReceiptColumns>(() => ({
+    quantity: this.t("getShopping.receipt.columns.quantity"),
+    name: this.t("getShopping.receipt.columns.name"),
+    price: this.t("getShopping.receipt.columns.price"),
+  }));
+
+  receiptTotalLabel = computed(() =>
+    this.complete()
+      ? this.t("getShopping.receipt.totalDone")
+      : this.t("getShopping.receipt.total"),
+  );
+
+  receiptNote = computed(() => {
+    if (this.complete()) return this.t("getShopping.receipt.estimate");
+
+    const count = this.searchedItems().length - this.cartItems().length;
+
+    return this.t(
+      count === 1
+        ? "getShopping.receipt.missing.one"
+        : "getShopping.receipt.missing.many",
+      { count },
+    );
+  });
+
+  receiptNoteAside = computed(() =>
+    this.complete()
+      ? ""
+      : this.t("getShopping.receipt.toPick", {
+          total: this.cartSummary().pendingLabel,
+        }),
+  );
+
+  receiptStamp = computed(() =>
+    this.complete() ? this.t("getShopping.receipt.stamp") : "",
+  );
+
+  routeDoneLabel = computed(() =>
+    this.t("getShopping.receipt.routeDone", { count: this.groups().length }),
+  );
+
   quickSuggestions = computed(() =>
     this.view.quickSuggestions(
       this.articles(),
@@ -321,16 +393,6 @@ export class GetShoppingListComponent implements OnInit {
       5,
     ),
   );
-
-  scrollToGroup(id: string): void {
-    const reducedMotion = this.document.defaultView?.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    this.document.getElementById(id)?.scrollIntoView({
-      behavior: reducedMotion ? "auto" : "smooth",
-      block: "start",
-    });
-  }
 
   scanTicket(): void {
     void this.router.navigateByUrl("/tickets/scan");
@@ -558,8 +620,20 @@ export class GetShoppingListComponent implements OnInit {
   }
 
   toggleChecked(item: ShoppingItemRow): void {
+    this.trackCartOrder(item.id, !item.checked);
     this.patchItem(item.id, { checked: !item.checked });
     this.queueItem(item.id);
+  }
+
+  private trackCartOrder(itemId: string, checked: boolean): void {
+    this.cartOrder.update((current) => {
+      const next = new Map(current);
+      next.delete(itemId);
+      if (!checked) return next;
+
+      next.set(itemId, ++this.cartSequence);
+      return next;
+    });
   }
 
   increment(item: ShoppingItemRow): void {

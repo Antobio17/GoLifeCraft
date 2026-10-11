@@ -57,17 +57,40 @@ export class ShoppingPage {
     await waitForAutosave(this.page);
   }
 
+  get cart(): Locator {
+    return this.ds.host("shopping-cart");
+  }
+
+  cartLine(name: string): Locator {
+    return this.ds.all("shopping-cart-line").filter({ hasText: name });
+  }
+
+  async openCart(): Promise<void> {
+    const head = this.cart.getByRole("button").first();
+    if ((await head.getAttribute("aria-expanded")) === "true") return;
+
+    await head.click();
+  }
+
+  async returnToRoute(name: string): Promise<void> {
+    await this.openCart();
+    const line = this.cartLine(name).first();
+    await line.getByTestId("receipt-line-toggle").click();
+    await line.getByTestId("receipt-line-return").click();
+    await waitForAutosave(this.page);
+  }
+
   async expectChecked(name: string, checked: boolean): Promise<void> {
-    if (checked) {
-      const cart = this.page
-        .getByTestId("shopping-cart")
-        .getByRole("button")
-        .first();
-      if ((await cart.getAttribute("aria-expanded")) === "false")
-        await cart.click();
+    if (!checked) {
+      await expect(this.cartLine(name)).toHaveCount(0);
+      await expect(
+        this.itemNamed(name).first().getByTestId("shopping-item-toggle"),
+      ).toHaveAttribute("aria-pressed", "false");
+      return;
     }
-    await expect(
-      this.itemNamed(name).first().getByTestId("shopping-item-toggle"),
-    ).toHaveAttribute("aria-pressed", String(checked));
+
+    await this.openCart();
+    await expect(this.cartLine(name)).toHaveCount(1);
+    await expect(this.itemNamed(name)).toHaveCount(0);
   }
 }

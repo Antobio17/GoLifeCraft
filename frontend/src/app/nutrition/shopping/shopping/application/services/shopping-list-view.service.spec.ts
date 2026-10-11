@@ -111,8 +111,60 @@ describe("ShoppingListViewService route and cart", () => {
     ]);
     expect(groups[0].items).toEqual([]);
     expect(
-      view.cartRows(items, PACK_LABELS, false).map((entry) => entry.id),
+      view
+        .receiptGroups(items, PACK_LABELS, new Map(), false, "No store")
+        .flatMap((group) => group.lines.map((entry) => entry.id)),
     ).toEqual(["apple"]);
+  });
+  it("lists the receipt in the order the items reached the cart", () => {
+    const items = [
+      item("apple", { checked: true }),
+      item("milk", { checked: true }),
+      item("bread", { checked: true }),
+      item("eggs"),
+    ];
+    const order = new Map([
+      ["apple", 2],
+      ["bread", 1],
+    ]);
+    const [group] = view.receiptGroups(
+      items,
+      PACK_LABELS,
+      order,
+      false,
+      "No store",
+    );
+    expect(group.lines.map((entry) => entry.id)).toEqual([
+      "milk",
+      "bread",
+      "apple",
+    ]);
+  });
+  it("splits the receipt by supermarket with a subtotal each", () => {
+    const items = [
+      item("apple", { checked: true, lineTotal: 1.5 }),
+      item("skyr", { checked: true, store: "Store B", lineTotal: 2.58 }),
+      item("pear", { checked: true, lineTotal: 2 }),
+      item("paper", { checked: true, store: null, custom: true }),
+    ];
+    const groups = view.receiptGroups(
+      items,
+      PACK_LABELS,
+      new Map(),
+      true,
+      "No store",
+    );
+    expect(
+      groups.map((group) => [
+        group.label,
+        group.lines.map((entry) => entry.id),
+      ]),
+    ).toEqual([
+      ["Store A", ["apple", "pear"]],
+      ["Store B", ["skyr"]],
+      ["No store", ["paper"]],
+    ]);
+    expect(groups[0].subtotalLabel).toBe(view.money(3.5));
   });
   it("does not renumber aisles or change their anchors while searching", () => {
     const items = [

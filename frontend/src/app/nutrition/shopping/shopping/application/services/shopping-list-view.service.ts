@@ -11,9 +11,9 @@ import { ShoppingSortMode } from "@nutrition/shopping/shopping/domain/models/sho
 import { ShoppingRouteGroup } from "@nutrition/shopping/shopping/domain/models/shopping-route-group.model";
 import { ShoppingGroupBucket } from "@nutrition/shopping/shopping/domain/models/shopping-group-bucket.model";
 import { ShoppingHero } from "@nutrition/shopping/shopping/domain/models/shopping-hero.model";
+import { ShoppingReceiptGroup } from "@nutrition/shopping/shopping/domain/models/shopping-receipt-group.model";
 import { StoreCell } from "@shared/design-system/store-cells/domain/models/store-cell.model";
 import { StepBadgeState } from "@shared/design-system/step-badge/domain/models/step-badge-state.enum";
-import { RouteIndexEntry } from "@shared/design-system/route-index/domain/models/route-index-entry.model";
 import { QuickAddSuggestion } from "@shared/design-system/quick-add/domain/models/quick-add-suggestion.model";
 import { TextSearchService } from "@shared/search/application/services/text-search.service";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
@@ -312,24 +312,49 @@ export class ShoppingListViewService {
     }));
   }
 
-  cartRows(
+  receiptGroups(
     items: ShoppingListItemView[],
     packLabels: ShoppingPackLabels,
-    showStore: boolean,
-  ): ShoppingItemRow[] {
-    return items
+    order: ReadonlyMap<string, number>,
+    groupByStore: boolean,
+    withoutStoreLabel: string,
+  ): ShoppingReceiptGroup[] {
+    const lines = items
       .filter((item) => item.checked)
-      .map((item) => this.row(item, packLabels, showStore));
+      .sort(
+        (left, right) => (order.get(left.id) ?? 0) - (order.get(right.id) ?? 0),
+      );
+
+    if (!groupByStore) {
+      return [this.receiptGroup("", "", lines, packLabels)];
+    }
+
+    const stores = [
+      ...new Set(lines.map((item) => item.store ?? withoutStoreLabel)),
+    ];
+
+    return stores.map((store) =>
+      this.receiptGroup(
+        store,
+        store,
+        lines.filter((item) => (item.store ?? withoutStoreLabel) === store),
+        packLabels,
+      ),
+    );
   }
 
-  routeIndex(groups: ShoppingRouteGroup[]): RouteIndexEntry[] {
-    return groups.map((group) => ({
-      key: group.domId,
-      label: group.label,
-      badge: group.badge ?? "",
-      state: group.state,
-      meta: group.state === StepBadgeState.Done ? "✓" : `${group.items.length}`,
-    }));
+  private receiptGroup(
+    key: string,
+    label: string,
+    items: ShoppingListItemView[],
+    packLabels: ShoppingPackLabels,
+  ): ShoppingReceiptGroup {
+    return {
+      key,
+      label,
+      subtotalLabel: this.money(this.total(items)),
+      lines: items.map((item) => this.row(item, packLabels, false)),
+    };
   }
 
   quickSuggestions(
