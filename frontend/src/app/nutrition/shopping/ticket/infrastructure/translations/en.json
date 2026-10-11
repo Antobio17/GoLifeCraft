@@ -72,23 +72,6 @@
       "text": "Scan a ticket or send it from the MCP and it will show up here ready to link."
     },
     "scan": "Scan a ticket",
-    "hero": {
-      "eyebrow": "This month",
-      "caption": "{{linked}}/{{total}} lines linked",
-      "emptyText": "No tickets uploaded this month yet",
-      "spent": "Spent",
-      "tickets": "Tickets",
-      "pending": "To link",
-      "link": "Link"
-    },
-    "tiles": {
-      "shopping": "Shopping",
-      "shoppingMeta": "List",
-      "inventory": "Inventory",
-      "inventoryMeta": "Counts",
-      "catalog": "Catalog",
-      "catalogMeta": "Products"
-    },
     "row": {
       "open": "Open the {{store}} ticket from {{date}}"
     },
