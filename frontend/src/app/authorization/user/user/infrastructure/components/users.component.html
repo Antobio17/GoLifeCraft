@@ -1,101 +1,107 @@
-<ds-page-wrapper [maxWidth]="'35rem'" [gap]="'0'">
-  <ds-stack [gap]="'var(--ds-space-3)'">
-    <ds-screen-header
-      leading="back"
-      [leadingLabel]="'users.back' | t"
-      [eyebrow]="'users.eyebrow' | t"
-      [title]="'users.title' | t"
-      (leadingClick)="back()"
+<ds-page-wrapper
+  [maxWidth]="'35rem'"
+  [wideMaxWidth]="'70rem'"
+  [gap]="'var(--ds-space-3)'"
+>
+  <ds-screen-header
+    leading="back"
+    [leadingLabel]="'users.back' | t"
+    [eyebrow]="'users.eyebrow' | t"
+    [title]="'users.title' | t"
+    (leadingClick)="back()"
+  >
+    <ds-chip slot="actions" tone="brand" [uppercase]="true">{{
+      "users.adminOnly" | t
+    }}</ds-chip>
+  </ds-screen-header>
+
+  @if (loading()) {
+    <ds-split-view
+      [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+      [gap]="'var(--ds-space-5)'"
     >
-      <ds-chip slot="actions" tone="brand" [uppercase]="true">{{
-        "users.adminOnly" | t
-      }}</ds-chip>
-    </ds-screen-header>
+      <ds-skeleton slot="side" height="13rem" />
 
-    @if (loading()) {
-      <ds-stack [gap]="'var(--ds-space-5)'">
-        <ds-skeleton height="13rem" />
-
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-skeleton-line width="8.875rem" height="0.75rem" />
-          <ds-skeleton-list
-            [count]="5"
-            [gap]="'var(--ds-space-2)'"
-            radius="var(--ds-radius-surface)"
-            padding="var(--ds-space-3) var(--ds-space-3)"
-            [tile]="40"
-            titleWidth="52%"
-            metaWidth="34%"
-            trailing="pill"
-            pillWidth="3.5rem"
-            pillHeight="1.5rem"
-          />
-        </ds-stack>
-
-        <ds-skeleton-note [lines]="2" />
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-skeleton-line width="8.875rem" height="0.75rem" />
+        <ds-skeleton-list
+          [count]="5"
+          [gap]="'var(--ds-space-2)'"
+          radius="var(--ds-radius-surface)"
+          padding="var(--ds-space-3) var(--ds-space-3)"
+          [tile]="40"
+          titleWidth="52%"
+          metaWidth="34%"
+          trailing="pill"
+          pillWidth="3.5rem"
+          pillHeight="1.5rem"
+        />
       </ds-stack>
-    } @else {
-      <ds-stack [gap]="'var(--ds-space-5)'">
-        <ds-module-card
-          data-testid="users-activity"
-          [hero]="true"
-          [eyebrow]="'users.hero.eyebrow' | t"
-        >
-          <ds-text slot="aside" variant="meta">{{ eventsLabel() }}</ds-text>
 
-          <ds-big-figure
-            [value]="activeThisWeek()"
-            [suffix]="activeOfLabel()"
-          />
+      <ds-skeleton-note [lines]="2" />
+    </ds-split-view>
+  } @else {
+    <ds-split-view
+      [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+      [gap]="'var(--ds-space-5)'"
+    >
+      <ds-module-card
+        slot="side"
+        data-testid="users-activity"
+        [hero]="true"
+        [eyebrow]="'users.hero.eyebrow' | t"
+      >
+        <ds-text slot="aside" variant="meta">{{ eventsLabel() }}</ds-text>
 
-          <ds-line-chart
-            role="img"
-            [attr.aria-label]="'users.hero.chartAria' | t"
-            [points]="dailyTotals()"
-            [captions]="dailyCaptions()"
-          ></ds-line-chart>
-        </ds-module-card>
+        <ds-big-figure [value]="activeThisWeek()" [suffix]="activeOfLabel()" />
 
-        <ds-stack [gap]="'var(--ds-space-2)'">
-          <ds-section-header
-            [title]="'users.section.activity' | t"
-            [staticLabel]="rowCountLabel()"
-          />
+        <ds-line-chart
+          role="img"
+          [attr.aria-label]="'users.hero.chartAria' | t"
+          [points]="dailyTotals()"
+          [captions]="dailyCaptions()"
+        ></ds-line-chart>
+      </ds-module-card>
 
-          @if (rows().length === 0) {
-            <ds-empty-state
-              icon="users"
-              [title]="'users.empty.title' | t"
-              [text]="'users.empty.text' | t"
-            ></ds-empty-state>
-          } @else {
-            <ds-card
-              data-testid="users-list"
-              [padding]="'var(--ds-space-1) var(--ds-space-2)'"
-              [gap]="'0'"
-            >
-              @for (row of rows(); track row.id) {
-                <ds-user-activity-row
-                  data-testid="user-row"
-                  [initial]="row.initial"
-                  [name]="row.name"
-                  [meta]="row.meta"
-                  [status]="row.status"
-                  [modules]="row.modules"
-                  [spark]="row.spark"
-                  [sparkAriaLabel]="'users.row.sparkAria' | t"
-                  (activated)="openUser(row)"
-                />
-                @if (!$last) {
-                  <ds-divider />
-                }
+      <ds-stack [gap]="'var(--ds-space-2)'">
+        <ds-section-header
+          [title]="'users.section.activity' | t"
+          [staticLabel]="rowCountLabel()"
+        />
+
+        @if (rows().length === 0) {
+          <ds-empty-state
+            icon="users"
+            [title]="'users.empty.title' | t"
+            [text]="'users.empty.text' | t"
+          ></ds-empty-state>
+        } @else {
+          <ds-card
+            data-testid="users-list"
+            [padding]="'var(--ds-space-1) var(--ds-space-2)'"
+            [gap]="'0'"
+          >
+            @for (row of rows(); track row.id) {
+              <ds-user-activity-row
+                data-testid="user-row"
+                [initial]="row.initial"
+                [name]="row.name"
+                [meta]="row.meta"
+                [status]="row.status"
+                [modules]="row.modules"
+                [spark]="row.spark"
+                [sparkAriaLabel]="'users.row.sparkAria' | t"
+                (activated)="openUser(row)"
+              />
+              @if (!$last) {
+                <ds-divider />
               }
-            </ds-card>
-          }
-        </ds-stack>
-
-        <ds-note icon="info">{{ "users.note" | t }}</ds-note>
+            }
+          </ds-card>
+        }
       </ds-stack>
-    }
-  </ds-stack>
+
+      <ds-note icon="info">{{ "users.note" | t }}</ds-note>
+    </ds-split-view>
+  }
 </ds-page-wrapper>
