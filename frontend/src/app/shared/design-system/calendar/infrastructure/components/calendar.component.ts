@@ -22,6 +22,8 @@ export interface CalendarCell {
   mark?: CalendarDayMark;
 }
 
+export type CalendarVariant = "plain" | "tile";
+
 export interface CalendarLegendItem {
   label: string;
   status: CalendarDayStatus;
@@ -30,7 +32,7 @@ export interface CalendarLegendItem {
 @Component({
   selector: "ds-calendar",
   template: `
-    <div class="ds-cal">
+    <div class="ds-cal" [class.ds-cal--tile]="variant === 'tile'">
       <div class="ds-cal__nav">
         <button
           class="ds-cal__navbtn"
@@ -94,6 +96,8 @@ export interface CalendarLegendItem {
               [class.ds-cal__cell--future]="cell.status === 'future'"
               [class.ds-cal__cell--plain]="cell.status === 'plain'"
               [class.ds-cal__cell--planned]="cell.planned"
+              [class.ds-cal__cell--pending]="cell.mark === 'pending'"
+              [class.ds-cal__cell--done]="cell.mark === 'done'"
               [class.ds-cal__cell--today]="cell.isToday"
               [class.ds-cal__cell--selected]="cell.isSelected"
               [disabled]="cell.disabled"
@@ -288,6 +292,60 @@ export interface CalendarLegendItem {
       .ds-cal__cell--selected {
         border-color: var(--ds-primary);
       }
+      .ds-cal--tile .ds-cal__navbtn {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 50%;
+        background: var(--ds-surface-inset);
+        color: var(--ds-text);
+      }
+      .ds-cal--tile .ds-cal__navbtn:focus-visible {
+        outline: 2px solid var(--ds-border-focus);
+        outline-offset: 2px;
+      }
+      .ds-cal--tile .ds-cal__month {
+        text-transform: capitalize;
+      }
+      .ds-cal--tile .ds-cal__weekday {
+        font-weight: var(--ds-weight-extrabold);
+        text-transform: uppercase;
+        color: var(--ds-text-muted);
+      }
+      .ds-cal--tile .ds-cal__cell:not(.ds-cal__cell--blank) {
+        border: none;
+        border-radius: var(--ds-radius-inner);
+        background: var(--ds-surface-inset);
+        color: var(--ds-text-muted);
+        font-family: var(--ds-font-display);
+        font-weight: var(--ds-weight-medium);
+        font-variant-numeric: tabular-nums;
+      }
+      .ds-cal--tile .ds-cal__mark {
+        display: none;
+      }
+      .ds-cal--tile .ds-cal__cell--done:not(.ds-cal__cell--blank) {
+        background: color-mix(in srgb, var(--ds-primary) 22%, transparent);
+        color: var(--ds-text);
+        font-weight: var(--ds-weight-bold);
+      }
+      .ds-cal--tile .ds-cal__cell--pending:not(.ds-cal__cell--blank) {
+        background: color-mix(in srgb, var(--ds-primary) 50%, transparent);
+        color: var(--ds-text);
+        font-weight: var(--ds-weight-bold);
+      }
+      .ds-cal--tile .ds-cal__cell--today:not(.ds-cal__cell--blank) {
+        box-shadow: inset 0 0 0 2px var(--ds-primary);
+      }
+      .ds-cal--tile .ds-cal__cell--selected:not(.ds-cal__cell--blank) {
+        background: var(--ds-primary);
+        color: var(--ds-on-primary);
+        font-weight: var(--ds-weight-extrabold);
+      }
+      .ds-cal--tile
+        .ds-cal__cell--selected.ds-cal__cell--today:not(.ds-cal__cell--blank) {
+        box-shadow: inset 0 0 0 2px
+          color-mix(in srgb, var(--ds-on-primary) 55%, transparent);
+      }
       .ds-cal__legend {
         display: flex;
         flex-wrap: wrap;
@@ -335,6 +393,7 @@ export class CalendarComponent {
   @Input() weekdays: string[] = [];
   @Input() cells: CalendarCell[] = [];
   @Input() legend: CalendarLegendItem[] = [];
+  @Input() variant: CalendarVariant = "plain";
   @Input() previousLabel = "Previous month";
   @Input() nextLabel = "Next month";
 

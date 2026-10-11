@@ -62,6 +62,11 @@
       "rangeHint": "Se creará una anotación por cada día del rango, sin hora concreta, y podrás marcarlas de forma independiente.",
       "rangeEditHint": "Esta anotación abarca varios días y se edita completa. Si estiras el rango se añaden días nuevos, y si lo acortas se borran los que queden fuera aunque estuvieran hechos.",
       "save": "Guardar en la agenda"
+    },
+    "month": {
+      "entries": "anotaciones",
+      "pending": "pendientes",
+      "done": "hechas"
     }
   }
 }

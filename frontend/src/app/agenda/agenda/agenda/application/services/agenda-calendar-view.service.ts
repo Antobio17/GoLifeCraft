@@ -6,6 +6,7 @@ import {
   CalendarDayMark,
 } from "@shared/design-system/calendar/infrastructure/components/calendar.component";
 import { AgendaCalendarDay } from "../../domain/models/agenda-calendar.model";
+import { AgendaMonthTotals } from "../../domain/models/agenda-month-totals.model";
 
 @Injectable()
 export class AgendaCalendarViewService {
@@ -95,6 +96,17 @@ export class AgendaCalendarViewService {
         pendingCount: Math.min(day.entryCount, Math.max(0, pendingCount)),
       };
     });
+  }
+
+  totals(days: AgendaCalendarDay[]): AgendaMonthTotals {
+    return days.reduce<AgendaMonthTotals>(
+      (totals, day) => ({
+        entries: totals.entries + day.entryCount,
+        pending: totals.pending + day.pendingCount,
+        done: totals.done + day.entryCount - day.pendingCount,
+      }),
+      { entries: 0, pending: 0, done: 0 },
+    );
   }
 
   private markFor(day: AgendaCalendarDay | undefined): CalendarDayMark {
