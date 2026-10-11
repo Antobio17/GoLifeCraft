@@ -284,18 +284,16 @@
               <ds-stack
                 direction="row"
                 align="center"
-                [gap]="'var(--ds-space-2)'"
+                justify="between"
+                [gap]="'var(--ds-space-3)'"
               >
-                <ds-stack [grow]="true">
-                  <ds-button
-                    data-testid="shopping-scan-ticket"
-                    variant="tonal"
-                    icon="camera"
-                    [fullWidth]="true"
-                    (clicked)="scanTicket()"
-                    >{{ "getShopping.completion.scan" | t }}</ds-button
-                  >
-                </ds-stack>
+                <ds-button
+                  data-testid="shopping-scan-ticket"
+                  variant="ghost"
+                  icon="camera"
+                  (clicked)="scanTicket()"
+                  >{{ "getShopping.completion.scan" | t }}</ds-button
+                >
                 <ds-button
                   data-testid="shopping-completion-clear"
                   variant="ghost-danger"

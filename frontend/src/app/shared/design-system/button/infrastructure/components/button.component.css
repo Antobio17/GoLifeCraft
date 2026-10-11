@@ -158,22 +158,6 @@
   outline-offset: 2px;
 }
 
-/* ---- Variante: tonal ---- */
-.ds-btn--tonal {
-  background: var(--ds-primary-soft);
-  color: var(--ds-primary-soft-text);
-  border-color: transparent;
-}
-
-.ds-btn--tonal:hover:not(:disabled) {
-  background: var(--ds-primary-soft-hover);
-}
-
-.ds-btn--tonal:focus-visible {
-  outline: 2px solid var(--ds-primary);
-  outline-offset: 2px;
-}
-
 /* ---- Variante: danger ---- */
 .ds-btn--danger {
   background: var(--ds-danger-soft);
@@ -251,10 +235,11 @@
   background: transparent;
   color: var(--ds-danger-soft-text);
   border-color: transparent;
+  padding-inline: 0;
 }
 
 .ds-btn--ghost-danger:hover:not(:disabled) {
-  background: var(--ds-danger-soft);
+  opacity: 0.75;
 }
 
 .ds-btn--ghost-danger:focus-visible {
