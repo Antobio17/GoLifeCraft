@@ -35,10 +35,7 @@ import { StoreCell } from "../../domain/models/store-cell.model";
       .ds-scells {
         display: grid;
         grid-template-columns: repeat(var(--scells-cols, 3), minmax(0, 1fr));
-        overflow: hidden;
-        background: var(--ds-surface-inset);
-        border: 1px solid var(--ds-border-hairline);
-        border-radius: var(--ds-radius-inner);
+        gap: var(--ds-space-2);
       }
       .ds-scells__cell {
         appearance: none;
@@ -47,23 +44,21 @@ import { StoreCell } from "../../domain/models/store-cell.model";
         gap: 1px;
         min-width: 0;
         padding: var(--ds-space-2) var(--ds-space-3);
-        border: 0;
-        background: transparent;
+        border: 1px solid transparent;
+        border-radius: var(--ds-radius-inner);
+        background: var(--ds-surface-inset);
         font: inherit;
         text-align: left;
         cursor: pointer;
         color: var(--ds-text);
         transition: var(--ds-motion-tint);
       }
-      .ds-scells__cell + .ds-scells__cell {
-        border-left: 1px solid var(--ds-border-hairline);
-      }
       .ds-scells__cell[aria-pressed="true"] {
-        background: var(--ds-primary-soft);
+        border-color: var(--ds-border-strong);
       }
       .ds-scells__cell:focus-visible {
         outline: none;
-        box-shadow: inset var(--ds-focus-ring);
+        box-shadow: var(--ds-focus-ring);
       }
       .ds-scells__label,
       .ds-scells__meta {
@@ -78,7 +73,7 @@ import { StoreCell } from "../../domain/models/store-cell.model";
       }
       .ds-scells__cell[aria-pressed="true"] .ds-scells__label {
         font-weight: var(--ds-weight-bold);
-        color: var(--ds-primary-soft-text);
+        color: var(--ds-text);
       }
       .ds-scells__value {
         overflow: hidden;
