@@ -41,6 +41,8 @@ import {
   CalendarCell,
   CalendarComponent,
 } from "@shared/design-system/calendar/infrastructure/components/calendar.component";
+import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
+import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/stat-strip-item.model";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetAgendaDayService } from "@agenda/agenda/agenda/application/services/get-agenda-day.service";
 import { GetAgendaCalendarService } from "@agenda/agenda/agenda/application/services/get-agenda-calendar.service";
@@ -95,6 +97,7 @@ import { DsGlyph } from "@shared/design-system/glyph/domain/models/ds-glyph.enum
     ChoiceChipsComponent,
     SegmentedToggleComponent,
     CalendarComponent,
+    StatStripComponent,
   ],
 })
 export class GetAgendaComponent implements OnInit {
@@ -161,6 +164,25 @@ export class GetAgendaComponent implements OnInit {
       this.view.todayIso(),
     ),
   );
+  monthStats = computed<StatStripItem[]>(() => {
+    this.translationsReady();
+    const totals = this.calendarView.totals(this.calendarDays());
+
+    return [
+      {
+        value: `${totals.entries}`,
+        label: this.t("getAgenda.month.entries"),
+      },
+      {
+        value: `${totals.pending}`,
+        label: this.t("getAgenda.month.pending"),
+      },
+      {
+        value: `${totals.done}`,
+        label: this.t("getAgenda.month.done"),
+      },
+    ];
+  });
 
   dayTitle = computed(() => {
     this.translationsReady();

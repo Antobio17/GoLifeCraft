@@ -26,12 +26,18 @@
     />
   </ds-stack>
 
-  <ds-split-view [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'">
+  <ds-split-view
+    [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+    [gap]="'var(--ds-space-5)'"
+  >
     <ds-card
       slot="side"
-      [padding]="'var(--ds-space-4) var(--ds-space-4) var(--ds-space-4)'"
+      data-testid="agenda-month"
+      variant="glass"
+      [gap]="'var(--ds-space-4)'"
     >
       <ds-calendar
+        variant="tile"
         [monthLabel]="calendarMonthLabel()"
         [weekdays]="calendarWeekdays()"
         [cells]="calendarCells()"
@@ -41,6 +47,7 @@
         (nextMonth)="nextMonth()"
         (daySelected)="onCalendarDay($event)"
       />
+      <ds-stat-strip [items]="monthStats()" />
     </ds-card>
 
     <ds-stack
