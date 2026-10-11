@@ -29,12 +29,6 @@
     </ng-container>
   </ds-screen-header>
 
-  <app-finance-variable-budget-card
-    data-testid="economy-budget"
-    [budget]="budget()"
-    [budgetLoading]="budgetLoading()"
-  />
-
   <ng-template #shortcuts>
     <ds-grid [columns]="3" [gap]="'var(--ds-space-2)'">
       <ds-action-tile
@@ -61,10 +55,44 @@
     </ds-grid>
   </ng-template>
 
-  @if (dayMode()) {
-    <ng-container [ngTemplateOutlet]="shortcuts" />
+  <ds-split-view [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'">
+    <app-finance-variable-budget-card
+      slot="side"
+      data-testid="economy-budget"
+      [budget]="budget()"
+      [budgetLoading]="budgetLoading()"
+    />
 
-    <ds-split-view [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'">
+    @if (!dayMode() && loading()) {
+      <ds-skeleton-panel
+        slot="side"
+        [glass]="true"
+        [figure]="true"
+        content="spark"
+        chartHeight="6.5rem"
+      />
+    } @else if (!dayMode()) {
+      <ds-balance-card
+        slot="side"
+        [eyebrow]="'getEconomy.balance.eyebrow' | t"
+        [value]="balanceValue()"
+        unit=" €"
+        [caption]="balanceCaption()"
+        [trendLabel]="balanceTrendLabel()"
+        [positive]="balancePositive()"
+        [points]="balanceSeries()"
+        [pointLabels]="balanceSeriesLabels()"
+        [pointCaptions]="balanceSeriesCaptions()"
+        [scrollable]="true"
+        [pointSpacing]="48"
+      >
+        <app-finance-privacy-toggle slot="action" [size]="30" [iconSize]="16" />
+      </ds-balance-card>
+    }
+
+    <ng-container slot="side" [ngTemplateOutlet]="shortcuts" />
+
+    @if (dayMode()) {
       <ds-card slot="side" [padding]="'var(--ds-space-4)'">
         <ds-calendar
           [monthLabel]="monthLabel()"
@@ -77,7 +105,9 @@
           (daySelected)="onCalendarDay($event)"
         />
       </ds-card>
+    }
 
+    @if (dayMode()) {
       @if (loading()) {
         <ds-stack [gap]="'2px'">
           <ds-skeleton-line
@@ -167,127 +197,103 @@
           }}</ds-text>
         }
       }
-    </ds-split-view>
-  }
-
-  @if (!dayMode()) {
-    @if (loading()) {
-      <ds-skeleton-panel
-        [glass]="true"
-        [figure]="true"
-        content="spark"
-        chartHeight="6.5rem"
-      />
-    } @else {
-      <ds-balance-card
-        [eyebrow]="'getEconomy.balance.eyebrow' | t"
-        [value]="balanceValue()"
-        unit=" €"
-        [caption]="balanceCaption()"
-        [trendLabel]="balanceTrendLabel()"
-        [positive]="balancePositive()"
-        [points]="balanceSeries()"
-        [pointLabels]="balanceSeriesLabels()"
-        [pointCaptions]="balanceSeriesCaptions()"
-        [scrollable]="true"
-        [pointSpacing]="48"
-      >
-        <app-finance-privacy-toggle slot="action" [size]="30" [iconSize]="16" />
-      </ds-balance-card>
     }
 
-    <ng-container [ngTemplateOutlet]="shortcuts" />
-
-    @if (loading()) {
-      <ds-stack
-        direction="row"
-        justify="between"
-        align="center"
-        [gap]="'var(--ds-space-2)'"
-      >
-        <ds-skeleton-line
-          width="8.5rem"
-          height="1.125rem"
-          radius="var(--ds-radius-mark)"
-        />
-        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
-          <ds-skeleton-line
-            width="1.875rem"
-            height="1.875rem"
-            radius="var(--ds-radius-control-sm)"
-          />
-          <ds-skeleton-line
-            width="1.875rem"
-            height="1.875rem"
-            radius="var(--ds-radius-control-sm)"
-          />
-        </ds-stack>
-      </ds-stack>
-    } @else {
-      <ds-stack
-        direction="row"
-        justify="between"
-        align="center"
-        [gap]="'var(--ds-space-2)'"
-      >
-        <ds-heading [level]="3" size="md" [truncate]="true">{{
-          monthLabel()
-        }}</ds-heading>
-
-        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-1-5)'">
-          <ds-icon-button
-            icon="chevronLeft"
-            variant="soft"
-            [size]="30"
-            [iconSize]="15"
-            [stroke]="2.4"
-            [ariaLabel]="'getEconomy.month.previous' | t"
-            (clicked)="previousMonth()"
-          />
-          <ds-icon-button
-            icon="chevronRight"
-            variant="soft"
-            [size]="30"
-            [iconSize]="15"
-            [stroke]="2.4"
-            [disabled]="!canGoNextMonth()"
-            [ariaLabel]="'getEconomy.month.next' | t"
-            (clicked)="nextMonth()"
-          />
-        </ds-stack>
-      </ds-stack>
-    }
-
-    <ds-segmented-toggle
-      data-testid="economy-tabs"
-      variant="pill"
-      [options]="tabOptions()"
-      [ngModel]="activeTab()"
-      [ngModelOptions]="{ standalone: true }"
-      (ngModelChange)="changeTab($event)"
-    />
-
-    @if (isStatistics()) {
+    @if (!dayMode()) {
       @if (loading()) {
-        <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'var(--ds-space-2)'"
+        >
+          <ds-skeleton-line
+            width="8.5rem"
+            height="1.125rem"
+            radius="var(--ds-radius-mark)"
+          />
+          <ds-stack
+            direction="row"
+            align="center"
+            [gap]="'var(--ds-space-1-5)'"
+          >
+            <ds-skeleton-line
+              width="1.875rem"
+              height="1.875rem"
+              radius="var(--ds-radius-control-sm)"
+            />
+            <ds-skeleton-line
+              width="1.875rem"
+              height="1.875rem"
+              radius="var(--ds-radius-control-sm)"
+            />
+          </ds-stack>
+        </ds-stack>
+      } @else {
+        <ds-stack
+          direction="row"
+          justify="between"
+          align="center"
+          [gap]="'var(--ds-space-2)'"
+        >
+          <ds-heading [level]="3" size="md" [truncate]="true">{{
+            monthLabel()
+          }}</ds-heading>
+
+          <ds-stack
+            direction="row"
+            align="center"
+            [gap]="'var(--ds-space-1-5)'"
+          >
+            <ds-icon-button
+              icon="chevronLeft"
+              variant="soft"
+              [size]="30"
+              [iconSize]="15"
+              [stroke]="2.4"
+              [ariaLabel]="'getEconomy.month.previous' | t"
+              (clicked)="previousMonth()"
+            />
+            <ds-icon-button
+              icon="chevronRight"
+              variant="soft"
+              [size]="30"
+              [iconSize]="15"
+              [stroke]="2.4"
+              [disabled]="!canGoNextMonth()"
+              [ariaLabel]="'getEconomy.month.next' | t"
+              (clicked)="nextMonth()"
+            />
+          </ds-stack>
+        </ds-stack>
+      }
+
+      <ds-segmented-toggle
+        data-testid="economy-tabs"
+        variant="pill"
+        [options]="tabOptions()"
+        [ngModel]="activeTab()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="changeTab($event)"
+      />
+
+      @if (isStatistics()) {
+        @if (loading()) {
           <ds-skeleton-section-header
-            slot="side"
             titleWidth="5.5rem"
             [action]="true"
             actionWidth="5.25rem"
           />
           <ds-skeleton-rows
-            slot="side"
             [card]="true"
             [rows]="3"
             labelWidth="40%"
             valueWidth="4.5rem"
           />
 
-          <ds-skeleton-metrics slot="side" [count]="3" />
+          <ds-skeleton-metrics [count]="3" />
 
           <ds-skeleton-panel
-            slot="side"
             [figure]="true"
             content="spark"
             chartHeight="6rem"
@@ -308,85 +314,81 @@
             labelWidth="44%"
             valueWidth="4.5rem"
           />
-        </ds-split-view>
-      } @else {
-        <ds-split-view [columns]="'minmax(0, 1fr) minmax(0, 1fr)'">
-          <ng-container slot="side">
-            @if (!hasAccounts()) {
-              <ds-note icon="alertCircle" tone="warning">{{
-                "getEconomy.accounts.missing" | t
-              }}</ds-note>
-            }
+        } @else {
+          @if (!hasAccounts()) {
+            <ds-note icon="alertCircle" tone="warning">{{
+              "getEconomy.accounts.missing" | t
+            }}</ds-note>
+          }
 
-            @if (accountRows().length > 0) {
-              <ds-section-header
-                [title]="'getEconomy.accounts.title' | t"
-                [actionLabel]="'getEconomy.accounts.manage' | t"
-                size="md"
-                (action)="goToAccounts()"
-              />
-              <ds-card [padding]="'var(--ds-space-4)'">
-                @for (row of accountRows(); track row.key) {
-                  <ds-breakdown-row
-                    [label]="row.label"
-                    [amountLabel]="row.amountLabel"
-                    [glyph]="row.glyph"
-                    [color]="row.color"
-                    [ratio]="row.ratio"
-                  />
-                }
-              </ds-card>
-            }
+          @if (accountRows().length > 0) {
+            <ds-section-header
+              [title]="'getEconomy.accounts.title' | t"
+              [actionLabel]="'getEconomy.accounts.manage' | t"
+              size="md"
+              (action)="goToAccounts()"
+            />
+            <ds-card [padding]="'var(--ds-space-4)'">
+              @for (row of accountRows(); track row.key) {
+                <ds-breakdown-row
+                  [label]="row.label"
+                  [amountLabel]="row.amountLabel"
+                  [glyph]="row.glyph"
+                  [color]="row.color"
+                  [ratio]="row.ratio"
+                />
+              }
+            </ds-card>
+          }
 
-            @if (overspending()) {
-              <ds-note icon="alertCircle" tone="warning">{{
-                overspendingText()
-              }}</ds-note>
-            }
+          @if (overspending()) {
+            <ds-note icon="alertCircle" tone="warning">{{
+              overspendingText()
+            }}</ds-note>
+          }
 
-            <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
-              <ds-metric-card
-                size="compact"
-                [value]="incomeLabel()"
-                [label]="'getEconomy.summary.income' | t"
-              />
-              <ds-metric-card
-                size="compact"
-                [value]="expenseLabel()"
-                [label]="'getEconomy.summary.expense' | t"
-              />
-              <ds-metric-card
-                size="compact"
-                [value]="netLabel()"
-                [label]="'getEconomy.summary.net' | t"
+          <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+            <ds-metric-card
+              size="compact"
+              [value]="incomeLabel()"
+              [label]="'getEconomy.summary.income' | t"
+            />
+            <ds-metric-card
+              size="compact"
+              [value]="expenseLabel()"
+              [label]="'getEconomy.summary.expense' | t"
+            />
+            <ds-metric-card
+              size="compact"
+              [value]="netLabel()"
+              [label]="'getEconomy.summary.net' | t"
+            />
+          </ds-stack>
+
+          <ds-card [padding]="'var(--ds-space-4)'">
+            <ds-stack
+              direction="row"
+              justify="between"
+              align="start"
+              [gap]="'var(--ds-space-2)'"
+            >
+              <ds-stack [gap]="'2px'" [grow]="true">
+                <ds-text variant="strong">{{
+                  "getEconomy.evolution.title" | t
+                }}</ds-text>
+                <ds-text variant="meta">{{
+                  "getEconomy.evolution.subtitle" | t
+                }}</ds-text>
+              </ds-stack>
+
+              <ds-trend-badge
+                [positive]="evolutionDeltaPositive()"
+                [label]="evolutionDeltaLabel()"
               />
             </ds-stack>
 
-            <ds-card [padding]="'var(--ds-space-4)'">
-              <ds-stack
-                direction="row"
-                justify="between"
-                align="start"
-                [gap]="'var(--ds-space-2)'"
-              >
-                <ds-stack [gap]="'2px'" [grow]="true">
-                  <ds-text variant="strong">{{
-                    "getEconomy.evolution.title" | t
-                  }}</ds-text>
-                  <ds-text variant="meta">{{
-                    "getEconomy.evolution.subtitle" | t
-                  }}</ds-text>
-                </ds-stack>
-
-                <ds-trend-badge
-                  [positive]="evolutionDeltaPositive()"
-                  [label]="evolutionDeltaLabel()"
-                />
-              </ds-stack>
-
-              <ds-bar-chart [bars]="evolutionBars()" [height]="96" />
-            </ds-card>
-          </ng-container>
+            <ds-bar-chart [bars]="evolutionBars()" [height]="96" />
+          </ds-card>
 
           @if (!hasExpense()) {
             <ds-empty-state
@@ -430,87 +432,87 @@
               </ds-card>
             }
           }
-        </ds-split-view>
-      }
-    } @else {
-      @if (loading()) {
-        <ds-skeleton-section-header titleWidth="7.5rem" [count]="true" />
-
-        <ds-skeleton-list
-          [count]="5"
-          [gap]="'var(--ds-space-2)'"
-          radius="var(--ds-radius-surface)"
-          padding="var(--ds-space-2) var(--ds-space-3)"
-          [tile]="40"
-          titleWidth="52%"
-          metaWidth="34%"
-          trailing="pill"
-          pillWidth="3.75rem"
-          pillHeight="0.875rem"
-        />
-      } @else {
-        @if (!hasMovements()) {
-          <ds-empty-state
-            icon="wallet"
-            [title]="'getEconomy.empty.title' | t"
-            [text]="'getEconomy.empty.text' | t"
-          />
         }
+      } @else {
+        @if (loading()) {
+          <ds-skeleton-section-header titleWidth="7.5rem" [count]="true" />
 
-        @if (hasMovements()) {
-          <ds-section-header
-            [title]="'getEconomy.movements.title' | t"
-            [staticLabel]="movementsCountLabel()"
-            size="md"
-          >
-            <ds-view-switch
-              slot="trailing"
-              data-testid="economy-grouping"
-              [options]="groupingOptions()"
-              [ariaLabel]="'getEconomy.grouping.label' | t"
-              [ngModel]="grouping()"
-              [ngModelOptions]="{ standalone: true }"
-              (ngModelChange)="onGrouping($event)"
+          <ds-skeleton-list
+            [count]="5"
+            [gap]="'var(--ds-space-2)'"
+            radius="var(--ds-radius-surface)"
+            padding="var(--ds-space-2) var(--ds-space-3)"
+            [tile]="40"
+            titleWidth="52%"
+            metaWidth="34%"
+            trailing="pill"
+            pillWidth="3.75rem"
+            pillHeight="0.875rem"
+          />
+        } @else {
+          @if (!hasMovements()) {
+            <ds-empty-state
+              icon="wallet"
+              [title]="'getEconomy.empty.title' | t"
+              [text]="'getEconomy.empty.text' | t"
             />
-          </ds-section-header>
+          }
 
-          @for (group of movementGroups(); track group.key) {
-            @if (group.label) {
-              <ds-section-header
-                [title]="group.label"
-                [staticLabel]="group.summaryLabel"
+          @if (hasMovements()) {
+            <ds-section-header
+              [title]="'getEconomy.movements.title' | t"
+              [staticLabel]="movementsCountLabel()"
+              size="md"
+            >
+              <ds-view-switch
+                slot="trailing"
+                data-testid="economy-grouping"
+                [options]="groupingOptions()"
+                [ariaLabel]="'getEconomy.grouping.label' | t"
+                [ngModel]="grouping()"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="onGrouping($event)"
               />
-            }
+            </ds-section-header>
 
-            <ds-stack [gap]="'var(--ds-space-2)'">
-              @for (row of group.rows; track row.transaction.id) {
-                <ds-swipe-to-delete
-                  #swipe
-                  pad="var(--ds-space-2)"
-                  [removeLabel]="'getEconomy.movements.remove' | t"
-                  (remove)="removeTransaction(row)"
-                >
-                  <ds-transaction-row
-                    [glyph]="row.glyph"
-                    [glyphColor]="row.glyphColor"
-                    [title]="row.title"
-                    [subtitle]="row.subtitle"
-                    [amountLabel]="row.amountLabel"
-                    [income]="row.income"
-                    [tags]="row.tags"
-                    [pressable]="true"
-                    [pressLabel]="row.title"
-                    [slid]="swipe.slid"
-                    (pressed)="openEditSheet(row.transaction)"
-                  />
-                </ds-swipe-to-delete>
+            @for (group of movementGroups(); track group.key) {
+              @if (group.label) {
+                <ds-section-header
+                  [title]="group.label"
+                  [staticLabel]="group.summaryLabel"
+                />
               }
-            </ds-stack>
+
+              <ds-stack [gap]="'var(--ds-space-2)'">
+                @for (row of group.rows; track row.transaction.id) {
+                  <ds-swipe-to-delete
+                    #swipe
+                    pad="var(--ds-space-2)"
+                    [removeLabel]="'getEconomy.movements.remove' | t"
+                    (remove)="removeTransaction(row)"
+                  >
+                    <ds-transaction-row
+                      [glyph]="row.glyph"
+                      [glyphColor]="row.glyphColor"
+                      [title]="row.title"
+                      [subtitle]="row.subtitle"
+                      [amountLabel]="row.amountLabel"
+                      [income]="row.income"
+                      [tags]="row.tags"
+                      [pressable]="true"
+                      [pressLabel]="row.title"
+                      [slid]="swipe.slid"
+                      (pressed)="openEditSheet(row.transaction)"
+                    />
+                  </ds-swipe-to-delete>
+                }
+              </ds-stack>
+            }
           }
         }
       }
     }
-  }
+  </ds-split-view>
 
   <ds-modal-sheet
     [open]="sheetOpen()"
