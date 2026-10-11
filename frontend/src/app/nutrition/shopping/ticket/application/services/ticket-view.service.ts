@@ -8,8 +8,6 @@ import { TicketItem } from "../../domain/models/ticket-item.model";
 import { TicketLineRow } from "../../domain/models/ticket-line-row.model";
 import { TicketRow } from "../../domain/models/ticket-row.model";
 import { TicketStatus } from "../../domain/models/ticket-status.model";
-import { Ticket } from "../../domain/models/ticket.model";
-import { TicketMonthSummary } from "../../domain/models/ticket-month-summary.model";
 import { DatedRowTone } from "@shared/design-system/dated-row/domain/models/dated-row-tone.enum";
 
 @Injectable({ providedIn: "root" })
@@ -88,38 +86,6 @@ export class TicketViewService {
         month: "long",
       }).format(this.purchasedDate(purchasedOn)),
     );
-  }
-
-  monthSummary(tickets: Ticket[], today: Date): TicketMonthSummary {
-    const purchasedOn = this.isoDate(today);
-    const month = this.monthKey(purchasedOn);
-    const inMonth = tickets.filter(
-      (ticket) => this.monthKey(ticket.attributes.purchasedOn) === month,
-    );
-    const pending = inMonth.find(
-      (ticket) =>
-        TicketStatus.DRAFT === ticket.attributes.status &&
-        ticket.attributes.pendingItems > 0,
-    );
-
-    return {
-      purchasedOn,
-      spent: this.round(
-        inMonth.reduce(
-          (sum, ticket) => sum + (ticket.attributes.total ?? 0),
-          0,
-        ),
-        2,
-      ),
-      tickets: inMonth.length,
-      totalItems: this.sumOf(inMonth, (attributes) => attributes.totalItems),
-      linkedItems: this.sumOf(inMonth, (attributes) => attributes.linkedItems),
-      pendingItems: this.sumOf(
-        inMonth,
-        (attributes) => attributes.pendingItems,
-      ),
-      pendingTicketId: pending?.id ?? null,
-    };
   }
 
   rowOf(
@@ -233,20 +199,6 @@ export class TicketViewService {
     const factor = 10 ** decimals;
 
     return Math.round(value * factor) / factor;
-  }
-
-  private sumOf(
-    tickets: Ticket[],
-    pick: (attributes: TicketAttributes) => number,
-  ): number {
-    return tickets.reduce((sum, ticket) => sum + pick(ticket.attributes), 0);
-  }
-
-  private isoDate(date: Date): string {
-    const month = `${date.getMonth() + 1}`.padStart(2, "0");
-    const day = `${date.getDate()}`.padStart(2, "0");
-
-    return `${date.getFullYear()}-${month}-${day}`;
   }
 
   private capitalize(text: string): string {

@@ -23,158 +23,90 @@
     />
   </ds-screen-header>
 
-  <ds-split-view
-    [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
-    [gap]="'var(--ds-space-5)'"
-  >
-    @if (monthLoading()) {
-      <ds-skeleton
-        slot="side"
-        height="17rem"
-        radius="var(--ds-radius-surface)"
+  @if (loading()) {
+    <ds-skeleton-filters [search]="true" [viewSwitch]="true" />
+    <ng-container
+      [ngTemplateOutlet]="ticketSkeleton"
+      [ngTemplateOutletContext]="{ $implicit: 4 }"
+    />
+  } @else {
+    <ds-stack [gap]="'var(--ds-space-3)'">
+      <ds-search-input
+        data-testid="tickets-search"
+        [placeholder]="'getTickets.filter.search' | t"
+        [clearLabel]="'getTickets.filter.clear' | t"
+        [debounce]="300"
+        [value]="search()"
+        (searched)="onSearch($event)"
       />
-    } @else {
-      <ds-module-card
-        slot="side"
-        data-testid="tickets-hero"
-        [hero]="true"
-        [eyebrow]="'getTickets.hero.eyebrow' | t"
-      >
-        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-          @if (hero().tickets > 0) {
-            <ds-progress-ring [value]="hero().percent">
-              <ds-text variant="strong">{{ hero().percent }}%</ds-text>
-            </ds-progress-ring>
-          }
-          <ds-stack [gap]="'2px'">
-            <ds-heading [level]="2" size="md">{{ hero().title }}</ds-heading>
-            <ds-text variant="meta">{{ hero().caption }}</ds-text>
-          </ds-stack>
-        </ds-stack>
 
-        <ds-stat-strip [items]="hero().stats" />
-
-        <ds-button
-          data-testid="tickets-hero-cta"
-          variant="primary"
-          [icon]="hero().pendingTicketId ? 'checkCircle' : 'camera'"
-          [fullWidth]="true"
-          (clicked)="onHeroCta()"
-        >
-          {{ heroCtaLabel() }}
-        </ds-button>
-      </ds-module-card>
-    }
-
-    <ds-grid slot="side" [columns]="3" [gap]="'var(--ds-space-2)'">
-      <ds-action-tile
-        data-testid="tickets-shopping"
-        icon="list"
-        [name]="tiles().shopping"
-        [meta]="tiles().shoppingMeta"
-        (clicked)="onShopping()"
+      <ds-view-switch
+        data-testid="tickets-status"
+        [options]="statusOptions()"
+        [ariaLabel]="'getTickets.filter.label' | t"
+        [ngModel]="selectedStatus()"
+        (ngModelChange)="onStatusChange($event)"
       />
-      <ds-action-tile
-        data-testid="tickets-inventory"
-        icon="checkAll"
-        [name]="tiles().inventory"
-        [meta]="tiles().inventoryMeta"
-        (clicked)="onInventory()"
-      />
-      <ds-action-tile
-        data-testid="tickets-catalog"
-        icon="leaf"
-        [name]="tiles().catalog"
-        [meta]="tiles().catalogMeta"
-        (clicked)="onCatalog()"
-      />
-    </ds-grid>
+    </ds-stack>
 
-    @if (loading()) {
-      <ds-skeleton-filters [search]="true" [viewSwitch]="true" />
+    @if (reloading()) {
       <ng-container
         [ngTemplateOutlet]="ticketSkeleton"
         [ngTemplateOutletContext]="{ $implicit: 4 }"
       />
-    } @else {
-      <ds-stack [gap]="'var(--ds-space-3)'">
-        <ds-search-input
-          data-testid="tickets-search"
-          [placeholder]="'getTickets.filter.search' | t"
-          [clearLabel]="'getTickets.filter.clear' | t"
-          [debounce]="300"
-          [value]="search()"
-          (searched)="onSearch($event)"
-        />
-
-        <ds-view-switch
-          data-testid="tickets-status"
-          [options]="statusOptions()"
-          [ariaLabel]="'getTickets.filter.label' | t"
-          [ngModel]="selectedStatus()"
-          (ngModelChange)="onStatusChange($event)"
-        />
-      </ds-stack>
-
-      @if (reloading()) {
-        <ng-container
-          [ngTemplateOutlet]="ticketSkeleton"
-          [ngTemplateOutletContext]="{ $implicit: 4 }"
-        />
-      } @else if (months().length === 0) {
-        @if (filtered()) {
-          <ds-text variant="muted">
-            {{ "getTickets.noResultsFilters" | t }}
-          </ds-text>
-        } @else {
-          <ds-empty-state
-            icon="cart"
-            [title]="'getTickets.empty.title' | t"
-            [text]="'getTickets.empty.text' | t"
-          />
-        }
+    } @else if (months().length === 0) {
+      @if (filtered()) {
+        <ds-text variant="muted">
+          {{ "getTickets.noResultsFilters" | t }}
+        </ds-text>
       } @else {
-        @for (month of months(); track month.key) {
-          <ds-stack [gap]="'var(--ds-space-2)'">
-            <ds-section-header
-              [title]="month.title"
-              [staticLabel]="month.countLabel"
-            />
-            <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-              @for (row of month.rows; track row.id) {
-                <ds-dated-row
-                  data-testid="ticket-row"
-                  [interactive]="true"
-                  [ariaLabel]="row.ariaLabel"
-                  [weekday]="row.weekday"
-                  [day]="row.day"
-                  [title]="row.title"
-                  [tag]="row.tag"
-                  [tagTone]="row.tagTone"
-                  [meta]="row.meta"
-                  [value]="row.value"
-                  [progress]="row.progress"
-                  (activated)="onOpen(row.id)"
-                />
-              }
-            </ds-stack>
-          </ds-stack>
-        }
-
-        @if (loadingMore()) {
-          <ng-container
-            [ngTemplateOutlet]="ticketSkeleton"
-            [ngTemplateOutletContext]="{ $implicit: 2 }"
-          />
-        }
-
-        <ds-infinite-scroll
-          [disabled]="loadingMore() || !hasMore()"
-          (reached)="loadMore()"
+        <ds-empty-state
+          icon="cart"
+          [title]="'getTickets.empty.title' | t"
+          [text]="'getTickets.empty.text' | t"
         />
       }
+    } @else {
+      @for (month of months(); track month.key) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="month.title"
+            [staticLabel]="month.countLabel"
+          />
+          <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
+            @for (row of month.rows; track row.id) {
+              <ds-dated-row
+                data-testid="ticket-row"
+                [interactive]="true"
+                [ariaLabel]="row.ariaLabel"
+                [weekday]="row.weekday"
+                [day]="row.day"
+                [title]="row.title"
+                [tag]="row.tag"
+                [tagTone]="row.tagTone"
+                [meta]="row.meta"
+                [value]="row.value"
+                [progress]="row.progress"
+                (activated)="onOpen(row.id)"
+              />
+            }
+          </ds-stack>
+        </ds-stack>
+      }
+
+      @if (loadingMore()) {
+        <ng-container
+          [ngTemplateOutlet]="ticketSkeleton"
+          [ngTemplateOutletContext]="{ $implicit: 2 }"
+        />
+      }
+
+      <ds-infinite-scroll
+        [disabled]="loadingMore() || !hasMore()"
+        (reached)="loadMore()"
+      />
     }
-  </ds-split-view>
+  }
 </ds-page-wrapper>
 
 <ng-template #ticketSkeleton let-count>

@@ -72,23 +72,6 @@
       "text": "Escanea un ticket o mándalo desde el MCP y aparecerá aquí listo para vincular."
     },
     "scan": "Escanear un ticket",
-    "hero": {
-      "eyebrow": "Este mes",
-      "caption": "{{linked}}/{{total}} líneas vinculadas",
-      "emptyText": "Todavía no has subido ningún ticket este mes",
-      "spent": "Gasto",
-      "tickets": "Tickets",
-      "pending": "Sin vincular",
-      "link": "Vincular"
-    },
-    "tiles": {
-      "shopping": "Compra",
-      "shoppingMeta": "Lista",
-      "inventory": "Inventario",
-      "inventoryMeta": "Recuentos",
-      "catalog": "Catálogo",
-      "catalogMeta": "Productos"
-    },
     "row": {
       "open": "Abrir el ticket de {{store}} del {{date}}"
     },
