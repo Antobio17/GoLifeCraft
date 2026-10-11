@@ -9,26 +9,6 @@
   >
     <ng-container slot="actions">
       <ds-icon-button
-        icon="wallet"
-        variant="soft"
-        [size]="40"
-        [iconSize]="19"
-        [stroke]="2.1"
-        [ariaLabel]="'getEconomy.accounts.manage' | t"
-        (clicked)="goToAccounts()"
-      />
-
-      <ds-icon-button
-        icon="repeat"
-        variant="soft"
-        [size]="40"
-        [iconSize]="19"
-        [stroke]="2.1"
-        [ariaLabel]="'getEconomy.recurrences.manage' | t"
-        (clicked)="goToRecurrences()"
-      />
-
-      <ds-icon-button
         icon="calendar"
         [variant]="dayMode() ? 'solid' : 'soft'"
         [size]="40"
@@ -53,57 +33,43 @@
     <ds-skeleton-budget />
   } @else if (budgetConfigured()) {
     <ds-card
-      [padding]="'var(--ds-space-4)'"
+      data-testid="economy-budget"
+      [padding]="'var(--ds-space-3) var(--ds-space-4)'"
       [interactive]="true"
       (activated)="goToBudget()"
     >
-      <ds-stack
-        direction="row"
-        justify="between"
-        align="center"
-        [gap]="'var(--ds-space-2)'"
-      >
-        <ds-text variant="label">{{ "getEconomy.budget.eyebrow" | t }}</ds-text>
-        <ds-chip
-          [tone]="budgetTone() === 'positive' ? 'brand' : 'warning'"
-          [uppercase]="true"
-          >{{ budgetBadgeLabel() }}</ds-chip
+      <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+        <ds-progress-ring
+          [value]="budgetPercent()"
+          [size]="60"
+          [hollow]="true"
+          [tone]="budgetTone()"
+          >{{ budgetPercentLabel() }}</ds-progress-ring
         >
-      </ds-stack>
 
-      <ds-stack
-        direction="row"
-        align="end"
-        [gap]="'var(--ds-space-2)'"
-        [wrap]="true"
-      >
-        <ds-heading [level]="3" size="lg">{{ budgetSpentLabel() }}</ds-heading>
-        <ds-text variant="meta"
-          >{{ "getEconomy.budget.of" | t }} {{ budgetTotalLabel() }}</ds-text
-        >
-      </ds-stack>
+        <ds-stack [gap]="'2px'" [grow]="true">
+          <ds-text variant="meta" [truncate]="true">{{
+            "getEconomy.budget.title" | t
+          }}</ds-text>
+          <ds-stack
+            direction="row"
+            align="end"
+            [gap]="'var(--ds-space-1-5)'"
+            [wrap]="true"
+          >
+            <ds-heading [level]="3" size="md">{{
+              budgetSpentLabel()
+            }}</ds-heading>
+            <ds-text variant="meta"
+              >{{ "getEconomy.budget.of" | t }}
+              {{ budgetTotalLabel() }}</ds-text
+            >
+          </ds-stack>
+        </ds-stack>
 
-      <ds-budget-meter
-        [ratio]="budgetRatio()"
-        [paceRatio]="budgetPaceRatio()"
-        [tone]="budgetTone()"
-        [ariaLabel]="'getEconomy.budget.eyebrow' | t"
-      />
-
-      <ds-stack
-        direction="row"
-        justify="between"
-        align="center"
-        [gap]="'var(--ds-space-2)'"
-      >
-        <ds-text variant="meta"
-          >{{ "getEconomy.budget.pace" | t }} ·
-          {{ budgetExpectedLabel() }}</ds-text
-        >
-        <ds-text
-          [variant]="budgetDifferencePositive() ? 'success' : 'danger'"
-          >{{ budgetDifferenceLabel() }}</ds-text
-        >
+        <ds-chip [tone]="budgetChipTone()" [uppercase]="true">{{
+          budgetBadgeLabel()
+        }}</ds-chip>
       </ds-stack>
     </ds-card>
   } @else {
@@ -116,7 +82,35 @@
     />
   }
 
+  <ng-template #shortcuts>
+    <ds-grid [columns]="3" [gap]="'var(--ds-space-2)'">
+      <ds-action-tile
+        data-testid="economy-shortcut-recurrences"
+        icon="repeat"
+        [name]="'getEconomy.shortcuts.recurrences' | t"
+        [meta]="'getEconomy.shortcuts.recurrencesMeta' | t"
+        (clicked)="goToRecurrences()"
+      />
+      <ds-action-tile
+        data-testid="economy-shortcut-accounts"
+        icon="wallet"
+        [name]="'getEconomy.shortcuts.accounts' | t"
+        [meta]="'getEconomy.shortcuts.accountsMeta' | t"
+        (clicked)="goToAccounts()"
+      />
+      <ds-action-tile
+        data-testid="economy-shortcut-budget"
+        icon="filter"
+        [name]="'getEconomy.shortcuts.budget' | t"
+        [meta]="'getEconomy.shortcuts.budgetMeta' | t"
+        (clicked)="goToBudgetSettings()"
+      />
+    </ds-grid>
+  </ng-template>
+
   @if (dayMode()) {
+    <ng-container [ngTemplateOutlet]="shortcuts" />
+
     <ds-split-view [columns]="'minmax(0, 0.95fr) minmax(0, 1fr)'">
       <ds-card slot="side" [padding]="'var(--ds-space-4)'">
         <ds-calendar
@@ -231,7 +225,27 @@
         content="spark"
         chartHeight="6.5rem"
       />
+    } @else {
+      <ds-balance-card
+        [eyebrow]="'getEconomy.balance.eyebrow' | t"
+        [value]="balanceValue()"
+        unit=" €"
+        [caption]="balanceCaption()"
+        [trendLabel]="balanceTrendLabel()"
+        [positive]="balancePositive()"
+        [points]="balanceSeries()"
+        [pointLabels]="balanceSeriesLabels()"
+        [pointCaptions]="balanceSeriesCaptions()"
+        [scrollable]="true"
+        [pointSpacing]="48"
+      >
+        <app-finance-privacy-toggle slot="action" [size]="30" [iconSize]="16" />
+      </ds-balance-card>
+    }
 
+    <ng-container [ngTemplateOutlet]="shortcuts" />
+
+    @if (loading()) {
       <ds-stack
         direction="row"
         justify="between"
@@ -257,22 +271,6 @@
         </ds-stack>
       </ds-stack>
     } @else {
-      <ds-balance-card
-        [eyebrow]="'getEconomy.balance.eyebrow' | t"
-        [value]="balanceValue()"
-        unit=" €"
-        [caption]="balanceCaption()"
-        [trendLabel]="balanceTrendLabel()"
-        [positive]="balancePositive()"
-        [points]="balanceSeries()"
-        [pointLabels]="balanceSeriesLabels()"
-        [pointCaptions]="balanceSeriesCaptions()"
-        [scrollable]="true"
-        [pointSpacing]="48"
-      >
-        <app-finance-privacy-toggle slot="action" [size]="30" [iconSize]="16" />
-      </ds-balance-card>
-
       <ds-stack
         direction="row"
         justify="between"

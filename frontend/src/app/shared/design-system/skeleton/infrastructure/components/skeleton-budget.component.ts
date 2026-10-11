@@ -6,5 +6,5 @@ import { Component, Input } from "@angular/core";
   styleUrls: ["./skeleton-budget.component.css"],
 })
 export class SkeletonBudgetComponent {
-  @Input() meterHeight = "0.75rem";
+  @Input() ringSize = "3.75rem";
 }
