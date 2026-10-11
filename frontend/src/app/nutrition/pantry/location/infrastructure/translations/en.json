@@ -85,11 +85,16 @@
       "recipes": "Recipes"
     },
     "contents": {
-      "title": "Contents",
       "remove": "Remove",
       "emptyTitle": "Nothing here yet",
       "emptyText": "Use “Add to the location” to place here what you keep in this spot",
-      "open": "Open the record"
+      "open": "Open the record",
+      "search": "Search here...",
+      "clear": "Clear",
+      "filter": "Show",
+      "noResults": "Nothing matches",
+      "noArticles": "No items in this location",
+      "noRecipes": "No recipes in this location"
     },
     "candidates": {
       "title": "Add to this location",
@@ -105,9 +110,17 @@
         "one": "item stored",
         "other": "items stored"
       },
-      "empty": "Still empty",
-      "articles": "Articles",
-      "recipes": "Recipes"
+      "empty": "Still empty"
+    },
+    "chips": {
+      "articles": {
+        "one": "item",
+        "other": "items"
+      },
+      "recipes": {
+        "one": "recipe",
+        "other": "recipes"
+      }
     }
   },
   "pantryLocationKind": {

@@ -13,9 +13,10 @@ import { Component, Input } from "@angular/core";
           decoding="async"
           (error)="imageFailed = true"
         />
-      } @else {
+      } @else if (emoji) {
         <span class="ds-product-hero__emoji">{{ emoji }}</span>
       }
+      <ng-content select="[slot=visual]" />
       @if (price) {
         <span class="ds-product-hero__price">{{ price }}</span>
       } @else if (badge) {

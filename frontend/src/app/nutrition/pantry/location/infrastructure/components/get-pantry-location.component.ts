@@ -18,10 +18,8 @@ import { SplitViewComponent } from "@shared/design-system/split-view/infrastruct
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
-import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
-import { HeadingComponent } from "@shared/design-system/heading/infrastructure/components/heading.component";
-import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
-import { StatStripItem } from "@shared/design-system/stat-strip/domain/models/stat-strip-item.model";
+import { ProductHeroComponent } from "@shared/design-system/product-hero/infrastructure/components/product-hero.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
@@ -30,9 +28,11 @@ import { SearchInputComponent } from "@shared/design-system/search-input/infrast
 import { ViewSwitchComponent } from "@shared/design-system/view-switch/infrastructure/components/view-switch.component";
 import { ViewSwitchOption } from "@shared/design-system/view-switch/domain/models/view-switch-option.model";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
-import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
+import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
+import { SkeletonFiltersComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-filters.component";
+import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
@@ -71,9 +71,8 @@ const ALL_KINDS = "";
     StackComponent,
     CardComponent,
     TextComponent,
-    ModuleCardComponent,
-    HeadingComponent,
-    StatStripComponent,
+    ProductHeroComponent,
+    ChipComponent,
     AddTileComponent,
     ButtonComponent,
     IconButtonComponent,
@@ -81,9 +80,11 @@ const ALL_KINDS = "";
     SearchInputComponent,
     ViewSwitchComponent,
     EmptyStateComponent,
-    SkeletonComponent,
     SkeletonScreenHeaderComponent,
-    SectionHeaderComponent,
+    SkeletonHeroComponent,
+    SkeletonChipsComponent,
+    SkeletonFiltersComponent,
+    SkeletonListComponent,
     ModalSheetComponent,
     SwipeToDeleteComponent,
     ConfirmActionModalComponent,
@@ -118,6 +119,8 @@ export class GetPantryLocationComponent {
   showAddSheet = signal(false);
   search = signal("");
   kind = signal<string>(ALL_KINDS);
+  contentSearch = signal("");
+  chosenContentKind = signal<PantryLocationItemKind | null>(null);
 
   articleCount = computed(
     () =>
@@ -142,7 +145,7 @@ export class GetPantryLocationComponent {
     this.kindCatalog.labelOf(this.attributes()?.emoji ?? ""),
   );
 
-  heroTitle = computed(() => {
+  heroBadge = computed(() => {
     const total = this.items().length;
 
     if (0 === total) return this.t("getPantryLocation.hero.empty");
@@ -150,14 +153,34 @@ export class GetPantryLocationComponent {
     return `${total} ${this.t(this.locationView.countKey(total, "getPantryLocation.hero.items"))}`;
   });
 
-  heroStats = computed<StatStripItem[]>(() => [
+  articleChip = computed(() =>
+    this.countLabel(this.articleCount(), "getPantryLocation.chips.articles"),
+  );
+
+  recipeChip = computed(() =>
+    this.countLabel(this.recipeCount(), "getPantryLocation.chips.recipes"),
+  );
+
+  contentKind = computed(() => {
+    const chosen = this.chosenContentKind();
+
+    if (null !== chosen) return chosen;
+
+    return 0 === this.articleCount() && 0 < this.recipeCount()
+      ? PantryLocationItemKind.RECIPE
+      : PantryLocationItemKind.ARTICLE;
+  });
+
+  contentKindOptions = computed<ViewSwitchOption[]>(() => [
     {
-      value: `${this.articleCount()}`,
-      label: this.t("getPantryLocation.hero.articles"),
+      value: PantryLocationItemKind.ARTICLE,
+      label: this.t("getPantryLocation.kind.articles"),
+      icon: "leaf",
     },
     {
-      value: `${this.recipeCount()}`,
-      label: this.t("getPantryLocation.hero.recipes"),
+      value: PantryLocationItemKind.RECIPE,
+      label: this.t("getPantryLocation.kind.recipes"),
+      icon: "chefHat",
     },
   ]);
 
@@ -176,6 +199,27 @@ export class GetPantryLocationComponent {
   itemRows = computed<PantryLocationItemRow[]>(() =>
     this.items().map((item) => this.locationView.itemRow(item)),
   );
+
+  visibleRows = computed<PantryLocationItemRow[]>(() => {
+    const kind = this.contentKind();
+    const query = this.contentSearch().trim().toLocaleLowerCase();
+
+    return this.itemRows().filter(
+      (row) =>
+        kind === row.item.attributes.kind &&
+        row.name.toLocaleLowerCase().includes(query),
+    );
+  });
+
+  visibleEmptyText = computed(() => {
+    if (this.contentSearch().trim()) {
+      return `${this.t("getPantryLocation.contents.noResults")} “${this.contentSearch().trim()}”`;
+    }
+
+    return PantryLocationItemKind.RECIPE === this.contentKind()
+      ? this.t("getPantryLocation.contents.noRecipes")
+      : this.t("getPantryLocation.contents.noArticles");
+  });
 
   candidateRows = computed<PantryLocationCandidateRow[]>(() =>
     this.candidates().map((candidate) =>
@@ -230,6 +274,14 @@ export class GetPantryLocationComponent {
 
   onKind(value: string): void {
     this.kind.set(value);
+  }
+
+  onContentSearch(value: string): void {
+    this.contentSearch.set(value);
+  }
+
+  onContentKind(value: PantryLocationItemKind): void {
+    this.chosenContentKind.set(value);
   }
 
   onOpenAddSheet(): void {
@@ -299,6 +351,10 @@ export class GetPantryLocationComponent {
 
   back(): void {
     this.backNavigation.back(["/locations"]);
+  }
+
+  private countLabel(count: number, key: string): string {
+    return `${count} ${this.t(this.locationView.countKey(count, key))}`;
   }
 
   private track(request: Observable<void>): void {

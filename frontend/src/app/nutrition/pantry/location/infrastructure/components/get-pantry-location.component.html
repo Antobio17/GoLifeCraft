@@ -1,4 +1,8 @@
-<ds-page-wrapper [gap]="'var(--ds-space-3)'">
+<ds-page-wrapper
+  [maxWidth]="'44rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-3)'"
+>
   @if (loading()) {
     <ds-skeleton-screen-header
       [stacked]="true"
@@ -9,15 +13,23 @@
       [actions]="2"
     />
 
-    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
-      <ng-container slot="side">
-        <ds-skeleton height="13rem" />
-      </ng-container>
-      <ds-stack [gap]="'var(--ds-space-3)'">
-        <ds-skeleton height="4rem" />
-        <ds-skeleton height="4rem" delay="0.1s" />
-        <ds-skeleton height="4rem" delay="0.2s" />
-      </ds-stack>
+    <ds-split-view [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'">
+      <ds-skeleton-hero slot="side" />
+      <ds-skeleton-chips
+        slot="side"
+        [count]="3"
+        height="1.625rem"
+        [gap]="'var(--ds-space-1-5)'"
+      />
+
+      <ds-skeleton-filters [search]="true" [viewSwitch]="true" />
+      <ds-skeleton-list
+        [count]="4"
+        padding="var(--ds-space-2) var(--ds-space-3) var(--ds-space-2) var(--ds-space-2)"
+        [tile]="40"
+        titleWidth="52%"
+        [meta]="false"
+      />
     </ds-split-view>
   }
 
@@ -52,33 +64,58 @@
       </ds-stack>
     </ds-screen-header>
 
-    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
-      <ng-container slot="side">
-        <ds-module-card [hero]="true" [eyebrow]="kindLabel()">
-          <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-            <ds-glyph
-              [name]="locationVisual().glyph"
-              [color]="locationVisual().color"
-              [size]="44"
-              [tile]="true"
-              box="4.75rem"
-            />
-            <ds-heading [level]="2" size="md">{{ heroTitle() }}</ds-heading>
-          </ds-stack>
+    <ds-split-view [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'">
+      <ds-product-hero
+        slot="side"
+        data-testid="location-hero"
+        [badge]="heroBadge()"
+      >
+        <ds-glyph
+          slot="visual"
+          [name]="locationVisual().glyph"
+          [color]="locationVisual().color"
+          [size]="40"
+          [tile]="true"
+          box="4.5rem"
+        />
+      </ds-product-hero>
 
-          @if (location.description) {
-            <ds-text variant="meta">{{ location.description }}</ds-text>
-          }
+      <ds-stack
+        slot="side"
+        direction="row"
+        [wrap]="true"
+        [gap]="'var(--ds-space-1-5)'"
+      >
+        <ds-chip tone="brand">{{ kindLabel() }}</ds-chip>
+        <ds-chip>{{ articleChip() }}</ds-chip>
+        <ds-chip>{{ recipeChip() }}</ds-chip>
+      </ds-stack>
 
-          <ds-stat-strip [items]="heroStats()" />
-        </ds-module-card>
-      </ng-container>
+      @if (location.description) {
+        <ds-text slot="side" variant="meta">{{ location.description }}</ds-text>
+      }
 
       <ds-stack [gap]="'var(--ds-space-2)'">
-        <ds-section-header
-          [title]="'getPantryLocation.contents.title' | t"
-          [staticLabel]="itemRows().length.toString()"
-        />
+        <ds-stack direction="row" [gap]="'var(--ds-space-2)'">
+          <ds-stack [grow]="true">
+            <ds-search-input
+              data-testid="location-contents-search"
+              [placeholder]="'getPantryLocation.contents.search' | t"
+              [clearLabel]="'getPantryLocation.contents.clear' | t"
+              [value]="contentSearch()"
+              (searched)="onContentSearch($event)"
+            />
+          </ds-stack>
+
+          <ds-view-switch
+            data-testid="location-contents-kind"
+            [options]="contentKindOptions()"
+            [ariaLabel]="'getPantryLocation.contents.filter' | t"
+            [ngModel]="contentKind()"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="onContentKind($event)"
+          />
+        </ds-stack>
 
         @if (itemRows().length === 0) {
           <ds-empty-state
@@ -86,20 +123,18 @@
             [title]="'getPantryLocation.contents.emptyTitle' | t"
             [text]="'getPantryLocation.contents.emptyText' | t"
           />
+        } @else if (visibleRows().length === 0) {
+          <ds-text variant="muted">{{ visibleEmptyText() }}</ds-text>
         }
 
-        @for (row of itemRows(); track row.item.id) {
+        @for (row of visibleRows(); track row.item.id) {
           <ds-swipe-to-delete
             radius="var(--ds-radius-surface)"
             [disabled]="moving()"
             [removeLabel]="removeLabel()"
             (remove)="onRemove(row)"
           >
-            <ds-card
-              variant="inset"
-              [padding]="'var(--ds-space-3)'"
-              [gap]="'var(--ds-space-2)'"
-            >
+            <ds-card [padding]="'var(--ds-space-2)'">
               <ds-stack
                 direction="row"
                 align="center"
@@ -112,7 +147,7 @@
                   [size]="40"
                 />
 
-                <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
+                <ds-stack [grow]="true">
                   @if (row.openable) {
                     <ds-pressable
                       class="item__open"
@@ -130,7 +165,7 @@
                   }
                 </ds-stack>
 
-                <ds-stack [gap]="'var(--ds-space-1)'" [shrink]="false">
+                <ds-stack [shrink]="false">
                   <ds-text variant="meta" align="end">{{
                     row.quantityLabel
                   }}</ds-text>

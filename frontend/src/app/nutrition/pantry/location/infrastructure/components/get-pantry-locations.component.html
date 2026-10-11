@@ -50,15 +50,20 @@
         />
       }
     } @else {
-      <ds-grid dsReveal="children" [minColumn]="'18.75rem'">
+      <ds-grid
+        dsReveal="children"
+        [minColumn]="'18.75rem'"
+        [gap]="'var(--ds-space-2)'"
+      >
         @for (row of rows(); track row.id) {
-          <ds-location-card
+          <ds-location-row
             data-testid="location-card"
             [glyph]="row.glyph"
             [color]="row.color"
             [name]="row.name"
-            [description]="row.description"
-            [badges]="row.badges"
+            [meta]="row.meta"
+            [figure]="row.figure"
+            [figureLabel]="row.figureLabel"
             (activated)="onOpen(row.id)"
           />
         }
@@ -84,13 +89,11 @@
     [count]="count"
     [columns]="null"
     minColumn="18.75rem"
-    [gap]="'var(--ds-space-3)'"
+    [gap]="'var(--ds-space-2)'"
     radius="var(--ds-radius-surface)"
-    padding="var(--ds-space-2)"
-    [alignTop]="true"
-    [tile]="56"
+    padding="var(--ds-space-2) var(--ds-space-3) var(--ds-space-2) var(--ds-space-2)"
+    [tile]="44"
     titleWidth="54%"
-    metaWidth="48%"
-    [chips]="2"
+    metaWidth="30%"
   />
 </ng-template>
