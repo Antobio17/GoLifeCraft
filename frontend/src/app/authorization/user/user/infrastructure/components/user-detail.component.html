@@ -11,6 +11,18 @@
     <ds-chip slot="actions" tone="brand" [uppercase]="true">{{
       "userDetail.adminOnly" | t
     }}</ds-chip>
+    @if (!loading() && canImpersonate()) {
+      <ds-button
+        slot="actions"
+        data-testid="user-impersonate"
+        variant="secondary"
+        size="icon"
+        icon="eye"
+        [ariaLabel]="'userDetail.impersonate.action' | t"
+        [loading]="entering()"
+        (clicked)="askForImpersonation()"
+      />
+    }
   </ds-screen-header>
 
   @if (loading()) {
@@ -95,23 +107,7 @@
       <ds-stack [gap]="'var(--ds-space-4)'">
         <app-user-usage [userId]="user()!.id" />
 
-        <ds-text variant="label">{{
-          "userDetail.section.support" | t
-        }}</ds-text>
-
-        <ds-note icon="eye">{{ "userDetail.impersonate.help" | t }}</ds-note>
-
-        @if (canImpersonate()) {
-          <ds-button
-            data-testid="user-impersonate"
-            variant="secondary"
-            icon="eye"
-            [fullWidth]="true"
-            [loading]="entering()"
-            (clicked)="askForImpersonation()"
-            >{{ "userDetail.impersonate.action" | t }}</ds-button
-          >
-        } @else {
+        @if (!canImpersonate()) {
           <ds-note icon="alertCircle" tone="warning">{{
             "userDetail.impersonate.blocked" | t
           }}</ds-note>
@@ -124,6 +120,8 @@
     [show]="confirming()"
     [title]="'userDetail.impersonate.confirmTitle' | t"
     [body]="'userDetail.impersonate.confirmBody' | t"
+    [description]="'userDetail.impersonate.help' | t"
+    [showIcon]="false"
     [itemName]="displayName()"
     [warningText]="'userDetail.impersonate.confirmWarning' | t"
     [isDeleting]="entering()"

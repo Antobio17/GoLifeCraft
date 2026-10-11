@@ -24,6 +24,8 @@ export class ConfirmActionModalComponent {
   @Input() show: boolean = false;
   @Input() title: string = "";
   @Input() body: string = "";
+  @Input() description: string = "";
+  @Input() showIcon: boolean = true;
   @Input() itemName: string = "";
   @Input() warningText: string = "";
   @Input() isDeleting: boolean = false;
