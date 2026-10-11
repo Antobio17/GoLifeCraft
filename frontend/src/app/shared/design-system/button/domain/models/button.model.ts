@@ -2,7 +2,6 @@ export type ButtonVariant =
   | "primary"
   | "secondary"
   | "soft"
-  | "tonal"
   | "danger"
   | "ghost"
   | "ghost-danger"
