@@ -87,7 +87,6 @@ import { IconComponent } from "../../../icon/infrastructure/components/icon.comp
         cursor: pointer;
         transition: background var(--ds-dur-2) var(--ds-ease-out);
       }
-      .ds-rline:hover,
       .ds-rline--open {
         background: var(--ds-surface-inset);
       }
