@@ -20,6 +20,8 @@
   "getEconomy.movements.many": "movements",
   "getEconomy.movements.remove": "Delete",
   "getEconomy.removed": "{{name}} removed",
+  "getEconomy.tab.movements": "Movements",
+  "getEconomy.tab.statistics": "Statistics",
   "getEconomy.grouping.date": "By date",
   "getEconomy.grouping.category": "By category",
   "getEconomy.grouping.label": "Group transactions",

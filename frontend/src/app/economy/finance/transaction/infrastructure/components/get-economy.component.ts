@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
   signal,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -83,6 +84,7 @@ import { FinanceCategory } from "@economy/finance/transaction/domain/models/fina
 import { FinanceMovementRow } from "@economy/finance/transaction/domain/models/finance-movement-row.model";
 import { FinanceMovementGroup } from "@economy/finance/transaction/domain/models/finance-movement-group.model";
 import { FinanceMovementGrouping } from "@economy/finance/transaction/domain/models/finance-movement-grouping.model";
+import { EconomyTab } from "@economy/finance/transaction/domain/models/economy-tab.model";
 import { FinanceBreakdownRow } from "@economy/finance/transaction/domain/models/finance-breakdown-row.model";
 import { GetFinanceAccountsService } from "@economy/finance/account/application/services/get-finance-accounts.service";
 import { FinanceAccountCatalogService } from "@economy/finance/account/application/services/finance-account-catalog.service";
@@ -171,8 +173,6 @@ export class GetEconomyComponent implements OnInit {
   private readonly MODULE_PATH = "economy/finance/transaction";
   private readonly BUDGET_MODULE_PATH = "economy/finance/budget";
 
-  readonly skeletonMovementGroups = [3, 2];
-
   loading = signal(true);
   budgetLoading = signal(true);
   saving = signal(false);
@@ -188,9 +188,33 @@ export class GetEconomyComponent implements OnInit {
   dayMode = signal(false);
   selectedDate = signal<string | null>(null);
   private loadedDayTransactions = signal<FinanceTransactionView[]>([]);
-  grouping = signal<FinanceMovementGrouping>(FinanceMovementGrouping.CATEGORY);
+  grouping = signal<FinanceMovementGrouping>(FinanceMovementGrouping.DATE);
 
   readonly create = input<string>();
+  readonly tab = input<string | undefined>(undefined);
+
+  readonly activeTab = linkedSignal<EconomyTab>(() =>
+    EconomyTab.STATISTICS === this.tab()
+      ? EconomyTab.STATISTICS
+      : EconomyTab.MOVEMENTS,
+  );
+  readonly isStatistics = computed(
+    () => EconomyTab.STATISTICS === this.activeTab(),
+  );
+  readonly tabOptions = computed<SegmentedOption[]>(() => {
+    this.translationsReady();
+
+    return [
+      {
+        value: EconomyTab.MOVEMENTS,
+        label: this.t("getEconomy.tab.movements"),
+      },
+      {
+        value: EconomyTab.STATISTICS,
+        label: this.t("getEconomy.tab.statistics"),
+      },
+    ];
+  });
   private createHandled = false;
 
   sheetOpen = signal(false);
@@ -392,14 +416,14 @@ export class GetEconomyComponent implements OnInit {
 
     return [
       {
-        value: FinanceMovementGrouping.CATEGORY,
-        label: this.t("getEconomy.grouping.category"),
-        icon: "tag",
-      },
-      {
         value: FinanceMovementGrouping.DATE,
         label: this.t("getEconomy.grouping.date"),
         icon: "calendar",
+      },
+      {
+        value: FinanceMovementGrouping.CATEGORY,
+        label: this.t("getEconomy.grouping.category"),
+        icon: "tag",
       },
     ];
   });
@@ -529,6 +553,15 @@ export class GetEconomyComponent implements OnInit {
 
   toggleDayMode(): void {
     this.dayMode.update((mode) => !mode);
+  }
+
+  changeTab(tab: string): void {
+    this.activeTab.set(tab as EconomyTab);
+    this.router.navigate([], {
+      queryParams: { tab: EconomyTab.STATISTICS === tab ? tab : null },
+      queryParamsHandling: "merge",
+      replaceUrl: true,
+    });
   }
 
   onGrouping(grouping: string): void {
