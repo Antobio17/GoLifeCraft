@@ -157,7 +157,17 @@
     "stepsCount": "{{count}}",
     "step": "Paso {{position}}",
     "stepPlaceholder": "Sofríe la cebolla hasta que esté blanda…",
-    "stepMinutes": "Minutos del paso",
+    "stepsSummary": "{{count}} · {{minutes}} min",
+    "stepMinutesShort": "{{minutes}} min",
+    "editStep": "Editar paso {{position}}",
+    "stepSheet": {
+      "text": "Qué hay que hacer",
+      "minutes": "Tiempo (opcional)",
+      "save": "Guardar paso",
+      "addAnother": "Guardar y añadir otro",
+      "decrement": "Quitar un minuto",
+      "increment": "Añadir un minuto"
+    },
     "addStep": "Añadir paso",
     "removeStep": "Quitar paso",
     "prepMode": {

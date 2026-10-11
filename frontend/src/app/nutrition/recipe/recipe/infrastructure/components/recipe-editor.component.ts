@@ -42,8 +42,9 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
-import { TextareaComponent } from "@shared/design-system/textarea/infrastructure/components/textarea.component";
-import { StepLineComponent } from "@shared/design-system/step-line/infrastructure/components/step-line.component";
+import { StepRowComponent } from "@shared/design-system/step-row/infrastructure/components/step-row.component";
+import { StepSheetComponent } from "@shared/design-system/step-sheet/infrastructure/components/step-sheet.component";
+import { StepDraft } from "@shared/design-system/step-sheet/domain/models/step-draft.model";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
@@ -114,8 +115,8 @@ type PickerTab = "product" | "recipe";
     TextComponent,
     MacroBarsComponent,
     NumberInputComponent,
-    TextareaComponent,
-    StepLineComponent,
+    StepRowComponent,
+    StepSheetComponent,
     EmptyStateComponent,
     ViewSwitchComponent,
     ModalSheetComponent,
@@ -182,10 +183,42 @@ export class RecipeEditorComponent implements OnInit {
   servings = signal(1);
   ingredients = signal<FormIngredient[]>([]);
   steps = signal<FormStep[]>([]);
-  stepsLabel = computed(() =>
-    this.t("recipeEditor.stepsCount", {
-      count: this.recipeForm.writtenSteps(this.steps()).length,
-    }),
+  stepsLabel = computed(() => {
+    const steps = this.recipeForm.writtenSteps(this.steps());
+    const minutes = steps.reduce(
+      (total, step) => total + (step.minutes ?? 0),
+      0,
+    );
+
+    if (0 === minutes) {
+      return this.t("recipeEditor.stepsCount", { count: steps.length });
+    }
+
+    return this.t("recipeEditor.stepsSummary", {
+      count: steps.length,
+      minutes,
+    });
+  });
+  stepRows = computed(() =>
+    this.steps().map((step, index) => ({
+      key: step.key,
+      label: `${index + 1}`,
+      text: step.text,
+      meta: step.minutes
+        ? this.t("recipeEditor.stepMinutesShort", { minutes: step.minutes })
+        : "",
+      ariaLabel: this.t("recipeEditor.editStep", { position: index + 1 }),
+    })),
+  );
+  stepSheetOpen = signal(false);
+  stepSheetKey = signal<string | null>(null);
+  stepSheetIsNew = computed(() => null === this.stepSheetKey());
+  stepSheetStep = computed(
+    () => this.steps().find((step) => step.key === this.stepSheetKey()) ?? null,
+  );
+  stepSheetPosition = signal(1);
+  stepSheetTitle = computed(() =>
+    this.t("recipeEditor.step", { position: this.stepSheetPosition() }),
   );
   readonly categoryOptions: ChoiceChipOption[] = this.categoryService
     .categories()
@@ -370,26 +403,45 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   onAddStep(): void {
-    this.steps.update((steps) => [...steps, this.recipeForm.createStep()]);
+    this.stepSheetKey.set(null);
+    this.stepSheetPosition.set(this.steps().length + 1);
+    this.stepSheetOpen.set(true);
   }
 
-  onStepText(key: string, text: string): void {
+  onEditStep(key: string): void {
+    this.stepSheetKey.set(key);
+    this.stepSheetPosition.set(
+      this.steps().findIndex((step) => step.key === key) + 1,
+    );
+    this.stepSheetOpen.set(true);
+  }
+
+  closeStepSheet(): void {
+    this.stepSheetOpen.set(false);
+  }
+
+  onStepSaved(draft: StepDraft): void {
+    const key = this.stepSheetKey();
+    this.stepSheetOpen.set(false);
+
+    if (null === key) {
+      this.appendStep(draft);
+      return;
+    }
+
     this.steps.update((steps) =>
-      steps.map((step) => (step.key === key ? { ...step, text } : step)),
+      steps.map((step) => (step.key === key ? { ...step, ...draft } : step)),
     );
   }
 
-  onStepMinutes(key: string, minutes: number): void {
-    this.steps.update((steps) =>
-      steps.map((step) =>
-        step.key === key
-          ? { ...step, minutes: minutes > 0 ? minutes : null }
-          : step,
-      ),
-    );
+  onStepSavedAndNext(draft: StepDraft): void {
+    this.appendStep(draft);
+    this.stepSheetPosition.set(this.steps().length + 1);
   }
 
-  onRemoveStep(key: string): void {
+  onStepRemoved(): void {
+    const key = this.stepSheetKey();
+    this.stepSheetOpen.set(false);
     this.steps.update((steps) => steps.filter((step) => step.key !== key));
   }
 
@@ -623,6 +675,13 @@ export class RecipeEditorComponent implements OnInit {
         minutes: step.minutes,
       })),
     };
+  }
+
+  private appendStep(draft: StepDraft): void {
+    this.steps.update((steps) => [
+      ...steps,
+      { ...this.recipeForm.createStep(), ...draft },
+    ]);
   }
 
   private format(value: number): string {
