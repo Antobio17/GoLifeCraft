@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslationService } from "@shared/i18n/application/services/translation.service";
 import { BudgetMeterTone } from "@shared/design-system/budget-meter/infrastructure/components/budget-meter.component";
+import { ChipTone } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { FinanceBudgetStatus } from "../../domain/models/finance-budget-status.model";
 
 const MODULE_PATH = "economy/finance/budget";
@@ -11,12 +12,22 @@ const TONE_BY_STATUS: Record<FinanceBudgetStatus, BudgetMeterTone> = {
   [FinanceBudgetStatus.OVER]: "danger",
 };
 
+const CHIP_TONE_BY_STATUS: Record<FinanceBudgetStatus, ChipTone> = {
+  [FinanceBudgetStatus.ON_TRACK]: "brand",
+  [FinanceBudgetStatus.AT_RISK]: "warning",
+  [FinanceBudgetStatus.OVER]: "danger",
+};
+
 @Injectable()
 export class FinanceBudgetViewService {
   private translationService = inject(TranslationService);
 
   tone(status: FinanceBudgetStatus): BudgetMeterTone {
     return TONE_BY_STATUS[status] ?? "positive";
+  }
+
+  chipTone(status: FinanceBudgetStatus): ChipTone {
+    return CHIP_TONE_BY_STATUS[status] ?? "brand";
   }
 
   positive(status: FinanceBudgetStatus): boolean {

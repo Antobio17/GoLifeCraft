@@ -32,9 +32,10 @@
   "getFinanceBudget.categoryMovements.emptyTitle": "Sin gastos en esta categoría",
   "getFinanceBudget.categoryMovements.emptyText": "No hay gastos registrados para esta categoría en el mes seleccionado.",
   "getFinanceBudget.fixed.title": "Fijos y provisiones",
-  "getFinanceBudget.fixed.hint": "Solo informan",
-  "getFinanceBudget.fixed.settled": "Pagado · {amount}",
-  "getFinanceBudget.fixed.pending": "Llevas {amount}",
+  "getFinanceBudget.fixed.summary": "{paid} de {total} pagados",
+  "getFinanceBudget.fixed.planned": "Previsto {amount}",
+  "getFinanceBudget.fixed.paid": "Pagado",
+  "getFinanceBudget.fixed.pending": "Pendiente",
   "getFinanceBudget.empty.title": "Aún no tienes presupuesto",
   "getFinanceBudget.empty.text": "Fíjate un tope por categoría y un objetivo de ahorro para ver aquí tu ritmo del mes.",
   "saveFinanceBudget.title": "Configurar",
@@ -74,5 +75,13 @@
   "saveFinanceBudget.unassigned.warning": "El reparto supera tu ingreso de referencia. Baja algún tope antes de guardar.",
   "saveFinanceBudget.save": "Guardar presupuesto",
   "getFinanceBudget.empty.ctaTitle": "Crea tu presupuesto",
-  "getFinanceBudget.empty.ctaText": "Fíjate un tope por categoría y un objetivo de ahorro"
+  "getFinanceBudget.empty.ctaText": "Fíjate un tope por categoría y un objetivo de ahorro",
+  "getFinanceBudget.variable.label": "Gasto variable",
+  "getFinanceBudget.variable.excess": "{amount} por encima del tope",
+  "getFinanceBudget.savings.label": "Ahorro del mes",
+  "getFinanceBudget.groups.over": "Te has pasado",
+  "getFinanceBudget.groups.active": "Dentro del tope",
+  "getFinanceBudget.groups.idle": "Sin gasto aún",
+  "getFinanceBudget.category.spentOf": "{spent} de {budget}",
+  "getFinanceBudget.category.exceeded": "+{amount}"
 }

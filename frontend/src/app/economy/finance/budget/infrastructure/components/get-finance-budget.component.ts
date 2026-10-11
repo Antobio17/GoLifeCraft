@@ -10,15 +10,19 @@ import { HeadingComponent } from "@shared/design-system/heading/infrastructure/c
 import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infrastructure/components/screen-header.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
+import { DisclosureComponent } from "@shared/design-system/disclosure/infrastructure/components/disclosure.component";
+import { BudgetRowComponent } from "@shared/design-system/budget-row/infrastructure/components/budget-row.component";
+import { CategoryPillComponent } from "@shared/design-system/category-pill/infrastructure/components/category-pill.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
-import { GlyphComponent } from "@shared/design-system/glyph/infrastructure/components/glyph.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
-import { ProgressBarComponent } from "@shared/design-system/progress-bar/infrastructure/components/progress-bar.component";
-import { BudgetMeterComponent } from "@shared/design-system/budget-meter/infrastructure/components/budget-meter.component";
 import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
+import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { TransactionRowComponent } from "@shared/design-system/transaction-row/infrastructure/components/transaction-row.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
@@ -33,6 +37,8 @@ import { FinanceBudgetViewService } from "@economy/finance/budget/application/se
 import { FinanceBudgetAttributes } from "@economy/finance/budget/domain/models/finance-budget-attributes.model";
 import { FinanceBudgetCategoryProgress } from "@economy/finance/budget/domain/models/finance-budget-category-progress.model";
 import { FinanceBudgetCategoryRow } from "@economy/finance/budget/domain/models/finance-budget-category-row.model";
+import { FinanceBudgetCategoryGroup } from "@economy/finance/budget/domain/models/finance-budget-category-group.model";
+import { FinanceBudgetCategoryGroupKey } from "@economy/finance/budget/domain/models/finance-budget-category-group-key.model";
 import { FinanceBudgetFixedRow } from "@economy/finance/budget/domain/models/finance-budget-fixed-row.model";
 import { FinanceBudgetStatus } from "@economy/finance/budget/domain/models/finance-budget-status.model";
 import { FinanceCategory } from "@economy/finance/transaction/domain/models/finance-category.model";
@@ -52,15 +58,19 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ScreenHeaderComponent,
     IconButtonComponent,
     CardComponent,
+    GridComponent,
+    ModuleCardComponent,
+    ProgressRingComponent,
+    DisclosureComponent,
+    BudgetRowComponent,
+    CategoryPillComponent,
     SectionHeaderComponent,
     EmptyStateComponent,
-    GlyphComponent,
     ChipComponent,
-    ProgressBarComponent,
-    BudgetMeterComponent,
     CtaRowComponent,
     SkeletonPanelComponent,
     SkeletonRowsComponent,
+    SkeletonMetricsComponent,
     SkeletonSectionHeaderComponent,
     TransactionRowComponent,
     FinancePrivacyToggleComponent,
@@ -95,10 +105,6 @@ export class GetFinanceBudgetComponent implements OnInit {
 
   configured = computed(() => this.budget()?.configured ?? false);
 
-  monthProgressPercent = computed(() =>
-    Math.round((this.budget()?.monthProgress ?? 0) * 100),
-  );
-  monthProgressLabel = computed(() => `${this.monthProgressPercent()}%`);
   dayLabel = computed(() => {
     this.translationsReady();
     const attributes = this.budget();
@@ -113,19 +119,6 @@ export class GetFinanceBudgetComponent implements OnInit {
   savingsRealLabel = computed(() =>
     this.view.sensitiveMoney(this.budget()?.savingsReal ?? 0),
   );
-  savingsObjectiveLabel = computed(() =>
-    this.view.sensitiveMoney(this.budget()?.savingsObjective ?? 0),
-  );
-  savingsRatio = computed(() => this.budget()?.savingsProgress ?? 0);
-  savingsStatus = computed(
-    () => this.budget()?.savingsStatus ?? FinanceBudgetStatus.ON_TRACK,
-  );
-  savingsTone = computed(() => this.budgetView.tone(this.savingsStatus()));
-  savingsBadgeLabel = computed(() => {
-    this.translationsReady();
-
-    return this.budgetView.savingsStatusLabel(this.savingsStatus());
-  });
 
   savingsRemaining = computed(
     () =>
@@ -175,15 +168,82 @@ export class GetFinanceBudgetComponent implements OnInit {
     () => (this.budget()?.variableDifference ?? 0) >= 0,
   );
 
-  monthProgressRatio = computed(() => this.budget()?.monthProgress ?? 0);
+  variableChipTone = computed(() =>
+    this.budgetView.chipTone(this.variableStatus()),
+  );
+  variablePercent = computed(() => Math.round(this.variableRatio() * 100));
+  variablePercentLabel = computed(() =>
+    this.budgetView.percentage(this.variableRatio()),
+  );
+  variableBalance = computed(
+    () =>
+      (this.budget()?.variableBudget ?? 0) -
+      (this.budget()?.variableSpent ?? 0),
+  );
+  variableOverBudget = computed(() => this.variableBalance() < 0);
+  variableBalanceLabel = computed(() => {
+    this.translationsReady();
+    const balance = this.variableBalance();
+    const key =
+      balance < 0
+        ? "getFinanceBudget.variable.excess"
+        : "getFinanceBudget.remaining.left";
 
-  categoryRows = computed<FinanceBudgetCategoryRow[]>(() => {
+    return this.t(key).replace("{amount}", this.view.money(Math.abs(balance)));
+  });
+
+  private variableCategories = computed(
+    () => this.budget()?.variableCategories ?? [],
+  );
+
+  categoryGroups = computed<FinanceBudgetCategoryGroup[]>(() => {
+    this.translationsReady();
+    const categories = this.variableCategories();
+
+    return [
+      this.toCategoryGroup(
+        FinanceBudgetCategoryGroupKey.OVER,
+        categories
+          .filter((category) => category.status === FinanceBudgetStatus.OVER)
+          .map((category) => this.toOverCategoryRow(category)),
+      ),
+      this.toCategoryGroup(
+        FinanceBudgetCategoryGroupKey.ACTIVE,
+        categories
+          .filter(
+            (category) =>
+              category.status !== FinanceBudgetStatus.OVER &&
+              category.spent > 0,
+          )
+          .map((category) => this.toActiveCategoryRow(category)),
+      ),
+    ].filter((group) => group.rows.length > 0);
+  });
+
+  idleCategoryRows = computed<FinanceBudgetCategoryRow[]>(() => {
     this.translationsReady();
 
-    return (this.budget()?.variableCategories ?? []).map((category) =>
-      this.toCategoryRow(category),
+    return this.variableCategories()
+      .filter(
+        (category) =>
+          category.status !== FinanceBudgetStatus.OVER && category.spent <= 0,
+      )
+      .map((category) => this.toActiveCategoryRow(category));
+  });
+
+  selectedGroupKey = computed<FinanceBudgetCategoryGroupKey | null>(() => {
+    const selectedCategoryKey = this.selectedCategoryKey();
+
+    if (!selectedCategoryKey) return null;
+
+    return (
+      this.categoryGroups().find((group) =>
+        group.rows.some((row) => row.key === selectedCategoryKey),
+      )?.key ?? null
     );
   });
+
+  idleCountLabel = computed(() => `${this.idleCategoryRows().length}`);
 
   fixedRows = computed<FinanceBudgetFixedRow[]>(() => {
     this.translationsReady();
@@ -193,7 +253,17 @@ export class GetFinanceBudgetComponent implements OnInit {
     );
   });
 
-  hasCategories = computed(() => this.categoryRows().length > 0);
+  fixedSummaryLabel = computed(() => {
+    this.translationsReady();
+    const rows = this.fixedRows();
+
+    return this.t("getFinanceBudget.fixed.summary")
+      .replace("{paid}", `${rows.filter((row) => row.settled).length}`)
+      .replace("{total}", `${rows.length}`);
+  });
+
+  hasCategories = computed(() => this.variableCategories().length > 0);
+  hasIdleCategories = computed(() => this.idleCategoryRows().length > 0);
   hasFixed = computed(() => this.fixedRows().length > 0);
   hasSelectedCategoryTransactions = computed(
     () => this.selectedCategoryTransactions().length > 0,
@@ -277,27 +347,69 @@ export class GetFinanceBudgetComponent implements OnInit {
     this.router.navigate(["/economy/budget/settings"]);
   }
 
-  private toCategoryRow(
+  private toCategoryGroup(
+    key: FinanceBudgetCategoryGroupKey,
+    rows: FinanceBudgetCategoryRow[],
+  ): FinanceBudgetCategoryGroup {
+    return {
+      key,
+      title: this.t(`getFinanceBudget.groups.${key}`),
+      countLabel: `${rows.length}`,
+      rows,
+    };
+  }
+
+  private toOverCategoryRow(
     category: FinanceBudgetCategoryProgress,
   ): FinanceBudgetCategoryRow {
+    return {
+      ...this.toCategoryIdentity(category),
+      metaLabel: this.t("getFinanceBudget.category.spentOf")
+        .replace("{spent}", this.view.money(category.spent))
+        .replace("{budget}", this.view.money(category.budget)),
+      amountLabel: "",
+      chipLabel: this.t("getFinanceBudget.category.exceeded").replace(
+        "{amount}",
+        this.view.money(Math.abs(category.remaining)),
+      ),
+      chipTone: "danger",
+      ratio: null,
+      tone: this.budgetView.tone(category.status),
+    };
+  }
+
+  private toActiveCategoryRow(
+    category: FinanceBudgetCategoryProgress,
+  ): FinanceBudgetCategoryRow {
+    const atRisk = category.status === FinanceBudgetStatus.AT_RISK;
+
+    return {
+      ...this.toCategoryIdentity(category),
+      metaLabel: this.budgetView.remainingLabel(
+        category.remaining,
+        this.view.money(Math.abs(category.remaining)),
+      ),
+      amountLabel: this.view.money(category.spent),
+      chipLabel: atRisk ? this.budgetView.statusLabel(category.status) : "",
+      chipTone: "warning",
+      ratio: category.progress,
+      tone: this.budgetView.tone(category.status),
+    };
+  }
+
+  private toCategoryIdentity(
+    category: FinanceBudgetCategoryProgress,
+  ): Pick<
+    FinanceBudgetCategoryRow,
+    "key" | "name" | "glyph" | "color" | "budgetLabel" | "paceRatio"
+  > {
     return {
       key: category.category,
       name: this.categoryCatalog.label(category.category),
       glyph: this.categoryCatalog.glyph(category.category),
       color: this.categoryCatalog.color(category.category),
-      spentLabel: this.view.money(category.spent),
       budgetLabel: this.view.money(category.budget),
-      statusText: this.budgetView.differenceLabel(
-        category.difference,
-        this.view.money(Math.abs(category.difference)),
-      ),
-      remainLabel: this.budgetView.remainingLabel(
-        category.remaining,
-        this.view.money(Math.abs(category.remaining)),
-      ),
-      ratio: category.progress,
       paceRatio: this.budget()?.monthProgress ?? 0,
-      tone: this.budgetView.tone(category.status),
     };
   }
 
@@ -305,20 +417,24 @@ export class GetFinanceBudgetComponent implements OnInit {
     category: FinanceBudgetCategoryProgress,
   ): FinanceBudgetFixedRow {
     const settled = category.spent >= category.budget;
-    const noteKey = settled
-      ? "getFinanceBudget.fixed.settled"
-      : "getFinanceBudget.fixed.pending";
 
     return {
       key: category.category,
       name: this.categoryCatalog.label(category.category),
       glyph: this.categoryCatalog.glyph(category.category),
       color: this.categoryCatalog.color(category.category),
-      note: this.t(noteKey).replace(
+      metaLabel: this.t("getFinanceBudget.fixed.planned").replace(
         "{amount}",
-        this.view.money(category.spent),
+        this.view.money(category.budget),
       ),
-      amountLabel: this.view.money(category.budget),
+      amountLabel: this.view.money(category.spent),
+      chipLabel: this.t(
+        settled
+          ? "getFinanceBudget.fixed.paid"
+          : "getFinanceBudget.fixed.pending",
+      ),
+      chipTone: settled ? "brand" : "neutral",
+      settled,
     };
   }
 
