@@ -7,6 +7,7 @@ import {
   linkedSignal,
   signal,
 } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -40,9 +41,14 @@ import { DateInputComponent } from "@shared/design-system/date-input/infrastruct
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
-import { BudgetMeterComponent } from "@shared/design-system/budget-meter/infrastructure/components/budget-meter.component";
+import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
+import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
+import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
 import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
-import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import {
+  ChipComponent,
+  ChipTone,
+} from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { BalanceCardComponent } from "@shared/design-system/balance-card/infrastructure/components/balance-card.component";
 import { BarChartComponent } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
 import { BreakdownRowComponent } from "@shared/design-system/breakdown-row/infrastructure/components/breakdown-row.component";
@@ -102,6 +108,7 @@ const EVOLUTION_MONTHS = 6;
   styleUrls: ["./get-economy.component.css"],
   imports: [
     FormsModule,
+    NgTemplateOutlet,
     ContextualTranslatePipe,
     PageWrapperComponent,
     SplitViewComponent,
@@ -130,7 +137,9 @@ const EVOLUTION_MONTHS = 6;
     AmountInputComponent,
     SwipeToDeleteComponent,
     TrendBadgeComponent,
-    BudgetMeterComponent,
+    ProgressRingComponent,
+    GridComponent,
+    ActionTileComponent,
     CtaRowComponent,
     ChipComponent,
     BalanceCardComponent,
@@ -270,33 +279,24 @@ export class GetEconomyComponent implements OnInit {
   budgetTotalLabel = computed(() =>
     this.view.money(this.budget()?.variableBudget ?? 0),
   );
-  budgetExpectedLabel = computed(() =>
-    this.view.money(this.budget()?.variableExpected ?? 0),
+  budgetPercent = computed(() =>
+    Math.round((this.budget()?.variableProgress ?? 0) * 100),
   );
-  budgetRatio = computed(() => this.budget()?.variableProgress ?? 0);
-  budgetPaceRatio = computed(() => this.budget()?.monthProgress ?? 0);
+  budgetPercentLabel = computed(() => `${this.budgetPercent()}%`);
   budgetStatus = computed(
     () => this.budget()?.variableStatus ?? FinanceBudgetStatus.ON_TRACK,
   );
   budgetTone = computed(() => this.budgetView.tone(this.budgetStatus()));
+  budgetChipTone = computed<ChipTone>(() => {
+    const tone = this.budgetTone();
+
+    return tone === "positive" ? "brand" : tone;
+  });
   budgetBadgeLabel = computed(() => {
     this.translationsReady();
 
     return this.budgetView.statusLabel(this.budgetStatus());
   });
-  budgetDifferenceLabel = computed(() => {
-    this.translationsReady();
-    const difference = this.budget()?.variableDifference ?? 0;
-
-    return this.budgetView.differenceLabel(
-      difference,
-      this.view.money(Math.abs(difference)),
-    );
-  });
-  budgetDifferencePositive = computed(
-    () => (this.budget()?.variableDifference ?? 0) >= 0,
-  );
-
   balanceValue = computed(() =>
     this.view.sensitiveMoneyPlain(this.overview()?.balance ?? 0),
   );

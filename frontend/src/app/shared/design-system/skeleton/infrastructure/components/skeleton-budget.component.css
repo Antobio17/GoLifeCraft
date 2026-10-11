@@ -5,70 +5,44 @@
 .skbud {
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: var(--ds-space-3);
-  padding: var(--ds-space-4);
+  padding: var(--ds-space-3) var(--ds-space-4);
   border-radius: var(--ds-radius-surface);
   background: var(--ds-surface);
   border: 1px solid var(--ds-border-hairline);
   box-shadow: var(--ds-shadow-card);
 }
 
-.skbud__head {
+.skbud__ring {
+  flex: none;
+  border-radius: 50%;
+}
+
+.skbud__text {
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: var(--ds-space-2);
 }
 
-.skbud__eyebrow {
-  width: 6.5rem;
-  height: 0.625rem;
-}
-
-.skbud__chip {
-  width: 4.5rem;
-  height: 1.125rem;
-  border-radius: var(--ds-radius-pill);
-}
-
-.skbud__amount {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--ds-space-2);
+.skbud__label {
+  width: 7.5rem;
+  max-width: 80%;
+  height: 0.6875rem;
 }
 
 .skbud__value {
-  width: 6.25rem;
-  height: 1.5rem;
+  width: 9rem;
+  max-width: 90%;
+  height: 1.125rem;
   border-radius: var(--ds-radius-mark);
 }
 
-.skbud__total {
-  width: 5.5rem;
-  height: 0.75rem;
-}
-
-.skbud__meter {
-  display: block;
-  width: 100%;
+.skbud__chip {
+  flex: none;
+  width: 4.5rem;
+  height: 1.125rem;
   border-radius: var(--ds-radius-pill);
-}
-
-.skbud__foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ds-space-2);
-}
-
-.skbud__pace {
-  width: 9.5rem;
-  max-width: 60%;
-  height: 0.6875rem;
-}
-
-.skbud__difference {
-  width: 3.75rem;
-  height: 0.6875rem;
 }
