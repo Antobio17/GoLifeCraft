@@ -77,6 +77,10 @@
       "agendaMeta": "Apunta una cita o una tarea",
       "movement": "Nuevo movimiento",
       "movementMeta": "Apunta un gasto o un ingreso"
+    },
+    "economy": {
+      "title": "Economía",
+      "seeAll": "Ver más"
     }
   }
 }

@@ -29,7 +29,7 @@ import { GetDiaryService } from "@nutrition/diary/diary/application/services/get
 import { DiaryViewService } from "@nutrition/diary/diary/application/services/diary-view.service";
 import { DiaryDayAttributes } from "@nutrition/diary/diary/domain/models/diary.model";
 import { AgendaSummaryComponent } from "@agenda/agenda/agenda/infrastructure/components/agenda-summary.component";
-import { FinanceSavingsSummaryComponent } from "@economy/finance/budget/infrastructure/components/finance-savings-summary.component";
+import { FinanceVariableBudgetSummaryComponent } from "@economy/finance/budget/infrastructure/components/finance-variable-budget-summary.component";
 
 @Component({
   selector: "app-dashboard",
@@ -48,7 +48,7 @@ import { FinanceSavingsSummaryComponent } from "@economy/finance/budget/infrastr
     StackComponent,
     GymAnalyticsComponent,
     AgendaSummaryComponent,
-    FinanceSavingsSummaryComponent,
+    FinanceVariableBudgetSummaryComponent,
   ],
 })
 export class DashboardComponent implements OnInit {

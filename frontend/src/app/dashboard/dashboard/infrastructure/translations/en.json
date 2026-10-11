@@ -77,6 +77,10 @@
       "agendaMeta": "Add an appointment or a task",
       "movement": "New transaction",
       "movementMeta": "Log an expense or income"
+    },
+    "economy": {
+      "title": "Economy",
+      "seeAll": "See more"
     }
   }
 }

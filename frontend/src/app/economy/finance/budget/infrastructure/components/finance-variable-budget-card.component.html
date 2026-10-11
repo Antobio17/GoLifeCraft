@@ -1,0 +1,51 @@
+@if (budgetLoading()) {
+  <ds-skeleton-budget />
+} @else if (budgetConfigured()) {
+  <ds-card
+    data-testid="finance-variable-budget"
+    [padding]="'var(--ds-space-3) var(--ds-space-4)'"
+    [interactive]="true"
+    (activated)="openBudget()"
+  >
+    <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+      <ds-progress-ring
+        [value]="budgetPercent()"
+        [size]="60"
+        [hollow]="true"
+        [tone]="budgetTone()"
+        >{{ budgetPercentLabel() }}</ds-progress-ring
+      >
+
+      <ds-stack [gap]="'2px'" [grow]="true">
+        <ds-text variant="meta" [truncate]="true">{{
+          "getEconomy.budget.title" | t
+        }}</ds-text>
+        <ds-stack
+          direction="row"
+          align="end"
+          [gap]="'var(--ds-space-1-5)'"
+          [wrap]="true"
+        >
+          <ds-heading [level]="3" size="md">{{
+            budgetSpentLabel()
+          }}</ds-heading>
+          <ds-text variant="meta"
+            >{{ "getEconomy.budget.of" | t }} {{ budgetTotalLabel() }}</ds-text
+          >
+        </ds-stack>
+      </ds-stack>
+
+      <ds-chip [tone]="budgetChipTone()" [uppercase]="true">{{
+        budgetBadgeLabel() | t
+      }}</ds-chip>
+    </ds-stack>
+  </ds-card>
+} @else {
+  <ds-cta-row
+    icon="wallet"
+    [dashed]="true"
+    [title]="'getEconomy.budget.ctaTitle' | t"
+    [subtitle]="'getEconomy.budget.ctaText' | t"
+    (clicked)="openSettings()"
+  />
+}

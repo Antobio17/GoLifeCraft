@@ -1,3 +1,4 @@
+import { FinanceVariableBudgetCardComponent } from "@economy/finance/budget/infrastructure/components/finance-variable-budget-card.component";
 import {
   Component,
   OnInit,
@@ -29,7 +30,6 @@ import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastruc
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
 import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
-import { SkeletonBudgetComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-budget.component";
 import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
@@ -41,14 +41,8 @@ import { DateInputComponent } from "@shared/design-system/date-input/infrastruct
 import { AmountInputComponent } from "@shared/design-system/amount-input/infrastructure/components/amount-input.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { TrendBadgeComponent } from "@shared/design-system/trend-badge/infrastructure/components/trend-badge.component";
-import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
 import { GridComponent } from "@shared/design-system/grid/infrastructure/components/grid.component";
 import { ActionTileComponent } from "@shared/design-system/action-tile/infrastructure/components/action-tile.component";
-import { CtaRowComponent } from "@shared/design-system/cta-row/infrastructure/components/cta-row.component";
-import {
-  ChipComponent,
-  ChipTone,
-} from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { BalanceCardComponent } from "@shared/design-system/balance-card/infrastructure/components/balance-card.component";
 import { BarChartComponent } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
 import { BreakdownRowComponent } from "@shared/design-system/breakdown-row/infrastructure/components/breakdown-row.component";
@@ -96,9 +90,7 @@ import { GetFinanceAccountsService } from "@economy/finance/account/application/
 import { FinanceAccountCatalogService } from "@economy/finance/account/application/services/finance-account-catalog.service";
 import { FinanceAccount } from "@economy/finance/account/domain/models/finance-account.model";
 import { GetFinanceBudgetService } from "@economy/finance/budget/application/services/get-finance-budget.service";
-import { FinanceBudgetViewService } from "@economy/finance/budget/application/services/finance-budget-view.service";
 import { FinanceBudgetAttributes } from "@economy/finance/budget/domain/models/finance-budget-attributes.model";
-import { FinanceBudgetStatus } from "@economy/finance/budget/domain/models/finance-budget-status.model";
 
 const EVOLUTION_MONTHS = 6;
 
@@ -107,6 +99,7 @@ const EVOLUTION_MONTHS = 6;
   templateUrl: "./get-economy.component.html",
   styleUrls: ["./get-economy.component.css"],
   imports: [
+    FinanceVariableBudgetCardComponent,
     FormsModule,
     NgTemplateOutlet,
     ContextualTranslatePipe,
@@ -125,7 +118,6 @@ const EVOLUTION_MONTHS = 6;
     SkeletonComponent,
     SkeletonLineComponent,
     SkeletonPanelComponent,
-    SkeletonBudgetComponent,
     SkeletonMetricsComponent,
     SkeletonRowsComponent,
     SkeletonSectionHeaderComponent,
@@ -137,11 +129,8 @@ const EVOLUTION_MONTHS = 6;
     AmountInputComponent,
     SwipeToDeleteComponent,
     TrendBadgeComponent,
-    ProgressRingComponent,
     GridComponent,
     ActionTileComponent,
-    CtaRowComponent,
-    ChipComponent,
     BalanceCardComponent,
     BarChartComponent,
     BreakdownRowComponent,
@@ -172,7 +161,6 @@ export class GetEconomyComponent implements OnInit {
   private router = inject(Router);
   protected undo = inject(UndoService);
   protected view = inject(FinanceViewService);
-  protected budgetView = inject(FinanceBudgetViewService);
   protected calendarView = inject(FinanceCalendarViewService);
   protected categoryCatalog = inject(FinanceCategoryCatalogService);
   protected movementGrouping = inject(FinanceMovementGroupingService);
@@ -272,31 +260,6 @@ export class GetEconomyComponent implements OnInit {
   hasMovements = computed(() => this.transactions().length > 0);
   hasExpense = computed(() => (this.overview()?.expense ?? 0) > 0);
 
-  budgetConfigured = computed(() => this.budget()?.configured ?? false);
-  budgetSpentLabel = computed(() =>
-    this.view.money(this.budget()?.variableSpent ?? 0),
-  );
-  budgetTotalLabel = computed(() =>
-    this.view.money(this.budget()?.variableBudget ?? 0),
-  );
-  budgetPercent = computed(() =>
-    Math.round((this.budget()?.variableProgress ?? 0) * 100),
-  );
-  budgetPercentLabel = computed(() => `${this.budgetPercent()}%`);
-  budgetStatus = computed(
-    () => this.budget()?.variableStatus ?? FinanceBudgetStatus.ON_TRACK,
-  );
-  budgetTone = computed(() => this.budgetView.tone(this.budgetStatus()));
-  budgetChipTone = computed<ChipTone>(() => {
-    const tone = this.budgetTone();
-
-    return tone === "positive" ? "brand" : tone;
-  });
-  budgetBadgeLabel = computed(() => {
-    this.translationsReady();
-
-    return this.budgetView.statusLabel(this.budgetStatus());
-  });
   balanceValue = computed(() =>
     this.view.sensitiveMoneyPlain(this.overview()?.balance ?? 0),
   );
