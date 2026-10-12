@@ -24,7 +24,6 @@ import { ChipComponent } from "@shared/design-system/chip/infrastructure/compone
 import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
 import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
-import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { LocationCardComponent } from "@shared/design-system/location-card/infrastructure/components/location-card.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
@@ -71,7 +70,6 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ChipComponent,
     ProgressRingComponent,
     CardComponent,
-    ButtonComponent,
     IconButtonComponent,
     LocationCardComponent,
     EmptyStateComponent,
