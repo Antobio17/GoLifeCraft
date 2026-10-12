@@ -17,13 +17,14 @@
       data-testid="production-submit"
       type="button"
       variant="primary"
-      size="md"
+      size="icon-lg"
       icon="check"
+      [iconSize]="19"
+      [ariaLabel]="'createProduction.submitShort' | t"
       [disabled]="!canSubmit() || saving()"
       [loading]="saving()"
       (clicked)="onSubmit()"
-      >{{ "createProduction.submitShort" | t }}</ds-button
-    >
+    />
   </ds-screen-header>
 
   <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
