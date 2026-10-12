@@ -14,6 +14,7 @@ import { UpdateRecipeProviders } from "../providers/update-recipe.providers";
 import { DeleteRecipeProviders } from "../providers/delete-recipe.providers";
 import { RecipeCategoryService } from "../../application/services/recipe-category.service";
 import { RecipeFormService } from "../../application/services/recipe-form.service";
+import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
 
 export const RECIPE_ROUTES: Routes = [
   {
@@ -38,6 +39,7 @@ export const RECIPE_ROUTES: Routes = [
     children: [
       {
         path: "",
+        data: { preload: PreloadMode.Eager },
         loadComponent: () =>
           import("../components/get-recipes.component").then(
             (m) => m.GetRecipesComponent,

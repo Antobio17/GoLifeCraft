@@ -23,6 +23,7 @@ import { GetArticlesProviders } from "@nutrition/catalog/article/infrastructure/
 import { GetRecipesProviders } from "@nutrition/recipe/recipe/infrastructure/providers/get-recipes.providers";
 import { GetRecipeProviders } from "@nutrition/recipe/recipe/infrastructure/providers/get-recipe.providers";
 import { UpdateRecipeStockProviders } from "@nutrition/pantry/recipe-stock/infrastructure/providers/update-recipe-stock.providers";
+import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
 
 export const KITCHEN_ROUTES: Routes = [
   {
@@ -56,6 +57,7 @@ export const KITCHEN_ROUTES: Routes = [
     children: [
       {
         path: "",
+        data: { preload: PreloadMode.Eager },
         loadComponent: () =>
           import("../components/get-productions.component").then(
             (m) => m.GetProductionsComponent,

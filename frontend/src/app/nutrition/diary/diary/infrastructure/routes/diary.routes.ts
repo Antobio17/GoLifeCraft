@@ -11,6 +11,7 @@ import { GetProductionsProviders } from "@nutrition/kitchen/production/infrastru
 import { GetShoppingListProviders } from "@nutrition/shopping/shopping/infrastructure/providers/get-shopping-list.providers";
 import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
 import { UndoProvider } from "@shared/undo/infrastructure/providers/undo.provider";
+import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
 
 export const DIARY_ROUTES: Routes = [
   {
@@ -32,6 +33,7 @@ export const DIARY_ROUTES: Routes = [
     children: [
       {
         path: "",
+        data: { preload: PreloadMode.Eager },
         loadComponent: () =>
           import("../components/get-diary.component").then(
             (m) => m.GetDiaryComponent,

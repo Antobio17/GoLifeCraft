@@ -6,6 +6,7 @@ import { FinanceAccountProviders } from "@economy/finance/account/infrastructure
 import { FinanceBalanceCheckProviders } from "@economy/finance/balance-check/infrastructure/providers/finance-balance-check.providers";
 import { FinanceRecurrenceProviders } from "@economy/finance/recurrence/infrastructure/providers/finance-recurrence.providers";
 import { FinanceBudgetProviders } from "@economy/finance/budget/infrastructure/providers/finance-budget.providers";
+import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
 
 export const ECONOMY_ROUTES: Routes = [
   {
@@ -21,6 +22,7 @@ export const ECONOMY_ROUTES: Routes = [
     children: [
       {
         path: "",
+        data: { preload: PreloadMode.Eager },
         providers: [...UndoProvider.getProviders()],
         loadComponent: () =>
           import("../components/get-economy.component").then(

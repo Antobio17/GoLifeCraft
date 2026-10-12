@@ -9,6 +9,8 @@ import { ActiveWorkoutBannerComponent } from "@gym/training/workout/infrastructu
 import { AuthSessionService } from "@shared/auth/application/services/auth-session.service";
 import { ImpersonationService } from "@shared/auth/application/services/impersonation.service";
 import { ImpersonationBarComponent } from "@shared/design-system/impersonation-bar/infrastructure/components/impersonation-bar.component";
+import { RouteProgressComponent } from "@shared/design-system/route-progress/infrastructure/components/route-progress.component";
+import { NavigationProgressService } from "@shared/routing/application/services/navigation-progress.service";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { GetMyProfileService } from "@authorization/user/user/application/services/get-my-profile.service";
 import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/providers/get-my-profile.provider";
@@ -24,6 +26,7 @@ import { UnreadNotificationsService } from "@notification/notification/inbox/app
     SideDrawerComponent,
     ActiveWorkoutBannerComponent,
     ImpersonationBarComponent,
+    RouteProgressComponent,
     ContextualTranslatePipe,
   ],
   providers: [...GetMyProfileProvider.getProviders()],
@@ -39,6 +42,7 @@ export class MainLayoutComponent implements OnInit {
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
   private routeModuleService = inject(RouteModuleService);
+  private navigationProgress = inject(NavigationProgressService);
 
   private readonly PUSH_RECEIVED = "golifecraft.push.received";
 
@@ -46,6 +50,7 @@ export class MainLayoutComponent implements OnInit {
   module = signal(this.routeModuleService.moduleFor(this.router.url));
   navModule = signal(this.routeModuleService.navModuleFor(this.router.url));
   readonly impersonation = this.impersonationService.impersonation;
+  readonly navigating = this.navigationProgress.navigating;
 
   ngOnInit(): void {
     this.router.events

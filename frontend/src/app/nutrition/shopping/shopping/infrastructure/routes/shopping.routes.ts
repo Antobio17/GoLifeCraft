@@ -8,6 +8,7 @@ import { GetShoppingListProviders } from "../providers/get-shopping-list.provide
 import { ShoppingWriteProviders } from "../providers/shopping-write.providers";
 import { AutosaveProvider } from "@shared/autosave/infrastructure/providers/autosave.provider";
 import { UndoProvider } from "@shared/undo/infrastructure/providers/undo.provider";
+import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
 
 export const SHOPPING_ROUTES: Routes = [
   {
@@ -26,6 +27,7 @@ export const SHOPPING_ROUTES: Routes = [
     children: [
       {
         path: "",
+        data: { preload: PreloadMode.Eager },
         loadComponent: () =>
           import("../components/get-shopping-list.component").then(
             (m) => m.GetShoppingListComponent,

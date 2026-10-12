@@ -1,10 +1,11 @@
 import { Routes } from "@angular/router";
+import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
 
 export const GYM_ROUTES: Routes = [
   { path: "", redirectTo: "sessions", pathMatch: "full" },
   {
     path: "sessions",
-    data: { breadcrumb: "session.breadcrumb.list" },
+    data: { breadcrumb: "session.breadcrumb.list", preload: PreloadMode.Eager },
     loadChildren: () =>
       import("@gym/training/session/infrastructure/routes/session.routes").then(
         (m) => m.SESSION_ROUTES,

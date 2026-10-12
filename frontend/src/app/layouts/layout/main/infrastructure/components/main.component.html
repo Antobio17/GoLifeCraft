@@ -1,5 +1,6 @@
 <div class="app-frame" [class.app-frame--with-tabbar]="showTabBar()">
   <app-floating-toast></app-floating-toast>
+  <ds-route-progress [active]="navigating()" />
 
   @if (impersonation(); as active) {
     <ds-impersonation-bar
