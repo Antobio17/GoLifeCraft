@@ -191,16 +191,18 @@ export class CreateProductionComponent {
         this.t("createProduction.group.nowCaption"),
         rows.filter((row) => !row.item.dueDate),
       ),
-      ...this.timeline.dueDays(rows).map((day) => {
-        const dayRows = rows.filter((row) => row.item.dueDate === day);
+      ...this.timeline
+        .dueDays(rows.map((row) => row.item.dueDate))
+        .map((day) => {
+          const dayRows = rows.filter((row) => row.item.dueDate === day);
 
-        return this.group(
-          day,
-          this.range.dayLabel(day),
-          this.dueCaption(dayRows),
-          dayRows,
-        );
-      }),
+          return this.group(
+            day,
+            this.range.dayLabel(day),
+            this.dueCaption(dayRows),
+            dayRows,
+          );
+        }),
     ].filter((group) => group.rows.length > 0);
   });
 

@@ -5,5 +5,7 @@ export interface ProductionRecipeRow {
   imageUrl: string | null;
   meta: string;
   done: boolean;
-  origin: string;
+  amount: string;
+  ariaLabel: string;
+  servings: number;
 }
