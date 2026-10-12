@@ -47,6 +47,7 @@
     "stat": {
       "counted": "Contados",
       "adjusted": "Con diferencia",
+      "adjustedHint": "de {count} contados",
       "locations": "Ubicaciones"
     },
     "locations": {

@@ -10,11 +10,14 @@
     />
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
-      <ds-skeleton
+      <ds-skeleton-panel
         slot="side"
-        height="17rem"
-        radius="var(--ds-radius-surface)"
+        [glass]="true"
+        [figure]="true"
+        content="meters"
+        [meters]="1"
       />
+      <ds-skeleton-metrics slot="side" [count]="2" />
       <ds-stack [gap]="'var(--ds-space-3)'">
         <ds-skeleton height="5rem" />
         <ds-skeleton height="5rem" delay="0.1s" />
@@ -34,79 +37,130 @@
       [subtitle]="headerSubtitle()"
       (leadingClick)="back()"
     >
-      @if (isDraft()) {
-        <ds-button
-          slot="actions"
-          data-testid="inventory-reschedule"
-          variant="secondary"
-          size="icon-lg"
-          icon="pencil"
-          [iconSize]="19"
-          [ariaLabel]="'getInventory.edit' | t"
-          (clicked)="onEditSchedule()"
-        />
-      }
-
-      @if (isDraft()) {
-        <ds-button
-          slot="actions"
-          data-testid="inventory-discard"
-          variant="danger"
-          size="icon-lg"
-          icon="trash"
-          [iconSize]="19"
-          [ariaLabel]="'getInventory.discard' | t"
-          (clicked)="onDiscard()"
-        />
-      }
+      <ng-container slot="actions">
+        @if (isDraft()) {
+          <ds-icon-button
+            data-testid="inventory-reschedule"
+            icon="pencil"
+            variant="soft"
+            [size]="36"
+            [iconSize]="18"
+            [ariaLabel]="'getInventory.edit' | t"
+            (clicked)="onEditSchedule()"
+          />
+          <ds-icon-button
+            data-testid="inventory-discard"
+            icon="trash"
+            variant="danger"
+            [size]="36"
+            [iconSize]="18"
+            [ariaLabel]="'getInventory.discard' | t"
+            (clicked)="onDiscard()"
+          />
+        } @else {
+          <ds-icon-button
+            data-testid="inventory-reopen"
+            icon="restore"
+            variant="soft"
+            [size]="36"
+            [iconSize]="18"
+            [ariaLabel]="'getInventory.reopen' | t"
+            (clicked)="onReopen()"
+          />
+        }
+      </ng-container>
     </ds-screen-header>
 
     <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1.2fr)'">
-      <ds-module-card
-        slot="side"
-        data-testid="inventory-hero"
-        [hero]="true"
-        [eyebrow]="'getInventory.hero.eyebrow' | t"
-      >
-        <ds-chip slot="aside" [tone]="hero.validated ? 'brand' : 'warning'">
-          {{ hero.statusLabel }}
-        </ds-chip>
+      <ng-container slot="side">
+        <ds-module-card
+          data-testid="inventory-hero"
+          [hero]="true"
+          [eyebrow]="'getInventory.hero.eyebrow' | t"
+        >
+          <ds-chip
+            slot="aside"
+            [tone]="hero.validated ? 'brand' : 'warning'"
+            [uppercase]="true"
+            >{{ hero.statusLabel }}</ds-chip
+          >
 
-        <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
-          <ds-progress-ring [value]="hero.percent">
-            <ds-text variant="strong">{{ hero.percent }}%</ds-text>
-          </ds-progress-ring>
-          <ds-stack [gap]="'2px'">
-            <ds-heading [level]="2" size="md">{{ hero.title }}</ds-heading>
-            <ds-text variant="meta">{{ hero.caption }}</ds-text>
+          <ds-stack
+            direction="row"
+            align="center"
+            [gap]="'var(--ds-space-4)'"
+            [wrap]="false"
+          >
+            <ds-progress-ring
+              [value]="hero.percent"
+              [size]="88"
+              [hollow]="true"
+              [tone]="hero.settled ? 'brand' : 'warning'"
+              >{{ hero.percent }}%</ds-progress-ring
+            >
+
+            <ds-stack [grow]="true" [gap]="'2px'">
+              <ds-text variant="meta">{{
+                "getInventory.stat.counted" | t
+              }}</ds-text>
+              <ds-heading [level]="3" size="xl" [truncate]="true">{{
+                hero.countedLabel
+              }}</ds-heading>
+              <ds-text [variant]="hero.settled ? 'success' : 'strong'">{{
+                hero.title
+              }}</ds-text>
+              <ds-text variant="meta">{{ hero.caption }}</ds-text>
+            </ds-stack>
           </ds-stack>
-        </ds-stack>
 
-        <ds-stat-strip [items]="hero.stats" />
+          @if (!hero.validated) {
+            <ds-button
+              data-testid="inventory-validate"
+              variant="primary"
+              icon="check"
+              [fullWidth]="true"
+              [loading]="validating()"
+              (clicked)="onValidate()"
+            >
+              {{ "getInventory.validate" | t }}
+            </ds-button>
+          }
+        </ds-module-card>
 
-        @if (hero.validated) {
-          <ds-button
-            data-testid="inventory-reopen"
-            variant="primary"
-            icon="restore"
-            [fullWidth]="true"
-            (clicked)="onReopen()"
+        <ds-grid [columns]="2" [gap]="'var(--ds-space-2)'">
+          <ds-card
+            data-testid="inventory-adjusted"
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'2px'"
           >
-            {{ "getInventory.reopen" | t }}
-          </ds-button>
-        } @else {
-          <ds-button
-            data-testid="inventory-validate"
-            variant="primary"
-            icon="check"
-            [fullWidth]="true"
-            [loading]="validating()"
-            (clicked)="onValidate()"
+            <ds-text variant="meta" [truncate]="true">{{
+              "getInventory.stat.adjusted" | t
+            }}</ds-text>
+            <ds-heading [level]="3" size="md" [truncate]="true">{{
+              hero.adjustedLabel
+            }}</ds-heading>
+            <ds-text variant="meta" [truncate]="true">{{
+              hero.adjustedHint
+            }}</ds-text>
+          </ds-card>
+
+          <ds-card
+            data-testid="inventory-locations"
+            [padding]="'var(--ds-space-3)'"
+            [gap]="'2px'"
           >
-            {{ "getInventory.validate" | t }}
-          </ds-button>
-        }
-      </ds-module-card>
+            <ds-text variant="meta" [truncate]="true">{{
+              "getInventory.stat.locations" | t
+            }}</ds-text>
+            <ds-heading [level]="3" size="md" [truncate]="true">{{
+              hero.locationsLabel
+            }}</ds-heading>
+            <ds-text variant="meta" [truncate]="true">{{
+              hero.locationsHint
+            }}</ds-text>
+          </ds-card>
+        </ds-grid>
+      </ng-container>
 
       <ds-stack [gap]="'var(--ds-space-2)'">
         <ds-section-header
