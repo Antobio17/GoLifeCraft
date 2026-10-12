@@ -1,6 +1,6 @@
 <ds-page-wrapper
   [maxWidth]="'40rem'"
-  [wideMaxWidth]="'60rem'"
+  [wideMaxWidth]="'64rem'"
   [gap]="'var(--ds-space-3)'"
 >
   @if (loading()) {
@@ -11,17 +11,24 @@
       titleWidth="46%"
       [actions]="1"
     />
-    <ds-skeleton-list
-      [count]="3"
-      [gap]="'var(--ds-space-2)'"
-      radius="var(--ds-radius-surface)"
-      padding="var(--ds-space-3)"
-      [tile]="44"
-      titleWidth="52%"
-      metaWidth="40%"
-      trailing="pill"
-    />
-  } @else if (production(); as detail) {
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-skeleton-hero slot="side" />
+
+      <ds-rail [indent]="'var(--ds-space-8)'" [gap]="'var(--ds-space-5)'">
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-skeleton-section-header titleWidth="8rem" [count]="true" />
+          <ds-skeleton-list
+            [count]="3"
+            [gap]="'var(--ds-space-3)'"
+            [tile]="40"
+            titleWidth="54%"
+            metaWidth="40%"
+            trailing="pill"
+          />
+        </ds-stack>
+      </ds-rail>
+    </ds-split-view>
+  } @else if (production()) {
     <ds-screen-header
       [sticky]="true"
       [leading]="'back'"
@@ -42,43 +49,85 @@
       </ds-stack>
     </ds-screen-header>
 
-    <ds-split-view [columns]="'minmax(0, 0.7fr) minmax(0, 1fr)'">
-      <ds-stack slot="side" [gap]="'var(--ds-space-2)'">
-        <ds-text variant="meta">{{ summary() }}</ds-text>
-        <ds-stack direction="row" [wrap]="true" [gap]="'var(--ds-space-1-5)'">
-          <ds-chip [tone]="cooking() ? 'brand' : 'neutral'">{{
-            statusLabel()
-          }}</ds-chip>
-          @if (cooking()) {
-            <ds-chip>{{
-              "getProduction.pending" | t: { pending: pendingCount() }
-            }}</ds-chip>
-          }
-        </ds-stack>
-      </ds-stack>
-
-      <ds-section-header
-        [title]="'getProduction.recipes' | t"
-        [staticLabel]="detail.items.length.toString()"
-      />
-
-      <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-        @for (row of rows(); track row.item.itemId) {
-          <ds-production-row
-            [state]="
-              row.done ? ProductionRowState.Done : ProductionRowState.Deficit
-            "
-            [interactive]="true"
-            [emoji]="row.item.emoji"
-            [imageUrl]="row.imageUrl"
-            [name]="row.item.name"
-            [meta]="row.meta"
-            [tag]="row.origin"
-            [doneLabel]="'getProduction.row.done' | t"
-            (opened)="onOpen(row.item)"
+    <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
+      <ds-module-card
+        slot="side"
+        data-testid="production-detail-hero"
+        [hero]="true"
+        [eyebrow]="heroKicker()"
+      >
+        <ds-stack [gap]="'var(--ds-space-1-5)'">
+          <ds-big-figure
+            [value]="heroServings()"
+            [suffix]="'getProduction.hero.servings' | t"
           />
+          <ds-text variant="meta">{{ summary() }}</ds-text>
+        </ds-stack>
+
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-bar-chart
+            class="hero-bars"
+            [bars]="bars()"
+            [height]="72"
+            [showValues]="true"
+          />
+          <ds-text variant="meta">{{ "getProduction.hero.chart" | t }}</ds-text>
+        </ds-stack>
+      </ds-module-card>
+
+      <ds-rail [indent]="'var(--ds-space-8)'" [gap]="'var(--ds-space-5)'">
+        @for (group of groups(); track group.key) {
+          <ds-stack class="production-day" [gap]="'var(--ds-space-1)'">
+            <ds-section-header
+              [title]="group.title"
+              [caption]="group.caption"
+              [staticLabel]="group.total"
+            />
+
+            <ds-stack dsReveal="children">
+              @for (row of group.rows; track row.item.itemId) {
+                <ds-pressable
+                  class="production-row"
+                  data-testid="production-detail-row"
+                  [gap]="'var(--ds-space-4)'"
+                  [class.is-done]="row.done"
+                  [ariaLabel]="row.ariaLabel"
+                  (press)="onOpen(row.item)"
+                >
+                  <ds-emoji-tile
+                    [emoji]="row.item.emoji"
+                    [imageUrl]="row.imageUrl"
+                    [alt]="row.item.name"
+                    [size]="40"
+                  />
+
+                  <ds-stack
+                    class="production-row__body"
+                    [gap]="'2px'"
+                    [grow]="true"
+                  >
+                    <ds-text variant="strong">{{ row.item.name }}</ds-text>
+                    <ds-text variant="meta">{{ row.meta }}</ds-text>
+                  </ds-stack>
+
+                  <ds-chip
+                    class="production-row__amount"
+                    [tone]="row.done ? 'brand' : 'accent'"
+                  >
+                    @if (row.done) {
+                      <ds-icon name="check" [size]="12" [stroke]="3" />
+                    }
+                    {{ row.amount }}
+                    @if (!row.done) {
+                      <ds-icon name="chevronRight" [size]="12" [stroke]="2.6" />
+                    }
+                  </ds-chip>
+                </ds-pressable>
+              }
+            </ds-stack>
+          </ds-stack>
         }
-      </ds-stack>
+      </ds-rail>
     </ds-split-view>
   } @else {
     <ds-empty-state

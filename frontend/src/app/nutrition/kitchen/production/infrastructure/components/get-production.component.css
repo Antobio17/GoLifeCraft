@@ -1,0 +1,49 @@
+.hero-bars {
+  --ds-bar-width: var(--ds-space-6);
+}
+
+.production-day {
+  position: relative;
+}
+
+.production-day::before {
+  content: "";
+  position: absolute;
+  top: var(--ds-space-1-5);
+  left: calc(var(--ds-space-8) / -2 - var(--ds-space-1-5));
+  width: var(--ds-space-3);
+  height: var(--ds-space-3);
+  box-sizing: border-box;
+  border-radius: var(--ds-radius-pill);
+  border: 2px solid var(--ds-accent);
+  background: var(--ds-bg);
+}
+
+.production-row {
+  padding: var(--ds-space-2) 0;
+  transition: opacity var(--ds-dur-2) var(--ds-ease-out);
+}
+
+.production-row.is-done {
+  opacity: 0.55;
+}
+
+.production-row__body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.production-row__amount {
+  flex: 0 0 auto;
+  --chip-pad: var(--ds-space-1-5) var(--ds-space-2) var(--ds-space-1-5)
+    var(--ds-space-3);
+  --chip-size: var(--ds-text-md);
+}
+
+.production-row__amount ds-icon:first-child {
+  margin-right: var(--ds-space-1);
+}
+
+.production-row__amount ds-icon:last-child {
+  margin-left: var(--ds-space-1);
+}

@@ -20,17 +20,26 @@ import { TextComponent } from "@shared/design-system/text/infrastructure/compone
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
-import { ProductionRowComponent } from "@shared/design-system/production-row/infrastructure/components/production-row.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { BigFigureComponent } from "@shared/design-system/big-figure/infrastructure/components/big-figure.component";
+import { BarChartComponent } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
+import { RailComponent } from "@shared/design-system/rail/infrastructure/components/rail.component";
+import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonListComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-list.component";
+import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
+import { SkeletonSectionHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-section-header.component";
 import { RevealDirective } from "@shared/design-system/reveal/infrastructure/directives/reveal.directive";
 import { GetProductionService } from "@nutrition/kitchen/production/application/services/get-production.service";
 import { DiscardProductionService } from "@nutrition/kitchen/production/application/services/discard-production.service";
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
-import { ProductionRowState } from "@shared/design-system/production-row/domain/models/production-row-state.model";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
+import { ProposalTimelineService } from "@nutrition/kitchen/production/application/services/proposal-timeline.service";
+import { ProductionDayGroup } from "@nutrition/kitchen/production/domain/models/production-day-group.model";
 import { ProductionDetailAttributes } from "@nutrition/kitchen/production/domain/models/production-detail-attributes.model";
 import { ProductionItemStatus } from "@nutrition/kitchen/production/domain/models/production-item-status.model";
 import { ProductionItemView } from "@nutrition/kitchen/production/domain/models/production-item-view.model";
@@ -45,6 +54,7 @@ import { RecipePrepMode } from "@nutrition/recipe/recipe/domain/models/recipe-pr
 @Component({
   selector: "app-get-production",
   templateUrl: "./get-production.component.html",
+  styleUrls: ["./get-production.component.css"],
   imports: [
     ContextualTranslatePipe,
     RevealDirective,
@@ -56,11 +66,19 @@ import { RecipePrepMode } from "@nutrition/recipe/recipe/domain/models/recipe-pr
     ButtonComponent,
     ChipComponent,
     SectionHeaderComponent,
-    ProductionRowComponent,
+    ModuleCardComponent,
+    BigFigureComponent,
+    BarChartComponent,
+    IconComponent,
+    PressableComponent,
+    RailComponent,
+    EmojiTileComponent,
     EmptyStateComponent,
     ConfirmActionModalComponent,
     SkeletonScreenHeaderComponent,
     SkeletonListComponent,
+    SkeletonHeroComponent,
+    SkeletonSectionHeaderComponent,
   ],
 })
 export class GetProductionComponent {
@@ -73,10 +91,9 @@ export class GetProductionComponent {
   private router = inject(Router);
   protected range = inject(ProductionRangeService);
   protected view = inject(ProductionViewService);
+  private timeline = inject(ProposalTimelineService);
 
   private readonly MODULE_PATH = "nutrition/kitchen/production";
-
-  protected readonly ProductionRowState = ProductionRowState;
 
   readonly id = input.required<string>();
 
@@ -106,6 +123,7 @@ export class GetProductionComponent {
   rows = computed<ProductionRecipeRow[]>(() =>
     (this.production()?.items ?? []).map((item) => {
       const done = ProductionItemStatus.Done === item.status;
+      const servings = done ? item.servingsCooked : item.servingsPlanned;
 
       return {
         item,
@@ -115,35 +133,125 @@ export class GetProductionComponent {
           item.recipeId,
           item.image,
         ),
-        meta: this.rowMeta(item, done),
+        meta: this.rowMeta(item),
         done,
-        origin: this.rowTag(item, done),
+        amount: this.t("getProduction.group.total", {
+          servings: this.view.servings(servings),
+        }),
+        ariaLabel: this.t(
+          done ? "getProduction.row.ariaDone" : "getProduction.row.aria",
+          { name: item.name, servings: this.view.servings(servings) },
+        ),
+        servings,
       };
     }),
   );
 
+  groups = computed<ProductionDayGroup[]>(() => {
+    const rows = this.rows();
+
+    return [
+      this.group(
+        "batch",
+        this.t("getProduction.group.now"),
+        this.t("getProduction.group.nowCaption"),
+        rows.filter((row) => !row.item.dueDate),
+      ),
+      ...this.timeline
+        .dueDays(rows.map((row) => row.item.dueDate))
+        .map((day) => {
+          const dayRows = rows.filter((row) => row.item.dueDate === day);
+
+          return this.group(
+            day,
+            this.dayTitle(day),
+            this.dueCaption(dayRows),
+            dayRows,
+          );
+        }),
+    ].filter((group) => group.rows.length > 0);
+  });
+
   pendingCount = computed(() => this.rows().filter((row) => !row.done).length);
 
-  private rowTag(item: ProductionItemView, done: boolean): string {
-    if (done) return this.originTag(item);
+  heroServings = computed(() => {
+    const detail = this.production();
+    if (!detail) return "";
 
-    if (item.dueDate && RecipePrepMode.DayBefore === item.prepMode) {
-      return this.t("getProduction.row.cookOnFor", {
-        day: this.range.dayLabel(item.dueDate),
-        next: this.range.dayLabel(this.range.addDays(item.dueDate, 1)),
-      });
-    }
+    return this.view.servings(
+      this.cooking() ? detail.servingsPlanned : detail.servingsCooked,
+    );
+  });
 
-    if (item.dueDate) {
-      return this.t("getProduction.row.dueOn", {
-        day: this.range.dayLabel(item.dueDate),
-      });
-    }
+  heroKicker = computed(() =>
+    this.cooking()
+      ? this.t("getProduction.pending", { pending: this.pendingCount() })
+      : this.statusLabel(),
+  );
 
-    return this.t("getProduction.row.cookNow");
+  bars = computed(() => {
+    const detail = this.production();
+    if (!detail) return [];
+
+    return this.timeline.barsOf(
+      this.rows().map((row) => ({
+        dueDate: row.item.dueDate,
+        servings: row.servings,
+      })),
+      detail.fromDate,
+      detail.toDate,
+      this.range.todayIso(),
+    );
+  });
+
+  private group(
+    key: string,
+    title: string,
+    caption: string,
+    rows: ProductionRecipeRow[],
+  ): ProductionDayGroup {
+    const servings = rows.reduce((sum, row) => sum + row.servings, 0);
+
+    return {
+      key,
+      title,
+      caption,
+      total: this.t("getProduction.group.total", {
+        servings: this.view.servings(Math.round(servings * 100) / 100),
+      }),
+      rows,
+    };
   }
 
-  private originTag(item: ProductionItemView): string {
+  private dayTitle(day: string): string {
+    const label = this.range.dayLabel(day);
+
+    if (day !== this.range.todayIso()) return label;
+
+    return this.t("getProduction.group.today", { day: label });
+  }
+
+  private dueCaption(rows: ProductionRecipeRow[]): string {
+    const dayBefore = rows.filter(
+      (row) => RecipePrepMode.DayBefore === row.item.prepMode,
+    ).length;
+
+    if (!dayBefore) return this.t("getProduction.group.sameDayCaption");
+
+    if (dayBefore === rows.length) {
+      return this.t("getProduction.group.dayBeforeCaption");
+    }
+
+    return this.t("getProduction.group.mixedCaption");
+  }
+
+  private rowOrigin(item: ProductionItemView): string {
+    if (RecipePrepMode.DayBefore === item.prepMode && item.dueDate) {
+      return this.t("getProduction.row.eatenOn", {
+        day: this.range.dayLabel(this.range.addDays(item.dueDate, 1)),
+      });
+    }
+
     if (item.requiredBy.length) {
       return this.t("getProduction.row.requiredBy", {
         parents: this.view.joinNames(item.requiredBy),
@@ -153,21 +261,14 @@ export class GetProductionComponent {
     return this.t("getProduction.row.fromDiary");
   }
 
-  private rowMeta(item: ProductionItemView, done: boolean): string {
-    const servings = done
-      ? this.t("getProduction.row.cooked", {
-          servings: this.view.servings(item.servingsCooked),
-        })
-      : this.t("getProduction.row.planned", {
-          servings: this.view.servings(item.servingsPlanned),
-        });
-
-    const marks = [
+  private rowMeta(item: ProductionItemView): string {
+    return [
+      this.rowOrigin(item),
       item.code ?? "",
       item.customized ? this.t("getProduction.row.changed") : "",
-    ].filter((mark) => "" !== mark);
-
-    return 0 === marks.length ? servings : `${servings} · ${marks.join(" · ")}`;
+    ]
+      .filter((mark) => "" !== mark)
+      .join(" · ");
   }
 
   summary = computed(() => {

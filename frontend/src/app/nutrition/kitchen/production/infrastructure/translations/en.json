@@ -131,7 +131,6 @@
   "getProduction": {
     "back": "Back to productions",
     "breadcrumb": "Production",
-    "recipes": "Recipes in the batch",
     "summary": "{{recipes}} recipes · {{servings}} servings",
     "pending": "{{pending}} left to cook",
     "discard": "Discard production",
@@ -140,15 +139,12 @@
       "done": "Finished"
     },
     "row": {
-      "planned": "{{servings}} servings planned",
-      "cooked": "{{servings}} servings cooked",
       "requiredBy": "For {{parents}}",
       "fromDiary": "From the diary",
-      "done": "Done",
       "changed": "changed",
-      "dueOn": "For {{day}}",
-      "cookOnFor": "Cook on {{day}} for {{next}}",
-      "cookNow": "Cook now"
+      "eatenOn": "Eaten on {{day}}",
+      "aria": "{{name}}: {{servings}} servings to cook",
+      "ariaDone": "{{name}}: {{servings}} servings cooked"
     },
     "discardModal": {
       "title": "Discard production",
@@ -161,6 +157,19 @@
     "error": {
       "title": "We could not find this production",
       "text": "It may have been discarded from another device."
+    },
+    "group": {
+      "now": "Cook now",
+      "nowCaption": "Keeps for the whole batch",
+      "sameDayCaption": "Cooked that day",
+      "dayBeforeCaption": "Made the day before",
+      "mixedCaption": "For that day and the next",
+      "total": "{{servings}} serv.",
+      "today": "Today · {{day}}"
+    },
+    "hero": {
+      "servings": "servings",
+      "chart": "Servings per day"
     }
   },
   "getProductionRecipe": {

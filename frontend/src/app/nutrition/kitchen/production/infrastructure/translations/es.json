@@ -131,7 +131,6 @@
   "getProduction": {
     "back": "Volver a producciones",
     "breadcrumb": "Producción",
-    "recipes": "Recetas del lote",
     "summary": "{{recipes}} recetas · {{servings}} raciones",
     "pending": "{{pending}} por cocinar",
     "discard": "Descartar producción",
@@ -140,15 +139,12 @@
       "done": "Terminada"
     },
     "row": {
-      "planned": "{{servings}} raciones planificadas",
-      "cooked": "{{servings}} raciones hechas",
       "requiredBy": "Para {{parents}}",
       "fromDiary": "Del diario",
-      "done": "Listo",
       "changed": "modificado",
-      "dueOn": "Para el {{day}}",
-      "cookOnFor": "Cocinar el {{day}} para el {{next}}",
-      "cookNow": "Cocinar ahora"
+      "eatenOn": "Se come el {{day}}",
+      "aria": "{{name}}: {{servings}} raciones por cocinar",
+      "ariaDone": "{{name}}: {{servings}} raciones hechas"
     },
     "discardModal": {
       "title": "Descartar producción",
@@ -161,6 +157,19 @@
     "error": {
       "title": "No hemos encontrado esta producción",
       "text": "Puede que se haya descartado desde otro dispositivo."
+    },
+    "group": {
+      "now": "Cocinar ahora",
+      "nowCaption": "Aguanta todo el lote",
+      "sameDayCaption": "Se cocina ese día",
+      "dayBeforeCaption": "Se deja hecho para el día siguiente",
+      "mixedCaption": "Para ese día y el siguiente",
+      "total": "{{servings}} rac.",
+      "today": "Hoy · {{day}}"
+    },
+    "hero": {
+      "servings": "raciones",
+      "chart": "Raciones por día"
     }
   },
   "getProductionRecipe": {

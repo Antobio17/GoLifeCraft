@@ -29,7 +29,6 @@ import { FieldComponent } from "@shared/design-system/field/infrastructure/compo
 import { TextInputComponent } from "@shared/design-system/text-input/infrastructure/components/text-input.component";
 import { InlineQuantityComponent } from "@shared/design-system/inline-quantity/infrastructure/components/inline-quantity.component";
 import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
-import { AddTileComponent } from "@shared/design-system/add-tile/infrastructure/components/add-tile.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
 import { SwipeToDeleteComponent } from "@shared/design-system/swipe-to-delete/infrastructure/components/swipe-to-delete.component";
 import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
@@ -98,7 +97,6 @@ const LABEL_SAVE_DEBOUNCE_MS = 600;
     TextInputComponent,
     InlineQuantityComponent,
     IconButtonComponent,
-    AddTileComponent,
     EmojiTileComponent,
     SwipeToDeleteComponent,
     ModalSheetComponent,

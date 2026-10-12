@@ -38,17 +38,32 @@
       (leadingClick)="onBack()"
       (titleClick)="onOpenRecipe()"
     >
-      @if (!editing() && !done()) {
+      @if (editing()) {
         <ds-button
           slot="actions"
           variant="primary"
+          size="icon-lg"
           icon="check"
+          [iconSize]="19"
+          data-testid="production-recipe-save-ingredients"
+          [ariaLabel]="'getProductionRecipe.saveIngredients' | t"
+          [loading]="savingIngredients()"
+          [disabled]="savingIngredients() || draftRows().length === 0"
+          (clicked)="onSaveIngredients()"
+        />
+      } @else if (!done()) {
+        <ds-button
+          slot="actions"
+          variant="primary"
+          size="icon-lg"
+          icon="check"
+          [iconSize]="19"
           data-testid="production-recipe-cook"
+          [ariaLabel]="'getProductionRecipe.submit' | t"
           [loading]="cooking()"
           [disabled]="cooking()"
           (clicked)="onCook()"
-          >{{ "getProductionRecipe.submit" | t }}</ds-button
-        >
+        />
       }
     </ds-screen-header>
 
@@ -160,19 +175,16 @@
             </ds-swipe-to-delete>
           }
 
-          <ds-add-tile
-            [label]="'getProductionRecipe.addIngredient' | t"
-            (clicked)="onOpenPicker()"
-          />
-
-          <ds-button
-            variant="soft"
-            [fullWidth]="true"
-            [loading]="savingIngredients()"
-            [disabled]="savingIngredients() || draftRows().length === 0"
-            (clicked)="onSaveIngredients()"
-            >{{ "getProductionRecipe.saveIngredients" | t }}</ds-button
-          >
+          <ds-stack align="start">
+            <ds-button
+              variant="link"
+              size="sm"
+              icon="plus"
+              data-testid="production-recipe-add-ingredient"
+              (clicked)="onOpenPicker()"
+              >{{ "getProductionRecipe.addIngredient" | t }}</ds-button
+            >
+          </ds-stack>
 
           @if (customized()) {
             <ds-button
