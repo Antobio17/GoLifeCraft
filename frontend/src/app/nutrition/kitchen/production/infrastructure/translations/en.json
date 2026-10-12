@@ -65,26 +65,21 @@
     "to": "To",
     "days": "{{days}} days",
     "dayOne": "1 day",
-    "hint": "What the diary asks for minus what you already have cooked",
-    "toCook": "To produce",
-    "summary": "{{recipes}} recipes · {{servings}} servings",
-    "submit": "Create production",
     "row": {
       "meta": "The diary asks for {{demand}} · you have {{stock}}",
       "metaEmpty": "The diary asks for {{demand}} · you have none",
       "metaInProduction": "The diary asks for {{demand}} · you have {{stock}} · {{cooking}} under way",
       "packHint": "Your {{packUnit}} of {{article}} covers {{servings}}",
-      "usePack": "use it all",
-      "toggle": "Add to or remove from the batch",
       "servings": "Servings to produce",
       "less": "One serving less",
       "more": "One serving more",
       "requiredBy": "For {{parents}}",
-      "fromDiary": "From the diary",
-      "dueOn": "For {{day}}",
-      "cookNow": "Cook now",
       "metaNoDemand": "Not in the diary · you have {{stock}}",
-      "fromRecipe": "From the recipe"
+      "fromRecipe": "From the recipe",
+      "excluded": "Out",
+      "amount": "{{name}}: {{servings}} servings",
+      "amountExcluded": "{{name}}: out of the batch",
+      "usePackCount": "Make {{servings}}"
     },
     "covered": {
       "title": "Already covered",
@@ -97,16 +92,38 @@
       "title": "Nothing to produce",
       "text": "The diary for those days is already covered by what you have cooked. Try a longer range."
     },
-    "hint2": "If a recipe contains another one, the sub-recipe joins the batch and is cooked first.",
-    "toCookBatch": "Cook now for the whole week",
-    "toCookSameDay": "Cooked on the day",
     "preset": {
       "3": "3 days",
       "5": "5 days",
-      "7": "1 week",
-      "custom": "Custom"
+      "7": "Week",
+      "custom": "Other"
     },
-    "widen": "Add 7 more days"
+    "widen": "Add 7 more days",
+    "submitShort": "Create batch",
+    "hero": {
+      "kicker": "Batch · {{range}}",
+      "servings": "servings",
+      "meta": "{{recipes}} recipes",
+      "metaNow": "{{recipes}} recipes · {{servings}} cooked now",
+      "packs": {
+        "one": "1 pack to use up",
+        "many": "{{count}} packs to use up"
+      },
+      "chart": "Servings per day"
+    },
+    "group": {
+      "now": "Cook now",
+      "nowCaption": "Lasts the whole batch",
+      "sameDayCaption": "Cooked on the day",
+      "total": "{{servings}} serv."
+    },
+    "sheet": {
+      "close": "Close",
+      "done": "Done",
+      "remove": "Remove from the batch",
+      "add": "Add to the batch"
+    },
+    "hint": "What the diary asks for minus what you already have cooked"
   },
   "getProduction": {
     "back": "Back to productions",

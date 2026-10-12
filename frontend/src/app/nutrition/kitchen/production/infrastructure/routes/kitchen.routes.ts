@@ -3,6 +3,7 @@ import { KitchenFormatService } from "@nutrition/kitchen/production/application/
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProposalFormService } from "@nutrition/kitchen/production/application/services/proposal-form.service";
+import { ProposalTimelineService } from "@nutrition/kitchen/production/application/services/proposal-timeline.service";
 import { UpcomingProductionProposalService } from "@nutrition/kitchen/production/application/services/upcoming-production-proposal.service";
 import { ProductionIngredientFormService } from "@nutrition/kitchen/production/application/services/production-ingredient-form.service";
 import { GetProductionsProviders } from "../providers/get-productions.providers";
@@ -31,6 +32,7 @@ export const KITCHEN_ROUTES: Routes = [
       ProductionRangeService,
       ProductionViewService,
       ProposalFormService,
+      ProposalTimelineService,
       UpcomingProductionProposalService,
       ProductionIngredientFormService,
       ...GetProductionsProviders.getProviders(),

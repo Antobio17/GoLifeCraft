@@ -65,26 +65,21 @@
     "to": "Hasta",
     "days": "{{days}} días",
     "dayOne": "1 día",
-    "hint": "Lo que pide el diario menos lo que ya tienes hecho",
-    "toCook": "Por producir",
-    "summary": "{{recipes}} recetas · {{servings}} raciones",
-    "submit": "Crear producción",
     "row": {
       "meta": "El diario pide {{demand}} · tienes {{stock}}",
       "metaEmpty": "El diario pide {{demand}} · no tienes nada",
       "metaInProduction": "El diario pide {{demand}} · tienes {{stock}} · {{cooking}} en marcha",
       "packHint": "Tu {{packUnit}} de {{article}} da para {{servings}}",
-      "usePack": "aprovechar",
-      "toggle": "Incluir o quitar del lote",
       "servings": "Raciones a producir",
       "less": "Una ración menos",
       "more": "Una ración más",
       "requiredBy": "Para {{parents}}",
-      "fromDiary": "Del diario",
-      "dueOn": "Para el {{day}}",
-      "cookNow": "Cocinar ahora",
       "metaNoDemand": "El diario no la pide · tienes {{stock}}",
-      "fromRecipe": "Desde la receta"
+      "fromRecipe": "Desde la receta",
+      "excluded": "Fuera",
+      "amount": "{{name}}: {{servings}} raciones",
+      "amountExcluded": "{{name}}: fuera del lote",
+      "usePackCount": "Hacer {{servings}}"
     },
     "covered": {
       "title": "Ya lo tienes cubierto",
@@ -97,16 +92,38 @@
       "title": "No hay nada que producir",
       "text": "El diario de esos días ya está cubierto con lo que tienes hecho. Prueba con un rango más largo."
     },
-    "hint2": "Si una receta lleva otra dentro, la sub-receta entra en el lote y se cocina primero.",
-    "toCookBatch": "Cocinar ahora para toda la semana",
-    "toCookSameDay": "Se cocina el día",
     "preset": {
       "3": "3 días",
       "5": "5 días",
-      "7": "1 semana",
-      "custom": "Personalizado"
+      "7": "Semana",
+      "custom": "Otro"
     },
-    "widen": "Ampliar 7 días más"
+    "widen": "Ampliar 7 días más",
+    "submitShort": "Crear lote",
+    "hero": {
+      "kicker": "Lote · {{range}}",
+      "servings": "raciones",
+      "meta": "{{recipes}} recetas",
+      "metaNow": "{{recipes}} recetas · {{servings}} se cocinan ahora",
+      "packs": {
+        "one": "1 pack por aprovechar",
+        "many": "{{count}} packs por aprovechar"
+      },
+      "chart": "Raciones por día"
+    },
+    "group": {
+      "now": "Cocinar ahora",
+      "nowCaption": "Aguanta todo el lote",
+      "sameDayCaption": "Se cocina ese día",
+      "total": "{{servings}} rac."
+    },
+    "sheet": {
+      "close": "Cerrar",
+      "done": "Listo",
+      "remove": "Quitar del lote",
+      "add": "Añadir al lote"
+    },
+    "hint": "Lo que pide el diario menos lo que ya tienes hecho"
   },
   "getProduction": {
     "back": "Volver a producciones",

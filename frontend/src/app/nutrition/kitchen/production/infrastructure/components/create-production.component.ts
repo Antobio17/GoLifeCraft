@@ -20,10 +20,18 @@ import { StackComponent } from "@shared/design-system/stack/infrastructure/compo
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import {
-  ChoiceChipOption,
-  ChoiceChipsComponent,
-} from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
-import { WeekStripComponent } from "@shared/design-system/week-strip/infrastructure/components/week-strip.component";
+  SegmentedOption,
+  SegmentedToggleComponent,
+} from "@shared/design-system/segmented-toggle/infrastructure/components/segmented-toggle.component";
+import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
+import { BigFigureComponent } from "@shared/design-system/big-figure/infrastructure/components/big-figure.component";
+import { BarChartComponent } from "@shared/design-system/bar-chart/infrastructure/components/bar-chart.component";
+import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
+import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { PressableComponent } from "@shared/design-system/pressable/infrastructure/components/pressable.component";
+import { RailComponent } from "@shared/design-system/rail/infrastructure/components/rail.component";
+import { ModalSheetComponent } from "@shared/design-system/modal-sheet/infrastructure/components/modal-sheet.component";
+import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
 import { DateFieldComponent } from "@shared/design-system/date-field/infrastructure/components/date-field.component";
 import { NumberInputComponent } from "@shared/design-system/number-input/infrastructure/components/number-input.component";
 import { EmojiTileComponent } from "@shared/design-system/emoji-tile/infrastructure/components/emoji-tile.component";
@@ -42,6 +50,7 @@ import { ProductionRangePreset } from "@nutrition/kitchen/production/domain/mode
 import { ProductionDateRange } from "@nutrition/kitchen/production/domain/models/production-date-range.model";
 import { ProductionRangeService } from "@nutrition/kitchen/production/application/services/production-range.service";
 import { ProposalFormService } from "@nutrition/kitchen/production/application/services/proposal-form.service";
+import { ProposalTimelineService } from "@nutrition/kitchen/production/application/services/proposal-timeline.service";
 import { ProductionRowState } from "@shared/design-system/production-row/domain/models/production-row-state.model";
 import { ProductionViewService } from "@nutrition/kitchen/production/application/services/production-view.service";
 import { ProposalAttributes } from "@nutrition/kitchen/production/domain/models/proposal-attributes.model";
@@ -68,8 +77,16 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     StackComponent,
     TextComponent,
     ButtonComponent,
-    ChoiceChipsComponent,
-    WeekStripComponent,
+    SegmentedToggleComponent,
+    ModuleCardComponent,
+    BigFigureComponent,
+    BarChartComponent,
+    ChipComponent,
+    IconComponent,
+    PressableComponent,
+    RailComponent,
+    ModalSheetComponent,
+    SkeletonLineComponent,
     DateFieldComponent,
     NumberInputComponent,
     EmojiTileComponent,
@@ -92,6 +109,7 @@ export class CreateProductionComponent {
   protected range = inject(ProductionRangeService);
   protected form = inject(ProposalFormService);
   protected view = inject(ProductionViewService);
+  private timeline = inject(ProposalTimelineService);
 
   private readonly MODULE_PATH = "nutrition/kitchen/production";
 
@@ -147,52 +165,92 @@ export class CreateProductionComponent {
 
   isCustom = computed(() => ProductionRangePreset.Custom === this.preset());
 
-  presetOptions = computed<ChoiceChipOption[]>(() =>
+  presetOptions = computed<SegmentedOption[]>(() =>
     this.range.presets().map((preset) => ({
       value: preset,
       label: this.t(`createProduction.preset.${preset}`),
     })),
   );
 
-  stripDays = computed(() => this.range.stripDays(this.fromDate()));
-
   invalidRange = computed(() =>
     this.range.isInverted(this.fromDate(), this.toDate()),
   );
 
   rows = computed<ProposalRow[]>(() =>
-    (this.proposal()?.toCook ?? []).map((item) => ({
-      slot: this.form.slotOf(item),
-      item,
-      dueLabel: this.dueLabel(item),
-      imageUrl: this.entityVisual.urlOf(
-        VisualSurface.Kitchen,
-        AggregateImageKind.Recipe,
-        item.recipeId,
-        item.image,
-      ),
-      meta: this.rowMeta(item),
-      origin: this.rowOrigin(item),
-      hint: this.rowHint(item),
-      servings: this.servings().get(this.form.slotOf(item)) ?? item.deficit,
-      selected: this.selected().has(this.form.slotOf(item)),
-    })),
+    (this.proposal()?.toCook ?? []).map((item) => this.toRow(item)),
   );
 
-  groups = computed<ProposalGroup[]>(() =>
-    [
-      {
-        key: "batch",
-        title: this.t("createProduction.toCookBatch"),
-        rows: this.rows().filter((row) => !row.item.dueDate),
-      },
-      {
-        key: "sameDay",
-        title: this.t("createProduction.toCookSameDay"),
-        rows: this.rows().filter((row) => !!row.item.dueDate),
-      },
-    ].filter((group) => group.rows.length > 0),
+  groups = computed<ProposalGroup[]>(() => {
+    const rows = this.rows();
+
+    return [
+      this.group(
+        "batch",
+        this.t("createProduction.group.now"),
+        this.t("createProduction.group.nowCaption"),
+        rows.filter((row) => !row.item.dueDate),
+      ),
+      ...this.timeline.dueDays(rows).map((day) =>
+        this.group(
+          day,
+          this.range.dayLabel(day),
+          this.t("createProduction.group.sameDayCaption"),
+          rows.filter((row) => row.item.dueDate === day),
+        ),
+      ),
+    ].filter((group) => group.rows.length > 0);
+  });
+
+  editingSlot = signal<string | null>(null);
+
+  editingRow = computed(
+    () => this.rows().find((row) => row.slot === this.editingSlot()) ?? null,
   );
+
+  sheetRow = linkedSignal<ProposalRow | null, ProposalRow | null>({
+    source: this.editingRow,
+    computation: (row, previous) => row ?? previous?.value ?? null,
+  });
+
+  bars = computed(() =>
+    this.timeline.bars(this.rows(), this.fromDate(), this.toDate()),
+  );
+
+  heroKicker = computed(() =>
+    this.t("createProduction.hero.kicker", { range: this.rangeLabel() }),
+  );
+
+  heroMeta = computed(() => {
+    const now = this.timeline.selectedServings(
+      this.rows().filter((row) => !row.item.dueDate),
+    );
+
+    if (now <= 0) {
+      return this.t("createProduction.hero.meta", {
+        recipes: this.selectedCount(),
+      });
+    }
+
+    return this.t("createProduction.hero.metaNow", {
+      recipes: this.selectedCount(),
+      servings: this.view.servings(now),
+    });
+  });
+
+  packLabel = computed(() => {
+    const count = this.rows().filter(
+      (row) => row.selected && !!row.hint,
+    ).length;
+
+    if (!count) return "";
+
+    return this.t(
+      1 === count
+        ? "createProduction.hero.packs.one"
+        : "createProduction.hero.packs.many",
+      { count },
+    );
+  });
 
   coveredRows = computed(() =>
     (this.proposal()?.covered ?? []).map((item) => ({
@@ -212,12 +270,7 @@ export class CreateProductionComponent {
     this.form.totalServings(this.selected(), this.servings()),
   );
 
-  summary = computed(() =>
-    this.t("createProduction.summary", {
-      recipes: this.selectedCount(),
-      servings: this.view.servings(this.totalServings()),
-    }),
-  );
+  heroServings = computed(() => this.view.servings(this.totalServings()));
 
   private request = computed(() => ({
     fromDate: this.fromDate(),
@@ -260,15 +313,6 @@ export class CreateProductionComponent {
     if (!range) return;
 
     this.setRange(range);
-  }
-
-  onDayPicked(day: string): void {
-    this.setRange(
-      this.range.pickDay(
-        { fromDate: this.fromDate(), toDate: this.toDate() },
-        day,
-      ),
-    );
   }
 
   onWiden(): void {
@@ -319,6 +363,14 @@ export class CreateProductionComponent {
       .subscribe(() => this.reloadTick.update((tick) => tick + 1));
   }
 
+  onEditRow(row: ProposalRow): void {
+    this.editingSlot.set(row.slot);
+  }
+
+  onCloseRow(): void {
+    this.editingSlot.set(null);
+  }
+
   onBack(): void {
     this.backNavigation.back(["/kitchen"]);
   }
@@ -344,11 +396,61 @@ export class CreateProductionComponent {
       });
   }
 
-  private dueLabel(item: ProposalToCook): string {
-    if (!item.dueDate) return this.t("createProduction.row.cookNow");
+  private toRow(item: ProposalToCook): ProposalRow {
+    const slot = this.form.slotOf(item);
+    const servings = this.servings().get(slot) ?? item.deficit;
+    const selected = this.selected().has(slot);
+    const packPending = this.timeline.packPending(item, servings);
 
-    return this.t("createProduction.row.dueOn", {
-      day: this.range.dayLabel(item.dueDate),
+    return {
+      slot,
+      item,
+      imageUrl: this.entityVisual.urlOf(
+        VisualSurface.Kitchen,
+        AggregateImageKind.Recipe,
+        item.recipeId,
+        item.image,
+      ),
+      meta: this.rowMeta(item),
+      origin: this.rowOrigin(item),
+      hint: packPending ? this.rowHint(item) : "",
+      packAction: packPending ? this.packAction(item) : "",
+      amount: selected
+        ? this.view.servings(servings)
+        : this.t("createProduction.row.excluded"),
+      ariaLabel: selected
+        ? this.t("createProduction.row.amount", {
+            name: item.name,
+            servings: this.view.servings(servings),
+          })
+        : this.t("createProduction.row.amountExcluded", { name: item.name }),
+      servings,
+      selected,
+    };
+  }
+
+  private group(
+    key: string,
+    title: string,
+    caption: string,
+    rows: ProposalRow[],
+  ): ProposalGroup {
+    return {
+      key,
+      title,
+      caption,
+      total: this.t("createProduction.group.total", {
+        servings: this.view.servings(this.timeline.selectedServings(rows)),
+      }),
+      rows,
+    };
+  }
+
+  private packAction(item: ProposalToCook): string {
+    if (!item.packHint) return "";
+
+    return this.t("createProduction.row.usePackCount", {
+      servings: this.view.servings(item.packHint.suggestedServings),
     });
   }
 
@@ -388,7 +490,7 @@ export class CreateProductionComponent {
 
     if (item.demand <= 0) return this.t("createProduction.row.fromRecipe");
 
-    return this.t("createProduction.row.fromDiary");
+    return "";
   }
 
   private rowHint(item: ProposalToCook): string {
