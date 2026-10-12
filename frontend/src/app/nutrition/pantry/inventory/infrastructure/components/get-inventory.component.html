@@ -57,6 +57,17 @@
             [ariaLabel]="'getInventory.discard' | t"
             (clicked)="onDiscard()"
           />
+          <ds-icon-button
+            data-testid="inventory-validate"
+            icon="check"
+            variant="solid"
+            [size]="36"
+            [iconSize]="18"
+            [stroke]="2.4"
+            [disabled]="validating()"
+            [ariaLabel]="'getInventory.validate' | t"
+            (clicked)="onValidate()"
+          />
         } @else {
           <ds-icon-button
             data-testid="inventory-reopen"
@@ -112,19 +123,6 @@
               <ds-text variant="meta">{{ hero.caption }}</ds-text>
             </ds-stack>
           </ds-stack>
-
-          @if (!hero.validated) {
-            <ds-button
-              data-testid="inventory-validate"
-              variant="primary"
-              icon="check"
-              [fullWidth]="true"
-              [loading]="validating()"
-              (clicked)="onValidate()"
-            >
-              {{ "getInventory.validate" | t }}
-            </ds-button>
-          }
         </ds-module-card>
 
         <ds-grid [columns]="2" [gap]="'var(--ds-space-2)'">
