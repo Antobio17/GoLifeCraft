@@ -172,9 +172,10 @@
     "removeStep": "Remove step",
     "prepMode": {
       "label": "How it is cooked",
-      "hint": "Decides whether it joins the weekly batch or has to be made on the day",
+      "hint": "Decides whether it joins the weekly batch, has to be made on the day or the day before",
       "batch": "Cooked ahead",
-      "sameDay": "Cooked on the day"
+      "sameDay": "Cooked on the day",
+      "dayBefore": "Cooked the day before"
     }
   }
 }

@@ -58,6 +58,7 @@ import { ProposalCovered } from "@nutrition/kitchen/production/domain/models/pro
 import { ProposalGroup } from "@nutrition/kitchen/production/domain/models/proposal-group.model";
 import { ProposalRow } from "@nutrition/kitchen/production/domain/models/proposal-row.model";
 import { ProposalToCook } from "@nutrition/kitchen/production/domain/models/proposal-to-cook.model";
+import { RecipePrepMode } from "@nutrition/recipe/recipe/domain/models/recipe-prep-mode.enum";
 import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggregate-image-kind.enum";
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
@@ -190,14 +191,16 @@ export class CreateProductionComponent {
         this.t("createProduction.group.nowCaption"),
         rows.filter((row) => !row.item.dueDate),
       ),
-      ...this.timeline.dueDays(rows).map((day) =>
-        this.group(
+      ...this.timeline.dueDays(rows).map((day) => {
+        const dayRows = rows.filter((row) => row.item.dueDate === day);
+
+        return this.group(
           day,
           this.range.dayLabel(day),
-          this.t("createProduction.group.sameDayCaption"),
-          rows.filter((row) => row.item.dueDate === day),
-        ),
-      ),
+          this.dueCaption(dayRows),
+          dayRows,
+        );
+      }),
     ].filter((group) => group.rows.length > 0);
   });
 
@@ -481,7 +484,29 @@ export class CreateProductionComponent {
     });
   }
 
+  private dueCaption(rows: ProposalRow[]): string {
+    const dayBefore = rows.filter(
+      (row) => RecipePrepMode.DayBefore === row.item.prepMode,
+    ).length;
+
+    if (!dayBefore) return this.t("createProduction.group.sameDayCaption");
+
+    if (dayBefore === rows.length) {
+      return this.t("createProduction.group.dayBeforeCaption");
+    }
+
+    return this.t("createProduction.group.mixedCaption");
+  }
+
   private rowOrigin(item: ProposalToCook): string {
+    if (RecipePrepMode.DayBefore === item.prepMode) {
+      return this.t("createProduction.row.eatenOn", {
+        day: this.range.dayLabel(
+          item.dueDate ? this.range.addDays(item.dueDate, 1) : this.fromDate(),
+        ),
+      });
+    }
+
     if (item.requiredBy.length) {
       return this.t("createProduction.row.requiredBy", {
         parents: this.view.joinNames(item.requiredBy),

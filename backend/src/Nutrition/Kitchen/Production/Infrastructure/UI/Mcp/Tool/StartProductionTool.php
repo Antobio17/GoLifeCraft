@@ -10,7 +10,7 @@ use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 
 #[McpTool(
     name: 'start_production',
-    description: 'Open a cooking batch covering a range of days, with the recipes to cook in it. One batch is one cooking session plan: the recipes that can be cooked ahead are added up across the whole range, while a recipe whose prepMode is "same_day" is added once per day it is due, so the same recipe may appear several times with different dueDate values. Sub-recipes are planned on their own and cooked first. Read what the diary is asking for with query_model on "diary_entry", what is already in the freezer with "recipe_stock", and the batch itself afterwards with "production" and "production_item". Cooking each line is a separate call to cook_production_item; cooking the last one closes the batch on its own.',
+    description: 'Open a cooking batch covering a range of days, with the recipes to cook in it. One batch is one cooking session plan: the recipes that can be cooked ahead are added up across the whole range, while a recipe whose prepMode is "same_day" is added once per day it is eaten and one whose prepMode is "day_before" once per day before it is eaten, so the same recipe may appear several times with different dueDate values. Sub-recipes are planned on their own and cooked first. Read what the diary is asking for with query_model on "diary_entry", what is already in the freezer with "recipe_stock", and the batch itself afterwards with "production" and "production_item". Cooking each line is a separate call to cook_production_item; cooking the last one closes the batch on its own.',
 )]
 final class StartProductionTool extends McpMessengerTool
 {
@@ -24,13 +24,13 @@ final class StartProductionTool extends McpMessengerTool
         string $toDate,
         #[Schema(
             type: 'array',
-            description: 'The lines of the batch. Each one is {"recipeId": "…", "servings": 4, "dueDate": "2026-09-17"}, where dueDate is only for a same_day recipe and is left out for anything cooked ahead.',
+            description: 'The lines of the batch. Each one is {"recipeId": "…", "servings": 4, "dueDate": "2026-09-17"}, where dueDate is only for a same_day or day_before recipe and is left out for anything cooked ahead.',
             items: [
                 'type' => 'object',
                 'properties' => [
                     'recipeId' => ['type' => 'string', 'description' => 'Id of the recipe to cook.'],
                     'servings' => ['type' => 'number', 'description' => 'Servings to plan for this line.'],
-                    'dueDate' => ['type' => 'string', 'description' => 'Day this line must be cooked, as "YYYY-MM-DD". Only for a same_day recipe.'],
+                    'dueDate' => ['type' => 'string', 'description' => 'Day this line must be cooked, as "YYYY-MM-DD". Only for a same_day recipe (the day it is eaten) or a day_before recipe (the day before it is eaten).'],
                 ],
                 'required' => ['recipeId', 'servings'],
             ],

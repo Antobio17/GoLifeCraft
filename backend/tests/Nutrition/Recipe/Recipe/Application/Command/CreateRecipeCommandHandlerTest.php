@@ -67,6 +67,25 @@ final class CreateRecipeCommandHandlerTest extends TestCase
         $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());
     }
 
+    public function testItCreatesARecipeCookedTheDayBefore(): void
+    {
+        ($this->handler)(new CreateRecipeCommand(
+            recipeId: 'recipe-1',
+            name: 'Pollo marinado',
+            emoji: '🍗',
+            category: 'Cena',
+            servings: 2,
+            prepMode: Recipe::PREP_MODE_DAY_BEFORE,
+            ingredients: [],
+            steps: [],
+            createdByUserId: 'god-user-id',
+        ));
+
+        $recipe = $this->recipeRepository->findById(id: 'recipe-1');
+
+        $this->assertSame(expected: Recipe::PREP_MODE_DAY_BEFORE, actual: $recipe->prepMode);
+    }
+
     public function testItCreatesARecipeWithOrderedSteps(): void
     {
         ($this->handler)(new CreateRecipeCommand(

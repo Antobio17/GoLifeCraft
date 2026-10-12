@@ -233,6 +233,10 @@ export class RecipeEditorComponent implements OnInit {
       value: RecipePrepMode.SameDay,
       label: this.t("recipeEditor.prepMode.sameDay"),
     },
+    {
+      value: RecipePrepMode.DayBefore,
+      label: this.t("recipeEditor.prepMode.dayBefore"),
+    },
   ]);
 
   pickerTabs = computed<ViewSwitchOption[]>(() => [

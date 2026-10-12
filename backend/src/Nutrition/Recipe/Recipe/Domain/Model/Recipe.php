@@ -15,11 +15,13 @@ class Recipe extends GenericAggregate
 {
     public const string PREP_MODE_BATCH = 'batch';
     public const string PREP_MODE_SAME_DAY = 'same_day';
+    public const string PREP_MODE_DAY_BEFORE = 'day_before';
 
     /** @var array<int, string> */
     public const array PREP_MODES = [
         self::PREP_MODE_BATCH,
         self::PREP_MODE_SAME_DAY,
+        self::PREP_MODE_DAY_BEFORE,
     ];
 
     public string $name;

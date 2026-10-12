@@ -79,6 +79,7 @@
       "excluded": "Out",
       "amount": "{{name}}: {{servings}} servings",
       "amountExcluded": "{{name}}: out of the batch",
+      "eatenOn": "Eaten on {{day}}",
       "usePackCount": "Make {{servings}}"
     },
     "covered": {
@@ -115,6 +116,8 @@
       "now": "Cook now",
       "nowCaption": "Lasts the whole batch",
       "sameDayCaption": "Cooked on the day",
+      "dayBeforeCaption": "Made the day before it is eaten",
+      "mixedCaption": "For that day and the next",
       "total": "{{servings}} serv."
     },
     "sheet": {
@@ -144,6 +147,7 @@
       "done": "Done",
       "changed": "changed",
       "dueOn": "For {{day}}",
+      "cookOnFor": "Cook on {{day}} for {{next}}",
       "cookNow": "Cook now"
     },
     "discardModal": {

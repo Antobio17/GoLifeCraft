@@ -99,7 +99,10 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
             $packs ??= $this->packsByArticle();
             $origin = array_values(array: array_unique(array: $requiredBy[$recipeId] ?? []));
 
-            foreach ($this->dueRows(recipe: $recipe, recipeId: $recipeId, deficit: $deficit, demandByDate: $demandByDate, stock: $stock, inProduction: $inProduction) as $dueDate => $dueDeficit) {
+            $dueRows = $this->dueRows(recipe: $recipe, recipeId: $recipeId, deficit: $deficit, fromDate: $fromDate, demandByDate: $demandByDate, stock: $stock, inProduction: $inProduction);
+            $wholeRange = [''] === array_keys($dueRows);
+
+            foreach ($dueRows as $dueDate => $dueDeficit) {
                 $toCook[] = new ProposalToCookItem(
                     recipeId: $recipeId,
                     name: $recipe['name'],
@@ -107,7 +110,7 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
                     image: $recipe['image'],
                     prepMode: $recipe['prepMode'],
                     dueDate: '' === $dueDate ? null : (string) $dueDate,
-                    demand: '' === $dueDate ? $servings : $dueDeficit,
+                    demand: $wholeRange ? $servings : $dueDeficit,
                     inStock: $stock[$recipeId] ?? 0.0,
                     inProduction: $inProduction[$recipeId] ?? 0.0,
                     deficit: $dueDeficit,
@@ -212,7 +215,9 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
 
     /**
      * A batch dish is one line for the whole range. A same-day dish is one line per day it is
-     * eaten, so the lot says which day each portion is due.
+     * eaten, so the lot says which day each portion is due. A day-before dish is one line per day
+     * it is eaten too, but due the previous day; when that falls before the range it goes into
+     * the lot cooked now.
      *
      * @param array{name: string, emoji: string, image: ?string, prepMode: string} $recipe
      * @param array<string, array<string, float>>                                  $demandByDate
@@ -225,20 +230,47 @@ final readonly class DoctrineGetProductionProposalNeedleDataQuery implements Get
         array $recipe,
         string $recipeId,
         float $deficit,
+        string $fromDate,
         array $demandByDate,
         array $stock,
         array $inProduction,
     ): array {
         $dates = $demandByDate[$recipeId] ?? [];
 
-        if (Recipe::PREP_MODE_SAME_DAY !== $recipe['prepMode'] || [] === $dates) {
+        if (!in_array(needle: $recipe['prepMode'], haystack: ProductionItem::DATED_PREP_MODES, strict: true) || [] === $dates) {
             return ['' => $deficit];
         }
 
         $available = ($stock[$recipeId] ?? 0.0) + ($inProduction[$recipeId] ?? 0.0);
         $shortfall = self::shortfallByDate(dates: $dates, available: $available);
 
-        return [] === $shortfall ? ['' => $deficit] : $shortfall;
+        if ([] === $shortfall) {
+            return ['' => $deficit];
+        }
+
+        if (Recipe::PREP_MODE_DAY_BEFORE !== $recipe['prepMode']) {
+            return $shortfall;
+        }
+
+        return self::dueTheDayBefore(shortfall: $shortfall, fromDate: $fromDate);
+    }
+
+    /**
+     * @param array<string, float> $shortfall
+     *
+     * @return array<string, float>
+     */
+    private static function dueTheDayBefore(array $shortfall, string $fromDate): array
+    {
+        $due = [];
+
+        foreach ($shortfall as $date => $missing) {
+            $dayBefore = (new \DateTimeImmutable(datetime: (string) $date))->modify(modifier: '-1 day')->format(format: 'Y-m-d');
+            $key = $dayBefore < $fromDate ? '' : $dayBefore;
+            $due[$key] = round(num: ($due[$key] ?? 0.0) + $missing, precision: ProductionItem::SERVINGS_PRECISION);
+        }
+
+        return $due;
     }
 
     /**

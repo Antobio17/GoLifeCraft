@@ -40,6 +40,7 @@ import { AggregateImageKind } from "@shared/aggregate-image/domain/models/aggreg
 import { EntityVisualService } from "@shared/entity-visual/application/services/entity-visual.service";
 import { VisualSurface } from "@shared/visual-preference/domain/models/visual-surface.enum";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
+import { RecipePrepMode } from "@nutrition/recipe/recipe/domain/models/recipe-prep-mode.enum";
 
 @Component({
   selector: "app-get-production",
@@ -125,6 +126,13 @@ export class GetProductionComponent {
 
   private rowTag(item: ProductionItemView, done: boolean): string {
     if (done) return this.originTag(item);
+
+    if (item.dueDate && RecipePrepMode.DayBefore === item.prepMode) {
+      return this.t("getProduction.row.cookOnFor", {
+        day: this.range.dayLabel(item.dueDate),
+        next: this.range.dayLabel(this.range.addDays(item.dueDate, 1)),
+      });
+    }
 
     if (item.dueDate) {
       return this.t("getProduction.row.dueOn", {

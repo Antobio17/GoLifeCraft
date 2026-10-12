@@ -63,6 +63,40 @@ final class StartProductionCommandHandlerTest extends TestCase
         $this->assertNotEmpty(actual: $this->domainEventCollectorService->pullEvents());
     }
 
+    public function testItKeepsTheDueDateOfDatedRecipesAndDropsItForBatchOnes(): void
+    {
+        $needleDataQuery = new InMemoryStartProductionNeedleDataQuery();
+        $needleDataQuery->addRecipe(recipeId: 'recipe-1', name: 'Lentejas con chorizo', emoji: '🍲', servings: 2);
+        $needleDataQuery->addRecipe(recipeId: 'recipe-2', name: 'Pollo marinado', emoji: '🍗', servings: 2, prepMode: ProductionItem::PREP_MODE_DAY_BEFORE);
+        $needleDataQuery->addRecipe(recipeId: 'recipe-3', name: 'Tortilla', emoji: '🍳', servings: 2, prepMode: ProductionItem::PREP_MODE_SAME_DAY);
+
+        $handler = new StartProductionCommandHandler(
+            productionRepository: $this->productionRepository,
+            needleDataQuery: $needleDataQuery,
+            compositionResolver: new InMemoryProductionCompositionResolver(),
+            domainEventCollectorService: $this->domainEventCollectorService,
+            dateTimeGenerator: new DateTimeGenerator(),
+        );
+
+        $handler(new StartProductionCommand(
+            fromDate: '2026-08-26',
+            toDate: '2026-08-28',
+            items: [
+                ['recipeId' => 'recipe-1', 'servings' => 5.0, 'dueDate' => '2026-08-27'],
+                ['recipeId' => 'recipe-2', 'servings' => 2.0, 'dueDate' => '2026-08-26'],
+                ['recipeId' => 'recipe-3', 'servings' => 1.0, 'dueDate' => '2026-08-28'],
+            ],
+            startedByUserId: 'god-user-id',
+        ));
+
+        $items = $this->productionRepository->findById(id: 'production-1')->items;
+
+        $this->assertNull(actual: $items[0]->dueDate);
+        $this->assertSame(expected: ProductionItem::PREP_MODE_DAY_BEFORE, actual: $items[1]->prepMode);
+        $this->assertSame(expected: '2026-08-26', actual: $items[1]->dueDate);
+        $this->assertSame(expected: '2026-08-28', actual: $items[2]->dueDate);
+    }
+
     public function testItThrowsWhenTheRecipeDoesNotExist(): void
     {
         $this->expectException(exception: StartProductionException::class);
