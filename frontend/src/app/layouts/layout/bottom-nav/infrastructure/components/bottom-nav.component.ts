@@ -1,14 +1,8 @@
 import { Component, NgZone, computed, inject } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
-import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
-import {
-  animationFrameScheduler,
-  auditTime,
-  filter,
-  fromEvent,
-  map,
-} from "rxjs";
+import { animationFrameScheduler, auditTime, filter, fromEvent } from "rxjs";
 import { ContextualTranslatePipe } from "@shared/i18n/infrastructure/pipes/contextual-translate.pipe";
 import { TabItemComponent } from "@shared/design-system/tab-item/infrastructure/components/tab-item.component";
 import { StackComponent } from "@shared/design-system/stack/infrastructure/components/stack.component";
@@ -16,6 +10,7 @@ import { SideDrawerService } from "@layouts/layout/side-drawer/application/servi
 import { BottomNavItemsService } from "../../application/services/bottom-nav-items.service";
 import { BottomNavActiveItemService } from "../../application/services/bottom-nav-active-item.service";
 import { BottomNavCollapseService } from "../../application/services/bottom-nav-collapse.service";
+import { NavigationProgressService } from "@shared/routing/application/services/navigation-progress.service";
 
 @Component({
   selector: "app-bottom-nav",
@@ -34,6 +29,7 @@ export class BottomNavComponent {
   private bottomNavItemsService = inject(BottomNavItemsService);
   private bottomNavActiveItemService = inject(BottomNavActiveItemService);
   private bottomNavCollapseService = inject(BottomNavCollapseService);
+  private navigationProgress = inject(NavigationProgressService);
   private router = inject(Router);
   private zone = inject(NgZone);
   private window = inject(DOCUMENT).defaultView;
@@ -41,16 +37,11 @@ export class BottomNavComponent {
   isDrawerOpen = this.sideDrawerService.isOpen;
   items = this.bottomNavItemsService.getItems();
 
-  private url = toSignal(
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      map((event) => event.urlAfterRedirects),
-    ),
-    { initialValue: this.router.url },
-  );
-
   activeRoute = computed(() =>
-    this.bottomNavActiveItemService.findActiveRoute(this.url(), this.items),
+    this.bottomNavActiveItemService.findActiveRoute(
+      this.navigationProgress.targetUrl(),
+      this.items,
+    ),
   );
 
   hidden = computed(

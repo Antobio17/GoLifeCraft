@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { authGuard } from "./authorization/login/login/domain/guards/auth.guard";
+import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
 
 export const APP_ROUTES: Routes = [
   {
@@ -43,7 +44,7 @@ export const APP_ROUTES: Routes = [
     children: [
       {
         path: "dashboard",
-        data: { breadcrumb: null },
+        data: { breadcrumb: null, preload: PreloadMode.Eager },
         loadChildren: () =>
           import("./dashboard/dashboard/infrastructure/routes/dashboard.routes").then(
             (m) => m.DASHBOARD_ROUTES,
@@ -51,7 +52,10 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: "diary",
-        data: { breadcrumb: "diary.breadcrumb.list" },
+        data: {
+          breadcrumb: "diary.breadcrumb.list",
+          preload: PreloadMode.Eager,
+        },
         loadChildren: () =>
           import("./nutrition/diary/diary/infrastructure/routes/diary.routes").then(
             (m) => m.DIARY_ROUTES,
@@ -75,7 +79,10 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: "economy",
-        data: { breadcrumb: "getEconomy.breadcrumb.list" },
+        data: {
+          breadcrumb: "getEconomy.breadcrumb.list",
+          preload: PreloadMode.Eager,
+        },
         loadChildren: () =>
           import("./economy/finance/transaction/infrastructure/routes/economy.routes").then(
             (m) => m.ECONOMY_ROUTES,
@@ -99,7 +106,10 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: "kitchen",
-        data: { breadcrumb: "kitchen.breadcrumb.list" },
+        data: {
+          breadcrumb: "kitchen.breadcrumb.list",
+          preload: PreloadMode.Eager,
+        },
         loadChildren: () =>
           import("./nutrition/kitchen/production/infrastructure/routes/kitchen.routes").then(
             (m) => m.KITCHEN_ROUTES,
@@ -131,7 +141,10 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: "recipes",
-        data: { breadcrumb: "recipe.breadcrumb.list" },
+        data: {
+          breadcrumb: "recipe.breadcrumb.list",
+          preload: PreloadMode.Eager,
+        },
         loadChildren: () =>
           import("./nutrition/recipe/recipe/infrastructure/routes/recipe.routes").then(
             (m) => m.RECIPE_ROUTES,
@@ -139,7 +152,10 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: "shopping-list",
-        data: { breadcrumb: "getShopping.breadcrumb.list" },
+        data: {
+          breadcrumb: "getShopping.breadcrumb.list",
+          preload: PreloadMode.Eager,
+        },
         loadChildren: () =>
           import("./nutrition/shopping/shopping/infrastructure/routes/shopping.routes").then(
             (m) => m.SHOPPING_ROUTES,
@@ -147,7 +163,10 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: "gym",
-        data: { breadcrumb: "session.breadcrumb.list" },
+        data: {
+          breadcrumb: "session.breadcrumb.list",
+          preload: PreloadMode.Eager,
+        },
         loadChildren: () =>
           import("./gym/infrastructure/routes/gym.routes").then(
             (m) => m.GYM_ROUTES,

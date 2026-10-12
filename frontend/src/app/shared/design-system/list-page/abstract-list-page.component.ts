@@ -91,17 +91,16 @@ export abstract class AbstractListPageComponent<T> implements OnInit {
 
     const snapshot = this.pendingSnapshot();
 
-    this.translationService.loadModuleTranslations(this.modulePath).then(() => {
-      this.configureList();
+    void this.translationService.loadModuleTranslations(this.modulePath);
+    this.configureList();
 
-      if (null === snapshot) {
-        this.load();
+    if (null === snapshot) {
+      this.load();
 
-        return;
-      }
+      return;
+    }
 
-      this.restore(snapshot);
-    });
+    this.restore(snapshot);
   }
 
   protected t(key: string): string {

@@ -20,6 +20,7 @@ import {
 } from "@angular/router";
 import { IdlePreloadStrategy } from "./app/shared/routing/infrastructure/strategies/idle-preload.strategy";
 import { BackNavigationService } from "./app/shared/routing/application/services/back-navigation.service";
+import { ViewTransitionPolicyService } from "./app/shared/routing/application/services/view-transition-policy.service";
 import { AppSplashService } from "./app/shared/splash/application/services/app-splash.service";
 import { PresentedSheetsService } from "./app/shared/design-system/modal-sheet/application/services/presented-sheets.service";
 import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/components/main.component";
@@ -45,8 +46,13 @@ bootstrapApplication(MainLayoutComponent, {
       }),
       withViewTransitions({
         skipInitialTransition: true,
-        onViewTransitionCreated: ({ transition }) => {
-          if (!inject(PresentedSheetsService).any()) return;
+        onViewTransitionCreated: ({ transition, from, to }) => {
+          const sheetPresented = inject(PresentedSheetsService).any();
+          const crossesSection = inject(
+            ViewTransitionPolicyService,
+          ).crossesSection(from, to);
+
+          if (!sheetPresented && !crossesSection) return;
 
           transition.skipTransition();
         },

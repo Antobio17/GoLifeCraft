@@ -12,6 +12,7 @@ import { GetExercisesProviders } from "@gym/library/exercise/infrastructure/prov
 import { GetExerciseTopSetsProviders } from "@gym/library/exercise/infrastructure/providers/get-exercise-top-sets.providers";
 import { GetWorkoutsProviders } from "@gym/training/workout/infrastructure/providers/get-workouts.providers";
 import { GetGymStatsProviders } from "@gym/analytics/stats/infrastructure/providers/get-gym-stats.providers";
+import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
 
 export const SESSION_ROUTES: Routes = [
   {
@@ -32,6 +33,7 @@ export const SESSION_ROUTES: Routes = [
     children: [
       {
         path: "",
+        data: { preload: PreloadMode.Eager },
         loadComponent: () =>
           import("../components/get-sessions.component").then(
             (m) => m.GetSessionsComponent,
