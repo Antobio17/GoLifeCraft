@@ -8,9 +8,18 @@ const EMPTY_HEIGHT = 4;
   selector: "ds-bar-chart",
   template: `
     <div class="ds-bars">
-      <div class="ds-bars__plot" [style.height.px]="height">
+      <div
+        class="ds-bars__plot"
+        [class.has-values]="showValues"
+        [style.height.px]="height"
+      >
         @for (bar of bars; track bar.label) {
           <div class="ds-bars__col">
+            @if (showValues) {
+              <span class="ds-bars__value" [class.is-empty]="!bar.value">{{
+                bar.value ? bar.valueLabel : "—"
+              }}</span>
+            }
             <span
               class="ds-bars__bar"
               [class.is-selected]="bar.selected"
@@ -48,19 +57,36 @@ const EMPTY_HEIGHT = 4;
         padding-bottom: var(--ds-space-2);
         border-bottom: 1px solid var(--ds-border-hairline);
       }
+      .ds-bars__plot.has-values {
+        padding-top: var(--ds-space-5);
+      }
       .ds-bars__col {
         flex: 1 1 0;
         min-width: 0;
         height: 100%;
         display: flex;
-        align-items: flex-end;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--ds-space-1);
+      }
+      .ds-bars__value {
+        flex: 0 0 auto;
+        font-size: var(--ds-text-xs);
+        font-weight: var(--ds-weight-bold);
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+        color: var(--ds-text);
+      }
+      .ds-bars__value.is-empty {
+        color: var(--ds-text-disabled);
       }
       .ds-bars__bar {
         display: block;
+        flex: 0 0 auto;
         width: 100%;
         max-width: var(--ds-bar-width);
-        min-height: var(--ds-bar-width);
+        min-height: min(var(--ds-bar-width), var(--ds-space-2));
         border-radius: var(--ds-radius-pill);
         background: color-mix(in srgb, var(--ds-data-1) 22%, transparent);
         transition:
@@ -93,6 +119,7 @@ const EMPTY_HEIGHT = 4;
 export class BarChartComponent {
   @Input() bars: BarChartBar[] = [];
   @Input() height = 112;
+  @Input() showValues = false;
 
   heightOf(bar: BarChartBar): number {
     const max = Math.max(...this.bars.map((item) => item.value), 0);

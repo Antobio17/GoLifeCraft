@@ -1,10 +1,11 @@
 <ds-page-wrapper
   [maxWidth]="'40rem'"
   [wideMaxWidth]="'64rem'"
-  [gap]="'var(--ds-space-3)'"
+  [gap]="'var(--ds-space-4)'"
 >
   <ds-screen-header
     [sticky]="true"
+    [stacked]="true"
     [leading]="'back'"
     [leadingLabel]="'createProduction.back' | t"
     [eyebrow]="daysLabel()"
@@ -16,21 +17,59 @@
       data-testid="production-submit"
       type="button"
       variant="primary"
-      size="icon-lg"
-      icon="save"
-      [iconSize]="19"
-      [ariaLabel]="'createProduction.submit' | t"
+      size="md"
+      icon="check"
       [disabled]="!canSubmit() || saving()"
       [loading]="saving()"
       (clicked)="onSubmit()"
-    />
+      >{{ "createProduction.submitShort" | t }}</ds-button
+    >
   </ds-screen-header>
 
   <ds-split-view [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'">
-    <ds-stack slot="side" [gap]="'var(--ds-space-3)'">
-      <ds-choice-chips
+    <ds-module-card
+      slot="side"
+      data-testid="production-hero"
+      [hero]="true"
+      [eyebrow]="heroKicker()"
+    >
+      @if (loading()) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-skeleton-line width="45%" height="2rem" />
+          <ds-skeleton-line width="70%" height="0.75rem" />
+        </ds-stack>
+        <ds-skeleton-line width="100%" height="6rem" />
+      } @else {
+        <ds-stack [gap]="'var(--ds-space-1-5)'">
+          <ds-big-figure
+            data-testid="production-hero-servings"
+            [value]="heroServings()"
+            [suffix]="'createProduction.hero.servings' | t"
+          />
+          <ds-text variant="meta">{{ heroMeta() }}</ds-text>
+          @if (packLabel()) {
+            <ds-chip class="hero-pack" tone="warning">
+              <ds-icon name="package" [size]="12" [stroke]="2.2" />
+              {{ packLabel() }}
+            </ds-chip>
+          }
+        </ds-stack>
+
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-bar-chart
+            class="hero-bars"
+            data-testid="production-hero-bars"
+            [bars]="bars()"
+            [height]="72"
+            [showValues]="true"
+          />
+          <ds-text variant="meta">{{ "createProduction.hint" | t }}</ds-text>
+        </ds-stack>
+      }
+
+      <ds-segmented-toggle
         data-testid="production-range-presets"
-        [wrap]="true"
+        variant="pill"
         [options]="presetOptions()"
         [ngModel]="preset()"
         [ngModelOptions]="{ standalone: true }"
@@ -38,11 +77,7 @@
       />
 
       @if (isCustom()) {
-        <ds-stack
-          class="range-panel"
-          direction="row"
-          [gap]="'var(--ds-space-3)'"
-        >
+        <ds-stack direction="row" [gap]="'var(--ds-space-3)'">
           <ds-stack [gap]="'var(--ds-space-1)'" [grow]="true">
             <ds-text variant="label">{{ "createProduction.from" | t }}</ds-text>
             <ds-date-field
@@ -67,185 +102,219 @@
           </ds-stack>
         </ds-stack>
       }
+    </ds-module-card>
 
-      <ds-week-strip
-        data-testid="production-range-strip"
-        [title]="rangeLabel()"
-        [caption]="'createProduction.hint' | t"
-        [days]="stripDays()"
-        [selectable]="true"
-        [rangeStart]="fromDate()"
-        [rangeEnd]="toDate()"
-        (daySelected)="onDayPicked($event)"
-      />
-    </ds-stack>
+    <ds-stack [gap]="'var(--ds-space-5)'">
+      @if (loading()) {
+        <ds-rail [indent]="'var(--ds-space-5)'" [gap]="'var(--ds-space-5)'">
+          <ds-stack [gap]="'var(--ds-space-2)'">
+            <ds-skeleton-section-header titleWidth="8rem" [count]="true" />
+            <ds-skeleton-list
+              [count]="3"
+              [gap]="'var(--ds-space-3)'"
+              [tile]="40"
+              titleWidth="54%"
+              metaWidth="66%"
+              trailing="pill"
+            />
+          </ds-stack>
+        </ds-rail>
+      } @else if (rows().length) {
+        <ds-rail [indent]="'var(--ds-space-5)'" [gap]="'var(--ds-space-5)'">
+          @for (group of groups(); track group.key) {
+            <ds-stack class="proposal-day" [gap]="'var(--ds-space-1)'">
+              <ds-section-header
+                [title]="group.title"
+                [caption]="group.caption"
+                [staticLabel]="group.total"
+              />
 
-    @if (loading()) {
-      <ds-skeleton-section-header titleWidth="8rem" [count]="true" />
-      <ds-skeleton-list
-        [count]="3"
-        [gap]="'var(--ds-space-2)'"
-        radius="var(--ds-radius-surface)"
-        padding="var(--ds-space-3)"
-        [check]="true"
-        [tile]="44"
-        titleWidth="54%"
-        metaWidth="66%"
-        trailing="pill"
-      />
-    } @else if (rows().length) {
-      @for (group of groups(); track group.key) {
-        <ds-section-header [title]="group.title" [staticLabel]="rangeLabel()" />
-
-        <ds-stack dsReveal="children" [gap]="'var(--ds-space-2)'">
-          @for (row of group.rows; track row.slot) {
-            <ds-stack
-              class="proposal-row"
-              [class.is-off]="!row.selected"
-              [gap]="'var(--ds-space-2)'"
-            >
-              <ds-stack
-                direction="row"
-                align="center"
-                [gap]="'var(--ds-space-3)'"
-              >
-                <ds-button
-                  class="proposal-row__check"
-                  [variant]="row.selected ? 'primary' : 'secondary'"
-                  size="icon-sm"
-                  [icon]="row.selected ? 'check' : 'plus'"
-                  [iconSize]="15"
-                  [ariaLabel]="'createProduction.row.toggle' | t"
-                  (clicked)="onToggle(row.item)"
-                />
-
-                <ds-emoji-tile
-                  [emoji]="row.item.emoji"
-                  [imageUrl]="row.imageUrl"
-                  [alt]="row.item.name"
-                  [size]="44"
-                />
-
-                <ds-stack [gap]="'2px'" [grow]="true">
-                  <ds-text variant="strong">{{ row.item.name }}</ds-text>
-                  <ds-text variant="meta">{{ row.meta }}</ds-text>
-                  <ds-text class="proposal-row__origin" variant="meta">{{
-                    row.origin
-                  }}</ds-text>
-                  @if (row.dueLabel) {
-                    <ds-text class="proposal-row__due" variant="meta">{{
-                      row.dueLabel
-                    }}</ds-text>
-                  }
-                </ds-stack>
-              </ds-stack>
-
-              <ds-stack
-                class="proposal-row__amount"
-                direction="row"
-                align="center"
-                justify="between"
-                [gap]="'var(--ds-space-3)'"
-              >
-                <ds-text variant="label">{{
-                  "createProduction.row.servings" | t
-                }}</ds-text>
-
-                <ds-number-input
-                  class="proposal-row__servings"
-                  [stepper]="true"
-                  [min]="0"
-                  [ariaLabel]="'createProduction.row.servings' | t"
-                  [decrementLabel]="'createProduction.row.less' | t"
-                  [incrementLabel]="'createProduction.row.more' | t"
-                  [ngModel]="row.servings"
-                  [ngModelOptions]="{ standalone: true }"
-                  (ngModelChange)="onServings(row.item, $event)"
-                />
-              </ds-stack>
-
-              @if (row.hint) {
-                <ds-stack
-                  direction="row"
-                  align="center"
-                  [wrap]="true"
-                  [gap]="'var(--ds-space-2)'"
-                >
-                  <ds-text class="proposal-row__hint" variant="meta">{{
-                    row.hint
-                  }}</ds-text>
-                  <ds-button
-                    variant="link"
-                    size="sm"
-                    (clicked)="onUsePack(row.item)"
-                    >{{ "createProduction.row.usePack" | t }}</ds-button
+              <ds-stack dsReveal="children">
+                @for (row of group.rows; track row.slot) {
+                  <ds-pressable
+                    class="proposal-row"
+                    data-testid="production-proposal-row"
+                    [class.is-off]="!row.selected"
+                    [ariaLabel]="row.ariaLabel"
+                    (press)="onEditRow(row)"
                   >
-                </ds-stack>
-              }
+                    <ds-emoji-tile
+                      [emoji]="row.item.emoji"
+                      [imageUrl]="row.imageUrl"
+                      [alt]="row.item.name"
+                      [size]="40"
+                    />
+
+                    <ds-stack
+                      class="proposal-row__body"
+                      [gap]="'2px'"
+                      [grow]="true"
+                    >
+                      <ds-text variant="strong" [truncate]="true">{{
+                        row.item.name
+                      }}</ds-text>
+                      <ds-text variant="meta" [truncate]="true">{{
+                        row.meta
+                      }}</ds-text>
+                      @if (row.origin) {
+                        <ds-text
+                          class="proposal-row__origin"
+                          variant="meta"
+                          [truncate]="true"
+                          >{{ row.origin }}</ds-text
+                        >
+                      }
+                      @if (row.hint) {
+                        <ds-text
+                          class="proposal-row__hint"
+                          variant="meta"
+                          [truncate]="true"
+                          >{{ row.hint }}</ds-text
+                        >
+                      }
+                    </ds-stack>
+
+                    <ds-chip
+                      class="proposal-row__amount"
+                      [tone]="row.selected ? 'accent' : 'neutral'"
+                    >
+                      {{ row.amount }}
+                      <ds-icon name="chevronDown" [size]="12" [stroke]="2.6" />
+                    </ds-chip>
+                  </ds-pressable>
+                }
+              </ds-stack>
             </ds-stack>
           }
+        </ds-rail>
+      } @else if (!coveredRows().length) {
+        <ds-empty-state
+          icon="chefHat"
+          [title]="'createProduction.empty.title' | t"
+          [text]="'createProduction.empty.text' | t"
+        >
+          <ds-button
+            data-testid="production-widen"
+            variant="secondary"
+            size="md"
+            icon="plus"
+            (clicked)="onWiden()"
+            >{{ "createProduction.widen" | t }}</ds-button
+          >
+        </ds-empty-state>
+      }
+
+      @if (!loading() && coveredRows().length) {
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-section-header
+            [title]="'createProduction.covered.title' | t"
+            [staticLabel]="rows().length ? '' : rangeLabel()"
+            [caption]="
+              rows().length ? '' : ('createProduction.covered.caption' | t)
+            "
+          />
+
+          @for (row of coveredRows(); track row.item.recipeId) {
+            <ds-production-row
+              [state]="ProductionRowState.Expected"
+              [emoji]="row.item.emoji"
+              [imageUrl]="row.imageUrl"
+              [name]="row.item.name"
+              [meta]="row.meta"
+              [linkLabel]="'createProduction.covered.clear' | t"
+              (linked)="onNoStock(row.item)"
+            />
+          }
+        </ds-stack>
+
+        @if (!rows().length) {
+          <ds-button
+            data-testid="production-widen"
+            variant="secondary"
+            size="md"
+            icon="plus"
+            [fullWidth]="true"
+            (clicked)="onWiden()"
+            >{{ "createProduction.widen" | t }}</ds-button
+          >
+        }
+      }
+    </ds-stack>
+  </ds-split-view>
+</ds-page-wrapper>
+
+<ds-modal-sheet
+  data-testid="production-row-sheet"
+  [open]="!!editingRow()"
+  [title]="sheetRow()?.item?.name ?? ''"
+  [caption]="sheetRow()?.meta ?? ''"
+  [closeLabel]="'createProduction.sheet.close' | t"
+  [confirmLabel]="'createProduction.sheet.done' | t"
+  confirmIcon="check"
+  (closed)="onCloseRow()"
+  (confirmed)="onCloseRow()"
+>
+  @if (sheetRow(); as row) {
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-stack
+        direction="row"
+        align="center"
+        justify="between"
+        [gap]="'var(--ds-space-3)'"
+      >
+        <ds-text variant="label">{{
+          "createProduction.row.servings" | t
+        }}</ds-text>
+        <ds-number-input
+          data-testid="production-row-servings"
+          [stepper]="true"
+          [min]="0"
+          [ariaLabel]="'createProduction.row.servings' | t"
+          [decrementLabel]="'createProduction.row.less' | t"
+          [incrementLabel]="'createProduction.row.more' | t"
+          [ngModel]="row.servings"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onServings(row.item, $event)"
+        />
+      </ds-stack>
+
+      @if (row.hint) {
+        <ds-stack
+          class="sheet-pack"
+          direction="row"
+          align="center"
+          [gap]="'var(--ds-space-3)'"
+        >
+          <ds-icon name="package" [size]="16" [stroke]="2" />
+          <ds-stack [grow]="true">
+            <ds-text class="sheet-pack__text" variant="meta">{{
+              row.hint
+            }}</ds-text>
+          </ds-stack>
+          <ds-button
+            data-testid="production-row-use-pack"
+            variant="soft"
+            size="sm"
+            (clicked)="onUsePack(row.item)"
+            >{{ row.packAction }}</ds-button
+          >
         </ds-stack>
       }
 
-      <ds-stack
-        class="summary"
-        direction="row"
-        align="center"
-        [gap]="'var(--ds-space-3)'"
+      <ds-button
+        data-testid="production-row-toggle"
+        [variant]="row.selected ? 'ghost-danger' : 'soft'"
+        size="md"
+        [icon]="row.selected ? 'close' : 'plus'"
+        [fullWidth]="true"
+        (clicked)="onToggle(row.item)"
+        >{{
+          (row.selected
+            ? "createProduction.sheet.remove"
+            : "createProduction.sheet.add"
+          ) | t
+        }}</ds-button
       >
-        <ds-text variant="meta">{{ summary() }}</ds-text>
-      </ds-stack>
-    } @else if (!coveredRows().length) {
-      <ds-empty-state
-        icon="chefHat"
-        [title]="'createProduction.empty.title' | t"
-        [text]="'createProduction.empty.text' | t"
-      >
-        <ds-button
-          data-testid="production-widen"
-          variant="secondary"
-          size="md"
-          icon="plus"
-          (clicked)="onWiden()"
-          >{{ "createProduction.widen" | t }}</ds-button
-        >
-      </ds-empty-state>
-    }
-
-    @if (!loading() && coveredRows().length) {
-      <ds-section-header
-        [title]="'createProduction.covered.title' | t"
-        [staticLabel]="rows().length ? '' : rangeLabel()"
-        [caption]="
-          rows().length ? '' : ('createProduction.covered.caption' | t)
-        "
-      />
-
-      <ds-stack [gap]="'var(--ds-space-2)'">
-        @for (row of coveredRows(); track row.item.recipeId) {
-          <ds-production-row
-            [state]="ProductionRowState.Expected"
-            [emoji]="row.item.emoji"
-            [imageUrl]="row.imageUrl"
-            [name]="row.item.name"
-            [meta]="row.meta"
-            [linkLabel]="'createProduction.covered.clear' | t"
-            (linked)="onNoStock(row.item)"
-          />
-        }
-      </ds-stack>
-
-      @if (!rows().length) {
-        <ds-button
-          data-testid="production-widen"
-          variant="secondary"
-          size="md"
-          icon="plus"
-          [fullWidth]="true"
-          (clicked)="onWiden()"
-          >{{ "createProduction.widen" | t }}</ds-button
-        >
-      }
-    }
-  </ds-split-view>
-</ds-page-wrapper>
+    </ds-stack>
+  }
+</ds-modal-sheet>
