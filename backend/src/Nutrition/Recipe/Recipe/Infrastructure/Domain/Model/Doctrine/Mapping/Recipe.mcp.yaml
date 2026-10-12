@@ -41,7 +41,7 @@ fields:
     writable: true
     required: false
     type: string
-    enum: [batch, same_day]
+    enum: [batch, same_day, day_before]
     filterable: true
     description: >-
       How the dish reaches the plate. "batch" is the default: it can be cooked days ahead in one
@@ -49,6 +49,8 @@ fields:
       adds up everything the diary asks for across the whole range. "same_day" is a dish that only
       works cooked the day it is eaten, so the kitchen keeps it in the same production but lists it
       once per day, marked with the day it is due, instead of merging it into the batch.
+      "day_before" is listed once per day it is eaten too, but due the day before (a marinade, a
+      dough that rests overnight); if that day falls before the range it goes into the batch.
 
 relations: {}
 

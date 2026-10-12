@@ -79,7 +79,8 @@
       "excluded": "Fuera",
       "amount": "{{name}}: {{servings}} raciones",
       "amountExcluded": "{{name}}: fuera del lote",
-      "usePackCount": "Hacer {{servings}}"
+      "usePackCount": "Hacer {{servings}}",
+      "eatenOn": "Se come el {{day}}"
     },
     "covered": {
       "title": "Ya lo tienes cubierto",
@@ -115,6 +116,8 @@
       "now": "Cocinar ahora",
       "nowCaption": "Aguanta todo el lote",
       "sameDayCaption": "Se cocina ese día",
+      "dayBeforeCaption": "Se deja hecho para el día siguiente",
+      "mixedCaption": "Para ese día y el siguiente",
       "total": "{{servings}} rac."
     },
     "sheet": {
@@ -144,6 +147,7 @@
       "done": "Listo",
       "changed": "modificado",
       "dueOn": "Para el {{day}}",
+      "cookOnFor": "Cocinar el {{day}} para el {{next}}",
       "cookNow": "Cocinar ahora"
     },
     "discardModal": {

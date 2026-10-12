@@ -76,7 +76,7 @@ final readonly class StartProductionCommandHandler
                 nameSnapshot: $recipe->name,
                 emojiSnapshot: $recipe->emoji,
                 prepMode: $recipe->prepMode,
-                dueDate: ProductionItem::PREP_MODE_SAME_DAY === $recipe->prepMode ? $dueDate : null,
+                dueDate: in_array(needle: $recipe->prepMode, haystack: ProductionItem::DATED_PREP_MODES, strict: true) ? $dueDate : null,
                 composition: $this->compositionResolver->fromRecipe(recipeId: $recipeId, servings: $servings),
                 createdByUserId: $command->startedByUserId,
                 dateTimeGenerator: $this->dateTimeGenerator,

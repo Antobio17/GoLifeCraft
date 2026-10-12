@@ -172,9 +172,10 @@
     "removeStep": "Quitar paso",
     "prepMode": {
       "label": "Cómo se cocina",
-      "hint": "Decide si entra en el lote semanal o hay que hacerla el día",
+      "hint": "Decide si entra en el lote semanal, hay que hacerla el día o la víspera",
       "batch": "Se cocina por adelantado",
-      "sameDay": "Se cocina el día"
+      "sameDay": "Se cocina el día",
+      "dayBefore": "Se cocina el día antes"
     }
   }
 }
