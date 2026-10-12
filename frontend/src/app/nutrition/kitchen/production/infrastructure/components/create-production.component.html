@@ -107,7 +107,7 @@
 
     <ds-stack [gap]="'var(--ds-space-5)'">
       @if (loading()) {
-        <ds-rail [indent]="'var(--ds-space-5)'" [gap]="'var(--ds-space-5)'">
+        <ds-rail [indent]="'var(--ds-space-8)'" [gap]="'var(--ds-space-5)'">
           <ds-stack [gap]="'var(--ds-space-2)'">
             <ds-skeleton-section-header titleWidth="8rem" [count]="true" />
             <ds-skeleton-list
@@ -121,7 +121,7 @@
           </ds-stack>
         </ds-rail>
       } @else if (rows().length) {
-        <ds-rail [indent]="'var(--ds-space-5)'" [gap]="'var(--ds-space-5)'">
+        <ds-rail [indent]="'var(--ds-space-8)'" [gap]="'var(--ds-space-5)'">
           @for (group of groups(); track group.key) {
             <ds-stack class="proposal-day" [gap]="'var(--ds-space-1)'">
               <ds-section-header
@@ -135,6 +135,7 @@
                   <ds-pressable
                     class="proposal-row"
                     data-testid="production-proposal-row"
+                    [gap]="'var(--ds-space-4)'"
                     [class.is-off]="!row.selected"
                     [ariaLabel]="row.ariaLabel"
                     (press)="onEditRow(row)"
@@ -151,27 +152,17 @@
                       [gap]="'2px'"
                       [grow]="true"
                     >
-                      <ds-text variant="strong" [truncate]="true">{{
-                        row.item.name
-                      }}</ds-text>
-                      <ds-text variant="meta" [truncate]="true">{{
-                        row.meta
-                      }}</ds-text>
+                      <ds-text variant="strong">{{ row.item.name }}</ds-text>
+                      <ds-text variant="meta">{{ row.meta }}</ds-text>
                       @if (row.origin) {
-                        <ds-text
-                          class="proposal-row__origin"
-                          variant="meta"
-                          [truncate]="true"
-                          >{{ row.origin }}</ds-text
-                        >
+                        <ds-text class="proposal-row__origin" variant="meta">{{
+                          row.origin
+                        }}</ds-text>
                       }
                       @if (row.hint) {
-                        <ds-text
-                          class="proposal-row__hint"
-                          variant="meta"
-                          [truncate]="true"
-                          >{{ row.hint }}</ds-text
-                        >
+                        <ds-text class="proposal-row__hint" variant="meta">{{
+                          row.hint
+                        }}</ds-text>
                       }
                     </ds-stack>
 

@@ -19,7 +19,7 @@
   content: "";
   position: absolute;
   top: var(--ds-space-1-5);
-  left: calc(var(--ds-space-5) / -2 - var(--ds-space-1-5));
+  left: calc(var(--ds-space-8) / -2 - var(--ds-space-1-5));
   width: var(--ds-space-3);
   height: var(--ds-space-3);
   box-sizing: border-box;
@@ -39,6 +39,7 @@
 
 .proposal-row__body {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .proposal-row__origin {
