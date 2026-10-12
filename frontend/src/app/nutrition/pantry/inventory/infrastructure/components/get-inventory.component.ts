@@ -22,11 +22,14 @@ import { HeadingComponent } from "@shared/design-system/heading/infrastructure/c
 import { ModuleCardComponent } from "@shared/design-system/module-card/infrastructure/components/module-card.component";
 import { ChipComponent } from "@shared/design-system/chip/infrastructure/components/chip.component";
 import { ProgressRingComponent } from "@shared/design-system/progress-ring/infrastructure/components/progress-ring.component";
-import { StatStripComponent } from "@shared/design-system/stat-strip/infrastructure/components/stat-strip.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { IconButtonComponent } from "@shared/design-system/icon-button/infrastructure/components/icon-button.component";
 import { ButtonComponent } from "@shared/design-system/button/infrastructure/components/button.component";
 import { LocationCardComponent } from "@shared/design-system/location-card/infrastructure/components/location-card.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
+import { SkeletonPanelComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-panel.component";
+import { SkeletonMetricsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-metrics.component";
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
 import { ConfirmActionModalComponent } from "@shared/design-system/confirm-action-modal/infrastructure/components/confirm-action-modal.component";
@@ -67,11 +70,14 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ModuleCardComponent,
     ChipComponent,
     ProgressRingComponent,
-    StatStripComponent,
+    CardComponent,
     ButtonComponent,
+    IconButtonComponent,
     LocationCardComponent,
     EmptyStateComponent,
     SkeletonComponent,
+    SkeletonPanelComponent,
+    SkeletonMetricsComponent,
     SkeletonScreenHeaderComponent,
     SectionHeaderComponent,
     ConfirmActionModalComponent,
@@ -159,24 +165,22 @@ export class GetInventoryComponent {
       caption: attributes.note || this.heroCaption(validated),
       statusLabel: this.t(this.inventoryView.statusKey(attributes.status)),
       validated,
+      settled: validated || attributes.countedItems >= attributes.totalItems,
       percent: this.inventoryView.progressPercent(
         attributes.countedItems,
         attributes.totalItems,
       ),
-      stats: [
-        {
-          value: `${attributes.countedItems}/${attributes.totalItems}`,
-          label: this.t("getInventory.stat.counted"),
-        },
-        {
-          value: `${attributes.adjustedItems}`,
-          label: this.t("getInventory.stat.adjusted"),
-        },
-        {
-          value: `${attributes.totalLocations}`,
-          label: this.t("getInventory.stat.locations"),
-        },
-      ],
+      countedLabel: `${attributes.countedItems}/${attributes.totalItems}`,
+      adjustedLabel: `${attributes.adjustedItems}`,
+      adjustedHint: this.t("getInventory.stat.adjustedHint").replace(
+        "{count}",
+        String(attributes.countedItems),
+      ),
+      locationsLabel: `${attributes.totalLocations}`,
+      locationsHint: this.t("getInventory.location.items").replace(
+        "{count}",
+        String(attributes.totalItems),
+      ),
     };
   });
 
