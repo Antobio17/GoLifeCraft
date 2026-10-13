@@ -26,6 +26,7 @@ export interface SessionDetailAttributes {
   name: string;
   estimatedDurationMinutes: number;
   restSeconds: number;
+  warmupRestSeconds: number;
   progressionEnabled: boolean;
   exercises: SessionExerciseView[];
 }

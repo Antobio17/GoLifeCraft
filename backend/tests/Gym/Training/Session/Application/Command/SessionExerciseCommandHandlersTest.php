@@ -56,6 +56,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
             restSeconds: 180,
+            warmupRestSeconds: 60,
             exercises: [
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',
@@ -106,6 +107,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
             name: 'Empuje B',
             estimatedDurationMinutes: 40,
             restSeconds: 90,
+            warmupRestSeconds: 45,
             progressionEnabled: true,
             updatedByUserId: 'god-user-id',
         ));
@@ -114,6 +116,7 @@ final class SessionExerciseCommandHandlersTest extends TestCase
         $this->assertEquals(expected: 'Empuje B', actual: $session->name);
         $this->assertEquals(expected: 40, actual: $session->estimatedDurationMinutes);
         $this->assertEquals(expected: 90, actual: $session->restSeconds);
+        $this->assertEquals(expected: 45, actual: $session->warmupRestSeconds);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises);
         $this->assertEquals(expected: 'exercise-1', actual: $session->exercises[0]->exerciseId);
     }

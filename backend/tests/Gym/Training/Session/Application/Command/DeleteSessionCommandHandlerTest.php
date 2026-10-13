@@ -38,6 +38,7 @@ final class DeleteSessionCommandHandlerTest extends TestCase
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
             restSeconds: 180,
+            warmupRestSeconds: 60,
             exercises: [
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',

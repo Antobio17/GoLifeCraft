@@ -101,6 +101,9 @@
       "restUnit": "sec",
       "restHint": "The rest timer turns red once this time is exceeded.",
       "restCustomAria": "Rest between sets in seconds",
+      "warmupRest": "Rest after warmup sets",
+      "warmupRestHint": "Warmup sets usually need less rest: the timer uses this target after you tick one.",
+      "warmupRestCustomAria": "Rest after warmup sets in seconds",
       "progression": "Automatic progression",
       "progressionHint": "When a workout finishes, the template keeps next time’s weight."
     },

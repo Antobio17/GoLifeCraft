@@ -101,6 +101,9 @@
       "restUnit": "seg",
       "restHint": "El cronómetro de descanso se pone en rojo al pasar de este tiempo.",
       "restCustomAria": "Descanso entre series en segundos",
+      "warmupRest": "Descanso tras series de aproximación",
+      "warmupRestHint": "Las series de aproximación suelen pedir menos descanso: el cronómetro usa este tiempo tras marcarlas.",
+      "warmupRestCustomAria": "Descanso tras series de aproximación en segundos",
       "progression": "Progresión automática",
       "progressionHint": "Al terminar un entreno, la plantilla se queda con el peso de la próxima vez."
     },

@@ -21,10 +21,12 @@ class Session extends GenericAggregate
     public const string SYNC_MODE_EXERCISES = 'exercises';
     public const string SYNC_MODE_SETS = 'sets';
     public const int DEFAULT_REST_SECONDS = 180;
+    public const int DEFAULT_WARMUP_REST_SECONDS = 60;
 
     public string $name;
     public int $estimatedDurationMinutes;
     public int $restSeconds;
+    public int $warmupRestSeconds = self::DEFAULT_WARMUP_REST_SECONDS;
     public bool $progressionEnabled = true;
 
     /** @var SessionExercise[] */
@@ -38,6 +40,7 @@ class Session extends GenericAggregate
         string $name,
         int $estimatedDurationMinutes,
         int $restSeconds,
+        int $warmupRestSeconds,
         array $exercises,
         string $createdByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -46,7 +49,7 @@ class Session extends GenericAggregate
             throw CreateSessionException::durationMustNotBeNegative();
         }
 
-        if (!self::hasValidRest(restSeconds: $restSeconds)) {
+        if (!self::hasValidRest(restSeconds: $restSeconds) || !self::hasValidRest(restSeconds: $warmupRestSeconds)) {
             throw CreateSessionException::restMustNotBeNegative();
         }
 
@@ -57,6 +60,7 @@ class Session extends GenericAggregate
         $session->name = $name;
         $session->estimatedDurationMinutes = $estimatedDurationMinutes;
         $session->restSeconds = $restSeconds;
+        $session->warmupRestSeconds = $warmupRestSeconds;
         $session->exercises = $exercises;
         $session->stampCreation(userId: $createdByUserId, now: $now);
 
@@ -66,6 +70,7 @@ class Session extends GenericAggregate
             name: $name,
             estimatedDurationMinutes: $estimatedDurationMinutes,
             restSeconds: $restSeconds,
+            warmupRestSeconds: $warmupRestSeconds,
             progressionEnabled: $session->progressionEnabled,
             exercises: $session->exercisesPayload(),
             createdAt: $now,
@@ -101,6 +106,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            warmupRestSeconds: $this->warmupRestSeconds,
             progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
@@ -143,6 +149,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            warmupRestSeconds: $this->warmupRestSeconds,
             progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
@@ -165,6 +172,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            warmupRestSeconds: $this->warmupRestSeconds,
             progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
@@ -178,6 +186,7 @@ class Session extends GenericAggregate
         string $name,
         int $estimatedDurationMinutes,
         int $restSeconds,
+        int $warmupRestSeconds,
         bool $progressionEnabled,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
@@ -186,7 +195,7 @@ class Session extends GenericAggregate
             throw UpdateSessionException::durationMustNotBeNegative();
         }
 
-        if (!self::hasValidRest(restSeconds: $restSeconds)) {
+        if (!self::hasValidRest(restSeconds: $restSeconds) || !self::hasValidRest(restSeconds: $warmupRestSeconds)) {
             throw UpdateSessionException::restMustNotBeNegative();
         }
 
@@ -195,6 +204,7 @@ class Session extends GenericAggregate
         $this->name = $name;
         $this->estimatedDurationMinutes = $estimatedDurationMinutes;
         $this->restSeconds = $restSeconds;
+        $this->warmupRestSeconds = $warmupRestSeconds;
         $this->progressionEnabled = $progressionEnabled;
         $this->stampUpdate(userId: $updatedByUserId, now: $now);
 
@@ -204,6 +214,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            warmupRestSeconds: $this->warmupRestSeconds,
             progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
@@ -236,6 +247,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            warmupRestSeconds: $this->warmupRestSeconds,
             progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
@@ -290,6 +302,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            warmupRestSeconds: $this->warmupRestSeconds,
             progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
@@ -332,6 +345,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            warmupRestSeconds: $this->warmupRestSeconds,
             progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,
@@ -364,6 +378,7 @@ class Session extends GenericAggregate
             name: $this->name,
             estimatedDurationMinutes: $this->estimatedDurationMinutes,
             restSeconds: $this->restSeconds,
+            warmupRestSeconds: $this->warmupRestSeconds,
             progressionEnabled: $this->progressionEnabled,
             exercises: $this->exercisesPayload(),
             createdAt: $this->createdAt,

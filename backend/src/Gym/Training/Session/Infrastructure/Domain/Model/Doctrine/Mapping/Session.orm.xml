@@ -10,6 +10,11 @@
         <option name="default">180</option>
       </options>
     </field>
+    <field name="warmupRestSeconds" type="integer" column="warmup_rest_seconds">
+      <options>
+        <option name="default">60</option>
+      </options>
+    </field>
     <field name="progressionEnabled" type="boolean" column="progression_enabled">
       <options>
         <option name="default">1</option>

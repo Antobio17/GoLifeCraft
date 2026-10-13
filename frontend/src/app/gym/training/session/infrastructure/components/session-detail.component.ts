@@ -203,6 +203,7 @@ export class SessionDetailComponent implements OnInit {
   name = signal("");
   estimatedDurationMinutes = signal(0);
   restSeconds = signal(0);
+  warmupRestSeconds = signal(0);
 
   restLabel = computed(() => {
     const totalSeconds = this.restSeconds();
@@ -560,6 +561,7 @@ export class SessionDetailComponent implements OnInit {
     this.name.set("");
     this.estimatedDurationMinutes.set(0);
     this.restSeconds.set(0);
+    this.warmupRestSeconds.set(0);
     this.loadedExercises.set([]);
     this.persistedExercises.clear();
     this.templateExercises.set([]);
@@ -667,6 +669,7 @@ export class SessionDetailComponent implements OnInit {
             attributes.estimatedDurationMinutes,
           );
           this.restSeconds.set(attributes.restSeconds);
+          this.warmupRestSeconds.set(attributes.warmupRestSeconds);
           this.activeWorkout.ensureRestored().subscribe({
             next: () => this.finalizeLoad(attributes.exercises),
             error: () => this.finalizeLoad(attributes.exercises),
@@ -1225,6 +1228,7 @@ export class SessionDetailComponent implements OnInit {
     }
 
     this.activeWorkout.restTargetSeconds.set(this.restSeconds());
+    this.activeWorkout.warmupRestTargetSeconds.set(this.warmupRestSeconds());
   }
 
   onFinishWorkout(): void {

@@ -42,6 +42,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
             restSeconds: 120,
+            warmupRestSeconds: 60,
             exercises: [
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',
@@ -60,6 +61,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
         $this->assertNotNull(actual: $session);
         $this->assertEquals(expected: 'Empuje A', actual: $session->name);
         $this->assertEquals(expected: 120, actual: $session->restSeconds);
+        $this->assertEquals(expected: 60, actual: $session->warmupRestSeconds);
         $this->assertCount(expectedCount: 1, haystack: $session->exercises);
         $this->assertEquals(expected: 'exercise-1', actual: $session->exercises[0]->exerciseId);
         $this->assertEquals(expected: 'Pausar 1 segundo abajo', actual: $session->exercises[0]->note);
@@ -75,6 +77,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
             name: 'Entrenamiento libre',
             estimatedDurationMinutes: 30,
             restSeconds: 180,
+            warmupRestSeconds: 60,
             exercises: [],
             createdByUserId: 'god-user-id',
             sessionId: 'session-from-free-workout',
@@ -95,6 +98,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
             restSeconds: 180,
+            warmupRestSeconds: 60,
             exercises: [],
             createdByUserId: 'god-user-id',
         ));
@@ -108,6 +112,7 @@ final class CreateSessionCommandHandlerTest extends TestCase
             name: 'Empuje A',
             estimatedDurationMinutes: -1,
             restSeconds: 180,
+            warmupRestSeconds: 60,
             exercises: [],
             createdByUserId: 'god-user-id',
         ));
@@ -121,6 +126,21 @@ final class CreateSessionCommandHandlerTest extends TestCase
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
             restSeconds: -1,
+            warmupRestSeconds: 60,
+            exercises: [],
+            createdByUserId: 'god-user-id',
+        ));
+    }
+
+    public function testItThrowsExceptionForNegativeWarmupRest(): void
+    {
+        $this->expectException(exception: CreateSessionException::class);
+
+        ($this->handler)(new CreateSessionCommand(
+            name: 'Empuje A',
+            estimatedDurationMinutes: 55,
+            restSeconds: 180,
+            warmupRestSeconds: -1,
             exercises: [],
             createdByUserId: 'god-user-id',
         ));

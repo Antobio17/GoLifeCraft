@@ -196,7 +196,7 @@ describe("ActiveWorkoutService rest timer", () => {
   it("flags the rest as over the configured target", () => {
     service.restTargetSeconds.set(3);
     startWorkout();
-    service.toggleDone(0, 0, exercises);
+    service.toggleDone(0, 1, exercises);
     tick(2000);
 
     expect(service.restOverTarget()).toBeFalse();
@@ -209,7 +209,7 @@ describe("ActiveWorkoutService rest timer", () => {
   it("flags the rest as ending once a third of the target is left", () => {
     service.restTargetSeconds.set(90);
     startWorkout();
-    service.toggleDone(0, 0, exercises);
+    service.toggleDone(0, 1, exercises);
     tick(59000);
 
     expect(service.restEnding()).toBeFalse();
@@ -221,6 +221,75 @@ describe("ActiveWorkoutService rest timer", () => {
     tick(60000);
 
     expect(service.restEnding()).toBeTrue();
+  });
+
+  it("measures the rest after a warmup set against the warmup target", () => {
+    service.restTargetSeconds.set(180);
+    service.warmupRestTargetSeconds.set(3);
+    startWorkout();
+    service.toggleDone(0, 0, exercises);
+    tick(2000);
+
+    expect(service.currentRestTargetSeconds()).toBe(3);
+    expect(service.restOverTarget()).toBeFalse();
+
+    tick(1000);
+
+    expect(service.restOverTarget()).toBeTrue();
+  });
+
+  it("switches back to the regular target after an effective set", () => {
+    service.restTargetSeconds.set(180);
+    service.warmupRestTargetSeconds.set(60);
+    startWorkout();
+    service.toggleDone(0, 0, exercises);
+
+    expect(service.currentRestTargetSeconds()).toBe(60);
+
+    service.toggleDone(0, 1, exercises);
+
+    expect(service.currentRestTargetSeconds()).toBe(180);
+  });
+
+  it("recovers the warmup target when the last done set was a warmup", () => {
+    service.restTargetSeconds.set(180);
+    service.warmupRestTargetSeconds.set(60);
+    const recovered = activeWorkout(new Date(Date.now() - 10000).toISOString());
+    recovered.attributes.exercises = [
+      {
+        id: "workout-exercise-1",
+        exerciseId: "exercise-1",
+        exerciseName: "Press banca",
+        muscleGroups: ["Pecho"],
+        type: "bilateral",
+        weightMode: "total",
+        position: 1,
+        note: null,
+        sets: [
+          {
+            id: "set-1",
+            position: 1,
+            reps: 10,
+            weight: 40,
+            done: true,
+            kind: SetKind.Warmup,
+          },
+          {
+            id: "set-2",
+            position: 2,
+            reps: 8,
+            weight: 45,
+            done: false,
+            kind: SetKind.Effective,
+          },
+        ],
+      },
+    ];
+    port.active = recovered;
+
+    service.ensureRestored().subscribe();
+
+    expect(service.currentRestTargetSeconds()).toBe(60);
   });
 
   it("does not add the paused time to the rest", () => {

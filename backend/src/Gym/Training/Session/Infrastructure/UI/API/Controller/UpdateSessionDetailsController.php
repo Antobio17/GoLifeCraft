@@ -33,6 +33,7 @@ final class UpdateSessionDetailsController
                 name: RequestExtractor::getStringRequestValue(request: $request, fieldName: 'name'),
                 estimatedDurationMinutes: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'estimatedDurationMinutes'),
                 restSeconds: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'restSeconds', required: false) ?? Session::DEFAULT_REST_SECONDS,
+                warmupRestSeconds: RequestExtractor::getIntRequestValue(request: $request, fieldName: 'warmupRestSeconds', required: false) ?? Session::DEFAULT_WARMUP_REST_SECONDS,
                 progressionEnabled: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'progressionEnabled', required: false) ?? true,
                 updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
