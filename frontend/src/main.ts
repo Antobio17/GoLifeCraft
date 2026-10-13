@@ -22,6 +22,7 @@ import { IdlePreloadStrategy } from "./app/shared/routing/infrastructure/strateg
 import { BackNavigationService } from "./app/shared/routing/application/services/back-navigation.service";
 import { ViewTransitionPolicyService } from "./app/shared/routing/application/services/view-transition-policy.service";
 import { AppSplashService } from "./app/shared/splash/application/services/app-splash.service";
+import { ServiceWorkerRegistrationService } from "./app/shared/service-worker/application/services/service-worker-registration.service";
 import { PresentedSheetsService } from "./app/shared/design-system/modal-sheet/application/services/presented-sheets.service";
 import { MainLayoutComponent } from "./app/layouts/layout/main/infrastructure/components/main.component";
 import { APP_ROUTES } from "./app/app.routes";
@@ -36,6 +37,7 @@ bootstrapApplication(MainLayoutComponent, {
     provideAppInitializer(() => {
       inject(BackNavigationService);
       inject(AppSplashService).dismissOnFirstNavigation();
+      inject(ServiceWorkerRegistrationService).register();
     }),
     provideRouter(
       APP_ROUTES,
