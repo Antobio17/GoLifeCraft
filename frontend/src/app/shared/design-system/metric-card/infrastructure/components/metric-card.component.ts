@@ -20,6 +20,7 @@ export type MetricCardVariant = "plain" | "feature";
         display: block;
         flex: 1 1 0;
         min-width: 0;
+        container-type: inline-size;
       }
       .ds-metric {
         background: var(--ds-surface);
@@ -37,12 +38,15 @@ export type MetricCardVariant = "plain" | "feature";
       .ds-metric__value {
         font-family: var(--ds-font-display);
         font-weight: var(--ds-weight-extrabold);
-        font-size: var(--ds-text-xl);
+        font-size: clamp(var(--ds-text-md), 13cqi, var(--ds-text-xl));
         line-height: 1;
         color: var(--ds-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .ds-metric--compact .ds-metric__value {
-        font-size: var(--ds-text-lg);
+        font-size: clamp(var(--ds-text-sm), 10.5cqi, var(--ds-text-lg));
       }
       .ds-metric--feature .ds-metric__value {
         color: var(--ds-primary-soft-text);
@@ -52,6 +56,7 @@ export type MetricCardVariant = "plain" | "feature";
         font-size: var(--ds-text-base);
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
+        overflow-wrap: anywhere;
       }
       .ds-metric--feature .ds-metric__label {
         color: var(--ds-primary-soft-text);
