@@ -21,6 +21,15 @@ fields:
     min: 0
     max: 3600
     sortable: true
+  warmupRestSeconds:
+    writable: true
+    required: false
+    type: int
+    min: 0
+    max: 3600
+    sortable: true
+    description: >-
+      Rest target after a warmup (approach) set. Effective sets keep restSeconds.
   progressionEnabled:
     writable: true
     type: bool

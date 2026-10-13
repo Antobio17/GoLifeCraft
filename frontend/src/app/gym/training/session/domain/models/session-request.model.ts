@@ -21,6 +21,7 @@ export interface CreateSessionRequest {
   name: string;
   estimatedDurationMinutes: number;
   restSeconds: number;
+  warmupRestSeconds: number;
   progressionEnabled: boolean;
   exercises: SessionExerciseRequest[];
 }

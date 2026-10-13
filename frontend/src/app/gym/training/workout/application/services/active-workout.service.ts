@@ -28,6 +28,7 @@ import { SetKind } from "@gym/training/session/domain/models/set-kind.model";
 import { uuidV4 } from "@shared/uuid/uuid";
 
 const DEFAULT_REST_SECONDS = 180;
+const DEFAULT_WARMUP_REST_SECONDS = 60;
 
 export interface ActiveExerciseSet {
   reps: number;
@@ -56,6 +57,7 @@ export class ActiveWorkoutService implements OnDestroy {
   readonly activeName = signal("");
   readonly paused = signal(false);
   readonly restTargetSeconds = signal(DEFAULT_REST_SECONDS);
+  readonly warmupRestTargetSeconds = signal(DEFAULT_WARMUP_REST_SECONDS);
 
   private readonly baseSeconds = signal(0);
   private readonly startedAtMs = signal(0);
@@ -63,6 +65,7 @@ export class ActiveWorkoutService implements OnDestroy {
   private readonly doneKeys = signal<Set<string>>(new Set());
   private readonly restStartedAtMs = signal<number | null>(null);
   private readonly restFrozenSeconds = signal(0);
+  private readonly restKind = signal<SetKind>(SetKind.Effective);
   private readonly hydratedIdentity = signal<string | null>(null);
 
   readonly liveExercises = signal<ActiveExercise[]>([]);
@@ -124,27 +127,33 @@ export class ActiveWorkoutService implements OnDestroy {
 
   readonly restRunning = computed(() => this.restSeconds() !== null);
 
+  readonly currentRestTargetSeconds = computed(() =>
+    this.restKind() === SetKind.Warmup
+      ? this.warmupRestTargetSeconds()
+      : this.restTargetSeconds(),
+  );
+
   readonly restLabel = computed(() =>
     this.formatElapsed(this.restSeconds() ?? 0),
   );
 
   readonly restOverTarget = computed(() => {
     const seconds = this.restSeconds();
-    const target = this.restTargetSeconds();
+    const target = this.currentRestTargetSeconds();
 
     return seconds !== null && target > 0 && seconds >= target;
   });
 
   readonly restEnding = computed(() => {
     const seconds = this.restSeconds();
-    const target = this.restTargetSeconds();
+    const target = this.currentRestTargetSeconds();
 
     return seconds !== null && target > 0 && seconds * 3 >= target * 2;
   });
 
   readonly restProgress = computed(() => {
     const seconds = this.restSeconds() ?? 0;
-    const target = this.restTargetSeconds();
+    const target = this.currentRestTargetSeconds();
 
     if (target <= 0) {
       return 100;
@@ -195,10 +204,34 @@ export class ActiveWorkoutService implements OnDestroy {
       next.delete(key);
     } else {
       next.add(key);
+      this.restKind.set(this.kindOf(exercises, exerciseIndex, setIndex));
       this.restartRest();
     }
     this.doneKeys.set(next);
     this.queueProgress(exercises);
+  }
+
+  private kindOf(
+    exercises: ActiveExercise[],
+    exerciseIndex: number,
+    setIndex: number,
+  ): SetKind {
+    return exercises[exerciseIndex]?.sets[setIndex]?.kind ?? SetKind.Effective;
+  }
+
+  private lastDoneKind(
+    exercises: ActiveExercise[],
+    doneKeys: Set<string>,
+  ): SetKind {
+    let kind = SetKind.Effective;
+    exercises.forEach((exercise, i) =>
+      exercise.sets.forEach((set, j) => {
+        if (doneKeys.has(this.doneKey(i, j))) {
+          kind = set.kind;
+        }
+      }),
+    );
+    return kind;
   }
 
   reorderExercises(
@@ -388,8 +421,10 @@ export class ActiveWorkoutService implements OnDestroy {
     this.hydratedIdentity.set(this.identity());
     this.activeSessionId.set(active.attributes.sessionId);
     this.activeName.set(active.attributes.sessionName);
-    this.liveExercises.set(this.fromDetail(active));
+    const exercises = this.fromDetail(active);
+    this.liveExercises.set(exercises);
     this.doneKeys.set(doneKeys);
+    this.restKind.set(this.lastDoneKind(exercises, doneKeys));
     this.restoreRest(active.attributes.restStartedAt);
     this.baseSeconds.set(0);
     this.startedAtMs.set(new Date(active.attributes.startedAt).getTime());
@@ -474,6 +509,8 @@ export class ActiveWorkoutService implements OnDestroy {
     this.doneKeys.set(new Set());
     this.stopRest();
     this.restTargetSeconds.set(DEFAULT_REST_SECONDS);
+    this.warmupRestTargetSeconds.set(DEFAULT_WARMUP_REST_SECONDS);
+    this.restKind.set(SetKind.Effective);
     this.restore$ = of(undefined);
   }
 

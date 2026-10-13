@@ -211,6 +211,7 @@ export class SessionDraftService {
     name: string,
     estimatedDurationMinutes: number,
     restSeconds: number,
+    warmupRestSeconds: number,
     progressionEnabled: boolean,
     list: SessionExerciseView[],
   ): CreateSessionRequest {
@@ -218,6 +219,7 @@ export class SessionDraftService {
       name,
       estimatedDurationMinutes,
       restSeconds,
+      warmupRestSeconds,
       progressionEnabled,
       exercises: list.map((exercise, exerciseIndex) => ({
         exerciseId: exercise.exerciseId,

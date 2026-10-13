@@ -42,6 +42,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
             restSeconds: 180,
+            warmupRestSeconds: 60,
             exercises: [
                 new SessionExerciseData(
                     exerciseId: 'exercise-1',
@@ -191,6 +192,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
             name: 'Empuje A',
             estimatedDurationMinutes: 55,
             restSeconds: 180,
+            warmupRestSeconds: 60,
             progressionEnabled: false,
             updatedByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),

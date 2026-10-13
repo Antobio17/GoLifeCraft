@@ -55,6 +55,23 @@
         />
       </ds-field>
 
+      <ds-field
+        [label]="warmupRestLabel()"
+        [hint]="warmupRestHint()"
+        [hintIcon]="true"
+      >
+        <ds-duration-choice
+          data-testid="session-warmup-rest"
+          formControlName="warmupRestSeconds"
+          [options]="warmupRestOptions"
+          [customLabel]="customLabel()"
+          [customAriaLabel]="warmupRestCustomAriaLabel()"
+          [unit]="restUnit()"
+          [min]="0"
+          [max]="3600"
+        />
+      </ds-field>
+
       <ds-preference-toggle
         data-testid="session-progression-enabled"
         glyph="trendUp"

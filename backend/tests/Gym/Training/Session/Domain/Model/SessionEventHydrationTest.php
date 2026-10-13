@@ -30,6 +30,7 @@ final class SessionEventHydrationTest extends TestCase
         $this->assertSame(expected: 'Torso A', actual: $event->name);
         $this->assertSame(expected: 55, actual: $event->estimatedDurationMinutes);
         $this->assertSame(expected: 120, actual: $event->restSeconds);
+        $this->assertSame(expected: 60, actual: $event->warmupRestSeconds);
         $this->assertSame(expected: 'god-user-id', actual: $event->createdByUserId);
         $this->assertSame(expected: $session->createdAt, actual: $event->createdAt);
 
@@ -87,6 +88,7 @@ final class SessionEventHydrationTest extends TestCase
             name: 'Torso A',
             estimatedDurationMinutes: 55,
             restSeconds: 120,
+            warmupRestSeconds: 60,
             exercises: [$sessionExercise],
             createdByUserId: 'god-user-id',
             dateTimeGenerator: $this->dateTimeGenerator,

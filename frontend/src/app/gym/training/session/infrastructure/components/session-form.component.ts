@@ -63,6 +63,7 @@ export class SessionFormComponent implements OnInit {
 
   private readonly MODULE_PATH = "gym/training/session";
   private readonly DEFAULT_REST_SECONDS = 180;
+  private readonly DEFAULT_WARMUP_REST_SECONDS = 60;
 
   readonly durationOptions: DurationChoiceOption[] = [
     { value: 45, label: "45 min" },
@@ -78,6 +79,14 @@ export class SessionFormComponent implements OnInit {
     { value: 240, label: "4:00" },
   ];
 
+  readonly warmupRestOptions: DurationChoiceOption[] = [
+    { value: 30, label: "0:30" },
+    { value: 45, label: "0:45" },
+    { value: 60, label: "1:00" },
+    { value: 90, label: "1:30" },
+    { value: 120, label: "2:00" },
+  ];
+
   customLabel = computed(() => this.t("createSession.field.custom"));
   durationLabel = computed(() => this.t("createSession.field.duration"));
   durationUnit = computed(() => this.t("createSession.field.durationUnit"));
@@ -89,6 +98,11 @@ export class SessionFormComponent implements OnInit {
   restHint = computed(() => this.t("createSession.field.restHint"));
   restCustomAriaLabel = computed(() =>
     this.t("createSession.field.restCustomAria"),
+  );
+  warmupRestLabel = computed(() => this.t("createSession.field.warmupRest"));
+  warmupRestHint = computed(() => this.t("createSession.field.warmupRestHint"));
+  warmupRestCustomAriaLabel = computed(() =>
+    this.t("createSession.field.warmupRestCustomAria"),
   );
   progressionLabel = computed(() => this.t("createSession.field.progression"));
   progressionHint = computed(() =>
@@ -107,6 +121,10 @@ export class SessionFormComponent implements OnInit {
       name: ["", [Validators.required, Validators.minLength(2)]],
       estimatedDurationMinutes: [55, [Validators.required]],
       restSeconds: [this.DEFAULT_REST_SECONDS, [Validators.required]],
+      warmupRestSeconds: [
+        this.DEFAULT_WARMUP_REST_SECONDS,
+        [Validators.required],
+      ],
       progressionEnabled: [true],
     });
     this.draft = EditorDraft.forForm(this.form);
@@ -141,6 +159,7 @@ export class SessionFormComponent implements OnInit {
               name: attributes.name,
               estimatedDurationMinutes: attributes.estimatedDurationMinutes,
               restSeconds: attributes.restSeconds,
+              warmupRestSeconds: attributes.warmupRestSeconds,
               progressionEnabled: attributes.progressionEnabled,
             });
             this.draft.markSaved();
@@ -168,6 +187,8 @@ export class SessionFormComponent implements OnInit {
       this.form.value.estimatedDurationMinutes ?? 0;
     const restSeconds =
       this.form.value.restSeconds ?? this.DEFAULT_REST_SECONDS;
+    const warmupRestSeconds =
+      this.form.value.warmupRestSeconds ?? this.DEFAULT_WARMUP_REST_SECONDS;
     const progressionEnabled = this.form.value.progressionEnabled ?? true;
 
     const request$ = this.isEdit
@@ -175,6 +196,7 @@ export class SessionFormComponent implements OnInit {
           name,
           estimatedDurationMinutes,
           restSeconds,
+          warmupRestSeconds,
           progressionEnabled,
         })
       : this.createSessionService.createSession(
@@ -182,6 +204,7 @@ export class SessionFormComponent implements OnInit {
             name,
             estimatedDurationMinutes,
             restSeconds,
+            warmupRestSeconds,
             progressionEnabled,
             [],
           ),
