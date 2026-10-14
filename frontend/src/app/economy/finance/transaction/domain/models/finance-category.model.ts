@@ -5,6 +5,7 @@ export enum FinanceCategory {
   TRANSPORT = "transport",
   LEISURE = "leisure",
   HOME = "home",
+  MORTGAGE = "mortgage",
   BILLS = "bills",
   HEALTH = "health",
   BEAUTY = "beauty",

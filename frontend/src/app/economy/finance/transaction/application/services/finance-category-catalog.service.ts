@@ -34,6 +34,10 @@ const CATEGORIES: Record<FinanceCategory, FinanceCategoryEntry> = {
     glyph: DsGlyph.House,
     color: "var(--ds-cat-home)",
   },
+  [FinanceCategory.MORTGAGE]: {
+    glyph: DsGlyph.Key,
+    color: "var(--ds-cat-mortgage)",
+  },
   [FinanceCategory.BILLS]: {
     glyph: DsGlyph.Bulb,
     color: "var(--ds-cat-bills)",

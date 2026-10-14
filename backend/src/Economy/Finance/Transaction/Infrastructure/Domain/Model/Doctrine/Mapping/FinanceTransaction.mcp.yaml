@@ -50,6 +50,7 @@ fields:
         transport,
         leisure,
         home,
+        mortgage,
         bills,
         health,
         beauty,

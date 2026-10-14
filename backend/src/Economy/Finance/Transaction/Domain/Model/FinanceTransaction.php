@@ -46,6 +46,7 @@ class FinanceTransaction extends GenericAggregate
         'transport',
         'leisure',
         'home',
+        'mortgage',
         'bills',
         'health',
         'beauty',
