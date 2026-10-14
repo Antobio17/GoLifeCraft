@@ -50,13 +50,16 @@ import { TextareaComponent } from "@shared/design-system/textarea/infrastructure
       }
       .ds-inote {
         appearance: none;
+        box-sizing: border-box;
         width: 100%;
+        min-width: 0;
         display: flex;
         align-items: flex-start;
         gap: var(--ds-space-1-5);
-        padding: var(--ds-space-1);
+        padding: var(--ds-space-2) var(--ds-space-3);
         border: none;
-        border-radius: var(--ds-radius-mark);
+        border-radius: var(--ds-radius-control);
+        overflow: hidden;
         background: transparent;
         color: var(--ds-text-muted);
         font-family: var(--ds-font-body);
