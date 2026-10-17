@@ -275,7 +275,9 @@ export class GetProductionComponent {
     const detail = this.production();
     if (!detail) return "";
 
-    return this.t("getProduction.summary", {
+    const key = 1 === detail.items.length ? "one" : "many";
+
+    return this.t(`getProduction.summary.${key}`, {
       recipes: detail.items.length,
       servings: this.view.servings(
         this.cooking() ? detail.servingsPlanned : detail.servingsCooked,

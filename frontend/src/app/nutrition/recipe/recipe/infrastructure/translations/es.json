@@ -2,7 +2,10 @@
   "getRecipes": {
     "eyebrow": "Nutrición",
     "heading": "Recetario",
-    "subtitle": "recetas",
+    "subtitle": {
+      "one": "1 receta",
+      "many": "{{count}} recetas"
+    },
     "create": "Nueva",
     "searchPlaceholder": "Buscar receta o categoría…",
     "searchClear": "Limpiar búsqueda",

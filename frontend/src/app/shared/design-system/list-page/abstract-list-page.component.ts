@@ -103,8 +103,8 @@ export abstract class AbstractListPageComponent<T> implements OnInit {
     this.restore(snapshot);
   }
 
-  protected t(key: string): string {
-    return this.translationService.translate(key, this.modulePath);
+  protected t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.modulePath, params);
   }
 
   private pathOf(url: string): string {

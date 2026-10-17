@@ -12,7 +12,10 @@
       "many": "{{count}} batches in progress"
     },
     "create": "New production",
-    "meta": "{{recipes}} recipes · {{servings}} servings",
+    "meta": {
+      "one": "1 recipe · {{servings}} servings",
+      "many": "{{recipes}} recipes · {{servings}} servings"
+    },
     "status": {
       "cooking": "{{cooked}} of {{total}}",
       "done": "Finished"
@@ -104,8 +107,14 @@
     "hero": {
       "kicker": "Batch · {{range}}",
       "servings": "servings",
-      "meta": "{{recipes}} recipes",
-      "metaNow": "{{recipes}} recipes · {{servings}} cooked now",
+      "meta": {
+        "one": "1 recipe",
+        "many": "{{recipes}} recipes"
+      },
+      "metaNow": {
+        "one": "1 recipe · {{servings}} cooked now",
+        "many": "{{recipes}} recipes · {{servings}} cooked now"
+      },
       "packs": {
         "one": "1 pack to use up",
         "many": "{{count}} packs to use up"
@@ -131,7 +140,10 @@
   "getProduction": {
     "back": "Back to productions",
     "breadcrumb": "Production",
-    "summary": "{{recipes}} recipes · {{servings}} servings",
+    "summary": {
+      "one": "1 recipe · {{servings}} servings",
+      "many": "{{recipes}} recipes · {{servings}} servings"
+    },
     "pending": "{{pending}} left to cook",
     "discard": "Discard production",
     "status": {

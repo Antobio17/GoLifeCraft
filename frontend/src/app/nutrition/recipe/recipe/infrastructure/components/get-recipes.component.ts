@@ -100,8 +100,10 @@ export class GetRecipesComponent extends AbstractListPageComponent<RecipeListIte
   );
 
   headerSubtitle = computed(() => {
-    const label = this.t("getRecipes.subtitle");
-    return `${this.items().length} ${label}`;
+    const count = this.items().length;
+    return this.t(`getRecipes.subtitle.${1 === count ? "one" : "many"}`, {
+      count,
+    });
   });
 
   hasResults = computed(() => this.filteredRecipes().length > 0);

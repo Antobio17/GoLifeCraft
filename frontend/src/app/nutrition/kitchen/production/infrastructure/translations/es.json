@@ -12,7 +12,10 @@
       "many": "{{count}} lotes en marcha"
     },
     "create": "Nueva producción",
-    "meta": "{{recipes}} recetas · {{servings}} raciones",
+    "meta": {
+      "one": "1 receta · {{servings}} raciones",
+      "many": "{{recipes}} recetas · {{servings}} raciones"
+    },
     "status": {
       "cooking": "{{cooked}} de {{total}}",
       "done": "Terminada"
@@ -104,8 +107,14 @@
     "hero": {
       "kicker": "Lote · {{range}}",
       "servings": "raciones",
-      "meta": "{{recipes}} recetas",
-      "metaNow": "{{recipes}} recetas · {{servings}} se cocinan ahora",
+      "meta": {
+        "one": "1 receta",
+        "many": "{{recipes}} recetas"
+      },
+      "metaNow": {
+        "one": "1 receta · {{servings}} se cocinan ahora",
+        "many": "{{recipes}} recetas · {{servings}} se cocinan ahora"
+      },
       "packs": {
         "one": "1 pack por aprovechar",
         "many": "{{count}} packs por aprovechar"
@@ -131,7 +140,10 @@
   "getProduction": {
     "back": "Volver a producciones",
     "breadcrumb": "Producción",
-    "summary": "{{recipes}} recetas · {{servings}} raciones",
+    "summary": {
+      "one": "1 receta · {{servings}} raciones",
+      "many": "{{recipes}} recetas · {{servings}} raciones"
+    },
     "pending": "{{pending}} por cocinar",
     "discard": "Descartar producción",
     "status": {

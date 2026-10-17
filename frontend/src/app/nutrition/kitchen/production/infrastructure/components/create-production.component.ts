@@ -229,14 +229,15 @@ export class CreateProductionComponent {
     const now = this.timeline.selectedServings(
       this.rows().filter((row) => !row.item.dueDate),
     );
+    const plural = 1 === this.selectedCount() ? "one" : "many";
 
     if (now <= 0) {
-      return this.t("createProduction.hero.meta", {
+      return this.t(`createProduction.hero.meta.${plural}`, {
         recipes: this.selectedCount(),
       });
     }
 
-    return this.t("createProduction.hero.metaNow", {
+    return this.t(`createProduction.hero.metaNow.${plural}`, {
       recipes: this.selectedCount(),
       servings: this.view.servings(now),
     });

@@ -158,8 +158,11 @@
       "ruler": "Slide to adjust the quantity"
     },
     "shortcuts": {
-      "menu": "Apply menu",
-      "menuMeta": "{{count}} menus",
+      "menu": "Menu",
+      "menuMeta": {
+        "one": "1 menu",
+        "many": "{{count}} menus"
+      },
       "kitchen": "Kitchen",
       "kitchenMeta": "{{count}} in progress",
       "shopping": "Shopping",

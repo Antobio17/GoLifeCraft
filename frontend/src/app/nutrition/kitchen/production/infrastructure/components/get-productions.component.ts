@@ -192,7 +192,7 @@ export class GetProductionsComponent extends AbstractListPageComponent<Productio
         weekday: this.range.weekday(attributes.fromDate, "short"),
         day: this.range.dayOfMonth(attributes.fromDate),
         title,
-        meta: this.translate("getProductions.meta", {
+        meta: this.translate(this.countKey("getProductions.meta", attributes.itemCount), {
           recipes: attributes.itemCount,
           servings: this.view.servings(
             cooking ? attributes.servingsPlanned : attributes.servingsCooked,
@@ -300,6 +300,10 @@ export class GetProductionsComponent extends AbstractListPageComponent<Productio
     }
 
     return Math.round((attributes.cookedCount / attributes.itemCount) * 100);
+  }
+
+  private countKey(key: string, count: number): string {
+    return 1 === count ? `${key}.one` : `${key}.many`;
   }
 
   private translate(key: string, params: Record<string, unknown>): string {
