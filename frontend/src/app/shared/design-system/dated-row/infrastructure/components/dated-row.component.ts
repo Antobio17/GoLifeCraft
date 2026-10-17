@@ -144,11 +144,13 @@ import { DatedRowTone } from "../../domain/models/dated-row-tone.enum";
       }
       .ds-drow__title {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        gap: var(--ds-space-2);
+        gap: var(--ds-space-1) var(--ds-space-2);
         min-width: 0;
       }
       .ds-drow__name {
+        max-width: 100%;
         font-size: var(--ds-text-lg);
         font-weight: var(--ds-weight-bold);
         white-space: nowrap;

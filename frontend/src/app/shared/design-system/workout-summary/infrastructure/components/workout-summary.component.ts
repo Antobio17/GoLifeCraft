@@ -58,7 +58,10 @@ export interface WorkoutSummaryStat {
         font-size: var(--ds-text-base);
         font-weight: 600;
         color: var(--ds-text-muted);
-        text-transform: capitalize;
+        display: inline-block;
+      }
+      .ds-wksum__date::first-letter {
+        text-transform: uppercase;
       }
       .ds-wksum__stat {
         flex: 0 0 auto;

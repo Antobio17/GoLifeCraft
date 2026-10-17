@@ -77,7 +77,10 @@ import { MonthHeatmapCell } from "../../domain/models/month-heatmap-cell.model";
         font-family: var(--ds-font-display);
         font-size: var(--ds-text-lg);
         font-weight: var(--ds-weight-bold);
-        text-transform: capitalize;
+        display: inline-block;
+      }
+      .ds-mheat__title::first-letter {
+        text-transform: uppercase;
       }
       .ds-mheat__nav {
         appearance: none;

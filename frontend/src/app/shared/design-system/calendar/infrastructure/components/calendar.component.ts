@@ -304,7 +304,10 @@ export interface CalendarLegendItem {
         outline-offset: 2px;
       }
       .ds-cal--tile .ds-cal__month {
-        text-transform: capitalize;
+        display: inline-block;
+      }
+      .ds-cal--tile .ds-cal__month::first-letter {
+        text-transform: uppercase;
       }
       .ds-cal--tile .ds-cal__weekday {
         font-weight: var(--ds-weight-extrabold);
@@ -384,6 +387,16 @@ export interface CalendarLegendItem {
         font-weight: var(--ds-weight-semibold);
         color: var(--ds-text-muted);
         overflow-wrap: anywhere;
+      }
+      @media (pointer: coarse) {
+        .ds-cal__navbtn {
+          position: relative;
+        }
+        .ds-cal__navbtn::after {
+          content: "";
+          position: absolute;
+          inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+        }
       }
     `,
   ],
