@@ -9,7 +9,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
     <div class="ds-empty">
       @if (icon) {
         <span class="ds-empty__icon">
-          <ds-icon [name]="icon" [size]="34" [stroke]="1.8" />
+          <ds-icon [name]="icon" [size]="22" [stroke]="2" />
         </span>
       }
       <p class="ds-empty__title">{{ title }}</p>
@@ -25,16 +25,16 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: var(--ds-space-2);
+        gap: var(--ds-space-1-5);
         text-align: center;
-        padding: 2.5rem var(--ds-space-6);
+        padding: var(--ds-space-6) var(--ds-space-5);
       }
       .ds-empty__icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 4rem;
-        height: 4rem;
+        width: 2.75rem;
+        height: 2.75rem;
         margin-bottom: var(--ds-space-1);
         border-radius: var(--ds-radius-pill);
         background: var(--ds-surface-inset);
@@ -43,7 +43,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
       .ds-empty__title {
         margin: 0;
         font-family: var(--ds-font-display);
-        font-size: var(--ds-text-xl);
+        font-size: var(--ds-text-lg);
         font-weight: var(--ds-weight-bold);
         color: var(--ds-text);
       }
