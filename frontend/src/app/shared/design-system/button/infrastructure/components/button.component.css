@@ -311,10 +311,8 @@
 
 .ds-btn--loading .ds-btn__spinner {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: 0;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
 }
 
 .ds-btn--full {
