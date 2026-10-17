@@ -67,7 +67,7 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
 
   headerSubtitle = computed(
     () =>
-      `${this.totalItems()} ${this.t(this.locationView.countKey(this.totalItems(), "getPantryLocations.stats.locations"))}`,
+      `${this.totalItems()} ${this.t("getPantryLocations.stats.locations", { count: this.totalItems() })}`,
   );
 
   rows = computed<PantryLocationRow[]>(() =>
@@ -170,7 +170,7 @@ export class GetPantryLocationsComponent extends AbstractListPageComponent<Pantr
   }
 
   private countLabel(count: number, key: string): string {
-    return `${count} ${this.t(this.locationView.countKey(count, key))}`;
+    return `${count} ${this.t(key, { count })}`;
   }
 
   goBack(): void {

@@ -390,12 +390,9 @@ export class GetEconomyComponent implements OnInit {
   });
   movementsCountLabel = computed(() => {
     this.translationsReady();
-    const count = this.transactions().length;
-    const unit = this.t(
-      count === 1 ? "getEconomy.movements.one" : "getEconomy.movements.many",
-    );
-
-    return `${count} ${unit}`;
+    return this.t("getEconomy.movements.count", {
+      count: this.transactions().length,
+    });
   });
 
   calendarWeekdays = computed(() => this.calendarView.weekdays());
@@ -494,8 +491,8 @@ export class GetEconomyComponent implements OnInit {
     });
   }
 
-  t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   previousMonth(): void {

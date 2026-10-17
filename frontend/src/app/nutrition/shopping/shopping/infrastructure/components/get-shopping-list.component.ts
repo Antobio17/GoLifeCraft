@@ -330,12 +330,7 @@ export class GetShoppingListComponent implements OnInit {
 
   receiptMeta = computed(() => {
     const count = this.cartItems().length;
-    const items = this.t(
-      count === 1
-        ? "getShopping.receipt.items.one"
-        : "getShopping.receipt.items.many",
-      { count },
-    );
+    const items = this.t("getShopping.receipt.items", { count });
     const stores = this.cartStores();
     const where = this.groupReceiptByStore()
       ? this.t("getShopping.receipt.stores", { count: stores.size })
@@ -361,12 +356,7 @@ export class GetShoppingListComponent implements OnInit {
 
     const count = this.searchedItems().length - this.cartItems().length;
 
-    return this.t(
-      count === 1
-        ? "getShopping.receipt.missing.one"
-        : "getShopping.receipt.missing.many",
-      { count },
-    );
+    return this.t("getShopping.receipt.missing", { count });
   });
 
   receiptNoteAside = computed(() =>

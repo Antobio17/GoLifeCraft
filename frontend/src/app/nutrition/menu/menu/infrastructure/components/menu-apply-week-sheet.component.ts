@@ -185,14 +185,11 @@ export class MenuApplyWeekSheetComponent {
 
   confirmLabel = computed(() => {
     const count = this.activeCount();
-    const days =
-      count === 1
-        ? this.t("getMenu.applyWeek.days.one")
-        : this.translationService.translate(
-            "getMenu.applyWeek.days.many",
-            MODULE_PATH,
-            { count },
-          );
+    const days = this.translationService.translate(
+      "getMenu.applyWeek.days",
+      MODULE_PATH,
+      { count },
+    );
 
     return this.translationService.translate(
       "getMenu.applyWeek.confirm",

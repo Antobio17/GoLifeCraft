@@ -159,11 +159,10 @@ export class GetRecipeComponent {
 
     if (debt <= 0) return "";
 
-    return 1 === debt
-      ? this.t("getRecipe.stock.debt.one")
-      : this.t("getRecipe.stock.debt.many", {
-          servings: this.stockView.servings(debt),
-        });
+    return this.t("getRecipe.stock.debt", {
+      count: debt,
+      servings: this.stockView.servings(debt),
+    });
   });
 
   stockSubText = computed(() =>

@@ -197,14 +197,11 @@ export class DiaryShoppingSheetComponent {
     const count = this.checkedCount();
     if (count === 0) return this.t("getShopping.diary.confirmEmpty");
 
-    const items =
-      count === 1
-        ? this.t("getShopping.diary.items.one")
-        : this.translationService.translate(
-            "getShopping.diary.items.many",
-            MODULE_PATH,
-            { count },
-          );
+    const items = this.translationService.translate(
+      "getShopping.diary.items",
+      MODULE_PATH,
+      { count },
+    );
 
     return this.translationService.translate(
       "getShopping.diary.confirm",

@@ -14,8 +14,10 @@
     "count": {
       "empty": "Nothing planned",
       "allDone": "All done",
-      "one": "1 pending",
-      "many": "pending"
+      "pending": {
+        "one": "1 pending",
+        "many": "{{count}} pending"
+      }
     },
     "nav": {
       "previous": "Previous day",

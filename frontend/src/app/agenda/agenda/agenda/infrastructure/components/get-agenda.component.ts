@@ -201,9 +201,9 @@ export class GetAgendaComponent implements OnInit {
 
     if (attributes.pendingCount === 0) return this.t("getAgenda.count.allDone");
 
-    return attributes.pendingCount === 1
-      ? this.t("getAgenda.count.one")
-      : `${attributes.pendingCount} ${this.t("getAgenda.count.many")}`;
+    return this.t("getAgenda.count.pending", {
+      count: attributes.pendingCount,
+    });
   });
   navLabel = computed(() => {
     this.translationsReady();
@@ -290,8 +290,8 @@ export class GetAgendaComponent implements OnInit {
     });
   }
 
-  t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   entryKindLabel(entry: AgendaEntryView): string {

@@ -351,10 +351,7 @@ export class GetMenuComponent implements OnInit {
     if (!detail) return "";
 
     const count = detail.weekDays.length;
-    const days =
-      count === 1
-        ? this.t("getMenu.week.activeDays.one")
-        : this.translate("getMenu.week.activeDays.many", { count });
+    const days = this.translate("getMenu.week.activeDays", { count });
     const kcal = this.translate("getMenu.week.kcalPerDay", {
       kcal: this.view.integer(detail.perDay.calories),
     });
@@ -468,8 +465,8 @@ export class GetMenuComponent implements OnInit {
       });
   }
 
-  t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   mealLabel(meal: MenuMealKey): string {
@@ -492,9 +489,7 @@ export class GetMenuComponent implements OnInit {
 
   itemUnitLabel(item: MenuItemView): string {
     if (item.kind === "recipe") {
-      return this.t(
-        item.quantity === 1 ? "getMenu.servings.one" : "getMenu.servings.many",
-      );
+      return this.t("getMenu.servings", { count: item.quantity });
     }
 
     return this.picker.unitLabel(item.unit ?? item.baseUnit);

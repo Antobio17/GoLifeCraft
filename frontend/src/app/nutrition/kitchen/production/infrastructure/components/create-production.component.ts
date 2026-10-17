@@ -229,15 +229,16 @@ export class CreateProductionComponent {
     const now = this.timeline.selectedServings(
       this.rows().filter((row) => !row.item.dueDate),
     );
-    const plural = 1 === this.selectedCount() ? "one" : "many";
 
     if (now <= 0) {
-      return this.t(`createProduction.hero.meta.${plural}`, {
+      return this.t("createProduction.hero.meta", {
+        count: this.selectedCount(),
         recipes: this.selectedCount(),
       });
     }
 
-    return this.t(`createProduction.hero.metaNow.${plural}`, {
+    return this.t("createProduction.hero.metaNow", {
+      count: this.selectedCount(),
       recipes: this.selectedCount(),
       servings: this.view.servings(now),
     });
@@ -250,12 +251,7 @@ export class CreateProductionComponent {
 
     if (!count) return "";
 
-    return this.t(
-      1 === count
-        ? "createProduction.hero.packs.one"
-        : "createProduction.hero.packs.many",
-      { count },
-    );
+    return this.t("createProduction.hero.packs", { count });
   });
 
   coveredRows = computed(() =>

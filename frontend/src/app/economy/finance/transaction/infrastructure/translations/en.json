@@ -16,8 +16,10 @@
   "getEconomy.categories.title": "Spending by category",
   "getEconomy.stores.title": "Spending by store",
   "getEconomy.movements.title": "Movements",
-  "getEconomy.movements.one": "movement",
-  "getEconomy.movements.many": "movements",
+  "getEconomy.movements.count": {
+    "one": "1 movement",
+    "many": "{{count}} movements"
+  },
   "getEconomy.movements.remove": "Delete",
   "getEconomy.removed": "{{name}} removed",
   "getEconomy.tab.movements": "Movements",

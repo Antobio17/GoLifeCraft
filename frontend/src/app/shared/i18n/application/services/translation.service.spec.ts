@@ -9,6 +9,8 @@ import { of, throwError } from "rxjs";
 const mockTranslations: TranslationMap = {
   greeting: "Hello",
   nested: { key: "Nested Value" },
+  recipes: { one: "1 receta", many: "{{count}} recetas" },
+  places: { one: "{{count}} sitio", other: "{{count}} sitios" },
 };
 
 class MockTranslationPort extends TranslationPort {
@@ -132,6 +134,42 @@ describe("TranslationService", () => {
       expect(service.translate("nested.nonexistent", "auth/login")).toBe(
         "nested.nonexistent",
       );
+    });
+
+    it("should pick the one form when count is 1", async () => {
+      await service.loadModuleTranslations("auth/login");
+      expect(service.translate("recipes", "auth/login", { count: 1 })).toBe(
+        "1 receta",
+      );
+    });
+
+    it("should pick the many form for any other count", async () => {
+      await service.loadModuleTranslations("auth/login");
+      expect(service.translate("recipes", "auth/login", { count: 0 })).toBe(
+        "0 recetas",
+      );
+      expect(service.translate("recipes", "auth/login", { count: 3 })).toBe(
+        "3 recetas",
+      );
+    });
+
+    it("should accept other as the plural form", async () => {
+      await service.loadModuleTranslations("auth/login");
+      expect(service.translate("places", "auth/login", { count: 2 })).toBe(
+        "2 sitios",
+      );
+    });
+
+    it("should fall back to the plural form for the Spanish many category", async () => {
+      await service.loadModuleTranslations("auth/login");
+      expect(
+        service.translate("places", "auth/login", { count: 1_000_000 }),
+      ).toBe("1000000 sitios");
+    });
+
+    it("should return the key for a plural group without a count", async () => {
+      await service.loadModuleTranslations("auth/login");
+      expect(service.translate("recipes", "auth/login")).toBe("recipes");
     });
   });
 });

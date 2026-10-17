@@ -1109,11 +1109,7 @@ export class GetDiaryComponent implements OnInit {
   private countLabel(key: string, count: number | null): string {
     if (count === null) return "";
 
-    if (key !== "menuMeta") return this.t(`getDiary.shortcuts.${key}`, { count });
-
-    return this.t(`getDiary.shortcuts.menuMeta.${1 === count ? "one" : "many"}`, {
-      count,
-    });
+    return this.t(`getDiary.shortcuts.${key}`, { count });
   }
 
   private loadShortcuts(): void {

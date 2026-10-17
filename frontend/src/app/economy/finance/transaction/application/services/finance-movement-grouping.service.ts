@@ -74,11 +74,11 @@ export class FinanceMovementGroupingService {
   }
 
   private countLabel(count: number): string {
-    const unit = this.t(
-      count === 1 ? "getEconomy.movements.one" : "getEconomy.movements.many",
+    return this.translationService.translate(
+      "getEconomy.movements.count",
+      MODULE_PATH,
+      { count },
     );
-
-    return `${count} ${unit}`;
   }
 
   private keyOf(row: FinanceMovementRow): string {

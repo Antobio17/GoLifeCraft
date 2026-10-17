@@ -18,6 +18,7 @@ export class TranslationService {
     new Map(),
   );
   private readonly inFlightRequests: Map<string, Promise<void>> = new Map();
+  private readonly pluralRules: Map<string, Intl.PluralRules> = new Map();
 
   constructor(private translationPort: TranslationPort) {
     this.currentLanguage.set(this.restoreLanguage());
@@ -101,7 +102,10 @@ export class TranslationService {
       return key;
     }
 
-    const translation = this.getNestedTranslation(translationMap, key);
+    const translation = this.selectForm(
+      this.getNestedTranslation(translationMap, key),
+      params?.["count"],
+    );
 
     if (!translation) {
       return key;
@@ -155,10 +159,29 @@ export class TranslationService {
     this.translations.set(nextTranslations);
   }
 
-  private getNestedTranslation(
-    map: TranslationMap,
-    key: string,
-  ): string | null {
+  private selectForm(node: unknown, count: unknown): string | null {
+    if (typeof node === "string") return node;
+    if (!node || typeof node !== "object" || typeof count !== "number") {
+      return null;
+    }
+
+    const forms = node as Record<string, unknown>;
+    const category = this.pluralRulesFor(this.getLocale()).select(count);
+    const form = forms[category] ?? forms["other"] ?? forms["many"];
+
+    return typeof form === "string" ? form : null;
+  }
+
+  private pluralRulesFor(locale: string): Intl.PluralRules {
+    const cached = this.pluralRules.get(locale);
+    if (cached) return cached;
+
+    const rules = new Intl.PluralRules(locale);
+    this.pluralRules.set(locale, rules);
+    return rules;
+  }
+
+  private getNestedTranslation(map: TranslationMap, key: string): unknown {
     const keys = key.split(".");
     let current: unknown = map;
 
@@ -181,6 +204,6 @@ export class TranslationService {
       return null;
     }
 
-    return typeof current === "string" ? current : null;
+    return current;
   }
 }

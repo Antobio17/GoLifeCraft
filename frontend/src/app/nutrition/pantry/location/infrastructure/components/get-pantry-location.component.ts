@@ -150,7 +150,7 @@ export class GetPantryLocationComponent {
 
     if (0 === total) return this.t("getPantryLocation.hero.empty");
 
-    return `${total} ${this.t(this.locationView.countKey(total, "getPantryLocation.hero.items"))}`;
+    return `${total} ${this.t("getPantryLocation.hero.items", { count: total })}`;
   });
 
   articleChip = computed(() =>
@@ -264,8 +264,8 @@ export class GetPantryLocationComponent {
       .subscribe(() => this.refreshCandidates());
   }
 
-  protected t(key: string): string {
-    return this.translationService.translate(key, this.MODULE_PATH);
+  protected t(key: string, params?: Record<string, unknown>): string {
+    return this.translationService.translate(key, this.MODULE_PATH, params);
   }
 
   onSearch(value: string): void {
@@ -354,7 +354,7 @@ export class GetPantryLocationComponent {
   }
 
   private countLabel(count: number, key: string): string {
-    return `${count} ${this.t(this.locationView.countKey(count, key))}`;
+    return `${count} ${this.t(key, { count })}`;
   }
 
   private track(request: Observable<void>): void {

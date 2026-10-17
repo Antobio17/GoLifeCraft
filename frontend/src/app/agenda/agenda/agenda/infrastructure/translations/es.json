@@ -14,8 +14,10 @@
     "count": {
       "empty": "Sin nada anotado",
       "allDone": "Todo hecho",
-      "one": "1 pendiente",
-      "many": "pendientes"
+      "pending": {
+        "one": "1 pendiente",
+        "many": "{{count}} pendientes"
+      }
     },
     "nav": {
       "previous": "Día anterior",

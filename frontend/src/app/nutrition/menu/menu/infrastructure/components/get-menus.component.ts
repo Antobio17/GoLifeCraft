@@ -96,17 +96,7 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   exportingMenuId = signal<string | null>(null);
 
   headerSubtitle = computed(() => {
-    const total = this.items().length;
-
-    if (total === 1) {
-      return this.t("getMenus.count.one");
-    }
-
-    return this.translationService.translate(
-      "getMenus.count.many",
-      this.modulePath,
-      { count: total },
-    );
+    return this.t("getMenus.count", { count: this.items().length });
   });
 
   filteredMenus = computed<MenuListItem[]>(() => {
@@ -138,7 +128,9 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
       groups.push({
         key: "week",
         label: this.t("getMenus.groups.week"),
-        countLabel: this.plural("getMenus.groups.weekCount", weekCards.length),
+        countLabel: this.t("getMenus.groups.weekCount", {
+          count: weekCards.length,
+        }),
         cards: weekCards,
       });
     }
@@ -147,10 +139,9 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
       groups.push({
         key: "single",
         label: this.t("getMenus.groups.single"),
-        countLabel: this.plural(
-          "getMenus.groups.singleCount",
-          singleCards.length,
-        ),
+        countLabel: this.t("getMenus.groups.singleCount", {
+          count: singleCards.length,
+        }),
         cards: singleCards,
       });
     }
@@ -273,7 +264,7 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
     )}`;
     const size =
       attributes.type === "week"
-        ? this.plural("getMenus.card.days", attributes.dayCount)
+        ? this.t("getMenus.card.days", { count: attributes.dayCount })
         : this.itemsLabel(attributes.itemCount);
 
     return `${size} · ${kcal}`;
@@ -282,15 +273,7 @@ export class GetMenusComponent extends AbstractListPageComponent<MenuListItem> {
   private itemsLabel(count: number): string {
     if (count === 0) return this.t("getMenus.card.items.zero");
 
-    return this.plural("getMenus.card.items", count);
-  }
-
-  private plural(key: string, count: number): string {
-    if (count === 1) return this.t(`${key}.one`);
-
-    return this.translationService.translate(`${key}.many`, this.modulePath, {
-      count,
-    });
+    return this.t("getMenus.card.items", { count });
   }
 
   goBack(): void {

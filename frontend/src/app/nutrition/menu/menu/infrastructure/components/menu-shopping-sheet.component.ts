@@ -126,14 +126,11 @@ export class MenuShoppingSheetComponent {
     const count = this.checkedCount();
     if (count === 0) return this.t("getMenu.shopping.confirmEmpty");
 
-    const items =
-      count === 1
-        ? this.t("getMenu.shopping.items.one")
-        : this.translationService.translate(
-            "getMenu.shopping.items.many",
-            MODULE_PATH,
-            { count },
-          );
+    const items = this.translationService.translate(
+      "getMenu.shopping.items",
+      MODULE_PATH,
+      { count },
+    );
 
     return this.translationService.translate(
       "getMenu.shopping.confirm",
