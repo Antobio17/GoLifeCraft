@@ -372,3 +372,14 @@
   min-height: 100%;
   aspect-ratio: 1;
 }
+
+@media (pointer: coarse) {
+  .ds-btn--icon-sm, .ds-btn--icon, .ds-btn--sm, .ds-btn--link {
+    position: relative;
+  }
+  .ds-btn--icon-sm::after, .ds-btn--icon::after, .ds-btn--sm::after, .ds-btn--link::after {
+    content: "";
+    position: absolute;
+    inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+  }
+}

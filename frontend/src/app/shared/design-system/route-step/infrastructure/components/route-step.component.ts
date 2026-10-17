@@ -111,6 +111,16 @@ import { StepBadgeState } from "../../../step-badge/domain/models/step-badge-sta
       :host(:only-child) .ds-rstep__items:empty {
         display: none;
       }
+      @media (pointer: coarse) {
+        .ds-rstep__action {
+          position: relative;
+        }
+        .ds-rstep__action::after {
+          content: "";
+          position: absolute;
+          inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+        }
+      }
     `,
   ],
 })

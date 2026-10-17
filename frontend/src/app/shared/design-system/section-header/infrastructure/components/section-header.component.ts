@@ -76,6 +76,16 @@ type SectionHeaderSize = "sm" | "md";
         font-weight: 700;
         color: var(--ds-text-meta);
       }
+      @media (pointer: coarse) {
+        .ds-shead__action {
+          position: relative;
+        }
+        .ds-shead__action::after {
+          content: "";
+          position: absolute;
+          inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+        }
+      }
     `,
   ],
 })

@@ -145,6 +145,16 @@ type SegmentedVariant = "underline" | "pill";
           transition: none;
         }
       }
+      @media (pointer: coarse) {
+        .ds-segmented__option {
+          position: relative;
+        }
+        .ds-segmented__option::after {
+          content: "";
+          position: absolute;
+          inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+        }
+      }
     `,
   ],
   providers: [

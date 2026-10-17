@@ -78,6 +78,16 @@ type IconButtonVariant =
         background: var(--ds-danger-soft);
         color: var(--ds-danger);
       }
+      @media (pointer: coarse) {
+        .ds-icon-btn {
+          position: relative;
+        }
+        .ds-icon-btn::after {
+          content: "";
+          position: absolute;
+          inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+        }
+      }
     `,
   ],
   host: {

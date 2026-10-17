@@ -124,6 +124,16 @@ const ARROW_STEPS: Record<string, number> = {
         cursor: not-allowed;
         opacity: 0.6;
       }
+      @media (pointer: coarse) {
+        .ds-prefchoice__option {
+          position: relative;
+        }
+        .ds-prefchoice__option::after {
+          content: "";
+          position: absolute;
+          inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+        }
+      }
     `,
   ],
 })

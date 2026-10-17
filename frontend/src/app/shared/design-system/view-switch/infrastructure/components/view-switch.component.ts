@@ -111,6 +111,16 @@ type ViewSwitchSize = "md" | "sm";
           transition: none;
         }
       }
+      @media (pointer: coarse) {
+        .ds-vswitch__option {
+          position: relative;
+        }
+        .ds-vswitch__option::after {
+          content: "";
+          position: absolute;
+          inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+        }
+      }
     `,
   ],
   providers: [

@@ -182,3 +182,14 @@ ds-pressable.shopping-item__open:hover .shopping-item__name {
   outline: 2px solid var(--ds-border-focus);
   outline-offset: 2px;
 }
+
+@media (pointer: coarse) {
+  .shopping-item__check, .shopping-item__step {
+    position: relative;
+  }
+  .shopping-item__check::after, .shopping-item__step::after {
+    content: "";
+    position: absolute;
+    inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+  }
+}

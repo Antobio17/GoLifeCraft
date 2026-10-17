@@ -19,6 +19,13 @@
   --ds-z-drawer: 100;
   --ds-z-modal: 200;
   --ds-z-toast: 300;
+
+  /* Área táctil mínima (Apple HIG 44pt). Un control más pequeño la alcanza
+     con un ::after invisible: --ds-tap-slop es cuánto sobresale por cada lado,
+     en negativo, y cero si el control ya llega. */
+  --ds-tap-min: 2.75rem;
+  --ds-tap-slop-y: min(0px, calc((100% - var(--ds-tap-min)) / 2));
+  --ds-tap-slop-x: min(0px, calc((100% - var(--ds-tap-min)) / 2));
 }
 
 @media (min-width: 768px) {

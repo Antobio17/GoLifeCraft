@@ -221,3 +221,14 @@ input[type="number"].form-control::-webkit-inner-spin-button {
     font-size: var(--ds-text-sm);
   }
 }
+
+@media (pointer: coarse) {
+  .password-toggle {
+    position: relative;
+  }
+  .password-toggle::after {
+    content: "";
+    position: absolute;
+    inset: var(--ds-tap-slop-y) var(--ds-tap-slop-x);
+  }
+}
