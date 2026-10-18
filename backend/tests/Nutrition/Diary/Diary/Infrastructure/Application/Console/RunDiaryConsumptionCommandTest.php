@@ -5,6 +5,8 @@ namespace App\Tests\Nutrition\Diary\Diary\Infrastructure\Application\Console;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Nutrition\Diary\Diary\Application\Command\ConsumeDiaryEntryCommand;
+use Nutrition\Diary\Diary\Application\Query\GetPastPendingDiaryEntryIdsQuery;
+use Nutrition\Diary\Diary\Application\Query\GetPastPendingDiaryEntryIdsQueryHandler;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntry;
 use Nutrition\Diary\Diary\Domain\Model\DiaryEntrySnapshot;
 use Nutrition\Diary\Diary\Infrastructure\Application\Console\RunDiaryConsumptionCommand;
@@ -17,6 +19,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 final class RunDiaryConsumptionCommandTest extends TestCase
 {
@@ -24,8 +27,7 @@ final class RunDiaryConsumptionCommandTest extends TestCase
 
     public function testItTicksThePendingEntriesOfTheLastSevenDaysOldestFirst(): void
     {
-        $messageBus = $this->givenMessageBus();
-        $tester = $this->givenTester(messageBus: $messageBus, entries: [
+        [$tester, $messageBus] = $this->givenTester(entries: [
             $this->entry(id: 'yesterday-dinner', entryDate: '2026-10-17'),
             $this->entry(id: 'a-week-ago-lunch', entryDate: '2026-10-11'),
         ]);
@@ -40,8 +42,7 @@ final class RunDiaryConsumptionCommandTest extends TestCase
 
     public function testItLeavesTodayAndTheDaysBeforeTheWindowPending(): void
     {
-        $messageBus = $this->givenMessageBus();
-        $tester = $this->givenTester(messageBus: $messageBus, entries: [
+        [$tester, $messageBus] = $this->givenTester(entries: [
             $this->entry(id: 'today-breakfast', entryDate: '2026-10-18'),
             $this->entry(id: 'eight-days-ago-dinner', entryDate: '2026-10-10'),
             $this->entry(id: 'yesterday-dinner', entryDate: '2026-10-17'),
@@ -54,8 +55,7 @@ final class RunDiaryConsumptionCommandTest extends TestCase
 
     public function testItWidensTheWindowWithTheDaysOption(): void
     {
-        $messageBus = $this->givenMessageBus();
-        $tester = $this->givenTester(messageBus: $messageBus, entries: [
+        [$tester, $messageBus] = $this->givenTester(entries: [
             $this->entry(id: 'eight-days-ago-dinner', entryDate: '2026-10-10'),
         ]);
 
@@ -69,8 +69,7 @@ final class RunDiaryConsumptionCommandTest extends TestCase
         $ticked = $this->entry(id: 'yesterday-lunch', entryDate: '2026-10-17');
         $ticked->consume(consumed: true, updatedByUserId: 'god-user-id', dateTimeGenerator: new DateTimeGenerator());
 
-        $messageBus = $this->givenMessageBus();
-        $tester = $this->givenTester(messageBus: $messageBus, entries: [$ticked]);
+        [$tester, $messageBus] = $this->givenTester(entries: [$ticked]);
 
         $tester->execute(input: ['--tenant' => 'GLC000000001', '--date' => '2026-10-18']);
 
@@ -79,8 +78,7 @@ final class RunDiaryConsumptionCommandTest extends TestCase
 
     public function testItWritesNothingOnADryRun(): void
     {
-        $messageBus = $this->givenMessageBus();
-        $tester = $this->givenTester(messageBus: $messageBus, entries: [
+        [$tester, $messageBus] = $this->givenTester(entries: [
             $this->entry(id: 'yesterday-dinner', entryDate: '2026-10-17'),
         ]);
 
@@ -92,8 +90,7 @@ final class RunDiaryConsumptionCommandTest extends TestCase
 
     public function testItRejectsAMalformedDate(): void
     {
-        $messageBus = $this->givenMessageBus();
-        $tester = $this->givenTester(messageBus: $messageBus, entries: []);
+        [$tester, $messageBus] = $this->givenTester(entries: []);
 
         $tester->execute(input: ['--tenant' => 'GLC000000001', '--date' => '18/10/2026']);
 
@@ -102,8 +99,7 @@ final class RunDiaryConsumptionCommandTest extends TestCase
 
     public function testItRejectsANonPositiveNumberOfDays(): void
     {
-        $messageBus = $this->givenMessageBus();
-        $tester = $this->givenTester(messageBus: $messageBus, entries: []);
+        [$tester, $messageBus] = $this->givenTester(entries: []);
 
         $tester->execute(input: ['--tenant' => 'GLC000000001', '--date' => '2026-10-18', '--days' => '0']);
 
@@ -112,10 +108,16 @@ final class RunDiaryConsumptionCommandTest extends TestCase
 
     /**
      * @param DiaryEntry[] $entries
+     *
+     * @return array{0: CommandTester, 1: MessageBusInterface}
      */
-    private function givenTester(MessageBusInterface $messageBus, array $entries): CommandTester
+    private function givenTester(array $entries): array
     {
-        return new CommandTester(command: new RunDiaryConsumptionCommand(
+        $messageBus = $this->givenMessageBus(queryHandler: new GetPastPendingDiaryEntryIdsQueryHandler(
+            needleDataQuery: new InMemoryConsumePastDiaryEntriesNeedleDataQuery(entries: $entries),
+        ));
+
+        $tester = new CommandTester(command: new RunDiaryConsumptionCommand(
             switcher: new class implements TenantConnectionSwitcher {
                 public function switch(string $tenantId): void
                 {
@@ -123,9 +125,10 @@ final class RunDiaryConsumptionCommandTest extends TestCase
             },
             writerTenantConnection: $this->createStub(Connection::class),
             tenantEntityManager: $this->createStub(EntityManagerInterface::class),
-            needleDataQuery: new InMemoryConsumePastDiaryEntriesNeedleDataQuery(entries: $entries),
             messageBus: $messageBus,
         ));
+
+        return [$tester, $messageBus];
     }
 
     private function entry(string $id, string $entryDate): DiaryEntry
@@ -156,17 +159,25 @@ final class RunDiaryConsumptionCommandTest extends TestCase
         return array_map(static fn (ConsumeDiaryEntryCommand $command): string => $command->entryId, $messageBus->dispatched);
     }
 
-    private function givenMessageBus(): MessageBusInterface
+    private function givenMessageBus(GetPastPendingDiaryEntryIdsQueryHandler $queryHandler): MessageBusInterface
     {
-        return new class implements MessageBusInterface {
+        return new class($queryHandler) implements MessageBusInterface {
             /** @var array<int, ConsumeDiaryEntryCommand> */
             public array $dispatched = [];
 
+            public function __construct(private readonly GetPastPendingDiaryEntryIdsQueryHandler $queryHandler)
+            {
+            }
+
             public function dispatch(object $message, array $stamps = []): Envelope
             {
+                if ($message instanceof GetPastPendingDiaryEntryIdsQuery) {
+                    return new Envelope(message: $message, stamps: [new HandledStamp(result: ($this->queryHandler)($message), handlerName: 'query')]);
+                }
+
                 $this->dispatched[] = $message;
 
-                return new Envelope(message: $message);
+                return new Envelope(message: $message, stamps: [new HandledStamp(result: null, handlerName: 'command')]);
             }
         };
     }

@@ -2,8 +2,8 @@
 
 namespace Economy\Finance\Recurrence\Infrastructure\UI\API\Controller;
 
-use Economy\Finance\Recurrence\Application\Command\GeneratePendingFinanceRecurrencesCommand;
-use Economy\Finance\Recurrence\Application\Query\CountPendingFinanceRecurrencesQuery;
+use Economy\Finance\Recurrence\Application\Command\GenerateFinanceRecurrenceCommand;
+use Economy\Finance\Recurrence\Application\Query\GetPendingFinanceRecurrenceBookingsQuery;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,15 +24,21 @@ final class GeneratePendingFinanceRecurrencesController
     public function __invoke(): JsonResponse
     {
         try {
-            $booked = $this->handle(message: new CountPendingFinanceRecurrencesQuery(onlyCurrentMonth: true));
+            $bookings = $this->handle(message: new GetPendingFinanceRecurrenceBookingsQuery(onlyCurrentMonth: true));
 
-            $this->handle(message: new GeneratePendingFinanceRecurrencesCommand(onlyCurrentMonth: true));
+            foreach ($bookings as $booking) {
+                $this->handle(message: new GenerateFinanceRecurrenceCommand(
+                    financeRecurrenceId: $booking->financeRecurrenceId,
+                    month: $booking->month,
+                    today: $booking->today,
+                ));
+            }
 
             return new JsonResponse(data: [
                 'data' => [
                     'type' => 'financeRecurrenceRun',
                     'attributes' => [
-                        'booked' => $booked,
+                        'booked' => count($bookings),
                     ],
                 ],
             ], status: Response::HTTP_OK);

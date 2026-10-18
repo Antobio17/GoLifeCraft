@@ -1,39 +1,45 @@
 <?php
 
-namespace Economy\Finance\Recurrence\Application\Command;
+namespace Economy\Finance\Recurrence\Application\Query;
 
+use Economy\Finance\Recurrence\Domain\QueryModel\Dto\PendingFinanceRecurrenceBooking;
 use Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery;
 use Economy\Finance\Recurrence\Domain\Service\FinanceRecurrenceCalendar;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
-use Symfony\Component\Messenger\MessageBusInterface;
 
-final readonly class GeneratePendingFinanceRecurrencesCommandHandler
+final readonly class GetPendingFinanceRecurrenceBookingsQueryHandler
 {
     public function __construct(
         private PendingFinanceRecurrencesNeedleDataQuery $needleDataQuery,
-        private MessageBusInterface $messageBus,
         private DateTimeGenerator $dateTimeGenerator,
     ) {
     }
 
-    public function __invoke(GeneratePendingFinanceRecurrencesCommand $command): void
+    /**
+     * @return PendingFinanceRecurrenceBooking[]
+     */
+    public function __invoke(GetPendingFinanceRecurrenceBookingsQuery $query): array
     {
-        $today = $command->today ?? $this->dateTimeGenerator->now()->format(format: 'Y-m-d');
+        $today = $query->today ?? $this->dateTimeGenerator->now()->format(format: 'Y-m-d');
+        $bookings = [];
 
         foreach ($this->needleDataQuery->findPending(today: $today) as $pendingRecurrence) {
             $months = FinanceRecurrenceCalendar::monthsToBook(
                 months: $pendingRecurrence->months,
                 today: $today,
-                onlyCurrentMonth: $command->onlyCurrentMonth,
+                onlyCurrentMonth: $query->onlyCurrentMonth,
             );
 
             foreach ($months as $month) {
-                $this->messageBus->dispatch(new GenerateFinanceRecurrenceCommand(
+                $bookings[] = new PendingFinanceRecurrenceBooking(
                     financeRecurrenceId: $pendingRecurrence->id,
+                    note: $pendingRecurrence->note,
                     month: $month,
                     today: $today,
-                ));
+                );
             }
         }
+
+        return $bookings;
     }
 }
