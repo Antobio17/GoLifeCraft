@@ -3,8 +3,10 @@
 namespace Nutrition\Diary\Diary\Infrastructure\UI\Mcp\Tool;
 
 use Integration\Mcp\Server\Infrastructure\UI\Mcp\Tool\McpMessengerTool;
+use Integration\Mcp\Server\Infrastructure\UI\Mcp\Tool\McpToolResult;
 use Mcp\Capability\Attribute\McpTool;
-use Nutrition\Diary\Diary\Application\Command\ConsumeDiaryMealCommand;
+use Nutrition\Diary\Diary\Application\Command\ConsumeDiaryEntryCommand;
+use Nutrition\Diary\Diary\Application\Query\GetDiaryMealEntryIdsQuery;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 
 #[McpTool(
@@ -20,11 +22,21 @@ final class ConsumeDiaryMealTool extends McpMessengerTool
      */
     public function __invoke(string $date, string $meal, bool $consumed = true): array
     {
-        return $this->dispatch(messageFactory: fn () => new ConsumeDiaryMealCommand(
-            date: $date,
-            meal: $meal,
-            consumed: $consumed,
-            updatedByUserId: RequestExtractor::getUserSessionId(request: $this->request()),
-        ));
+        return $this->dispatch(
+            messageFactory: fn () => new GetDiaryMealEntryIdsQuery(date: $date, meal: $meal),
+            resultMapper: function (array $entryIds) use ($consumed): array {
+                $updatedByUserId = RequestExtractor::getUserSessionId(request: $this->request());
+
+                foreach ($entryIds as $entryId) {
+                    $this->handle(message: new ConsumeDiaryEntryCommand(
+                        entryId: $entryId,
+                        consumed: $consumed,
+                        updatedByUserId: $updatedByUserId,
+                    ));
+                }
+
+                return McpToolResult::success();
+            },
+        );
     }
 }

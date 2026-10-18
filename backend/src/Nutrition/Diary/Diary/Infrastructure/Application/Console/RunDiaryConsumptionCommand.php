@@ -5,16 +5,19 @@ namespace Nutrition\Diary\Diary\Infrastructure\Application\Console;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Nutrition\Diary\Diary\Application\Command\ConsumeDiaryEntryCommand;
-use Nutrition\Diary\Diary\Domain\QueryModel\ConsumePastDiaryEntriesNeedleDataQuery;
+use Nutrition\Diary\Diary\Application\Query\GetPastPendingDiaryEntryIdsQuery;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final class RunDiaryConsumptionCommand extends Command
 {
+    use HandleTrait;
+
     private const string SYSTEM_USER_ID = '00000000-0000-0000-0000-000000000000';
     private const string TIMEZONE = 'Europe/Madrid';
     private const int DEFAULT_DAYS = 7;
@@ -23,9 +26,10 @@ final class RunDiaryConsumptionCommand extends Command
         private readonly TenantConnectionSwitcher $switcher,
         private readonly Connection $writerTenantConnection,
         private readonly EntityManagerInterface $tenantEntityManager,
-        private readonly ConsumePastDiaryEntriesNeedleDataQuery $needleDataQuery,
-        private readonly MessageBusInterface $messageBus,
+        MessageBusInterface $messageBus,
     ) {
+        $this->messageBus = $messageBus;
+
         parent::__construct(name: 'app:diary:consume-past-entries');
     }
 
@@ -90,7 +94,7 @@ final class RunDiaryConsumptionCommand extends Command
         $this->switcher->switch(tenantId: $dbname);
         $this->tenantEntityManager->clear();
 
-        $pending = $this->needleDataQuery->findPendingEntryIds(fromDate: $fromDate, toDate: $toDate);
+        $pending = $this->handle(message: new GetPastPendingDiaryEntryIdsQuery(fromDate: $fromDate, toDate: $toDate));
 
         if ([] === $pending) {
             $output->writeln(messages: sprintf('<comment>%s: nothing pending between %s and %s.</comment>', $dbname, $fromDate, $toDate));
@@ -105,7 +109,7 @@ final class RunDiaryConsumptionCommand extends Command
         }
 
         foreach ($pending as $entryId) {
-            $this->messageBus->dispatch(new ConsumeDiaryEntryCommand(
+            $this->handle(message: new ConsumeDiaryEntryCommand(
                 entryId: $entryId,
                 consumed: true,
                 updatedByUserId: self::SYSTEM_USER_ID,

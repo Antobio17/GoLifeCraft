@@ -2,7 +2,8 @@
 
 namespace Nutrition\Diary\Diary\Infrastructure\UI\API\Controller;
 
-use Nutrition\Diary\Diary\Application\Command\ConsumeDiaryMealCommand;
+use Nutrition\Diary\Diary\Application\Command\ConsumeDiaryEntryCommand;
+use Nutrition\Diary\Diary\Application\Query\GetDiaryMealEntryIdsQuery;
 use Nutrition\Diary\Diary\Domain\Exception\UpdateDiaryEntryException;
 use Shared\Tool\Tool\Domain\Exception\ArgumentRequestException;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
@@ -27,12 +28,20 @@ final class ConsumeDiaryMealController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $this->handle(message: new ConsumeDiaryMealCommand(
+            $consumed = RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'consumed');
+            $updatedByUserId = RequestExtractor::getUserSessionId(request: $request);
+            $entryIds = $this->handle(message: new GetDiaryMealEntryIdsQuery(
                 date: $request->attributes->get(key: 'date'),
                 meal: $request->attributes->get(key: 'meal'),
-                consumed: RequestExtractor::getBooleanRequestValue(request: $request, fieldName: 'consumed'),
-                updatedByUserId: RequestExtractor::getUserSessionId(request: $request),
             ));
+
+            foreach ($entryIds as $entryId) {
+                $this->handle(message: new ConsumeDiaryEntryCommand(
+                    entryId: $entryId,
+                    consumed: $consumed,
+                    updatedByUserId: $updatedByUserId,
+                ));
+            }
 
             return new JsonResponse(data: null, status: Response::HTTP_OK);
         } catch (HandlerFailedException $e) {

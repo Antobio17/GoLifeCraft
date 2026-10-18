@@ -1,6 +1,6 @@
 services:
-  Economy\Finance\Recurrence\Application\Query\CountPendingFinanceRecurrencesQueryHandler:
-    class: Economy\Finance\Recurrence\Application\Query\CountPendingFinanceRecurrencesQueryHandler
+  Economy\Finance\Recurrence\Application\Query\GetPendingFinanceRecurrenceBookingsQueryHandler:
+    class: Economy\Finance\Recurrence\Application\Query\GetPendingFinanceRecurrenceBookingsQueryHandler
     arguments:
       $needleDataQuery: '@Economy\Finance\Recurrence\Domain\QueryModel\PendingFinanceRecurrencesNeedleDataQuery'
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'

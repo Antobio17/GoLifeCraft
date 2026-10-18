@@ -218,6 +218,8 @@ public function __invoke(DecreaseRecipeStockCommand $command): void
 }
 ```
 
+- **Un CommandHandler nunca despacha otros comandos.** Si una acción del usuario afecta a varias instancias (todas las entradas de una comida, todos los meses pendientes de una recurrencia), una **Query** devuelve qué hay que tocar y el punto de entrada (controller, tool MCP o comando de consola) despacha un comando por cada una. Los únicos que despachan comandos desde dentro son los **Subscribers**, como reacción a un evento.
+
 > Los métodos auxiliares privados sí pueden devolver **value objects** que el handler necesita para construir la llamada de dominio (`snapshotFor(): DiaryEntrySnapshot`). Lo prohibido es devolver el agregado o el resultado del caso de uso.
 
 ## Criterio de validación: Dominio vs Aplicación

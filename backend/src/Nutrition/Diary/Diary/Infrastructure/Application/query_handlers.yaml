@@ -31,3 +31,17 @@ services:
 
   Nutrition\Diary\Diary\Application\Query\GetDiaryShoppingNeedsDataTransform:
     class: Nutrition\Diary\Diary\Infrastructure\UI\API\DataTransform\ApiGetDiaryShoppingNeedsDataTransform
+
+  Nutrition\Diary\Diary\Application\Query\GetDiaryMealEntryIdsQueryHandler:
+    class: Nutrition\Diary\Diary\Application\Query\GetDiaryMealEntryIdsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\ConsumeDiaryMealNeedleDataQuery'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\Diary\Diary\Application\Query\GetPastPendingDiaryEntryIdsQueryHandler:
+    class: Nutrition\Diary\Diary\Application\Query\GetPastPendingDiaryEntryIdsQueryHandler
+    arguments:
+      $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\ConsumePastDiaryEntriesNeedleDataQuery'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
