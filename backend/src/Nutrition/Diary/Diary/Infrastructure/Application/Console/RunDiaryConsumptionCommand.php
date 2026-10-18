@@ -4,20 +4,17 @@ namespace Nutrition\Diary\Diary\Infrastructure\Application\Console;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Nutrition\Diary\Diary\Application\Command\ConsumePastDiaryEntriesCommand;
+use Nutrition\Diary\Diary\Application\Command\ConsumeDiaryEntryCommand;
 use Nutrition\Diary\Diary\Domain\QueryModel\ConsumePastDiaryEntriesNeedleDataQuery;
 use Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final class RunDiaryConsumptionCommand extends Command
 {
-    use HandleTrait;
-
     private const string SYSTEM_USER_ID = '00000000-0000-0000-0000-000000000000';
     private const string TIMEZONE = 'Europe/Madrid';
     private const int DEFAULT_DAYS = 7;
@@ -27,10 +24,8 @@ final class RunDiaryConsumptionCommand extends Command
         private readonly Connection $writerTenantConnection,
         private readonly EntityManagerInterface $tenantEntityManager,
         private readonly ConsumePastDiaryEntriesNeedleDataQuery $needleDataQuery,
-        MessageBusInterface $messageBus,
+        private readonly MessageBusInterface $messageBus,
     ) {
-        $this->messageBus = $messageBus;
-
         parent::__construct(name: 'app:diary:consume-past-entries');
     }
 
@@ -109,11 +104,13 @@ final class RunDiaryConsumptionCommand extends Command
             return;
         }
 
-        $this->handle(message: new ConsumePastDiaryEntriesCommand(
-            fromDate: $fromDate,
-            toDate: $toDate,
-            updatedByUserId: self::SYSTEM_USER_ID,
-        ));
+        foreach ($pending as $entryId) {
+            $this->messageBus->dispatch(new ConsumeDiaryEntryCommand(
+                entryId: $entryId,
+                consumed: true,
+                updatedByUserId: self::SYSTEM_USER_ID,
+            ));
+        }
 
         $output->writeln(messages: sprintf('<info>%s: %d entries between %s and %s ticked as eaten.</info>', $dbname, count($pending), $fromDate, $toDate));
     }
