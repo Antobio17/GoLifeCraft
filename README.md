@@ -101,6 +101,8 @@ que solo se hace una vez por servidor; el resto es en tu máquina / GitHub.
 7. **[servidor]** Emitir el **certificado TLS inicial** (ver más abajo).
 8. **[servidor]** Añadir al `crontab -e` de `deploy` el envío de notificaciones →
    ver [Envío de notificaciones](#envío-de-notificaciones-cron-cada-minuto-a-mano-en-el-host).
+9. **[servidor]** Añadir al `crontab -e` de `root` el cierre nocturno del diario →
+   ver [Cierre del diario](#cierre-del-diario-cron-nocturno-a-mano-en-el-host).
 
 > Los pasos 1-3 (claves y servidor) ya están hechos en el servidor actual; se
 > documentan aquí por si hay que reconstruir el servidor o migrar a otro.
@@ -484,6 +486,32 @@ tail -f volumes/worker_logs/notification-dispatch.log
 
 > En local tampoco lo lanza nadie. Para probar el envío, ejecútalo a mano:
 > `docker exec golifecraft_php php bin/console app:notification:dispatch`.
+
+### Cierre del diario (cron nocturno, a mano en el host)
+
+`app:diary:consume-past-entries` marca como consumidas las entradas del diario de
+los días ya pasados que siguen pendientes, y la despensa las descuenta con la
+fecha de su día. Así lo planificado se da por comido sin marcarlo a mano: lo que
+no se comió se borra del diario (papelera), y lo que se comió distinto se edita
+antes de que acabe el día. El día se calcula en `Europe/Madrid` y mira 7 días
+hacia atrás (`--days`); lo pendiente de antes se queda como está. Como `root`,
+`crontab -e` y añade:
+
+```cron
+0 3 * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/diary-consumption.lock docker exec golifecraft_php php bin/console app:diary:consume-past-entries --no-interaction >> volumes/worker_logs/diary-consumption.log 2>&1
+```
+
+- Es idempotente: una entrada ya consumida no se vuelve a tocar, y una noche
+  fallida se recupera en la siguiente.
+- Desmarcar una entrada de un día pasado no sirve para decir que no se comió: la
+  siguiente noche se vuelve a marcar. Para eso está la papelera.
+- Antes de activarlo, `--dry-run` cuenta lo que marcaría en cada tenant sin
+  escribir nada.
+
+**Parar** el cierre: quita (o comenta) la línea del `crontab -e`. Nada que desplegar.
+
+> En local lo lanza el contenedor de cron cada noche. Para probarlo a mano:
+> `docker exec golifecraft_php php bin/console app:diary:consume-past-entries --dry-run`.
 
 ## Notas
 

@@ -45,6 +45,11 @@ services:
     arguments:
       $connection: '@doctrine.dbal.reader_tenant_connection'
 
+  Nutrition\Diary\Diary\Domain\QueryModel\ConsumePastDiaryEntriesNeedleDataQuery:
+    class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineConsumePastDiaryEntriesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
   Nutrition\Diary\Diary\Domain\QueryModel\FindDiaryEntryLotNeedleDataQuery:
     class: Nutrition\Diary\Diary\Infrastructure\Domain\QueryModel\Doctrine\DoctrineFindDiaryEntryLotNeedleDataQuery
     arguments:

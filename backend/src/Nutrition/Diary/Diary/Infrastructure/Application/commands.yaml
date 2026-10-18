@@ -8,3 +8,14 @@ services:
       $calculator: '@Nutrition\Recipe\Recipe\Domain\Service\RecipeNutritionCalculator'
     tags:
       - { name: 'console.command' }
+
+  Nutrition\Diary\Diary\Infrastructure\Application\Console\RunDiaryConsumptionCommand:
+    class: Nutrition\Diary\Diary\Infrastructure\Application\Console\RunDiaryConsumptionCommand
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $writerTenantConnection: '@doctrine.dbal.writer_tenant_connection'
+      $tenantEntityManager: '@doctrine.orm.tenant_manager_entity_manager'
+      $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\ConsumePastDiaryEntriesNeedleDataQuery'
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'console.command' }
