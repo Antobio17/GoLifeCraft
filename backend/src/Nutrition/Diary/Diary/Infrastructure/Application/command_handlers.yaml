@@ -117,14 +117,6 @@ services:
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
 
-  Nutrition\Diary\Diary\Application\Command\ConsumePastDiaryEntriesCommandHandler:
-    class: Nutrition\Diary\Diary\Application\Command\ConsumePastDiaryEntriesCommandHandler
-    arguments:
-      $needleDataQuery: '@Nutrition\Diary\Diary\Domain\QueryModel\ConsumePastDiaryEntriesNeedleDataQuery'
-      $messageBus: '@messenger.bus.default'
-    tags:
-      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
-
   Nutrition\Diary\Diary\Application\Command\AssignDiaryEntryLotCommandHandler:
     class: Nutrition\Diary\Diary\Application\Command\AssignDiaryEntryLotCommandHandler
     arguments:
