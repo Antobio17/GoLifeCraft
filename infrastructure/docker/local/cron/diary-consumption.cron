@@ -1,0 +1,5 @@
+# Diary — ticks as eaten every pending entry of the days already gone, every night at 03:00 UTC.
+# Symfony's console loads backend/.env.local itself, so no env inheritance is needed.
+# The day is computed in Europe/Madrid by the command itself. It is idempotent and looks back 7 days, so a missed night catches up the next one.
+# Job output is redirected to PID 1 so it shows up in `docker logs golifecraft_cron`.
+0 3 * * * root cd /var/www/html && /usr/local/bin/php bin/console app:diary:consume-past-entries > /proc/1/fd/1 2> /proc/1/fd/2

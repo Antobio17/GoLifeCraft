@@ -9,7 +9,7 @@ use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 
 #[McpTool(
     name: 'consume_diary_meal',
-    description: 'Tick a whole meal of one day as eaten, or untick it. This is the only thing that takes food out of the pantry: an entry that is planned but not consumed still counts as demand for the kitchen and for the shopping list, and its articles and servings stay in stock. Ticking a past day is the usual way to catch up, and the stock movement is dated on that day, not on today. Pass consumed false to undo it, which revokes those movements instead of applying the opposite delta.',
+    description: 'Tick a whole meal of one day as eaten, or untick it. Ticking is what takes food out of the pantry: an entry that is planned but not consumed still counts as demand for the kitchen and for the shopping list, and its articles and servings stay in stock. Every night the entries of the days already gone that are still pending are ticked on their own, dated on their day, so this is only needed to take a meal out of the pantry before the day ends. What was not eaten is deleted from the diary, never left unticked, because the nightly run would tick it again. Pass consumed false to undo a tick, which revokes those movements instead of applying the opposite delta.',
 )]
 final class ConsumeDiaryMealTool extends McpMessengerTool
 {
