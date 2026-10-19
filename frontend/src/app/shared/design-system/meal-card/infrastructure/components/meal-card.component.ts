@@ -1,12 +1,10 @@
-import { NgTemplateOutlet } from "@angular/common";
-import { Component, computed, input, output } from "@angular/core";
-import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { Component, input } from "@angular/core";
 import { MacroBarLabels } from "@shared/design-system/macro-bar/domain/models/macro-bar-labels.model";
 import { MacroBarComponent } from "@shared/design-system/macro-bar/infrastructure/components/macro-bar.component";
 
 @Component({
   selector: "ds-meal-card",
-  imports: [IconComponent, MacroBarComponent, NgTemplateOutlet],
+  imports: [MacroBarComponent],
   template: `
     <section
       class="ds-meal"
@@ -15,18 +13,13 @@ import { MacroBarComponent } from "@shared/design-system/macro-bar/infrastructur
     >
       @if (kcal()) {
         <header class="ds-meal__head ds-meal__head--list">
-          @if (consumable() && showConsume()) {
-            <ng-container [ngTemplateOutlet]="consume" />
-          }
           <span class="ds-meal__title">{{ title() }}</span>
-          <span
-            class="ds-meal__kcal"
-            [class.ds-meal__kcal--empty]="!consumable()"
+          <span class="ds-meal__kcal" [class.ds-meal__kcal--empty]="!hasItems()"
             >{{ kcal()
             }}<span class="ds-meal__unit">{{ kcalUnit() }}</span></span
           >
         </header>
-        @if (consumable()) {
+        @if (hasItems()) {
           <ds-macro-bar
             [protein]="protein()"
             [fat]="fat()"
@@ -50,10 +43,6 @@ import { MacroBarComponent } from "@shared/design-system/macro-bar/infrastructur
               [ariaLabel]="macrosLabel()"
             />
           </span>
-
-          @if (consumable()) {
-            <ng-container [ngTemplateOutlet]="consume" />
-          }
         </header>
       }
 
@@ -61,26 +50,6 @@ import { MacroBarComponent } from "@shared/design-system/macro-bar/infrastructur
         <ng-content />
       </div>
     </section>
-
-    <ng-template #consume>
-      <button
-        type="button"
-        class="ds-meal__consume"
-        [class.ds-meal__consume--done]="consumed()"
-        [class.ds-meal__consume--partial]="partial()"
-        [attr.aria-label]="consumeLabel()"
-        [attr.aria-pressed]="consumed() || partial()"
-        (click)="consumeToggled.emit()"
-      >
-        @if (!kcal() || consumed() || partial()) {
-          <ds-icon
-            [name]="consumeIcon()"
-            [size]="kcal() ? 15 : 16"
-            [stroke]="kcal() ? 2.5 : 2.6"
-          />
-        }
-      </button>
-    </ng-template>
   `,
   styles: [
     `
@@ -129,50 +98,6 @@ import { MacroBarComponent } from "@shared/design-system/macro-bar/infrastructur
       .ds-meal__macros {
         max-width: 9rem;
       }
-      .ds-meal__consume {
-        appearance: none;
-        flex: 0 0 auto;
-        width: 2.75rem;
-        height: 2.75rem;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        border: 1.5px solid var(--ds-border-strong);
-        background: var(--ds-surface);
-        color: var(--ds-text-muted);
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        transition:
-          var(--ds-motion-tint),
-          transform var(--ds-dur-1) var(--ds-ease-out);
-      }
-      .ds-meal__consume:hover {
-        border-color: var(--ds-primary-soft-border);
-        color: var(--ds-primary-soft-text);
-      }
-      .ds-meal__consume:active {
-        transform: scale(0.92);
-      }
-      .ds-meal__consume:focus-visible {
-        outline: 2px solid var(--ds-border-focus);
-        outline-offset: 2px;
-      }
-      .ds-meal__consume--partial {
-        border-color: var(--ds-primary-soft-border);
-        background: var(--ds-primary-soft);
-        color: var(--ds-primary-soft-text);
-      }
-      .ds-meal__consume--done {
-        border-color: var(--ds-primary);
-        background: var(--ds-primary);
-        color: var(--ds-on-primary);
-      }
-      .ds-meal__consume--done:hover {
-        border-color: var(--ds-primary);
-        color: var(--ds-on-primary);
-      }
       .ds-meal--list {
         gap: var(--ds-space-2);
         padding: var(--ds-space-3) var(--ds-space-4) var(--ds-space-2);
@@ -180,20 +105,6 @@ import { MacroBarComponent } from "@shared/design-system/macro-bar/infrastructur
       .ds-meal__head--list .ds-meal__title {
         flex: 1 1 auto;
         min-width: 0;
-      }
-      .ds-meal__head--list .ds-meal__consume {
-        width: 2.125rem;
-        height: 2.125rem;
-        background: transparent;
-        border: 1.5px solid var(--ds-border);
-        color: var(--ds-primary-soft-text);
-      }
-      .ds-meal__head--list .ds-meal__consume--partial,
-      .ds-meal__head--list .ds-meal__consume--done,
-      .ds-meal__head--list .ds-meal__consume--done:hover {
-        background: var(--ds-primary-soft);
-        border-color: var(--ds-primary-soft-border);
-        color: var(--ds-primary-soft-text);
       }
       .ds-meal__kcal {
         flex: 0 0 auto;
@@ -238,15 +149,5 @@ export class MealCardComponent {
   readonly carbs = input(0);
   readonly macrosLabel = input("");
   readonly macroLabels = input<MacroBarLabels | null>(null);
-  readonly consumable = input(false);
-  readonly showConsume = input(true);
-  readonly consumed = input(false);
-  readonly partial = input(false);
-  readonly consumeLabel = input("");
-
-  readonly consumeToggled = output<void>();
-
-  protected readonly consumeIcon = computed(() =>
-    this.partial() ? "minus" : "check",
-  );
+  readonly hasItems = input(false);
 }

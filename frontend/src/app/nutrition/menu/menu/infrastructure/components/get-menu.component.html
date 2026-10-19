@@ -204,8 +204,7 @@
           [carbs]="meal.carbs"
           [macrosLabel]="meal.macrosLabel"
           [macroLabels]="macroLabels()"
-          [consumable]="meal.items.length > 0"
-          [showConsume]="false"
+          [hasItems]="meal.items.length > 0"
         >
           @for (row of meal.items; track row.item.id) {
             <ds-stack [gap]="'var(--ds-space-1-5)'">

@@ -91,7 +91,6 @@ import { GetRecipeLotsService } from "@nutrition/kitchen/production/application/
 import { DiaryLotRow } from "@nutrition/diary/diary/domain/models/diary-lot-row.model";
 import { DiaryTreeViewService } from "@nutrition/diary/diary/application/services/diary-tree-view.service";
 import { DeleteDiaryEntryService } from "@nutrition/diary/diary/application/services/delete-diary-entry.service";
-import { ConsumeDiaryMealService } from "@nutrition/diary/diary/application/services/consume-diary-meal.service";
 import { DiaryTreeComponent } from "@shared/design-system/diary-tree/infrastructure/components/diary-tree.component";
 import {
   DiaryTreeQuantityChange,
@@ -100,7 +99,6 @@ import {
 import {
   DiaryDay,
   DiaryEntryView,
-  DiaryMealView,
 } from "@nutrition/diary/diary/domain/models/diary.model";
 import { DiaryEntryKind } from "@nutrition/diary/diary/domain/models/diary-entry-kind.model";
 import { DiaryStockState } from "@nutrition/diary/diary/domain/models/diary-stock-state.model";
@@ -186,7 +184,6 @@ export class GetDiaryComponent implements OnInit {
   private getRecipeLotsService = inject(GetRecipeLotsService);
   private lotView = inject(DiaryLotViewService);
   private deleteDiaryEntryService = inject(DeleteDiaryEntryService);
-  private consumeDiaryMealService = inject(ConsumeDiaryMealService);
   private treeView = inject(DiaryTreeViewService);
   private entityVisual = inject(EntityVisualService);
   private aggregateNavigation = inject(AggregateNavigationService);
@@ -247,12 +244,10 @@ export class GetDiaryComponent implements OnInit {
   );
 
   quickAddMeal = computed(() => {
-    const open = (this.attributes()?.meals ?? []).filter(
-      (meal) => !meal.consumed,
-    );
-    if (open.length === 0) return null;
+    const meals = this.attributes()?.meals ?? [];
+    if (meals.length === 0) return null;
 
-    return this.view.mealForHour(open, new Date().getHours());
+    return this.view.mealForHour(meals, new Date().getHours());
   });
   quickAddLabel = computed(() => {
     const mealKey = this.quickAddMeal();
@@ -386,10 +381,7 @@ export class GetDiaryComponent implements OnInit {
       carbs: meal.totals.carbs,
       macrosLabel: `${this.t("getDiary.macrosAria")}: ${this.view.macroLine(meal.totals, this.macroLabels())}`,
       addLabel: this.t(`getDiary.addTo.${meal.key}`),
-      consumed: meal.consumed,
-      partial: !meal.consumed && meal.entries.some((entry) => entry.consumed),
-      consumable: meal.entries.length > 0,
-      consumeLabel: this.mealConsumeLabel(meal),
+      hasItems: meal.entries.length > 0,
       entries: meal.entries.map((entry) => ({
         entry,
         imageUrl: this.entityVisual.urlOf(
@@ -516,14 +508,6 @@ export class GetDiaryComponent implements OnInit {
   goalPercentTotal = computed(() => this.goalForm.percentTotal(this.goal()));
   goalValid = computed(() => this.goalForm.isValid(this.goal()));
 
-  mealConsumeLabel(meal: DiaryMealView): string {
-    if (meal.consumed || meal.entries.some((entry) => entry.consumed)) {
-      return this.t("getDiary.meal.unmark");
-    }
-
-    return this.t("getDiary.meal.markEaten");
-  }
-
   stockLabel(entry: DiaryEntryView): string {
     if (DiaryEntryKind.Recipe !== entry.kind || entry.consumed) return "";
 
@@ -549,21 +533,6 @@ export class GetDiaryComponent implements OnInit {
     if (DiaryEntryKind.Quick === kind) return "pencil";
 
     return null;
-  }
-
-  onConsumeMeal(mealKey: string, consumed: boolean): void {
-    const previous = this.loadedDay();
-    if (!previous) return;
-
-    this.loadedDay.set(this.view.withMealConsumed(previous, mealKey, consumed));
-
-    this.consumeDiaryMealService
-      .consumeDiaryMeal(this.date(), mealKey, consumed)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => this.load(this.date(), true),
-        error: () => this.loadedDay.set(previous),
-      });
   }
 
   menusTotal = signal<number | null>(null);
@@ -697,8 +666,6 @@ export class GetDiaryComponent implements OnInit {
   }
 
   openPicker(mealKey: string): void {
-    if (this.isMealConsumed(mealKey)) return;
-
     this.pickerMeal.set(mealKey);
     this.pickerTab.set("product");
     this.pickerQuery.set("");
@@ -1098,12 +1065,6 @@ export class GetDiaryComponent implements OnInit {
     if (this.weekView.contains(this.weekStart(), date)) return;
 
     this.weekStart.set(this.weekView.weekStart(date));
-  }
-
-  private isMealConsumed(mealKey: string): boolean {
-    return (this.attributes()?.meals ?? []).some(
-      (meal) => meal.key === mealKey && meal.consumed,
-    );
   }
 
   private countLabel(key: string, count: number | null): string {
