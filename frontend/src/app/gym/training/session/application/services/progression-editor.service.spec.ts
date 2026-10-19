@@ -21,6 +21,7 @@ describe("ProgressionEditorService", () => {
     repTargets: [],
     repTolerance: 2,
     incrementKg: null,
+    maxWeightKg: null,
   };
 
   const ramp = [
@@ -99,5 +100,24 @@ describe("ProgressionEditorService", () => {
     const progression = service.withTarget(ramp, configured, 1, 12);
 
     expect(progression.repTargets).toEqual([12, 12, 10]);
+  });
+
+  it("keeps the maximum weight when switching mode", () => {
+    const configured: Progression = { ...none, maxWeightKg: 80 };
+
+    const progression = service.withMode(
+      ramp,
+      configured,
+      ProgressionMode.Cascade,
+    );
+
+    expect(progression.maxWeightKg).toBe(80);
+  });
+
+  it("treats a maximum weight of zero as no limit", () => {
+    const capped = service.withMaxWeight(none, 80);
+
+    expect(capped.maxWeightKg).toBe(80);
+    expect(service.withMaxWeight(capped, 0).maxWeightKg).toBeNull();
   });
 });

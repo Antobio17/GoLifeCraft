@@ -270,6 +270,87 @@ final class ProgressionPolicyTest extends TestCase
         $this->assertEquals(expected: [105.0, 102.5, 102.5], actual: $this->weightsOf(exercise: $exercise));
     }
 
+    public function testItKeepsProgressingTheWeightWithoutAMaximum(): void
+    {
+        $exercise = $this->exercise(
+            mode: SessionExercise::PROGRESSION_BLOCK,
+            performed: [[12, 100.0], [11, 100.0], [10, 100.0]],
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [102.5, 102.5, 102.5], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: [12, 11, 10], actual: $exercise->repTargets);
+    }
+
+    public function testItNeverPlansAboveTheMaximumWeight(): void
+    {
+        $exercise = $this->exercise(
+            mode: SessionExercise::PROGRESSION_BLOCK,
+            performed: [[12, 100.0], [11, 100.0], [10, 100.0]],
+            maxWeight: 101.0,
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [101.0, 101.0, 101.0], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: [12, 11, 10], actual: $exercise->repTargets);
+    }
+
+    public function testABlockAtTheMaximumWeightRaisesEveryRepTarget(): void
+    {
+        $exercise = $this->exercise(
+            mode: SessionExercise::PROGRESSION_BLOCK,
+            performed: [[12, 100.0], [11, 100.0], [10, 100.0]],
+            maxWeight: 100.0,
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [100.0, 100.0, 100.0], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: [13, 12, 11], actual: $exercise->repTargets);
+        $this->assertEquals(expected: [13, 12, 11], actual: $this->repsOf(exercise: $exercise));
+    }
+
+    public function testACascadeAtTheMaximumWeightRaisesTheWeakestRepTarget(): void
+    {
+        $exercise = $this->exercise(
+            performed: [[12, 100.0], [11, 100.0], [10, 100.0]],
+            maxWeight: 100.0,
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [100.0, 100.0, 100.0], actual: $this->weightsOf(exercise: $exercise));
+        $this->assertEquals(expected: [12, 11, 11], actual: $exercise->repTargets);
+    }
+
+    public function testItKeepsTheRepTargetsAtTheMaximumWeightWhileTheyAreNotReached(): void
+    {
+        $exercise = $this->exercise(
+            mode: SessionExercise::PROGRESSION_BLOCK,
+            performed: [[12, 100.0], [10, 100.0], [10, 100.0]],
+            maxWeight: 100.0,
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [12, 11, 10], actual: $exercise->repTargets);
+        $this->assertEquals(expected: [100.0, 100.0, 100.0], actual: $this->weightsOf(exercise: $exercise));
+    }
+
+    public function testACascadeCapsItsTopSetsAtTheMaximumWeight(): void
+    {
+        $exercise = $this->exercise(
+            performed: [[13, 101.0], [11, 100.0], [10, 100.0]],
+            maxWeight: 101.0,
+        );
+
+        $this->policy->apply(sessionExercise: $exercise);
+
+        $this->assertEquals(expected: [101.0, 101.0, 101.0], actual: $this->weightsOf(exercise: $exercise));
+    }
+
     /**
      * @param array<int, array{0: int, 1: float}> $performed
      * @param array<int, array{0: int, 1: float}> $warmups
@@ -282,6 +363,7 @@ final class ProgressionPolicyTest extends TestCase
         int $holds = 0,
         array $targets = [12, 11, 10],
         int $tolerance = 2,
+        ?float $maxWeight = null,
     ): SessionExercise {
         $exercise = SessionExercise::create(
             sessionId: 'session-1',
@@ -297,6 +379,7 @@ final class ProgressionPolicyTest extends TestCase
             repTargets: SessionExercise::PROGRESSION_NONE === $mode ? [] : $targets,
             repTolerance: $tolerance,
             incrementKg: SessionExercise::PROGRESSION_NONE === $mode ? null : 2.5,
+            maxWeightKg: $maxWeight,
             updatedByUserId: 'user-1',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

@@ -70,5 +70,20 @@
         />
       </div>
     </div>
+
+    <div class="pe-field">
+      <ds-text variant="meta">{{ maxWeightLabel }}</ds-text>
+      <ds-number-input
+        variant="field"
+        [stepper]="true"
+        [step]="increment"
+        [precision]="2"
+        [min]="0"
+        [ngModel]="maxWeight"
+        (ngModelChange)="maxWeightChange.emit($event)"
+        [ariaLabel]="maxWeightLabel"
+      />
+      <ds-text variant="meta">{{ maxWeightHint }}</ds-text>
+    </div>
   }
 </ds-stack>

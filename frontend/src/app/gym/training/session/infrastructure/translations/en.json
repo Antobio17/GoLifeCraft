@@ -248,13 +248,16 @@
       "modeCascade": "Cascade",
       "tolerance": "Tolerance (reps)",
       "increment": "Increment (kg)",
+      "maxWeight": "Max weight (kg)",
+      "maxWeightHint": "Leave it at 0 for no limit. Once reached, reps go up instead of weight.",
       "noTargets": "Mark a set as effective to set targets.",
       "hintBlock": "All three sets go up at once.",
       "hintCascade": "One set goes up per workout.",
       "set": "Set",
       "now": "Today",
       "target": "Target",
-      "summary": "{{mode}} · target {{targets}} · +{{increment}} kg"
+      "summary": "{{mode}} · target {{targets}} · +{{increment}} kg",
+      "summaryCapped": "{{summary}} · max {{max}} kg"
     },
     "tab": {
       "sets": "Sets",

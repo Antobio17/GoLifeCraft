@@ -34,6 +34,7 @@ final class SessionExerciseProgressionTest extends TestCase
             repTargets: [12, 11, 10],
             repTolerance: 2,
             incrementKg: 2.5,
+            maxWeightKg: null,
             updatedByUserId: 'user-1',
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -52,6 +53,7 @@ final class SessionExerciseProgressionTest extends TestCase
             repTargets: [12],
             repTolerance: 2,
             incrementKg: 2.5,
+            maxWeightKg: null,
             updatedByUserId: 'user-1',
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -66,6 +68,7 @@ final class SessionExerciseProgressionTest extends TestCase
             repTargets: [],
             repTolerance: 2,
             incrementKg: 2.5,
+            maxWeightKg: null,
             updatedByUserId: 'user-1',
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -80,6 +83,7 @@ final class SessionExerciseProgressionTest extends TestCase
             repTargets: [12, 11, 10],
             repTolerance: 2,
             incrementKg: null,
+            maxWeightKg: null,
             updatedByUserId: 'user-1',
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -94,6 +98,22 @@ final class SessionExerciseProgressionTest extends TestCase
             repTargets: [12],
             repTolerance: 2,
             incrementKg: 0.0,
+            maxWeightKg: null,
+            updatedByUserId: 'user-1',
+            dateTimeGenerator: $this->dateTimeGenerator,
+        );
+    }
+
+    public function testItRejectsANonPositiveMaximumWeight(): void
+    {
+        $this->expectException(exception: UpdateSessionException::class);
+
+        $this->sessionExercise()->configureProgression(
+            mode: SessionExercise::PROGRESSION_BLOCK,
+            repTargets: [12],
+            repTolerance: 2,
+            incrementKg: 2.5,
+            maxWeightKg: 0.0,
             updatedByUserId: 'user-1',
             dateTimeGenerator: $this->dateTimeGenerator,
         );
@@ -108,6 +128,7 @@ final class SessionExerciseProgressionTest extends TestCase
             repTargets: [],
             repTolerance: -1,
             incrementKg: null,
+            maxWeightKg: null,
             updatedByUserId: 'user-1',
             dateTimeGenerator: $this->dateTimeGenerator,
         );

@@ -28,6 +28,7 @@ class SessionExercise extends GenericAggregate
     public string $progressionMode = self::PROGRESSION_NONE;
     public int $repTolerance = self::DEFAULT_REP_TOLERANCE;
     public ?float $incrementKg = null;
+    public ?float $maxWeightKg = null;
     public int $consecutiveHolds = 0;
 
     /** @var int[] */
@@ -87,6 +88,7 @@ class SessionExercise extends GenericAggregate
         array $repTargets,
         int $repTolerance,
         ?float $incrementKg,
+        ?float $maxWeightKg,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -95,12 +97,14 @@ class SessionExercise extends GenericAggregate
             repTargets: $repTargets,
             repTolerance: $repTolerance,
             incrementKg: $incrementKg,
+            maxWeightKg: $maxWeightKg,
         );
 
         $this->progressionMode = $mode;
         $this->repTargets = array_values(array: $repTargets);
         $this->repTolerance = $repTolerance;
         $this->incrementKg = $incrementKg;
+        $this->maxWeightKg = $maxWeightKg;
         $this->stampUpdate(userId: $updatedByUserId, now: $dateTimeGenerator->now());
     }
 
@@ -110,6 +114,7 @@ class SessionExercise extends GenericAggregate
         $this->repTargets = $previous->repTargets;
         $this->repTolerance = $previous->repTolerance;
         $this->incrementKg = $previous->incrementKg;
+        $this->maxWeightKg = $previous->maxWeightKg;
         $this->consecutiveHolds = $previous->consecutiveHolds;
     }
 
@@ -135,6 +140,28 @@ class SessionExercise extends GenericAggregate
         }
 
         return max($weights);
+    }
+
+    public function capWeight(float $weight): float
+    {
+        if (null === $this->maxWeightKg) {
+            return $weight;
+        }
+
+        return min($weight, $this->maxWeightKg);
+    }
+
+    public function reachedMaxWeight(float $weight): bool
+    {
+        return null !== $this->maxWeightKg && $weight >= $this->maxWeightKg;
+    }
+
+    /**
+     * @param int[] $repTargets
+     */
+    public function raiseRepTargets(array $repTargets): void
+    {
+        $this->repTargets = array_values(array: $repTargets);
     }
 
     public function holdOnce(): void
@@ -190,6 +217,7 @@ class SessionExercise extends GenericAggregate
         array $repTargets,
         int $repTolerance,
         ?float $incrementKg,
+        ?float $maxWeightKg,
     ): void {
         if (!in_array($mode, self::PROGRESSION_MODES, true)) {
             throw UpdateSessionException::invalidProgressionMode(mode: $mode);
@@ -201,6 +229,10 @@ class SessionExercise extends GenericAggregate
 
         if (null !== $incrementKg && $incrementKg <= 0) {
             throw UpdateSessionException::incrementMustBePositive();
+        }
+
+        if (null !== $maxWeightKg && $maxWeightKg <= 0) {
+            throw UpdateSessionException::maxWeightMustBePositive();
         }
 
         foreach ($repTargets as $repTarget) {

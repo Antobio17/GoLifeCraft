@@ -74,7 +74,8 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
                 'se.progression_mode',
                 'se.rep_targets',
                 'se.rep_tolerance',
-                'se.increment_kg'
+                'se.increment_kg',
+                'se.max_weight_kg'
             )
             ->from(table: 'session_exercise', alias: 'se')
             ->leftJoin('se', 'exercise', 'e', 'e.id = se.exercise_id')
@@ -108,6 +109,7 @@ final readonly class DoctrineGetSessionNeedleDataQuery implements GetSessionNeed
                     repTargets: json_decode(json: $row['rep_targets'] ?? '[]', associative: true) ?? [],
                     repTolerance: (int) $row['rep_tolerance'],
                     incrementKg: null === $row['increment_kg'] ? null : (float) $row['increment_kg'],
+                    maxWeightKg: null === $row['max_weight_kg'] ? null : (float) $row['max_weight_kg'],
                 ),
             );
         }, array: $exerciseRows);

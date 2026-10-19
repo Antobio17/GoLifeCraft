@@ -46,6 +46,7 @@ final readonly class SessionExerciseAssembler
             repTargets: $exerciseData->progression->repTargets,
             repTolerance: $exerciseData->progression->repTolerance,
             incrementKg: $exerciseData->progression->incrementKg,
+            maxWeightKg: $exerciseData->progression->maxWeightKg,
             updatedByUserId: $userId,
             dateTimeGenerator: $this->dateTimeGenerator,
         );

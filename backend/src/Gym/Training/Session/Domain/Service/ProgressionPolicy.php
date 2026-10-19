@@ -154,6 +154,12 @@ final readonly class ProgressionPolicy
                 return;
             }
 
+            if ($sessionExercise->reachedMaxWeight(weight: $baseWeight)) {
+                self::raiseReps(sessionExercise: $sessionExercise, performed: $performed);
+
+                return;
+            }
+
             self::writePlan(
                 sessionExercise: $sessionExercise,
                 performed: $performed,
@@ -192,7 +198,7 @@ final readonly class ProgressionPolicy
         int $advanced,
         float $increment,
     ): void {
-        $topWeight = $baseWeight + $increment;
+        $topWeight = max($baseWeight, $sessionExercise->capWeight(weight: $baseWeight + $increment));
 
         foreach (array_values(array: $performed) as $index => $set) {
             $set->planFor(
@@ -202,6 +208,37 @@ final readonly class ProgressionPolicy
         }
 
         self::followWithWarmups(sessionExercise: $sessionExercise, increment: $increment);
+    }
+
+    /**
+     * @param ExerciseSet[] $performed
+     */
+    private static function raiseReps(SessionExercise $sessionExercise, array $performed): void
+    {
+        $targets = [];
+        foreach (array_values(array: $performed) as $index => $set) {
+            $targets[] = self::targetAt(sessionExercise: $sessionExercise, index: $index, fallback: $set->reps);
+        }
+
+        $sessionExercise->raiseRepTargets(repTargets: self::raisedTargets(sessionExercise: $sessionExercise, targets: $targets));
+        self::writeTargets(sessionExercise: $sessionExercise, performed: $performed);
+    }
+
+    /**
+     * @param int[] $targets
+     *
+     * @return int[]
+     */
+    private static function raisedTargets(SessionExercise $sessionExercise, array $targets): array
+    {
+        if (SessionExercise::PROGRESSION_BLOCK === $sessionExercise->progressionMode) {
+            return array_map(callback: static fn (int $target): int => $target + 1, array: $targets);
+        }
+
+        $weakest = array_search(needle: min($targets), haystack: $targets, strict: true);
+        $targets[$weakest] = $targets[$weakest] + 1;
+
+        return $targets;
     }
 
     private static function followWithWarmups(SessionExercise $sessionExercise, float $increment): void

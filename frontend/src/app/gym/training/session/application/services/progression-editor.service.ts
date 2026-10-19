@@ -44,6 +44,7 @@ export class ProgressionEditorService {
       repTargets: this.repTargetsFor(sets, progression),
       repTolerance: progression.repTolerance,
       incrementKg: progression.incrementKg ?? this.defaultIncrementKg,
+      maxWeightKg: progression.maxWeightKg,
     };
   }
 
@@ -69,6 +70,13 @@ export class ProgressionEditorService {
 
   withIncrement(progression: Progression, incrementKg: number): Progression {
     return { ...progression, incrementKg };
+  }
+
+  withMaxWeight(progression: Progression, maxWeightKg: number): Progression {
+    return {
+      ...progression,
+      maxWeightKg: maxWeightKg > 0 ? maxWeightKg : null,
+    };
   }
 
   private effectiveSets(sets: ExerciseSetView[]): ExerciseSetView[] {

@@ -96,6 +96,15 @@ final class UpdateSessionException extends BaseException
         );
     }
 
+    public static function maxWeightMustBePositive(): self
+    {
+        return new static(
+            title: 'The maximum weight must be greater than zero.',
+            keyTranslation: 'session.progression.max.weight.must.be.positive',
+            details: []
+        );
+    }
+
     public static function repTargetMustBePositive(int $repTarget): self
     {
         return new static(

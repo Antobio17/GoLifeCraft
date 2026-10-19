@@ -12,6 +12,7 @@ final readonly class ProgressionView
         public array $repTargets,
         public int $repTolerance,
         public ?float $incrementKg,
+        public ?float $maxWeightKg,
     ) {
     }
 }
