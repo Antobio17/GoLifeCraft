@@ -498,15 +498,28 @@ hacia atrás (`--days`); lo pendiente de antes se queda como está. Como `root`,
 `crontab -e` y añade:
 
 ```cron
-0 3 * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/diary-consumption.lock docker exec golifecraft_php php bin/console app:diary:consume-past-entries --no-interaction >> volumes/worker_logs/diary-consumption.log 2>&1
+0 3 * * * cd /home/deploy/golifecraft/prod && flock -n /tmp/diary-consumption.lock docker compose --env-file .env.local -f docker-compose.prod.yml run --rm worker sh -c 'php bin/console app:diary:consume-past-entries --no-interaction >> /var/log/worker/diary-consumption.log 2>&1'
 ```
 
+- Corre una vez al día, así que va en un `worker` efímero (`run --rm`), igual que
+  las recurrencias de finanzas, y no en un `docker exec` sobre el `php` que sirve
+  la web. Va una hora después de las recurrencias para no coincidir.
 - Es idempotente: una entrada ya consumida no se vuelve a tocar, y una noche
   fallida se recupera en la siguiente.
 - Desmarcar una entrada de un día pasado no sirve para decir que no se comió: la
   siguiente noche se vuelve a marcar. Para eso está la papelera.
 - Antes de activarlo, `--dry-run` cuenta lo que marcaría en cada tenant sin
-  escribir nada.
+  escribir nada:
+
+```bash
+docker compose --env-file .env.local -f docker-compose.prod.yml run --rm worker php bin/console app:diary:consume-past-entries --dry-run
+```
+
+**Comprobar** que funciona:
+
+```bash
+tail -f volumes/worker_logs/diary-consumption.log
+```
 
 **Parar** el cierre: quita (o comenta) la línea del `crontab -e`. Nada que desplegar.
 
