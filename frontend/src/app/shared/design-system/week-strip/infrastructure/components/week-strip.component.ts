@@ -2,13 +2,12 @@ import { NgTemplateOutlet } from "@angular/common";
 import {
   Component,
   ElementRef,
-  afterNextRender,
   computed,
   effect,
   inject,
   input,
   output,
-  signal,
+  viewChild,
 } from "@angular/core";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
 import { ViewportService } from "@shared/viewport/application/services/viewport.service";
@@ -23,13 +22,11 @@ import { WeekStripDayView } from "../../domain/models/week-strip-day-view.model"
   host: {
     "[class.ds-week-host--frameless]": "frameless()",
     "[class.ds-week-host--collapsible]": "collapsible()",
-    "[class.is-stuck]": "stuck()",
-    "[style.margin-block-end.px]": "collapsedGap() || null",
   },
   template: `
-    <section class="ds-week" [attr.aria-label]="title() || null">
+    <section #week class="ds-week" [attr.aria-label]="title() || null">
       @if (title()) {
-        <div class="ds-week__head">
+        <div #head class="ds-week__head">
           <div class="ds-week__text">
             <span class="ds-week__title">{{ title() }}</span>
             @if (caption()) {
@@ -155,16 +152,30 @@ import { WeekStripDayView } from "../../domain/models/week-strip-day-view.model"
           position: sticky;
           top: calc(
             env(safe-area-inset-top) + var(--ds-sticky-header-offset, 0px) +
-              var(--ds-space-2)
+              var(--ds-space-2) - var(--week-collapse, 0px)
           );
           z-index: 15;
         }
-        :host(.ds-week-host--collapsible.is-stuck) .ds-week {
-          gap: 0;
-          box-shadow: var(--ds-shadow-float);
+        :host(.ds-week-host--collapsible) .ds-week {
+          position: relative;
+          isolation: isolate;
+          background: none;
+          border: none;
+          box-shadow: none;
         }
-        :host(.ds-week-host--collapsible.is-stuck) .ds-week__head {
-          display: none;
+        :host(.ds-week-host--collapsible) .ds-week::before {
+          content: "";
+          position: absolute;
+          inset: var(--week-hidden, 0px) 0 0;
+          z-index: -1;
+          background: var(--ds-surface);
+          border: 1px solid var(--ds-border);
+          border-radius: var(--ds-radius-surface);
+          box-shadow: var(--ds-shadow-card);
+        }
+        :host(.ds-week-host--collapsible) .ds-week__head {
+          opacity: calc(1 - var(--week-progress, 0));
+          clip-path: inset(var(--week-hidden, 0px) 0 0);
         }
       }
       :host(.ds-week-host--frameless) .ds-week {
@@ -391,35 +402,22 @@ export class WeekStripComponent {
 
   protected readonly tone = WeekStripDayTone;
 
-  private readonly host = inject(ElementRef<HTMLElement>).nativeElement;
+  private readonly host: HTMLElement = inject(ElementRef).nativeElement;
   private readonly narrow = inject(ViewportService).matches(
     "(max-width: 999.98px)",
   );
-  private readonly rendered = signal(false);
-  private readonly sticks = computed(
-    () => this.rendered() && this.collapsible() && this.narrow(),
-  );
-  private readonly expandedHeight = signal(0);
-  private readonly currentHeight = signal(0);
-
-  protected readonly stuck = signal(false);
-  protected readonly collapsedGap = computed(() =>
-    this.stuck()
-      ? Math.max(0, this.expandedHeight() - this.currentHeight())
-      : 0,
-  );
+  private readonly week = viewChild<ElementRef<HTMLElement>>("week");
+  private readonly head = viewChild<ElementRef<HTMLElement>>("head");
 
   constructor() {
-    afterNextRender(() => this.rendered.set(true));
-
     effect((onCleanup) => {
-      if (!this.sticks()) {
-        this.stuck.set(false);
+      const week = this.week()?.nativeElement;
+      const head = this.head()?.nativeElement;
+      if (!this.collapsible() || !this.narrow() || !week || !head) {
         return;
       }
 
-      const disconnect = this.observeStickiness();
-      onCleanup(disconnect);
+      onCleanup(this.followCollapse(week, head));
     });
   }
 
@@ -450,33 +448,37 @@ export class WeekStripComponent {
     });
   });
 
-  private observeStickiness(): () => void {
-    const stickyTop = parseFloat(getComputedStyle(this.host).top) || 0;
-    const stickiness = new IntersectionObserver(
-      ([entry]) =>
-        this.stuck.set(
-          entry.intersectionRatio < 1 &&
-            entry.boundingClientRect.top <= (entry.rootBounds?.top ?? 0),
-        ),
-      { rootMargin: `-${stickyTop + 1}px 0px 0px 0px`, threshold: [0, 1] },
-    );
-    const size = new ResizeObserver(([entry]) => {
-      const height = entry.borderBoxSize[0]?.blockSize ?? 0;
-      this.currentHeight.set(height);
+  private followCollapse(week: HTMLElement, head: HTMLElement): () => void {
+    let collapse = 0;
+    const update = () => {
+      const stuckTop = parseFloat(getComputedStyle(this.host).top) || 0;
+      const top = this.host.getBoundingClientRect().top;
+      const hidden = Math.min(Math.max(stuckTop + collapse - top, 0), collapse);
+      this.host.style.setProperty("--week-hidden", `${hidden}px`);
+      this.host.style.setProperty(
+        "--week-progress",
+        `${collapse > 0 ? hidden / collapse : 0}`,
+      );
+    };
+    const measure = () => {
+      collapse =
+        head.offsetHeight + (parseFloat(getComputedStyle(week).rowGap) || 0);
+      this.host.style.setProperty("--week-collapse", `${collapse}px`);
+      update();
+    };
+    const size = new ResizeObserver(measure);
 
-      if (this.stuck()) {
-        return;
-      }
-
-      this.expandedHeight.set(height);
-    });
-
-    stickiness.observe(this.host);
-    size.observe(this.host);
+    size.observe(head);
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
 
     return () => {
-      stickiness.disconnect();
       size.disconnect();
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      this.host.style.removeProperty("--week-hidden");
+      this.host.style.removeProperty("--week-collapse");
+      this.host.style.removeProperty("--week-progress");
     };
   }
 
