@@ -165,13 +165,7 @@
             [carbs]="meal.carbs"
             [macrosLabel]="meal.macrosLabel"
             [macroLabels]="macroLabels()"
-            [consumable]="meal.consumable"
-            [consumed]="meal.consumed"
-            [partial]="meal.partial"
-            [consumeLabel]="meal.consumeLabel"
-            (consumeToggled)="
-              onConsumeMeal(meal.key, !meal.consumed && !meal.partial)
-            "
+            [hasItems]="meal.hasItems"
           >
             @for (row of meal.entries; track row.entry.id) {
               <ds-stack [gap]="'var(--ds-space-1-5)'">
@@ -230,27 +224,18 @@
                   />
                 }
               </ds-stack>
-              @if (!$last || !meal.consumed) {
-                <ds-divider
-                  animate.enter="diary__add--in"
-                  animate.leave="diary__add--out"
-                />
-              }
+              <ds-divider />
             }
 
-            @if (!meal.consumed) {
-              <ds-button
-                class="diary__add"
-                animate.enter="diary__add--in"
-                animate.leave="diary__add--out"
-                [attr.data-testid]="'diary-add-' + meal.key"
-                variant="link"
-                size="sm"
-                icon="plus"
-                (clicked)="openPicker(meal.key)"
-                >{{ meal.addLabel }}</ds-button
-              >
-            }
+            <ds-button
+              class="diary__add"
+              [attr.data-testid]="'diary-add-' + meal.key"
+              variant="link"
+              size="sm"
+              icon="plus"
+              (clicked)="openPicker(meal.key)"
+              >{{ meal.addLabel }}</ds-button
+            >
           </ds-meal-card>
         }
       </ds-stack>

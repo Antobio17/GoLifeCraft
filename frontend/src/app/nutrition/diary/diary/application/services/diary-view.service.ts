@@ -29,28 +29,6 @@ export class DiaryViewService {
   private unitCatalog = inject(UnitCatalogService);
   private calendarView = inject(DiaryCalendarViewService);
 
-  withMealConsumed(
-    day: DiaryDay,
-    mealKey: string,
-    consumed: boolean,
-  ): DiaryDay {
-    return {
-      ...day,
-      attributes: {
-        ...day.attributes,
-        meals: day.attributes.meals.map((meal) =>
-          meal.key === mealKey
-            ? {
-                ...meal,
-                consumed,
-                entries: meal.entries.map((entry) => ({ ...entry, consumed })),
-              }
-            : meal,
-        ),
-      },
-    };
-  }
-
   todayIso(): string {
     return this.toIso(new Date());
   }

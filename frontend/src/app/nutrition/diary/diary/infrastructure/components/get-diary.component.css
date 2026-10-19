@@ -52,32 +52,3 @@ ds-button.diary__add {
   align-self: flex-start;
   padding-block: var(--ds-space-2) var(--ds-space-1);
 }
-
-.diary__add--in {
-  overflow: hidden;
-  animation: diary-add-in var(--ds-dur-3) var(--ds-ease-out);
-}
-
-.diary__add--out {
-  overflow: hidden;
-  animation: diary-add-in var(--ds-dur-3) var(--ds-ease-in) reverse;
-}
-
-@keyframes diary-add-in {
-  from {
-    max-height: 0;
-    padding-block: 0;
-    opacity: 0;
-  }
-  to {
-    max-height: 3rem;
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .diary__add--in,
-  .diary__add--out {
-    animation-duration: 0.01ms;
-  }
-}

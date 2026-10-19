@@ -131,10 +131,6 @@
       "covered": "IN STOCK",
       "short": "TO COOK"
     },
-    "meal": {
-      "markEaten": "Mark as eaten",
-      "unmark": "Unmark the meal"
-    },
     "lot": {
       "title": "From which batch?",
       "hint": "What the diary counts is what went into that batch.",
