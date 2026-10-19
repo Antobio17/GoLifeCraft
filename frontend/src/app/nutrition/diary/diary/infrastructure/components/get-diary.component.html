@@ -36,10 +36,12 @@
   <ds-split-view
     [columns]="'minmax(0, 0.8fr) minmax(0, 1fr)'"
     [gap]="'var(--ds-space-5)'"
+    [flatSide]="true"
   >
     <ds-week-strip
       slot="side"
       data-testid="diary-week"
+      [collapsible]="true"
       [title]="weekTitle()"
       [caption]="weekCaption()"
       [selectable]="true"
