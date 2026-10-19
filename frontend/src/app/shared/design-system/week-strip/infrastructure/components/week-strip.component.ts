@@ -1,6 +1,17 @@
 import { NgTemplateOutlet } from "@angular/common";
-import { Component, computed, input, output } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  afterNextRender,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from "@angular/core";
 import { IconComponent } from "@shared/design-system/icon/infrastructure/components/icon.component";
+import { ViewportService } from "@shared/viewport/application/services/viewport.service";
 import { WeekStripDay } from "../../domain/models/week-strip-day.model";
 import { WeekStripDayState } from "../../domain/models/week-strip-day-state.enum";
 import { WeekStripDayTone } from "../../domain/models/week-strip-day-tone.enum";
@@ -11,6 +22,9 @@ import { WeekStripDayView } from "../../domain/models/week-strip-day-view.model"
   imports: [IconComponent, NgTemplateOutlet],
   host: {
     "[class.ds-week-host--frameless]": "frameless()",
+    "[class.ds-week-host--collapsible]": "collapsible()",
+    "[class.is-stuck]": "stuck()",
+    "[style.margin-block-end.px]": "collapsedGap() || null",
   },
   template: `
     <section class="ds-week" [attr.aria-label]="title() || null">
@@ -135,6 +149,40 @@ import { WeekStripDayView } from "../../domain/models/week-strip-day-view.model"
         border: 1px solid var(--ds-border);
         border-radius: var(--ds-radius-surface);
         box-shadow: var(--ds-shadow-card);
+      }
+      @media (max-width: 999.98px) {
+        :host(.ds-week-host--collapsible) {
+          position: sticky;
+          top: calc(
+            env(safe-area-inset-top) + var(--ds-sticky-header-offset, 0px) +
+              var(--ds-space-2)
+          );
+          z-index: 15;
+        }
+        :host(.ds-week-host--collapsible.is-stuck) .ds-week {
+          gap: 0;
+          padding: var(--ds-space-2) var(--ds-space-3);
+          box-shadow: var(--ds-shadow-float);
+        }
+        :host(.ds-week-host--collapsible.is-stuck) .ds-week__head {
+          display: none;
+        }
+        :host(.ds-week-host--collapsible.is-stuck) .ds-week__day,
+        :host(.ds-week-host--collapsible.is-stuck) .ds-week__hit {
+          gap: 2px;
+        }
+        :host(.ds-week-host--collapsible.is-stuck) .ds-week__weekday {
+          font-size: 0.625rem;
+        }
+        :host(.ds-week-host--collapsible.is-stuck) .ds-week__dot {
+          width: 1.875rem;
+          height: 1.875rem;
+          font-size: var(--ds-text-base);
+        }
+        :host(.ds-week-host--collapsible.is-stuck)
+          .ds-week__day--in-range::before {
+          height: 1.875rem;
+        }
       }
       :host(.ds-week-host--frameless) .ds-week {
         padding: 0;
@@ -350,6 +398,7 @@ export class WeekStripComponent {
   rangeStart = input("");
   rangeEnd = input("");
   navigable = input(false);
+  collapsible = input(false);
   previousLabel = input("Previous week");
   nextLabel = input("Next week");
 
@@ -358,6 +407,38 @@ export class WeekStripComponent {
   nextWeek = output<void>();
 
   protected readonly tone = WeekStripDayTone;
+
+  private readonly host = inject(ElementRef<HTMLElement>).nativeElement;
+  private readonly narrow = inject(ViewportService).matches(
+    "(max-width: 999.98px)",
+  );
+  private readonly rendered = signal(false);
+  private readonly sticks = computed(
+    () => this.rendered() && this.collapsible() && this.narrow(),
+  );
+  private readonly expandedHeight = signal(0);
+  private readonly currentHeight = signal(0);
+
+  protected readonly stuck = signal(false);
+  protected readonly collapsedGap = computed(() =>
+    this.stuck()
+      ? Math.max(0, this.expandedHeight() - this.currentHeight())
+      : 0,
+  );
+
+  constructor() {
+    afterNextRender(() => this.rendered.set(true));
+
+    effect((onCleanup) => {
+      if (!this.sticks()) {
+        this.stuck.set(false);
+        return;
+      }
+
+      const disconnect = this.observeStickiness();
+      onCleanup(disconnect);
+    });
+  }
 
   protected readonly dayViews = computed<WeekStripDayView[]>(() => {
     const selected = this.selected();
@@ -385,6 +466,36 @@ export class WeekStripComponent {
       };
     });
   });
+
+  private observeStickiness(): () => void {
+    const stickyTop = parseFloat(getComputedStyle(this.host).top) || 0;
+    const stickiness = new IntersectionObserver(
+      ([entry]) =>
+        this.stuck.set(
+          entry.intersectionRatio < 1 &&
+            entry.boundingClientRect.top <= (entry.rootBounds?.top ?? 0),
+        ),
+      { rootMargin: `-${stickyTop + 1}px 0px 0px 0px`, threshold: [0, 1] },
+    );
+    const size = new ResizeObserver(([entry]) => {
+      const height = entry.borderBoxSize[0]?.blockSize ?? 0;
+      this.currentHeight.set(height);
+
+      if (this.stuck()) {
+        return;
+      }
+
+      this.expandedHeight.set(height);
+    });
+
+    stickiness.observe(this.host);
+    size.observe(this.host);
+
+    return () => {
+      stickiness.disconnect();
+      size.disconnect();
+    };
+  }
 
   protected onDaysKeydown(event: KeyboardEvent): void {
     const step = this.keyStep(event.key);

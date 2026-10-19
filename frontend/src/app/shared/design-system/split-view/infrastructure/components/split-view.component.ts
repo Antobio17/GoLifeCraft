@@ -39,6 +39,12 @@ type SplitViewSide = "start" | "end";
         order: 1;
       }
 
+      @media (max-width: 999.98px) {
+        :host(.ds-split--flat-side) .split__side {
+          display: contents;
+        }
+      }
+
       @media (min-width: 1000px) {
         .split {
           display: grid;
@@ -82,6 +88,7 @@ type SplitViewSide = "start" | "end";
     "[style.--split-column-gap]": "columnGap",
     "[style.--split-sticky-top]": "stickyTop",
     "[class.ds-split--end]": "side === 'end'",
+    "[class.ds-split--flat-side]": "flatSide",
   },
 })
 export class SplitViewComponent {
@@ -92,4 +99,5 @@ export class SplitViewComponent {
   @Input() side: SplitViewSide = "start";
   @Input() stickyTop = "var(--ds-space-5)";
   @Input() sticky = true;
+  @Input() flatSide = false;
 }
