@@ -161,27 +161,10 @@ import { WeekStripDayView } from "../../domain/models/week-strip-day-view.model"
         }
         :host(.ds-week-host--collapsible.is-stuck) .ds-week {
           gap: 0;
-          padding: var(--ds-space-2) var(--ds-space-3);
           box-shadow: var(--ds-shadow-float);
         }
         :host(.ds-week-host--collapsible.is-stuck) .ds-week__head {
           display: none;
-        }
-        :host(.ds-week-host--collapsible.is-stuck) .ds-week__day,
-        :host(.ds-week-host--collapsible.is-stuck) .ds-week__hit {
-          gap: 2px;
-        }
-        :host(.ds-week-host--collapsible.is-stuck) .ds-week__weekday {
-          font-size: 0.625rem;
-        }
-        :host(.ds-week-host--collapsible.is-stuck) .ds-week__dot {
-          width: 1.875rem;
-          height: 1.875rem;
-          font-size: var(--ds-text-base);
-        }
-        :host(.ds-week-host--collapsible.is-stuck)
-          .ds-week__day--in-range::before {
-          height: 1.875rem;
         }
       }
       :host(.ds-week-host--frameless) .ds-week {
