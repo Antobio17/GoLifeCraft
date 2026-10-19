@@ -248,13 +248,16 @@
       "modeCascade": "En cascada",
       "tolerance": "Tolerancia (reps)",
       "increment": "Incremento (kg)",
+      "maxWeight": "Peso máximo (kg)",
+      "maxWeightHint": "Déjalo en 0 si no hay tope. Al llegar a él, se suben repeticiones en vez de peso.",
       "noTargets": "Marca alguna serie como efectiva para fijar objetivos.",
       "hintBlock": "Las tres series suben a la vez.",
       "hintCascade": "Sube una serie por entreno.",
       "set": "Serie",
       "now": "Hoy",
       "target": "Objetivo",
-      "summary": "{{mode}} · objetivo {{targets}} · +{{increment}} kg"
+      "summary": "{{mode}} · objetivo {{targets}} · +{{increment}} kg",
+      "summaryCapped": "{{summary}} · máx. {{max}} kg"
     },
     "tab": {
       "sets": "Series",

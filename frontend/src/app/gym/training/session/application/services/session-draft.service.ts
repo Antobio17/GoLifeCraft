@@ -258,6 +258,7 @@ export class SessionDraftService {
       repTargets: [],
       repTolerance: this.defaultRepTolerance,
       incrementKg: null,
+      maxWeightKg: null,
     };
   }
 

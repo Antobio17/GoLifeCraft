@@ -105,6 +105,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
             repTargets: [12, 11, 10],
             repTolerance: 2,
             incrementKg: 2.5,
+            maxWeightKg: null,
             updatedByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),
         );
@@ -145,6 +146,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
             repTargets: [8, 8, 8],
             repTolerance: 1,
             incrementKg: 5.0,
+            maxWeightKg: null,
             updatedByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),
         );
@@ -217,6 +219,7 @@ final class SyncSessionExercisesCommandHandlerTest extends TestCase
             repTargets: [12, 11, 10],
             repTolerance: 2,
             incrementKg: 2.5,
+            maxWeightKg: null,
             updatedByUserId: 'god-user-id',
             dateTimeGenerator: new DateTimeGenerator(),
         );

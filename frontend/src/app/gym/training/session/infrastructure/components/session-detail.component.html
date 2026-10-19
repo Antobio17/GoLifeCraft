@@ -181,7 +181,6 @@
                   {{ "getSession.progress.empty" | t }}
                 </ds-text>
               }
-
             </ds-card>
           }
         }
@@ -334,6 +333,9 @@
                   [tolerance]="exercise.progression.repTolerance"
                   [incrementLabel]="progressionIncrementLabel()"
                   [increment]="exercise.progression.incrementKg ?? 1.25"
+                  [maxWeightLabel]="progressionMaxWeightLabel()"
+                  [maxWeight]="exercise.progression.maxWeightKg ?? 0"
+                  [maxWeightHint]="progressionMaxWeightHint()"
                   [noTargetsText]="progressionNoTargets()"
                   (modeChange)="setProgressionMode(exercise.id, $event)"
                   (targetChange)="setProgressionTarget(exercise.id, $event)"
@@ -342,6 +344,9 @@
                   "
                   (incrementChange)="
                     setProgressionIncrement(exercise.id, $event)
+                  "
+                  (maxWeightChange)="
+                    setProgressionMaxWeight(exercise.id, $event)
                   "
                 />
               }

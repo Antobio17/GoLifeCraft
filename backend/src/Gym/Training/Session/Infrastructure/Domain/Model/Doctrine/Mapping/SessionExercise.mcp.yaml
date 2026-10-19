@@ -38,6 +38,14 @@ fields:
     type: float
     min: 0
     description: Weight step added when the exercise progresses, in kilograms.
+  maxWeightKg:
+    writable: true
+    type: float
+    min: 0
+    description: >-
+      Heaviest weight the exercise can take, in kilograms (a machine stack, for instance).
+      Empty means no limit. Once the working weight reaches it, the progression raises the
+      rep targets instead of the weight.
   consecutiveHolds:
     type: int
     min: 0

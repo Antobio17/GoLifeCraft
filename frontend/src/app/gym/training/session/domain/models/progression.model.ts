@@ -5,4 +5,5 @@ export interface Progression {
   repTargets: number[];
   repTolerance: number;
   incrementKg: number | null;
+  maxWeightKg: number | null;
 }

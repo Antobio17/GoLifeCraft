@@ -19,6 +19,7 @@
       </options>
     </field>
     <field name="incrementKg" type="float" column="increment_kg" nullable="true"/>
+    <field name="maxWeightKg" type="float" column="max_weight_kg" nullable="true"/>
     <field name="consecutiveHolds" type="integer" column="consecutive_holds">
       <options>
         <option name="default">0</option>

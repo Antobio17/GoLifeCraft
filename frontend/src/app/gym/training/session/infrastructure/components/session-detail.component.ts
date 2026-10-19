@@ -948,6 +948,12 @@ export class SessionDetailComponent implements OnInit {
   progressionIncrementLabel = computed(() =>
     this.t("getSession.progression.increment"),
   );
+  progressionMaxWeightLabel = computed(() =>
+    this.t("getSession.progression.maxWeight"),
+  );
+  progressionMaxWeightHint = computed(() =>
+    this.t("getSession.progression.maxWeightHint"),
+  );
   progressionNoTargets = computed(() =>
     this.t("getSession.progression.noTargets"),
   );
@@ -1054,12 +1060,21 @@ export class SessionDetailComponent implements OnInit {
       return "";
     }
 
-    return this.t("getSession.progression.summary", {
+    const summary = this.t("getSession.progression.summary", {
       mode: this.progressionModeName(exercise.progression.mode),
       targets: this.progressionEditor
         .repTargetsFor(exercise.sets, exercise.progression)
         .join("/"),
       increment: exercise.progression.incrementKg ?? 0,
+    });
+
+    if (!exercise.progression.maxWeightKg) {
+      return summary;
+    }
+
+    return this.t("getSession.progression.summaryCapped", {
+      summary,
+      max: exercise.progression.maxWeightKg,
     });
   }
 
@@ -1108,6 +1123,12 @@ export class SessionDetailComponent implements OnInit {
   setProgressionIncrement(exerciseId: string, increment: number): void {
     this.changeProgression(exerciseId, (_sets, progression) =>
       this.progressionEditor.withIncrement(progression, increment),
+    );
+  }
+
+  setProgressionMaxWeight(exerciseId: string, maxWeight: number): void {
+    this.changeProgression(exerciseId, (_sets, progression) =>
+      this.progressionEditor.withMaxWeight(progression, maxWeight),
     );
   }
 

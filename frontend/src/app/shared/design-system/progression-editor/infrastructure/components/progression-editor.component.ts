@@ -40,12 +40,16 @@ export class ProgressionEditorComponent {
   @Input() tolerance = 2;
   @Input() incrementLabel = "";
   @Input() increment = 1.25;
+  @Input() maxWeightLabel = "";
+  @Input() maxWeight = 0;
+  @Input() maxWeightHint = "";
   @Input() noTargetsText = "";
 
   @Output() modeChange = new EventEmitter<string>();
   @Output() targetChange = new EventEmitter<ProgressionTargetRow>();
   @Output() toleranceChange = new EventEmitter<number>();
   @Output() incrementChange = new EventEmitter<number>();
+  @Output() maxWeightChange = new EventEmitter<number>();
 
   onTargetChange(row: ProgressionTargetRow, reps: number): void {
     this.targetChange.emit({ ...row, reps });

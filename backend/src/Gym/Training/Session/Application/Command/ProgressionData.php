@@ -14,6 +14,7 @@ final readonly class ProgressionData
         public array $repTargets = [],
         public int $repTolerance = SessionExercise::DEFAULT_REP_TOLERANCE,
         public ?float $incrementKg = null,
+        public ?float $maxWeightKg = null,
     ) {
     }
 
@@ -27,7 +28,8 @@ final readonly class ProgressionData
             mode: self::mode(value: $rawProgression['mode'] ?? null),
             repTargets: self::repTargets(value: $rawProgression['repTargets'] ?? null),
             repTolerance: self::repTolerance(value: $rawProgression['repTolerance'] ?? null),
-            incrementKg: self::incrementKg(value: $rawProgression['incrementKg'] ?? null),
+            incrementKg: self::nullableFloat(value: $rawProgression['incrementKg'] ?? null),
+            maxWeightKg: self::nullableFloat(value: $rawProgression['maxWeightKg'] ?? null),
         );
     }
 
@@ -64,7 +66,7 @@ final readonly class ProgressionData
         return (int) $value;
     }
 
-    private static function incrementKg(mixed $value): ?float
+    private static function nullableFloat(mixed $value): ?float
     {
         if (null === $value || '' === $value) {
             return null;

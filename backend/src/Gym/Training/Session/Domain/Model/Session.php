@@ -271,6 +271,7 @@ class Session extends GenericAggregate
         array $repTargets,
         int $repTolerance,
         ?float $incrementKg,
+        ?float $maxWeightKg,
         string $updatedByUserId,
         DateTimeGenerator $dateTimeGenerator,
     ): void {
@@ -282,6 +283,7 @@ class Session extends GenericAggregate
             repTargets: $repTargets,
             repTolerance: $repTolerance,
             incrementKg: $incrementKg,
+            maxWeightKg: $maxWeightKg,
             updatedByUserId: $updatedByUserId,
             dateTimeGenerator: $dateTimeGenerator,
         );
