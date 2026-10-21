@@ -96,6 +96,8 @@ jobs:
           context: .
           file: infrastructure/docker/production/php/Dockerfile
           push: true
+          pull: true
+          no-cache: true
           tags: ${{ steps.meta-php.outputs.tags }}
           labels: ${{ steps.meta-php.outputs.labels }}
           cache-from: type=gha
