@@ -4,12 +4,14 @@ namespace Nutrition\GlobalCatalog\Article\Application\Query;
 
 use Nutrition\GlobalCatalog\Article\Domain\Exception\GetGlobalArticleException;
 use Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticleNeedleDataQuery;
+use Nutrition\GlobalCatalog\Article\Domain\QueryModel\ImportedArticleBarcodesNeedleDataQuery;
 use Shared\Shared\Shared\Application\Query\QueryResult;
 
 final readonly class GetGlobalArticleQueryHandler
 {
     public function __construct(
         private GetGlobalArticleNeedleDataQuery $needleDataQuery,
+        private ImportedArticleBarcodesNeedleDataQuery $importedArticleBarcodesNeedleDataQuery,
         private GetGlobalArticleDataTransform $dataTransform,
     ) {
     }
@@ -18,6 +20,7 @@ final readonly class GetGlobalArticleQueryHandler
     {
         $globalArticle = $this->needleDataQuery->findGlobalArticleById(
             globalArticleId: $query->globalArticleId,
+            importedBarcodes: $this->importedArticleBarcodesNeedleDataQuery->importedBarcodes(),
         );
 
         if (null === $globalArticle) {

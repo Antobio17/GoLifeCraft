@@ -13,3 +13,8 @@ services:
     class: Nutrition\GlobalCatalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetGlobalArticleNeedleDataQuery
     arguments:
       $connection: '@doctrine.dbal.master_connection'
+
+  Nutrition\GlobalCatalog\Article\Domain\QueryModel\ImportedArticleBarcodesNeedleDataQuery:
+    class: Nutrition\GlobalCatalog\Article\Infrastructure\Domain\QueryModel\Doctrine\DoctrineImportedArticleBarcodesNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'

@@ -3,6 +3,7 @@ services:
     class: Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesQueryHandler
     arguments:
       $needleDataQuery: '@Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticlesNeedleDataQuery'
+      $importedArticleBarcodesNeedleDataQuery: '@Nutrition\GlobalCatalog\Article\Domain\QueryModel\ImportedArticleBarcodesNeedleDataQuery'
       $dataTransform: '@Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticlesDataTransform'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
@@ -21,6 +22,7 @@ services:
     class: Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleQueryHandler
     arguments:
       $needleDataQuery: '@Nutrition\GlobalCatalog\Article\Domain\QueryModel\GetGlobalArticleNeedleDataQuery'
+      $importedArticleBarcodesNeedleDataQuery: '@Nutrition\GlobalCatalog\Article\Domain\QueryModel\ImportedArticleBarcodesNeedleDataQuery'
       $dataTransform: '@Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleDataTransform'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

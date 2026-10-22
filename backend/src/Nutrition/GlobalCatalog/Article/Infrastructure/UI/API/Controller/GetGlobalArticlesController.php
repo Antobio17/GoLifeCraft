@@ -32,6 +32,8 @@ final class GetGlobalArticlesController
                     filterSource: RequestExtractor::getFilterParam(request: $request, filterName: 'source'),
                     filterCategory: RequestExtractor::getFilterParam(request: $request, filterName: 'category'),
                     orderBy: RequestExtractor::getOrderByParam(request: $request),
+                    filterWithNutrition: RequestExtractor::getBooleanFilterParam(request: $request, filterName: 'withNutrition', default: false) ?? false,
+                    filterHideImported: RequestExtractor::getBooleanFilterParam(request: $request, filterName: 'hideImported', default: false) ?? false,
                 )),
             );
         } catch (HandlerFailedException $e) {

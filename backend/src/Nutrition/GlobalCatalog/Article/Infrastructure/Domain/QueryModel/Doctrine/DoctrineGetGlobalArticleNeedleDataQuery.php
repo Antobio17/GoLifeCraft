@@ -12,7 +12,7 @@ final readonly class DoctrineGetGlobalArticleNeedleDataQuery implements GetGloba
     {
     }
 
-    public function findGlobalArticleById(string $globalArticleId): ?GetGlobalArticleResult
+    public function findGlobalArticleById(string $globalArticleId, array $importedBarcodes = []): ?GetGlobalArticleResult
     {
         $row = $this->connection->createQueryBuilder()
             ->select(
@@ -86,6 +86,7 @@ final readonly class DoctrineGetGlobalArticleNeedleDataQuery implements GetGloba
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
             createdByUserId: $row['created_by_user_id'],
             updatedByUserId: $row['updated_by_user_id'],
+            imported: in_array(needle: $row['barcode'], haystack: $importedBarcodes, strict: true),
         );
     }
 }

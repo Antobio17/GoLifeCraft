@@ -6,5 +6,8 @@ use Nutrition\GlobalCatalog\Article\Domain\QueryModel\Dto\GetGlobalArticleResult
 
 interface GetGlobalArticleNeedleDataQuery
 {
-    public function findGlobalArticleById(string $globalArticleId): ?GetGlobalArticleResult;
+    /**
+     * @param string[] $importedBarcodes
+     */
+    public function findGlobalArticleById(string $globalArticleId, array $importedBarcodes = []): ?GetGlobalArticleResult;
 }
