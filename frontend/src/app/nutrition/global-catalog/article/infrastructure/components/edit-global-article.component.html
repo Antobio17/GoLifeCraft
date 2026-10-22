@@ -1,0 +1,263 @@
+<ds-page-wrapper
+  [maxWidth]="'44rem'"
+  [wideMaxWidth]="'68rem'"
+  [gap]="'var(--ds-space-5)'"
+>
+  @if (loading()) {
+    <ds-skeleton-screen-header
+      [stacked]="true"
+      [leading]="true"
+      [eyebrow]="true"
+      [subtitle]="false"
+      titleWidth="58%"
+      [actions]="1"
+    />
+    <ds-split-view [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'">
+      <ds-skeleton-hero slot="side" height="12.5rem" />
+      <ds-skeleton-rows
+        slot="side"
+        [card]="true"
+        [header]="true"
+        [rows]="5"
+        labelWidth="36%"
+        valueWidth="5.125rem"
+      />
+
+      <ds-skeleton-rows
+        [card]="true"
+        [header]="true"
+        [rows]="3"
+        labelWidth="36%"
+        valueWidth="5.125rem"
+      />
+      <ds-skeleton-rows
+        [card]="true"
+        [header]="true"
+        [badge]="true"
+        [rows]="8"
+        labelWidth="44%"
+        valueWidth="3.5rem"
+      />
+    </ds-split-view>
+  } @else if (notFound()) {
+    <ds-screen-header
+      leading="back"
+      [leadingLabel]="'editGlobalArticle.back' | t"
+      [title]="'getGlobalArticle.notFound.title' | t"
+      (leadingClick)="cancel()"
+    />
+    <ds-empty-state
+      icon="info"
+      [title]="'getGlobalArticle.notFound.title' | t"
+      [text]="'getGlobalArticle.notFound.text' | t"
+    />
+  } @else {
+    <ds-screen-header
+      data-testid="edit-global-article-header"
+      [sticky]="true"
+      [stacked]="true"
+      leading="close"
+      [leadingLabel]="'editGlobalArticle.back' | t"
+      [eyebrow]="'editGlobalArticle.eyebrow' | t"
+      [title]="title()"
+      (leadingClick)="cancel()"
+    >
+      <ds-button
+        slot="actions"
+        data-testid="edit-global-article-save"
+        variant="primary"
+        size="icon-lg"
+        icon="save"
+        [iconSize]="19"
+        [ariaLabel]="'editGlobalArticle.save' | t"
+        [disabled]="!draft.hasChanges()"
+        [loading]="saving()"
+        (clicked)="save()"
+      />
+    </ds-screen-header>
+
+    <ds-note icon="globe">{{ "editGlobalArticle.note" | t }}</ds-note>
+
+    <ds-split-view
+      [formGroup]="form"
+      [gap]="'var(--ds-space-5)'"
+      [columns]="'minmax(0, 0.9fr) minmax(0, 1fr)'"
+    >
+      <ds-product-hero
+        slot="side"
+        [emoji]="'🛒'"
+        [imageUrl]="article()?.imageUrl ?? null"
+        [alt]="title()"
+      />
+
+      <ds-card slot="side">
+        <ds-section-header [title]="'editGlobalArticle.identity.heading' | t" />
+
+        <ds-field
+          [label]="'editGlobalArticle.field.name' | t"
+          [required]="true"
+          [error]="nameError()"
+        >
+          <ds-text-input
+            data-testid="edit-global-article-name"
+            variant="outlined"
+            formControlName="name"
+          />
+        </ds-field>
+
+        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
+          <ds-field [grow]="true" [label]="'editGlobalArticle.field.brand' | t">
+            <ds-text-input
+              data-testid="edit-global-article-brand"
+              variant="outlined"
+              formControlName="brand"
+            />
+          </ds-field>
+          <ds-field
+            [width]="'8rem'"
+            [label]="'editGlobalArticle.field.quantity' | t"
+          >
+            <ds-text-input
+              data-testid="edit-global-article-quantity"
+              variant="outlined"
+              formControlName="quantity"
+              [placeholder]="'editGlobalArticle.field.quantityPlaceholder' | t"
+            />
+          </ds-field>
+        </ds-stack>
+
+        @if (categoryOptions().length > 0) {
+          <ds-field [label]="'editGlobalArticle.field.category' | t">
+            <ds-select-chips
+              data-testid="edit-global-article-category"
+              formControlName="categoryName"
+              [options]="categoryOptions()"
+            />
+          </ds-field>
+        }
+
+        <ds-nutrition-facts [rows]="identityRows()" />
+      </ds-card>
+
+      <ds-card>
+        <ds-section-header [title]="'editGlobalArticle.pricing.heading' | t" />
+
+        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
+          <ds-field [grow]="true" [label]="'editGlobalArticle.field.price' | t">
+            <ds-price-input
+              data-testid="edit-global-article-price"
+              formControlName="price"
+            />
+          </ds-field>
+          <ds-field
+            [grow]="true"
+            [label]="'editGlobalArticle.field.previousPrice' | t"
+          >
+            <ds-price-input
+              data-testid="edit-global-article-previous-price"
+              formControlName="previousPrice"
+            />
+          </ds-field>
+        </ds-stack>
+
+        <ds-stack direction="row" align="end" [gap]="'var(--ds-space-3)'">
+          <ds-field
+            [grow]="true"
+            [label]="'editGlobalArticle.field.referencePrice' | t"
+          >
+            <ds-price-input formControlName="referencePrice" />
+          </ds-field>
+          <ds-field
+            [width]="'8rem'"
+            [label]="'editGlobalArticle.field.referenceFormat' | t"
+          >
+            <ds-text-input
+              variant="outlined"
+              formControlName="referenceFormat"
+              [placeholder]="
+                'editGlobalArticle.field.referenceFormatPlaceholder' | t
+              "
+            />
+          </ds-field>
+        </ds-stack>
+      </ds-card>
+
+      <ds-stack [gap]="'var(--ds-space-3)'">
+        <ds-macro-bars
+          data-testid="edit-global-article-preview"
+          [kcal]="preview().kcal"
+          [kcalUnit]="'getGlobalArticle.macro.kcal' | t"
+          [macros]="[
+            {
+              label: 'getGlobalArticle.macro.protein' | t,
+              value: preview().protein,
+              tone: 'protein',
+            },
+            {
+              label: 'getGlobalArticle.macro.fat' | t,
+              value: preview().fat,
+              tone: 'fat',
+            },
+            {
+              label: 'getGlobalArticle.macro.carbs' | t,
+              value: preview().carbs,
+              tone: 'carbs',
+            },
+          ]"
+        />
+
+        <ds-nutrition-editor
+          [title]="'editGlobalArticle.nutrition.heading' | t"
+          [badge]="'editGlobalArticle.nutrition.reference' | t"
+        >
+          <ds-nutrient-input
+            data-testid="edit-global-article-calories"
+            variant="energy"
+            icon="flame"
+            unit="kcal"
+            formControlName="calories"
+            [label]="'editGlobalArticle.nutrition.energy' | t"
+          />
+          <ds-nutrient-input
+            data-testid="edit-global-article-protein"
+            formControlName="protein"
+            [label]="'getGlobalArticle.table.protein' | t"
+          />
+          <ds-nutrient-input
+            formControlName="fat"
+            [label]="'getGlobalArticle.table.fat' | t"
+          />
+          <ds-nutrient-input
+            variant="sub"
+            formControlName="saturatedFat"
+            [label]="'getGlobalArticle.table.saturated' | t"
+          />
+          <ds-nutrient-input
+            formControlName="carbs"
+            [label]="'getGlobalArticle.table.carbs' | t"
+          />
+          <ds-nutrient-input
+            variant="sub"
+            formControlName="sugars"
+            [label]="'getGlobalArticle.table.sugars' | t"
+          />
+          <ds-nutrient-input
+            formControlName="fiber"
+            [label]="'getGlobalArticle.table.fiber' | t"
+          />
+          <ds-nutrient-input
+            [last]="true"
+            formControlName="salt"
+            [label]="'getGlobalArticle.table.salt' | t"
+          />
+        </ds-nutrition-editor>
+      </ds-stack>
+    </ds-split-view>
+  }
+</ds-page-wrapper>
+
+<ds-discard-changes-modal
+  [show]="draft.confirmingDiscard()"
+  (confirmed)="draft.discard()"
+  (cancelled)="draft.keepEditing()"
+/>

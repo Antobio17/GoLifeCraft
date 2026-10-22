@@ -1,6 +1,7 @@
 import { Observable } from "rxjs";
 import { GetGlobalArticlesPort } from "../../domain/ports/get-global-articles.port";
 import { GetGlobalArticlesResponse } from "../../domain/models/get-global-articles-response.model";
+import { GetGlobalArticlesFilters } from "../../domain/models/get-global-articles-filters.model";
 
 export class GetGlobalArticlesService {
   constructor(private getGlobalArticlesPort: GetGlobalArticlesPort) {}
@@ -8,16 +9,12 @@ export class GetGlobalArticlesService {
   getGlobalArticles(
     page: number = 1,
     pageSize: number = 100,
-    filterName?: string,
-    filterSource?: string,
-    filterCategory?: string,
+    filters: GetGlobalArticlesFilters = {},
   ): Observable<GetGlobalArticlesResponse> {
     return this.getGlobalArticlesPort.getGlobalArticles(
       page,
       pageSize,
-      filterName,
-      filterSource,
-      filterCategory,
+      filters,
     );
   }
 }

@@ -1,25 +1,18 @@
 {
   "getGlobalArticles": {
     "heading": "Import to catalog",
-    "pending": "products ready to add",
     "info": "A selection of preloaded products with their nutrition values. Search for the ones you need and import them one by one to add them to your catalog.",
-    "importAll": "Import all",
-    "allImported": "All imported",
-    "add": "Import",
+    "add": "Add to my catalog",
     "added": "Added",
     "searchPlaceholder": "Search product or brand…",
     "searchClear": "Clear search",
-    "filterSource": "Filter by source",
-    "filterCategory": "Filter by category",
     "nutritionCaption": "Values per 100 g",
     "noResults": "No results for",
     "source": {
-      "all": "All",
-      "noResults": "No products from this source"
+      "all": "All"
     },
     "category": {
-      "all": "All categories",
-      "noResults": "No products in this category"
+      "all": "All categories"
     },
     "macro": {
       "kcal": "kcal",
@@ -32,8 +25,45 @@
       "text": "There are no products available to import yet"
     },
     "toast": {
-      "importedAll": "Products added to your catalog",
       "error": "Could not add the product"
+    },
+    "eyebrow": "Catalog",
+    "back": "Back to catalog",
+    "subtitle": {
+      "one": "1 product ready to add",
+      "many": "{{total}} products ready to add"
+    },
+    "results": {
+      "one": "1 product",
+      "many": "{{total}} products"
+    },
+    "noResultsFilters": "No products match these filters",
+    "filter": {
+      "open": "Filters",
+      "title": "Filters",
+      "close": "Close",
+      "apply": "Apply",
+      "clear": "Clear all",
+      "remove": "Remove filter",
+      "category": "Category",
+      "sort": "Sort by",
+      "sortPill": "Sort: {{label}}",
+      "withNutrition": {
+        "title": "Only with nutrition values",
+        "subtitle": "Hides the ones without kcal or macros",
+        "pill": "With nutrition"
+      },
+      "hideImported": {
+        "title": "Hide the ones I already have",
+        "subtitle": "Removes the ones already in your catalog",
+        "pill": "Without the ones I have"
+      }
+    },
+    "sort": {
+      "name": "Name",
+      "price": "Price",
+      "protein": "Most protein",
+      "calories": "Fewest kcal"
     }
   },
   "getGlobalArticle": {
@@ -44,7 +74,6 @@
     "import": "Add to my catalog",
     "alreadyImported": "Already in your catalog",
     "per": "Values per",
-    "noNutrition": "This product has no nutrition information",
     "macro": {
       "kcal": "kcal",
       "protein": "Protein",
@@ -61,13 +90,13 @@
       "salt": "Salt"
     },
     "details": {
-      "heading": "Product data",
       "price": "Price",
       "previousPrice": "Previous price",
       "referencePrice": "Unit price",
       "bulkPrice": "Bulk price",
       "stores": "Available at",
-      "barcode": "Barcode"
+      "barcode": "Barcode",
+      "heading": "Product details"
     },
     "notFound": {
       "title": "Product not found",
@@ -75,6 +104,72 @@
     },
     "toast": {
       "error": "Could not add the product"
+    },
+    "edit": "Edit product",
+    "nutritionHeading": "Nutrition facts",
+    "importCard": {
+      "title": "Do you use it at home?",
+      "text": "It is copied to your catalog with its nutrition and price. You can then adjust it like any other item.",
+      "doneTitle": "Already in your catalog",
+      "doneText": "Changes to your copy do not affect this product."
+    },
+    "noNutrition": {
+      "title": "No nutrition facts",
+      "text": "The source does not provide its nutrition values.",
+      "complete": "Fill in values"
+    }
+  },
+  "editGlobalArticle": {
+    "breadcrumb": "Edit product",
+    "back": "Cancel",
+    "eyebrow": "Edit product",
+    "title": "Global product",
+    "save": "Save changes",
+    "note": "You are correcting the global catalog entry: anyone who imports it from now on will get these values. Copies already imported do not change.",
+    "identity": {
+      "heading": "Identification",
+      "barcode": "Barcode",
+      "source": "Source"
+    },
+    "pricing": {
+      "heading": "Price"
+    },
+    "field": {
+      "name": "Name",
+      "nameRequired": "The name is required",
+      "brand": "Brand",
+      "quantity": "Quantity",
+      "quantityPlaceholder": "500 g",
+      "category": "Category",
+      "price": "Price",
+      "previousPrice": "Previous price",
+      "referencePrice": "Unit price",
+      "referenceFormat": "Unit",
+      "referenceFormatPlaceholder": "kg"
+    },
+    "nutrition": {
+      "heading": "Nutrition facts",
+      "reference": "per 100 g",
+      "energy": "Energy"
+    },
+    "toast": {
+      "saved": "Changes saved"
+    }
+  },
+  "global": {
+    "article": {
+      "not": {
+        "found": "The product no longer exists in the global catalog"
+      },
+      "name": {
+        "required": "The name is required"
+      },
+      "negative": {
+        "value": "Values cannot be negative"
+      },
+      "update": {
+        "forbidden": "Only an administrator can edit the global catalog"
+      }
     }
   }
 }

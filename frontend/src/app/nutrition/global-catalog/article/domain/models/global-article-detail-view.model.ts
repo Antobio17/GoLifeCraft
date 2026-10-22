@@ -18,4 +18,5 @@ export interface GlobalArticleDetailView {
   hasNutrition: boolean;
   referenceLabel: string;
   macros: GlobalArticleMacroSet;
+  imported: boolean;
 }
