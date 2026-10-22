@@ -2,6 +2,7 @@
 
 namespace Nutrition\GlobalCatalog\Article\Infrastructure\Domain\QueryModel\Doctrine;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Nutrition\GlobalCatalog\Article\Domain\QueryModel\Dto\GetGlobalArticlesResult;
@@ -17,12 +18,21 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
     public function findGlobalArticles(
         int $pageSize,
         int $pageNumber,
+        array $importedBarcodes = [],
         ?string $filterName = null,
         ?string $filterSource = null,
         ?string $filterCategory = null,
         ?string $orderBy = null,
+        bool $filterWithNutrition = false,
+        array $excludedBarcodes = [],
     ): array {
-        $qb = $this->getBaseQuery(filterName: $filterName, filterSource: $filterSource, filterCategory: $filterCategory)
+        $qb = $this->getBaseQuery(
+            filterName: $filterName,
+            filterSource: $filterSource,
+            filterCategory: $filterCategory,
+            filterWithNutrition: $filterWithNutrition,
+            excludedBarcodes: $excludedBarcodes,
+        )
             ->select(
                 't.id',
                 't.barcode',
@@ -61,6 +71,7 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
             ->fetchAllAssociative();
 
         $utc = new \DateTimeZone(timezone: 'UTC');
+        $imported = array_flip(array: $importedBarcodes);
 
         return array_map(callback: static fn (array $row): GetGlobalArticlesResult => new GetGlobalArticlesResult(
             id: $row['id'],
@@ -91,6 +102,7 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
             updatedAt: new \DateTime(datetime: $row['updated_at'], timezone: $utc),
             createdByUserId: $row['created_by_user_id'],
             updatedByUserId: $row['updated_by_user_id'],
+            imported: isset($imported[$row['barcode']]),
         ), array: $rows);
     }
 
@@ -98,17 +110,30 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
         ?string $filterName = null,
         ?string $filterSource = null,
         ?string $filterCategory = null,
+        bool $filterWithNutrition = false,
+        array $excludedBarcodes = [],
     ): int {
-        return (int) $this->getBaseQuery(filterName: $filterName, filterSource: $filterSource, filterCategory: $filterCategory)
+        return (int) $this->getBaseQuery(
+            filterName: $filterName,
+            filterSource: $filterSource,
+            filterCategory: $filterCategory,
+            filterWithNutrition: $filterWithNutrition,
+            excludedBarcodes: $excludedBarcodes,
+        )
             ->select('COUNT(*)')
             ->executeQuery()
             ->fetchOne();
     }
 
+    /**
+     * @param string[] $excludedBarcodes
+     */
     private function getBaseQuery(
         ?string $filterName = null,
         ?string $filterSource = null,
         ?string $filterCategory = null,
+        bool $filterWithNutrition = false,
+        array $excludedBarcodes = [],
     ): QueryBuilder {
         $qb = $this->connection->createQueryBuilder()
             ->from(table: 'global_article', alias: 't');
@@ -125,6 +150,15 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
                 ->setParameter(key: 'category', value: $filterCategory);
         }
 
+        if ($filterWithNutrition) {
+            $qb->andWhere('t.calories IS NOT NULL');
+        }
+
+        if ([] !== $excludedBarcodes) {
+            $qb->andWhere('t.barcode NOT IN (:excludedBarcodes)')
+                ->setParameter(key: 'excludedBarcodes', value: $excludedBarcodes, type: ArrayParameterType::STRING);
+        }
+
         return $qb;
     }
 
@@ -133,6 +167,9 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
         $allowedFields = [
             'name' => 't.name',
             'updatedAt' => 't.updated_at',
+            'price' => 't.price',
+            'protein' => 't.protein',
+            'calories' => 't.calories',
         ];
 
         $field = $orderBy ?? 'name';
@@ -145,6 +182,8 @@ final readonly class DoctrineGetGlobalArticlesNeedleDataQuery implements GetGlob
 
         $column = $allowedFields[$field] ?? 't.name';
 
-        $qb->orderBy(sort: $column, order: $direction);
+        $qb->orderBy(sort: $column.' IS NULL', order: 'ASC')
+            ->addOrderBy(sort: $column, order: $direction)
+            ->addOrderBy(sort: 't.name', order: 'ASC');
     }
 }

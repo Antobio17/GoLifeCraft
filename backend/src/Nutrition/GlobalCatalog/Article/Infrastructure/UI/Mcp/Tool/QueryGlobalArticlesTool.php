@@ -20,7 +20,7 @@ final class QueryGlobalArticlesTool extends McpMessengerTool
      * @param string|null $name     Free text matched against the article name and brand
      * @param string|null $source   Catalog the article comes from: "openfoodfacts" or "mercadona"
      * @param string|null $category Exact category name, as returned in the categoryName of previous results
-     * @param string|null $orderBy  "name" or "updatedAt", prefixed with "-" for descending order
+     * @param string|null $orderBy  "name", "updatedAt", "price", "protein" or "calories", prefixed with "-" for descending order
      */
     public function __invoke(
         ?string $name = null,

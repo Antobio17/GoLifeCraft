@@ -6,3 +6,12 @@ services:
       $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Nutrition\GlobalCatalog\Article\Application\Command\UpdateGlobalArticleCommandHandler:
+    class: Nutrition\GlobalCatalog\Article\Application\Command\UpdateGlobalArticleCommandHandler
+    arguments:
+      $globalArticleRepository: '@Nutrition\GlobalCatalog\Article\Domain\Model\GlobalArticleRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }

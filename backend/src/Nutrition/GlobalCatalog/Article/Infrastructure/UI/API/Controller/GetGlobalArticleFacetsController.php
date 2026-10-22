@@ -4,6 +4,7 @@ namespace Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller;
 
 use Nutrition\GlobalCatalog\Article\Application\Query\GetGlobalArticleFacetsQuery;
 use Nutrition\GlobalCatalog\Article\Domain\QueryModel\Dto\GetGlobalArticleFacetsResult;
+use Nutrition\GlobalCatalog\Article\Domain\QueryModel\Dto\GlobalArticleCategoryCount;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\JsonResponse\JsonResponseBuilder;
 use Shared\Tool\Tool\Infrastructure\Domain\Service\Request\RequestExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,7 +33,17 @@ final class GetGlobalArticleFacetsController
 
             return new JsonResponse(data: [
                 'data' => [
-                    'categories' => $result->categories,
+                    'categories' => array_map(
+                        callback: static fn (GlobalArticleCategoryCount $category): string => $category->name,
+                        array: $result->categories,
+                    ),
+                    'categoryCounts' => array_map(
+                        callback: static fn (GlobalArticleCategoryCount $category): array => [
+                            'name' => $category->name,
+                            'count' => $category->count,
+                        ],
+                        array: $result->categories,
+                    ),
                 ],
             ]);
         } catch (HandlerFailedException $e) {

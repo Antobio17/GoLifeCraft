@@ -3,6 +3,8 @@
 namespace Nutrition\GlobalCatalog\Article\Domain\Model;
 
 use Integration\Mcp\Server\Domain\Model\GenericAggregate;
+use Nutrition\GlobalCatalog\Article\Domain\Event\GlobalArticleUpdated;
+use Nutrition\GlobalCatalog\Article\Domain\Exception\UpdateGlobalArticleException;
 use Shared\Tool\Tool\Domain\Service\DateTimeGenerator;
 
 class GlobalArticle extends GenericAggregate
@@ -88,6 +90,78 @@ class GlobalArticle extends GenericAggregate
         $this->stampUpdate(userId: self::SYSTEM_USER_ID, now: $dateTimeGenerator->now());
     }
 
+    public function correct(
+        string $name,
+        ?string $brand,
+        ?string $categoryName,
+        ?string $quantity,
+        GlobalArticlePricing $pricing,
+        GlobalArticleNutrition $nutrition,
+        string $updatedByUserId,
+        DateTimeGenerator $dateTimeGenerator,
+    ): void {
+        $trimmedName = trim(string: $name);
+
+        if ('' === $trimmedName) {
+            throw UpdateGlobalArticleException::nameRequired(globalArticleId: $this->id);
+        }
+
+        $this->assertNotNegative(values: [
+            'price' => $pricing->price,
+            'previousPrice' => $pricing->previousPrice,
+            'referencePrice' => $pricing->referencePrice,
+            'calories' => $nutrition->calories,
+            'protein' => $nutrition->protein,
+            'carbs' => $nutrition->carbs,
+            'sugars' => $nutrition->sugars,
+            'fat' => $nutrition->fat,
+            'saturatedFat' => $nutrition->saturatedFat,
+            'fiber' => $nutrition->fiber,
+            'salt' => $nutrition->salt,
+        ]);
+
+        $now = $dateTimeGenerator->now();
+
+        $this->name = $trimmedName;
+        $this->brand = $brand;
+        $this->categoryName = $categoryName;
+        $this->quantity = $quantity;
+        $this->writePricing(pricing: $pricing);
+        $this->writeNutrition(nutrition: $nutrition);
+        $this->stampUpdate(userId: $updatedByUserId, now: $now);
+
+        $this->record(event: new GlobalArticleUpdated(
+            aggregateId: $this->id,
+            occurredOn: $now,
+            barcode: $this->barcode,
+            name: $this->name,
+            brand: $this->brand,
+            categoryName: $this->categoryName,
+            imageUrl: $this->imageUrl,
+            quantity: $this->quantity,
+            stores: $this->stores,
+            price: $this->price,
+            bulkPrice: $this->bulkPrice,
+            referencePrice: $this->referencePrice,
+            referenceFormat: $this->referenceFormat,
+            previousPrice: $this->previousPrice,
+            source: $this->source,
+            referenceAmount: $this->referenceAmount,
+            calories: $this->calories,
+            protein: $this->protein,
+            carbs: $this->carbs,
+            sugars: $this->sugars,
+            fat: $this->fat,
+            saturatedFat: $this->saturatedFat,
+            fiber: $this->fiber,
+            salt: $this->salt,
+            createdAt: $this->createdAt,
+            updatedAt: $this->updatedAt,
+            createdByUserId: $this->createdByUserId,
+            updatedByUserId: $this->updatedByUserId,
+        ));
+    }
+
     public function pricing(): GlobalArticlePricing
     {
         return new GlobalArticlePricing(
@@ -112,6 +186,18 @@ class GlobalArticle extends GenericAggregate
             fiber: $this->fiber,
             salt: $this->salt,
         );
+    }
+
+    /**
+     * @param array<string, float|null> $values
+     */
+    private function assertNotNegative(array $values): void
+    {
+        foreach ($values as $field => $value) {
+            if (null !== $value && $value < 0) {
+                throw UpdateGlobalArticleException::negativeValue(globalArticleId: $this->id, field: $field);
+            }
+        }
     }
 
     private function writePricing(GlobalArticlePricing $pricing): void

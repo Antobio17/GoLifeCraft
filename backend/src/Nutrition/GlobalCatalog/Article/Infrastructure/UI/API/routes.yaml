@@ -12,3 +12,8 @@ get_global_article:
   path: /api/v1/nutrition/global-catalog/articles/{globalArticleId}
   methods: [GET]
   controller: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\GetGlobalArticleController
+
+update_global_article:
+  path: /api/v1/nutrition/global-catalog/articles/{globalArticleId}
+  methods: [PUT]
+  controller: Nutrition\GlobalCatalog\Article\Infrastructure\UI\API\Controller\UpdateGlobalArticleController

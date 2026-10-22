@@ -13,6 +13,8 @@ final readonly class GetGlobalArticlesQuery implements Query
         public ?string $filterSource = null,
         public ?string $filterCategory = null,
         public ?string $orderBy = null,
+        public bool $filterWithNutrition = false,
+        public bool $filterHideImported = false,
     ) {
     }
 

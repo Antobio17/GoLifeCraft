@@ -35,6 +35,7 @@ final class GetGlobalArticlesResult extends QueryAggregateResult
         public readonly \DateTime $updatedAt,
         public readonly string $createdByUserId,
         public readonly string $updatedByUserId,
+        public readonly bool $imported = false,
     ) {
         parent::__construct(id: $id, aggregateName: $aggregateName);
     }
