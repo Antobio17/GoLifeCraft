@@ -6,20 +6,7 @@ import { GlobalArticleDetail } from "../../domain/models/global-article-detail.m
 import { GlobalArticleDetailAttributes } from "../../domain/models/global-article-detail-attributes.model";
 import { GlobalArticleDetailView } from "../../domain/models/global-article-detail-view.model";
 import { GlobalArticleSource } from "../../domain/models/global-article-source.model";
-
-export interface GlobalArticleCardView {
-  id: string;
-  emoji: string;
-  imageUrl: string | null;
-  name: string;
-  price: string | null;
-  brand: string | null;
-  source: string | null;
-  kcal: string | null;
-  protein: string | null;
-  fat: string | null;
-  carbs: string | null;
-}
+import { GlobalArticleCardView } from "../../domain/models/global-article-card-view.model";
 
 const FALLBACK_EMOJI = "🛒";
 
@@ -56,6 +43,7 @@ export class GlobalArticleViewService {
       protein: this.decimal(attributes.protein),
       fat: this.decimal(attributes.fat),
       carbs: this.decimal(attributes.carbs),
+      imported: attributes.imported,
     };
   }
 
@@ -94,6 +82,7 @@ export class GlobalArticleViewService {
         fiberG: this.grams(attributes.fiber),
         saltG: this.grams(attributes.salt),
       },
+      imported: attributes.imported,
     };
   }
 
@@ -162,6 +151,10 @@ export class GlobalArticleViewService {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value)} €`;
+  }
+
+  count(value: number): string {
+    return new Intl.NumberFormat("es-ES").format(value);
   }
 
   sourceLabel(source: string | null): string | null {

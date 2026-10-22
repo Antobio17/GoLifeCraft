@@ -17,6 +17,7 @@ export interface GlobalArticleAttributes {
   saturatedFat: number | null;
   fiber: number | null;
   salt: number | null;
+  imported: boolean;
 }
 
 export interface GlobalArticle {

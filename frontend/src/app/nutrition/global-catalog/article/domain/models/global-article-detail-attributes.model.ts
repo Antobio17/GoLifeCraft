@@ -21,4 +21,5 @@ export interface GlobalArticleDetailAttributes {
   saturatedFat: number | null;
   fiber: number | null;
   salt: number | null;
+  imported: boolean;
 }

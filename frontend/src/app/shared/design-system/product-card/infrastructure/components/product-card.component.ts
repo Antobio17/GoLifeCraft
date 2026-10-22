@@ -6,6 +6,7 @@ import { DsIconName } from "../../../icon/domain/models/icon.model";
 import { MacroBadgesComponent } from "../../../macro-badges/infrastructure/components/macro-badges.component";
 import { MacroBadge } from "../../../macro-badges/domain/models/macro-badge.model";
 import { ImageFit } from "../../domain/models/image-fit.model";
+import { ProductCardActionTone } from "../../domain/models/product-card-action-tone.model";
 import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/macro-bar.component";
 
 @Component({
@@ -73,7 +74,11 @@ import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/
         [class.ds-pcard__action--footer]="footerAction"
         [class.ds-pcard__action--added]="added"
         [class.ds-pcard__action--icon]="actionIconOnly"
-        [attr.aria-label]="actionIconOnly ? actionCaption : null"
+        [class.ds-pcard__action--soft]="actionTone === 'soft'"
+        [class.ds-pcard__action--captioned]="showsAddedCaption"
+        [attr.aria-label]="
+          actionIconOnly && !showsAddedCaption ? actionCaption : null
+        "
         [disabled]="pending || added"
         (click)="action.emit()"
       >
@@ -83,7 +88,7 @@ import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/
           [size]="footerAction ? 15 : 14"
           [stroke]="2.4"
         />
-        @if (actionCaption && !actionIconOnly) {
+        @if (actionCaption && (!actionIconOnly || showsAddedCaption)) {
           <span>{{ actionCaption }}</span>
         }
       </button>
@@ -154,6 +159,7 @@ import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/
         class="ds-pcard"
         [class.ds-pcard--static]="!footerAction"
         [class.ds-pcard--stacked]="footerAction"
+        [class.ds-pcard--owned]="added && actionTone === 'soft'"
       >
         @if (footerAction) {
           <button
@@ -353,6 +359,39 @@ import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/
         color: var(--ds-text);
         background: var(--ds-surface-hover);
       }
+      .ds-pcard__action--soft,
+      .ds-pcard__action--soft.ds-pcard__action--icon {
+        color: var(--ds-primary-soft-text);
+        background: var(--ds-primary-soft);
+        box-shadow: inset 0 0 0 1px var(--ds-primary-soft-border);
+      }
+      .ds-pcard__action--soft:hover:not(:disabled),
+      .ds-pcard__action--soft.ds-pcard__action--icon:hover:not(:disabled) {
+        color: var(--ds-primary-soft-text);
+        background: var(--ds-primary-soft-hover);
+      }
+      .ds-pcard__action--soft.ds-pcard__action--added {
+        color: var(--ds-primary-soft-text);
+        background: var(--ds-primary-soft);
+        box-shadow: none;
+      }
+      .ds-pcard__action--captioned.ds-pcard__action--icon {
+        width: auto;
+        height: 2rem;
+        padding: 0 var(--ds-space-3) 0 var(--ds-space-2);
+        gap: var(--ds-space-1);
+        font-size: var(--ds-text-sm);
+        font-weight: 700;
+        border-radius: var(--ds-radius-pill);
+      }
+      .ds-pcard--owned {
+        border-color: var(--ds-primary-soft-border);
+        background: color-mix(
+          in srgb,
+          var(--ds-primary-soft) 40%,
+          var(--ds-surface)
+        );
+      }
       .ds-pcard__action--footer {
         width: 100%;
         margin-top: auto;
@@ -551,6 +590,7 @@ export class ProductCardComponent {
   @Input() actionIcon: DsIconName = "download";
   @Input() actionIconOnly = false;
   @Input() actionLabel = "";
+  @Input() actionTone: ProductCardActionTone = "neutral";
   @Input() addedLabel = "";
   @Input() favorite: boolean | null = null;
   @Input() favoriteLabel = "";
@@ -584,6 +624,10 @@ export class ProductCardComponent {
 
   get priceAside(): boolean {
     return this.actionIconOnly && !this.footerAction && !!this.price;
+  }
+
+  get showsAddedCaption(): boolean {
+    return this.added && this.actionTone === "soft" && !!this.addedLabel;
   }
 
   get actionCaption(): string {

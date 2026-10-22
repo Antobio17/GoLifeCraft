@@ -15,9 +15,6 @@ import { ScreenHeaderComponent } from "@shared/design-system/screen-header/infra
 import { SkeletonScreenHeaderComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-screen-header.component";
 import { SkeletonHeroComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-hero.component";
 import { SkeletonChipsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-chips.component";
-import { SkeletonComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton.component";
-import { SkeletonLineComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-line.component";
-import { SkeletonMacroBarsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-macro-bars.component";
 import { SkeletonRowsComponent } from "@shared/design-system/skeleton/infrastructure/components/skeleton-rows.component";
 import { EmptyStateComponent } from "@shared/design-system/empty-state/infrastructure/components/empty-state.component";
 import { TextComponent } from "@shared/design-system/text/infrastructure/components/text.component";
@@ -27,13 +24,14 @@ import { ButtonComponent } from "@shared/design-system/button/infrastructure/com
 import { ProductHeroComponent } from "@shared/design-system/product-hero/infrastructure/components/product-hero.component";
 import { MacroBarsComponent } from "@shared/design-system/macro-bars/infrastructure/components/macro-bars.component";
 import { NutritionFactsComponent } from "@shared/design-system/nutrition-facts/infrastructure/components/nutrition-facts.component";
-import { PanelComponent } from "@shared/design-system/panel/infrastructure/components/panel.component";
+import { CardComponent } from "@shared/design-system/card/infrastructure/components/card.component";
+import { SectionHeaderComponent } from "@shared/design-system/section-header/infrastructure/components/section-header.component";
+import { Router } from "@angular/router";
 import { BackNavigationService } from "@shared/routing/application/services/back-navigation.service";
 
 @Component({
   selector: "app-get-global-article",
   templateUrl: "./get-global-article.component.html",
-  styleUrl: "./get-global-article.component.css",
   imports: [
     ContextualTranslatePipe,
     PageWrapperComponent,
@@ -42,9 +40,6 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     SkeletonScreenHeaderComponent,
     SkeletonHeroComponent,
     SkeletonChipsComponent,
-    SkeletonComponent,
-    SkeletonLineComponent,
-    SkeletonMacroBarsComponent,
     SkeletonRowsComponent,
     EmptyStateComponent,
     TextComponent,
@@ -54,7 +49,8 @@ import { BackNavigationService } from "@shared/routing/application/services/back
     ProductHeroComponent,
     MacroBarsComponent,
     NutritionFactsComponent,
-    PanelComponent,
+    CardComponent,
+    SectionHeaderComponent,
   ],
 })
 export class GetGlobalArticleComponent {
@@ -63,6 +59,7 @@ export class GetGlobalArticleComponent {
   private importGlobalArticleService = inject(ImportGlobalArticleService);
   private floatingToastService = inject(FloatingToastService);
   private authSession = inject(AuthSessionService);
+  private router = inject(Router);
   protected view = inject(GlobalArticleViewService);
 
   readonly id = input.required<string>();
@@ -73,6 +70,7 @@ export class GetGlobalArticleComponent {
   importing = signal(false);
   imported = signal(false);
   canImport = this.authSession.isAuthenticated();
+  canEdit = this.authSession.isGod();
 
   constructor() {
     toObservable(this.id)
@@ -88,7 +86,9 @@ export class GetGlobalArticleComponent {
         takeUntilDestroyed(),
       )
       .subscribe((response) => {
-        this.detail.set(response ? this.view.toDetail(response.data) : null);
+        const detail = response ? this.view.toDetail(response.data) : null;
+        this.detail.set(detail);
+        this.imported.set(detail?.imported ?? false);
         this.notFound.set(null === response);
         this.loading.set(false);
       });
@@ -96,6 +96,10 @@ export class GetGlobalArticleComponent {
 
   goBack(): void {
     this.backNavigation.back(["/global-catalog"]);
+  }
+
+  onEdit(): void {
+    this.router.navigate(["/global-catalog", this.id(), "edit"]);
   }
 
   onImport(): void {
