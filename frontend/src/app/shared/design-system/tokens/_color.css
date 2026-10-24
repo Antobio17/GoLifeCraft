@@ -55,7 +55,7 @@
   --ds-surface-sheet: var(--ds-surface-raised);
   --ds-surface-brand: var(--ds-green-800);
   --ds-on-surface-brand: #e9f7ec;
-  --ds-status-bar-tint: transparent;
+  --ds-status-bar-tint: var(--ds-bg);
 
   --ds-surface-chart: var(--ds-surface);
   --ds-on-surface-chart: var(--ds-text);
@@ -218,7 +218,7 @@
   --ds-surface-sheet: var(--ds-surface);
   --ds-surface-brand: var(--ds-green-800);
   --ds-on-surface-brand: #e9f7ec;
-  --ds-status-bar-tint: transparent;
+  --ds-status-bar-tint: var(--ds-bg);
 
   --ds-surface-chart: var(--ds-surface-raised);
 
