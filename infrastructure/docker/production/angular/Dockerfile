@@ -10,7 +10,7 @@ COPY frontend/ .
 
 RUN npx ng build --configuration production
 
-FROM nginx:stable-alpine
+FROM nginx:1.30.6-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
 

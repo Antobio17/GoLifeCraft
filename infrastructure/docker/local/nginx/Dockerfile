@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.30.6
 
 RUN mkdir -p /var/www/upload/
 
