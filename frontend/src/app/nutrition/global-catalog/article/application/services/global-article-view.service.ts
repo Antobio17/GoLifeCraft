@@ -40,9 +40,10 @@ export class GlobalArticleViewService {
       brand: attributes.brand,
       source: this.sourceLabel(attributes.source),
       kcal: this.integer(attributes.calories),
-      protein: this.decimal(attributes.protein),
-      fat: this.decimal(attributes.fat),
-      carbs: this.decimal(attributes.carbs),
+      proteinG: attributes.protein ?? 0,
+      fatG: attributes.fat ?? 0,
+      carbsG: attributes.carbs ?? 0,
+      macroLabel: "",
       imported: attributes.imported,
     };
   }
@@ -169,7 +170,7 @@ export class GlobalArticleViewService {
     return this.number(Math.round(value), 0);
   }
 
-  private decimal(value: number | null): string | null {
+  decimal(value: number | null): string | null {
     if (value === null || value === undefined) return null;
 
     return this.number(value, 1);

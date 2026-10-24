@@ -119,7 +119,11 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
     return this.items().map((article) => {
       const card = this.view.toCard(article);
 
-      return { ...card, imported: card.imported || importedIds.has(card.id) };
+      return {
+        ...card,
+        imported: card.imported || importedIds.has(card.id),
+        macroLabel: this.macroLabel(card),
+      };
     });
   });
 
@@ -376,6 +380,14 @@ export class GetGlobalArticlesComponent extends AbstractListPageComponent<Global
       next: () => this.markImported(card.id),
       error: (error) => this.handleImportError(card.id, error),
     });
+  }
+
+  private macroLabel(card: GlobalArticleCardView): string {
+    return [
+      `${this.t("getGlobalArticles.macro.protein")} ${this.view.decimal(card.proteinG)} g`,
+      `${this.t("getGlobalArticles.macro.fat")} ${this.view.decimal(card.fatG)} g`,
+      `${this.t("getGlobalArticles.macro.carbs")} ${this.view.decimal(card.carbsG)} g`,
+    ].join(", ");
   }
 
   private sortLabel(sort: string): string {

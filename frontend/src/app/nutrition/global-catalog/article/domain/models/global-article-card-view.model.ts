@@ -7,8 +7,9 @@ export interface GlobalArticleCardView {
   brand: string | null;
   source: string | null;
   kcal: string | null;
-  protein: string | null;
-  fat: string | null;
-  carbs: string | null;
+  proteinG: number;
+  fatG: number;
+  carbsG: number;
+  macroLabel: string;
   imported: boolean;
 }

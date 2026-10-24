@@ -18,7 +18,10 @@
       "kcal": "kcal",
       "proteinShort": "P",
       "fatShort": "G",
-      "carbsShort": "H"
+      "carbsShort": "H",
+      "protein": "Proteína",
+      "fat": "Grasa",
+      "carbs": "Hidratos"
     },
     "empty": {
       "title": "Catálogo global vacío",

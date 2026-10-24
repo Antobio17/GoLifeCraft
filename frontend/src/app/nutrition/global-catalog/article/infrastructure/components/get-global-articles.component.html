@@ -108,13 +108,14 @@
 
       <ds-grid
         dsReveal="children"
-        [minColumn]="'20rem'"
+        [minColumn]="'18.75rem'"
         [gap]="'var(--ds-space-2)'"
       >
         @for (card of cards(); track card.id) {
           <ds-product-card
             data-testid="global-article-card"
             [attr.data-id]="card.id"
+            [compact]="true"
             [actionable]="canImport"
             [actionIconOnly]="true"
             actionIcon="plus"
@@ -130,12 +131,13 @@
             [store]="card.source"
             [added]="card.imported"
             [pending]="isPending(card.id)"
-            [kcal]="card.kcal ? card.kcal + ' ' + kcalUnit() : ''"
-            [macros]="[
-              { label: macroLetters().protein, value: card.protein || '' },
-              { label: macroLetters().fat, value: card.fat || '' },
-              { label: macroLetters().carbs, value: card.carbs || '' },
-            ]"
+            [kcal]="card.kcal ?? ''"
+            [kcalUnit]="kcalUnit()"
+            [proteinG]="card.proteinG"
+            [fatG]="card.fatG"
+            [carbsG]="card.carbsG"
+            [macroLabel]="card.macroLabel"
+            [macroLetters]="macroLetters()"
             (activated)="openDetail(card.id)"
             (action)="onImport(card)"
           />
@@ -235,15 +237,13 @@
   <ds-skeleton-list
     [count]="count"
     [columns]="null"
-    minColumn="20rem"
+    minColumn="18.75rem"
     [gap]="'var(--ds-space-2)'"
     radius="var(--ds-radius-surface)"
-    padding="var(--ds-space-2)"
-    [alignTop]="true"
-    [tile]="56"
-    titleWidth="52%"
-    metaWidth="46%"
-    [chips]="4"
+    padding="var(--ds-space-2) var(--ds-space-3) var(--ds-space-2) var(--ds-space-2)"
+    [tile]="44"
+    titleWidth="56%"
+    metaWidth="44%"
     trailing="button"
   />
 </ng-template>

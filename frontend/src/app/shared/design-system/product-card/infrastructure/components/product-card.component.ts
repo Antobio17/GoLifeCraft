@@ -94,65 +94,81 @@ import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/
       </button>
     </ng-template>
 
-    @if (compact) {
+    <ng-template #compactContent>
+      <span class="ds-pcard__emoji ds-pcard__emoji--compact">
+        @if (imageUrl && !imageFailed) {
+          <img
+            class="ds-pcard__image"
+            [style.object-fit]="imageFit"
+            [src]="imageUrl"
+            [alt]="name"
+            loading="lazy"
+            decoding="async"
+            (error)="imageFailed = true"
+          />
+        } @else {
+          {{ emoji }}
+        }
+      </span>
+      <span class="ds-pcard__body ds-pcard__body--compact">
+        <span class="ds-pcard__line">
+          <span class="ds-pcard__name ds-pcard__name--compact">{{ name }}</span>
+          @if (favorite) {
+            <ds-icon
+              class="ds-pcard__star"
+              name="starFilled"
+              [size]="14"
+              [stroke]="2"
+              [attr.title]="favoriteLabel || null"
+            />
+          }
+        </span>
+        @if (compactMeta) {
+          <span class="ds-pcard__meta ds-pcard__meta--compact">{{
+            compactMeta
+          }}</span>
+        }
+        <ds-macro-bar
+          class="ds-pcard__mbar"
+          [class.ds-pcard__mbar--figures]="macroLetters"
+          [protein]="proteinG"
+          [fat]="fatG"
+          [carbs]="carbsG"
+          [ariaLabel]="macroLabel"
+          [labels]="macroLetters"
+        />
+      </span>
+      @if (kcal) {
+        <span class="ds-pcard__kcal">
+          <span class="ds-pcard__kcal-value">{{ kcal }}</span>
+          @if (kcalUnit) {
+            <span class="ds-pcard__kcal-unit">{{ kcalUnit }}</span>
+          }
+        </span>
+      }
+    </ng-template>
+
+    @if (compact && actionable) {
+      <div
+        class="ds-pcard ds-pcard--compact ds-pcard--compact-action"
+        [class.ds-pcard--owned]="added && actionTone === 'soft'"
+      >
+        <button
+          type="button"
+          class="ds-pcard__main ds-pcard__main--compact"
+          (click)="activated.emit()"
+        >
+          <ng-container [ngTemplateOutlet]="compactContent"></ng-container>
+        </button>
+        <ng-container [ngTemplateOutlet]="actionButton"></ng-container>
+      </div>
+    } @else if (compact) {
       <button
         type="button"
         class="ds-pcard ds-pcard--compact"
         (click)="activated.emit()"
       >
-        <span class="ds-pcard__emoji ds-pcard__emoji--compact">
-          @if (imageUrl && !imageFailed) {
-            <img
-              class="ds-pcard__image"
-              [style.object-fit]="imageFit"
-              [src]="imageUrl"
-              [alt]="name"
-              loading="lazy"
-              decoding="async"
-              (error)="imageFailed = true"
-            />
-          } @else {
-            {{ emoji }}
-          }
-        </span>
-        <span class="ds-pcard__body ds-pcard__body--compact">
-          <span class="ds-pcard__line">
-            <span class="ds-pcard__name ds-pcard__name--compact">{{
-              name
-            }}</span>
-            @if (favorite) {
-              <ds-icon
-                class="ds-pcard__star"
-                name="starFilled"
-                [size]="14"
-                [stroke]="2"
-                [attr.title]="favoriteLabel || null"
-              />
-            }
-          </span>
-          @if (compactMeta) {
-            <span class="ds-pcard__meta ds-pcard__meta--compact">{{
-              compactMeta
-            }}</span>
-          }
-          <ds-macro-bar
-            class="ds-pcard__mbar"
-            [class.ds-pcard__mbar--figures]="macroLetters"
-            [protein]="proteinG"
-            [fat]="fatG"
-            [carbs]="carbsG"
-            [ariaLabel]="macroLabel"
-            [labels]="macroLetters"
-          />
-        </span>
-        @if (kcal) {
-          <span class="ds-pcard__kcal">
-            <span class="ds-pcard__kcal-value">{{ kcal }}</span>
-            @if (kcalUnit) {
-              <span class="ds-pcard__kcal-unit">{{ kcalUnit }}</span>
-            }
-          </span>
-        }
+        <ng-container [ngTemplateOutlet]="compactContent"></ng-container>
       </button>
     } @else if (actionable) {
       <div
@@ -241,7 +257,8 @@ import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/
           transform var(--ds-dur-3) var(--ds-ease-in-out);
       }
       button.ds-pcard:hover,
-      .ds-pcard--favoritable:hover {
+      .ds-pcard--favoritable:hover,
+      .ds-pcard--compact-action:hover {
         border-color: var(--ds-border-strong);
         background: var(--ds-surface-hover);
         box-shadow: var(--ds-elev-lg);
@@ -499,6 +516,15 @@ import { MacroBarComponent } from "../../../macro-bar/infrastructure/components/
         --ds-pad: var(--ds-space-2);
         padding: var(--ds-pad) var(--ds-space-3) var(--ds-pad) var(--ds-pad);
       }
+      .ds-pcard--compact-action {
+        cursor: default;
+        gap: var(--ds-space-2);
+      }
+      .ds-pcard__main--compact {
+        flex: 1 1 auto;
+        min-width: 0;
+        align-items: center;
+      }
       .ds-pcard__emoji--compact {
         width: 2.75rem;
         height: 2.75rem;
@@ -627,7 +653,12 @@ export class ProductCardComponent {
   }
 
   get showsAddedCaption(): boolean {
-    return this.added && this.actionTone === "soft" && !!this.addedLabel;
+    return (
+      this.added &&
+      this.actionTone === "soft" &&
+      !!this.addedLabel &&
+      !this.compact
+    );
   }
 
   get actionCaption(): string {

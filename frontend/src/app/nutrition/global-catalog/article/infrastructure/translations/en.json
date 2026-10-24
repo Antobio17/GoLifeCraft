@@ -18,7 +18,10 @@
       "kcal": "kcal",
       "proteinShort": "P",
       "fatShort": "F",
-      "carbsShort": "C"
+      "carbsShort": "C",
+      "protein": "Protein",
+      "fat": "Fat",
+      "carbs": "Carbs"
     },
     "empty": {
       "title": "Global catalog is empty",
