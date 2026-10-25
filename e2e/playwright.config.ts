@@ -41,11 +41,16 @@ export default defineConfig({
   },
 
   reporter: IS_CI
-    ? [["github"], ["html", { open: "never" }], ["json", { outputFile: "test-results/results.json" }]]
+    ? [
+        ["github"],
+        ["html", { open: "never" }],
+        ["json", { outputFile: "test-results/results.json" }],
+      ]
     : [["list"], ["html", { open: "never" }]],
 
   use: {
     baseURL: BASE_URL,
+    serviceWorkers: "block",
     testIdAttribute: "data-testid",
     locale: "es-ES",
     timezoneId: "Europe/Madrid",
