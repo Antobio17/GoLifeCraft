@@ -1,0 +1,181 @@
+{
+  "achievements": {
+    "breadcrumb": "Logros",
+    "back": "Volver",
+    "eyebrow": "Tu progreso",
+    "title": "Logros",
+    "tally": "{{unlocked}} / {{total}}",
+    "recent": {
+      "title": "Últimos conseguidos",
+      "empty": "Aún no has conseguido ningún logro. Termina un entreno o registra tu diario para estrenar la vitrina.",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "daysAgo": {
+        "one": "Hace 1 día",
+        "other": "Hace {{count}} días"
+      }
+    },
+    "filter": {
+      "all": "Todos",
+      "gym": "Gym",
+      "nutrition": "Nutrición",
+      "finance": "Finanzas",
+      "agenda": "Agenda"
+    },
+    "module": {
+      "gym": "Gym",
+      "nutrition": "Nutrición",
+      "finance": "Finanzas",
+      "agenda": "Agenda"
+    },
+    "section": {
+      "count": "{{unlocked}} de {{total}}"
+    },
+    "tier": {
+      "bronze": "Bronce",
+      "silver": "Plata",
+      "gold": "Oro",
+      "platinum": "Platino"
+    },
+    "card": {
+      "progress": "{{value}} / {{target}}",
+      "tierProgress": "{{tier}} · {{value}}/{{target}}",
+      "completed": "{{tier}} · completado"
+    },
+    "next": {
+      "title": "Próximo logro",
+      "seeAll": "Ver logros",
+      "name": "{{name}} · {{tier}}",
+      "completed": "Todos los niveles conseguidos",
+      "allDone": "Has completado todos los logros. ¡Enhorabuena!"
+    },
+    "celebration": {
+      "eyebrow": "Logro desbloqueado · {{tier}}",
+      "next": "Siguiente: {{tier}} · {{target}}",
+      "see": "Ver",
+      "seeAll": "Ver todos mis logros",
+      "great": "¡Genial!",
+      "close": "Cerrar"
+    },
+    "catalog": {
+      "gym": {
+        "workouts": {
+          "name": "Constante",
+          "description": {
+            "one": "Tu primer entreno terminado",
+            "other": "{{count}} entrenos terminados"
+          },
+          "remaining": {
+            "one": "Te falta 1 entreno",
+            "other": "Te faltan {{count}} entrenos"
+          }
+        },
+        "weekly_streak": {
+          "name": "Racha de hierro",
+          "description": {
+            "one": "1 semana entrenando 3 días o más",
+            "other": "{{count}} semanas seguidas entrenando 3 días o más"
+          },
+          "remaining": {
+            "one": "Te falta 1 semana de 3 entrenos",
+            "other": "Te faltan {{count}} semanas de 3 entrenos"
+          }
+        }
+      },
+      "nutrition": {
+        "diary_streak": {
+          "name": "Diario al día",
+          "description": {
+            "one": "1 día registrando lo que comes",
+            "other": "{{count}} días seguidos registrando lo que comes"
+          },
+          "remaining": {
+            "one": "Te falta 1 día seguido",
+            "other": "Te faltan {{count}} días seguidos"
+          }
+        },
+        "meals": {
+          "name": "Buen provecho",
+          "description": {
+            "one": "1 comida registrada",
+            "other": "{{count}} comidas registradas"
+          },
+          "remaining": {
+            "one": "Te falta 1 comida",
+            "other": "Te faltan {{count}} comidas"
+          }
+        },
+        "recipes": {
+          "name": "Chef",
+          "description": {
+            "one": "Tu primera receta creada",
+            "other": "{{count}} recetas creadas"
+          },
+          "remaining": {
+            "one": "Te falta 1 receta",
+            "other": "Te faltan {{count}} recetas"
+          }
+        },
+        "cooking": {
+          "name": "Batch cooking",
+          "description": {
+            "one": "Tu primer lote cocinado",
+            "other": "{{count}} lotes cocinados"
+          },
+          "remaining": {
+            "one": "Te falta 1 lote",
+            "other": "Te faltan {{count}} lotes"
+          }
+        },
+        "shopping": {
+          "name": "Al súper",
+          "description": {
+            "one": "Tu primer ticket recibido",
+            "other": "{{count}} tickets recibidos"
+          },
+          "remaining": {
+            "one": "Te falta 1 ticket",
+            "other": "Te faltan {{count}} tickets"
+          }
+        },
+        "inventory": {
+          "name": "Despensa en orden",
+          "description": {
+            "one": "Tu primer inventario validado",
+            "other": "{{count}} inventarios validados"
+          },
+          "remaining": {
+            "one": "Te falta 1 inventario",
+            "other": "Te faltan {{count}} inventarios"
+          }
+        }
+      },
+      "finance": {
+        "transactions": {
+          "name": "Cuentas claras",
+          "description": {
+            "one": "Tu primer movimiento apuntado",
+            "other": "{{count}} movimientos apuntados"
+          },
+          "remaining": {
+            "one": "Te falta 1 movimiento",
+            "other": "Te faltan {{count}} movimientos"
+          }
+        }
+      },
+      "agenda": {
+        "tasks_done": {
+          "name": "Hecho",
+          "description": {
+            "one": "Tu primera tarea completada",
+            "other": "{{count}} tareas completadas"
+          },
+          "remaining": {
+            "one": "Te falta 1 tarea",
+            "other": "Te faltan {{count}} tareas"
+          }
+        }
+      }
+    }
+  }
+}

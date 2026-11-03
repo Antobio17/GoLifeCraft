@@ -9,6 +9,7 @@ import { VisualPreferenceProviders } from "@shared/visual-preference/infrastruct
 import { EntityVisualProviders } from "@shared/entity-visual/infrastructure/providers/entity-visual.providers";
 import { MyAvatarProviders } from "@shared/my-avatar/infrastructure/providers/my-avatar.providers";
 import { UnreadNotificationsProvider } from "@notification/notification/inbox/infrastructure/providers/unread-notifications.provider";
+import { AchievementCelebrationProviders } from "@gamification/achievement/achievement/infrastructure/providers/achievement-celebration.providers";
 
 export type ProviderModule = {
   getProviders(): Provider[];
@@ -26,6 +27,7 @@ export class GlobalProviders {
     EntityVisualProviders,
     MyAvatarProviders,
     UnreadNotificationsProvider,
+    AchievementCelebrationProviders,
   ];
 
   static getProviders(): Provider[] {

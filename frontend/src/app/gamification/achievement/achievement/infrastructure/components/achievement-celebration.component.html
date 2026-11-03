@@ -1,0 +1,33 @@
+@if (current(); as unlock) {
+  @if (isToast()) {
+    <ds-achievement-toast
+      data-testid="achievement-toast"
+      [icon]="unlock.icon"
+      [tier]="unlock.tier"
+      [eyebrow]="eyebrow()"
+      [title]="title()"
+      [caption]="description()"
+      [actionLabel]="'achievements.celebration.see' | t"
+      [closeLabel]="'achievements.celebration.close' | t"
+      (action)="openAchievements()"
+      (closed)="dismiss()"
+    />
+  }
+  @if (isFullScreen()) {
+    <ds-achievement-celebration
+      data-testid="achievement-celebration"
+      [icon]="unlock.icon"
+      [tier]="unlock.tier"
+      [eyebrow]="eyebrow()"
+      [title]="title()"
+      [text]="description()"
+      [chips]="chips()"
+      [primaryLabel]="'achievements.celebration.great' | t"
+      [secondaryLabel]="'achievements.celebration.seeAll' | t"
+      [closeLabel]="'achievements.celebration.close' | t"
+      (primary)="dismiss()"
+      (secondary)="openAchievements()"
+      (closed)="dismiss()"
+    />
+  }
+}

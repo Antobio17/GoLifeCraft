@@ -10,6 +10,7 @@ registerLocaleData(localeEs);
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { authTokenInterceptor } from "./app/shared/auth/infrastructure/interceptors/auth-token.interceptor";
 import { httpErrorInterceptor } from "./app/shared/auth/infrastructure/interceptors/http-error.interceptor";
+import { achievementUnlockInterceptor } from "./app/gamification/achievement/achievement/infrastructure/interceptors/achievement-unlock.interceptor";
 import { bootstrapApplication } from "@angular/platform-browser";
 import {
   provideRouter,
@@ -60,7 +61,11 @@ bootstrapApplication(MainLayoutComponent, {
       withPreloading(IdlePreloadStrategy),
     ),
     provideHttpClient(
-      withInterceptors([authTokenInterceptor, httpErrorInterceptor]),
+      withInterceptors([
+        authTokenInterceptor,
+        httpErrorInterceptor,
+        achievementUnlockInterceptor,
+      ]),
     ),
     provideAnimationsAsync(),
     { provide: LOCALE_ID, useValue: "es" },

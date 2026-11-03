@@ -30,6 +30,7 @@ import { DiaryViewService } from "@nutrition/diary/diary/application/services/di
 import { DiaryDayAttributes } from "@nutrition/diary/diary/domain/models/diary.model";
 import { AgendaSummaryComponent } from "@agenda/agenda/agenda/infrastructure/components/agenda-summary.component";
 import { FinanceVariableBudgetSummaryComponent } from "@economy/finance/budget/infrastructure/components/finance-variable-budget-summary.component";
+import { NextAchievementSummaryComponent } from "@gamification/achievement/achievement/infrastructure/components/next-achievement-summary.component";
 
 @Component({
   selector: "app-dashboard",
@@ -49,6 +50,7 @@ import { FinanceVariableBudgetSummaryComponent } from "@economy/finance/budget/i
     GymAnalyticsComponent,
     AgendaSummaryComponent,
     FinanceVariableBudgetSummaryComponent,
+    NextAchievementSummaryComponent,
   ],
 })
 export class DashboardComponent implements OnInit {
@@ -146,6 +148,10 @@ export class DashboardComponent implements OnInit {
 
   goToBudget(): void {
     this.router.navigate(["/economy/budget"]);
+  }
+
+  goToAchievements(): void {
+    this.router.navigate(["/achievements"]);
   }
 
   goToDiary(): void {

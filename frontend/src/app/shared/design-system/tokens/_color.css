@@ -200,6 +200,15 @@
   --ds-place-travel: #a05f9c;
   --ds-place-storeroom: #6b7a70;
 
+  --ds-tier-bronze: #c27a45;
+  --ds-tier-bronze-text: #8a4f24;
+  --ds-tier-silver: #9aa5ad;
+  --ds-tier-silver-text: #59636a;
+  --ds-tier-gold: #e0a92a;
+  --ds-tier-gold-text: #8c5f0c;
+  --ds-tier-platinum: #6fa3d8;
+  --ds-tier-platinum-text: #2c6db3;
+
   --ds-focus-ring: 0 0 0 0.25rem rgba(0, 134, 61, 0.22);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(201, 58, 40, 0.18);
 
@@ -349,6 +358,15 @@
   --ds-place-car: #ad9dd8;
   --ds-place-travel: #cf9bcb;
   --ds-place-storeroom: #aebbb2;
+
+  --ds-tier-bronze: #d99a6c;
+  --ds-tier-bronze-text: #e3b08a;
+  --ds-tier-silver: #c9d1cc;
+  --ds-tier-silver-text: #d6ddd8;
+  --ds-tier-gold: #f2c463;
+  --ds-tier-gold-text: #f5d07f;
+  --ds-tier-platinum: #a8d1fa;
+  --ds-tier-platinum-text: #bcdcfb;
 
   --ds-focus-ring: 0 0 0 0.25rem rgba(143, 250, 152, 0.28);
   --ds-focus-ring-danger: 0 0 0 0.25rem rgba(242, 112, 94, 0.26);

@@ -1,0 +1,35 @@
+<ds-stack [gap]="'var(--ds-space-2)'">
+  <ds-section-header
+    data-testid="dashboard-achievements"
+    [title]="'achievements.next.title' | t"
+    [actionLabel]="'achievements.next.seeAll' | t"
+    (action)="seeAll.emit()"
+  />
+  <ds-module-card>
+    @if (loading()) {
+      <ds-stack direction="row" align="center" [gap]="'var(--ds-space-3)'">
+        <ds-skeleton-line
+          width="5rem"
+          height="5rem"
+          radius="var(--ds-radius-pill)"
+        />
+        <ds-stack [gap]="'var(--ds-space-2)'">
+          <ds-skeleton-line width="9rem" height="1rem" />
+          <ds-skeleton-line width="7rem" height="0.75rem" />
+        </ds-stack>
+      </ds-stack>
+    } @else if (next(); as achievement) {
+      <ds-achievement-medal
+        data-testid="achievement-next"
+        [inline]="true"
+        [icon]="achievement.icon"
+        [tier]="achievement.currentTier"
+        [ring]="achievement.progress"
+        [name]="nextName()"
+        [caption]="remainingLabel()"
+      />
+    } @else {
+      <ds-text variant="muted">{{ "achievements.next.allDone" | t }}</ds-text>
+    }
+  </ds-module-card>
+</ds-stack>

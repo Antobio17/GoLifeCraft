@@ -16,6 +16,7 @@ import { GetMyProfileService } from "@authorization/user/user/application/servic
 import { GetMyProfileProvider } from "@authorization/user/user/infrastructure/providers/get-my-profile.provider";
 import { RouteModuleService } from "@shared/design-system/module-theme/application/services/route-module.service";
 import { UnreadNotificationsService } from "@notification/notification/inbox/application/services/unread-notifications.service";
+import { AchievementCelebrationComponent } from "@gamification/achievement/achievement/infrastructure/components/achievement-celebration.component";
 
 @Component({
   selector: "app-main",
@@ -28,6 +29,7 @@ import { UnreadNotificationsService } from "@notification/notification/inbox/app
     ImpersonationBarComponent,
     RouteProgressComponent,
     ContextualTranslatePipe,
+    AchievementCelebrationComponent,
   ],
   providers: [...GetMyProfileProvider.getProviders()],
   styleUrls: ["./main.component.css"],

@@ -173,6 +173,14 @@ export const APP_ROUTES: Routes = [
           ),
       },
       {
+        path: "achievements",
+        data: { breadcrumb: "achievements.breadcrumb" },
+        loadChildren: () =>
+          import("./gamification/achievement/achievement/infrastructure/routes/achievement.routes").then(
+            (m) => m.ACHIEVEMENT_ROUTES,
+          ),
+      },
+      {
         path: "notifications",
         data: { breadcrumb: "notifications.breadcrumb" },
         loadChildren: () =>

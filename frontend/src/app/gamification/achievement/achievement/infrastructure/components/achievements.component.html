@@ -1,0 +1,91 @@
+<ds-page-wrapper
+  [maxWidth]="'40rem'"
+  [wideMaxWidth]="'62rem'"
+  [gap]="'var(--ds-space-5)'"
+>
+  <ds-screen-header
+    [sticky]="true"
+    leading="back"
+    [leadingLabel]="'achievements.back' | t"
+    [eyebrow]="'achievements.eyebrow' | t"
+    [title]="'achievements.title' | t"
+    (leadingClick)="back()"
+  />
+
+  @if (loading()) {
+    <ds-stack [gap]="'var(--ds-space-4)'">
+      <ds-skeleton-line width="45%" height="0.875rem" />
+      <ds-grid [minColumn]="'6.5rem'" [gap]="'var(--ds-space-4)'">
+        @for (medal of skeletonMedals; track medal) {
+          <ds-skeleton-line
+            width="4.5rem"
+            height="4.5rem"
+            radius="var(--ds-radius-pill)"
+          />
+        }
+      </ds-grid>
+    </ds-stack>
+  } @else {
+    <ds-stack data-testid="achievements-recent" [gap]="'var(--ds-space-3)'">
+      <ds-section-header
+        [title]="'achievements.recent.title' | t"
+        [staticLabel]="tallyLabel()"
+      />
+      @if (recent().length > 0) {
+        <ds-grid [minColumn]="'9rem'" [gap]="'var(--ds-space-3)'">
+          @for (item of recent(); track item.key + item.tier) {
+            <ds-achievement-medal
+              data-testid="achievement-recent"
+              size="sm"
+              [inline]="true"
+              [icon]="item.icon"
+              [tier]="item.tier"
+              [name]="item.name"
+              [caption]="item.when"
+            />
+          }
+        </ds-grid>
+      } @else {
+        <ds-text variant="muted">{{ "achievements.recent.empty" | t }}</ds-text>
+      }
+    </ds-stack>
+
+    <ds-choice-chips
+      data-testid="achievements-filter"
+      [scroll]="true"
+      [options]="filterOptions()"
+      [ngModel]="filter()"
+      [ngModelOptions]="{ standalone: true }"
+      (ngModelChange)="changeFilter($event)"
+    />
+
+    @for (section of sections(); track section.module) {
+      <ds-stack
+        data-testid="achievements-section"
+        [attr.data-module]="section.module"
+        [gap]="'var(--ds-space-4)'"
+      >
+        <ds-section-header
+          [title]="section.title"
+          [staticLabel]="section.count"
+        />
+        <ds-grid
+          [minColumn]="'6.5rem'"
+          [gap]="'var(--ds-space-5) var(--ds-space-2)'"
+        >
+          @for (card of section.cards; track card.key) {
+            <ds-achievement-medal
+              data-testid="achievement-medal"
+              [attr.data-key]="card.key"
+              [icon]="card.icon"
+              [tier]="card.tier"
+              [name]="card.name"
+              [caption]="card.caption"
+              [progress]="card.progress"
+            />
+          }
+        </ds-grid>
+      </ds-stack>
+    }
+  }
+</ds-page-wrapper>
