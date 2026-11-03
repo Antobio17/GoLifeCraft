@@ -245,3 +245,9 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Notification/Notification/Inbox/Infrastructure/Domain/Model/Doctrine/Mapping'
                         prefix: 'Notification\Notification\Inbox\Domain\Model'
                         alias: notification
+                    AchievementProgress:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Gamification/Achievement/Achievement/Infrastructure/Domain/Model/Doctrine/Mapping'
+                        prefix: 'Gamification\Achievement\Achievement\Domain\Model'
+                        alias: achievement_progress

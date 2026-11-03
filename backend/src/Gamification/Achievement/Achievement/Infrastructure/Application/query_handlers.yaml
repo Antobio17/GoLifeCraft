@@ -1,0 +1,13 @@
+services:
+  Gamification\Achievement\Achievement\Application\Query\GetAchievementsQueryHandler:
+    class: Gamification\Achievement\Achievement\Application\Query\GetAchievementsQueryHandler
+    arguments:
+      $achievementCatalog: '@Gamification\Achievement\Achievement\Domain\Service\AchievementCatalog'
+      $needleDataQuery: '@Gamification\Achievement\Achievement\Domain\QueryModel\GetAchievementsNeedleDataQuery'
+      $achievementStanding: '@Gamification\Achievement\Achievement\Domain\Service\AchievementStanding'
+      $dataTransform: '@Gamification\Achievement\Achievement\Application\Query\GetAchievementsDataTransform'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gamification\Achievement\Achievement\Application\Query\GetAchievementsDataTransform:
+    class: Gamification\Achievement\Achievement\Infrastructure\UI\API\DataTransform\ApiGetAchievementsDataTransform

@@ -1,0 +1,6 @@
+services:
+  Gamification\Achievement\Achievement\Domain\Model\AchievementProgressRepository:
+    class: Gamification\Achievement\Achievement\Infrastructure\Domain\Model\Doctrine\DoctrineAchievementProgressRepository
+    factory: ["@doctrine.orm.tenant_manager_entity_manager", getRepository]
+    arguments:
+      - Gamification\Achievement\Achievement\Domain\Model\AchievementProgress

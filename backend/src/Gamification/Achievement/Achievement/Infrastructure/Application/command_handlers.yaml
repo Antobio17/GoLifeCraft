@@ -1,0 +1,33 @@
+services:
+  Gamification\Achievement\Achievement\Application\Command\RecordAchievementProgressCommandFactory:
+    class: Gamification\Achievement\Achievement\Application\Command\RecordAchievementProgressCommandFactory
+    arguments:
+      $achievementCatalog: '@Gamification\Achievement\Achievement\Domain\Service\AchievementCatalog'
+
+  Gamification\Achievement\Achievement\Application\Command\RecordAchievementProgressCommandHandler:
+    class: Gamification\Achievement\Achievement\Application\Command\RecordAchievementProgressCommandHandler
+    arguments:
+      $achievementProgressRepository: '@Gamification\Achievement\Achievement\Domain\Model\AchievementProgressRepository'
+      $achievementCatalog: '@Gamification\Achievement\Achievement\Domain\Service\AchievementCatalog'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gamification\Achievement\Achievement\Application\Command\MarkAchievementSeenCommandHandler:
+    class: Gamification\Achievement\Achievement\Application\Command\MarkAchievementSeenCommandHandler
+    arguments:
+      $achievementProgressRepository: '@Gamification\Achievement\Achievement\Domain\Model\AchievementProgressRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
+
+  Gamification\Achievement\Achievement\Application\Command\DeleteAchievementProgressCommandHandler:
+    class: Gamification\Achievement\Achievement\Application\Command\DeleteAchievementProgressCommandHandler
+    arguments:
+      $achievementProgressRepository: '@Gamification\Achievement\Achievement\Domain\Model\AchievementProgressRepository'
+      $domainEventCollectorService: '@Shared\Shared\Shared\Domain\Service\DomainEventCollectorService'
+      $dateTimeGenerator: '@Shared\Tool\Tool\Domain\Service\DateTimeGenerator'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.default' }
