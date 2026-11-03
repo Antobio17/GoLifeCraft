@@ -1,0 +1,181 @@
+{
+  "achievements": {
+    "breadcrumb": "Achievements",
+    "back": "Back",
+    "eyebrow": "Your progress",
+    "title": "Achievements",
+    "tally": "{{unlocked}} / {{total}}",
+    "recent": {
+      "title": "Latest unlocked",
+      "empty": "No achievements yet. Finish a workout or log your diary to start the showcase.",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": {
+        "one": "1 day ago",
+        "other": "{{count}} days ago"
+      }
+    },
+    "filter": {
+      "all": "All",
+      "gym": "Gym",
+      "nutrition": "Nutrition",
+      "finance": "Finance",
+      "agenda": "Agenda"
+    },
+    "module": {
+      "gym": "Gym",
+      "nutrition": "Nutrition",
+      "finance": "Finance",
+      "agenda": "Agenda"
+    },
+    "section": {
+      "count": "{{unlocked}} of {{total}}"
+    },
+    "tier": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum"
+    },
+    "card": {
+      "progress": "{{value}} / {{target}}",
+      "tierProgress": "{{tier}} · {{value}}/{{target}}",
+      "completed": "{{tier}} · completed"
+    },
+    "next": {
+      "title": "Next achievement",
+      "seeAll": "See achievements",
+      "name": "{{name}} · {{tier}}",
+      "completed": "Every tier unlocked",
+      "allDone": "You have completed every achievement. Congratulations!"
+    },
+    "celebration": {
+      "eyebrow": "Achievement unlocked · {{tier}}",
+      "next": "Next: {{tier}} · {{target}}",
+      "see": "See",
+      "seeAll": "See all my achievements",
+      "great": "Great!",
+      "close": "Close"
+    },
+    "catalog": {
+      "gym": {
+        "workouts": {
+          "name": "Consistent",
+          "description": {
+            "one": "Your first finished workout",
+            "other": "{{count}} finished workouts"
+          },
+          "remaining": {
+            "one": "1 workout to go",
+            "other": "{{count}} workouts to go"
+          }
+        },
+        "weekly_streak": {
+          "name": "Iron streak",
+          "description": {
+            "one": "1 week training 3 days or more",
+            "other": "{{count}} weeks in a row training 3 days or more"
+          },
+          "remaining": {
+            "one": "1 more week of 3 workouts",
+            "other": "{{count}} more weeks of 3 workouts"
+          }
+        }
+      },
+      "nutrition": {
+        "diary_streak": {
+          "name": "Diary on track",
+          "description": {
+            "one": "1 day logging what you eat",
+            "other": "{{count}} days in a row logging what you eat"
+          },
+          "remaining": {
+            "one": "1 more day in a row",
+            "other": "{{count}} more days in a row"
+          }
+        },
+        "meals": {
+          "name": "Bon appétit",
+          "description": {
+            "one": "1 meal logged",
+            "other": "{{count}} meals logged"
+          },
+          "remaining": {
+            "one": "1 meal to go",
+            "other": "{{count}} meals to go"
+          }
+        },
+        "recipes": {
+          "name": "Chef",
+          "description": {
+            "one": "Your first recipe",
+            "other": "{{count}} recipes created"
+          },
+          "remaining": {
+            "one": "1 recipe to go",
+            "other": "{{count}} recipes to go"
+          }
+        },
+        "cooking": {
+          "name": "Batch cooking",
+          "description": {
+            "one": "Your first batch cooked",
+            "other": "{{count}} batches cooked"
+          },
+          "remaining": {
+            "one": "1 batch to go",
+            "other": "{{count}} batches to go"
+          }
+        },
+        "shopping": {
+          "name": "Grocery run",
+          "description": {
+            "one": "Your first receipt",
+            "other": "{{count}} receipts received"
+          },
+          "remaining": {
+            "one": "1 receipt to go",
+            "other": "{{count}} receipts to go"
+          }
+        },
+        "inventory": {
+          "name": "Tidy pantry",
+          "description": {
+            "one": "Your first validated stocktake",
+            "other": "{{count}} validated stocktakes"
+          },
+          "remaining": {
+            "one": "1 stocktake to go",
+            "other": "{{count}} stocktakes to go"
+          }
+        }
+      },
+      "finance": {
+        "transactions": {
+          "name": "Clear accounts",
+          "description": {
+            "one": "Your first logged movement",
+            "other": "{{count}} movements logged"
+          },
+          "remaining": {
+            "one": "1 movement to go",
+            "other": "{{count}} movements to go"
+          }
+        }
+      },
+      "agenda": {
+        "tasks_done": {
+          "name": "Done",
+          "description": {
+            "one": "Your first completed task",
+            "other": "{{count}} tasks completed"
+          },
+          "remaining": {
+            "one": "1 task to go",
+            "other": "{{count}} tasks to go"
+          }
+        }
+      }
+    }
+  }
+}

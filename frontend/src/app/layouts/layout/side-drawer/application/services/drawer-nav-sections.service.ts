@@ -14,6 +14,7 @@ export class DrawerNavSectionsService {
         items: [
           this.route("home", "navbar.home", "/dashboard"),
           this.route("agenda", "navbar.agenda", "/agenda"),
+          this.route("trophy", "navbar.achievements", "/achievements"),
         ],
       },
       {

@@ -22,6 +22,7 @@ export class ContextualTranslatePipe implements PipeTransform {
     profile: "authorization/user/user",
     settings: "authorization/user/user",
     dashboard: "dashboard/dashboard",
+    achievements: "gamification/achievement/achievement",
     notifications: "notification/notification/inbox",
     notification: "notification/notification/inbox",
     formInput: "shared/design-system/form-input",

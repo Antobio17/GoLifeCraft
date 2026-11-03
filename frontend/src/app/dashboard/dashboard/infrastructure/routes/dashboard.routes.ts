@@ -4,6 +4,7 @@ import { GetDiaryProviders } from "@nutrition/diary/diary/infrastructure/provide
 import { AgendaSummaryProviders } from "@agenda/agenda/agenda/infrastructure/providers/agenda-summary.providers";
 import { FinanceSavingsSummaryProviders } from "@economy/finance/budget/infrastructure/providers/finance-savings-summary.providers";
 import { PreloadMode } from "@shared/routing/domain/models/preload-mode.enum";
+import { GetAchievementsProviders } from "@gamification/achievement/achievement/infrastructure/providers/get-achievements.providers";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -14,6 +15,7 @@ export const DASHBOARD_ROUTES: Routes = [
       ...GetDiaryProviders.getProviders(),
       ...AgendaSummaryProviders.getProviders(),
       ...FinanceSavingsSummaryProviders.getProviders(),
+      ...GetAchievementsProviders.getProviders(),
     ],
     loadComponent: () =>
       import("../components/dashboard.component").then(
