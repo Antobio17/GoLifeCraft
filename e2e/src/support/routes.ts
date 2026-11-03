@@ -20,6 +20,7 @@ export const CORE_SCREENS: readonly CoreScreen[] = [
   { name: "menus", path: "/menus", ready: "[data-testid='menu-card']" },
   { name: "locations", path: "/locations", ready: "[data-testid='location-card']" },
   { name: "notifications", path: "/notifications", ready: "[data-testid='notifications-empty']" },
+  { name: "achievements", path: "/achievements", ready: "[data-testid='achievements-section']" },
   {
     name: "notification-settings",
     path: "/notifications?tab=settings",
