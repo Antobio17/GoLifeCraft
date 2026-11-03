@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="Gamification\Achievement\Achievement\Infrastructure\Domain\Model\Doctrine\DoctrineAchievementProgressRepository" name="Gamification\Achievement\Achievement\Domain\Model\AchievementProgress" table="achievement_progress">
+    <unique-constraints>
+      <unique-constraint name="uniq_achievement_progress_definition_key" columns="definition_key"/>
+    </unique-constraints>
+    <id name="id" type="string" column="id" primary="true" length="36"/>
+    <field name="version" type="integer" version="true"/>
+    <field name="definitionKey" type="string" column="definition_key" length="80"/>
+    <field name="value" type="integer" column="progress_value"/>
+    <field name="currentStreak" type="integer" column="current_streak"/>
+    <field name="currentPeriodKey" type="string" column="current_period_key" length="10" nullable="true"/>
+    <field name="currentPeriodCount" type="integer" column="current_period_count"/>
+    <field name="lastCompletedPeriodKey" type="string" column="last_completed_period_key" length="10" nullable="true"/>
+    <field name="unlocks" type="json_list" column="unlocks"/>
+    <field name="lastOccurrenceAt" type="datetime" column="last_occurrence_at" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at"/>
+    <field name="updatedAt" type="datetime" column="updated_at"/>
+    <field name="createdByUserId" type="string" column="created_by_user_id" length="36"/>
+    <field name="updatedByUserId" type="string" column="updated_by_user_id" length="36"/>
+  </entity>
+</doctrine-mapping>

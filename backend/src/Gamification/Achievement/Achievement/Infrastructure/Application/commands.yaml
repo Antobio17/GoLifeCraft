@@ -1,0 +1,12 @@
+services:
+  Gamification\Achievement\Achievement\Infrastructure\Application\Console\RebuildAchievementsCommand:
+    class: Gamification\Achievement\Achievement\Infrastructure\Application\Console\RebuildAchievementsCommand
+    arguments:
+      $switcher: '@Shared\Tenant\Tenant\Domain\Service\TenantConnectionSwitcher'
+      $tenantEntityManager: '@doctrine.orm.tenant_manager_entity_manager'
+      $needleDataQuery: '@Gamification\Achievement\Achievement\Domain\QueryModel\RebuildAchievementsNeedleDataQuery'
+      $achievementCatalog: '@Gamification\Achievement\Achievement\Domain\Service\AchievementCatalog'
+      $commandFactory: '@Gamification\Achievement\Achievement\Application\Command\RecordAchievementProgressCommandFactory'
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: 'console.command' }

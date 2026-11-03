@@ -1,0 +1,11 @@
+get_achievements:
+  path: /api/v1/gamification/achievements
+  methods: [GET]
+  controller: Gamification\Achievement\Achievement\Infrastructure\UI\API\Controller\GetAchievementsController
+
+mark_achievement_seen:
+  path: /api/v1/gamification/achievements/{definitionKey}/seen
+  methods: [POST]
+  controller: Gamification\Achievement\Achievement\Infrastructure\UI\API\Controller\MarkAchievementSeenController
+  requirements:
+    definitionKey: '[a-z0-9_.]{1,80}'

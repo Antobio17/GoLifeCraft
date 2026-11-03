@@ -1,0 +1,15 @@
+services:
+  Gamification\Achievement\Achievement\Application\Subscriber\RecordAchievementProgressOnTrackedEvent:
+    class: Gamification\Achievement\Achievement\Application\Subscriber\RecordAchievementProgressOnTrackedEvent
+    arguments:
+      $messageBus: '@messenger.bus.default'
+      $commandFactory: '@Gamification\Achievement\Achievement\Application\Command\RecordAchievementProgressCommandFactory'
+    tags:
+      - { name: 'domain_event_subscriber', event: 'golifecraft.gym.event.1.workout.finished' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.diary_entry.consumed' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.recipe.created' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.production.item_cooked' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.ticket.received' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.nutrition.event.1.inventory.validated' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.economy.event.1.finance_transaction.created' }
+      - { name: 'domain_event_subscriber', event: 'golifecraft.agenda.event.1.agenda_entry.status_changed' }

@@ -1,0 +1,8 @@
+services:
+  Gamification\Achievement\Achievement\Domain\Service\AchievementCatalog:
+    class: Gamification\Achievement\Achievement\Infrastructure\Domain\Service\Configured\ConfiguredAchievementCatalog
+    arguments:
+      $definitions: '%achievements.catalog%'
+
+  Gamification\Achievement\Achievement\Domain\Service\AchievementStanding:
+    class: Gamification\Achievement\Achievement\Domain\Service\AchievementStanding

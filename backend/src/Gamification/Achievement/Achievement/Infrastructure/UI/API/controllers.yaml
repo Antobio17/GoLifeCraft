@@ -1,0 +1,14 @@
+services:
+  Gamification\Achievement\Achievement\Infrastructure\UI\API\Controller\GetAchievementsController:
+    class: Gamification\Achievement\Achievement\Infrastructure\UI\API\Controller\GetAchievementsController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }
+
+  Gamification\Achievement\Achievement\Infrastructure\UI\API\Controller\MarkAchievementSeenController:
+    class: Gamification\Achievement\Achievement\Infrastructure\UI\API\Controller\MarkAchievementSeenController
+    arguments:
+      $messageBus: '@messenger.bus.default'
+    tags:
+      - { name: controller.service_arguments }

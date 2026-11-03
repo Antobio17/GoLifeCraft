@@ -1,0 +1,11 @@
+services:
+  Gamification\Achievement\Achievement\Domain\QueryModel\GetAchievementsNeedleDataQuery:
+    class: Gamification\Achievement\Achievement\Infrastructure\Domain\QueryModel\Doctrine\DoctrineGetAchievementsNeedleDataQuery
+    arguments:
+      $connection: '@doctrine.dbal.reader_tenant_connection'
+
+  Gamification\Achievement\Achievement\Domain\QueryModel\RebuildAchievementsNeedleDataQuery:
+    class: Gamification\Achievement\Achievement\Infrastructure\Domain\QueryModel\Doctrine\DoctrineRebuildAchievementsNeedleDataQuery
+    arguments:
+      $masterConnection: '@doctrine.dbal.master_connection'
+      $tenantConnection: '@doctrine.dbal.writer_tenant_connection'

@@ -1,0 +1,82 @@
+parameters:
+    achievements.catalog:
+        -   key: gym.workouts
+            module: gym
+            icon: dumbbell
+            metric: count
+            thresholds: [1, 25, 100, 250]
+            triggers:
+                - { event: golifecraft.gym.event.1.workout.finished }
+
+        -   key: gym.weekly_streak
+            module: gym
+            icon: flame
+            metric: weekly_streak
+            min_per_period: 3
+            thresholds: [2, 4, 8, 16]
+            triggers:
+                - { event: golifecraft.gym.event.1.workout.finished }
+
+        -   key: nutrition.diary_streak
+            module: nutrition
+            icon: flame
+            metric: daily_streak
+            thresholds: [3, 7, 30, 100]
+            triggers:
+                - { event: golifecraft.nutrition.event.1.diary_entry.consumed, when: { consumed: true } }
+
+        -   key: nutrition.meals
+            module: nutrition
+            icon: leaf
+            metric: count
+            thresholds: [10, 100, 500, 1500]
+            triggers:
+                - { event: golifecraft.nutrition.event.1.diary_entry.consumed, when: { consumed: true } }
+
+        -   key: nutrition.recipes
+            module: nutrition
+            icon: chefHat
+            metric: count
+            thresholds: [1, 10, 25, 50]
+            triggers:
+                - { event: golifecraft.nutrition.event.1.recipe.created }
+
+        -   key: nutrition.cooking
+            module: nutrition
+            icon: package
+            metric: count
+            thresholds: [1, 10, 50, 150]
+            triggers:
+                - { event: golifecraft.nutrition.event.1.production.item_cooked }
+
+        -   key: nutrition.shopping
+            module: nutrition
+            icon: cart
+            metric: count
+            thresholds: [1, 10, 50, 150]
+            triggers:
+                - { event: golifecraft.nutrition.event.1.ticket.received }
+
+        -   key: nutrition.inventory
+            module: nutrition
+            icon: aisles
+            metric: count
+            thresholds: [1, 5, 20, 50]
+            triggers:
+                - { event: golifecraft.nutrition.event.1.inventory.validated }
+
+        -   key: finance.transactions
+            module: finance
+            icon: wallet
+            metric: count
+            thresholds: [1, 50, 250, 1000]
+            triggers:
+                - { event: golifecraft.economy.event.1.finance_transaction.created }
+
+        -   key: agenda.tasks_done
+            module: agenda
+            icon: agenda
+            metric: count
+            thresholds: [1, 25, 100, 500]
+            triggers:
+                - { event: golifecraft.agenda.event.1.agenda_entry.status_changed, when: { done: true } }
