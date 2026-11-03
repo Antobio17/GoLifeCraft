@@ -4,6 +4,7 @@ import { Ds } from "./ds";
 import { startClockAt } from "./clock";
 import { disableRoutePreloading } from "./preload";
 import { seededAuthToken } from "./auth-state";
+import { silenceAchievementCelebrations } from "./achievements";
 
 interface Fixtures {
   ds: Ds;
@@ -21,6 +22,7 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
   page: async ({ page }, use) => {
     await startClockAt(page);
     await disableRoutePreloading(page);
+    await silenceAchievementCelebrations(page);
     await use(page);
   },
 
