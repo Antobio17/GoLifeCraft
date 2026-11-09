@@ -14,6 +14,9 @@
   --ds-app-bottom-nav-height: 4.625rem;
   --ds-app-sidebar-width: 15.25rem;
   --ds-app-inset-left: 0px;
+  --ds-app-inset-top: calc(
+    env(safe-area-inset-top) + min(env(safe-area-inset-top), var(--ds-space-2))
+  );
   --ds-app-content-max: 73.75rem;
   --ds-form-max-width: 60rem;
   --ds-z-drawer: 100;
