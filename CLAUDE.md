@@ -166,7 +166,7 @@ src/
 ├── Integration/Mcp/Server/         # Servidor MCP genérico (describe/query/write de modelos)
 ├── Integration/Mcp/OAuth/          # OAuth 2.0 propio del MCP (authorize/token/.well-known + autenticación de tokens)
 ├── Nutrition/Catalog/              # Negocio: Product, Format, NutritionFacts
-├── Gamification/Achievement/       # Logros: progreso por logro, alimentado por eventos de dominio (catálogo en config/packages/achievements.yaml)
+├── Gamification/Achievement/       # Logros: progreso por logro, alimentado por eventos de dominio (catálogo en `Infrastructure/Domain/Service/Configured/achievements.yaml` del módulo)
 └── Shared/                         # Shared/Shared, Shared/DomainEventLog, Tenant/Tenant, Tool/Tool
 ```
 

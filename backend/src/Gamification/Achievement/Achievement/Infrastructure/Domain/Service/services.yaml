@@ -1,3 +1,6 @@
+imports:
+  - { resource: Configured/achievements.yaml }
+
 services:
   Gamification\Achievement\Achievement\Domain\Service\AchievementCatalog:
     class: Gamification\Achievement\Achievement\Infrastructure\Domain\Service\Configured\ConfiguredAchievementCatalog
