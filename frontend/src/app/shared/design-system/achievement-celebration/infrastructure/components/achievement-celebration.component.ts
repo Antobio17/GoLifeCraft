@@ -248,7 +248,7 @@ const CONFETTI_PIECES = Array.from({ length: 18 }, (_, index) => index);
       .celebration__piece:nth-child(3n) {
         width: 0.625rem;
         height: 0.375rem;
-        background: var(--ds-accent);
+        background: var(--ds-module, var(--ds-accent));
       }
       .celebration__piece:nth-child(3n + 1) {
         background: var(--ds-module-gym, var(--tier));

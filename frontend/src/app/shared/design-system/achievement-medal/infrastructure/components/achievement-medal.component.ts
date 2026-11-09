@@ -109,7 +109,7 @@ const ICON_SIZE: Record<`${MedalSize}`, number> = {
       .medal__frame--ring {
         padding: var(--ds-space-1);
         background: conic-gradient(
-          var(--tier-ring, var(--ds-accent)) 0 calc(var(--medal-ring) * 1%),
+          var(--ds-module, var(--ds-accent)) 0 calc(var(--medal-ring) * 1%),
           color-mix(in srgb, currentColor 14%, transparent)
             calc(var(--medal-ring) * 1%) 100%
         );

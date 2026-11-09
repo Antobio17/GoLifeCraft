@@ -15,6 +15,7 @@ import {
   ChoiceChipOption,
   ChoiceChipsComponent,
 } from "@shared/design-system/choice-chips/infrastructure/components/choice-chips.component";
+import { ScrollRowComponent } from "@shared/design-system/scroll-row/infrastructure/components/scroll-row.component";
 import { AchievementMedalComponent } from "@shared/design-system/achievement-medal/infrastructure/components/achievement-medal.component";
 import { GetAchievementsService } from "../../application/services/get-achievements.service";
 import { AchievementViewService } from "../../application/services/achievement-view.service";
@@ -37,6 +38,7 @@ const SKELETON_MEDALS = Array.from({ length: 6 }, (_, index) => index);
     SectionHeaderComponent,
     SkeletonLineComponent,
     ChoiceChipsComponent,
+    ScrollRowComponent,
     AchievementMedalComponent,
   ],
 })
