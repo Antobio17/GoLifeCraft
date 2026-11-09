@@ -151,7 +151,7 @@ import { WeekStripDayView } from "../../domain/models/week-strip-day-view.model"
         :host(.ds-week-host--collapsible) {
           position: sticky;
           top: calc(
-            env(safe-area-inset-top) + var(--ds-sticky-header-offset, 0px) +
+            var(--ds-app-inset-top) + var(--ds-sticky-header-offset, 0px) +
               var(--ds-space-2) - var(--week-collapse, 0px)
           );
           z-index: 15;

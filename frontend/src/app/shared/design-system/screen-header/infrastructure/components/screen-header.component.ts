@@ -132,17 +132,17 @@ export type ScreenHeaderLeading = "back" | "close" | null;
       :host(.is-sticky.is-stacked) .ds-screen-head__bar {
         --screen-head-bleed: var(--ds-space-4);
         position: sticky;
-        top: env(safe-area-inset-top);
+        top: var(--ds-app-inset-top);
         z-index: 20;
         padding-block: var(--ds-space-2);
         margin-block: calc(-1 * var(--ds-space-2));
         background: var(--ds-bg);
         box-shadow:
           0 0 0 var(--screen-head-bleed) var(--ds-bg),
-          0 calc(-1 * env(safe-area-inset-top)) 0 var(--screen-head-bleed)
+          0 calc(-1 * var(--ds-app-inset-top)) 0 var(--screen-head-bleed)
             var(--ds-bg);
         clip-path: inset(
-          calc(-1 * (var(--screen-head-bleed) + env(safe-area-inset-top)))
+          calc(-1 * (var(--screen-head-bleed) + var(--ds-app-inset-top)))
             calc(-1 * var(--screen-head-bleed)) -1px
         );
       }

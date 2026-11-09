@@ -58,8 +58,7 @@ type SplitViewSide = "start" | "end";
 
         .split__side--sticky {
           --split-sticky-gap: calc(
-            env(safe-area-inset-top) +
-              var(--split-sticky-top, var(--ds-space-5))
+            var(--ds-app-inset-top) + var(--split-sticky-top, var(--ds-space-5))
           );
           --split-sticky-offset: calc(
             var(--ds-sticky-header-offset, 0px) + var(--split-sticky-gap)
