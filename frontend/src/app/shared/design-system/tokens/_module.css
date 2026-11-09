@@ -9,6 +9,8 @@
   --ds-module-agenda-text: #8f3d76;
   --ds-module-admin: #d23a56;
   --ds-module-admin-text: #a5233d;
+  --ds-module-achievements: #7c5cd6;
+  --ds-module-achievements-text: #5b3fb0;
   --ds-module-on: var(--ds-gray-0);
 
   --ds-module-hero-base: var(--ds-gray-25);
@@ -26,6 +28,8 @@
   --ds-module-agenda-text: #f0bfe0;
   --ds-module-admin: #ff7f8f;
   --ds-module-admin-text: #ffa1ac;
+  --ds-module-achievements: #b69cff;
+  --ds-module-achievements-text: #c9b6ff;
   --ds-module-on: #0b0f0c;
 
   --ds-module-hero-base: rgba(24, 28, 26, 0.78);
@@ -55,6 +59,11 @@
 [data-module="agenda"] {
   --ds-module: var(--ds-module-agenda);
   --ds-module-text: var(--ds-module-agenda-text);
+}
+
+[data-module="achievements"] {
+  --ds-module: var(--ds-module-achievements);
+  --ds-module-text: var(--ds-module-achievements-text);
 }
 
 [data-module="admin"] {

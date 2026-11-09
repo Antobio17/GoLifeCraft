@@ -50,14 +50,16 @@
       }
     </ds-stack>
 
-    <ds-choice-chips
-      data-testid="achievements-filter"
-      [scroll]="true"
-      [options]="filterOptions()"
-      [ngModel]="filter()"
-      [ngModelOptions]="{ standalone: true }"
-      (ngModelChange)="changeFilter($event)"
-    />
+    <ds-scroll-row>
+      <ds-choice-chips
+        data-testid="achievements-filter"
+        [scroll]="true"
+        [options]="filterOptions()"
+        [ngModel]="filter()"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="changeFilter($event)"
+      />
+    </ds-scroll-row>
 
     @for (section of sections(); track section.module) {
       <ds-stack

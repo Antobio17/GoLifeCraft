@@ -7,6 +7,7 @@ export class RouteModuleService {
     ["/gym", AppModule.Gym],
     ["/economy", AppModule.Finance],
     ["/agenda", AppModule.Agenda],
+    ["/achievements", AppModule.Achievements],
     ["/users", AppModule.Admin],
   ];
 
