@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 final class ConfiguredAchievementCatalogTest extends TestCase
 {
     private const string PROJECT_DIR = __DIR__.'/../../../../../../..';
-    private const string CATALOG_PATH = self::PROJECT_DIR.'/config/packages/achievements.yaml';
+    private const string CATALOG_PATH = self::PROJECT_DIR.'/src/Gamification/Achievement/Achievement/Infrastructure/Domain/Service/Configured/achievements.yaml';
     private const string SUBSCRIBERS_PATH = self::PROJECT_DIR.'/src/Gamification/Achievement/Achievement/Infrastructure/Application/subscribers.yaml';
     private const string SUBSCRIBER_ID = 'Gamification\Achievement\Achievement\Application\Subscriber\RecordAchievementProgressOnTrackedEvent';
 
